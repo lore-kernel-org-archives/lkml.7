@@ -2,88 +2,155 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344A5C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 07:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC481C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 07:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40072070D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 07:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="Q5h14Lfr"
+	by mail.kernel.org (Postfix) with ESMTP id B274121655
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 07:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564300228;
+	bh=EMON1xbHxqhol4OWAY88eLLqBUAAabNCHjiC81S7aAY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=x+/vVhiUhqmqL90Gi9CJIJapORjMX1qxS3JtNWyUZ6f64BofQ8NPhVGhkSpiDucLy
+	 GJZvaJ5YlLYsnuX5Xnbw5P3bOF4XNX/1KOO1sQOAgwpla44Ws3gWG4Dv8jXdJQUS6G
+	 dg+MahcZ9rnkpByq64fNoeZ3E73ewjdLCFsF/LnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbfG1HqX (ORCPT
+        id S1726080AbfG1HuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 03:46:23 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37132 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfG1HqX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 03:46:23 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f17so50826822wme.2
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 00:46:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2/G7IaZ8tiYQkvUjO2OGRQfRiaaHFpZ/Ktl9QzMcAM4=;
-        b=Q5h14Lfr1vWRYHjX5e6phEJRFTeh+7dNc+QdnUBBekSIV3CtR0lIVJ3fd6BRZsIQj3
-         Hh9/qDIlUUekUyF/zlcHYhwJWJ7c6YHQ1hmMWt7IDtGEyyNNpE/Gu0BRooM3DNGaKkAF
-         GQmpZJCrBdT9B8U2g4jYormH1HLmxS58DSCyP4CaFtjxPWSHPwOOulmHdzO+2vOA8qwR
-         A0xhEMeBiyXi1+FHnhqJ2Ox0ZGseYzK6n9gL1eEqE+I7VHdoI/XvjCcwItsawXAwnSeW
-         kxhoz3SVHnlqAS365oB3V4fplD91va1O5hEAdCc6y3mK8ZSdxVoLHQdwCufe8lhY1ZvN
-         fPjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2/G7IaZ8tiYQkvUjO2OGRQfRiaaHFpZ/Ktl9QzMcAM4=;
-        b=NvuyXAuZ01n2TaTxrUPNaZBxXefQ+ido/Jj6127tTzj/CbjZo+I8w/Z03l47Z9VawV
-         VKPYZh7XegdXXujmaUDJXYFC7uFzCAh0WglB9lLbVDtdpRjcbJweUl5IXch1Nrr7oi+O
-         aFvBYwO7rl3SPGexMHIPYZ9I3qnLyBWkOlDcrXpPHlGcN30qThriXMLpUgcVesCx9Gvi
-         hErDIq6SVi2kmqOVvN9SuyYdam9EIn1+gLG9dIzGZMy53OB7t/tV2IJPaIs2vqTHOsQI
-         96MFteekOH+gvVbmGl66mhRNVvlJcGsOAnO2zVdl0y3jkzG6qs7ch5Sm9vk7FUKINLzD
-         DvXA==
-X-Gm-Message-State: APjAAAWpvwAwwhKYXzqFoBlN8C2PceKpiKeQbu9uUgQnb7S/uZSZnHGq
-        wxT+lvLSGOEg1NsMAqXsqeY=
-X-Google-Smtp-Source: APXvYqyg9ads4NJultwbj5Ts8UfWbNW/kHbokiWQB83owxZnaZwiVsGhlK22m19FExLQ6sHi8BCEBA==
-X-Received: by 2002:a1c:ddc1:: with SMTP id u184mr91017388wmg.158.1564299980967;
-        Sun, 28 Jul 2019 00:46:20 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id f1sm39579827wml.28.2019.07.28.00.46.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 00:46:20 -0700 (PDT)
-Date:   Sun, 28 Jul 2019 09:46:19 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Colin King <colin.king@canonical.com>
-Cc:     David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rocker: fix memory leaks of fib_work on two error return
- paths
-Message-ID: <20190728074619.GA2423@nanopsycho.orion>
-References: <20190727233726.3121-1-colin.king@canonical.com>
+        Sun, 28 Jul 2019 03:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbfG1HuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 03:50:19 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AEE72070D;
+        Sun, 28 Jul 2019 07:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564300218;
+        bh=EMON1xbHxqhol4OWAY88eLLqBUAAabNCHjiC81S7aAY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LGuaTLMhdwiDq+5oLIuAxK9XVoZ/s/80qS+cHolmJG5RNnmG2PLPJz4Pf/Deu627K
+         TpevS7EwA6/OhT+f9EUq5V6GMBfT6WwAOUqxiMhtiPfnxsuPrteMMgXBGTAuXajEY4
+         GayUnT2iTbqojCvckqMgVD/5ttGKUXIljAoRS7Es=
+Date:   Sun, 28 Jul 2019 08:50:10 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Song Qiang <songqiang1304521@gmail.com>,
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
+        Martin Kelly <mkelly@xevo.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Brian Masney <masneyb@onstation.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gregor Boirie <gregor.boirie@parrot.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Samu Onkalo <samu.onkalo@intel.com>
+Subject: Re: [PATCH v2 02/10] iio: document bindings for mounting matrices
+Message-ID: <20190728085010.36040cb2@archlinux>
+In-Reply-To: <4C901747-1657-47AD-A9D7-10E41AFB35CB@goldelico.com>
+References: <cover.1550768574.git.hns@goldelico.com>
+        <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
+        <CACRpkdZ5Z9VY457Fywt6X=K5XONgiPVcwbwSkwL_U+GCqZ+u5g@mail.gmail.com>
+        <4C901747-1657-47AD-A9D7-10E41AFB35CB@goldelico.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190727233726.3121-1-colin.king@canonical.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sun, Jul 28, 2019 at 01:37:26AM CEST, colin.king@canonical.com wrote:
->From: Colin Ian King <colin.king@canonical.com>
->
->Currently there are two error return paths that leak memory allocated
->to fib_work. Fix this by kfree'ing fib_work before returning.
->
->Addresses-Coverity: ("Resource leak")
->Fixes: 19a9d136f198 ("ipv4: Flag fib_info with a fib_nh using IPv6 gateway")
->Fixes: dbcc4fa718ee ("rocker: Fail attempts to use routes with nexthop objects")
->Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Tue, 23 Jul 2019 11:46:49 +0200
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+> Hi Linus,
+> 
+> > Am 23.07.2019 um 09:42 schrieb Linus Walleij <linus.walleij@linaro.org>:
+> > 
+> > Hi H. Nikolaus,
+> > 
+> > On Thu, Feb 21, 2019 at 6:03 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >   
+> >> From: Linus Walleij <linus.walleij@linaro.org>  
+> > 
+> > It is fair for you to change authorship to yourself at this point.
+> > Just keeping my Signed-off-by is sufficient.  
+> 
+> Well, I think my contribution is less than yours :)
+> 
+> >   
+> >> The mounting matrix for sensors was introduced in
+> >> commit dfc57732ad38 ("iio:core: mounting matrix support")
+> >> 
+> >> However the device tree bindings are very terse and since this is
+> >> a widely applicable property, we need a proper binding for it
+> >> that the other bindings can reference. This will also be useful
+> >> for other operating systems and sensor engineering at large.
+> >> 
+> >> I think all 3D sensors should support it, the current situation
+> >> is probably that the mounting information is confined in magic
+> >> userspace components rather than using the mounting matrix, which
+> >> is not good for portability and reuse.
+> >> 
+> >> Cc: Linus Walleij <linus.walleij@linaro.org>
+> >> Cc: Gregor Boirie <gregor.boirie@parrot.com>
+> >> Cc: Sebastian Reichel <sre@kernel.org>
+> >> Cc: Samu Onkalo <samu.onkalo@intel.com>
+> >> Cc: devicetree@vger.kernel.org
+> >> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>  
+> > 
+> > Did this patch fall off somewhere? I think it's really neat, even in this
+> > form it is great help for developers. If you want I can try picking up the
+> > comments and resend it.  
+> 
+> Well, I had planned to review it again and promised to send out a new
+> version. But as usual this ToDo becomes hidden by always more important
+> tasks.
+> 
+> So I am fine if you can pick comments and resend it. I think there will
+> be others who help to make it even better in the future if the mount matrix
+> is more widely used.
+> 
+> BR,
+> Nikolaus
+> 
+Given the comments that 'need' any response are fairly minor, I've just
+taken the view that the perfect is the enemy of the good and applied
+it to the togreg branch of iio.git with some really small tweaks.
+
+Thanks for offering to tidy this up Linus, but seems like it would be
+a waste of your time for such trivial tweaks!
+
+The only one outstanding that I haven't 'fixed' is the question I raised
+on face down or face up when talking about flat on the ground.
+
+That might want a clarifying comment.
+
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it (or not as the case may be!)
+
+Thanks,
+
+Jonathan
+
