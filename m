@@ -2,232 +2,267 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7D0C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FDAC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5002077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E8D2087C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:28:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XyB89bKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbfG1P1b (ORCPT
+        id S1726240AbfG1P2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 11:27:31 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33100 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfG1P11 (ORCPT
+        Sun, 28 Jul 2019 11:28:19 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36753 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfG1P2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 11:27:27 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r6so42502185qkc.0
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 08:27:27 -0700 (PDT)
+        Sun, 28 Jul 2019 11:28:18 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z4so57342852qtc.3;
+        Sun, 28 Jul 2019 08:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0w9yYqcES2o05gonZr9zRP5Wl/3rtCQeTzQMgiwfiKs=;
+        b=XyB89bKIeXZ11A0ivwxD32pSI7Cv+vKQ0QXzaltQZhhZ8pCdWXEXbx8b052XQrabJO
+         HgAse6Ad00tYzEzAMHE/w1OihGGuXWJC6b6/1918mLb2DaJ5A5x4WP3ElPeyAMZZ/UTx
+         QGPEqdvKvd8XmOHRr2smKA6gcoXFy3YF+9inAX+cwiOuiQfabXBUHkkdLAgLLRZf58lo
+         sOD+lqn8doAVanVisZHhEcN4J6E+n/dYPNTy0EBZtn8TwCeoyA10zaSNfBxaDiTTHt1W
+         j7W+sRvUwQvZxwxWyE3UJOxa5w9hpo3lkQu7HA11umd+rpjX1b0lEu8k8AtoodoHRnw3
+         ARjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F35K+zfag4ltzyCsUASdf81c+ysiklIJwp6fDU8GkBg=;
-        b=V7hrk/1IHBGxJbsyQBGs9oVwcMOEI00tc9ygXi/AWIp7RYi6FXRuseqE9MOQUxfAhl
-         ejy6lFvcSpSeoQ/HP8hA2AlQ6Gi9iA/12GTiKnbUVQphxBNMnpOUoApbh77wiHRv8PAq
-         bYPRe63dDHMrXjZK/Tb7FuD++NP4/rdKXkd+mSnp7zbmDRDGBSaWFDNYjWb2F4YMONwp
-         IkXU4QUUiNKhOKnE+Jpf4QuxUWCWB4rt8Fbh+LQw42eP9+/sZi3MqbDlmc+/QV9hbVaJ
-         RWOM51kgxgymkr9Doo+bQq2ccfVgpkX58HFBLEUWDiW7TwRxDcXKxXNo2SPgFNaEhUOa
-         I8ig==
-X-Gm-Message-State: APjAAAWJxecD3KrOYlCiNHRyxFvUy6rt5KEQnUAJGPcgOHkcJ+n8Dtg+
-        s4K1P+6wYQIRvsvRK97fxU1Hq/lP5Sp6XRodang=
-X-Google-Smtp-Source: APXvYqw6+D27uAOCGRjn7qjS0hMSrUs+qwZOguAPKuhEO7YfPihCE7pkfWb6ewDj2Zi0ubfJ7XpvIeo29ncfT6rLQl0=
-X-Received: by 2002:a37:4ac3:: with SMTP id x186mr67603060qka.138.1564327646458;
- Sun, 28 Jul 2019 08:27:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0w9yYqcES2o05gonZr9zRP5Wl/3rtCQeTzQMgiwfiKs=;
+        b=mB92+mkot/hV108Y8ZK8Nc+gHqPvMVlaARxZZV1raXhM7r3EDNqd4usoyxrzCClMIU
+         GqpowazVFmebyxA3p7RkHOfQWkUe7ttraOovwuj/zmENc5YmIrGC048EXgdtaYreu496
+         yoCdcbrjcCiGQjfbwkRkYPWQSzrMk4oz5epX0tQG8sAdO2dOBQM1yLHfJts/JeE9vwu9
+         VpezMi16Z1c7EsSZEY+mUh6RA40xkUhWoWKgoQQiBXqxr08yoH5fV3HgtBpBJQtUDeuI
+         poUSbYqJmuCC+gKVWcTqxzUG/YlR5kaNBziCSw2k0j3K4pQwCN8xxXHgrc9lvM1SOMsd
+         Iv+Q==
+X-Gm-Message-State: APjAAAW9542J6SX3QlKzAchIDqA1B24CMhQ7lLbValg2qxF2rBWXNGKD
+        CgmeD5uWEM+BYSrLYtSUV6M=
+X-Google-Smtp-Source: APXvYqwClKx7vFTV9/E9AwGF1SIkXxaYvyIN/lpQXpD/2hdOb4tu2dO6bt8MRqm0MBW/rJIzS5/ohA==
+X-Received: by 2002:ac8:2bd4:: with SMTP id n20mr75526234qtn.131.1564327697243;
+        Sun, 28 Jul 2019 08:28:17 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id q32sm25364274qtd.79.2019.07.28.08.28.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Jul 2019 08:28:16 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 51B4321B24;
+        Sun, 28 Jul 2019 11:28:15 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Sun, 28 Jul 2019 11:28:15 -0400
+X-ME-Sender: <xms:Cr89Xd4SDQToHv6-btJWHPtPTKcRZkJyCBTZ715fmIHZ9oh4CFZjdg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrkeelgdeltdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehgtderredtredvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecukfhppeeghe
+    drfedvrdduvdekrddutdelnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhm
+    vghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekhe
+    ehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghm
+    vgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:Cr89XRPFlfSLbpjripMHH8JnnC4QV18nLiucxBXHgz1gzLwka9cLBw>
+    <xmx:Cr89Xadw5MvmoUX3akgvmtEMtQD30hPtE-g_hcq2re_v4XY4NR0LEg>
+    <xmx:Cr89XTeiahgi1zb8uGitTFs5J0IKYhpd11ftqXFsjyxl99E_5oZepQ>
+    <xmx:D789XWodY-BtYPOjil1c5VOdq0vcshu1OB_4mwcNSnJp6SFZHr40rTlrmgE>
+Received: from localhost (unknown [45.32.128.109])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D2DE7380074;
+        Sun, 28 Jul 2019 11:28:09 -0400 (EDT)
+Date:   Sun, 28 Jul 2019 23:28:06 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jade Alglave <j.alglave@ucl.ac.uk>, linux-arch@vger.kernel.org,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2] lkmm/docs: Correct ->prop example with additional rfe
+ link
+Message-ID: <20190728152806.GB26905@tardis>
+References: <20190728031303.164545-1-joel@joelfernandes.org>
+ <Pine.LNX.4.44L0.1907281027160.6532-100000@netrider.rowland.org>
+ <20190728151959.GA82871@google.com>
 MIME-Version: 1.0
-References: <201907221012.41504DCD@keescook> <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de>
- <201907221135.2C2D262D8@keescook> <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com>
- <201907221620.F31B9A082@keescook> <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com>
- <201907231437.DB20BEBD3@keescook> <alpine.DEB.2.21.1907240038001.27812@nanos.tec.linutronix.de>
- <201907231636.AD3ED717D@keescook> <alpine.DEB.2.21.1907240155080.2034@nanos.tec.linutronix.de>
- <20190726180103.GE3188@linux.intel.com> <CALCETrUe50sbMx+Pg+fQdVFVeZ_zTffNWGJUmYy53fcHNrOhrQ@mail.gmail.com>
- <CAK8P3a3_tki1mi4OjLJdaGLwVA7JE0wE1kczE_q7kEpr5e8sMQ@mail.gmail.com> <alpine.DEB.2.21.1907281225410.1791@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1907281225410.1791@nanos.tec.linutronix.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 28 Jul 2019 17:27:10 +0200
-Message-ID: <CAK8P3a0dC5ti8nVMK8-NmmTYeEfKPdLpVf0zrQEnq76fUvh1oA@mail.gmail.com>
-Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace on i386
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Paul Bolle <pebolle@tiscali.nl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
+Content-Disposition: inline
+In-Reply-To: <20190728151959.GA82871@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 12:30 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> On Sun, 28 Jul 2019, Arnd Bergmann wrote:
-> > On Sat, Jul 27, 2019 at 7:53 PM Andy Lutomirski <luto@kernel.org> wrote:
 
-> Which is totally irrelevant because res is NULL and that NULL pointer check
-> should simply return -EFAULT, which is what the syscall fallback returns
-> because the pointer is NULL.
->
-> But that NULL pointer check is inconsistent anyway:
->
->  - 64 bit does not have it and never had
->
->  - the vdso is not capable of handling faults properly anyway. If the
->    pointer is not valid, then it will segfault. So just preventing the
->    segfault for NULL is silly.
->
-> I'm going to just remove it.
+--E39vaYmALEf/7YXx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ah, you are right, I misread.
+On Sun, Jul 28, 2019 at 11:19:59AM -0400, Joel Fernandes wrote:
+> On Sun, Jul 28, 2019 at 10:48:51AM -0400, Alan Stern wrote:
+> > On Sat, 27 Jul 2019, Joel Fernandes (Google) wrote:
+> >=20
+> > > The lkmm example about ->prop relation should describe an additional =
+rfe
+> > > link between P1's store to y and P2's load of y, which should be
+> > > critical to establishing the ordering resulting in the ->prop ordering
+> > > on P0. IOW, there are 2 rfe links, not one.
+> > >=20
+> > > Correct these in the docs to make the ->prop ordering on P0 more clea=
+r.
+> > >=20
+> > > Cc: kernel-team@android.com
+> > > Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > ---
+> >=20
+> > This is not a good update.  See below...
+>=20
+> No problem, thanks for the feedback. I am new to the LKMM so please bear
+> with me.. I should have tagged this RFC.
+>=20
+> > >  .../memory-model/Documentation/explanation.txt  | 17 ++++++++++-----=
+--
+> > >  1 file changed, 10 insertions(+), 7 deletions(-)
+> > >=20
+> > > diff --git a/tools/memory-model/Documentation/explanation.txt b/tools=
+/memory-model/Documentation/explanation.txt
+> > > index 68caa9a976d0..aa84fce854cc 100644
+> > > --- a/tools/memory-model/Documentation/explanation.txt
+> > > +++ b/tools/memory-model/Documentation/explanation.txt
+> > > @@ -1302,8 +1302,8 @@ followed by an arbitrary number of cumul-fence =
+links, ending with an
+> > >  rfe link.  You can concoct more exotic examples, containing more than
+> > >  one fence, although this quickly leads to diminishing returns in ter=
+ms
+> > >  of complexity.  For instance, here's an example containing a coe link
+> > > -followed by two fences and an rfe link, utilizing the fact that
+> > > -release fences are A-cumulative:
+> > > +followed by a fence, an rfe link, another fence and and a final rfe =
+link,
+> >                                                    ^---^
+> > > +utilizing the fact that release fences are A-cumulative:
+> >=20
+> > I don't like this, for two reasons.  First is the repeated "and" typo.
+>=20
+> Will fix the trivial typo, sorry about that.
+>=20
+> > More importantly, it's not necessary to go into this level of detail; a
+> > better revision would be:
+> >=20
+> > +followed by two cumul-fences and an rfe link, utilizing the fact that
+> >=20
+> > This is appropriate because the cumul-fence relation is defined to=20
+> > contain the rfe link which you noticed wasn't mentioned explicitly.
+>=20
+> No, I am talking about the P1's store to Y and P2's load of Y. That is not
+> through a cumul-fence so I don't understand what you meant? That _is_ mis=
+sing
+> the rfe link I am referring to, that is left out.
+>=20
+> The example says r2 =3D 1 and then we work backwards from that. r2 could =
+very
+> well have been 0, there's no fence or anything involved, it just happens =
+to
+> be the executation pattern causing r2 =3D 1 and hence the rfe link. Right?
+>=20
+> > >  	int x, y, z;
+> > > =20
+> > > @@ -1334,11 +1334,14 @@ If x =3D 2, r0 =3D 1, and r2 =3D 1 after this=
+ code runs then there is a prop
+> > >  link from P0's store to its load.  This is because P0's store gets
+> > >  overwritten by P1's store since x =3D 2 at the end (a coe link), the
+> > >  smp_wmb() ensures that P1's store to x propagates to P2 before the
+> > > -store to y does (the first fence), the store to y propagates to P2
+> > > -before P2's load and store execute, P2's smp_store_release()
+> > > -guarantees that the stores to x and y both propagate to P0 before the
+> > > -store to z does (the second fence), and P0's load executes after the
+> > > -store to z has propagated to P0 (an rfe link).
+> > > +store to y does (the first fence), P2's store to y happens before P2=
+'s
+> > ---------------------------------------^
+> >=20
+> > This makes no sense, since P2 doesn't store to y.  You meant P1's store
+> > to y.  Also, the use of "happens before" is here unnecessarily
+> > ambiguous (is it an informal usage or does it refer to the formal
+> > happens-before relation?).  The original "propagates to" is better.
+>=20
+> Will reword this.
+>=20
+> > > +load of y (rfe link), P2's smp_store_release() ensures that P2's load
+> > > +of y executes before P2's store to z (second fence), which implies t=
+hat
+> > > +that stores to x and y propagate to P2 before the smp_store_release(=
+), which
+> > > +means that P2's smp_store_release() will propagate stores to x and y=
+ to all
+> > > +CPUs before the store to z propagates (A-cumulative property of this=
+ fence).
+> > > +Finally P0's load of z executes after P2's store to z has propagated=
+ to
+> > > +P0 (rfe link).
+> >=20
+> > Again, a better change would be simply to replace the two instances of
+> > "fence" in the original text with "cumul-fence".
+>=20
+> Ok that's fine. But I still feel the rfe is not a part of the cumul-fence.
+> The fences have nothing to do with the rfe. Or, I am missing something qu=
+ite
+> badly.
+>=20
+> Boqun, did you understand what Alan is saying?
+>=20
 
-Anyway, if we want to keep the traditional behavior and get fewer surprises
-for users of seccomp and anything else that might observe clock_gettime
-behavior, below is how I'd do it. (not even build tested, x86-only. I'll
-send a proper patch if this is where we want to take it).
+I think 'cumul-fence' that Alan mentioned is not a fence, but a
+relation, which could be the result of combining a rfe relation and a
+A-cumulative fence relation. Please see the section "PROPAGATION ORDER
+RELATION: cumul-fence" or the definition of cumul-fence in
+linux-kernel.cat.
 
-        Arnd
+Did I get you right, Alan? If so, your suggestion is indeed a better
+change.
 
-diff --git a/arch/x86/include/asm/vdso/gettimeofday.h
-b/arch/x86/include/asm/vdso/gettimeofday.h
-index ae91429129a6..f7b6a50d4811 100644
---- a/arch/x86/include/asm/vdso/gettimeofday.h
-+++ b/arch/x86/include/asm/vdso/gettimeofday.h
-@@ -70,6 +70,13 @@ long clock_gettime_fallback(clockid_t _clkid,
-struct __kernel_timespec *_ts)
-        return ret;
- }
+Regards,
+Boqun
 
-+
-+static __always_inline
-+long clock_gettime32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-+{
-+       return -ENOSYS;
-+}
-+
- static __always_inline
- long gettimeofday_fallback(struct __kernel_old_timeval *_tv,
-                           struct timezone *_tz)
-@@ -97,7 +104,7 @@ long clock_getres_fallback(clockid_t _clkid, struct
-__kernel_timespec *_ts)
- #else
+> thanks,
+>=20
+>  - Joel
+>=20
 
- static __always_inline
--long clock_gettime_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-+long clock_gettime_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
- {
-        long ret;
+--E39vaYmALEf/7YXx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-@@ -113,6 +120,23 @@ long clock_gettime_fallback(clockid_t _clkid,
-struct __kernel_timespec *_ts)
-        return ret;
- }
+-----BEGIN PGP SIGNATURE-----
 
-+static __always_inline
-+long clock_gettime32_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-+{
-+       long ret;
-+
-+       asm (
-+               "mov %%ebx, %%edx \n"
-+               "mov %[clock], %%ebx \n"
-+               "call __kernel_vsyscall \n"
-+               "mov %%edx, %%ebx \n"
-+               : "=a" (ret), "=m" (*_ts)
-+               : "0" (__NR_clock_gettime), [clock] "g" (_clkid), "c" (_ts)
-+               : "edx");
-+
-+       return ret;
-+}
-+
- static __always_inline
- long gettimeofday_fallback(struct __kernel_old_timeval *_tv,
-                           struct timezone *_tz)
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 2d1c1f241fd9..3b3dab53d611 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -18,6 +18,7 @@
-  *   clock_mode.
-  * - gettimeofday_fallback(): fallback for gettimeofday.
-  * - clock_gettime_fallback(): fallback for clock_gettime.
-+ * - clock_gettime_fallback(): fallback for clock_gettime32.
-  * - clock_getres_fallback(): fallback for clock_getres.
-  */
- #ifdef ENABLE_COMPAT_VDSO
-@@ -51,7 +52,7 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
-                ns = vdso_ts->nsec;
-                last = vd->cycle_last;
-                if (unlikely((s64)cycles < 0))
--                       return clock_gettime_fallback(clk, ts);
-+                       return -ENOSYS;
+iQEzBAABCAAdFiEEj5IosQTPz8XU1wRHSXnow7UH+rgFAl09vwIACgkQSXnow7UH
++rhTkQf+P27OfVcqDn7RAZlp6KBxXcTwxUccGXSnJcXP3XYvPCkOSkFyBLkZeZbF
+LM/uL1Ec0Cc6xSIl4Bsqh+y6C11SV5HibIaLRrzuuC2A9Hfzm0eU+6BhzX9ppLfb
+0YVlO0aiwUhN4Dp3LLeJVCEkMkICgvW4sJtRNqGTf8f9SyjLrmQWClxui+PifO8O
+ZHj5Lo03at/Qz5MCDTRAqfpfXY0h0/fI0tkLVlTn7115hUSessr5VQFbZCSjAe6L
+Nmp8tNbqSgEGWiLwzaju7EOIGk3ffaHfPihl9V5PTg8mtXf5Bp9Ml+7WDnAr4uKO
+Qj9ctOJd8qAjbRBoBeHLhhQtBvoblw==
+=LDZp
+-----END PGP SIGNATURE-----
 
-                ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
-                ns >>= vd->shift;
-@@ -81,15 +82,15 @@ static void do_coarse(const struct vdso_data *vd,
-clockid_t clk,
-        } while (unlikely(vdso_read_retry(vd, seq)));
- }
-
--static __maybe_unused int
--__cvdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
-+static int
-+__cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
- {
-        const struct vdso_data *vd = __arch_get_vdso_data();
-        u32 msk;
-
-        /* Check for negative values or invalid clocks */
-        if (unlikely((u32) clock >= MAX_CLOCKS))
--               goto fallback;
-+               return -EINVAL;
-
-        /*
-         * Convert the clockid to a bitmask and use it to check which
-@@ -105,7 +106,15 @@ __cvdso_clock_gettime(clockid_t clock, struct
-__kernel_timespec *ts)
-                return do_hres(&vd[CS_RAW], clock, ts);
-        }
-
--fallback:
-+       return -EINVAL;
-+}
-+
-+static __maybe_unused int
-+__cvdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
-+{
-+       if (!__cvdso_clock_gettime_common(clock, ts))
-+               return 0;
-+
-        return clock_gettime_fallback(clock, ts);
- }
-
-@@ -113,22 +122,14 @@ static __maybe_unused int
- __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
- {
-        struct __kernel_timespec ts;
--       int ret;
--
--       if (res == NULL)
--               goto fallback;
--
--       ret = __cvdso_clock_gettime(clock, &ts);
-
--       if (ret == 0) {
-+       if (!__cvdso_clock_gettime_common(clock, &ts)) {
-                res->tv_sec = ts.tv_sec;
-                res->tv_nsec = ts.tv_nsec;
-+               return 0;
-        }
-
--       return ret;
--
--fallback:
--       return clock_gettime_fallback(clock, (struct __kernel_timespec *)res);
-+       return clock_gettime32_fallback(clock, res);
- }
-
- static __maybe_unused int
+--E39vaYmALEf/7YXx--
