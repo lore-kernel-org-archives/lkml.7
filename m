@@ -2,67 +2,105 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9F8C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C765C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458642075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B55C2087C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:19:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXZ+E676"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726058AbfG1LNR (ORCPT
+        id S1726080AbfG1LT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 07:13:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51559 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfG1LNR (ORCPT
+        Sun, 28 Jul 2019 07:19:28 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44926 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfG1LT2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 07:13:17 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hrh6x-00022G-Ah; Sun, 28 Jul 2019 13:13:07 +0200
-Date:   Sun, 28 Jul 2019 13:13:06 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace
- on i386
-In-Reply-To: <CAK8P3a3_tki1mi4OjLJdaGLwVA7JE0wE1kczE_q7kEpr5e8sMQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907281311180.1791@nanos.tec.linutronix.de>
-References: <201907221012.41504DCD@keescook> <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de> <201907221135.2C2D262D8@keescook> <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com> <201907221620.F31B9A082@keescook>
- <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com> <201907231437.DB20BEBD3@keescook> <alpine.DEB.2.21.1907240038001.27812@nanos.tec.linutronix.de> <201907231636.AD3ED717D@keescook> <alpine.DEB.2.21.1907240155080.2034@nanos.tec.linutronix.de>
- <20190726180103.GE3188@linux.intel.com> <CALCETrUe50sbMx+Pg+fQdVFVeZ_zTffNWGJUmYy53fcHNrOhrQ@mail.gmail.com> <CAK8P3a3_tki1mi4OjLJdaGLwVA7JE0wE1kczE_q7kEpr5e8sMQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 28 Jul 2019 07:19:28 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i18so26821054pgl.11
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 04:19:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=B6TX782w2nBGeMiqESzq7NZYdapmEI2iIuDzWwvD73U=;
+        b=MXZ+E676Ntw3aSNHqfnVD+vV93kAQFhnjN7v5+bVIai1HEiJ9IdyRrMQj6g7+npQTL
+         To7doQ5Skx9J7FxAUX7BdrvD5EX+ReNYmjeMpEDQ/APqAaTMJNpsRVoid+drvHj7oGwh
+         BCpSC0QOV1+0uqSypplKpllUII17eXJkASlpUYFSKjRx3cv67eog3bwtAw7ma1klYER0
+         HPJZQzppsp/9xG3gC7dC8/vcStTfOt7PI+fAkd+dCRl3/5HqyJYoHKyY+JYk4DxO4k9q
+         MqZxpgHVpO4+pTOlDCe5T/Wfca6MvRt2Zmx1HqWSxoYQtAgw7BQj8A2OdTAzZUAEtehM
+         xNWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=B6TX782w2nBGeMiqESzq7NZYdapmEI2iIuDzWwvD73U=;
+        b=Du68i8JJprV5TmKVzic9ay2DbJpgwQrfLjJu7+rK4i8+NwMtAXyaGrXm+XBEbfxtjN
+         Ur/mE7IOhIOUWZAS7E8mjD3WrkFT8/2KVBQaClkbtS3e62iv15TPNMX5jK+AJocfDG0D
+         Lxy0dGPqwhZAXsjIp2Hsh+1PWzkRCq/TOkgq+bI/2H/QiBbJZlXt25/j7wFVcnc4mBBj
+         nzhdQXBD8N5v9MoE6Qx5leNh692fD4Xve3CRsJLmevdpZy9r5XcgOmnEl+vjSTHIKqZe
+         mv/4O+CvHWDxB8kH0URY64sciiCztLCb5fK0gMnvOb1CjLhf1ZCI0ktZskDMA6Hl1HOt
+         qXJw==
+X-Gm-Message-State: APjAAAW6mepk96udwxYrctI7qe0JfZzUTJmgbYWVHKOggA/FDPblOhLl
+        0OAdW+XNSyfwAuz7GJHSXAo=
+X-Google-Smtp-Source: APXvYqxxfgP0hAWjsHS3mvtNIYhn4ZiY0lxJaD8PKrUgtK38LgU7uiI2Z+xjPs4VKbPFdF41titAYg==
+X-Received: by 2002:a65:52c5:: with SMTP id z5mr85384058pgp.118.1564312767754;
+        Sun, 28 Jul 2019 04:19:27 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id s11sm56220185pgv.13.2019.07.28.04.19.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Jul 2019 04:19:26 -0700 (PDT)
+Date:   Sun, 28 Jul 2019 16:49:18 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Jeeeun Evans <jeeeunevans@gmail.com>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Anirudh Rayabharam <anirudh.rayabharam@gmail.com>,
+        Kimberly Brown <kimbrownkd@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Larry.Finger@lwfinger.net, hdegoede@redhat.com
+Subject: [PATCH] staging: rtl8723bs: core: Remove unneeded extern WFD_OUI
+Message-ID: <20190728111918.GA24278@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Jul 2019, Arnd Bergmann wrote:
-> We also need to decide what to do about __cvdso_clock_gettime32()
-> once we add a compile-time option to make all time32 syscalls
-> to return an error. Returning -ENOSYS from the clock_gettime32()
-> fallback is probably a good idea, but for consistency the
-> __vdso_clock_gettime() call should either always return the
-> same in that configuration, or be left out from the vdso build
-> endirely.
+Remove unneeded extern variable "extern unsigned char WFD_OUI"
 
-Either way works and it does not make a difference :)
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_ap.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks,
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+index 7bd5c61..2bb20762 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ap.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+@@ -13,7 +13,6 @@ extern unsigned char RTW_WPA_OUI[];
+ extern unsigned char WMM_OUI[];
+ extern unsigned char WPS_OUI[];
+ extern unsigned char P2P_OUI[];
+-extern unsigned char WFD_OUI[];
+ 
+ void init_mlme_ap_info(struct adapter *padapter)
+ {
+-- 
+2.7.4
 
-	tglx
