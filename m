@@ -2,76 +2,126 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF30C7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4888C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE8E72064C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9AE2064C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:48:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbfG1OmT (ORCPT
+        id S1726111AbfG1Osx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 10:42:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51762 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfG1OmT (ORCPT
+        Sun, 28 Jul 2019 10:48:53 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:53897 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726043AbfG1Osw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 10:42:19 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hrkNJ-000562-Sn; Sun, 28 Jul 2019 16:42:14 +0200
-Date:   Sun, 28 Jul 2019 16:42:12 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Bolle <pebolle@tiscali.nl>, Will Deacon <will@kernel.org>
-Subject: Re: [patch 1/5] lib/vdso/32: Remove inconsistent NULL pointer
- checks
-In-Reply-To: <CALCETrXbwPNt-SiudX+xup1vmkjksJpy-GJAT2K-g_dFw6d6vA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907281640380.1791@nanos.tec.linutronix.de>
-References: <20190728131251.622415456@linutronix.de> <20190728131648.587523358@linutronix.de> <CALCETrXbwPNt-SiudX+xup1vmkjksJpy-GJAT2K-g_dFw6d6vA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 28 Jul 2019 10:48:52 -0400
+Received: (qmail 8593 invoked by uid 500); 28 Jul 2019 10:48:51 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 28 Jul 2019 10:48:51 -0400
+Date:   Sun, 28 Jul 2019 10:48:51 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+cc:     linux-kernel@vger.kernel.org, <kernel-team@android.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        <linux-arch@vger.kernel.org>, Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2] lkmm/docs: Correct ->prop example with additional
+ rfe link
+In-Reply-To: <20190728031303.164545-1-joel@joelfernandes.org>
+Message-ID: <Pine.LNX.4.44L0.1907281027160.6532-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Jul 2019, Andy Lutomirski wrote:
+On Sat, 27 Jul 2019, Joel Fernandes (Google) wrote:
 
-> On Sun, Jul 28, 2019 at 6:20 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > The 32bit variants of vdso_clock_gettime()/getres() have a NULL pointer
-> > check for the timespec pointer. That's inconsistent vs. 64bit.
-> >
-> > But the vdso implementation will never be consistent versus the syscall
-> > because the only case which it can handle is NULL. Any other invalid
-> > pointer will cause a segfault. So special casing NULL is not really useful.
-> >
-> > Remove it along with the superflouos syscall fallback invocation as that
-> > will return -EFAULT anyway. That also gets rid of the dubious typecast
-> > which only works because the pointer is NULL.
+> The lkmm example about ->prop relation should describe an additional rfe
+> link between P1's store to y and P2's load of y, which should be
+> critical to establishing the ordering resulting in the ->prop ordering
+> on P0. IOW, there are 2 rfe links, not one.
 > 
-> Reviewed-by: Andy Lutomirski <luto@kernel.org>
+> Correct these in the docs to make the ->prop ordering on P0 more clear.
 > 
-> FWIW, the equivalent change to gettimeofday would be an ABI break,
-> since we historically have that check, and it even makes sense there.
+> Cc: kernel-team@android.com
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
 
-Of course, because either of the two pointers can be NULL.
+This is not a good update.  See below...
 
-Thanks,
+>  .../memory-model/Documentation/explanation.txt  | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
+> index 68caa9a976d0..aa84fce854cc 100644
+> --- a/tools/memory-model/Documentation/explanation.txt
+> +++ b/tools/memory-model/Documentation/explanation.txt
+> @@ -1302,8 +1302,8 @@ followed by an arbitrary number of cumul-fence links, ending with an
+>  rfe link.  You can concoct more exotic examples, containing more than
+>  one fence, although this quickly leads to diminishing returns in terms
+>  of complexity.  For instance, here's an example containing a coe link
+> -followed by two fences and an rfe link, utilizing the fact that
+> -release fences are A-cumulative:
+> +followed by a fence, an rfe link, another fence and and a final rfe link,
+                                                   ^---^
+> +utilizing the fact that release fences are A-cumulative:
 
-	tglx
+I don't like this, for two reasons.  First is the repeated "and" typo.  
+More importantly, it's not necessary to go into this level of detail; a
+better revision would be:
+
++followed by two cumul-fences and an rfe link, utilizing the fact that
+
+This is appropriate because the cumul-fence relation is defined to 
+contain the rfe link which you noticed wasn't mentioned explicitly.
+
+>  	int x, y, z;
+>  
+> @@ -1334,11 +1334,14 @@ If x = 2, r0 = 1, and r2 = 1 after this code runs then there is a prop
+>  link from P0's store to its load.  This is because P0's store gets
+>  overwritten by P1's store since x = 2 at the end (a coe link), the
+>  smp_wmb() ensures that P1's store to x propagates to P2 before the
+> -store to y does (the first fence), the store to y propagates to P2
+> -before P2's load and store execute, P2's smp_store_release()
+> -guarantees that the stores to x and y both propagate to P0 before the
+> -store to z does (the second fence), and P0's load executes after the
+> -store to z has propagated to P0 (an rfe link).
+> +store to y does (the first fence), P2's store to y happens before P2's
+---------------------------------------^
+
+This makes no sense, since P2 doesn't store to y.  You meant P1's store
+to y.  Also, the use of "happens before" is here unnecessarily
+ambiguous (is it an informal usage or does it refer to the formal
+happens-before relation?).  The original "propagates to" is better.
+
+> +load of y (rfe link), P2's smp_store_release() ensures that P2's load
+> +of y executes before P2's store to z (second fence), which implies that
+> +that stores to x and y propagate to P2 before the smp_store_release(), which
+> +means that P2's smp_store_release() will propagate stores to x and y to all
+> +CPUs before the store to z propagates (A-cumulative property of this fence).
+> +Finally P0's load of z executes after P2's store to z has propagated to
+> +P0 (rfe link).
+
+Again, a better change would be simply to replace the two instances of
+"fence" in the original text with "cumul-fence".
+
+Alan
 
