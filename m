@@ -2,85 +2,103 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23011C7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA36C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4DC22087C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:59:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d7wz/kPr"
+	by mail.kernel.org (Postfix) with ESMTP id EC08C2077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbfG1W7B (ORCPT
+        id S1726245AbfG1XDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 18:59:01 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42910 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfG1W7B (ORCPT
+        Sun, 28 Jul 2019 19:03:15 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37545 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfG1XDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 18:59:01 -0400
-Received: by mail-lf1-f68.google.com with SMTP id s19so40704658lfb.9
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 15:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7cpnNhjoonDmEkUXX/FcWxaQpdtFRkDDXf/a02wQO8U=;
-        b=d7wz/kPrVXPPE0EK8nix4F1zOnDPPR6ikXZJULkZ5sS4YFG8eWhMsit58GZyzEp5dL
-         1ax1QLhB7E4uAVdJOjxj+E9Ylok85UGjvaVRqo0fPGkyrnJSHADHB/H4IHM6I9K7ZaNX
-         6cqvFpplywcDgxvt4kAsafJcdG68ujh55JQ3kLPOCEGWj/e6FAlrZSpzERUtDYuo1TrS
-         gGqXZ+NFuISuOIiME8RXk9YOeww6fonI9TDbLVlOpjY9j8jz2ia3mCXezCUZ2qYH1iw9
-         6Ms/fhiRzhH+4Y67bKctLFvAYUSDBY+XmBK7/ztMyJUxDa83imatYifeC83zdy14VjpU
-         B6TQ==
+        Sun, 28 Jul 2019 19:03:15 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n9so34675875wrr.4
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 16:03:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7cpnNhjoonDmEkUXX/FcWxaQpdtFRkDDXf/a02wQO8U=;
-        b=EodxjrASuO0yKpLS0P7TLpgBeEzvISVfGWq7Gf6SNfMRoYG1Lmu1/2jOVRRAGcXaLI
-         8Lov61WvZC9KFeZpxXNuiq1kJ9EigTdBoE9cd/+DnNg1Z7jmYmixinFfpU5VAMJXHYv9
-         /kF8Tb/QnlwdzsHOjii5dEaQDti5GhgtRhTJzD6rHIpEN4+J8oAE6aa3yK+FPtB/nZER
-         iJbbeAl9xikpq87AeZDpDHfZWMcB+bh47IlNfpLfsGCKKlZajOBGgz+eiRj0smDdyv4l
-         XmXMhpeo00BvyM16G31X8+kuyXuFvIS6XhfqsTsAwUAECTdQgBCpucGOTiaLhgmwlMQk
-         3PtA==
-X-Gm-Message-State: APjAAAUirKrTU+bdumWNhfaInREreryXtpjNz4Xq30wG4gIkrSUpHaxX
-        AZ6/rAnqfMAXfXxmq3LY1C85NHenDDvujczGq+BgUw==
-X-Google-Smtp-Source: APXvYqwa2xZ1U26fwVAeM34mNz4McRVa0UDLuCcDymbTVYyP9jT+fg84OSSQiuW1P3zLmlBSm9n4azMLNBNPY3SL4x4=
-X-Received: by 2002:a19:e006:: with SMTP id x6mr48911419lfg.165.1564354739013;
- Sun, 28 Jul 2019 15:58:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vHmOVMZ+hgbl6glGrYbyUU8RJ/uLOzhuRxz4ckuaKpY=;
+        b=A8jUPsoILm/+J0RiKgmFuqt2ufSHjjfl3cXOLi9bpUly/RQA3ODGaLWWcI9LWZNpOE
+         OOi7nF7RdPb/xqr1jZ6ieLL7uuTm0qw8vpvOSG62zJShghvbilulXFLlKNmRHVIiFdr3
+         WyMR1A1k5OC8A43xMaNn/OFtJos7tH6l8qOo1R2MfWUSAKNQAVFsWiH2xfRJmiol51+8
+         CcWxt21e30gjaI2izfokDjYlsI82VzsfQ/Hh76rwJQGMJiNnwGQizreKMb/4CPZomzKc
+         Abtf0FjysDA8zih6YBwIuDgnC4NsQNJkx79B0IeHoF5JjtzLbgdQXS/YK+mOZ2qv4QpY
+         GOYw==
+X-Gm-Message-State: APjAAAWIEKCp5reiik2jCFkOFhloTyk3ad9MbFgGxeBdDu8n97G3+HON
+        Rd85gTqc44rCx4hP6c+ln+Uv0Q==
+X-Google-Smtp-Source: APXvYqxmxi7OfpyaSbmUwwwfjLMUedXKpYPEq+qCCzw11VozDSYV1iAQnIiLCMRLbrHIaznWEibpiQ==
+X-Received: by 2002:a5d:4e08:: with SMTP id p8mr39699881wrt.20.1564354993194;
+        Sun, 28 Jul 2019 16:03:13 -0700 (PDT)
+Received: from mcroce-redhat.homenet.telecomitalia.it (host221-208-dynamic.27-79-r.retail.telecomitalia.it. [79.27.208.221])
+        by smtp.gmail.com with ESMTPSA id v65sm66144369wme.31.2019.07.28.16.03.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 28 Jul 2019 16:03:12 -0700 (PDT)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: mark expected switch fall-through
+Date:   Mon, 29 Jul 2019 01:03:10 +0200
+Message-Id: <20190728230310.5924-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190707203558.10993-1-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20190707203558.10993-1-chris.packham@alliedtelesis.co.nz>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 Jul 2019 00:58:47 +0200
-Message-ID: <CACRpkdags1geSzrLxVGf11PvpH+c_N0F7oa=42C57geKpm2VjQ@mail.gmail.com>
-Subject: Re: [PATCH v3] gpiolib: Preserve desc->flags when setting state
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 7, 2019 at 10:36 PM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
+Move the "fallthrough" comment just because the case keyword,
+fixes the following warning:
 
-> desc->flags may already have values set by of_gpiochip_add() so make
-> sure that this isn't undone when setting the initial direction.
->
-> Fixes: 3edfb7bd76bd1cba ("gpiolib: Show correct direction from the beginning")
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+In file included from ./include/linux/kernel.h:15,
+                 from ./include/linux/list.h:9,
+                 from ./include/linux/kobject.h:19,
+                 from ./include/linux/of.h:17,
+                 from ./include/linux/irqdomain.h:35,
+                 from ./include/linux/acpi.h:13,
+                 from arch/arm64/kernel/smp.c:9:
+arch/arm64/kernel/smp.c: In function ‘__cpu_up’:
+./include/linux/printk.h:302:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  printk(KERN_CRIT pr_fmt(fmt), ##__VA_ARGS__)
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm64/kernel/smp.c:156:4: note: in expansion of macro ‘pr_crit’
+    pr_crit("CPU%u: may not have shut down cleanly\n", cpu);
+    ^~~~~~~
+arch/arm64/kernel/smp.c:157:3: note: here
+   case CPU_STUCK_IN_KERNEL:
+   ^~~~
 
-Patch applied for fixes and tagged for stable.
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ arch/arm64/kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for digging into this! Excellent work!
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index ea90d3bd9253..018a33e01b0e 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -152,8 +152,8 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ 				pr_crit("CPU%u: died during early boot\n", cpu);
+ 				break;
+ 			}
+-			/* Fall through */
+ 			pr_crit("CPU%u: may not have shut down cleanly\n", cpu);
++			/* Fall through */
+ 		case CPU_STUCK_IN_KERNEL:
+ 			pr_crit("CPU%u: is stuck in kernel\n", cpu);
+ 			if (status & CPU_STUCK_REASON_52_BIT_VA)
+-- 
+2.21.0
 
-Yours,
-Linus Walleij
