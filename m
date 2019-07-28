@@ -2,96 +2,91 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 159C8C7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB28CC7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A792075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660D02075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:14:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fYfSEu0N"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="eeBZJiNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbfG1WLy (ORCPT
+        id S1726248AbfG1WOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 18:11:54 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46186 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfG1WLy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 18:11:54 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v24so56726358ljg.13
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 15:11:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P/UUoIRi1saO6ICrZirvERC3tkUx/Rrg9Uu5W/WNhiI=;
-        b=fYfSEu0NfzDyjpxjq/ysAcfDfZY2Yjdv2Ql2GucgXtjPYlngCS87l9KxOWAW9WqMsG
-         7YQnuBTDQi5lzkUsX7ju8ANwHjvY9RUH9p8uqm7fuSwta6Dlt3zwJ2m7C99onbm2WOlO
-         5kQIlhiEAqqZbf+UX43YuSJRk4k/V7goItgDwki5TllMdkb/aJYwH7SA5dBL/xuSuWDW
-         Jq2AC0UUkcz96HnCyDSY+VjSrm3G0lf77JURZyw8jThfrM1MQ+H496xoacb3imKl/1Ie
-         Nwjrrj+N5WFI4HRChmgn3C8YEOlQy+2sFGBTBwZ6HxhsL2++jWO2ibkrrJXXfDzkk+OZ
-         grUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P/UUoIRi1saO6ICrZirvERC3tkUx/Rrg9Uu5W/WNhiI=;
-        b=dK0w2ResZT1RPUrMYS/aGO1avq6Gf33sYEhYEY2drZqAW02YouxxEoQtIWXoa324CJ
-         9dRH9PPAuMzF3mvlKgFRKe+UavK3ixnwS5T6PBBwFCnq7XUMCxS4cwLcSC4AH0i08jV4
-         KWg891CWwgwgKojxiwUxeiSRzBiXBT0qWBaJwuHXBoD89aNRURqDO8KgXzue2X59sMsJ
-         hB/thw6ggOFfa5eAEz8lfycSdxAVW8x+m43OqvLwFxMH+BdcAwvQ+Hy1QHPCsfkNkZef
-         7X5O8Be/KI1orEeqVfffUNJ6GZ49pMmmhv37dKZ6o4WTPuWcO15tCT3LqdbzKewth6zK
-         P/zg==
-X-Gm-Message-State: APjAAAWeVknhAzZWw/Mj5tZGXD6MQq1XeoKdQ91uI8M51XUdxQtvxNYh
-        6tdk3npBAzwBIzo0LfK9C3Ne2h0EYmy9MEypgT+JlQFV
-X-Google-Smtp-Source: APXvYqxyPrbflvR8n7bEZTuQzLrXMs+cK8AFTQaEbNF0iOHog8ehTxf2NGg3ABVcU7uIcSaEND69PlsoNKKHH90DCGU=
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr34303871ljm.180.1564351912427;
- Sun, 28 Jul 2019 15:11:52 -0700 (PDT)
+        Sun, 28 Jul 2019 18:14:20 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42950 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbfG1WOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 18:14:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=5/H6mwJ6ueqohYnfDld+48SY+48Vagu6j7FHEctaFAQ=; b=eeBZJiNGsQT7R6hK12i3/mN/CD
+        89FpcJlP91gShudl7iiYzFma5uaxcArlUYPK7pnDu0eQZSqT0JvbnT7gLgwuqP8zLd4n6NTSXkhEk
+        NSWQQ9M5FvZXXgUveNvqrfwOQrOuDNAPK1Oym5fQ+f1ETdV2qWUQH6fiG0LOmzIbVuN8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hrrQi-00068s-DH; Mon, 29 Jul 2019 00:14:12 +0200
+Date:   Mon, 29 Jul 2019 00:14:12 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     liuyonglong <liuyonglong@huawei.com>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        shiju.jose@huawei.com
+Subject: Re: [PATCH net] net: hns: fix LED configuration for marvell phy
+Message-ID: <20190728221412.GB23125@lunn.ch>
+References: <1563775152-21369-1-git-send-email-liuyonglong@huawei.com>
+ <20190722.181906.2225538844348045066.davem@davemloft.net>
+ <72061222-411f-a58c-5873-ad873394cdb5@huawei.com>
+ <20190725042829.GB14276@lunn.ch>
+ <20190728132412.GC8718@xo-6d-61-c0.localdomain>
 MIME-Version: 1.0
-References: <20190713075259.243565-1-dmitry.torokhov@gmail.com> <20190713075259.243565-2-dmitry.torokhov@gmail.com>
-In-Reply-To: <20190713075259.243565-2-dmitry.torokhov@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 Jul 2019 00:11:41 +0200
-Message-ID: <CACRpkdZxJZyQD4WZ68hSNGXtGS23hHDv=rrnu9oFmMN0oRNb2w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drivers: base: swnode: link devices to software nodes
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Linux Input <linux-input@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190728132412.GC8718@xo-6d-61-c0.localdomain>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 9:53 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On Sun, Jul 28, 2019 at 03:24:12PM +0200, Pavel Machek wrote:
+> On Thu 2019-07-25 06:28:29, Andrew Lunn wrote:
+> > On Thu, Jul 25, 2019 at 11:00:08AM +0800, liuyonglong wrote:
+> > > > Revert "net: hns: fix LED configuration for marvell phy"
+> > > > This reverts commit f4e5f775db5a4631300dccd0de5eafb50a77c131.
+> > > >
+> > > > Andrew Lunn says this should be handled another way.
+> > > >
+> > > > Signed-off-by: David S. Miller <davem@davemloft.net>
+> > > 
+> > > 
+> > > Hi Andrew:
+> > > 
+> > > I see this patch have been reverted, can you tell me the better way to do this?
+> > > Thanks very much!
+> > 
+> > Please take a look at the work Matthias Kaehlcke is doing. It has not
+> > got too far yet, but when it is complete, it should define a generic
+> > way to configure PHY LEDs.
+> 
+> I don't remember PHY LED discussion from LED mailing list. Would you have a pointer?
 
-> It is helpful to know what device, if any, a software node is tied to, so
-> let's store a pointer to the device in software node structure. Note that
-> children software nodes will inherit their parent's device pointer, so we
-> do not have to traverse hierarchy to see what device the [sub]tree belongs
-> to.
->
-> We will be using the device pointer to locate GPIO lookup tables for
-> devices with static properties.
->
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Hi Pavel 
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+So far, it has not made it onto the generic LED list. And the current
+implementation is unlikely to go as far as using the generic LED
+code. But i would like the binding to be compatible with it, so that
+some time in the future it could be migrated to being part of the
+generic LED code. But that would also require extensions to the
+generic LED code to support hardware offload of triggers.
 
-If some device core person like Rafael and/or Greg can ACK it I can
-apply this patch to the GPIO tree.
-
-Yours,
-Linus Walleij
+	Andrew
