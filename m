@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A2FC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 17:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC8AC7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 17:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9C0216B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 17:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EA4216B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 17:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564335019;
-	bh=+Fb/AstsPPb/152WXJWNxzWcmSDViHx0aDjW5JyAh1I=;
+	s=default; t=1564335023;
+	bh=jmyG8VqilhLk7zNtnR/FdfJc0ah5n8GjBaZ5EchVWDk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=tQTjt3FfxDLYJnyZPsGPZLdflckY6P3QqxCMDuAo39SxECXd18kh7+kAa++w5l1sj
-	 2o5vE1FZFagA84ebTb24+KCXwNjq5I20uGJ/ZnKBltZcBBlynmbXr+R8EH+3phZVpW
-	 CSuPRPFF0VOAQHIe84VIf4Vx4arIaRLzKuZieObc=
+	b=odKjNemZNr0rzXCR+NQJuLp8xc/p2F6C5w4r2O5EaaLjt4V7ziY6AJvoTp/+T0ovn
+	 ciIqDbUc/OXNHME+3YmHcJ/0pMGn1UZY7pA3BzvLvUaZqSwSTf1EPlLN+qJWISGrC6
+	 Q27ZxtNFRXIvIotzAxu/vkX8JhPTuduAOu57geZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfG1RaS (ORCPT
+        id S1726252AbfG1RaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 13:30:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36552 "EHLO mail.kernel.org"
+        Sun, 28 Jul 2019 13:30:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbfG1RaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 13:30:18 -0400
-Subject: Re: [GIT PULL] ARM: SoC fixes
+        id S1726099AbfG1RaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 13:30:19 -0400
+Subject: Re: [GIT PULL] USB fixes for 5.3-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564335017;
-        bh=+Fb/AstsPPb/152WXJWNxzWcmSDViHx0aDjW5JyAh1I=;
+        s=default; t=1564335018;
+        bh=jmyG8VqilhLk7zNtnR/FdfJc0ah5n8GjBaZ5EchVWDk=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xW5sXgtPF3C8w/K4sek/7TH4b2Ltnorn9QHKTPxCx/vWTbywSL5q9DPw8AH+DYGyy
-         33AyrJJOOeYe6L4tn3d4bYJfmyB9Jcst2golfHZFTJyr/EG/EbhDV3kkFmsRKb01fk
-         NoFAo/uZDx9K4WUkNjB+1D7Ew9JWh3pKoCDTl5lw=
+        b=mwzOxTp/vmZplJ+oxoI94Bt8L+1NcOgy8AqccGD1DvuOCqEr0lz9+h2fNpbXrhJeq
+         dNf5xwd32T+f4Sh/aG9zy/WtE9l2NJmk3eC55tc5+31T43t5b3ldamsQKx8ZiMx7Rk
+         vAUC2hMYNn/kkxuqgoPKM0t1xwPgwP0WWBZXoFm8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190728063715.ensdmo7jyimrsez4@localhost>
-References: <20190728063715.ensdmo7jyimrsez4@localhost>
+In-Reply-To: <20190728115928.GA15888@kroah.com>
+References: <20190728115928.GA15888@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190728063715.ensdmo7jyimrsez4@localhost>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
-X-PR-Tracked-Commit-Id: 7bd9d465140a93c0a21ba2d2f426451c78bfcc7d
+X-PR-Tracked-Message-Id: <20190728115928.GA15888@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.3-rc2
+X-PR-Tracked-Commit-Id: d39b5bad8658d6d94cb2d98a44a7e159db4f5030
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5bb575bcc6d1564340f969c5aa2bff8a500b239f
-Message-Id: <156433501738.9558.9696751081969592633.pr-tracker-bot@kernel.org>
-Date:   Sun, 28 Jul 2019 17:30:17 +0000
-To:     Olof Johansson <olof@lixom.net>
-Cc:     torvalds@linux-foundation.org, olof@lixom.net,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        soc@kernel.org, arm@kernel.org
+X-PR-Merge-Commit-Id: 29af915cabd4d51a2306008f84ee447f3a0d4e8f
+Message-Id: <156433501848.9558.8653102684901126956.pr-tracker-bot@kernel.org>
+Date:   Sun, 28 Jul 2019 17:30:18 +0000
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 27 Jul 2019 23:37:15 -0700:
+The pull request you sent on Sun, 28 Jul 2019 13:59:28 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.3-rc2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5bb575bcc6d1564340f969c5aa2bff8a500b239f
+https://git.kernel.org/torvalds/c/29af915cabd4d51a2306008f84ee447f3a0d4e8f
 
 Thank you!
 
