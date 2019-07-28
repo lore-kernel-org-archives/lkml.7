@@ -2,153 +2,209 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D22C7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27090C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED3602087C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B4B2077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:35:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ARdtilcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbfG1Pef (ORCPT
+        id S1726180AbfG1Pfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 11:34:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:33594 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbfG1Pef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 11:34:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59211344;
-        Sun, 28 Jul 2019 08:34:34 -0700 (PDT)
-Received: from [10.37.12.40] (unknown [10.37.12.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E3663F71F;
-        Sun, 28 Jul 2019 08:34:32 -0700 (PDT)
-Subject: Re: [patch 5/5] arm64: compat: vdso: Use legacy syscalls as fallback
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Bolle <pebolle@tiscali.nl>, Will Deacon <will@kernel.org>
-References: <20190728131251.622415456@linutronix.de>
- <20190728131648.971361611@linutronix.de>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <68c3f5ca-6c38-4a82-4586-6b33fd54390a@arm.com>
-Date:   Sun, 28 Jul 2019 16:35:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 28 Jul 2019 11:35:47 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39218 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfG1Pfr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 11:35:47 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b7so26565633pls.6
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 08:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pm6pwIPdlV9wRk+JitjPlIfT8uYdgqGZKgDDx5JXMvo=;
+        b=ARdtilcr0o+k6afqdq26dB6uiPQmwsK/dIg5CCUfize/+2sZckkq9SBfSdltYDqdvK
+         CmUecGvwbkSdnSWtSvlXRjuxZcdFejEOeqPY3zzYmNgSuYBBQd3SV4PGISic/QDX6sxV
+         tPS9OrxdPUdOe16wYiDYpxXi115+Z/pjxkEZU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pm6pwIPdlV9wRk+JitjPlIfT8uYdgqGZKgDDx5JXMvo=;
+        b=Uld8qJxHpGnMyaeKgZzC61qh8VRGDDOXBDBUwEmGBq7iZN3D0ICHYOhRh5J6QYOPZs
+         5cu0Bue1ErV0VSjCFxRo75JEaaBaHK2of59B8uZY6NNPyk4PZtTsn9AU/18c1lq1QdVI
+         MMnL/lOiU4TTgkAKQ7OLweheFb1VFT1Ass6L8kRXTjJKYiCmx/W3CmWiCIOYzwDEu9r0
+         44by2nYlF/Mi5xWm2PyeoQDU2clWTwpAHpDok7lFTwi5j/Zngnk9RNZYYdKtz6W5JQal
+         6mWZNps+ad4q2lJYgNgjru0gA++SD2FKFYHFjVgzY0i/u09OFAzkXJAhEMVds2AlZkWN
+         PIsA==
+X-Gm-Message-State: APjAAAXNfrLhSKQdkGA4tcru579jPO3/b9Z5rNiYrwWfZazwtYaQlyK4
+        6fwae7Z9H3UoQIzznq8714U=
+X-Google-Smtp-Source: APXvYqwlh8jFqpMNB2vT4vmBRbLrB7P3r3gqG6V5tDxzBhF0Er/215XImhQMOAIPhhTKSVtXcooiBA==
+X-Received: by 2002:a17:902:b702:: with SMTP id d2mr109216801pls.259.1564328146304;
+        Sun, 28 Jul 2019 08:35:46 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id x24sm55904341pgl.84.2019.07.28.08.35.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 28 Jul 2019 08:35:45 -0700 (PDT)
+Date:   Sun, 28 Jul 2019 11:35:44 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jade Alglave <j.alglave@ucl.ac.uk>, linux-arch@vger.kernel.org,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2] lkmm/docs: Correct ->prop example with additional rfe
+ link
+Message-ID: <20190728153544.GA87531@google.com>
+References: <20190728031303.164545-1-joel@joelfernandes.org>
+ <Pine.LNX.4.44L0.1907281027160.6532-100000@netrider.rowland.org>
+ <20190728151959.GA82871@google.com>
+ <20190728152806.GB26905@tardis>
 MIME-Version: 1.0
-In-Reply-To: <20190728131648.971361611@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190728152806.GB26905@tardis>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/19 2:12 PM, Thomas Gleixner wrote:
-> The generic VDSO implementation uses the Y2038 safe clock_gettime64() and
-> clock_getres_time64() syscalls as fallback for 32bit VDSO. This breaks
-> seccomp setups because these syscalls might be not (yet) allowed.
+On Sun, Jul 28, 2019 at 11:28:06PM +0800, Boqun Feng wrote:
+> On Sun, Jul 28, 2019 at 11:19:59AM -0400, Joel Fernandes wrote:
+> > On Sun, Jul 28, 2019 at 10:48:51AM -0400, Alan Stern wrote:
+> > > On Sat, 27 Jul 2019, Joel Fernandes (Google) wrote:
+> > > 
+> > > > The lkmm example about ->prop relation should describe an additional rfe
+> > > > link between P1's store to y and P2's load of y, which should be
+> > > > critical to establishing the ordering resulting in the ->prop ordering
+> > > > on P0. IOW, there are 2 rfe links, not one.
+> > > > 
+> > > > Correct these in the docs to make the ->prop ordering on P0 more clear.
+> > > > 
+> > > > Cc: kernel-team@android.com
+> > > > Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > ---
+> > > 
+> > > This is not a good update.  See below...
+> > 
+> > No problem, thanks for the feedback. I am new to the LKMM so please bear
+> > with me.. I should have tagged this RFC.
+> > 
+> > > >  .../memory-model/Documentation/explanation.txt  | 17 ++++++++++-------
+> > > >  1 file changed, 10 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
+> > > > index 68caa9a976d0..aa84fce854cc 100644
+> > > > --- a/tools/memory-model/Documentation/explanation.txt
+> > > > +++ b/tools/memory-model/Documentation/explanation.txt
+> > > > @@ -1302,8 +1302,8 @@ followed by an arbitrary number of cumul-fence links, ending with an
+> > > >  rfe link.  You can concoct more exotic examples, containing more than
+> > > >  one fence, although this quickly leads to diminishing returns in terms
+> > > >  of complexity.  For instance, here's an example containing a coe link
+> > > > -followed by two fences and an rfe link, utilizing the fact that
+> > > > -release fences are A-cumulative:
+> > > > +followed by a fence, an rfe link, another fence and and a final rfe link,
+> > >                                                    ^---^
+> > > > +utilizing the fact that release fences are A-cumulative:
+> > > 
+> > > I don't like this, for two reasons.  First is the repeated "and" typo.
+> > 
+> > Will fix the trivial typo, sorry about that.
+> > 
+> > > More importantly, it's not necessary to go into this level of detail; a
+> > > better revision would be:
+> > > 
+> > > +followed by two cumul-fences and an rfe link, utilizing the fact that
+> > > 
+> > > This is appropriate because the cumul-fence relation is defined to 
+> > > contain the rfe link which you noticed wasn't mentioned explicitly.
+> > 
+> > No, I am talking about the P1's store to Y and P2's load of Y. That is not
+> > through a cumul-fence so I don't understand what you meant? That _is_ missing
+> > the rfe link I am referring to, that is left out.
+> > 
+> > The example says r2 = 1 and then we work backwards from that. r2 could very
+> > well have been 0, there's no fence or anything involved, it just happens to
+> > be the executation pattern causing r2 = 1 and hence the rfe link. Right?
+> > 
+> > > >  	int x, y, z;
+> > > >  
+> > > > @@ -1334,11 +1334,14 @@ If x = 2, r0 = 1, and r2 = 1 after this code runs then there is a prop
+> > > >  link from P0's store to its load.  This is because P0's store gets
+> > > >  overwritten by P1's store since x = 2 at the end (a coe link), the
+> > > >  smp_wmb() ensures that P1's store to x propagates to P2 before the
+> > > > -store to y does (the first fence), the store to y propagates to P2
+> > > > -before P2's load and store execute, P2's smp_store_release()
+> > > > -guarantees that the stores to x and y both propagate to P0 before the
+> > > > -store to z does (the second fence), and P0's load executes after the
+> > > > -store to z has propagated to P0 (an rfe link).
+> > > > +store to y does (the first fence), P2's store to y happens before P2's
+> > > ---------------------------------------^
+> > > 
+> > > This makes no sense, since P2 doesn't store to y.  You meant P1's store
+> > > to y.  Also, the use of "happens before" is here unnecessarily
+> > > ambiguous (is it an informal usage or does it refer to the formal
+> > > happens-before relation?).  The original "propagates to" is better.
+> > 
+> > Will reword this.
+> > 
+> > > > +load of y (rfe link), P2's smp_store_release() ensures that P2's load
+> > > > +of y executes before P2's store to z (second fence), which implies that
+> > > > +that stores to x and y propagate to P2 before the smp_store_release(), which
+> > > > +means that P2's smp_store_release() will propagate stores to x and y to all
+> > > > +CPUs before the store to z propagates (A-cumulative property of this fence).
+> > > > +Finally P0's load of z executes after P2's store to z has propagated to
+> > > > +P0 (rfe link).
+> > > 
+> > > Again, a better change would be simply to replace the two instances of
+> > > "fence" in the original text with "cumul-fence".
+> > 
+> > Ok that's fine. But I still feel the rfe is not a part of the cumul-fence.
+> > The fences have nothing to do with the rfe. Or, I am missing something quite
+> > badly.
+> > 
+> > Boqun, did you understand what Alan is saying?
+> > 
 > 
-> Implement the 32bit variants which use the legacy syscalls and select the
-> variant in the core library.
+> I think 'cumul-fence' that Alan mentioned is not a fence, but a
+> relation, which could be the result of combining a rfe relation and a
+> A-cumulative fence relation. Please see the section "PROPAGATION ORDER
+> RELATION: cumul-fence" or the definition of cumul-fence in
+> linux-kernel.cat.
 > 
-> The 64bit time variants are not removed because they are required for the
-> time64 based vdso accessors.
->
+> Did I get you right, Alan? If so, your suggestion is indeed a better
+> change.
 
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+To be frank, I don't think it is better if that's what Alan meant. It is
+better to be explicit about the ->rfe so that the reader walking through the
+example can clearly see the ordering and make sense of it.
 
-> Reported-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Reported-by: Paul Bolle <pebolle@tiscali.nl>
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Fixes: 00b26474c2f1 ("lib/vdso: Provide generic VDSO implementation")
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> Note:
-> 
-> The NULL pointer check in the getres/getres32() fallbacks is just wrong.
-> The proper return code for a NULL pointer is -EFAULT. How did this ever
-> pass any posix test? Also it just should go away because any other invalid
-> pointer will be caught in the syscall anyway. The clockid check is also
-> part of the syscall so no point in having it here again. Handling calls
-> with invalid arguments is not really a performance critical operation.
-> 
-> ---
->  arch/arm64/include/asm/vdso/compat_gettimeofday.h |   40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
-> 
-> --- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-> +++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-> @@ -16,6 +16,8 @@
->  
->  #define VDSO_HAS_CLOCK_GETRES		1
->  
-> +#define VDSO_HAS_32BIT_FALLBACK		1
-> +
->  static __always_inline
->  int gettimeofday_fallback(struct __kernel_old_timeval *_tv,
->  			  struct timezone *_tz)
-> @@ -52,6 +54,23 @@ long clock_gettime_fallback(clockid_t _c
->  }
->  
->  static __always_inline
-> +long clock_gettime32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-> +{
-> +	register struct old_timespec32 *ts asm("r1") = _ts;
-> +	register clockid_t clkid asm("r0") = _clkid;
-> +	register long ret asm ("r0");
-> +	register long nr asm("r7") = __NR_compat_clock_gettime;
-> +
-> +	asm volatile(
-> +	"	swi #0\n"
-> +	: "=r" (ret)
-> +	: "r" (clkid), "r" (ts), "r" (nr)
-> +	: "memory");
-> +
-> +	return ret;
-> +}
-> +
-> +static __always_inline
->  int clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
->  {
->  	register struct __kernel_timespec *ts asm("r1") = _ts;
-> @@ -61,6 +80,27 @@ int clock_getres_fallback(clockid_t _clk
->  
->  	/* The checks below are required for ABI consistency with arm */
->  	if ((_clkid >= MAX_CLOCKS) && (_ts == NULL))
-> +		return -EINVAL;
-> +
-> +	asm volatile(
-> +	"       swi #0\n"
-> +	: "=r" (ret)
-> +	: "r" (clkid), "r" (ts), "r" (nr)
-> +	: "memory");
-> +
-> +	return ret;
-> +}
-> +
-> +static __always_inline
-> +int clock_getres32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-> +{
-> +	register struct old_timespec32 *ts asm("r1") = _ts;
-> +	register clockid_t clkid asm("r0") = _clkid;
-> +	register long ret asm ("r0");
-> +	register long nr asm("r7") = __NR_compat_clock_getres;
-> +
-> +	/* The checks below are required for ABI consistency with arm */
-> +	if ((_clkid >= MAX_CLOCKS) && (_ts == NULL))
->  		return -EINVAL;
->  
->  	asm volatile(
-> 
-> 
+Just saying 'cumul-fence' and then hoping the reader sees the light is quite
+a big assumption and makes the document less readable.
 
--- 
-Regards,
-Vincenzo
+I mean the fact that you are asking Alan for clarification, means that it is
+not that obvious ;)
+
+thanks,
+
+ - Joel
+
+
