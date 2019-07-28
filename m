@@ -2,184 +2,118 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A72C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC262C7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3A92075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:20:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="hB60gM+N"
+	by mail.kernel.org (Postfix) with ESMTP id 8C2CA2075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:20:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbfG1PUD (ORCPT
+        id S1726216AbfG1PUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 11:20:03 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34332 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfG1PUD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 11:20:03 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so20736236pgc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 08:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a9skpT1sSwUqktDYaW2plKE+BXOaJldB9nBUVKcxchI=;
-        b=hB60gM+N+CFJTC1n8Gee1qgCMfzgrUBRv0DO6eaWEoUf3Fuemtg1gDGXZYGQBqe0SV
-         0I5yfm7NE6yetEcSHoo0B+Io+WNLOM/W3wBI55Y4XBwHKgWdEQowbXdJY5CLWtQLePPP
-         +PnzM3apy7+eAtTcj3Tutt8hMsEpxtLRtRmtI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a9skpT1sSwUqktDYaW2plKE+BXOaJldB9nBUVKcxchI=;
-        b=tOHc6hauIW4CFTfIZd9go61y/bOfY6oGFJs0zwo/xXAHDrLt9UqvEO8Qv82DjM6NqL
-         fZJzTbmCyEdOMjHlLaA9+DjJghBoSjcLaZDQqqYoji1zpwI+RWn8m5KypruFzUp4eUjL
-         S7hU0udbjy5sgv+d/Z8WOFWq4Q7XzvDBGyWoMcdn1oedvrA/RiPKzvh1hcJIUyda0K3J
-         0FbcOEuxpWOqnK9hveg9d+klDaSlnshNujeS63736ji6OQVicW/H5QeEioC+AwoLGb/3
-         af5fwM/UXOzJ9eIJIOoKDatKooOi8IXDzflJFw+ND/8vhduAwYxte7X1jR0SPKYpDE3l
-         p7sg==
-X-Gm-Message-State: APjAAAXcmtTktjzk9UX1eajyJD6nSJGF1gpXE3VdipzGicRDoJ6XEhNo
-        lg9ATG7eE61RT+1vQG1F70I=
-X-Google-Smtp-Source: APXvYqyix+tvRepys2JtpV9mvuGiLyR0jCGibp7tqGOzYMs0C0HQTYDXC1Ce55coClkbsyOHOFMSAw==
-X-Received: by 2002:a63:5550:: with SMTP id f16mr83867531pgm.426.1564327201663;
-        Sun, 28 Jul 2019 08:20:01 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id w4sm77496264pfn.144.2019.07.28.08.20.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 08:20:00 -0700 (PDT)
-Date:   Sun, 28 Jul 2019 11:19:59 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jade Alglave <j.alglave@ucl.ac.uk>, linux-arch@vger.kernel.org,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v2] lkmm/docs: Correct ->prop example with additional rfe
- link
-Message-ID: <20190728151959.GA82871@google.com>
-References: <20190728031303.164545-1-joel@joelfernandes.org>
- <Pine.LNX.4.44L0.1907281027160.6532-100000@netrider.rowland.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1907281027160.6532-100000@netrider.rowland.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 28 Jul 2019 11:20:47 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51204 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbfG1PUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 11:20:47 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D7C042011E2;
+        Sun, 28 Jul 2019 17:20:44 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C90682011D4;
+        Sun, 28 Jul 2019 17:20:44 +0200 (CEST)
+Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 1B2C52060A;
+        Sun, 28 Jul 2019 17:20:44 +0200 (CEST)
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     shawnguo@kernel.org
+Cc:     s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        l.stach@pengutronix.de, ccaione@baylibre.com, abel.vesa@nxp.com,
+        baruch@tkos.co.il, andrew.smirnov@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, shengjiu.wang@nxp.com,
+        angus@akkea.ca, agx@sigxcpu.org, Anson.Huang@nxp.com,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v4] arm64: dts: imx8mq: Init rates and parents configs for clocks
+Date:   Sun, 28 Jul 2019 18:20:40 +0300
+Message-Id: <20190728152040.15323-1-daniel.baluta@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 10:48:51AM -0400, Alan Stern wrote:
-> On Sat, 27 Jul 2019, Joel Fernandes (Google) wrote:
-> 
-> > The lkmm example about ->prop relation should describe an additional rfe
-> > link between P1's store to y and P2's load of y, which should be
-> > critical to establishing the ordering resulting in the ->prop ordering
-> > on P0. IOW, there are 2 rfe links, not one.
-> > 
-> > Correct these in the docs to make the ->prop ordering on P0 more clear.
-> > 
-> > Cc: kernel-team@android.com
-> > Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> 
-> This is not a good update.  See below...
+From: Abel Vesa <abel.vesa@nxp.com>
 
-No problem, thanks for the feedback. I am new to the LKMM so please bear
-with me.. I should have tagged this RFC.
+Add the initial configuration for clocks that need default parent and rate
+setting. This is based on the vendor tree clock provider parents and rates
+configuration except this is doing the setup in dts rather then using clock
+consumer API in a clock provider driver.
 
-> >  .../memory-model/Documentation/explanation.txt  | 17 ++++++++++-------
-> >  1 file changed, 10 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-> > index 68caa9a976d0..aa84fce854cc 100644
-> > --- a/tools/memory-model/Documentation/explanation.txt
-> > +++ b/tools/memory-model/Documentation/explanation.txt
-> > @@ -1302,8 +1302,8 @@ followed by an arbitrary number of cumul-fence links, ending with an
-> >  rfe link.  You can concoct more exotic examples, containing more than
-> >  one fence, although this quickly leads to diminishing returns in terms
-> >  of complexity.  For instance, here's an example containing a coe link
-> > -followed by two fences and an rfe link, utilizing the fact that
-> > -release fences are A-cumulative:
-> > +followed by a fence, an rfe link, another fence and and a final rfe link,
->                                                    ^---^
-> > +utilizing the fact that release fences are A-cumulative:
-> 
-> I don't like this, for two reasons.  First is the repeated "and" typo.
+Note that by adding the initial rate setting for audio_pll1/audio_pll
+setting we need to remove it from imx8mq-librem5-devkit.dts
 
-Will fix the trivial typo, sorry about that.
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Tested-by: Angus Ainslie (Purism) <angus@akkea.ca>
+---
+Changes since v3:
+	- fix extra new lines
 
-> More importantly, it's not necessary to go into this level of detail; a
-> better revision would be:
-> 
-> +followed by two cumul-fences and an rfe link, utilizing the fact that
-> 
-> This is appropriate because the cumul-fence relation is defined to 
-> contain the rfe link which you noticed wasn't mentioned explicitly.
+ .../dts/freescale/imx8mq-librem5-devkit.dts   |  5 -----
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 19 +++++++++++++++++++
+ 2 files changed, 19 insertions(+), 5 deletions(-)
 
-No, I am talking about the P1's store to Y and P2's load of Y. That is not
-through a cumul-fence so I don't understand what you meant? That _is_ missing
-the rfe link I am referring to, that is left out.
-
-The example says r2 = 1 and then we work backwards from that. r2 could very
-well have been 0, there's no fence or anything involved, it just happens to
-be the executation pattern causing r2 = 1 and hence the rfe link. Right?
-
-> >  	int x, y, z;
-> >  
-> > @@ -1334,11 +1334,14 @@ If x = 2, r0 = 1, and r2 = 1 after this code runs then there is a prop
-> >  link from P0's store to its load.  This is because P0's store gets
-> >  overwritten by P1's store since x = 2 at the end (a coe link), the
-> >  smp_wmb() ensures that P1's store to x propagates to P2 before the
-> > -store to y does (the first fence), the store to y propagates to P2
-> > -before P2's load and store execute, P2's smp_store_release()
-> > -guarantees that the stores to x and y both propagate to P0 before the
-> > -store to z does (the second fence), and P0's load executes after the
-> > -store to z has propagated to P0 (an rfe link).
-> > +store to y does (the first fence), P2's store to y happens before P2's
-> ---------------------------------------^
-> 
-> This makes no sense, since P2 doesn't store to y.  You meant P1's store
-> to y.  Also, the use of "happens before" is here unnecessarily
-> ambiguous (is it an informal usage or does it refer to the formal
-> happens-before relation?).  The original "propagates to" is better.
-
-Will reword this.
-
-> > +load of y (rfe link), P2's smp_store_release() ensures that P2's load
-> > +of y executes before P2's store to z (second fence), which implies that
-> > +that stores to x and y propagate to P2 before the smp_store_release(), which
-> > +means that P2's smp_store_release() will propagate stores to x and y to all
-> > +CPUs before the store to z propagates (A-cumulative property of this fence).
-> > +Finally P0's load of z executes after P2's store to z has propagated to
-> > +P0 (rfe link).
-> 
-> Again, a better change would be simply to replace the two instances of
-> "fence" in the original text with "cumul-fence".
-
-Ok that's fine. But I still feel the rfe is not a part of the cumul-fence.
-The fences have nothing to do with the rfe. Or, I am missing something quite
-badly.
-
-Boqun, did you understand what Alan is saying?
-
-thanks,
-
- - Joel
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+index 683a11035643..c702ccc82867 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+@@ -169,11 +169,6 @@
+ 	};
+ };
+ 
+-&clk {
+-	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL2>;
+-	assigned-clock-rates = <786432000>, <722534400>;
+-};
+-
+ &dphy {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 02fbd0625318..a55d72ba2e05 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -494,6 +494,25 @@
+ 				clock-names = "ckil", "osc_25m", "osc_27m",
+ 				              "clk_ext1", "clk_ext2",
+ 				              "clk_ext3", "clk_ext4";
++				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
++					<&clk IMX8MQ_AUDIO_PLL1>,
++					<&clk IMX8MQ_AUDIO_PLL2>,
++					<&clk IMX8MQ_CLK_AHB>,
++					<&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
++					<&clk IMX8MQ_CLK_AUDIO_AHB>,
++					<&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
++					<&clk IMX8MQ_CLK_NOC>;
++				assigned-clock-parents = <0>,
++						<0>,
++						<0>,
++						<&clk IMX8MQ_SYS1_PLL_133M>,
++						<&clk IMX8MQ_SYS1_PLL_266M>,
++						<&clk IMX8MQ_SYS2_PLL_500M>,
++						<&clk IMX8MQ_CLK_27M>,
++						<&clk IMX8MQ_SYS1_PLL_800M>;
++				assigned-clock-rates = <593999999>,
++						<786432000>,
++						<722534400>;
+ 			};
+ 
+ 			src: reset-controller@30390000 {
+-- 
+2.17.1
 
