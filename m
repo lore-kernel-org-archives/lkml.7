@@ -2,70 +2,90 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BACC7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54652C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03CEA214C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B7520657
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfG1UIo (ORCPT
+        id S1726413AbfG1UWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 16:08:44 -0400
-Received: from mail-lj1-f171.google.com ([209.85.208.171]:33108 "EHLO
-        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfG1UIo (ORCPT
+        Sun, 28 Jul 2019 16:22:48 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35031 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfG1UWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 16:08:44 -0400
-Received: by mail-lj1-f171.google.com with SMTP id h10so56468667ljg.0
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 13:08:43 -0700 (PDT)
+        Sun, 28 Jul 2019 16:22:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x25so56543056ljh.2;
+        Sun, 28 Jul 2019 13:22:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=8Ehe9L15ikwLaOegvSbffqJNAvcSP5VfCjBEA7JSyTc=;
-        b=bfXCKeDzFYrg4MDemsuOpzg4Sp1nFZbU2vqp5UM6hom89AfV5gv0Sx7PuDAL0awUAU
-         UlY5NBJ5vY15u1NWeNfkT8vuL6x9VCinedHT6rrJX+Lqt9kN5OnIv9+da1v9uy4dKrlE
-         Pg2mNUtyskepb6coBNiRDn8k07M5Kc0jXpk3uycVKZeIIs5RSftlMKjoM5i5WXfWy1gY
-         E0FCRpjqA3wVPADGAwTfH8mJaRAQFYLMtC1Mm/W6eCtyPJFRo1/RAYAaug7JhRW/PHGZ
-         NLo8b/Z4cRhM4UH4y9jXc++1YfhZ0nMPYgICeEUQGriNnevFAZ5ewMR43TyY5dw599Jj
-         MM1Q==
-X-Gm-Message-State: APjAAAWv958lrScpp+8wmsYNGFwswvYPGaltr676KOysWtJuAwbVrsb3
-        l7rPVlrzYEr5a6oIWJ+XAhro23j8JoQ1e1aytOOCZBmk5AI=
-X-Google-Smtp-Source: APXvYqzMDT7jLYyQwW9rgotscZ5/OzUxcCpfRFZVxxEtiiDmgFqSMegnW8RjxzWH+5JfETP9r/+o5SYBwlzM8A7wA8U=
-X-Received: by 2002:a2e:9643:: with SMTP id z3mr56707238ljh.43.1564344522278;
- Sun, 28 Jul 2019 13:08:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H30JE1TBEsAuw94izU6UpoMxwvUnP+RXDRNZnh1O8pc=;
+        b=NLzJaWYk5pMNRm/jy6AFK25+6c/JRuiw6a2ZmsVY9Jk0rGXvm9qACQVpp1krrsUqhN
+         WjiTp9weCHhsYEZPZ34ofjaooYmsITNBwfBMRlhfJXJZL6U5RrbJP8dnrLk8K3xeMemD
+         BsCdoOYcOp73v7nJe++hkZweON+IrnjFEHiYtdOPQDWernOaqUDrkkWSOWQ8w2hrniJX
+         iq/zg/OqExeQ5obLpXS0azII9NH2WQegjMCrK6W3Up2FweU6FwSttyYg+W3F9xklEjT5
+         xeYFTkidA0pZOFNLbV/sU5DHAm9Gc8KqiSvhX8MBsaXVQu+9gIBB87BPwUHR2mKvDcNe
+         B8Bw==
+X-Gm-Message-State: APjAAAVw9yrGvkX3Y9WaxgQqHauF9mleTbSwOPNzyHk6e1pxChU9gXC6
+        4matc8CsCj0kWRKmnMlRGRc=
+X-Google-Smtp-Source: APXvYqygX2Y5dS/gnwNqOZKPSCByVOdOdiau/6PoALAhMf0ml07RPwI9uM2EKDeRpNnJ5yE9cYpa9g==
+X-Received: by 2002:a2e:814e:: with SMTP id t14mr20112908ljg.167.1564345365258;
+        Sun, 28 Jul 2019 13:22:45 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id z17sm12395917ljc.37.2019.07.28.13.22.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Jul 2019 13:22:44 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Michal Simek <monstr@monstr.eu>, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] PCI: Convert pci_resource_to_user() to a weak function
+Date:   Sun, 28 Jul 2019 23:22:08 +0300
+Message-Id: <20190728202213.15550-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Sun, 28 Jul 2019 22:08:06 +0200
-Message-ID: <CAGnkfhySwXY7YwuQezyx6cEpemZW4Hox1_4fQJm3-5hvM3G6gw@mail.gmail.com>
-Subject: build error
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Architectures currently define HAVE_ARCH_PCI_RESOURCE_TO_USER if they want
+to provide their own pci_resource_to_user() implementation. This could be
+simplified if we make the generic version a weak function. Thus,
+architecture specific versions will automatically override the generic one.
 
-I get this build error with 5.3-rc2"
+Denis Efremov (5):
+  PCI: Convert pci_resource_to_user to a weak function
+  microblaze/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+  mips/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+  powerpc/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+  spark/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
 
-# make
-arch/arm64/Makefile:58: gcc not found, check CROSS_COMPILE_COMPAT.  Stop.
+ arch/microblaze/include/asm/pci.h |  2 --
+ arch/mips/include/asm/pci.h       |  1 -
+ arch/powerpc/include/asm/pci.h    |  2 --
+ arch/sparc/include/asm/pci.h      |  2 --
+ drivers/pci/pci.c                 |  8 ++++++++
+ include/linux/pci.h               | 18 +++---------------
+ 6 files changed, 11 insertions(+), 22 deletions(-)
 
-I didn't bisect the tree, but I guess that this kconfig can be related
-
-# grep CROSS_COMPILE_COMPAT .config
-CONFIG_CROSS_COMPILE_COMPAT_VDSO=""
-
-Does someone have any idea? Am I missing something?
-
-Thanks,
 -- 
-Matteo Croce
-per aspera ad upstream
+2.21.0
+
