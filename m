@@ -2,86 +2,137 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA55C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFD8C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937B521655
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95EEC2075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:28:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKmOMyi1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbfG1LTc (ORCPT
+        id S1726044AbfG1L2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 07:19:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:60268 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfG1LTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 07:19:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1C89344;
-        Sun, 28 Jul 2019 04:19:29 -0700 (PDT)
-Received: from [10.163.1.126] (unknown [10.163.1.126])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 855083F71F;
-        Sun, 28 Jul 2019 04:19:23 -0700 (PDT)
-Subject: Re: [PATCH v9 00/21] Generic page walk and ptdump
-To:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190722154210.42799-1-steven.price@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <794fb469-00c8-af10-92a8-cb7c0c83378b@arm.com>
-Date:   Sun, 28 Jul 2019 16:50:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190722154210.42799-1-steven.price@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 28 Jul 2019 07:28:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33808 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfG1L2Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 07:28:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id 31so58835983wrm.1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 04:28:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=Rw98zLA5WI0SsNjkcVzuBXmqholrN3Tz8/1ws8gGo3A=;
+        b=EKmOMyi1GnyJ0v0v6hZkyWrhORPZeNXtzcD1UWRKayC+tRueXQbcN7gkd6cS36dHeX
+         zvRYXQ1T29zrDJ4vI3dih6uHe5M9tPVOuKD09RdT9BVTS3Q9efADb3bxuz9jmcocRRxg
+         PwqNPH+o911yXVWmUOsKPb2Vvgvds0LgoMDePWJjNeGbM6kdHkgSB/byDOsU3MNd1d2G
+         5oalhYzK8dexUFOKvxfncvTIhBTfC0K9TEaZpWNeKgZrz49xONGOxt64wuCS/KcB3Ciw
+         eE2HHAFOXuPKzlZjSSIFyBZN3M9s+zlnf5g3tjgIr56E7oIVwV/pUiNXj31Nnv3qkmfh
+         qeSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=Rw98zLA5WI0SsNjkcVzuBXmqholrN3Tz8/1ws8gGo3A=;
+        b=QVDIg+5bYs0ylEwXvccGxRPcg/bKVo3Zsd/ClRoyVxzRo9FWqWBoFScUznCcygWvpO
+         FPDyOEoUFOTufgj5831gw5r0RGvEeTytyDUxFsDn0vJZSmjw9htXlmrEEaTpwrELEHfL
+         82FQZkXx3+UA7d4I4Po+ATCndYP2feJGSm3yudKZ+7mrwgINN852RGiJ5z0r/u4XlvKN
+         D4sp15O1c8sq9H/9POrjbh20jyUiY7KERiUbVeyZT6JUqW03/MoRd9xpsWQlptdP/hpM
+         rqi0XTehOK21MtFImccJKR0KlXoRiSZDXr2/vsHeFN0xxOGQQm5riUKGpgzfvZO8Hb/Q
+         4sZw==
+X-Gm-Message-State: APjAAAVEEiTkwxWvQgF0CDnsyULs51nLalvRLikA1azt3OjpvsyXU19n
+        DrbwUr1YvyPQHplpJnrlkwlIjZZqiog=
+X-Google-Smtp-Source: APXvYqz7y34SHBVLYFrCnc0V9bg/QxIvFSgYnnqL495IcEqr9S7VpMfuJInxKx0xBtatB2sb5T6owg==
+X-Received: by 2002:a5d:540e:: with SMTP id g14mr5009423wrv.346.1564313301333;
+        Sun, 28 Jul 2019 04:28:21 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id r12sm69805174wrt.95.2019.07.28.04.28.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 28 Jul 2019 04:28:20 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai, gregkh@linuxfoundation.org
+Subject: [PATCH 0/9] habanalabs: support open device by multiple processes
+Date:   Sun, 28 Jul 2019 14:28:09 +0300
+Message-Id: <20190728112818.30397-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/22/2019 09:11 PM, Steven Price wrote:
-> Steven Price (21):
->   arc: mm: Add p?d_leaf() definitions
->   arm: mm: Add p?d_leaf() definitions
->   arm64: mm: Add p?d_leaf() definitions
->   mips: mm: Add p?d_leaf() definitions
->   powerpc: mm: Add p?d_leaf() definitions
->   riscv: mm: Add p?d_leaf() definitions
->   s390: mm: Add p?d_leaf() definitions
->   sparc: mm: Add p?d_leaf() definitions
->   x86: mm: Add p?d_leaf() definitions
+This patch-set removes the limitation in the driver's code that only a
+single process will have a file-descriptor of the device at any point of
+time.
 
-The set of architectures here is neither complete (e.g ia64, parisc missing)
-nor does it only include architectures which had previously enabled PTDUMP
-like arm, arm64, powerpc, s390 and x86. Is there any reason for this set of
-archs to be on the list and not the others which are currently falling back
-on generic p?d_leaf() defined later in the series ? Are the missing archs
-do not have huge page support in the MMU ? If there is a direct dependency
-for these symbols with CONFIG_HUGETLB_PAGE then it must be checked before
-falling back on the generic ones.
+This limitation needs to be removed because of two reasons:
 
-Now that pmd_leaf() and pud_leaf() are getting used in walk_page_range() these
-functions need to be defined on all arch irrespective if they use PTDUMP or not
-or otherwise just define it for archs which need them now for sure i.e x86 and
-arm64 (which are moving to new generic PTDUMP framework). Other archs can
-implement these later.
+1. Blocking multiple processes and trying to account them was stupid and
+doomed to fail.
+
+2. The driver needs to support system management applications that just
+want to inquire about the device's status while a deep-learning
+application is also running and sending work to the device.
+
+With this patch-set, there can be unlimited number of open
+file-descriptors of the device by unlimited number of user space
+processes.
+
+Having said that, only a single process can submit work to the device, or
+do any change in the device itself via IOCTLs. All the processes can
+perform inqueries about the device using the INFO IOCTL. This is enforced
+by using an object called "context".
+
+The "context" object is created as part of the private data the driver
+saves per an open file-descriptor. For backward compatibility with
+existing user-space code, the "context" is created in a lazy way (it is
+created on the first call to an IOCTL). There can be only a single context
+per process, and only a single context on the entire device is considered
+"compute context". Only the FD which owns the "compute context" can
+call IOCTLs which require this context, such as command submissions,
+memory map, etc.
+
+Only when an FD is completely released, its context will be closed. It
+doesn't matter if the FD is duplicated or shared in user-space, as the
+driver will keep a single private data structure (and single context) per
+that FD.
+
+In addition, a context that was open as a "non-compute context" can be
+upgraded to a "compute context", if there isn't any other "compute
+context". This is because the application usually calls the INOF IOCTL
+before it calls other IOCTLs.
+
+Thanks,
+Oded
+
+Oded Gabbay (9):
+  habanalabs: add handle field to context structure
+  habanalabs: verify context is valid in IOCTLs
+  habanalabs: create context in lazy mode
+  habanalabs: don't change frequency if user context is valid
+  habanalabs: maintain a list of file private data objects
+  habanalabs: define user context as compute context
+  habanalabs: protect only pointer dereference in hard-reset
+  habanalabs: kill user process after CS rollback
+  habanalabs: allow multiple processes to open FD
+
+ drivers/misc/habanalabs/command_buffer.c     |   6 +
+ drivers/misc/habanalabs/command_submission.c |  12 ++
+ drivers/misc/habanalabs/context.c            | 145 ++++++++++++++++---
+ drivers/misc/habanalabs/debugfs.c            |   4 +-
+ drivers/misc/habanalabs/device.c             | 144 +++++++++---------
+ drivers/misc/habanalabs/goya/goya_hwmgr.c    |  11 +-
+ drivers/misc/habanalabs/habanalabs.h         |  39 ++---
+ drivers/misc/habanalabs/habanalabs_drv.c     |  54 ++-----
+ drivers/misc/habanalabs/habanalabs_ioctl.c   |  20 ++-
+ drivers/misc/habanalabs/memory.c             |   6 +
+ 10 files changed, 285 insertions(+), 156 deletions(-)
+
+-- 
+2.17.1
+
