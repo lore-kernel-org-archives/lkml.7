@@ -2,299 +2,95 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C54C76190
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14243C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810A2206A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:52:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lr7sqEhp"
+	by mail.kernel.org (Postfix) with ESMTP id E159A2070D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbfG1Iwb (ORCPT
+        id S1726023AbfG1JGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 04:52:31 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42460 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfG1Iwa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 04:52:30 -0400
-Received: by mail-ed1-f66.google.com with SMTP id v15so56710527eds.9;
-        Sun, 28 Jul 2019 01:52:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lKh5rMewK4RJY3m6/XNHu9JdW8wZ24ygU5BoWkZ52I8=;
-        b=Lr7sqEhpfXMJkMVl+7xTavQdDlmv+hMH0ahg3BWjq3vdMFCp4QVW9S4zbZiR68X9Yr
-         dDMj3xxJNvyHLf3LtSBWO5B9WLdiZmaIEcnrBKoiwfNQXTFFaXAc+CrJCkrp10fZlamg
-         GX0A/YIx30MJMJReLXGF0l4m/9cDhUfCATeo64Kz9TjcQOuqkHYCm/r3OcOc8uzLoz0k
-         /fQyabb+3C1VcviY3TvZ8PqZW0piOT5y/ZEpO1kx9OlK0y5xSQBCNsZCrGGvMrgxp+o8
-         fMpC+GIBWOeJTkEgV9A2s2VwmzXblM9H1VhdX2W5t+EV2SHbNHtbEZ2owFgQi5k/YFqW
-         NiFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lKh5rMewK4RJY3m6/XNHu9JdW8wZ24ygU5BoWkZ52I8=;
-        b=AxQ5eDXRqS2MlTiyiywT7spUmhuzcLRE7Sxo6A5UJYn2ERQru/n0mEUmnSPVz00VRM
-         umFqFWmnq64mZH7G3Wl1hgDvT7bssUKfLehMOfzHSoNtmFfFljMn6df2jcgiORr5FP2M
-         SC0OIh026HIiAAhwD33pOAnuNAOkE+7kaFXEVVR8fnqhYkMcg2XDAHNLEBD6yThC1ezn
-         waFT+AhyaihaChnm/qVfQy42voxVsZhSBX5VJoVcek02ZHuPUMiCYwIZNUMGdtyJF8YY
-         IPRXDSB+T16epcv7jfvYTEN50gtY0nxvqHEY+UuFyxO+2biDZuayMx34SaV20zbj8FA1
-         EEqQ==
-X-Gm-Message-State: APjAAAWW9yLXzh/T0CLuI6HybaLkjp0lo+rlGtKQ/fGpwO1sRAaj6yWb
-        8bLbUkJSWkGm90PujGHU5O98Da9iT7EUCoJEnPW47MgN
-X-Google-Smtp-Source: APXvYqwDQhrqAl/+KUbAXxlMaoiWwbEMK2n/rTPRFjFxbVo+NHOSRVNkGqkvCWxz3QgZ93m8ZNCD9+d6oJlURfUJToM=
-X-Received: by 2002:a17:906:8317:: with SMTP id j23mr66952676ejx.51.1564303948170;
- Sun, 28 Jul 2019 01:52:28 -0700 (PDT)
+        Sun, 28 Jul 2019 05:06:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47070 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725880AbfG1JGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 05:06:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 85C1BAC0C;
+        Sun, 28 Jul 2019 09:06:51 +0000 (UTC)
+Subject: Re: [patch 11/12] hrtimer: Prepare support for PREEMPT_RT
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20190726183048.982726647@linutronix.de>
+ <20190726185753.737767218@linutronix.de>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <42299f02-ff29-f7e3-45f0-b9fef041aec9@suse.com>
+Date:   Sun, 28 Jul 2019 11:06:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190726090829.16979-1-hslester96@gmail.com> <20190727180815.0c3e655e@archlinux>
-In-Reply-To: <20190727180815.0c3e655e@archlinux>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Sun, 28 Jul 2019 16:52:15 +0800
-Message-ID: <CANhBUQ0NW18uFfoPkmecRwZ=EjWedB-ao8nyxfW1NFWg+DpTow@mail.gmail.com>
-Subject: Re: [PATCH] iio: light: Use device-managed APIs
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Kevin Tsai <ktsai@capellamicro.com>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190726185753.737767218@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jonathan Cameron <jic23@kernel.org> =E4=BA=8E2019=E5=B9=B47=E6=9C=8828=E6=
-=97=A5=E5=91=A8=E6=97=A5 =E4=B8=8A=E5=8D=881:08=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Fri, 26 Jul 2019 17:08:29 +0800
-> Chuhong Yuan <hslester96@gmail.com> wrote:
->
-> > Use device-managed APIs to simplify the code.
-> > The remove functions are redundant now and can
-> > be deleted.
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> Hi,
->
-> This should have been split along the lines of the drivers as these
-> have different authors and hence could be merged at different times.
-> Not to mention the nature of the changes isn't exactly the same
-> between the two.
->
-> I might have taken the cm3323 one with a small tweak as below if they
-> had been separate.
->
-> Thanks,
->
-> Jonathan
+On 26.07.19 20:30, Thomas Gleixner wrote:
+> From: Anna-Maria Gleixner <anna-maria@linutronix.de>
+> 
+> When PREEMPT_RT is enabled, the soft interrupt thread can be preempted.  If
+> the soft interrupt thread is preempted in the middle of a timer callback,
+> then calling hrtimer_cancel() can lead to two issues:
+> 
+>    - If the caller is on a remote CPU then it has to spin wait for the timer
+>      handler to complete. This can result in unbound priority inversion.
+> 
+>    - If the caller originates from the task which preempted the timer
+>      handler on the same CPU, then spin waiting for the timer handler to
+>      complete is never going to end.
+> 
+> To avoid these issues, add a new lock to the timer base which is held
+> around the execution of the timer callbacks. If hrtimer_cancel() detects
+> that the timer callback is currently running, it blocks on the expiry
+> lock. When the callback is finished, the expiry lock is dropped by the
+> softirq thread which wakes up the waiter and the system makes progress.
+> 
+> This addresses both the priority inversion and the life lock issues.
+> 
+> The same issue can happen in virtual machines when the vCPU which runs a
+> timer callback is scheduled out. If a second vCPU of the same guest calls
+> hrtimer_cancel() it will spin wait for the other vCPU to be scheduled back
+> in. The expiry lock mechanism would avoid that. It'd be trivial to enable
+> this when paravirt spinlocks are enabled in a guest, but it's not clear
+> whether this is an actual problem in the wild, so for now it's an RT only
+> mechanism.
 
-I will separate them and resend later.
+As in virtual machines the soft interrupt thread preemption should not
+be an issue, I guess the spinning is "just" sub-optimal (similar to not
+using paravirt spinlocks).
 
->
-> > ---
-> >  drivers/iio/light/cm3323.c | 31 ++++++++++-----------------
-> >  drivers/iio/light/si1145.c | 44 ++++++++++++++------------------------
-> >  2 files changed, 27 insertions(+), 48 deletions(-)
-> >
-> > diff --git a/drivers/iio/light/cm3323.c b/drivers/iio/light/cm3323.c
-> > index 50f3438c2b49..fd352c0a4507 100644
-> > --- a/drivers/iio/light/cm3323.c
-> > +++ b/drivers/iio/light/cm3323.c
-> > @@ -101,15 +101,16 @@ static int cm3323_init(struct iio_dev *indio_dev)
-> >       return 0;
-> >  }
-> >
-> > -static void cm3323_disable(struct iio_dev *indio_dev)
-> > +static void cm3323_disable(void *data)
-> >  {
-> >       int ret;
-> > -     struct cm3323_data *data =3D iio_priv(indio_dev);
-> > +     struct iio_dev *indio_dev =3D data;
-> > +     struct cm3323_data *cm_data =3D iio_priv(indio_dev);
-> >
-> > -     ret =3D i2c_smbus_write_word_data(data->client, CM3323_CMD_CONF,
-> > +     ret =3D i2c_smbus_write_word_data(cm_data->client, CM3323_CMD_CON=
-F,
-> >                                       CM3323_CONF_SD_BIT);
-> >       if (ret < 0)
-> > -             dev_err(&data->client->dev, "Error writing reg_conf\n");
-> > +             dev_err(&cm_data->client->dev, "Error writing reg_conf\n"=
-);
-> >  }
-> >
-> >  static int cm3323_set_it_bits(struct cm3323_data *data, int val, int v=
-al2)
-> > @@ -243,25 +244,16 @@ static int cm3323_probe(struct i2c_client *client=
-,
-> >               return ret;
-> >       }
-> >
-> > -     ret =3D iio_device_register(indio_dev);
-> > +     ret =3D devm_add_action_or_reset(&client->dev, cm3323_disable, in=
-dio_dev);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     ret =3D devm_iio_device_register(&client->dev, indio_dev);
-> >       if (ret < 0) {
-> >               dev_err(&client->dev, "failed to register iio dev\n");
-> > -             goto err_init;
-> > +             return ret;
->
-> I'd drop the failed to register message and just
-> return devm_iio_device_register(...);
->
-> Most of the likely paths that can cause that to fail report errors anyway
-> in the core code.
->
-> >       }
-> >
-> > -     return 0;
-> > -err_init:
-> > -     cm3323_disable(indio_dev);
-> > -     return ret;
-> > -}
-> > -
-> > -static int cm3323_remove(struct i2c_client *client)
-> > -{
-> > -     struct iio_dev *indio_dev =3D i2c_get_clientdata(client);
-> > -
-> > -     iio_device_unregister(indio_dev);
-> > -     cm3323_disable(indio_dev);
-> > -
-> >       return 0;
-> >  }
-> >
-> > @@ -276,7 +268,6 @@ static struct i2c_driver cm3323_driver =3D {
-> >               .name =3D CM3323_DRV_NAME,
-> >       },
-> >       .probe          =3D cm3323_probe,
-> > -     .remove         =3D cm3323_remove,
-> >       .id_table       =3D cm3323_id,
-> >  };
-> >
-> > diff --git a/drivers/iio/light/si1145.c b/drivers/iio/light/si1145.c
-> > index 6579d2418814..61867552b27c 100644
-> > --- a/drivers/iio/light/si1145.c
-> > +++ b/drivers/iio/light/si1145.c
-> > @@ -1271,13 +1271,14 @@ static int si1145_probe_trigger(struct iio_dev =
-*indio_dev)
-> >       return 0;
-> >  }
-> >
-> > -static void si1145_remove_trigger(struct iio_dev *indio_dev)
-> > +static void si1145_remove_trigger(void *data)
-> >  {
-> > -     struct si1145_data *data =3D iio_priv(indio_dev);
-> > +     struct iio_dev *indio_dev =3D data;
-> > +     struct si1145_data *si_data =3D iio_priv(indio_dev);
-> >
-> > -     if (data->trig) {
-> > -             iio_trigger_unregister(data->trig);
-> > -             data->trig =3D NULL;
-> > +     if (si_data->trig) {
-> > +             iio_trigger_unregister(si_data->trig);
->
-> This doesn't look right.  Why not use the devm trigger
-> registration directly?
->
-> > +             si_data->trig =3D NULL;
->
-> I find it unlikely that we actually need to set this to
-> NULL, but please check closely in the driver.
-> The obvious path would be that the interrupt fired
-> after the trigger was unregistered (shouldn't be possible
-> unless something odd is going on), however there is no
-> obviously signs of this being checked there.
->
+In case we'd want to change that I'd rather not special case timers, but
+apply a more general solution to the quite large amount of similar
+cases: I assume the majority of cpu_relax() uses are affected, so adding
+a paravirt op cpu_relax() might be appropriate.
 
-Thanks for your advice!
-I will check whether data->trig is not needed to be set to NULL
-and can devm_iio_trigger_register be used.
-If so, I will revise them in version 2.
+That could be put under CONFIG_PARAVIRT_SPINLOCK. If called in a guest
+it could ask the hypervisor to give up the physical cpu voluntarily
+(in Xen this would be a "yield" hypercall).
 
-Regards,
-Chuhong
 
->
-> >       }
-> >  }
-> >
-> > @@ -1332,7 +1333,8 @@ static int si1145_probe(struct i2c_client *client=
-,
-> >       if (ret < 0)
-> >               return ret;
-> >
-> > -     ret =3D iio_triggered_buffer_setup(indio_dev, NULL,
-> > +     ret =3D devm_iio_triggered_buffer_setup(&client->dev,
-> > +             indio_dev, NULL,
-> >               si1145_trigger_handler, &si1145_buffer_setup_ops);
-> >       if (ret < 0)
-> >               return ret;
-> > @@ -1340,23 +1342,21 @@ static int si1145_probe(struct i2c_client *clie=
-nt,
-> >       if (client->irq) {
-> >               ret =3D si1145_probe_trigger(indio_dev);
-> >               if (ret < 0)
-> > -                     goto error_free_buffer;
-> > +                     return ret;
-> > +
-> > +             ret =3D devm_add_action_or_reset(&client->dev,
-> > +                                     si1145_remove_trigger, indio_dev)=
-;
-> > +             if (ret < 0)
-> > +                     return ret;
-> > +
-> >       } else {
-> >               dev_info(&client->dev, "no irq, using polling\n");
-> >       }
-> >
-> > -     ret =3D iio_device_register(indio_dev);
-> > +     ret =3D devm_iio_device_register(&client->dev, indio_dev);
-> >       if (ret < 0)
-> > -             goto error_free_trigger;
-> > +             return ret;
-> >
-> >       return 0;
-> > -
-> > -error_free_trigger:
-> > -     si1145_remove_trigger(indio_dev);
-> > -error_free_buffer:
-> > -     iio_triggered_buffer_cleanup(indio_dev);
-> > -
-> > -     return ret;
-> >  }
-> >
-> >  static const struct i2c_device_id si1145_ids[] =3D {
-> > @@ -1371,23 +1371,11 @@ static const struct i2c_device_id si1145_ids[] =
-=3D {
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, si1145_ids);
-> >
-> > -static int si1145_remove(struct i2c_client *client)
-> > -{
-> > -     struct iio_dev *indio_dev =3D i2c_get_clientdata(client);
-> > -
-> > -     iio_device_unregister(indio_dev);
-> > -     si1145_remove_trigger(indio_dev);
-> > -     iio_triggered_buffer_cleanup(indio_dev);
-> > -
-> > -     return 0;
-> > -}
-> > -
-> >  static struct i2c_driver si1145_driver =3D {
-> >       .driver =3D {
-> >               .name   =3D "si1145",
-> >       },
-> >       .probe  =3D si1145_probe,
-> > -     .remove =3D si1145_remove,
-> >       .id_table =3D si1145_ids,
-> >  };
-> >
->
+Juergen
