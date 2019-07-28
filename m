@@ -2,128 +2,119 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF9DC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94A4C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A6A214C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:34:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564302861;
-	bh=MbqHmXO5YZd8uWQm+FlJEdearXUQPKipfL5ob5AhD0c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=x8BjGVAhCloqNSfRIxcbvvvXAN81SXvIYdEIaY4BFw3TmzVze08E2MwQIF4Ip9Wf1
-	 Zqt0m+a8B44AwXnmyllN6izzm3cb/ipY3QSeLKQSDNpmP/sXnXpkXQ4k2Pvvbe+DKg
-	 uBKX607qcijMb1vGyUiMwivi22X2BCEExplsuvi8=
+	by mail.kernel.org (Postfix) with ESMTP id 83C14205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfG1IeU (ORCPT
+        id S1726107AbfG1Igs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 04:34:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725880AbfG1IeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 04:34:20 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B3462085A;
-        Sun, 28 Jul 2019 08:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564302858;
-        bh=MbqHmXO5YZd8uWQm+FlJEdearXUQPKipfL5ob5AhD0c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UVprk842MaZ9gG3VyxDNa4nsWau/ZfI+QDa5L30JlH90ZABceUMQXpQwd8zoCM6ZO
-         E42jUnOE+8VM6i1xPKPjQlhV/EgKR/qvnWx49RMwUENcSM5hHfb6aGneh3kQGvXuOd
-         g+J0nLaO/onIpmCdt2AudcNQdvhg5wa41Wl4aLZg=
-Date:   Sun, 28 Jul 2019 09:34:14 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] iio: imu: st_lsm6dsx: add support for accel/gyro
- unit of lsm9sd1
-Message-ID: <20190728093414.5d3ca94d@archlinux>
-In-Reply-To: <a2f6d5fe-04c6-f5d8-ad38-56b8fa033295@puri.sm>
-References: <20190725053132.9589-1-martin.kepplinger@puri.sm>
-        <20190725053132.9589-5-martin.kepplinger@puri.sm>
-        <20190727184844.307255a2@archlinux>
-        <a2f6d5fe-04c6-f5d8-ad38-56b8fa033295@puri.sm>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 28 Jul 2019 04:36:48 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36679 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbfG1Igs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 04:36:48 -0400
+Received: by mail-io1-f67.google.com with SMTP id o9so9976120iom.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 01:36:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JmcimYJf+Bna2bF5oHtnyvYwQab4h3brdRl3y+Yku3w=;
+        b=Www3e5kFMNj2enG7P44iVoUYy78U8xSo+U2CmTNBRfSdOrwQtyQ6ApLpAQKkgjKvH+
+         iYYH+yCLuS3Ah+oeKO1H4aPbpmgPsyG0D2wg+g8jkOHrd49MF4Lj/oB5zHhNeFmGzpY+
+         nsl7+auDlaWFz4bRlcaPUW6RyZ2uj8NLPIedSChztp567a6o/uscWmR2cWW99v4eUaaA
+         fLTMeU18RrVIRkZiUm+lpYw2uHL0mowEHDjl4civiTe7VKUMhaoIo9nNbHBQnjiMChZY
+         NFY+lTvOsstBiQfdAvm+ugNz6QFCmaNGuV0616bDixsJTTyzm50fEyCvIWfXCHvjy3WM
+         3mcw==
+X-Gm-Message-State: APjAAAVztZzunotzAbcvA0HtiCYKvKLXD3dylaKEAKYnnATpCskJEISP
+        iFAWmLKirM2g7utIgwwAO5dziQ==
+X-Google-Smtp-Source: APXvYqyHU6qTV7uMr9tjpRxhhvTuO4lK+5tp+FQOjsGxN+s/1qcSKnN7S1nMevwymEewifIu5iF5Gg==
+X-Received: by 2002:a02:b883:: with SMTP id p3mr34245354jam.79.1564303007037;
+        Sun, 28 Jul 2019 01:36:47 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id o7sm48957845ioo.81.2019.07.28.01.36.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 28 Jul 2019 01:36:45 -0700 (PDT)
+Date:   Sun, 28 Jul 2019 04:36:39 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+36e93b425cd6eb54fcc1@syzkaller.appspotmail.com>,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.lkml@markovi.net, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        yamada.masahiro@socionext.com
+Subject: Re: INFO: rcu detected stall in vhost_worker
+Message-ID: <20190728043619-mutt-send-email-mst@kernel.org>
+References: <000000000000b4358f058e924c6d@google.com>
+ <000000000000e87d14058e9728d7@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000e87d14058e9728d7@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Jul 2019 08:04:51 +0200
-Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
-
-> On 27.07.19 19:48, Jonathan Cameron wrote:
-> > On Thu, 25 Jul 2019 07:31:31 +0200
-> > Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
-> >   
-> >> The LSM9DS1's accelerometer / gyroscope unit and it's magnetometer (separately
-> >> supported in iio/magnetometer/st_magn*) are located on a separate i2c addresses
-> >> on the bus.
-> >>
-> >> For the datasheet, see https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
-> >>
-> >> Treat it just like the LSM6* devices and, despite it's name, hook it up
-> >> to the st_lsm6dsx driver, using it's basic functionality.
-> >>
-> >> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>  
-> > I'm a little confused on this hardware.
+On Sat, Jul 27, 2019 at 04:23:23PM +0800, Hillf Danton wrote:
+> 
+> Fri, 26 Jul 2019 08:26:01 -0700 (PDT)
+> > syzbot has bisected this bug to:
 > > 
-> > How does buffered output work if these are independently clocked?
+> > commit 0ecfebd2b52404ae0c54a878c872bb93363ada36
+> > Author: Linus Torvalds <torvalds@linux-foundation.org>
+> > Date:   Sun Jul 7 22:41:56 2019 +0000
 > > 
-> > I took a quick look at the datasheet, and 'suspect' the answer is that
-> > it runs at the gyro frequencies if both are enable. Is that right?
-> >   
+> >      Linux 5.2
+> > 
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=118810bfa00000
+> > start commit:   13bf6d6a Add linux-next specific files for 20190725
+> > git tree:       linux-next
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8ae987d803395886
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=36e93b425cd6eb54fcc1
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15112f3fa00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=131ab578600000
+> > 
+> > Reported-by: syzbot+36e93b425cd6eb54fcc1@syzkaller.appspotmail.com
+> > Fixes: 0ecfebd2b524 ("Linux 5.2")
+> > 
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 > 
-> Thanks for reviewing, Jonathan,
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -787,7 +787,6 @@ static void vhost_setup_uaddr(struct vho
+> 			      size_t size, bool write)
+> {
+> 	struct vhost_uaddr *addr = &vq->uaddrs[index];
+> -	spin_lock(&vq->mmu_lock);
 > 
-> Correct. It says so in chapter 7.12. But that's a "problem" with all
-> these imu devices, not specific to this addition right?
-It's not a problem as such, but there is a related difference in this
-device to the others supported by this driver.
+> 	addr->uaddr = uaddr;
+> 	addr->size = size;
+> @@ -797,7 +796,10 @@ static void vhost_setup_uaddr(struct vho
+> static void vhost_setup_vq_uaddr(struct vhost_virtqueue *vq)
+> {
+> 	spin_lock(&vq->mmu_lock);
+> -
+> +	/*
+> +	 * deadlock if managing to take mmu_lock again while
+> +	 * setting up uaddr
+> +	 */
+> 	vhost_setup_uaddr(vq, VHOST_ADDR_DESC,
+> 			  (unsigned long)vq->desc,
+> 			  vhost_get_desc_size(vq, vq->num),
+> --
 
-The other parts seem to allow for independent data rate setting, with
-streaming to the buffer that isn't in 'lock step'.  I.e you can get
+Thanks!
+I reverted this whole commit.
 
-Ax_1, Ay_1, Az_1, Gx_1, Gy_1, Gz_1, Gx_2, Gy_2, Gz_2, Ax_2, Ay_2, Az_2, Gy_3...
-
-That required us to split them up into two devices and means that, to fuse
-data from these two source, userspace has to do the harder job of
-aligning the two datasets.
-
-For this device, things are simpler in that you always a 'scan' that goes
-across both accelerometer and gyroscope channels.  That allows us to
-represent it as a single IIO device with a single buffer.
-
-I'm not seeing any reference in the lsm9ds1 to the pattern registers
-that are used to handle difference in frequency for the other
-parts by letting us know what is actually present in each data set
-in the fifo.
-
-Now, that doesn't meant we can't still handle them separately given
-we already do that for other parts.
-
-Anyhow, is my understanding correct?
-
-Jonathan
-
-> 
-> Sidenote: I thought about renaming things to "lsm6ds0" here just because
-> of the name and because the registers are (almost) the same as for my
-> lsm9ds1. But I'm not a fan of blindly doing that without being able to
-> test. When the current patchset looks good to you, let's keep it that way.
-> 
->                             martin
-
+-- 
+MST
