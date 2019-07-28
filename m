@@ -2,105 +2,86 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C765C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA55C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B55C2087C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:19:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXZ+E676"
+	by mail.kernel.org (Postfix) with ESMTP id 937B521655
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 11:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbfG1LT2 (ORCPT
+        id S1726109AbfG1LTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 07:19:28 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44926 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfG1LT2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 07:19:28 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so26821054pgl.11
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 04:19:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=B6TX782w2nBGeMiqESzq7NZYdapmEI2iIuDzWwvD73U=;
-        b=MXZ+E676Ntw3aSNHqfnVD+vV93kAQFhnjN7v5+bVIai1HEiJ9IdyRrMQj6g7+npQTL
-         To7doQ5Skx9J7FxAUX7BdrvD5EX+ReNYmjeMpEDQ/APqAaTMJNpsRVoid+drvHj7oGwh
-         BCpSC0QOV1+0uqSypplKpllUII17eXJkASlpUYFSKjRx3cv67eog3bwtAw7ma1klYER0
-         HPJZQzppsp/9xG3gC7dC8/vcStTfOt7PI+fAkd+dCRl3/5HqyJYoHKyY+JYk4DxO4k9q
-         MqZxpgHVpO4+pTOlDCe5T/Wfca6MvRt2Zmx1HqWSxoYQtAgw7BQj8A2OdTAzZUAEtehM
-         xNWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=B6TX782w2nBGeMiqESzq7NZYdapmEI2iIuDzWwvD73U=;
-        b=Du68i8JJprV5TmKVzic9ay2DbJpgwQrfLjJu7+rK4i8+NwMtAXyaGrXm+XBEbfxtjN
-         Ur/mE7IOhIOUWZAS7E8mjD3WrkFT8/2KVBQaClkbtS3e62iv15TPNMX5jK+AJocfDG0D
-         Lxy0dGPqwhZAXsjIp2Hsh+1PWzkRCq/TOkgq+bI/2H/QiBbJZlXt25/j7wFVcnc4mBBj
-         nzhdQXBD8N5v9MoE6Qx5leNh692fD4Xve3CRsJLmevdpZy9r5XcgOmnEl+vjSTHIKqZe
-         mv/4O+CvHWDxB8kH0URY64sciiCztLCb5fK0gMnvOb1CjLhf1ZCI0ktZskDMA6Hl1HOt
-         qXJw==
-X-Gm-Message-State: APjAAAW6mepk96udwxYrctI7qe0JfZzUTJmgbYWVHKOggA/FDPblOhLl
-        0OAdW+XNSyfwAuz7GJHSXAo=
-X-Google-Smtp-Source: APXvYqxxfgP0hAWjsHS3mvtNIYhn4ZiY0lxJaD8PKrUgtK38LgU7uiI2Z+xjPs4VKbPFdF41titAYg==
-X-Received: by 2002:a65:52c5:: with SMTP id z5mr85384058pgp.118.1564312767754;
-        Sun, 28 Jul 2019 04:19:27 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id s11sm56220185pgv.13.2019.07.28.04.19.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Jul 2019 04:19:26 -0700 (PDT)
-Date:   Sun, 28 Jul 2019 16:49:18 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Jeeeun Evans <jeeeunevans@gmail.com>,
-        Shobhit Kukreti <shobhitkukreti@gmail.com>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Anirudh Rayabharam <anirudh.rayabharam@gmail.com>,
-        Kimberly Brown <kimbrownkd@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Larry.Finger@lwfinger.net, hdegoede@redhat.com
-Subject: [PATCH] staging: rtl8723bs: core: Remove unneeded extern WFD_OUI
-Message-ID: <20190728111918.GA24278@hari-Inspiron-1545>
+        Sun, 28 Jul 2019 07:19:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:60268 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725977AbfG1LTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 07:19:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1C89344;
+        Sun, 28 Jul 2019 04:19:29 -0700 (PDT)
+Received: from [10.163.1.126] (unknown [10.163.1.126])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 855083F71F;
+        Sun, 28 Jul 2019 04:19:23 -0700 (PDT)
+Subject: Re: [PATCH v9 00/21] Generic page walk and ptdump
+To:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190722154210.42799-1-steven.price@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <794fb469-00c8-af10-92a8-cb7c0c83378b@arm.com>
+Date:   Sun, 28 Jul 2019 16:50:03 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190722154210.42799-1-steven.price@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded extern variable "extern unsigned char WFD_OUI"
+On 07/22/2019 09:11 PM, Steven Price wrote:
+> Steven Price (21):
+>   arc: mm: Add p?d_leaf() definitions
+>   arm: mm: Add p?d_leaf() definitions
+>   arm64: mm: Add p?d_leaf() definitions
+>   mips: mm: Add p?d_leaf() definitions
+>   powerpc: mm: Add p?d_leaf() definitions
+>   riscv: mm: Add p?d_leaf() definitions
+>   s390: mm: Add p?d_leaf() definitions
+>   sparc: mm: Add p?d_leaf() definitions
+>   x86: mm: Add p?d_leaf() definitions
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_ap.c | 1 -
- 1 file changed, 1 deletion(-)
+The set of architectures here is neither complete (e.g ia64, parisc missing)
+nor does it only include architectures which had previously enabled PTDUMP
+like arm, arm64, powerpc, s390 and x86. Is there any reason for this set of
+archs to be on the list and not the others which are currently falling back
+on generic p?d_leaf() defined later in the series ? Are the missing archs
+do not have huge page support in the MMU ? If there is a direct dependency
+for these symbols with CONFIG_HUGETLB_PAGE then it must be checked before
+falling back on the generic ones.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index 7bd5c61..2bb20762 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -13,7 +13,6 @@ extern unsigned char RTW_WPA_OUI[];
- extern unsigned char WMM_OUI[];
- extern unsigned char WPS_OUI[];
- extern unsigned char P2P_OUI[];
--extern unsigned char WFD_OUI[];
- 
- void init_mlme_ap_info(struct adapter *padapter)
- {
--- 
-2.7.4
-
+Now that pmd_leaf() and pud_leaf() are getting used in walk_page_range() these
+functions need to be defined on all arch irrespective if they use PTDUMP or not
+or otherwise just define it for archs which need them now for sure i.e x86 and
+arm64 (which are moving to new generic PTDUMP framework). Other archs can
+implement these later.
