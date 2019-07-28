@@ -2,115 +2,181 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8A9C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A760FC7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775B72075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:57:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZV53OTCs"
+	by mail.kernel.org (Postfix) with ESMTP id 86EFC2075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfG1J5e (ORCPT
+        id S1726115AbfG1J6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 05:57:34 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46672 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfG1J5d (ORCPT
+        Sun, 28 Jul 2019 05:58:17 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43524 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfG1J6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 05:57:33 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v24so55693767ljg.13;
-        Sun, 28 Jul 2019 02:57:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I5U5P2OB+CW1lAAzC/g4JOE6432qGwFP+/JSwm0jSHU=;
-        b=ZV53OTCsHDfSi2msA8fBNToBiGv1qSMCKgBQXDYU2lDS7+Vh64l0Pb6wOlXEw+vUT5
-         BrQdMuTWRPTsPW9wJ0fUQINwtKQjCoc1c1RqPp5JAz8SmrW/rBha8mnJF7LR1GERrUaj
-         LjesFwNlFmzF84GiwhpjettdBknui1n0kO2MLU+Pc6SsbafRJ7ApvOMJWe8kWYFTdI+Y
-         hNoTTnVK5r9Wr1aXZ9tiPSGv8QzT6eiCNYW/EN+iJxYX0YL2hhnUYbqDWsMd+T84+4Gi
-         sQ94QOp1j2tk3Wq36Uonm35FoGLlhHtqwNgvSFIP4KQWRJkQpeHazVQYN1crYcniSP/J
-         o7Wg==
+        Sun, 28 Jul 2019 05:58:17 -0400
+Received: by mail-qt1-f196.google.com with SMTP id w17so12550799qto.10
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 02:58:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I5U5P2OB+CW1lAAzC/g4JOE6432qGwFP+/JSwm0jSHU=;
-        b=EzzNnF7J2CIxGuapku4kwbt3M5nAsr1d7cdMuAAxqXCnuJHdR1R1NLlFCE/9gm502d
-         tnQX6QjfGFB7xEYc+MI6VoIJaC/CNLSLrOIUP1+IBR1XDGPAYBahOSLZB2WFjo0sbdyW
-         iwa3fLNZ0kTuX23LY3BY7iluBORseHvwkbRXkXbDBah5162SeJIb5a86R0X+mfCdRBMc
-         IndeOYA0qKccZ2mnxhYA8tEMhXcFGpcC36H+QczVYA4S2eo4P2muHBJyEoC7QyE4P3iA
-         468GbfXTiFk50LQ9Br4LG77NlR4S1jBg4GrfZRqIQ6P6ySePJNfPttUE3VbMKTZsqjLZ
-         SBLQ==
-X-Gm-Message-State: APjAAAX3xC6fwKr74lRf/1/bQ4p7rDtU206dGWs1f9PJvE3J+jxC7xOo
-        naNCSg3OqPLw7aFUA5Jweh0=
-X-Google-Smtp-Source: APXvYqwhw6OvM5th7He13Ewrm1ZQ2dCdDBT/HVP2qOAnliTHa6FW6BpkBP/nC5rQ9AHjO0hV9V2/2Q==
-X-Received: by 2002:a2e:9753:: with SMTP id f19mr54145925ljj.113.1564307850821;
-        Sun, 28 Jul 2019 02:57:30 -0700 (PDT)
-Received: from localhost ([178.155.13.240])
-        by smtp.gmail.com with ESMTPSA id n187sm9919522lfa.30.2019.07.28.02.57.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 28 Jul 2019 02:57:29 -0700 (PDT)
-Date:   Sun, 28 Jul 2019 12:57:26 +0300
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v3 1/2] platform/x86: surfacepro3_button: Fix device check
-Message-ID: <20190728095726.GA775@penguin>
-References: <20190720150511.95076-1-luzmaximilian@gmail.com>
- <20190720150511.95076-2-luzmaximilian@gmail.com>
- <CAHp75Ve+3c-TFeN3Dh-DB75Rjft8mY2DA8vNkrFyp7JK-ZOjDA@mail.gmail.com>
- <20190727091541.GD795@penguin>
- <CAHp75VdsL+-bhAUcxLKFKLZedN3gFD3jxnhELD1RtKGSHdagjw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CgCTbuELxfZzxTSEknSndN9sTLLuOVb2vt6aeuNUBPg=;
+        b=EGSpe367S6+uVbAREiugKiX0FaDGPBwwp4aooLrTemY5MKdbDUjER8czEU08//2vNn
+         YrPc5zkbxUsTObyHsvvVFUg1OR/iJqsbfNBgrF5ysAozyrAKDiI5Al9hqpgtrJsXebrr
+         bJ6p9qKfq5a9HcExNNPhyeQQ1ei2uHxG/Mh9lGFTg8oKm3eskQbXgMAeQD8q9Z7EnQsD
+         xonGYQa5v7rOf9uhel4vIPUoabrrWbKO83h9ZNttJjitkm8Er/7LNk8PSuA2Cyjn3FrF
+         pH5B48+BYCRoUnYrV9zVg4ozlvmK0FUomtIyLEAWeHLqOzikZnbT7CEMzP8iISYYOsfw
+         J8Jw==
+X-Gm-Message-State: APjAAAWUbc6LGhWkgRGXGUmFAuciQ69dVJNr00Sw8yKBHEn9XHjWb6mT
+        Gp6qFM7KD/SxhrniGvMlUI+VS6+uip58OF0W5sw=
+X-Google-Smtp-Source: APXvYqzOMSm1KAVJxcgrEGtIEaAvPRlkKIEXQlqGBWWQpklW+GTFVj/ccnHEPROD0CHq/ls+gGjR3kKPWZhHsZdGkL0=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr71591396qtd.18.1564307895541;
+ Sun, 28 Jul 2019 02:58:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdsL+-bhAUcxLKFKLZedN3gFD3jxnhELD1RtKGSHdagjw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <201907221012.41504DCD@keescook> <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de>
+ <201907221135.2C2D262D8@keescook> <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com>
+ <201907221620.F31B9A082@keescook> <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com>
+ <201907231437.DB20BEBD3@keescook> <alpine.DEB.2.21.1907240038001.27812@nanos.tec.linutronix.de>
+ <201907231636.AD3ED717D@keescook> <alpine.DEB.2.21.1907240155080.2034@nanos.tec.linutronix.de>
+ <20190726180103.GE3188@linux.intel.com> <CALCETrUe50sbMx+Pg+fQdVFVeZ_zTffNWGJUmYy53fcHNrOhrQ@mail.gmail.com>
+In-Reply-To: <CALCETrUe50sbMx+Pg+fQdVFVeZ_zTffNWGJUmYy53fcHNrOhrQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sun, 28 Jul 2019 11:57:58 +0200
+Message-ID: <CAK8P3a3_tki1mi4OjLJdaGLwVA7JE0wE1kczE_q7kEpr5e8sMQ@mail.gmail.com>
+Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace on i386
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Paul Bolle <pebolle@tiscali.nl>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 03:26:41PM +0300, Andy Shevchenko wrote:
-> On Sat, Jul 27, 2019 at 12:15 PM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
+On Sat, Jul 27, 2019 at 7:53 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Fri, Jul 26, 2019 at 11:01 AM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
 > >
-> > On Thu, Jul 25, 2019 at 08:57:53PM +0300, Andy Shevchenko wrote:
-> > > On Sat, Jul 20, 2019 at 6:05 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
-> > > >
-> > > > Do not use the surfacepro3_button driver on newer Microsoft Surface
-> > > > models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
-> > > > and possibly future generations) use the same device as the Surface Pro
-> > > > 4 to represent their volume and power buttons (MSHW0040), but their
-> > > > actual implementation is significantly different. This patch ensures
-> > > > that the surfacepro3_button driver is only used on the Pro 3 and 4
-> > > > models, allowing a different driver to bind on other models.
-> > > >
+> > On Wed, Jul 24, 2019 at 01:56:34AM +0200, Thomas Gleixner wrote:
+> > > On Tue, 23 Jul 2019, Kees Cook wrote:
 > > >
-> > > Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > On Wed, Jul 24, 2019 at 12:59:03AM +0200, Thomas Gleixner wrote:
+> > > > > And as we have sys_clock_gettime64() exposed for 32bit anyway you need to
+> > > > > deal with that in seccomp independently of the VDSO. It does not make sense
+> > > > > to treat sys_clock_gettime() differently than sys_clock_gettime64(). They
+> > > > > both expose the same information, but the latter is y2038 safe.
+> > > >
+> > > > Okay, so combining Andy's ideas on aliasing and "more seccomp flags",
+> > > > we could declare that clock_gettime64() is not filterable on 32-bit at
+> > > > all without the magic SECCOMP_IGNORE_ALIASES flag or something. Then we
+> > > > would alias clock_gettime64 to clock_gettime _before_ the first evaluation
+> > > > (unless SECCOMP_IGNORE_ALIASES is set)?
+> > > >
+> > > > (When was clock_gettime64() introduced? Is it too long ago to do this
+> > > > "you can't filter it without a special flag" change?)
 > > >
-> > > assuming it will go thru Input subsystem.
+> > > clock_gettime64() and the other sys_*time64() syscalls which address the
+> > > y2038 issue were added in 5.1
 > >
-> > I can take it, but I do not think it is dependent on the other change
-> > and thus can go through platform tree as well.
-> 
-> Pkease, take it. I do not expect any changes to the driver this cycle.
+> > Paul Bolle pointed out that this regression showed up in v5.3-rc1, not
+> > v5.2.  In Paul's case, systemd-journal is failing.
+>
+> I think it's getting quite late to start inventing new seccomp
+> features to fix this.  I think the right solution for 5.3 is to change
+> the 32-bit vdso fallback to use the old clock_gettime, i.e.
+> clock_gettime32.  This is obviously not an acceptable long-term
+> solution.
 
-OK, applied, thank you.
+I think there is something else wrong with the fallback path, it seems
+to pass the wrong structure in some cases:
 
--- 
-Dmitry
+arch/x86/include/asm/vdso/gettimeofday.h vdso32:
+
+static __always_inline
+long clock_gettime_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
+{
+        long ret;
+
+        asm (
+                "mov %%ebx, %%edx \n"
+                "mov %[clock], %%ebx \n"
+                "call __kernel_vsyscall \n"
+                "mov %%edx, %%ebx \n"
+                : "=a" (ret), "=m" (*_ts)
+                : "0" (__NR_clock_gettime64), [clock] "g" (_clkid), "c" (_ts)
+                : "edx");
+
+        return ret;
+}
+
+arch/x86/include/asm/vdso/gettimeofday.h vdso64:
+static __always_inline
+long clock_gettime_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
+{
+        long ret;
+
+        asm ("syscall" : "=a" (ret), "=m" (*_ts) :
+             "0" (__NR_clock_gettime), "D" (_clkid), "S" (_ts) :
+             "rcx", "r11");
+
+        return ret;
+}
+
+
+lib/vdso/gettimeofday.c:
+static __maybe_unused int
+__cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
+{
+        struct __kernel_timespec ts;
+        int ret;
+
+        if (res == NULL)
+                goto fallback;
+
+        ret = __cvdso_clock_gettime(clock, &ts);
+
+        if (ret == 0) {
+                res->tv_sec = ts.tv_sec;
+                res->tv_nsec = ts.tv_nsec;
+        }
+
+        return ret;
+
+fallback:
+        return clock_gettime_fallback(clock, (struct __kernel_timespec *)res);
+}
+
+So we get an 'old_timespec32' pointer from user space, and cast
+it to __kernel_timespec in order to pass it to the low-level function
+that actually fills in the 64-bit structure.
+
+On a little-endian machine, the first four bytes are actually correct
+here, but this is followed by tv_nsec=0 and 8 more bytes that overwrite
+whatever comes after the user space 'timespec'. [I missed the
+typecast as an indication of a bug during my review, sorry about
+that].
+
+I think adding a clock_gettime32_fallback() function that calls
+__NR_clock_gettime is both the simplest fix for this bug, and
+the least ugly way to handle it in the long run.
+
+We also need to decide what to do about __cvdso_clock_gettime32()
+once we add a compile-time option to make all time32 syscalls
+to return an error. Returning -ENOSYS from the clock_gettime32()
+fallback is probably a good idea, but for consistency the
+__vdso_clock_gettime() call should either always return the
+same in that configuration, or be left out from the vdso build
+endirely.
+
+       Arnd
