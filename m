@@ -6,91 +6,84 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14243C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C230C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E159A2070D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270862075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726023AbfG1JGx (ORCPT
+        id S1726044AbfG1JNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 05:06:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47070 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725880AbfG1JGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 05:06:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 85C1BAC0C;
-        Sun, 28 Jul 2019 09:06:51 +0000 (UTC)
-Subject: Re: [patch 11/12] hrtimer: Prepare support for PREEMPT_RT
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20190726183048.982726647@linutronix.de>
- <20190726185753.737767218@linutronix.de>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <42299f02-ff29-f7e3-45f0-b9fef041aec9@suse.com>
-Date:   Sun, 28 Jul 2019 11:06:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 28 Jul 2019 05:13:53 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51491 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbfG1JNx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 05:13:53 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hrfFR-0000mT-Bf; Sun, 28 Jul 2019 11:13:45 +0200
+Date:   Sun, 28 Jul 2019 11:13:44 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Sewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH] Kbuild: Handle PREEMPT_RT for version string and magic
+In-Reply-To: <CAK7LNAS1=+OccAd3asj9P9JMWnhimRWR+dPQREOyK3y=Dx2odg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1907281111570.1791@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907262245320.1791@nanos.tec.linutronix.de> <CAK7LNAS1=+OccAd3asj9P9JMWnhimRWR+dPQREOyK3y=Dx2odg@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190726185753.737767218@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.07.19 20:30, Thomas Gleixner wrote:
-> From: Anna-Maria Gleixner <anna-maria@linutronix.de>
-> 
-> When PREEMPT_RT is enabled, the soft interrupt thread can be preempted.  If
-> the soft interrupt thread is preempted in the middle of a timer callback,
-> then calling hrtimer_cancel() can lead to two issues:
-> 
->    - If the caller is on a remote CPU then it has to spin wait for the timer
->      handler to complete. This can result in unbound priority inversion.
-> 
->    - If the caller originates from the task which preempted the timer
->      handler on the same CPU, then spin waiting for the timer handler to
->      complete is never going to end.
-> 
-> To avoid these issues, add a new lock to the timer base which is held
-> around the execution of the timer callbacks. If hrtimer_cancel() detects
-> that the timer callback is currently running, it blocks on the expiry
-> lock. When the callback is finished, the expiry lock is dropped by the
-> softirq thread which wakes up the waiter and the system makes progress.
-> 
-> This addresses both the priority inversion and the life lock issues.
-> 
-> The same issue can happen in virtual machines when the vCPU which runs a
-> timer callback is scheduled out. If a second vCPU of the same guest calls
-> hrtimer_cancel() it will spin wait for the other vCPU to be scheduled back
-> in. The expiry lock mechanism would avoid that. It'd be trivial to enable
-> this when paravirt spinlocks are enabled in a guest, but it's not clear
-> whether this is an actual problem in the wild, so for now it's an RT only
-> mechanism.
+Masahiro,
 
-As in virtual machines the soft interrupt thread preemption should not
-be an issue, I guess the spinning is "just" sub-optimal (similar to not
-using paravirt spinlocks).
+On Sun, 28 Jul 2019, Masahiro Yamada wrote:
+> 
+> Since CONFIG_PREEMPTION was introduced after -rc1,
+> I think this should be queued on top of -rc2.
 
-In case we'd want to change that I'd rather not special case timers, but
-apply a more general solution to the quite large amount of similar
-cases: I assume the majority of cpu_relax() uses are affected, so adding
-a paravirt op cpu_relax() might be appropriate.
+Right. Are you picking it up?
 
-That could be put under CONFIG_PARAVIRT_SPINLOCK. If called in a guest
-it could ask the hypervisor to give up the physical cpu voluntarily
-(in Xen this would be a "yield" hypercall).
+> > -#ifdef CONFIG_PREEMPT
+> > -#define MODULE_VERMAGIC_PREEMPT "preempt "
+> > +#ifdef CONFIG_PREEMPTION
+> > +# ifdef CONFIG_PREEMPT
+> > +#  define MODULE_VERMAGIC_PREEMPT "preempt "
+> > +# else
+> > +#  define MODULE_VERMAGIC_PREEMPT "preempt_rt "
+> > +# endif
+> >  #else
+> > -#define MODULE_VERMAGIC_PREEMPT ""
+> > +# define MODULE_VERMAGIC_PREEMPT ""
+> 
+> Maybe, is the following more readable?
+> 
+> #if defined(CONFIG_PREEMPT_RT)
+> #define MODULE_VERMAGIC_PREEMPT "preempt_rt "
+> #elif defined(CONFIG_PREEMPT)
+> #define MODULE_VERMAGIC_PREEMPT "preempt "
+> #else
+> #define MODULE_VERMAGIC_PREEMPT ""
+> #endif
 
+Doh. That's obvious. Must be a result of the heat wave we had.
+Will send a V2.
 
-Juergen
+Thanks,
+
+	tglx
