@@ -2,104 +2,98 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE655C7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 10:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BEBC7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 10:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959592075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 10:01:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTd3qfwP"
+	by mail.kernel.org (Postfix) with ESMTP id 644432075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 10:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfG1KBq (ORCPT
+        id S1726173AbfG1KDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 06:01:46 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37363 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfG1KBo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 06:01:44 -0400
-Received: by mail-lj1-f195.google.com with SMTP id z28so1332424ljn.4;
-        Sun, 28 Jul 2019 03:01:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sW/UYb8mObeW8WWhGrXYNtg6fROLodUuxps6PdiCevM=;
-        b=GTd3qfwPiBY6r66aUOP7w5OkNRigCzsdeDxgx9QfHlvehm5O6Td0mfxff/fmNP3gCG
-         IWypwFBS3KslLR1miL6Dq3R4ybg/gO90GTIplQA3R1YvT4FVsKXycLCztZTMFUgchFgb
-         4FJFXvNy8Uc4Rdgreocq7tPzhjg3yhHt4FoPyh0LLV3G/pXeJYj1pnh++d85WOKWWije
-         tiUtNog7KNOdIOvjE/DX/eITTKFUlp6E/xCHw90ZgIzapljFJAfwtiJkgC9u8rrrhfqj
-         wGiVzLrCLT4nq1N27itnHdcjZZTEhJGLIIiUTedU0KmMzeUwiF7LsI/sHTdx0u8WmGcE
-         DsbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sW/UYb8mObeW8WWhGrXYNtg6fROLodUuxps6PdiCevM=;
-        b=cv5ibSdHob5xsOu89tNf+0P+5vsfS2W+9xbVXcS2CpGHXNyaNAqjgA/bqgNBHiQhMD
-         zdTajcFCdDwP9uM3LIedVwqnmaXTo7Pxj0Jp4nuQZ7ekgi9zDOZadOw353XnLTmCCe5Q
-         OKiR5nEfyIela0ptKhVIAhzWV1Wz6KZsKrEElVK/BWNgI6sRjm7YGjaGvWe98Txi0w8D
-         /AMiDZI+8ac0BGLX3QADNjVrbTZZMCI0Ly/CMSc+uL1B8x/oZxp1Rk8dbyPk95/6gcfd
-         7M1EcdSuFOvlcmcUUhbNwPcqonWaPMtK12erOVuYZ9Fiac4hZlqOh5TwlgeXptDBH49l
-         RYjQ==
-X-Gm-Message-State: APjAAAUwVfsNlSAuL5ZoGf4JglRmjL94IR+aBvylvhc/0Z2+Jt9VCzPs
-        D/K2gvi2zFpvnF9kD2ajp/s=
-X-Google-Smtp-Source: APXvYqyrdGp0WCa8L6yrZWZpKTMqFaslqOKreZnL5V8NJs9iTBN2gRammQeJCxnnvhM9Od/n9pDiOQ==
-X-Received: by 2002:a2e:8602:: with SMTP id a2mr51948647lji.206.1564308102149;
-        Sun, 28 Jul 2019 03:01:42 -0700 (PDT)
-Received: from localhost ([178.155.13.240])
-        by smtp.gmail.com with ESMTPSA id u18sm9889983lfe.65.2019.07.28.03.01.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 28 Jul 2019 03:01:41 -0700 (PDT)
-Date:   Sun, 28 Jul 2019 13:01:38 +0300
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v3 2/2] Input: soc_button_array - Add support for newer
- surface devices
-Message-ID: <20190728100138.GC775@penguin>
-References: <20190720150511.95076-1-luzmaximilian@gmail.com>
- <20190720150511.95076-3-luzmaximilian@gmail.com>
- <20190727091443.GC795@penguin>
- <fb53b082-4d83-83a6-1ae6-b9fae9dc750f@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb53b082-4d83-83a6-1ae6-b9fae9dc750f@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 28 Jul 2019 06:03:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:59972 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbfG1KDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 06:03:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7088D344;
+        Sun, 28 Jul 2019 03:03:35 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A6303F694;
+        Sun, 28 Jul 2019 03:03:32 -0700 (PDT)
+Date:   Sun, 28 Jul 2019 11:03:31 +0100
+Message-ID: <86wog2mq6k.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        john@phrozen.org, hauke@hauke-m.de
+Subject: Re: [PATCH 5/5] MIPS: dts: lantiq: danube: easy50712: route the PCI_INTA IRQ through EBU
+In-Reply-To: <20190727175315.28834-6-martin.blumenstingl@googlemail.com>
+References: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
+        <20190727175315.28834-6-martin.blumenstingl@googlemail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 02:01:26PM +0200, Maximilian Luz wrote:
-> On 7/27/19 11:14 AM, Dmitry Torokhov wrote:
-> > On Sat, Jul 20, 2019 at 05:05:11PM +0200, Maximilian Luz wrote:
-> > > -
-> > > -	error = gpiod_count(dev, NULL);
-> > > -	if (error < 0) {
-> > > -		dev_dbg(dev, "no GPIO attached, ignoring...\n");
-> > > -		return -ENODEV;
-> > 
-> > I do not think we need to move this into individual "check" functions.
-> > It is needed in all cases so we should keep it here.
-> > 
-> > How about version below?
+On Sat, 27 Jul 2019 18:53:15 +0100,
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 > 
-> Makes sense, looks good to me!
+> EBU provides an interrupt line for the PCI_INTA interrupt. Route
+> easy50712's PCI interrupt to EBU so the interrupt line is configured
+> correctly (using IRQ_TYPE_LEVEL_LOW, this was previously hardcoded in
+> the PCI driver) and ACKed properly.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  arch/mips/boot/dts/lantiq/easy50712.dts | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/mips/boot/dts/lantiq/easy50712.dts b/arch/mips/boot/dts/lantiq/easy50712.dts
+> index 1ce20b7d05cb..33c26b93cfc9 100644
+> --- a/arch/mips/boot/dts/lantiq/easy50712.dts
+> +++ b/arch/mips/boot/dts/lantiq/easy50712.dts
+> @@ -1,6 +1,8 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /dts-v1/;
+>  
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+>  /include/ "danube.dtsi"
+>  
+>  / {
+> @@ -105,7 +107,7 @@
+>  			lantiq,bus-clock = <33333333>;
+>  			interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
+>  			interrupt-map = <
+> -				0x7000 0 0 1 &icu0 29 1 // slot 14, irq 29
+> +				0x7000 0 0 1 &ebu0 0 IRQ_TYPE_LEVEL_LOW // slot 14
+>  			>;
+>  			gpios-reset = <&gpio 21 0>;
+>  			req-mask = <0x1>;		/* GNT1 */
+> -- 
+> 2.22.0
+> 
 
-OK, great, applied.
+Are you OK with breaking compatibility between kernel and DT? It
+usually isn't very nice for users...
+
+Thanks,
+
+	M.
 
 -- 
-Dmitry
+Jazz is not dead, it just smells funny.
