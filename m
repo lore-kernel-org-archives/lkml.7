@@ -2,135 +2,122 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E68C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BBBC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E602070D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:36:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sam.st header.i=@sam.st header.b="WbITrxD0"
+	by mail.kernel.org (Postfix) with ESMTP id 3FD182087C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564328254;
+	bh=dtpU0JvrhpmoMYOOkgibEwwTx2ITKEaj/zaUT14NMXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tjEaQrlEeSa5FdLCa46QH9YdQvsZjqzc05k5n7jepEBGgtLaZEkkWKO71qqnT2F72
+	 HvvieHMzb1nei/CP7MFB4Y2swfPR8+vTJFNEyWY794RHgRief6qQLPu/1/8ceHEmZx
+	 p4+yd5MIcW7wNbrEkNPkhkkWSyNp2hX/QK1NJp1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfG1Pgf (ORCPT
+        id S1726248AbfG1Phc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 11:36:35 -0400
-Received: from sam.st ([5.44.101.18]:47691 "EHLO mail.sam.st"
+        Sun, 28 Jul 2019 11:37:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbfG1Pgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 11:36:35 -0400
-X-Greylist: delayed 562 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Jul 2019 11:36:33 EDT
-Received: from workstation-ibk.test (212-186-61-58.cable.dynamic.surfer.at [212.186.61.58])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726148AbfG1Phc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 11:37:32 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.mayr.bz.it (Postfix) with ESMTPSA id 802DB3000BD;
-        Sun, 28 Jul 2019 17:27:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sam.st; s=default;
-        t=1564327626;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=71FxAUQjnzv2j4qqgDoMFk3VeNdKFNwKxT1YuGIIY4U=;
-        b=WbITrxD0yrYuIBctsgI0XRdCjme+lw+y2NvxAFKUQ8bc2zPLq1gRWHCV1ndv5M9/UUNKaH
-        I01z2fLCBqYU9PB0z7eH5AWsAIPtaBbqkPryiqL6SuK8xqkTzUP2qpfB4qR8K9ekEqulVK
-        i1XrToC88XlD86Pc2fw8SW6F4imMtmo=
-From:   Sebastian Mayr <me@sam.st>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Sebastian Mayr <me@sam.st>
-Subject: [PATCH] uprobes/x86: fix detection of 32-bit user mode
-Date:   Sun, 28 Jul 2019 17:26:17 +0200
-Message-Id: <20190728152617.7308-1-me@sam.st>
-X-Mailer: git-send-email 2.22.0
+        by mail.kernel.org (Postfix) with ESMTPSA id A4A3A2075E;
+        Sun, 28 Jul 2019 15:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564328250;
+        bh=dtpU0JvrhpmoMYOOkgibEwwTx2ITKEaj/zaUT14NMXY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e7+0iwwQS6zexQs9n1mZQqR2usI1hB7F3+6QneIJaBy2NftphI4L0qR4SIx3Q9+Vz
+         dUTsOKQ5LtocYpvFHRFzQqT1ehu7Hyb3yQE/ZpQ1JdYvso09pFNRAvH8rwE932CwHd
+         8dN2F1VOIKhd0rHnT3oQEUw6is3bVqQqL+sKjvgM=
+Date:   Sun, 28 Jul 2019 11:37:29 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        EJ Hsu <ejh@nvidia.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.1 054/141] usb: gadget: storage: Remove warning
+ message
+Message-ID: <20190728153729.GG8637@sasha-vm>
+References: <20190719040246.15945-1-sashal@kernel.org>
+ <20190719040246.15945-54-sashal@kernel.org>
+ <CY4PR1201MB003731626E6A487A7CFC0E33AACB0@CY4PR1201MB0037.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CY4PR1201MB003731626E6A487A7CFC0E33AACB0@CY4PR1201MB0037.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-32-bit processes running on a 64-bit kernel are not always detected
-correctly, causing the process to crash when uretprobes are installed.
-The reason for the crash is that in_ia32_syscall() is used to determine
-the process's mode, which only works correctly when called from a
-syscall. In the case of uretprobes, however, the function is called from
-a software interrupt and always returns 'false' (on a 64-bit kernel). In
-consequence this leads to corruption of the process's return address.
+On Fri, Jul 19, 2019 at 05:27:31AM +0000, Thinh Nguyen wrote:
+>Hi Sasha,
+>
+>Sasha Levin wrote:
+>> From: EJ Hsu <ejh@nvidia.com>
+>>
+>> [ Upstream commit e70b3f5da00119e057b7faa557753fee7f786f17 ]
+>>
+>> This change is to fix below warning message in following scenario:
+>> usb_composite_setup_continue: Unexpected call
+>>
+>> When system tried to enter suspend, the fsg_disable() will be called to
+>> disable fsg driver and send a signal to fsg_main_thread. However, at
+>> this point, the fsg_main_thread has already been frozen and can not
+>> respond to this signal. So, this signal will be pended until
+>> fsg_main_thread wakes up.
+>>
+>> Once system resumes from suspend, fsg_main_thread will detect a signal
+>> pended and do some corresponding action (in handle_exception()). Then,
+>> host will send some setup requests (get descriptor, set configuration...)
+>> to UDC driver trying to enumerate this device. During the handling of "set
+>> configuration" request, it will try to sync up with fsg_main_thread by
+>> sending a signal (which is the same as the signal sent by fsg_disable)
+>> to it. In a similar manner, once the fsg_main_thread receives this
+>> signal, it will call handle_exception() to handle the request.
+>>
+>> However, if the fsg_main_thread wakes up from suspend a little late and
+>> "set configuration" request from Host arrives a little earlier,
+>> fsg_main_thread might come across the request from "set configuration"
+>> when it handles the signal from fsg_disable(). In this case, it will
+>> handle this request as well. So, when fsg_main_thread tries to handle
+>> the signal sent from "set configuration" later, there will nothing left
+>> to do and warning message "Unexpected call" is printed.
+>>
+>> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+>> Signed-off-by: EJ Hsu <ejh@nvidia.com>
+>> Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/usb/gadget/function/f_mass_storage.c | 21 ++++++++++++++------
+>>  drivers/usb/gadget/function/storage_common.h |  1 +
+>>  2 files changed, 16 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/usb/gadget/function/f_mass_storage.c b/drivers/usb/gadget/function/f_mass_storage.c
+>> index 043f97ad8f22..982c3e89eb0d 100644
+>> --- a/drivers/usb/gadget/function/f_mass_storage.c
+>> +++ b/drivers/usb/gadget/function/f_mass_storage.c
+>>
+>
+>This patch may have issue. It was reverted upstream. Please don't queue
+>to stable.
 
-This can be fixed by using user_64bit_mode(), which should always be
-correct.
+I've dropped it, thanks!
 
-Signed-off-by: Sebastian Mayr <me@sam.st>
----
-
-Please note that I just stumbled over this bug and am not really
-familiar with all the internals. So take the patch and, in particular,
-the commit message with a grain of salt. Thanks!
-
- arch/x86/kernel/uprobes.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 918b5092a85f..d6e261202c6b 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -508,9 +508,9 @@ struct uprobe_xol_ops {
- 	void	(*abort)(struct arch_uprobe *, struct pt_regs *);
- };
- 
--static inline int sizeof_long(void)
-+static inline int sizeof_long(struct pt_regs *regs)
- {
--	return in_ia32_syscall() ? 4 : 8;
-+	return user_64bit_mode(regs) ? 8 : 4;
- }
- 
- static int default_pre_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
-@@ -521,9 +521,9 @@ static int default_pre_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
- 
- static int emulate_push_stack(struct pt_regs *regs, unsigned long val)
- {
--	unsigned long new_sp = regs->sp - sizeof_long();
-+	unsigned long new_sp = regs->sp - sizeof_long(regs);
- 
--	if (copy_to_user((void __user *)new_sp, &val, sizeof_long()))
-+	if (copy_to_user((void __user *)new_sp, &val, sizeof_long(regs)))
- 		return -EFAULT;
- 
- 	regs->sp = new_sp;
-@@ -556,7 +556,7 @@ static int default_post_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs
- 		long correction = utask->vaddr - utask->xol_vaddr;
- 		regs->ip += correction;
- 	} else if (auprobe->defparam.fixups & UPROBE_FIX_CALL) {
--		regs->sp += sizeof_long(); /* Pop incorrect return address */
-+		regs->sp += sizeof_long(regs); /* Pop incorrect return address */
- 		if (emulate_push_stack(regs, utask->vaddr + auprobe->defparam.ilen))
- 			return -ERESTART;
- 	}
-@@ -675,7 +675,7 @@ static int branch_post_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
- 	 * "call" insn was executed out-of-line. Just restore ->sp and restart.
- 	 * We could also restore ->ip and try to call branch_emulate_op() again.
- 	 */
--	regs->sp += sizeof_long();
-+	regs->sp += sizeof_long(regs);
- 	return -ERESTART;
- }
- 
-@@ -1056,7 +1056,7 @@ bool arch_uprobe_skip_sstep(struct arch_uprobe *auprobe, struct pt_regs *regs)
- unsigned long
- arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs *regs)
- {
--	int rasize = sizeof_long(), nleft;
-+	int rasize = sizeof_long(regs), nleft;
- 	unsigned long orig_ret_vaddr = 0; /* clear high bits for 32-bit apps */
- 
- 	if (copy_from_user(&orig_ret_vaddr, (void __user *)regs->sp, rasize))
--- 
-2.22.0
-
+--
+Thanks,
+Sasha
