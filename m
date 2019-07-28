@@ -2,98 +2,106 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E2DC7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF239C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F67F20659
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D342075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:34:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTEaCpTg"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Ohh6BbE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfG1Jaz (ORCPT
+        id S1726065AbfG1Jep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 05:30:55 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42758 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfG1Jaw (ORCPT
+        Sun, 28 Jul 2019 05:34:45 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:23333 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfG1Jep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 05:30:52 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so26509116pff.9;
-        Sun, 28 Jul 2019 02:30:52 -0700 (PDT)
+        Sun, 28 Jul 2019 05:34:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=//Jv33RApRdIWivr1AaSMY9thwcYsKbzUTeGOkJOzyI=;
-        b=NTEaCpTgsZ0te86AUZoP0nnvyjTvQc0/KvHjecVxvocYcOYJ83oX6MCdwdkB/rvB8A
-         SxNz6AmXGP6oepbH2oDHyuiMBZk17zuJXfUiag0LMwQIdEB66i5MdY4u8F1BRGNMnlSX
-         JrAh6IHeBnVrp6aHS+vmlazBI4giiS1rlTbDYRwoG+CNbmFRl/7XcN+r9C9Ssbe00q2N
-         SDQ3AnZaDjqx6ZMbNGUnOriwkSe7IriQ6uOokkyNTkflRL/wnsedzi8m0MB36vgh2FR3
-         ZPts2N7W4tbloJy90k7nv+C/6c8rOK1X4uCXzG++FXTxcw+zU40JFEL7v7msGHhyCzoS
-         65vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=//Jv33RApRdIWivr1AaSMY9thwcYsKbzUTeGOkJOzyI=;
-        b=V8cqlvvk4livn0c7fI56xsBP/4ZbaWdGKFpcnAwClJLGXGoD5evSzEgP1PABOHsynH
-         /+gAA2tIjNx5UXZ1RF2PeQW9cg7UfR3PCqXuLbLn6vefgDS5nYG8jVTEMQfOiEv01R9z
-         Q8oyZOG0H+JD/m/tJRrcK+rc8r5RQfU7hq0ecGBRIn0q3BKuezx1iWl69IUlg/gooROG
-         aO9e2a1lELRtzkIGmfd8OYYQTZMWOXPhaMpx0ZcvcDuKmvjsEqUO2rrNp/MXYxKGd1HB
-         iGhgCmLVsQTf8ov+KiSBFSxOpzpgEdvXX59YimnJniSgh8zTBxFI+fAaf8dSkOg3SNkw
-         9Qbg==
-X-Gm-Message-State: APjAAAXFDxqr9gfDejQ8fGNl70RaiFuwU7N7zJEsXRdOu6vvrQ9pYcXe
-        QZdWDugQtBKxmvR0rltGxvohnYus
-X-Google-Smtp-Source: APXvYqwtHBxanejvuCajsmepJw3LJ8U832BCDyyTf8jeauRfoT9SOc2S1gkbFd0NksYLH+ExYBduwA==
-X-Received: by 2002:a62:640c:: with SMTP id y12mr30320972pfb.166.1564306252054;
-        Sun, 28 Jul 2019 02:30:52 -0700 (PDT)
-Received: from localhost.localdomain (unknown-224-80.windriver.com. [147.11.224.80])
-        by smtp.gmail.com with ESMTPSA id s20sm66237380pfe.169.2019.07.28.02.30.51
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sun, 28 Jul 2019 02:30:51 -0700 (PDT)
-From:   Bin Meng <bmeng.cn@gmail.com>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] dt-bindings: pci: pci-msi: Correct the unit-address of the pci node name
-Date:   Sun, 28 Jul 2019 02:30:19 -0700
-Message-Id: <1564306219-17439-2-git-send-email-bmeng.cn@gmail.com>
-X-Mailer: git-send-email 1.7.1
-In-Reply-To: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
-References: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1564306484; x=1595842484;
+  h=from:subject:to:cc:references:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=HBEj87FM8520lmjB2CAs3MjRc7/bulRXak9RiLFobSE=;
+  b=Ohh6BbE3iaUrMzPYAFCdN2R6o/9zfPmhwuJKu2RUz712wxngd23FmXQo
+   9Ykyk0E2pYnIuFN2Bm/N8dqb6QC4ExLJ619Liae30bWD646U1GWVGdfZz
+   jOyRcpdJrHfR9+gO8PIHRdoCixOlFJ60xnxmMu3cB5q/0fH6sVmU+w2cA
+   4=;
+X-IronPort-AV: E=Sophos;i="5.64,317,1559520000"; 
+   d="scan'208";a="688518889"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 28 Jul 2019 09:34:42 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id D64F8A21E1;
+        Sun, 28 Jul 2019 09:34:41 +0000 (UTC)
+Received: from EX13D08UEE001.ant.amazon.com (10.43.62.126) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Sun, 28 Jul 2019 09:34:41 +0000
+Received: from EX13MTAUEE001.ant.amazon.com (10.43.62.200) by
+ EX13D08UEE001.ant.amazon.com (10.43.62.126) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Sun, 28 Jul 2019 09:34:41 +0000
+Received: from [10.107.3.19] (10.107.3.19) by mail-relay.amazon.com
+ (10.43.62.226) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
+ Transport; Sun, 28 Jul 2019 09:34:36 +0000
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Subject: Re: [UNVERIFIED SENDER] Re: [RFC 1/1] edac: Add a counter parameter
+ for edac_device_handle_ue/ce()
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+CC:     <thor.thayer@linux.intel.com>, <bp@alien8.de>,
+        <james.morse@arm.com>, <rric@kernel.org>, <morbidrsa@gmail.com>,
+        <ralf@linux-mips.org>, <david.daney@cavium.com>,
+        <andy.gross@linaro.org>, <david.brown@linaro.org>,
+        <ckadabi@codeaurora.org>, <vnkgutta@codeaurora.org>,
+        <jglauber@cavium.com>, <khuong@os.amperecomputing.com>,
+        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mips@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+References: <1563187987-5847-1-git-send-email-hhhawa@amazon.com>
+ <20190725153658.084ea1aa@coco.lan>
+Message-ID: <355dc172-52f5-3d9c-883a-4ad1fd10d54c@amazon.com>
+Date:   Sun, 28 Jul 2019 12:34:35 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190725153658.084ea1aa@coco.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The unit-address must match the first address specified in the
-reg property of the node.
 
-Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
----
 
- Documentation/devicetree/bindings/pci/pci-msi.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 7/25/2019 9:36 PM, Mauro Carvalho Chehab wrote:
+>>   	/* Propagate the count up the 'totals' tree */
+>> -	instance->counters.ue_count++;
+>> -	edac_dev->counters.ue_count++;
+>> +	instance->counters.ue_count += error_count;
+>> +	edac_dev->counters.ue_count += error_count;
+> Patch itself looks a good idea, but maybe it should rise a WARN()
+> if error_count == 0.
+Good point, shouldn't we use WARN_ONCE here? if the user call 
+edac_device_handle_ue() with error count == 0, it not be change in 
+run-time, only if the error count parameter is calculated somehow, and 
+it'll be the *caller* issue that didn't check the error count.
+What you think?
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
-index 9b3cc81..b73d839 100644
---- a/Documentation/devicetree/bindings/pci/pci-msi.txt
-+++ b/Documentation/devicetree/bindings/pci/pci-msi.txt
-@@ -201,7 +201,7 @@ Example (5)
- 		#msi-cells = <1>;
- 	};
- 
--	pci: pci@c {
-+	pci: pci@f {
- 		reg = <0xf 0x1>;
- 		compatible = "vendor,pcie-root-complex";
- 		device_type = "pci";
--- 
-2.7.4
+> 
+> That applies for both CE and UE error logic.
+Sure.
+
+Thanks,
+Hanna
+> 
+> Thanks,
+> Mauro
 
