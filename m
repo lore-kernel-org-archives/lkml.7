@@ -8,88 +8,92 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35474C7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E2DC7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D7E2085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F67F20659
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:31:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxb3WBd0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTEaCpTg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbfG1Jaw (ORCPT
+        id S1726138AbfG1Jaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 05:30:52 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46718 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfG1Jav (ORCPT
+        Sun, 28 Jul 2019 05:30:55 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42758 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfG1Jaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 05:30:51 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c3so3382346pfa.13;
-        Sun, 28 Jul 2019 02:30:51 -0700 (PDT)
+        Sun, 28 Jul 2019 05:30:52 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so26509116pff.9;
+        Sun, 28 Jul 2019 02:30:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=5Pz4rCVD0vWLA17p+mMhsqMFpeVJDTz+U0y7lXimbeo=;
-        b=rxb3WBd0NCoKGgDCvLUZ9MwueRLsV2bBb8hisfN3xX8w6/eJB0NovX4//X771U1zp4
-         rWGBGpoZpRvwgW8Kvuwwnei8pKU0OmhGWscNi75ufVCaOwwmhVDqM9ppJElD1a0rqCTI
-         1sj+QGGHyEptASUvqtgtXOCTTDaiFLj/8RLVuiz6rq54uRY1x3+qy4rbQ4O0lRwgMuhJ
-         ab01hKUXR3t5KGydKYZHPCcQ/axBEO08aaAT5B0kIZRxJpHMofJW6xtujcD88BWe5Aqv
-         wfBUPYsd611bgcIv5HifAAHNpRNkhCg0h9NIwu1C6H7IUhmmiy4kCHBPd1079P/2uUY2
-         08Ug==
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=//Jv33RApRdIWivr1AaSMY9thwcYsKbzUTeGOkJOzyI=;
+        b=NTEaCpTgsZ0te86AUZoP0nnvyjTvQc0/KvHjecVxvocYcOYJ83oX6MCdwdkB/rvB8A
+         SxNz6AmXGP6oepbH2oDHyuiMBZk17zuJXfUiag0LMwQIdEB66i5MdY4u8F1BRGNMnlSX
+         JrAh6IHeBnVrp6aHS+vmlazBI4giiS1rlTbDYRwoG+CNbmFRl/7XcN+r9C9Ssbe00q2N
+         SDQ3AnZaDjqx6ZMbNGUnOriwkSe7IriQ6uOokkyNTkflRL/wnsedzi8m0MB36vgh2FR3
+         ZPts2N7W4tbloJy90k7nv+C/6c8rOK1X4uCXzG++FXTxcw+zU40JFEL7v7msGHhyCzoS
+         65vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=5Pz4rCVD0vWLA17p+mMhsqMFpeVJDTz+U0y7lXimbeo=;
-        b=qhyry8/h5Ev54DdO8MQewI1PY/lxgc5CJHww0ocoOQfHcvfn1zfCYYH3KA7LPIsfue
-         flM6n23yToVOksuUJUxFgyZY9Pi9TZNTY52h13k1TmsgVDfhuXkD8BDye/etp37rkeZf
-         glri9m8KcECF+4cJBF0xXPsCK/sSsiwC6RKsSIVWqrBtA6XNIrbYJSrUuPRl5+PL0/d2
-         h0WafzkQ0mVgpNFwMkDd6h1NBhFcZI6Z1y07hxpvbUuK2pPUlf75BHoQNrQdi2gislbm
-         XjrL1beHHOONEPfJ5ZuRpYpreiyg7Xkyi323POp9Stnj6SMsStu7KMW30cf/D9+jFkF0
-         lKjA==
-X-Gm-Message-State: APjAAAXO+5+BwALk7GDVl4mkZz20vK3dYZ8lz9zXRnw+EJTJvGGOt5gk
-        YDV2HjKDi4r5W8MnEkd8FuM=
-X-Google-Smtp-Source: APXvYqwZ2IM4/sha2sxku6bqL2fendny9Jm6t5sLo8mngCSairpU4j2k6G5G9vIgUsDB4arnpUlXXw==
-X-Received: by 2002:aa7:9254:: with SMTP id 20mr31908859pfp.212.1564306251153;
-        Sun, 28 Jul 2019 02:30:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=//Jv33RApRdIWivr1AaSMY9thwcYsKbzUTeGOkJOzyI=;
+        b=V8cqlvvk4livn0c7fI56xsBP/4ZbaWdGKFpcnAwClJLGXGoD5evSzEgP1PABOHsynH
+         /+gAA2tIjNx5UXZ1RF2PeQW9cg7UfR3PCqXuLbLn6vefgDS5nYG8jVTEMQfOiEv01R9z
+         Q8oyZOG0H+JD/m/tJRrcK+rc8r5RQfU7hq0ecGBRIn0q3BKuezx1iWl69IUlg/gooROG
+         aO9e2a1lELRtzkIGmfd8OYYQTZMWOXPhaMpx0ZcvcDuKmvjsEqUO2rrNp/MXYxKGd1HB
+         iGhgCmLVsQTf8ov+KiSBFSxOpzpgEdvXX59YimnJniSgh8zTBxFI+fAaf8dSkOg3SNkw
+         9Qbg==
+X-Gm-Message-State: APjAAAXFDxqr9gfDejQ8fGNl70RaiFuwU7N7zJEsXRdOu6vvrQ9pYcXe
+        QZdWDugQtBKxmvR0rltGxvohnYus
+X-Google-Smtp-Source: APXvYqwtHBxanejvuCajsmepJw3LJ8U832BCDyyTf8jeauRfoT9SOc2S1gkbFd0NksYLH+ExYBduwA==
+X-Received: by 2002:a62:640c:: with SMTP id y12mr30320972pfb.166.1564306252054;
+        Sun, 28 Jul 2019 02:30:52 -0700 (PDT)
 Received: from localhost.localdomain (unknown-224-80.windriver.com. [147.11.224.80])
-        by smtp.gmail.com with ESMTPSA id s20sm66237380pfe.169.2019.07.28.02.30.50
+        by smtp.gmail.com with ESMTPSA id s20sm66237380pfe.169.2019.07.28.02.30.51
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sun, 28 Jul 2019 02:30:50 -0700 (PDT)
+        Sun, 28 Jul 2019 02:30:51 -0700 (PDT)
 From:   Bin Meng <bmeng.cn@gmail.com>
 To:     Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] dt-bindings: interrupt-controller: msi: Correct msi-controller@c's reg
-Date:   Sun, 28 Jul 2019 02:30:18 -0700
-Message-Id: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
+Subject: [PATCH 2/2] dt-bindings: pci: pci-msi: Correct the unit-address of the pci node name
+Date:   Sun, 28 Jul 2019 02:30:19 -0700
+Message-Id: <1564306219-17439-2-git-send-email-bmeng.cn@gmail.com>
 X-Mailer: git-send-email 1.7.1
+In-Reply-To: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
+References: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The base address of msi-controller@c should be set to c.
+The unit-address must match the first address specified in the
+reg property of the node.
 
 Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
 ---
 
- Documentation/devicetree/bindings/interrupt-controller/msi.txt | 2 +-
+ Documentation/devicetree/bindings/pci/pci-msi.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/msi.txt b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
-index c60c034..c20b51d 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/msi.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
-@@ -98,7 +98,7 @@ Example
+diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
+index 9b3cc81..b73d839 100644
+--- a/Documentation/devicetree/bindings/pci/pci-msi.txt
++++ b/Documentation/devicetree/bindings/pci/pci-msi.txt
+@@ -201,7 +201,7 @@ Example (5)
+ 		#msi-cells = <1>;
  	};
  
- 	msi_c: msi-controller@c {
--		reg = <0xb 0xf00>;
-+		reg = <0xc 0xf00>;
- 		compatible = "vendor-b,another-controller";
- 		msi-controller;
- 		/* Each device has some unique ID */
+-	pci: pci@c {
++	pci: pci@f {
+ 		reg = <0xf 0x1>;
+ 		compatible = "vendor,pcie-root-complex";
+ 		device_type = "pci";
 -- 
 2.7.4
 
