@@ -2,144 +2,83 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E64E2C76190
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 03:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021A2C7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 03:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CDC20828
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 03:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45AF2085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 03:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfG1DOc (ORCPT
+        id S1726027AbfG1DqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Jul 2019 23:14:32 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:52471 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfG1DOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Jul 2019 23:14:31 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id C23D86F928;
-        Sun, 28 Jul 2019 03:14:27 +0000 (UTC)
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v5 6/6] ARM: dts: sun8i: s3: add devicetree for Lichee zero plus w/ S3
-Date:   Sun, 28 Jul 2019 11:12:27 +0800
-Message-Id: <20190728031227.49140-7-icenowy@aosc.io>
-In-Reply-To: <20190728031227.49140-1-icenowy@aosc.io>
-References: <20190728031227.49140-1-icenowy@aosc.io>
+        Sat, 27 Jul 2019 23:46:02 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:45746 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfG1DqB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Jul 2019 23:46:01 -0400
+Received: by mail-io1-f69.google.com with SMTP id e20so63151502ioe.12
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jul 2019 20:46:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=o2kzyTbMhQL/kAorHcC+7ID+BqHWTQyphajjOBsUUz8=;
+        b=cA7CccRz5izEY3dJP5dV0F4e9IXcGNQLAUOhtXd5bPojHbcKl6qC4VyTHUcuV1eFxI
+         vpoZCgZzmzBphNqy59sFcmt/traSzuVuz9U3kcjDcscX3cGBpA5s22mdyarMHQbpmhng
+         ADS6XVoMAht6iAg9oRUydX6f7g7Kv8WVI7wtJBrd4/Iiev/sWx5X/eBR47tajPZgJHqO
+         tE6xbMZswngaxVmTxrRQZFRNUBmheZxbJtMkHAnGEwxR5y7qYFbTMQizH9Fy9G9dpXOp
+         9cHaoblQw7ER0gUyHGNTLnwLJaoDLugBst1eJnomkgJ5cbybc3mu3HtCtq6dM0hYxQCy
+         IKxw==
+X-Gm-Message-State: APjAAAUFHGJ1t7B41uNk0glaNSfcnVasJ4Y86KL3Mo4mCfc9XbE2TRXw
+        pb77CeMesYsV7ojjsNfxuoCBp77a6A4jIxXt1rUuZx8HnCZO
+X-Google-Smtp-Source: APXvYqxXM+e7HkG1ndOj4S4xy8tLRGbSOz7rHomFcVxe9opbIqsbCOX/jEqUOK4tXAcI7y8l03aMdveo9Zu26OKpCrjDuyQnBW0q
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a02:878a:: with SMTP id t10mr33742269jai.112.1564285560945;
+ Sat, 27 Jul 2019 20:46:00 -0700 (PDT)
+Date:   Sat, 27 Jul 2019 20:46:00 -0700
+In-Reply-To: <0000000000002b4896058e7abf78@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000300996058eb59dd7@google.com>
+Subject: Re: general protection fault in tls_trim_both_msgs
+From:   syzbot <syzbot+0e0fedcad708d12d3032@syzkaller.appspotmail.com>
+To:     ast@kernel.org, aviadye@mellanox.com, borisp@mellanox.com,
+        bpf@vger.kernel.org, corbet@lwn.net, daniel@iogearbox.net,
+        davejwatson@fb.com, davem@davemloft.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
+        kafai@fb.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lichee zero plus is a core board made by Sipeed, which includes on-board
-TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
-header, a microUSB slot and a gold finger connector for expansion. It
-can use either Sochip S3 or Allwinner S3L SoC.
+syzbot has bisected this bug to:
 
-Add the basic device tree for the core board, w/o optional onboard
-storage, and with S3 SoC.
+commit 32857cf57f920cdc03b5095f08febec94cf9c36b
+Author: John Fastabend <john.fastabend@gmail.com>
+Date:   Fri Jul 19 17:29:18 2019 +0000
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
-Changes in v5:
-- Added missing compatible string.
-- Set default USB role to "peripheral".
-- Switch to use V3 DTSI.
+     net/tls: fix transition through disconnect with close
 
-No changes in v4.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155064d8600000
+start commit:   fde50b96 Add linux-next specific files for 20190726
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=175064d8600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=135064d8600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4b58274564b354c1
+dashboard link: https://syzkaller.appspot.com/bug?extid=0e0fedcad708d12d3032
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14779d64600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1587c842600000
 
-Changes in v3:
-- Drop common regulator DTSI usage and added vcc3v3 regulator.
+Reported-by: syzbot+0e0fedcad708d12d3032@syzkaller.appspotmail.com
+Fixes: 32857cf57f92 ("net/tls: fix transition through disconnect with  
+close")
 
-Patch introduced in v2.
-
- arch/arm/boot/dts/Makefile                    |  1 +
- .../boot/dts/sun8i-s3-lichee-zero-plus.dts    | 53 +++++++++++++++++++
- 2 files changed, 54 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bef2b6e2392d..ef937988b30e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1120,6 +1120,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-r16-nintendo-super-nes-classic.dtb \
- 	sun8i-r16-parrot.dtb \
- 	sun8i-r40-bananapi-m2-ultra.dtb \
-+	sun8i-s3-lichee-zero-plus.dtb \
- 	sun8i-t3-cqa3t-bv3.dtb \
- 	sun8i-v3s-licheepi-zero.dtb \
- 	sun8i-v3s-licheepi-zero-dock.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-new file mode 100644
-index 000000000000..d18192d51d1b
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-v3.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "Sipeed Lichee Zero Plus";
-+	compatible = "sipeed,lichee-zero-plus", "sochip,s3",
-+		     "allwinner,sun8i-v3";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&mmc0 {
-+	broken-cd;
-+	bus-width = <4>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "peripheral";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
--- 
-2.21.0
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
