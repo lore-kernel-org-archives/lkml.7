@@ -2,257 +2,82 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2CEC7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 16:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A10C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 16:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A183C206DD
+	by mail.kernel.org (Postfix) with ESMTP id CDD832085A
 	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 16:41:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bFFofcgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbfG1Qkt (ORCPT
+        id S1726203AbfG1Qln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 12:40:49 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:31867 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfG1Qkt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 12:40:49 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x6SGeKji024520;
-        Mon, 29 Jul 2019 01:40:20 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6SGeKji024520
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564332020;
-        bh=utzluryZNWCiMcKjtA37Iw3PBQRzyoAFNM/fbkOO86Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bFFofcgElFlMDh4CaXpmYURoXbjYGSbxfvB4lC9UgewikYwVnbaLlcFgAU1H16FVE
-         DbLi8mWKXD75MpG/we2NFOWTvPs8ycQ8M+ewxaKq+NVyrx+mlyFMfCk5bAFcTr/zdg
-         2aZ1A6kbYYNid0ZSzKXNtYMDnT7Gde4qwruiw7nlgbl0acJOm8CvDE3YWvcSFE/ym6
-         0yM78PkS0rtHc5PlkLKakdtb0nyYbqc1D7TeefZCCqSzexydCeXk75qqbJ1OyDoFmB
-         j82OMizorGi+jaeYJ5rhd/aOedeZOA2CvtC5TUwe5LjggLaakFVfXjKNCGStrmZ0af
-         g7myGCQelVz9A==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] leds: netxbig: remove legacy board-file support
-Date:   Mon, 29 Jul 2019 01:40:15 +0900
-Message-Id: <20190728164015.15405-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 28 Jul 2019 12:41:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48960 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726046AbfG1Qlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 12:41:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7E16AAD45;
+        Sun, 28 Jul 2019 16:41:41 +0000 (UTC)
+Date:   Sun, 28 Jul 2019 18:41:38 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Linux I2C <linux-i2c@vger.kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/2] eeprom: at24: make spd world-readable again
+Message-ID: <20190728184138.78afc30f@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit ebc278f15759 ("ARM: mvebu: remove static LED setup for
-netxbig boards"), no one in upstream passes in the platform data to
-this driver.
+The integration of the at24 driver into the nvmem framework broke the
+world-readability of spd EEPROMs. Fix it.
 
-Squash leds-kirkwood-netxbig.h into the driver, and remove the legacy
-board-file support.
-
-Link: https://lkml.org/lkml/2019/7/20/83
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Fixes: 57d155506dd5 ("eeprom: at24: extend driver to plug into the NVMEM framework")
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Arnd Bergmann <arnd@arndb.de>
 ---
+Note: This is only the 1st half of the fix, the nvmem core driver
+also needs to be fixed.
 
- drivers/leds/Kconfig                          |  1 +
- drivers/leds/leds-netxbig.c                   | 70 +++++++++++++------
- .../platform_data/leds-kirkwood-netxbig.h     | 54 --------------
- 3 files changed, 51 insertions(+), 74 deletions(-)
- delete mode 100644 include/linux/platform_data/leds-kirkwood-netxbig.h
+Changes since V1:
+ * Split into 2 patches, one to the at24 driver and one to the nvmem
+   core.
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index b0fdeef10bd9..80e0399b7e6d 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -587,6 +587,7 @@ config LEDS_NETXBIG
- 	tristate "LED support for Big Network series LEDs"
- 	depends on LEDS_CLASS
- 	depends on MACH_KIRKWOOD
-+	depends on OF_GPIO
- 	default y
- 	help
- 	  This option enables support for LEDs found on the LaCie 2Big
-diff --git a/drivers/leds/leds-netxbig.c b/drivers/leds/leds-netxbig.c
-index 10497a466775..0944cb111c34 100644
---- a/drivers/leds/leds-netxbig.c
-+++ b/drivers/leds/leds-netxbig.c
-@@ -15,7 +15,48 @@
- #include <linux/gpio.h>
- #include <linux/of_gpio.h>
- #include <linux/leds.h>
--#include <linux/platform_data/leds-kirkwood-netxbig.h>
-+
-+struct netxbig_gpio_ext {
-+	unsigned int	*addr;
-+	int		num_addr;
-+	unsigned int	*data;
-+	int		num_data;
-+	unsigned int	enable;
-+};
-+
-+enum netxbig_led_mode {
-+	NETXBIG_LED_OFF,
-+	NETXBIG_LED_ON,
-+	NETXBIG_LED_SATA,
-+	NETXBIG_LED_TIMER1,
-+	NETXBIG_LED_TIMER2,
-+	NETXBIG_LED_MODE_NUM,
-+};
-+
-+#define NETXBIG_LED_INVALID_MODE NETXBIG_LED_MODE_NUM
-+
-+struct netxbig_led_timer {
-+	unsigned long		delay_on;
-+	unsigned long		delay_off;
-+	enum netxbig_led_mode	mode;
-+};
-+
-+struct netxbig_led {
-+	const char	*name;
-+	const char	*default_trigger;
-+	int		mode_addr;
-+	int		*mode_val;
-+	int		bright_addr;
-+	int		bright_max;
-+};
-+
-+struct netxbig_led_platform_data {
-+	struct netxbig_gpio_ext	*gpio_ext;
-+	struct netxbig_led_timer *timer;
-+	int			num_timer;
-+	struct netxbig_led	*leds;
-+	int			num_leds;
-+};
- 
- /*
-  * GPIO extension bus.
-@@ -306,7 +347,6 @@ static int create_netxbig_led(struct platform_device *pdev,
- 	return devm_led_classdev_register(&pdev->dev, &led_dat->cdev);
- }
- 
--#ifdef CONFIG_OF_GPIO
- static int gpio_ext_get_of_pdata(struct device *dev, struct device_node *np,
- 				 struct netxbig_gpio_ext *gpio_ext)
- {
-@@ -522,30 +562,20 @@ static const struct of_device_id of_netxbig_leds_match[] = {
- 	{},
- };
- MODULE_DEVICE_TABLE(of, of_netxbig_leds_match);
--#else
--static inline int
--netxbig_leds_get_of_pdata(struct device *dev,
--			  struct netxbig_led_platform_data *pdata)
--{
--	return -ENODEV;
--}
--#endif /* CONFIG_OF_GPIO */
- 
- static int netxbig_led_probe(struct platform_device *pdev)
- {
--	struct netxbig_led_platform_data *pdata = dev_get_platdata(&pdev->dev);
-+	struct netxbig_led_platform_data *pdata;
- 	struct netxbig_led_data *leds_data;
- 	int i;
- 	int ret;
- 
--	if (!pdata) {
--		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
--		if (!pdata)
--			return -ENOMEM;
--		ret = netxbig_leds_get_of_pdata(&pdev->dev, pdata);
--		if (ret)
--			return ret;
--	}
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+	ret = netxbig_leds_get_of_pdata(&pdev->dev, pdata);
-+	if (ret)
-+		return ret;
- 
- 	leds_data = devm_kcalloc(&pdev->dev,
- 				 pdata->num_leds, sizeof(*leds_data),
-@@ -571,7 +601,7 @@ static struct platform_driver netxbig_led_driver = {
- 	.probe		= netxbig_led_probe,
- 	.driver		= {
- 		.name		= "leds-netxbig",
--		.of_match_table	= of_match_ptr(of_netxbig_leds_match),
-+		.of_match_table	= of_netxbig_leds_match,
- 	},
- };
- 
-diff --git a/include/linux/platform_data/leds-kirkwood-netxbig.h b/include/linux/platform_data/leds-kirkwood-netxbig.h
-deleted file mode 100644
-index 3c85a735c380..000000000000
---- a/include/linux/platform_data/leds-kirkwood-netxbig.h
-+++ /dev/null
-@@ -1,54 +0,0 @@
--/*
-- * Platform data structure for netxbig LED driver
-- *
-- * This file is licensed under the terms of the GNU General Public
-- * License version 2.  This program is licensed "as is" without any
-- * warranty of any kind, whether express or implied.
-- */
--
--#ifndef __LEDS_KIRKWOOD_NETXBIG_H
--#define __LEDS_KIRKWOOD_NETXBIG_H
--
--struct netxbig_gpio_ext {
--	unsigned	*addr;
--	int		num_addr;
--	unsigned	*data;
--	int		num_data;
--	unsigned	enable;
--};
--
--enum netxbig_led_mode {
--	NETXBIG_LED_OFF,
--	NETXBIG_LED_ON,
--	NETXBIG_LED_SATA,
--	NETXBIG_LED_TIMER1,
--	NETXBIG_LED_TIMER2,
--	NETXBIG_LED_MODE_NUM,
--};
--
--#define NETXBIG_LED_INVALID_MODE NETXBIG_LED_MODE_NUM
--
--struct netxbig_led_timer {
--	unsigned long		delay_on;
--	unsigned long		delay_off;
--	enum netxbig_led_mode	mode;
--};
--
--struct netxbig_led {
--	const char	*name;
--	const char	*default_trigger;
--	int		mode_addr;
--	int		*mode_val;
--	int		bright_addr;
--	int		bright_max;
--};
--
--struct netxbig_led_platform_data {
--	struct netxbig_gpio_ext	*gpio_ext;
--	struct netxbig_led_timer *timer;
--	int			num_timer;
--	struct netxbig_led	*leds;
--	int			num_leds;
--};
--
--#endif /* __LEDS_KIRKWOOD_NETXBIG_H */
+ drivers/misc/eeprom/at24.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- linux-5.1.orig/drivers/misc/eeprom/at24.c	2019-07-28 16:52:06.550918923 +0200
++++ linux-5.1/drivers/misc/eeprom/at24.c	2019-07-28 16:53:28.104167083 +0200
+@@ -719,7 +719,7 @@ static int at24_probe(struct i2c_client
+ 	nvmem_config.name = dev_name(dev);
+ 	nvmem_config.dev = dev;
+ 	nvmem_config.read_only = !writable;
+-	nvmem_config.root_only = true;
++	nvmem_config.root_only = !(flags & AT24_FLAG_IRUGO);
+ 	nvmem_config.owner = THIS_MODULE;
+ 	nvmem_config.compat = true;
+ 	nvmem_config.base_dev = dev;
+
+
 -- 
-2.17.1
-
+Jean Delvare
+SUSE L3 Support
