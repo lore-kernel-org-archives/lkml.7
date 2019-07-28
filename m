@@ -2,186 +2,142 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5B1C7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 12:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884B4C7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 12:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23CDA2067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 12:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="1whsAqWu"
+	by mail.kernel.org (Postfix) with ESMTP id 6037B2070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 12:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbfG1M3m (ORCPT
+        id S1726148AbfG1MdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 08:29:42 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:43330 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726008AbfG1M3m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 08:29:42 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 2691F2E0ACA;
-        Sun, 28 Jul 2019 15:29:39 +0300 (MSK)
-Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id dss6TXipDP-TcNGG9RB;
-        Sun, 28 Jul 2019 15:29:39 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1564316979; bh=EObxK8dqWVVRvRBsEeGGtpDlfj4a0yOhIWWPIED/x3I=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=1whsAqWuYKUJOXIPmma8+5xsd/DouCy6BjR807Y4R+wzUZD3rwTnOdzO8+z9EzdNm
-         DhYxNS7unEDB0vVeMJeEVb0CTUOUtgKtNd7Qx+hfo0Mic5/s1HJS79olmnfDG17l7a
-         0AqyBOkOz+M6pGmoVhyanJQEcgC735AjJsBq5x6M=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:9005::1:7])
-        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id uMle0XeyLh-TcAq4Ce2;
-        Sun, 28 Jul 2019 15:29:38 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit in
- get_user_pages loop
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     cgroups@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Date:   Sun, 28 Jul 2019 15:29:38 +0300
-Message-ID: <156431697805.3170.6377599347542228221.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Sun, 28 Jul 2019 08:33:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:60710 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbfG1MdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 08:33:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D541337;
+        Sun, 28 Jul 2019 05:33:02 -0700 (PDT)
+Received: from [10.163.1.126] (unknown [10.163.1.126])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B3BF13F71A;
+        Sun, 28 Jul 2019 05:32:56 -0700 (PDT)
+Subject: Re: [PATCH v9 11/21] mm: pagewalk: Add p4d_entry() and pgd_entry()
+To:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-12-steven.price@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <b61435a3-0da0-de57-0993-b1fffeca3ca9@arm.com>
+Date:   Sun, 28 Jul 2019 18:03:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190722154210.42799-12-steven.price@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-High memory limit in memory cgroup allows to batch memory reclaiming and
-defer it until returning into userland. This moves it out of any locks.
 
-Fixed gap between high and max limit works pretty well (we are using
-64 * NR_CPUS pages) except cases when one syscall allocates tons of
-memory. This affects all other tasks in cgroup because they might hit
-max memory limit in unhandy places and\or under hot locks.
 
-For example mmap with MAP_POPULATE or MAP_LOCKED might allocate a lot
-of pages and push memory cgroup usage far ahead high memory limit.
+On 07/22/2019 09:12 PM, Steven Price wrote:
+> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
+> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
+> no users. We're about to add users so reintroduce them, along with
+> p4d_entry() as we now have 5 levels of tables.
+> 
+> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
+> PUD-sized transparent hugepages") already re-added pud_entry() but with
+> different semantics to the other callbacks. Since there have never
+> been upstream users of this, revert the semantics back to match the
+> other callbacks. This means pud_entry() is called for all entries, not
+> just transparent huge pages.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>  include/linux/mm.h | 15 +++++++++------
+>  mm/pagewalk.c      | 27 ++++++++++++++++-----------
+>  2 files changed, 25 insertions(+), 17 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 0334ca97c584..b22799129128 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1432,15 +1432,14 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+>  
+>  /**
+>   * mm_walk - callbacks for walk_page_range
+> - * @pud_entry: if set, called for each non-empty PUD (2nd-level) entry
+> - *	       this handler should only handle pud_trans_huge() puds.
+> - *	       the pmd_entry or pte_entry callbacks will be used for
+> - *	       regular PUDs.
+> - * @pmd_entry: if set, called for each non-empty PMD (3rd-level) entry
+> + * @pgd_entry: if set, called for each non-empty PGD (top-level) entry
+> + * @p4d_entry: if set, called for each non-empty P4D entry
+> + * @pud_entry: if set, called for each non-empty PUD entry
+> + * @pmd_entry: if set, called for each non-empty PMD entry
+>   *	       this handler is required to be able to handle
+>   *	       pmd_trans_huge() pmds.  They may simply choose to
+>   *	       split_huge_page() instead of handling it explicitly.
+> - * @pte_entry: if set, called for each non-empty PTE (4th-level) entry
+> + * @pte_entry: if set, called for each non-empty PTE (lowest-level) entry
+>   * @pte_hole: if set, called for each hole at all levels
+>   * @hugetlb_entry: if set, called for each hugetlb entry
+>   * @test_walk: caller specific callback function to determine whether
+> @@ -1455,6 +1454,10 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+>   * (see the comment on walk_page_range() for more details)
+>   */
+>  struct mm_walk {
+> +	int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
+> +			 unsigned long next, struct mm_walk *walk);
+> +	int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
+> +			 unsigned long next, struct mm_walk *walk);
+>  	int (*pud_entry)(pud_t *pud, unsigned long addr,
+>  			 unsigned long next, struct mm_walk *walk);
+>  	int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
+> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+> index c3084ff2569d..98373a9f88b8 100644
+> --- a/mm/pagewalk.c
+> +++ b/mm/pagewalk.c
+> @@ -90,15 +90,9 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>  		}
+>  
+>  		if (walk->pud_entry) {
+> -			spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
+> -
+> -			if (ptl) {
+> -				err = walk->pud_entry(pud, addr, next, walk);
+> -				spin_unlock(ptl);
+> -				if (err)
+> -					break;
+> -				continue;
+> -			}
+> +			err = walk->pud_entry(pud, addr, next, walk);
+> +			if (err)
+> +				break;
 
-This patch uses halfway between high and max limits as threshold and
-in this case starts memory reclaiming if mem_cgroup_handle_over_high()
-called with argument only_severe = true, otherwise reclaim is deferred
-till returning into userland. If high limits isn't set nothing changes.
-
-Now long running get_user_pages will periodically reclaim cgroup memory.
-Other possible targets are generic file read/write iter loops.
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- include/linux/memcontrol.h |    4 ++--
- include/linux/tracehook.h  |    2 +-
- mm/gup.c                   |    5 ++++-
- mm/memcontrol.c            |   17 ++++++++++++++++-
- 4 files changed, 23 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 44c41462be33..eca2bf9560f2 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -512,7 +512,7 @@ unsigned long mem_cgroup_get_zone_lru_size(struct lruvec *lruvec,
- 	return mz->lru_zone_size[zone_idx][lru];
- }
- 
--void mem_cgroup_handle_over_high(void);
-+void mem_cgroup_handle_over_high(bool only_severe);
- 
- unsigned long mem_cgroup_get_max(struct mem_cgroup *memcg);
- 
-@@ -969,7 +969,7 @@ static inline void unlock_page_memcg(struct page *page)
- {
- }
- 
--static inline void mem_cgroup_handle_over_high(void)
-+static inline void mem_cgroup_handle_over_high(bool only_severe)
- {
- }
- 
-diff --git a/include/linux/tracehook.h b/include/linux/tracehook.h
-index 36fb3bbed6b2..8845fb65353f 100644
---- a/include/linux/tracehook.h
-+++ b/include/linux/tracehook.h
-@@ -194,7 +194,7 @@ static inline void tracehook_notify_resume(struct pt_regs *regs)
- 	}
- #endif
- 
--	mem_cgroup_handle_over_high();
-+	mem_cgroup_handle_over_high(false);
- 	blkcg_maybe_throttle_current();
- }
- 
-diff --git a/mm/gup.c b/mm/gup.c
-index 98f13ab37bac..42b93fffe824 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -847,8 +847,11 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
- 			ret = -ERESTARTSYS;
- 			goto out;
- 		}
--		cond_resched();
- 
-+		/* Reclaim memory over high limit before stocking too much */
-+		mem_cgroup_handle_over_high(true);
-+
-+		cond_resched();
- 		page = follow_page_mask(vma, start, foll_flags, &ctx);
- 		if (!page) {
- 			ret = faultin_page(tsk, vma, start, &foll_flags,
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index cdbb7a84cb6e..15fa664ce98c 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2317,11 +2317,16 @@ static void high_work_func(struct work_struct *work)
- 	reclaim_high(memcg, MEMCG_CHARGE_BATCH, GFP_KERNEL);
- }
- 
-+#define MEMCG_SEVERE_OVER_HIGH	(1 << 31)
-+
- /*
-  * Scheduled by try_charge() to be executed from the userland return path
-  * and reclaims memory over the high limit.
-+ *
-+ * Long allocation loops should call periodically with only_severe = true
-+ * to reclaim memory if usage already over halfway to the max limit.
-  */
--void mem_cgroup_handle_over_high(void)
-+void mem_cgroup_handle_over_high(bool only_severe)
- {
- 	unsigned int nr_pages = current->memcg_nr_pages_over_high;
- 	struct mem_cgroup *memcg;
-@@ -2329,6 +2334,11 @@ void mem_cgroup_handle_over_high(void)
- 	if (likely(!nr_pages))
- 		return;
- 
-+	if (nr_pages & MEMCG_SEVERE_OVER_HIGH)
-+		nr_pages -= MEMCG_SEVERE_OVER_HIGH;
-+	else if (only_severe)
-+		return;
-+
- 	memcg = get_mem_cgroup_from_mm(current->mm);
- 	reclaim_high(memcg, nr_pages, GFP_KERNEL);
- 	css_put(&memcg->css);
-@@ -2493,6 +2503,11 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 				schedule_work(&memcg->high_work);
- 				break;
- 			}
-+			/* Mark as severe if over halfway to the max limit */
-+			if (page_counter_read(&memcg->memory) >
-+			    (memcg->high >> 1) + (memcg->memory.max >> 1))
-+				current->memcg_nr_pages_over_high |=
-+						MEMCG_SEVERE_OVER_HIGH;
- 			current->memcg_nr_pages_over_high += batch;
- 			set_notify_resume(current);
- 			break;
-
+But will not this still encounter possible THP entries when walking user
+page tables (valid walk->vma) in which case still needs to get a lock.
+OR will the callback take care of it ?
