@@ -2,102 +2,165 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E6FC7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E877C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8F5214C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B742077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:50:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uzHn7y7a"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="R26HwiPe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfG1WaX (ORCPT
+        id S1726229AbfG1WuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 18:30:23 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:32864 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfG1WaX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 18:30:23 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h10so56655389ljg.0
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 15:30:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zdX9YrMQVaxUpfOTBX1O7pLAKJ90DiMSNYDDgK4w6MY=;
-        b=uzHn7y7a0Y0/qlrn0YKzbEZHsMJUT2XOGNwHEDmiall7D/hRi7/Pa0PXDWsMKK8M/x
-         +T5Ufs0bPMV5NZn4UKxhRQJRiV7HioFeyz42N5YxMlqpe0otIap7wBnrRHIXRlabL6F+
-         tIw+FW06ASnNiOMxsazFNARFAoQxhXCx8mVUKVQUiwc6s8eKSGDQ+wV6xvlP+RKVCx69
-         AthGteqAMcNz4kes7DpXDFFTXyZdf1plXIwdX4VvK4RzT+DjLMcAtCpSZs6JrLBP3hiD
-         AjyFEwNvD7QVeh3gFADQG7mUdVU4Krzz3Mz+hC8ImhnfZx9OK6NL+asd76M5rif4Ggir
-         TO/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zdX9YrMQVaxUpfOTBX1O7pLAKJ90DiMSNYDDgK4w6MY=;
-        b=Q27GFw7T1a6+hN87KVvIdToQhK/U9Fvko7Ki6hkXufAzYm8zMIShFRDrY95r1qezoC
-         5u7SSKxGJvTTKz19Nr6H8yWmCxR/nNWpOV5HzmHeS0ZPk2zm72wPJHFsn3g/l3zJ6ofW
-         st/Y8BMd2JnFG9uAfRNzKVCRxbLJzaLyDPQ/d4vLcM9A1Xk/Tr3piHzK6OXSL57YWt4h
-         6T9e68iQizxqhl/Eojcnz7r7Ld78bnvaeNjM1hdHelrHwbP41wBgPZTUDXosF2wvWibU
-         vcPtvk48ZdQinrez/CnYs3pU/vyrhb9AW8VJbVHvnhQ6Hh/EnNf1hlXYDBbaXheMr54I
-         IxJA==
-X-Gm-Message-State: APjAAAVBpXChP1Tglvu7f+uWYUNsnGbvE115kPTjdNtj7LO1fenM9Eh0
-        9Aes5w0hTHSWA8o4UY6EnT+naiw+l62vYiBEajxKiw==
-X-Google-Smtp-Source: APXvYqyNNR8/uF69NmdXmI2Xz8NIUyywV1VbobmDCsvJZxej/NwUjEoBbVcZtYq2KHv7AytYbnmLcq/B2nAMEoUr/1A=
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr8075769ljs.54.1564353021137;
- Sun, 28 Jul 2019 15:30:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190707023037.21496-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190707023037.21496-1-yamada.masahiro@socionext.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 Jul 2019 00:30:09 +0200
-Message-ID: <CACRpkdYSDT3pQzNTiHoDdtwMQn32jZ83Q71G=soQ1ycdg+F1ag@mail.gmail.com>
-Subject: Re: [PATCH] gpio: remove less important #ifdef around declarations
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sun, 28 Jul 2019 18:50:01 -0400
+Received: from mail-eopbgr700098.outbound.protection.outlook.com ([40.107.70.98]:50705
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726103AbfG1WuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 18:50:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oLKmNkw5ACkjsvHmCaMJQ1lRGRvUswEAHWuGeaXhjxupaaJq3Q6PUuyCPE9vGXGkJvq+1EmsQYa9YazdmieohHXZcMu/KbXCmreD9b7oG/aLJuldvpKFNdv1BWQlQWhIDFr7eaIjOH3va/ozHDVYdKUx27rZ2E+kLOpjwEt1nfijep/PflzKHaShRPx0d3BhmHgnWgc2uF4Y4cKAw6p0/xTIBEY/neUZ6JGfL9Fi3nHCEQmyZVbtz0HBHsvyo4gi+Cc5cexPrw4DTRiq/62bNia16yOfLFCd+SZ1R0nTVZ8e4JD3Af7BQaz3slRCr3avS+rc75eRoCy5NueAXWO0Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1t+e0kdgV/QI2HfuepYYo8ALA2TOfk9UcfFB4PXRaNo=;
+ b=kXmAlJpm4IDgFWMciKZdZczpaBawUxioXFZSLt38GDQ4jD5lu70jg9o8QYI/f/HVqPTcPWf7vH0ibdhKN5FryiJkd6hj1OXSurPEmOJwgFTPKVFr3dT5GZlVh4nZHBTD+ifvHBe147K5VEDcjNX7LZqA3ODuHJk0gqP3/t7gdAye6PIaekv7u/SkT/vfGHelN/yfgqLZfgrSY42q3eTFepQkUoZr6QEOHyomf9OOTD62xohkd1oTyw8a2ubWUdzqi7qaIeaspcli4R/QtXqR9q4MdIckRZGvLBAVC7sushTIvK4LEZaGWe8oI4gnvsbieOHG7MbPBBkuRc80DVZZtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wavecomp.com;dmarc=pass action=none
+ header.from=mips.com;dkim=pass header.d=mips.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1t+e0kdgV/QI2HfuepYYo8ALA2TOfk9UcfFB4PXRaNo=;
+ b=R26HwiPeP8BQNG2RyotTltxCEtfBhBs5xSR+8GrJIOv8VafzqBgu6LAAnhi1leiK3c6wsekwlUtQJ7Txk5Uj/nO2epH9WJHj6HM0VK75OodvrCav2aVGLS/lzyx55gBlt3pW66lNwts0mf4bWXTaz9tuYAj8YIQ0I06v/A7HLoI=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1375.namprd22.prod.outlook.com (10.174.160.150) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.10; Sun, 28 Jul 2019 22:49:55 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::105a:1595:b6ef:cbdf]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::105a:1595:b6ef:cbdf%4]) with mapi id 15.20.2115.005; Sun, 28 Jul 2019
+ 22:49:55 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Denis Efremov <efremov@linux.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [EXTERNAL][PATCH 1/5] PCI: Convert pci_resource_to_user to a weak
+ function
+Thread-Topic: [EXTERNAL][PATCH 1/5] PCI: Convert pci_resource_to_user to a
+ weak function
+Thread-Index: AQHVRYJLuix0vLkFjkOXtfNq2O4qQKbgooWA
+Date:   Sun, 28 Jul 2019 22:49:55 +0000
+Message-ID: <20190728224953.kezztdozc6k24ya3@pburton-laptop>
+References: <20190728202213.15550-1-efremov@linux.com>
+ <20190728202213.15550-2-efremov@linux.com>
+In-Reply-To: <20190728202213.15550-2-efremov@linux.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR02CA0043.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::20) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+user-agent: NeoMutt/20180716
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [73.93.4.225]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a04180d2-8bc9-41d1-8562-08d713ade8bf
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1375;
+x-ms-traffictypediagnostic: MWHPR2201MB1375:
+x-microsoft-antispam-prvs: <MWHPR2201MB137543F7C0491F4E3EAFBFADC1C20@MWHPR2201MB1375.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:983;
+x-forefront-prvs: 01128BA907
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(346002)(376002)(136003)(39830400003)(396003)(199004)(189003)(66476007)(66556008)(71190400001)(66946007)(5660300002)(4326008)(71200400001)(76176011)(7416002)(6246003)(53936002)(256004)(6916009)(66446008)(64756008)(52116002)(99286004)(6116002)(25786009)(3846002)(66066001)(6512007)(9686003)(44832011)(305945005)(81156014)(6506007)(26005)(81166006)(316002)(478600001)(476003)(8676002)(186003)(68736007)(7736002)(229853002)(446003)(6436002)(8936002)(486006)(2906002)(33716001)(1076003)(102836004)(6486002)(54906003)(42882007)(11346002)(14454004)(386003)(58126008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1375;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LGoXH/hfZ2EmVxj3CUBqAL1sE0i9frxkLeyaAv11qd5O/T0Vpk5dzHcq5B69mWk9zzcZGjP8mgNYqnYgk8VqWacbSL5U1PAXFUuEUxznedrRjQwQV2vPSyfCz2/0ML4894jFWL5b9GgZoPlrjT7dZ8vyafd0q/MtN4sU7xDwnvr+Quk4JuTf2quk4QpWt+gytYlAgN9WF/xbO6KcK2SOv/ebCUzSDWbybST6lhuT065w+DYtU/sfa+9g9lrHpN+xqIVS7fcS0DGisdVV0uROM8JS2Q+vNtIMz2MBVoRQGNaWh0MilRwAmDP6FXuXef+RGu3NNUfdXp0HIPTnpe2WMds9niDVqNKpSlA+naW4VSVt+Y5txDN3lNRiB2e+jDH4pvj72xFpYjGeMDxphd52Bnfx5LUtHJxgrIr28bB8Na8=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A2F7F7783DF44944999686D51424D191@namprd22.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a04180d2-8bc9-41d1-8562-08d713ade8bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2019 22:49:55.3491
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1375
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 7, 2019 at 4:31 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+Hi Denis,
 
-> The whole struct/function declarations in this header are surrounded
-> by #ifdef.
->
-> As far as I understood, the motivation of doing so is probably to break
-> the build earlier if a driver misses to select or depend on correct
-> CONFIG options in Kconfig.
->
-> Since commit 94bed2a9c4ae ("Add -Werror-implicit-function-declaration")
-> no one cannot call functions that have not been declared.
->
-> So, I see some benefit in doing this in the cost of uglier headers.
->
-> In reality, it would not be so easy to catch missed 'select' or
-> 'depends on' because GPIOLIB, GPIOLIB_IRQCHIP etc. are already selected
-> by someone else eventually. So, this kind of error, if any, will be
-> caught by randconfig bots.
->
-> In summary, I am not a big fan of cluttered #ifdef nesting, and this
-> does not matter for normal developers. The code readability wins.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Sun, Jul 28, 2019 at 11:22:09PM +0300, Denis Efremov wrote:
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 9e700d9f9f28..1a19d0151b0a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1870,25 +1870,13 @@ static inline const char *pci_name(const struct p=
+ci_dev *pdev)
+>  	return dev_name(&pdev->dev);
+>  }
+> =20
+> -
+>  /*
+>   * Some archs don't want to expose struct resource to userland as-is
+>   * in sysfs and /proc
+>   */
+> -#ifdef HAVE_ARCH_PCI_RESOURCE_TO_USER
+> -void pci_resource_to_user(const struct pci_dev *dev, int bar,
+> -			  const struct resource *rsrc,
+> -			  resource_size_t *start, resource_size_t *end);
+> -#else
+> -static inline void pci_resource_to_user(const struct pci_dev *dev, int b=
+ar,
+> -		const struct resource *rsrc, resource_size_t *start,
+> -		resource_size_t *end)
+> -{
+> -	*start =3D rsrc->start;
+> -	*end =3D rsrc->end;
+> -}
+> -#endif /* HAVE_ARCH_PCI_RESOURCE_TO_USER */
+> -
+> +void __weak pci_resource_to_user(const struct pci_dev *dev, int bar,
+> +				 const struct resource *rsrc,
+> +				 resource_size_t *start, resource_size_t *end);
+> =20
+>  /*
+>   * The world is not perfect and supplies us with broken PCI devices.
 
-Hm I guess you're right.
+This is wrong - using __weak on the declaration in a header will cause
+the weak attribute to be applied to all implementations too (presuming
+the C files containing the implementations include the header). You then
+get whichever impleentation the linker chooses, which isn't necessarily
+the one you wanted.
 
-This patch does not apply cleanly on v5.3-rc1, could you rebase it
-and resend?
+checkpatch.pl should produce an error about this - see the
+WEAK_DECLARATION error introduced in commit 619a908aa334 ("checkpatch:
+add error on use of attribute((weak)) or __weak declarations").
 
-Yours,
-Linus Walleij
+Thanks,
+    Paul
