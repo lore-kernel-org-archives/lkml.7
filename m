@@ -2,119 +2,106 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94A4C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23474C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C14205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71432085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 08:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564303535;
+	bh=/5r3rYZjAroH9klgA3A3a0rKTbHeBYnKF2HDF1+EAzw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tnHfi6kO+YWrfSLjoOy9IFk2W6laVO4mxUO5ingLwa0tRQYRQ08+2H36my9DuXPXO
+	 hUF5I2DhEKe4BEVGLE9r/PFu59OvGol4VTDHpfvRUHWixCMfP6Z87ckWXNAJxe3/1r
+	 6HJryWwFTBc28orwF/vmhLIMRyqbKqS1s/mCsiY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbfG1Igs (ORCPT
+        id S1726023AbfG1Ipa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 04:36:48 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36679 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbfG1Igs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 04:36:48 -0400
-Received: by mail-io1-f67.google.com with SMTP id o9so9976120iom.3
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 01:36:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JmcimYJf+Bna2bF5oHtnyvYwQab4h3brdRl3y+Yku3w=;
-        b=Www3e5kFMNj2enG7P44iVoUYy78U8xSo+U2CmTNBRfSdOrwQtyQ6ApLpAQKkgjKvH+
-         iYYH+yCLuS3Ah+oeKO1H4aPbpmgPsyG0D2wg+g8jkOHrd49MF4Lj/oB5zHhNeFmGzpY+
-         nsl7+auDlaWFz4bRlcaPUW6RyZ2uj8NLPIedSChztp567a6o/uscWmR2cWW99v4eUaaA
-         fLTMeU18RrVIRkZiUm+lpYw2uHL0mowEHDjl4civiTe7VKUMhaoIo9nNbHBQnjiMChZY
-         NFY+lTvOsstBiQfdAvm+ugNz6QFCmaNGuV0616bDixsJTTyzm50fEyCvIWfXCHvjy3WM
-         3mcw==
-X-Gm-Message-State: APjAAAVztZzunotzAbcvA0HtiCYKvKLXD3dylaKEAKYnnATpCskJEISP
-        iFAWmLKirM2g7utIgwwAO5dziQ==
-X-Google-Smtp-Source: APXvYqyHU6qTV7uMr9tjpRxhhvTuO4lK+5tp+FQOjsGxN+s/1qcSKnN7S1nMevwymEewifIu5iF5Gg==
-X-Received: by 2002:a02:b883:: with SMTP id p3mr34245354jam.79.1564303007037;
-        Sun, 28 Jul 2019 01:36:47 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id o7sm48957845ioo.81.2019.07.28.01.36.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 01:36:45 -0700 (PDT)
-Date:   Sun, 28 Jul 2019 04:36:39 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+36e93b425cd6eb54fcc1@syzkaller.appspotmail.com>,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        michal.lkml@markovi.net, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        yamada.masahiro@socionext.com
-Subject: Re: INFO: rcu detected stall in vhost_worker
-Message-ID: <20190728043619-mutt-send-email-mst@kernel.org>
-References: <000000000000b4358f058e924c6d@google.com>
- <000000000000e87d14058e9728d7@google.com>
+        Sun, 28 Jul 2019 04:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725880AbfG1Ipa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 04:45:30 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D44A2085A;
+        Sun, 28 Jul 2019 08:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564303529;
+        bh=/5r3rYZjAroH9klgA3A3a0rKTbHeBYnKF2HDF1+EAzw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=em3yfMQjkjLr7fBs+kgwtzRpXzjQmy4heVAtAqHs4GXaffz3PpYrdderzejYuejwS
+         cP4TsQd06lza6cbSqVueJcAT+coNAZRiolIEvYJcIGcccVIi3mrojQ1G60Jr9Y8YwR
+         2Hp0vvfRjrJxV1ywuSKxIcNFUXZK1CL6HvgOMYIc=
+Date:   Sun, 28 Jul 2019 09:45:23 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: iio/adc: Add a compatible string
+ for JZ4770 SoC ADC
+Message-ID: <20190728094523.2a161231@archlinux>
+In-Reply-To: <20190727195940.14010-1-contact@artur-rojek.eu>
+References: <20190727195940.14010-1-contact@artur-rojek.eu>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000e87d14058e9728d7@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 04:23:23PM +0800, Hillf Danton wrote:
-> 
-> Fri, 26 Jul 2019 08:26:01 -0700 (PDT)
-> > syzbot has bisected this bug to:
-> > 
-> > commit 0ecfebd2b52404ae0c54a878c872bb93363ada36
-> > Author: Linus Torvalds <torvalds@linux-foundation.org>
-> > Date:   Sun Jul 7 22:41:56 2019 +0000
-> > 
-> >      Linux 5.2
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=118810bfa00000
-> > start commit:   13bf6d6a Add linux-next specific files for 20190725
-> > git tree:       linux-next
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8ae987d803395886
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=36e93b425cd6eb54fcc1
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15112f3fa00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=131ab578600000
-> > 
-> > Reported-by: syzbot+36e93b425cd6eb54fcc1@syzkaller.appspotmail.com
-> > Fixes: 0ecfebd2b524 ("Linux 5.2")
-> > 
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> 
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -787,7 +787,6 @@ static void vhost_setup_uaddr(struct vho
-> 			      size_t size, bool write)
-> {
-> 	struct vhost_uaddr *addr = &vq->uaddrs[index];
-> -	spin_lock(&vq->mmu_lock);
-> 
-> 	addr->uaddr = uaddr;
-> 	addr->size = size;
-> @@ -797,7 +796,10 @@ static void vhost_setup_uaddr(struct vho
-> static void vhost_setup_vq_uaddr(struct vhost_virtqueue *vq)
-> {
-> 	spin_lock(&vq->mmu_lock);
-> -
-> +	/*
-> +	 * deadlock if managing to take mmu_lock again while
-> +	 * setting up uaddr
-> +	 */
-> 	vhost_setup_uaddr(vq, VHOST_ADDR_DESC,
-> 			  (unsigned long)vq->desc,
-> 			  vhost_get_desc_size(vq, vq->num),
-> --
+On Sat, 27 Jul 2019 21:59:38 +0200
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-Thanks!
-I reverted this whole commit.
+> Add a compatible string for the ADC controller present on
+> Ingenic JZ4770 SoC.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
--- 
-MST
+Hi Artur,
+
+I'll have to hold this series for a few weeks as the fix for the
+clock rate divider isn't in my upstream for the togreg branch yet
+(as I haven't sent a pull request since the merge window).
+
+Give me a poke if I seem to have forgotten these in a few weeks
+time.
+
+Thanks,
+
+Jonathan
+
+> ---
+> 
+> Changes:
+> 
+> v2: no change
+> 
+>  Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> index f01159f20d87..cd9048cf9dcf 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>  - compatible: Should be one of:
+>    * ingenic,jz4725b-adc
+>    * ingenic,jz4740-adc
+> +  * ingenic,jz4770-adc
+>  - reg: ADC controller registers location and length.
+>  - clocks: phandle to the SoC's ADC clock.
+>  - clock-names: Must be set to "adc".
+
