@@ -2,91 +2,119 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0B3C7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719CDC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2FE2070D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325752070D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:15:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mecH4Vht"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="v7fk5m+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbfG1XOv (ORCPT
+        id S1726300AbfG1XPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 19:14:51 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41367 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbfG1XOu (ORCPT
+        Sun, 28 Jul 2019 19:15:30 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.35]:23268 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726191AbfG1XPa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 19:14:50 -0400
-Received: by mail-lj1-f195.google.com with SMTP id d24so56685383ljg.8
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 16:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uqbaLb+DoYfmkQkeju/D4dfpefzvGhqE/NA7IyXYHDs=;
-        b=mecH4VhtykhjOehOVm7m8Pa5YP6LbhZHxuLFQA2XocGjWKuVwaUD5JKujEe9aVixYW
-         cawoMpzpCuo6PsH/Y5+Y7tXwV3d7SoDRDfjjcoukQScCk9CzzHAMPo1pS4yrzvyXmqyJ
-         2yMjXxSUUQvzemHru0Os3ufWRvyApCPQMYjePIqEYdIr8dqIpeHbncxd/W99X2KbFg2j
-         jbwANzOROhAvP10F0iLcxqbviHMgDbZ6aAMO7bHOLzMbrE+YgCLY6qUQqtoboNujm0Gj
-         U73hnvjkMlVYKlUDbpdLF67Z+MpbkHJo3vfCQ+e8YPRfhiYgmC3LZ5+TDpH4eiTfU3zX
-         7Iyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uqbaLb+DoYfmkQkeju/D4dfpefzvGhqE/NA7IyXYHDs=;
-        b=X3ChG2zq9nim9P/V6J0wmegXEy9O1pRvxmQJ/Vv1KZ3nnkPDQ0qo80fSPhsfaUoVWn
-         K377/SZh2KlTqJtELu1vpnjR4ER0kceLcIKeajJ4zITdJ/MOs08ck3eIGVTAdNBazFMQ
-         ZJx1wik0hIisvCQsIlfmC0lEgwLD2uHi6WoOYnoJizOVexMhHfJOZ4AbA0skM3Py/cn1
-         RreYWjVN1zWlNznJIw3LKyKjeoDWTuZTwwL2frKgSF7jh/PbK+5fJUxNnuzVl0ezdneC
-         xL4zS05zJ5MZYs00k8UN6ryDvBCk4/BaLhcUDx+IOJbEGsp9OHzoxQIUiUr5iANLUE1I
-         qMCg==
-X-Gm-Message-State: APjAAAXXNacsczUyIodBbVnchSpV9HoxyRbala/iaAXU3dwcp+P/SYE0
-        UimTrmmtknvFlGCGDLaPL0bQOvvJ50XZu7c7L39r3Q==
-X-Google-Smtp-Source: APXvYqxZn/ye7KzmbCXTelv16sXPVMTT2jnKOOv6eVhlkoDzFB17aRJoEaL7U1kzdaeMP7q7K+fcGcM99btdobKE65w=
-X-Received: by 2002:a2e:9593:: with SMTP id w19mr8822011ljh.69.1564355688739;
- Sun, 28 Jul 2019 16:14:48 -0700 (PDT)
+        Sun, 28 Jul 2019 19:15:30 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 8EE1142A4
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 18:15:29 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id rsO1h1X4PdnCersO1hV2rx; Sun, 28 Jul 2019 18:15:29 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8eM1ZD0P81hvxEH0zPMrHc1dSmyP7SXOYbdNw95fElQ=; b=v7fk5m+NtnGmmK+v9Cc8LiDioR
+        Oj7xM8zlr1Ph9+Ns7nNtgf7udDx8FmlZgTIhbHIHThOHq81zqh60YOFA4JfVVYwTiF88h5Wj3RnAZ
+        76uP6jA613mMpMSG8+1PZmd0Q93IphVbzHrQgOvZpWvq34IWqiWHpMT8LnnJcKXDqyVHhDyMjSBq9
+        XmxqEFeuNnWHDJ07nRnVFXgNxzNFW6WtGPyBc6sSvRZmR9KH92IweC0WldC3/HzDXgEcH2PjypvIZ
+        8pYU5CQXFMxxsLbbX1pwLonxSqjM4e1fzObGf8GXzhmK+1JYwoFhE2rTYV4nrPLJwQsL0MpGJbzEw
+        GMGYJMCg==;
+Received: from [187.192.11.120] (port=39040 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hrsO0-003VsI-Bx; Sun, 28 Jul 2019 18:15:28 -0500
+Date:   Sun, 28 Jul 2019 18:15:26 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Russell King <linux@armlinux.org.uk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] ARM: tegra: Mark expected switch fall-through
+Message-ID: <20190728231526.GA22066@embeddedor>
 MIME-Version: 1.0
-References: <20190711041942.23202-1-andrew@aj.id.au>
-In-Reply-To: <20190711041942.23202-1-andrew@aj.id.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 Jul 2019 01:14:37 +0200
-Message-ID: <CACRpkdb4pEdPHbo=3+fJXe9WG8K7A2_xVMtKWCJCfEawDO5wBw@mail.gmail.com>
-Subject: Re: [PATCH 0/6] pinctrl: aspeed: Add AST2600 pinmux support
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>, ryanchen.aspeed@gmail.com,
-        johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hrsO0-003VsI-Bx
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:39040
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 6:19 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+Mark switch cases where we are expecting to fall through.
 
-> This series adds pinmux support for the AST2600. Some more rework was required
-> on top of the previous cleanup series, but this rework was focussed on
-> supporting features of the AST2600 pinmux rather than fixing issues with the
-> existing infrastructure for the ASPEED drivers. Due to the dependences it's
-> based on top of pinctrl/devel, so should avoid any more SPDX issues.
->
-> ASPEED have been testing the patches on hardware, so even for an initial pass
-> there's some confidence in the implementation.
+This patch fixes the following warning:
 
-I'm unsure if I need to wait for the DT bindings to be fixed on this
-series?
+arch/arm/mach-tegra/reset.c: In function 'tegra_cpu_reset_handler_enable':
+arch/arm/mach-tegra/reset.c:72:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   tegra_cpu_reset_handler_set(reset_address);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm/mach-tegra/reset.c:74:2: note: here
+  case 0:
+  ^~~~
 
-Yours,
-Linus Walleij
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ arch/arm/mach-tegra/reset.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-tegra/reset.c b/arch/arm/mach-tegra/reset.c
+index 5a67a71f80cc..76a65df42d10 100644
+--- a/arch/arm/mach-tegra/reset.c
++++ b/arch/arm/mach-tegra/reset.c
+@@ -70,7 +70,7 @@ static void __init tegra_cpu_reset_handler_enable(void)
+ 	switch (err) {
+ 	case -ENOSYS:
+ 		tegra_cpu_reset_handler_set(reset_address);
+-		/* pass-through */
++		/* fall through */
+ 	case 0:
+ 		is_enabled = true;
+ 		break;
+-- 
+2.22.0
+
