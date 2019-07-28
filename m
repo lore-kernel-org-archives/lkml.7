@@ -2,111 +2,92 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6254C76190
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 19:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2F4C7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9122075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 19:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADE1206A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="hl7TiFhG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTGxTS/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfG1Tw3 (ORCPT
+        id S1726278AbfG1UBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 15:52:29 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:11886 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfG1Tw2 (ORCPT
+        Sun, 28 Jul 2019 16:01:10 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40422 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfG1UBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 15:52:28 -0400
+        Sun, 28 Jul 2019 16:01:10 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k8so57470376eds.7;
+        Sun, 28 Jul 2019 13:01:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1564343547; x=1595879547;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jp036A70PNKKSUR2d3ycNtKJ/DljExzQRQpJU5CYsQE=;
-  b=hl7TiFhGep4uTeOXe/txzGFfE9eN96HJESnDSa/JLbTzg9eLarCYgDVV
-   JXuvbt6bq2cpnCuE+SWj3Ob3DJhnnUOjj69gyG8ETtrbfUSG6+GYVpXjR
-   57a08GBAEYes4GlT52cCCcSn4l8oedZPrriNf6N8oh+0vda98CSridwUD
-   4=;
-X-IronPort-AV: E=Sophos;i="5.64,319,1559520000"; 
-   d="scan'208";a="814374163"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 28 Jul 2019 19:52:14 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com (Postfix) with ESMTPS id 9B673A2173;
-        Sun, 28 Jul 2019 19:52:14 +0000 (UTC)
-Received: from EX13D05EUC002.ant.amazon.com (10.43.164.231) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 28 Jul 2019 19:52:14 +0000
-Received: from u18dbf258377358bea500.amazon.com (10.43.160.25) by
- EX13D05EUC002.ant.amazon.com (10.43.164.231) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 28 Jul 2019 19:52:06 +0000
-From:   Ronen Krupnik <ronenk@amazon.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <barakw@amazon.com>, <dwmw@amazon.co.uk>, <benh@amazon.com>,
-        <jonnyc@amazon.com>, <talel@amazon.com>, <hhhawa@amazon.com>,
-        <hanochu@amazon.com>, Ronen Krupnik <ronenk@amazon.com>
-Subject: [PATCH 1/2] dt-bindings: amazon: add Amazon Annapurna Labs Alpine support
-Date:   Sun, 28 Jul 2019 22:51:34 +0300
-Message-ID: <20190728195135.12661-2-ronenk@amazon.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190728195135.12661-1-ronenk@amazon.com>
-References: <20190728195135.12661-1-ronenk@amazon.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ejm20Y4Kz3qQAGjgn7grvGG6B+WvKV1+ZQma7+eIPL8=;
+        b=nTGxTS/Jv3FkFSiVUwVt3eU3upA0PZep95o1yMzzmRbpzGHi72LM1Dn91gFiuJVklE
+         QK3ewaEcpiveSbu8BDMIplVr3G1Py4DjJSCfYXLzcCXlXFghetCAW8m3JK5PE4x7vpvr
+         BzMW23/7hYHfWzSqZ2uczEc8WLZsGPdJe+4oRKJyVZpxev5ObiocjYA3FYyM3XnBKmHU
+         MHx+cRFpuye5JMZ8IQGhk7YAf58xXQZ8zU5zGGFAMiXb5r53/mNzfTEhWepzadFjKIS1
+         OOspT6d9JMnoMmSmzIAY5tqXiDP/gVK2GaS86dHqlBbPmoe2VEsxj0/NWSjG3YHBwAAL
+         3cHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ejm20Y4Kz3qQAGjgn7grvGG6B+WvKV1+ZQma7+eIPL8=;
+        b=YMEdCJY+QMMl7zhOz7gQqHgHHewBFjFZE78dbc1rrUDI7W3MBUIUG8HrO+JSVA+Ot0
+         3S4rm7U0wGMappVdpRRZ1nkonnwa9uQaIDkUrwSbtboBouC+4ZoJpxxY6V4+T/Iw416a
+         e2NO/EqMeqXD0fI6wwf/8FPMkxTq7YGdxitD4p+eeUCY6G2bhJvpda2AX5kcWy7XPeWp
+         3qd9YzmzreI6w4xWJ+cG4yWqumYbwLvu2B2BMIyw7xuN7aKzx8PN9kZsACaF8wPmaYdp
+         A+jsydyUNvn68zMmqkrY2JjfSUoWqoQ0zgbx3mSqLoPCH8dfK9kXQkacZJlxvPPgTbYf
+         UmgQ==
+X-Gm-Message-State: APjAAAWB9UhIVSdhWCjz5BG3ZH//3s1m0pS/ie3uhvEfweCqzIGU+r7/
+        JKlg4HQeLbU6yapNU24pDyM/3i8ym6XUCBxbdFg=
+X-Google-Smtp-Source: APXvYqx6e1jH1Ur0aG9EOYYD+HMwXocx7yP4Jc9Kg4wAHeNy/76HfFW+d9490J38ti3/OHDZj+IqVh4q5sOAPqy98MI=
+X-Received: by 2002:a17:907:2177:: with SMTP id rl23mr82663915ejb.14.1564344068148;
+ Sun, 28 Jul 2019 13:01:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.25]
-X-ClientProxiedBy: EX13P01UWA002.ant.amazon.com (10.43.160.46) To
- EX13D05EUC002.ant.amazon.com (10.43.164.231)
+References: <CADxRZqx-jEnm4U8oe=tJf5apbvcMuw5OYZUN8h4G68sXFvDsmQ@mail.gmail.com>
+ <20190724.131324.1545677795217357026.davem@davemloft.net> <CADxRZqw0oCpw=wKUrFTOJF1dUKrCU6k5MQXj3tVGachu4zPcgw@mail.gmail.com>
+ <20190727.190929.2229738632787796180.davem@davemloft.net>
+In-Reply-To: <20190727.190929.2229738632787796180.davem@davemloft.net>
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Sun, 28 Jul 2019 23:00:56 +0300
+Message-ID: <CADxRZqwv_TUkGsbS5vHsdGXMadjf3MjYbW7WUPEenpa=iSo6PQ@mail.gmail.com>
+Subject: Re: [PATCH 09/16] sparc64: use the generic get_user_pages_fast code
+To:     David Miller <davem@davemloft.net>
+Cc:     "Dmitry V. Levin" <ldv@altlinux.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Sparc kernel list <sparclinux@vger.kernel.org>,
+        linux-mm@kvack.org,
+        Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds DT bindings info for Amazon Annapurna Labs Alpine SOC
-and related reference boards.
+On Sun, Jul 28, 2019 at 5:09 AM David Miller <davem@davemloft.net> wrote:
+> From: Anatoly Pugachev <matorola@gmail.com>
+> Date: Thu, 25 Jul 2019 21:33:24 +0300
+> > there's vmlinuz-5.3.0-rc1 kernel and archive 5.3.0-rc1-modules.tar.gz
+> > of /lib/modules/5.3.0-rc1/
+> > this is from oracle sparclinux LDOM , compiled with 7.4.0 gcc
+>
+> Please, I really really need the unstripped kernel image with all the
+> symbols.  This vmlinuz file is stripped already.  The System.map does
+> not serve as a replacement.
 
-Signed-off-by: Ronen Krupnik <ronenk@amazon.com>
----
- .../devicetree/bindings/arm/amazon,alpine.txt | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/amazon,alpine.txt
+David,
 
-diff --git a/Documentation/devicetree/bindings/arm/amazon,alpine.txt b/Documentation/devicetree/bindings/arm/amazon,alpine.txt
-new file mode 100644
-index 000000000000..58817208421b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/amazon,alpine.txt
-@@ -0,0 +1,23 @@
-+Amazon Annapurna Labs Alpine v3 Platform Device Tree Bindings
-+---------------------------------------------------------------
-+
-+Platforms based on Amazon Annapurna Labs Alpine SoC architecture
-+shall follow the following scheme:
-+
-+SoCs
-+----
-+
-+Each device tree root node must specify which exact SoC in alpine
-+architecture it uses, using one of the following compatible values:
-+
-+- alpine v3
-+  compatible = "amazon,alpine-v3";
-+
-+Boards
-+------
-+
-+Each device tree must specify which one or more of the following
-+board-specific compatible values:
-+
-+- alpine-v3 Evaluation Platform (EVP)
-+  compatible = "amazon,alpine-v3-evp";
--- 
-2.21.0
+http://u164.east.ru/kernel2/
 
+I'm sorry missed debug kernel first. Enabled CONFIG_DEBUG_INFO=y
