@@ -2,111 +2,216 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB24FC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395DAC7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7158C21738
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:33:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="O9BBgdkv"
+	by mail.kernel.org (Postfix) with ESMTP id 0FD422070D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfG1UdI (ORCPT
+        id S1726197AbfG1UpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 16:33:08 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:36666 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbfG1UdI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 16:33:08 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id B2C0F886BF;
-        Mon, 29 Jul 2019 08:33:04 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1564345984;
-        bh=E0biQ+0m4VEh6duf/uRWckBUO5MNN03zyLmL+pngf0o=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=O9BBgdkvLs0DOfDMQIP+6dxYOMAD54G/WNPnI3MH1ky2alWaYLNz7eZTDJzLuJBbw
-         l7LHJXFoHfJIW4t2l/Zxmo9AnExE4VCtm5r9O4q652Eeywi6UP20AYdb1SZObl1JX3
-         0e+Wr+/ZAfaZWCszoEVAYC3N/0G8lHSGpMLvO0F6rSvOrnE3i5bE8x27Xgx39DzW2E
-         YziSq5rcC+e9XPzoPTTRfmjSguJaTu/1Avsh2/NrMI5zPelZkGzNz1SyajkLIWnsnw
-         +hNYnAxEaXj5nV3v/+DxkVQovZFsI43BKQJxeC58E7C1j82WrU7U9v+I9+W39e/URS
-         fzRX5Mx7rJLbA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d3e06800001>; Mon, 29 Jul 2019 08:33:04 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Mon, 29 Jul 2019 08:33:04 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Mon, 29 Jul 2019 08:33:04 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "james.morse@arm.com" <james.morse@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jlu@pengutronix.de" <jlu@pengutronix.de>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "patches@armlinux.org.uk" <patches@armlinux.org.uk>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Subject: Re: [PATCH v9 0/8] EDAC drivers for Armada XP L2 and DDR
-Thread-Topic: [PATCH v9 0/8] EDAC drivers for Armada XP L2 and DDR
-Thread-Index: AQHVOGTGE5n98W5t/EG62Bvvhz+yG6bcSbyAgAODnoA=
-Date:   Sun, 28 Jul 2019 20:33:03 +0000
-Message-ID: <1564345983.9737.9.camel@alliedtelesis.co.nz>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
-         <d1dfe8ec-66e8-e2c8-5421-a18d7e7fc8fc@arm.com>
-In-Reply-To: <d1dfe8ec-66e8-e2c8-5421-a18d7e7fc8fc@arm.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D7D656BF95F90C47AFC63125E32B5778@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Sun, 28 Jul 2019 16:45:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37392 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbfG1UpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 16:45:02 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1C2C0308FC20;
+        Sun, 28 Jul 2019 20:45:02 +0000 (UTC)
+Received: from treble (ovpn-120-102.rdu2.redhat.com [10.10.120.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F5A6600C7;
+        Sun, 28 Jul 2019 20:44:58 +0000 (UTC)
+Date:   Sun, 28 Jul 2019 15:44:56 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jikos@kernel.org, pmladek@suse.com,
+        joe.lawrence@redhat.com, nstange@suse.de,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH] s390/livepatch: Implement reliable stack tracing for the
+ consistency model
+Message-ID: <20190728204456.7bxnsbuo4o3tjxeq@treble>
+References: <20190710105918.22487-1-mbenes@suse.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190710105918.22487-1-mbenes@suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Sun, 28 Jul 2019 20:45:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA3LTI2IGF0IDE1OjUzICswMTAwLCBKYW1lcyBNb3JzZSB3cm90ZToNCj4g
-SGkgQ2hyaXMsDQo+IA0KPiBPbiAxMi8wNy8yMDE5IDA0OjQ4LCBDaHJpcyBQYWNraGFtIHdyb3Rl
-Og0KPiA+IA0KPiA+IEkgc3RpbGwgc2VlbSB0byBiZSBzdHJ1Z2dsaW5nIHRvIGdldCB0aGlzIG9u
-IGFueW9uZSdzIHJhZGFyLg0KPiBXaG9zZSByYWRhciBkb2VzIGl0IG5lZWQgdG8gY3Jvc3M/DQo+
-IA0KDQpUaGF0J3MgYSBnb29kIHF1ZXN0aW9uLiBUaGUgbGFzdCBzb2xpZCBndWlkYW5jZSBJIGhh
-ZCB3YXMgdGhhdCB0aGlzDQpzZXJpZXMgd2FzIGdvaW5nIGluIHZpYSB0aGUgQVJNIHRyZWUuIEJ1
-dCBhcyB5b3Ugc2F5IGJlbG93IHRoYXQgd2FzIHR3bw0KeWVhcnMgYWdvLg0KDQpJIG9ubHkgcmVh
-bGlzZWQgcmVjZW50bHkgdGhhdCB0aGUgQVJNIGNvcmUgc2VlbXMgdG8gaGF2ZSBhIGRpZmZlcmVu
-dA0Kd29ya2Zsb3cgdG8gb3RoZXIga2VybmVsIHN1YnN5c3RlbXMuDQoNCj4gDQo+ID4gDQo+ID4g
-VGhlIFJldmlld3MvQWNrcyBoYXZlIGJlZW4gZ2l2ZW4gc28gdGhpcyBzaG91bGQgYmUgZ29vZCB0
-byBnbyBpbg0KPiA+IHZpYSB0aGUgQVJNDQo+ID4gdHJlZSBhcyBwbGFubmVkLg0KPiA+IA0KPiA+
-IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1hcm0ta2VybmVsLzIw
-MTctQXVndXN0LzUNCj4gPiAyNTU2MS5odG1sDQo+IEZvciB5b3VyIHY4IEkgdG9vayB0aGlzIHRv
-IG1lYW4gdGhpcyBzZXJpZXMgd2FzIGRvbmUhDQo+IA0KPiBJZiBub3RoaW5nIGhhcyBjaGFuZ2Vk
-IHdpdGggQm9yaXMgYW5kIFJ1c3NlbGwncyBkZWNpc2lvbiAoaXQgd2FzIHR3bw0KPiB5ZWFycyBh
-Z28uLi4uKSwNCj4gZGV0YWlscyBvZiB0aGUgcGF0Y2ggc3lzdGVtIGFyZSBoZXJlOg0KPiANCj4g
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtYXJtLWtlcm5lbC8yMDE5MDYyNDE0MjM0Ni5w
-eGxqdjNtNG5wYXRkDQo+IGl5a0BzaGVsbC5hcm1saW51eC5vcmcudWsvDQo+IA0KDQpUaGFua3Mg
-Zm9yIHRoZSBsaW5rLiBJIHdvdWxkIGhhdmUgbmV2ZXIgZm91bmQgdGhhdC4gSSBkaWQgdHJ5IHRv
-IGZvbGxvdw0Kd2hhdCBJIGNvdWxkIGZpbmQgb27CoGh0dHBzOi8vd3d3LmFybWxpbnV4Lm9yZy51
-ay9kZXZlbG9wZXIvwqBidXQgYSBsb3QNCm9mIHRoYXQgc2VlbXMgdG8gYmUgb3V0IG9mIGRhdGUu
-DQoNCkkgZGlkIG1hbmFnZSB0byBzdWJtaXQgdjkgwqB0byB0aGUgQVJNIHBhdGNoIHRyYWNrZXIg
-YnV0IG5hdHVyYWxseSBJDQptZXNzZWQgaXQgdXAgdGhlIGZpcnN0IHRpbWXCoGh0dHBzOi8vd3d3
-LmFybWxpbnV4Lm9yZy51ay9kZXZlbG9wZXIvcGF0Y2gNCmVzL3ZpZXdwYXRjaC5waHA/aWQ9ODg3
-Ny8xwqBhbmQgSSdtIG5vdCBzdXJlIEkgZ290IHRoZSBzZWNvbmQgYXR0ZW1wdA0KcmlnaHQgZWl0
-aGVywqBodHRwczovL3d3dy5hcm1saW51eC5vcmcudWsvZGV2ZWxvcGVyL3BhdGNoZXMvdmlld3Bh
-dGNoLnBoDQpwP2lkPTg4ODUvMQ0KDQoNCj4gVGhhbmtzLA0KPiANCj4gSmFtZXM=
+On Wed, Jul 10, 2019 at 12:59:18PM +0200, Miroslav Benes wrote:
+> The livepatch consistency model requires reliable stack tracing
+> architecture support in order to work properly. In order to achieve
+> this, two main issues have to be solved. First, reliable and consistent
+> call chain backtracing has to be ensured. Second, the unwinder needs to
+> be able to detect stack corruptions and return errors.
+> 
+> The "zSeries ELF Application Binary Interface Supplement" says:
+> 
+>   "The stack pointer points to the first word of the lowest allocated
+>   stack frame. If the "back chain" is implemented this word will point to
+>   the previously allocated stack frame (towards higher addresses), except
+>   for the first stack frame, which shall have a back chain of zero (NULL).
+>   The stack shall grow downwards, in other words towards lower addresses."
+> 
+> "back chain" is optional. GCC option -mbackchain enables it. Quoting
+> Martin Schwidefsky [1]:
+
+This reference footnote seems to be missing at the bottom of the patch
+description.
+
+> diff --git a/arch/s390/include/asm/unwind.h b/arch/s390/include/asm/unwind.h
+> index d827b5b9a32c..1cc96c54169c 100644
+> --- a/arch/s390/include/asm/unwind.h
+> +++ b/arch/s390/include/asm/unwind.h
+> @@ -45,6 +45,25 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+>  bool unwind_next_frame(struct unwind_state *state);
+>  unsigned long unwind_get_return_address(struct unwind_state *state);
+>  
+> +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
+> +void __unwind_start_reliable(struct unwind_state *state,
+> +			     struct task_struct *task, unsigned long sp);
+> +bool unwind_next_frame_reliable(struct unwind_state *state);
+> +
+> +static inline void unwind_start_reliable(struct unwind_state *state,
+> +					 struct task_struct *task)
+> +{
+> +	unsigned long sp;
+> +
+> +	if (task == current)
+> +		sp = current_stack_pointer();
+> +	else
+> +		sp = task->thread.ksp;
+> +
+> +	__unwind_start_reliable(state, task, sp);
+> +}
+> +#endif
+> +
+
+(Ah, cool, I didn't realize s390 ported the x86 unwind interfaces.  We
+should look at unifying them someday.)
+
+Why do you need _reliable() variants of the unwind interfaces?  Can the
+error checking be integrated into unwind_start() and unwind_next_frame()
+like they are on x86?
+
+> +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
+> +void __unwind_start_reliable(struct unwind_state *state,
+> +			     struct task_struct *task, unsigned long sp)
+> +{
+> +	struct stack_info *info = &state->stack_info;
+> +	struct stack_frame *sf;
+> +	unsigned long ip;
+> +
+> +	memset(state, 0, sizeof(*state));
+> +	state->task = task;
+> +
+> +	/* Get current stack pointer and initialize stack info */
+> +	if (get_stack_info_reliable(sp, task, info) ||
+> +	    !on_stack(info, sp, sizeof(struct stack_frame))) {
+> +		/* Something is wrong with the stack pointer */
+> +		info->type = STACK_TYPE_UNKNOWN;
+> +		state->error = true;
+> +		return;
+> +	}
+> +
+> +	/* Get the instruction pointer from the stack frame */
+> +	sf = (struct stack_frame *) sp;
+> +	ip = READ_ONCE_NOCHECK(sf->gprs[8]);
+> +
+> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> +	/* Decode any ftrace redirection */
+> +	if (ip == (unsigned long) return_to_handler)
+> +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
+> +					   ip, NULL);
+> +#endif
+
+The return_to_handler and ifdef checks aren't needed.  Those are done
+already by the call.
+
+Also it seems a bit odd that the kretprobes check isn't done in this
+function next to the ftrace check.
+
+> +
+> +	/* Update unwind state */
+> +	state->sp = sp;
+> +	state->ip = ip;
+> +}
+> +
+> +bool unwind_next_frame_reliable(struct unwind_state *state)
+> +{
+> +	struct stack_info *info = &state->stack_info;
+> +	struct stack_frame *sf;
+> +	struct pt_regs *regs;
+> +	unsigned long sp, ip;
+> +
+> +	sf = (struct stack_frame *) state->sp;
+> +	sp = READ_ONCE_NOCHECK(sf->back_chain);
+> +	/*
+> +	 * Idle tasks are special. The final back-chain points to nodat_stack.
+> +	 * See CALL_ON_STACK() in smp_start_secondary() callback used in
+> +	 * __cpu_up(). We just accept it, go to else branch and look for
+> +	 * pt_regs.
+> +	 */
+> +	if (likely(sp && !(is_idle_task(state->task) &&
+> +			   outside_of_stack(state, sp)))) {
+> +		/* Non-zero back-chain points to the previous frame */
+> +		if (unlikely(outside_of_stack(state, sp)))
+> +			goto out_err;
+> +
+> +		sf = (struct stack_frame *) sp;
+> +		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
+> +	} else {
+> +		/* No back-chain, look for a pt_regs structure */
+> +		sp = state->sp + STACK_FRAME_OVERHEAD;
+> +		regs = (struct pt_regs *) sp;
+> +		if ((unsigned long)regs != info->end - sizeof(struct pt_regs))
+> +			goto out_err;
+> +		if (!(state->task->flags & (PF_KTHREAD | PF_IDLE)) &&
+> +		     !user_mode(regs))
+> +			goto out_err;
+> +
+> +		state->regs = regs;
+> +		goto out_stop;
+> +	}
+> +
+> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> +	/* Decode any ftrace redirection */
+> +	if (ip == (unsigned long) return_to_handler)
+> +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
+> +					   ip, (void *) sp);
+> +#endif
+> +
+> +	/* Update unwind state */
+> +	state->sp = sp;
+> +	state->ip = ip;
+> +	return true;
+> +
+> +out_err:
+> +	state->error = true;
+> +out_stop:
+> +	state->stack_info.type = STACK_TYPE_UNKNOWN;
+> +	return false;
+> +}
+> +#endif
+
+For the _reliable() variants of the unwind interfaces, there's a lot of
+code duplication with the non-reliable variants.  It looks like it would
+be a lot cleaner (and easier to follow) if they were integrated.
+
+Overall it's looking good though.
+
+-- 
+Josh
