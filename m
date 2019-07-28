@@ -2,80 +2,132 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A937C7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 18:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF738C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 18:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587DD2075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 18:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9D72075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 18:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfG1SXF (ORCPT
+        id S1726193AbfG1S1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 14:23:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45696 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfG1SXF (ORCPT
+        Sun, 28 Jul 2019 14:27:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51924 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfG1S1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 14:23:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f9so59371388wre.12
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 11:23:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EJvFkR0xFT4DcC7xVvhEBR15YloolIRXAQnWx8WaEfY=;
-        b=GtM5bfLC43Q1aYsm1hDvY8fxrEXRROuXxuefhwzArHd6Iy0TyJ4IjOGi+ETUFanw+B
-         N1b9RHzXOwSCLDCnfGS9R86F1FH4aaJ7RUwzRd4SpfASuWx0eHNVF3GYWyXltKNQTOWT
-         ZJdc/uf/9ts/kDTumY4c8PXU+71QNbaKtbtNbQ3OJxSvmGo81H5308pPrRMGpBbL49Z6
-         g67r2NgHmfmsOom6wEFfJU2I8XFFtOkWX0XWVUg1I77hauLUZk2T0UjOqKCwT+WLOfB8
-         jnmbzDUp6OLiUqosXnOrsCwG8Dh7qV4NWdRjmjcGX1O1s0lex5/H+MSO3QGeqIVx2w5B
-         5o/w==
-X-Gm-Message-State: APjAAAWSJVs7QiTp88Io8TJ3RlVuPqSZRTPITyVJoX2XX5xwNJr3jHQe
-        EwUB9zHL27ojolim3BFNm+jfXoOVYL0=
-X-Google-Smtp-Source: APXvYqzwcZAz/nfFDF8OnSYn/r901CFMCFqvI14YguhLfmyPgtbl5+072mrwBjm9A12RZsiMW5sLeA==
-X-Received: by 2002:a5d:4cc5:: with SMTP id c5mr63058610wrt.278.1564338183735;
-        Sun, 28 Jul 2019 11:23:03 -0700 (PDT)
-Received: from mcroce-redhat.redhat.com (host221-208-dynamic.27-79-r.retail.telecomitalia.it. [79.27.208.221])
-        by smtp.gmail.com with ESMTPSA id d10sm48813525wrx.34.2019.07.28.11.23.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 11:23:02 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Subject: [PATCH] kconfig: ignore auto-generated file
-Date:   Sun, 28 Jul 2019 20:23:00 +0200
-Message-Id: <20190728182300.3169-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        Sun, 28 Jul 2019 14:27:49 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hrntW-0007oJ-2i; Sun, 28 Jul 2019 20:27:42 +0200
+Date:   Sun, 28 Jul 2019 20:27:41 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Sewior <bigeasy@linutronix.de>
+Subject: [PATCH V2] Kbuild: Handle PREEMPT_RT for version string and magic
+In-Reply-To: <alpine.DEB.2.21.1907281111570.1791@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1907282026320.1791@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907262245320.1791@nanos.tec.linutronix.de> <CAK7LNAS1=+OccAd3asj9P9JMWnhimRWR+dPQREOyK3y=Dx2odg@mail.gmail.com> <alpine.DEB.2.21.1907281111570.1791@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-scripts/kconfig/zconf.hash.c is autogenerated during the build,
-let's add it to the directory .gitignore.
+Update the build scripts and the version magic to reflect when
+CONFIG_PREEMPT_RT is enabled in the same way as CONFIG_PREEMPT is treated.
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
+The resulting version strings:
+
+  Linux m 5.3.0-rc1+ #100 SMP Fri Jul 26 ...
+  Linux m 5.3.0-rc1+ #101 SMP PREEMPT Fri Jul 26 ...
+  Linux m 5.3.0-rc1+ #102 SMP PREEMPT_RT Fri Jul 26 ...
+
+The module vermagic:
+
+  5.3.0-rc1+ SMP mod_unload modversions 
+  5.3.0-rc1+ SMP preempt mod_unload modversions 
+  5.3.0-rc1+ SMP preempt_rt mod_unload modversions 
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: linux-kbuild@vger.kernel.org
 ---
- scripts/kconfig/.gitignore | 1 +
- 1 file changed, 1 insertion(+)
+V2: Simplify the ifdeffery as pointed out by Masahiro
+---
+ include/linux/vermagic.h |    2 ++
+ init/Makefile            |    5 +++--
+ scripts/Makefile.modpost |    2 +-
+ scripts/mkcompile_h      |    4 +++-
+ 4 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/kconfig/.gitignore b/scripts/kconfig/.gitignore
-index b5bf92f66d11..2de0948749a0 100644
---- a/scripts/kconfig/.gitignore
-+++ b/scripts/kconfig/.gitignore
-@@ -3,6 +3,7 @@
- #
- *.moc
- *conf-cfg
-+zconf.hash.c
+--- a/include/linux/vermagic.h
++++ b/include/linux/vermagic.h
+@@ -9,6 +9,8 @@
+ #endif
+ #ifdef CONFIG_PREEMPT
+ #define MODULE_VERMAGIC_PREEMPT "preempt "
++#elif defined(CONFIG_PREEMPT_RT)
++#define MODULE_VERMAGIC_PREEMPT "preempt_rt "
+ #else
+ #define MODULE_VERMAGIC_PREEMPT ""
+ #endif
+--- a/init/Makefile
++++ b/init/Makefile
+@@ -33,5 +33,6 @@ mounts-$(CONFIG_BLK_DEV_MD)	+= do_mounts
+ silent_chk_compile.h = :
+ include/generated/compile.h: FORCE
+ 	@$($(quiet)chk_compile.h)
+-	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@ \
+-	"$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)" "$(CC) $(KBUILD_CFLAGS)"
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@	\
++	"$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"	\
++	"$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)"
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -23,7 +23,7 @@
+ #   Version magic (see include/linux/vermagic.h for full details)
+ #     - Kernel release
+ #     - SMP is CONFIG_SMP
+-#     - PREEMPT is CONFIG_PREEMPT
++#     - PREEMPT is CONFIG_PREEMPT[_RT]
+ #     - GCC Version
+ #   Module info
+ #     - Module version (MODULE_VERSION)
+--- a/scripts/mkcompile_h
++++ b/scripts/mkcompile_h
+@@ -5,7 +5,8 @@ TARGET=$1
+ ARCH=$2
+ SMP=$3
+ PREEMPT=$4
+-CC=$5
++PREEMPT_RT=$5
++CC=$6
  
- #
- # configuration programs
--- 
-2.21.0
-
+ vecho() { [ "${quiet}" = "silent_" ] || echo "$@" ; }
+ 
+@@ -53,6 +54,7 @@ UTS_VERSION="#$VERSION"
+ CONFIG_FLAGS=""
+ if [ -n "$SMP" ] ; then CONFIG_FLAGS="SMP"; fi
+ if [ -n "$PREEMPT" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS PREEMPT"; fi
++if [ -n "$PREEMPT_RT" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS PREEMPT_RT"; fi
+ UTS_VERSION="$UTS_VERSION $CONFIG_FLAGS $TIMESTAMP"
+ 
+ # Truncate to maximum length
