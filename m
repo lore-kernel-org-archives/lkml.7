@@ -2,109 +2,70 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F3FC433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BACC7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA0DA2070D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03CEA214C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 20:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfG1UEd (ORCPT
+        id S1726431AbfG1UIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 16:04:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39462 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbfG1UEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 16:04:33 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CA0BA3082E44;
-        Sun, 28 Jul 2019 20:04:32 +0000 (UTC)
-Received: from treble (ovpn-120-102.rdu2.redhat.com [10.10.120.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C0C991001B17;
-        Sun, 28 Jul 2019 20:04:29 +0000 (UTC)
-Date:   Sun, 28 Jul 2019 15:04:28 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     jikos@kernel.org, pmladek@suse.com, joe.lawrence@redhat.com,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-Message-ID: <20190728200427.dbrojgu7hafphia7@treble>
-References: <20190719122840.15353-1-mbenes@suse.cz>
- <20190719122840.15353-3-mbenes@suse.cz>
+        Sun, 28 Jul 2019 16:08:44 -0400
+Received: from mail-lj1-f171.google.com ([209.85.208.171]:33108 "EHLO
+        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfG1UIo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 16:08:44 -0400
+Received: by mail-lj1-f171.google.com with SMTP id h10so56468667ljg.0
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 13:08:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=8Ehe9L15ikwLaOegvSbffqJNAvcSP5VfCjBEA7JSyTc=;
+        b=bfXCKeDzFYrg4MDemsuOpzg4Sp1nFZbU2vqp5UM6hom89AfV5gv0Sx7PuDAL0awUAU
+         UlY5NBJ5vY15u1NWeNfkT8vuL6x9VCinedHT6rrJX+Lqt9kN5OnIv9+da1v9uy4dKrlE
+         Pg2mNUtyskepb6coBNiRDn8k07M5Kc0jXpk3uycVKZeIIs5RSftlMKjoM5i5WXfWy1gY
+         E0FCRpjqA3wVPADGAwTfH8mJaRAQFYLMtC1Mm/W6eCtyPJFRo1/RAYAaug7JhRW/PHGZ
+         NLo8b/Z4cRhM4UH4y9jXc++1YfhZ0nMPYgICeEUQGriNnevFAZ5ewMR43TyY5dw599Jj
+         MM1Q==
+X-Gm-Message-State: APjAAAWv958lrScpp+8wmsYNGFwswvYPGaltr676KOysWtJuAwbVrsb3
+        l7rPVlrzYEr5a6oIWJ+XAhro23j8JoQ1e1aytOOCZBmk5AI=
+X-Google-Smtp-Source: APXvYqzMDT7jLYyQwW9rgotscZ5/OzUxcCpfRFZVxxEtiiDmgFqSMegnW8RjxzWH+5JfETP9r/+o5SYBwlzM8A7wA8U=
+X-Received: by 2002:a2e:9643:: with SMTP id z3mr56707238ljh.43.1564344522278;
+ Sun, 28 Jul 2019 13:08:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190719122840.15353-3-mbenes@suse.cz>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sun, 28 Jul 2019 20:04:32 +0000 (UTC)
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Sun, 28 Jul 2019 22:08:06 +0200
+Message-ID: <CAGnkfhySwXY7YwuQezyx6cEpemZW4Hox1_4fQJm3-5hvM3G6gw@mail.gmail.com>
+Subject: build error
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 02:28:40PM +0200, Miroslav Benes wrote:
-> Josh reported a bug:
-> 
->   When the object to be patched is a module, and that module is
->   rmmod'ed and reloaded, it fails to load with:
-> 
->   module: x86/modules: Skipping invalid relocation target, existing value is nonzero for type 2, loc 00000000ba0302e9, val ffffffffa03e293c
->   livepatch: failed to initialize patch 'livepatch_nfsd' for module 'nfsd' (-8)
->   livepatch: patch 'livepatch_nfsd' failed for module 'nfsd', refusing to load module 'nfsd'
-> 
->   The livepatch module has a relocation which references a symbol
->   in the _previous_ loading of nfsd. When apply_relocate_add()
->   tries to replace the old relocation with a new one, it sees that
->   the previous one is nonzero and it errors out.
-> 
->   On ppc64le, we have a similar issue:
-> 
->   module_64: livepatch_nfsd: Expected nop after call, got e8410018 at e_show+0x60/0x548 [livepatch_nfsd]
->   livepatch: failed to initialize patch 'livepatch_nfsd' for module 'nfsd' (-8)
->   livepatch: patch 'livepatch_nfsd' failed for module 'nfsd', refusing to load module 'nfsd'
-> 
-> He also proposed three different solutions. We could remove the error
-> check in apply_relocate_add() introduced by commit eda9cec4c9a1
-> ("x86/module: Detect and skip invalid relocations"). However the check
-> is useful for detecting corrupted modules.
-> 
-> We could also deny the patched modules to be removed. If it proved to be
-> a major drawback for users, we could still implement a different
-> approach. The solution would also complicate the existing code a lot.
-> 
-> We thus decided to reverse the relocation patching (clear all relocation
-> targets on x86_64, or return back nops on powerpc). The solution is not
-> universal and is too much arch-specific, but it may prove to be simpler
-> in the end.
+Hi,
 
-Thanks for the patch Miroslav.
+I get this build error with 5.3-rc2"
 
-However, I really don't like it.  All this extra convoluted
-arch-specific code, just so users can unload a patched module.
+# make
+arch/arm64/Makefile:58: gcc not found, check CROSS_COMPILE_COMPAT.  Stop.
 
-Remind me why we didn't do the "deny the patched modules to be removed"
-option?
+I didn't bisect the tree, but I guess that this kconfig can be related
 
-Really, we should be going in the opposite direction, by creating module
-dependencies, like all other kernel modules do, ensuring that a module
-is loaded *before* we patch it.  That would also eliminate this bug.
+# grep CROSS_COMPILE_COMPAT .config
+CONFIG_CROSS_COMPILE_COMPAT_VDSO=""
 
-And I think it would also help us remove a lot of nasty code, like the
-coming/going notifiers and the .klp.arch mess.  Which, BTW, seem to be
-the sources of most of our bugs...
+Does someone have any idea? Am I missing something?
 
-Yes, there's the "but it's less flexible!" argument.  Does anybody
-really need the flexibility?  I strongly doubt it.  I would love to see
-an RFC patch which enforces that restriction, to see all the nasty code
-we could remove.  I would much rather live patching be stable than
-flexible.
-
+Thanks,
 -- 
-Josh
+Matteo Croce
+per aspera ad upstream
