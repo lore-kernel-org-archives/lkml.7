@@ -2,168 +2,116 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8C3C7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86269C7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70D32075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8AC2075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:53:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tAZwniCR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfG1WxU (ORCPT
+        id S1726308AbfG1Wx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 18:53:20 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36885 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfG1WxU (ORCPT
+        Sun, 28 Jul 2019 18:53:58 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39782 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfG1Wx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 18:53:20 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so34664070wrr.4
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 15:53:18 -0700 (PDT)
+        Sun, 28 Jul 2019 18:53:58 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v85so40665720lfa.6
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 15:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=293HgNYyed41RovpEOe3GRTdf8e582HYxtgx4LeaxX8=;
+        b=tAZwniCR0CPqi/ult8quwOe+LiEPOnK1pWoH/p5x/mp3iQzLmMmSrUg7fMjQ7j3abc
+         PeCYmgFFjQhbJMuMRIF6KWG3Y5GWnVCaGcercOYI//Rkt4MMZ9VP4wUURUMSWFoHyJCW
+         IEKUirZ1GtcscdHq8zp422EJAcMe87w4vkWfQ+iuFLk6UZOGinDfdBSQAoh7WUSQUmNI
+         Sl9dm4D/tOBaEA2nSHG2wOllxE7ohK2FMv/LTTseUeesqYxiNAZafvWIZWQPpO0zRRJ9
+         isxZ/0baSUzg1L4ny3bXBnp1AsnU1eOHnMvU/MTgGsUhO5t/DwyLtcMBqVE6td/QHqT7
+         yyng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ftGcDLnR4imQmQ+UkOat+KWbwwjELLyC+CYKk4KZ2MI=;
-        b=XGWebNwpY0Pi7CDyTQHuAymLs97b1/inxqms4boNNk/a0WHFHZRU9xIhLW3L/EC5SD
-         qflqeJR+NA01y57TLWb+5fPke89vqsPIyqfZMS1uK8qylfshZS/rWwnVO2MP6Xt90rIG
-         72alzLlEVfiNI0GvcIcuXph7fmbNdomyqx0cLIx2qEtugXdSLtNGihqbgABI4QikJalP
-         p30vtj6K57+gecCz5QKINbVyTBgdq30xuOtSmrjf1PBZtwBWEiJ6hz2Hrl3zZB2nglqE
-         v0mkVccgNv2HMTiktUkBLb1LrPENWcPXZil+Ud8Ck1uJf0JvQw1Bl18uVZ4EdO+OZ7HD
-         uxjw==
-X-Gm-Message-State: APjAAAWnmtKgG860DKtZNz+ZzhBu0/gfwl8GlL4L8WQiCE4Hdh0tdQae
-        tcU8jJKg0u7C0uCBAGG4jSzc+fQXm5c=
-X-Google-Smtp-Source: APXvYqzXz/uRYLBkINGQsD6hev7BbnvXZn0rdIH9tudJoRoTw/rjgcK0VY1Im/N583+KNY1tUym6uQ==
-X-Received: by 2002:a5d:4212:: with SMTP id n18mr112558387wrq.261.1564354397866;
-        Sun, 28 Jul 2019 15:53:17 -0700 (PDT)
-Received: from mcroce-redhat.homenet.telecomitalia.it (host221-208-dynamic.27-79-r.retail.telecomitalia.it. [79.27.208.221])
-        by smtp.gmail.com with ESMTPSA id q193sm45278109wme.8.2019.07.28.15.53.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 15:53:17 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: arm64: mark expected switch fall-through
-Date:   Mon, 29 Jul 2019 00:53:11 +0200
-Message-Id: <20190728225311.5414-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=293HgNYyed41RovpEOe3GRTdf8e582HYxtgx4LeaxX8=;
+        b=DSJ191n8PbgLS3axu8ex/Fegaynvv4nnHCnrYeWfrJ7ftdg2stfXwVxl3MqZancL5/
+         qt6LgpRU+vK9l8geQkPjxHa6NOojdkykOP+IEHqsKvh4orNqOm3JXQY7t6rj/CVHR7WJ
+         ON9+vrwodxmF6b6nwbPMkMrnnNnYc3dTsaH8FsjJOOfO1KKEYG5ts5BLk+LTqAAq8VRU
+         lc+JNW9QMB418+uE99Y8Y+ZLdAxLgT8uRTvechrh3WpCyB+NhKKCzHQA76jGYu9x0JkI
+         85489HK0eEBh1aOKxmSlbMDN4M9wg2efK9cg2wI8eF+K/i/S2yJRZVCNwEHsXXsCt8ne
+         IPeg==
+X-Gm-Message-State: APjAAAUQC/1RWGf39yU+ZieiCpGkEQBFNc2D//+aJ3UHmDPWcV8HvEiL
+        9W7ML8py5cntZ9hpHLAs4xyBrqYxtC3yxPNzHu4gEw==
+X-Google-Smtp-Source: APXvYqyRtXjryP5sP5m8Z9yg9JFeb+N25+DCvbf/LanaCCkR4NFm7RX6WHaYn71J41in1OzN5ZtYeqLAwNo3WAGVnD0=
+X-Received: by 2002:a19:7616:: with SMTP id c22mr51039500lff.115.1564354436188;
+ Sun, 28 Jul 2019 15:53:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190724080155.12209-1-andrew@aj.id.au>
+In-Reply-To: <20190724080155.12209-1-andrew@aj.id.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 29 Jul 2019 00:53:45 +0200
+Message-ID: <CACRpkdaJTB-=DODtj-u6bOkmy7bQ8eXoYyTqv4xK9L+cV4T11Q@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: aspeed-g5: Delay acquisition of regmaps
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through,
-fixes the following warning:
+On Wed, Jul 24, 2019 at 10:02 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-In file included from ./arch/arm64/include/asm/kvm_emulate.h:19,
-                 from arch/arm64/kvm/regmap.c:13:
-arch/arm64/kvm/regmap.c: In function ‘vcpu_write_spsr32’:
-./arch/arm64/include/asm/kvm_hyp.h:31:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   asm volatile(ALTERNATIVE(__msr_s(r##nvh, "%x0"), \
-   ^~~
-./arch/arm64/include/asm/kvm_hyp.h:46:31: note: in expansion of macro ‘write_sysreg_elx’
- #define write_sysreg_el1(v,r) write_sysreg_elx(v, r, _EL1, _EL12)
-                               ^~~~~~~~~~~~~~~~
-arch/arm64/kvm/regmap.c:180:3: note: in expansion of macro ‘write_sysreg_el1’
-   write_sysreg_el1(v, SYS_SPSR);
-   ^~~~~~~~~~~~~~~~
-arch/arm64/kvm/regmap.c:181:2: note: here
-  case KVM_SPSR_ABT:
-  ^~~~
-In file included from ./arch/arm64/include/asm/cputype.h:132,
-                 from ./arch/arm64/include/asm/cache.h:8,
-                 from ./include/linux/cache.h:6,
-                 from ./include/linux/printk.h:9,
-                 from ./include/linux/kernel.h:15,
-                 from ./include/asm-generic/bug.h:18,
-                 from ./arch/arm64/include/asm/bug.h:26,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/mmdebug.h:5,
-                 from ./include/linux/mm.h:9,
-                 from arch/arm64/kvm/regmap.c:11:
-./arch/arm64/include/asm/sysreg.h:837:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  asm volatile("msr " __stringify(r) ", %x0"  \
-  ^~~
-arch/arm64/kvm/regmap.c:182:3: note: in expansion of macro ‘write_sysreg’
-   write_sysreg(v, spsr_abt);
-   ^~~~~~~~~~~~
-arch/arm64/kvm/regmap.c:183:2: note: here
-  case KVM_SPSR_UND:
-  ^~~~
-In file included from ./arch/arm64/include/asm/cputype.h:132,
-                 from ./arch/arm64/include/asm/cache.h:8,
-                 from ./include/linux/cache.h:6,
-                 from ./include/linux/printk.h:9,
-                 from ./include/linux/kernel.h:15,
-                 from ./include/asm-generic/bug.h:18,
-                 from ./arch/arm64/include/asm/bug.h:26,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/mmdebug.h:5,
-                 from ./include/linux/mm.h:9,
-                 from arch/arm64/kvm/regmap.c:11:
-./arch/arm64/include/asm/sysreg.h:837:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  asm volatile("msr " __stringify(r) ", %x0"  \
-  ^~~
-arch/arm64/kvm/regmap.c:184:3: note: in expansion of macro ‘write_sysreg’
-   write_sysreg(v, spsr_und);
-   ^~~~~~~~~~~~
-arch/arm64/kvm/regmap.c:185:2: note: here
-  case KVM_SPSR_IRQ:
-  ^~~~
-In file included from ./arch/arm64/include/asm/cputype.h:132,
-                 from ./arch/arm64/include/asm/cache.h:8,
-                 from ./include/linux/cache.h:6,
-                 from ./include/linux/printk.h:9,
-                 from ./include/linux/kernel.h:15,
-                 from ./include/asm-generic/bug.h:18,
-                 from ./arch/arm64/include/asm/bug.h:26,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/mmdebug.h:5,
-                 from ./include/linux/mm.h:9,
-                 from arch/arm64/kvm/regmap.c:11:
-./arch/arm64/include/asm/sysreg.h:837:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  asm volatile("msr " __stringify(r) ", %x0"  \
-  ^~~
-arch/arm64/kvm/regmap.c:186:3: note: in expansion of macro ‘write_sysreg’
-   write_sysreg(v, spsr_irq);
-   ^~~~~~~~~~~~
-arch/arm64/kvm/regmap.c:187:2: note: here
-  case KVM_SPSR_FIQ:
-  ^~~~
+> While sorting out some devicetree issues I found that the pinctrl driver
+> was failing to acquire its GFX regmap even though the phandle was
+> present in the devicetree:
+>
+>     [    0.124190] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: No GFX phandle found, some mux configurations may fail
+>
+> Without access to the GFX regmap we fail to configure the mux for the
+> VPO function:
+>
+>     [    1.548866] pinctrl core: add 1 pinctrl maps
+>     [    1.549826] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: found group selector 164 for VPO
+>     [    1.550638] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: request pin 144 (V20) for 1e6e6000.display
+>     [    1.551346] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: request pin 145 (U19) for 1e6e6000.display
+>     ...
+>     [    1.562057] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: request pin 218 (T22) for 1e6e6000.display
+>     [    1.562541] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: request pin 219 (R20) for 1e6e6000.display
+>     [    1.563113] Muxing pin 144 for VPO
+>     [    1.563456] Want SCU8C[0x00000001]=0x1, got 0x0 from 0x00000000
+>     [    1.564624] aspeed_gfx 1e6e6000.display: Error applying setting, reverse things back
+>
+> This turned out to be a simple problem of timing: The ASPEED pinctrl
+> driver is probed during arch_initcall(), while GFX is processed much
+> later. As such the GFX syscon is not yet registered during the pinctrl
+> probe() and we get an -EPROBE_DEFER when we try to look it up, however
+> we must not defer probing the pinctrl driver for the inability to mux
+> some GFX-related functions.
+>
+> Switch to lazily grabbing the regmaps when they're first required by the
+> mux configuration. This generates a bit of noise in the patch as we have
+> to drop the `const` qualifier on arguments for several function
+> prototypes, but has the benefit of working.
+>
+> I've smoke tested this for the ast2500-evb under qemu with a dummy
+> graphics device. We now succeed in our attempts to configure the SoC's
+> VPO pinmux function.
+>
+> Fixes: 7d29ed88acbb ("pinctrl: aspeed: Read and write bits in LPC and GFX controllers")
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- arch/arm64/kvm/regmap.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Patch applied for fixes. Good rootcausing!
 
-diff --git a/arch/arm64/kvm/regmap.c b/arch/arm64/kvm/regmap.c
-index 0d60e4f0af66..b376b2fdbf51 100644
---- a/arch/arm64/kvm/regmap.c
-+++ b/arch/arm64/kvm/regmap.c
-@@ -178,12 +178,16 @@ void vcpu_write_spsr32(struct kvm_vcpu *vcpu, unsigned long v)
- 	switch (spsr_idx) {
- 	case KVM_SPSR_SVC:
- 		write_sysreg_el1(v, SYS_SPSR);
-+		/* fallthrough */
- 	case KVM_SPSR_ABT:
- 		write_sysreg(v, spsr_abt);
-+		/* fallthrough */
- 	case KVM_SPSR_UND:
- 		write_sysreg(v, spsr_und);
-+		/* fallthrough */
- 	case KVM_SPSR_IRQ:
- 		write_sysreg(v, spsr_irq);
-+		/* fallthrough */
- 	case KVM_SPSR_FIQ:
- 		write_sysreg(v, spsr_fiq);
- 	}
--- 
-2.21.0
-
+Yours,
+Linus Walleij
