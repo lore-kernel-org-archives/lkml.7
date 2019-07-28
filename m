@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8948C7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 714E7C7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 10:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C243A2075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E0152075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 10:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FRl0zJAK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s4gmEPa+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbfG1J7j (ORCPT
+        id S1726193AbfG1KA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 05:59:39 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43056 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfG1J7j (ORCPT
+        Sun, 28 Jul 2019 06:00:29 -0400
+Received: from mail-lf1-f44.google.com ([209.85.167.44]:37591 "EHLO
+        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfG1KA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 05:59:39 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c19so39964033lfm.10
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 02:59:38 -0700 (PDT)
+        Sun, 28 Jul 2019 06:00:28 -0400
+Received: by mail-lf1-f44.google.com with SMTP id c9so39921344lfh.4
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 03:00:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TT2iQ+fh+yLVfA5XCASIgHgqymw+iJWW639N0+0UQAE=;
-        b=FRl0zJAKpwfKOlbX9Q5cPuWYSDRbmQE6DNbukn1h3ogrfsflueUFSgzjLc2SzfKJmR
-         E+m+RKFJGXHGTQxCbHHEAUyvrMW/i27uOzMblM7E39IlLXNUZipq1sxXEr1Ao0deWM61
-         TGd1Y3wy9ZkJPV1km0kHVQPpc60PiIcjgjN1kqdkGKmSX4gtr3WNxQ/oUIpud41n0A0z
-         2WMIZKD+ZSBh3LQUlMhvfTu+Wqewi0XFx2CrquUtFg2bV6LD/CUto6RiC6XIFhhKnWrQ
-         NXoh3Wji7vjpIauRm10bkwehuX0zeLTsL8XU3nQZMZkod6NRP4C6u/6Okl1ooGbx/yI9
-         1Lcg==
+        bh=M5pBCLZQz90BrGcUD2I4KEUNjM1YGzNjZn8GbrFYE54=;
+        b=s4gmEPa+MSse8G/JQ3TVW6Wq7NmcNzaUl6/rZymOwbWBLSQqL7jA2FDZWocTsV0eB2
+         wIX0YfUEq2E8JUVl3WCTfiAZmRXRl/gzyDQM84i8T3B92WOTOUhZ21dJk/M97mXx4apw
+         tMYrxvXJibhZCztKD2Rj/8Hc/OfA4YajHY1W9D/D6nTmUsRBnvf2MaiVaaPzPcVu1Br/
+         0wU4J/K+Zxia5WR307Lbl0o6efQ0liqjW6dT/Pi6i2qYtfrZFGOaY8tgEZFBvHpDSJDl
+         8RYHkXfsufIYgIQEnZPcpAk04Q6AQnQfT+plBspfWyZlrAScyYsR6gWGgN+sZVUqv6dj
+         Ug7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TT2iQ+fh+yLVfA5XCASIgHgqymw+iJWW639N0+0UQAE=;
-        b=P58F7bIM5rxMBLjpZL7CUcVEoW8dVlThxqcOEUbXCSNiWDK7rAQsWVlSJiUzN2vHKJ
-         448yPZZUiwyIh3H+qUZUP4cvLoRoUapeL0WSCDh3q6ARJLP7IXw6/1/f0b9+kE7sU6fJ
-         Qa8S16oq+wGCToWK5OMJaY58vs0cTRVC7rACyNZbvXzgohNmPPiTB7Wbum2c1oLLiYT8
-         YnM7j6xsPb2bV1djcFEJXWwD6kqdcDVhCCPPk3+t+fEbeIYiula30sU7QNZpBr8eN1e8
-         tUK1WeqfE87kglFxfjovRS22IslZafgiuPXcuH9zWkfWwwbpzPHZvVyPy/vo10rkOgUb
-         4ayQ==
-X-Gm-Message-State: APjAAAXDiBnYMSFqNJ81XDZe1X9JotEDeUmWLsT7eLs8udOFe5c+AXwE
-        hnn41Xz3Gfwe3Le+gR0aruoWbqcNHhpc6en07sbzEg==
-X-Google-Smtp-Source: APXvYqxkR2GcWRl3K2H831/69AeuP+bZxZIVeB/0pJPp/XlfvJyMah1IjsUVQhTN/o7bF6FNas2xCMlAk3GX6qDHTY0=
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr48506198lfu.141.1564307977519;
- Sun, 28 Jul 2019 02:59:37 -0700 (PDT)
+        bh=M5pBCLZQz90BrGcUD2I4KEUNjM1YGzNjZn8GbrFYE54=;
+        b=kMBG4clYuMhHgktkXSunfLYRJXN+QMEHvD9qYF+coU90QgvmRHt6Y8l2OCCSbQVph2
+         SWG3qWJeIIWJEWyKV0h0a/l8+ICU0ddfoa1RIdZ1pQ0ztAgBZ0aAgeg2hT9TCuVHoSJL
+         anx5EPzb5B0/uVIIRtPA+h5piQ4n22/HsTmsXmr+EowazNUK9GYEkJtOyrYoWxK1AiWu
+         8QWY6yJbaJyiukIzhIMfi2ZEgc9iWjSHAWa1byxFcxo3ysiFlh8V51FhUdLcKgcTrXKJ
+         Vh/pJ7C2BVT6j79A7JeEDrQRgwQ1skg1Ht+lbLJn7Lr4r9fomS/8NSUiHtpPyfecwAj3
+         tivQ==
+X-Gm-Message-State: APjAAAWbBUXe9EAbkjtVdFQ4MBn0Cjj2jtjM0i70GTkVwx/wJAH2GxIK
+        dEDIZ3rW0yFgA/rnjvDdzJQ3DQCwu6yGtW6tiePA7A==
+X-Google-Smtp-Source: APXvYqxBERF293e15i4oX5SWRbPMOfqKEJuOzLHoaUrl9EoMvgRMl7sq8s8LAW8jZQcqDMBCNmWB002/Dgpd16Pyzww=
+X-Received: by 2002:ac2:5382:: with SMTP id g2mr47219184lfh.92.1564308025871;
+ Sun, 28 Jul 2019 03:00:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190628161419.26439-1-colin.king@canonical.com>
-In-Reply-To: <20190628161419.26439-1-colin.king@canonical.com>
+References: <20190629123306.12519-1-colin.king@canonical.com>
+In-Reply-To: <20190629123306.12519-1-colin.king@canonical.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 28 Jul 2019 11:59:26 +0200
-Message-ID: <CACRpkdZvmbCkfCn=PqREp=v7bB7OaGG9+B8_PG5+nK_=CRWM8w@mail.gmail.com>
-Subject: Re: [PATCH][next] gpio: bd70528: fix spelling misstake "debouce" -> "debounce"
+Date:   Sun, 28 Jul 2019 12:00:14 +0200
+Message-ID: <CACRpkdYaVT_j5Ky-nd8_1F0mG3yqBWaQ_ju8g2zSb1O+565ozw@mail.gmail.com>
+Subject: Re: [PATCH][next] gpio: bd70528: remove redundant assignment to
+ variable ret
 To:     Colin King <colin.king@canonical.com>
-Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         kernel-janitors@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -71,12 +70,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 6:14 PM Colin King <colin.king@canonical.com> wrote:
+On Sat, Jun 29, 2019 at 2:33 PM Colin King <colin.king@canonical.com> wrote:
 
 > From: Colin Ian King <colin.king@canonical.com>
 >
-> There is a spelling mistake in a dev_err message. Fix it.
+> Variable ret is being initialized with a value that is never read
+> and ret is being re-assigned a little later on. The assignment is
+> redundant and hence can be removed.
 >
+> Addresses-Coverity: ("Unused value")
 > Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
 Patch applied.
