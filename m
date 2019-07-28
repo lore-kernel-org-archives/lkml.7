@@ -2,104 +2,104 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC23C7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 13:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339F8C7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995652075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 13:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051A72077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 14:07:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFYnKq2O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lglvxf6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfG1N63 (ORCPT
+        id S1726148AbfG1OHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 09:58:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37607 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfG1N63 (ORCPT
+        Sun, 28 Jul 2019 10:07:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46138 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfG1OHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 09:58:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i70so16167782pgd.4
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 06:58:28 -0700 (PDT)
+        Sun, 28 Jul 2019 10:07:50 -0400
+Received: by mail-pg1-f193.google.com with SMTP id k189so7871837pgk.13;
+        Sun, 28 Jul 2019 07:07:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=DhB7pgMefZ2zqjVgLMgP3xs2mx8GtiK0WJNu5macO/4=;
-        b=PFYnKq2O8NH3HhFByJmSYxFZZxqPtnbFvXX/VzP/suRpy2FMtBHiLOY31Hmt6XzBoY
-         w4O5aRXUm6YcC/NSNeWpvAFCrl3LqpPptMzK3gbH9CkmC46+DkpRnB3lDHMP64ewOuVe
-         qStgSbrWU8RTblfBJTftCxkIpRhq43fJ4iN+m0ypBzbkSRr/eiAXooR2s0dXyk5QWRpl
-         xoMSbRUSbroVfGUUXQJBnOC7HIYsTddLw7WBxvX/Ki2s2s4oALG9SUjQA4TjYpcm8dr9
-         2EocOp9+tpbAq8rcL07Iq9YMJD622KUSARIlX86YCvLUw2qCtzil9BD2LYrvZ+ikZEyH
-         CThA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7wNNlwp2VDKWKwFNYxDQX6TM/koZM7zLealIeSa2nWo=;
+        b=lglvxf6IFqg4KOs3L7Hgc1exqBk5UIajBrbFkfGJCajnwHThNg+5TfNwhRcNuqtMh2
+         tJSGfi/x9jWq8GTvn9Vmn1Le4eQgIRnFaJa5Z6Dgj9rDPbXOVKCcePcmhQtZjV/kINR2
+         eIa8X70S914rkym7+7zOye8b9YdQRHqFdLSrmpOgpHSs2mtHsUQSIVPyqghh2ZytAxV1
+         GmiV4geAf+b9uoJwi8EG0/Ren3Cz2/GR+wdac62YdhW+ilFmnNNJTJ05Ih/mwDx9bGKj
+         hlVBhIglW1X9HKW5exw/qvb21zo/L3lEG7DUyDPz5CnhjLNvuzqRRhzIsk6mH+wM9bxW
+         SOmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:content-transfer-encoding
-         :user-agent;
-        bh=DhB7pgMefZ2zqjVgLMgP3xs2mx8GtiK0WJNu5macO/4=;
-        b=gLD15KtlAN1Q8T8kb1dcqTAbb3Vh8mliQoZWQOFqd067tePtQY2eOGmOlopMSap3Vg
-         TnMfhfe4qlEDkpHVqdJpe7uDA84jqGGNez8cWWv4CAelCrwnQFsrlEfh25bwmlkcyUZO
-         ilAmsEqlqKX9DMAA14QFwHz2I0ECD1IqXy9nHqclFLW1/9qm7uspQamguPVu1WNG8gL9
-         B4Yd6f0xBRp3wDSBiYEwjVfX2/MPT8uvhw6kKjbjeWSlNR6SYNRj94OtnIYAPbiycuPW
-         dNoL9j2UQxWe/ysEmSKfckwyuzVrS+FPTT8ZgCMYQfPItNYKTrW3Zy4gSDFDNU6qVlVE
-         mI3w==
-X-Gm-Message-State: APjAAAU5rWzyb5mKfDyDaogKzNL44ob9DHNB+7C7aeZoJ7w78Om+ksoX
-        fSgeeOB7bhKSpRaz4vwvUPw=
-X-Google-Smtp-Source: APXvYqyN26/zpjxJoCTw9HpbgkVZpVNHOUCBKlrt2gEsiEvv1vwZtKW0Erch6y22+ASSw4w6tQ8IWA==
-X-Received: by 2002:a17:90a:2190:: with SMTP id q16mr103876006pjc.23.1564322308340;
-        Sun, 28 Jul 2019 06:58:28 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p68sm70394749pfb.80.2019.07.28.06.58.26
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7wNNlwp2VDKWKwFNYxDQX6TM/koZM7zLealIeSa2nWo=;
+        b=E5CSRTZBdxgC25eblOWlKJTcGnOdJu3ZReebfdayaaz8S+8eRrCmh1yRP1PuaDXoLI
+         W5opT12o4tnb6ylbcsxirMhQjIUXs57gbO6EBzxPf9ykkWbbOmn+YCKsTFX/4vEutKYX
+         JaoQ9EV5Af5pgu+atmDopgXhni9coof6lsytHKAee3+PPPIolZUhew5ZX9ar60JTrwyt
+         ktZiNXVTSzDUSdpG+Xdq3O79L7sjTOF5XehieeYwRltotLvciqGfygNFtOya+iwvYdfK
+         8Cl5FZknuIfTIIU6e2cGDSPFRSY4fQdanmlxP1WxbGf7X4WJZxrF2nor9INzc4002GjF
+         kYdg==
+X-Gm-Message-State: APjAAAVZoI+h4kX5dD1qTMrvDbVCD3KeAZNrffKJlH0/BIyaYgZW15Wk
+        L9O+LvZSBKljO29vlAy7clE=
+X-Google-Smtp-Source: APXvYqytnwBFUYq3/VG+6Frww3/CYoTZ5mDbacg8sN2qCZqthO/WHGi2MvIfdTfgDAboq0INPfBw6A==
+X-Received: by 2002:a65:64cf:: with SMTP id t15mr96941158pgv.88.1564322869755;
+        Sun, 28 Jul 2019 07:07:49 -0700 (PDT)
+Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
+        by smtp.gmail.com with ESMTPSA id a16sm64495033pfd.68.2019.07.28.07.07.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Jul 2019 06:58:27 -0700 (PDT)
-Date:   Sun, 28 Jul 2019 06:58:26 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sun, 28 Jul 2019 07:07:48 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id 0C920201190; Sun, 28 Jul 2019 23:07:46 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     sgruszka@redhat.com, helmut.schaa@googlemail.com,
+        kvalo@codeaurora.org, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Makefile: Globally enable fall-through warning
-Message-ID: <20190728135826.GA10262@roeck-us.net>
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH net-next] rt2800usb: Add new rt2800usb device PLANEX GW-USMicroN
+Date:   Sun, 28 Jul 2019 23:07:42 +0900
+Message-Id: <20190728140742.3280-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.22.0.545.g9c9b961d7eb1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 07:46:17PM -0500, Gustavo A. R. Silva wrote:
-> Now that all the fall-through warnings have been addressed in the
-> kernel, enable the fall-through warning globally.
-> 
+This patch add a device ID for PLANEX GW-USMicroN.
+Without this patch, I had to echo the device IDs in order to
+recognize the device.
 
-Not really "all".
+# lsusb |grep PLANEX
+Bus 002 Device 005: ID 2019:ed14 PLANEX GW-USMicroN
 
-powerpc:85xx/sbc8548_defconfig:
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+---
+ drivers/net/wireless/ralink/rt2x00/rt2800usb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-arch/powerpc/kernel/align.c: In function ‘emulate_spe’:
-arch/powerpc/kernel/align.c:178:8: error: this statement may fall through
+diff --git a/drivers/net/wireless/ralink/rt2x00/rt2800usb.c b/drivers/net/wireless/ralink/rt2x00/rt2800usb.c
+index fdf0504b5f1d..0dfb55c69b73 100644
+--- a/drivers/net/wireless/ralink/rt2x00/rt2800usb.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2800usb.c
+@@ -1086,6 +1086,7 @@ static const struct usb_device_id rt2800usb_device_table[] = {
+ 	{ USB_DEVICE(0x0846, 0x9013) },
+ 	{ USB_DEVICE(0x0846, 0x9019) },
+ 	/* Planex */
++	{ USB_DEVICE(0x2019, 0xed14) },
+ 	{ USB_DEVICE(0x2019, 0xed19) },
+ 	/* Ralink */
+ 	{ USB_DEVICE(0x148f, 0x3573) },
+-- 
+2.22.0.545.g9c9b961d7eb1
 
-Plus many more similar errors in the same file.
-
-All sh builds:
-
-arch/sh/kernel/disassemble.c: In function 'print_sh_insn':
-arch/sh/kernel/disassemble.c:478:8: error: this statement may fall through
-
-Again, this is seen in several places.
-
-mips:cavium_octeon_defconfig:
-
-arch/mips/cavium-octeon/octeon-usb.c: In function 'dwc3_octeon_clocks_start':
-include/linux/device.h:1499:2: error: this statement may fall through
-
-None of those are from recent changes. And this is just from my small
-subset of test builds.
-
-Guenter
