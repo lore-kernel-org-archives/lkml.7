@@ -2,204 +2,303 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A539DC7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 06:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB0EC76190
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 06:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F4C2075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 06:42:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WPSEgu1f";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XghOdHzl"
+	by mail.kernel.org (Postfix) with ESMTP id 4014C2077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 06:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564297022;
+	bh=AesncYxVmCXOsN+y3uljDpIGGdUf5kZFAVPPGbwDeVA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=cP5y53xznLlfXiGSH9XFqnuwAdFmJ+ObHWZjZQluDONUTyxJYUvBYmGU40NCpGPpa
+	 XjtT4fWa1EaPiy8LhRDjtC1lgG2ZRwEtXRfcppJ7pwijroqZWsiyr0DlXzOpB9Oksq
+	 j0u+iEjlcIzw88E9S/FmRo46JZ0oWMAXPwX5vOu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfG1GmB (ORCPT
+        id S1726098AbfG1G5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 02:42:01 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:58790 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725911AbfG1GmA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 02:42:00 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6S6bQCB007136;
-        Sat, 27 Jul 2019 23:41:27 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=3I2kcmT90WweFer52wY/VNVfeBhfzP3p4KoHzd+NRE4=;
- b=WPSEgu1fhn/rSOxaIawEMmKa6RlIyo7hOlvgRrTeN6mE+9GPDuCXbhXNJVhL+I1CH/GL
- lLlkn+kwL67ESuJlBdQ/fm/aJIHQXkI295RZ5ec7aeSrb0i2lr8IlDa5CUA6gp6nVkt4
- Ht2uJJoeUN7eX0L14f+VK2ADyUfrwPQ5ltw= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2u0nwkt7py-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sat, 27 Jul 2019 23:41:26 -0700
-Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
- ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 27 Jul 2019 23:41:25 -0700
-Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
- ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 27 Jul 2019 23:41:25 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Sat, 27 Jul 2019 23:41:25 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BCfFjH1Ud3lcvlTwmV13eK4dQR3jOYdnI8pfnpaV0+Sd3NeMW2yYxEYGR5sle5vBD58/rPn+VWi4aJk7fv7/lEbQC9r/F86dcgArautA2eFpk+SUsqZW//FufoveQkiIcqCONEGistsOPm6aCAYPeO3ucEetxIhIuAeeNoTaqWOijVBH3rQI8Wrun4E+fNYNiE4cf4sYx6IQO/DFc++0J21WWicLiaK15VbIH4y9QvBF0spopIjUhz0w3oi18kQ4u9DdCCjYD38OYBDhyKlKxGtR3zQhulZEwWT+h2nkOWYdOOG0O6jf2G3QNbHxdD9/S82mIh+zVtPex49ysO/89A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3I2kcmT90WweFer52wY/VNVfeBhfzP3p4KoHzd+NRE4=;
- b=ZNzLgZpWx2Bm4ch2QJrt69SKigQtA4RlLLE9nTRZI9eprNprecS+WP9xP2issnzHn4FlC3wghQUsQG+vWNF8z3keVkqQqH/fDCDpw92Js2o877CPhSS2VmQTg4sMA92ychLZVuZsO/xNxGKSSFi9JU+cfPpxn2rx9mFyYtCYz59okkBCxvwAlKAtB6s2id8PxN3X9ko9IIQzrF8A54RPvkSnu4Sq6V4FQ3x/rPmrDAWa6SQA9VRGLihwA6VNdgh5rQPN95ABI5zvw51QRx1RO/7+AJX78NfGOm+askycih5Jnq1Ujf7hiBEM23qdWXi8fID1Eqwfbiy+EEqCwJ6vlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
- header.d=fb.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3I2kcmT90WweFer52wY/VNVfeBhfzP3p4KoHzd+NRE4=;
- b=XghOdHzlv5kYuMhF0epBkWcF5XhkxqQUIBM9EPcnDj+YCEvsbt+AxphuS6Kk+jF4QHp3kQHNLZK4AXMyEgQmIqyIy6sQDkqHSYHIfopZcW/k0CkRebIzyNC+3veyZ0Sym4cL1Tc/T8jF5CleBlFVBsZ8EQZR8vLUTJa7519EAoE=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1886.namprd15.prod.outlook.com (10.174.255.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.17; Sun, 28 Jul 2019 06:41:23 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::d4fc:70c0:79a5:f41b]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::d4fc:70c0:79a5:f41b%2]) with mapi id 15.20.2115.005; Sun, 28 Jul 2019
- 06:41:23 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     "Huang, Kai" <kai.huang@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        "hdanton@sina.com" <hdanton@sina.com>,
-        "Kernel Team" <Kernel-team@fb.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>
-Subject: Re: [PATCH v9 5/6] mm,thp: add read-only THP support for (non-shmem)
- FS
-Thread-Topic: [PATCH v9 5/6] mm,thp: add read-only THP support for (non-shmem)
- FS
-Thread-Index: AQHVKurnm0pZpZevHki8fTgvnJjHiqbZD5wAgAa5fgA=
-Date:   Sun, 28 Jul 2019 06:41:23 +0000
-Message-ID: <0858B3CD-D3AA-402E-B34E-2B218553910E@fb.com>
-References: <20190625001246.685563-1-songliubraving@fb.com>
- <20190625001246.685563-6-songliubraving@fb.com>
- <1563926391.8456.1.camel@intel.com>
-In-Reply-To: <1563926391.8456.1.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:180::1:e89a]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8707eed1-1e6e-4614-0966-08d713269b93
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1886;
-x-ms-traffictypediagnostic: MWHPR15MB1886:
-x-microsoft-antispam-prvs: <MWHPR15MB188636DDD2BAE193FBCA79ACB3C20@MWHPR15MB1886.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:972;
-x-forefront-prvs: 01128BA907
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39860400002)(376002)(366004)(346002)(189003)(199004)(71190400001)(486006)(57306001)(256004)(76176011)(46003)(68736007)(8676002)(6506007)(6116002)(2616005)(476003)(11346002)(36756003)(102836004)(81156014)(71200400001)(53546011)(81166006)(14454004)(2906002)(446003)(6486002)(186003)(8936002)(66476007)(86362001)(6436002)(64756008)(66946007)(66556008)(50226002)(99286004)(66446008)(53936002)(305945005)(316002)(7736002)(478600001)(33656002)(25786009)(76116006)(54906003)(6916009)(4326008)(6246003)(5660300002)(6512007)(229853002)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1886;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4wHcU7M51h+3ON9lIqxduwemTnQRgH3Q00TQDI7l8iGo1ithUSbwXvnc+tXjNm8sdfPIqLkMDEv1kdYjKQSlsalsGTVGd43UkFFmtInSteyt5idK2/whG/megxwtb96SXzU8tJRtbxfmq3ONP+zcChVwnydet9xpbcAgAtrJdsI7I4N2OE5fPr0FljzEBDdPm3owoiI9r5IhjaiFumnCitYn6jCay34OgnTW3GWp6KT5pApSgyNiFIQwn2D+mDw87zRQoare7Gm5nso5/DNkrX8Ze0JgIdd1ISO2CFJJ+MwRf+67dfBOmakQDjx4jhWr8jqIKeA0LMDpx6EE5K8Ywvol5or16EvYpIXd8ZsWK59iSmmD7qNdoPooQjO1ogijNVXXKudH+4eu4w46QZvEYxtJKVKfGtgW1f4RPMT3KLo=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E97D3C8D83917143997EB9A7DF469C77@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Sun, 28 Jul 2019 02:57:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfG1G5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 02:57:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA1AD2077C;
+        Sun, 28 Jul 2019 06:56:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564297019;
+        bh=AesncYxVmCXOsN+y3uljDpIGGdUf5kZFAVPPGbwDeVA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=iEe+OguqvfvudbsueRDZXt6cBY6/O8YwY2BNVQTekGdrzoSH46XsT0y5VSYXpyrqT
+         PgZzuJPTYvqtVPqLFg+BKqt9vVpV29H4/Edr/G0cLZn1H0k7aUFNZMGqCwjb3JzOJb
+         5ccvLOdjc28iqz3Wy/TUpD931vhwqiYAJUAFqu0A=
+Date:   Sun, 28 Jul 2019 08:56:56 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.19.62
+Message-ID: <20190728065656.GA23573@kroah.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8707eed1-1e6e-4614-0966-08d713269b93
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2019 06:41:23.4012
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1886
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-28_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=986 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907280084
-X-FB-Internal: deliver
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Jul 23, 2019, at 4:59 PM, Huang, Kai <kai.huang@intel.com> wrote:
->=20
-> On Mon, 2019-06-24 at 17:12 -0700, Song Liu wrote:
->> This patch is (hopefully) the first step to enable THP for non-shmem
->> filesystems.
->>=20
->> This patch enables an application to put part of its text sections to TH=
-P
->> via madvise, for example:
->>=20
->>    madvise((void *)0x600000, 0x200000, MADV_HUGEPAGE);
->>=20
->> We tried to reuse the logic for THP on tmpfs.
->>=20
->> Currently, write is not supported for non-shmem THP. khugepaged will onl=
-y
->> process vma with VM_DENYWRITE. sys_mmap() ignores VM_DENYWRITE requests
->> (see ksys_mmap_pgoff). The only way to create vma with VM_DENYWRITE is
->> execve(). This requirement limits non-shmem THP to text sections.
->>=20
->> The next patch will handle writes, which would only happen when the all
->> the vmas with VM_DENYWRITE are unmapped.
->>=20
->> An EXPERIMENTAL config, READ_ONLY_THP_FOR_FS, is added to gate this
->> feature.
->>=20
->> Acked-by: Rik van Riel <riel@surriel.com>
->> Signed-off-by: Song Liu <songliubraving@fb.com>
->> ---
->> mm/Kconfig      | 11 ++++++
->> mm/filemap.c    |  4 +--
->> mm/khugepaged.c | 94 +++++++++++++++++++++++++++++++++++++++++--------
->> mm/rmap.c       | 12 ++++---
->> 4 files changed, 100 insertions(+), 21 deletions(-)
->>=20
->> diff --git a/mm/Kconfig b/mm/Kconfig
->> index f0c76ba47695..0a8fd589406d 100644
->> --- a/mm/Kconfig
->> +++ b/mm/Kconfig
->> @@ -762,6 +762,17 @@ config GUP_BENCHMARK
->>=20
->> 	  See tools/testing/selftests/vm/gup_benchmark.c
->>=20
->> +config READ_ONLY_THP_FOR_FS
->> +	bool "Read-only THP for filesystems (EXPERIMENTAL)"
->> +	depends on TRANSPARENT_HUGE_PAGECACHE && SHMEM
->=20
-> Hi,
->=20
-> Maybe a stupid question since I am new, but why does it depend on SHMEM?
+I'm announcing the release of the 4.19.62 kernel.
 
-Not stupid at all. :)
+All users of the 4.19 kernel series must upgrade.
 
-We reuse a lot of code for shmem thp, thus the dependency. Technically, we=
-=20
-can remove the dependency. However, we will remove this config option when
-THP for FS is more mature. So it doesn't make sense to resolve the=20
-dependency at this stage.
+The updated 4.19.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-4.19.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-Thanks,
-Song
+thanks,
 
+greg k-h
+
+------------
+
+ Makefile                                              |    2=20
+ arch/mips/jz4740/board-qi_lb60.c                      |   16 +-
+ arch/x86/kvm/vmx.c                                    |   10 +
+ drivers/dma-buf/dma-buf.c                             |    1=20
+ drivers/dma-buf/reservation.c                         |    4=20
+ drivers/gpio/gpio-davinci.c                           |    5=20
+ drivers/net/caif/caif_hsi.c                           |    2=20
+ drivers/net/dsa/mv88e6xxx/chip.c                      |    2=20
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c       |    3=20
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c        |   57 +++----
+ drivers/net/ethernet/marvell/sky2.c                   |    7=20
+ drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c |    9 +
+ drivers/net/ethernet/realtek/r8169.c                  |  137 +++++++++++++=
++++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     |   29 ++-
+ drivers/net/hyperv/netvsc_drv.c                       |    1=20
+ drivers/net/macsec.c                                  |    6=20
+ drivers/net/phy/sfp.c                                 |    2=20
+ drivers/net/vrf.c                                     |   58 ++++---
+ fs/ext4/dir.c                                         |   19 +-
+ fs/ext4/ext4_jbd2.h                                   |   12 -
+ fs/ext4/file.c                                        |    4=20
+ fs/ext4/inode.c                                       |   24 ++-
+ fs/ext4/ioctl.c                                       |   46 +++++-
+ fs/ext4/move_extent.c                                 |    3=20
+ fs/ext4/namei.c                                       |   45 ++++-
+ fs/jbd2/commit.c                                      |   23 ++-
+ fs/jbd2/journal.c                                     |    4=20
+ fs/jbd2/transaction.c                                 |   49 +++---
+ include/linux/fs.h                                    |    2=20
+ include/linux/jbd2.h                                  |   22 ++
+ include/linux/perf_event.h                            |    5=20
+ include/net/dst.h                                     |    5=20
+ include/net/tcp.h                                     |    8 -
+ include/net/tls.h                                     |    1=20
+ kernel/events/core.c                                  |   83 ++++++++--
+ mm/filemap.c                                          |   22 ++
+ mm/vmscan.c                                           |    6=20
+ net/bridge/br_input.c                                 |    8 -
+ net/bridge/br_multicast.c                             |   32 ++--
+ net/bridge/br_stp_bpdu.c                              |    3=20
+ net/core/filter.c                                     |    2=20
+ net/core/neighbour.c                                  |    2=20
+ net/ipv4/devinet.c                                    |    8 +
+ net/ipv4/igmp.c                                       |    8 -
+ net/ipv4/tcp.c                                        |    6=20
+ net/ipv4/tcp_cong.c                                   |    6=20
+ net/ipv4/tcp_output.c                                 |   13 +
+ net/ipv6/ip6_fib.c                                    |   18 ++
+ net/ipv6/route.c                                      |    2=20
+ net/netfilter/nf_queue.c                              |    6=20
+ net/netrom/af_netrom.c                                |    4=20
+ net/nfc/nci/data.c                                    |    2=20
+ net/openvswitch/actions.c                             |    6=20
+ net/rxrpc/af_rxrpc.c                                  |    4=20
+ net/sched/cls_api.c                                   |    3=20
+ net/sched/sch_fq_codel.c                              |    2=20
+ net/sched/sch_sfq.c                                   |    2=20
+ net/sctp/socket.c                                     |   20 --
+ net/sctp/stream.c                                     |    9 +
+ net/tls/tls_device.c                                  |    2=20
+ net/tls/tls_main.c                                    |    2=20
+ 61 files changed, 670 insertions(+), 234 deletions(-)
+
+Alexander Shishkin (1):
+      perf/core: Fix exclusive events' grouping
+
+Andreas Steinmetz (2):
+      macsec: fix use-after-free of skb during RX
+      macsec: fix checksumming after decryption
+
+Andrew Lunn (1):
+      net: phy: sfp: hwmon: Fix scaling of RX power
+
+Aya Levin (1):
+      net/mlx5e: IPoIB, Add error path in mlx5_rdma_setup_rn
+
+Baruch Siach (1):
+      net: dsa: mv88e6xxx: wait after reset deactivation
+
+Brian King (1):
+      bnx2x: Prevent load reordering in tx completion processing
+
+Chris Wilson (1):
+      dma-buf: Discard old fence_excl on retrying get_fences_rcu for realloc
+
+Christoph Paasch (1):
+      tcp: Reset bytes_acked and bytes_received when disconnecting
+
+Cong Wang (3):
+      netrom: fix a memory leak in nr_rx_frame()
+      netrom: hold sock when setting skb->destructor
+      net_sched: unset TCQ_F_CAN_BYPASS when adding filters
+
+Darrick J. Wong (1):
+      ext4: don't allow any modifications to an immutable file
+
+David Ahern (1):
+      ipv6: rt6_check should return NULL if 'from' is NULL
+
+David Howells (1):
+      rxrpc: Fix send on a connected, but unbound socket
+
+Eric Dumazet (3):
+      igmp: fix memory leak in igmpv3_del_delrec()
+      tcp: be more careful in tcp_fragment()
+      tcp: fix tcp_set_congestion_control() use from bpf hook
+
+Florian Westphal (1):
+      net: make skb_dst_force return true when dst is refcounted
+
+Greg Kroah-Hartman (1):
+      Linux 4.19.62
+
+Haiyang Zhang (1):
+      hv_netvsc: Fix extra rcu_read_unlock in netvsc_recv_callback()
+
+Heiner Kallweit (1):
+      r8169: fix issue with confused RX unit after PHY power-down on RTL841=
+1b
+
+Ido Schimmel (1):
+      ipv6: Unlink sibling route in case of failure
+
+Jakub Kicinski (1):
+      net/tls: make sure offload also gets the keys wiped
+
+Jan Kiszka (1):
+      KVM: nVMX: Clear pending KVM_REQ_GET_VMCS12_PAGES when leaving nested
+
+John Hurley (1):
+      net: openvswitch: fix csum updates for MPLS actions
+
+Jose Abreu (1):
+      net: stmmac: Re-work the queue selection for TSO packets
+
+Justin Chen (1):
+      net: bcmgenet: use promisc for unsupported filters
+
+J=E9r=F4me Glisse (1):
+      dma-buf: balance refcount inbalance
+
+Keerthy (1):
+      gpio: davinci: silence error prints in case of EPROBE_DEFER
+
+Kuo-Hsin Yang (1):
+      mm: vmscan: scan anonymous pages on file refaults
+
+Lorenzo Bianconi (1):
+      net: neigh: fix multiple neigh timer scheduling
+
+Marcelo Ricardo Leitner (1):
+      sctp: fix error handling on stream scheduler initialization
+
+Matteo Croce (1):
+      ipv4: don't set IPv6 only flags to IPv4 addresses
+
+Nikolay Aleksandrov (4):
+      net: bridge: mcast: fix stale nsrcs pointer in igmp3/mld2 report hand=
+ling
+      net: bridge: mcast: fix stale ipv6 hdr pointer when handling v6 query
+      net: bridge: don't cache ether dest pointer on input
+      net: bridge: stp: don't cache eth dest pointer before skb pull
+
+Paolo Bonzini (1):
+      KVM: nVMX: do not use dangling shadow VMCS after guest reset
+
+Paul Cercueil (1):
+      MIPS: lb60: Fix pin mappings
+
+Peter Kosyh (1):
+      vrf: make sure skb->data contains ip header to make routing
+
+Peter Zijlstra (1):
+      perf/core: Fix race between close() and fork()
+
+Ross Zwisler (3):
+      mm: add filemap_fdatawait_range_keep_errors()
+      jbd2: introduce jbd2_inode dirty range scoping
+      ext4: use jbd2_inode dirty range scoping
+
+Taehee Yoo (1):
+      caif-hsi: fix possible deadlock in cfhsi_exit_module()
+
+Takashi Iwai (1):
+      sky2: Disable MSI on ASUS P6T
+
+Theodore Ts'o (2):
+      ext4: enforce the immutable flag on open files
+      ext4: allow directory holes
+
+Vlad Buslov (1):
+      net: sched: verify that q!=3DNULL before setting q->flags
+
+Xin Long (1):
+      sctp: not bind the socket in sctp_connect
+
+Yang Wei (1):
+      nfc: fix potential illegal memory access
+
+
+--opJtzjQTFsWo+cga
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl09RzUACgkQONu9yGCS
+aT4MKw//SLfgKLYev8BCXc1XWthPnzS1Qz9zHbMdpS0fHzuwx/yIoXd6DO3M8eUd
+2pcQJ7CGeJKY9xyqrVFWZ3tYCXnPrPPToTgx6Kk3z5WWhFR4lTd4kx0JShV1Hp3+
+2lkBEZsCtS+O3EImPBmwY0W6VlhIzcOsVdqMfoVrxkgyT8nq9Tq41WqbOm9+nWrc
+z4A/6SPP/SzlhcvdlaZqPfFSThSBolzPtAIfHviefhvidtOHtOmc2yOU733FhhV6
+6VADiu45vtWicTzdOLnvzbHvUEO6UuOR0mEtCpG8ENyzY3ieZZO7hGIBrpaonZ+c
+piVJrJDqDz3f6Q23IZdVctI8rms3S2AkHGuc5ac77216WA197ZG0bpa9UhiuZAK5
+w7+3lBCchNpOuPd60XYcHZdrNhPyRopdR+fIMXv15iDKN6bjs8zujRkRqYRmVPuF
+rGJsZgfty53NJ+N3xOBojgNRj8GCNZrHOuWjZJixX+6fUVf3jzXlassKqaLvbNyx
+BEWFVK6rIcXVcHoNqYoauODVGGA9zGk8vys0ZDDbmNg19nPzCUL+w4us7IFXa7XG
+XjR4I+CuTP1opEjOAPXFEO/zr7mKRlMvvVDrK2XOTe/+SAyijN3eixO3PVTC/n78
+5UWKrOK/affckDLiIwlfHeBqOc4Xgd+9zP4Lk4dVyADNBOBx+/8=
+=ei4p
+-----END PGP SIGNATURE-----
+
+--opJtzjQTFsWo+cga--
