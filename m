@@ -2,186 +2,123 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C02C7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 13:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92B3C7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 13:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70A52075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 13:38:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Swl6CXvx"
+	by mail.kernel.org (Postfix) with ESMTP id 9055D216C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 13:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbfG1Nij (ORCPT
+        id S1726115AbfG1Nk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 09:38:39 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39158 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfG1Nii (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 09:38:38 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m10so57044402edv.6
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 06:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hy+mRQ+QZ9gGOKuMHdwHfkZBAGMRoDJYYoYSH6U8K7A=;
-        b=Swl6CXvxlH7T2DPcTnYcdtPuLwjp1jS/fDPuuVE/laBJ+s8PYOLdZglXMZpo67fYxV
-         Ll9W7uWM5Li2hT8noe7HHL1mJntUkro2fHHOkSwC+m1BmQ1Fmrw5cie3x79EYSGQ+qEW
-         dDSUKFvyU7RQyyDmurzRgnF8B1hfYL/1RobTTgQxBaa5n/MXI4ZF4yMYq7crzJMhZqiX
-         3V6GD3TrrIiqj4vh/O7j3WZfuJhnILDSXKOC68GWc2AqIKIokBi8C9XNSrdKdFLJkZIk
-         tEVwtn390QhvG41kVuGNnusTPYkExko+27RGIUanjkwcZo+6ToZnx3n4ZgoiL/2EpvII
-         qkKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hy+mRQ+QZ9gGOKuMHdwHfkZBAGMRoDJYYoYSH6U8K7A=;
-        b=LCL4U63vTVviBp44/ro/tzqu7WytvtqwmFoY84YG3Fw+VnEjL5IU0XkfN7FosRRpYu
-         rinVRl1yxzPhWKWFeb4obuFEh5V7weg0Xf1K/8ZQCXipZSbaSM5PC2GIxKve1P7FUodA
-         4WNVlBEi6Z4Ix2wrvjmGqJeejSj0u2Hq4yK0+KTgwdiOTtqQRQ90ly5d8h7OcbebpwoF
-         Fi4IhBxzbT7R0sLEd1WqU6cz+DNYsxXmE4S9U0GY7/zeVZFwGbbf5yV4vOF9zgbAxN7H
-         rnlJwB+0Laqvnx3NAiG5rVHZyeGQWlrwVabtgjKgRHB28sWMVV/leVn3Svh+RdkqhIgA
-         BWRw==
-X-Gm-Message-State: APjAAAXoKDA4gJtA5HnlvtHSIUX9DMncyfmbQLtfWkbU3n8BheT4rAsZ
-        +oLNUnf0hgCpD8lfPt9QcuCCwc/T6rDpBPzkhMo=
-X-Google-Smtp-Source: APXvYqzJFhA4yfR/AhsQy7gz2M1fgFG9KBciwTB/MXLVkyXYEFdwGDN6sQjCRmCociC7RVSJJcTt/NzLrgI1xepJ8DY=
-X-Received: by 2002:a17:906:81cb:: with SMTP id e11mr79541973ejx.37.1564321116352;
- Sun, 28 Jul 2019 06:38:36 -0700 (PDT)
+        Sun, 28 Jul 2019 09:40:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:32796 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfG1Nk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 09:40:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2389C344;
+        Sun, 28 Jul 2019 06:40:26 -0700 (PDT)
+Received: from [10.163.1.126] (unknown [10.163.1.126])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD10B3F71A;
+        Sun, 28 Jul 2019 06:40:19 -0700 (PDT)
+Subject: Re: [PATCH v9 13/21] mm: pagewalk: Add test_p?d callbacks
+To:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-14-steven.price@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <b74e545f-cbe0-9dd0-004c-5919e5cabb6f@arm.com>
+Date:   Sun, 28 Jul 2019 19:11:00 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.9999.1907261259420.26670@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1907261259420.26670@viisi.sifive.com>
-From:   Bin Meng <bmeng.cn@gmail.com>
-Date:   Sun, 28 Jul 2019 21:38:25 +0800
-Message-ID: <CAEUhbmUh0rJzFUoA05En9osy+Vv9AP0yOr-bs1goqk7+6SCv2g@mail.gmail.com>
-Subject: Re: [PATCH] riscv: kbuild: add virtual memory system selection
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexandre Ghiti <alex@ghiti.fr>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190722154210.42799-14-steven.price@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 4:00 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
->
-> The RISC-V specifications currently define three virtual memory
-> translation systems: Sv32, Sv39, and Sv48.  Sv32 is currently specific
-> to 32-bit systems; Sv39 and Sv48 are currently specific to 64-bit
-> systems.  The current kernel only supports Sv32 and Sv39, but we'd
-> like to start preparing for Sv48.  As an initial step, allow the
-> virtual memory translation system to be selected via kbuild, and stop
-> the build if an option is selected that the kernel doen't currently
-> support.
->
-> This patch currently has no functional impact.
->
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Alexandre Ghiti <alex@ghiti.fr>
+
+
+On 07/22/2019 09:12 PM, Steven Price wrote:
+> It is useful to be able to skip parts of the page table tree even when
+> walking without VMAs. Add test_p?d callbacks similar to test_walk but
+> which are called just before a table at that level is walked. If the
+> callback returns non-zero then the entire table is skipped.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
 > ---
->  arch/riscv/Kconfig                  | 43 +++++++++++++++++++++++++++++
->  arch/riscv/include/asm/pgtable-32.h |  4 +++
->  arch/riscv/include/asm/pgtable-64.h |  4 +++
->  3 files changed, 51 insertions(+)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 59a4727ecd6c..8ef64fe2c2b3 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -155,6 +155,49 @@ config MODULE_SECTIONS
->         bool
->         select HAVE_MOD_ARCH_SPECIFIC
->
-> +choice
-> +       prompt "Virtual Memory System"
-> +       default RISCV_VM_SV32 if 32BIT
-> +       default RISCV_VM_SV39 if 64BIT
-> +       help
-> +         The RISC-V Instruction Set Manual Volume II: Privileged
-> +         Architecture defines several different "virtual memory
-> +         systems" which specify virtual and physical address formats
-> +         and the structure of page table entries.  This determines
-> +         the amount of virtual address space present and how it is
-> +         translated into physical addresses.
-> +
-> +       config RISCV_VM_SV32
-> +               depends on 32BIT
-> +               bool "RISC-V Sv32"
-> +               help
-> +                 The Sv32 virtual memory system is a page-based
-> +                 address and page table format for RV32 systems.
-> +                 It specifies a translation between 32-bit virtual
-> +                 addresses and 33-bit physical addresses, via a
-> +                 two-stage page table layout.
-> +       config RISCV_VM_SV39
-> +               depends on 64BIT
-> +               bool "RISC-V Sv39"
-> +               help
-> +                 The Sv39 virtual memory system is a page-based
-> +                 address and page table format for RV64 systems.
-> +                 It specifies a translation between 39-bit virtual
-> +                 addresses and 40-bit physical addresses, via a
+>  include/linux/mm.h | 11 +++++++++++
+>  mm/pagewalk.c      | 24 ++++++++++++++++++++++++
+>  2 files changed, 35 insertions(+)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index b22799129128..325a1ca6f820 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1447,6 +1447,11 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+>   *             value means "do page table walk over the current vma,"
+>   *             and a negative one means "abort current page table walk
+>   *             right now." 1 means "skip the current vma."
+> + * @test_pmd:  similar to test_walk(), but called for every pmd.
+> + * @test_pud:  similar to test_walk(), but called for every pud.
+> + * @test_p4d:  similar to test_walk(), but called for every p4d.
+> + *             Returning 0 means walk this part of the page tables,
+> + *             returning 1 means to skip this range.
+>   * @mm:        mm_struct representing the target process of page table walk
+>   * @vma:       vma currently walked (NULL if walking outside vmas)
+>   * @private:   private data for callbacks' usage
+> @@ -1471,6 +1476,12 @@ struct mm_walk {
+>  			     struct mm_walk *walk);
+>  	int (*test_walk)(unsigned long addr, unsigned long next,
+>  			struct mm_walk *walk);
+> +	int (*test_pmd)(unsigned long addr, unsigned long next,
+> +			pmd_t *pmd_start, struct mm_walk *walk);
+> +	int (*test_pud)(unsigned long addr, unsigned long next,
+> +			pud_t *pud_start, struct mm_walk *walk);
+> +	int (*test_p4d)(unsigned long addr, unsigned long next,
+> +			p4d_t *p4d_start, struct mm_walk *walk);
+>  	struct mm_struct *mm;
+>  	struct vm_area_struct *vma;
+>  	void *private;
+> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+> index 1cbef99e9258..6bea79b95be3 100644
+> --- a/mm/pagewalk.c
+> +++ b/mm/pagewalk.c
+> @@ -32,6 +32,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>  	unsigned long next;
+>  	int err = 0;
+>  
+> +	if (walk->test_pmd) {
+> +		err = walk->test_pmd(addr, end, pmd_offset(pud, 0UL), walk);
+> +		if (err < 0)
+> +			return err;
+> +		if (err > 0)
+> +			return 0;
+> +	}
 
-The spec does not mention 40-bit physical addresses, but 56-bit.
-
-> +                 three-stage page table layout.
-> +       config RISCV_VM_SV48
-> +               depends on 64BIT
-> +               bool "RISC-V Sv48"
-> +               help
-> +                 The Sv48 virtual memory system is a page-based
-> +                 address and page table format for RV64 systems.
-> +                 It specifies a translation between 48-bit virtual
-> +                 addresses and 49-bit physical addresses, via a
-
-ditto.
-
-> +                 four-stage page table layout.
-> +
-> +endchoice
-> +
-> +
->  choice
->         prompt "Maximum Physical Memory"
->         default MAXPHYSMEM_2GB if 32BIT
-> diff --git a/arch/riscv/include/asm/pgtable-32.h b/arch/riscv/include/asm/pgtable-32.h
-> index b0ab66e5fdb1..86d41a04735b 100644
-> --- a/arch/riscv/include/asm/pgtable-32.h
-> +++ b/arch/riscv/include/asm/pgtable-32.h
-> @@ -6,6 +6,10 @@
->  #ifndef _ASM_RISCV_PGTABLE_32_H
->  #define _ASM_RISCV_PGTABLE_32_H
->
-> +#if !defined(CONFIG_RISCV_VM_SV32)
-> +#error Only Sv32 supported
-> +#endif
-> +
->  #include <asm-generic/pgtable-nopmd.h>
->  #include <linux/const.h>
->
-> diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-> index 74630989006d..86935595115d 100644
-> --- a/arch/riscv/include/asm/pgtable-64.h
-> +++ b/arch/riscv/include/asm/pgtable-64.h
-> @@ -6,6 +6,10 @@
->  #ifndef _ASM_RISCV_PGTABLE_64_H
->  #define _ASM_RISCV_PGTABLE_64_H
->
-> +#if !defined(CONFIG_RISCV_VM_SV39)
-> +#error Only Sv39 supported for now
-> +#endif
-> +
->  #include <linux/const.h>
->
->  #define PGDIR_SHIFT     30
-> --
-
-Regards,
-Bin
+Though this attempts to match semantics with test_walk() and be comprehensive
+just wondering what are the real world situations when page walking need to be
+aborted based on error condition at a given page table level.
