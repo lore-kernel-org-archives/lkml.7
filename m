@@ -2,181 +2,84 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A760FC7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8948C7618B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86EFC2075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C243A2075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 09:59:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FRl0zJAK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfG1J6R (ORCPT
+        id S1726163AbfG1J7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 05:58:17 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43524 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbfG1J6R (ORCPT
+        Sun, 28 Jul 2019 05:59:39 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43056 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfG1J7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 05:58:17 -0400
-Received: by mail-qt1-f196.google.com with SMTP id w17so12550799qto.10
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 02:58:16 -0700 (PDT)
+        Sun, 28 Jul 2019 05:59:39 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c19so39964033lfm.10
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 02:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TT2iQ+fh+yLVfA5XCASIgHgqymw+iJWW639N0+0UQAE=;
+        b=FRl0zJAKpwfKOlbX9Q5cPuWYSDRbmQE6DNbukn1h3ogrfsflueUFSgzjLc2SzfKJmR
+         E+m+RKFJGXHGTQxCbHHEAUyvrMW/i27uOzMblM7E39IlLXNUZipq1sxXEr1Ao0deWM61
+         TGd1Y3wy9ZkJPV1km0kHVQPpc60PiIcjgjN1kqdkGKmSX4gtr3WNxQ/oUIpud41n0A0z
+         2WMIZKD+ZSBh3LQUlMhvfTu+Wqewi0XFx2CrquUtFg2bV6LD/CUto6RiC6XIFhhKnWrQ
+         NXoh3Wji7vjpIauRm10bkwehuX0zeLTsL8XU3nQZMZkod6NRP4C6u/6Okl1ooGbx/yI9
+         1Lcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CgCTbuELxfZzxTSEknSndN9sTLLuOVb2vt6aeuNUBPg=;
-        b=EGSpe367S6+uVbAREiugKiX0FaDGPBwwp4aooLrTemY5MKdbDUjER8czEU08//2vNn
-         YrPc5zkbxUsTObyHsvvVFUg1OR/iJqsbfNBgrF5ysAozyrAKDiI5Al9hqpgtrJsXebrr
-         bJ6p9qKfq5a9HcExNNPhyeQQ1ei2uHxG/Mh9lGFTg8oKm3eskQbXgMAeQD8q9Z7EnQsD
-         xonGYQa5v7rOf9uhel4vIPUoabrrWbKO83h9ZNttJjitkm8Er/7LNk8PSuA2Cyjn3FrF
-         pH5B48+BYCRoUnYrV9zVg4ozlvmK0FUomtIyLEAWeHLqOzikZnbT7CEMzP8iISYYOsfw
-         J8Jw==
-X-Gm-Message-State: APjAAAWUbc6LGhWkgRGXGUmFAuciQ69dVJNr00Sw8yKBHEn9XHjWb6mT
-        Gp6qFM7KD/SxhrniGvMlUI+VS6+uip58OF0W5sw=
-X-Google-Smtp-Source: APXvYqzOMSm1KAVJxcgrEGtIEaAvPRlkKIEXQlqGBWWQpklW+GTFVj/ccnHEPROD0CHq/ls+gGjR3kKPWZhHsZdGkL0=
-X-Received: by 2002:aed:33a4:: with SMTP id v33mr71591396qtd.18.1564307895541;
- Sun, 28 Jul 2019 02:58:15 -0700 (PDT)
+        bh=TT2iQ+fh+yLVfA5XCASIgHgqymw+iJWW639N0+0UQAE=;
+        b=P58F7bIM5rxMBLjpZL7CUcVEoW8dVlThxqcOEUbXCSNiWDK7rAQsWVlSJiUzN2vHKJ
+         448yPZZUiwyIh3H+qUZUP4cvLoRoUapeL0WSCDh3q6ARJLP7IXw6/1/f0b9+kE7sU6fJ
+         Qa8S16oq+wGCToWK5OMJaY58vs0cTRVC7rACyNZbvXzgohNmPPiTB7Wbum2c1oLLiYT8
+         YnM7j6xsPb2bV1djcFEJXWwD6kqdcDVhCCPPk3+t+fEbeIYiula30sU7QNZpBr8eN1e8
+         tUK1WeqfE87kglFxfjovRS22IslZafgiuPXcuH9zWkfWwwbpzPHZvVyPy/vo10rkOgUb
+         4ayQ==
+X-Gm-Message-State: APjAAAXDiBnYMSFqNJ81XDZe1X9JotEDeUmWLsT7eLs8udOFe5c+AXwE
+        hnn41Xz3Gfwe3Le+gR0aruoWbqcNHhpc6en07sbzEg==
+X-Google-Smtp-Source: APXvYqxkR2GcWRl3K2H831/69AeuP+bZxZIVeB/0pJPp/XlfvJyMah1IjsUVQhTN/o7bF6FNas2xCMlAk3GX6qDHTY0=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr48506198lfu.141.1564307977519;
+ Sun, 28 Jul 2019 02:59:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <201907221012.41504DCD@keescook> <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de>
- <201907221135.2C2D262D8@keescook> <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com>
- <201907221620.F31B9A082@keescook> <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com>
- <201907231437.DB20BEBD3@keescook> <alpine.DEB.2.21.1907240038001.27812@nanos.tec.linutronix.de>
- <201907231636.AD3ED717D@keescook> <alpine.DEB.2.21.1907240155080.2034@nanos.tec.linutronix.de>
- <20190726180103.GE3188@linux.intel.com> <CALCETrUe50sbMx+Pg+fQdVFVeZ_zTffNWGJUmYy53fcHNrOhrQ@mail.gmail.com>
-In-Reply-To: <CALCETrUe50sbMx+Pg+fQdVFVeZ_zTffNWGJUmYy53fcHNrOhrQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 28 Jul 2019 11:57:58 +0200
-Message-ID: <CAK8P3a3_tki1mi4OjLJdaGLwVA7JE0wE1kczE_q7kEpr5e8sMQ@mail.gmail.com>
-Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace on i386
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Paul Bolle <pebolle@tiscali.nl>
+References: <20190628161419.26439-1-colin.king@canonical.com>
+In-Reply-To: <20190628161419.26439-1-colin.king@canonical.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 28 Jul 2019 11:59:26 +0200
+Message-ID: <CACRpkdZvmbCkfCn=PqREp=v7bB7OaGG9+B8_PG5+nK_=CRWM8w@mail.gmail.com>
+Subject: Re: [PATCH][next] gpio: bd70528: fix spelling misstake "debouce" -> "debounce"
+To:     Colin King <colin.king@canonical.com>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 7:53 PM Andy Lutomirski <luto@kernel.org> wrote:
+On Fri, Jun 28, 2019 at 6:14 PM Colin King <colin.king@canonical.com> wrote:
+
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> On Fri, Jul 26, 2019 at 11:01 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Wed, Jul 24, 2019 at 01:56:34AM +0200, Thomas Gleixner wrote:
-> > > On Tue, 23 Jul 2019, Kees Cook wrote:
-> > >
-> > > > On Wed, Jul 24, 2019 at 12:59:03AM +0200, Thomas Gleixner wrote:
-> > > > > And as we have sys_clock_gettime64() exposed for 32bit anyway you need to
-> > > > > deal with that in seccomp independently of the VDSO. It does not make sense
-> > > > > to treat sys_clock_gettime() differently than sys_clock_gettime64(). They
-> > > > > both expose the same information, but the latter is y2038 safe.
-> > > >
-> > > > Okay, so combining Andy's ideas on aliasing and "more seccomp flags",
-> > > > we could declare that clock_gettime64() is not filterable on 32-bit at
-> > > > all without the magic SECCOMP_IGNORE_ALIASES flag or something. Then we
-> > > > would alias clock_gettime64 to clock_gettime _before_ the first evaluation
-> > > > (unless SECCOMP_IGNORE_ALIASES is set)?
-> > > >
-> > > > (When was clock_gettime64() introduced? Is it too long ago to do this
-> > > > "you can't filter it without a special flag" change?)
-> > >
-> > > clock_gettime64() and the other sys_*time64() syscalls which address the
-> > > y2038 issue were added in 5.1
-> >
-> > Paul Bolle pointed out that this regression showed up in v5.3-rc1, not
-> > v5.2.  In Paul's case, systemd-journal is failing.
+> There is a spelling mistake in a dev_err message. Fix it.
 >
-> I think it's getting quite late to start inventing new seccomp
-> features to fix this.  I think the right solution for 5.3 is to change
-> the 32-bit vdso fallback to use the old clock_gettime, i.e.
-> clock_gettime32.  This is obviously not an acceptable long-term
-> solution.
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-I think there is something else wrong with the fallback path, it seems
-to pass the wrong structure in some cases:
+Patch applied.
 
-arch/x86/include/asm/vdso/gettimeofday.h vdso32:
-
-static __always_inline
-long clock_gettime_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-{
-        long ret;
-
-        asm (
-                "mov %%ebx, %%edx \n"
-                "mov %[clock], %%ebx \n"
-                "call __kernel_vsyscall \n"
-                "mov %%edx, %%ebx \n"
-                : "=a" (ret), "=m" (*_ts)
-                : "0" (__NR_clock_gettime64), [clock] "g" (_clkid), "c" (_ts)
-                : "edx");
-
-        return ret;
-}
-
-arch/x86/include/asm/vdso/gettimeofday.h vdso64:
-static __always_inline
-long clock_gettime_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-{
-        long ret;
-
-        asm ("syscall" : "=a" (ret), "=m" (*_ts) :
-             "0" (__NR_clock_gettime), "D" (_clkid), "S" (_ts) :
-             "rcx", "r11");
-
-        return ret;
-}
-
-
-lib/vdso/gettimeofday.c:
-static __maybe_unused int
-__cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
-{
-        struct __kernel_timespec ts;
-        int ret;
-
-        if (res == NULL)
-                goto fallback;
-
-        ret = __cvdso_clock_gettime(clock, &ts);
-
-        if (ret == 0) {
-                res->tv_sec = ts.tv_sec;
-                res->tv_nsec = ts.tv_nsec;
-        }
-
-        return ret;
-
-fallback:
-        return clock_gettime_fallback(clock, (struct __kernel_timespec *)res);
-}
-
-So we get an 'old_timespec32' pointer from user space, and cast
-it to __kernel_timespec in order to pass it to the low-level function
-that actually fills in the 64-bit structure.
-
-On a little-endian machine, the first four bytes are actually correct
-here, but this is followed by tv_nsec=0 and 8 more bytes that overwrite
-whatever comes after the user space 'timespec'. [I missed the
-typecast as an indication of a bug during my review, sorry about
-that].
-
-I think adding a clock_gettime32_fallback() function that calls
-__NR_clock_gettime is both the simplest fix for this bug, and
-the least ugly way to handle it in the long run.
-
-We also need to decide what to do about __cvdso_clock_gettime32()
-once we add a compile-time option to make all time32 syscalls
-to return an error. Returning -ENOSYS from the clock_gettime32()
-fallback is probably a good idea, but for consistency the
-__vdso_clock_gettime() call should either always return the
-same in that configuration, or be left out from the vdso build
-endirely.
-
-       Arnd
+Yours,
+Linus Walleij
