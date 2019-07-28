@@ -2,209 +2,135 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27090C433FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E68C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B4B2077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E602070D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:36:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ARdtilcr"
+	dkim=pass (1024-bit key) header.d=sam.st header.i=@sam.st header.b="WbITrxD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbfG1Pfr (ORCPT
+        id S1726195AbfG1Pgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 11:35:47 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39218 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfG1Pfr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 11:35:47 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b7so26565633pls.6
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 08:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Pm6pwIPdlV9wRk+JitjPlIfT8uYdgqGZKgDDx5JXMvo=;
-        b=ARdtilcr0o+k6afqdq26dB6uiPQmwsK/dIg5CCUfize/+2sZckkq9SBfSdltYDqdvK
-         CmUecGvwbkSdnSWtSvlXRjuxZcdFejEOeqPY3zzYmNgSuYBBQd3SV4PGISic/QDX6sxV
-         tPS9OrxdPUdOe16wYiDYpxXi115+Z/pjxkEZU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Pm6pwIPdlV9wRk+JitjPlIfT8uYdgqGZKgDDx5JXMvo=;
-        b=Uld8qJxHpGnMyaeKgZzC61qh8VRGDDOXBDBUwEmGBq7iZN3D0ICHYOhRh5J6QYOPZs
-         5cu0Bue1ErV0VSjCFxRo75JEaaBaHK2of59B8uZY6NNPyk4PZtTsn9AU/18c1lq1QdVI
-         MMnL/lOiU4TTgkAKQ7OLweheFb1VFT1Ass6L8kRXTjJKYiCmx/W3CmWiCIOYzwDEu9r0
-         44by2nYlF/Mi5xWm2PyeoQDU2clWTwpAHpDok7lFTwi5j/Zngnk9RNZYYdKtz6W5JQal
-         6mWZNps+ad4q2lJYgNgjru0gA++SD2FKFYHFjVgzY0i/u09OFAzkXJAhEMVds2AlZkWN
-         PIsA==
-X-Gm-Message-State: APjAAAXNfrLhSKQdkGA4tcru579jPO3/b9Z5rNiYrwWfZazwtYaQlyK4
-        6fwae7Z9H3UoQIzznq8714U=
-X-Google-Smtp-Source: APXvYqwlh8jFqpMNB2vT4vmBRbLrB7P3r3gqG6V5tDxzBhF0Er/215XImhQMOAIPhhTKSVtXcooiBA==
-X-Received: by 2002:a17:902:b702:: with SMTP id d2mr109216801pls.259.1564328146304;
-        Sun, 28 Jul 2019 08:35:46 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id x24sm55904341pgl.84.2019.07.28.08.35.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 08:35:45 -0700 (PDT)
-Date:   Sun, 28 Jul 2019 11:35:44 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jade Alglave <j.alglave@ucl.ac.uk>, linux-arch@vger.kernel.org,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v2] lkmm/docs: Correct ->prop example with additional rfe
- link
-Message-ID: <20190728153544.GA87531@google.com>
-References: <20190728031303.164545-1-joel@joelfernandes.org>
- <Pine.LNX.4.44L0.1907281027160.6532-100000@netrider.rowland.org>
- <20190728151959.GA82871@google.com>
- <20190728152806.GB26905@tardis>
+        Sun, 28 Jul 2019 11:36:35 -0400
+Received: from sam.st ([5.44.101.18]:47691 "EHLO mail.sam.st"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbfG1Pgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 11:36:35 -0400
+X-Greylist: delayed 562 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Jul 2019 11:36:33 EDT
+Received: from workstation-ibk.test (212-186-61-58.cable.dynamic.surfer.at [212.186.61.58])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.mayr.bz.it (Postfix) with ESMTPSA id 802DB3000BD;
+        Sun, 28 Jul 2019 17:27:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sam.st; s=default;
+        t=1564327626;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=71FxAUQjnzv2j4qqgDoMFk3VeNdKFNwKxT1YuGIIY4U=;
+        b=WbITrxD0yrYuIBctsgI0XRdCjme+lw+y2NvxAFKUQ8bc2zPLq1gRWHCV1ndv5M9/UUNKaH
+        I01z2fLCBqYU9PB0z7eH5AWsAIPtaBbqkPryiqL6SuK8xqkTzUP2qpfB4qR8K9ekEqulVK
+        i1XrToC88XlD86Pc2fw8SW6F4imMtmo=
+From:   Sebastian Mayr <me@sam.st>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Sebastian Mayr <me@sam.st>
+Subject: [PATCH] uprobes/x86: fix detection of 32-bit user mode
+Date:   Sun, 28 Jul 2019 17:26:17 +0200
+Message-Id: <20190728152617.7308-1-me@sam.st>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190728152806.GB26905@tardis>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 11:28:06PM +0800, Boqun Feng wrote:
-> On Sun, Jul 28, 2019 at 11:19:59AM -0400, Joel Fernandes wrote:
-> > On Sun, Jul 28, 2019 at 10:48:51AM -0400, Alan Stern wrote:
-> > > On Sat, 27 Jul 2019, Joel Fernandes (Google) wrote:
-> > > 
-> > > > The lkmm example about ->prop relation should describe an additional rfe
-> > > > link between P1's store to y and P2's load of y, which should be
-> > > > critical to establishing the ordering resulting in the ->prop ordering
-> > > > on P0. IOW, there are 2 rfe links, not one.
-> > > > 
-> > > > Correct these in the docs to make the ->prop ordering on P0 more clear.
-> > > > 
-> > > > Cc: kernel-team@android.com
-> > > > Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > ---
-> > > 
-> > > This is not a good update.  See below...
-> > 
-> > No problem, thanks for the feedback. I am new to the LKMM so please bear
-> > with me.. I should have tagged this RFC.
-> > 
-> > > >  .../memory-model/Documentation/explanation.txt  | 17 ++++++++++-------
-> > > >  1 file changed, 10 insertions(+), 7 deletions(-)
-> > > > 
-> > > > diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-> > > > index 68caa9a976d0..aa84fce854cc 100644
-> > > > --- a/tools/memory-model/Documentation/explanation.txt
-> > > > +++ b/tools/memory-model/Documentation/explanation.txt
-> > > > @@ -1302,8 +1302,8 @@ followed by an arbitrary number of cumul-fence links, ending with an
-> > > >  rfe link.  You can concoct more exotic examples, containing more than
-> > > >  one fence, although this quickly leads to diminishing returns in terms
-> > > >  of complexity.  For instance, here's an example containing a coe link
-> > > > -followed by two fences and an rfe link, utilizing the fact that
-> > > > -release fences are A-cumulative:
-> > > > +followed by a fence, an rfe link, another fence and and a final rfe link,
-> > >                                                    ^---^
-> > > > +utilizing the fact that release fences are A-cumulative:
-> > > 
-> > > I don't like this, for two reasons.  First is the repeated "and" typo.
-> > 
-> > Will fix the trivial typo, sorry about that.
-> > 
-> > > More importantly, it's not necessary to go into this level of detail; a
-> > > better revision would be:
-> > > 
-> > > +followed by two cumul-fences and an rfe link, utilizing the fact that
-> > > 
-> > > This is appropriate because the cumul-fence relation is defined to 
-> > > contain the rfe link which you noticed wasn't mentioned explicitly.
-> > 
-> > No, I am talking about the P1's store to Y and P2's load of Y. That is not
-> > through a cumul-fence so I don't understand what you meant? That _is_ missing
-> > the rfe link I am referring to, that is left out.
-> > 
-> > The example says r2 = 1 and then we work backwards from that. r2 could very
-> > well have been 0, there's no fence or anything involved, it just happens to
-> > be the executation pattern causing r2 = 1 and hence the rfe link. Right?
-> > 
-> > > >  	int x, y, z;
-> > > >  
-> > > > @@ -1334,11 +1334,14 @@ If x = 2, r0 = 1, and r2 = 1 after this code runs then there is a prop
-> > > >  link from P0's store to its load.  This is because P0's store gets
-> > > >  overwritten by P1's store since x = 2 at the end (a coe link), the
-> > > >  smp_wmb() ensures that P1's store to x propagates to P2 before the
-> > > > -store to y does (the first fence), the store to y propagates to P2
-> > > > -before P2's load and store execute, P2's smp_store_release()
-> > > > -guarantees that the stores to x and y both propagate to P0 before the
-> > > > -store to z does (the second fence), and P0's load executes after the
-> > > > -store to z has propagated to P0 (an rfe link).
-> > > > +store to y does (the first fence), P2's store to y happens before P2's
-> > > ---------------------------------------^
-> > > 
-> > > This makes no sense, since P2 doesn't store to y.  You meant P1's store
-> > > to y.  Also, the use of "happens before" is here unnecessarily
-> > > ambiguous (is it an informal usage or does it refer to the formal
-> > > happens-before relation?).  The original "propagates to" is better.
-> > 
-> > Will reword this.
-> > 
-> > > > +load of y (rfe link), P2's smp_store_release() ensures that P2's load
-> > > > +of y executes before P2's store to z (second fence), which implies that
-> > > > +that stores to x and y propagate to P2 before the smp_store_release(), which
-> > > > +means that P2's smp_store_release() will propagate stores to x and y to all
-> > > > +CPUs before the store to z propagates (A-cumulative property of this fence).
-> > > > +Finally P0's load of z executes after P2's store to z has propagated to
-> > > > +P0 (rfe link).
-> > > 
-> > > Again, a better change would be simply to replace the two instances of
-> > > "fence" in the original text with "cumul-fence".
-> > 
-> > Ok that's fine. But I still feel the rfe is not a part of the cumul-fence.
-> > The fences have nothing to do with the rfe. Or, I am missing something quite
-> > badly.
-> > 
-> > Boqun, did you understand what Alan is saying?
-> > 
-> 
-> I think 'cumul-fence' that Alan mentioned is not a fence, but a
-> relation, which could be the result of combining a rfe relation and a
-> A-cumulative fence relation. Please see the section "PROPAGATION ORDER
-> RELATION: cumul-fence" or the definition of cumul-fence in
-> linux-kernel.cat.
-> 
-> Did I get you right, Alan? If so, your suggestion is indeed a better
-> change.
+32-bit processes running on a 64-bit kernel are not always detected
+correctly, causing the process to crash when uretprobes are installed.
+The reason for the crash is that in_ia32_syscall() is used to determine
+the process's mode, which only works correctly when called from a
+syscall. In the case of uretprobes, however, the function is called from
+a software interrupt and always returns 'false' (on a 64-bit kernel). In
+consequence this leads to corruption of the process's return address.
 
-To be frank, I don't think it is better if that's what Alan meant. It is
-better to be explicit about the ->rfe so that the reader walking through the
-example can clearly see the ordering and make sense of it.
+This can be fixed by using user_64bit_mode(), which should always be
+correct.
 
-Just saying 'cumul-fence' and then hoping the reader sees the light is quite
-a big assumption and makes the document less readable.
+Signed-off-by: Sebastian Mayr <me@sam.st>
+---
 
-I mean the fact that you are asking Alan for clarification, means that it is
-not that obvious ;)
+Please note that I just stumbled over this bug and am not really
+familiar with all the internals. So take the patch and, in particular,
+the commit message with a grain of salt. Thanks!
 
-thanks,
+ arch/x86/kernel/uprobes.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
- - Joel
-
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 918b5092a85f..d6e261202c6b 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -508,9 +508,9 @@ struct uprobe_xol_ops {
+ 	void	(*abort)(struct arch_uprobe *, struct pt_regs *);
+ };
+ 
+-static inline int sizeof_long(void)
++static inline int sizeof_long(struct pt_regs *regs)
+ {
+-	return in_ia32_syscall() ? 4 : 8;
++	return user_64bit_mode(regs) ? 8 : 4;
+ }
+ 
+ static int default_pre_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
+@@ -521,9 +521,9 @@ static int default_pre_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
+ 
+ static int emulate_push_stack(struct pt_regs *regs, unsigned long val)
+ {
+-	unsigned long new_sp = regs->sp - sizeof_long();
++	unsigned long new_sp = regs->sp - sizeof_long(regs);
+ 
+-	if (copy_to_user((void __user *)new_sp, &val, sizeof_long()))
++	if (copy_to_user((void __user *)new_sp, &val, sizeof_long(regs)))
+ 		return -EFAULT;
+ 
+ 	regs->sp = new_sp;
+@@ -556,7 +556,7 @@ static int default_post_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs
+ 		long correction = utask->vaddr - utask->xol_vaddr;
+ 		regs->ip += correction;
+ 	} else if (auprobe->defparam.fixups & UPROBE_FIX_CALL) {
+-		regs->sp += sizeof_long(); /* Pop incorrect return address */
++		regs->sp += sizeof_long(regs); /* Pop incorrect return address */
+ 		if (emulate_push_stack(regs, utask->vaddr + auprobe->defparam.ilen))
+ 			return -ERESTART;
+ 	}
+@@ -675,7 +675,7 @@ static int branch_post_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
+ 	 * "call" insn was executed out-of-line. Just restore ->sp and restart.
+ 	 * We could also restore ->ip and try to call branch_emulate_op() again.
+ 	 */
+-	regs->sp += sizeof_long();
++	regs->sp += sizeof_long(regs);
+ 	return -ERESTART;
+ }
+ 
+@@ -1056,7 +1056,7 @@ bool arch_uprobe_skip_sstep(struct arch_uprobe *auprobe, struct pt_regs *regs)
+ unsigned long
+ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs *regs)
+ {
+-	int rasize = sizeof_long(), nleft;
++	int rasize = sizeof_long(regs), nleft;
+ 	unsigned long orig_ret_vaddr = 0; /* clear high bits for 32-bit apps */
+ 
+ 	if (copy_from_user(&orig_ret_vaddr, (void __user *)regs->sp, rasize))
+-- 
+2.22.0
 
