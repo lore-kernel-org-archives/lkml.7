@@ -2,111 +2,91 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E523BC7618B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31D5C433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9973214C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564328595;
-	bh=Dq6QoeL4ezr8ZMXAdrLCOVGLtVrBtn6BM2sBUdeCB9g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cjK6xPXXidahMV0OG/Gu9MLyx2VRnMngVeqV5FSwQ6sYMYtHAx+fYDkdPn7NFOABw
-	 fUQBon1mxhv5x4rE8oU9qmT47BnxdKnvu0pDCaa3K0Uqv5N5Mzv4uZx/n2c3mL6ssU
-	 RqrlbTmI6YAf6CMt+1zsojjHyBR6zwZG9ASnBedk=
+	by mail.kernel.org (Postfix) with ESMTP id 78DDC2085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 15:48:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="yhi1MR4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbfG1PnO (ORCPT
+        id S1726141AbfG1PsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 11:43:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbfG1PnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 11:43:14 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 223A92075E;
-        Sun, 28 Jul 2019 15:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564328593;
-        bh=Dq6QoeL4ezr8ZMXAdrLCOVGLtVrBtn6BM2sBUdeCB9g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2kdhgneqNrndEjMHQ3ivzAHCizetTNGmYiQIwcSITKs2WTjP+ILuQ9/pel/OXx6Rt
-         OwJnWAX+HFTWIHiVG3tcBp0h1vR+g1TDDlagOmRjDJql7F72S5NrUMMWnxqu9diIj3
-         EOYumr0qVw7XimeNyd4sEZ6y56M4/9vX1TamnLls=
-Date:   Sun, 28 Jul 2019 11:43:12 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "jic23@kernel.org" <jic23@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "denis.ciocca@st.com" <denis.ciocca@st.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 4.4 17/35] iio: st_accel: fix
- iio_triggered_buffer_{pre,post}enable positions
-Message-ID: <20190728154312.GJ8637@sasha-vm>
-References: <20190719041423.19322-1-sashal@kernel.org>
- <20190719041423.19322-17-sashal@kernel.org>
- <20190721182256.70ab6692@archlinux>
- <1fcd1ef5f55de84c2b8c58492cd5fac9b8acf7ee.camel@analog.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1fcd1ef5f55de84c2b8c58492cd5fac9b8acf7ee.camel@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 28 Jul 2019 11:48:00 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:63407 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfG1Pr7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 11:47:59 -0400
+Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x6SFlYKw013667;
+        Mon, 29 Jul 2019 00:47:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x6SFlYKw013667
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564328854;
+        bh=uQYldCyUhsL2ffOk1ckUqqzFkEWVp4rPzap8vzYi+vQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=yhi1MR4csP31TdvIMm31aVc8DRgL8LXLDDnOJH/3qJP/Q5clk8ef6nkKKyBEZKoPp
+         lsni9j0wFlEcZCmaXu/G/jd8xRnrjepnjmlKfvMRp4/SCwVXZcEdK9ozHmzuDMyve7
+         /fa00BjorZRNfdGYKU3AuRDsUcap/KwTA5b9/vSOOVUPkQsN1/L1sTO6eW2IV2hvGB
+         /PMNE9AP0oLacvu0homcuFBrSzLpU8XfjScV4XkapbqeDHidAzraadGgPaNzfaO9Dj
+         eb9YqOt6iRAdZgMeqkQEzPNKxUwUAo0v3E2Ur4fyepITiQWEASRzERJDhJ969YbRQg
+         gwvNRIkbvGWJg==
+X-Nifty-SrcIP: [126.26.94.249]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] linux/coff.h: add include guard
+Date:   Mon, 29 Jul 2019 00:47:28 +0900
+Message-Id: <20190728154728.11126-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 06:47:47AM +0000, Ardelean, Alexandru wrote:
->On Sun, 2019-07-21 at 18:23 +0100, Jonathan Cameron wrote:
->> [External]
->>
->> On Fri, 19 Jul 2019 00:14:05 -0400
->> Sasha Levin <sashal@kernel.org> wrote:
->>
->> > From: Alexandru Ardelean <alexandru.ardelean@analog.com>
->> >
->> > [ Upstream commit 05b8bcc96278c9ef927a6f25a98e233e55de42e1 ]
->> >
->> > The iio_triggered_buffer_{predisable,postenable} functions attach/detach
->> > the poll functions.
->> >
->> > For the predisable hook, the disable code should occur before detaching
->> > the poll func, and for the postenable hook, the poll func should be
->> > attached before the enable code.
->> >
->> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
->> > Acked-by: Denis Ciocca <denis.ciocca@st.com>
->> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> > Signed-off-by: Sasha Levin <sashal@kernel.org>
->> Hi Sasha,
->>
->> This should do any harm, but I deliberately didn't cc stable on
->> this one.
->>
->> Alex, my assumption on this one is that it was fixing a logical
->> ordering problem, but one that had no visible impact.
->> Whilst the pollfunc will be attached too early, the trigger
->> will be disabled for the whole of this function anyway so
->> it shouldn't cause any visible problem.  Is that a correct interpretation?
->
->Yes.
->That is correct.
->
->Maybe I'll change the commit title format so that there is no confusion.
->It's a fix, but not in the sense that something was broken.
->Just something that is the realm of cleaning up.
+Add a header include guard just in case.
 
-I'll drop it from the queue, thanks!
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
---
-Thanks,
-Sasha
+Looks like this file is unused at least in the kernel tree,
+but I am not it is OK to delete it.
+
+I am just adding the include guard for the header compile-testing.
+
+
+
+ include/uapi/linux/coff.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/include/uapi/linux/coff.h b/include/uapi/linux/coff.h
+index e4a79f80b9a0..ab5c7e847eed 100644
+--- a/include/uapi/linux/coff.h
++++ b/include/uapi/linux/coff.h
+@@ -11,6 +11,9 @@
+    more information about COFF, then O'Reilly has a very excellent book.
+ */
+ 
++#ifndef _UAPI_LINUX_COFF_H
++#define _UAPI_LINUX_COFF_H
++
+ #define  E_SYMNMLEN  8   /* Number of characters in a symbol name         */
+ #define  E_FILNMLEN 14   /* Number of characters in a file name           */
+ #define  E_DIMNUM    4   /* Number of array dimensions in auxiliary entry */
+@@ -350,3 +353,5 @@ struct COFF_reloc {
+ 
+ /* For new sections we haven't heard of before */
+ #define COFF_DEF_SECTION_ALIGNMENT       4
++
++#endif /* _UAPI_LINUX_COFF_H */
+-- 
+2.17.1
+
