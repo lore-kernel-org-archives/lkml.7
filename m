@@ -4,97 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345E7C7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159C8C7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 007DC2075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A792075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 22:11:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WSHsBcXZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fYfSEu0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfG1WJe (ORCPT
+        id S1726262AbfG1WLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 18:09:34 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37306 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfG1WJd (ORCPT
+        Sun, 28 Jul 2019 18:11:54 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46186 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfG1WLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 18:09:33 -0400
-Received: by mail-lj1-f196.google.com with SMTP id z28so2360806ljn.4
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 15:09:32 -0700 (PDT)
+        Sun, 28 Jul 2019 18:11:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so56726358ljg.13
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 15:11:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FX1hpidhvVd2B1jpZNjhTE/QLOo8ZOGtRfMqnoho3GM=;
-        b=WSHsBcXZ7JERbbGCMkWI5YCfQg8C14MBHZJm3Hue5oF7J5DyqJl6tQpVbngQ8q52c8
-         2ScdHTPvRGepFlQLYPWxw2+AXctL99KLBkHSFQ8O4PukhjvxlRN35e1Mbo2a9eAsRy1L
-         kJeMT5pviW3zV/uCvwdcsc4DwJCul8jcDjVvLZOXt+LUuxErTKp4EjWHWw8RditvsrEk
-         Ql1emScyRfzwoGqoycMYh2gQ9ULJv2iQuCMF5g1ImxA1dcbqvRfi1uanPOPq3N2SLAHn
-         ak5s40rLE1mfZYkTU+iKfp8r8S/5/BMctQsqsZ8htKP912yknb+5p451H5XxfSf1/42x
-         1cQA==
+        bh=P/UUoIRi1saO6ICrZirvERC3tkUx/Rrg9Uu5W/WNhiI=;
+        b=fYfSEu0NfzDyjpxjq/ysAcfDfZY2Yjdv2Ql2GucgXtjPYlngCS87l9KxOWAW9WqMsG
+         7YQnuBTDQi5lzkUsX7ju8ANwHjvY9RUH9p8uqm7fuSwta6Dlt3zwJ2m7C99onbm2WOlO
+         5kQIlhiEAqqZbf+UX43YuSJRk4k/V7goItgDwki5TllMdkb/aJYwH7SA5dBL/xuSuWDW
+         Jq2AC0UUkcz96HnCyDSY+VjSrm3G0lf77JURZyw8jThfrM1MQ+H496xoacb3imKl/1Ie
+         Nwjrrj+N5WFI4HRChmgn3C8YEOlQy+2sFGBTBwZ6HxhsL2++jWO2ibkrrJXXfDzkk+OZ
+         grUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FX1hpidhvVd2B1jpZNjhTE/QLOo8ZOGtRfMqnoho3GM=;
-        b=EmnrTTVNDV8fAJ1nq2W6QxLRZw2ND1k2WDY2Lp5IIBZIJY5843JJUqtXRajdebH8/z
-         7jCpDE7ZoAuYkJQCRfR0fufOURd35sOQuA3nMpNkj8JZ8d0XJpYL81WKTh/Fb7f7QEGA
-         b4oo9tmbRBGg/5vXldXku3E/vAOxw25WSZtkPemkB1dk/QrEMh0rbg2NE0ZjYQ8KlRWu
-         IXh0Ug7ky+rPzJUcfAnPqtl87Dl7R35m4FwdoIuFntFaqJM2b+eNdQ5/yeVi2lNKZvJX
-         CkdWHoXv6WF+HnGTbSQMSB1SmyJ/ygge790mOMy8AfkCI5SkGC/ArXHeNGC2lX96EPEm
-         DnpA==
-X-Gm-Message-State: APjAAAXxEt+z4QdA3ibqUD6MmBlQ5hLYHJYkgA/kXQQBZE7luMmeCu6C
-        xIrj2UzHuHEX2h8v+9Se8xVXw2xifO9HepsjmHcVVg==
-X-Google-Smtp-Source: APXvYqywJuBj32EcmV1j+DhpREz2WRlJ8AJL77FsJDcPL2Uh+1cobshd9SxF1ulQUi38gPjw1BTeSgp8v1gBCV2YbpE=
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr8043666ljs.54.1564351771778;
- Sun, 28 Jul 2019 15:09:31 -0700 (PDT)
+        bh=P/UUoIRi1saO6ICrZirvERC3tkUx/Rrg9Uu5W/WNhiI=;
+        b=dK0w2ResZT1RPUrMYS/aGO1avq6Gf33sYEhYEY2drZqAW02YouxxEoQtIWXoa324CJ
+         9dRH9PPAuMzF3mvlKgFRKe+UavK3ixnwS5T6PBBwFCnq7XUMCxS4cwLcSC4AH0i08jV4
+         KWg891CWwgwgKojxiwUxeiSRzBiXBT0qWBaJwuHXBoD89aNRURqDO8KgXzue2X59sMsJ
+         hB/thw6ggOFfa5eAEz8lfycSdxAVW8x+m43OqvLwFxMH+BdcAwvQ+Hy1QHPCsfkNkZef
+         7X5O8Be/KI1orEeqVfffUNJ6GZ49pMmmhv37dKZ6o4WTPuWcO15tCT3LqdbzKewth6zK
+         P/zg==
+X-Gm-Message-State: APjAAAWeVknhAzZWw/Mj5tZGXD6MQq1XeoKdQ91uI8M51XUdxQtvxNYh
+        6tdk3npBAzwBIzo0LfK9C3Ne2h0EYmy9MEypgT+JlQFV
+X-Google-Smtp-Source: APXvYqxyPrbflvR8n7bEZTuQzLrXMs+cK8AFTQaEbNF0iOHog8ehTxf2NGg3ABVcU7uIcSaEND69PlsoNKKHH90DCGU=
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr34303871ljm.180.1564351912427;
+ Sun, 28 Jul 2019 15:11:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190606010249.3538-1-bjorn.andersson@linaro.org> <20190606010249.3538-3-bjorn.andersson@linaro.org>
-In-Reply-To: <20190606010249.3538-3-bjorn.andersson@linaro.org>
+References: <20190713075259.243565-1-dmitry.torokhov@gmail.com> <20190713075259.243565-2-dmitry.torokhov@gmail.com>
+In-Reply-To: <20190713075259.243565-2-dmitry.torokhov@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 Jul 2019 00:09:20 +0200
-Message-ID: <CACRpkdbSrGq7ma2ywyQ89N8PKQWLVUiz8NqE4iGyctyENcBKSQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] scsi: ufs: Allow resetting the UFS device
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Andy Gross <agross@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Mon, 29 Jul 2019 00:11:41 +0200
+Message-ID: <CACRpkdZxJZyQD4WZ68hSNGXtGS23hHDv=rrnu9oFmMN0oRNb2w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drivers: base: swnode: link devices to software nodes
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Linux Input <linux-input@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-scsi@vger.kernel.org
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 3:02 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On Sat, Jul 13, 2019 at 9:53 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-> Acquire the device-reset GPIO and toggle this to reset the UFS device
-> during initialization and host reset.
+> It is helpful to know what device, if any, a software node is tied to, so
+> let's store a pointer to the device in software node structure. Note that
+> children software nodes will inherit their parent's device pointer, so we
+> do not have to traverse hierarchy to see what device the [sub]tree belongs
+> to.
 >
-> Based on downstream support implemented by Subhash Jadavani
-> <subhashj@codeaurora.org>.
+> We will be using the device pointer to locate GPIO lookup tables for
+> devices with static properties.
 >
-> Tested-by: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-I agree with Rob that just "reset-gpios" looks better.
-Otherwise:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+If some device core person like Rafael and/or Greg can ACK it I can
+apply this patch to the GPIO tree.
 
 Yours,
 Linus Walleij
