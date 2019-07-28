@@ -2,91 +2,77 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E27CC76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 18:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0ACDC7618F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 18:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2358C2070D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 18:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812D72070D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 18:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbfG1SRC (ORCPT
+        id S1726171AbfG1SUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 14:17:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51916 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfG1SRB (ORCPT
+        Sun, 28 Jul 2019 14:20:37 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34027 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfG1SUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 14:17:01 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hrnj6-0007hm-66; Sun, 28 Jul 2019 20:16:56 +0200
-Date:   Sun, 28 Jul 2019 20:16:55 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace
- on i386
-In-Reply-To: <alpine.DEB.2.21.1907282013310.1791@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1907282015430.1791@nanos.tec.linutronix.de>
-References: <201907221012.41504DCD@keescook> <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de> <201907221135.2C2D262D8@keescook> <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com> <201907221620.F31B9A082@keescook>
- <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com> <201907231437.DB20BEBD3@keescook> <alpine.DEB.2.21.1907240038001.27812@nanos.tec.linutronix.de> <201907231636.AD3ED717D@keescook> <alpine.DEB.2.21.1907240155080.2034@nanos.tec.linutronix.de>
- <20190726180103.GE3188@linux.intel.com> <CALCETrUe50sbMx+Pg+fQdVFVeZ_zTffNWGJUmYy53fcHNrOhrQ@mail.gmail.com> <CAK8P3a3_tki1mi4OjLJdaGLwVA7JE0wE1kczE_q7kEpr5e8sMQ@mail.gmail.com> <alpine.DEB.2.21.1907281225410.1791@nanos.tec.linutronix.de>
- <CAK8P3a0dC5ti8nVMK8-NmmTYeEfKPdLpVf0zrQEnq76fUvh1oA@mail.gmail.com> <alpine.DEB.2.21.1907282013310.1791@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 28 Jul 2019 14:20:36 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 31so59442373wrm.1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 11:20:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EM4rFoGptL8wwVy+9aAkVAtoyQmR94Sq+t8yQw0SwLw=;
+        b=YePBUpmUknjwJ8dTjUSngWVp4C/T7WtGKa8/Zi4zS5hHS8FDViYmFOhAeeA8Hn+lXr
+         zbdVtfG6aIudSCl54mZpeC4YnhCVxXx+JxlV6dPFaaOQSKYWad5QHVig+QKZqiH3BZK9
+         SAvTmfnm7JNavjKxugzlQKCehPQ6acEE6x6PVBYmQKzmyvVkjDzzUU1mDzr/b//jL77T
+         9tfWNKXEHZtl1+7TEs///Vigm7fzlvKTh6HyjJh4XPpbpTBFeDs47c9DYrtOu31EjIUd
+         VUymvojQBddzNUENHWmvyS+uzBp1EPyOjuINwa3chV+aUZqyti5FvMH6XryTJAsDMLKs
+         KTIg==
+X-Gm-Message-State: APjAAAVcoEY11mkNtlLsQbBSKrLtOm4j15YaYqtwlG0RMiP+/quS70yQ
+        HWUZ/rmhoIPM/5Vj1MTzrRDxQzaCM2c=
+X-Google-Smtp-Source: APXvYqzhGqnPaq/J2MnLsl2azY1MJd/Fyy9wgoAXejcy/aBYRP3FSnkvJOezLnnpa8MXHMALmq+CKQ==
+X-Received: by 2002:adf:ea82:: with SMTP id s2mr108181433wrm.91.1564338034805;
+        Sun, 28 Jul 2019 11:20:34 -0700 (PDT)
+Received: from mcroce-redhat.redhat.com (host221-208-dynamic.27-79-r.retail.telecomitalia.it. [79.27.208.221])
+        by smtp.gmail.com with ESMTPSA id r11sm88993030wre.14.2019.07.28.11.20.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 28 Jul 2019 11:20:33 -0700 (PDT)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Subject: [PATCH] kernel: ignore auto-generated file
+Date:   Sun, 28 Jul 2019 20:20:29 +0200
+Message-Id: <20190728182029.2893-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Jul 2019, Thomas Gleixner wrote:
-> On Sun, 28 Jul 2019, Arnd Bergmann wrote:
-> 
-> > On Sun, Jul 28, 2019 at 12:30 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > On Sun, 28 Jul 2019, Arnd Bergmann wrote:
-> > > > On Sat, Jul 27, 2019 at 7:53 PM Andy Lutomirski <luto@kernel.org> wrote:
-> > 
-> > > Which is totally irrelevant because res is NULL and that NULL pointer check
-> > > should simply return -EFAULT, which is what the syscall fallback returns
-> > > because the pointer is NULL.
-> > >
-> > > But that NULL pointer check is inconsistent anyway:
-> > >
-> > >  - 64 bit does not have it and never had
-> > >
-> > >  - the vdso is not capable of handling faults properly anyway. If the
-> > >    pointer is not valid, then it will segfault. So just preventing the
-> > >    segfault for NULL is silly.
-> > >
-> > > I'm going to just remove it.
-> > 
-> > Ah, you are right, I misread.
-> > 
-> > Anyway, if we want to keep the traditional behavior and get fewer surprises
-> > for users of seccomp and anything else that might observe clock_gettime
-> > behavior, below is how I'd do it. (not even build tested, x86-only. I'll
-> > send a proper patch if this is where we want to take it).
-> 
-> I posted a series which fixes up the mess 2 hours before you sent this mail :)
+kernel/config_data.h is autogenerated during the build, let's add it to
+the directory .gitignore.
 
-And stupid me forgot to CC you. I was entirely sure that I did....
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ kernel/.gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-   https://lkml.kernel.org/r/20190728131251.622415456@linutronix.de
+diff --git a/kernel/.gitignore b/kernel/.gitignore
+index 34d1e77ee9df..98e2e22b97d5 100644
+--- a/kernel/.gitignore
++++ b/kernel/.gitignore
+@@ -4,3 +4,4 @@
+ kheaders.md5
+ timeconst.h
+ hz.bc
++config_data.h
+-- 
+2.21.0
 
-Sorry
-
-	tglx
