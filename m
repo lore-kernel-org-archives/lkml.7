@@ -2,105 +2,90 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25785C7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A279C76190
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC21A2070D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16382077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:08:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CEzzNg0X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jKcqI13c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfG1XHw (ORCPT
+        id S1726320AbfG1XIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 19:07:52 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43032 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbfG1XHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 19:07:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=rgynBm9hctybZUQVcP0RXwQdxJdI0dv3Bh59KGp9aWo=; b=CEzzNg0Xm/Z5ZBhcLdThuFymBA
-        3m2WnPrllV0f9OJX4NEWnjuV4tuMKPsDcGlKkETaNLhGbKx6cDsNYO6hMT/yS8pLPcX3D9foSF9cp
-        KNe4aEAtQeNKWIaIXvwStAnRykxDdlJRAfnYWuaj3vdzxMx4Jb6cbcZz9Q6Pbx4HEtAk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hrsGT-0006hC-MQ; Mon, 29 Jul 2019 01:07:41 +0200
-Date:   Mon, 29 Jul 2019 01:07:41 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
-Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        roopa@cumulusnetworks.com, davem@davemloft.net,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-Message-ID: <20190728230741.GF23125@lunn.ch>
-References: <7e7a7015-6072-d884-b2ba-0a51177245ab@cumulusnetworks.com>
- <eef063fe-fd3a-7e02-89c2-e40728a17578@cumulusnetworks.com>
- <20190725142101.65tusauc6fzxb2yp@soft-dev3.microsemi.net>
- <b9ce433a-3ef7-fe15-642a-659c5715d992@cumulusnetworks.com>
- <e6ad982f-4706-46f9-b8f0-1337b09de350@cumulusnetworks.com>
- <20190726120214.c26oj5vks7g5ntwu@soft-dev3.microsemi.net>
- <20190726134613.GD18223@lunn.ch>
- <20190726195010.7x75rr74v7ph3m6m@lx-anielsen.microsemi.net>
- <20190727030223.GA29731@lunn.ch>
- <20190728191558.zuopgfqza2iz5d5b@lx-anielsen.microsemi.net>
+        Sun, 28 Jul 2019 19:08:06 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39069 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfG1XIF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 19:08:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v18so56647597ljh.6
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 16:08:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O9XQGnluX2xcbDyPaZOiLCfhELVR6ARk9hMIDpP13vM=;
+        b=jKcqI13c9E5QyILvaIYgYgRYmaryyYWNEbMQEoOKb37DRDPRNOQ/CmltyhtMOQ2HUS
+         fBQywfQcaDwy5p9rj+8V2NNg7KBeis8WehmdgqEW5Hu1ZeboAzu3lDjxHdXHxBbTO7Lx
+         wDKj4rAWrziNOZnQyYVQ+4zZKDCfxpONMitQU1nbGcWG7h8+KNIx8WxymkjFgV4uMLNV
+         gTq+TsDheRts+0kwZ1pF2AWFFE33LUDfPgNcsfFAF4eoov8vIDeqAwwx4d45q4mUQi9d
+         67ctbyLdpbL1YoTtScBd8ekPRHh5pa/7kIj+wl9FXlgCXSCG/6KI47rzPNoSFd7zFwFY
+         KPUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O9XQGnluX2xcbDyPaZOiLCfhELVR6ARk9hMIDpP13vM=;
+        b=XyM4OPOidcyEYsMS+p7dr+jyxSG8AEly1W8T4vm9PYYANYc+PEjIp+qzpvCIeLidxk
+         jB3TTHTp2fh3KCRHIVZQEec3Xm7IPa4cD2OeUfKVvy7PWaYnotlYTWUzB1yDfpgm5yWs
+         gyDgr4Xw6XUmD4L07rVDZz9/qZ+EsfilsSSTfxQKGeQckd0IXnoIpTBN9vVCXtd3DyZY
+         6Dw2gSa3Qc2ab4+q+64fFlx4XA27kei/Jf0vs7unQ3GV7XFrHBD0CxScHJbuqJ/hernF
+         iN1upQcb/f9OpZQQcxL8jdn48QwW6GlgznM5Pk1UkHoqrJSf2aIswll+PXqB0Z9ZQ5Lu
+         IAmQ==
+X-Gm-Message-State: APjAAAX/UkC5lYrCWBjbgw283uTA0YAzArpEY+M/GQHlWOR6g6s5Bz4x
+        ZeO6cRJH0sfMNQRMf8KQHs0SAyIvurCaPjvcjKo/Ew==
+X-Google-Smtp-Source: APXvYqwEW1LqfjiyoWnevFQ68/gbc/RdODkVK1fGIl+hP12fx7TSPrM4zpDWzDWByLH4DWsTBNenxT7LE1B+MwCRLes=
+X-Received: by 2002:a2e:8756:: with SMTP id q22mr56865504ljj.108.1564355283784;
+ Sun, 28 Jul 2019 16:08:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190728191558.zuopgfqza2iz5d5b@lx-anielsen.microsemi.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <1562668156-12927-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1562668156-12927-1-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 29 Jul 2019 01:07:52 +0200
+Message-ID: <CACRpkdayG1yvCewxRwi3BD-EM-NTXPS80Z5T0WONM3m2u_Yxcg@mail.gmail.com>
+Subject: Re: [PATCH 0/5] pinctrl: uniphier: Add some improvements and new settings
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Trying to get back to the original problem:
-> 
-> We have a network which implements the ODVA/DLR ring protocol. This protocol
-> sends out a beacon frame as often as every 3 us (as far as I recall, default I
-> believe is 400 us) to this MAC address: 01:21:6C:00:00:01.
-> 
-> Try take a quick look at slide 10 in [1].
-> 
-> If we assume that the SwitchDev driver implemented such that all multicast
-> traffic goes to the CPU, then we should really have a way to install a HW
-> offload path in the silicon, such that these packets does not go to the CPU (as
-> they are known not to be use full, and a frame every 3 us is a significant load
-> on small DMA connections and CPU resources).
-> 
-> If we assume that the SwitchDev driver implemented such that only "needed"
-> multicast packets goes to the CPU, then we need a way to get these packets in
-> case we want to implement the DLR protocol.
-> 
-> I'm sure that both models can work, and I do not think that this is the main
-> issue here.
-> 
-> Our initial attempt was to allow install static L2-MAC entries and append
-> multiple ports to such an entry in the MAC table. This was rejected, for several
-> good reasons it seems. But I'm not sure it was clear what we wanted to achieve,
-> and why we find it to be important. Hopefully this is clear with a real world
-> use-case.
-> 
-> Any hints or ideas on what would be a better way to solve this problems will be
-> much appreciated.
+On Tue, Jul 9, 2019 at 12:29 PM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
 
-I always try to think about how this would work if i had a bunch of
-discrete network interfaces, not a switch. What APIs are involved in
-configuring such a system? How does the Linux network stack perform
-software DLR? How is the reception and blocking of the multicast group
-performed?
+> This series adds some improvements and new settings for pin-mux.
+>
+> Kunihiko Hayashi (5):
+>   pinctrl: uniphier: Separate modem group from UART ctsrts group
+>   pinctrl: uniphier: Add another audio I/O pin-mux settings for LD20
+>   pinctrl: uniphier: Add 4th LD20 MPEG2-TS input pin-mux setting
+>   pinctrl: uniphier: Add Pro5 PCIe pin-mux settings
+>   pinctrl: uniphier: Fix Pro5 SD pin-mux setting
 
-Once you understand how it works in the software implement, it should
-then be more obvious which switchdev hooks should be used to
-accelerate this using hardware.
+Looks fine to me.
 
-	   Andrew
+Masahiro, can I have your ACK/review on these patches?
+
+Yours,
+Linus Walleij
