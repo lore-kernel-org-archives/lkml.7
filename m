@@ -2,113 +2,122 @@ Return-Path: <SRS0=snA0=VZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C0FC7618F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC7DC433FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493BD2077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:41:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="eK8A1Thu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pNeZHonu"
+	by mail.kernel.org (Postfix) with ESMTP id 27BD22077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Jul 2019 23:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfG1XlO (ORCPT
+        id S1726343AbfG1XmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 19:41:14 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:60963 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbfG1XlO (ORCPT
+        Sun, 28 Jul 2019 19:42:22 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46711 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726171AbfG1XmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 19:41:14 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C65CD108B;
-        Sun, 28 Jul 2019 19:41:12 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 28 Jul 2019 19:41:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=U4RDuA+FSEF8yU1ZGRvQY82lPLeCcjf
-        hhcly0ZZX73U=; b=eK8A1ThuZVoK4sXEsuVOEEhAwXkF1Yy77aDYbCW9IrJ/OYo
-        n/Xq54zf6PMwyMfx+kR6Wjxy46DHAU1UqJgSiHeCNXWdBiOfDJ2aUg+TdbGCJNXi
-        yvByaeGHqMHHt3+7CX6mhuUBnjjnqKvlL+HOYEIOrFtNCF9WaOq8w/d+us4s/QSE
-        5G+F6AF2yLRoX8MR0YTB5Wnpz0T7KAlp1/kWKuL8iUyL+BR28Knb31AoAZPWNKIA
-        LsgMqG25wyLYu2vqIJXFjC3KwyDZyB7LFortsXGniIuL4UCzfgWM3COAOmU7W64X
-        WRm2hez+5RNzFeLKhYZGyIyU0sqyR3PyECBTEpw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=U4RDuA
-        +FSEF8yU1ZGRvQY82lPLeCcjfhhcly0ZZX73U=; b=pNeZHonuKkVktSvIThlH/V
-        fYL19ZQpECOIQs61lYsbRiQT7BVt2YitAJRtljv0NPSYHnj3KlE32wRLolJg5KL8
-        UshJdoM0O2VOJEWzarRdOr335PaRZlxb3zLATuhD/4LlRwGSNWy2j4n14njuSZj5
-        u9vJcualcV6GIcCK/CoF87dREOmijBshNYL8B8hvXas13tWoezDwGNjMKCcLeEeH
-        xoDjie8OTu5frdKQ4rh2YvtiusrBCiMKCq3c4qAEyqvfjzNw2QeDOVBpvE+U8xmm
-        v+qi1Ucu35yzKfMPn7UsQX2Zin5Ad4NnHGUqVf4piNJaXMx4SFPPmagXLB7CzhYA
-        ==
-X-ME-Sender: <xms:lTI-Xf0D-h9NjPtChndbt_AZAEcGOgba9qUFHi71HCoRLpxCds5Hjg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledtgddvgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:lTI-XaIJins3UcM1v_qAS1wAwJcnzQH3zB9Z9iJzd-dsfWe_JnEAxw>
-    <xmx:lTI-XV1gZJJ5wfub7rrZbuhLNdfqfhc-KxeMMkbZWoy-6-Xk7KjPIA>
-    <xmx:lTI-XVyjXvVm-gpkrvZRwv0CJYJOEjsyW5wxW2m5b8pmEw8-alJt4Q>
-    <xmx:mDI-XVdQMfBvgBauhlEZAvpotqZ8mpaX0JOXEV8Mkk2lONrbFJDrkw>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 3062AE00A2; Sun, 28 Jul 2019 19:41:09 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-736-gdfb8e44-fmstable-20190718v2
-Mime-Version: 1.0
-Message-Id: <950b8374-2a06-44fe-a1fc-87be17e7d608@www.fastmail.com>
-In-Reply-To: <CACRpkdb4pEdPHbo=3+fJXe9WG8K7A2_xVMtKWCJCfEawDO5wBw@mail.gmail.com>
-References: <20190711041942.23202-1-andrew@aj.id.au>
- <CACRpkdb4pEdPHbo=3+fJXe9WG8K7A2_xVMtKWCJCfEawDO5wBw@mail.gmail.com>
-Date:   Mon, 29 Jul 2019 09:11:28 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Ryan Chen" <ryanchen.aspeed@gmail.com>,
-        "Johnny Huang" <johnny_huang@aspeedtech.com>,
-        linux-aspeed@lists.ozlabs.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/6] pinctrl: aspeed: Add AST2600 pinmux support
-Content-Type: text/plain
+        Sun, 28 Jul 2019 19:42:22 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 568CF820831;
+        Mon, 29 Jul 2019 09:42:17 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hrsms-00005W-25; Mon, 29 Jul 2019 09:41:10 +1000
+Date:   Mon, 29 Jul 2019 09:41:10 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Christoph Hellwig <hch@infradead.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        Masato Suzuki <masato.suzuki@wdc.com>
+Subject: Re: [PATCH] ext4: Fix deadlock on page reclaim
+Message-ID: <20190728234110.GH7777@dread.disaster.area>
+References: <20190725093358.30679-1-damien.lemoal@wdc.com>
+ <20190725115442.GA15733@infradead.org>
+ <20190726224423.GE7777@dread.disaster.area>
+ <20190726225508.GA13729@mit.edu>
+ <BYAPR04MB58162929012135E47C68923AE7C30@BYAPR04MB5816.namprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR04MB58162929012135E47C68923AE7C30@BYAPR04MB5816.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=7-415B0cAAAA:8 a=wVqCKi36-eQ2n_nKcFwA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Mon, 29 Jul 2019, at 08:44, Linus Walleij wrote:
-> On Thu, Jul 11, 2019 at 6:19 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+On Sat, Jul 27, 2019 at 02:59:59AM +0000, Damien Le Moal wrote:
+> On 2019/07/27 7:55, Theodore Y. Ts'o wrote:
+> > On Sat, Jul 27, 2019 at 08:44:23AM +1000, Dave Chinner wrote:
+> >>>
+> >>> This looks like something that could hit every file systems, so
+> >>> shouldn't we fix this in common code?  We could also look into
+> >>> just using memalloc_nofs_save for the page cache allocation path
+> >>> instead of the per-mapping gfp_mask.
+> >>
+> >> I think it has to be the entire IO path - any allocation from the
+> >> underlying filesystem could recurse into the top level filesystem
+> >> and then deadlock if the memory reclaim submits IO or blocks on
+> >> IO completion from the upper filesystem. That's a bloody big hammer
+> >> for something that is only necessary when there are stacked
+> >> filesystems like this....
+> > 
+> > Yeah.... that's why using memalloc_nofs_save() probably makes the most
+> > sense, and dm_zoned should use that before it calls into ext4.
 > 
-> > This series adds pinmux support for the AST2600. Some more rework was required
-> > on top of the previous cleanup series, but this rework was focussed on
-> > supporting features of the AST2600 pinmux rather than fixing issues with the
-> > existing infrastructure for the ASPEED drivers. Due to the dependences it's
-> > based on top of pinctrl/devel, so should avoid any more SPDX issues.
-> >
-> > ASPEED have been testing the patches on hardware, so even for an initial pass
-> > there's some confidence in the implementation.
-> 
-> I'm unsure if I need to wait for the DT bindings to be fixed on this
-> series?
+> Unfortunately, with this particular setup, that will not solve the problem.
+> dm-zoned submit BIOs to its backend drive in response to XFS activity. The
+> requests for these BIOs are passed along to the kernel tcmu HBA and end up in
+> that HBA command ring. The commands themselves are read from the ring and
+> executed by the tcmu-runner user process which executes them doing
+> pread()/pwrite() to the ext4 file. The tcmu-runner process being a different
+> context than the dm-zoned worker thread issuing the BIO,
+> memalloc_nofs_save/restore() calls in dm-zoned will have no effect.
 
-Yeah, I need to, sorry for the delay. Been distracted by other stuff.
+Right, I'm talking about using memalloc_nofs_save() as a huge hammer
+in the pread/pwrite() calling context, not the bio submission
+context (which is typically GFP_NOFS above submit_bio() and GFP_NOIO
+below).
 
-Will send a v2 shortly.
+> So back to Dave's point, we may be needing the big-hammer solution in the case
+> of stacked file systems, while a non-stack setups do not necessarily need it
+> (that is for the FS to decide). But I do not see how to implement this big
+> hammer conditionally. How can a file system tell if it is at the top of the
+> stack (big hammer not needed) or lower than the top level (big hammer needed) ?
 
-Andrew
+Age old question - tracking arbitrary nesting through mount/fs/bdev
+layers is ... difficult. There is no easy way to tell.
+
+> One simple hack would be an fcntl() or mount option to tell the FS to use
+> GFP_NOFS unconditionally, but avoiding the bug would mean making sure that the
+> applications or system setup is correct. So not so safe.
+
+Wasn't there discussion at some point in the past about an interface
+for special processes to be able to mark themselves as PF_MEMALLOC
+(some kind of prctl, I think) for things like FUSE daemons? That
+would prevent direct reclaim recursion for these userspace daemons
+that are in the kernel memory reclaim IO path. It's the same
+situation there, isn't it? How does fuse deal with this problem?
+
+Cheers,
+
+Dave,
+-- 
+Dave Chinner
+david@fromorbit.com
