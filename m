@@ -2,135 +2,117 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCBAC7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A55AC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F4F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21BBB20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="gUuXkOS0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387534AbfG2Q2O (ORCPT
+        id S2387655AbfG2Q2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:28:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37658 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbfG2Q2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:28:13 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 22DA04DB1F;
-        Mon, 29 Jul 2019 16:28:13 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D26E5D9C3;
-        Mon, 29 Jul 2019 16:28:11 +0000 (UTC)
-Message-ID: <ee858ba02e8e560672aff68aead2323bc2136b6c.camel@redhat.com>
-Subject: Re: [PATCH] infiniband: hw: cxgb3: Fix a possible null-pointer
- dereference in connect_reply_upcall()
-From:   Doug Ledford <dledford@redhat.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>, bharat@chelsio.com,
-        jgg@ziepe.ca
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 29 Jul 2019 12:28:09 -0400
-In-Reply-To: <20190725121508.16352-1-baijiaju1990@gmail.com>
-References: <20190725121508.16352-1-baijiaju1990@gmail.com>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-YogQSHis/dLMip/kO+pD"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 29 Jul 2019 12:28:30 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42535 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387559AbfG2Q23 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:28:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id e20so90951474iob.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DHVMtSjxHblhx8srqB8OuNrRbChIr9eVS1c++J6kqsE=;
+        b=gUuXkOS07DLB8rjER8sOfxYBZ+PMPgw7mBd1QVP1d65kxP/UIs2709LyQoUtAXNzNv
+         J3MmeaV+fCaVKcet3Un0AFU2HUO+1a2cTxpyEIAX2Enpo3OBBsFYJEU/VV3UeUo1gtNY
+         PoWQUb1d/KjvGocN+bLnYjfV2U3TO9FNzIMJFCwo0FWCLHBa0HuON7k/Akw/dNzZDh7v
+         ZgbjHEAuwJoLqBk1/bezqbp3ewiO8MeMfsuVX2KGfBjzvhLA7X2pDloMS0tRzXJDzZ2B
+         d4wmWv9q46Ypwxs/o5sD+gGYQrbjfeyf0Y84jBWa1dW8MabeWz13NApFWdqFValIBtVl
+         +zJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DHVMtSjxHblhx8srqB8OuNrRbChIr9eVS1c++J6kqsE=;
+        b=HsAFCCLOSjtuTme+fzliIZwW6ANBci4h2liYfAK79DGgfcsxssVE/zL5P6gOdh1MCX
+         03EKw5B4pYeKyJsg29ZOhfmrqmCexczRYfSCSxT7n4JXRhaGGrrwDvchNyo3BdHQ0SxD
+         yWQ9kc+HSx2YSgQURKZneCk4R8BttEEM5UyNKm5dkx2uY9rVgEIiOtW3n3xR3ICwsJOM
+         QLBirBr2h6UXIsexggAU0IwCez2kgvvpAT9IFL8VEDzH6z0Nl7DkwpBTw4f3iQZ3hkuA
+         HH2z/0oGXhS7tgXR3BnLf5YbdwAdGSci74BcPfIU6w7CNCiKN7zEcsJeXdrwKebYQDka
+         l1uQ==
+X-Gm-Message-State: APjAAAVb9O/ULq+uDwvAQ9Chk6o234f0FeISiesKXWPWztMme6gDRjV+
+        SxwBzluPjezKNOpQLsWab7s=
+X-Google-Smtp-Source: APXvYqyskFjQclHZ6gnHk7M17Uzais67Lqu10XVHEYQYCYjkRKzKm2IR24VvJaPj4kAUd4cuQvh/Pg==
+X-Received: by 2002:a02:8814:: with SMTP id r20mr17712166jai.115.1564417708655;
+        Mon, 29 Jul 2019 09:28:28 -0700 (PDT)
+Received: from localhost.localdomain ([162.223.5.124])
+        by smtp.gmail.com with ESMTPSA id l11sm45420026ioj.32.2019.07.29.09.28.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 09:28:27 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     oleg@redhat.com, linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org, tj@kernel.org, tglx@linutronix.de,
+        prsood@codeaurora.org, avagin@gmail.com,
+        Christian Brauner <christian@brauner.io>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] exit: make setting exit_state consistent
+Date:   Mon, 29 Jul 2019 18:27:57 +0200
+Message-Id: <20190729162757.22694-1-christian@brauner.io>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 29 Jul 2019 16:28:13 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since commit [1] we unconditionally set exit_state to EXIT_ZOMBIE before
+calling into do_notify_parent(). This was done to eliminate a race when
+querying exit_state in do_notify_pidfd().
+Back then we decided to do the absolute minimal thing to fix this and
+not touch the rest of the exit_notify() function where exit_state is
+set.
+Since this fix has not caused any issues change the setting of
+exit_state to EXIT_DEAD in the autoreap case to account for the fact hat
+exit_state is set to EXIT_ZOMBIE unconditionally. This fix was planned
+but also explicitly requested in [2] and makes the whole code more
+consistent.
 
---=-YogQSHis/dLMip/kO+pD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+/* References */
+[1]: b191d6491be6 ("pidfd: fix a poll race when setting exit_state")
+[2]: https://lore.kernel.org/lkml/CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com
 
-On Thu, 2019-07-25 at 20:15 +0800, Jia-Ju Bai wrote:
-> In connect_reply_upcall(), there is an if statement on line 730 to
-> check
-> whether ep->com.cm_id is NULL:
->     if (ep->com.cm_id)
->=20
-> When ep->com.cm_id is NULL, it is used on line 736:
->     ep->com.cm_id->rem_ref(ep->com.cm_id);
->=20
-> Thus, a possible null-pointer dereference may occur.
->=20
-> To fix this bug, ep->com.cm_id is checked before being used.
->=20
-> This bug is found by a static analysis tool STCheck written by us.
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+---
+ kernel/exit.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-I think this is one of those theoretical issues that is a non-issue in
-practice.  The cxgb3 driver is older than dirt and only hangs around
-because people out there are still using it in a few places.  We have no
-reports of bugs in this function.  I looked through the code, but it
-wasn't quickly obvious why this isn't an issue, but I suspect the real
-answer is "we can never have a negative status and not have a cm_id" as
-a result of the design of the code.  Verifying that with an audit is
-more time than I want to spend though.  So, I'm going to drop this
-patch.  If you can find a plausible path by which this is actually a
-bug, then we can revisit it.  But I don't want to go around changing a
-known working for years driver on the basis of "my new static code
-checker found this thing" versus someone who reports an actual crash
-(which is what this bug would cause if it exists).
-
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  drivers/infiniband/hw/cxgb3/iwch_cm.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/infiniband/hw/cxgb3/iwch_cm.c
-> b/drivers/infiniband/hw/cxgb3/iwch_cm.c
-> index 0bca72cb4d9a..2b31c4726d3e 100644
-> --- a/drivers/infiniband/hw/cxgb3/iwch_cm.c
-> +++ b/drivers/infiniband/hw/cxgb3/iwch_cm.c
-> @@ -733,7 +733,8 @@ static void connect_reply_upcall(struct iwch_ep
-> *ep, int status)
->  		ep->com.cm_id->event_handler(ep->com.cm_id, &event);
->  	}
->  	if (status < 0) {
-> -		ep->com.cm_id->rem_ref(ep->com.cm_id);
-> +		if (ep->com.cm_id)
-> +			ep->com.cm_id->rem_ref(ep->com.cm_id);
->  		ep->com.cm_id =3D NULL;
->  		ep->com.qp =3D NULL;
->  	}
-
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
---=-YogQSHis/dLMip/kO+pD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl0/HpkACgkQuCajMw5X
-L90CNw//Y6UQ1pxYfjyvEe7fu8Ltg+vL3hoLkfuH5MEGWSYUdyntysX3sj3iYWtP
-w4WniX9GtVbTcKZCU82FZrajQcFWvh+5+O/ouyKLeMXs6DXPej8G0zt4p8XnlI60
-1uct3Kjytw3Fmr3iGk86190S3Gh1eRx8CMOZhKPKeb84VhpJg2evqu9VTjwwcCSG
-a7k9sEBiXzfblUQT4kvWEDQF7ycbZtF5e2EO78gv2g+t66u5N8U+WWgzxIpLD1Jw
-qeIHnvV/ymp2OzW5aHZCjJPacZOTFlTBMy2CLJCpaRU5anh1KGIsb0e/mDprNL/w
-rX48cnTSQym67wq7w67HRj7mRfi+S38YEHqYlWZfkYvlf62yuKpNoQCTWTUYj8N7
-biWz2bvXEpFfTN5uw1QQmfx2bOyGByyCqj23ZrvcXSPE0dZigUXAOxAfi8LyuXil
-9PzLZ2ezuqxQOu5TJNTTe8kIJgFHjQZW2FrJqC40wRrcXcoqvDdQDbDmqWiNPSiw
-xihr213HIzlrNf4Hu5Bv+9ai/WeH0xrF124ieW7sYRNG8uh81b2C5Ammg2hgjeLs
-AU3KmQnY6gcVnlVrG0FwgxDeZi20lu8SPMwi3XMT5sq4Ytq/jXUnr0iEMUjv6NZ/
-5lSdWianq6yxOKeQjDm1fYIbHHl4mhoz3k4DGySjqXuFNE2aaJU=
-=dMEI
------END PGP SIGNATURE-----
-
---=-YogQSHis/dLMip/kO+pD--
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 4436158a6d30..5b4a5dcce8f8 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -734,9 +734,10 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
+ 		autoreap = true;
+ 	}
+ 
+-	tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
+-	if (tsk->exit_state == EXIT_DEAD)
++	if (autoreap) {
++		tsk->exit_state = EXIT_DEAD;
+ 		list_add(&tsk->ptrace_entry, &dead);
++	}
+ 
+ 	/* mt-exec, de_thread() is waiting for group leader */
+ 	if (unlikely(tsk->signal->notify_count < 0))
+-- 
+2.22.0
 
