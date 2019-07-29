@@ -2,156 +2,111 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C67C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E4FC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796E7206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6BC2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="U3Oyx9zN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfG2HjL (ORCPT
+        id S1726845AbfG2Hl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 03:39:11 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:2214 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725917AbfG2HjK (ORCPT
+        Mon, 29 Jul 2019 03:41:28 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37280 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfG2Hl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 03:39:10 -0400
-X-UUID: 956ec71b12d64041beb42b8c6da990ec-20190729
-X-UUID: 956ec71b12d64041beb42b8c6da990ec-20190729
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1541818433; Mon, 29 Jul 2019 15:38:44 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 29 Jul
- 2019 15:38:39 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 29 Jul 2019 15:38:38 +0800
-Message-ID: <1564385918.17211.6.camel@mhfsdcap03>
-Subject: Re: [v2,2/2] PCI: mediatek: Add controller support for MT7629
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <youlin.pei@mediatek.com>,
-        <jianjun.wang@mediatek.com>
-Date:   Mon, 29 Jul 2019 15:38:38 +0800
-In-Reply-To: <20190628073425.25165-3-jianjun.wang@mediatek.com>
-References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
-         <20190628073425.25165-3-jianjun.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 29 Jul 2019 03:41:28 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so35550414wrr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 00:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ORbzlsHDa5hfAtYywIFIzyHDT+ZvebWOt6YTGvwMpig=;
+        b=U3Oyx9zN4u2Gtbuvjv+zgxcVNpE6ZKb70DCl4DIEj3I4V9ml3D84LExFTzRYkfan6s
+         NRYpbieyI3krseoucYfTo3uWhnm/qloBGOsfAQeLeKSMTPmLVq5mhJNmvLkNWMpW3kw0
+         8N7dxwE0J4bRWdRsK2a/ECi91IdaNWUrY6huK4eVd0YX1WVVHXNfCjobSYS+9Q7Aaahr
+         T2G43s/XcEQ8J+Kdb1dFGpzgHBXSXiAC8fhlwt7V+KlWya1e7Ew0hv/VYl9wPNUvz8X7
+         eCbL/7s2XVxgsrzOo5tkUEXOyGnO97DA9+NRaWTJKc56tnKpHdiFA0MikkGwnPtx2ZT5
+         nmcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ORbzlsHDa5hfAtYywIFIzyHDT+ZvebWOt6YTGvwMpig=;
+        b=idlVAayHhTJnWC//nH2uBHDB2HyDhpNjo9swGT9yw4w96LvmTLLwJ0cIKu2f0Fl1pH
+         EjHu7ZH84wPqUy0loPNRYx5nORsGmZN2XgRTXDF9UeI4bNI3I4Wqb8sv2nZ1feyoMTQt
+         jgpuS5RIYyICWfWd7PEcl8uk9Pk8SxIRFx3j8r417m/pagwMmbzQuu49SeeuLTmIMcNO
+         9w0fpEpnkEI3k1bxC/nABGhMq0pJVwM+uylmTq0OBWIOACIHlFoxwsK+Ud6T09RgJoIL
+         rXXpVhnj5Y9KpgUzEQ9f9zugRMxUPr9OJJHH/cUHEOPa5FV32JF9RTmAJ+4QwWk9kkts
+         iOSA==
+X-Gm-Message-State: APjAAAUupX9hRrlbow8NVdUxQh5FhFhKfWOsHYA4zu8qgFK+SXcJX9W+
+        98CYA4DgsUKLKz33JNR1wPM=
+X-Google-Smtp-Source: APXvYqw+rYnER7GSElPp44lGXfPWqu3WnBnRAu+1fqDmgcedrvhr4Z2/zTlGTzHIKSvjGwIqDz7wBg==
+X-Received: by 2002:a5d:43c9:: with SMTP id v9mr45383532wrr.70.1564386086100;
+        Mon, 29 Jul 2019 00:41:26 -0700 (PDT)
+Received: from localhost (mail.chocen-mesto.cz. [85.163.43.2])
+        by smtp.gmail.com with ESMTPSA id v18sm63277633wrs.80.2019.07.29.00.41.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 00:41:25 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:41:25 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: sched: Fix a possible null-pointer dereference in
+ dequeue_func()
+Message-ID: <20190729074125.GB2211@nanopsycho>
+References: <20190729022157.18090-1-baijiaju1990@gmail.com>
+ <20190729065653.GA2211@nanopsycho>
+ <4752bf67-7a0c-7bc9-3d54-f18361085ba2@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 736AECADBE0E85D306CDAE61C7316ECFE7F8B270E6112EAB74CF5017161808C82000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4752bf67-7a0c-7bc9-3d54-f18361085ba2@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-28 at 15:34 +0800, Jianjun Wang wrote:
-> MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
-> 
-> The HW default value of its Device ID is invalid, fix its Device ID to
-> match the hardware implementation.
-> 
-> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
->  include/linux/pci_ids.h                |  1 +
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 80601e1b939e..e5e6740b635d 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -73,6 +73,7 @@
->  #define PCIE_MSI_VECTOR		0x0c0
->  
->  #define PCIE_CONF_VEND_ID	0x100
-> +#define PCIE_CONF_DEVICE_ID	0x102
->  #define PCIE_CONF_CLASS_ID	0x106
->  
->  #define PCIE_INT_MASK		0x420
-> @@ -141,12 +142,16 @@ struct mtk_pcie_port;
->  /**
->   * struct mtk_pcie_soc - differentiate between host generations
->   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-> + * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
-> + * @device_id: Device ID which this host need to be fixed
->   * @ops: pointer to configuration access functions
->   * @startup: pointer to controller setting functions
->   * @setup_irq: pointer to initialize IRQ functions
->   */
->  struct mtk_pcie_soc {
->  	bool need_fix_class_id;
-> +	bool need_fix_device_id;
-> +	unsigned int device_id;
->  	struct pci_ops *ops;
->  	int (*startup)(struct mtk_pcie_port *port);
->  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-> @@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
->  		writew(val, port->base + PCIE_CONF_CLASS_ID);
->  	}
->  
-> +	if (soc->need_fix_device_id)
-> +		writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
-> +
->  	/* 100ms timeout value should be enough for Gen1/2 training */
->  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
->  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
-> @@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
->  	.setup_irq = mtk_pcie_setup_irq,
->  };
->  
-> +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
-> +	.need_fix_class_id = true,
-> +	.need_fix_device_id = true,
-> +	.device_id = PCI_DEVICE_ID_MEDIATEK_7629,
-> +	.ops = &mtk_pcie_ops_v2,
-> +	.startup = mtk_pcie_startup_port_v2,
-> +	.setup_irq = mtk_pcie_setup_irq,
-> +};
-> +
->  static const struct of_device_id mtk_pcie_ids[] = {
->  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
->  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
->  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
->  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
-> +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
->  	{},
->  };
->  
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 70e86148cb1e..aa32962759b2 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2131,6 +2131,7 @@
->  #define PCI_VENDOR_ID_MYRICOM		0x14c1
->  
->  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
-> +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
->  
->  #define PCI_VENDOR_ID_TITAN		0x14D2
->  #define PCI_DEVICE_ID_TITAN_010L	0x8001
+Mon, Jul 29, 2019 at 09:32:00AM CEST, baijiaju1990@gmail.com wrote:
+>
+>
+>On 2019/7/29 14:56, Jiri Pirko wrote:
+>> Mon, Jul 29, 2019 at 04:21:57AM CEST, baijiaju1990@gmail.com wrote:
+>> > In dequeue_func(), there is an if statement on line 74 to check whether
+>> > skb is NULL:
+>> >     if (skb)
+>> > 
+>> > When skb is NULL, it is used on line 77:
+>> >     prefetch(&skb->end);
+>> > 
+>> > Thus, a possible null-pointer dereference may occur.
+>> > 
+>> > To fix this bug, skb->end is used when skb is not NULL.
+>> > 
+>> > This bug is found by a static analysis tool STCheck written by us.
+>> > 
+>> > Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+>> Fixes tag, please?
+>
+>Sorry, I do not know what "fixes tag" means...
+>I just find a possible bug and fix it in this patch.
 
-Hi Bjorn & Lorenzo,
+git log |grep Fixes:
 
-Is this patch ok or is there anything I need to fixed?
-
-Thanks.
+If A fix goes to -net tree, it most probably fixes some bug introduced
+by some commit in the past. So this tag is to put a reference.
 
 
+>
+>
+>Best wishes,
+>Jia-Ju Bai
