@@ -2,52 +2,54 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4640DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B26C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB9E205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643D82064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430965;
-	bh=Sfb8OS3U2e2x5qmCLlDtDVvs6ClLocIR+p5SM0N5PPc=;
+	s=default; t=1564430972;
+	bh=WINzYg5Ou+5ohGWLM6Y5BQuTa68ooJVBWZysmX3OUWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LCZgInvGesTqF32f47WT5RMXiNNXiTtn8XVScZ5qYsSIA4gNLsTUVOr4Q5oxTr+O9
-	 gx3McVbuFNoBvSePyFSEJqKmUcRTEFLWgOjMjtrxf1d+DoUzE+WzRAxWCwKgqamflr
-	 GbkaSG5FLXzk76Qh6nw4FvaSlbwvirYrCawbpywg=
+	b=lYV2dRBO7LEqB9HNdx1f9OGKVPnZWIKFQv4a4umhnSZgdWzTyL3KNWy9KHxO4L52s
+	 vN8k127QjtOBzQWZ75sYvOXYTDSD4ygqUD+KJCBm3Zi2CMfbMX98owv1Hl7GoRgyYk
+	 fb0JHW8hHJZUFDdCNJZXzYxpeh3jxV44UX9y0a70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbfG2UJY (ORCPT
+        id S2388598AbfG2TgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:09:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51266 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:36:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729333AbfG2Tgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:36:48 -0400
+        id S1728992AbfG2TgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:36:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D385B2171F;
-        Mon, 29 Jul 2019 19:36:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 875C821773;
+        Mon, 29 Jul 2019 19:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429007;
-        bh=Sfb8OS3U2e2x5qmCLlDtDVvs6ClLocIR+p5SM0N5PPc=;
+        s=default; t=1564428978;
+        bh=WINzYg5Ou+5ohGWLM6Y5BQuTa68ooJVBWZysmX3OUWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q3q+/posYvnjyWJiiyannv8RqngyXH1IDXW8V30wQn2i/5tpDgjQnhV9m5lFvagua
-         rCkGDEpky7g3Mf3+jhI1qEoM38FqRgcZSpVslNVvZbotm5IJsURmImQJgzqFgyGPxK
-         nqnyvNzQ2gYoW15bbg9mxvfW8XdAPBS40o3g8OaI=
+        b=Z2LAkJt10gtK6uokItbAzxexZLVwXKFH03mYo8bs8cKVNrcu8nBazFH3Qk/PWvzg4
+         ZC4b1hs6mnzeYbcR2EKKmqn+Nq4CDEj+wmS2UiheBSw092WKA7/nXoTndoYV/5vKZX
+         L2187tlMQuFxne5cAKcCan+APXXh3ly4+ZspPobU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Peter Smith <peter.smith@linaro.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 255/293] powerpc/4xx/uic: clear pending interrupt after irq type/pol change
-Date:   Mon, 29 Jul 2019 21:22:26 +0200
-Message-Id: <20190729190843.975767237@linuxfoundation.org>
+Subject: [PATCH 4.14 246/293] kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS
+Date:   Mon, 29 Jul 2019 21:22:17 +0200
+Message-Id: <20190729190843.308435390@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,36 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3ab3a0689e74e6aa5b41360bc18861040ddef5b1 ]
+[ Upstream commit 589834b3a0097a4908f4112eac0ca2feb486fa32 ]
 
-When testing out gpio-keys with a button, a spurious
-interrupt (and therefore a key press or release event)
-gets triggered as soon as the driver enables the irq
-line for the first time.
+In commit ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI
+drift"), the arm64 Makefile added -Wno-psabi to KBUILD_CFLAGS, which is
+a GCC only option so clang rightfully complains:
 
-This patch clears any potential bogus generated interrupt
-that was caused by the switching of the associated irq's
-type and polarity.
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
 
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
+
+However, by default, this is merely a warning so the build happily goes
+on with a slew of these warnings in the process.
+
+Commit c3f0d0bc5b01 ("kbuild, LLVMLinux: Add -Werror to cc-option to
+support clang") worked around this behavior in cc-option by adding
+-Werror so that unknown flags cause an error. However, this all happens
+silently and when an unknown flag is added to the build unconditionally
+like -Wno-psabi, cc-option will always fail because there is always an
+unknown flag in the list of flags. This manifested as link time failures
+in the arm64 libstub because -fno-stack-protector didn't get added to
+KBUILD_CFLAGS.
+
+To avoid these weird cryptic failures in the future, make clang behave
+like gcc and immediately error when it encounters an unknown flag by
+adding -Werror=unknown-warning-option to CLANG_FLAGS. This can be added
+unconditionally for clang because it is supported by at least 3.0.0,
+according to godbolt [1] and 4.0.0, according to its documentation [2],
+which is far earlier than we typically support.
+
+[1]: https://godbolt.org/z/7F7rm3
+[2]: https://releases.llvm.org/4.0.0/tools/clang/docs/DiagnosticsReference.html#wunknown-warning-option
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/511
+Link: https://github.com/ClangBuiltLinux/linux/issues/517
+Suggested-by: Peter Smith <peter.smith@linaro.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/4xx/uic.c | 1 +
+ Makefile | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/platforms/4xx/uic.c b/arch/powerpc/platforms/4xx/uic.c
-index 8b4dd0da0839..9e27cfe27026 100644
---- a/arch/powerpc/platforms/4xx/uic.c
-+++ b/arch/powerpc/platforms/4xx/uic.c
-@@ -158,6 +158,7 @@ static int uic_set_irq_type(struct irq_data *d, unsigned int flow_type)
- 
- 	mtdcr(uic->dcrbase + UIC_PR, pr);
- 	mtdcr(uic->dcrbase + UIC_TR, tr);
-+	mtdcr(uic->dcrbase + UIC_SR, ~mask);
- 
- 	raw_spin_unlock_irqrestore(&uic->lock, flags);
- 
+diff --git a/Makefile b/Makefile
+index 97c744513af0..bbc9b6acb177 100644
+--- a/Makefile
++++ b/Makefile
+@@ -488,6 +488,7 @@ ifneq ($(GCC_TOOLCHAIN),)
+ CLANG_FLAGS	+= --gcc-toolchain=$(GCC_TOOLCHAIN)
+ endif
+ CLANG_FLAGS	+= -no-integrated-as
++CLANG_FLAGS	+= -Werror=unknown-warning-option
+ KBUILD_CFLAGS	+= $(CLANG_FLAGS)
+ KBUILD_AFLAGS	+= $(CLANG_FLAGS)
+ export CLANG_FLAGS
 -- 
 2.20.1
 
