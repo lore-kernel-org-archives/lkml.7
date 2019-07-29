@@ -2,63 +2,109 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0F3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A1FC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F97B206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45419206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:25:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="sw7qv0bB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbfG2RY3 (ORCPT
+        id S1728869AbfG2RZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 13:24:29 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:36418 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfG2RY3 (ORCPT
+        Mon, 29 Jul 2019 13:25:53 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:41776 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfG2RZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:24:29 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5F7DA12BFE6D2;
-        Mon, 29 Jul 2019 10:24:28 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 10:24:25 -0700 (PDT)
-Message-Id: <20190729.102425.1302416507900603310.davem@davemloft.net>
-To:     gustavo@embeddedor.com
-Cc:     m.grzeschik@pengutronix.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, geert@linux-m68k.org,
-        keescook@chromium.org
-Subject: Re: [PATCH] arcnet: com20020-isa: Mark expected switch
- fall-throughs
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190729142503.GA7917@embeddedor>
-References: <20190729142503.GA7917@embeddedor>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 10:24:28 -0700 (PDT)
+        Mon, 29 Jul 2019 13:25:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1564421150; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8+qV28YYJniA0AukbbbJEysxFPjT+avEllLJr1CUVTc=;
+        b=sw7qv0bBtbgyJbzjIoXXSS5FQUZvEZVn+PBWp+obxwOs3LGxECaxlAlmHs21P/b5RUAAT2
+        hq6FrRaKanu/AvUQ+9uDVSKCtxex0VPrTUwZ6r9t9aKZFL10PAYPf2AkIALQERSqS8sSyJ
+        P+HgUycY6IzIHqJMAUh1dl/zHZM8GZA=
+Date:   Mon, 29 Jul 2019 13:25:33 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 4/4 v4] irqchip: Ingenic: Add support for new Ingenic
+ Socs.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, tglx@linutronix.de, mark.rutland@arm.com,
+        jason@lakedaemon.net, marc.zyngier@arm.com
+Message-Id: <1564421133.6633.1@crapouillou.net>
+In-Reply-To: <1564335273-22931-5-git-send-email-zhouyanjie@zoho.com>
+References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
+        <1564335273-22931-1-git-send-email-zhouyanjie@zoho.com>
+        <1564335273-22931-5-git-send-email-zhouyanjie@zoho.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date: Mon, 29 Jul 2019 09:25:03 -0500
 
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings:
-> 
-> drivers/net/arcnet/com20020-isa.c: warning: this statement may fall
-> through [-Wimplicit-fallthrough=]:  => 205:13, 203:10, 209:7, 201:11,
-> 207:8
-> 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Applied.
+Le dim. 28 juil. 2019 =E0 13:34, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+=E9crit :
+> Add support for probing the irq-ingenic driver on the JZ4760/JZ4760B
+> and the X1000/X1000E and the X1500 Socs from Ingenic.
+>=20
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> ---
+>  drivers/irqchip/irq-ingenic.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/irqchip/irq-ingenic.c=20
+> b/drivers/irqchip/irq-ingenic.c
+> index 8430f5a..b72430c 100644
+> --- a/drivers/irqchip/irq-ingenic.c
+> +++ b/drivers/irqchip/irq-ingenic.c
+> @@ -173,6 +173,11 @@ static int __init intc_2chip_of_init(struct=20
+> device_node *node,
+>  {
+>  	return ingenic_intc_of_init(node, 2);
+>  }
+> +IRQCHIP_DECLARE(jz4760_intc, "ingenic,jz4760-intc",=20
+> intc_2chip_of_init);
+> +IRQCHIP_DECLARE(jz4760b_intc, "ingenic,jz4760b-intc",=20
+> intc_2chip_of_init);
+>  IRQCHIP_DECLARE(jz4770_intc, "ingenic,jz4770-intc",=20
+> intc_2chip_of_init);
+>  IRQCHIP_DECLARE(jz4775_intc, "ingenic,jz4775-intc",=20
+> intc_2chip_of_init);
+>  IRQCHIP_DECLARE(jz4780_intc, "ingenic,jz4780-intc",=20
+> intc_2chip_of_init);
+> +IRQCHIP_DECLARE(x1000_intc, "ingenic,x1000-intc",=20
+> intc_2chip_of_init);
+> +IRQCHIP_DECLARE(x1000e_intc, "ingenic,x1000e-intc",=20
+> intc_2chip_of_init);
+> +IRQCHIP_DECLARE(x1500_intc, "ingenic,x1500-intc",=20
+> intc_2chip_of_init);
+
+All these compatible strings point to the exact same behaviour. It was
+already a mistake to have the three "ingenic,jz47[70,75,80]-intc" here;
+there should have been only one, e.g. "ingenic,jz4770-intc" and the=20
+other
+two SoCs using it as a fallback compatible.
+
+I think you don't need to add these, and in your devicetree just use
+"ingenic,jz4780-intc" as a fallback compatible.
+
+Cheers,
+-Paul
+
+=
+
