@@ -4,160 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4B6C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5027FC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4F820644
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EEAE20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfG2IM0 (ORCPT
+        id S1727516AbfG2INK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:12:26 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:48310 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfG2IM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:12:26 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 5FE39FB03;
-        Mon, 29 Jul 2019 10:12:23 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3avP_g3MYwj1; Mon, 29 Jul 2019 10:12:22 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 9C4E846BAF; Mon, 29 Jul 2019 10:12:21 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 10:12:21 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Anson.Huang@nxp.com
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com,
-        sboyd@kernel.org, l.stach@pengutronix.de, abel.vesa@nxp.com,
-        andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com,
-        leonard.crestez@nxp.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH 4/6] thermal: qoriq: Add clock operations
-Message-ID: <20190729081221.GA2523@bogon.m.sigxcpu.org>
-References: <20190705045612.27665-1-Anson.Huang@nxp.com>
- <20190705045612.27665-4-Anson.Huang@nxp.com>
+        Mon, 29 Jul 2019 04:13:10 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:34916 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726690AbfG2INJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 04:13:09 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=kerneljasonxing@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TY1HZl2_1564387964;
+Received: from ali-6c96cfdd2b5d.local(mailfrom:kerneljasonxing@linux.alibaba.com fp:SMTPD_---0TY1HZl2_1564387964)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 29 Jul 2019 16:13:03 +0800
+Subject: Re: [PATCH] psi: get poll_work to run when calling poll syscall next
+ time
+To:     hannes@cmpxchg.org, surenb@google.com, mingo@redhat.com,
+        peterz@infradead.org
+Cc:     dennis@kernel.org, axboe@kernel.dk, lizefan@huawei.com,
+        tj@kernel.org, linux-kernel@vger.kernel.org
+References: <1563864339-2621-1-git-send-email-kerneljasonxing@linux.alibaba.com>
+From:   Jason Xing <kerneljasonxing@linux.alibaba.com>
+Message-ID: <4d7ca842-3246-10ee-9ae2-973d1b88ed93@linux.alibaba.com>
+Date:   Mon, 29 Jul 2019 16:12:44 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <1563864339-2621-1-git-send-email-kerneljasonxing@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190705045612.27665-4-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
-On Fri, Jul 05, 2019 at 12:56:10PM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
+Hello,
+
+Could someone take a quick look at this patch? It's not complicated at 
+all, just one line added into PSI which can make the poll() run in the 
+right way.
+
+Thanks,
+Jason
+
+On 2019/7/23 下午2:45, Jason Xing wrote:
+> Only when calling the poll syscall the first time can user
+> receive POLLPRI correctly. After that, user always fails to
+> acquire the event signal.
 > 
-> Some platforms like i.MX8MQ has clock control for this module,
-> need to add clock operations to make sure the driver is working
-> properly.
+> Reproduce case:
+> 1. Get the monitor code in Documentation/accounting/psi.txt
+> 2. Run it, and wait for the event triggered.
+> 3. Kill and restart the process.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> If the user doesn't kill the monitor process, it seems the
+> poll_work works fine. After killing and restarting the monitor,
+> the poll_work in kernel will never run again due to the wrong
+> value of poll_scheduled. Therefore, we should reset the value
+> as group_init() does after the last trigger is destroyed.
+> 
+> Signed-off-by: Jason Xing <kerneljasonxing@linux.alibaba.com>
 > ---
->  drivers/thermal/qoriq_thermal.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>   kernel/sched/psi.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-> index 2b2f79b..0813c1b 100644
-> --- a/drivers/thermal/qoriq_thermal.c
-> +++ b/drivers/thermal/qoriq_thermal.c
-> @@ -2,6 +2,7 @@
->  //
->  // Copyright 2016 Freescale Semiconductor, Inc.
->  
-> +#include <linux/clk.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/err.h>
-> @@ -72,6 +73,7 @@ struct qoriq_sensor {
->  
->  struct qoriq_tmu_data {
->  	struct qoriq_tmu_regs __iomem *regs;
-> +	struct clk *clk;
->  	bool little_endian;
->  	struct qoriq_sensor	*sensor[SITES_MAX];
->  };
-> @@ -208,6 +210,19 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
->  		return PTR_ERR(data->regs);
->  	}
->  
-> +	data->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(data->clk)) {
-> +		if (PTR_ERR(data->clk) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		data->clk = NULL;
-> +	}
-
-Wouldn't devm_clk_get_optional make more sense?
-
-> +
-> +	ret = clk_prepare_enable(data->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to enable clock\n");
-> +		return ret;
-> +	}
-> +
->  	qoriq_tmu_init_device(data);	/* TMU initialization */
->  
->  	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
-> @@ -235,6 +250,8 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
->  	/* Disable monitoring */
->  	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
->  
-> +	clk_disable_unprepare(data->clk);
-> +
->  	platform_set_drvdata(pdev, NULL);
->  
->  	return 0;
-> @@ -250,14 +267,21 @@ static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
->  	tmr &= ~TMR_ME;
->  	tmu_write(data, tmr, &data->regs->tmr);
->  
-> +	clk_disable_unprepare(data->clk);
-> +
->  	return 0;
->  }
->  
->  static int __maybe_unused qoriq_tmu_resume(struct device *dev)
->  {
->  	u32 tmr;
-> +	int ret;
->  	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
->  
-> +	ret = clk_prepare_enable(data->clk);
-> +	if (ret)
-> +		return ret;
-> +
->  	/* Enable monitoring */
->  	tmr = tmu_read(data, &data->regs->tmr);
->  	tmr |= TMR_ME;
-
-Apart from that it looks like what Fabio sent and what i tested so
-
-Reviewed-by: Guido G�nther <agx@sigxcpu.org>
-
-Cheers,
- -- Guido
-
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> index 7acc632..66f4385 100644
+> --- a/kernel/sched/psi.c
+> +++ b/kernel/sched/psi.c
+> @@ -1133,6 +1133,12 @@ static void psi_trigger_destroy(struct kref *ref)
+>   	if (kworker_to_destroy) {
+>   		kthread_cancel_delayed_work_sync(&group->poll_work);
+>   		kthread_destroy_worker(kworker_to_destroy);
+> +		/*
+> +		 * The poll_work should have the chance to be put into the
+> +		 * kthread queue when calling poll syscall next time. So
+> +		 * reset poll_scheduled to zero as group_init() does
+> +		 */
+> +		atomic_set(&group->poll_scheduled, 0);
+>   	}
+>   	kfree(t);
+>   }
 > 
