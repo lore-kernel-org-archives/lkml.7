@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEDAC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94572C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5F32070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 668582070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428254;
-	bh=VFAIIZL5hvOD4KbeAdybXfZWSYRbtUQGaVq/WFD0yK4=;
+	s=default; t=1564428260;
+	bh=0ec6NeFqmFZxWWpQ73b8nQMKU7+faETgn/Bt1DHjJ4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XOsZl7UbRCBgCodcmQ9wmBcBPpVysj0SJodLJTA9iqr4xuI4I7YR8lJ0S3ryQx82/
-	 FlCBFHa+WdVbeA6TFdzuekl6Sg1Ts1tFoj6CbYwCS/4+98Y3qU0KwXbtcFPVkKL3kP
-	 Gl4UJ6shWZfj1GsI5os2Vhrjq0P6G1NcruImKDNE=
+	b=INuZ/EGDSSFNh5eLTBoNBNsW3rZf1V46Vkdsh2EJr0m6GslzC69OQRVSwpRLO7XUn
+	 9uYrPV9pk26a1qA2zCirXHZ4YcXRspsX2q5isq7JucIpHjvl4maouWerqxfF0j9uEx
+	 86Q0Opjh44aoXRF+IMx7rDLOfwlwhbjRXghH1PP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbfG2TYN (ORCPT
+        id S2387576AbfG2TYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:24:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36330 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbfG2TYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:24:07 -0400
+        id S1729460AbfG2TYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:24:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1D3F21655;
-        Mon, 29 Jul 2019 19:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF69F21655;
+        Mon, 29 Jul 2019 19:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428246;
-        bh=VFAIIZL5hvOD4KbeAdybXfZWSYRbtUQGaVq/WFD0yK4=;
+        s=default; t=1564428253;
+        bh=0ec6NeFqmFZxWWpQ73b8nQMKU7+faETgn/Bt1DHjJ4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EezLEkHFT47MYbqAphKaa4RlEs2P17kJMEaKL8kY2U9/baaHhl6jxS9qX7aVA2f8q
-         d3iw0BvYQ0hzg46KoG+87+caqRVC2AGxAX+dzw4TfrmqvsuffXKEpQFQo/OM+iJ7x9
-         WFoZYM7T/q1qnZ52tLFCLZwPtn9mZaqBCkhm+YtU=
+        b=ZlvA6UC5TXsh75mXogLCSNXv0WaVKXwp3r2+2ns4RqKw8p8HSqYQg4z8APHLpUGTd
+         OS4FIorlTJfq0DdKfqNhudXLuX6++57vHXO/LgRSO7nRjeXNJLlw39TqXg7wsj0gHi
+         a0MYvwDq5CMLOXdSjz8HUUzhyCB/qxfwEhC/ByQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jo-Philipp Wich <jo@mein.io>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Maurizio Lombardi <mlombard@redhat.com>,
+        Chris Leech <cleech@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 002/293] MIPS: fix build on non-linux hosts
-Date:   Mon, 29 Jul 2019 21:18:13 +0200
-Message-Id: <20190729190820.539632976@linuxfoundation.org>
+Subject: [PATCH 4.14 004/293] scsi: iscsi: set auth_protocol back to NULL if CHAP_A value is not supported
+Date:   Mon, 29 Jul 2019 21:18:15 +0200
+Message-Id: <20190729190820.686197057@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -62,62 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1196364f21ffe5d1e6d83cafd6a2edb89404a3ae ]
+[ Upstream commit 5dd6c49339126c2c8df2179041373222362d6e49 ]
 
-calc_vmlinuz_load_addr.c requires SZ_64K to be defined for alignment
-purposes.  It included "../../../../include/linux/sizes.h" to define
-that size, however "sizes.h" tries to include <linux/const.h> which
-assumes linux system headers.  These may not exist eg. the following
-error was encountered when building Linux for OpenWrt under macOS:
+If the CHAP_A value is not supported, the chap_server_open() function
+should free the auth_protocol pointer and set it to NULL, or we will leave
+a dangling pointer around.
 
-In file included from arch/mips/boot/compressed/calc_vmlinuz_load_addr.c:16:
-arch/mips/boot/compressed/../../../../include/linux/sizes.h:11:10: fatal error: 'linux/const.h' file not found
-         ^~~~~~~~~~
+[   66.010905] Unsupported CHAP_A value
+[   66.011660] Security negotiation failed.
+[   66.012443] iSCSI Login negotiation failed.
+[   68.413924] general protection fault: 0000 [#1] SMP PTI
+[   68.414962] CPU: 0 PID: 1562 Comm: targetcli Kdump: loaded Not tainted 4.18.0-80.el8.x86_64 #1
+[   68.416589] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+[   68.417677] RIP: 0010:__kmalloc_track_caller+0xc2/0x210
 
-Change makefile to force building on local linux headers instead of
-system headers.  Also change eye-watering relative reference in include
-file spec.
-
-Thanks to Jo-Philip Wich & Petr Štetiar for assistance in tracking this
-down & fixing.
-
-Suggested-by: Jo-Philipp Wich <jo@mein.io>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
-Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
+Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
+Reviewed-by: Chris Leech <cleech@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/compressed/Makefile                 | 2 ++
- arch/mips/boot/compressed/calc_vmlinuz_load_addr.c | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/target/iscsi/iscsi_target_auth.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
-index adce180f3ee4..331b9e0a8072 100644
---- a/arch/mips/boot/compressed/Makefile
-+++ b/arch/mips/boot/compressed/Makefile
-@@ -75,6 +75,8 @@ OBJCOPYFLAGS_piggy.o := --add-section=.image=$(obj)/vmlinux.bin.z \
- $(obj)/piggy.o: $(obj)/dummy.o $(obj)/vmlinux.bin.z FORCE
- 	$(call if_changed,objcopy)
+diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
+index 4e680d753941..e2fa3a3bc81d 100644
+--- a/drivers/target/iscsi/iscsi_target_auth.c
++++ b/drivers/target/iscsi/iscsi_target_auth.c
+@@ -89,6 +89,12 @@ static int chap_check_algorithm(const char *a_str)
+ 	return CHAP_DIGEST_UNKNOWN;
+ }
  
-+HOSTCFLAGS_calc_vmlinuz_load_addr.o += $(LINUXINCLUDE)
++static void chap_close(struct iscsi_conn *conn)
++{
++	kfree(conn->auth_protocol);
++	conn->auth_protocol = NULL;
++}
 +
- # Calculate the load address of the compressed kernel image
- hostprogs-y := calc_vmlinuz_load_addr
+ static struct iscsi_chap *chap_server_open(
+ 	struct iscsi_conn *conn,
+ 	struct iscsi_node_auth *auth,
+@@ -126,7 +132,7 @@ static struct iscsi_chap *chap_server_open(
+ 	case CHAP_DIGEST_UNKNOWN:
+ 	default:
+ 		pr_err("Unsupported CHAP_A value\n");
+-		kfree(conn->auth_protocol);
++		chap_close(conn);
+ 		return NULL;
+ 	}
  
-diff --git a/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c b/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
-index 542c3ede9722..d14f75ec8273 100644
---- a/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
-+++ b/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
-@@ -13,7 +13,7 @@
- #include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
--#include "../../../../include/linux/sizes.h"
-+#include <linux/sizes.h>
+@@ -141,19 +147,13 @@ static struct iscsi_chap *chap_server_open(
+ 	 * Generate Challenge.
+ 	 */
+ 	if (chap_gen_challenge(conn, 1, aic_str, aic_len) < 0) {
+-		kfree(conn->auth_protocol);
++		chap_close(conn);
+ 		return NULL;
+ 	}
  
- int main(int argc, char *argv[])
- {
+ 	return chap;
+ }
+ 
+-static void chap_close(struct iscsi_conn *conn)
+-{
+-	kfree(conn->auth_protocol);
+-	conn->auth_protocol = NULL;
+-}
+-
+ static int chap_server_compute_md5(
+ 	struct iscsi_conn *conn,
+ 	struct iscsi_node_auth *auth,
 -- 
 2.20.1
 
