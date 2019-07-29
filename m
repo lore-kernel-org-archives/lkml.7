@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08889C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FE6C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D54205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0404D20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430688;
-	bh=oRCeYSMmp0m1iqf4ohdkAmpqrThC+viBHh35Dr23+2I=;
+	s=default; t=1564430693;
+	bh=AjB9ovnnGRHFQbRJNii7d5yid9O6pyfxFu7a1mrNwng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RmjDxt6wW7lo2giR2eUUsHZsRTG15tINKy2AWr4U2unZEwagauJ1yWb1Nejz3r89k
-	 hUYhCAp6EgmDmog9qybbhG9+npYKHuSPEX2bvNl+BG/xzvJu8opvJ6xbkIwyKjoL9W
-	 EpyVPv8HTIyaOqBk7U+Id3Hf18eGqkEGj3bwLqTI=
+	b=Ox2OnGhwjn+DBh6xd9nw/uQZq+hMXA3iOrPg8noH/1kqoTimGHIoht6CGtjIfRAmM
+	 WOIeudlM6J8rqeo1ll34wKz2G8K36DYLKNAYjspT7CKP5rQEmgLJMhW/v9XNJSpjs4
+	 5O4bDX+TUV1SrOLFV+pyI2bzpRZQAT0WJAOTgP8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389826AbfG2Top (ORCPT
+        id S2389584AbfG2UEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:44:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33144 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389803AbfG2Toe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:44:34 -0400
+        id S2389820AbfG2Ton (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:44:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1E4321655;
-        Mon, 29 Jul 2019 19:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED9882171F;
+        Mon, 29 Jul 2019 19:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429473;
-        bh=oRCeYSMmp0m1iqf4ohdkAmpqrThC+viBHh35Dr23+2I=;
+        s=default; t=1564429482;
+        bh=AjB9ovnnGRHFQbRJNii7d5yid9O6pyfxFu7a1mrNwng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PQZjP0VT5RQLrILeEAYCbFQ4J2n/sGmXzxM6oxDIiFRkwiKsga7Y8mJoqdga2SXe9
-         +twYvSp/kfkU03dCfHoGjH2JCxP0uKeVw+v4a6BUwS3psPggjvQ8RxijPetasNr++6
-         BGcCGr3qk4FXhbFVXElYxWy/o50XAGgVoepjHnWQ=
+        b=XjRARXmPOVaXypuUkjaxs2r2qajj2dd4RNODRFqgMq/Lo4jybnO28k8+GXPLett7V
+         TcRhq1uMtCEU1JfGHqcZksWdqIqeVVTe2ybAx70/2CROqPO4TiGMurNLlDxdgwp9Os
+         wkHm9SRSuYlyzepPMKkOUcnBH44wWmiWjSI5WjRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 108/113] ALSA: line6: Fix wrong altsetting for LINE6_PODHD500_1
-Date:   Mon, 29 Jul 2019 21:23:15 +0200
-Message-Id: <20190729190720.956388036@linuxfoundation.org>
+        stable@vger.kernel.org, Praveen Pandey <Praveen.Pandey@in.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 111/113] powerpc/tm: Fix oops on sigreturn on systems without TM
+Date:   Mon, 29 Jul 2019 21:23:18 +0200
+Message-Id: <20190729190721.421186265@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,36 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Michael Neuling <mikey@neuling.org>
 
-commit 70256b42caaf3e13c2932c2be7903a73fbe8bb8b upstream.
+commit f16d80b75a096c52354c6e0a574993f3b0dfbdfe upstream.
 
-Commit 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
-set a wrong altsetting for LINE6_PODHD500_1 during refactoring.
+On systems like P9 powernv where we have no TM (or P8 booted with
+ppc_tm=off), userspace can construct a signal context which still has
+the MSR TS bits set. The kernel tries to restore this context which
+results in the following crash:
 
-Set the correct altsetting number to fix the issue.
+  Unexpected TM Bad Thing exception at c0000000000022fc (msr 0x8000000102a03031) tm_scratch=800000020280f033
+  Oops: Unrecoverable exception, sig: 6 [#1]
+  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+  Modules linked in:
+  CPU: 0 PID: 1636 Comm: sigfuz Not tainted 5.2.0-11043-g0a8ad0ffa4 #69
+  NIP:  c0000000000022fc LR: 00007fffb2d67e48 CTR: 0000000000000000
+  REGS: c00000003fffbd70 TRAP: 0700   Not tainted  (5.2.0-11045-g7142b497d8)
+  MSR:  8000000102a03031 <SF,VEC,VSX,FP,ME,IR,DR,LE,TM[E]>  CR: 42004242  XER: 00000000
+  CFAR: c0000000000022e0 IRQMASK: 0
+  GPR00: 0000000000000072 00007fffb2b6e560 00007fffb2d87f00 0000000000000669
+  GPR04: 00007fffb2b6e728 0000000000000000 0000000000000000 00007fffb2b6f2a8
+  GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+  GPR12: 0000000000000000 00007fffb2b76900 0000000000000000 0000000000000000
+  GPR16: 00007fffb2370000 00007fffb2d84390 00007fffea3a15ac 000001000a250420
+  GPR20: 00007fffb2b6f260 0000000010001770 0000000000000000 0000000000000000
+  GPR24: 00007fffb2d843a0 00007fffea3a14a0 0000000000010000 0000000000800000
+  GPR28: 00007fffea3a14d8 00000000003d0f00 0000000000000000 00007fffb2b6e728
+  NIP [c0000000000022fc] rfi_flush_fallback+0x7c/0x80
+  LR [00007fffb2d67e48] 0x7fffb2d67e48
+  Call Trace:
+  Instruction dump:
+  e96a0220 e96a02a8 e96a0330 e96a03b8 394a0400 4200ffdc 7d2903a6 e92d0c00
+  e94d0c08 e96d0c10 e82d0c18 7db242a6 <4c000024> 7db243a6 7db142a6 f82d0c18
 
-BugLink: https://bugs.launchpad.net/bugs/1790595
-Fixes: 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+The problem is the signal code assumes TM is enabled when
+CONFIG_PPC_TRANSACTIONAL_MEM is enabled. This may not be the case as
+with P9 powernv or if `ppc_tm=off` is used on P8.
+
+This means any local user can crash the system.
+
+Fix the problem by returning a bad stack frame to the user if they try
+to set the MSR TS bits with sigreturn() on systems where TM is not
+supported.
+
+Found with sigfuz kernel selftest on P9.
+
+This fixes CVE-2019-13648.
+
+Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
+Cc: stable@vger.kernel.org # v3.9
+Reported-by: Praveen Pandey <Praveen.Pandey@in.ibm.com>
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190719050502.405-1-mikey@neuling.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/line6/podhd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/signal_32.c |    3 +++
+ arch/powerpc/kernel/signal_64.c |    5 +++++
+ 2 files changed, 8 insertions(+)
 
---- a/sound/usb/line6/podhd.c
-+++ b/sound/usb/line6/podhd.c
-@@ -417,7 +417,7 @@ static const struct line6_properties pod
- 		.name = "POD HD500",
- 		.capabilities	= LINE6_CAP_PCM
- 				| LINE6_CAP_HWMON,
--		.altsetting = 1,
-+		.altsetting = 0,
- 		.ep_ctrl_r = 0x81,
- 		.ep_ctrl_w = 0x01,
- 		.ep_audio_r = 0x86,
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -1202,6 +1202,9 @@ SYSCALL_DEFINE0(rt_sigreturn)
+ 			goto bad;
+ 
+ 		if (MSR_TM_ACTIVE(msr_hi<<32)) {
++			/* Trying to start TM on non TM system */
++			if (!cpu_has_feature(CPU_FTR_TM))
++				goto bad;
+ 			/* We only recheckpoint on return if we're
+ 			 * transaction.
+ 			 */
+--- a/arch/powerpc/kernel/signal_64.c
++++ b/arch/powerpc/kernel/signal_64.c
+@@ -750,6 +750,11 @@ SYSCALL_DEFINE0(rt_sigreturn)
+ 	if (MSR_TM_ACTIVE(msr)) {
+ 		/* We recheckpoint on return. */
+ 		struct ucontext __user *uc_transact;
++
++		/* Trying to start TM on non TM system */
++		if (!cpu_has_feature(CPU_FTR_TM))
++			goto badframe;
++
+ 		if (__get_user(uc_transact, &uc->uc_link))
+ 			goto badframe;
+ 		if (restore_tm_sigcontexts(current, &uc->uc_mcontext,
 
 
