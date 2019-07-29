@@ -2,128 +2,132 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E635C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 062EDC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B542054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:34:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="Sde8UgRU"
+	by mail.kernel.org (Postfix) with ESMTP id DAF3F214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbfG2Men (ORCPT
+        id S2387885AbfG2Mex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:34:43 -0400
-Received: from mx01-fr.bfs.de ([193.174.231.67]:42579 "EHLO mx01-fr.bfs.de"
+        Mon, 29 Jul 2019 08:34:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:43442 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727625AbfG2Mem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:34:42 -0400
-Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
-        by mx01-fr.bfs.de (Postfix) with ESMTPS id 270DC20376;
-        Mon, 29 Jul 2019 14:34:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1564403676; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qqmyrL0xuxOoHnbtajOEKx+rhyikST36MrsY2R3mGJg=;
-        b=Sde8UgRU4cY4OD8Z0LKRI+R8KuJug+f9TGX0uZWPOLwwijft3D1CAPInecQtMS2Qqmqyqx
-        XE23TELsm+v5ZC+2lnXAmpn+XkPJiArueec34b9h9lThtRFFii4zpuWV1hta15n/vrpC48
-        ix3KJgiA6e1PT+ui+GGWnHfkYw4LWGVeOLTThtc2UbnAM6v3hTMuw0ndbYbe7DdyN1Fp+b
-        LYxIbL8LZ5c9DL8RyZ9c/7XEobo2Vuu7UpicQBxTu95Wf7LUptxiDJOTBPiqnm3CW3a82r
-        wavrL5TxBqYbMlfHgzHNII+rqI9sCLsvF/PeT5xAyxU+WLnitxH8NN41qSjeJw==
-Received: from [134.92.181.33] (unknown [134.92.181.33])
-        by mail-fr.bfs.de (Postfix) with ESMTPS id 7AD32BEEBD;
-        Mon, 29 Jul 2019 14:34:35 +0200 (CEST)
-Message-ID: <5D3EE7DB.9070706@bfs.de>
-Date:   Mon, 29 Jul 2019 14:34:35 +0200
-From:   walter harms <wharms@bfs.de>
-Reply-To: wharms@bfs.de
-User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
+        id S1727625AbfG2Mex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:34:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83BF228;
+        Mon, 29 Jul 2019 05:34:52 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 117973F575;
+        Mon, 29 Jul 2019 05:34:49 -0700 (PDT)
+Subject: Re: [PATCH v9 13/21] mm: pagewalk: Add test_p?d callbacks
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-14-steven.price@arm.com>
+ <b74e545f-cbe0-9dd0-004c-5919e5cabb6f@arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <df6f5233-6630-2d21-ad38-2520644c0c87@arm.com>
+Date:   Mon, 29 Jul 2019 13:34:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-To:     Colin King <colin.king@canonical.com>
-CC:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-pm@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][V2] drivers: thermal: processor_thermal_device: fix missing
- bitwise-or operators
-References: <20190729120323.15838-1-colin.king@canonical.com>
-In-Reply-To: <20190729120323.15838-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <b74e545f-cbe0-9dd0-004c-5919e5cabb6f@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-Authentication-Results: mx01-fr.bfs.de
-X-Spamd-Result: default: False [-3.10 / 7.00];
-         ARC_NA(0.00)[];
-         HAS_REPLYTO(0.00)[wharms@bfs.de];
-         BAYES_HAM(-3.00)[100.00%];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         MIME_GOOD(-0.10)[text/plain];
-         REPLYTO_ADDR_EQ_FROM(0.00)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         RCVD_TLS_ALL(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Am 29.07.2019 14:03, schrieb Colin King:
-> From: Colin Ian King <colin.king@canonical.com>
+On 28/07/2019 14:41, Anshuman Khandual wrote:
 > 
-> The variable val is having the top 8 bits cleared and then the variable is being
-> re-assinged and setting just the top 8 bits.  I believe the intention was bitwise-or
-> in the top 8 bits.  Fix this by replacing the = operators with &= and |= instead.
 > 
-> Addresses-Coverity: ("Unused value")
-> Fixes: b0c74b08517e ("drivers: thermal: processor_thermal_device: Export sysfs inteface for TCC offset")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
+> On 07/22/2019 09:12 PM, Steven Price wrote:
+>> It is useful to be able to skip parts of the page table tree even when
+>> walking without VMAs. Add test_p?d callbacks similar to test_walk but
+>> which are called just before a table at that level is walked. If the
+>> callback returns non-zero then the entire table is skipped.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  include/linux/mm.h | 11 +++++++++++
+>>  mm/pagewalk.c      | 24 ++++++++++++++++++++++++
+>>  2 files changed, 35 insertions(+)
+>>
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index b22799129128..325a1ca6f820 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -1447,6 +1447,11 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+>>   *             value means "do page table walk over the current vma,"
+>>   *             and a negative one means "abort current page table walk
+>>   *             right now." 1 means "skip the current vma."
+>> + * @test_pmd:  similar to test_walk(), but called for every pmd.
+>> + * @test_pud:  similar to test_walk(), but called for every pud.
+>> + * @test_p4d:  similar to test_walk(), but called for every p4d.
+>> + *             Returning 0 means walk this part of the page tables,
+>> + *             returning 1 means to skip this range.
+>>   * @mm:        mm_struct representing the target process of page table walk
+>>   * @vma:       vma currently walked (NULL if walking outside vmas)
+>>   * @private:   private data for callbacks' usage
+>> @@ -1471,6 +1476,12 @@ struct mm_walk {
+>>  			     struct mm_walk *walk);
+>>  	int (*test_walk)(unsigned long addr, unsigned long next,
+>>  			struct mm_walk *walk);
+>> +	int (*test_pmd)(unsigned long addr, unsigned long next,
+>> +			pmd_t *pmd_start, struct mm_walk *walk);
+>> +	int (*test_pud)(unsigned long addr, unsigned long next,
+>> +			pud_t *pud_start, struct mm_walk *walk);
+>> +	int (*test_p4d)(unsigned long addr, unsigned long next,
+>> +			p4d_t *p4d_start, struct mm_walk *walk);
+>>  	struct mm_struct *mm;
+>>  	struct vm_area_struct *vma;
+>>  	void *private;
+>> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+>> index 1cbef99e9258..6bea79b95be3 100644
+>> --- a/mm/pagewalk.c
+>> +++ b/mm/pagewalk.c
+>> @@ -32,6 +32,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>>  	unsigned long next;
+>>  	int err = 0;
+>>  
+>> +	if (walk->test_pmd) {
+>> +		err = walk->test_pmd(addr, end, pmd_offset(pud, 0UL), walk);
+>> +		if (err < 0)
+>> +			return err;
+>> +		if (err > 0)
+>> +			return 0;
+>> +	}
 > 
-> V2: Add in &= operator missing from V1. Doh.
-> 
-> ---
->  .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> index 6f6ac6a8e82d..97333fc4be42 100644
-> --- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> +++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> @@ -163,8 +163,8 @@ static int tcc_offset_update(int tcc)
->  	if (err)
->  		return err;
->  
-> -	val = ~GENMASK_ULL(31, 24);
-> -	val = (tcc & 0xff) << 24;
-> +	val &= ~GENMASK_ULL(31, 24);
-> +	val |= (tcc & 0xff) << 24;
->  
+> Though this attempts to match semantics with test_walk() and be comprehensive
+> just wondering what are the real world situations when page walking need to be
+> aborted based on error condition at a given page table level.
 
-IMHO GENMASK_ULL(31, 24) is a complicated way to say 0xFF000000
-In this special case it would be better to use that (or 0xff<<24).
+I'm not aware of a situation yet where aborting early is necessary - but
+as you say this matches the semantics of test_walk() and was easy to
+implement.
 
-just my 2 cents,
-
-re,
- wh
-
-
->  	err = wrmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, val);
->  	if (err)
+Steve
