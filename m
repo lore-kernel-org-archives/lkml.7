@@ -2,176 +2,167 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E962C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89920C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF2B2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:16:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeblueprint-co-uk.20150623.gappssmtp.com header.i=@codeblueprint-co-uk.20150623.gappssmtp.com header.b="rLXHXVSo"
+	by mail.kernel.org (Postfix) with ESMTP id 6CBDC2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfG2MQY (ORCPT
+        id S1727715AbfG2MRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:16:24 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33142 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfG2MQY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:16:24 -0400
-Received: by mail-ed1-f66.google.com with SMTP id i11so59129324edq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 05:16:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=codeblueprint-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MZIUVHdjLMQukRWc0f7u5fJGuVGb54YkwkBwhwkBOCo=;
-        b=rLXHXVSoA/vHF6iJ0hCyWlDw84arO1P1aKv/LcwtKun9ZKApSzDsRFaLhmAnPrYNsY
-         3Pag5W4aiGUAbsFcW+bQXDgCo5THCMvaywcGhqf7lFRkkNd8we47tukoN64Bf8tO6/W0
-         VRVOS9FF4P/AggwZNVEwZhKztJ9HKzFUPQKLdBXQtsQ9IuxQvRDJvLtM4xiq8jmugzui
-         kk0RfDFT9mLvKbs7SCJvllTOez7+FejB3Mh1InBkQLGDs46xdTl23b9Sw8iOpvfJxUuQ
-         KivoVMG+JfxzLpmhhoLIkNfaiWBrpXZ8Fq1WzaYwMeyngeD4hKu1vAr1PC2Y608jY6Xq
-         1GAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MZIUVHdjLMQukRWc0f7u5fJGuVGb54YkwkBwhwkBOCo=;
-        b=YQOzBEPfpEB6XfuYuY5haw+uMVQh6fSm+QwjQmIhztjW67V9DZsiF1dIuYPe+lQqAt
-         QGIDBTxrQ9SBazFO4MGQ/REUNoPquwk7SQyZmHdxMnNuP2Gbf9R4oLa0flvBDVfzxWBY
-         Nsy3ZuAtC1XSsGCNRvppM4LGr8LO/crndIfruh7KvFhKuaAAY5X4KMtgQwUwhCakgWU0
-         cs2kM0icIPPHm9eUFXo341U5jHKGDJL88s7nXmc3wUONmYCs2TqenIBnKPWiXqVT3kqh
-         fgm+qggrek9iWD58Dlur9ft12OXhlR/c4FuYJ3ODvwS30olNOQ/3pFbRQcMKmdmEiuKr
-         qiOg==
-X-Gm-Message-State: APjAAAVCEYLXkaVho+dSo62qLBgovHyGsOP3C553PwcGWt4LxHG/06lA
-        FCe3d/Mga/YGT5ltVk7kM8I=
-X-Google-Smtp-Source: APXvYqzCEHNO+b+ZRVDCAXHzaAwouiWsLwZuuQJ7YuzBUJUjRh8R+h4M03xwIcsycGOGmmYH/TsddA==
-X-Received: by 2002:a50:92cd:: with SMTP id l13mr93556388eda.136.1564402582487;
-        Mon, 29 Jul 2019 05:16:22 -0700 (PDT)
-Received: from localhost (5ec096bd.skybroadband.com. [94.192.150.189])
-        by smtp.gmail.com with ESMTPSA id j30sm15833311edb.8.2019.07.29.05.16.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 05:16:21 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 13:16:20 +0100
-From:   Matt Fleming <matt@codeblueprint.co.uk>
-To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v3] sched/topology: Improve load balancing on AMD EPYC
-Message-ID: <20190729121620.GD6909@codeblueprint.co.uk>
-References: <20190723104830.26623-1-matt@codeblueprint.co.uk>
- <a8241850-7111-2d93-2330-d28b00797e56@amd.com>
+        Mon, 29 Jul 2019 08:17:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:43132 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726635AbfG2MRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:17:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F232528;
+        Mon, 29 Jul 2019 05:17:45 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EFF93F575;
+        Mon, 29 Jul 2019 05:17:43 -0700 (PDT)
+Subject: Re: [PATCH v9 11/21] mm: pagewalk: Add p4d_entry() and pgd_entry()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-12-steven.price@arm.com>
+ <b61435a3-0da0-de57-0993-b1fffeca3ca9@arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <63a86424-9a8e-4528-5880-138f0009e462@arm.com>
+Date:   Mon, 29 Jul 2019 13:17:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a8241850-7111-2d93-2330-d28b00797e56@amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <b61435a3-0da0-de57-0993-b1fffeca3ca9@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jul, at 04:37:06PM, Suthikulpanit, Suravee wrote:
+On 28/07/2019 13:33, Anshuman Khandual wrote:
 > 
-> I am testing this patch on the Linux-5.2, and I actually do not
-> notice difference pre vs post patch.
 > 
-> Besides the case above, I have also run an experiment with
-> a different number of threads across two sockets:
+> On 07/22/2019 09:12 PM, Steven Price wrote:
+>> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
+>> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
+>> no users. We're about to add users so reintroduce them, along with
+>> p4d_entry() as we now have 5 levels of tables.
+>>
+>> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
+>> PUD-sized transparent hugepages") already re-added pud_entry() but with
+>> different semantics to the other callbacks. Since there have never
+>> been upstream users of this, revert the semantics back to match the
+>> other callbacks. This means pud_entry() is called for all entries, not
+>> just transparent huge pages.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  include/linux/mm.h | 15 +++++++++------
+>>  mm/pagewalk.c      | 27 ++++++++++++++++-----------
+>>  2 files changed, 25 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index 0334ca97c584..b22799129128 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -1432,15 +1432,14 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+>>  
+>>  /**
+>>   * mm_walk - callbacks for walk_page_range
+>> - * @pud_entry: if set, called for each non-empty PUD (2nd-level) entry
+>> - *	       this handler should only handle pud_trans_huge() puds.
+>> - *	       the pmd_entry or pte_entry callbacks will be used for
+>> - *	       regular PUDs.
+>> - * @pmd_entry: if set, called for each non-empty PMD (3rd-level) entry
+>> + * @pgd_entry: if set, called for each non-empty PGD (top-level) entry
+>> + * @p4d_entry: if set, called for each non-empty P4D entry
+>> + * @pud_entry: if set, called for each non-empty PUD entry
+>> + * @pmd_entry: if set, called for each non-empty PMD entry
+>>   *	       this handler is required to be able to handle
+>>   *	       pmd_trans_huge() pmds.  They may simply choose to
+>>   *	       split_huge_page() instead of handling it explicitly.
+>> - * @pte_entry: if set, called for each non-empty PTE (4th-level) entry
+>> + * @pte_entry: if set, called for each non-empty PTE (lowest-level) entry
+>>   * @pte_hole: if set, called for each hole at all levels
+>>   * @hugetlb_entry: if set, called for each hugetlb entry
+>>   * @test_walk: caller specific callback function to determine whether
+>> @@ -1455,6 +1454,10 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+>>   * (see the comment on walk_page_range() for more details)
+>>   */
+>>  struct mm_walk {
+>> +	int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
+>> +			 unsigned long next, struct mm_walk *walk);
+>> +	int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
+>> +			 unsigned long next, struct mm_walk *walk);
+>>  	int (*pud_entry)(pud_t *pud, unsigned long addr,
+>>  			 unsigned long next, struct mm_walk *walk);
+>>  	int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
+>> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+>> index c3084ff2569d..98373a9f88b8 100644
+>> --- a/mm/pagewalk.c
+>> +++ b/mm/pagewalk.c
+>> @@ -90,15 +90,9 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>>  		}
+>>  
+>>  		if (walk->pud_entry) {
+>> -			spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
+>> -
+>> -			if (ptl) {
+>> -				err = walk->pud_entry(pud, addr, next, walk);
+>> -				spin_unlock(ptl);
+>> -				if (err)
+>> -					break;
+>> -				continue;
+>> -			}
+>> +			err = walk->pud_entry(pud, addr, next, walk);
+>> +			if (err)
+>> +				break;
 > 
-> (Note: I only focus on thread0 of each core.)
-> 
-> sXnY = Socket X Node Y
-> 
->      * s0n0 + s0n1 + s1n0 + s1n1
->      numactl -C 0-15,32-47 ./spinner 32
-> 
->      * s0n2 + s0n3 + s1n2 + s1n3
->      numactl -C 16-31,48-63 ./spinner 32
-> 
->      * s0 + s1
->      numactl -C 0-63 ./spinner 64
-> 
-> My observations are:
-> 
->      * I still notice improper load-balance on one of the task initially
->        for a few seconds before they are load-balanced correctly.
-> 
->      * It is taking longer to load balance w/ more number of tasks.
-> 
-> I wonder if you have tried with a different kernel base?
+> But will not this still encounter possible THP entries when walking user
+> page tables (valid walk->vma) in which case still needs to get a lock.
+> OR will the callback take care of it ?
 
-It was tested with one of the 5.2 -rc kernels.
+This is what I mean in the commit message by:
+> Since there have never
+> been upstream users of this, revert the semantics back to match the
+> other callbacks. This means pud_entry() is called for all entries, not
+> just transparent huge pages.
 
-I'll take another look at this behaviour, but for the benefit of LKML
-readers, here's the summary I gave before. It's specific to using
-cgroups to partitions tasks:
+So the expectation is that the caller takes care of it.
 
-    It turns out there's a secondary issue to do with how run queue load
-    averages are compared between sched groups.
-    
-    Load averages for a sched_group (a group within a domain) are
-    effectively "scaled" by the number of CPUs in that group. This has a
-    direct influence on how quickly load ramps up in a group.
-    
-    What's happening on my system when running with $(numactl -C
-    0-7,32-39) is that the load for the top NUMA sched_domain (domain4) is
-    scaling the load by 64 CPUs -- even though the workload can't use all
-    64 due to scheduler affinity.
-    
-    So because the load balancer thinks there's plenty of room left to run
-    tasks, it doesn't balance very well across sockets even with the
-    SD_BALANCE_FORK flag.
-    
-    This super quick and ugly patch, which caps the number of CPUs at 8, gets both
-    sockets used by fork() on my system.
-    
-    ---->8----
-    
-    diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-    index 40bd1e27b1b7..9444c34d038c 100644
-    --- a/kernel/sched/fair.c
-    +++ b/kernel/sched/fair.c
-    @@ -5791,6 +5791,7 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
-     	int imbalance_scale = 100 + (sd->imbalance_pct-100)/2;
-     	unsigned long imbalance = scale_load_down(NICE_0_LOAD) *
-     				(sd->imbalance_pct-100) / 100;
-    +	unsigned long capacity;
-     
-     	if (sd_flag & SD_BALANCE_WAKE)
-     		load_idx = sd->wake_idx;
-    @@ -5835,10 +5836,15 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
-     		}
-     
-     		/* Adjust by relative CPU capacity of the group */
-    +		capacity = group->sgc->capacity;
-    +
-    +		if (capacity > (SCHED_CAPACITY_SCALE * 8))
-    +			capacity = SCHED_CAPACITY_SCALE * 8;
-    +
-     		avg_load = (avg_load * SCHED_CAPACITY_SCALE) /
-    -					group->sgc->capacity;
-    +					capacity;
-     		runnable_load = (runnable_load * SCHED_CAPACITY_SCALE) /
-    -					group->sgc->capacity;
-    +					capacity;
-     
-     		if (local_group) {
-     			this_runnable_load = runnable_load;
-    
-    ----8<----
-    
-    There's still an issue with the active load balancer kicking in after a few
-    seconds, but I suspect that is related to the use of group capacity elsewhere
-    in the load balancer code (like update_sg_lb_stats()).
+However, having checked again, it appears that mm/hmm.c now does use
+this callback (merged in v5.2-rc1).
 
+Jérôme - are you happy with this change in semantics? It looks like
+hmm_vma_walk_pud() should deal gracefully with both normal and large
+pages - although I'm unsure whether you are relying on the lock from
+pud_trans_huge_lock()?
 
--- 
-Matt Fleming
-SUSE Performance Team
+Thanks,
+
+Steve
