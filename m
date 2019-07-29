@@ -2,214 +2,213 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C741AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E83FC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7899420679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D222075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SdzpILNF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tvjDYKlM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbfG2Jqr (ORCPT
+        id S1728010AbfG2JsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:46:47 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38149 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfG2Jqp (ORCPT
+        Mon, 29 Jul 2019 05:48:04 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33384 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfG2JsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:46:45 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r9so57937344ljg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:46:43 -0700 (PDT)
+        Mon, 29 Jul 2019 05:48:03 -0400
+Received: by mail-io1-f66.google.com with SMTP id z3so8857776iog.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:48:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tg+McBFqpd0f2zrbI/7wxxs8tzmhTKN9nAWzW3WwxlU=;
-        b=SdzpILNFfLN2CAMRhUndFy579p7sz+RKl4jBviLx7P4+/bERXmVC/UiiTSMRWKrMbX
-         8bTH6PKDi08vqZQEYB2X5pFK3LNC/A/C4zXxij1ZjTkmeEjPgRNkXTVQF1HFRVP2sAL8
-         t+md7uPWRSaUSdU6lzsMWeqrH+mWgjQPXv+8Vr+XUb/7p9YrPgYFQ/nT151DcKviIZWt
-         BbJyCvFlyWX0tO0PAg3xyTSpmDtasav0EkA5oUQiMHY2mMR9S3aVsyewqLbcFVIA2Kvo
-         NhCQGC3ZcHSCmdkPbFYHqcqF/qbyHC6cBiw5VoZdFqARuIbpdZiicaQcLEI821OoV8Ay
-         /5EQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3Rw2BWyG599Bkhavz/sQ+o4mMfyoJ00aNO31/BIgOjY=;
+        b=tvjDYKlMKW9WNCIwBUxwRBIDjQSCzulXqlzdoOCQfBMvRRG4ppwsRfTkc37gA9ewGf
+         hrzTpkI8X2ONvWblpvqvb9OgXvzzJsUKdoayIY2f9viHaFiNbFUQmhOWuFfWuI1sSwLy
+         4MX0orjd8H4cNLPnD/3FRy+kLHKbZ9MyJ94iHUguPp5P34XWg8b/qULOdadF6TtK9L97
+         +n0dgJa4emlS1JBnWvLI8vu+L8s8HnzL6qvvHkDoxXH5360ybogbFETUu5W2/rQ8BeW8
+         KawPJHdjKrsf01eB/trvVQREDUoQ5E0ybDHbFuapJeDHmKpca3qskmETSXVIQRW5CAFk
+         YJNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tg+McBFqpd0f2zrbI/7wxxs8tzmhTKN9nAWzW3WwxlU=;
-        b=Afd8dXqKZ8ydGndJf/qGlSVJRP5kqLS4dUaAVYCw2pqHW3kEFvUe8njTfq3xdAOJCN
-         /rJIyDz2PEIuLgKv+pJNWJbd0yebIb3M1EJl0XU1IWoiVP48o5sR//C6stqVKzunC0lQ
-         vlMb1AWSgxkaTBdGUe96pgz2j4mwgbG4dHvmvq4PRWJ1ogbVKfIkTERM2eoJxlpRxvRX
-         aoIjvCsFsCtf7RG5Qqb482pCnvgMT3xoE9ESkcq6lSEXJy6O5AG28BE0TqHJXORJSszP
-         2RL237g1wdwPzxcmnZY7DPqnW5s346RK1YUyG0bG8mmuKqHvoQ4+c72a+VO5y/DQIUg4
-         Rc+w==
-X-Gm-Message-State: APjAAAU2fP72oDCi+e71qP0OEctzKFWKdrnQW9UBLnY3I94v6JehF/Om
-        gpXixlp4nh6+qTGCeKJfu0kk5g==
-X-Google-Smtp-Source: APXvYqwJv8qOr+vXkmc+GxaKZiQqHVqnVgciB2XEWBb1mWCh7+Z9mup+2Pp1i+NZLxz9ELM1Pk0/Bg==
-X-Received: by 2002:a2e:a0d6:: with SMTP id f22mr32148813ljm.182.1564393602547;
-        Mon, 29 Jul 2019 02:46:42 -0700 (PDT)
-Received: from [192.168.28.50] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id 27sm7398736ljv.21.2019.07.29.02.46.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 02:46:41 -0700 (PDT)
-Subject: Re: [PATCH v6 4/4] media: venus: Update core selection
-To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org
-References: <1563786452-22188-1-git-send-email-amasule@codeaurora.org>
- <1563786452-22188-4-git-send-email-amasule@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <d8fb8806-df3f-dd30-9d40-79667cf5cc37@linaro.org>
-Date:   Mon, 29 Jul 2019 12:46:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Rw2BWyG599Bkhavz/sQ+o4mMfyoJ00aNO31/BIgOjY=;
+        b=SOLQlLjD5yezgiclFWmJILzUjDCIYUsBvwbBMGBe3xhlbd6xVkymaGEg+c1P2QY7q0
+         Us6pbHl03whqH2cwBbD5p0kFbYFpUxxjpiTQKuPhlNtHfnzSgDa/Ep2wsq+xayleEdKc
+         U3DK8sl5J6D8QIT6DnUkMq/rsm+hUtcCxaEVp4QIWzXG7j3SGZeMuWW9H4tj9e4Qnpxk
+         WQbNYUlLQBhZEv9SL2whHPGzMofd+NCFrui8jqZglT59Mu7z1WXUjGw4GfaHZXnxMK9q
+         Ult4VZXpmPxKsUtxgk8Cg0jb5lfYw5lbTD3UpqCLbmoS4uHKaKsnnN3fkXqD3O9V5Lsm
+         lBhA==
+X-Gm-Message-State: APjAAAUQZ2+80mVUDg8G1RGXYBz40ToksUXqQQF7HczQ5BumDU1yGtDO
+        9LABhQq9XRJxPmCDaxGAjvlYyqYmT/WvHjiVa/E=
+X-Google-Smtp-Source: APXvYqzpTB/5Yw8dvagNRCkISfTkP/vJaXeh5bYd+fkbYO9zlJDw/0ybbAMCd5ucTdurkc3tqVRF5YanRHQrfVTOHpU=
+X-Received: by 2002:a5d:9e48:: with SMTP id i8mr99148747ioi.51.1564393682927;
+ Mon, 29 Jul 2019 02:48:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1563786452-22188-4-git-send-email-amasule@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <alpine.DEB.2.21.1906291443070.2577@hadrien>
+In-Reply-To: <alpine.DEB.2.21.1906291443070.2577@hadrien>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Mon, 29 Jul 2019 11:50:56 +0200
+Message-ID: <CAOi1vP9RGuYvb_sDjqMtxiOfkbabGg8NuH+60dhs8MGQHzXuXg@mail.gmail.com>
+Subject: Re: fs/ceph/export.c:459:3-12: code aligned with following code on
+ line 461 (fwd)
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     "Yan, Zheng" <zyan@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kbuild-all@01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, Jun 29, 2019 at 4:09 PM Julia Lawall <julia.lawall@lip6.fr> wrote:
+>
+> There is no bug here, but some code starting on line 461 seems to be
+> incorrectly indented.
+>
+> julia
+>
+> ---------- Forwarded message ----------
+> Date: Sat, 29 Jun 2019 19:51:04 +0800
+> From: kbuild test robot <lkp@intel.com>
+> To: kbuild@01.org
+> Cc: Julia Lawall <julia.lawall@lip6.fr>
+> Subject: fs/ceph/export.c:459:3-12: code aligned with following code on line 461
+>
+> CC: kbuild-all@01.org
+> CC: linux-kernel@vger.kernel.org
+> TO: "Yan, Zheng" <zyan@redhat.com>
+> CC: Ilya Dryomov <idryomov@gmail.com>
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   249155c20f9b0754bc1b932a33344cfb4e0c2101
+> commit: 570df4e9c23f861aa3f8f2954468c534a033bf1a ceph: snapshot nfs re-export
+> date:   8 weeks ago
+> :::::: branch date: 5 days ago
+> :::::: commit date: 8 weeks ago
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+>
+> >> fs/ceph/export.c:459:3-12: code aligned with following code on line 461
+>
+> # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=570df4e9c23f861aa3f8f2954468c534a033bf1a
+> git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> git remote update linus
+> git checkout 570df4e9c23f861aa3f8f2954468c534a033bf1a
+> vim +459 fs/ceph/export.c
+>
+> a8e63b7d Sage Weil  2009-10-06  401
+> 570df4e9 Yan, Zheng 2017-11-15  402  static int __get_snap_name(struct dentry *parent, char *name,
+> 570df4e9 Yan, Zheng 2017-11-15  403                        struct dentry *child)
+> 570df4e9 Yan, Zheng 2017-11-15  404  {
+> 570df4e9 Yan, Zheng 2017-11-15  405     struct inode *inode = d_inode(child);
+> 570df4e9 Yan, Zheng 2017-11-15  406     struct inode *dir = d_inode(parent);
+> 570df4e9 Yan, Zheng 2017-11-15  407     struct ceph_fs_client *fsc = ceph_inode_to_client(inode);
+> 570df4e9 Yan, Zheng 2017-11-15  408     struct ceph_mds_request *req = NULL;
+> 570df4e9 Yan, Zheng 2017-11-15  409     char *last_name = NULL;
+> 570df4e9 Yan, Zheng 2017-11-15  410     unsigned next_offset = 2;
+> 570df4e9 Yan, Zheng 2017-11-15  411     int err = -EINVAL;
+> 570df4e9 Yan, Zheng 2017-11-15  412
+> 570df4e9 Yan, Zheng 2017-11-15  413     if (ceph_ino(inode) != ceph_ino(dir))
+> 570df4e9 Yan, Zheng 2017-11-15  414             goto out;
+> 570df4e9 Yan, Zheng 2017-11-15  415     if (ceph_snap(inode) == CEPH_SNAPDIR) {
+> 570df4e9 Yan, Zheng 2017-11-15  416             if (ceph_snap(dir) == CEPH_NOSNAP) {
+> 570df4e9 Yan, Zheng 2017-11-15  417                     strcpy(name, fsc->mount_options->snapdir_name);
+> 570df4e9 Yan, Zheng 2017-11-15  418                     err = 0;
+> 570df4e9 Yan, Zheng 2017-11-15  419             }
+> 570df4e9 Yan, Zheng 2017-11-15  420             goto out;
+> 570df4e9 Yan, Zheng 2017-11-15  421     }
+> 570df4e9 Yan, Zheng 2017-11-15  422     if (ceph_snap(dir) != CEPH_SNAPDIR)
+> 570df4e9 Yan, Zheng 2017-11-15  423             goto out;
+> 570df4e9 Yan, Zheng 2017-11-15  424
+> 570df4e9 Yan, Zheng 2017-11-15  425     while (1) {
+> 570df4e9 Yan, Zheng 2017-11-15  426             struct ceph_mds_reply_info_parsed *rinfo;
+> 570df4e9 Yan, Zheng 2017-11-15  427             struct ceph_mds_reply_dir_entry *rde;
+> 570df4e9 Yan, Zheng 2017-11-15  428             int i;
+> 570df4e9 Yan, Zheng 2017-11-15  429
+> 570df4e9 Yan, Zheng 2017-11-15  430             req = ceph_mdsc_create_request(fsc->mdsc, CEPH_MDS_OP_LSSNAP,
+> 570df4e9 Yan, Zheng 2017-11-15  431                                            USE_AUTH_MDS);
+> 570df4e9 Yan, Zheng 2017-11-15  432             if (IS_ERR(req)) {
+> 570df4e9 Yan, Zheng 2017-11-15  433                     err = PTR_ERR(req);
+> 570df4e9 Yan, Zheng 2017-11-15  434                     req = NULL;
+> 570df4e9 Yan, Zheng 2017-11-15  435                     goto out;
+> 570df4e9 Yan, Zheng 2017-11-15  436             }
+> 570df4e9 Yan, Zheng 2017-11-15  437             err = ceph_alloc_readdir_reply_buffer(req, inode);
+> 570df4e9 Yan, Zheng 2017-11-15  438             if (err)
+> 570df4e9 Yan, Zheng 2017-11-15  439                     goto out;
+> 570df4e9 Yan, Zheng 2017-11-15  440
+> 570df4e9 Yan, Zheng 2017-11-15  441             req->r_direct_mode = USE_AUTH_MDS;
+> 570df4e9 Yan, Zheng 2017-11-15  442             req->r_readdir_offset = next_offset;
+> 570df4e9 Yan, Zheng 2017-11-15  443             req->r_args.readdir.flags =
+> 570df4e9 Yan, Zheng 2017-11-15  444                             cpu_to_le16(CEPH_READDIR_REPLY_BITFLAGS);
+> 570df4e9 Yan, Zheng 2017-11-15  445             if (last_name) {
+> 570df4e9 Yan, Zheng 2017-11-15  446                     req->r_path2 = last_name;
+> 570df4e9 Yan, Zheng 2017-11-15  447                     last_name = NULL;
+> 570df4e9 Yan, Zheng 2017-11-15  448             }
+> 570df4e9 Yan, Zheng 2017-11-15  449
+> 570df4e9 Yan, Zheng 2017-11-15  450             req->r_inode = dir;
+> 570df4e9 Yan, Zheng 2017-11-15  451             ihold(dir);
+> 570df4e9 Yan, Zheng 2017-11-15  452             req->r_dentry = dget(parent);
+> 570df4e9 Yan, Zheng 2017-11-15  453
+> 570df4e9 Yan, Zheng 2017-11-15  454             inode_lock(dir);
+> 570df4e9 Yan, Zheng 2017-11-15  455             err = ceph_mdsc_do_request(fsc->mdsc, NULL, req);
+> 570df4e9 Yan, Zheng 2017-11-15  456             inode_unlock(dir);
+> 570df4e9 Yan, Zheng 2017-11-15  457
+> 570df4e9 Yan, Zheng 2017-11-15  458             if (err < 0)
+> 570df4e9 Yan, Zheng 2017-11-15 @459                     goto out;
+> 570df4e9 Yan, Zheng 2017-11-15  460
+> 570df4e9 Yan, Zheng 2017-11-15 @461              rinfo = &req->r_reply_info;
+> 570df4e9 Yan, Zheng 2017-11-15  462              for (i = 0; i < rinfo->dir_nr; i++) {
+> 570df4e9 Yan, Zheng 2017-11-15  463                      rde = rinfo->dir_entries + i;
+> 570df4e9 Yan, Zheng 2017-11-15  464                      BUG_ON(!rde->inode.in);
+> 570df4e9 Yan, Zheng 2017-11-15  465                      if (ceph_snap(inode) ==
+> 570df4e9 Yan, Zheng 2017-11-15  466                          le64_to_cpu(rde->inode.in->snapid)) {
+> 570df4e9 Yan, Zheng 2017-11-15  467                              memcpy(name, rde->name, rde->name_len);
+> 570df4e9 Yan, Zheng 2017-11-15  468                              name[rde->name_len] = '\0';
+> 570df4e9 Yan, Zheng 2017-11-15  469                              err = 0;
+> 570df4e9 Yan, Zheng 2017-11-15  470                              goto out;
+> 570df4e9 Yan, Zheng 2017-11-15  471                      }
+> 570df4e9 Yan, Zheng 2017-11-15  472              }
+> 570df4e9 Yan, Zheng 2017-11-15  473
+> 570df4e9 Yan, Zheng 2017-11-15  474              if (rinfo->dir_end)
+> 570df4e9 Yan, Zheng 2017-11-15  475                      break;
+> 570df4e9 Yan, Zheng 2017-11-15  476
+> 570df4e9 Yan, Zheng 2017-11-15  477              BUG_ON(rinfo->dir_nr <= 0);
+> 570df4e9 Yan, Zheng 2017-11-15  478              rde = rinfo->dir_entries + (rinfo->dir_nr - 1);
+> 570df4e9 Yan, Zheng 2017-11-15  479              next_offset += rinfo->dir_nr;
+> 570df4e9 Yan, Zheng 2017-11-15  480              last_name = kstrndup(rde->name, rde->name_len, GFP_KERNEL);
+> 570df4e9 Yan, Zheng 2017-11-15  481              if (!last_name) {
+> 570df4e9 Yan, Zheng 2017-11-15  482                      err = -ENOMEM;
+> 570df4e9 Yan, Zheng 2017-11-15  483                      goto out;
+> 570df4e9 Yan, Zheng 2017-11-15  484              }
+> 570df4e9 Yan, Zheng 2017-11-15  485
+> 570df4e9 Yan, Zheng 2017-11-15  486              ceph_mdsc_put_request(req);
+> 570df4e9 Yan, Zheng 2017-11-15  487              req = NULL;
+> 570df4e9 Yan, Zheng 2017-11-15  488     }
+> 570df4e9 Yan, Zheng 2017-11-15  489     err = -ENOENT;
+> 570df4e9 Yan, Zheng 2017-11-15  490  out:
+> 570df4e9 Yan, Zheng 2017-11-15  491     if (req)
+> 570df4e9 Yan, Zheng 2017-11-15  492             ceph_mdsc_put_request(req);
+> 570df4e9 Yan, Zheng 2017-11-15  493     kfree(last_name);
+> 570df4e9 Yan, Zheng 2017-11-15  494     dout("get_snap_name %p ino %llx.%llx err=%d\n",
+> 570df4e9 Yan, Zheng 2017-11-15  495          child, ceph_vinop(inode), err);
+> 570df4e9 Yan, Zheng 2017-11-15  496     return err;
+> 570df4e9 Yan, Zheng 2017-11-15  497  }
+> 570df4e9 Yan, Zheng 2017-11-15  498
 
-On 7/22/19 12:07 PM, Aniket Masule wrote:
-> Present core assignment is static. Introduced load balancing
-> across the cores. Load on earch core is calculated and core
-> with minimum load is assigned to given instance.
-> 
-> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-> ---
->  drivers/media/platform/qcom/venus/helpers.c    | 69 +++++++++++++++++++++++---
->  drivers/media/platform/qcom/venus/helpers.h    |  2 +-
->  drivers/media/platform/qcom/venus/hfi_helper.h |  1 +
->  drivers/media/platform/qcom/venus/hfi_parser.h |  5 ++
->  drivers/media/platform/qcom/venus/vdec.c       |  2 +-
->  drivers/media/platform/qcom/venus/venc.c       |  2 +-
->  6 files changed, 72 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-> index edf403d..3b6cbbf 100644
-> --- a/drivers/media/platform/qcom/venus/helpers.c
-> +++ b/drivers/media/platform/qcom/venus/helpers.c
-> @@ -26,6 +26,7 @@
->  #include "helpers.h"
->  #include "hfi_helper.h"
->  #include "hfi_venus_io.h"
-> +#include "hfi_parser.h"
->  
->  struct intbuf {
->  	struct list_head list;
-> @@ -331,6 +332,24 @@ static u32 load_per_instance(struct venus_inst *inst)
->  	return mbs * inst->fps;
->  }
->  
-> +static u32 load_per_core(struct venus_core *core, u32 core_id)
-> +{
-> +	struct venus_inst *inst = NULL;
-> +	u32 mbs_per_sec = 0, load = 0;
-> +
-> +	mutex_lock(&core->lock);
-> +	list_for_each_entry(inst, &core->instances, list) {
-> +		if (inst->clk_data.core_id != core_id)
-> +			continue;
-> +
-> +		mbs_per_sec = load_per_instance(inst);
-> +		load += mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
-> +	}
-> +	mutex_unlock(&core->lock);
-> +
-> +	return load;
-> +}
-> +
->  static u32 load_per_type(struct venus_core *core, u32 session_type)
->  {
->  	struct venus_inst *inst = NULL;
-> @@ -505,6 +524,16 @@ static int load_scale_clocks(struct venus_inst *inst)
->  	return scale_clocks(inst);
->  }
->  
-> +int set_core_usage(struct venus_inst *inst, u32 usage)
-> +{
-> +	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
-> +	struct hfi_videocores_usage_type cu;
-> +
-> +	cu.video_core_enable_mask = usage;
-> +
-> +	return hfi_session_set_property(inst, ptype, &cu);
-> +}
-> +
->  static void fill_buffer_desc(const struct venus_buffer *buf,
->  			     struct hfi_buffer_desc *bd, bool response)
->  {
-> @@ -808,19 +837,47 @@ int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode)
->  }
->  EXPORT_SYMBOL_GPL(venus_helper_set_work_mode);
->  
-> -int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage)
-> +int venus_helper_set_core(struct venus_inst *inst)
->  {
-> -	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
-> -	struct hfi_videocores_usage_type cu;
-> +	struct venus_core *core = inst->core;
-> +	u32 min_core_id = 0, core1_load = 0, core2_load = 0;
-> +	unsigned long min_load, max_freq, cur_inst_load;
-> +	u32 cores_max;
-> +	int ret;
->  
->  	if (!IS_V4(inst->core))
->  		return 0;
->  
-> -	cu.video_core_enable_mask = usage;
-> +	core1_load = load_per_core(core, VIDC_CORE_ID_1);
-> +	core2_load = load_per_core(core, VIDC_CORE_ID_2);
-> +	min_core_id = core1_load < core2_load ? VIDC_CORE_ID_1 : VIDC_CORE_ID_2;
-> +	min_load = min(core1_load, core2_load);
-> +	cores_max = core_num_max(inst);
->  
-> -	return hfi_session_set_property(inst, ptype, &cu);
-> +	if (cores_max < VIDC_CORE_ID_2) {
-> +		min_core_id = VIDC_CORE_ID_1;
-> +		min_load = core1_load;
-> +	}
-> +
-> +	cur_inst_load = load_per_instance(inst) *
-> +		inst->clk_data.codec_freq_data->vpp_freq;
-> +	max_freq = core->res->freq_tbl[0].freq;
-> +
-> +	if ((cur_inst_load + min_load) > max_freq) {
-> +		dev_warn(core->dev, "HW is overloaded, needed: %lu max: %lu\n",
-> +			 cur_inst_load, max_freq);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = set_core_usage(inst, min_core_id);
+Fixed.
 
-We have a problem here. Lets assume that we have only one running
-decoder session and the code above decides that it should be handled by
-core2, but core2 clocks presently are enabled only if there is an
-encoder session (see DT subnodes), thus we select core2 but without
-enabling core2 clocks and power domain.
+Thanks,
 
-> +	if (ret)
-> +		return ret;
-> +
-> +	inst->clk_data.core_id = min_core_id;
-> +
-> +	return 0;
->  }
-> -EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
-> +EXPORT_SYMBOL_GPL(venus_helper_set_core);
->  
-
-
--- 
-regards,
-Stan
+                Ilya
