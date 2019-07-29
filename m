@@ -2,94 +2,86 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F60C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48338C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9931206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F43206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:21:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KWfxRLwM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InwwDQ22"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbfG2MUw (ORCPT
+        id S1727935AbfG2MVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:20:52 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40345 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfG2MUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:20:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45xzL76qMgz9s7T;
-        Mon, 29 Jul 2019 22:20:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564402848;
-        bh=3ZkE3Wh5jiD52ViBI3ydmbVsv7nbSViohUmvTLpbK70=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KWfxRLwMNOziGpWS6BoNYIOFdG/0wx8TN+5p2DFAZJ0yBReJYDTgOYdDgW3P82Qcc
-         MC8cQo+h4DZJ/EsAc3f/6m39bl881hwKgkervD4W41jonANn+rQUaNKI2SuhCmHAWn
-         NqXGuM8tBdJntI3LQ+CSEYkpDQMTHXbLwT1Pusgs16ovgQ0iV/jOCNBQt/Gw7uzu05
-         kHvBIoRAs4E09TbJODyukwcBd3vXrgpP/5s8U0MbwWutQUj9zbTSU3RygqIeDtvlbd
-         JgQEZr1H3odoftAwmqgfw2unfVC5U59siY9i1uZ+mRT4uXX5hJ7nogLy7fI4Tz48R2
-         kySap4hjMXHnw==
-Date:   Mon, 29 Jul 2019 22:20:45 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] modpost: check for static EXPORT_SYMBOL* functions
-Message-ID: <20190729222045.4b491ffb@canb.auug.org.au>
-In-Reply-To: <20190729092250.32670-1-efremov@linux.com>
-References: <20190714152817.24693-1-efremov@linux.com>
-        <20190729092250.32670-1-efremov@linux.com>
+        Mon, 29 Jul 2019 08:21:13 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39353 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfG2MVM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:21:12 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v18so58336375ljh.6;
+        Mon, 29 Jul 2019 05:21:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lus5TxJaffuFpsnjVsSfL9Xup/2Q5tADoKnscqx0e0o=;
+        b=InwwDQ224lgQiDVL9i6pVtS0Vvh/lrCRZAxHHs4uW1jMEQPzbbUSxpf4sKK/Q3pwIl
+         ZdTz2bXA7p1Cdp5KBxKh3ZZxvyU+r3a6IPnDAaLC1vMZ2LgYDpx3ybkwByC86vuTMmTz
+         3rAuPRhyobMGW1t8u/jALQxJRjDYuL1EVqIdME9w0sIrUSuAKhm5KzRM/scP+HLr9lMy
+         En33fmBmbL8yfRBJ15NY4JFAwox6OLvV/nhvbKL0YYnVyOvfOtcuFtW8cft3f5iLfRF7
+         HI5LsUGxSdhYCDDCOdSi/p6WntIlRfnF+CsTLP05zNREVNWGEBzHJxKIZlHCS38Ke5f/
+         1LQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lus5TxJaffuFpsnjVsSfL9Xup/2Q5tADoKnscqx0e0o=;
+        b=St3YIIhTddGRxK2ntSzVI3rRabNipzaIVRRq35hT0ik16PV6DybuQ6J88aDpDGDpsC
+         F+9rwK7JilCck8FF8A/DyWAW6WTCASM9tWnGHkmUBpuTK5OYQrbMRE15dlP8EBolUao4
+         ypKqhsEZy0iMB6vjUIF2+ysdrSKrukbmwZqllDy3k3rP1VwZODLtcstux6HAOo5srPYw
+         3QhLyw//yBK4flyMtVe4jaaeI85wt5k0NPfd2zCMaZMDZqJbwJZjyOwT29LhnOY0nM8r
+         BPMoKa+05ziVaLzSIqjfFPmZaQjl/0TMWpafPA7CsbKU54Ic6PIcCaJU/EGYQadxFbXG
+         XO2g==
+X-Gm-Message-State: APjAAAWL+NTtwSx20QI0m7kEIOKwg4vLxFc4fPVDenRWP3IMQw2Oxdcb
+        MHOCqbSF/0llxqMyWIpHzw7B8Gs2umJckRXLUpM=
+X-Google-Smtp-Source: APXvYqxkW5SmThMalAQq31UlmmO81GX4lGXENqxdVeAnVIsK+llwHK4DqHkMcrejGumyqG/qS1DuqMlt/5yp0CWS+HM=
+X-Received: by 2002:a2e:a311:: with SMTP id l17mr55967735lje.214.1564402870592;
+ Mon, 29 Jul 2019 05:21:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Ak=QLX=2NJUyzZgETBpXpbk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190729083915.4855-1-Anson.Huang@nxp.com> <20190729083915.4855-3-Anson.Huang@nxp.com>
+In-Reply-To: <20190729083915.4855-3-Anson.Huang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 29 Jul 2019 09:21:15 -0300
+Message-ID: <CAOMZO5Ao8aNGfj3KHd+rsX=kj528BvzeSHFvQR6pEWXN3BD98g@mail.gmail.com>
+Subject: Re: [PATCH V2 3/4] dt-bindings: thermal: qoriq: Add optional clocks property
+To:     Yongcai Huang <Anson.Huang@nxp.com>
+Cc:     "rui.zhang" <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Ak=QLX=2NJUyzZgETBpXpbk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Anson,
 
-Hi Denis,
-
-Just a small note (nit? :-)):
-
-On Mon, 29 Jul 2019 12:22:50 +0300 Denis Efremov <efremov@linux.com> wrote:
+On Mon, Jul 29, 2019 at 6:04 AM <Anson.Huang@nxp.com> wrote:
 >
-> +			if (s->is_static)
-> +				warn("\"%s\" [%s] is the static %s\n",
+> From: Anson Huang <Anson.Huang@nxp.com>
+>
+> Some platforms have clock control for TMU, add optional
+> clocks property to the binding doc.
 
-This read a little wrong to me, maybe "is a static"?
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Ak=QLX=2NJUyzZgETBpXpbk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0+5J0ACgkQAVBC80lX
-0GxG5wgApfJ4ZYIP4/nrvt1ZpHnsVu8rZOSuHQBxLepKCgo2wcYPrgDfSyyhrsYR
-qK3mVW9IjuHCqRbbjoPQMzrHREdO11fIOvrGQyDNHE2FkUdkd1tr2SnBQmNov6LO
-VtsyfEl6Iubq0Fv4RCALpas0lkdww7oz5fFIi10E51wX24p3q0OWLNJo3/6bsATi
-XRuaH5VJ94fbWODxfQQeLpab+20pQABFUZQPM81pWG1jDHhod4IkCz1sJM/TC4IP
-oOPhA9mBh/Pd8B9i88Mxcy1Jk62bkM7f1VG/lUHyY7hV8yTRHPlcGaHUgw2ye2XF
-GiYlOFlRCmQKIpL1dt1JBY5kC286rw==
-=Axup
------END PGP SIGNATURE-----
-
---Sig_/Ak=QLX=2NJUyzZgETBpXpbk--
+Please add a note that this is needed for i.MX8M.
