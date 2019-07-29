@@ -2,186 +2,92 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09466C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA51C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D75472147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB6C2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:43:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LF54msqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfG2DjY (ORCPT
+        id S1726694AbfG2Dnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 23:39:24 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:59753 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726312AbfG2DjX (ORCPT
+        Sun, 28 Jul 2019 23:43:50 -0400
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:35025 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbfG2Dnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 23:39:23 -0400
-X-UUID: 7d8b31c80a0946a4b0520df025bb2c97-20190729
-X-UUID: 7d8b31c80a0946a4b0520df025bb2c97-20190729
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <roger.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 450280008; Mon, 29 Jul 2019 11:39:15 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 29 Jul 2019 11:39:15 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 29 Jul 2019 11:39:15 +0800
-Message-ID: <1564371555.18434.11.camel@mtksdaap41>
-Subject: Re: [PATCH 6/8] PM / OPP: Support adjusting OPP voltages at runtime
-From:   Roger Lu <roger.lu@mediatek.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <sboyd@codeaurora.org>
-CC:     Andrew-sh Cheng =?UTF-8?Q?=28=E9=84=AD=E5=BC=8F=E5=8B=B3=29?= 
-        <andrew-sh.cheng@mediatek.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Fan Chen =?UTF-8?Q?=28=E9=99=B3=E5=87=A1=29?= 
-        <fan.chen@mediatek.com>, <yt.lee@mediatek.com>
-Date:   Mon, 29 Jul 2019 11:39:15 +0800
-In-Reply-To: <20190520044704.unftq6q5vy73z5bo@vireshk-i7>
-References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
-         <1557997725-12178-7-git-send-email-andrew-sh.cheng@mediatek.com>
-         <20190520044704.unftq6q5vy73z5bo@vireshk-i7>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 28 Jul 2019 23:43:50 -0400
+Received: by mail-pg1-f173.google.com with SMTP id s1so21189376pgr.2;
+        Sun, 28 Jul 2019 20:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=spXdUxCtUWc6Ma6GamSGGP+kblTO8jCHKcnziir+xwI=;
+        b=LF54msqUrTQ7In+GCGa7hpXWB4JwdMUtCEeLkeQnxQ6al6Zn/OZf77ZMA7FU8R4buS
+         monkN3tK+oRGltp9lty9LTmyp/924vYZTTZI8iwl7FwNvO/9jrkuZb1t1V4HSpkm3Qqe
+         ZrN27omLaXYwjU/43uBnwoOHDBuIY/qZaxtoe97tFLJRELsE6+DX/zahGpzHb6qLMvnM
+         4uURCx/oaMQBVfR1LB+jabtJfCzhxHOICsDaaJzaThUSEEMIx42kND93NW/XGGJkJIZw
+         rkAt6+Y3ax3zx0r0Ed1Lt5kOjWxe/ERPgV/cMPvZPxDvNpYHB7VlgtV2kUFK8KXktsOK
+         BM3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=spXdUxCtUWc6Ma6GamSGGP+kblTO8jCHKcnziir+xwI=;
+        b=KgwYlm+8TyXkx/t1FakPCF4TNexxwVPXfehdmob3Xr8rGPBzKUzXeCUO6LVb9xGQcA
+         Umhf9HAjCInzKef63ZChjOskCJ/aHpx5OKPRlU2uN8gUFfHph/3bLQmbjUqmvY5i5P7Y
+         lGGhCmvRlDm7aseI9dqSDaKxjRC5EZhXqwQ7yQMrN60aNztgSvQK05f18r/xqTRG8f48
+         +QqMaK6ip11DxlrdjofAOb6M2Run6lsKN7Wx1X9whf9mdhCGTNsGyi/BtqBgx1sleDkM
+         L7LC1RJKHxudBMc8nuYT4mwRLTiWTOq9pGR7BQCtRZHKBOUvDh2RiNP1r26wkl9HP7jP
+         QTFQ==
+X-Gm-Message-State: APjAAAXPGFF37oz5e1rIzxcH2xjQXEiYi+gbVtEkEG7c1zF4brBk4VWp
+        hmMeQ+mfuDqgihpb0AJMX5JoENMV
+X-Google-Smtp-Source: APXvYqwuYF1K452KRahE63BkfFu99gPYCsas9dC3SN9WSj1j0pv4JqnTZ7IlwDETqARFUfaAovUtZA==
+X-Received: by 2002:a62:38c6:: with SMTP id f189mr34469301pfa.157.1564371829529;
+        Sun, 28 Jul 2019 20:43:49 -0700 (PDT)
+Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
+        by smtp.gmail.com with ESMTPSA id a12sm100261192pje.3.2019.07.28.20.43.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Jul 2019 20:43:49 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [BUG] net: xfrm: possible null-pointer dereferences in xfrm_policy()
+To:     steffen.klassert@secunet.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <464bb93d-75b2-c21b-ee32-25a10ff61622@gmail.com>
+Date:   Mon, 29 Jul 2019 11:43:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Stephen Boyd,
+In xfrm_policy(), the while loop on lines 3802-3830 ends when dst->xfrm 
+is NULL.
+Then, dst->xfrm is used on line 3840:
+     xfrm_state_mtu(dst->xfrm, mtu);
+         if (x->km.state != XFRM_STATE_VALID...)
+         aead = x->data;
 
-This patch is derived from [1]. Please kindly shares the suggestion to
-us. Thanks very much.
+Thus, possible null-pointer dereferences may occur.
 
-[1]: https://lore.kernel.org/patchwork/patch/599279/
+These bugs are found by a static analysis tool STCheck written by us.
 
-Dear Viresh,
-
-I followed _opp_set_availability() coding style to refine
-dev_pm_opp_adjust_voltage() from this patch. Is this refinement suitable
-for OPP core? Thanks a lot.
-
-On Mon, 2019-05-20 at 12:47 +0800, Viresh Kumar wrote:
-> On 16-05-19, 17:08, Andrew-sh.Cheng wrote:
-> > From: Stephen Boyd <sboyd@codeaurora.org>
-> > 
-> > On some SoCs the Adaptive Voltage Scaling (AVS) technique is
-> > employed to optimize the operating voltage of a device. At a
-> > given frequency, the hardware monitors dynamic factors and either
-> > makes a suggestion for how much to adjust a voltage for the
-> > current frequency, or it automatically adjusts the voltage
-> > without software intervention. Add an API to the OPP library for
-> > the former case, so that AVS type devices can update the voltages
-> > for an OPP when the hardware determines the voltage should
-> > change. The assumption is that drivers like CPUfreq or devfreq
-> > will register for the OPP notifiers and adjust the voltage
-> > according to suggestions that AVS makes.
-> > 
-> > This patch is devired from [1] submitted by Stephen.
-> > [1] https://lore.kernel.org/patchwork/patch/599279/
-> > 
-> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> > ---
-> >  drivers/opp/core.c     | 78 ++++++++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/pm_opp.h | 11 +++++++
-> >  2 files changed, 89 insertions(+)
-> 
-> This is an rcu implementation which got removed long back from OPP core. Please
-> align this with the latest changes.
-> 
+I do not know how to correctly fix these bugs, so I only report them.
 
 
-/**
- * dev_pm_opp_adjust_voltage() - helper to change the voltage of an OPP
- * @dev:		device for which we do this operation
- * @freq:		OPP frequency to adjust voltage of
- * @u_volt:		new OPP voltage
- *
- * Return: -EINVAL for bad pointers, -ENOMEM if no memory available for
-the
- * copy operation, returns 0 if no modifcation was done OR modification
-was
- * successful.
- */
-int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
-			      unsigned long u_volt)
-{
-	struct opp_table *opp_table;
-	struct dev_pm_opp *tmp_opp, *opp = ERR_PTR(-ENODEV);
-	int r = 0;
-
-	/* Find the opp_table */
-	opp_table = _find_opp_table(dev);
-	if (IS_ERR(opp_table)) {
-		r = PTR_ERR(opp_table);
-		dev_warn(dev, "%s: Device OPP not found (%d)\n", __func__, r);
-		return r;
-	}
-
-	mutex_lock(&opp_table->lock);
-
-	/* Do we have the frequency? */
-	list_for_each_entry(tmp_opp, &opp_table->opp_list, node) {
-		if (tmp_opp->rate == freq) {
-			opp = tmp_opp;
-			break;
-		}
-	}
-
-	if (IS_ERR(opp)) {
-		r = PTR_ERR(opp);
-		goto adjust_unlock;
-	}
-
-	/* Is update really needed? */
-	if (opp->supplies->u_volt == u_volt)
-		goto adjust_unlock;
-
-	opp->supplies->u_volt = u_volt;
-
-	dev_pm_opp_get(opp);
-	mutex_unlock(&opp_table->lock);
-
-	/* Notify the voltage change of the OPP */
-	blocking_notifier_call_chain(&opp_table->head,
-OPP_EVENT_ADJUST_VOLTAGE,
-				     opp);
-
-	dev_pm_opp_put(opp);
-	goto adjust_put_table;
-
-adjust_unlock:
-	mutex_unlock(&opp_table->lock);
-adjust_put_table:
-	dev_pm_opp_put_opp_table(opp_table);
-	return r;
-}
-
-Sincerely,
-Roger Lu.
+Best wishes,
+Jia-Ju Bai
 
