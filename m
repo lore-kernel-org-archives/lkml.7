@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70FDC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3691C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935E02070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D972064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431345;
-	bh=blHjgIZHXCdXeJcyEHyC4xgbYKAKEIj5JANjXEsjWs0=;
+	s=default; t=1564431351;
+	bh=Tu2SmrOsQqUe9ACAyBEFF/lSAeSN+5gPhxezGHmRkwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WvLXpbQZsaETlmqbEzVxcWfNHsuiE/Rk0s+Rqgh0Omy38JllN/9+MCcEf8UERrHth
-	 n8UWS//5BQjpcIcu/Oan5yMRCLhCQg8SKNi5xc3vOOmTRUjyR1G+IkGGg+YiQ/aZoa
-	 ub12DJYmAEq3BTvBLTJoxqKR3GzENegHGF1QD5ho=
+	b=SuMYDysqUvLV6CvV0V5v/Qnemqh6Bf/RxFEBURupdhQLw7WqT59zVJeXWmdYXOYTF
+	 w0q17igV4g3uz5H/2vi9cr57qwqBIpdIY8BdSpPAkGqwcG8u6nTtRzFBdVQS6DMx04
+	 8NSOy8W1EmTXwmJhfKO9JosQ3ja5KE6IF79BPo44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbfG2TZg (ORCPT
+        id S1728834AbfG2TZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:25:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37872 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:25:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728910AbfG2TZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:25:34 -0400
+        id S2388281AbfG2TZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:25:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82B1A21655;
-        Mon, 29 Jul 2019 19:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B1B920C01;
+        Mon, 29 Jul 2019 19:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428333;
-        bh=blHjgIZHXCdXeJcyEHyC4xgbYKAKEIj5JANjXEsjWs0=;
+        s=default; t=1564428320;
+        bh=Tu2SmrOsQqUe9ACAyBEFF/lSAeSN+5gPhxezGHmRkwY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Trs2QKHPVGQrfLI/XU8rVBW4Ly+s1ba9NnLBRxKWKzapPq1SnbfKreFbOa4v9Y85
-         tXTB6YUVdUgGvD4LKB4MxDhkZhnfAJZX7SJr0rJdrIbFfSw+E03gxgjcYBmJdvtwCd
-         BFcQNnrYwcyuG+BsBIlrE38jWCvBUEQ1Ko7q8Hdg=
+        b=AlyfkWeStX+XCQuHAenWfRWAXcKIc9lltneRO5Ai8XGaWSD6byFIfarKqGGmYXkwH
+         P9wWTJ5n0gJwYqSp5mXpc7pc7cU4LhXXjfn4/44kwXxzxGpcNHw7BLQU8cpETtciV6
+         ufpiesH9HBj9PT8Whi/4zAngSG7chTganyeYIbUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 042/293] perf test 6: Fix missing kvm module load for s390
-Date:   Mon, 29 Jul 2019 21:18:53 +0200
-Message-Id: <20190729190825.902254287@linuxfoundation.org>
+Subject: [PATCH 4.14 038/293] RAS/CEC: Fix pfn insertion
+Date:   Mon, 29 Jul 2019 21:18:49 +0200
+Message-Id: <20190729190825.269610232@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -63,85 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 53fe307dfd309e425b171f6272d64296a54f4dff ]
+[ Upstream commit 6d8e294bf5f0e85c34e8b14b064e2965f53f38b0 ]
 
-Command
+When inserting random PFNs for debugging the CEC through
+(debugfs)/ras/cec/pfn, depending on the return value of pfn_set(),
+multiple values get inserted per a single write.
 
-   # perf test -Fv 6
+That is because simple_attr_write() interprets a retval of 0 as
+success and claims the whole input. However, pfn_set() returns the
+cec_add_elem() value, which, if > 0 and smaller than the whole input
+length, makes glibc continue issuing the write syscall until there's
+input left:
 
-fails with error
+  pfn_set
+  simple_attr_write
+  debugfs_attr_write
+  full_proxy_write
+  vfs_write
+  ksys_write
+  do_syscall_64
+  entry_SYSCALL_64_after_hwframe
 
-   running test 100 'kvm-s390:kvm_s390_create_vm' failed to parse
-    event 'kvm-s390:kvm_s390_create_vm', err -1, str 'unknown tracepoint'
-    event syntax error: 'kvm-s390:kvm_s390_create_vm'
-                         \___ unknown tracepoint
+leading to those repeated calls.
 
-when the kvm module is not loaded or not built in.
+Return 0 to fix that.
 
-Fix this by adding a valid function which tests if the module
-is loaded. Loaded modules (or builtin KVM support) have a
-directory named
-  /sys/kernel/debug/tracing/events/kvm-s390
-for this tracepoint.
-
-Check for existence of this directory.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20190604053504.43073-1-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/parse-events.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/ras/cec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index f0679613bd18..424b82a7d078 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -19,6 +19,32 @@
- #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
- 			     PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD)
- 
-+#if defined(__s390x__)
-+/* Return true if kvm module is available and loaded. Test this
-+ * and retun success when trace point kvm_s390_create_vm
-+ * exists. Otherwise this test always fails.
-+ */
-+static bool kvm_s390_create_vm_valid(void)
-+{
-+	char *eventfile;
-+	bool rc = false;
-+
-+	eventfile = get_events_file("kvm-s390");
-+
-+	if (eventfile) {
-+		DIR *mydir = opendir(eventfile);
-+
-+		if (mydir) {
-+			rc = true;
-+			closedir(mydir);
-+		}
-+		put_events_file(eventfile);
-+	}
-+
-+	return rc;
-+}
-+#endif
-+
- static int test__checkevent_tracepoint(struct perf_evlist *evlist)
+diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
+index c7205cdcc11a..97cf40a522be 100644
+--- a/drivers/ras/cec.c
++++ b/drivers/ras/cec.c
+@@ -373,7 +373,9 @@ static int pfn_set(void *data, u64 val)
  {
- 	struct perf_evsel *evsel = perf_evlist__first(evlist);
-@@ -1600,6 +1626,7 @@ static struct evlist_test test__events[] = {
- 	{
- 		.name  = "kvm-s390:kvm_s390_create_vm",
- 		.check = test__checkevent_tracepoint,
-+		.valid = kvm_s390_create_vm_valid,
- 		.id    = 100,
- 	},
- #endif
+ 	*(u64 *)data = val;
+ 
+-	return cec_add_elem(val);
++	cec_add_elem(val);
++
++	return 0;
+ }
+ 
+ DEFINE_DEBUGFS_ATTRIBUTE(pfn_ops, u64_get, pfn_set, "0x%llx\n");
 -- 
 2.20.1
 
