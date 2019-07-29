@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D35C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41721C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE77D217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D5B21773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429051;
-	bh=HDtr9Pswu4IuOYjYw5mYDl+rU29gSip/6fkssNdw3ds=;
+	s=default; t=1564429055;
+	bh=4P2i2gaZ1antH6yCHEkpjWcNYzqo3v1guLr01cMlNC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=knoY5MMWRf6uGaoZVv5/kPP7iKZ8c9Yc8al1y264+k86S9W4BrNqOdIJD5j4fb7L/
-	 Z3KtyllhD8rSuxSGhcQzPZJ2EWn7oiPtegmypBW7TK27CXGdQVuENFAZb0UARkG9MG
-	 v829VgfdBBy2kkW+FFH1w6K9bSIYyyiDEOBNljhc=
+	b=mMWptOHW8FSzGjjETcav/WrKPU0Z5PBa90FyOPSSpccsuii/I6qrYcXfkChnX+yd9
+	 heE2txl7+lAAmRWnnB2dvuAp0nLclZxbZ2NTrSoH0qqiU10aF5yg3SzoZc6Uj5XpK5
+	 D51FTpMp5MEMkI0vehv+OcJRKDbj7OaB0Le24W64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388718AbfG2Tha (ORCPT
+        id S2388727AbfG2Thd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:37:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52238 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388711AbfG2Th2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:37:28 -0400
+        id S2388714AbfG2Tha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:37:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53E15217D4;
-        Mon, 29 Jul 2019 19:37:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 086212171F;
+        Mon, 29 Jul 2019 19:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429046;
-        bh=HDtr9Pswu4IuOYjYw5mYDl+rU29gSip/6fkssNdw3ds=;
+        s=default; t=1564429049;
+        bh=4P2i2gaZ1antH6yCHEkpjWcNYzqo3v1guLr01cMlNC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gJoKi8uHqun/LzcbiF4gRcXTMJrgDI7DrF4VVS/1H7YDonSdNLU1eB1QIMWvt5G/b
-         cMGObzid3rUPxL6y7BaXv2tk5B1Xhr8TdXCRWiq72/8mft+YXHLcIWYPnios3ESp5C
-         mS0meTeTMc0iASNyD/80eYIi5jo2MwiCRr1O6Hhk=
+        b=jT2VXhtSh20kLuh45jJCN8PRyM+8D1C/EB1URDGL4ETtdKLcASg0mhp11o1reFJWD
+         h+584Ksu5cj9JDwUznNx8Kt11pSdNOLxBuYXayxs9na7z73jXiapzzJbpf+AEvg9Iu
+         bUTkZh/aSEXhhLhaQYC1pCtP/qQDjYLOy1esMjvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jyri Sarha <jsarha@ti.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        stable@vger.kernel.org, Ocean Chen <oceanchen@google.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 230/293] drm/bridge: sii902x: pixel clock unit is 10kHz instead of 1kHz
-Date:   Mon, 29 Jul 2019 21:22:01 +0200
-Message-Id: <20190729190842.100590728@linuxfoundation.org>
+Subject: [PATCH 4.14 266/293] f2fs: avoid out-of-range memory access
+Date:   Mon, 29 Jul 2019 21:22:37 +0200
+Message-Id: <20190729190844.753195129@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,40 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8dbfc5b65023b67397aca28e8adb25c819f6398c ]
+[ Upstream commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a ]
 
-The pixel clock unit in the first two registers (0x00 and 0x01) of
-sii9022 is 10kHz, not 1kHz as in struct drm_display_mode. Division by
-10 fixes the issue.
+blkoff_off might over 512 due to fs corrupt or security
+vulnerability. That should be checked before being using.
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1a2a8eae0b9d6333e7a5841026bf7fd65c9ccd09.1558964241.git.jsarha@ti.com
+Use ENTRIES_IN_SUM to protect invalid value in cur_data_blkoff.
+
+Signed-off-by: Ocean Chen <oceanchen@google.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/sii902x.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/f2fs/segment.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-index 60373d7eb220..109ab4c3df50 100644
---- a/drivers/gpu/drm/bridge/sii902x.c
-+++ b/drivers/gpu/drm/bridge/sii902x.c
-@@ -261,10 +261,11 @@ static void sii902x_bridge_mode_set(struct drm_bridge *bridge,
- 	struct regmap *regmap = sii902x->regmap;
- 	u8 buf[HDMI_INFOFRAME_SIZE(AVI)];
- 	struct hdmi_avi_infoframe frame;
-+	u16 pixel_clock_10kHz = adj->clock / 10;
- 	int ret;
- 
--	buf[0] = adj->clock;
--	buf[1] = adj->clock >> 8;
-+	buf[0] = pixel_clock_10kHz & 0xff;
-+	buf[1] = pixel_clock_10kHz >> 8;
- 	buf[2] = adj->vrefresh;
- 	buf[3] = 0x00;
- 	buf[4] = adj->hdisplay;
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 70bd15cadb44..18d51c36a5e3 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -2612,6 +2612,11 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+ 		seg_i = CURSEG_I(sbi, i);
+ 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
+ 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
++		if (blk_off > ENTRIES_IN_SUM) {
++			f2fs_bug_on(sbi, 1);
++			f2fs_put_page(page, 1);
++			return -EFAULT;
++		}
+ 		seg_i->next_segno = segno;
+ 		reset_curseg(sbi, i, 0);
+ 		seg_i->alloc_type = ckpt->alloc_type[i];
 -- 
 2.20.1
 
