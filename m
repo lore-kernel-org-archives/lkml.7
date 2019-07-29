@@ -2,133 +2,106 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6552FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1473AC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39987205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430654;
-	bh=D2qqXfDJMWwfKVSQ4wWxiU2sHix2PzDRu+6ojoRiB5g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KwiKGS0uaQt/NZZfm7dO59LH8FiQQ7Bw8Vq249h/DERnuoJ3YSXERyPYLfRph22tb
-	 CR5PzxI6xubLbztf3VUE5NJifVN5qGRN/JDgC+MXzRTxpJiTWTItlwIyOmu0j9V0IY
-	 ZjHU4HDhGKB3JJP5WGIvsABmwF0pYP3z8Wi5jg+I=
+	by mail.kernel.org (Postfix) with ESMTP id D76402064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i4fDxC9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389968AbfG2Tpn (ORCPT
+        id S1730064AbfG2UEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:45:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728342AbfG2Tph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:45:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C35C20C01;
-        Mon, 29 Jul 2019 19:45:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429537;
-        bh=D2qqXfDJMWwfKVSQ4wWxiU2sHix2PzDRu+6ojoRiB5g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GVMKDdyGGlgJgIsrFPZOHi4NKsap1HUi7fXJUf5g7KJTTLnL3sNY4KrARfkrnn3KD
-         PcuQGKSxoZrqtZMvMlJ69XkZbadg29jv4Qam9pIFP3hJnKkP3pBqdYQRTO9A0+nIyI
-         /USoYevpjlprB45kLWX3BX7rmwGk/eK85tjbcyZw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 016/215] tty: serial: cpm_uart - fix init when SMC is relocated
-Date:   Mon, 29 Jul 2019 21:20:12 +0200
-Message-Id: <20190729190742.285475353@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
-References: <20190729190739.971253303@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 29 Jul 2019 16:04:16 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41969 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389702AbfG2Tpo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:45:44 -0400
+Received: by mail-lj1-f193.google.com with SMTP id d24so59742691ljg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 12:45:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3Xj0KmdFEesb0An0pvpoI4nRdiLfdj9xAiXwnPK4NLM=;
+        b=i4fDxC9jgwYfkwAabdzbHKdotQBa5S7C9sw2mTATq9cGBTlThSmyjKilRde22eS4EQ
+         J1y54uKk3TdvfFz+IZixYBhYEDQKK00Yr5LCyxsLkgEpzD2QrreBz4/IrMb+XjkyZi4f
+         6P+ywrpTxBuWukUHucrzU54+yZN5I364s2E6o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Xj0KmdFEesb0An0pvpoI4nRdiLfdj9xAiXwnPK4NLM=;
+        b=jUU3vjDjFlKXNEIlnu9CBS9BGjUhx0VreCbDMAPK+fJikqy10jKfopbvnPeGolIcmk
+         SOJUJAZ21JL8SLg1zvz/Bf1m+fm5SkWNpGkkfTnB1D2Tvt86e/QcIfLFGkcfpqHQmr7d
+         Annot1SAO9ZtM5bzUXr0N6LFK0C0vHcy/D68I8Gg2l3TgLFqz8Gxrdyk/o+df6Vu3s+N
+         6oMxFH4xGA5nHSf8jRfIZphai/jNm93IbNuGsVYzvQWlumZ2r49LaDcOptlSiA//6d03
+         q+AGsHbDtEuWIWROPUPxv+xIAGh9HQhdXbLdeIkqBFDPEpl6mF2NUx4l41DzL8YjgFeF
+         x7ig==
+X-Gm-Message-State: APjAAAU1Eetz6Gh8VZDrlbGskE/2GJ45zTnTbobAGbPSWEhL9S8eY49I
+        wtze9WLzuYGM6RnCzlSXx+Nx92yqoOw=
+X-Google-Smtp-Source: APXvYqxmrJyu4mHeY340jv33GIOUR6sUBAP7nr/0oyJY7u9HGnDCYQO1Feys/MAjhuiwEQ3dgyxRVQ==
+X-Received: by 2002:a2e:86cc:: with SMTP id n12mr34201783ljj.146.1564429541762;
+        Mon, 29 Jul 2019 12:45:41 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id y194sm10751627lfa.5.2019.07.29.12.45.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 12:45:38 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id y17so35180257ljk.10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 12:45:38 -0700 (PDT)
+X-Received: by 2002:a2e:3602:: with SMTP id d2mr407913lja.112.1564429538156;
+ Mon, 29 Jul 2019 12:45:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190724194634.205718-1-briannorris@chromium.org> <s5hv9vkx21i.wl-tiwai@suse.de>
+In-Reply-To: <s5hv9vkx21i.wl-tiwai@suse.de>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Mon, 29 Jul 2019 12:45:26 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXMEFew2Sg5G1ofKq-0gfOTFEOhZNjfyNJMRzRjv7ZFgXw@mail.gmail.com>
+Message-ID: <CA+ASDXMEFew2Sg5G1ofKq-0gfOTFEOhZNjfyNJMRzRjv7ZFgXw@mail.gmail.com>
+Subject: Re: [PATCH 5.3] mwifiex: fix 802.11n/WPA detection
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        stable <stable@vger.kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 06aaa3d066db87e8478522d910285141d44b1e58 ]
+On Mon, Jul 29, 2019 at 9:01 AM Takashi Iwai <tiwai@suse.de> wrote:
+> This isn't seen in linux-next yet.
 
-SMC relocation can also be activated earlier by the bootloader,
-so the driver's behaviour cannot rely on selected kernel config.
+Apparently not.
 
-When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
+> Still pending review?
 
-But the only thing CPM_CR_INIT_TRX does is to clear the
-rstate and tstate registers, so this can be done manually,
-even when SMC is not relocated.
+I guess? Probably mostly pending maintainer attention.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+Also, Johannes already had noticed (and privately messaged me): this
+patch took a while to show up on the linux-wireless Patchwork
+instance. So the first review (from Guenter Roeck) and my extra reply
+noting the -stable regression didn't make it to Patchwork:
 
-diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-index b929c7ae3a27..7bab9a3eda92 100644
---- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-@@ -407,7 +407,16 @@ static int cpm_uart_startup(struct uart_port *port)
- 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
- 		}
- 		cpm_uart_initbd(pinfo);
--		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		if (IS_SMC(pinfo)) {
-+			out_be32(&pinfo->smcup->smc_rstate, 0);
-+			out_be32(&pinfo->smcup->smc_tstate, 0);
-+			out_be16(&pinfo->smcup->smc_rbptr,
-+				 in_be16(&pinfo->smcup->smc_rbase));
-+			out_be16(&pinfo->smcup->smc_tbptr,
-+				 in_be16(&pinfo->smcup->smc_tbase));
-+		} else {
-+			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		}
- 	}
- 	/* Install interrupt handler. */
- 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
-@@ -861,16 +870,14 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
- 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
- 
- /*
-- *  In case SMC1 is being relocated...
-+ *  In case SMC is being relocated...
-  */
--#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
- 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
- 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
- 	out_be32(&up->smc_rstate, 0);
- 	out_be32(&up->smc_tstate, 0);
- 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
- 	out_be16(&up->smc_brkec, 0);
--#endif
- 
- 	/* Set up the uart parameters in the
- 	 * parameter ram.
-@@ -884,8 +891,6 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
- 	out_be16(&up->smc_brkec, 0);
- 	out_be16(&up->smc_brkcr, 1);
- 
--	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
--
- 	/* Set UART mode, 8 bit, no parity, one stop.
- 	 * Enable receive and transmit.
- 	 */
--- 
-2.20.1
+https://patchwork.kernel.org/patch/11057585/
 
+> In anyway,
+>   Reviewed-by: Takashi Iwai <tiwai@suse.de>
 
+Thanks. Hopefully Kalle can pick it up.
 
+Brian
