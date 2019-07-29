@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32D4C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87547C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0EE42171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 582DA2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429706;
-	bh=RaUJzPXr4KOk5NwG8VVoKTKUM7U3QKGQwjujiaZ0Zrg=;
+	s=default; t=1564429711;
+	bh=lZnPLW3H5pSLGCa7gLcah8frpSSrusmtoBFA1HBMCkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yiHMwWpZzEORxDYYohi4WajW6rA87HZcIIwXRchx9KuyMbJ/GOaf+XBrD1HTvHgj0
-	 CjKmGcXrXFCyuFKaTQaf3QVNdCo+7eZAn1BgFC4Ydmn1c5TorM5m+5j1Z3dw2Gna6F
-	 y2HG0C3JAiHt6UFzreqdT/+75FmV9cQzGvIQVrOo=
+	b=s8nFTLvrlSK/lGRl7ZyO0lurS29ODMkXihkEpgHLZG8Pjk3evo+74MXZg3Nt9slVa
+	 eiIb0xpdKwklw3HxOYB4oNMEgxa2ljwrH5/uTQA8HXQNlceCtSCrrDbZJUEQ4AgBVW
+	 FIGreoFyfQOXBOjBNlhzdJwCh22cvB5SRBkvms3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390114AbfG2TsY (ORCPT
+        id S2390132AbfG2Tsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:48:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729777AbfG2TsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:48:20 -0400
+        id S2390094AbfG2TsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:48:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B342C21655;
-        Mon, 29 Jul 2019 19:48:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2562221655;
+        Mon, 29 Jul 2019 19:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429699;
-        bh=RaUJzPXr4KOk5NwG8VVoKTKUM7U3QKGQwjujiaZ0Zrg=;
+        s=default; t=1564429702;
+        bh=lZnPLW3H5pSLGCa7gLcah8frpSSrusmtoBFA1HBMCkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KfnwXupL5Xt36Ye56VHeJ60MfiL3M3aTimOaf2VNWNxjpW95JKGlC8iVfQhFxJA/6
-         unhccS0SFgRegzmJmdqCJ7Da4BYl8pAH2aoqJdjQEdE2nK/BkrCK3Eq6ty5l/vHPzj
-         0+kt+/E+4/8MlRdW7RYuwrfKGbd+toap09iPBsEc=
+        b=aknBraGI+VqQ4xZS97XxEew611+E4BTvY45aZMa29JKtBy2WhsK6ePMrNeIgYyIXd
+         UtLQw3Cx7Eu92//YTfBjgP1f3ULDXklYJc/cfeblfKdZlxHnT/gs15aMaNr+9bSrk5
+         JXm0HwYMVahbgCS9kUAIJANkW73ZOhAsSJNkBT5k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 065/215] platform/x86: asus-wmi: Increase input buffer size of WMI methods
-Date:   Mon, 29 Jul 2019 21:21:01 +0200
-Message-Id: <20190729190751.690267243@linuxfoundation.org>
+Subject: [PATCH 5.2 066/215] iio: adxl372: fix iio_triggered_buffer_{pre,post}enable positions
+Date:   Mon, 29 Jul 2019 21:21:02 +0200
+Message-Id: <20190729190751.829614219@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -62,87 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 98e865a522983f2afde075648ec9d15ea4bb9194 ]
+[ Upstream commit 0e4f0b42f42d88507b48282c8915f502551534e4 ]
 
-The asus-nb-wmi driver is matched by WMI alias but fails to load on TUF
-Gaming series laptops producing multiple ACPI errors in the kernel log.
+The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+the poll functions.
 
-The input buffer for WMI method invocation size is 2 dwords, whereas
-3 are expected by this model.
+For the predisable hook, the disable code should occur before detaching
+the poll func, and for the postenable hook, the poll func should be
+attached before the enable code.
 
-FX505GM:
-..
-Method (WMNB, 3, Serialized)
-{
-    P8XH (Zero, 0x11)
-    CreateDWordField (Arg2, Zero, IIA0)
-    CreateDWordField (Arg2, 0x04, IIA1)
-    CreateDWordField (Arg2, 0x08, IIA2)
-    Local0 = (Arg1 & 0xFFFFFFFF)
-    ...
-
-Compare with older K54C:
-...
-Method (WMNB, 3, NotSerialized)
-{
-    CreateDWordField (Arg2, 0x00, IIA0)
-    CreateDWordField (Arg2, 0x04, IIA1)
-    Local0 = (Arg1 & 0xFFFFFFFF)
-    ...
-
-Increase buffer size to 3 dwords. No negative consequences of this change
-are expected, as the input buffer size is not verified. The original
-function is replaced by a wrapper for a new method passing value 0 for the
-last parameter. The new function will be used to control RGB keyboard
-backlight.
-
-Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Reviewed-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-wmi.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/iio/accel/adxl372.c | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 9b18a184e0aa..abfa99d18fea 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -85,6 +85,7 @@ static bool ashs_present(void)
- struct bios_args {
- 	u32 arg0;
- 	u32 arg1;
-+	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
- } __packed;
+diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
+index 3b84cb243a87..055227cb3d43 100644
+--- a/drivers/iio/accel/adxl372.c
++++ b/drivers/iio/accel/adxl372.c
+@@ -782,10 +782,14 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
+ 	unsigned int mask;
+ 	int i, ret;
  
- /*
-@@ -211,11 +212,13 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
- 	asus->inputdev = NULL;
- }
+-	ret = adxl372_set_interrupts(st, ADXL372_INT1_MAP_FIFO_FULL_MSK, 0);
++	ret = iio_triggered_buffer_postenable(indio_dev);
+ 	if (ret < 0)
+ 		return ret;
  
--int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
-+static int asus_wmi_evaluate_method3(u32 method_id,
-+		u32 arg0, u32 arg1, u32 arg2, u32 *retval)
- {
- 	struct bios_args args = {
- 		.arg0 = arg0,
- 		.arg1 = arg1,
-+		.arg2 = arg2,
- 	};
- 	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
- 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -247,6 +250,11 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
- 
- 	return 0;
- }
++	ret = adxl372_set_interrupts(st, ADXL372_INT1_MAP_FIFO_FULL_MSK, 0);
++	if (ret < 0)
++		goto err;
 +
-+int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
-+{
-+	return asus_wmi_evaluate_method3(method_id, arg0, arg1, 0, retval);
-+}
- EXPORT_SYMBOL_GPL(asus_wmi_evaluate_method);
+ 	mask = *indio_dev->active_scan_mask;
  
- static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
+ 	for (i = 0; i < ARRAY_SIZE(adxl372_axis_lookup_table); i++) {
+@@ -793,8 +797,10 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
+ 			break;
+ 	}
+ 
+-	if (i == ARRAY_SIZE(adxl372_axis_lookup_table))
+-		return -EINVAL;
++	if (i == ARRAY_SIZE(adxl372_axis_lookup_table)) {
++		ret = -EINVAL;
++		goto err;
++	}
+ 
+ 	st->fifo_format = adxl372_axis_lookup_table[i].fifo_format;
+ 	st->fifo_set_size = bitmap_weight(indio_dev->active_scan_mask,
+@@ -814,26 +820,25 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
+ 	if (ret < 0) {
+ 		st->fifo_mode = ADXL372_FIFO_BYPASSED;
+ 		adxl372_set_interrupts(st, 0, 0);
+-		return ret;
++		goto err;
+ 	}
+ 
+-	return iio_triggered_buffer_postenable(indio_dev);
++	return 0;
++
++err:
++	iio_triggered_buffer_predisable(indio_dev);
++	return ret;
+ }
+ 
+ static int adxl372_buffer_predisable(struct iio_dev *indio_dev)
+ {
+ 	struct adxl372_state *st = iio_priv(indio_dev);
+-	int ret;
+-
+-	ret = iio_triggered_buffer_predisable(indio_dev);
+-	if (ret < 0)
+-		return ret;
+ 
+ 	adxl372_set_interrupts(st, 0, 0);
+ 	st->fifo_mode = ADXL372_FIFO_BYPASSED;
+ 	adxl372_configure_fifo(st);
+ 
+-	return 0;
++	return iio_triggered_buffer_predisable(indio_dev);
+ }
+ 
+ static const struct iio_buffer_setup_ops adxl372_buffer_ops = {
 -- 
 2.20.1
 
