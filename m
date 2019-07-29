@@ -2,72 +2,135 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E6CC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36B9C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69856206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5D9206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:46:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Hy53qEOj"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="YiaN9TvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387699AbfG2Np5 (ORCPT
+        id S1728309AbfG2Nqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 09:45:57 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:44786 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727632AbfG2Np5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 09:45:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=3Z/kfa9fM3G4V3a6xOuotsKa6lAoDW+2j1EfLl7AEuU=; b=Hy53qEOjo79ssYqLSRDTY4m1D+
-        jAAhCFM/KVIVhnYg4OdMgJDqJMzmxs3bA6JZnlmlzw4U/A8LOduOw0jX6KtRmC7UHzLIetv8MB7Mp
-        qz/Rt3WWfTMWcwWjpyqhKMI5luFT+cJLYh+TgXPLu4qiB1gQjyQyQIbhzh6aor9e8lBY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hs5yL-0001QT-BW; Mon, 29 Jul 2019 15:45:53 +0200
-Date:   Mon, 29 Jul 2019 15:45:53 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: phy: phy_led_triggers: Fix a possible null-pointer
- dereference in phy_led_trigger_change_speed()
-Message-ID: <20190729134553.GC4110@lunn.ch>
-References: <20190729092424.30928-1-baijiaju1990@gmail.com>
+        Mon, 29 Jul 2019 09:46:46 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:22738 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfG2Nqp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 09:46:45 -0400
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x6TDkd2c004063;
+        Mon, 29 Jul 2019 22:46:39 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6TDkd2c004063
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564407999;
+        bh=cWonGbORACMO992JEG6wXpUqVMiORjcWPcSpyfVWOk0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YiaN9TvKEiAy5f9FiC7CIBYwMpyY2i4mh9BVD3eZYHuWmzxzbeMeNYnqzqzr2jSgx
+         kB1YPbCyWnRwwSpeQNg2EkndNVjq0ItYxyJY4pb0mAVx+3LcB+Da4F5QLyb0hgJ5//
+         c9iFonMEFGqEPNojbYIuZjXdjT17oK3un8zV8v/r+9Z/SKHwr49xKSET/QwxpFwfO3
+         M1aNvrc3fV+QGQRCx/ljkmpU3S90hU0z/502lt88/HVZY/JhzKKL8jzukKbE3TxlBC
+         CA5sCqpmDTAAuYwQ+/zdmZdEwOMWE36BCmCAHrexFtRH2Q4FQZDxyq7JElB175GCRN
+         5oCKD/G5U2YMw==
+X-Nifty-SrcIP: [209.85.221.178]
+Received: by mail-vk1-f178.google.com with SMTP id f68so11958376vkf.5;
+        Mon, 29 Jul 2019 06:46:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAWzcM6x8MeUZdRCq1VHqSTTXSB74JXUsITWTE3wA2JuZ6DGnYaQ
+        q+nWNfpIpZ5EpUiIW/pNFbcBo4xg4CStYRciqY8=
+X-Google-Smtp-Source: APXvYqwBJsXVFguSWM2zN6i1W5HEZ0K0TTlacTQ34Up1dQRt6B588UuGnxnYplz478eRNNtsGmGRMZj0/96+C/dgC7c=
+X-Received: by 2002:a1f:a34c:: with SMTP id m73mr27781226vke.74.1564407998326;
+ Mon, 29 Jul 2019 06:46:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729092424.30928-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <1562668156-12927-1-git-send-email-hayashi.kunihiko@socionext.com> <1562668156-12927-5-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1562668156-12927-5-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 29 Jul 2019 22:46:02 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT7irhQWdMkKsY9E8Qwgvwqobs8GF1Mvmoe9wfTqVE4nA@mail.gmail.com>
+Message-ID: <CAK7LNAT7irhQWdMkKsY9E8Qwgvwqobs8GF1Mvmoe9wfTqVE4nA@mail.gmail.com>
+Subject: Re: [PATCH 4/5] pinctrl: uniphier: Add Pro5 PCIe pin-mux settings
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 05:24:24PM +0800, Jia-Ju Bai wrote:
-> In phy_led_trigger_change_speed(), there is an if statement on line 48
-> to check whether phy->last_triggered is NULL: 
->     if (!phy->last_triggered)
-> 
-> When phy->last_triggered is NULL, it is used on line 52:
->     led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
-> 
-> Thus, a possible null-pointer dereference may occur.
-> 
-> To fix this bug, led_trigger_event(&phy->last_triggered->trigger,
-> LED_OFF) is called when phy->last_triggered is not NULL.
-> 
-> This bug is found by a static analysis tool STCheck written by us.
+On Tue, Jul 9, 2019 at 7:29 PM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
+>
+> Pro5 PCIe interface uses the following pins:
+>     XPERST, XPEWAKE, XPECLKRQ
+>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c
+> index 1d418e3..577f12e 100644
+> --- a/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c
+> +++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c
+> @@ -855,6 +855,8 @@ static const unsigned usb1_pins[] = {126, 127};
+>  static const int usb1_muxvals[] = {0, 0};
+>  static const unsigned usb2_pins[] = {128, 129};
+>  static const int usb2_muxvals[] = {0, 0};
+> +static const unsigned pcie_pins[] = {109, 110, 111};
+> +static const int pcie_muxvals[] = {0, 0, 0};
 
-Who is 'us'? 
+Please keep the alphabetical sorting.
 
-Thanks
-    Andrew
+
+>  static const unsigned int gpio_range_pins[] = {
+>         89, 90, 91, 92, 93, 94, 95, 96,         /* PORT0x */
+>         97, 98, 99, 100, 101, 102, 103, 104,    /* PORT1x */
+> @@ -925,6 +927,7 @@ static const struct uniphier_pinctrl_group uniphier_pro5_groups[] = {
+>         UNIPHIER_PINCTRL_GROUP(usb0),
+>         UNIPHIER_PINCTRL_GROUP(usb1),
+>         UNIPHIER_PINCTRL_GROUP(usb2),
+> +       UNIPHIER_PINCTRL_GROUP(pcie),
+
+Ditto.
+
+>         UNIPHIER_PINCTRL_GROUP_GPIO(gpio_range),
+>  };
+>
+> @@ -957,6 +960,7 @@ static const char * const uart3_groups[] = {"uart3"};
+>  static const char * const usb0_groups[] = {"usb0"};
+>  static const char * const usb1_groups[] = {"usb1"};
+>  static const char * const usb2_groups[] = {"usb2"};
+> +static const char * const pcie_groups[] = {"pcie"};
+>
+>  static const struct uniphier_pinmux_function uniphier_pro5_functions[] = {
+>         UNIPHIER_PINMUX_FUNCTION(emmc),
+> @@ -979,6 +983,7 @@ static const struct uniphier_pinmux_function uniphier_pro5_functions[] = {
+>         UNIPHIER_PINMUX_FUNCTION(usb0),
+>         UNIPHIER_PINMUX_FUNCTION(usb1),
+>         UNIPHIER_PINMUX_FUNCTION(usb2),
+> +       UNIPHIER_PINMUX_FUNCTION(pcie),
+
+Ditto.
+
+
+
+>  };
+>
+>  static int uniphier_pro5_get_gpio_muxval(unsigned int pin,
+> --
+> 2.7.4
+>
+
+
+--
+Best Regards
+Masahiro Yamada
