@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762A1C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BD8C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B244217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0166B2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429106;
-	bh=jJS2Hl146sLNV2zsYlfjeiTnP8ZcPiX/ViingnfrTwM=;
+	s=default; t=1564429111;
+	bh=TFqTnxju/RcqurZHbARZd4YhaMMzHJ+XMmRzD+1Pn2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nCDshoCNq+fu9117I3Szci7kpvFkiGpq6XshXYj5yN/OpPoYUf/LKOn8f5rgzn8PP
-	 YYPI+KuRlC4DGjbSKFICf7m4gT0Bugs6mds6BCQAGtcWE/svm8uANDrZ6mE3t6Ixii
-	 HpUtJdIdgq1I1ZaRC8gT5S1o12IUKzP8gkC2wnLQ=
+	b=BSlcN+T/RyjpIZ/AKAR1+E6mfcuP2Jdy9gkD6Q2KeZbWGHWeZc2/sv2qPGpFlOR2D
+	 KVDwc0aO1+eUKSoBNRKtsBQKbJQdI5Ffiu6AKjZ3GtOUASW09CkViyhS3mfB6N7/c1
+	 l5+3iM8/NVeeluq8XxxB1o8KTDmxU3fgfIZPUDQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388850AbfG2TiU (ORCPT
+        id S2388865AbfG2Ti3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:38:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53196 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:38:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388841AbfG2TiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:38:14 -0400
+        id S2388847AbfG2TiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:38:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC4692054F;
-        Mon, 29 Jul 2019 19:38:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1505D206DD;
+        Mon, 29 Jul 2019 19:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429093;
-        bh=jJS2Hl146sLNV2zsYlfjeiTnP8ZcPiX/ViingnfrTwM=;
+        s=default; t=1564429099;
+        bh=TFqTnxju/RcqurZHbARZd4YhaMMzHJ+XMmRzD+1Pn2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dYFxXC35+UQ2xZftI5GjKDrXLwpU/lWrbV4c8BXvowFqhVaOLewTzaB5CakzfpXpH
-         rwRBnfoBVkKP1X6qsE5fieVXUxaIg+F4+iVQ1NOpg4k16sjyH9nk/G7q3Y6/RmuYvw
-         LsdSQlBc6DPtPYA7wEqrH0+iwwrNazVNsXv231iA=
+        b=N/xhQeuNyTDvFFvixkj6VWehR6Wd17zMrLUBBJ9HJ+o7YFb8iArc9zA+ymaYbVva3
+         MkFr+hzlA8VbYWrAOcmALBOuqYK2j83b5JjEUaA0jIfColMwwexeY6cpL/H4Hy1HDI
+         8v/8kYAQ22+nDn7ahclP0O318Q6GHUuS4TMt3HBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Harvey <jamespharvey20@gmail.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 283/293] btrfs: inode: Dont compress if NODATASUM or NODATACOW set
-Date:   Mon, 29 Jul 2019 21:22:54 +0200
-Message-Id: <20190729190845.942574983@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 285/293] x86/speculation/mds: Apply more accurate check on hypervisor platform
+Date:   Mon, 29 Jul 2019 21:22:56 +0200
+Message-Id: <20190729190846.089202270@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -59,101 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 
-commit 42c16da6d684391db83788eb680accd84f6c2083 upstream.
+commit 517c3ba00916383af6411aec99442c307c23f684 upstream.
 
-As btrfs(5) specified:
+X86_HYPER_NATIVE isn't accurate for checking if running on native platform,
+e.g. CONFIG_HYPERVISOR_GUEST isn't set or "nopv" is enabled.
 
-	Note
-	If nodatacow or nodatasum are enabled, compression is disabled.
+Checking the CPU feature bit X86_FEATURE_HYPERVISOR to determine if it's
+running on native platform is more accurate.
 
-If NODATASUM or NODATACOW set, we should not compress the extent.
+This still doesn't cover the platforms on which X86_FEATURE_HYPERVISOR is
+unsupported, e.g. VMware, but there is nothing which can be done about this
+scenario.
 
-Normally NODATACOW is detected properly in run_delalloc_range() so
-compression won't happen for NODATACOW.
-
-However for NODATASUM we don't have any check, and it can cause
-compressed extent without csum pretty easily, just by:
-  mkfs.btrfs -f $dev
-  mount $dev $mnt -o nodatasum
-  touch $mnt/foobar
-  mount -o remount,datasum,compress $mnt
-  xfs_io -f -c "pwrite 0 128K" $mnt/foobar
-
-And in fact, we have a bug report about corrupted compressed extent
-without proper data checksum so even RAID1 can't recover the corruption.
-(https://bugzilla.kernel.org/show_bug.cgi?id=199707)
-
-Running compression without proper checksum could cause more damage when
-corruption happens, as compressed data could make the whole extent
-unreadable, so there is no need to allow compression for
-NODATACSUM.
-
-The fix will refactor the inode compression check into two parts:
-
-- inode_can_compress()
-  As the hard requirement, checked at btrfs_run_delalloc_range(), so no
-  compression will happen for NODATASUM inode at all.
-
-- inode_need_compress()
-  As the soft requirement, checked at btrfs_run_delalloc_range() and
-  compress_file_range().
-
-Reported-by: James Harvey <jamespharvey20@gmail.com>
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 8a4b06d391b0 ("x86/speculation/mds: Add sysfs reporting for MDS")
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1564022349-17338-1-git-send-email-zhenzhong.duan@oracle.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |   24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/bugs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -405,10 +405,31 @@ static noinline int add_async_extent(str
- 	return 0;
- }
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1196,7 +1196,7 @@ static ssize_t l1tf_show_state(char *buf
  
-+/*
-+ * Check if the inode has flags compatible with compression
-+ */
-+static inline bool inode_can_compress(struct inode *inode)
-+{
-+	if (BTRFS_I(inode)->flags & BTRFS_INODE_NODATACOW ||
-+	    BTRFS_I(inode)->flags & BTRFS_INODE_NODATASUM)
-+		return false;
-+	return true;
-+}
-+
-+/*
-+ * Check if the inode needs to be submitted to compression, based on mount
-+ * options, defragmentation, properties or heuristics.
-+ */
- static inline int inode_need_compress(struct inode *inode, u64 start, u64 end)
+ static ssize_t mds_show_state(char *buf)
  {
- 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
- 
-+	if (!inode_can_compress(inode)) {
-+		WARN(IS_ENABLED(CONFIG_BTRFS_DEBUG),
-+			KERN_ERR "BTRFS: unexpected compression for ino %llu\n",
-+			btrfs_ino(BTRFS_I(inode)));
-+		return 0;
-+	}
- 	/* force compress */
- 	if (btrfs_test_opt(fs_info, FORCE_COMPRESS))
- 		return 1;
-@@ -1626,7 +1647,8 @@ static int run_delalloc_range(void *priv
- 	} else if (BTRFS_I(inode)->flags & BTRFS_INODE_PREALLOC && !force_cow) {
- 		ret = run_delalloc_nocow(inode, locked_page, start, end,
- 					 page_started, 0, nr_written);
--	} else if (!inode_need_compress(inode, start, end)) {
-+	} else if (!inode_can_compress(inode) ||
-+		   !inode_need_compress(inode, start, end)) {
- 		ret = cow_file_range(inode, locked_page, start, end, end,
- 				      page_started, nr_written, 1, NULL);
- 	} else {
+-	if (!hypervisor_is_type(X86_HYPER_NATIVE)) {
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+ 		return sprintf(buf, "%s; SMT Host state unknown\n",
+ 			       mds_strings[mds_mitigation]);
+ 	}
 
 
