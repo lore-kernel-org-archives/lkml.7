@@ -2,52 +2,52 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F86C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FC1C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E722171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B2F2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428782;
-	bh=LiGSuNB9y2psHrp6HAu8WaKeI1QQ1uvdJ9SRX8Bhp54=;
+	s=default; t=1564428785;
+	bh=C3mhXCl2ZWYBLwyb38j1K9FbAQ3C3952L957kgeENwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PdwOL7l1axLZIHVj1kS7zDZkWvsZmX+NMSfZYpju0J2HZOCcYNgkoQI13KATPjSlK
-	 nBLUMFZ8d78P+U2DX7AoWAV191Q1BvODy0/OMcP+XIyOjfAjScDJSfsizKC6ruLmfI
-	 u3Q5gRWEdDhy8gZ2beWYUD3KInTpVfQd1jRC5l3Y=
+	b=oXXQ0GV7Jko4Fv3eG+QsoVrHBZ2Bj7m0qLWNZpYynyjw/GIDzdHANdXrhyuB7jkFU
+	 47uTysTmnymWBxHHg31QQO/m9LqsI/EgjPbKj6xReSfUIBCrlzhhiQvspcFevGftqS
+	 BzFVoewn98d1Rc5qAh3hcr1P567TpQimS4dwHMZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbfG2TdA (ORCPT
+        id S1729760AbfG2TdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:33:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46518 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:33:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfG2Tcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:32:48 -0400
+        id S1730290AbfG2Tc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:32:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3127217D6;
-        Mon, 29 Jul 2019 19:32:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10B2E21655;
+        Mon, 29 Jul 2019 19:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428768;
-        bh=LiGSuNB9y2psHrp6HAu8WaKeI1QQ1uvdJ9SRX8Bhp54=;
+        s=default; t=1564428778;
+        bh=C3mhXCl2ZWYBLwyb38j1K9FbAQ3C3952L957kgeENwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gCVgdSSyGSijNLKk9q1gBlIaPLHMHgbKrsDVKScpSRKsqMtWEbQZh41pWcT6S8R7f
-         5nEMQICSBqLwkEXMBpHqDs1yY/fMGd30SPQKZcZe+t0S1M8lr5AYPssrdURwaOilO0
-         mraMVmmTNKvezILyAxNT8JJXKjt5+69g9MX4nFqo=
+        b=oYEDWaOeGNXbfRZIjscG73c/vbjEayg1rFwlAh1IhAJq0WEm6VS0cuWVlcP8jjQx/
+         Yb0qlWJwa8sdg4p7Gs3PYnc34JGs/jYYQwDvv4mei94IH3VRKlebEtJkc9I/wg1KRY
+         /lT8cIbBPElmdhQqbY/edtK1UUAZsb3u7OhPJrhI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 179/293] compiler.h: Add read_word_at_a_time() function.
-Date:   Mon, 29 Jul 2019 21:21:10 +0200
-Message-Id: <20190729190838.211695661@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Marc Meledandri <m.meledandri@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: [PATCH 4.14 146/293] drm/nouveau/i2c: Enable i2c pads & busses during preinit
+Date:   Mon, 29 Jul 2019 21:20:37 +0200
+Message-Id: <20190729190835.725603223@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,51 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7f1e541fc8d57a143dd5df1d0a1276046e08c083 ]
+From: Lyude Paul <lyude@redhat.com>
 
-Sometimes we know that it's safe to do potentially out-of-bounds access
-because we know it won't cross a page boundary.  Still, KASAN will
-report this as a bug.
+commit 7cb95eeea6706c790571042a06782e378b2561ea upstream.
 
-Add read_word_at_a_time() function which is supposed to be used in such
-cases.  In read_word_at_a_time() KASAN performs relaxed check - only the
-first byte of access is validated.
+It turns out that while disabling i2c bus access from software when the
+GPU is suspended was a step in the right direction with:
 
-Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+commit 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after
+->fini()")
+
+We also ended up accidentally breaking the vbios init scripts on some
+older Tesla GPUs, as apparently said scripts can actually use the i2c
+bus. Since these scripts are executed before initializing any
+subdevices, we end up failing to acquire access to the i2c bus which has
+left a number of cards with their fan controllers uninitialized. Luckily
+this doesn't break hardware - it just means the fan gets stuck at 100%.
+
+This also means that we've always been using our i2c busses before
+initializing them during the init scripts for older GPUs, we just didn't
+notice it until we started preventing them from being used until init.
+It's pretty impressive this never caused us any issues before!
+
+So, fix this by initializing our i2c pad and busses during subdev
+pre-init. We skip initializing aux busses during pre-init, as those are
+guaranteed to only ever be used by nouveau for DP aux transactions.
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Tested-by: Marc Meledandri <m.meledandri@gmail.com>
+Fixes: 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after ->fini()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/compiler.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index f490d8d93ec3..f84d332085c3 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -238,6 +238,7 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
-  * required ordering.
-  */
- #include <asm/barrier.h>
-+#include <linux/kasan-checks.h>
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
+@@ -185,6 +185,25 @@ nvkm_i2c_fini(struct nvkm_subdev *subdev
+ }
  
- #define __READ_ONCE(x, check)						\
- ({									\
-@@ -257,6 +258,13 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
-  */
- #define READ_ONCE_NOCHECK(x) __READ_ONCE(x, 0)
- 
-+static __no_kasan_or_inline
-+unsigned long read_word_at_a_time(const void *addr)
+ static int
++nvkm_i2c_preinit(struct nvkm_subdev *subdev)
 +{
-+	kasan_check_read(addr, 1);
-+	return *(unsigned long *)addr;
++	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
++	struct nvkm_i2c_bus *bus;
++	struct nvkm_i2c_pad *pad;
++
++	/*
++	 * We init our i2c busses as early as possible, since they may be
++	 * needed by the vbios init scripts on some cards
++	 */
++	list_for_each_entry(pad, &i2c->pad, head)
++		nvkm_i2c_pad_init(pad);
++	list_for_each_entry(bus, &i2c->bus, head)
++		nvkm_i2c_bus_init(bus);
++
++	return 0;
 +}
 +
- #define WRITE_ONCE(x, val) \
- ({							\
- 	union { typeof(x) __val; char __c[1]; } __u =	\
--- 
-2.20.1
-
++static int
+ nvkm_i2c_init(struct nvkm_subdev *subdev)
+ {
+ 	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
+@@ -238,6 +257,7 @@ nvkm_i2c_dtor(struct nvkm_subdev *subdev
+ static const struct nvkm_subdev_func
+ nvkm_i2c = {
+ 	.dtor = nvkm_i2c_dtor,
++	.preinit = nvkm_i2c_preinit,
+ 	.init = nvkm_i2c_init,
+ 	.fini = nvkm_i2c_fini,
+ 	.intr = nvkm_i2c_intr,
 
 
