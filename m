@@ -2,102 +2,157 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00714C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B37C7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE526206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4ACB206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:43:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eg7LsPyD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PHC2FXYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfG2Qmq (ORCPT
+        id S1728562AbfG2Qnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:42:46 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42422 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbfG2Qmp (ORCPT
+        Mon, 29 Jul 2019 12:43:51 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39920 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfG2Qnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:42:45 -0400
-Received: by mail-io1-f67.google.com with SMTP id e20so91056830iob.9;
-        Mon, 29 Jul 2019 09:42:45 -0700 (PDT)
+        Mon, 29 Jul 2019 12:43:51 -0400
+Received: by mail-pf1-f196.google.com with SMTP id f17so24324580pfn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bmQBBxHIt/eza4I+J3H3QVjWn12oGbnozJKzf9V+0Ig=;
-        b=eg7LsPyDXHvp4+juupUsF6DEW1xyfkm0S7KlgYBgIvTviXu5aaPxd2Ra64WBP1Hp19
-         LRvBFDEvdorvIFrVkf67rS7O0YL2ARodjMsu7RpaaV0i9mP+vvBMrLBvQv23AGwBFyy7
-         0LnuDifYQh8F/A3jUi6O5BiItpq3U8TZcdaovZA8U9UHoJXB1ZO0O6VpSwU/dfm5rVzH
-         7LNznnMqtliI6e+NCruUP/fiLNPqEipr39KpcpUV9L3yvf6fnvNbv5nmgbvnN4+2ofol
-         2xFPlOwsTjkytoJB3siD+JoT+bN9B66Wt94mOlbdxjAprgYUHvTeiG3HAFhXCCAs8/EJ
-         vmzg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GTxqOtx/tULQyH+zO3Bz0gEKEdO5gP/P6N04rGxbcPI=;
+        b=PHC2FXYu2saZhEvftEBHC72CB1sBvN3g2hGFT2XM8a3oViVN66MvcLKC6N9rWOAkJ+
+         NRIgvA6YNK8FD/3xcIQx2vHRPbwcoVP4SKP8jGWsHDxpftaDIX3YRiEvqARs8ebbAfZb
+         0bfNOsXZJzfkDV4KRrAtBb5S6Tv01axWsa/Hc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=bmQBBxHIt/eza4I+J3H3QVjWn12oGbnozJKzf9V+0Ig=;
-        b=YtneJs6n1b9/OQHhPwj0YiI4w83acq9W5M5QSOmqj74RhxfA1Mdw/bs4t1rOKGEK7J
-         yQuhnamENKMBcZwgIXmV/5H+kuzCDsmCae39tT2pQGVvia+j5JgM1F4mpRlpOKLeTmdd
-         FGxI2mIW5MsC9TszpgPiAJs6oXa+3rtlTl7KH9b+mEseAKb5WGesmOHyXHmewqvps5rS
-         UczKedinLOh8qj9qxAOKThFgulUngxYr/MsB82ZSBhNt4QxjdgTydyeRmkJ5PNBMqcbo
-         dq++CYTr4lhLlCe7De8J594US60Mmb8BgZ7myZPuh7jm3DAL6I6Vf1LkE1iDgEE913UN
-         ljCQ==
-X-Gm-Message-State: APjAAAU2VMR9Brvk3PMzBMTGP0JKCbQiK/xtEWR4/Hbu4xW62om4Iufa
-        Y2Blnkdlx7BrMnSGujK6Nzo=
-X-Google-Smtp-Source: APXvYqx9RAnoQcF1WuI32NPf46CQ9XRe79lNZjazF9WSw9v2zVi05F9kaIX9YjTFK/o1qyuwb1eP3g==
-X-Received: by 2002:a6b:f114:: with SMTP id e20mr102069896iog.169.1564418565034;
-        Mon, 29 Jul 2019 09:42:45 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id z17sm83662696iol.73.2019.07.29.09.42.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 09:42:44 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     josef@toxicpanda.com
-Cc:     kjlu@umn.edu, smccaman@umn.edu, secalert@redhat.com,
-        emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        nbd@other.debian.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] nbd_genl_status: null check for nla_nest_start
-Date:   Mon, 29 Jul 2019 11:42:26 -0500
-Message-Id: <20190729164226.22632-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190729130912.7imtg3hfnvb4lt2y@MacBook-Pro-91.local>
-References: <20190729130912.7imtg3hfnvb4lt2y@MacBook-Pro-91.local>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GTxqOtx/tULQyH+zO3Bz0gEKEdO5gP/P6N04rGxbcPI=;
+        b=DqBPrDqSdeQR/WYue7b+uU06acGpVed5O4+kocGtP8BwxveHorgscefQoABjxTK0P1
+         m5aZ6DO1wtSap5TXWhi/gIiUJX8qhxPJZ1zJ3EjHq7BMOpGjHiZs1nWTsym2heogoHtA
+         hpv9aHsC1Sel+JZrs8ajGspwFQ80Xa9fTozt41NTo4osUTgY2oemNQPjeis4hDSSlWir
+         8f4z1RtKCGRnX3IBJHa/F+xHj/ck63op35ciEngBpe9ePu3Q4dZKFnpnMQCatLmRSO6X
+         FShGz9Ha04iw2qSwKQbB6QKurPSxMHaW26V2hbcmXvx/LYihx1Hj/k4ZVOvZRhtUcDQA
+         g0aQ==
+X-Gm-Message-State: APjAAAXbtqhuVQeFWb5EJ7pFENH1V5Pmf30pZbMOqfKy3jLFN4qYDZQ6
+        NyIb2at/Dd4Uhs+de6y+dAPdtw==
+X-Google-Smtp-Source: APXvYqwY+cdKqt/jiGYWCzxUKnexFNPVOjkqUZM2+zcOxvIsY1mNeS37X+qQARmwQd5Rya5w/9CdCA==
+X-Received: by 2002:a17:90a:a613:: with SMTP id c19mr115416417pjq.17.1564418630555;
+        Mon, 29 Jul 2019 09:43:50 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h9sm57029156pgh.51.2019.07.29.09.43.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 09:43:49 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:43:48 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] watchdog: Mark expected switch fall-throughs
+Message-ID: <201907290943.28A73DF@keescook>
+References: <20190729151033.GA10143@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729151033.GA10143@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nla_nest_start may fail and return NULL. The check is inserted, and
-errno is selected based on other call sites within the same source code.
-Update: removed extra new line.
+On Mon, Jul 29, 2019 at 10:10:33AM -0500, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following warnings:
+> 
+> drivers/watchdog/ar7_wdt.c: warning: this statement may fall
+> through [-Wimplicit-fallthrough=]:  => 237:3
+> drivers/watchdog/pcwd.c: warning: this statement may fall
+> through [-Wimplicit-fallthrough=]:  => 653:3
+> drivers/watchdog/sb_wdog.c: warning: this statement may fall
+> through [-Wimplicit-fallthrough=]:  => 204:3
+> drivers/watchdog/wdt.c: warning: this statement may fall
+> through [-Wimplicit-fallthrough=]:  => 391:3
+> 
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/block/nbd.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 9bcde2325893..2410812d1e82 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -2149,6 +2149,11 @@ static int nbd_genl_status(struct sk_buff *skb, struct genl_info *info)
- 	}
- 
- 	dev_list = nla_nest_start_noflag(reply, NBD_ATTR_DEVICE_LIST);
-+	if (!dev_list) {
-+		ret = -EMSGSIZE;
-+		goto out;
-+	}
-+
- 	if (index == -1) {
- 		ret = idr_for_each(&nbd_index_idr, &status_cb, reply);
- 		if (ret) {
+-Kees
+
+> ---
+>  drivers/watchdog/ar7_wdt.c | 1 +
+>  drivers/watchdog/pcwd.c    | 2 +-
+>  drivers/watchdog/sb_wdog.c | 1 +
+>  drivers/watchdog/wdt.c     | 2 +-
+>  4 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/watchdog/ar7_wdt.c b/drivers/watchdog/ar7_wdt.c
+> index b9b2d06b3879..668a1c704f28 100644
+> --- a/drivers/watchdog/ar7_wdt.c
+> +++ b/drivers/watchdog/ar7_wdt.c
+> @@ -235,6 +235,7 @@ static long ar7_wdt_ioctl(struct file *file,
+>  		ar7_wdt_update_margin(new_margin);
+>  		ar7_wdt_kick(1);
+>  		spin_unlock(&wdt_lock);
+> +		/* Fall through */
+>  
+>  	case WDIOC_GETTIMEOUT:
+>  		if (put_user(margin, (int *)arg))
+> diff --git a/drivers/watchdog/pcwd.c b/drivers/watchdog/pcwd.c
+> index 1b2cf5b95a89..c3c93e00b320 100644
+> --- a/drivers/watchdog/pcwd.c
+> +++ b/drivers/watchdog/pcwd.c
+> @@ -651,7 +651,7 @@ static long pcwd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  			return -EINVAL;
+>  
+>  		pcwd_keepalive();
+> -		/* Fall */
+> +		/* Fall through */
+>  
+>  	case WDIOC_GETTIMEOUT:
+>  		return put_user(heartbeat, argp);
+> diff --git a/drivers/watchdog/sb_wdog.c b/drivers/watchdog/sb_wdog.c
+> index 5a6ced7a7e8f..202fc8d8ca5f 100644
+> --- a/drivers/watchdog/sb_wdog.c
+> +++ b/drivers/watchdog/sb_wdog.c
+> @@ -202,6 +202,7 @@ static long sbwdog_ioctl(struct file *file, unsigned int cmd,
+>  		timeout = time;
+>  		sbwdog_set(user_dog, timeout);
+>  		sbwdog_pet(user_dog);
+> +		/* Fall through */
+>  
+>  	case WDIOC_GETTIMEOUT:
+>  		/*
+> diff --git a/drivers/watchdog/wdt.c b/drivers/watchdog/wdt.c
+> index 0650100fad00..7d278b37e083 100644
+> --- a/drivers/watchdog/wdt.c
+> +++ b/drivers/watchdog/wdt.c
+> @@ -389,7 +389,7 @@ static long wdt_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  		if (wdt_set_heartbeat(new_heartbeat))
+>  			return -EINVAL;
+>  		wdt_ping();
+> -		/* Fall */
+> +		/* Fall through */
+>  	case WDIOC_GETTIMEOUT:
+>  		return put_user(heartbeat, p);
+>  	default:
+> -- 
+> 2.22.0
+> 
+
 -- 
-2.17.1
-
+Kees Cook
