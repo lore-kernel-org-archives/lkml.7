@@ -2,88 +2,214 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE805C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978BFC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAFE02067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6731A2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbfG2Pht (ORCPT
+        id S1728736AbfG2PiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:37:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60733 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725209AbfG2Pht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:37:49 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DE805300CA4D;
-        Mon, 29 Jul 2019 15:37:48 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 11B105C1A1;
-        Mon, 29 Jul 2019 15:37:47 +0000 (UTC)
-Subject: Re: [PATCH v2] sched/core: Don't use dying mm as active_mm of
- kthreads
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>, Rik van Riel <riel@surriel.com>,
-        Andy Lutomirski <luto@kernel.org>
-References: <20190727171047.31610-1-longman@redhat.com>
- <20190729085235.GT31381@hirez.programming.kicks-ass.net>
- <4cd17c3a-428c-37a0-b3a2-04e6195a61d5@redhat.com>
- <20190729150338.GF31398@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <c2dfc884-b3e1-6fb3-b05f-2b1f299853f4@redhat.com>
-Date:   Mon, 29 Jul 2019 11:37:47 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 29 Jul 2019 11:38:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:53544 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725209AbfG2PiG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:38:06 -0400
+Received: by mail-io1-f69.google.com with SMTP id h3so67961445iob.20
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 08:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=U+NQmVnzZ0voXbnlBdKLop7GZ6b6TZwZ0Zr+Fsw5ZVM=;
+        b=JSzSNuklrwmMxWC/97AnvEu4oRfm22TXw2bEIHntazLiyhMkTvI98Wi7LkL4AVmxAh
+         3HncTiiyAB8JIOvnyqahxYkE5dP3huh1HM60Yjcp65EgvikEP9swl8EztPFbP7CCEwA4
+         BV+CjygjJVR0SnoDLJ8SIxu9xPtz9qeFG4Hz6jj+kBE9H7njFc8wHYOIy6fHqJayA+8f
+         KsN/kVhpSKBG6cUxlNZw/DVDgSHuqcgbNbe+HVfpT8jdq/h1vFzER5p0b6AXGPNRe8I5
+         AfTUMw09nY8CMIsgnybNa9urJumTnOoMHEhzWzC/Ov/Lh4c6jGvXa4NuIp7Vrr07KByp
+         /ICQ==
+X-Gm-Message-State: APjAAAVuJ1kgeu9jhAMrUgbmYadIJLeWIf6yjh7k5J14oFarcjCoNN67
+        bXbWMBrlvh+uhaVlFxyZ5pFqDdT70tjSb8wWxH1WNL8ucMdo
+X-Google-Smtp-Source: APXvYqwidnUb8zSkOCZg5nE/L9O4rgw7Ncy75ZIChL3V2IeHoNlBSYeE7S2y1e7n8HBloNaW1A5omV1IFeoJ7QA11MpGWy+OUO+n
 MIME-Version: 1.0
-In-Reply-To: <20190729150338.GF31398@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 29 Jul 2019 15:37:48 +0000 (UTC)
+X-Received: by 2002:a6b:ee12:: with SMTP id i18mr41089402ioh.172.1564414685668;
+ Mon, 29 Jul 2019 08:38:05 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 08:38:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009ef2b8058ed3ad5e@google.com>
+Subject: KMSAN: uninit-value in skb_pull_rcsum
+From:   syzbot <syzbot+019264c4af66fbb45cac@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/19 11:03 AM, Peter Zijlstra wrote:
-> On Mon, Jul 29, 2019 at 10:51:51AM -0400, Waiman Long wrote:
->> On 7/29/19 4:52 AM, Peter Zijlstra wrote:
->>> On Sat, Jul 27, 2019 at 01:10:47PM -0400, Waiman Long wrote:
->>>> It was found that a dying mm_struct where the owning task has exited
->>>> can stay on as active_mm of kernel threads as long as no other user
->>>> tasks run on those CPUs that use it as active_mm. This prolongs the
->>>> life time of dying mm holding up memory and other resources like swap
->>>> space that cannot be freed.
->>> Sure, but this has been so 'forever', why is it a problem now?
->> I ran into this probem when running a test program that keeps on
->> allocating and touch memory and it eventually fails as the swap space is
->> full. After the failure, I could not rerun the test program again
->> because the swap space remained full. I finally track it down to the
->> fact that the mm stayed on as active_mm of kernel threads. I have to
->> make sure that all the idle cpus get a user task to run to bump the
->> dying mm off the active_mm of those cpus, but this is just a workaround,
->> not a solution to this problem.
-> The 'sad' part is that x86 already switches to init_mm on idle and we
-> only keep the active_mm around for 'stupid'.
->
-> Rik and Andy were working on getting that 'fixed' a while ago, not sure
-> where that went.
+Hello,
 
-Good, perhaps the right thing to do is for the idle->kernel case to keep
-init_mm as the active_mm instead of reuse whatever left behind the last
-time around.
+syzbot found the following crash on:
 
-Cheers,
-Longman
+HEAD commit:    beaab8a3 fix KASAN build
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=115ac27c600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4db781fe35a84ef5
+dashboard link: https://syzkaller.appspot.com/bug?extid=019264c4af66fbb45cac
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
 
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+019264c4af66fbb45cac@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KMSAN: uninit-value in __skb_pull include/linux/skbuff.h:2224 [inline]
+BUG: KMSAN: uninit-value in skb_pull_rcsum+0x2fb/0x500  
+net/core/skbuff.c:3483
+CPU: 1 PID: 15024 Comm: syz-executor.2 Not tainted 5.2.0+ #15
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
+  __skb_pull include/linux/skbuff.h:2224 [inline]
+  skb_pull_rcsum+0x2fb/0x500 net/core/skbuff.c:3483
+  __iptunnel_pull_header+0x14d/0xbc0 net/ipv4/ip_tunnel_core.c:94
+  erspan_rcv net/ipv4/ip_gre.c:279 [inline]
+  gre_rcv+0x6d9/0x1900 net/ipv4/ip_gre.c:415
+  gre_rcv+0x2dd/0x3c0 net/ipv4/gre_demux.c:155
+  ip_protocol_deliver_rcu+0x722/0xbc0 net/ipv4/ip_input.c:204
+  ip_local_deliver_finish net/ipv4/ip_input.c:231 [inline]
+  NF_HOOK include/linux/netfilter.h:305 [inline]
+  ip_local_deliver+0x62a/0x7c0 net/ipv4/ip_input.c:252
+  dst_input include/net/dst.h:439 [inline]
+  ip_rcv_finish net/ipv4/ip_input.c:413 [inline]
+  NF_HOOK include/linux/netfilter.h:305 [inline]
+  ip_rcv+0x6c5/0x740 net/ipv4/ip_input.c:523
+  __netif_receive_skb_one_core net/core/dev.c:5009 [inline]
+  __netif_receive_skb net/core/dev.c:5123 [inline]
+  process_backlog+0xef5/0x1410 net/core/dev.c:5934
+  napi_poll net/core/dev.c:6357 [inline]
+  net_rx_action+0x738/0x1940 net/core/dev.c:6423
+  __do_softirq+0x4ad/0x858 kernel/softirq.c:293
+  do_softirq_own_stack+0x49/0x80 arch/x86/entry/entry_64.S:1052
+  </IRQ>
+  do_softirq kernel/softirq.c:338 [inline]
+  __local_bh_enable_ip+0x199/0x1e0 kernel/softirq.c:190
+  local_bh_enable+0x36/0x40 include/linux/bottom_half.h:32
+  rcu_read_unlock_bh include/linux/rcupdate.h:682 [inline]
+  ip_finish_output2+0x20dc/0x25d0 net/ipv4/ip_output.c:229
+  ip_finish_output+0xd2a/0xfd0 net/ipv4/ip_output.c:315
+  NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+  ip_output+0x541/0x610 net/ipv4/ip_output.c:415
+  dst_output include/net/dst.h:433 [inline]
+  ip_local_out net/ipv4/ip_output.c:125 [inline]
+  ip_send_skb net/ipv4/ip_output.c:1473 [inline]
+  ip_push_pending_frames+0x243/0x460 net/ipv4/ip_output.c:1493
+  raw_sendmsg+0x2df8/0x46d0 net/ipv4/raw.c:672
+  inet_sendmsg+0x48e/0x750 net/ipv4/af_inet.c:798
+  sock_sendmsg_nosec net/socket.c:646 [inline]
+  sock_sendmsg net/socket.c:665 [inline]
+  ___sys_sendmsg+0xe92/0x13c0 net/socket.c:2286
+  __sys_sendmsg net/socket.c:2324 [inline]
+  __do_sys_sendmsg net/socket.c:2333 [inline]
+  __se_sys_sendmsg+0x305/0x460 net/socket.c:2331
+  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2331
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:302
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x459829
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb0d4758c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+RDX: 0000000000000000 RSI: 0000000020003d00 RDI: 0000000000000004
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb0d47596d4
+R13: 00000000004c7560 R14: 00000000004dcac0 R15: 00000000ffffffff
+
+Uninit was stored to memory at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:187 [inline]
+  kmsan_internal_chain_origin+0xcc/0x150 mm/kmsan/kmsan.c:345
+  kmsan_memcpy_memmove_metadata+0x9f9/0xe00 mm/kmsan/kmsan.c:278
+  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:298
+  __msan_memcpy+0x56/0x70 mm/kmsan/kmsan_instr.c:129
+  pskb_expand_head+0x38a/0x19f0 net/core/skbuff.c:1510
+  __skb_cow include/linux/skbuff.h:3036 [inline]
+  skb_cow_head include/linux/skbuff.h:3070 [inline]
+  ip_tunnel_xmit+0x2971/0x3320 net/ipv4/ip_tunnel.c:811
+  __gre_xmit net/ipv4/ip_gre.c:444 [inline]
+  erspan_xmit+0x1ef8/0x35c0 net/ipv4/ip_gre.c:679
+  __netdev_start_xmit include/linux/netdevice.h:4406 [inline]
+  netdev_start_xmit include/linux/netdevice.h:4420 [inline]
+  xmit_one net/core/dev.c:3288 [inline]
+  dev_hard_start_xmit+0x51a/0xab0 net/core/dev.c:3304
+  sch_direct_xmit+0x56c/0x18c0 net/sched/sch_generic.c:309
+  __dev_xmit_skb net/core/dev.c:3485 [inline]
+  __dev_queue_xmit+0x1e53/0x4270 net/core/dev.c:3846
+  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3910
+  neigh_resolve_output+0xab7/0xb50 net/core/neighbour.c:1486
+  neigh_output include/net/neighbour.h:511 [inline]
+  ip_finish_output2+0x1a8e/0x25d0 net/ipv4/ip_output.c:228
+  ip_finish_output+0xd2a/0xfd0 net/ipv4/ip_output.c:315
+  NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+  ip_output+0x541/0x610 net/ipv4/ip_output.c:415
+  dst_output include/net/dst.h:433 [inline]
+  ip_local_out net/ipv4/ip_output.c:125 [inline]
+  ip_send_skb net/ipv4/ip_output.c:1473 [inline]
+  ip_push_pending_frames+0x243/0x460 net/ipv4/ip_output.c:1493
+  raw_sendmsg+0x2df8/0x46d0 net/ipv4/raw.c:672
+  inet_sendmsg+0x48e/0x750 net/ipv4/af_inet.c:798
+  sock_sendmsg_nosec net/socket.c:646 [inline]
+  sock_sendmsg net/socket.c:665 [inline]
+  ___sys_sendmsg+0xe92/0x13c0 net/socket.c:2286
+  __sys_sendmsg net/socket.c:2324 [inline]
+  __do_sys_sendmsg net/socket.c:2333 [inline]
+  __se_sys_sendmsg+0x305/0x460 net/socket.c:2331
+  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2331
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:302
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+
+Uninit was created at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:187 [inline]
+  kmsan_internal_poison_shadow+0x53/0xa0 mm/kmsan/kmsan.c:146
+  kmsan_slab_alloc+0xaa/0x120 mm/kmsan/kmsan_hooks.c:175
+  slab_alloc_node mm/slub.c:2771 [inline]
+  __kmalloc_node_track_caller+0xc8f/0xf10 mm/slub.c:4389
+  __kmalloc_reserve net/core/skbuff.c:138 [inline]
+  __alloc_skb+0x306/0xa10 net/core/skbuff.c:206
+  alloc_skb include/linux/skbuff.h:1055 [inline]
+  __ip_append_data+0x3901/0x52c0 net/ipv4/ip_output.c:1013
+  ip_append_data+0x324/0x480 net/ipv4/ip_output.c:1228
+  raw_sendmsg+0x2d02/0x46d0 net/ipv4/raw.c:666
+  inet_sendmsg+0x48e/0x750 net/ipv4/af_inet.c:798
+  sock_sendmsg_nosec net/socket.c:646 [inline]
+  sock_sendmsg net/socket.c:665 [inline]
+  ___sys_sendmsg+0xe92/0x13c0 net/socket.c:2286
+  __sys_sendmsg net/socket.c:2324 [inline]
+  __do_sys_sendmsg net/socket.c:2333 [inline]
+  __se_sys_sendmsg+0x305/0x460 net/socket.c:2331
+  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2331
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:302
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
