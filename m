@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BD8C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2B9C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3132F217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C0D217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428474;
-	bh=l9gRyO9IidlNojMDzg1+eyqr6O5J4ZzI0DHcDuMu6wM=;
+	s=default; t=1564428477;
+	bh=EnJyaztDHpgHcFJXzpgoGij0JItQ9VAd1x/OnT9tPgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZSKb3kLlfpsRgHiiY46cD0999VMUTiHcdwi4eEevrc1nrD/rDL0bKC7PBNOgwORd4
-	 pdrMGlSYGI277UJxxK0DHuclQkOI8JKOePoCQJ/kaE2gniqWLXCiLMKNQ2SQTDFt39
-	 dXI8kVERklHLf2Wzg7jEFzf9xre/w9WvugKiMI0Y=
+	b=srv8n4sAxqRaRgFdgSz1quU9h9a+HzL0jVZd8SNDb4D/0dJBa+FVrfgDkrF7pQfHW
+	 nwet91/YmpJUH4pxXYNEpAoFjCTsLJQQCCxdpLGeoHPctzC7WszPWxV+ua/E2qXhmB
+	 sPOscAHJBpha0ehznIW/DEcdDuZd6+M+caNLj2U0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388373AbfG2T1w (ORCPT
+        id S2388384AbfG2T14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40468 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:27:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729943AbfG2T1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:27:50 -0400
+        id S1729286AbfG2T1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:27:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB4CA217D6;
-        Mon, 29 Jul 2019 19:27:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52A3B217D4;
+        Mon, 29 Jul 2019 19:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428469;
-        bh=l9gRyO9IidlNojMDzg1+eyqr6O5J4ZzI0DHcDuMu6wM=;
+        s=default; t=1564428472;
+        bh=EnJyaztDHpgHcFJXzpgoGij0JItQ9VAd1x/OnT9tPgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1cX4Qm8kOXhU810qEu6sqZaqPRJZH713Dg+bq8HTnpEQH+XY2moCbQ/XP66i07gTP
-         xDAl6bhAFijdaC/l6+AFyXXBVi3D+z8jyFJhbcGsGd/0TMnkVA+icJAU8LRdJ9RPhY
-         BCyYBYKlbiJUBkBUGUT+qC8Xaal4u52xGk9vE78c=
+        b=EWIayauy+nJLJAyBur1vIE/xMwZSpIVPiTu92jLCDGbkujpkVn4RzhfgofxLRm5cK
+         n+Enj0MdpxQiOzV4cEqCrFB2AMDzFre/Uoyjz9FYUyjcmL7z+sVyJ/CfLguBRhWDvN
+         ECbLmK0Qtpx2gqRdarkaMsX5vbdd8V1zJSqPSrSA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 086/293] crypto: asymmetric_keys - select CRYPTO_HASH where needed
-Date:   Mon, 29 Jul 2019 21:19:37 +0200
-Message-Id: <20190729190831.179501781@linuxfoundation.org>
+Subject: [PATCH 4.14 060/293] ipsec: select crypto ciphers for xfrm_algo
+Date:   Mon, 29 Jul 2019 21:19:11 +0200
+Message-Id: <20190729190829.007823387@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,58 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 90acc0653d2bee203174e66d519fbaaa513502de ]
+[ Upstream commit 597179b0ba550bd83fab1a9d57c42a9343c58514 ]
 
-Build testing with some core crypto options disabled revealed
-a few modules that are missing CRYPTO_HASH:
+kernelci.org reports failed builds on arc because of what looks
+like an old missed 'select' statement:
 
-crypto/asymmetric_keys/x509_public_key.o: In function `x509_get_sig_params':
-x509_public_key.c:(.text+0x4c7): undefined reference to `crypto_alloc_shash'
-x509_public_key.c:(.text+0x5e5): undefined reference to `crypto_shash_digest'
-crypto/asymmetric_keys/pkcs7_verify.o: In function `pkcs7_digest.isra.0':
-pkcs7_verify.c:(.text+0xab): undefined reference to `crypto_alloc_shash'
-pkcs7_verify.c:(.text+0x1b2): undefined reference to `crypto_shash_digest'
-pkcs7_verify.c:(.text+0x3c1): undefined reference to `crypto_shash_update'
-pkcs7_verify.c:(.text+0x411): undefined reference to `crypto_shash_finup'
+net/xfrm/xfrm_algo.o: In function `xfrm_probe_algs':
+xfrm_algo.c:(.text+0x1e8): undefined reference to `crypto_has_ahash'
 
-This normally doesn't show up in randconfig tests because there is
-a large number of other options that select CRYPTO_HASH.
+I don't see this in randconfig builds on other architectures, but
+it's fairly clear we want to select the hash code for it, like we
+do for all its other users. As Herbert points out, CRYPTO_BLKCIPHER
+is also required even though it has not popped up in build tests.
 
+Fixes: 17bc19702221 ("ipsec: Use skcipher and ahash when probing algorithms")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/asymmetric_keys/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ net/xfrm/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
-index f3702e533ff4..d8a73d94bb30 100644
---- a/crypto/asymmetric_keys/Kconfig
-+++ b/crypto/asymmetric_keys/Kconfig
-@@ -15,6 +15,7 @@ config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
- 	select MPILIB
- 	select CRYPTO_HASH_INFO
- 	select CRYPTO_AKCIPHER
+diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
+index 286ed25c1a69..2e747ae7dc89 100644
+--- a/net/xfrm/Kconfig
++++ b/net/xfrm/Kconfig
+@@ -14,6 +14,8 @@ config XFRM_ALGO
+ 	tristate
+ 	select XFRM
+ 	select CRYPTO
 +	select CRYPTO_HASH
- 	help
- 	  This option provides support for asymmetric public key type handling.
- 	  If signature generation and/or verification are to be used,
-@@ -34,6 +35,7 @@ config X509_CERTIFICATE_PARSER
- config PKCS7_MESSAGE_PARSER
- 	tristate "PKCS#7 message parser"
- 	depends on X509_CERTIFICATE_PARSER
-+	select CRYPTO_HASH
- 	select ASN1
- 	select OID_REGISTRY
- 	help
-@@ -56,6 +58,7 @@ config SIGNED_PE_FILE_VERIFICATION
- 	bool "Support for PE file signature verification"
- 	depends on PKCS7_MESSAGE_PARSER=y
- 	depends on SYSTEM_DATA_VERIFICATION
-+	select CRYPTO_HASH
- 	select ASN1
- 	select OID_REGISTRY
- 	help
++	select CRYPTO_BLKCIPHER
+ 
+ config XFRM_USER
+ 	tristate "Transformation user configuration interface"
 -- 
 2.20.1
 
