@@ -2,139 +2,116 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8294AC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DCBC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597A3206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B8220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:46:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kNGpuKj2"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JFYCrWKe";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BqLagmE8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbfG2QqP (ORCPT
+        id S1728826AbfG2QqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:46:15 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38335 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727624AbfG2QqO (ORCPT
+        Mon, 29 Jul 2019 12:46:23 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40868 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727488AbfG2QqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:46:14 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y15so28325223pfn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:46:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XB62ZlwhO0yjn1D18g6mJedhYXvVJ+OT4E/XDQe9ZCk=;
-        b=kNGpuKj266Cp80GsF21mWtbjwjw0TwpMwcxKSTrWp1fKs229lQ5Q6fKNDlF8XNZOby
-         DIzPP5WCZcmvdoALsMOTeDg/H1GNliIN45wzak4RfJPYn8DhadOjKojLjSnwjQKNX9+c
-         F+p98alnCGB01sujC8ZfcDPZtrNUcOETIWJr8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XB62ZlwhO0yjn1D18g6mJedhYXvVJ+OT4E/XDQe9ZCk=;
-        b=uePudKXQaRAM58Lg9BRvC4dKCO5xwwAnHUDQQFvLsGpvshu5+nUC6vvkAOgN1Q55ul
-         dr1fyZpggC86BMD9AdLFdDMB7aonl+6UySzMYMgtS8h04AVQp52cwVH2cfaEsfcFucyW
-         ZDa0P7WIHiXP5irDrLc2G4k3ZYyK3rvdprW+SMpoWDqtTqui1dc/uk7j20Dmm8YAnuxx
-         cw0GtxwbZ8IG3yBMnMkJP5zaB1agHEiwjpWhYofVOvXxpvWgH/JHo5mb20zKZ8BO3nzn
-         sNcbWof4D3Svt95i1GOusnYBrz+QsT4piHP93AJBoFsQKbDrTE5EU1Bl7u2u9EEVme6x
-         JiCg==
-X-Gm-Message-State: APjAAAV2MkwRzohkemZS1IRq1hQdyiaGdEOMRVD1ZlxEfsggQenKIvYk
-        Isj9OtgzUhQWSj7N7FEAprRDoA==
-X-Google-Smtp-Source: APXvYqz9qJOM5dIi2ju6tb+8erAlPufIhyFtbb5+Wt/6x+Za99SlREIVsU/CBsi5YAwjGE7lxc5zNw==
-X-Received: by 2002:aa7:9ab5:: with SMTP id x21mr37126562pfi.139.1564418774350;
-        Mon, 29 Jul 2019 09:46:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 35sm70258236pgw.91.2019.07.29.09.46.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 09:46:13 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 09:46:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Michael Cyr <mikecyr@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] scsi: ibmvscsi_tgt: Mark expected switch fall-throughs
-Message-ID: <201907290946.C8FFE767@keescook>
-References: <20190729112902.GA3768@embeddedor>
+        Mon, 29 Jul 2019 12:46:22 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0B38560A42; Mon, 29 Jul 2019 16:46:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564418781;
+        bh=oEfTz25DMg3N/lplcYB6CKqNnvmYEuMZiG4+Z5D/Jbg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JFYCrWKe6VxTbTEq1Ep+CSBeFqYI7brEg08NWsGq1ouacAERDYeXJMGHO1Nh8ll3Y
+         LWQhz3hXAknsXmQaGAsiSIYpymUqzES6cbXQu9sneuRWRl6vQy2MAejPlpvqshWVS+
+         gxZ071f0xNlAzVD6pr/k+JAhrIbg1lF7Jsw6ifTQ=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id F386C6037C;
+        Mon, 29 Jul 2019 16:46:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564418777;
+        bh=oEfTz25DMg3N/lplcYB6CKqNnvmYEuMZiG4+Z5D/Jbg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BqLagmE8UVjFVdV8t7Wzzgv1RFDv2uY9OMKSFJIx05Xz7j2sJMUggph4bFA8pBLnm
+         sNDHd0RRcu5DIhPz10MAWVUb8HPuW/RpstE74l+zfUn+xp+fyknG8FUxe5Rq813s81
+         7QdtCZ4fzY0FiVszPcHOJo+ScpTEbWSDSsmoqEvk=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729112902.GA3768@embeddedor>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 29 Jul 2019 22:16:16 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     robh+dt@kernel.org, vkoul@kernel.org, aneela@codeaurora.org,
+        mark.rutland@arm.com, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
+        clew@codeaurora.org
+Subject: Re: [PATCH 0/6] Add support for Qualcomm SM8150 and SC7180 SoCs
+In-Reply-To: <20190729153826.GT7234@tuxbook-pro>
+References: <20190729120633.20451-1-sibis@codeaurora.org>
+ <20190729153826.GT7234@tuxbook-pro>
+Message-ID: <e7a6a873c47f96a1ca326a50f544d35a@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 06:29:02AM -0500, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings (Building: powerpc allyesconfig):
-> 
-> drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function 'ibmvscsis_adapter_info':
-> drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1582:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (connection_broken(vscsi))
->       ^
-> drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1584:2: note: here
->   default:
->   ^~~~~~~
-> drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function 'ibmvscsis_ping_response':
-> drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:2494:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    vscsi->flags |= CLIENT_FAILED;
-> drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:2495:2: note: here
->   case H_DROPPED:
->   ^~~~
-> drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:2496:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    vscsi->flags |= RESPONSE_Q_DOWN;
-> drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:2497:2: note: here
->   case H_REMOTE_PARM:
->   ^~~~
-> 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Hey Bjorn,
+Thanks for the review!
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 3 +++
->  1 file changed, 3 insertions(+)
+On 2019-07-29 21:08, Bjorn Andersson wrote:
+> On Mon 29 Jul 05:06 PDT 2019, Sibi Sankar wrote:
 > 
-> diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-> index 7f9535392a93..a929fe76102b 100644
-> --- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-> +++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-> @@ -1581,6 +1581,7 @@ static long ibmvscsis_adapter_info(struct scsi_info *vscsi,
->  	case H_PERMISSION:
->  		if (connection_broken(vscsi))
->  			flag_bits = (RESPONSE_Q_DOWN | CLIENT_FAILED);
-> +		/* Fall through */
->  	default:
->  		dev_err(&vscsi->dev, "adapter_info: h_copy_rdma to client failed, rc %ld\n",
->  			rc);
-> @@ -2492,8 +2493,10 @@ static long ibmvscsis_ping_response(struct scsi_info *vscsi)
->  		break;
->  	case H_CLOSED:
->  		vscsi->flags |= CLIENT_FAILED;
-> +		/* Fall through */
->  	case H_DROPPED:
->  		vscsi->flags |= RESPONSE_Q_DOWN;
-> +		/* Fall through */
->  	case H_REMOTE_PARM:
->  		dev_err(&vscsi->dev, "ping_response: h_send_crq failed, rc %ld\n",
->  			rc);
-> -- 
-> 2.22.0
+>> This patch series adds SCM, APSS shared mailbox and QMP AOSS PD/clock
+>> support on SM8150 and SC7180 SoCs.
+>> 
 > 
+> Thanks Sibi, this looks good.
+> 
+> Could you please update the last 5 patches to ensure/maintain sort 
+> order
+> of the lists they affect.
+
+yes I'll do that
+
+> 
+> Regards,
+> Bjorn
+> 
+>> Sibi Sankar (6):
+>>   soc: qcom: smem: Update max processor count
+>>   dt-bindings: firmware: scm: Add SM8150 and SC7180 support
+>>   dt-bindings: mailbox: Add APSS shared for SM8150 and SC7180 SoCs
+>>   mailbox: qcom: Add support for Qualcomm SM8150 and SC7180 SoCs
+>>   dt-bindings: soc: qcom: aoss: Add SM8150 and SC7180 support
+>>   soc: qcom: aoss: Add AOSS QMP support
+>> 
+>>  Documentation/devicetree/bindings/firmware/qcom,scm.txt      | 2 ++
+>>  .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt    | 2 ++
+>>  Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt | 5 
+>> ++++-
+>>  drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 2 ++
+>>  drivers/soc/qcom/qcom_aoss.c                                 | 2 ++
+>>  drivers/soc/qcom/smem.c                                      | 2 +-
+>>  6 files changed, 13 insertions(+), 2 deletions(-)
+>> 
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
 
 -- 
-Kees Cook
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
