@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943CAC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FD0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62E3F217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84ED12171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428791;
-	bh=B+4mkE2wlLtHn+8VNj1PDnu0y6OxojTs8LQSdPTpCJQ=;
+	s=default; t=1564428793;
+	bh=nS+P0xEdNX2Rityxe+sq+lJ71ZCbNvBhaBhuLMPIssY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EpkWlDEQpAaP65oC0RrNtSyNXoXOmmlB7pyZE5gaKCzcdJckTlkI0ULBpjKV9ICf2
-	 IlgZss3SIfeOVtmRhRFvhHAwo+n9iS6wzIzxs8W9mam+MaJsZHrALKiOaDJoGG4F7x
-	 e7jKk75ydo3y5oQM2rXUC/yUOevnV60E1j7Aqhhw=
+	b=faZQXSq3QXoFUUiSXw9AYxsWa6TRPAZVdUUG47jIXFImG5KrRWPCCim3ikjWkz+co
+	 9uX4IBKOFQ8pwytkkTsYWAgbZm/MMfTNAZm7QUD4Jkt0egCvQH9SAKC8SAIuljkX6M
+	 ai266rfmE++tJT/OCTPOheXzUt8TQOscfl0R41Qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbfG2TdJ (ORCPT
+        id S1730308AbfG2TdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:33:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46976 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:33:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729778AbfG2TdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:33:05 -0400
+        id S1729812AbfG2TdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:33:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61D1121655;
-        Mon, 29 Jul 2019 19:33:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D226F21773;
+        Mon, 29 Jul 2019 19:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428784;
-        bh=B+4mkE2wlLtHn+8VNj1PDnu0y6OxojTs8LQSdPTpCJQ=;
+        s=default; t=1564428787;
+        bh=nS+P0xEdNX2Rityxe+sq+lJ71ZCbNvBhaBhuLMPIssY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dnLKPoxN++RUxCUSug+lzx0X3+OmmvzlVZyGVxFwys/oX5S9sG++lxOQyKGTs8kXJ
-         u1XgIGmSOzoySyi90D7ugcIca3yF2uP0WP9mOPCQKnFLesFEK5RJB0ee7tp1j87AwA
-         jCkz+vVzAjzxZ4Mre2aSbfFgtpMT4DsT6lz2Ik54=
+        b=h7ZKI7BfrfRh16KfBRNpVDgoPCTJv81EAoiocddUC33F5JR1nLNkxFP7X7jFeZ49t
+         bp7iCVR7/qt7oT7opP9XNpIJGBpkR6QV48IiEx+7acJ/PgCQ7BUHi2CxLQx2Z/vvvR
+         zcgwwFMxKIPrdz72uM3mVScLC4txoWvgNRjKB1CU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 183/293] caif-hsi: fix possible deadlock in cfhsi_exit_module()
-Date:   Mon, 29 Jul 2019 21:21:14 +0200
-Message-Id: <20190729190838.522437823@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: [PATCH 4.14 147/293] padata: use smp_mb in padata_reorder to avoid orphaned padata jobs
+Date:   Mon, 29 Jul 2019 21:20:38 +0200
+Message-Id: <20190729190835.818681103@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -59,32 +65,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-[ Upstream commit fdd258d49e88a9e0b49ef04a506a796f1c768a8e ]
+commit cf144f81a99d1a3928f90b0936accfd3f45c9a0a upstream.
 
-cfhsi_exit_module() calls unregister_netdev() under rtnl_lock().
-but unregister_netdev() internally calls rtnl_lock().
-So deadlock would occur.
+Testing padata with the tcrypt module on a 5.2 kernel...
 
-Fixes: c41254006377 ("caif-hsi: Add rtnl support")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+    # modprobe tcrypt alg="pcrypt(rfc4106(gcm(aes)))" type=3
+    # modprobe tcrypt mode=211 sec=1
+
+...produces this splat:
+
+    INFO: task modprobe:10075 blocked for more than 120 seconds.
+          Not tainted 5.2.0-base+ #16
+    modprobe        D    0 10075  10064 0x80004080
+    Call Trace:
+     ? __schedule+0x4dd/0x610
+     ? ring_buffer_unlock_commit+0x23/0x100
+     schedule+0x6c/0x90
+     schedule_timeout+0x3b/0x320
+     ? trace_buffer_unlock_commit_regs+0x4f/0x1f0
+     wait_for_common+0x160/0x1a0
+     ? wake_up_q+0x80/0x80
+     { crypto_wait_req }             # entries in braces added by hand
+     { do_one_aead_op }
+     { test_aead_jiffies }
+     test_aead_speed.constprop.17+0x681/0xf30 [tcrypt]
+     do_test+0x4053/0x6a2b [tcrypt]
+     ? 0xffffffffa00f4000
+     tcrypt_mod_init+0x50/0x1000 [tcrypt]
+     ...
+
+The second modprobe command never finishes because in padata_reorder,
+CPU0's load of reorder_objects is executed before the unlocking store in
+spin_unlock_bh(pd->lock), causing CPU0 to miss CPU1's increment:
+
+CPU0                                 CPU1
+
+padata_reorder                       padata_do_serial
+  LOAD reorder_objects  // 0
+                                       INC reorder_objects  // 1
+                                       padata_reorder
+                                         TRYLOCK pd->lock   // failed
+  UNLOCK pd->lock
+
+CPU0 deletes the timer before returning from padata_reorder and since no
+other job is submitted to padata, modprobe waits indefinitely.
+
+Add a pair of full barriers to guarantee proper ordering:
+
+CPU0                                 CPU1
+
+padata_reorder                       padata_do_serial
+  UNLOCK pd->lock
+  smp_mb()
+  LOAD reorder_objects
+                                       INC reorder_objects
+                                       smp_mb__after_atomic()
+                                       padata_reorder
+                                         TRYLOCK pd->lock
+
+smp_mb__after_atomic is needed so the read part of the trylock operation
+comes after the INC, as Andrea points out.   Thanks also to Andrea for
+help with writing a litmus test.
+
+Fixes: 16295bec6398 ("padata: Generic parallelization/serialization interface")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: <stable@vger.kernel.org>
+Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-arch@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/caif/caif_hsi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/caif/caif_hsi.c
-+++ b/drivers/net/caif/caif_hsi.c
-@@ -1462,7 +1462,7 @@ static void __exit cfhsi_exit_module(voi
- 	rtnl_lock();
- 	list_for_each_safe(list_node, n, &cfhsi_list) {
- 		cfhsi = list_entry(list_node, struct cfhsi, list);
--		unregister_netdev(cfhsi->ndev);
-+		unregister_netdevice(cfhsi->ndev);
- 	}
- 	rtnl_unlock();
- }
+---
+ kernel/padata.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -265,7 +265,12 @@ static void padata_reorder(struct parall
+ 	 * The next object that needs serialization might have arrived to
+ 	 * the reorder queues in the meantime, we will be called again
+ 	 * from the timer function if no one else cares for it.
++	 *
++	 * Ensure reorder_objects is read after pd->lock is dropped so we see
++	 * an increment from another task in padata_do_serial.  Pairs with
++	 * smp_mb__after_atomic in padata_do_serial.
+ 	 */
++	smp_mb();
+ 	if (atomic_read(&pd->reorder_objects)
+ 			&& !(pinst->flags & PADATA_RESET))
+ 		mod_timer(&pd->timer, jiffies + HZ);
+@@ -334,6 +339,13 @@ void padata_do_serial(struct padata_priv
+ 	list_add_tail(&padata->list, &pqueue->reorder.list);
+ 	spin_unlock(&pqueue->reorder.lock);
+ 
++	/*
++	 * Ensure the atomic_inc of reorder_objects above is ordered correctly
++	 * with the trylock of pd->lock in padata_reorder.  Pairs with smp_mb
++	 * in padata_reorder.
++	 */
++	smp_mb__after_atomic();
++
+ 	put_cpu();
+ 
+ 	padata_reorder(pd);
 
 
