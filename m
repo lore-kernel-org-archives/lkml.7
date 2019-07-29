@@ -2,120 +2,166 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F3BC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26116C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE361206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Pyv87Ytl"
+	by mail.kernel.org (Postfix) with ESMTP id EFE8A2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:35:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfG2Jdj (ORCPT
+        id S1728018AbfG2JfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:33:39 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:46481 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbfG2Jdj (ORCPT
+        Mon, 29 Jul 2019 05:35:06 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:25098 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfG2JfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:33:39 -0400
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x6T9XVJ7003071;
-        Mon, 29 Jul 2019 18:33:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6T9XVJ7003071
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564392812;
-        bh=GbQD+NQzpNYdvCeXSDoU44vwY5qR02vwvWZY2Y2V8Xs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Pyv87YtlEC8J7FRdnY4xxIHsdzjGj9PzI0JEIkvXnzAS/MWQTFI4nAFEivuneIDmR
-         0VLUO+nD1Tb1oi9Ey2ClOsrsmehhrfeXg4oTynbbCcXP146gUORQlifnZNgUbYWLjL
-         qeX0WVdtm6v7cXg/Pvdcf1OrC0UA1jtDsVEj3mjJihFWn1ggU+kbwvUkwfNkKxCekz
-         e7Jz7lVUu2JtzUHNBO3wwxvlJzffOXM/t3QbS/twIsUCDBkT4aEvzatDVXh/LKUh8b
-         LRHvgfX+gZECWgmhL/WMtBNQ1bDtSRjX0IzhGoHwvxWUCMAtOSMlqWwBOuT4WbZxVE
-         zriJGpygB7KkA==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id z13so23705297uaa.4;
-        Mon, 29 Jul 2019 02:33:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAXa7oihszkzxr6aJpBkKC4DlW/ja70oh535GEmCAdmoS+liaED3
-        B0p7rvVHrvaMDbClHQ+H/NgaeaSa9NR+qKYuGyU=
-X-Google-Smtp-Source: APXvYqw4MkB8nxsg4qaDoFhTrvHPu/otiN3CkYvB5SuPJDtu/q2o9OMeaQMSZ/nc3rEooE+2IVrLlNRPv6jxI0Jcl3o=
-X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr67487725uag.40.1564392811271;
- Mon, 29 Jul 2019 02:33:31 -0700 (PDT)
+        Mon, 29 Jul 2019 05:35:05 -0400
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id x6T9YN3b083443;
+        Mon, 29 Jul 2019 17:34:23 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 806C1D4D4A3E8D87A0E0;
+        Mon, 29 Jul 2019 17:34:23 +0800 (CST)
+In-Reply-To: <CAMuHMdWVuQa1LLXPqrdSw6wdRzwQapAkk6Est=XrjESPF9zQwg@mail.gmail.com>
+References: <1564108975-27423-1-git-send-email-masonccyang@mxic.com.tw> <1564108975-27423-3-git-send-email-masonccyang@mxic.com.tw> <CAMuHMdWVuQa1LLXPqrdSw6wdRzwQapAkk6Est=XrjESPF9zQwg@mail.gmail.com>
+To:     "Geert Uytterhoeven" <geert@linux-m68k.org>
+Cc:     "Mark Brown" <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
+        "Lee Jones" <lee.jones@linaro.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Linux-Renesas" <linux-renesas-soc@vger.kernel.org>,
+        "linux-spi" <linux-spi@vger.kernel.org>,
+        "Marek Vasut" <marek.vasut@gmail.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v15 2/2] dt-bindings: spi: Document Renesas R-Car Gen3 RPC-IF
+ controller bindings
 MIME-Version: 1.0
-References: <20190714152817.24693-1-efremov@linux.com> <20190728100906.18847-1-efremov@linux.com>
- <20190729151351.24f9eeb9@canb.auug.org.au> <e2b5607f-0f74-41c6-a83d-5a22d6828778@linux.com>
-In-Reply-To: <e2b5607f-0f74-41c6-a83d-5a22d6828778@linux.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 29 Jul 2019 18:32:55 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATFKv=gm=Q8_0Xqjq4NAb-FL59xY6C3VQ3RXq3NaP2=jQ@mail.gmail.com>
-Message-ID: <CAK7LNATFKv=gm=Q8_0Xqjq4NAb-FL59xY6C3VQ3RXq3NaP2=jQ@mail.gmail.com>
-Subject: Re: [PATCH] modpost: check for static EXPORT_SYMBOL* functions
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-KeepSent: FF9D8385:D8395BBD-48258446:0033FD62;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFFF9D8385.D8395BBD-ON48258446.0033FD62-48258446.00349608@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Mon, 29 Jul 2019 17:34:22 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/07/29 PM 05:34:23,
+        Serialize complete at 2019/07/29 PM 05:34:23
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com x6T9YN3b083443
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 6:16 PM Denis Efremov <efremov@linux.com> wrote:
->
-> > Just a reminder that some of us (just me?) do well over 100+ builds per
-> > day ...  if this can be optimised some what that would be good.
->
-> These measurements for the worst case (allmodconfig). Is it possible to
-> measure the slowdown in your case? How it will perform on your typical
-> workflow?
->
-> Looks like it is possible to optimize it, but I need some hints from
-> Masahiro on how to do it properly. Because I don't know how to match
-> __ksymtab_<symbol> with the <symbol> without an additional loop.
 
-Right.
-This is not feasible without an additional loop
-since we put only exported symbols into the hash table.
+Hi Geert,
 
+ 
+> On Fri, Jul 26, 2019 at 4:19 AM Mason Yang <masonccyang@mxic.com.tw> 
+wrote:
+> > Dcument the bindings used by the Renesas R-Car Gen3 RPC-IF controller.
+> 
+> Document
 
-Perhaps, we could put every symbol into the hash table
-so that we can quickly look-up <symbol> from __ksymtab_<symbol>,
-but it would consume lots of memory.
+Oops, sorry !
 
-So, I think the implementation is this patch is good enough.
-
-
-> Introduce another hash table?
->
-> The first loop from this patch could traverse only the exported symbols
-> instead of all symbols. But in this case, I don't know how to break
-> early from the loop because there can be many symbols with the same name
-> but with the different scope (static/non-static).
->
-> For example, ring_buffer_size:
-> kernel/trace/ring_buffer.c
-> 4334:unsigned long ring_buffer_size(struct ring_buffer *buffer, int cpu)
-> 4347:EXPORT_SYMBOL_GPL(ring_buffer_size);
-> And
-> drivers/usb/misc/ldusb.c
-> 125:static int ring_buffer_size = 128;
->
-> Or for, nfs4_disable_idmapping:
-> fs/nfs/super.c
-> 2920:bool nfs4_disable_idmapping = true;
-> 2930:EXPORT_SYMBOL_GPL(nfs4_disable_idmapping);
-> fs/nfsd/nfs4idmap.c
-> 48:static bool nfs4_disable_idmapping = true;
+> 
+> >
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+> > @@ -0,0 +1,46 @@
+> 
+> [...]
+> 
+> > +- flash: should be represented by a subnode of the RPC-IF node,
+> > +        which "compatible" property contains "jedec,spi-nor", it 
+presents
+> > +        SPI is used.
+> 
+> Sorry, I failed to parse the last subsentence.
 
 
+Fix it to:
+- flash: should be represented by a subnode of the RPC-IF node,
+         its "compatible" property contains "jedec,spi-nor" presents
+         SPI is used.
+
+OK?
+
+> 
+> > +
+> > +Example:
+> > +
+> > +       rpc: spi@ee200000 {
+> > +               compatible = "renesas,r8a77995-rpc", 
+"renesas,rcar-gen3-rpc";
+> > +               reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 
+0x4000000>,
+> > +                     <0 0xee208000 0 0x100>;
+> > +               reg-names = "regs", "dirmap", "wbuf";
+> > +               clocks = <&cpg CPG_MOD 917>;
+> > +               clock-names = "rpc";
+> > +               power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> > +               resets = <&cpg 917>;
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +
+> > +               flash@0 {
+> > +                       compatible = "jedec,spi-nor";
+> > +                       reg = <0>;
+> > +                       spi-max-frequency = <40000000>;
+> > +                       spi-tx-bus-width = <1>;
+> > +                       spi-rx-bus-width = <1>;
+> 
+> Shouldn't those <1> be <4>, as this is QSPI?
+
+okay, fix them to <4>
+
+
+thanks for your time & review.
+
+best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
 
 
--- 
-Best Regards
-Masahiro Yamada
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
