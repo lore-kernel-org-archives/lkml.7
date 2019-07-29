@@ -2,106 +2,118 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6229C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CEEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8875E2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:04:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dpmv/JAy"
+	by mail.kernel.org (Postfix) with ESMTP id E56272070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfG2JEg (ORCPT
+        id S1727774AbfG2JFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:04:36 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42512 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfG2JEf (ORCPT
+        Mon, 29 Jul 2019 05:05:41 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33726 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfG2JFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:04:35 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t132so27903157pgb.9;
-        Mon, 29 Jul 2019 02:04:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=v/A21rAwjhZMNLCDz5qblCoOcY3twfiyDKBiZflQpBQ=;
-        b=Dpmv/JAygDIespOi7yY+Pll4NwJss+4gHitbFUWYnGC8LgfvYn0OlweiqB9Vi4w2Ni
-         XLp94Y5QJ0tSLmKin/zDMce9xpI8+S9yRgkyMEWulc+/HLE0sz8sp/Zr5IT6U7D7vpb/
-         oQQz9LOW0CxOBqdDk5+ThBOMpIEFQGBW5rYceBD59U9ICIKUhQ557jYViwHNcXgAHIHc
-         L1MfSwJ/WhcHlm8Bk3AWCdp+pQKJLlf/IlmQ1ruyR7m/YBgeWk1ujfJpCUTua4Qa9uJh
-         m+vKcvusOHAygtUf6PA3YFx7qLs3l9T2sST9dbgkkYgk2LZch1LJSs5cLD53opL8Y3Wp
-         mSlQ==
+        Mon, 29 Jul 2019 05:05:41 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n9so61030954wru.0;
+        Mon, 29 Jul 2019 02:05:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=v/A21rAwjhZMNLCDz5qblCoOcY3twfiyDKBiZflQpBQ=;
-        b=Nr028G8H4GV3f+XycgII/CsuGZlgWoaYEhZ4p2EW0nc0G1xzGU1XzxTMsx0FuiSs80
-         Jmr5vAMCz0fUrVE1q43zy5HoD8YOgTRUVQkkm6S2trpjVDwcKcROIV6nC9CMO+7qLhCP
-         BIauzEEvbMEsB3iqMHbWi5UbxGKfX/4g8rflJKB8JjKFRJbCWK/pe+4nz9xgSjGZuOHN
-         CsllcJrc5MSl5HsH77sVC5MLB0f0idtF6cP9fQIcF0Nc7lLe94fWJ24oyV4dHAwt2eoe
-         zNsjSUrJYCciOhXMCXvRr/oax8wpB5gqpm/ZSQjSKYGUynJ2M+9UjYKxpy66/LGwn0jk
-         V20w==
-X-Gm-Message-State: APjAAAWXsuYgx4HydQ4owV839/FuFNz0FNFeJz4bGq+rgKm9iTm/A8FP
-        6eUyQjz203FNasSxUgtLd/k=
-X-Google-Smtp-Source: APXvYqwpAAAlCWGA6TCIkU80kb4HRWXdT1LVGsa211XYFZoBbK1cuefj+7QZRS7MNa1z9AQPXoxOdw==
-X-Received: by 2002:a63:5c07:: with SMTP id q7mr50879183pgb.436.1564391074974;
-        Mon, 29 Jul 2019 02:04:34 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id 30sm140861632pjk.17.2019.07.29.02.04.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 02:04:34 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     b-liu@ti.com, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] usb: musb: Fix a possible null-pointer dereference in musb_handle_intr_connect()
-Date:   Mon, 29 Jul 2019 17:04:28 +0800
-Message-Id: <20190729090428.29508-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qxGXy8FtO6vZfwLC9EabJrzvuG/ZhokgOoU0Ki4Dhbw=;
+        b=jDc4wGfMkBV7POTrZPf6hRcIPHyA7llZULoVLQ31Q6ZHqzBEgwKjDFFDLyTaxKMnik
+         Bqo3nTdgPdbCnPJonIrLmo6JswTmmtPdpPSQ99rys4/zCosjaH/LdEOr1a0BPhA5yLS7
+         4H+SVPuieUkzpflESR16ZAVGLfk74r3QckmTp7UBqpfcCoCnYZ3Muk/THo+TT4xPvfS5
+         vFfcjf6AeVJnJE8Y0qnxmY4iHOHgZ03geQnfNKBmJ3kME2EDPfKfV43aa+qfcwZQJ5rJ
+         /riV80osvB47VCHoGjS95d8aapqli9K8u7Fy41vKHdybTYHiptP2LmGfUNXlp3Owk0G3
+         qAFA==
+X-Gm-Message-State: APjAAAWKwpeNfQ4c3qJqv9WRq81Ke+2poT4A1W47PrW/fFJwb6JdLpuL
+        h7LCdXqnjCDIoiDpUryTVp+D7WhViZE/ce9b33g=
+X-Google-Smtp-Source: APXvYqz6uojkUazaZHHYCxUOpwqlKfsC3vg/+iiUOP1b3dFA5D9/TZrHUuJeGqZvqozJ1+Et2HptvgBmlSS7h66vIBY=
+X-Received: by 2002:adf:cd81:: with SMTP id q1mr117369836wrj.16.1564391138795;
+ Mon, 29 Jul 2019 02:05:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190725180825.31508-1-max@enpas.org>
+In-Reply-To: <20190725180825.31508-1-max@enpas.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 29 Jul 2019 11:05:27 +0200
+Message-ID: <CAMuHMdURm-9nazOBTL8uRH8WMt7gi=QUYy0qr9kaxzczCr+ujg@mail.gmail.com>
+Subject: Re: [PATCH v3] ata/pata_buddha: Probe via modalias instead of initcall
+To:     Max Staudt <max@enpas.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-ide@vger.kernel.org,
+        "Linux/m68k" <linux-m68k@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In musb_handle_intr_connect(), there is an if statement on line 783 to
-check whether musb->hcd is NULL:
-    if (musb->hcd)
+Hi Max,
 
-When musb->hcd is NULL, it is used on line 797:
-    musb_host_poke_root_hub(musb);
-        if (musb->hcd->status_urb)
+On Thu, Jul 25, 2019 at 8:08 PM Max Staudt <max@enpas.org> wrote:
+> Up until now, the pata_buddha driver would only check for cards on
+> initcall time. Now, the kernel will call its probe function as soon
+> as a compatible card is detected.
+>
+> v3: Clean up devm_*, implement device removal.
+>
+> v2: Rename 'zdev' to 'z' to make the patch easy to analyse with
+>     git diff --ignore-space-change
+>
+> Tested-by: Max Staudt <max@enpas.org>
+> Signed-off-by: Max Staudt <max@enpas.org>
 
-Thus, a possible null-pointer dereference may occur.
+Sorry, I only noticed v3 after I replied to v2.
+My comments are still valid, though.
 
-To fix this bug, musb->hcd is checked before calling
-musb_host_poke_root_hub().
+> --- a/drivers/ata/pata_buddha.c
+> +++ b/drivers/ata/pata_buddha.c
 
-This bug is found by a static analysis tool STCheck written by us.
+> +static const struct zorro_device_id pata_buddha_zorro_tbl[] = {
+> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA, },
+> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL, },
+> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, },
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/usb/musb/musb_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+drivers/net/ethernet/8390/zorro8390.c also matches against
+ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, while only
+a single zorro_driver can bind to it.  Hence you can no longer use both
+IDE and Ethernet on X-Surf :-(
+Before, this worked, as the IDE driver just walked the list of devices.
 
-diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
-index 9f5a4819a744..329ff52f8167 100644
---- a/drivers/usb/musb/musb_core.c
-+++ b/drivers/usb/musb/musb_core.c
-@@ -794,7 +794,8 @@ static void musb_handle_intr_connect(struct musb *musb, u8 devctl, u8 int_usb)
- 		break;
- 	}
- 
--	musb_host_poke_root_hub(musb);
-+	if (musb->hcd)
-+		musb_host_poke_root_hub(musb);
- 
- 	musb_dbg(musb, "CONNECT (%s) devctl %02x",
- 			usb_otg_state_string(musb->xceiv->otg->state), devctl);
+I think the proper solution is to create MFD devices for Zorro boards
+with multiple functions, and bind against the individual MFD cells.
+That would also get rid of the nr_ports loop in the IDE driver, as each
+instance would have its own cell.
+
+I played with this a long time ago, but never finished it.
+It worked fine for my Ariadne Ethernet card.
+Last state at
+https://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git/log/?h=zorro-mfd
+
+Oh, seems I wrote up most of this before in
+https://lore.kernel.org/lkml/CAMuHMdVe1KgQWYZ_BfBkSo3zr0c+TenLMEw3T=BLEQNoZ6ex7A@mail.gmail.com/
+
+> +       { 0 }
+> +};
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
