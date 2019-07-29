@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1BFC7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA3FC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CAB205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4896D205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430823;
-	bh=L+tRwcr+gkZhY0fZr/oRffdokB2aqA3LwmbU+a2UaPY=;
+	s=default; t=1564430836;
+	bh=CQWzI7qtMVxhWNj/HKj6OxlBAtm6dzDS5xrpQ4IVqeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XlgW3tUrUJ3Bz/ecQRVOmROxDrWr/2kQIhfxnAItFkGBeA4wxIZLSXvhR9n/eL/LQ
-	 FGPbP5Oeo6AHlO6s7D6HCh7Z5xGuJZOfoA2EUc/lad34YMEmmWMAcIXbgSKEm+tW1W
-	 zo7VpIXL2f0b9BZNAUpDDTA4IUYOqs2U4ppMO4dU=
+	b=x+jsTRPf2H/oCWUVFmj6brwVW0WjRo+8L9dmScskToINg9BTHMCLrMzFZdGQP325n
+	 MWpgFxjf5rZw6jT7xg1TA6CRuBkclGQhP61WvPBW7BICSAdc+lKiHmNVw1p+g6CCzm
+	 RqEzyZiAiIEO9g+7LLZtvhzAi9QOS3dpw4z+M7Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389141AbfG2TkU (ORCPT
+        id S1729995AbfG2UHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:40:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55540 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:07:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388834AbfG2TkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:40:15 -0400
+        id S2388776AbfG2Tjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:39:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0031A21773;
-        Mon, 29 Jul 2019 19:40:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86E65217D4;
+        Mon, 29 Jul 2019 19:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429214;
-        bh=L+tRwcr+gkZhY0fZr/oRffdokB2aqA3LwmbU+a2UaPY=;
+        s=default; t=1564429189;
+        bh=CQWzI7qtMVxhWNj/HKj6OxlBAtm6dzDS5xrpQ4IVqeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pZ/NsHOtpv9gVM/A2QKjBbCT0NVpwn1Ys/9Cih7OesIYZ4DlzQ6MSKOtaGyQh42mg
-         vzfkN1nwipdA5zgcd1/i0Aa5tNDJe2iTS2zHYBlHQBU0VcO7BcpTYj7wtA05cfX1nT
-         Jm88nJjlnBsNZlkHwX84A7lq64geJG9RupeCavMg=
+        b=J0va2aWA8/zGNGFbj1PdBLTQeG3YmEy/+R2YjJXN0YXeQWksrE3+JwpZZL1/NmzVz
+         l//EvusDZKV9Qx+BklAwS4roawbmEemSAlq4ja0jkLJwa0Owz0Zlu4uhjOuRNWNFKJ
+         WxDhUk7GkwJcWaTlUFo3y7BYlSbkMI6E1Ir05Xrc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Riley <davidriley@chromium.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/113] drm/virtio: Add memory barriers for capset cache.
-Date:   Mon, 29 Jul 2019 21:21:54 +0200
-Message-Id: <20190729190702.363655497@linuxfoundation.org>
+Subject: [PATCH 4.19 002/113] drm/panel: simple: Fix panel_simple_dsi_probe
+Date:   Mon, 29 Jul 2019 21:21:29 +0200
+Message-Id: <20190729190656.234251785@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,48 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9ff3a5c88e1f1ab17a31402b96d45abe14aab9d7 ]
+[ Upstream commit 7ad9db66fafb0f0ad53fd2a66217105da5ddeffe ]
 
-After data is copied to the cache entry, atomic_set is used indicate
-that the data is the entry is valid without appropriate memory barriers.
-Similarly the read side was missing the corresponding memory barriers.
+In case mipi_dsi_attach() fails remove the registered panel to avoid added
+panel without corresponding device.
 
-Signed-off-by: David Riley <davidriley@chromium.org>
-Link: http://patchwork.freedesktop.org/patch/msgid/20190610211810.253227-5-davidriley@chromium.org
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190226081153.31334-1-peter.ujfalusi@ti.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 3 +++
- drivers/gpu/drm/virtio/virtgpu_vq.c    | 2 ++
- 2 files changed, 5 insertions(+)
+ drivers/gpu/drm/panel/panel-simple.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index 7bdf6f0e58a5..8d2f5ded86d6 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -528,6 +528,9 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
- 	if (!ret)
- 		return -EBUSY;
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 97964f7f2ace..b1d41c4921dd 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2803,7 +2803,14 @@ static int panel_simple_dsi_probe(struct mipi_dsi_device *dsi)
+ 	dsi->format = desc->format;
+ 	dsi->lanes = desc->lanes;
  
-+	/* is_valid check must proceed before copy of the cache entry. */
-+	smp_rmb();
+-	return mipi_dsi_attach(dsi);
++	err = mipi_dsi_attach(dsi);
++	if (err) {
++		struct panel_simple *panel = dev_get_drvdata(&dsi->dev);
 +
- 	ptr = cache_ent->caps_cache;
++		drm_panel_remove(&panel->base);
++	}
++
++	return err;
+ }
  
- copy_exit:
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 020070d483d3..c8a581b1f4c4 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -588,6 +588,8 @@ static void virtio_gpu_cmd_capset_cb(struct virtio_gpu_device *vgdev,
- 		    cache_ent->id == le32_to_cpu(cmd->capset_id)) {
- 			memcpy(cache_ent->caps_cache, resp->capset_data,
- 			       cache_ent->size);
-+			/* Copy must occur before is_valid is signalled. */
-+			smp_wmb();
- 			atomic_set(&cache_ent->is_valid, 1);
- 			break;
- 		}
+ static int panel_simple_dsi_remove(struct mipi_dsi_device *dsi)
 -- 
 2.20.1
 
