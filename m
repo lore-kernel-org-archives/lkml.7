@@ -4,112 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6844FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962CEC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB1F206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC3D21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JZjXEn6Q"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lq4hvAXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbfG2Qip (ORCPT
+        id S2387815AbfG2Qiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:38:45 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44983 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbfG2Qio (ORCPT
+        Mon, 29 Jul 2019 12:38:55 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41610 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728320AbfG2Qiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:38:44 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i18so28530160pgl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:38:44 -0700 (PDT)
+        Mon, 29 Jul 2019 12:38:54 -0400
+Received: by mail-pf1-f193.google.com with SMTP id m30so28322115pff.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:38:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=+08c+PdXIBVeY6sDHfUjTE9cNjO6KyMEPTgMj7V2IY4=;
-        b=JZjXEn6QYGEaImI7V1iUAdLhYZw+xOBslJwMzGz0qIiJ1mxf2/qcPESNBb5IZQ6Zi0
-         l0Hvc6j2QUyhIUuWRbNzPSyKiMbLB6WU5H0DWxMm29fVsPXeMsiHs8opmPpQXwdGrT9Q
-         e1gVS+ZMXJlJodmV3Wc15altBqNOZou3V7FbI=
+        bh=yKlH3Eeb0DeQvX9rl3BIqhT6JzbzUSOYVMt5HGkhl1A=;
+        b=Lq4hvAXrfW4ailQU20BQW1ZTXtvTLME1pVxYI8PWBJw8lDl29E2VUvngFBe/txdO7s
+         NTfQtb74kj9XotmLHu2vrB3oUZ5Wvfa95vPtLIZG1EACcojUVmbEhQVjqy37X5v7R4Xj
+         yCdIW0M/VW3gEVy+cWsnN7wGOx7G4sUEwT4Ak=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+08c+PdXIBVeY6sDHfUjTE9cNjO6KyMEPTgMj7V2IY4=;
-        b=RW9u8wSdW39G6Siz2J7ki1s99kWt9sbPZDFWZiQKO3hlAvTbgeUYvJKDGE9ZHYhWUK
-         S6kygWVLLaEZtD6Wax75n2aBIfQ8QCqwzUBSdY3N20Axc8ZAXj23maCbxBAbLNq/9mEc
-         EuXP4pim+IUFnjk9izWmwezKC7jec0gY3ecGwyhO9bzj9xWTZzqyslTTK1/HigPUcdFR
-         Lwe9j1YfyQvfEosLVSPMdC8om3/FjVYbzOaaPaBT6loE1m5OpORzm6knipzjtJMW/uZz
-         g9ybqvHf8nnE1oXU0F4KCVL0Lj06FJhj7W1B4FYDOAPvVBmv9cQW+eR9XqbgK3ZSf+aI
-         jiMg==
-X-Gm-Message-State: APjAAAVrgiIfpYSbIyX0wFdi+96Q9T1jJsdxUpV6FJ/Kb8cmBSSihHCz
-        qNux1iDJzAT37chGuYQ8VuWrig==
-X-Google-Smtp-Source: APXvYqyELyrdfBSbaJc1b/4/p8QGl1qLzaYkHKBSMm8jZldpOoqQAfcTWUmpFaevBfT0PPNVUHwiBQ==
-X-Received: by 2002:a63:494d:: with SMTP id y13mr106885695pgk.109.1564418324034;
-        Mon, 29 Jul 2019 09:38:44 -0700 (PDT)
+        bh=yKlH3Eeb0DeQvX9rl3BIqhT6JzbzUSOYVMt5HGkhl1A=;
+        b=KFQWQbQzAmjKL+2CXVbaTME0p/IzFNRqCnoSbYkPnXdqQGWmtAhI5ujNSQhBB45urA
+         MkVAXFrTLEUGER3bzoOcYmxAMPbwaXAISMu+tBGAmdOzt9zg8E6G065Ug/dUBmZuJmwY
+         ZPSgOH1b+jLEiArLoeYf/ZcULcMWxEr+oEMTxhyibOUqnFwBeiajKQsmExOeeN3PTr9p
+         Aa5ddhW2VZwzF9UvdtCe9Fb+fOSMjRZ4mG5DQx1NSGiA+hzUpLkn36MXmHUsKkIinLy0
+         Ud/fNmBhMbE2ezH/ePo9eegAYsuH/EKXXrIhpa5fuhrkn+8+DTVhwY/PzZXx7axy0q8T
+         0Zlw==
+X-Gm-Message-State: APjAAAUY78WtBBO+DRk6DZyF9y6gEEW2p32jED9RbzjGafq4iJOQ57hs
+        jEssZOhH4b71oC3eT9bxfZCvGdbsT1A=
+X-Google-Smtp-Source: APXvYqwLIugILnKEI3N4RRnR0x4eYXrRiQNCEjBDx371yRGCbQ1Y+Xs4nBjHnggkW/EZSmiH4ACp/A==
+X-Received: by 2002:a17:90a:6097:: with SMTP id z23mr113682930pji.75.1564418334236;
+        Mon, 29 Jul 2019 09:38:54 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q144sm63458340pfc.103.2019.07.29.09.38.43
+        by smtp.gmail.com with ESMTPSA id q1sm72865462pfg.84.2019.07.29.09.38.53
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 09:38:43 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 09:38:42 -0700
+        Mon, 29 Jul 2019 09:38:53 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:38:52 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+Cc:     Douglas Miller <dougmill@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] scsi: ibmvfc: Mark expected switch fall-throughs
-Message-ID: <201907290938.022D08EA@keescook>
-References: <20190729002608.GA25263@embeddedor>
+Subject: Re: [PATCH] net: ehea: Mark expected switch fall-through
+Message-ID: <201907290938.3B407BE13C@keescook>
+References: <20190729003009.GA25425@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190729002608.GA25263@embeddedor>
+In-Reply-To: <20190729003009.GA25425@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 07:26:08PM -0500, Gustavo A. R. Silva wrote:
+On Sun, Jul 28, 2019 at 07:30:09PM -0500, Gustavo A. R. Silva wrote:
 > Mark switch cases where we are expecting to fall through.
 > 
-> This patch fixes the following warnings:
+> This patch fixes the following warning:
 > 
-> drivers/scsi/ibmvscsi/ibmvfc.c: In function 'ibmvfc_npiv_login_done':
-> drivers/scsi/ibmvscsi/ibmvfc.c:4022:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    ibmvfc_retry_host_init(vhost);
->    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/scsi/ibmvscsi/ibmvfc.c:4023:2: note: here
->   case IBMVFC_MAD_DRIVER_FAILED:
+> drivers/net/ethernet/ibm/ehea/ehea_main.c: In function 'ehea_mem_notifier':
+> include/linux/printk.h:311:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+>   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/ethernet/ibm/ehea/ehea_main.c:3253:3: note: in expansion of macro 'pr_info'
+>    pr_info("memory offlining canceled");
+>    ^~~~~~~
+> drivers/net/ethernet/ibm/ehea/ehea_main.c:3256:2: note: here
+>   case MEM_ONLINE:
 >   ^~~~
-> drivers/scsi/ibmvscsi/ibmvfc.c: In function 'ibmvfc_bsg_request':
-> drivers/scsi/ibmvscsi/ibmvfc.c:1830:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    port_id = (bsg_request->rqst_data.h_els.port_id[0] << 16) |
->    ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->     (bsg_request->rqst_data.h_els.port_id[1] << 8) |
->     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->     bsg_request->rqst_data.h_els.port_id[2];
->     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/scsi/ibmvscsi/ibmvfc.c:1833:2: note: here
->   case FC_BSG_RPT_ELS:
->   ^~~~
-> drivers/scsi/ibmvscsi/ibmvfc.c:1838:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    port_id = (bsg_request->rqst_data.h_ct.port_id[0] << 16) |
->    ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->     (bsg_request->rqst_data.h_ct.port_id[1] << 8) |
->     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->     bsg_request->rqst_data.h_ct.port_id[2];
->     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/scsi/ibmvscsi/ibmvfc.c:1841:2: note: here
->   case FC_BSG_RPT_CT:
->   ^~~~
+> 
+> Notice that, in this particular case, the code comment is
+> modified in accordance with what GCC is expecting to find.
 > 
 > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
 > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
@@ -119,37 +99,22 @@ Reviewed-by: Kees Cook <keescook@chromium.org>
 -Kees
 
 > ---
->  drivers/scsi/ibmvscsi/ibmvfc.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
-> index 8cdbac076a1b..df897df5cafe 100644
-> --- a/drivers/scsi/ibmvscsi/ibmvfc.c
-> +++ b/drivers/scsi/ibmvscsi/ibmvfc.c
-> @@ -1830,6 +1830,7 @@ static int ibmvfc_bsg_request(struct bsg_job *job)
->  		port_id = (bsg_request->rqst_data.h_els.port_id[0] << 16) |
->  			(bsg_request->rqst_data.h_els.port_id[1] << 8) |
->  			bsg_request->rqst_data.h_els.port_id[2];
-> +		/* fall through */
->  	case FC_BSG_RPT_ELS:
->  		fc_flags = IBMVFC_FC_ELS;
->  		break;
-> @@ -1838,6 +1839,7 @@ static int ibmvfc_bsg_request(struct bsg_job *job)
->  		port_id = (bsg_request->rqst_data.h_ct.port_id[0] << 16) |
->  			(bsg_request->rqst_data.h_ct.port_id[1] << 8) |
->  			bsg_request->rqst_data.h_ct.port_id[2];
-> +		/* fall through */
->  	case FC_BSG_RPT_CT:
->  		fc_flags = IBMVFC_FC_CT_IU;
->  		break;
-> @@ -4020,6 +4022,7 @@ static void ibmvfc_npiv_login_done(struct ibmvfc_event *evt)
->  		return;
->  	case IBMVFC_MAD_CRQ_ERROR:
->  		ibmvfc_retry_host_init(vhost);
-> +		/* fall through */
->  	case IBMVFC_MAD_DRIVER_FAILED:
->  		ibmvfc_free_event(evt);
->  		return;
+> diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+> index 4138a8480347..cca71ba7a74a 100644
+> --- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
+> +++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+> @@ -3251,7 +3251,7 @@ static int ehea_mem_notifier(struct notifier_block *nb,
+>  	switch (action) {
+>  	case MEM_CANCEL_OFFLINE:
+>  		pr_info("memory offlining canceled");
+> -		/* Fall through: re-add canceled memory block */
+> +		/* Fall through - re-add canceled memory block */
+>  
+>  	case MEM_ONLINE:
+>  		pr_info("memory is going online");
 > -- 
 > 2.22.0
 > 
