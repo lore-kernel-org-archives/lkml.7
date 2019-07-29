@@ -2,136 +2,95 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1BBC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F93CC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A305F2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B5E20693
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfG2ItB (ORCPT
+        id S1726768AbfG2IuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:49:01 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:55122 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbfG2Isy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:48:54 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 13DF91A032F;
-        Mon, 29 Jul 2019 10:48:52 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 401CC1A1455;
-        Mon, 29 Jul 2019 10:48:47 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0ABBF40313;
-        Mon, 29 Jul 2019 16:48:38 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 4/4] thermal: qoriq: Add clock operations
-Date:   Mon, 29 Jul 2019 16:39:15 +0800
-Message-Id: <20190729083915.4855-4-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190729083915.4855-1-Anson.Huang@nxp.com>
-References: <20190729083915.4855-1-Anson.Huang@nxp.com>
+        Mon, 29 Jul 2019 04:50:09 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:35606 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726496AbfG2IuI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 04:50:08 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id uk-mta-6-T74adJHKP9OKW6b0WGvMPg-1;
+ Mon, 29 Jul 2019 09:50:05 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 29 Jul 2019 09:50:04 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 29 Jul 2019 09:50:04 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     =?utf-8?B?J0NocmlzdG9waCBCw7ZobXdhbGRlcic=?= 
+        <christoph.boehmwalder@linbit.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "Eric W . Biederman" <ebiederm@xmission.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] drbd: do not ignore signals in threads
+Thread-Topic: [PATCH] drbd: do not ignore signals in threads
+Thread-Index: AQHVRehdZ3MFgEc+dUGpXqE3QyW7xKbhRpmw
+Date:   Mon, 29 Jul 2019 08:50:04 +0000
+Message-ID: <6259de605e9246b095233e3984262b93@AcuMS.aculab.com>
+References: <20190729083248.30362-1-christoph.boehmwalder@linbit.com>
+In-Reply-To: <20190729083248.30362-1-christoph.boehmwalder@linbit.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
+X-MC-Unique: T74adJHKP9OKW6b0WGvMPg-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
-
-Some platforms like i.MX8MQ has clock control for this module,
-need to add clock operations to make sure the driver is working
-properly.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Guido Günther <agx@sigxcpu.org>
----
-Changes since V1:
-	- use devm_clk_get_optional() instead of devm_clk_get().
----
- drivers/thermal/qoriq_thermal.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 2b2f79b..0ae45c0 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -2,6 +2,7 @@
- //
- // Copyright 2016 Freescale Semiconductor, Inc.
- 
-+#include <linux/clk.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/err.h>
-@@ -72,6 +73,7 @@ struct qoriq_sensor {
- 
- struct qoriq_tmu_data {
- 	struct qoriq_tmu_regs __iomem *regs;
-+	struct clk *clk;
- 	bool little_endian;
- 	struct qoriq_sensor	*sensor[SITES_MAX];
- };
-@@ -208,6 +210,16 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 		return PTR_ERR(data->regs);
- 	}
- 
-+	data->clk = devm_clk_get_optional(&pdev->dev, NULL);
-+	if (IS_ERR(data->clk))
-+		return PTR_ERR(data->clk);
-+
-+	ret = clk_prepare_enable(data->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to enable clock\n");
-+		return ret;
-+	}
-+
- 	qoriq_tmu_init_device(data);	/* TMU initialization */
- 
- 	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
-@@ -235,6 +247,8 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
- 	/* Disable monitoring */
- 	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
- 
-+	clk_disable_unprepare(data->clk);
-+
- 	platform_set_drvdata(pdev, NULL);
- 
- 	return 0;
-@@ -250,14 +264,21 @@ static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
- 	tmr &= ~TMR_ME;
- 	tmu_write(data, tmr, &data->regs->tmr);
- 
-+	clk_disable_unprepare(data->clk);
-+
- 	return 0;
- }
- 
- static int __maybe_unused qoriq_tmu_resume(struct device *dev)
- {
- 	u32 tmr;
-+	int ret;
- 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
- 
-+	ret = clk_prepare_enable(data->clk);
-+	if (ret)
-+		return ret;
-+
- 	/* Enable monitoring */
- 	tmr = tmu_read(data, &data->regs->tmr);
- 	tmr |= TMR_ME;
--- 
-2.7.4
+RnJvbTogQ2hyaXN0b3BoIELDtmhtd2FsZGVyDQo+IFNlbnQ6IDI5IEp1bHkgMjAxOSAwOTozMw0K
+PiBGaXggYSByZWdyZXNzaW9uIGludHJvZHVjZWQgYnkgdXBzdHJlYW0gY29tbWl0IGZlZTEwOTkw
+MWYzOQ0KPiAoJ3NpZ25hbC9kcmJkOiBVc2Ugc2VuZF9zaWcgbm90IGZvcmNlX3NpZycpLg0KPiAN
+Cj4gQ3VycmVudGx5LCB3aGVuIGEgdGhyZWFkIGlzIGluaXRpYWxpemVkLCBhbGwgc2lnbmFscyBh
+cmUgc2V0IHRvIGJlDQo+IGlnbm9yZWQgYnkgZGVmYXVsdC4gRFJCRCB1c2VzIFNJR0hVUCB0byBl
+bmQgaXRzIHRocmVhZHMsIHdoaWNoIG1lYW5zIGl0DQo+IGlzIG5vdyBubyBsb25nZXIgcG9zc2li
+bGUgdG8gYnJpbmcgZG93biBhIERSQkQgcmVzb3VyY2UgYmVjYXVzZSB0aGUNCj4gc2lnbmFscyBk
+byBub3QgbWFrZSBpdCB0aHJvdWdoIHRvIHRoZSB0aHJlYWQgaW4gcXVlc3Rpb24uDQo+IA0KPiBU
+aGlzIGNpcmN1bXN0YW5jZSB3YXMgcHJldmlvdXNseSBoaWRkZW4gYnkgdGhlIGZhY3QgdGhhdCBE
+UkJEIHVzZWQNCj4gZm9yY2Vfc2lnKCkgdG8ga2lsbCBpdHMgdGhyZWFkcy4gVGhlIGFmb3JlbWVu
+dGlvbmVkIHVwc3RyZWFtIGNvbW1pdA0KPiBjaGFuZ2VkIHRoaXMgdG8gc2VuZF9zaWcoKSwgd2hp
+Y2ggbWVhbnMgdGhlIGVmZmVjdHMgb2YgdGhlIHNpZ25hbHMgYmVpbmcNCj4gaWdub3JlZCBieSBk
+ZWZhdWx0IGFyZSBub3cgYmVjb21pbmcgdmlzaWJsZS4NCj4gDQo+IFRodXMsIGlzc3VlIGFuIGFs
+bG93X3NpZ25hbCgpIGF0IHRoZSBzdGFydCBvZiB0aGUgdGhyZWFkIHRvIGV4cGxpY2l0bHkNCj4g
+YWxsb3cgdGhlIGRlc2lyZWQgc2lnbmFscy4NCg0KRG9lc24ndCB1bm1hc2tpbmcgdGhlIHNpZ25h
+bHMgYW5kIHVzaW5nIHNlbmRfc2lnKCkgaW5zdGVhZCAgb2YgZm9yY2Vfc2lnKCkNCmhhdmUgdGhl
+IChwcm9iYWJseSB1bndhbnRlZCkgc2lkZSBlZmZlY3Qgb2YgYWxsb3dpbmcgdXNlcnNwYWNlIHRv
+IHNlbmQNCnRoZSBzaWduYWw/DQoNCkkndmUgY2VydGFpbmx5IGdvdCBzb21lIGRyaXZlciBjb2Rl
+IHRoYXQgdXNlcyBmb3JjZV9zaWcoKSBvbiBhIGt0aHJlYWQNCnRoYXQgaXQgZG9lc24ndCAoZXZl
+cikgd2FudCB1c2Vyc3BhY2UgdG8gc2lnbmFsLg0KDQpUaGUgb3JpZ2luYTEgY29tbWl0IHNheXM6
+DQo+IEZ1cnRoZXIgZm9yY2Vfc2lnIGlzIGZvciBkZWxpdmVyaW5nIHN5bmNocm9ub3VzIHNpZ25h
+bHMgKGFrYSBleGNlcHRpb25zKS4NCj4gVGhlIGxvY2tpbmcgaW4gZm9yY2Vfc2lnIGlzIG5vdCBw
+cmVwYXJlZCB0byBkZWFsIHdpdGggcnVubmluZyBwcm9jZXNzZXMsIGFzDQo+IHRzay0+c2lnaGFu
+ZCBtYXkgY2hhbmdlIGR1cmluZyBleGVjIGZvciBhIHJ1bm5pbmcgcHJvY2Vzcy4NCg0KSSB0aGlu
+ayBhIGxvdCBvZiBjb2RlIGhhcyBhc3N1bWVkIHRoYXQgdGhlIG9ubHkgcmVhbCBkaWZmZXJlbmNl
+IGJldHdlZW4NCnNlbmRfc2lnKCkgYW5kIGZvcmNlX3NpZygpIGlzIHRoYXQgdGhlIGxhdHRlciBp
+Z25vcmVzIHRoZSBzaWduYWwgbWFzay4NCg0KSWYgeW91IG5lZWQgdG8gdW5ibG9jayBhIGtlcm5l
+bCB0aHJlYWQgKGVnIG9uZSBibG9ja2VkIGluIGtlcm5lbF9hY2NlcHQoKSkNCmluIG9yZGVyIHRv
+IHVubG9hZCBhIGRyaXZlciwgdGhlbiB5b3UgcmVhbGx5IGRvbid0IHdhbnQgaXQgdG8gYmUgcG9z
+c2libGUNCmZvciBhbnl0aGluZyBlbHNlIHRvIHNpZ25hbCB0aGUga3RocmVhZC4NCg0KCURhdmlk
+DQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBG
+YXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2
+IChXYWxlcykNCg==
 
