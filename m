@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA62C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2E0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 250152171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2ED217D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429247;
-	bh=lCZ5oIwP5bwvvV48Eg1OMEB3VgrGPYIoZutGWqKmJkc=;
+	s=default; t=1564429253;
+	bh=+Ly88yUH6yAJrx+nKGGrwNVtbiju5gqZ/9uzwEJDyP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vCpeiqRmZXpCreyVc7OzqoZ/maV7oOChcxhZeSqNHCbu5dVJwgouKwv9iBg/XxJio
-	 xYGCtf4od3mAnCg/9nUe4/BM08yb+/TLrUfbk8cekS3edoSPyD2poFhxES69Cg263T
-	 iCPZ1H1LMqrV6t5aBguIdrjA0uX/d7Op+KPU/IGI=
+	b=GDhxc/dNsZeVhkFIwYGqdsclZk596bNgzOr3RFTwvtI7dg0xr1F7hBeGACRZ54ieB
+	 jKMEp9S2CNdN2kimEbmApuwdVNGf1NJi4eq99GanvQrovJX4IC5sVIi9PzeX6g/RpD
+	 +k/RYT+lAKIZtaRLg1bjn21aMJHMPvbnRAkZ3Grk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389213AbfG2Tkq (ORCPT
+        id S1728992AbfG2Tkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:40:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55946 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:40:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389184AbfG2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:40:38 -0400
+        id S2388065AbfG2Tkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:40:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6FB6206DD;
-        Mon, 29 Jul 2019 19:40:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED66A20C01;
+        Mon, 29 Jul 2019 19:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429237;
-        bh=lCZ5oIwP5bwvvV48Eg1OMEB3VgrGPYIoZutGWqKmJkc=;
+        s=default; t=1564429246;
+        bh=+Ly88yUH6yAJrx+nKGGrwNVtbiju5gqZ/9uzwEJDyP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZITAI7vAYXh5eHOPp554ua2odXcnYfZSYPwDI0V9fA8jBr+BDVi3+mCsJWT+6S3xv
-         xVaEuTlTd2yeqE+6g1GGCMXfuOUqqn8FF8+u6wyLbnTFKI7Xz57fVwtbKubAQs/ZyS
-         mZqs50ZX+Tqp+4FnFwsQce0INVKZBmJigHlj3uoo=
+        b=sO8+R9/sDkvuQt1PG0J/Ei/ywmRMlwW/88oHBfjjEMYbXH8QEc0eoc7xlRRYx/A2Y
+         y0HrF3kUJOnoWtZ5oG/1F5GR/apPhaO4GfPKLQMJTZiVXQcX/bsM2O4D6m20e6kGgD
+         lsf61TUfCICw2RzA2dwnd5wLmrqAM/kZRQVAm0kc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 006/113] usb: core: hub: Disable hub-initiated U1/U2
-Date:   Mon, 29 Jul 2019 21:21:33 +0200
-Message-Id: <20190729190657.217754958@linuxfoundation.org>
+Subject: [PATCH 4.19 009/113] tty: serial: cpm_uart - fix init when SMC is relocated
+Date:   Mon, 29 Jul 2019 21:21:36 +0200
+Message-Id: <20190729190657.968938058@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -59,79 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 561759292774707b71ee61aecc07724905bb7ef1 ]
+[ Upstream commit 06aaa3d066db87e8478522d910285141d44b1e58 ]
 
-If the device rejects the control transfer to enable device-initiated
-U1/U2 entry, then the device will not initiate U1/U2 transition. To
-improve the performance, the downstream port should not initate
-transition to U1/U2 to avoid the delay from the device link command
-response (no packet can be transmitted while waiting for a response from
-the device). If the device has some quirks and does not implement U1/U2,
-it may reject all the link state change requests, and the downstream
-port may resend and flood the bus with more requests. This will affect
-the device performance even further. This patch disables the
-hub-initated U1/U2 if the device-initiated U1/U2 entry fails.
+SMC relocation can also be activated earlier by the bootloader,
+so the driver's behaviour cannot rely on selected kernel config.
 
-Reference: USB 3.2 spec 7.2.4.2.3
+When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
 
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+But the only thing CPM_CR_INIT_TRX does is to clear the
+rstate and tstate registers, so this can be done manually,
+even when SMC is not relocated.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/hub.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index f4e8e869649a..8018f813972e 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -3961,6 +3961,9 @@ static int usb_set_lpm_timeout(struct usb_device *udev,
-  * control transfers to set the hub timeout or enable device-initiated U1/U2
-  * will be successful.
-  *
-+ * If the control transfer to enable device-initiated U1/U2 entry fails, then
-+ * hub-initiated U1/U2 will be disabled.
-+ *
-  * If we cannot set the parent hub U1/U2 timeout, we attempt to let the xHCI
-  * driver know about it.  If that call fails, it should be harmless, and just
-  * take up more slightly more bus bandwidth for unnecessary U1/U2 exit latency.
-@@ -4015,23 +4018,24 @@ static void usb_enable_link_state(struct usb_hcd *hcd, struct usb_device *udev,
- 		 * host know that this link state won't be enabled.
- 		 */
- 		hcd->driver->disable_usb3_lpm_timeout(hcd, udev, state);
--	} else {
--		/* Only a configured device will accept the Set Feature
--		 * U1/U2_ENABLE
--		 */
--		if (udev->actconfig)
--			usb_set_device_initiated_lpm(udev, state, true);
-+		return;
-+	}
- 
--		/* As soon as usb_set_lpm_timeout(timeout) returns 0, the
--		 * hub-initiated LPM is enabled. Thus, LPM is enabled no
--		 * matter the result of usb_set_device_initiated_lpm().
--		 * The only difference is whether device is able to initiate
--		 * LPM.
--		 */
-+	/* Only a configured device will accept the Set Feature
-+	 * U1/U2_ENABLE
-+	 */
-+	if (udev->actconfig &&
-+	    usb_set_device_initiated_lpm(udev, state, true) == 0) {
- 		if (state == USB3_LPM_U1)
- 			udev->usb3_lpm_u1_enabled = 1;
- 		else if (state == USB3_LPM_U2)
- 			udev->usb3_lpm_u2_enabled = 1;
-+	} else {
-+		/* Don't request U1/U2 entry if the device
-+		 * cannot transition to U1/U2.
-+		 */
-+		usb_set_lpm_timeout(udev, state, 0);
-+		hcd->driver->disable_usb3_lpm_timeout(hcd, udev, state);
+diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+index e5389591bb4f..ad40c75bb58f 100644
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+@@ -407,7 +407,16 @@ static int cpm_uart_startup(struct uart_port *port)
+ 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
+ 		}
+ 		cpm_uart_initbd(pinfo);
+-		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		if (IS_SMC(pinfo)) {
++			out_be32(&pinfo->smcup->smc_rstate, 0);
++			out_be32(&pinfo->smcup->smc_tstate, 0);
++			out_be16(&pinfo->smcup->smc_rbptr,
++				 in_be16(&pinfo->smcup->smc_rbase));
++			out_be16(&pinfo->smcup->smc_tbptr,
++				 in_be16(&pinfo->smcup->smc_tbase));
++		} else {
++			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		}
  	}
- }
+ 	/* Install interrupt handler. */
+ 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
+@@ -861,16 +870,14 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
  
+ /*
+- *  In case SMC1 is being relocated...
++ *  In case SMC is being relocated...
+  */
+-#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
+ 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
+ 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
+ 	out_be32(&up->smc_rstate, 0);
+ 	out_be32(&up->smc_tstate, 0);
+ 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
+ 	out_be16(&up->smc_brkec, 0);
+-#endif
+ 
+ 	/* Set up the uart parameters in the
+ 	 * parameter ram.
+@@ -884,8 +891,6 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	out_be16(&up->smc_brkec, 0);
+ 	out_be16(&up->smc_brkcr, 1);
+ 
+-	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
+-
+ 	/* Set UART mode, 8 bit, no parity, one stop.
+ 	 * Enable receive and transmit.
+ 	 */
 -- 
 2.20.1
 
