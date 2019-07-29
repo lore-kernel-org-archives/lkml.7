@@ -2,124 +2,128 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3488C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 803C8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00EA206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F622067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:42:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5aS9kIf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388156AbfG2Pl1 convert rfc822-to-8bit (ORCPT
+        id S2388162AbfG2Pmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:41:27 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39521 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387467AbfG2Pl0 (ORCPT
+        Mon, 29 Jul 2019 11:42:50 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33569 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387476AbfG2Pmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:41:26 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so9211160wrt.6;
-        Mon, 29 Jul 2019 08:41:24 -0700 (PDT)
+        Mon, 29 Jul 2019 11:42:50 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f20so19227338pgj.0;
+        Mon, 29 Jul 2019 08:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=RKPiZTA2YoR1sZpm3S5fEClBL2fssDBfiWiIIOCDRxM=;
+        b=V5aS9kIfli8N1iRiW1c5Z4dJgi3/TlhcKgHQiCs7lIQkVmIqiSH7aLA+PNWLVCg/An
+         6+dEL1fMsTZWcioQXS9lcZiIGNMBYdHmjgUXqcg4Ey/tZl+Yr6INdcWfm5aDIlSVcUq9
+         Kn/A6UFIOq/FSeE/o56RYafImE473JHxRfMujNAXpPG0waoZAV1/vS7i5MN4J0wu7ofY
+         epXeJ8veVcU8oDVqfOzjU3DaLNUE6mmV7ty5dHiOh35PoIYJKGkziSu2Y2RgLfn33GwN
+         hYIrr6fuOsCY0198QHyPtN4Qd5d8RYKthE3IfNuWzwNG1wJTs0cBgwmV62CqcDrxhLrn
+         Ys2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xxQXIw3jvl/S1k9A2H6zSUmpyqWCq7mlSHIXxho7oz4=;
-        b=cLBiBB40wi15LCSyOkN9cF8lZffAAzx9m/5n26T8h9MOFkL4LF04Gi42I3MrHHyxch
-         But74+nQtwtiBBax4hTo5MA+noIEm7lI9Ni4G6/DJDzQzpFeNs2+TPUCLrfwV5mCK6sW
-         S5nAO5j1AlTuNdZ+tMZ/0Mxq0EV6dE8w+eTXLxc0R3+Dpr0VEDOp/VRC3+bpc0ym3R7U
-         ZZMnJP+XxTuXbFj5fH/Hv6DctA8frBlDY0MXbJGC880P7bhVJNQXK9jKs7sEbRmd+m7d
-         Gbx5z0dZliydleMO0jLCdNfS5FaEKf1p863Gte38nwg46AOoPzkpj0sSkA4WmaJS2XxG
-         ZjYQ==
-X-Gm-Message-State: APjAAAXP01NX2WaoecJBnp8efumObjIJDnmv/hA+DdhfHoNueHyLtHR9
-        SDt2cKE4VqkSydXQe2mT4WMJRmiIa6BL3l7ZXIM=
-X-Google-Smtp-Source: APXvYqzBEqFSoJ1b9bepaHXMbEjq8XzMAZPHCa1KyWJ5zIgkVHJt4qD8XzWJwRTNIsQa/rLsiut1qhGf43oicKWImwQ=
-X-Received: by 2002:adf:f08f:: with SMTP id n15mr37064306wro.213.1564414883303;
- Mon, 29 Jul 2019 08:41:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=RKPiZTA2YoR1sZpm3S5fEClBL2fssDBfiWiIIOCDRxM=;
+        b=LWAdYKyE+lKDTEp4IxinSPOV4uVrIu5AYNdcsAqsrGqsofN6rldKEBlUJnR3TubEpf
+         nE4LFHYbduMYJuur87PBgvbuWvEfvWAv3jhrdayr9ZnlQuW/lbdylvBkv2c6fwMelcBM
+         1Xl4yY2eN9eTdKm27Qe8mse6bEzi7FsQ2+XlzZ5Wp47oBr5oW3Cs6j1ufKp0IaAP86pQ
+         5+cHLgJQTYDBuZ5kOu5wwkBlqji3djqftU69VRQ5G4KqRvCQMRbFL0U+SSqLKCTe90vo
+         oWobTFQVaMdB3+CG11100MFxJwH9/wVvbKS5t1R6cnicyL73jYlUCn+gxDBuU3v8Gh0n
+         s5Ng==
+X-Gm-Message-State: APjAAAVP/qCiJ8D+HXZEyN8EBMZFnTPEvwVdlctgmupZKm3l/2MPxsRM
+        YrDSlS2d6oPLyxha49BUIsGTKUs=
+X-Google-Smtp-Source: APXvYqzICHrByfUpJ4Ded36rYhJTzRwCNRoZYuwNwUGbIJE6p67/Ot9qOM53rWX8GL++lFphVRnNvA==
+X-Received: by 2002:a65:5c4b:: with SMTP id v11mr62285172pgr.62.1564414968814;
+        Mon, 29 Jul 2019 08:42:48 -0700 (PDT)
+Received: from ubuntu ([12.38.14.9])
+        by smtp.gmail.com with ESMTPSA id r75sm84439798pfc.18.2019.07.29.08.42.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 08:42:48 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 11:42:34 -0400
+From:   Stephen Suryaputra <ssuryaextr@gmail.com>
+To:     stable@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, greg@kroah.com, dsahern@gmail.com,
+        davem@davemloft.net
+Subject: Back-porting request
+Message-ID: <20190729154234.GA3508@ubuntu>
 MIME-Version: 1.0
-References: <20190725180825.31508-1-max@enpas.org> <CAMuHMdURm-9nazOBTL8uRH8WMt7gi=QUYy0qr9kaxzczCr+ujg@mail.gmail.com>
- <9cde6e79-52da-e0c0-f452-6afc2e5fa5ee@enpas.org> <CAMuHMdUGsfzQg8xy2OqWfuo09MxwZ5OJz=t5CARJp+A1ZVtqaA@mail.gmail.com>
- <b7473bd6-650d-f0b6-0d30-99e3b6b942b5@enpas.org> <CAMuHMdXVzX6cm4uTe7OipAuR4viye32yKuHWJBzuLpR_wqyRhQ@mail.gmail.com>
- <7a6f887f-b674-4db7-a09a-a028219ebce0@enpas.org>
-In-Reply-To: <7a6f887f-b674-4db7-a09a-a028219ebce0@enpas.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 29 Jul 2019 17:41:11 +0200
-Message-ID: <CAMuHMdXwWHz9pkOKf4NiPF=GXS-vTU20Hu9QNni9ZWVds2bWGw@mail.gmail.com>
-Subject: Re: [PATCH v3] ata/pata_buddha: Probe via modalias instead of initcall
-To:     Max <max@enpas.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-ide@vger.kernel.org,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Max,
+Hello,
 
-On Mon, Jul 29, 2019 at 5:38 PM Max <max@enpas.org> wrote:
-> On 07/29/2019 05:26 PM, Geert Uytterhoeven wrote:
-> >> We *could* also temporarily split off a pata_buddha_xsurf driver: pata_buddha would be auto-probed by the new framework, and pata_buddha_xsurf would do the old module_init() dance.
-> >> That is, until the MFD conversion happens.
-> >
-> > Or add temporarily a late_initcall() to find all X-Surf boards using
-> > zorro_find_device(), create fake zorro_device_id entries, and pass both
-> > to pata_buddha_probe()?  A big ugly, but that should work.
->
-> Sounds good, and it replaces modile_init() at the same time. I'll implement this.
+I'm requesting this commit to be back-ported to v4.14:
+---
+commit 5b18f1289808fee5d04a7e6ecf200189f41a4db6
+Author: Stephen Suryaputra <ssuryaextr@gmail.com>
+Date:   Wed Jun 26 02:21:16 2019 -0400
 
-Thanks!
+    ipv4: reset rt_iif for recirculated mcast/bcast out pkts
 
-> >>> Your single Buddha should be sufficient to convert pata_buddha.c from
-> >>> a plain Zorro driver to an MFD cell driver, and test it.
-> >>> I expect the buddha-mfd.c MFD driver from my zorro-mfd branch to
-> >>> work as-is, or with very minor changes.
-> >>>
-> >>> However, to keep X-Surf working, this needs to be synchronized with
-> >>> a Zorro MFD conversion of the zorro8390 driver, too.
-> >>
-> >> Yeah, this second part is where I get caught up. I'd really like to test this with a real X-Surf, or have someone test it, before sending it upstream.
-> >
-> > Of course it should be tested ;-)
-> > Converting zorro8390.c from a zorro driver to an MFD cell driver should
-> > not require that many changes, most bugs should be caught by code review.
-> > I already have a skeleton 8390-cell.c driver in my zorro-mfd branch.
->
-> Honestly, at this point I'd rather do the hack above and keep the MFD stuff for later. Let's take it step by step. I'd prefer not to touch 8390 for now, unless I can get my hands on an X-Surf. I'd like to help with the MFD stuff as a way to enable the clockport and my SilverSurfer on it, but for the moment I'd rather move that further down the road.
+    Multicast or broadcast egress packets have rt_iif set to the oif. These
+    packets might be recirculated back as input and lookup to the raw
+    sockets may fail because they are bound to the incoming interface
+    (skb_iif). If rt_iif is not zero, during the lookup, inet_iif() function
+    returns rt_iif instead of skb_iif. Hence, the lookup fails.
 
-OK, fine for me, of course.
+    v2: Make it non vrf specific (David Ahern). Reword the changelog to
+        reflect it.
+    Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
+    Reviewed-by: David Ahern <dsahern@gmail.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+---
 
-> >>> Yes, the clockport could be added as an extra MFD cell.  Later, drivers can
-> >>> be written to bind against the clockport cell.
-> >>
-> >> Yes, but how can we assign specific drivers to specific clockports? As they are non-enumerable (are they?), we can't auto-probe them.
-> >
-> > That's something the user has to configure.
-> > The Buddha MFD driver registers an "a1200-clockport" cell, which is
-> > really a separate platform device.
-> > The user writes the name of the actual driver to use to the device's
-> > driver_override file in sysfs, after which the driver is bound
-> > automatically.  See Documentation/ABI/testing/sysfs-bus-platform,
->
-> That sounds just like what I was hoping for, thanks.
+We found the issue in that release and the above commit is on
+linux-stable. On the discussion behind this commit, please see:
+https://www.spinics.net/lists/netdev/msg581045.html
 
-I'm happy you like it ;-)
+I think after the following diff is needed on top of the above commit
+for v4.14:
 
-Gr{oetje,eeting}s,
+---
+diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+index 4d85a4fdfdb0..ad2718c1624e 100644
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1623,11 +1623,8 @@ struct rtable *rt_dst_clone(struct net_device *dev, struct rtable *rt)
+ 		new_rt->rt_iif = rt->rt_iif;
+ 		new_rt->rt_pmtu = rt->rt_pmtu;
+ 		new_rt->rt_mtu_locked = rt->rt_mtu_locked;
+-		new_rt->rt_gw_family = rt->rt_gw_family;
+-		if (rt->rt_gw_family == AF_INET)
+-			new_rt->rt_gw4 = rt->rt_gw4;
+-		else if (rt->rt_gw_family == AF_INET6)
+-			new_rt->rt_gw6 = rt->rt_gw6;
++		new_rt->rt_gateway = rt->rt_gateway;
++		new_rt->rt_table_id = rt->rt_table_id;
+ 		INIT_LIST_HEAD(&new_rt->rt_uncached);
+ 
+ 		new_rt->dst.flags |= DST_HOST;
+---
 
-                        Geert
+Thank you,
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Stephen.
