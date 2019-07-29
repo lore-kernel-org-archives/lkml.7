@@ -2,186 +2,94 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90679C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AC7C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B87206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:43:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvWWSK0J"
+	by mail.kernel.org (Postfix) with ESMTP id 95659206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfG2BnI (ORCPT
+        id S1726455AbfG2BpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 21:43:08 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40669 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfG2BnI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 21:43:08 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p184so27124856pfp.7;
-        Sun, 28 Jul 2019 18:43:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LV39I9aLdwL8Ba7krSV4uBeXZ89IOyHpbCxzE7258B4=;
-        b=gvWWSK0JytSMopVhFA0NawbhUPQQPNyzNxYAQY5G00eOVqDZsp1Ys370zU7aDPBbFl
-         xz8/HU7B+7VUOD8bbMNLKx0/RGh6CVk8SomEfrbTI8MVnML3WIdGl/6sxgbSkDfsuJKP
-         1NCV1aFIE746ubZOX8jn8EOHuxcLwFljuQ6TuZSXX7oSa5BafoBzbPH/5aOvwxHC5BZL
-         Guh4Y+mCzhpYNnjl7vav69WJPc8xNCTkYwd9YuAAQpelRthTG8O1vDrELvg1epKzO9by
-         hVHn22fBNIcgeMl0fxI6fwHRil5gcImSufsi+2kILwaJp+uE89nwRNth2ucvxLjG4cgP
-         gCDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LV39I9aLdwL8Ba7krSV4uBeXZ89IOyHpbCxzE7258B4=;
-        b=B33BXczhRQ+8SNiEMaZrWIOCyphpv2XVjeThAbz3nrK5HsJAK1Lez2csTAgBwYeO1z
-         1dOHZjAAzbyBTSVqyGMmgm1QyCbDmO2j/qRm5ZPhTmuMR3MMhPVfXnmNrz1LlyXJL+zQ
-         m1snLfoacu3n19lSzBgu4HJG7dcD+JCp8zaTbx5sXHMRkHMNPSHjh0vX6Ci6EQwrCCg+
-         DI26OWkc6hzefRlv6RJnkZDcJ8N6SgZ/UrN11tGs0wCG9VzexeWVhaUEwc5/gsMGbNMA
-         NVkijnh2OlZUlfn2Eq9rSJPgVsQTDQgLDtGoNVCDOy9kaiN4N7N+QD5TDTiQQVBb6JGo
-         vPNg==
-X-Gm-Message-State: APjAAAW2eH8TAkU93Xp7j1f4xa1M5uKCICz051tK8z46ZJFBf++H2NbN
-        Yht8XeXtp7GQYCblSlN7yB4=
-X-Google-Smtp-Source: APXvYqy33T1WT3c2ceVt49IN+W8TfL9YaK4sBZZ5C+bItnu4spucVXkt+KxG/Gn+mGavkkjYCGawMw==
-X-Received: by 2002:a17:90a:9bc5:: with SMTP id b5mr110329060pjw.109.1564364587501;
-        Sun, 28 Jul 2019 18:43:07 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id b6sm52386509pgq.26.2019.07.28.18.43.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 18:43:06 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] iio: light: si1145: Use device-managed APIs
-Date:   Mon, 29 Jul 2019 09:43:01 +0800
-Message-Id: <20190729014301.13402-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 28 Jul 2019 21:45:00 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3190 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726216AbfG2Bo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 21:44:59 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 10A16CC1ED126121B8D2;
+        Mon, 29 Jul 2019 09:44:58 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
+ 09:44:50 +0800
+Subject: Re: [PATCH resend v2] lib: scatterlist: Fix to support no mapped sg
+To:     <robert.jarzmik@free.fr>, <axboe@fb.com>, <axboe@kernel.dk>
+References: <1563940463-95597-1-git-send-email-wangzhou1@hisilicon.com>
+CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5D3E4F91.4020605@hisilicon.com>
+Date:   Mon, 29 Jul 2019 09:44:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <1563940463-95597-1-git-send-email-wangzhou1@hisilicon.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use device-managed APIs to simplify the code.
-The remove functions are redundant now and can
-be deleted.
+On 2019/7/24 11:54, Zhou Wang wrote:
+> In function sg_split, the second sg_calculate_split will return -EINVAL
+> when in_mapped_nents is 0.
+> 
+> Indeed there is no need to do second sg_calculate_split and sg_split_mapped
+> when in_mapped_nents is 0, as in_mapped_nents indicates no mapped entry in
+> original sgl.
+> 
+> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+> Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+> ---
+> v2: Just add Acked-by from Robert.
+> 
+>  lib/sg_split.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/lib/sg_split.c b/lib/sg_split.c
+> index 9982c63..60a0bab 100644
+> --- a/lib/sg_split.c
+> +++ b/lib/sg_split.c
+> @@ -176,11 +176,13 @@ int sg_split(struct scatterlist *in, const int in_mapped_nents,
+>  	 * The order of these 3 calls is important and should be kept.
+>  	 */
+>  	sg_split_phys(splitters, nb_splits);
+> -	ret = sg_calculate_split(in, in_mapped_nents, nb_splits, skip,
+> -				 split_sizes, splitters, true);
+> -	if (ret < 0)
+> -		goto err;
+> -	sg_split_mapped(splitters, nb_splits);
+> +	if (in_mapped_nents) {
+> +		ret = sg_calculate_split(in, in_mapped_nents, nb_splits, skip,
+> +					 split_sizes, splitters, true);
+> +		if (ret < 0)
+> +			goto err;
+> +		sg_split_mapped(splitters, nb_splits);
+> +	}
+>  
+>  	for (i = 0; i < nb_splits; i++) {
+>  		out[i] = splitters[i].out_sg;
+> 
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Split v1 into two patches.
-  - Use devm_iio_trigger_register in probe_trigger,
-    delete redundant remove_trigger.
-  - Return devm_iio_device_register directly as a
-    minor optimization.
+Hi Jens,
 
- drivers/iio/light/si1145.c | 42 +++++---------------------------------
- 1 file changed, 5 insertions(+), 37 deletions(-)
+I saw you are the committer of sg_splite.c, could you help to take this patch?
 
-diff --git a/drivers/iio/light/si1145.c b/drivers/iio/light/si1145.c
-index 6579d2418814..982bba0c54e7 100644
---- a/drivers/iio/light/si1145.c
-+++ b/drivers/iio/light/si1145.c
-@@ -1261,7 +1261,7 @@ static int si1145_probe_trigger(struct iio_dev *indio_dev)
- 		return ret;
- 	}
- 
--	ret = iio_trigger_register(trig);
-+	ret = devm_iio_trigger_register(&client->dev, trig);
- 	if (ret)
- 		return ret;
- 
-@@ -1271,16 +1271,6 @@ static int si1145_probe_trigger(struct iio_dev *indio_dev)
- 	return 0;
- }
- 
--static void si1145_remove_trigger(struct iio_dev *indio_dev)
--{
--	struct si1145_data *data = iio_priv(indio_dev);
--
--	if (data->trig) {
--		iio_trigger_unregister(data->trig);
--		data->trig = NULL;
--	}
--}
--
- static int si1145_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
-@@ -1332,7 +1322,8 @@ static int si1145_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		return ret;
- 
--	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-+	ret = devm_iio_triggered_buffer_setup(&client->dev,
-+		indio_dev, NULL,
- 		si1145_trigger_handler, &si1145_buffer_setup_ops);
- 	if (ret < 0)
- 		return ret;
-@@ -1340,23 +1331,12 @@ static int si1145_probe(struct i2c_client *client,
- 	if (client->irq) {
- 		ret = si1145_probe_trigger(indio_dev);
- 		if (ret < 0)
--			goto error_free_buffer;
-+			return ret;
- 	} else {
- 		dev_info(&client->dev, "no irq, using polling\n");
- 	}
- 
--	ret = iio_device_register(indio_dev);
--	if (ret < 0)
--		goto error_free_trigger;
--
--	return 0;
--
--error_free_trigger:
--	si1145_remove_trigger(indio_dev);
--error_free_buffer:
--	iio_triggered_buffer_cleanup(indio_dev);
--
--	return ret;
-+	return devm_iio_device_register(&client->dev, indio_dev);
- }
- 
- static const struct i2c_device_id si1145_ids[] = {
-@@ -1371,23 +1351,11 @@ static const struct i2c_device_id si1145_ids[] = {
- };
- MODULE_DEVICE_TABLE(i2c, si1145_ids);
- 
--static int si1145_remove(struct i2c_client *client)
--{
--	struct iio_dev *indio_dev = i2c_get_clientdata(client);
--
--	iio_device_unregister(indio_dev);
--	si1145_remove_trigger(indio_dev);
--	iio_triggered_buffer_cleanup(indio_dev);
--
--	return 0;
--}
--
- static struct i2c_driver si1145_driver = {
- 	.driver = {
- 		.name   = "si1145",
- 	},
- 	.probe  = si1145_probe,
--	.remove = si1145_remove,
- 	.id_table = si1145_ids,
- };
- 
--- 
-2.20.1
+Many thanks,
+Zhou
 
