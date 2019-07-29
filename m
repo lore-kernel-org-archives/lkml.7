@@ -2,121 +2,93 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91FBC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9629C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F929205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="JPljb8ZT"
+	by mail.kernel.org (Postfix) with ESMTP id 8179C20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564431066;
+	bh=12MB2UsBIr1bw8DUZkqPqk0bQzWqiWONwTykxzZqE1g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ulPbeGhUynDeVt4SzBD1bo1IGOpxlYaSyEXQRrIgQ+4Jk3F1HaD9aQ5kUToWoIu2c
+	 ft58zSbQFKaPbXc9XBVH56nM5A2AC2GPku3a18CRzM5wpXrH38o6n7wiXa6Tp3cAMC
+	 KP9gdcdPH6ZKiyl0OyI7ub3p/JJmTvv0VssHuxvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388061AbfG2Td6 (ORCPT
+        id S1730475AbfG2ULF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:33:58 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36358 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387892AbfG2Tdx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:33:53 -0400
-Received: by mail-io1-f65.google.com with SMTP id o9so19054806iom.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 12:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LLxn7C9aC5wuodbKHEOV6mkYITys5cF1PQfnyuR0FjI=;
-        b=JPljb8ZTyaVb8h4Bz4OJBKZhLNaT6av3N0ZgV0E/ky43qADdbSBt98vbCOUKbI11pC
-         HEizJCNey/IubUXtKezPS1EbSH6NSZEr9kV+Zb8Xpyocg45dThxNyvtslPdnYTjx5v4k
-         zldwju6QUAX2SYTda4ERbi5mbE5KsBp11LgqP8NXIFFMpPVgsWFZlcYsa8jHahiQGifh
-         TWwX/HdoXNkdTW1xXfarPSShdWEsf7w5nMmwno4aMZVtLU2AnGWpj8j7YmvMvqefG9mi
-         bptkFuW6yivA6aevgFjxNhKICMDih547P/5zPm3pRtrJZ1nr49vWlKHQ2c0tbeZpUNMg
-         BmYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LLxn7C9aC5wuodbKHEOV6mkYITys5cF1PQfnyuR0FjI=;
-        b=Vc/Pya5kpx16bkQa2MK6seryodGYQCAvhKD6ywVOpgpqWyecsj8fRrPirxpF5Cwghn
-         f3/sFSi4zaeewDukrsbgKatmQ4NBwQ8p1uB3FcQMXNv5XFSbB2y+rRLEwqqHDERwL9V6
-         cuiqomEQm1JpUSXKMP3nLOaPMc4dYhPf4oo0CuGBdw/4RiPHI8U23YeDsKpu1EvCdAOU
-         hcIhv6a1S/283dQbYQVb5TqqN6M6VgJPW3pWL2Vx23NyZq+/m6D30oFxh7ZWWyT1GSsW
-         hGe6Z4B8kD1YXSokyRIMmMEYITPGFCCJJX+VvUkiErDkpB/22scfDTR7k6E2ggcqO7EI
-         lvqQ==
-X-Gm-Message-State: APjAAAVj0JCzM3jLGVdKiedkChkGTFfGnz89T3vhw/YU9KjET4sZsuE4
-        VtjY99eNm7+XF5inp7lq9sY=
-X-Google-Smtp-Source: APXvYqxTJRKvff2VQ2AbO/A2hHFCWdKiEgIw3/LPhUvFbJn1sc9MbAcMf20K3siEvKJKXPFmDpeNSg==
-X-Received: by 2002:a02:cb4b:: with SMTP id k11mr114182524jap.109.1564428832072;
-        Mon, 29 Jul 2019 12:33:52 -0700 (PDT)
-Received: from brauner.io ([162.223.5.124])
-        by smtp.gmail.com with ESMTPSA id h8sm56813084ioq.61.2019.07.29.12.33.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 12:33:51 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 21:33:50 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Dmitry Safonov <0x7f454c46@gmail.com>
-Cc:     Adrian Reber <areber@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH 1/2] fork: extend clone3() to support CLONE_SET_TID
-Message-ID: <20190729193349.d5b6aivfx7w4plwq@brauner.io>
-References: <20190729163355.4530-1-areber@redhat.com>
- <CAJwJo6Z5qHThG5wECSn+jiS0iM3smuXA1OS96Gho1HL-gD=RKQ@mail.gmail.com>
- <CAJwJo6baR_w_sE8Qtr4Le9KTLWx0Qzi99qmoTm+6hd1j1UkmFA@mail.gmail.com>
+        Mon, 29 Jul 2019 16:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387868AbfG2Tdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:33:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 392A521773;
+        Mon, 29 Jul 2019 19:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564428831;
+        bh=12MB2UsBIr1bw8DUZkqPqk0bQzWqiWONwTykxzZqE1g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=unbBEz3lJakNUoWDw7g//8/bsmZtU9G4WO73AEIuD0vSKtG7Y8GgjAIg69Um/pKA/
+         PKmZT+groHnaDteYJt3vqektfWO3f4C7CyiDBaHjhU4bWSabLS+recFgyNv5N1VxoI
+         5Dh+xU5qPKIwWZxZAA1O4r1Ms/SvSN1o2r2PA/bU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 201/293] tcp: Reset bytes_acked and bytes_received when disconnecting
+Date:   Mon, 29 Jul 2019 21:21:32 +0200
+Message-Id: <20190729190839.889480843@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
+References: <20190729190820.321094988@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJwJo6baR_w_sE8Qtr4Le9KTLWx0Qzi99qmoTm+6hd1j1UkmFA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 08:17:58PM +0100, Dmitry Safonov wrote:
-> On Mon, 29 Jul 2019 at 20:12, Dmitry Safonov <0x7f454c46@gmail.com> wrote:
-> >
-> > On Mon, 29 Jul 2019 at 17:52, Adrian Reber <areber@redhat.com> wrote:
-> > [..]
-> > > --- a/include/uapi/linux/sched.h
-> > > +++ b/include/uapi/linux/sched.h
-> > > @@ -32,6 +32,7 @@
-> > >  #define CLONE_NEWPID           0x20000000      /* New pid namespace */
-> > >  #define CLONE_NEWNET           0x40000000      /* New network namespace */
-> > >  #define CLONE_IO               0x80000000      /* Clone io context */
-> > > +#define CLONE_SET_TID          0x100000000ULL  /* set if the desired TID is set in set_tid */
-> > >
-> > >  /*
-> > >   * Arguments for the clone3 syscall
-> > > @@ -45,6 +46,7 @@ struct clone_args {
-> > >         __aligned_u64 stack;
-> > >         __aligned_u64 stack_size;
-> > >         __aligned_u64 tls;
-> > > +       __aligned_u64 set_tid;
-> > >  };
-> > >
-> >
-> > I don't see a change to
-> > :    if (unlikely(size < sizeof(struct clone_args)))
-> > :        return -EINVAL;
-> >
-> > That seems backwards-incompatible, but I may miss some part..
-> 
-> On the other hand, clone3() was merged in v5.3 window, so probably,
-> it doesn't matter.
+From: Christoph Paasch <cpaasch@apple.com>
 
-It would matter. Even if this were to be accepted and preferred over the
-existing /proc/sys/kernel/ns_last_pid interface the earliest point in
-time I'd consider this for would be 5.4. So I think this would need to
-be changed. :)
+[ Upstream commit e858faf556d4e14c750ba1e8852783c6f9520a0e ]
 
-Christian
+If an app is playing tricks to reuse a socket via tcp_disconnect(),
+bytes_acked/received needs to be reset to 0. Otherwise tcp_info will
+report the sum of the current and the old connection..
+
+Cc: Eric Dumazet <edumazet@google.com>
+Fixes: 0df48c26d841 ("tcp: add tcpi_bytes_acked to tcp_info")
+Fixes: bdd1f9edacb5 ("tcp: add tcpi_bytes_received to tcp_info")
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv4/tcp.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2366,6 +2366,8 @@ int tcp_disconnect(struct sock *sk, int
+ 	dst_release(sk->sk_rx_dst);
+ 	sk->sk_rx_dst = NULL;
+ 	tcp_saved_syn_free(tp);
++	tp->bytes_acked = 0;
++	tp->bytes_received = 0;
+ 
+ 	/* Clean up fastopen related fields */
+ 	tcp_free_fastopen_req(tp);
+
+
