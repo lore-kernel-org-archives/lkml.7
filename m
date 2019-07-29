@@ -2,181 +2,207 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318D3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4657C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C613E2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB352070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Z7KOP+q9"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="a7Wth4vw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387512AbfG2K7C (ORCPT
+        id S2387528AbfG2K7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:59:02 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:20465 "EHLO pegase1.c-s.fr"
+        Mon, 29 Jul 2019 06:59:14 -0400
+Received: from onstation.org ([52.200.56.107]:35266 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387424AbfG2K7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:59:02 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45xxWg4mFmz9v9MP;
-        Mon, 29 Jul 2019 12:58:55 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Z7KOP+q9; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id m1vNkj6CGk8W; Mon, 29 Jul 2019 12:58:55 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45xxWg3ZpVz9v9M5;
-        Mon, 29 Jul 2019 12:58:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1564397935; bh=VxSKkHaFNdhmlWwNqqJwQwOE2mQ2WhfF8ueMIIf3F34=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Z7KOP+q9C3qceGHfw6ZeieAEjypdB1+Dkd+P+cMakb/+BsuwphM7JqYj93yE4KHS0
-         ailFGX6Tzv1R5Yn1Wg1WclPtJ+xN54IxByFDadhndcGJ27eXhoj9At/rNwTvcaaw61
-         bvk5zCMdSO9rZUN03xgStmlD/qCIyPrZcFJ3yBRI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 567A48B7CB;
-        Mon, 29 Jul 2019 12:59:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id bO3NIiryu1lR; Mon, 29 Jul 2019 12:59:00 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0FEA98B7B3;
-        Mon, 29 Jul 2019 12:59:00 +0200 (CEST)
-Subject: Re: [RFC PATCH 01/10] powerpc: unify definition of M_IF_NEEDED
-To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
-        keescook@chromium.org, kernel-hardening@lists.openwall.com
-Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
-        yebin10@huawei.com, thunder.leizhen@huawei.com,
-        jingxiangfeng@huawei.com, fanchengyang@huawei.com
-References: <20190717080621.40424-1-yanaijie@huawei.com>
- <20190717080621.40424-2-yanaijie@huawei.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <e9f2a7fc-ea70-e018-24b2-76cde6705780@c-s.fr>
-Date:   Mon, 29 Jul 2019 12:59:00 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2387424AbfG2K7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:59:13 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 92ECD3E910;
+        Mon, 29 Jul 2019 10:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1564397953;
+        bh=B34EPjeFIk9ftJgqn8Fp8+yWcxoptA9g3QIqaX9hknE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a7Wth4vwYR67Zwup95jIVDDr+Lq1PjJFyDtK6Z0sy9RVm1LGK5bvuGFU9HetMjJkg
+         ut9XfKk3tdyJFC7AfhVagNHa3St4GiNjUaPtoeV4VpA0lhHtWx5sWQBwb99IERRc/Z
+         VfC8E3u7PR1uvNfNhCyBXK++M8hRraWpktIGKZrY=
+Date:   Mon, 29 Jul 2019 06:59:12 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: tsl2772: Use device-managed API
+Message-ID: <20190729105912.GA2302@onstation.org>
+References: <20190729100339.24054-1-hslester96@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190717080621.40424-2-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729100339.24054-1-hslester96@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Chuhong,
 
-
-Le 17/07/2019 à 10:06, Jason Yan a écrit :
-> M_IF_NEEDED is defined too many times. Move it to a common place.
+On Mon, Jul 29, 2019 at 06:03:39PM +0800, Chuhong Yuan wrote:
+> Use devm_iio_device_register to simplify
+> the code.
 > 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> Cc: Diana Craciun <diana.craciun@nxp.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Thank you for the patch. The patch description doesn't match what all is
+done below. This should also be broken up into multiple patches since a
+patch should only do one thing. The regulator changes should be in their
+own patch, and some of the devm changes may require multiple patches.
+When writing your changelog, if your patch description has the word
+'and', then that may be a hint that you need to break up your patch a
+little bit. That's not always the case, but something to keep in mind.
+
+A few minor comments below.
 
 > ---
->   arch/powerpc/include/asm/nohash/mmu-book3e.h  | 10 ++++++++++
->   arch/powerpc/kernel/exceptions-64e.S          | 10 ----------
->   arch/powerpc/kernel/fsl_booke_entry_mapping.S | 10 ----------
->   arch/powerpc/kernel/misc_64.S                 |  5 -----
->   4 files changed, 10 insertions(+), 25 deletions(-)
+> Changes in v2:
+>   - Use regulator_bulk_() to shrink driver
+>     size.
+>   - Utilize more devm functions to simplify
+>     the code.
+>   - Remove several redundant functions.
 > 
-> diff --git a/arch/powerpc/include/asm/nohash/mmu-book3e.h b/arch/powerpc/include/asm/nohash/mmu-book3e.h
-> index 4c9777d256fb..0877362e48fa 100644
-> --- a/arch/powerpc/include/asm/nohash/mmu-book3e.h
-> +++ b/arch/powerpc/include/asm/nohash/mmu-book3e.h
-> @@ -221,6 +221,16 @@
->   #define TLBILX_T_CLASS2			6
->   #define TLBILX_T_CLASS3			7
->   
-> +/*
-> + * The mapping only needs to be cache-coherent on SMP, except on
-> + * Freescale e500mc derivatives where it's also needed for coherent DMA.
-> + */
-> +#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
-> +#define M_IF_NEEDED	MAS2_M
-> +#else
-> +#define M_IF_NEEDED	0
-> +#endif
+>  drivers/iio/light/tsl2772.c | 116 +++++++++++-------------------------
+>  1 file changed, 34 insertions(+), 82 deletions(-)
+> 
+> diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
+> index 83cece921843..946537c8586f 100644
+> --- a/drivers/iio/light/tsl2772.c
+> +++ b/drivers/iio/light/tsl2772.c
+> @@ -131,7 +131,10 @@ enum {
+>  enum {
+>  	TSL2772_CHIP_UNKNOWN = 0,
+>  	TSL2772_CHIP_WORKING = 1,
+> -	TSL2772_CHIP_SUSPENDED = 2
+> +	TSL2772_CHIP_SUSPENDED = 2,
+> +	TSL2772_SUPPLY_VDD = 0,
+> +	TSL2772_SUPPLY_VDDIO = 1,
+> +	TSL2772_NUM_SUPPLIES = 2
+>  };
+
+This is a really minor nitpick but can these either use a #define or be
+placed in its own enum block?
+
+>  
+>  /* Per-device data */
+> @@ -161,8 +164,7 @@ struct tsl2772_chip {
+>  	struct mutex prox_mutex;
+>  	struct mutex als_mutex;
+>  	struct i2c_client *client;
+> -	struct regulator *vdd_supply;
+> -	struct regulator *vddio_supply;
+> +	struct regulator_bulk_data reg[TSL2772_NUM_SUPPLIES];
+
+Since there's other changes, maybe name this 'supplies'? I think of
+'reg' as an address.
+
+>  	u16 prox_data;
+>  	struct tsl2772_als_info als_cur_info;
+>  	struct tsl2772_settings settings;
+> @@ -697,46 +699,7 @@ static void tsl2772_disable_regulators_action(void *_data)
+>  {
+>  	struct tsl2772_chip *chip = _data;
+>  
+> -	regulator_disable(chip->vdd_supply);
+> -	regulator_disable(chip->vddio_supply);
+> -}
+> -
+> -static int tsl2772_enable_regulator(struct tsl2772_chip *chip,
+> -				    struct regulator *regulator)
+> -{
+> -	int ret;
+> -
+> -	ret = regulator_enable(regulator);
+> -	if (ret < 0) {
+> -		dev_err(&chip->client->dev, "Failed to enable regulator: %d\n",
+> -			ret);
+> -		return ret;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static struct regulator *tsl2772_get_regulator(struct tsl2772_chip *chip,
+> -					       char *name)
+> -{
+> -	struct regulator *regulator;
+> -	int ret;
+> -
+> -	regulator = devm_regulator_get(&chip->client->dev, name);
+> -	if (IS_ERR(regulator)) {
+> -		if (PTR_ERR(regulator) != -EPROBE_DEFER)
+> -			dev_err(&chip->client->dev,
+> -				"Failed to get %s regulator %d\n",
+> -				name, (int)PTR_ERR(regulator));
+> -
+> -		return regulator;
+> -	}
+> -
+> -	ret = tsl2772_enable_regulator(chip, regulator);
+> -	if (ret < 0)
+> -		return ERR_PTR(ret);
+> -
+> -	return regulator;
+> +	regulator_bulk_disable(ARRAY_SIZE(chip->reg), chip->reg);
+>  }
+>  
+>  static int tsl2772_chip_on(struct iio_dev *indio_dev)
+> @@ -860,6 +823,13 @@ static int tsl2772_chip_off(struct iio_dev *indio_dev)
+>  	return tsl2772_write_control_reg(chip, 0x00);
+>  }
+>  
+> +static void tsl2772_chip_off_action(void *data)
+> +{
+> +	struct iio_dev *indio_dev = data;
 > +
->   #ifndef __ASSEMBLY__
->   #include <asm/bug.h>
->   
-> diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
-> index 1cfb3da4a84a..fd49ec07ce4a 100644
-> --- a/arch/powerpc/kernel/exceptions-64e.S
-> +++ b/arch/powerpc/kernel/exceptions-64e.S
-> @@ -1342,16 +1342,6 @@ skpinv:	addi	r6,r6,1				/* Increment */
->   	sync
->   	isync
->   
-> -/*
-> - * The mapping only needs to be cache-coherent on SMP, except on
-> - * Freescale e500mc derivatives where it's also needed for coherent DMA.
-> - */
-> -#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
-> -#define M_IF_NEEDED	MAS2_M
-> -#else
-> -#define M_IF_NEEDED	0
-> -#endif
-> -
->   /* 6. Setup KERNELBASE mapping in TLB[0]
->    *
->    * r3 = MAS0 w/TLBSEL & ESEL for the entry we started in
-> diff --git a/arch/powerpc/kernel/fsl_booke_entry_mapping.S b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
-> index ea065282b303..de0980945510 100644
-> --- a/arch/powerpc/kernel/fsl_booke_entry_mapping.S
-> +++ b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
-> @@ -153,16 +153,6 @@ skpinv:	addi	r6,r6,1				/* Increment */
->   	tlbivax 0,r9
->   	TLBSYNC
->   
-> -/*
-> - * The mapping only needs to be cache-coherent on SMP, except on
-> - * Freescale e500mc derivatives where it's also needed for coherent DMA.
-> - */
-> -#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
-> -#define M_IF_NEEDED	MAS2_M
-> -#else
-> -#define M_IF_NEEDED	0
-> -#endif
-> -
->   #if defined(ENTRY_MAPPING_BOOT_SETUP)
->   
->   /* 6. Setup KERNELBASE mapping in TLB1[0] */
-> diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
-> index b55a7b4cb543..26074f92d4bc 100644
-> --- a/arch/powerpc/kernel/misc_64.S
-> +++ b/arch/powerpc/kernel/misc_64.S
-> @@ -432,11 +432,6 @@ kexec_create_tlb:
->   	rlwimi	r9,r10,16,4,15		/* Setup MAS0 = TLBSEL | ESEL(r9) */
->   
->   /* Set up a temp identity mapping v:0 to p:0 and return to it. */
-> -#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
-> -#define M_IF_NEEDED	MAS2_M
-> -#else
-> -#define M_IF_NEEDED	0
-> -#endif
->   	mtspr	SPRN_MAS0,r9
->   
->   	lis	r9,(MAS1_VALID|MAS1_IPROT)@h
-> 
+> +	tsl2772_chip_off(indio_dev);
+> +}
+> +
+>  /**
+>   * tsl2772_invoke_change - power cycle the device to implement the user
+>   *                         parameters
+> @@ -1797,20 +1767,22 @@ static int tsl2772_probe(struct i2c_client *clientp,
+>  	chip->client = clientp;
+>  	i2c_set_clientdata(clientp, indio_dev);
+>  
+> -	chip->vddio_supply = tsl2772_get_regulator(chip, "vddio");
+> -	if (IS_ERR(chip->vddio_supply))
+> -		return PTR_ERR(chip->vddio_supply);
+> +	chip->reg[TSL2772_SUPPLY_VDD].supply = "vdd";
+> +	chip->reg[TSL2772_SUPPLY_VDDIO].supply = "vddio";
+>  
+> -	chip->vdd_supply = tsl2772_get_regulator(chip, "vdd");
+> -	if (IS_ERR(chip->vdd_supply)) {
+> -		regulator_disable(chip->vddio_supply);
+> -		return PTR_ERR(chip->vdd_supply);
+> -	}
+> +	ret = devm_regulator_bulk_get(&clientp->dev, ARRAY_SIZE(chip->reg),
+> +		chip->reg);
+> +	if (ret < 0)
+> +		return ret;
+
+Add a dev_err like the other error paths in probe function. Users can
+use the tracing subsystem to see why this failed but an error message
+in dmesg is much easier for users to find. Also be sure to check for the
+EPROBE_DEFER case.
+
+Brian
