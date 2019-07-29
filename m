@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF5C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D93C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE71204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88B00204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430232;
-	bh=JSym5BCHXIZhjJG90piwBXOB0c8hcCgBoTk+AG7pemM=;
+	s=default; t=1564430237;
+	bh=GBPPaGxrCNpYyAZszl07+DyHsr+jJxr0l5+IvGAZjtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GELI9gYPSY66/b1ZtdHLYLmetMET+Sg/uMgeWdDOluuB/vp+P9i4eYI5+cc5Al17V
-	 r8c4ZXBQqMqMYNeCBs+IkhM9xMu4zZsC8d7FbYzLxt3jNh0qvdphqpEmGm/YAgWjpb
-	 FGG9owJqdPJrVLoewcjuL5ExhQbVUFcLzROqcqqA=
+	b=TXFxl2Rsbfo32BGWOAgKglPiNXfHwjqd+b7NzzA6+1CqkSFwgI8cFxohlZO0TWEXZ
+	 KbxKMmvJN0AK7KQDVpIOJnfwbQw9N64XcftT4wKZydYdNrpFWnMyR85n+mx0reDRn/
+	 vc/H+LrIqvhEYMZfYFwGxAY5i3CQUxmbHwGUcjdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404138AbfG2Ty6 (ORCPT
+        id S2390789AbfG2Tym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:54:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:54:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404132AbfG2Tyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:54:53 -0400
+        id S2404073AbfG2Tyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:54:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B1CF204EC;
-        Mon, 29 Jul 2019 19:54:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15A69204EC;
+        Mon, 29 Jul 2019 19:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430092;
-        bh=JSym5BCHXIZhjJG90piwBXOB0c8hcCgBoTk+AG7pemM=;
+        s=default; t=1564430076;
+        bh=GBPPaGxrCNpYyAZszl07+DyHsr+jJxr0l5+IvGAZjtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UlahhL24bwsv1b6MT7Jg7JnTt3PvVvLBKOyHPuKt4u2a4LNK8ARRRzLCihYsEwBVy
-         MD4n4hstBX0ZM8XY0PLQ9xAqAaO3Xfv52842IvwM5qgt51I3Xh/j+VTJ8mU10zkiLB
-         /yVS29dAzWLNxRuZ2nJip7V9JbV0toUaqshdwoh0=
+        b=gaOnQGEA1BrVWUFO3rVnZAQ44TBa4r5NxvdhO02G7QEtuhVGLifP3Y7yUf30WGmnP
+         bvWqyr5ojtCcTipwlOu5IqV15hUeaFNWzgKgGk5Gvh7pBDszjGXlHKx4U6bIOtzeaC
+         smfVnXCmiox6+jbYdMzdMQapyke8E0+rFNdca9dU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Duncan Overbruck <kernel@duncano.de>
-Subject: [PATCH 5.2 193/215] ALSA: pcm: Fix refcount_inc() on zero usage
-Date:   Mon, 29 Jul 2019 21:23:09 +0200
-Message-Id: <20190729190813.335586133@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Bunk <bunk@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Arseny Solokha <asolokha@kb.kras.ru>
+Subject: [PATCH 5.2 188/215] eeprom: make older eeprom drivers select NVMEM_SYSFS
+Date:   Mon, 29 Jul 2019 21:23:04 +0200
+Message-Id: <20190729190812.669585679@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -59,81 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Arseny Solokha <asolokha@kb.kras.ru>
 
-commit 0e279dcea0ec897af1c979ebee4ec92b461793f5 upstream.
+commit 1b5621832f9bd9899370ea6928462cd02ebe7dc0 upstream.
 
-The recent rewrite of PCM link lock management introduced the refcount
-in snd_pcm_group object, managed by the kernel refcount_t API.  This
-caused unexpected kernel warnings when the kernel is built with
-CONFIG_REFCOUNT_FULL=y.  As the warning line indicates, the problem is
-obviously that we start with refcount=0 and do refcount_inc() for
-adding each PCM link, while refcount_t API doesn't like refcount_inc()
-performed on zero.
+misc/eeprom/{at24,at25,eeprom_93xx46} drivers all register their
+corresponding devices in the nvmem framework in compat mode which requires
+nvmem sysfs interface to be present. The latter, however, has been split
+out from nvmem under a separate Kconfig in commit ae0c2d725512 ("nvmem:
+core: add NVMEM_SYSFS Kconfig"). As a result, probing certain I2C-attached
+EEPROMs now fails with
 
-For adapting the proper refcount_t usage, this patch changes the logic
-slightly:
-- The initial refcount is 1, assuming the single list entry
-- The refcount is incremented / decremented at each PCM link addition
-  and deletion
-- ... which allows us concentrating only on the refcount as a release
-  condition
+  at24: probe of 0-0050 failed with error -38
 
-Fixes: f57f3df03a8e ("ALSA: pcm: More fine-grained PCM link locking")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204221
-Reported-and-tested-by: Duncan Overbruck <kernel@duncano.de>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+because of a stub implementation of nvmem_sysfs_setup_compat()
+in drivers/nvmem/nvmem.h. Update the nvmem dependency for these drivers
+so they could load again:
+
+  at24 0-0050: 32768 byte 24c256 EEPROM, writable, 64 bytes/write
+
+Cc: Adrian Bunk <bunk@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Arseny Solokha <asolokha@kb.kras.ru>
+Link: https://lore.kernel.org/r/20190716111236.27803-1-asolokha@kb.kras.ru
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/pcm_native.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/misc/eeprom/Kconfig |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -77,7 +77,7 @@ void snd_pcm_group_init(struct snd_pcm_g
- 	spin_lock_init(&group->lock);
- 	mutex_init(&group->mutex);
- 	INIT_LIST_HEAD(&group->substreams);
--	refcount_set(&group->refs, 0);
-+	refcount_set(&group->refs, 1);
- }
- 
- /* define group lock helpers */
-@@ -1096,8 +1096,7 @@ static void snd_pcm_group_unref(struct s
- 
- 	if (!group)
- 		return;
--	do_free = refcount_dec_and_test(&group->refs) &&
--		list_empty(&group->substreams);
-+	do_free = refcount_dec_and_test(&group->refs);
- 	snd_pcm_group_unlock(group, substream->pcm->nonatomic);
- 	if (do_free)
- 		kfree(group);
-@@ -2020,6 +2019,7 @@ static int snd_pcm_link(struct snd_pcm_s
- 	snd_pcm_group_lock_irq(target_group, nonatomic);
- 	snd_pcm_stream_lock(substream1);
- 	snd_pcm_group_assign(substream1, target_group);
-+	refcount_inc(&target_group->refs);
- 	snd_pcm_stream_unlock(substream1);
- 	snd_pcm_group_unlock_irq(target_group, nonatomic);
-  _end:
-@@ -2056,13 +2056,14 @@ static int snd_pcm_unlink(struct snd_pcm
- 	snd_pcm_group_lock_irq(group, nonatomic);
- 
- 	relink_to_local(substream);
-+	refcount_dec(&group->refs);
- 
- 	/* detach the last stream, too */
- 	if (list_is_singular(&group->substreams)) {
- 		relink_to_local(list_first_entry(&group->substreams,
- 						 struct snd_pcm_substream,
- 						 link_list));
--		do_free = !refcount_read(&group->refs);
-+		do_free = refcount_dec_and_test(&group->refs);
- 	}
- 
- 	snd_pcm_group_unlock_irq(group, nonatomic);
+--- a/drivers/misc/eeprom/Kconfig
++++ b/drivers/misc/eeprom/Kconfig
+@@ -5,6 +5,7 @@ config EEPROM_AT24
+ 	tristate "I2C EEPROMs / RAMs / ROMs from most vendors"
+ 	depends on I2C && SYSFS
+ 	select NVMEM
++	select NVMEM_SYSFS
+ 	select REGMAP_I2C
+ 	help
+ 	  Enable this driver to get read/write support to most I2C EEPROMs
+@@ -34,6 +35,7 @@ config EEPROM_AT25
+ 	tristate "SPI EEPROMs from most vendors"
+ 	depends on SPI && SYSFS
+ 	select NVMEM
++	select NVMEM_SYSFS
+ 	help
+ 	  Enable this driver to get read/write support to most SPI EEPROMs,
+ 	  after you configure the board init code to know about each eeprom
+@@ -80,6 +82,7 @@ config EEPROM_93XX46
+ 	depends on SPI && SYSFS
+ 	select REGMAP
+ 	select NVMEM
++	select NVMEM_SYSFS
+ 	help
+ 	  Driver for the microwire EEPROM chipsets 93xx46x. The driver
+ 	  supports both read and write commands and also the command to
 
 
