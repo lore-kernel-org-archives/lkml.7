@@ -7,89 +7,89 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3174DC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC7AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3BE9206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2416206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:35:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NDvJyUbd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kFIocFLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbfG2QfR (ORCPT
+        id S1729252AbfG2Qf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:35:17 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39289 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbfG2QfQ (ORCPT
+        Mon, 29 Jul 2019 12:35:28 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44755 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbfG2Qf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:35:16 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f17so24313778pfn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:35:15 -0700 (PDT)
+        Mon, 29 Jul 2019 12:35:27 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i18so28525853pgl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:35:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=LosA34Pi06t550ndfWq1HZ2X46u/LpML1Ea5fccWC7E=;
-        b=NDvJyUbd4FPZnEzvHlG0+LLOrnWEIWl8T1uF/R3sM9rTbDL1xgrMCms2SH12h3QByl
-         jQzeedo8qh7F1CKOkRgu6JO8CNoHChExWpJqfPHUx0yYX43YkvvT/cT8HfLH3HdVawEM
-         TZ0YrjtHl/lRT++4pspAHq2IqXkmm/X0gjEg4=
+        bh=csy/8OomwFVUg7SRyRLfvo8oboAYraDRiEDjE5dD+lQ=;
+        b=kFIocFLxC455i4jRxXXYbr7oPuLy/ISI/icidZgi/lHk98qBlP2Z8jLygeg+dV60wu
+         7Rvp2x4sQwKIu0YSBdvuQbFBbg3x1+cLo96LTzNdVoUVWpWuy+B/Tyfc/V9y6pUYOQ4t
+         uOAclk8gAMV5BaTCADFxTmVpEWqVxiTSMovYQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=LosA34Pi06t550ndfWq1HZ2X46u/LpML1Ea5fccWC7E=;
-        b=iqjV5Xz5UnFl1fcTp0U14/NXYCyfSsV3MlCiclpTrRXdsaFSQr2Rpk8E6otRFP6loC
-         9b4sj8YwElQFOP6k6LFBhT8LPQDKj7YspqSRZnR8B+q3gOC1re62eTr2L3EydeK5S/Uu
-         QEVQU48y7YRFTvvzjoF9/2EOchV4AtfUYxXw04fE+nfYjSlVnC2xjlD1JpTqy56PS8WX
-         D/vr2aLvrxOGQu73cYza7DHbGMoLUddLY0xwT4rgIBkOT1e24lx01x0g4/X4o3l8GNlL
-         VRUgfLbGk97VVMhALTM5JXMEBk+dVmk7/xoo5MODZnBniNm+G/CApPm+KGpLJDxFm7WD
-         re0A==
-X-Gm-Message-State: APjAAAU9TKFOodXz5J4OlOCK050PoMY/lkT/G0bSdkU1Mu/Rb8OoiEH/
-        jodtIx12mplPIK9izjGZ3pB8Sg==
-X-Google-Smtp-Source: APXvYqxiO8pf2kEJ5WYkyipUkk47CIU4vFX7JK7bgUojD7XXorF+A7b4LosOiyjpsDE+ksy35reuqQ==
-X-Received: by 2002:aa7:9118:: with SMTP id 24mr36133516pfh.56.1564418115354;
-        Mon, 29 Jul 2019 09:35:15 -0700 (PDT)
+        bh=csy/8OomwFVUg7SRyRLfvo8oboAYraDRiEDjE5dD+lQ=;
+        b=MrKrjexpQb2cQZnsxs0O/dVIzPu68WB92xgp8Gho9QwEgKTCrHOFHfHuvX6l2nP13W
+         XZagr3VFXecLxoXRwSkFs+a7DwydH3sR5Eaw0I3pmN/944Cc2hQOd4PbIDA3ZpSuEQIu
+         NrjQj6G4vGuyaruhqN3E02f/RIbnMt/d2a0FtVsOAc7fznYAct9yTzCtoUNPKs5IcLRG
+         pSiT7Md5g1B1bItoOJ7DTXAdIL7i7FBB2/QDcqCg7PcU7/Vz4mncX4XN4QhIEGFVQFe4
+         kkvGFHjxFUG8abeZf03urLxlZYLxphIEPYTKf8AN8JKh98abmLLSNLiUNca0UV2yhJXB
+         AnHA==
+X-Gm-Message-State: APjAAAWPh/EKRRYx4Z04V33E2H8J5ARk7SO3Frt0xurym7tOukCTtRse
+        w2ho/09htyQ9yCMDaRAmjedAag==
+X-Google-Smtp-Source: APXvYqzkiCoZJINOHjCqxo8dBE/Exx5+oW+y+VKHDSYAYoxcGcAMxDzu5ujXJKcPTy0sWl4YQa5NcA==
+X-Received: by 2002:a17:90a:2767:: with SMTP id o94mr109284055pje.25.1564418126501;
+        Mon, 29 Jul 2019 09:35:26 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w2sm53553878pgc.32.2019.07.29.09.35.14
+        by smtp.gmail.com with ESMTPSA id s185sm94309720pgs.67.2019.07.29.09.35.25
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 09:35:14 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 09:35:13 -0700
+        Mon, 29 Jul 2019 09:35:25 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:35:24 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+Cc:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
         Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] mfd: db8500-prcmu: Mark expected switch fall-throughs
-Message-ID: <201907290935.B02CE809F@keescook>
-References: <20190728235614.GA23618@embeddedor>
+Subject: Re: [PATCH] mfd: omap-usb-host: Mark expected switch fall-throughs
+Message-ID: <201907290935.F99432D6@keescook>
+References: <20190728235858.GA23755@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190728235614.GA23618@embeddedor>
+In-Reply-To: <20190728235858.GA23755@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 06:56:14PM -0500, Gustavo A. R. Silva wrote:
+On Sun, Jul 28, 2019 at 06:58:58PM -0500, Gustavo A. R. Silva wrote:
 > Mark switch cases where we are expecting to fall through.
 > 
 > This patch fixes the following warnings:
 > 
-> drivers/mfd/db8500-prcmu.c: In function 'dsiclk_rate':
-> drivers/mfd/db8500-prcmu.c:1592:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    div *= 2;
->    ~~~~^~~~
-> drivers/mfd/db8500-prcmu.c:1593:2: note: here
->   case PRCM_DSI_PLLOUT_SEL_PHI_2:
->   ^~~~
-> drivers/mfd/db8500-prcmu.c:1594:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    div *= 2;
->    ~~~~^~~~
-> drivers/mfd/db8500-prcmu.c:1595:2: note: here
->   case PRCM_DSI_PLLOUT_SEL_PHI:
->   ^~~~
+> drivers/mfd/omap-usb-host.c: In function 'usbhs_runtime_resume':
+> drivers/mfd/omap-usb-host.c:303:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     if (!IS_ERR(omap->hsic480m_clk[i])) {
+>        ^
+> drivers/mfd/omap-usb-host.c:313:3: note: here
+>    case OMAP_EHCI_PORT_MODE_TLL:
+>    ^~~~
+> drivers/mfd/omap-usb-host.c: In function 'usbhs_runtime_suspend':
+> drivers/mfd/omap-usb-host.c:345:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     if (!IS_ERR(omap->hsic480m_clk[i]))
+>        ^
+> drivers/mfd/omap-usb-host.c:349:3: note: here
+>    case OMAP_EHCI_PORT_MODE_TLL:
+>    ^~~~
 > 
 > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
 > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
@@ -99,24 +99,31 @@ Reviewed-by: Kees Cook <keescook@chromium.org>
 -Kees
 
 > ---
->  drivers/mfd/db8500-prcmu.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/mfd/omap-usb-host.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/mfd/db8500-prcmu.c b/drivers/mfd/db8500-prcmu.c
-> index 3f21e26b8d36..90e0f21bc49c 100644
-> --- a/drivers/mfd/db8500-prcmu.c
-> +++ b/drivers/mfd/db8500-prcmu.c
-> @@ -1590,8 +1590,10 @@ static unsigned long dsiclk_rate(u8 n)
->  	switch (divsel) {
->  	case PRCM_DSI_PLLOUT_SEL_PHI_4:
->  		div *= 2;
-> +		/* Fall through */
->  	case PRCM_DSI_PLLOUT_SEL_PHI_2:
->  		div *= 2;
-> +		/* Fall through */
->  	case PRCM_DSI_PLLOUT_SEL_PHI:
->  		return pll_rate(PRCM_PLLDSI_FREQ, clock_rate(PRCMU_HDMICLK),
->  			PLL_RAW) / div;
+> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
+> index 792b855a9104..4798d9f3f9d5 100644
+> --- a/drivers/mfd/omap-usb-host.c
+> +++ b/drivers/mfd/omap-usb-host.c
+> @@ -308,7 +308,7 @@ static int usbhs_runtime_resume(struct device *dev)
+>  					 i, r);
+>  				}
+>  			}
+> -		/* Fall through as HSIC mode needs utmi_clk */
+> +		/* Fall through - as HSIC mode needs utmi_clk */
+>  
+>  		case OMAP_EHCI_PORT_MODE_TLL:
+>  			if (!IS_ERR(omap->utmi_clk[i])) {
+> @@ -344,7 +344,7 @@ static int usbhs_runtime_suspend(struct device *dev)
+>  
+>  			if (!IS_ERR(omap->hsic480m_clk[i]))
+>  				clk_disable_unprepare(omap->hsic480m_clk[i]);
+> -		/* Fall through as utmi_clks were used in HSIC mode */
+> +		/* Fall through - as utmi_clks were used in HSIC mode */
+>  
+>  		case OMAP_EHCI_PORT_MODE_TLL:
+>  			if (!IS_ERR(omap->utmi_clk[i]))
 > -- 
 > 2.22.0
 > 
