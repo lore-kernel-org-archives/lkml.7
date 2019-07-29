@@ -2,84 +2,154 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850E5C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A45C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFE1206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA98206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nfAVIyvw"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="arONxYLf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387566AbfG2LHb (ORCPT
+        id S2387576AbfG2LIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:07:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49774 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387469AbfG2LHa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:07:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=J8SecCHFAYNhISRn2gyDpuWW772w3hItu/yd4iRurZs=; b=nfAVIyvwOvu5mJxYbjzOPhZdx
-        uugr83y7XKK1cjiO5jGGjHsCheAhouPpGABKL/0NlIFNBX/rvxEJlhTnOnuSVsat8iR6MBWyB6JUc
-        QqAso2peSPdD8xVCuYdDlNN/ejrScq524Y8WsgGyJDtn9ImNR8qI0CQGZnqpf/r8uO9jPMnFfrJe+
-        XIZm006y2L5N5Dhn30XW2aXq9tS86Ct9jRgW1uiK4IrnjSmbZfedvuxrLGEAcYgFQYBMaoITo9Ztl
-        yM6ZVEiwTE6BnTSErwTFei4lE0DPe6uv1eauzupGx2diDo5+dtXK19AihtiZ5m4P/ZyCGMzkfBJ72
-        DktEcOZfQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs3V3-0005yc-UH; Mon, 29 Jul 2019 11:07:30 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A051A20B51713; Mon, 29 Jul 2019 13:07:27 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 13:07:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     mingo@redhat.com, will@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] locking/mutex: Use mutex flags macro instead of hard
- code value
-Message-ID: <20190729110727.GB31398@hirez.programming.kicks-ass.net>
-References: <1564397578-28423-1-git-send-email-mojha@codeaurora.org>
- <1564397578-28423-2-git-send-email-mojha@codeaurora.org>
+        Mon, 29 Jul 2019 07:08:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:15122 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387457AbfG2LIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:08:10 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45xxkC44QKz9v9MV;
+        Mon, 29 Jul 2019 13:08:03 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=arONxYLf; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ESTVg6lnoUGW; Mon, 29 Jul 2019 13:08:03 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45xxkC2ztgz9v9Lx;
+        Mon, 29 Jul 2019 13:08:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1564398483; bh=5INwHw7XbuC/K2OjMZ4KYRax0cv2G+pbjXkMo1syWiI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=arONxYLfYazH1Zuv1sjYhl+98rYh7/IMm8wcB9t915KfBP0mg7p23qtwKyOzwnotp
+         W40nOf8zFdXdk+whAYptqqCcrHrHC6a8ulMz3YYeOFBKwQhFMNHEzDbTqPDV1UtWXJ
+         Wm699DyCi1utuj1uMB5IRkKVDDV3wBaTlHP6sh5E=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 449968B7CB;
+        Mon, 29 Jul 2019 13:08:08 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id vS0yC_BC0m1Z; Mon, 29 Jul 2019 13:08:08 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 13A6E8B7B3;
+        Mon, 29 Jul 2019 13:08:08 +0200 (CEST)
+Subject: Re: [RFC PATCH 05/10] powerpc/fsl_booke/32: introduce
+ reloc_kernel_entry() helper
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com
+Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
+        yebin10@huawei.com, thunder.leizhen@huawei.com,
+        jingxiangfeng@huawei.com, fanchengyang@huawei.com
+References: <20190717080621.40424-1-yanaijie@huawei.com>
+ <20190717080621.40424-6-yanaijie@huawei.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <e4ccd015-a9c4-b0a6-e3ca-d37a04e29ec6@c-s.fr>
+Date:   Mon, 29 Jul 2019 13:08:08 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564397578-28423-2-git-send-email-mojha@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190717080621.40424-6-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 04:22:58PM +0530, Mukesh Ojha wrote:
-> Let's use the mutex flag macro(which got moved from mutex.c
-> to linux/mutex.h in the last patch) instead of hard code
-> value which was used in __mutex_owner().
-> 
-> Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
-> ---
->  include/linux/mutex.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/mutex.h b/include/linux/mutex.h
-> index 79b28be..c3833ba 100644
-> --- a/include/linux/mutex.h
-> +++ b/include/linux/mutex.h
-> @@ -87,7 +87,7 @@ struct mutex {
->   */
->  static inline struct task_struct *__mutex_owner(struct mutex *lock)
->  {
-> -	return (struct task_struct *)(atomic_long_read(&lock->owner) & ~0x07);
-> +	return (struct task_struct *)(atomic_long_read(&lock->owner) & ~MUTEX_FLAGS);
->  }
 
-I would _much_ rather move __mutex_owner() out of line, you're exposing
-far too much stuff.
+
+Le 17/07/2019 à 10:06, Jason Yan a écrit :
+> Add a new helper reloc_kernel_entry() to jump back to the start of the
+> new kernel. After we put the new kernel in a randomized place we can use
+> this new helper to enter the kernel and begin to relocate again.
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Cc: Diana Craciun <diana.craciun@nxp.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> ---
+>   arch/powerpc/kernel/head_fsl_booke.S | 16 ++++++++++++++++
+>   arch/powerpc/mm/mmu_decl.h           |  1 +
+>   2 files changed, 17 insertions(+)
+> 
+> diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
+> index a57d44638031..ce40f96dae20 100644
+> --- a/arch/powerpc/kernel/head_fsl_booke.S
+> +++ b/arch/powerpc/kernel/head_fsl_booke.S
+> @@ -1144,6 +1144,22 @@ _GLOBAL(create_tlb_entry)
+>   	sync
+>   	blr
+>   
+> +/*
+> + * Return to the start of the relocated kernel and run again
+> + * r3 - virtual address of fdt
+> + * r4 - entry of the kernel
+> + */
+> +_GLOBAL(reloc_kernel_entry)
+> +	mfmsr	r7
+> +	li	r8,(MSR_IS | MSR_DS)
+> +	andc	r7,r7,r8
+
+Instead of the li/andc, what about the following:
+
+rlwinm r7, r7, 0, ~(MSR_IS | MSR_DS)
+
+> +
+> +	mtspr	SPRN_SRR0,r4
+> +	mtspr	SPRN_SRR1,r7
+> +	isync
+> +	sync
+> +	rfi
+
+Are the isync/sync really necessary ? AFAIK, rfi is context synchronising.
+
+> +
+>   /*
+>    * Create a tlb entry with the same effective and physical address as
+>    * the tlb entry used by the current running code. But set the TS to 1.
+> diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+> index d7737cf97cee..dae8e9177574 100644
+> --- a/arch/powerpc/mm/mmu_decl.h
+> +++ b/arch/powerpc/mm/mmu_decl.h
+> @@ -143,6 +143,7 @@ extern void adjust_total_lowmem(void);
+>   extern int switch_to_as1(void);
+>   extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
+>   extern void create_tlb_entry(phys_addr_t phys, unsigned long virt, int entry);
+> +extern void reloc_kernel_entry(void *fdt, int addr);
+
+No new 'extern' please, see 
+https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/8125//artifact/linux/checkpatch.log
+
+
+>   #endif
+>   extern void loadcam_entry(unsigned int index);
+>   extern void loadcam_multi(int first_idx, int num, int tmp_idx);
+> 
+
+Christophe
