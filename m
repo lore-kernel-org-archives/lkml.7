@@ -2,231 +2,221 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC12C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6898C7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E80E20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A19520C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564437957;
+	bh=oz7ZafXtY+Sug8R5wOW6KLCSMABcROJvqpyLNXhSpNI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=me3ML95y85Krn/7tSp3pjOgGa0dTerUDK8iEGBpdRp08Ig4s3RKGtwzfPldNf1Y8G
+	 RFLwFlqcwo18Fnuq+9XjutRQWLStezUsCxYIUZxLlrWqGxYFjG/aYXY0MB9RcG34jT
+	 oXsOsGFMtTwmmUkgPnHx3sCUWvglkyz5712IJ234=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbfG2WEy convert rfc822-to-8bit (ORCPT
+        id S1729495AbfG2WF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 18:04:54 -0400
-Received: from mailoutvs39.siol.net ([185.57.226.230]:34773 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728032AbfG2WEy (ORCPT
+        Mon, 29 Jul 2019 18:05:56 -0400
+Received: from mail-ot1-f43.google.com ([209.85.210.43]:42969 "EHLO
+        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727946AbfG2WF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 18:04:54 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 490F8522CFE;
-        Tue, 30 Jul 2019 00:04:49 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id WKzvpPpu-wT9; Tue, 30 Jul 2019 00:04:48 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 923D1522CD2;
-        Tue, 30 Jul 2019 00:04:48 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Zimbra) with ESMTPA id DCAB5522CFE;
-        Tue, 30 Jul 2019 00:04:47 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
-Date:   Tue, 30 Jul 2019 00:04:47 +0200
-Message-ID: <2452836.v7ux4bnEjb@jernej-laptop>
-In-Reply-To: <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net> <173825848.1FZsmuHfpq@jernej-laptop> <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
+        Mon, 29 Jul 2019 18:05:56 -0400
+Received: by mail-ot1-f43.google.com with SMTP id l15so64169739otn.9;
+        Mon, 29 Jul 2019 15:05:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UEA32fU0I6ytXCKg3XtwmUrMebt1jpdSsOdRBgXgNeM=;
+        b=r5YAnYae8I76jCmy1JBClemWy31leSvyCgowlDe6/etH3MB/HnJvKYCK6MW/sstlFi
+         OVUgRNza+ZDCBcGcrfBG/fYkDuxSuCS5jWfvwyF6fB+IAtrftPaWI8doqoGxtEitV/pW
+         bGmWQPr8YcCcI7/Z+N1uPofiWSMKjVUzb1jr0Ets8h5AYOYsfG711419ep5jHz11vXiq
+         upqLSuXHNdZYDKHpLHBhSZIzWOsaTN/FytA8uz4N1x2ovQq0kDXoZ0EMi81SsEY6hn6t
+         AiUaoFzpglNUKx8HhTC0NBL8oHyG0Qw7CTXfUZmpioHjI/Www/CE0SANjYO3TPcL997v
+         9iig==
+X-Gm-Message-State: APjAAAWoviUKCNDAlmo/A2JbVHrZlejhuUdPo5/4V1vCbecKxY/tN8+t
+        MrAIcBnj5ip4hRC+4Lpc1iZcnVksZOk621vFgms=
+X-Google-Smtp-Source: APXvYqy8Yk4N8UHHzj20KAMpPsb/zsAUKO3D/YBaq2Muo+H6UBXNUPih+VuLQB+hmRT5+c/N3COtIY7CD7gYCLOrrgg=
+X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr52930409oto.167.1564437954851;
+ Mon, 29 Jul 2019 15:05:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+References: <2332799.izEFUvJP67@kreacher> <2428826.VBuqOhikiK@kreacher>
+ <20190725195258.GA7307@localhost.localdomain> <15043168.halW6uqc8m@kreacher>
+ <D33632F4-E119-4833-816C-79084DA03DE4@canonical.com> <CAJZ5v0imsVS-eDB+Lmd5qzAfmb0UpJ5AwV_Vf+v8D21KAtqTOg@mail.gmail.com>
+ <868a042a9422463fa1166653982bb985@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <868a042a9422463fa1166653982bb985@AUSX13MPC105.AMER.DELL.COM>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 30 Jul 2019 00:05:43 +0200
+Message-ID: <CAJZ5v0gibD_oboFt7x7VjUTe4mw+mZxHcOiFEEcWdw8dUZ5RXw@mail.gmail.com>
+Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+ suspend" has problems
+To:     Mario Limonciello <Mario.Limonciello@dell.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Keith Busch <kbusch@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne ponedeljek, 29. julij 2019 ob 20:51:08 CEST je Uwe Kleine-König 
-napisal(a):
-> On Mon, Jul 29, 2019 at 08:46:25PM +0200, Jernej Škrabec wrote:
-> > Dne ponedeljek, 29. julij 2019 ob 20:40:41 CEST je Uwe Kleine-König
-> > 
-> > napisal(a):
-> > > On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej Škrabec wrote:
-> > > > Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König
-> > > > 
-> > > > napisal(a):
-> > > > > Hello,
-> > > > > 
-> > > > > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
-> > > > > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
-> > > > > > 
-> > > > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
-> > > > > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe
-> > > > > > > > Kleine-König
-> > > > > > > > 
-> > > > > > > > napisal(a):
-> > > > > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec 
-wrote:
-> > > > > > > > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
-> > > > > > > > > > sun4i_pwm_single_bypass = {>
-> > > > > > > > > > 
-> > > > > > > > > >   .npwm = 1,
-> > > > > > > > > >  
-> > > > > > > > > >  };
-> > > > > > > > > > 
-> > > > > > > > > > +static const struct sun4i_pwm_data
-> > > > > > > > > > sun50i_pwm_dual_bypass_clk_rst
-> > > > > > > > > > = {
-> > > > > > > > > > + .has_bus_clock = true,
-> > > > > > > > > > + .has_prescaler_bypass = true,
-> > > > > > > > > > + .has_reset = true,
-> > > > > > > > > > + .npwm = 2,
-> > > > > > > > > > +};
-> > > > > > > > > > +
-> > > > > > > > > > 
-> > > > > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
-> > > > > > > > > >  
-> > > > > > > > > >   {
-> > > > > > > > > >   
-> > > > > > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
-> > > > > > > > > > 
-> > > > > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
-> > > > > > > > > > sun4i_pwm_dt_ids[] =
-> > > > > > > > > > {
-> > > > > > > > > > 
-> > > > > > > > > >   }, {
-> > > > > > > > > >   
-> > > > > > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
-> > > > > > > > > >           .data = &sun4i_pwm_single_bypass,
-> > > > > > > > > > 
-> > > > > > > > > > + }, {
-> > > > > > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
-> > > > > > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
-> > > > > > > > > 
-> > > > > > > > > If you follow my suggestion for the two previous patches,
-> > > > > > > > > you
-> > > > > > > > > can
-> > > > > > > > > just
-> > > > > > > > > 
-> > > > > > > > > use:
-> > > > > > > > >     compatible = "allwinner,sun50i-h6-pwm",
-> > > > > > > > >     "allwinner,sun5i-a10s-pwm";
-> > > > > > > > > 
-> > > > > > > > > and drop this patch.
-> > > > > > > > 
-> > > > > > > > Maxime found out that it's not compatible with A10s due to
-> > > > > > > > difference
-> > > > > > > > in bypass bit, but yes, I know what you mean.
-> > > > > > > > 
-> > > > > > > > Since H6 requires reset line and bus clock to be specified,
-> > > > > > > > it's
-> > > > > > > > not
-> > > > > > > > compatible from DT binding side. New yaml based binding must
-> > > > > > > > somehow
-> > > > > > > > know that in order to be able to validate DT node, so it needs
-> > > > > > > > standalone compatible. However, depending on conclusions of
-> > > > > > > > other
-> > > > > > > > discussions, this new compatible can be associated with
-> > > > > > > > already
-> > > > > > > > available quirks structure or have it's own.> >
-> > > > > > > 
-> > > > > > > I cannot follow. You should be able to specify in the binding
-> > > > > > > that
-> > > > > > > the
-> > > > > > > reset line and bus clock is optional. Then
-> > > > > > > allwinner,sun50i-h6-pwm
-> > > > > > > without a reset line and bus clock also verifies, but this
-> > > > > > > doesn't
-> > > > > > > really hurt (and who knows, maybe the next allwinner chip needs
-> > > > > > > exactly
-> > > > > > > this).
-> > > > > > 
-> > > > > > It is not optional. It will not work if either the clocks or reset
-> > > > > > controls
-> > > > > > are missing. How would these be optional anyway? Either it's
-> > > > > > connected
-> > > > > > and
-> > > > > > thus required, or it's not and therefore should be omitted from
-> > > > > > the
-> > > > > > description.
-> > > > > 
-> > > > > [Just arguing about the clock here, the argumentation is analogous
-> > > > > for
-> > > > > the reset control.]
-> > > > > 
-> > > > > From the driver's perspective it's optional: There are devices with
-> > > > > and
-> > > > > without a bus clock. This doesn't mean that you can just ignore this
-> > > > > clock if it's specified. It's optional in the sense "If dt doesn't
-> > > > > specify it, then assume this is a device that doesn't have it and so
-> > > > > you
-> > > > > don't need to handle it." but not in the sense "it doesn't matter if
-> > > > > you handle it or not.".
-> > > > > 
-> > > > > Other than that I'm on your side. So for example I think it's not
-> > > > > optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
-> > > > > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
-> > > > > because this hides exactly the kind of problem you point out here.
-> > > > 
-> > > > I think there's misunderstanding. I only argued that we can't use
-> > > > 
-> > > > compatible = "allwinner,sun50i-h6-pwm",
-> > > > 
-> > > > 	 "allwinner,sun5i-a10s-pwm";
-> > > > 
-> > > > as you suggested and only
-> > > > 
-> > > > compatible = "allwinner,sun50i-h6-pwm";
-> > > > 
-> > > > will work. Not because of driver itself (it can still use _optional()
-> > > > variants), but because of DT binding, which should be able to validate
-> > > > H6
-> > > > PWM node - reset and bus clock references are required in this case.
-> > > 
-> > > I think I understood. In my eyes there is no need to let validation of
-> > > the DT bindings catch a missing "optional" property that is needed on
-> > > H6.
-> > > 
-> > > You have to draw the line somewhere which information the driver has
-> > > hard-coded and what is only provided by the device tree and just assumed
-> > > to be correct by the driver. You argue the driver should know that
-> > 
-> > No, in this thread I argue that DT validation tool, executed by
-> > 
-> > make ARCH=arm64 dtbs_check
-> > 
-> > should catch that. This is not a driver, but DT binding described in YAML.
-> 
-> The argumentation is the same. dtbs_check doesn't notice if the base
-> address of your "allwinner,sun50i-h6-pwm" device is wrong. So why should
-> it catch a missing reset controller phandle?
+On Mon, Jul 29, 2019 at 5:53 PM <Mario.Limonciello@dell.com> wrote:
+>
+> > -----Original Message-----
+> > From: Rafael J. Wysocki <rafael@kernel.org>
+> > Sent: Saturday, July 27, 2019 7:55 AM
+> > To: Kai-Heng Feng
+> > Cc: Rafael J. Wysocki; Keith Busch; Busch, Keith; Christoph Hellwig; Sagi Grimberg;
+> > linux-nvme@lists.infradead.org; Limonciello, Mario; Linux PM; LKML
+> > Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+> > suspend" has problems
+> >
+> >
+> > [EXTERNAL EMAIL]
+> >
+> > On Fri, Jul 26, 2019 at 4:03 PM Kai-Heng Feng
+> > <kai.heng.feng@canonical.com> wrote:
+> > >
+> > > at 04:02, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > >
+> > > > On Thursday, July 25, 2019 9:52:59 PM CEST Keith Busch wrote:
+> > > >> On Thu, Jul 25, 2019 at 09:48:57PM +0200, Rafael J. Wysocki wrote:
+> > > >>> NVME Identify Controller:
+> > > >>> vid     : 0x1c5c
+> > > >>> ssvid   : 0x1c5c
+> > > >>> sn      : MS92N171312902J0N
+> > > >>> mn      : PC401 NVMe SK hynix 256GB
+> > > >>> fr      : 80007E00
+> > > >>> rab     : 2
+> > > >>> ieee    : ace42e
+> > > >>> cmic    : 0
+> > > >>> mdts    : 5
+> > > >>> cntlid  : 1
+> > > >>> ver     : 10200
+> > > >>> rtd3r   : 7a120
+> > > >>> rtd3e   : 1e8480
+> > > >>> oaes    : 0x200
+> > > >>> ctratt  : 0
+> > > >>> oacs    : 0x17
+> > > >>> acl     : 7
+> > > >>> aerl    : 3
+> > > >>> frmw    : 0x14
+> > > >>> lpa     : 0x2
+> > > >>> elpe    : 255
+> > > >>> npss    : 4
+> > > >>> avscc   : 0x1
+> > > >>> apsta   : 0x1
+> > > >>> wctemp  : 352
+> > > >>> cctemp  : 354
+> > > >>> mtfa    : 0
+> > > >>> hmpre   : 0
+> > > >>> hmmin   : 0
+> > > >>> tnvmcap : 0
+> > > >>> unvmcap : 0
+> > > >>> rpmbs   : 0
+> > > >>> edstt   : 10
+> > > >>> dsto    : 0
+> > > >>> fwug    : 0
+> > > >>> kas     : 0
+> > > >>> hctma   : 0
+> > > >>> mntmt   : 0
+> > > >>> mxtmt   : 0
+> > > >>> sanicap : 0
+> > > >>> hmminds : 0
+> > > >>> hmmaxd  : 0
+> > > >>> nsetidmax : 0
+> > > >>> anatt   : 0
+> > > >>> anacap  : 0
+> > > >>> anagrpmax : 0
+> > > >>> nanagrpid : 0
+> > > >>> sqes    : 0x66
+> > > >>> cqes    : 0x44
+> > > >>> maxcmd  : 0
+> > > >>> nn      : 1
+> > > >>> oncs    : 0x1f
+> > > >>> fuses   : 0x1
+> > > >>> fna     : 0
+> > > >>> vwc     : 0x1
+> > > >>> awun    : 7
+> > > >>> awupf   : 7
+> > > >>> nvscc   : 1
+> > > >>> acwu    : 7
+> > > >>> sgls    : 0
+> > > >>> mnan    : 0
+> > > >>> subnqn  :
+> > > >>> ioccsz  : 0
+> > > >>> iorcsz  : 0
+> > > >>> icdoff  : 0
+> > > >>> ctrattr : 0
+> > > >>> msdbd   : 0
+> > > >>> ps    0 : mp:6.00W operational enlat:5 exlat:5 rrt:0 rrl:0
+> > > >>>           rwt:0 rwl:0 idle_power:- active_power:-
+> > > >>> ps    1 : mp:3.80W operational enlat:30 exlat:30 rrt:1 rrl:1
+> > > >>>           rwt:1 rwl:1 idle_power:- active_power:-
+> > > >>> ps    2 : mp:2.40W operational enlat:100 exlat:100 rrt:2 rrl:2
+> > > >>>           rwt:2 rwl:2 idle_power:- active_power:-
+> > > >>> ps    3 : mp:0.0700W non-operational enlat:1000 exlat:1000 rrt:3 rrl:3
+> > > >>>           rwt:3 rwl:3 idle_power:- active_power:-
+> > > >>> ps    4 : mp:0.0070W non-operational enlat:1000 exlat:5000 rrt:3 rrl:3
+> > > >>>           rwt:3 rwl:3 idle_power:- active_power:-
+> > > >>
+> > > >> Hm, nothing stands out as something we can use to determine if we should
+> > > >> skip the nvme specific settings or allow D3. I've no other ideas at the
+> > > >> moment for what we may check.
+> > > >
+> > > > Well, do ASPM settings matter here?
+> > >
+> > > Seems like it's a regression in the firmware.
+> > >
+> > > The issue happens in version 80007E00 but not version 80006E00.
+> >
+> > So you mean the NVMe firmware, to be entirely precise.
+>
+> Yes.
+>
+> >
+> > > I am not sure how to downgrade it under Linux though.
+> >
+> > Me neither.
+>
+> I'll ask the storage team to ask Hynix to make both these FW available on LVFS.
+> Fwupd can upgrade and downgrade firmware when the binaries are made available.
+>
+> They could potentially be pulled directly out of the Windows executables too, but I don't
+> know how to identify them myself.
 
-Of course checking actual values of node properties doesn't make sense in 
-dtbs_check, otherwise we would have million DT bindings. If you have 10 copies 
-of the same IP core, of course you would use same compatible, but actual 
-register ranges, interrupts, etc. would be different in DT nodes.
-
-At this point I would make same argument as were made before, but there is no 
-point going in circles. I'm interested what have DT maintainers to say.
-
-Best regards,
-Jernej
+Well, thanks, but I'm not quite convinced that the NVMe is the reason
+why my 9380 cannot reach SLP_S0 and this is my production system, so
+I'd rather not do NVMe firmware downgrade experiments on it. :-)
 
 
+
+>
+> >
+> > > The firmware changelog [1] is very interesting:
+> > > - Improves the performance of the solid-state drive (SSD) by distributing
+> > > power into the SSD efficiently according to the power state of the system.
+> > >
+> > > [1]
+> > >
+> > https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=m
+> > cxm8
+> >
+> > Huh.
+> >
+> > It looks like something else prevents the PCH on my 9380 from reaching
+> > the right state for S0ix, though.  I still need to find out what it
+> > is.
