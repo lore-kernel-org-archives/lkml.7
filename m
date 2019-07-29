@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FDCC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD820C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE932171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0A2217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428941;
-	bh=o+gUEAdqo4k1GnCYrjiQ2VeC9eCNVj157bg/jRvCF7M=;
+	s=default; t=1564428944;
+	bh=RhXlH+UNH9e1dlri2etCNTL86IgU0zFFYtzRoIaD7/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HYTiceOND/7vPC4xEN1AGE9tH2+PsSGj522u/ftHFjGECR6NeXdmHgLKrVE4j/70E
-	 wpk6QeMLEaUzpvf1Q3aAtVockyi4niuxmad86b4/6hd/EC57PT5tyhGQe3y0Va0WbD
-	 kq8MWYWab0xT6bV+A/lZRz2XSzmLlulfj76LmE1k=
+	b=qu8LrZXkaA0AqzmcBDUqU0GRNF/U+Z2nzIUQJ4THNvLZKq/qEo386SnDbrMDMrth7
+	 uVvEcY97Z70IJ5V1HA+r2Mk60EuqtWZRrRNU5JiRtpVt3/j1rlZRHvA9YfjCckBHMp
+	 skTYAMv5r+KMI92f5DyQKV+fgFJzk9nPW5Uj96jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbfG2Tfj (ORCPT
+        id S1729877AbfG2Tfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:35:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49914 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:35:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729752AbfG2Tfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:35:34 -0400
+        id S1729794AbfG2Tfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:35:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2BEC2171F;
-        Mon, 29 Jul 2019 19:35:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72EA52171F;
+        Mon, 29 Jul 2019 19:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428933;
-        bh=o+gUEAdqo4k1GnCYrjiQ2VeC9eCNVj157bg/jRvCF7M=;
+        s=default; t=1564428936;
+        bh=RhXlH+UNH9e1dlri2etCNTL86IgU0zFFYtzRoIaD7/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DguS15cK8os6vITSHrPZZrxabW5PYmtE9UcqrKWNAlupvKzPrme9M3G+T902UOtaN
-         WMxNlnTA1B63P7lOXeOol2L8nlMmOzhvbUSitRO3WbxzwENWGUOrhtpMtPwBKvhp6n
-         mPTgFA3engyyp5b/BMi+2+U+PYlAfmgp2nv4jQ/A=
+        b=C/NwaJl5mEk7yEz/vqsabqApS/sbQl72nLkXkUd4md0nyD8XTVQC8neEXeOcynUtd
+         h5IXyqXD2DkNuXtNo5l/Z6QLKJ1zp4eM6In+nOqkBcg2jlpHB/mw1Pj6dzde84KrBs
+         XspyE8QcrzwbpxyEidau8D700qeTx5tUD+v6zsHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Kosyh <p.kosyh@gmail.com>,
-        David Ahern <dsa@cumulusnetworks.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        syzbot+6ca1abd0db68b5173a4f@syzkaller.appspotmail.com,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 193/293] vrf: make sure skb->data contains ip header to make routing
-Date:   Mon, 29 Jul 2019 21:21:24 +0200
-Message-Id: <20190729190839.257346175@linuxfoundation.org>
+Subject: [PATCH 4.14 184/293] igmp: fix memory leak in igmpv3_del_delrec()
+Date:   Mon, 29 Jul 2019 21:21:15 +0200
+Message-Id: <20190729190838.594973468@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,113 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Kosyh <p.kosyh@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 107e47cc80ec37cb332bd41b22b1c7779e22e018 ]
+[ Upstream commit e5b1c6c6277d5a283290a8c033c72544746f9b5b ]
 
-vrf_process_v4_outbound() and vrf_process_v6_outbound() do routing
-using ip/ipv6 addresses, but don't make sure the header is available
-in skb->data[] (skb_headlen() is less then header size).
+im->tomb and/or im->sources might not be NULL, but we
+currently overwrite their values blindly.
 
-Case:
+Using swap() will make sure the following call to kfree_pmc(pmc)
+will properly free the psf structures.
 
-1) igb driver from intel.
-2) Packet size is greater then 255.
-3) MPLS forwards to VRF device.
+Tested with the C repro provided by syzbot, which basically does :
 
-So, patch adds pskb_may_pull() calls in vrf_process_v4/v6_outbound()
-functions.
+ socket(PF_INET, SOCK_DGRAM, IPPROTO_IP) = 3
+ setsockopt(3, SOL_IP, IP_ADD_MEMBERSHIP, "\340\0\0\2\177\0\0\1\0\0\0\0", 12) = 0
+ ioctl(3, SIOCSIFFLAGS, {ifr_name="lo", ifr_flags=0}) = 0
+ setsockopt(3, SOL_IP, IP_MSFILTER, "\340\0\0\2\177\0\0\1\1\0\0\0\1\0\0\0\377\377\377\377", 20) = 0
+ ioctl(3, SIOCSIFFLAGS, {ifr_name="lo", ifr_flags=IFF_UP}) = 0
+ exit_group(0)                    = ?
 
-Signed-off-by: Peter Kosyh <p.kosyh@gmail.com>
-Reviewed-by: David Ahern <dsa@cumulusnetworks.com>
+BUG: memory leak
+unreferenced object 0xffff88811450f140 (size 64):
+  comm "softirq", pid 0, jiffies 4294942448 (age 32.070s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000c7bad083>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<00000000c7bad083>] slab_post_alloc_hook mm/slab.h:439 [inline]
+    [<00000000c7bad083>] slab_alloc mm/slab.c:3326 [inline]
+    [<00000000c7bad083>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+    [<000000009acc4151>] kmalloc include/linux/slab.h:547 [inline]
+    [<000000009acc4151>] kzalloc include/linux/slab.h:742 [inline]
+    [<000000009acc4151>] ip_mc_add1_src net/ipv4/igmp.c:1976 [inline]
+    [<000000009acc4151>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2100
+    [<000000004ac14566>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2484
+    [<0000000052d8f995>] do_ip_setsockopt.isra.0+0x1795/0x1930 net/ipv4/ip_sockglue.c:959
+    [<000000004ee1e21f>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1248
+    [<0000000066cdfe74>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2618
+    [<000000009383a786>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3126
+    [<00000000d8ac0c94>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
+    [<000000001b1e9666>] __do_sys_setsockopt net/socket.c:2083 [inline]
+    [<000000001b1e9666>] __se_sys_setsockopt net/socket.c:2080 [inline]
+    [<000000001b1e9666>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
+    [<00000000420d395e>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+    [<000000007fd83a4b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 24803f38a5c0 ("igmp: do not remove igmp souce list info when set link down")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Hangbin Liu <liuhangbin@gmail.com>
+Reported-by: syzbot+6ca1abd0db68b5173a4f@syzkaller.appspotmail.com
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vrf.c |   58 ++++++++++++++++++++++++++++++++----------------------
- 1 file changed, 35 insertions(+), 23 deletions(-)
+ net/ipv4/igmp.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -167,23 +167,29 @@ static int vrf_ip6_local_out(struct net
- static netdev_tx_t vrf_process_v6_outbound(struct sk_buff *skb,
- 					   struct net_device *dev)
- {
--	const struct ipv6hdr *iph = ipv6_hdr(skb);
-+	const struct ipv6hdr *iph;
- 	struct net *net = dev_net(skb->dev);
--	struct flowi6 fl6 = {
--		/* needed to match OIF rule */
--		.flowi6_oif = dev->ifindex,
--		.flowi6_iif = LOOPBACK_IFINDEX,
--		.daddr = iph->daddr,
--		.saddr = iph->saddr,
--		.flowlabel = ip6_flowinfo(iph),
--		.flowi6_mark = skb->mark,
--		.flowi6_proto = iph->nexthdr,
--		.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF,
--	};
-+	struct flowi6 fl6;
- 	int ret = NET_XMIT_DROP;
- 	struct dst_entry *dst;
- 	struct dst_entry *dst_null = &net->ipv6.ip6_null_entry->dst;
- 
-+	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct ipv6hdr)))
-+		goto err;
-+
-+	iph = ipv6_hdr(skb);
-+
-+	memset(&fl6, 0, sizeof(fl6));
-+	/* needed to match OIF rule */
-+	fl6.flowi6_oif = dev->ifindex;
-+	fl6.flowi6_iif = LOOPBACK_IFINDEX;
-+	fl6.daddr = iph->daddr;
-+	fl6.saddr = iph->saddr;
-+	fl6.flowlabel = ip6_flowinfo(iph);
-+	fl6.flowi6_mark = skb->mark;
-+	fl6.flowi6_proto = iph->nexthdr;
-+	fl6.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF;
-+
- 	dst = ip6_route_output(net, NULL, &fl6);
- 	if (dst == dst_null)
- 		goto err;
-@@ -239,21 +245,27 @@ static int vrf_ip_local_out(struct net *
- static netdev_tx_t vrf_process_v4_outbound(struct sk_buff *skb,
- 					   struct net_device *vrf_dev)
- {
--	struct iphdr *ip4h = ip_hdr(skb);
-+	struct iphdr *ip4h;
- 	int ret = NET_XMIT_DROP;
--	struct flowi4 fl4 = {
--		/* needed to match OIF rule */
--		.flowi4_oif = vrf_dev->ifindex,
--		.flowi4_iif = LOOPBACK_IFINDEX,
--		.flowi4_tos = RT_TOS(ip4h->tos),
--		.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF,
--		.flowi4_proto = ip4h->protocol,
--		.daddr = ip4h->daddr,
--		.saddr = ip4h->saddr,
--	};
-+	struct flowi4 fl4;
- 	struct net *net = dev_net(vrf_dev);
- 	struct rtable *rt;
- 
-+	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct iphdr)))
-+		goto err;
-+
-+	ip4h = ip_hdr(skb);
-+
-+	memset(&fl4, 0, sizeof(fl4));
-+	/* needed to match OIF rule */
-+	fl4.flowi4_oif = vrf_dev->ifindex;
-+	fl4.flowi4_iif = LOOPBACK_IFINDEX;
-+	fl4.flowi4_tos = RT_TOS(ip4h->tos);
-+	fl4.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF;
-+	fl4.flowi4_proto = ip4h->protocol;
-+	fl4.daddr = ip4h->daddr;
-+	fl4.saddr = ip4h->saddr;
-+
- 	rt = ip_route_output_flow(net, &fl4, NULL);
- 	if (IS_ERR(rt))
- 		goto err;
+--- a/net/ipv4/igmp.c
++++ b/net/ipv4/igmp.c
+@@ -1220,12 +1220,8 @@ static void igmpv3_del_delrec(struct in_
+ 		im->interface = pmc->interface;
+ 		im->crcount = in_dev->mr_qrv ?: net->ipv4.sysctl_igmp_qrv;
+ 		if (im->sfmode == MCAST_INCLUDE) {
+-			im->tomb = pmc->tomb;
+-			pmc->tomb = NULL;
+-
+-			im->sources = pmc->sources;
+-			pmc->sources = NULL;
+-
++			swap(im->tomb, pmc->tomb);
++			swap(im->sources, pmc->sources);
+ 			for (psf = im->sources; psf; psf = psf->sf_next)
+ 				psf->sf_crcount = im->crcount;
+ 		}
 
 
