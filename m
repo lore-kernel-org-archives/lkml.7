@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA98C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8289AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B8F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44FE42171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428630;
-	bh=zcOOwdkWwAzsrnMVM5ggWKEhyC2WltkG0rLCXQ1hlsA=;
+	s=default; t=1564428634;
+	bh=uF/S1rg6K8XIBZA1tm5sYQcLrDI7mNKW8KJj7R+pdSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JynIGFXTP9is0IQYZb/QFoUuPpYmo8wibF+ndwT47gobZRSoclSqkxRTVREEPY7JU
-	 iLpocO0SJfKvGKEtGq7eR7NYCJgY040BJIYP5ui1sb0T0GcFaZ7uabgMyEDMFY0rFI
-	 N2e10sUe/RRQ6XHgy72qLXu+MAaXvDAVmiCgMXaI=
+	b=zOcmHRV4eEoU3N4Hw+QOkUTkkAvAH0y7Fr7cjY45bdW+tbWqUK6wCJXrsFKrvpimJ
+	 ZG5KG7lWRRenLMYgXDzRJnpT8qbAIOo1MW+9cieruwkvGj88kJuXB7AW487Zs3CoKN
+	 WsMhaaXjOR5q9Dpcjf2iBDC42EQI7GifH3lGF504=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbfG2Ta3 (ORCPT
+        id S1729148AbfG2Tac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:30:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43172 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:30:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387665AbfG2Ta0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:30:26 -0400
+        id S1727409AbfG2Ta3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:30:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE4B82070B;
-        Mon, 29 Jul 2019 19:30:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80D2721655;
+        Mon, 29 Jul 2019 19:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428625;
-        bh=zcOOwdkWwAzsrnMVM5ggWKEhyC2WltkG0rLCXQ1hlsA=;
+        s=default; t=1564428628;
+        bh=uF/S1rg6K8XIBZA1tm5sYQcLrDI7mNKW8KJj7R+pdSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OGkqbUrE9nzo/IT999G5gvEbytN0q9wMkypv1ek+N3qr7ThMV+yn/ObV8AcJD47GL
-         s70attwta0RuehaXiF/Bag2RUiMD3k4EgTnzAzeKIjD9ow4UqgUh5ncfOBCkB8nyMI
-         dtDK+CpNMrJIFrYy+30nekKfrd3p8tdX0PEwL7N0=
+        b=dug05N47RLYoPO7TGnRxnu6gLehraJjGka/ZEzcT0103Vnf01GH/BtDR3IumaPZFh
+         kD/ieuaBMCIXuzZBS7rZKfbdN+xjr+wPt1QZstCPXI6400xDZWuz7zwL/pPdNCRhHL
+         ZxJzYqlhCGE+u/cabr2chqP64J+iWoCLbJc2WT4M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 4.14 134/293] iwlwifi: pcie: fix ALIVE interrupt handling for gen2 devices w/o MSI-X
-Date:   Mon, 29 Jul 2019 21:20:25 +0200
-Message-Id: <20190729190834.822858147@linuxfoundation.org>
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.14 135/293] NFSv4: Handle the special Linux file open access mode
+Date:   Mon, 29 Jul 2019 21:20:26 +0200
+Message-Id: <20190729190834.891319903@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,72 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit ec46ae30245ecb41d73f8254613db07c653fb498 upstream.
+commit 44942b4e457beda00981f616402a1a791e8c616e upstream.
 
-We added code to restock the buffer upon ALIVE interrupt
-when MSI-X is disabled. This was added as part of the context
-info code. This code was added only if the ISR debug level
-is set which is very unlikely to be related.
-Move this code to run even when the ISR debug level is not
-set.
+According to the open() manpage, Linux reserves the access mode 3
+to mean "check for read and write permission on the file and return
+a file descriptor that can't be used for reading or writing."
 
-Note that gen2 devices work with MSI-X in most cases so that
-this path is seldom used.
+Currently, the NFSv4 code will ask the server to open the file,
+and will use an incorrect share access mode of 0. Since it has
+an incorrect share access mode, the client later forgets to send
+a corresponding close, meaning it can leak stateids on the server.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fixes: ce4ef7c0a8a05 ("NFS: Split out NFS v4 file operations")
+Cc: stable@vger.kernel.org # 3.6+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c |   34 ++++++++++++---------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ fs/nfs/inode.c    |    1 +
+ fs/nfs/nfs4file.c |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-@@ -1674,25 +1674,23 @@ irqreturn_t iwl_pcie_irq_handler(int irq
- 		goto out;
- 	}
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -1034,6 +1034,7 @@ int nfs_open(struct inode *inode, struct
+ 	nfs_fscache_open_file(inode, filp);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(nfs_open);
  
--	if (iwl_have_debug_level(IWL_DL_ISR)) {
--		/* NIC fires this, but we don't use it, redundant with WAKEUP */
--		if (inta & CSR_INT_BIT_SCD) {
--			IWL_DEBUG_ISR(trans,
--				      "Scheduler finished to transmit the frame/frames.\n");
--			isr_stats->sch++;
--		}
-+	/* NIC fires this, but we don't use it, redundant with WAKEUP */
-+	if (inta & CSR_INT_BIT_SCD) {
-+		IWL_DEBUG_ISR(trans,
-+			      "Scheduler finished to transmit the frame/frames.\n");
-+		isr_stats->sch++;
-+	}
+ /*
+  * This function is called whenever some part of NFS notices that
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -50,7 +50,7 @@ nfs4_file_open(struct inode *inode, stru
+ 		return err;
  
--		/* Alive notification via Rx interrupt will do the real work */
--		if (inta & CSR_INT_BIT_ALIVE) {
--			IWL_DEBUG_ISR(trans, "Alive interrupt\n");
--			isr_stats->alive++;
--			if (trans->cfg->gen2) {
--				/*
--				 * We can restock, since firmware configured
--				 * the RFH
--				 */
--				iwl_pcie_rxmq_restock(trans, trans_pcie->rxq);
--			}
-+	/* Alive notification via Rx interrupt will do the real work */
-+	if (inta & CSR_INT_BIT_ALIVE) {
-+		IWL_DEBUG_ISR(trans, "Alive interrupt\n");
-+		isr_stats->alive++;
-+		if (trans->cfg->gen2) {
-+			/*
-+			 * We can restock, since firmware configured
-+			 * the RFH
-+			 */
-+			iwl_pcie_rxmq_restock(trans, trans_pcie->rxq);
- 		}
- 	}
+ 	if ((openflags & O_ACCMODE) == 3)
+-		openflags--;
++		return nfs_open(inode, filp);
  
+ 	/* We can't create new files here */
+ 	openflags &= ~(O_CREAT|O_EXCL);
 
 
