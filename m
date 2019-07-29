@@ -2,88 +2,154 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE77C76192
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFD0C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744CB20693
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8749C2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:33:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="CTDMp8e5";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="SGt0ltx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfG2JaU (ORCPT
+        id S1728010AbfG2JdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:30:20 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41032 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727931AbfG2JaT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:30:19 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so57809179wrm.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:30:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9avy5m8auN2z87gWKpbvtw9ce3O/3bqjjaiEc9X8IB4=;
-        b=l0EBy8mRk0PZpNrnPM8xY/uRDq+soEJyuSoJMmNsmMlmeyK+xU4Uy513PH8z0h1X1k
-         PYS1HaEQ0Ln7M3PyV+ISPjGHaq9wM4CSzGBOTflDpWLJar5q7GNKFjOACyUa8XlnR3Xs
-         tU8ilaZvgVK/d4BJk25g5YgC6Afr5moxsmBT7Bne5FfnpNN+LIGeT2P8xhqGkpI8IfcP
-         zpJpuND9Be5qkEUEVAD8BOsD+tmmOq71rAnTL0arK9PXyzG+6nvlplg1Xl5Nm/daM7Q3
-         cqISDqthefPZnqO03Fv+INIX1dKt5aizDzco+SBY3yha5t7zEA6oHE4qH45qWwn7A/Q2
-         NHrg==
-X-Gm-Message-State: APjAAAUmohHiJuzVJk/YpUzs7kDECiBpK5KP3RNou7W7nUOogfZLal3J
-        1L9bSxDs8pZ2K6ArYyhVu4zoSw==
-X-Google-Smtp-Source: APXvYqy0ukqUzu8jgOYkuviFDoJUTuAF/SmhWh3Yh9peouGgMoj42CbJFnks9ZQse0UPz648OOpZQw==
-X-Received: by 2002:adf:f28a:: with SMTP id k10mr41842741wro.343.1564392617641;
-        Mon, 29 Jul 2019 02:30:17 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:29d3:6123:6d5f:2c04? ([2001:b07:6468:f312:29d3:6123:6d5f:2c04])
-        by smtp.gmail.com with ESMTPSA id w24sm48173380wmc.30.2019.07.29.02.30.16
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 02:30:17 -0700 (PDT)
-Subject: Re: [PATCH stable-4.19 1/2] KVM: nVMX: do not use dangling shadow
- VMCS after guest reset
-To:     Jack Wang <jack.wang.usish@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, stable@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <20190725104645.30642-1-vkuznets@redhat.com>
- <20190725104645.30642-2-vkuznets@redhat.com>
- <CA+res+RfqpT=g1QbCqr3OkHVzFFSAt3cfCYNcwqiemWmOifFxg@mail.gmail.com>
- <2ea5d588-8573-6653-b848-0b06d1f98310@redhat.com>
- <CA+res+ShqmPcJWj+0F7X8=0DM_ys8HCP+rjg4Nv-7o06EipJQw@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <471a1023-4f0a-5727-e7b2-48701f75188f@redhat.com>
-Date:   Mon, 29 Jul 2019 11:30:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 05:33:01 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:43288 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727500AbfG2JdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 05:33:01 -0400
+Received: by mail.z3ntu.xyz (Postfix, from userid 182)
+        id 12B98C71AA; Mon, 29 Jul 2019 09:32:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1564392778; bh=HN+MbnexiLAyOK7zOuZGtlCRFx/AHgiy8HDEo75eHGs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=CTDMp8e5BBkNLBABgUNlMn7Tfx5A14+WTPdGO2NZNCgpDr0Dwz4yUWIcBhTm5uqJz
+         Ha7+huWIML1t2ir8MiuGMm0q4L2Grg17KtzmvIBR7tTj4MftwXgcs/8mIncfcOdwzS
+         S9/ZaF26D6rIdkrdLQWZGiwSlXiASvqEcGxv8554=
+Received: from g550jk.localnet (80-110-121-20.cgn.dynamic.surfer.at [80.110.121.20])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 31A56C718B;
+        Mon, 29 Jul 2019 09:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1564392774; bh=HN+MbnexiLAyOK7zOuZGtlCRFx/AHgiy8HDEo75eHGs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=SGt0ltx66MUUflBY5dI2vSOMoR+ux/nl3JmLfiLedlCIFimmgOq0/PrS5bybyu2wa
+         Ss+SqKbdnfwUIn7Bpjyt8MdJrgW4qLjm5FTc/1NhNxSb8pzYFk83c8R30DTd9JnHyQ
+         OoaXjRsN3WL6t86es7kXdvJdVEiVXHFoybvvk9eQ=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     linux-kernel@vger.kernel.org
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH 00/15] thermal: qcom: tsens: Add interrupt support
+Date:   Mon, 29 Jul 2019 11:32:52 +0200
+Message-ID: <2123341.TWUfUUIiFt@g550jk>
+In-Reply-To: <20190729090735.GA897@onstation.org>
+References: <cover.1564091601.git.amit.kucheria@linaro.org> <CAHLCerNay31+RNQvQZyxMMVyb1mLLfN5BoZbz-M+bMqbmbYwtA@mail.gmail.com> <20190729090735.GA897@onstation.org>
 MIME-Version: 1.0
-In-Reply-To: <CA+res+ShqmPcJWj+0F7X8=0DM_ys8HCP+rjg4Nv-7o06EipJQw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="nextPart2004695.fh42H4uLbJ"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/19 11:29, Jack Wang wrote:
-> Thanks Paolo for confirmation. I'm asking because we had one incident
-> in our production with 4.14.129 kernel,
-> System is Skylake Gold cpu, first kvm errors, host hung afterwards
-> 
-> kernel: [1186161.091160] kvm: vmptrld           (null)/6bfc00000000 failed
-> kernel: [1186161.091537] kvm: vmclear fail:           (null)/6bfc00000000
-> kernel: [1186186.490300] watchdog: BUG: soft lockup - CPU#54 stuck for
-> 23s! [qemu:16639]
-> 
-> Hi Sasha, hi Greg,
-> 
-> Would be great if you can pick this patch also to 4.14 kernel.
+--nextPart2004695.fh42H4uLbJ
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+On Montag, 29. Juli 2019 11:07:35 CEST Brian Masney wrote:
+> On Sat, Jul 27, 2019 at 12:58:54PM +0530, Amit Kucheria wrote:
+> > On Fri, Jul 26, 2019 at 4:59 PM Brian Masney <masneyb@onstation.org> wrote:
+> > > On Fri, Jul 26, 2019 at 04:40:16PM +0530, Amit Kucheria wrote:
+> > > > How well does cpufreq work on 8974? I haven't looked at it yet but
+> > > > we'll need it for thermal throttling.
+> > > 
+> > > I'm not sure how to tell if the frequency is dynamically changed during
+> > > runtime on arm. x86-64 shows this information in /proc/cpuinfo. Here's
+> > 
+> > > the /proc/cpuinfo on the Nexus 5:
+> > Nah. /proc/cpuinfo won't show what we need.
+> > 
+> > Try the following:
+> > 
+> > $ grep "" /sys/devices/system/cpu/cpufreq/policy?/*
+> > 
+> > More specifically, the following files have the information you need.
+> > Run watch -n1 on them.
+> > 
+> > $ grep "" /sys/devices/system/cpu/cpufreq/policy?/scaling_*_freq
+> 
+> There's no cpufreq directory on msm8974:
+> 
+>     # ls -1 /sys/devices/system/cpu/
+>     cpu0
+>     cpu1
+>     cpu2
+>     cpu3
+>     cpuidle
+>     hotplug
+>     isolated
+>     kernel_max
+>     modalias
+>     offline
+>     online
+>     possible
+>     power
+>     present
+>     smt
+>     uevent
+> 
+> I'm using qcom_defconfig.
+> 
+> Brian
+
+Hi Brian,
+cpufreq isn't supported on msm8974 yet.
+I have these patches [0] in my tree but I'm not sure they work correctly, but I haven't tested much with them. Feel free to try them on hammerhead.
+
+Luca
+
+[0] https://github.com/z3ntu/linux/compare/b0917f53ada0e929896a094b451219cd8091366e...6459ca6aff498c9d12acd35709b4903effc4c3f8
+
+--nextPart2004695.fh42H4uLbJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE66ocILd+OiPORlvAOY2pEqPLBhkFAl0+vUQACgkQOY2pEqPL
+BhlwxQ/9FYvDo8UHyQXIQVJJGe70bpy3b2Ea/66omuwaw0BLmetJe2PvQq9IsiVD
+TV60M8z4yQdRLp2P3YKQWYg7z3dNRM2mVxX11KfrXdI9rM7xqF+VFwZ21qUY+fht
+canQPM1Ln11OJQaZ0fhrH1j9c6fbJ0DoQ3C4AG8CKxzRGIu8FPmWc6XObbxOhEYG
+pc3Dy6i0NvldNtgKrxiZ5e1YAjyqdpiKcsw5ZM4xdohcmNj7dLLC6BMebpxzzXRW
+NijyZsH9TJkjqLTGT7N7J7jQcEFhpgt0L+HrZOpcKncNpCAxVQDVWezI1AseFIuQ
+ZsYjG+QKay+JCfZ3AmwPPVpgm9I+yB3ywzYytb22nrsIX1WzKd2qv1Q7HhNYrJfv
+Nar7n7ecAi3cd7wxANrKTRn7FB3hcyIOmwXcoaeTxDRqtPqv6bbXiUGV5uaN2sd3
+IHK1XnipnttdfaOnlGW/9JFngiMN6mmlENPiTLL+TMlaCBphOhe302bpK6FWcHI+
+AQOXs/cDuYRfH16h/ArfrlnFl6L7Va6MQhKQxOFkhf/NorbJBYcA52E+bQelOChd
+Ud6cIOLCIZa64ohYrRZVB/Il8PyC8vl4o+buainb6YUC5yBKxVHzP3Gd2lHboh5T
+Gls7AeMsZNULixostOPRdA/KpwO72ePeqU2MtLi577P3qIu3uj4=
+=Ia3N
+-----END PGP SIGNATURE-----
+
+--nextPart2004695.fh42H4uLbJ--
+
+
+
