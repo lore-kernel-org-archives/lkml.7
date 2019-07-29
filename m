@@ -2,53 +2,52 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9987BC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BE7C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4992070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5552F2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428607;
-	bh=ywvhupy/GmtkqJemVDgy4t2e4ZfZJC8dbZm0PYqQ8OQ=;
+	s=default; t=1564428611;
+	bh=QRFJk2Cs9CtvaTS/cAOmN4Jgy3mHSXjz53+tvakQ11c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=leC+BuIa1qUtDeedVp0txgGj1EbZY1Ho9V3VNiDKtpPyLWuvahVzkR/rN3+zQEF9W
-	 XhjtPerP3NrqU3J9EsCKmT4EoFkn0gjJDghXQNlHDzugprlQAO4azXYxTZ8fq7jIqK
-	 m/BNmpVBzEuMQbl7bl82MBwSXkDTLZaSC5u+Nl6c=
+	b=vkBnJ3uEby4HHSIk3IjgFeM1dvSzPAxUumldTk9+xfNLI3H4XQeFi2gZ/VtcbVYt8
+	 i0IfhlfiF4L8+IjT536qWbsviE4n0iZ9qzgdNdCg8Azc3JLUSC7b9cuvB1Whq92+qh
+	 QTWePkkyACgAxvfhIuXMUm9V35BpmJxBSheOdglw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388025AbfG2TaG (ORCPT
+        id S2388162AbfG2TaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:30:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:30:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387396AbfG2TaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:30:05 -0400
+        id S2388072AbfG2TaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:30:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27EB721655;
-        Mon, 29 Jul 2019 19:30:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A0F2070B;
+        Mon, 29 Jul 2019 19:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428603;
-        bh=ywvhupy/GmtkqJemVDgy4t2e4ZfZJC8dbZm0PYqQ8OQ=;
+        s=default; t=1564428606;
+        bh=QRFJk2Cs9CtvaTS/cAOmN4Jgy3mHSXjz53+tvakQ11c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y7WpP2BuKWZQfMpkoibr9sAy4jIhrcJVfTN8jFsIprLp2yJb1re4+CJ4p6mQ9v736
-         wHYXWi4X3uMGa+4kwU/eUnXZZIvpb3hWuOxPxR8INw4d3gQy5t028QU9w48ZEy8Ugi
-         nD7Hi9yQ2538lQK8UaQmjF1J+8VsGeRh3QID7yYs=
+        b=QlNQrfJo/pjyoU6X1qBX/Yn/bcm62dBh1abpJ/jmDYAbne/bP9n4Czf/df9jTtKHn
+         929ygVapHhTxSU2qnnjJgDcmu9zNKvHGv5W0hTyOiKICz1vgcy6ZjIEQDoDWlqZCct
+         sObAB+kI6L6nFB4TlJ4exS5vuYfSFfGtes90Fp94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 128/293] Input: alps - dont handle ALPS cs19 trackpoint-only device
-Date:   Mon, 29 Jul 2019 21:20:19 +0200
-Message-Id: <20190729190834.394611664@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 102/293] gtp: fix Illegal context switch in RCU read-side critical section.
+Date:   Mon, 29 Jul 2019 21:19:53 +0200
+Message-Id: <20190729190832.456484955@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,98 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+[ Upstream commit 3f167e1921865b379a9becf03828e7202c7b4917 ]
 
-commit 7e4935ccc3236751e5fe4bd6846f86e46bb2e427 upstream.
+ipv4_pdp_add() is called in RCU read-side critical section.
+So GFP_KERNEL should not be used in the function.
+This patch make ipv4_pdp_add() to use GFP_ATOMIC instead of GFP_KERNEL.
 
-On a latest Lenovo laptop, the trackpoint and 3 buttons below it
-don't work at all, when we move the trackpoint or press those 3
-buttons, the kernel will print out:
-"Rejected trackstick packet from non DualPoint device"
+Test commands:
+gtp-link add gtp1 &
+gtp-tunnel add gtp1 v1 100 200 1.1.1.1 2.2.2.2
 
-This device is identified as an alps touchpad but the packet has
-trackpoint format, so the alps.c drops the packet and prints out
-the message above.
+Splat looks like:
+[  130.618881] =============================
+[  130.626382] WARNING: suspicious RCU usage
+[  130.626994] 5.2.0-rc6+ #50 Not tainted
+[  130.627622] -----------------------------
+[  130.628223] ./include/linux/rcupdate.h:266 Illegal context switch in RCU read-side critical section!
+[  130.629684]
+[  130.629684] other info that might help us debug this:
+[  130.629684]
+[  130.631022]
+[  130.631022] rcu_scheduler_active = 2, debug_locks = 1
+[  130.632136] 4 locks held by gtp-tunnel/1025:
+[  130.632925]  #0: 000000002b93c8b7 (cb_lock){++++}, at: genl_rcv+0x15/0x40
+[  130.634159]  #1: 00000000f17bc999 (genl_mutex){+.+.}, at: genl_rcv_msg+0xfb/0x130
+[  130.635487]  #2: 00000000c644ed8e (rtnl_mutex){+.+.}, at: gtp_genl_new_pdp+0x18c/0x1150 [gtp]
+[  130.636936]  #3: 0000000007a1cde7 (rcu_read_lock){....}, at: gtp_genl_new_pdp+0x187/0x1150 [gtp]
+[  130.638348]
+[  130.638348] stack backtrace:
+[  130.639062] CPU: 1 PID: 1025 Comm: gtp-tunnel Not tainted 5.2.0-rc6+ #50
+[  130.641318] Call Trace:
+[  130.641707]  dump_stack+0x7c/0xbb
+[  130.642252]  ___might_sleep+0x2c0/0x3b0
+[  130.642862]  kmem_cache_alloc_trace+0x1cd/0x2b0
+[  130.643591]  gtp_genl_new_pdp+0x6c5/0x1150 [gtp]
+[  130.644371]  genl_family_rcv_msg+0x63a/0x1030
+[  130.645074]  ? mutex_lock_io_nested+0x1090/0x1090
+[  130.645845]  ? genl_unregister_family+0x630/0x630
+[  130.646592]  ? debug_show_all_locks+0x2d0/0x2d0
+[  130.647293]  ? check_flags.part.40+0x440/0x440
+[  130.648099]  genl_rcv_msg+0xa3/0x130
+[ ... ]
 
-According to XiaoXiao's explanation, this device is named cs19 and
-is trackpoint-only device, its firmware is only for trackpoint, it
-is independent of touchpad and is a device completely different from
-DualPoint ones.
-
-To drive this device with mininal changes to the existing driver, we
-just let the alps driver not handle this device, then the trackpoint.c
-will be the driver of this device if the trackpoint driver is enabled.
-(if not, this device will fallback to a bare PS/2 device)
-
-With the trackpoint.c, this trackpoint and 3 buttons all work well,
-they have all features that the trackpoint should have, like
-scrolling-screen, drag-and-drop and frame-selection.
-
-Signed-off-by: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/alps.c |   32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/net/gtp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/input/mouse/alps.c
-+++ b/drivers/input/mouse/alps.c
-@@ -24,6 +24,7 @@
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 2756edd84abc..c751f87c935e 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -956,7 +956,7 @@ static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
  
- #include "psmouse.h"
- #include "alps.h"
-+#include "trackpoint.h"
+ 	}
  
- /*
-  * Definitions for ALPS version 3 and 4 command mode protocol
-@@ -2860,6 +2861,23 @@ static const struct alps_protocol_info *
- 	return NULL;
- }
+-	pctx = kmalloc(sizeof(struct pdp_ctx), GFP_KERNEL);
++	pctx = kmalloc(sizeof(*pctx), GFP_ATOMIC);
+ 	if (pctx == NULL)
+ 		return -ENOMEM;
  
-+static bool alps_is_cs19_trackpoint(struct psmouse *psmouse)
-+{
-+	u8 param[2] = { 0 };
-+
-+	if (ps2_command(&psmouse->ps2dev,
-+			param, MAKE_PS2_CMD(0, 2, TP_READ_ID)))
-+		return false;
-+
-+	/*
-+	 * param[0] contains the trackpoint device variant_id while
-+	 * param[1] contains the firmware_id. So far all alps
-+	 * trackpoint-only devices have their variant_ids equal
-+	 * TP_VARIANT_ALPS and their firmware_ids are in 0x20~0x2f range.
-+	 */
-+	return param[0] == TP_VARIANT_ALPS && (param[1] & 0x20);
-+}
-+
- static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)
- {
- 	const struct alps_protocol_info *protocol;
-@@ -3161,6 +3179,20 @@ int alps_detect(struct psmouse *psmouse,
- 		return error;
- 
- 	/*
-+	 * ALPS cs19 is a trackpoint-only device, and uses different
-+	 * protocol than DualPoint ones, so we return -EINVAL here and let
-+	 * trackpoint.c drive this device. If the trackpoint driver is not
-+	 * enabled, the device will fall back to a bare PS/2 mouse.
-+	 * If ps2_command() fails here, we depend on the immediately
-+	 * followed psmouse_reset() to reset the device to normal state.
-+	 */
-+	if (alps_is_cs19_trackpoint(psmouse)) {
-+		psmouse_dbg(psmouse,
-+			    "ALPS CS19 trackpoint-only device detected, ignoring\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
- 	 * Reset the device to make sure it is fully operational:
- 	 * on some laptops, like certain Dell Latitudes, we may
- 	 * fail to properly detect presence of trackstick if device
+-- 
+2.20.1
+
 
 
