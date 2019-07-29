@@ -2,94 +2,108 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6A3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7969BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57A7206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:07:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Zo6gMqj8";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XmTFD9kz"
+	by mail.kernel.org (Postfix) with ESMTP id 47EF1206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbfG2MHO (ORCPT
+        id S1728369AbfG2MHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:07:14 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37694 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbfG2MHK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:07:10 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B999B60E73; Mon, 29 Jul 2019 12:07:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564402029;
-        bh=yESQEjxs/UF7jQlnePfCZrAc502Wc240TBy0w7/zWvM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zo6gMqj8GgfRq7bbt0D+/wP0VNMXwt96yUCn8XVI95GPKBu8z72ecCP/f8UrT+cec
-         l+0MnTEotVc95VMKONY2yIAvYbl8RriqMnl1JzwadljnVuPOZOZfmZBEXeXdtUPZT6
-         AoNM1VBduFBGFchlksCCZ0mfYjAcCGJxXr34negs=
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0742601B4;
-        Mon, 29 Jul 2019 12:07:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564402028;
-        bh=yESQEjxs/UF7jQlnePfCZrAc502Wc240TBy0w7/zWvM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XmTFD9kzbNNuOrY5vlf1SNHzGzUNb7kPogIxibjUnbdqt46SUw8pb68Dkqh3jqf+Y
-         YnHT3u5P60yyFCES/7Hv9TRfAuYBnzUV+tBJWz7nsMc3idVdv50iDYDPQ0lr7arW3Q
-         69PIsc6q6v7YuCPvZGhfY2etV3/jKbo+08Mgd4us=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C0742601B4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, vkoul@kernel.org,
-        aneela@codeaurora.org
-Cc:     mark.rutland@arm.com, agross@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
-        clew@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 6/6] soc: qcom: aoss: Add AOSS QMP support
-Date:   Mon, 29 Jul 2019 17:36:33 +0530
-Message-Id: <20190729120633.20451-7-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729120633.20451-1-sibis@codeaurora.org>
-References: <20190729120633.20451-1-sibis@codeaurora.org>
+        Mon, 29 Jul 2019 08:07:22 -0400
+Received: from mga04.intel.com ([192.55.52.120]:38024 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728297AbfG2MHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:07:19 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 05:07:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,322,1559545200"; 
+   d="scan'208";a="190555061"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 29 Jul 2019 05:07:16 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 29 Jul 2019 15:07:15 +0300
+Date:   Mon, 29 Jul 2019 15:07:15 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/2] drivers: base: swnode: link devices to software nodes
+Message-ID: <20190729120715.GA28600@kuha.fi.intel.com>
+References: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
+ <20190713075259.243565-2-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190713075259.243565-2-dmitry.torokhov@gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add AOSS QMP support for SM8150 and SC7180 SoCs.
+On Sat, Jul 13, 2019 at 12:52:58AM -0700, Dmitry Torokhov wrote:
+> It is helpful to know what device, if any, a software node is tied to, so
+> let's store a pointer to the device in software node structure. Note that
+> children software nodes will inherit their parent's device pointer, so we
+> do not have to traverse hierarchy to see what device the [sub]tree belongs
+> to.
+> 
+> We will be using the device pointer to locate GPIO lookup tables for
+> devices with static properties.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/base/property.c  |  1 +
+>  drivers/base/swnode.c    | 35 ++++++++++++++++++++++++++++++++++-
+>  include/linux/property.h |  5 +++++
+>  3 files changed, 40 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index 348b37e64944..3bc93d4b35c4 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -527,6 +527,7 @@ int device_add_properties(struct device *dev,
+>  	if (IS_ERR(fwnode))
+>  		return PTR_ERR(fwnode);
+>  
+> +	software_node_link_device(fwnode, dev);
+>  	set_secondary_fwnode(dev, fwnode);
+>  	return 0;
+>  }
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index 7fc5a18e02ad..fd12eea539b6 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -24,6 +24,9 @@ struct software_node {
+>  
+>  	/* properties */
+>  	const struct property_entry *properties;
+> +
+> +	/* device this node is associated with */
+> +	struct device *dev;
+>  };
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/soc/qcom/qcom_aoss.c | 2 ++
- 1 file changed, 2 insertions(+)
+Let's not do that! The nodes can be, and in many cases are, associated
+with multiple devices.
 
-diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
-index 5f885196f4d0f..e2f8c7c9a5a0a 100644
---- a/drivers/soc/qcom/qcom_aoss.c
-+++ b/drivers/soc/qcom/qcom_aoss.c
-@@ -462,6 +462,8 @@ static int qmp_remove(struct platform_device *pdev)
- 
- static const struct of_device_id qmp_dt_match[] = {
- 	{ .compatible = "qcom,sdm845-aoss-qmp", },
-+	{ .compatible = "qcom,sm8150-aoss-qmp", },
-+	{ .compatible = "qcom,sc7180-aoss-qmp", },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, qmp_dt_match);
+Every device is already linked with the software node kobject, so
+isn't it possible to simply walk trough those links in order to check
+the devices associated with the node?
+
+
+thanks,
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+heikki
