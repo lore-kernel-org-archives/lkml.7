@@ -2,85 +2,137 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1696C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 740B5C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8573B2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554DC2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387493AbfG2QR3 (ORCPT
+        id S1728585AbfG2QTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:17:29 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:58892 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728367AbfG2QR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:17:28 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hs8Ks-0001XX-8O; Mon, 29 Jul 2019 10:17:18 -0600
-To:     Sagi Grimberg <sagi@grimberg.me>,
-        Stephen Bates <sbates@raithlin.com>,
-        Hannes Reinecke <hare@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <1f202de3-1122-f4a3-debd-0d169f545047@suse.de>
- <8fd8813f-f8e1-2139-13bf-b0635a03bc30@deltatee.com>
- <175fa142-4815-ee48-82a4-18eb411db1ae@grimberg.me>
- <76f617b9-1137-48b6-f10d-bfb1be2301df@deltatee.com>
- <e166c392-1548-f0bb-02bc-ced3dd85f301@grimberg.me>
- <1260e01c-6731-52f7-ae83-0b90e0345c68@deltatee.com>
- <6DF00EEF-5A9D-49C9-A27C-BE34E594D9A9@raithlin.com>
- <322df1b1-dbba-2018-44da-c108336f8d55@grimberg.me>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <f4e551fe-f081-26d2-5a6a-46f826640189@deltatee.com>
-Date:   Mon, 29 Jul 2019 10:17:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 12:19:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34821 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbfG2QTI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:19:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y4so62519379wrm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:19:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZKDqUs0ayhzO8fC3NvwV+tCFuuA/FPgD3ePdCx1GJqM=;
+        b=dACTMKwu4Gi8WJrOhgrimRZYL7pmU8PA6awVob5n3pqIBq1Z/YiRFKiWNNZ1itIL0x
+         zGbpStXd4hs9G+18BVjjmE+M2myVh1Wi62GdUz1yy4JkBVfGODa9V9OKxOYWsl6vT0i2
+         YY9Fil+Kpm9VNz27butJUmiJetKLlq723GZbmjvaNnsl+CWVeaUOcEmp7Ty89vzEy2ZR
+         qChN41LH/IYK7k4DA0+JGdryglCP6MgtwAHHXFPu6AOYPfYzOuB8XlddyXPc/lPSuhgk
+         J4RzrcP9vEMgEELWkqUxiIUbRtloAMtxIvD+K/O/EMolm8UNeE9VjBfGy4OKZPE05eT7
+         LI6w==
+X-Gm-Message-State: APjAAAV9975PpjGbf0Wkb4Uo2bcduFbCyan6/3m4VBhOGiBNWj8PuHV/
+        9Mvi9vCasaYAhPS1t6egiFXtkAFnWZE=
+X-Google-Smtp-Source: APXvYqx0sc12Pv/jNOPaKvwFRyWt3K0PAbYM2mQ0eNUoR5RWLAC9VV53Iw6ZEaEpC4k4BBzOXgmD7Q==
+X-Received: by 2002:a5d:4b8b:: with SMTP id b11mr40501951wrt.294.1564417146999;
+        Mon, 29 Jul 2019 09:19:06 -0700 (PDT)
+Received: from steredhat (host122-201-dynamic.13-79-r.retail.telecomitalia.it. [79.13.201.122])
+        by smtp.gmail.com with ESMTPSA id c11sm104255286wrq.45.2019.07.29.09.19.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 09:19:06 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 18:19:03 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
+Message-ID: <20190729161903.yhaj5rfcvleexkhc@steredhat>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-2-sgarzare@redhat.com>
+ <20190729095956-mutt-send-email-mst@kernel.org>
+ <20190729153656.zk4q4rob5oi6iq7l@steredhat>
+ <20190729114302-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <322df1b1-dbba-2018-44da-c108336f8d55@grimberg.me>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, hch@lst.de, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, hare@suse.de, sbates@raithlin.com, sagi@grimberg.me
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v6 00/16] nvmet: add target passthru commands support
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729114302-mutt-send-email-mst@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-07-29 10:15 a.m., Sagi Grimberg wrote:
+On Mon, Jul 29, 2019 at 11:49:02AM -0400, Michael S. Tsirkin wrote:
+> On Mon, Jul 29, 2019 at 05:36:56PM +0200, Stefano Garzarella wrote:
+> > On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
+> > > On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
+> > > > Since virtio-vsock was introduced, the buffers filled by the host
+> > > > and pushed to the guest using the vring, are directly queued in
+> > > > a per-socket list. These buffers are preallocated by the guest
+> > > > with a fixed size (4 KB).
+> > > > 
+> > > > The maximum amount of memory used by each socket should be
+> > > > controlled by the credit mechanism.
+> > > > The default credit available per-socket is 256 KB, but if we use
+> > > > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
+> > > > buffers, using up to 1 GB of memory per-socket. In addition, the
+> > > > guest will continue to fill the vring with new 4 KB free buffers
+> > > > to avoid starvation of other sockets.
+> > > > 
+> > > > This patch mitigates this issue copying the payload of small
+> > > > packets (< 128 bytes) into the buffer of last packet queued, in
+> > > > order to avoid wasting memory.
+> > > > 
+> > > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > > 
+> > > This is good enough for net-next, but for net I think we
+> > > should figure out how to address the issue completely.
+> > > Can we make the accounting precise? What happens to
+> > > performance if we do?
+> > > 
+> > 
+> > In order to do more precise accounting maybe we can use the buffer size,
+> > instead of payload size when we update the credit available.
+> > In this way, the credit available for each socket will reflect the memory
+> > actually used.
+> > 
+> > I should check better, because I'm not sure what happen if the peer sees
+> > 1KB of space available, then it sends 1KB of payload (using a 4KB
+> > buffer).
+> > 
+> > The other option is to copy each packet in a new buffer like I did in
+> > the v2 [2], but this forces us to make a copy for each packet that does
+> > not fill the entire buffer, perhaps too expensive.
+> > 
+> > [2] https://patchwork.kernel.org/patch/10938741/
+> > 
+> > 
+> > Thanks,
+> > Stefano
 > 
->>> This is different from multipath on say a multi-controller PCI device
->>> and trying to expose both those controllers through passthru. this is
->>> where the problems we are discussing come up.
->>
->> I *think* there is some confusion. I *think* Sagi is talking about network multi-path (i.e. the ability for the host to connect to a controller on the target via two different network paths that fail-over as needed). I *think* Logan is talking about multi-port PCIe NVMe devices that allow namespaces to be accessed via more than one controller over PCIe (dual-port NVMe SSDs being the most obvious example of this today).
+> Interesting. You are right, and at some level the protocol forces copies.
 > 
-> Yes, I was referring to fabrics multipathing which is somewhat
-> orthogonal to the backend pci multipathing (unless I'm missing
-> something).
+> We could try to detect that the actual memory is getting close to
+> admin limits and force copies on queued packets after the fact.
+> Is that practical?
 
-Yes, so if we focus on the fabrics multipathing, the only issue I see is
-that only one controller can be connected to a passthru target (I
-believe this was at your request) so two paths simply cannot exist to
-begin with. I can easily remove that restriction.
+Yes, I think it is doable!
+We can decrease the credit available with the buffer size queued, and
+when the buffer size of packet to queue is bigger than the credit
+available, we can copy it.
 
-Logan
+> 
+> And yes we can extend the credit accounting to include buffer size.
+> That's a protocol change but maybe it makes sense.
+
+Since we send to the other peer the credit available, maybe this
+change can be backwards compatible (I'll check better this).
+
+Thanks,
+Stefano
