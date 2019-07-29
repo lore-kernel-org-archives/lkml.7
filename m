@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B11C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9DCC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6251F217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6F3217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428961;
-	bh=gjigkedbTLbWtgV7jYoDIS4dKCy0u3tofYw9FRBagog=;
+	s=default; t=1564428965;
+	bh=96GKdQd01LTKAbHkpgUaJiy124ivuRtEJ2BvWn9+DOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KHLYukuBHuwXmVyomid5qAOap5QthirvOVrWKeestHVrCU1AnIEZmyMEsyBdPDCTX
-	 HxXDbgbpGrnWGJsbc/7gMB0e3BQbqE41sJ7OufLfMtgypxGO13I66m2nRK4B6R3iyA
-	 /JhoDubsebGREG3YNSV03Zma/xaYmaVVc0e+Lh/o=
+	b=pmiSCuY7g7ews1khaevftQWgm6KEA74CvX7TnLdFsMYfbr9NQ/mtmNmPndMbkLHEi
+	 o4lhl+DO6ibiJZ9GGVuIWKdDxRQN3ZbaYTmKRQuEMVpPAuLyT2ldMdQBOLNwI/FmxK
+	 mF6OHWU456yR+LdT9GEoT3GhoWJPPO7RyPSaRAnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388569AbfG2TgA (ORCPT
+        id S1727796AbfG2TgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:36:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50276 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:36:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388543AbfG2Tf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:35:57 -0400
+        id S2388412AbfG2Tf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:35:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED03E2070B;
-        Mon, 29 Jul 2019 19:35:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B99502070B;
+        Mon, 29 Jul 2019 19:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428956;
-        bh=gjigkedbTLbWtgV7jYoDIS4dKCy0u3tofYw9FRBagog=;
+        s=default; t=1564428959;
+        bh=96GKdQd01LTKAbHkpgUaJiy124ivuRtEJ2BvWn9+DOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R7YsZKZB/NqejDsAhw4+rg1XgKJ6Wezk5wWOfBCX8u93DNd2p2VOFiYOpyoF5smbl
-         5CRlaXDYo4uResuzQsnFRFB8nAcKkl7+TEM+RApop2xPgF5IBjnI8LB6snZ+9pLNYT
-         p4xxvJglM4IeKOnUmwXZGIfbd0hxS0Xal735hhBo=
+        b=sTyaLmx3BjVX4Lb4mR06bmuXSmhE+rRZ5Yscby1SmlzD+jCfIe+v7Gf+08PBoDKAW
+         TZxzLKLySLT4hJhP3ANLwd4plT9e96ILaUWMR9A2EunWRKBdYQBpz+wqn58ntbXJWq
+         nxgdSnro5+CwiaSijqLfbbiWa0yapI84qGrGmoJw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        stable@vger.kernel.org,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 240/293] tty: serial_core: Set port active bit in uart_port_activate
-Date:   Mon, 29 Jul 2019 21:22:11 +0200
-Message-Id: <20190729190842.856050919@linuxfoundation.org>
+Subject: [PATCH 4.14 241/293] usb: gadget: Zero ffs_io_data
+Date:   Mon, 29 Jul 2019 21:22:12 +0200
+Message-Id: <20190729190842.931624396@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -59,69 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 13b18d35909707571af9539f7731389fbf0feb31 ]
+[ Upstream commit 508595515f4bcfe36246e4a565cf280937aeaade ]
 
-A bug was introduced by commit b3b576461864 ("tty: serial_core: convert
-uart_open to use tty_port_open"). It caused a constant warning printed
-into the system log regarding the tty and port counter mismatch:
+In some cases the "Allocate & copy" block in ffs_epfile_io() is not
+executed. Consequently, in such a case ffs_alloc_buffer() is never called
+and struct ffs_io_data is not initialized properly. This in turn leads to
+problems when ffs_free_buffer() is called at the end of ffs_epfile_io().
 
-[   21.644197] ttyS ttySx: tty_port_close_start: tty->count = 1 port count = 2
+This patch uses kzalloc() instead of kmalloc() in the aio case and memset()
+in non-aio case to properly initialize struct ffs_io_data.
 
-in case if session hangup was detected so the warning is printed starting
-from the second open-close iteration.
-
-Particularly the problem was discovered in situation when there is a
-serial tty device without hardware back-end being setup. It is considered
-by the tty-serial subsystems as a hardware problem with session hang up.
-In this case uart_startup() will return a positive value with TTY_IO_ERROR
-flag set in corresponding tty_struct instance. The same value will get
-passed to be returned from the activate() callback and then being returned
-from tty_port_open(). But since in this case tty_port_block_til_ready()
-isn't called the TTY_PORT_ACTIVE flag isn't set (while the method had been
-called before tty_port_open conversion was introduced and the rest of the
-subsystem code expected the bit being set in this case), which prevents the
-uart_hangup() method to perform any cleanups including the tty port
-counter setting to zero. So the next attempt to open/close the tty device
-will discover the counters mismatch.
-
-In order to fix the problem we need to manually set the TTY_PORT_ACTIVE
-flag in case if uart_startup() returned a positive value. In this case
-the hang up procedure will perform a full set of cleanup actions including
-the port ref-counter resetting.
-
-Fixes: b3b576461864 "tty: serial_core: convert uart_open to use tty_port_open"
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/serial_core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/function/f_fs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index c39246b916af..17e2311f7b00 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -1742,6 +1742,7 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
- {
- 	struct uart_state *state = container_of(port, struct uart_state, port);
- 	struct uart_port *uport;
-+	int ret;
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 79900c0b4f3a..cdffbe999500 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1102,11 +1102,12 @@ static ssize_t ffs_epfile_write_iter(struct kiocb *kiocb, struct iov_iter *from)
+ 	ENTER();
  
- 	uport = uart_port_check(state);
- 	if (!uport || uport->flags & UPF_DEAD)
-@@ -1752,7 +1753,11 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
- 	/*
- 	 * Start up the serial port.
- 	 */
--	return uart_startup(tty, state, 0);
-+	ret = uart_startup(tty, state, 0);
-+	if (ret > 0)
-+		tty_port_set_active(port, 1);
-+
-+	return ret;
- }
+ 	if (!is_sync_kiocb(kiocb)) {
+-		p = kmalloc(sizeof(io_data), GFP_KERNEL);
++		p = kzalloc(sizeof(io_data), GFP_KERNEL);
+ 		if (unlikely(!p))
+ 			return -ENOMEM;
+ 		p->aio = true;
+ 	} else {
++		memset(p, 0, sizeof(*p));
+ 		p->aio = false;
+ 	}
  
- static const char *uart_type(struct uart_port *port)
+@@ -1138,11 +1139,12 @@ static ssize_t ffs_epfile_read_iter(struct kiocb *kiocb, struct iov_iter *to)
+ 	ENTER();
+ 
+ 	if (!is_sync_kiocb(kiocb)) {
+-		p = kmalloc(sizeof(io_data), GFP_KERNEL);
++		p = kzalloc(sizeof(io_data), GFP_KERNEL);
+ 		if (unlikely(!p))
+ 			return -ENOMEM;
+ 		p->aio = true;
+ 	} else {
++		memset(p, 0, sizeof(*p));
+ 		p->aio = false;
+ 	}
+ 
 -- 
 2.20.1
 
