@@ -2,52 +2,53 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FE6C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A7EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0404D20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE8B205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430693;
-	bh=AjB9ovnnGRHFQbRJNii7d5yid9O6pyfxFu7a1mrNwng=;
+	s=default; t=1564430698;
+	bh=Jb5//ygbKyXJ/q7wmeUpiah/CscHFECierkUDcF46nM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ox2OnGhwjn+DBh6xd9nw/uQZq+hMXA3iOrPg8noH/1kqoTimGHIoht6CGtjIfRAmM
-	 WOIeudlM6J8rqeo1ll34wKz2G8K36DYLKNAYjspT7CKP5rQEmgLJMhW/v9XNJSpjs4
-	 5O4bDX+TUV1SrOLFV+pyI2bzpRZQAT0WJAOTgP8E=
+	b=mbvnICbv/TpkFCmjn1S4LIS5YX+IPq1QTI/TEbnp+RMHK5SfVrxvWMWlkzqwcwsH1
+	 oL9InZyGnF0Fesq1wrTI4nAWBm1nzOdj0tpgBeliujeId2/WPxqonFSrUwtd1or85O
+	 Qi1gK5HeIPK02/OcEo8liAxE1BQk09D8karAVTp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389584AbfG2UEv (ORCPT
+        id S2389773AbfG2ToS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:04:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33354 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:44:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389820AbfG2Ton (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:44:43 -0400
+        id S2389330AbfG2ToM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:44:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED9882171F;
-        Mon, 29 Jul 2019 19:44:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D030205F4;
+        Mon, 29 Jul 2019 19:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429482;
-        bh=AjB9ovnnGRHFQbRJNii7d5yid9O6pyfxFu7a1mrNwng=;
+        s=default; t=1564429451;
+        bh=Jb5//ygbKyXJ/q7wmeUpiah/CscHFECierkUDcF46nM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjRARXmPOVaXypuUkjaxs2r2qajj2dd4RNODRFqgMq/Lo4jybnO28k8+GXPLett7V
-         TcRhq1uMtCEU1JfGHqcZksWdqIqeVVTe2ybAx70/2CROqPO4TiGMurNLlDxdgwp9Os
-         wkHm9SRSuYlyzepPMKkOUcnBH44wWmiWjSI5WjRk=
+        b=uKQnx0cRij/fP/oaUclzM2iBL9BqfICS+bstNF5J9Qc6gyyxjqr5/u3+gKgp8GVlH
+         zFx7YFlNvqS/TGpVp05Fy6i3r1Yvp6Rc22DUOZ+Cj1IVHIFN2YB7673e5hb0COswnk
+         Evp261Sj8O4oqTB5tPWB6JIUmYMQET7mNJnRVB8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Praveen Pandey <Praveen.Pandey@in.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 111/113] powerpc/tm: Fix oops on sigreturn on systems without TM
-Date:   Mon, 29 Jul 2019 21:23:18 +0200
-Message-Id: <20190729190721.421186265@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 075/113] powerpc/boot: add {get, put}_unaligned_be32 to xz_config.h
+Date:   Mon, 29 Jul 2019 21:22:42 +0200
+Message-Id: <20190729190713.461109334@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,91 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Neuling <mikey@neuling.org>
+[ Upstream commit 9e005b761e7ad153dcf40a6cba1d681fe0830ac6 ]
 
-commit f16d80b75a096c52354c6e0a574993f3b0dfbdfe upstream.
+The next commit will make the way of passing CONFIG options more robust.
+Unfortunately, it would uncover another hidden issue; without this
+commit, skiroot_defconfig would be broken like this:
 
-On systems like P9 powernv where we have no TM (or P8 booted with
-ppc_tm=off), userspace can construct a signal context which still has
-the MSR TS bits set. The kernel tries to restore this context which
-results in the following crash:
+|   WRAP    arch/powerpc/boot/zImage.pseries
+| arch/powerpc/boot/wrapper.a(decompress.o): In function `bcj_powerpc.isra.10':
+| decompress.c:(.text+0x720): undefined reference to `get_unaligned_be32'
+| decompress.c:(.text+0x7a8): undefined reference to `put_unaligned_be32'
+| make[1]: *** [arch/powerpc/boot/Makefile;383: arch/powerpc/boot/zImage.pseries] Error 1
+| make: *** [arch/powerpc/Makefile;295: zImage] Error 2
 
-  Unexpected TM Bad Thing exception at c0000000000022fc (msr 0x8000000102a03031) tm_scratch=800000020280f033
-  Oops: Unrecoverable exception, sig: 6 [#1]
-  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-  Modules linked in:
-  CPU: 0 PID: 1636 Comm: sigfuz Not tainted 5.2.0-11043-g0a8ad0ffa4 #69
-  NIP:  c0000000000022fc LR: 00007fffb2d67e48 CTR: 0000000000000000
-  REGS: c00000003fffbd70 TRAP: 0700   Not tainted  (5.2.0-11045-g7142b497d8)
-  MSR:  8000000102a03031 <SF,VEC,VSX,FP,ME,IR,DR,LE,TM[E]>  CR: 42004242  XER: 00000000
-  CFAR: c0000000000022e0 IRQMASK: 0
-  GPR00: 0000000000000072 00007fffb2b6e560 00007fffb2d87f00 0000000000000669
-  GPR04: 00007fffb2b6e728 0000000000000000 0000000000000000 00007fffb2b6f2a8
-  GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-  GPR12: 0000000000000000 00007fffb2b76900 0000000000000000 0000000000000000
-  GPR16: 00007fffb2370000 00007fffb2d84390 00007fffea3a15ac 000001000a250420
-  GPR20: 00007fffb2b6f260 0000000010001770 0000000000000000 0000000000000000
-  GPR24: 00007fffb2d843a0 00007fffea3a14a0 0000000000010000 0000000000800000
-  GPR28: 00007fffea3a14d8 00000000003d0f00 0000000000000000 00007fffb2b6e728
-  NIP [c0000000000022fc] rfi_flush_fallback+0x7c/0x80
-  LR [00007fffb2d67e48] 0x7fffb2d67e48
-  Call Trace:
-  Instruction dump:
-  e96a0220 e96a02a8 e96a0330 e96a03b8 394a0400 4200ffdc 7d2903a6 e92d0c00
-  e94d0c08 e96d0c10 e82d0c18 7db242a6 <4c000024> 7db243a6 7db142a6 f82d0c18
+skiroot_defconfig is the only defconfig that enables CONFIG_KERNEL_XZ
+for ppc, which has never been correctly built before.
 
-The problem is the signal code assumes TM is enabled when
-CONFIG_PPC_TRANSACTIONAL_MEM is enabled. This may not be the case as
-with P9 powernv or if `ppc_tm=off` is used on P8.
+I figured out the root cause in lib/decompress_unxz.c:
 
-This means any local user can crash the system.
+| #ifdef CONFIG_PPC
+| #      define XZ_DEC_POWERPC
+| #endif
 
-Fix the problem by returning a bad stack frame to the user if they try
-to set the MSR TS bits with sigreturn() on systems where TM is not
-supported.
+CONFIG_PPC is undefined here in the ppc bootwrapper because autoconf.h
+is not included except by arch/powerpc/boot/serial.c
 
-Found with sigfuz kernel selftest on P9.
+XZ_DEC_POWERPC is not defined, therefore, bcj_powerpc() is not compiled
+for the bootwrapper.
 
-This fixes CVE-2019-13648.
+With the next commit passing CONFIG_PPC correctly, we would realize that
+{get,put}_unaligned_be32 was missing.
 
-Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
-Cc: stable@vger.kernel.org # v3.9
-Reported-by: Praveen Pandey <Praveen.Pandey@in.ibm.com>
-Signed-off-by: Michael Neuling <mikey@neuling.org>
+Unlike the other decompressors, the ppc bootwrapper duplicates all the
+necessary helpers in arch/powerpc/boot/.
+
+The other architectures define __KERNEL__ and pull in helpers for
+building the decompressors.
+
+If ppc bootwrapper had defined __KERNEL__, lib/xz/xz_private.h would
+have included <asm/unaligned.h>:
+
+| #ifdef __KERNEL__
+| #       include <linux/xz.h>
+| #       include <linux/kernel.h>
+| #       include <asm/unaligned.h>
+
+However, doing so would cause tons of definition conflicts since the
+bootwrapper has duplicated everything.
+
+I just added copies of {get,put}_unaligned_be32, following the
+bootwrapper coding convention.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190719050502.405-1-mikey@neuling.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20190705100144.28785-1-yamada.masahiro@socionext.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/signal_32.c |    3 +++
- arch/powerpc/kernel/signal_64.c |    5 +++++
- 2 files changed, 8 insertions(+)
+ arch/powerpc/boot/xz_config.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/arch/powerpc/kernel/signal_32.c
-+++ b/arch/powerpc/kernel/signal_32.c
-@@ -1202,6 +1202,9 @@ SYSCALL_DEFINE0(rt_sigreturn)
- 			goto bad;
+diff --git a/arch/powerpc/boot/xz_config.h b/arch/powerpc/boot/xz_config.h
+index e22e5b3770dd..ebfadd39e192 100644
+--- a/arch/powerpc/boot/xz_config.h
++++ b/arch/powerpc/boot/xz_config.h
+@@ -20,10 +20,30 @@ static inline uint32_t swab32p(void *p)
  
- 		if (MSR_TM_ACTIVE(msr_hi<<32)) {
-+			/* Trying to start TM on non TM system */
-+			if (!cpu_has_feature(CPU_FTR_TM))
-+				goto bad;
- 			/* We only recheckpoint on return if we're
- 			 * transaction.
- 			 */
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -750,6 +750,11 @@ SYSCALL_DEFINE0(rt_sigreturn)
- 	if (MSR_TM_ACTIVE(msr)) {
- 		/* We recheckpoint on return. */
- 		struct ucontext __user *uc_transact;
+ #ifdef __LITTLE_ENDIAN__
+ #define get_le32(p) (*((uint32_t *) (p)))
++#define cpu_to_be32(x) swab32(x)
++static inline u32 be32_to_cpup(const u32 *p)
++{
++	return swab32p((u32 *)p);
++}
+ #else
+ #define get_le32(p) swab32p(p)
++#define cpu_to_be32(x) (x)
++static inline u32 be32_to_cpup(const u32 *p)
++{
++	return *p;
++}
+ #endif
+ 
++static inline uint32_t get_unaligned_be32(const void *p)
++{
++	return be32_to_cpup(p);
++}
 +
-+		/* Trying to start TM on non TM system */
-+		if (!cpu_has_feature(CPU_FTR_TM))
-+			goto badframe;
++static inline void put_unaligned_be32(u32 val, void *p)
++{
++	*((u32 *)p) = cpu_to_be32(val);
++}
 +
- 		if (__get_user(uc_transact, &uc->uc_link))
- 			goto badframe;
- 		if (restore_tm_sigcontexts(current, &uc->uc_mcontext,
+ #define memeq(a, b, size) (memcmp(a, b, size) == 0)
+ #define memzero(buf, size) memset(buf, 0, size)
+ 
+-- 
+2.20.1
+
 
 
