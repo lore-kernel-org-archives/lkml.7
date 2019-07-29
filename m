@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ACDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6312BC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B577A205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E60205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431111;
-	bh=ppr5BAOLZkqvQ0hhuWwGlJX9zzXOdBVO8hauVU+jdio=;
+	s=default; t=1564431122;
+	bh=HFU/DbYWq2H2LL/Ks3RT4dJnz4zgG/Hmhvvi2tRXXQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NiFQQKkM6TqVUQd7JyCKOdBWQwuuJ2doTNEDhY8bUkitOufzzw1cVht3kJqFcX4bZ
-	 9IRv3uUAjUSMxdugoGNBAuTWMDNiQwqRj2ZaNtyjn8tVbZ/+f5lvDi2FC09xV+W7zH
-	 JSkSkWDPzJNx6rTAs3FrbhXuit7Nw9wMB7xPBri4=
+	b=PHWOt8JxhBsbgnaQY4hn46GFJw7RMCnWG3ktV1u9HPSEgdL38foBP3TPcfuFUzr82
+	 SVipr33GvIA/BPlvzqQZNUIkmL4Zj6AuROumqXEq0eLzouWTgvlchxk1kRjfrHaPLQ
+	 yuL1ISY6Ku7GraC1cLJOaZj5N+mWk+52eLYauUXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730495AbfG2ULu (ORCPT
+        id S1730478AbfG2UMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:11:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46716 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730288AbfG2Tcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:32:55 -0400
+        id S1729269AbfG2Tcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:32:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FC992171F;
-        Mon, 29 Jul 2019 19:32:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 389D1217D4;
+        Mon, 29 Jul 2019 19:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428774;
-        bh=ppr5BAOLZkqvQ0hhuWwGlJX9zzXOdBVO8hauVU+jdio=;
+        s=default; t=1564428752;
+        bh=HFU/DbYWq2H2LL/Ks3RT4dJnz4zgG/Hmhvvi2tRXXQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p+fHldtz4/d0AH9Wwww+8GY999hAP8IZiMQZWB+Aga6jPsQ7yDOgHn1LTVqgXWN9i
-         wpIcdryUcBKrGKttnmhjw9eH3Po5k3Es9tgT0htjDr8JMURFlfso36V8IVlw2c8kuZ
-         3ltb/pDUuGXxjf+PTrLR9Rj8mq2hG0ZZE5Qm+MnA=
+        b=wjkDVj0bESS8Quf1mHX5+0jQ2oYc6bjzzVmrzvbTV3LSlAk9qL+Qm0R4I8YUiEfY3
+         a5NWWNqQ4Q2fGeh49vkMtRh/RVOeIeDE1OBv+I9/uanu5edisSBP15zBQvXgsIE3++
+         Sr2u+S2amZczkQwctO7PqnQzFCrpiiOvuiJZEi+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian King <brking@linux.vnet.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 181/293] bnx2x: Prevent load reordering in tx completion processing
-Date:   Mon, 29 Jul 2019 21:21:12 +0200
-Message-Id: <20190729190838.371128482@linuxfoundation.org>
+        stable@vger.kernel.org, "Lee, Chiasheng" <chiasheng.lee@intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lee@vger.kernel.org
+Subject: [PATCH 4.14 174/293] usb: Handle USB3 remote wakeup for LPM enabled devices correctly
+Date:   Mon, 29 Jul 2019 21:21:05 +0200
+Message-Id: <20190729190837.847991420@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -59,33 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian King <brking@linux.vnet.ibm.com>
+From: Lee, Chiasheng <chiasheng.lee@intel.com>
 
-[ Upstream commit ea811b795df24644a8eb760b493c43fba4450677 ]
+commit e244c4699f859cf7149b0781b1894c7996a8a1df upstream.
 
-This patch fixes an issue seen on Power systems with bnx2x which results
-in the skb is NULL WARN_ON in bnx2x_free_tx_pkt firing due to the skb
-pointer getting loaded in bnx2x_free_tx_pkt prior to the hw_cons
-load in bnx2x_tx_int. Adding a read memory barrier resolves the issue.
+With Link Power Management (LPM) enabled USB3 links transition to low
+power U1/U2 link states from U0 state automatically.
 
-Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Current hub code detects USB3 remote wakeups by checking if the software
+state still shows suspended, but the link has transitioned from suspended
+U3 to enabled U0 state.
+
+As it takes some time before the hub thread reads the port link state
+after a USB3 wake notification, the link may have transitioned from U0
+to U1/U2, and wake is not detected by hub code.
+
+Fix this by handling U1/U2 states in the same way as U0 in USB3 wakeup
+handling
+
+This patch should be added to stable kernels since 4.13 where LPM was
+kept enabled during suspend/resume
+
+Cc: <stable@vger.kernel.org> # v4.13+
+Signed-off-by: Lee, Chiasheng <chiasheng.lee@intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -286,6 +286,9 @@ int bnx2x_tx_int(struct bnx2x *bp, struc
- 	hw_cons = le16_to_cpu(*txdata->tx_cons_sb);
- 	sw_cons = txdata->tx_pkt_cons;
+---
+ drivers/usb/core/hub.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3532,6 +3532,7 @@ static int hub_handle_remote_wakeup(stru
+ 	struct usb_device *hdev;
+ 	struct usb_device *udev;
+ 	int connect_change = 0;
++	u16 link_state;
+ 	int ret;
  
-+	/* Ensure subsequent loads occur after hw_cons */
-+	smp_rmb();
-+
- 	while (sw_cons != hw_cons) {
- 		u16 pkt_cons;
+ 	hdev = hub->hdev;
+@@ -3541,9 +3542,11 @@ static int hub_handle_remote_wakeup(stru
+ 			return 0;
+ 		usb_clear_port_feature(hdev, port, USB_PORT_FEAT_C_SUSPEND);
+ 	} else {
++		link_state = portstatus & USB_PORT_STAT_LINK_STATE;
+ 		if (!udev || udev->state != USB_STATE_SUSPENDED ||
+-				 (portstatus & USB_PORT_STAT_LINK_STATE) !=
+-				 USB_SS_PORT_LS_U0)
++				(link_state != USB_SS_PORT_LS_U0 &&
++				 link_state != USB_SS_PORT_LS_U1 &&
++				 link_state != USB_SS_PORT_LS_U2))
+ 			return 0;
+ 	}
  
 
 
