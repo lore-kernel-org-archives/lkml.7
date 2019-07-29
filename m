@@ -2,129 +2,96 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A069AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4640DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECBE2064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itX+Ylve"
+	by mail.kernel.org (Postfix) with ESMTP id 0CB9E205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564430965;
+	bh=Sfb8OS3U2e2x5qmCLlDtDVvs6ClLocIR+p5SM0N5PPc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LCZgInvGesTqF32f47WT5RMXiNNXiTtn8XVScZ5qYsSIA4gNLsTUVOr4Q5oxTr+O9
+	 gx3McVbuFNoBvSePyFSEJqKmUcRTEFLWgOjMjtrxf1d+DoUzE+WzRAxWCwKgqamflr
+	 GbkaSG5FLXzk76Qh6nw4FvaSlbwvirYrCawbpywg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbfG2UJQ (ORCPT
+        id S1730394AbfG2UJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:09:16 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44242 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730188AbfG2UJP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:09:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so28790764pgl.11;
-        Mon, 29 Jul 2019 13:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:user-agent:mime-version;
-        bh=fBfBw2wkhiVUlzKRrybQChsuOJLRt+8izpDdk9CY/Nw=;
-        b=itX+YlvedKY4fzRJQgV8KR91wHxBTELBREIy6gRJ1SnVaGf8KOzDxp/Mo1UCKVNbYn
-         YmeEEpb++7Xb2MmG4WBZv35xHPGgtC954vfVzAkjAnJsDyVbGwKlx4TaA7lsaGEIVU7t
-         mJzeA9NIXmlBC3Nhndc4sqUhCFAxDU/ZNCrLnXRJM334siKWj9Z/gJmCNP/kgKmteM6v
-         9fqrTApA0o/HsMAVxEngZ5+FEWG2EGEc0hxGKq8mIlV2CYCdY0moT0dPJgvX5uPBFa2c
-         g9tllaQTKnK/uJMj1bZbI9CN0sypo/DOoeduDUXnsA1X1rru6bo1lLIGBHlkHJYrR7yz
-         6nyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=fBfBw2wkhiVUlzKRrybQChsuOJLRt+8izpDdk9CY/Nw=;
-        b=gA/6KCOZlk/luGsmhEcbtJ0hCmTOKyY8M25oKIxNCunRHR/HZhVMxnuUMymCFyqb4D
-         Q2tks60iOWTtoGpyEA2fPKjDWZrWalRsDfPAYy7E2eBx1bObiOVnqosS7vRaBMBtgrt+
-         nbyA1IWFbp/8zhT6+Tf/EsUK0zi/LlI1tfwDHEcUEv/ohsB1mGFah6/UOa7XzqBa08dN
-         Po0HtIWk9WBfX1luUyGupuEU99tQp5SOL6Nw4U/VkqN45JQzqpCcO8DGGyCgl421skOJ
-         iliVaUKJwVdP3dqIs8kszm64V+ZFcuZeYrWp+J5kOUQ/IjdZfNmyjyFazGjYKaUqNwVc
-         MwZQ==
-X-Gm-Message-State: APjAAAWXipAkaRJaBukiNTCjE/OcTjx6E45OdiZLR7yZ1AWxlO0qfYoS
-        AmvzenmZ7e3NFQRQVp6Enq/lIzR4skY=
-X-Google-Smtp-Source: APXvYqw64sHT7u8AAtryI2j1MfjOmW9ev5iXn+VhM8gdPdBzitofVG1Wz8aoXhGzm/hkiCwz6d96zQ==
-X-Received: by 2002:a63:8a43:: with SMTP id y64mr104911456pgd.104.1564430954506;
-        Mon, 29 Jul 2019 13:09:14 -0700 (PDT)
-Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
-        by smtp.gmail.com with ESMTPSA id m20sm65250324pff.79.2019.07.29.13.09.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 13:09:14 -0700 (PDT)
-From:   Mark Balantzyan <mbalant3@gmail.com>
-X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
-Date:   Mon, 29 Jul 2019 13:09:09 -0700 (PDT)
-To:     ezequiel@vanguardiasur.com.ar
-cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media input infrastructure:tw686x: Fix of possibleinconsistent
- memory deallocation and/or race condition by implementation of custom
- video_device_release function in tw686x driver
-Message-ID: <alpine.DEB.2.21.1907291256080.16959@mbalantz-desktop>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 29 Jul 2019 16:09:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729333AbfG2Tgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:36:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D385B2171F;
+        Mon, 29 Jul 2019 19:36:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564429007;
+        bh=Sfb8OS3U2e2x5qmCLlDtDVvs6ClLocIR+p5SM0N5PPc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q3q+/posYvnjyWJiiyannv8RqngyXH1IDXW8V30wQn2i/5tpDgjQnhV9m5lFvagua
+         rCkGDEpky7g3Mf3+jhI1qEoM38FqRgcZSpVslNVvZbotm5IJsURmImQJgzqFgyGPxK
+         nqnyvNzQ2gYoW15bbg9mxvfW8XdAPBS40o3g8OaI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 255/293] powerpc/4xx/uic: clear pending interrupt after irq type/pol change
+Date:   Mon, 29 Jul 2019 21:22:26 +0200
+Message-Id: <20190729190843.975767237@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
+References: <20190729190820.321094988@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[ Upstream commit 3ab3a0689e74e6aa5b41360bc18861040ddef5b1 ]
 
-Possible inconsistent memory deallocation and/or race conditions were 
-detected specifically with respect to remaining open handles to the video 
-device handled by the tw686x driver. This patch addresses this by 
-implementing a revised independent instance of the video_device_release 
-function to free the remaining resources and memory where the last open 
-handle(s) is/were closed.
+When testing out gpio-keys with a button, a spurious
+interrupt (and therefore a key press or release event)
+gets triggered as soon as the driver enables the irq
+line for the first time.
 
-Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
+This patch clears any potential bogus generated interrupt
+that was caused by the switching of the associated irq's
+type and polarity.
 
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ arch/powerpc/platforms/4xx/uic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-  drivers/media/pci/tw686x/tw686x-video.c | 15 +++++++++++----
-  1 file changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/media/pci/tw686x/tw686x-video.c 
-b/drivers/media/pci/tw686x/tw686x-video.c
-index 3a06c000..29e10c85 100644
---- a/drivers/media/pci/tw686x/tw686x-video.c
-+++ b/drivers/media/pci/tw686x/tw686x-video.c
-@@ -1151,18 +1151,25 @@ void tw686x_video_irq(struct tw686x_dev *dev, 
-unsigned long requests,
-  	}
-  }
-
-+void video_device_release(tw686x_dev *dev) {
-+	for (int pb = 0; pb < 2; pb++) {
-+		dev->dma_ops->free(dev->video_channels,pb);
-+	}
-+	kfree(dev);
-+}
-+
-  void tw686x_video_free(struct tw686x_dev *dev)
-  {
--	unsigned int ch, pb;
-+	unsigned int ch;
-
-  	for (ch = 0; ch < max_channels(dev); ch++) {
-  		struct tw686x_video_channel *vc = 
-&dev->video_channels[ch];
-
-  		video_unregister_device(vc->device);
-
--		if (dev->dma_ops->free)
--			for (pb = 0; pb < 2; pb++)
--				dev->dma_ops->free(vc, pb);
-+		if (dev->dma_ops->free) {
-+			video_device_release(dev);
-+		}
-  	}
-  }
-
+diff --git a/arch/powerpc/platforms/4xx/uic.c b/arch/powerpc/platforms/4xx/uic.c
+index 8b4dd0da0839..9e27cfe27026 100644
+--- a/arch/powerpc/platforms/4xx/uic.c
++++ b/arch/powerpc/platforms/4xx/uic.c
+@@ -158,6 +158,7 @@ static int uic_set_irq_type(struct irq_data *d, unsigned int flow_type)
+ 
+ 	mtdcr(uic->dcrbase + UIC_PR, pr);
+ 	mtdcr(uic->dcrbase + UIC_TR, tr);
++	mtdcr(uic->dcrbase + UIC_SR, ~mask);
+ 
+ 	raw_spin_unlock_irqrestore(&uic->lock, flags);
+ 
 -- 
-2.17.1
+2.20.1
+
+
 
