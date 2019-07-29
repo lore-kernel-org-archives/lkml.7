@@ -2,53 +2,65 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0986EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD78C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE8C2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1877D217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428676;
-	bh=ZrwcrDWPK5yJpXj3jRuqmuZVxOYlfYoF/tZGNepahu0=;
+	s=default; t=1564428683;
+	bh=L6AJrXGiOnr4csgCwVe6ZSzeFBWBhgSG7D8lgQsiOc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MiFLzU/kLmpfoFjnyJDpadXMA+I8RNxkIKmFO+SRPO0dyPSZ+EvbjmFgYpU8KaaSC
-	 8b7i1WYJ/MB1C6PmO8yL8t6Ai6w+oQR+19m5NIr5D5PhWJmYQkknV4aGTH9LL2ehgR
-	 ZcEGX1OJecu/zZAlKoKVwcFYnugq3hMnM2wOnOhc=
+	b=uDbWFuncNoHc19CgW6g2lzVihtWeAHMKKflGyY1jwK/tkYevPiKOJdtW5lHWYDUzw
+	 r1CmW0IgZgadoxWY/sEw2q9jzhHP9ODgPFbVzx9es3zzZfGSPzPGcj89x2lpYeDm6r
+	 45JfUlipByI67OIRvvINcbnndhKnvUhGCa/F9GW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfG2TbP (ORCPT
+        id S1729365AbfG2TbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:31:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43852 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:31:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729709AbfG2TbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:31:07 -0400
+        id S1727970AbfG2TbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:31:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDE7221773;
-        Mon, 29 Jul 2019 19:31:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3913F2070B;
+        Mon, 29 Jul 2019 19:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428666;
-        bh=ZrwcrDWPK5yJpXj3jRuqmuZVxOYlfYoF/tZGNepahu0=;
+        s=default; t=1564428678;
+        bh=L6AJrXGiOnr4csgCwVe6ZSzeFBWBhgSG7D8lgQsiOc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JgdM88yadFaCB1vsFtQVVNAApnlteAdzi4DknRfN99aPqPJm2GNcv+mND6Bofxwz8
-         ahnHMgSjoRG+dKCs5F27ueMwdeTrON/E97mIUfVHeS1bBtbSpBvAqpMpBurxIEFFyb
-         ekxDnG5+NO7GY96MK9ktTbo16T73355k4snsZifQ=
+        b=LyopGth3iEc4zz+hWYJvpb4kH8PIR3ZF/SuF/s6fjN4wCxqGFkcZjJAXVQhKHDOU/
+         2B3X1p+mCQqcTV/LTJfLi09X7qnZNPKosd5zxDEGqnxajim2cj6PzJX5Xskj9+aCjt
+         fOaLG/5N675okMSscnoEYGO4YWXfrOOjwrU0fVDc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Efremov <efremov@ispras.ru>,
-        Willy Tarreau <w@1wt.eu>,
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, Gary Hook <Gary.Hook@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 108/293] floppy: fix out-of-bounds read in next_valid_format
-Date:   Mon, 29 Jul 2019 21:19:59 +0200
-Message-Id: <20190729190832.933147012@linuxfoundation.org>
+        Martin Liska <mliska@suse.cz>,
+        Namhyung Kim <namhyung@kernel.org>, Pu Wen <puwen@hygon.cn>,
+        Stephane Eranian <eranian@google.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.14 153/293] perf/x86/amd/uncore: Do not set ThreadMask and SliceMask for non-L3 PMCs
+Date:   Mon, 29 Jul 2019 21:20:44 +0200
+Message-Id: <20190729190836.297738450@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,79 +73,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5635f897ed83fd539df78e98ba69ee91592f9bb8 ]
+From: Kim Phillips <kim.phillips@amd.com>
 
-This fixes a global out-of-bounds read access in the next_valid_format
-function of the floppy driver.
+commit 16f4641166b10e199f0d7b68c2c5f004fef0bda3 upstream.
 
-The values from autodetect field of the struct floppy_drive_params are
-used as indices for the floppy_type array in the next_valid_format
-function 'floppy_type[DP->autodetect[probed_format]].sect'.
+The following commit:
 
-To trigger the bug, one could use a value out of range and set the drive
-parameters with the FDSETDRVPRM ioctl.  A floppy disk is not required to
-be inserted.
+  d7cbbe49a930 ("perf/x86/amd/uncore: Set ThreadMask and SliceMask for L3 Cache perf events")
 
-CAP_SYS_ADMIN is required to call FDSETDRVPRM.
+enables L3 PMC events for all threads and slices by writing 1's in
+'ChL3PmcCfg' (L3 PMC PERF_CTL) register fields.
 
-The patch adds the check for values of the autodetect field to be in the
-'0 <= x < ARRAY_SIZE(floppy_type)' range of the floppy_type array indices.
+Those bitfields overlap with high order event select bits in the Data
+Fabric PMC control register, however.
 
-The bug was found by syzkaller.
+So when a user requests raw Data Fabric events (-e amd_df/event=0xYYY/),
+the two highest order bits get inadvertently set, changing the counter
+select to events that don't exist, and for which no counts are read.
 
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch changes the logic to write the L3 masks only when dealing
+with L3 PMC counters.
+
+AMD Family 16h and below Northbridge (NB) counters were not affected.
+
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Gary Hook <Gary.Hook@amd.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Liska <mliska@suse.cz>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: d7cbbe49a930 ("perf/x86/amd/uncore: Set ThreadMask and SliceMask for L3 Cache perf events")
+Link: https://lkml.kernel.org/r/20190628215906.4276-1-kim.phillips@amd.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/block/floppy.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/x86/events/amd/uncore.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 4c6c20376a83..a4f630ef2b75 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3386,6 +3386,20 @@ static int fd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
- 	return 0;
- }
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -213,7 +213,7 @@ static int amd_uncore_event_init(struct
+ 	 * SliceMask and ThreadMask need to be set for certain L3 events in
+ 	 * Family 17h. For other events, the two fields do not affect the count.
+ 	 */
+-	if (l3_mask)
++	if (l3_mask && is_llc_event(event))
+ 		hwc->config |= (AMD64_L3_SLICE_MASK | AMD64_L3_THREAD_MASK);
  
-+static bool valid_floppy_drive_params(const short autodetect[8])
-+{
-+	size_t floppy_type_size = ARRAY_SIZE(floppy_type);
-+	size_t i = 0;
-+
-+	for (i = 0; i < 8; ++i) {
-+		if (autodetect[i] < 0 ||
-+		    autodetect[i] >= floppy_type_size)
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- static int fd_locked_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
- 		    unsigned long param)
- {
-@@ -3512,6 +3526,8 @@ static int fd_locked_ioctl(struct block_device *bdev, fmode_t mode, unsigned int
- 		SUPBOUND(size, strlen((const char *)outparam) + 1);
- 		break;
- 	case FDSETDRVPRM:
-+		if (!valid_floppy_drive_params(inparam.dp.autodetect))
-+			return -EINVAL;
- 		*UDP = inparam.dp;
- 		break;
- 	case FDGETDRVPRM:
-@@ -3709,6 +3725,8 @@ static int compat_setdrvprm(int drive,
- 		return -EPERM;
- 	if (copy_from_user(&v, arg, sizeof(struct compat_floppy_drive_params)))
- 		return -EFAULT;
-+	if (!valid_floppy_drive_params(v.autodetect))
-+		return -EINVAL;
- 	mutex_lock(&floppy_mutex);
- 	UDP->cmos = v.cmos;
- 	UDP->max_dtr = v.max_dtr;
--- 
-2.20.1
-
+ 	if (event->cpu < 0)
 
 
