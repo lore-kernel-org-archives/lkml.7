@@ -2,115 +2,122 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B3CC7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2849C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33F72070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431221;
-	bh=HMENl/L5+knTn/Fjjyg+GxPo4hsqznlJ+G8e9eT390w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDbYkWRoS8UUnOQHTyoaebgA8wobq+3DwpkVRn49b8sYE6rfFWCVkwAEDY5pOdDjU
-	 QfBBMYeDhmOQtvLLI64VUpIPH2ANzN5VzZFidb6tZZNG43VCwVXQRXSj4h0fsuaJB4
-	 xBbpl7XUJy5W9KTKCHAoiJ75GnVyAWXRoyZzi0mg=
+	by mail.kernel.org (Postfix) with ESMTP id 8303A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="bvchi7hM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbfG2UNk (ORCPT
+        id S1730567AbfG2UNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:13:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728345AbfG2T3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:29:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12D1A2070B;
-        Mon, 29 Jul 2019 19:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428574;
-        bh=HMENl/L5+knTn/Fjjyg+GxPo4hsqznlJ+G8e9eT390w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bsBVMb1oNqZ+dfEsE3oR03L0QB15oAL43iio4a4qwoq/CKusE3EdRtbbOCHRleEp5
-         /PEP/SiSgCepPgTdNS71U41TBw19fjCOfdmhuQRjssneXpKagVXE/gmywuvMTdU+08
-         95tz2qESeYo7t6hKvo9CRaOEfu/j+q7p5WK4am1I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Robinson <pbrobinson@gmail.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 119/293] crypto: ghash - fix unaligned memory access in ghash_setkey()
-Date:   Mon, 29 Jul 2019 21:20:10 +0200
-Message-Id: <20190729190833.700397051@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
-References: <20190729190820.321094988@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 29 Jul 2019 16:13:43 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.35]:11397 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728525AbfG2UNj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 16:13:39 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id E249F8787
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:12:32 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id sC0WhH7uMdnCesC0WhkTyz; Mon, 29 Jul 2019 15:12:32 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=oENqlPZb6frT+9DV38Oo3+KZ9Fe2eujoFK1IJWgO4vw=; b=bvchi7hMrWhQPxGx54HWPe1FFE
+        9Q7FdSp3dSqUxWMZ+3xyYnsciVZgTrxHcDFC371vq/52zy+/8aD/Hz/ggxNEn2bwxK3flx8V3/g2g
+        l7sfwySfRiFiZq9P3gVtkvj/emQCy/xz3ccUV2c999hwW9IqmPuVRsCn/LXhRnjBiKzTI28sAKyHf
+        lE9nn1YYGg3ji/WXTmN+J7XAE6mIimvc6ZhHwqMzGiwyTiNWol3A4FK13CZFKKY3ZMilxo3uITFrW
+        rY27zgrimQSiK5JbrN+igpeqSesCY2ah3B+6RZf0HhxA3la4QRsbCyutGKebvwisgI03eU+eO+ByX
+        5Ufd6JwQ==;
+Received: from [187.192.11.120] (port=59540 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hsC0V-000znM-P1; Mon, 29 Jul 2019 15:12:31 -0500
+Date:   Mon, 29 Jul 2019 15:12:31 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Thomas Sailer <t.sailer@alumni.ethz.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-hams@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] net: hamradio: baycom_epp: Mark expected switch fall-through
+Message-ID: <20190729201231.GA7576@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hsC0V-000znM-P1
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:59540
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+Mark switch cases where we are expecting to fall through.
 
-commit 5c6bc4dfa515738149998bb0db2481a4fdead979 upstream.
+This patch fixes the following warning (Building: i386):
 
-Changing ghash_mod_init() to be subsys_initcall made it start running
-before the alignment fault handler has been installed on ARM.  In kernel
-builds where the keys in the ghash test vectors happened to be
-misaligned in the kernel image, this exposed the longstanding bug that
-ghash_setkey() is incorrectly casting the key buffer (which can have any
-alignment) to be128 for passing to gf128mul_init_4k_lle().
+drivers/net/hamradio/baycom_epp.c: In function ‘transmit’:
+drivers/net/hamradio/baycom_epp.c:491:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    if (i) {
+       ^
+drivers/net/hamradio/baycom_epp.c:504:3: note: here
+   default:  /* fall through */
+   ^~~~~~~
 
-Fix this by memcpy()ing the key to a temporary buffer.
+Notice that, in this particular case, the code comment is
+modified in accordance with what GCC is expecting to find.
 
-Don't fix it by setting an alignmask on the algorithm instead because
-that would unnecessarily force alignment of the data too.
-
-Fixes: 2cdc6899a88e ("crypto: ghash - Add GHASH digest algorithm for GCM")
-Reported-by: Peter Robinson <pbrobinson@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Tested-by: Peter Robinson <pbrobinson@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- crypto/ghash-generic.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/hamradio/baycom_epp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/crypto/ghash-generic.c
-+++ b/crypto/ghash-generic.c
-@@ -34,6 +34,7 @@ static int ghash_setkey(struct crypto_sh
- 			const u8 *key, unsigned int keylen)
- {
- 	struct ghash_ctx *ctx = crypto_shash_ctx(tfm);
-+	be128 k;
+diff --git a/drivers/net/hamradio/baycom_epp.c b/drivers/net/hamradio/baycom_epp.c
+index daab2c07d891..9303aeb2595f 100644
+--- a/drivers/net/hamradio/baycom_epp.c
++++ b/drivers/net/hamradio/baycom_epp.c
+@@ -500,8 +500,9 @@ static int transmit(struct baycom_state *bc, int cnt, unsigned char stat)
+ 				}
+ 				break;
+ 			}
++			/* fall through */
  
- 	if (keylen != GHASH_BLOCK_SIZE) {
- 		crypto_shash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
-@@ -42,7 +43,12 @@ static int ghash_setkey(struct crypto_sh
- 
- 	if (ctx->gf128)
- 		gf128mul_free_4k(ctx->gf128);
--	ctx->gf128 = gf128mul_init_4k_lle((be128 *)key);
-+
-+	BUILD_BUG_ON(sizeof(k) != GHASH_BLOCK_SIZE);
-+	memcpy(&k, key, GHASH_BLOCK_SIZE); /* avoid violating alignment rules */
-+	ctx->gf128 = gf128mul_init_4k_lle(&k);
-+	memzero_explicit(&k, GHASH_BLOCK_SIZE);
-+
- 	if (!ctx->gf128)
- 		return -ENOMEM;
- 
-
+-		default:  /* fall through */
++		default:
+ 			if (bc->hdlctx.calibrate <= 0)
+ 				return 0;
+ 			i = min_t(int, cnt, bc->hdlctx.calibrate);
+-- 
+2.22.0
 
