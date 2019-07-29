@@ -2,194 +2,109 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F246C76193
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E7DC7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FCE02171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:32:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564414343;
-	bh=JPn3KU2VZ0/gm+tjuJIQQ/6pqn46CVBj+G3Bl6UR5/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RqPXvw9h0mauTFGAAnkBuL4/mrDTxm+EcXvh52YeXotoeg8ryirYBSurUMoEW1LVk
-	 g8bRR7BXNNoWu09Y/VBE2v6OWiadab2ODEV7v9tlsKlz1wfdH+LCnrETZmUOmyPv/w
-	 ln84DnwncVf5xHI9IcXiFlJ0YK7xOejDTlNrCwSs=
+	by mail.kernel.org (Postfix) with ESMTP id C7A7D2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MfyclBA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388098AbfG2PcW (ORCPT
+        id S2388110AbfG2PdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:32:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387963AbfG2PcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:32:21 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9952E2070D;
-        Mon, 29 Jul 2019 15:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564414339;
-        bh=JPn3KU2VZ0/gm+tjuJIQQ/6pqn46CVBj+G3Bl6UR5/w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ed8lRhnyQJHe7MlDDkGnIwTKAoY3GbkAfKKh2gq8SLv5VdynrMKeP/upUPVi4sokp
-         WEdrUpqo+5xuc1y8u0Esh9DNx/v69YOErVn0ysRaDf59PyqEFq4w+KOY25V/qPPOmw
-         UA8oVrfOBb/YMZ/xEms6xEPr6pP3GRDuekDWNdUQ=
-Date:   Mon, 29 Jul 2019 11:32:18 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     gregkh@linuxfoundation.org, stable@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH stable 4.9] tcp: reset sk_send_head in
- tcp_write_queue_purge
-Message-ID: <20190729153218.GA29162@sasha-vm>
-References: <20190729132108.162320-1-maowenan@huawei.com>
+        Mon, 29 Jul 2019 11:33:01 -0400
+Received: from mail-eopbgr10083.outbound.protection.outlook.com ([40.107.1.83]:6420
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387925AbfG2PdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:33:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R6+COZ9gmuo7gEdvMYM2c5sM7uBI/rqq34T8DuIWZxZ78M1gHwAyeb8Rn0m8b2qJqbO7BntRvWEn69NGmo3wZt30XP8PvRXchBnJv3oPJYToNcCTM6bLN6B+bVyUrQAaKGDw3dprpulqpNZGW0zcSRqgAAtfkCUgfhMGRIu0ND+MLcDmrWO4H+PQQS4TTUPSEeFN/x8xohAhcYR3sVu18ru3RkTDsLeRyDYN9NaUHLFW/aczAqB9/g88AuX1OJv75vLoyxZhmUOzGs4QT+73IfXA8huVTQJekoY3WPHa2iz0Aj8S69nZThcrZGOcT/dyBMXvcF9VfUcTYGNIQmnrsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ue8RTdPdSLbwKJ+qvvCSHaeB9OyDARc8Ok36XeQfWhQ=;
+ b=ngz4qEsLmneZTdUFFzyLyqMDSQU/ZqunulwOobu6M4myeNV6eMT65ofX+z4Z3hUfaD4Ga/9yrrj+cb3yGjtzyoHW/3m0ANeWX/D0PNjsmi4rpkY2PFnIvIOuy1W5e9wgivaZA5QP6+LNWDvs2IzLpJmecJi7/QfId3wNvm14poeJm1su/oickF4ypia8+zUkQIGe1ylu1utyVf4/P+VQ7FjyK0MWpgIEPakHXw6vjWq9qfsdp3XJBNMykuRP4ld1Mlo55ALYezxDdtO9EIKRMWtwah8uY9Q9s5dFt47kDeyEZiRWFR/6UBwrrn45nP2rUxVuwdV6jcqgt2JjPO8oPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ue8RTdPdSLbwKJ+qvvCSHaeB9OyDARc8Ok36XeQfWhQ=;
+ b=MfyclBA4FC+RYBMFryTzQMjyXNpGgzHL5JzNoifBPMV2GYLyYzTp05EXtOPMA2zS0//FUCyPkCLTcYL6iqi4RB8fkfkQiY50IBkmwMH/k7HHoJKdXcrkwTYaEyEahUDoKts/96JqojGuvwRoN1e4i78k/59etyQaMjQ342tx4Lg=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3920.eurprd04.prod.outlook.com (52.134.17.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.10; Mon, 29 Jul 2019 15:32:57 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::7c64:5296:4607:e10]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::7c64:5296:4607:e10%5]) with mapi id 15.20.2094.017; Mon, 29 Jul 2019
+ 15:32:57 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 07/14] crypto: caam - drop 64-bit only wr/rd_reg64()
+Thread-Topic: [PATCH v6 07/14] crypto: caam - drop 64-bit only wr/rd_reg64()
+Thread-Index: AQHVPLPbJqU/tciNO0+eJySSQ03gsQ==
+Date:   Mon, 29 Jul 2019 15:32:57 +0000
+Message-ID: <VI1PR0402MB34856CBB1DEB39A6716B6CE498DD0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190717152458.22337-1-andrew.smirnov@gmail.com>
+ <20190717152458.22337-8-andrew.smirnov@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4deb7ea3-7c6f-4afe-eff9-08d7143a0845
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3920;
+x-ms-traffictypediagnostic: VI1PR0402MB3920:
+x-microsoft-antispam-prvs: <VI1PR0402MB39206F30DD825693E67EE82D98DD0@VI1PR0402MB3920.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:854;
+x-forefront-prvs: 01136D2D90
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(346002)(366004)(136003)(199004)(189003)(71200400001)(2501003)(229853002)(76176011)(102836004)(71190400001)(4326008)(74316002)(99286004)(256004)(53546011)(7696005)(446003)(86362001)(186003)(5660300002)(55016002)(26005)(2906002)(53936002)(478600001)(6436002)(6246003)(8936002)(476003)(110136005)(66066001)(66556008)(68736007)(54906003)(3846002)(6116002)(66946007)(66446008)(52536014)(486006)(7736002)(305945005)(14454004)(25786009)(9686003)(33656002)(44832011)(558084003)(8676002)(66476007)(76116006)(91956017)(316002)(64756008)(81166006)(6506007)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3920;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: isTcHUdicfFIaLeY/9U9u43fQSISZUTgOaZHSOZ6OZdRRgm85eDe8WBE8Z+KXubeKLeixItnJY+S9czxUpQvBJJRurxtk8mBbIDlKoWw2j0475xngTgzV88OWj17ow/axfz+1MYK6tKt83LrPNX+agfM9P9xBNbkxFpT4ZTHubtq0nfHuxLOycvbvq3F9jH2NeST0ibMLBA4dK6jwRfzxnzlLBdZgfPMmm6HaPqG870npwlkNJ+6eyQ9dXD/h5ApfeSJgyERrWNnv+TVqZq4qlJdWutjMe4X8iqXRw97QeqoT5vYKIeDd2F6rzgWfjuMW8xYgvvOzW20oos7LM66mzoyjHzCGUF/7RvCt5PHzCN0RHw9YjTZRRiUhM7El97WmqrmDeBqEHeNGyZn32eydfB6hUv8hfm+VEwWI7faZko=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190729132108.162320-1-maowenan@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4deb7ea3-7c6f-4afe-eff9-08d7143a0845
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 15:32:57.3775
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3920
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 09:21:08PM +0800, Mao Wenan wrote:
->From: Soheil Hassas Yeganeh <soheil@google.com>
->
->tcp_write_queue_purge clears all the SKBs in the write queue
->but does not reset the sk_send_head. As a result, we can have
->a NULL pointer dereference anywhere that we use tcp_send_head
->instead of the tcp_write_queue_tail.
->
->For example, after a27fd7a8ed38 (tcp: purge write queue upon RST),
->we can purge the write queue on RST. Prior to
->75c119afe14f (tcp: implement rb-tree based retransmit queue),
->tcp_push will only check tcp_send_head and then accesses
->tcp_write_queue_tail to send the actual SKB. As a result, it will
->dereference a NULL pointer.
->
->This has been reported twice for 4.14 where we don't have
->75c119afe14f:
->
->By Timofey Titovets:
->
->[  422.081094] BUG: unable to handle kernel NULL pointer dereference
->at 0000000000000038
->[  422.081254] IP: tcp_push+0x42/0x110
->[  422.081314] PGD 0 P4D 0
->[  422.081364] Oops: 0002 [#1] SMP PTI
->
->By Yongjian Xu:
->
->BUG: unable to handle kernel NULL pointer dereference at 0000000000000038
->IP: tcp_push+0x48/0x120
->PGD 80000007ff77b067 P4D 80000007ff77b067 PUD 7fd989067 PMD 0
->Oops: 0002 [#18] SMP PTI
->Modules linked in: tcp_diag inet_diag tcp_bbr sch_fq iTCO_wdt
->iTCO_vendor_support pcspkr ixgbe mdio i2c_i801 lpc_ich joydev input_leds shpchp
->e1000e igb dca ptp pps_core hwmon mei_me mei ipmi_si ipmi_msghandler sg ses
->scsi_transport_sas enclosure ext4 jbd2 mbcache sd_mod ahci libahci megaraid_sas
->wmi ast ttm dm_mirror dm_region_hash dm_log dm_mod dax
->CPU: 6 PID: 14156 Comm: [ET_NET 6] Tainted: G D 4.14.26-1.el6.x86_64 #1
->Hardware name: LENOVO ThinkServer RD440 /ThinkServer RD440, BIOS A0TS80A
->09/22/2014
->task: ffff8807d78d8140 task.stack: ffffc9000e944000
->RIP: 0010:tcp_push+0x48/0x120
->RSP: 0018:ffffc9000e947a88 EFLAGS: 00010246
->RAX: 00000000000005b4 RBX: ffff880f7cce9c00 RCX: 0000000000000000
->RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff8807d00f5000
->RBP: ffffc9000e947aa8 R08: 0000000000001c84 R09: 0000000000000000
->R10: ffff8807d00f5158 R11: 0000000000000000 R12: ffff8807d00f5000
->R13: 0000000000000020 R14: 00000000000256d4 R15: 0000000000000000
->FS: 00007f5916de9700(0000) GS:ffff88107fd00000(0000) knlGS:0000000000000000
->CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->CR2: 0000000000000038 CR3: 00000007f8226004 CR4: 00000000001606e0
->Call Trace:
->tcp_sendmsg_locked+0x33d/0xe50
->tcp_sendmsg+0x37/0x60
->inet_sendmsg+0x39/0xc0
->sock_sendmsg+0x49/0x60
->sock_write_iter+0xb6/0x100
->do_iter_readv_writev+0xec/0x130
->? rw_verify_area+0x49/0xb0
->do_iter_write+0x97/0xd0
->vfs_writev+0x7e/0xe0
->? __wake_up_common_lock+0x80/0xa0
->? __fget_light+0x2c/0x70
->? __do_page_fault+0x1e7/0x530
->do_writev+0x60/0xf0
->? inet_shutdown+0xac/0x110
->SyS_writev+0x10/0x20
->do_syscall_64+0x6f/0x140
->? prepare_exit_to_usermode+0x8b/0xa0
->entry_SYSCALL_64_after_hwframe+0x3d/0xa2
->RIP: 0033:0x3135ce0c57
->RSP: 002b:00007f5916de4b00 EFLAGS: 00000293 ORIG_RAX: 0000000000000014
->RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000003135ce0c57
->RDX: 0000000000000002 RSI: 00007f5916de4b90 RDI: 000000000000606f
->RBP: 0000000000000000 R08: 0000000000000000 R09: 00007f5916de8c38
->R10: 0000000000000000 R11: 0000000000000293 R12: 00000000000464cc
->R13: 00007f5916de8c30 R14: 00007f58d8bef080 R15: 0000000000000002
->Code: 48 8b 97 60 01 00 00 4c 8d 97 58 01 00 00 41 b9 00 00 00 00 41 89 f3 4c 39
->d2 49 0f 44 d1 41 81 e3 00 80 00 00 0f 85 b0 00 00 00 <80> 4a 38 08 44 8b 8f 74
->06 00 00 44 89 8f 7c 06 00 00 83 e6 01
->RIP: tcp_push+0x48/0x120 RSP: ffffc9000e947a88
->CR2: 0000000000000038
->---[ end trace 8d545c2e93515549 ]---
->
->There is other scenario which found in stable 4.4:
->Allocated:
-> [<ffffffff82f380a6>] __alloc_skb+0xe6/0x600 net/core/skbuff.c:218
-> [<ffffffff832466c3>] alloc_skb_fclone include/linux/skbuff.h:856 [inline]
-> [<ffffffff832466c3>] sk_stream_alloc_skb+0xa3/0x5d0 net/ipv4/tcp.c:833
-> [<ffffffff83249164>] tcp_sendmsg+0xd34/0x2b00 net/ipv4/tcp.c:1178
-> [<ffffffff83300ef3>] inet_sendmsg+0x203/0x4d0 net/ipv4/af_inet.c:755
->Freed:
-> [<ffffffff82f372fd>] __kfree_skb+0x1d/0x20 net/core/skbuff.c:676
-> [<ffffffff83288834>] sk_wmem_free_skb include/net/sock.h:1447 [inline]
-> [<ffffffff83288834>] tcp_write_queue_purge include/net/tcp.h:1460 [inline]
-> [<ffffffff83288834>] tcp_connect_init net/ipv4/tcp_output.c:3122 [inline]
-> [<ffffffff83288834>] tcp_connect+0xb24/0x30c0 net/ipv4/tcp_output.c:3261
-> [<ffffffff8329b991>] tcp_v4_connect+0xf31/0x1890 net/ipv4/tcp_ipv4.c:246
->
->BUG: KASAN: use-after-free in tcp_skb_pcount include/net/tcp.h:796 [inline]
->BUG: KASAN: use-after-free in tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
->BUG: KASAN: use-after-free in tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
-> [<ffffffff81515cd5>] kasan_report.cold.7+0x175/0x2f7 mm/kasan/report.c:408
-> [<ffffffff814f9784>] __asan_report_load2_noabort+0x14/0x20 mm/kasan/report.c:427
-> [<ffffffff83286582>] tcp_skb_pcount include/net/tcp.h:796 [inline]
-> [<ffffffff83286582>] tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
-> [<ffffffff83286582>] tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
-> [<ffffffff83287a40>] __tcp_push_pending_frames+0xa0/0x290 net/ipv4/tcp_output.c:2307
->
->stable 4.4 and stable 4.9 don't have the commit abb4a8b870b5 ("tcp: purge write queue upon RST")
->which is referred in dbbf2d1e4077,
->in tcp_connect_init, it calls tcp_write_queue_purge, and does not reset sk_send_head, then UAF.
->
->stable 4.14 have the commit abb4a8b870b5 ("tcp: purge write queue upon RST"),
->in tcp_reset, it calls tcp_write_queue_purge(sk), and does not reset sk_send_head, then UAF.
->
->So this patch can be used to fix stable 4.4 and 4.9.
->
->Fixes: a27fd7a8ed38 (tcp: purge write queue upon RST)
->Reported-by: Timofey Titovets <nefelim4ag@gmail.com>
->Reported-by: Yongjian Xu <yongjianchn@gmail.com>
->Signed-off-by: Eric Dumazet <edumazet@google.com>
->Signed-off-by: Soheil Hassas Yeganeh <soheil@google.com>
->Tested-by: Yongjian Xu <yongjianchn@gmail.com>
->
->Signed-off-by: David S. Miller <davem@davemloft.net>
->Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->Signed-off-by: Mao Wenan <maowenan@huawei.com>
-
-So the "Fixes:" commit in the commit message is wrong? What's the actual
-commit that this fixes?
-
---
-Thanks,
-Sasha
+On 7/17/2019 6:25 PM, Andrey Smirnov wrote:=0A=
+> Since 32-bit of both wr_reg64 and rd_reg64 now use 64-bit IO helpers,=0A=
+> these functions should no longer be necessary. No functional change inten=
+ded.=0A=
+> =0A=
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
