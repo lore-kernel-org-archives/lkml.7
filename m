@@ -2,93 +2,61 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA61C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885EDC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A54A2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564397498;
-	bh=Fp98NvsVQHW4OteUr6DoqjsManneTqzSgEmj4Sv6NWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UOjiQJ35l4SJNbH1hEmSnIuKpfBxBsCi4ad5oBvhngwsKDJm9HdNOGKz6UXs8Dz6O
-	 th5dFWUvsggk7svw65e2OYWkadWS0GmR/RCbv8XOBi6tGsojo7a6ltRvd8pmL3+2Cr
-	 igWPEpHLEjjQjJpvChlPkjTA6R3FxiSjCMZNAJEo=
+	by mail.kernel.org (Postfix) with ESMTP id 5F1FE2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387472AbfG2Kvh (ORCPT
+        id S2387493AbfG2KwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:51:37 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42456 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387404AbfG2Kvh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:51:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Fp98NvsVQHW4OteUr6DoqjsManneTqzSgEmj4Sv6NWQ=; b=TlrwPKA0cPSJXmi/CZ25ALugV
-        fwE4t4puANsJwlT545pg2qTFU4B+9F6GQ/3Vul5hbHisbMVARhBjcbRa24Zv2oXN2VB6YsUcDLK7Y
-        dOD+aHReKKAGSf3i1gXHw5qn1blH1XnwlHIny424vFxgYHzeNuB35PUh3wafro2dQtaC8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hs3FW-00048A-Dm; Mon, 29 Jul 2019 10:51:26 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 641832742B59; Mon, 29 Jul 2019 11:51:25 +0100 (BST)
-Date:   Mon, 29 Jul 2019 11:51:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-spi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] spi: tle620x: remove stale driver
-Message-ID: <20190729105125.GA4787@sirena.org.uk>
-References: <20190728161304.32022-1-yamada.masahiro@socionext.com>
+        Mon, 29 Jul 2019 06:52:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39950 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387438AbfG2KwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:52:25 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4D8DC307D928;
+        Mon, 29 Jul 2019 10:52:25 +0000 (UTC)
+Received: from localhost (unknown [10.40.205.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 298675D6A3;
+        Mon, 29 Jul 2019 10:52:22 +0000 (UTC)
+Date:   Mon, 29 Jul 2019 12:52:21 +0200
+From:   Jiri Benc <jbenc@redhat.com>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     davem@davemloft.net, sbrivio@redhat.com, sd@queasysnail.net,
+        liuhangbin@gmail.com, dsahern@gmail.com, natechancellor@gmail.com,
+        tglx@linutronix.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: geneve: Fix a possible null-pointer dereference in
+ geneve_link_config()
+Message-ID: <20190729125221.00baf700@redhat.com>
+In-Reply-To: <20190729123055.5a7ba416@redhat.com>
+References: <20190729102611.2338-1-baijiaju1990@gmail.com>
+        <20190729123055.5a7ba416@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
-Content-Disposition: inline
-In-Reply-To: <20190728161304.32022-1-yamada.masahiro@socionext.com>
-X-Cookie: A man's house is his hassle.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 29 Jul 2019 10:52:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 29 Jul 2019 12:30:55 +0200, Jiri Benc wrote:
+> Are you sure rt6_lookup can never return a non-NULL rt with rt->dst.dev
+> being NULL? You'd leak the reference in such case.
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In fact, you're introducing a bug, not fixing one. ip6_rt_put does
+accept NULL parameter. And it seems you already have been told that?
 
-On Mon, Jul 29, 2019 at 01:13:04AM +0900, Masahiro Yamada wrote:
-> This driver seems obsolte because this driver needs platform data
-> but no one in upstream passes it.
+Nacked-by: Jiri Benc <jbenc@redhat.com>
 
-I've not noticed this driver getting in the way of anything?
-
---zhXaljGHf11kAtnf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0+z6wACgkQJNaLcl1U
-h9A8iQf/WUaWbus2/y56hSB5wgIdbmnLdlQKFIbOiLlLCvTHg1+B16u4ggqtmNNy
-i/LxhIXJHljhPSB5UqNvqGbUUfJPqlC6EjP/VH9Se25srhYgCzNetng4TSJgUhf6
-mPx38/UCRMss9iggUIlCcZlwum4olpdkChGQCKbRpJYiJEmAT4/iiNdRbOhNVGor
-w75RTowSMbKKwzSw/vcrpZiyH+XV2xoRGiDRAR2yltKK84yEEvRd8LsiZnYtKm/f
-oEVeTbr2aM5P0EmyoTUN6waKMEHyUKDfiYI8fPqh+YIqEUM1cGor0tRyQUFah9G/
-+M/W7SX1YG7bE4+hsWQjfNpfkAxf4Q==
-=+NF+
------END PGP SIGNATURE-----
-
---zhXaljGHf11kAtnf--
+ Jiri
