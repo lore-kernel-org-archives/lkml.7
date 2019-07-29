@@ -2,123 +2,128 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3120C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50186C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF651206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F712070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:13:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Gpruoqx8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387586AbfG2LNX (ORCPT
+        id S2387604AbfG2LN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:13:23 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44591 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387450AbfG2LNW (ORCPT
+        Mon, 29 Jul 2019 07:13:26 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.219]:28359 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387450AbfG2LN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:13:22 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k18so58152561ljc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 04:13:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tOeU+CYtImamXwnMBo5r6FB06SkfmeDDgtJvh72e5f8=;
-        b=DTo+QQMfRiez7Two+o3auKjZNTA0c5AZSuawM5vGgftI6FGOiPVgcpQqnzJC0f4yBD
-         MOjTLleeEU4euMZPawQUyEX5YABdKgnFahVKWCL6K0foqRerR1NKjYa1eLNairT5JFsZ
-         GUxsFxVX6rTmfUpr59XkS9lNaOn7G/lRvlfx3XVCfs545DNudSEue3+6AnUgEUFpBs5g
-         NLtRrc0arywTxhVkWJLyjUi/j/YAEHltfe23oLBdDYv5rcoj/EDMCx7gMyp1ZgxDKHry
-         xRbRgLsArKpmgoAlBIxFMHGep3npWtQcOqrkdgmo4jAG12LD8W/bWiN3ClsFBv24OiRQ
-         RLNg==
-X-Gm-Message-State: APjAAAU7Ubi4tDbTsIpO3P4mUr1ldRzDsPXSO0zT38Wxr7xWelo0VCX2
-        4fI2Cab90Sdte65la7k0bUq0syQi8h3j/r6K6IwMtYQ2QKNmug==
-X-Google-Smtp-Source: APXvYqzG7FwJx4QRNGscSaihpY7Vr0ay+3S0b2wkdslvjOo2SttVSKYiJDePex+9EPvXQRl/Az7gXZ/T0xfWNYeJJyI=
-X-Received: by 2002:a2e:9643:: with SMTP id z3mr58586491ljh.43.1564398800931;
- Mon, 29 Jul 2019 04:13:20 -0700 (PDT)
+        Mon, 29 Jul 2019 07:13:26 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 17E14D4990
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 06:13:22 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id s3akhq3zC2qH7s3akhsVbV; Mon, 29 Jul 2019 06:13:22 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=mIw7cotMP7bnPhy9cmCT7/53nY6tn5T4nfr2XPRnVmo=; b=Gpruoqx8ukF3WMApnznu/Lv5my
+        Cx2kRuJAdvtJhke+Txv+zEwe+S5ArlBMCKefIlaQytdb8FpW65E+9A+TBSMLtZFSftQmbxiO3im/m
+        S7yQb48Px3pA9AVZaVFt+Vp4024DNSpUZmZoMfmhMXV6posoA1dh7wMjPVkbci+mhZgPwek0mHE4Z
+        ZPyd2598dlLruKCMb9Ln2aqXbMUKm3PfvrhfUCQeEnVzOrk99w05F12DptgFAZe7wyMNLXNjEnevc
+        tUWpKpTlmteVjLCiNropI+j5pS7l4nI9/lMVlfdkRG+BcSSH0MrbxbLX67bf3xm/BhktSWG/CtPCv
+        MOuNs4Qg==;
+Received: from [187.192.11.120] (port=46276 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hs3ai-000CDD-VZ; Mon, 29 Jul 2019 06:13:21 -0500
+Date:   Mon, 29 Jul 2019 06:13:20 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] arcnet: com90io: Mark expected switch fall-throughs
+Message-ID: <20190729111320.GA3193@embeddedor>
 MIME-Version: 1.0
-References: <CAGnkfhySwXY7YwuQezyx6cEpemZW4Hox1_4fQJm3-5hvM3G6gw@mail.gmail.com>
- <20190729095047.k45isr7etq3xkyvr@willie-the-truck> <1cfad84e-5a98-99bd-07c2-9db0cf37292b@arm.com>
- <CAGnkfhxXHPfMZVMy4Wjmy39E3Oh2U8FjVU8p8PprCnj5QFLMEg@mail.gmail.com> <cc6f9c8f-a4a1-7c71-1f89-72e1e8dd0cc8@arm.com>
-In-Reply-To: <cc6f9c8f-a4a1-7c71-1f89-72e1e8dd0cc8@arm.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Mon, 29 Jul 2019 13:12:45 +0200
-Message-ID: <CAGnkfhx6St+MYQuR_Duguk4Q9ieuL7sLCTL=G76-eqUcCAbpoA@mail.gmail.com>
-Subject: Re: build error
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hs3ai-000CDD-VZ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:46276
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 16
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 1:08 PM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> Hi Matteo,
->
-> On 29/07/2019 11:25, Matteo Croce wrote:
-> > On Mon, Jul 29, 2019 at 12:16 PM Vincenzo Frascino
-> > <vincenzo.frascino@arm.com> wrote:
-> >>
-> >> Hi Matteo and Will,
-> >>
-> >>
-> >> If I try to build a fresh kernel on my machine with the standard "make mrproper
-> >> && make defconfig && make" I do not see the reported issue (Please see below
-> >> scissors).
-> >>
-> >> At this point would be interesting to know more about how Matteo is building the
-> >> kernel, and try to reproduce the issue here.
-> >>
-> >> @Matteo, could you please provide the full .config and the steps you used to
-> >> generate it? Is it an 'oldconfig'?
-> >>
-> >
-> > Hi,
-> >
-> > yes, this is an oldconfig from a vanilla 5.2, I attach it
-> > (the non gzipped config was dropped by the ML filter)
-> >
-> >
->
-> I tried your config file and seems working correctly:
->
-> # cp ~/config ../linux-out/.config
-> # make oldconfig
-> # make
->
-> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the compat
-> vDSO will not be built
->
-> ---
->
-> Could you please send to me the config file that does not contain:
-> CONFIG_CROSS_COMPILE_COMPAT_VDSO=""
->
-> The original one I mean, on which you did not run make oldconfig.
-> My suspect at this point is that the string passed to
-> CONFIG_CROSS_COMPILE_COMPAT_VDSO is not completely empty.
->
-> In fact if I do CONFIG_CROSS_COMPILE_COMPAT_VDSO=" " (single space),
-> I do have a failure similar to the one you reported.
->
+Mark switch cases where we are expecting to fall through.
 
-That's what I initially thought, but the string is effectively empty:
+This patch fixes the following warnings (Building: powerpc allyesconfig):
 
-# make
-arch/arm64/Makefile:58: *** gcc not found, check CROSS_COMPILE_COMPAT.  Stop.
-# grep CROSS_COMPILE_COMPAT_VDSO .config |hexdump -C
-00000000  43 4f 4e 46 49 47 5f 43  52 4f 53 53 5f 43 4f 4d  |CONFIG_CROSS_COM|
-00000010  50 49 4c 45 5f 43 4f 4d  50 41 54 5f 56 44 53 4f  |PILE_COMPAT_VDSO|
-00000020  3d 22 22 0a                                       |="".|
-00000024
+drivers/net/arcnet/com90io.c: In function 'com90io_setup':
+include/linux/printk.h:304:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/arcnet/com90io.c:365:3: note: in expansion of macro 'pr_err'
+   pr_err("Too many arguments\n");
+   ^~~~~~
+drivers/net/arcnet/com90io.c:366:2: note: here
+  case 2:  /* IRQ */
+  ^~~~
+drivers/net/arcnet/com90io.c:367:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   irq = ints[2];
+   ~~~~^~~~~~~~~
+drivers/net/arcnet/com90io.c:368:2: note: here
+  case 1:  /* IO address */
+  ^~~~
 
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/arcnet/com90io.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/net/arcnet/com90io.c b/drivers/net/arcnet/com90io.c
+index 2c546013a980..186bbf87bc84 100644
+--- a/drivers/net/arcnet/com90io.c
++++ b/drivers/net/arcnet/com90io.c
+@@ -363,8 +363,10 @@ static int __init com90io_setup(char *s)
+ 	switch (ints[0]) {
+ 	default:		/* ERROR */
+ 		pr_err("Too many arguments\n");
++		/* Fall through */
+ 	case 2:		/* IRQ */
+ 		irq = ints[2];
++		/* Fall through */
+ 	case 1:		/* IO address */
+ 		io = ints[1];
+ 	}
 -- 
-Matteo Croce
-per aspera ad upstream
+2.22.0
+
