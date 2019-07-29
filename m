@@ -2,149 +2,133 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6573AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C14C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365972073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DC6217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:53:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="grga5bl+"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="iAbU8Dut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbfG2Rvl (ORCPT
+        id S1728495AbfG2RxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 13:51:41 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:52133 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726973AbfG2Rvk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:51:40 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 984B721F4C;
-        Mon, 29 Jul 2019 13:51:39 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 29 Jul 2019 13:51:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Vpmx8x
-        fcs9+OL5FkaK+/UEwKsySo7yiF3ecK8DXDOSg=; b=grga5bl+eOQHaywMoChyiC
-        ztI4BSrPCjEChRuC/fOz8w9tdiHjIO/2BN8Siw4Wd8Ssgk73YBGdkTFRiOXORHnq
-        1ixaCVz80BvG7qmjfcYd+Pq/tFBvK+Ar2rKCU2m5J1niugkNAPcylN3NO9TvaRUr
-        gD0I3frsL19ErIscBrj8Ujuj3GO3OLO5rylSDocWrpMtbaRVO31InrLB4mxzUaTE
-        RoS8OQ7K0G01inyKaLpNfaYTMEfkDUmyub7gIAL5hryNZPz4P7ItRdLZOojk08m+
-        TYDI3QBSPDDIzK0rTeQuL1Ujf50Y55GWsUri7aaCk38fLqEpzB/9kb7DqZDHtWWg
-        ==
-X-ME-Sender: <xms:KzI_XWdCnabs6lZOlxQbAAvuiQbx80MlLGwwM-VXeBoVT7-hlqPyDQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledugdduudekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepkfguohcu
-    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecukfhppedule
-    efrdegjedrudeihedrvdehudenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghh
-    sehiughoshgthhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:KzI_XdXlBs49ugvzZza8H6XeRA5IEtMCBss9b6945oWVd3T5MVMU0A>
-    <xmx:KzI_XX8hOiBa7dseYn0xAEeadx715Tc158nwU3EwZ1kcMWtZ7TBvAg>
-    <xmx:KzI_XU_exZEZWnorcwuYN5v4J8EqYZWAaIu7N20pH5QNn1QTOiqidQ>
-    <xmx:KzI_Xa8Xn2gLFLpqsNVZMyIVqqUYTFZloJP4mf3O2qNSj8Kt4qy1oA>
-Received: from localhost (unknown [193.47.165.251])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8BA5D380074;
-        Mon, 29 Jul 2019 13:51:38 -0400 (EDT)
-Date:   Mon, 29 Jul 2019 20:51:36 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
-Cc:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        roopa@cumulusnetworks.com, davem@davemloft.net,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-Message-ID: <20190729175136.GA28572@splinter>
-References: <e6ad982f-4706-46f9-b8f0-1337b09de350@cumulusnetworks.com>
- <20190726120214.c26oj5vks7g5ntwu@soft-dev3.microsemi.net>
- <b755f613-e6d8-a2e6-16cd-6f13ec0a6ddc@cumulusnetworks.com>
- <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
- <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
- <20190729131420.tqukz55tz26jkg73@lx-anielsen.microsemi.net>
- <3cc69103-d194-2eca-e7dd-e2fa6a730223@cumulusnetworks.com>
- <20190729135205.oiuthcyesal4b4ct@lx-anielsen.microsemi.net>
- <e4cd0db9-695a-82a7-7dc0-623ded66a4e5@cumulusnetworks.com>
- <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
+        Mon, 29 Jul 2019 13:53:16 -0400
+Received: from mout.gmx.net ([212.227.17.21]:41659 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728017AbfG2RxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 13:53:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1564422781;
+        bh=7wzmysCmKHB/MJ7yViR5g7vWMi9GW505v/lZE5dCVIM=;
+        h=X-UI-Sender-Class:From:To:Subject:Date:Cc:References:In-Reply-To;
+        b=iAbU8DutaEeE3VfG0gwqHQ7qG/JsABdtnNR4ue6jFALSoC+bXayD02Zbo4r83D8eI
+         TTMS0iU0hT6gd5QAaACP6dK7sI2E8SK1qV8XM5EUYPdcmx5WrJ/M6qtXa4UDLKobF/
+         bOOIuhvd/+JNpmzDQmYGbhcpKiBxrqkPmScyCyTA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from doku18 ([77.2.94.7]) by mail.gmx.com (mrgmx101
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0MTwYX-1i0iWD3q2j-00Qfvd; Mon, 29
+ Jul 2019 19:53:01 +0200
+From:   Dominik Kuhlen <dkuhlen@gmx.net>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: linux-next: Tree for Jul 26 (media/usb/dvb-usb/pctv452e.c)
+Date:   Mon, 29 Jul 2019 19:52:53 +0200
+User-Agent: KMail/1.9.10 (enterprise35 0.20100827.1168748)
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-media" <linux-media@vger.kernel.org>,
+        Andre Weidemann <Andre.Weidemann@web.de>,
+        "Michael H. Schimek" <mschimek@gmx.at>
+References: <20190726152342.2dd8b728@canb.auug.org.au> <782d7306-497f-7bd8-daaa-abac4fca0bdc@infradead.org>
+In-Reply-To: <782d7306-497f-7bd8-daaa-abac4fca0bdc@infradead.org>
+X-KMail-QuotePrefix: > 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: multipart/signed;
+  boundary="nextPart21433132.aLrHPWef0M";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Message-Id: <201907291952.54035.dkuhlen@gmx.net>
+X-Provags-ID: V03:K1:mB95IJ4jmxVaVllUrtLW0PlafrMBRi95QT3zMIxkaolk/h9cUhs
+ qE+kkoXiesuWcSw1kXZAr9PI6qOjmgptR6d0ftkmPR5pnXhq1mcXyc6ltTxcmUMU8nH3P7c
+ JKU1kXYTXVuYFyI40LVFDlAn/uxdDwiluSqxVEGJ01nRGqMG/f+8PXn2V/n7X/KnG2zA5kr
+ k+KRfA33Ed0gSEQHoY1gA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8NkhlyBt2jY=:91UkcdGkNYBP7/JWBItlEj
+ 7a9x6fVwxjVgHjKoWQo8bRm0hI1lpuHGMXkqJS5wdY+onIakReAzilTRXagrbKABv1Uwn5CpA
+ qwJjLiHjBIk2ggZEspg+ouBDWURerNAyY+/09yuu+ZniG+WGut0NuqJBjROtY0zmmt7/O8G3P
+ h5W/adb9kbryDPgMFkQrUtKpk0v1WAETs0DHXfMCGk7YiSUHUqoTIRpvAW6I6mWjSOLd8tZYb
+ PDP0Bo+pIlfvR/GAAEXRiYIipkPojc2xvkukODgo+AbP9vYnvhZcRQ5v8KXSFeMfIujNdFhA5
+ WX3pmq4WYpntMjoF7Jhv9UdT0n9q6fyOi3ZT2H5fMdwBoj2uWr5vqH6lo/emSMGWQvqANZCCX
+ 9s1a2uZsLyz0arUsBf+zaK+1TwRUDV6FGXlsyxf44tgW2yOTuvdSkF/lql5VH0HLhT9mDyYVJ
+ lO4tQakp+6gC1E2I3JQ3RD8YyQoefpp0ahjjz0R0WKhf6S0y3RkLUftyPv3cAybcCamClnM0W
+ /0g0TMJzcF56FpTdWq0hF7P7cRo79/Se98QnoFx42N251KKeUEbFn7zq2qwrl/hDjv1Tvi1bY
+ 2cv9WwnYab3jy050D7bfLp+Yl/d/hJ32R6gmHgdW0Rl3hJIJZQp9iUWvtvPp8MuP3KgY3GX3J
+ qskTkpXmk3r7C1IwaOgLHI5rZRTnfvNGE3J/+OmQp6xGaulqvJQpc2aLPTZKa50c7hMU746P/
+ MufYe8GL9E3gGgDuGInD/kk7C10d9uqwxvVI5klF+KXn/eQicAS1c1gO2zgAavKJ1G5nTGetp
+ NxtEu0NZ4oHpS/X28AbI5OlfVdWKBw38sqy9L5MKxmMkX+5d6blQj54QP6FYdM6sfRF8ng0+8
+ MCV7AKxEdDeF2CS4vdUWAuXsPr2SAweTV/vfYs4oOCovwv644a6aawjK9Y8MoMBRIHArVknIp
+ wH7rffBbkkweb5gRTfWiSDS2i1HUVJ2Ivu7iye2PSHQ0kRX/5iToiVJ6E7SGk7WHKrd9PistT
+ mfAP4jI5xXmRfs/ZvGM0QCH1BHxsmQrgpi0N/9WGTqSU+nUdkqdLn73PUeuz8qrU0Xx434fQK
+ 7lX8a5J513sxE8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 04:35:09PM +0200, Allan W. Nielsen wrote:
-> The 07/29/2019 17:21, Nikolay Aleksandrov wrote:
-> > On 29/07/2019 16:52, Allan W. Nielsen wrote:
-> > > The 07/29/2019 15:50, Nikolay Aleksandrov wrote:
-> > >> On 29/07/2019 15:22, Nikolay Aleksandrov wrote:
-> > >>> Hi Allan,
-> > >>> On 29/07/2019 15:14, Allan W. Nielsen wrote:
-> > >>>> First of all, as mentioned further down in this thread, I realized that our
-> > >>>> implementation of the multicast floodmasks does not align with the existing SW
-> > >>>> implementation. We will change this, such that all multicast packets goes to the
-> > >>>> SW bridge.
-> > >>>>
-> > >>>> This changes things a bit, not that much.
-> > >>>>
-> > >>>> I actually think you summarized the issue we have (after changing to multicast
-> > >>>> flood-masks) right here:
-> > >>>>
-> > >>>> The 07/26/2019 12:26, Nikolay Aleksandrov wrote:
-> > >>>>>>> Actually you mentioned non-IP traffic, so the querier stuff is not a problem. This
-> > >>>>>>> traffic will always be flooded by the bridge (and also a copy will be locally sent up).
-> > >>>>>>> Thus only the flooding may need to be controlled.
-> > >>>>
-> > >>>> This seems to be exactly what we need.
-> > >>>>
-> > >>>> Assuming we have a SW bridge (br0) with 4 slave interfaces (eth0-3). We use this
-> > >>>> on a network where we want to limit the flooding of frames with dmac
-> > >>>> 01:21:6C:00:00:01 (which is non IP traffic) to eth0 and eth1.
-> > >>>>
-> > >>>> One way of doing this could potentially be to support the following command:
-> > >>>>
-> > >>>> bridge fdb add    01:21:6C:00:00:01 port eth0
-> > >>>> bridge fdb append 01:21:6C:00:00:01 port eth1
-> > >> And the fdbs become linked lists?
-> > > Yes, it will most likely become a linked list
-> > > 
-> > >> So we'll increase the complexity for something that is already supported by
-> > >> ACLs (e.g. tc) and also bridge per-port multicast flood flag ?
-> > > I do not think it can be supported with the facilities we have today in tc.
-> > > 
-> > > We can do half of it (copy more fraems to the CPU) with tc, but we can not limit
-> > > the floodmask of a frame with tc (say we want it to flood to 2 out of 4 slave
-> > > ports).
-> > Why not ? You attach an egress filter for the ports and allow that dmac on only
-> > 2 of the ports.
-> Because we want a solution which we eventually can offload in HW. And the HW
-> facilities we have is doing ingress processing (we have no egress ACLs in this
-> design), and if we try to offload an egress rule, with an ingress HW facility,
-> then we will run into other issues.
+--nextPart21433132.aLrHPWef0M
+Content-Type: text/plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-Can you please clarify what you're trying to achieve? I just read the
-thread again and my impression is that you're trying to locally receive
-packets with a certain link layer multicast address. Nik suggested
-SIOCADDMULTI and I suggested a tc filter to get the packet to the CPU.
+Hi Randy,
 
-If you now want to limit the ports to which this packet is flooded, then
-you can use tc filters in *software*:
+On Friday 26 July 2019 16:57:50 Randy Dunlap wrote:
+> On 7/25/19 10:23 PM, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > Changes since 20190725:
+> >=20
+>=20
+> on x86_64:
+>=20
+> In file included from ../drivers/media/usb/dvb-usb/pctv452e.c:16:0:
+> ../drivers/media/usb/dvb-usb/pctv452e.c: In function =E2=80=98pctv452e_fr=
+ontend_attach=E2=80=99:
+> ../drivers/media/dvb-frontends/stb0899_drv.h:139:36: error: weak declarat=
+ion of =E2=80=98stb0899_attach=E2=80=99 being applied to a already existing=
+, static definition
+>  static inline struct dvb_frontend *stb0899_attach(struct stb0899_config =
+*config,
+>                                     ^~~~~~~~~~~~~~
 
-# tc qdisc add dev eth2 clsact
-# tc filter add dev eth2 egress pref 1 flower skip_hw \
-	dst_mac 01:21:6C:00:00:01 action drop
+ cat config-r6623 | grep -i pctv45
+CONFIG_DVB_USB_PCTV452E=3Dy
 
-If you want to forward the packet in hardware and locally receive it,
-you can chain several mirred action and then a trap action.
+ cat config-r6623 | grep -i stb0899
+# CONFIG_DVB_STB0899 is not set
 
-Both options avoid HW egress ACLs which your design does not support.
+=2D> mismatching configuration:
+The pctv452e needs the stb0899 frontend driver to work.
+And the CONFIG_DVB_STB6100 must also be set.
+
+Best regards,
+  Dominik
+
+--nextPart21433132.aLrHPWef0M
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRFyJKmsHqIL03994Lo5et+p+0wogUCXT8ydgAKCRDo5et+p+0w
+ouxYAKCStBFtM3FPc2DVzyK8twIZARLLXQCePMdigKYUO7HPoUmuy8IRu835eGw=
+=76Pp
+-----END PGP SIGNATURE-----
+
+--nextPart21433132.aLrHPWef0M--
