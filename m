@@ -2,216 +2,94 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1FBC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89026C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01814206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C2B6206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c/Ik2pRq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k9Tvz2zR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfG2Qrs (ORCPT
+        id S1728867AbfG2QsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:47:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35185 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfG2Qrq (ORCPT
+        Mon, 29 Jul 2019 12:48:05 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48632 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfG2QsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:47:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s1so22241804pgr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9HYM77T+SWMoihWfcbm2XFRaRtmpa4z+fIUs75oZAs8=;
-        b=c/Ik2pRquSujLz7O5dBwwJjKKhgfAuZ5GQ4zew/ml3g8QlA/37IuwKHgZnSXdeMKVR
-         e1i+h2U1u4hPdhRCBG1WuFHtfVl6wcrfWi0GnFJtD5pr/61XZmhTBkKRmaCokJaqIH9Z
-         hp1h8SlIpdXRKq/RtgKYF8GkxQeHZWSWVupBI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9HYM77T+SWMoihWfcbm2XFRaRtmpa4z+fIUs75oZAs8=;
-        b=M1birlferysCHa4GC43Lhv6p6aQe4IuQwvMz+OlcJj4LQCl7OoqSQezgN6buZLAzfl
-         X1tFYb//UyZfH4PYg1egqiuPyzuG/m408RnBsZNAOTZbaYjP7YRpSJC71Bg59Uft5eb+
-         dWy8gI1Y5dInxSuYYy/UK9nLiL4bsj3LGE7I2hetdQ7Q80snN9BTPjZFO4qvPkT8MNMw
-         WIwN6+dN6HwDGCe32vrcD6Ii+keGLLVbF/TaaQC7p3hOetYkyZbFyYewJzN/mG6l7sNr
-         LsI151OpvfU2ia0Fz4dkUnIgzxaUFGANdVrBp8vbocIxs8RtxGwhD9+thc+4aqeEISl1
-         v2hA==
-X-Gm-Message-State: APjAAAUgt2Fxwgab1EwkkLqLnRgDyfwoZt4VRMszaIuuwfy5xs3oZmMv
-        ZuSiicLgv9RzHGHxHEV4YKBVrg==
-X-Google-Smtp-Source: APXvYqwqyk7tZBLOXPCMqEp5goH/DD6//JX/K7sUovZfR0r1B5DokBw0Oi+u80x7UFb7YkFNVrl2iA==
-X-Received: by 2002:a17:90a:30cf:: with SMTP id h73mr114851009pjb.42.1564418866179;
-        Mon, 29 Jul 2019 09:47:46 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j6sm80389486pjd.19.2019.07.29.09.47.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 09:47:45 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 09:47:44 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "Manoj N. Kumar" <manoj@linux.ibm.com>,
-        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
-        Uma Krishnan <ukrishn@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] scsi: cxlflash: Mark expected switch fall-throughs
-Message-ID: <201907290947.4DC90F6@keescook>
-References: <20190729002119.GA25068@embeddedor>
+        Mon, 29 Jul 2019 12:48:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CdO+v4oZa9EnLCDZTQ85n/ETA6xyqhDMpjwT2xbLmSc=; b=k9Tvz2zRatSYev2i6zfTRqEix
+        l781VEZOt+0DIkqBi9YQpJdYaI0hrv47KEUUPj+i6JvAansBYoAf5NNjA/s7kroc3OEsxRQVLO5Hp
+        qReCDt27Aq/iIw7P/lEaXd3QlVqbB4t+ur0LdTOGrOWTMa+9BZrEiCqlC+i2DCTGGXTLKWBxuJdML
+        BO9m4coWzwx7urw1TDVphaTOazhYENrLjOSWXZsxYv6X9Mic11mAW0/Kbn8JNW6YnEuYQCdCHW09Y
+        +AdyNN4axtYb1MMSTfNW1FfDY6YCVVdU+f4VbDVKahyotsj87025ZgZTC5cS4uLzfQ5G8DtaiwLyf
+        7UIlOZCfg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hs8oY-0004Fa-5W; Mon, 29 Jul 2019 16:47:58 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D64FC20C7FF00; Mon, 29 Jul 2019 18:47:55 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 18:47:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <Valentin.Schneider@arm.com>,
+        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] sched/deadline: Use __sub_running_bw() throughout
+ dl_change_utilization()
+Message-ID: <20190729164755.GM31398@hirez.programming.kicks-ass.net>
+References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
+ <20190726082756.5525-4-dietmar.eggemann@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190729002119.GA25068@embeddedor>
+In-Reply-To: <20190726082756.5525-4-dietmar.eggemann@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 07:21:19PM -0500, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
+On Fri, Jul 26, 2019 at 09:27:54AM +0100, Dietmar Eggemann wrote:
+> dl_change_utilization() has a BUG_ON() to check that no schedutil
+> kthread (sugov) is entering this function. So instead of calling
+> sub_running_bw() which checks for the special entity related to a
+> sugov thread, call the underlying function __sub_running_bw().
 > 
-> This patch fixes the following warnings:
-> 
-> drivers/scsi/cxlflash/main.c: In function 'send_afu_cmd':
-> drivers/scsi/cxlflash/main.c:2347:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (rc) {
->       ^
-> drivers/scsi/cxlflash/main.c:2357:2: note: here
->   case -EAGAIN:
->   ^~~~
-> drivers/scsi/cxlflash/main.c: In function 'term_intr':
-> drivers/scsi/cxlflash/main.c:754:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (index == PRIMARY_HWQ)
->       ^
-> drivers/scsi/cxlflash/main.c:756:2: note: here
->   case UNMAP_TWO:
->   ^~~~
-> drivers/scsi/cxlflash/main.c:757:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    cfg->ops->unmap_afu_irq(hwq->ctx_cookie, 2, hwq);
->    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/scsi/cxlflash/main.c:758:2: note: here
->   case UNMAP_ONE:
->   ^~~~
-> drivers/scsi/cxlflash/main.c:759:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    cfg->ops->unmap_afu_irq(hwq->ctx_cookie, 1, hwq);
->    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/scsi/cxlflash/main.c:760:2: note: here
->   case FREE_IRQ:
->   ^~~~
-> drivers/scsi/cxlflash/main.c: In function 'cxlflash_remove':
-> drivers/scsi/cxlflash/main.c:975:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    cxlflash_release_chrdev(cfg);
->    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/scsi/cxlflash/main.c:976:2: note: here
->   case INIT_STATE_SCSI:
->   ^~~~
-> drivers/scsi/cxlflash/main.c:978:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    scsi_remove_host(cfg->host);
->    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/scsi/cxlflash/main.c:979:2: note: here
->   case INIT_STATE_AFU:
->   ^~~~
-> drivers/scsi/cxlflash/main.c:980:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    term_afu(cfg);
->    ^~~~~~~~~~~~~
-> drivers/scsi/cxlflash/main.c:981:2: note: here
->   case INIT_STATE_PCI:
->   ^~~~
-> drivers/scsi/cxlflash/main.c:983:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    pci_disable_device(pdev);
->    ^~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/scsi/cxlflash/main.c:984:2: note: here
->   case INIT_STATE_NONE:
->   ^~~~
-> drivers/scsi/cxlflash/main.c: In function 'num_hwqs_store':
-> drivers/scsi/cxlflash/main.c:3018:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (cfg->state == STATE_NORMAL)
->       ^
-> drivers/scsi/cxlflash/main.c:3020:2: note: here
->   default:
->   ^~~~~~~
-> 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 > ---
->  drivers/scsi/cxlflash/main.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+>  kernel/sched/deadline.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/scsi/cxlflash/main.c b/drivers/scsi/cxlflash/main.c
-> index b1f4724efde2..93ef97af22df 100644
-> --- a/drivers/scsi/cxlflash/main.c
-> +++ b/drivers/scsi/cxlflash/main.c
-> @@ -753,10 +753,13 @@ static void term_intr(struct cxlflash_cfg *cfg, enum undo_level level,
->  		/* SISL_MSI_ASYNC_ERROR is setup only for the primary HWQ */
->  		if (index == PRIMARY_HWQ)
->  			cfg->ops->unmap_afu_irq(hwq->ctx_cookie, 3, hwq);
-> +		/* fall through */
->  	case UNMAP_TWO:
->  		cfg->ops->unmap_afu_irq(hwq->ctx_cookie, 2, hwq);
-> +		/* fall through */
->  	case UNMAP_ONE:
->  		cfg->ops->unmap_afu_irq(hwq->ctx_cookie, 1, hwq);
-> +		/* fall through */
->  	case FREE_IRQ:
->  		cfg->ops->free_afu_irqs(hwq->ctx_cookie);
->  		/* fall through */
-> @@ -973,14 +976,18 @@ static void cxlflash_remove(struct pci_dev *pdev)
->  	switch (cfg->init_state) {
->  	case INIT_STATE_CDEV:
->  		cxlflash_release_chrdev(cfg);
-> +		/* fall through */
->  	case INIT_STATE_SCSI:
->  		cxlflash_term_local_luns(cfg);
->  		scsi_remove_host(cfg->host);
-> +		/* fall through */
->  	case INIT_STATE_AFU:
->  		term_afu(cfg);
-> +		/* fall through */
->  	case INIT_STATE_PCI:
->  		cfg->ops->destroy_afu(cfg->afu_cookie);
->  		pci_disable_device(pdev);
-> +		/* fall through */
->  	case INIT_STATE_NONE:
->  		free_mem(cfg);
->  		scsi_host_put(cfg->host);
-> @@ -2353,11 +2360,11 @@ static int send_afu_cmd(struct afu *afu, struct sisl_ioarcb *rcb)
->  			cxlflash_schedule_async_reset(cfg);
->  			break;
->  		}
-> -		/* fall through to retry */
-> +		/* fall through - to retry */
->  	case -EAGAIN:
->  		if (++nretry < 2)
->  			goto retry;
-> -		/* fall through to exit */
-> +		/* fall through - to exit */
->  	default:
->  		break;
->  	}
-> @@ -3017,6 +3024,7 @@ static ssize_t num_hwqs_store(struct device *dev,
->  		wait_event(cfg->reset_waitq, cfg->state != STATE_RESET);
->  		if (cfg->state == STATE_NORMAL)
->  			goto retry;
-> +		/* else, fall through */
->  	default:
->  		/* Ideally should not happen */
->  		dev_err(dev, "%s: Device is not ready, state=%d\n",
-> -- 
-> 2.22.0
-> 
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index 99d4c24a8637..1fa005f79307 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -164,7 +164,7 @@ void dl_change_utilization(struct task_struct *p, u64 new_bw)
+>  
+>  	rq = task_rq(p);
+>  	if (p->dl.dl_non_contending) {
+> -		sub_running_bw(&p->dl, &rq->dl);
+> +		__sub_running_bw(p->dl.dl_bw, &rq->dl);
+>  		p->dl.dl_non_contending = 0;
+>  		/*
+>  		 * If the timer handler is currently running and the
 
--- 
-Kees Cook
+I'm confused; the only called of dl_change_utilization() is
+sched_dl_overflow(), and that already checks FLAG_SUGOV and exits before
+calling.
+
+So how can this matter?
