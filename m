@@ -2,132 +2,125 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BE5C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6F1C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D1620651
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:44:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OarXZMdj"
+	by mail.kernel.org (Postfix) with ESMTP id 4AF3820651
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:45:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387787AbfG2LoK (ORCPT
+        id S2387750AbfG2Lp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:44:10 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43611 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387701AbfG2LoK (ORCPT
+        Mon, 29 Jul 2019 07:45:57 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43736 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387638AbfG2Lp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:44:10 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i189so27905981pfg.10;
-        Mon, 29 Jul 2019 04:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=/GdbQmHDgRxOIS9Wz7Qs+ZEMMYW4qyH6JYf9o6A1T0U=;
-        b=OarXZMdjsEIRH/B2hQgEb/RKA3uNUmUrj/k5djGinq6oLebsIYvUwa6wNSoYX6RAfW
-         QeeSa4wZ6xZDk0h9GfP6/ya67iYrpV+8SZ05T0c5+RPVhigzCm6CW6hlwn99gdAGb15V
-         0RkEqZudL0Pmw4ZFHjoxenhULkWdsfZyYIa86MmfPsPETKlD5khr0WnI4zV3712tWpMm
-         JI7s34YoD2VACRzirHt0oQrfaAB4j5HnAyeHpQZapbzsLizkjFStVHmaq2zD6vpTMqaJ
-         B+WZX8inoo3mTfh/IERGkPm7npXdbNp/r6f7IX3NpHVRqP6DPD7uqFt0mx2OsipuUzW2
-         /IFQ==
+        Mon, 29 Jul 2019 07:45:56 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p13so61457329wru.10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 04:45:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=/GdbQmHDgRxOIS9Wz7Qs+ZEMMYW4qyH6JYf9o6A1T0U=;
-        b=mvlstNHGWpPWmNrITbHSCx/GglpXY7J3WQAbXpsz/qr7eJ4KtKij0c8jqfEY9Si8eT
-         ABxrOZTEELGLRKOZwv5cRaeAwUBKvHzTws5CwKQZF+KcCslNZh3zZVudWHJaXXby2sU6
-         d+EPgFtNmsla6P+RbuoKKYwNEGHBs1kA3t7lVPnBgV2EEyVE6a36+ZNjGbWZ5NvTRdJp
-         yZzm05ECiq1kYNBuR+KQs0EVhTKNy1Uw/MaufGz1NjrK/64q5iBf+h9iv9j0en9ypY+M
-         T0T9P7Ct16V7Wf0jDe7dS2wCSxfXUiDugwV9t8+Updp8hL0z1bdvZa+BhELtvn34SPII
-         eoPg==
-X-Gm-Message-State: APjAAAUIVYMl9U2IRvajEQ2uME+7oT5Qk40H++FPgN4ePxqNGzmUgoq9
-        vKoRIeen24NhYBYPCK3OSOHrcuhoysw=
-X-Google-Smtp-Source: APXvYqy3GsKrIff1bHm1Y5Fg99sIIA4Iv+DUlUtjbfv6ilsoa/uoUdhdryfVBc72f6L3uxxptqcfCA==
-X-Received: by 2002:a17:90a:cb01:: with SMTP id z1mr110535882pjt.93.1564400649494;
-        Mon, 29 Jul 2019 04:44:09 -0700 (PDT)
-Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
-        by smtp.gmail.com with ESMTPSA id z12sm42867392pfn.29.2019.07.29.04.44.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 04:44:08 -0700 (PDT)
-Subject: Re: [PATCH] usb: storage: sddr55: Fix a possible null-pointer
- dereference in sddr55_transport()
-To:     Oliver Neukum <oneukum@suse.com>, gregkh@linuxfoundation.org,
-        stern@rowland.harvard.edu
-Cc:     usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-References: <20190729100555.2081-1-baijiaju1990@gmail.com>
- <1564398922.25582.6.camel@suse.com>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <8d21d256-8c03-7864-d45b-fb7f2590721e@gmail.com>
-Date:   Mon, 29 Jul 2019 19:44:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wswpQoJgwyGyzPq8XXsD+wjeWZTbEbjja41h5xGOJVQ=;
+        b=ddz4Wor4yo8TmxH/uvHUEtv/+ZD88N5kD3iXKJe55xA17xsP3AWWW9F3z8Ta4be6kA
+         XuXKQM+XxegdmkctCTzC4e5UiG+MySlTUFrl0HlGqApGgNgfJF9uXeDIUDQtYDpczjp3
+         7Jp2Yh8/bpZEa4MqbaTXIRDUpYouXZ+iFGAfSOur2UmD97540jocfdJ+ec7pG2/Tbai3
+         ZwuKb5e9DU/soMxrPdmuNpQGh6ni63Eg0mBMRArNTKBb7J/Ep2oV/HtbwZiYG+krtpSK
+         LvKE5JuQGFO65vm7y6cQVnHcgjawFDJVwF0TK35sHBqk2wvwzSFlOLt06+63ELO7KHZr
+         tnKQ==
+X-Gm-Message-State: APjAAAUI3RiyYpoPkyoCVeU4B1VcCTCKc+fU783jlQDcOszmbWBHfT/N
+        YACvh/w+MZWwQXMNjzQvMq/PvQ==
+X-Google-Smtp-Source: APXvYqxe+aP64hAMwZCKl2r96RQuNJ8QO4qV5Nz/0wIXQvSs0/a1KeBhexRENJdUdvzJDmVJ3Lt07Q==
+X-Received: by 2002:a5d:498f:: with SMTP id r15mr113353676wrq.353.1564400754574;
+        Mon, 29 Jul 2019 04:45:54 -0700 (PDT)
+Received: from t460s.bristot.redhat.com (nat-cataldo.sssup.it. [193.205.81.5])
+        by smtp.gmail.com with ESMTPSA id k17sm78744410wrq.83.2019.07.29.04.45.53
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 04:45:53 -0700 (PDT)
+Subject: Re: [RFC][PATCH 01/13] sched/deadline: Impose global limits on
+ sched_attr::sched_period
+To:     Juri Lelli <juri.lelli@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
+        balsini@android.com, dvyukov@google.com, tglx@linutronix.de,
+        vpillai@digitalocean.com, rostedt@goodmis.org
+References: <20190726145409.947503076@infradead.org>
+ <20190726161357.397880775@infradead.org>
+ <20190729085711.GQ25636@localhost.localdomain>
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Message-ID: <a7928ec6-b198-015e-edfb-7272de05a953@redhat.com>
+Date:   Mon, 29 Jul 2019 13:45:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1564398922.25582.6.camel@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190729085711.GQ25636@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/29 19:15, Oliver Neukum wrote:
-> Am Montag, den 29.07.2019, 18:05 +0800 schrieb Jia-Ju Bai:
->
+On 29/07/2019 10:57, Juri Lelli wrote:
 > Hi,
->
->> In sddr55_transport(), there is an if statement on line 836 to check
->> whether info->lba_to_pba is NULL:
->>      if (info->lba_to_pba == NULL || ...)
->>
->> When info->lba_to_pba is NULL, it is used on line 948:
->>      pba = info->lba_to_pba[lba];
->>
->> Thus, a possible null-pointer dereference may occur.
-> Yes, in practice READ_CAPACITY will always be called and set
-> up the correct translation table, but you can probably exploit
-> this.
->
->> To fix this bug, info->lba_to_pba is checked before being used.
->>
->> This bug is found by a static analysis tool STCheck written by us.
->>
->> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> 
+> On 26/07/19 16:54, Peter Zijlstra wrote:
+>> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+>> Cc: Luca Abeni <luca.abeni@santannapisa.it>
+>> Cc: Juri Lelli <juri.lelli@redhat.com>
+>> Cc: Dmitry Vyukov <dvyukov@google.com>
+>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 >> ---
->>   drivers/usb/storage/sddr55.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>  include/linux/sched/sysctl.h |    3 +++
+>>  kernel/sched/deadline.c      |   23 +++++++++++++++++++++--
+>>  kernel/sysctl.c              |   14 ++++++++++++++
+>>  3 files changed, 38 insertions(+), 2 deletions(-)
 >>
->> diff --git a/drivers/usb/storage/sddr55.c b/drivers/usb/storage/sddr55.c
->> index b8527c55335b..50afc39aa21d 100644
->> --- a/drivers/usb/storage/sddr55.c
->> +++ b/drivers/usb/storage/sddr55.c
->> @@ -945,7 +945,8 @@ static int sddr55_transport(struct scsi_cmnd *srb, struct us_data *us)
->>   			return USB_STOR_TRANSPORT_FAILED;
->>   		}
->>   
->> -		pba = info->lba_to_pba[lba];
->> +		if (info->lba_to_pba)
->> +			pba = info->lba_to_pba[lba];
-> If you use that fix, pba will be uninitialized when used. It should be
-> something like:
->
-> pba = info->lba_to_pba ? info->lba_to_pba[lba] : 0;
+>> --- a/include/linux/sched/sysctl.h
+>> +++ b/include/linux/sched/sysctl.h
+>> @@ -56,6 +56,9 @@ int sched_proc_update_handler(struct ctl
+>>  extern unsigned int sysctl_sched_rt_period;
+>>  extern int sysctl_sched_rt_runtime;
+>>  
+>> +extern unsigned int sysctl_sched_dl_period_max;
+>> +extern unsigned int sysctl_sched_dl_period_min;
+>> +
+>>  #ifdef CONFIG_UCLAMP_TASK
+>>  extern unsigned int sysctl_sched_uclamp_util_min;
+>>  extern unsigned int sysctl_sched_uclamp_util_max;
+>> --- a/kernel/sched/deadline.c
+>> +++ b/kernel/sched/deadline.c
+>> @@ -2597,6 +2597,14 @@ void __getparam_dl(struct task_struct *p
+>>  }
+>>  
+>>  /*
+>> + * Default limits for DL period; on the top end we guard against small util
+>> + * tasks still getting rediculous long effective runtimes, on the bottom end we
+> s/rediculous/ridiculous/
+> 
+>> + * guard against timer DoS.
+>> + */
+>> +unsigned int sysctl_sched_dl_period_max = 1 << 22; /* ~4 seconds */
+>> +unsigned int sysctl_sched_dl_period_min = 100;     /* 100 us */
+> These limits look sane to me. I've actually been experimenting with 10us
+> period tasks and throttling seemed to behave fine, but I guess 100us is
+> a saner default.
+> 
+> So, (with a few lines of changelog :)
+> 
+> Acked-by: Juri Lelli <juri.lelli@redhat.com>
 
-Thanks for the advice.
-I will send a v2 patch.
 
+Looks sane to me too!
 
-Best wishes,
-Jia-Ju Bai
+Acked-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+
+-- Daniel
