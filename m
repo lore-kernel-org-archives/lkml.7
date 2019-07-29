@@ -2,184 +2,145 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD23C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E75C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDDD02064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431047;
-	bh=wiDEyZdYXykqNWuoM8qvCbURYYqsywdDXaN71XOl2YM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2SvccGBueO+cqpYoJN4qX++t2prXl4lNOabI3jWtnGSwzbr8B54uT+p2tsis283KH
-	 wCxUrnGKIx57jF4Afki/OSCdkxcpfJPiFDScHqaSz51CwfEuzkQymgMpQVJQShUW1T
-	 1Pw0D3Z8HCtm9kr1SWQZNK/uGsj/2x+FsWS35Bhg=
+	by mail.kernel.org (Postfix) with ESMTP id 292582064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbfG2UKq (ORCPT
+        id S1730462AbfG2UKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388157AbfG2TeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:34:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FE2421655;
-        Mon, 29 Jul 2019 19:34:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428841;
-        bh=wiDEyZdYXykqNWuoM8qvCbURYYqsywdDXaN71XOl2YM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GfgZHFTXNXQpf3g+eeR8mepgE6bsyPaA8ByNHC//wzzXDKoA3EudWE6mREf/bD8zY
-         0Mg6wgDNGZ5NR9zbQi3d3HVV4xuxkV4eAlHf4MxwLAmin6Iqcb7gvJiNhko3OPFiHe
-         rooGQPkXn2xEzst6ephCh8KZYOIID/Uja77xL0oQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 186/293] net: bcmgenet: use promisc for unsupported filters
-Date:   Mon, 29 Jul 2019 21:21:17 +0200
-Message-Id: <20190729190838.747798668@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
-References: <20190729190820.321094988@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 29 Jul 2019 16:10:53 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:37282 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388031AbfG2Td6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:33:58 -0400
+Received: by mail-vs1-f66.google.com with SMTP id v6so41790140vsq.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 12:33:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=APfgCVofNAxTgIpWJJctDNySOFsZWXGHU5vcxTekT1w=;
+        b=gXZ8VPP6FXm7sS95jC+VMgxRj4g6veNIAhPOopOamIoLOFcC1tLtydzHK8bFg1d93R
+         WxjXgnEzIhgfEzAJ5xyImd0UqgVnF2Q9JclMHKXWP1PFqwYHOHOdMlbZqPadnNOKWSLF
+         t8w2EcqsEytyFJdmxU8PrSNsALnfYTDfEF4N2SfzuGVDCJJWlS78Jezp9Yu8t5eDOYdL
+         Q6xnkPEI1vLF3UybHVpfET9xwBqm7IMX/+4rDzabri8LU0gcmRwnCzIzTWcWmYiLXxIo
+         JE6tyZfjfxLHPX0hKMA5WOdksrqrcFg4JlWvrHq0AbUEMlpVH8b15kRlU9wZ59LmuPJS
+         c4Pw==
+X-Gm-Message-State: APjAAAVw1miIXH5v/rPwiTtBlN2hCUrAdU0FcGl8Lxt3yyIhfLuXqCR3
+        foTRR3HiTC/b2HuurgO5RQNNLA==
+X-Google-Smtp-Source: APXvYqzRLP/c6oL54wDBJQuKWm3Ku8BrREq1OSA8ge6Iw1WLkwaDnlWWbhuSQBXPE/VnBAgrAnjwqw==
+X-Received: by 2002:a67:f518:: with SMTP id u24mr26227759vsn.87.1564428837005;
+        Mon, 29 Jul 2019 12:33:57 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id u27sm12353175vkk.53.2019.07.29.12.33.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 12:33:56 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 15:33:49 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
+Message-ID: <20190729152634-mutt-send-email-mst@kernel.org>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-2-sgarzare@redhat.com>
+ <20190729095956-mutt-send-email-mst@kernel.org>
+ <20190729153656.zk4q4rob5oi6iq7l@steredhat>
+ <20190729115904-mutt-send-email-mst@kernel.org>
+ <CAGxU2F5F1KcaFNJ6n7++ApZiYMGnoEWKVRgo3Vc4h5hpxSJEZg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGxU2F5F1KcaFNJ6n7++ApZiYMGnoEWKVRgo3Vc4h5hpxSJEZg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Chen <justinpopo6@gmail.com>
+On Mon, Jul 29, 2019 at 06:41:27PM +0200, Stefano Garzarella wrote:
+> On Mon, Jul 29, 2019 at 12:01:37PM -0400, Michael S. Tsirkin wrote:
+> > On Mon, Jul 29, 2019 at 05:36:56PM +0200, Stefano Garzarella wrote:
+> > > On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
+> > > > On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
+> > > > > Since virtio-vsock was introduced, the buffers filled by the host
+> > > > > and pushed to the guest using the vring, are directly queued in
+> > > > > a per-socket list. These buffers are preallocated by the guest
+> > > > > with a fixed size (4 KB).
+> > > > >
+> > > > > The maximum amount of memory used by each socket should be
+> > > > > controlled by the credit mechanism.
+> > > > > The default credit available per-socket is 256 KB, but if we use
+> > > > > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
+> > > > > buffers, using up to 1 GB of memory per-socket. In addition, the
+> > > > > guest will continue to fill the vring with new 4 KB free buffers
+> > > > > to avoid starvation of other sockets.
+> > > > >
+> > > > > This patch mitigates this issue copying the payload of small
+> > > > > packets (< 128 bytes) into the buffer of last packet queued, in
+> > > > > order to avoid wasting memory.
+> > > > >
+> > > > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > > >
+> > > > This is good enough for net-next, but for net I think we
+> > > > should figure out how to address the issue completely.
+> > > > Can we make the accounting precise? What happens to
+> > > > performance if we do?
+> > > >
+> > >
+> > > In order to do more precise accounting maybe we can use the buffer size,
+> > > instead of payload size when we update the credit available.
+> > > In this way, the credit available for each socket will reflect the memory
+> > > actually used.
+> > >
+> > > I should check better, because I'm not sure what happen if the peer sees
+> > > 1KB of space available, then it sends 1KB of payload (using a 4KB
+> > > buffer).
+> > > The other option is to copy each packet in a new buffer like I did in
+> > > the v2 [2], but this forces us to make a copy for each packet that does
+> > > not fill the entire buffer, perhaps too expensive.
+> > >
+> > > [2] https://patchwork.kernel.org/patch/10938741/
+> > >
+> >
+> > So one thing we can easily do is to under-report the
+> > available credit. E.g. if we copy up to 256bytes,
+> > then report just 256bytes for every buffer in the queue.
+> >
+> 
+> Ehm sorry, I got lost :(
+> Can you explain better?
+> 
+> 
+> Thanks,
+> Stefano
 
-[ Upstream commit 35cbef9863640f06107144687bd13151bc2e8ce3 ]
+I think I suggested a better idea more recently.
+But to clarify this option: we are adding a 4K buffer.
+Let's say we know we will always copy 128 bytes.
 
-Currently we silently ignore filters if we cannot meet the filter
-requirements. This will lead to the MAC dropping packets that are
-expected to pass. A better solution would be to set the NIC to promisc
-mode when the required filters cannot be met.
+So we just tell remote we have 128.
+If we add another 4K buffer we add another 128 credits.
 
-Also correct the number of MDF filters supported. It should be 17,
-not 16.
+So we are charging local socket 16x more (4k for a 128 byte packet) but
+we are paying remote 16x less (128 credits for 4k byte buffer). It evens
+out.
 
-Signed-off-by: Justin Chen <justinpopo6@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c |   57 +++++++++++--------------
- 1 file changed, 26 insertions(+), 31 deletions(-)
-
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -3088,39 +3088,42 @@ static void bcmgenet_timeout(struct net_
- 	netif_tx_wake_all_queues(dev);
- }
- 
--#define MAX_MC_COUNT	16
-+#define MAX_MDF_FILTER	17
- 
- static inline void bcmgenet_set_mdf_addr(struct bcmgenet_priv *priv,
- 					 unsigned char *addr,
--					 int *i,
--					 int *mc)
-+					 int *i)
- {
--	u32 reg;
--
- 	bcmgenet_umac_writel(priv, addr[0] << 8 | addr[1],
- 			     UMAC_MDF_ADDR + (*i * 4));
- 	bcmgenet_umac_writel(priv, addr[2] << 24 | addr[3] << 16 |
- 			     addr[4] << 8 | addr[5],
- 			     UMAC_MDF_ADDR + ((*i + 1) * 4));
--	reg = bcmgenet_umac_readl(priv, UMAC_MDF_CTRL);
--	reg |= (1 << (MAX_MC_COUNT - *mc));
--	bcmgenet_umac_writel(priv, reg, UMAC_MDF_CTRL);
- 	*i += 2;
--	(*mc)++;
- }
- 
- static void bcmgenet_set_rx_mode(struct net_device *dev)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	struct netdev_hw_addr *ha;
--	int i, mc;
-+	int i, nfilter;
- 	u32 reg;
- 
- 	netif_dbg(priv, hw, dev, "%s: %08X\n", __func__, dev->flags);
- 
--	/* Promiscuous mode */
-+	/* Number of filters needed */
-+	nfilter = netdev_uc_count(dev) + netdev_mc_count(dev) + 2;
-+
-+	/*
-+	 * Turn on promicuous mode for three scenarios
-+	 * 1. IFF_PROMISC flag is set
-+	 * 2. IFF_ALLMULTI flag is set
-+	 * 3. The number of filters needed exceeds the number filters
-+	 *    supported by the hardware.
-+	*/
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
--	if (dev->flags & IFF_PROMISC) {
-+	if ((dev->flags & (IFF_PROMISC | IFF_ALLMULTI)) ||
-+	    (nfilter > MAX_MDF_FILTER)) {
- 		reg |= CMD_PROMISC;
- 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
- 		bcmgenet_umac_writel(priv, 0, UMAC_MDF_CTRL);
-@@ -3130,32 +3133,24 @@ static void bcmgenet_set_rx_mode(struct
- 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
- 	}
- 
--	/* UniMac doesn't support ALLMULTI */
--	if (dev->flags & IFF_ALLMULTI) {
--		netdev_warn(dev, "ALLMULTI is not supported\n");
--		return;
--	}
--
- 	/* update MDF filter */
- 	i = 0;
--	mc = 0;
- 	/* Broadcast */
--	bcmgenet_set_mdf_addr(priv, dev->broadcast, &i, &mc);
-+	bcmgenet_set_mdf_addr(priv, dev->broadcast, &i);
- 	/* my own address.*/
--	bcmgenet_set_mdf_addr(priv, dev->dev_addr, &i, &mc);
--	/* Unicast list*/
--	if (netdev_uc_count(dev) > (MAX_MC_COUNT - mc))
--		return;
-+	bcmgenet_set_mdf_addr(priv, dev->dev_addr, &i);
- 
--	if (!netdev_uc_empty(dev))
--		netdev_for_each_uc_addr(ha, dev)
--			bcmgenet_set_mdf_addr(priv, ha->addr, &i, &mc);
--	/* Multicast */
--	if (netdev_mc_empty(dev) || netdev_mc_count(dev) >= (MAX_MC_COUNT - mc))
--		return;
-+	/* Unicast */
-+	netdev_for_each_uc_addr(ha, dev)
-+		bcmgenet_set_mdf_addr(priv, ha->addr, &i);
- 
-+	/* Multicast */
- 	netdev_for_each_mc_addr(ha, dev)
--		bcmgenet_set_mdf_addr(priv, ha->addr, &i, &mc);
-+		bcmgenet_set_mdf_addr(priv, ha->addr, &i);
-+
-+	/* Enable filters */
-+	reg = GENMASK(MAX_MDF_FILTER - 1, MAX_MDF_FILTER - nfilter);
-+	bcmgenet_umac_writel(priv, reg, UMAC_MDF_CTRL);
- }
- 
- /* Set the hardware MAC address. */
+Way less credits to go around so I'm not sure it's a good idea,
+at least as the only solution. Can be combined with other
+optimizations and probably in a less drastic fashion
+(e.g. 2x rather than 16x).
 
 
+-- 
+MST
