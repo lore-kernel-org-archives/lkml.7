@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056FAC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA296C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C632020C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8922B217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429414;
-	bh=3lizOSZSapAncVFPDk5SecML46iwtuSEJnnXCAzjas0=;
+	s=default; t=1564429418;
+	bh=333I/5dGGjAojenhI1WcZlnlZf5vSbq8kbFNtZytKEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AcBtQqipNib4JmmrzORVCka1MwzBwGYhqgGfnKcGmvhp/gTEp5Z7PzajsMiBa/Sdv
-	 Cql6hPYs0SYLtO4GyCVYViLq6Rjarkk3W7dJS7VU3lGjpEbBGE6wZr2jeRDM7mxhu/
-	 G+a1Rfa6VuufKZuHRU3Sv6I/I0ThiVgp01IXeomk=
+	b=RQDz665XSs+MT0gzFnHBiAXIwPdC5eTxKzxVCbEYcnqOxYbBT5RGu70sG7RDPSEjC
+	 B/JZsB0RsTxHk8oQNdugQgXtap3U8+GBO7Knkql8IxXDQ4Iugs8FAvDmJS7y0C5TdH
+	 TrLexZ14K5HkJB/VW1DmX+Pl+NkZ5cD5LcSXqIp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389672AbfG2Tnd (ORCPT
+        id S2389677AbfG2Tnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59832 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:43:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389657AbfG2Tna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:43:30 -0400
+        id S2389665AbfG2Tnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:43:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D32C2205F4;
-        Mon, 29 Jul 2019 19:43:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BAF821773;
+        Mon, 29 Jul 2019 19:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429409;
-        bh=3lizOSZSapAncVFPDk5SecML46iwtuSEJnnXCAzjas0=;
+        s=default; t=1564429412;
+        bh=333I/5dGGjAojenhI1WcZlnlZf5vSbq8kbFNtZytKEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PwNRXekieHW8Ac57KKNAG5jNWExGzTKvt5OpKgaldt19nnLPDT2xLmyphhd4km4G7
-         vBhNGYmr1qDKrKP1knA7IqTxA/lg9IlMOqsVbDShEYa0U9tqjJv8YsK6MBKJSbYVDu
-         rSC9Y4Jak6E+d+I8GqHc8upsheEIpZzpHNSm6ARg=
+        b=Ytt4dx0b2xWk1iSfbqmrs0l3Ey9CH1kPKNTzDGEpojnmyvbBF38sfe8vca33u+C2c
+         lb21e4EaiKWu9fdkK/WFrkA+g0aYhObJaZY57iyBlwFYKdrK4RJS95A0kQQEUqHPUw
+         x9I4g1F+dSzQAEn8FIIEAc7GFVwyvgDGdPubS4ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -56,9 +56,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/113] proc: use down_read_killable mmap_sem for /proc/pid/smaps_rollup
-Date:   Mon, 29 Jul 2019 21:22:56 +0200
-Message-Id: <20190729190716.728939574@linuxfoundation.org>
+Subject: [PATCH 4.19 090/113] proc: use down_read_killable mmap_sem for /proc/pid/pagemap
+Date:   Mon, 29 Jul 2019 21:22:57 +0200
+Message-Id: <20190729190716.968891980@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -71,12 +71,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a26a97815548574213fd37f29b4b78ccc6d9ed20 ]
+[ Upstream commit ad80b932c57d85fd6377f97f359b025baf179a87 ]
 
 Do not remain stuck forever if something goes wrong.  Using a killable
 lock permits cleanup of stuck tasks and simplifies investigation.
 
-Link: http://lkml.kernel.org/r/156007493429.3335.14666825072272692455.stgit@buzz
+Link: http://lkml.kernel.org/r/156007493638.3335.4872164955523928492.stgit@buzz
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Reviewed-by: Roman Gushchin <guro@fb.com>
 Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
@@ -91,36 +91,24 @@ Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/task_mmu.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/proc/task_mmu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index c5819baee35c..b2010055180e 100644
+index b2010055180e..74965e17ffd5 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
-@@ -826,7 +826,10 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
- 
- 	memset(&mss, 0, sizeof(mss));
- 
--	down_read(&mm->mmap_sem);
-+	ret = down_read_killable(&mm->mmap_sem);
-+	if (ret)
-+		goto out_put_mm;
-+
- 	hold_task_mempolicy(priv);
- 
- 	for (vma = priv->mm->mmap; vma; vma = vma->vm_next) {
-@@ -843,8 +846,9 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
- 
- 	release_task_mempolicy(priv);
- 	up_read(&mm->mmap_sem);
--	mmput(mm);
- 
-+out_put_mm:
-+	mmput(mm);
- out_put_task:
- 	put_task_struct(priv->task);
- 	priv->task = NULL;
+@@ -1535,7 +1535,9 @@ static ssize_t pagemap_read(struct file *file, char __user *buf,
+ 		/* overflow ? */
+ 		if (end < start_vaddr || end > end_vaddr)
+ 			end = end_vaddr;
+-		down_read(&mm->mmap_sem);
++		ret = down_read_killable(&mm->mmap_sem);
++		if (ret)
++			goto out_free;
+ 		ret = walk_page_range(start_vaddr, end, &pagemap_walk);
+ 		up_read(&mm->mmap_sem);
+ 		start_vaddr = end;
 -- 
 2.20.1
 
