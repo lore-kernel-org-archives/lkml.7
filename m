@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8618AC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0B7C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50E0A2064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2282064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430937;
-	bh=sw7NaxbdxmEM6aRee2IGjhr908nG873HqFG3gLRoZso=;
+	s=default; t=1564430946;
+	bh=QUH2HVlCZzCSEYNqBC3dDREXI2MkI3HNm6UVaQKkVuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XYo88IHVSg3B/OvQaBa2sQRf47JDsL6h9sF5ZP9Er2ildFn897+9ypld34YMJrnTK
-	 EBohE+g3NJA8u1fG8npf7IL+2El0V4ZcRfhbuW9vkrGlDcIm4/uNeg+WD7smUkCC23
-	 VLFW6Gqqj/Rblln9lAcBho6QaeUht8cvV4US60So=
+	b=EsZjh0HhPRTAUDPzqbMlapg8Y0rodx+X9R4P09J7eC12+DAkx5YPIXvNEAxIxXHUr
+	 F7NBucZYPn5ez7FiHEJtELMDjhYk78tb1P8paQ4p4G39kembaNiRpQqzD/vpvcNvQw
+	 7F5vuO++lZhPK/qZo6sO5jdu5kSsJcqPRxb7N/X8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388754AbfG2Tho (ORCPT
+        id S2388688AbfG2ThV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:37:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52520 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:37:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388731AbfG2Thl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:37:41 -0400
+        id S2387908AbfG2ThQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:37:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C08952171F;
-        Mon, 29 Jul 2019 19:37:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CFE72184B;
+        Mon, 29 Jul 2019 19:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429060;
-        bh=sw7NaxbdxmEM6aRee2IGjhr908nG873HqFG3gLRoZso=;
+        s=default; t=1564429035;
+        bh=QUH2HVlCZzCSEYNqBC3dDREXI2MkI3HNm6UVaQKkVuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HeX3dHfVoIMM5hOFuqr2H+9+Pj7L76ANiC2hY/Er3gksYvrEcBemoSGYxc2tzzpPJ
-         w6u/Ydq/u21Fix4ciP0XfhqKZ5KXPFIT5Y5yEIA+2HoA3lzXka/b7LoNoOF+L2POUR
-         aVdNXkbbFkWLybNfoQw9tVsQV0ykpZmCDZuK6b6U=
+        b=XbT3mgV8plrdGXOb0YuVFx+uu3UeQiwM4HkTw7If/nPz5K1c95BwKWuSIeV9qyox5
+         VAyguF+5sGQM869AaUc71EVNN2XYJxm3P283ScvgCLV2BxD3UoaxNTGrTIBHhpYtU6
+         lY51QwRzKnLiHcOAm6sh/mXsOYEYXVkyqRmvPSSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Baruch Siach <baruch@tkos.co.il>,
+        stable@vger.kernel.org,
+        Konstantin Taranov <konstantin.taranov@inf.ethz.ch>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 233/293] tty/serial: digicolor: Fix digicolor-usart already registered warning
-Date:   Mon, 29 Jul 2019 21:22:04 +0200
-Message-Id: <20190729190842.338566469@linuxfoundation.org>
+Subject: [PATCH 4.14 263/293] RDMA/rxe: Fill in wc byte_len with IB_WC_RECV_RDMA_WITH_IMM
+Date:   Mon, 29 Jul 2019 21:22:34 +0200
+Message-Id: <20190729190844.535666878@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,42 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c7ad9ba0611c53cfe194223db02e3bca015f0674 ]
+[ Upstream commit bdce1290493caa3f8119f24b5dacc3fb7ca27389 ]
 
-When modprobe/rmmod/modprobe module, if platform_driver_register() fails,
-the kernel complained,
+Calculate the correct byte_len on the receiving side when a work
+completion is generated with IB_WC_RECV_RDMA_WITH_IMM opcode.
 
-  proc_dir_entry 'driver/digicolor-usart' already registered
-  WARNING: CPU: 1 PID: 5636 at fs/proc/generic.c:360 proc_register+0x19d/0x270
+According to the IBA byte_len must indicate the number of written bytes,
+whereas it was always equal to zero for the IB_WC_RECV_RDMA_WITH_IMM
+opcode, even though data was transferred.
 
-Fix this by adding uart_unregister_driver() when platform_driver_register() fails.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Acked-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Signed-off-by: Konstantin Taranov <konstantin.taranov@inf.ethz.ch>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/digicolor-usart.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/infiniband/sw/rxe/rxe_resp.c  | 5 ++++-
+ drivers/infiniband/sw/rxe/rxe_verbs.h | 1 +
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/digicolor-usart.c b/drivers/tty/serial/digicolor-usart.c
-index 02ad6953b167..50ec5f1ac77f 100644
---- a/drivers/tty/serial/digicolor-usart.c
-+++ b/drivers/tty/serial/digicolor-usart.c
-@@ -545,7 +545,11 @@ static int __init digicolor_uart_init(void)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
+index 74328561bee2..9207682b7a2e 100644
+--- a/drivers/infiniband/sw/rxe/rxe_resp.c
++++ b/drivers/infiniband/sw/rxe/rxe_resp.c
+@@ -435,6 +435,7 @@ static enum resp_states check_rkey(struct rxe_qp *qp,
+ 			qp->resp.va = reth_va(pkt);
+ 			qp->resp.rkey = reth_rkey(pkt);
+ 			qp->resp.resid = reth_len(pkt);
++			qp->resp.length = reth_len(pkt);
+ 		}
+ 		access = (pkt->mask & RXE_READ_MASK) ? IB_ACCESS_REMOTE_READ
+ 						     : IB_ACCESS_REMOTE_WRITE;
+@@ -860,7 +861,9 @@ static enum resp_states do_complete(struct rxe_qp *qp,
+ 				pkt->mask & RXE_WRITE_MASK) ?
+ 					IB_WC_RECV_RDMA_WITH_IMM : IB_WC_RECV;
+ 		wc->vendor_err = 0;
+-		wc->byte_len = wqe->dma.length - wqe->dma.resid;
++		wc->byte_len = (pkt->mask & RXE_IMMDT_MASK &&
++				pkt->mask & RXE_WRITE_MASK) ?
++					qp->resp.length : wqe->dma.length - wqe->dma.resid;
  
--	return platform_driver_register(&digicolor_uart_platform);
-+	ret = platform_driver_register(&digicolor_uart_platform);
-+	if (ret)
-+		uart_unregister_driver(&digicolor_uart);
-+
-+	return ret;
- }
- module_init(digicolor_uart_init);
+ 		/* fields after byte_len are different between kernel and user
+ 		 * space
+diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+index 59f6a24db064..b2b76a316eba 100644
+--- a/drivers/infiniband/sw/rxe/rxe_verbs.h
++++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+@@ -214,6 +214,7 @@ struct rxe_resp_info {
+ 	struct rxe_mem		*mr;
+ 	u32			resid;
+ 	u32			rkey;
++	u32			length;
+ 	u64			atomic_orig;
  
+ 	/* SRQ only */
 -- 
 2.20.1
 
