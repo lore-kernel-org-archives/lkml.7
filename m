@@ -2,55 +2,52 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56682C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E929AC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5AD21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBEEF2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428575;
-	bh=32sw+/2hBRIK2hQxyimGd9HkHEKOeZLzu/p6gHeeew0=;
+	s=default; t=1564428578;
+	bh=/JwY3h9nUS0LG/9eBVEMdwzjPajL0hD0NRE551e2B1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WAq4VL4NdkG06Ls9uftgTnl6ahjfb/fwlsLkBJXiuegak1/f9CGjiMmD2mr5R5h2e
-	 AGsmbTYmqTEiY1NMEunSMm3HRA3OgUtOHi1AxVgMzBPrRaRxX1k6urpK3j7nbhGsls
-	 waS2MjcWxfydJJUxo9zYjTMfkypITlmM1OukyTLI=
+	b=iuKGykBl1dvbIB31nfcPmmBUi544VzQuRFsn0uD9K1ao+E4hEJuyvNtH8vW3RH2Z1
+	 WqKq2b9qoBAcQcg0XTH6jb7m9zyoeiRnLfW/wK2xuEHDh24h3bYOJWpYeNqcLhx/+s
+	 aqlXFDBmLIzj4hzzfuS5yOobXh/Gq2PuwZQnpHCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387784AbfG2T3d (ORCPT
+        id S1728494AbfG2T3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:29:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42156 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:29:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387484AbfG2T3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:29:30 -0400
+        id S2387545AbfG2T3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:29:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E192F2070B;
-        Mon, 29 Jul 2019 19:29:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 927152171F;
+        Mon, 29 Jul 2019 19:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428568;
-        bh=32sw+/2hBRIK2hQxyimGd9HkHEKOeZLzu/p6gHeeew0=;
+        s=default; t=1564428571;
+        bh=/JwY3h9nUS0LG/9eBVEMdwzjPajL0hD0NRE551e2B1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q9DxrtaH9RwIDdRgKdjFJCro40KgTsDmoc/3mwDHIpF1nFmGde6u89bpTQrIAwuJO
-         QDiusCWGV/uWOBs6pC/v6N12HdRtOBP+WN+qclKAMbPkPc15CdPu2WTsuzdKLOm0Ap
-         UKUE4c4/W5CGYgCF3TrTlO1XZAaNFXc93zqIB+Cg=
+        b=s1a084XKqDhePyu8RnIi+yurtCbTBkSMD+2DYDUBS5ZLWFNxuzuGRvn4SDhyXvhah
+         Xo82N/1/hDilgdTUpWfIH9AV1ecAt9HHJUzImKMEj+kX5TNXVqhfTwCK7TjIoKM7Za
+         yuzA59VRLzGE60qknfLUsOZ/CbLQjOaEcgqjkv8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Chris Jones <chris@martin-jones.com>,
-        Stan Johnson <userm57@yahoo.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 118/293] scsi: mac_scsi: Fix pseudo DMA implementation, take 2
-Date:   Mon, 29 Jul 2019 21:20:09 +0200
-Message-Id: <20190729190833.632054609@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 101/293] gtp: fix suspicious RCU usage
+Date:   Mon, 29 Jul 2019 21:19:52 +0200
+Message-Id: <20190729190832.381864907@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -63,484 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+[ Upstream commit e198987e7dd7d3645a53875151cd6f8fc425b706 ]
 
-commit 78ff751f8e6a9446e9fb26b2bff0b8d3f8974cbd upstream.
+gtp_encap_enable_socket() and gtp_encap_destroy() are not protected
+by rcu_read_lock(). and it's not safe to write sk->sk_user_data.
+This patch make these functions to use lock_sock() instead of
+rcu_dereference_sk_user_data().
 
-A system bus error during a PDMA transfer can mess up the calculation of
-the transfer residual (the PDMA handshaking hardware lacks a byte
-counter). This results in data corruption.
+Test commands:
+    gtp-link add gtp1
 
-The algorithm in this patch anticipates a bus error by starting each
-transfer with a MOVE.B instruction. If a bus error is caught the transfer
-will be retried. If a bus error is caught later in the transfer (for a
-MOVE.W instruction) the transfer gets failed and subsequent requests for
-that target will use PIO instead of PDMA.
+Splat looks like:
+[   83.238315] =============================
+[   83.239127] WARNING: suspicious RCU usage
+[   83.239702] 5.2.0-rc6+ #49 Not tainted
+[   83.240268] -----------------------------
+[   83.241205] drivers/net/gtp.c:799 suspicious rcu_dereference_check() usage!
+[   83.243828]
+[   83.243828] other info that might help us debug this:
+[   83.243828]
+[   83.246325]
+[   83.246325] rcu_scheduler_active = 2, debug_locks = 1
+[   83.247314] 1 lock held by gtp-link/1008:
+[   83.248523]  #0: 0000000017772c7f (rtnl_mutex){+.+.}, at: __rtnl_newlink+0x5f5/0x11b0
+[   83.251503]
+[   83.251503] stack backtrace:
+[   83.252173] CPU: 0 PID: 1008 Comm: gtp-link Not tainted 5.2.0-rc6+ #49
+[   83.253271] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   83.254562] Call Trace:
+[   83.254995]  dump_stack+0x7c/0xbb
+[   83.255567]  gtp_encap_enable_socket+0x2df/0x360 [gtp]
+[   83.256415]  ? gtp_find_dev+0x1a0/0x1a0 [gtp]
+[   83.257161]  ? memset+0x1f/0x40
+[   83.257843]  gtp_newlink+0x90/0xa21 [gtp]
+[   83.258497]  ? __netlink_ns_capable+0xc3/0xf0
+[   83.259260]  __rtnl_newlink+0xb9f/0x11b0
+[   83.260022]  ? rtnl_link_unregister+0x230/0x230
+[ ... ]
 
-This avoids the "!REQ and !ACK" error so the severity level of that message
-is reduced to KERN_DEBUG.
-
-Cc: Michael Schmitz <schmitzmic@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: stable@vger.kernel.org # v4.14+
-Fixes: 3a0f64bfa907 ("mac_scsi: Fix pseudo DMA implementation")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Reported-by: Chris Jones <chris@martin-jones.com>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 1e3a3abd8b28 ("gtp: make GTP sockets in gtp_newlink optional")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mac_scsi.c |  369 ++++++++++++++++++++++++++++--------------------
- 1 file changed, 217 insertions(+), 152 deletions(-)
+ drivers/net/gtp.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/mac_scsi.c
-+++ b/drivers/scsi/mac_scsi.c
-@@ -3,6 +3,8 @@
-  *
-  * Copyright 1998, Michael Schmitz <mschmitz@lbl.gov>
-  *
-+ * Copyright 2019 Finn Thain
-+ *
-  * derived in part from:
-  */
- /*
-@@ -11,6 +13,7 @@
-  * Copyright 1995, Russell King
-  */
- 
-+#include <linux/delay.h>
- #include <linux/types.h>
- #include <linux/module.h>
- #include <linux/ioport.h>
-@@ -89,101 +92,217 @@ static int __init mac_scsi_setup(char *s
- __setup("mac5380=", mac_scsi_setup);
- #endif /* !MODULE */
- 
--/* Pseudo DMA asm originally by Ove Edlund */
-+/*
-+ * According to "Inside Macintosh: Devices", Mac OS requires disk drivers to
-+ * specify the number of bytes between the delays expected from a SCSI target.
-+ * This allows the operating system to "prevent bus errors when a target fails
-+ * to deliver the next byte within the processor bus error timeout period."
-+ * Linux SCSI drivers lack knowledge of the timing behaviour of SCSI targets
-+ * so bus errors are unavoidable.
-+ *
-+ * If a MOVE.B instruction faults, we assume that zero bytes were transferred
-+ * and simply retry. That assumption probably depends on target behaviour but
-+ * seems to hold up okay. The NOP provides synchronization: without it the
-+ * fault can sometimes occur after the program counter has moved past the
-+ * offending instruction. Post-increment addressing can't be used.
-+ */
-+
-+#define MOVE_BYTE(operands) \
-+	asm volatile ( \
-+		"1:     moveb " operands "     \n" \
-+		"11:    nop                    \n" \
-+		"       addq #1,%0             \n" \
-+		"       subq #1,%1             \n" \
-+		"40:                           \n" \
-+		"                              \n" \
-+		".section .fixup,\"ax\"        \n" \
-+		".even                         \n" \
-+		"90:    movel #1, %2           \n" \
-+		"       jra 40b                \n" \
-+		".previous                     \n" \
-+		"                              \n" \
-+		".section __ex_table,\"a\"     \n" \
-+		".align  4                     \n" \
-+		".long   1b,90b                \n" \
-+		".long  11b,90b                \n" \
-+		".previous                     \n" \
-+		: "+a" (addr), "+r" (n), "+r" (result) : "a" (io))
- 
--#define CP_IO_TO_MEM(s,d,n)				\
--__asm__ __volatile__					\
--    ("    cmp.w  #4,%2\n"				\
--     "    bls    8f\n"					\
--     "    move.w %1,%%d0\n"				\
--     "    neg.b  %%d0\n"				\
--     "    and.w  #3,%%d0\n"				\
--     "    sub.w  %%d0,%2\n"				\
--     "    bra    2f\n"					\
--     " 1: move.b (%0),(%1)+\n"				\
--     " 2: dbf    %%d0,1b\n"				\
--     "    move.w %2,%%d0\n"				\
--     "    lsr.w  #5,%%d0\n"				\
--     "    bra    4f\n"					\
--     " 3: move.l (%0),(%1)+\n"				\
--     "31: move.l (%0),(%1)+\n"				\
--     "32: move.l (%0),(%1)+\n"				\
--     "33: move.l (%0),(%1)+\n"				\
--     "34: move.l (%0),(%1)+\n"				\
--     "35: move.l (%0),(%1)+\n"				\
--     "36: move.l (%0),(%1)+\n"				\
--     "37: move.l (%0),(%1)+\n"				\
--     " 4: dbf    %%d0,3b\n"				\
--     "    move.w %2,%%d0\n"				\
--     "    lsr.w  #2,%%d0\n"				\
--     "    and.w  #7,%%d0\n"				\
--     "    bra    6f\n"					\
--     " 5: move.l (%0),(%1)+\n"				\
--     " 6: dbf    %%d0,5b\n"				\
--     "    and.w  #3,%2\n"				\
--     "    bra    8f\n"					\
--     " 7: move.b (%0),(%1)+\n"				\
--     " 8: dbf    %2,7b\n"				\
--     "    moveq.l #0, %2\n"				\
--     " 9: \n"						\
--     ".section .fixup,\"ax\"\n"				\
--     "    .even\n"					\
--     "91: moveq.l #1, %2\n"				\
--     "    jra 9b\n"					\
--     "94: moveq.l #4, %2\n"				\
--     "    jra 9b\n"					\
--     ".previous\n"					\
--     ".section __ex_table,\"a\"\n"			\
--     "   .align 4\n"					\
--     "   .long  1b,91b\n"				\
--     "   .long  3b,94b\n"				\
--     "   .long 31b,94b\n"				\
--     "   .long 32b,94b\n"				\
--     "   .long 33b,94b\n"				\
--     "   .long 34b,94b\n"				\
--     "   .long 35b,94b\n"				\
--     "   .long 36b,94b\n"				\
--     "   .long 37b,94b\n"				\
--     "   .long  5b,94b\n"				\
--     "   .long  7b,91b\n"				\
--     ".previous"					\
--     : "=a"(s), "=a"(d), "=d"(n)			\
--     : "0"(s), "1"(d), "2"(n)				\
--     : "d0")
-+/*
-+ * If a MOVE.W (or MOVE.L) instruction faults, it cannot be retried because
-+ * the residual byte count would be uncertain. In that situation the MOVE_WORD
-+ * macro clears n in the fixup section to abort the transfer.
-+ */
-+
-+#define MOVE_WORD(operands) \
-+	asm volatile ( \
-+		"1:     movew " operands "     \n" \
-+		"11:    nop                    \n" \
-+		"       subq #2,%1             \n" \
-+		"40:                           \n" \
-+		"                              \n" \
-+		".section .fixup,\"ax\"        \n" \
-+		".even                         \n" \
-+		"90:    movel #0, %1           \n" \
-+		"       movel #2, %2           \n" \
-+		"       jra 40b                \n" \
-+		".previous                     \n" \
-+		"                              \n" \
-+		".section __ex_table,\"a\"     \n" \
-+		".align  4                     \n" \
-+		".long   1b,90b                \n" \
-+		".long  11b,90b                \n" \
-+		".previous                     \n" \
-+		: "+a" (addr), "+r" (n), "+r" (result) : "a" (io))
-+
-+#define MOVE_16_WORDS(operands) \
-+	asm volatile ( \
-+		"1:     movew " operands "     \n" \
-+		"2:     movew " operands "     \n" \
-+		"3:     movew " operands "     \n" \
-+		"4:     movew " operands "     \n" \
-+		"5:     movew " operands "     \n" \
-+		"6:     movew " operands "     \n" \
-+		"7:     movew " operands "     \n" \
-+		"8:     movew " operands "     \n" \
-+		"9:     movew " operands "     \n" \
-+		"10:    movew " operands "     \n" \
-+		"11:    movew " operands "     \n" \
-+		"12:    movew " operands "     \n" \
-+		"13:    movew " operands "     \n" \
-+		"14:    movew " operands "     \n" \
-+		"15:    movew " operands "     \n" \
-+		"16:    movew " operands "     \n" \
-+		"17:    nop                    \n" \
-+		"       subl  #32,%1           \n" \
-+		"40:                           \n" \
-+		"                              \n" \
-+		".section .fixup,\"ax\"        \n" \
-+		".even                         \n" \
-+		"90:    movel #0, %1           \n" \
-+		"       movel #2, %2           \n" \
-+		"       jra 40b                \n" \
-+		".previous                     \n" \
-+		"                              \n" \
-+		".section __ex_table,\"a\"     \n" \
-+		".align  4                     \n" \
-+		".long   1b,90b                \n" \
-+		".long   2b,90b                \n" \
-+		".long   3b,90b                \n" \
-+		".long   4b,90b                \n" \
-+		".long   5b,90b                \n" \
-+		".long   6b,90b                \n" \
-+		".long   7b,90b                \n" \
-+		".long   8b,90b                \n" \
-+		".long   9b,90b                \n" \
-+		".long  10b,90b                \n" \
-+		".long  11b,90b                \n" \
-+		".long  12b,90b                \n" \
-+		".long  13b,90b                \n" \
-+		".long  14b,90b                \n" \
-+		".long  15b,90b                \n" \
-+		".long  16b,90b                \n" \
-+		".long  17b,90b                \n" \
-+		".previous                     \n" \
-+		: "+a" (addr), "+r" (n), "+r" (result) : "a" (io))
-+
-+#define MAC_PDMA_DELAY		32
-+
-+static inline int mac_pdma_recv(void __iomem *io, unsigned char *start, int n)
-+{
-+	unsigned char *addr = start;
-+	int result = 0;
-+
-+	if (n >= 1) {
-+		MOVE_BYTE("%3@,%0@");
-+		if (result)
-+			goto out;
-+	}
-+	if (n >= 1 && ((unsigned long)addr & 1)) {
-+		MOVE_BYTE("%3@,%0@");
-+		if (result)
-+			goto out;
-+	}
-+	while (n >= 32)
-+		MOVE_16_WORDS("%3@,%0@+");
-+	while (n >= 2)
-+		MOVE_WORD("%3@,%0@+");
-+	if (result)
-+		return start - addr; /* Negated to indicate uncertain length */
-+	if (n == 1)
-+		MOVE_BYTE("%3@,%0@");
-+out:
-+	return addr - start;
-+}
-+
-+static inline int mac_pdma_send(unsigned char *start, void __iomem *io, int n)
-+{
-+	unsigned char *addr = start;
-+	int result = 0;
-+
-+	if (n >= 1) {
-+		MOVE_BYTE("%0@,%3@");
-+		if (result)
-+			goto out;
-+	}
-+	if (n >= 1 && ((unsigned long)addr & 1)) {
-+		MOVE_BYTE("%0@,%3@");
-+		if (result)
-+			goto out;
-+	}
-+	while (n >= 32)
-+		MOVE_16_WORDS("%0@+,%3@");
-+	while (n >= 2)
-+		MOVE_WORD("%0@+,%3@");
-+	if (result)
-+		return start - addr; /* Negated to indicate uncertain length */
-+	if (n == 1)
-+		MOVE_BYTE("%0@,%3@");
-+out:
-+	return addr - start;
-+}
- 
- static inline int macscsi_pread(struct NCR5380_hostdata *hostdata,
-                                 unsigned char *dst, int len)
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index dba3869b61be..2756edd84abc 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -293,12 +293,14 @@ static void gtp_encap_destroy(struct sock *sk)
  {
- 	u8 __iomem *s = hostdata->pdma_io + (INPUT_DATA_REG << 4);
- 	unsigned char *d = dst;
--	int n = len;
--	int transferred;
-+
-+	hostdata->pdma_residual = len;
+ 	struct gtp_dev *gtp;
  
- 	while (!NCR5380_poll_politely(hostdata, BUS_AND_STATUS_REG,
- 	                              BASR_DRQ | BASR_PHASE_MATCH,
- 	                              BASR_DRQ | BASR_PHASE_MATCH, HZ / 64)) {
--		CP_IO_TO_MEM(s, d, n);
-+		int bytes;
-+
-+		bytes = mac_pdma_recv(s, d, min(hostdata->pdma_residual, 512));
- 
--		transferred = d - dst - n;
--		hostdata->pdma_residual = len - transferred;
-+		if (bytes > 0) {
-+			d += bytes;
-+			hostdata->pdma_residual -= bytes;
-+		}
- 
--		/* No bus error. */
--		if (n == 0)
-+		if (hostdata->pdma_residual == 0)
- 			return 0;
- 
--		/* Target changed phase early? */
- 		if (NCR5380_poll_politely2(hostdata, STATUS_REG, SR_REQ, SR_REQ,
--		                           BUS_AND_STATUS_REG, BASR_ACK, BASR_ACK, HZ / 64) < 0)
--			scmd_printk(KERN_ERR, hostdata->connected,
-+		                           BUS_AND_STATUS_REG, BASR_ACK,
-+		                           BASR_ACK, HZ / 64) < 0)
-+			scmd_printk(KERN_DEBUG, hostdata->connected,
- 			            "%s: !REQ and !ACK\n", __func__);
- 		if (!(NCR5380_read(BUS_AND_STATUS_REG) & BASR_PHASE_MATCH))
- 			return 0;
- 
-+		if (bytes == 0)
-+			udelay(MAC_PDMA_DELAY);
-+
-+		if (bytes >= 0)
-+			continue;
-+
- 		dsprintk(NDEBUG_PSEUDO_DMA, hostdata->host,
--		         "%s: bus error (%d/%d)\n", __func__, transferred, len);
-+		         "%s: bus error (%d/%d)\n", __func__, d - dst, len);
- 		NCR5380_dprint(NDEBUG_PSEUDO_DMA, hostdata->host);
--		d = dst + transferred;
--		n = len - transferred;
-+		return -1;
+-	gtp = rcu_dereference_sk_user_data(sk);
++	lock_sock(sk);
++	gtp = sk->sk_user_data;
+ 	if (gtp) {
+ 		udp_sk(sk)->encap_type = 0;
+ 		rcu_assign_sk_user_data(sk, NULL);
+ 		sock_put(sk);
  	}
- 
- 	scmd_printk(KERN_ERR, hostdata->connected,
-@@ -192,93 +311,27 @@ static inline int macscsi_pread(struct N
- 	return -1;
++	release_sock(sk);
  }
  
--
--#define CP_MEM_TO_IO(s,d,n)				\
--__asm__ __volatile__					\
--    ("    cmp.w  #4,%2\n"				\
--     "    bls    8f\n"					\
--     "    move.w %0,%%d0\n"				\
--     "    neg.b  %%d0\n"				\
--     "    and.w  #3,%%d0\n"				\
--     "    sub.w  %%d0,%2\n"				\
--     "    bra    2f\n"					\
--     " 1: move.b (%0)+,(%1)\n"				\
--     " 2: dbf    %%d0,1b\n"				\
--     "    move.w %2,%%d0\n"				\
--     "    lsr.w  #5,%%d0\n"				\
--     "    bra    4f\n"					\
--     " 3: move.l (%0)+,(%1)\n"				\
--     "31: move.l (%0)+,(%1)\n"				\
--     "32: move.l (%0)+,(%1)\n"				\
--     "33: move.l (%0)+,(%1)\n"				\
--     "34: move.l (%0)+,(%1)\n"				\
--     "35: move.l (%0)+,(%1)\n"				\
--     "36: move.l (%0)+,(%1)\n"				\
--     "37: move.l (%0)+,(%1)\n"				\
--     " 4: dbf    %%d0,3b\n"				\
--     "    move.w %2,%%d0\n"				\
--     "    lsr.w  #2,%%d0\n"				\
--     "    and.w  #7,%%d0\n"				\
--     "    bra    6f\n"					\
--     " 5: move.l (%0)+,(%1)\n"				\
--     " 6: dbf    %%d0,5b\n"				\
--     "    and.w  #3,%2\n"				\
--     "    bra    8f\n"					\
--     " 7: move.b (%0)+,(%1)\n"				\
--     " 8: dbf    %2,7b\n"				\
--     "    moveq.l #0, %2\n"				\
--     " 9: \n"						\
--     ".section .fixup,\"ax\"\n"				\
--     "    .even\n"					\
--     "91: moveq.l #1, %2\n"				\
--     "    jra 9b\n"					\
--     "94: moveq.l #4, %2\n"				\
--     "    jra 9b\n"					\
--     ".previous\n"					\
--     ".section __ex_table,\"a\"\n"			\
--     "   .align 4\n"					\
--     "   .long  1b,91b\n"				\
--     "   .long  3b,94b\n"				\
--     "   .long 31b,94b\n"				\
--     "   .long 32b,94b\n"				\
--     "   .long 33b,94b\n"				\
--     "   .long 34b,94b\n"				\
--     "   .long 35b,94b\n"				\
--     "   .long 36b,94b\n"				\
--     "   .long 37b,94b\n"				\
--     "   .long  5b,94b\n"				\
--     "   .long  7b,91b\n"				\
--     ".previous"					\
--     : "=a"(s), "=a"(d), "=d"(n)			\
--     : "0"(s), "1"(d), "2"(n)				\
--     : "d0")
--
- static inline int macscsi_pwrite(struct NCR5380_hostdata *hostdata,
-                                  unsigned char *src, int len)
- {
- 	unsigned char *s = src;
- 	u8 __iomem *d = hostdata->pdma_io + (OUTPUT_DATA_REG << 4);
--	int n = len;
--	int transferred;
-+
-+	hostdata->pdma_residual = len;
- 
- 	while (!NCR5380_poll_politely(hostdata, BUS_AND_STATUS_REG,
- 	                              BASR_DRQ | BASR_PHASE_MATCH,
- 	                              BASR_DRQ | BASR_PHASE_MATCH, HZ / 64)) {
--		CP_MEM_TO_IO(s, d, n);
-+		int bytes;
- 
--		transferred = s - src - n;
--		hostdata->pdma_residual = len - transferred;
-+		bytes = mac_pdma_send(s, d, min(hostdata->pdma_residual, 512));
- 
--		/* Target changed phase early? */
--		if (NCR5380_poll_politely2(hostdata, STATUS_REG, SR_REQ, SR_REQ,
--		                           BUS_AND_STATUS_REG, BASR_ACK, BASR_ACK, HZ / 64) < 0)
--			scmd_printk(KERN_ERR, hostdata->connected,
--			            "%s: !REQ and !ACK\n", __func__);
--		if (!(NCR5380_read(BUS_AND_STATUS_REG) & BASR_PHASE_MATCH))
--			return 0;
-+		if (bytes > 0) {
-+			s += bytes;
-+			hostdata->pdma_residual -= bytes;
-+		}
- 
--		/* No bus error. */
--		if (n == 0) {
-+		if (hostdata->pdma_residual == 0) {
- 			if (NCR5380_poll_politely(hostdata, TARGET_COMMAND_REG,
- 			                          TCR_LAST_BYTE_SENT,
- 			                          TCR_LAST_BYTE_SENT, HZ / 64) < 0)
-@@ -287,17 +340,29 @@ static inline int macscsi_pwrite(struct
- 			return 0;
- 		}
- 
-+		if (NCR5380_poll_politely2(hostdata, STATUS_REG, SR_REQ, SR_REQ,
-+		                           BUS_AND_STATUS_REG, BASR_ACK,
-+		                           BASR_ACK, HZ / 64) < 0)
-+			scmd_printk(KERN_DEBUG, hostdata->connected,
-+			            "%s: !REQ and !ACK\n", __func__);
-+		if (!(NCR5380_read(BUS_AND_STATUS_REG) & BASR_PHASE_MATCH))
-+			return 0;
-+
-+		if (bytes == 0)
-+			udelay(MAC_PDMA_DELAY);
-+
-+		if (bytes >= 0)
-+			continue;
-+
- 		dsprintk(NDEBUG_PSEUDO_DMA, hostdata->host,
--		         "%s: bus error (%d/%d)\n", __func__, transferred, len);
-+		         "%s: bus error (%d/%d)\n", __func__, s - src, len);
- 		NCR5380_dprint(NDEBUG_PSEUDO_DMA, hostdata->host);
--		s = src + transferred;
--		n = len - transferred;
-+		return -1;
+ static void gtp_encap_disable_sock(struct sock *sk)
+@@ -798,7 +800,8 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
+ 		goto out_sock;
  	}
  
- 	scmd_printk(KERN_ERR, hostdata->connected,
- 	            "%s: phase mismatch or !DRQ\n", __func__);
- 	NCR5380_dprint(NDEBUG_PSEUDO_DMA, hostdata->host);
--
- 	return -1;
- }
+-	if (rcu_dereference_sk_user_data(sock->sk)) {
++	lock_sock(sock->sk);
++	if (sock->sk->sk_user_data) {
+ 		sk = ERR_PTR(-EBUSY);
+ 		goto out_sock;
+ 	}
+@@ -814,6 +817,7 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
+ 	setup_udp_tunnel_sock(sock_net(sock->sk), sock, &tuncfg);
  
+ out_sock:
++	release_sock(sock->sk);
+ 	sockfd_put(sock);
+ 	return sk;
+ }
+-- 
+2.20.1
+
 
 
