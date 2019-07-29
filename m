@@ -2,52 +2,52 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B47BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1F7C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22824205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E042205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430790;
-	bh=VxXnJ/P807ym+51bu1JQ01WrVeUIkkjT5fp71u2lyag=;
+	s=default; t=1564430796;
+	bh=5QHtL0XNAjyJtuF2bZOQbdAb4gdb/YztsPUiD+UjgXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=biZvaEdnEZbwEmMX36x7LQY6QrnB2D6L5EQFvPm+WoorioAVvksqqsKoTa8oyLC3U
-	 L8cFqKPMd8z5+kwubRd79YrdnQogiiykfs7/q7G1hZPAB6ifOjBvIfXejw11nXD01+
-	 NPxPSuQk4bZo7mRuJPS8P0VKU9A1kAoB4+K09/+E=
+	b=AcuCNmqcF75bVX6XEzz8lQpN2gHjYJDay83BEsA6/3PLfL9sGCX7Qk6FnmVE/pnaw
+	 TaofmrdQOV1xIJKUMEBbiYqgogX1gwCn57LuJ/nJoB7ENlWO8gQh9PXXThcS4bN1fp
+	 aw1X3G7FzWiSJZgezLBpBMUHfbT6lLGct2L6mTrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390167AbfG2UG3 (ORCPT
+        id S2389285AbfG2TlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56800 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:41:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388558AbfG2TlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:41:21 -0400
+        id S2389256AbfG2TlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:41:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06088206DD;
-        Mon, 29 Jul 2019 19:41:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A080220C01;
+        Mon, 29 Jul 2019 19:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429281;
-        bh=VxXnJ/P807ym+51bu1JQ01WrVeUIkkjT5fp71u2lyag=;
+        s=default; t=1564429265;
+        bh=5QHtL0XNAjyJtuF2bZOQbdAb4gdb/YztsPUiD+UjgXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qNUcFTDnPbfVcauKcJAm/0BZFVZr8JvExL0dT2J/1ESXpwY3sfAeJ3DK9aITaf6r3
-         HxUANz3n6sVP0/ux6c/PLsexmfWlzb0DVqEC7ORAPiN3fWEO+MTOs6oEVcMtHunvHC
-         wLsT+u25F6c2+brSnZxKyHKdFUBcEexqqihI9Awk=
+        b=QhIlWxU63lZ4pS6EaT6oyrlG24wcyvp4kRHMZ1hxv0eRvr3LfQfwdexkG/FJE3L/+
+         CAjiVCxzQwUsM/zyYbCpV/kOomVyGOmyCssnQvrlyWlDUc0rJB2xic751zICsQxMyY
+         sG+kRgMeU0ZLosTeLTMJL9Ufas9crH5rjyz9ZK2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Bastien Nocera <hadess@hadess.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/113] mfd: core: Set fwnode for created devices
-Date:   Mon, 29 Jul 2019 21:22:16 +0200
-Message-Id: <20190729190707.272214674@linuxfoundation.org>
+Subject: [PATCH 4.19 044/113] iio: iio-utils: Fix possible incorrect mask calculation
+Date:   Mon, 29 Jul 2019 21:22:11 +0200
+Message-Id: <20190729190706.217460325@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,32 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c176c6d7e932662668bcaec2d763657096589d85 ]
+[ Upstream commit 208a68c8393d6041a90862992222f3d7943d44d6 ]
 
-The logic for setting the of_node on devices created by mfd did not set
-the fwnode pointer to match, which caused fwnode-based APIs to
-malfunction on these devices since the fwnode pointer was null. Fix
-this.
+On some machines, iio-sensor-proxy was returning all 0's for IIO sensor
+values. It turns out that the bits_used for this sensor is 32, which makes
+the mask calculation:
 
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+*mask = (1 << 32) - 1;
+
+If the compiler interprets the 1 literals as 32-bit ints, it generates
+undefined behavior depending on compiler version and optimization level.
+On my system, it optimizes out the shift, so the mask value becomes
+
+*mask = (1) - 1;
+
+With a mask value of 0, iio-sensor-proxy will always return 0 for every axis.
+
+Avoid incorrect 0 values caused by compiler optimization.
+
+See original fix by Brett Dutro <brett.dutro@gmail.com> in
+iio-sensor-proxy:
+https://github.com/hadess/iio-sensor-proxy/commit/9615ceac7c134d838660e209726cd86aa2064fd3
+
+Signed-off-by: Bastien Nocera <hadess@hadess.net>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/mfd-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/iio/iio_utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 94e3f32ce935..182973df1aed 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -179,6 +179,7 @@ static int mfd_add_device(struct device *parent, int id,
- 		for_each_child_of_node(parent->of_node, np) {
- 			if (of_device_is_compatible(np, cell->of_compatible)) {
- 				pdev->dev.of_node = np;
-+				pdev->dev.fwnode = &np->fwnode;
- 				break;
- 			}
- 		}
+diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
+index 7a6d61c6c012..55272fef3b50 100644
+--- a/tools/iio/iio_utils.c
++++ b/tools/iio/iio_utils.c
+@@ -159,9 +159,9 @@ int iioutils_get_type(unsigned *is_signed, unsigned *bytes, unsigned *bits_used,
+ 			*be = (endianchar == 'b');
+ 			*bytes = padint / 8;
+ 			if (*bits_used == 64)
+-				*mask = ~0;
++				*mask = ~(0ULL);
+ 			else
+-				*mask = (1ULL << *bits_used) - 1;
++				*mask = (1ULL << *bits_used) - 1ULL;
+ 
+ 			*is_signed = (signchar == 's');
+ 			if (fclose(sysfsfp)) {
 -- 
 2.20.1
 
