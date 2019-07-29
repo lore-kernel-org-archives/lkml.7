@@ -2,112 +2,84 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3F4C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA4BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F241F20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:13:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMc4NRl9"
+	by mail.kernel.org (Postfix) with ESMTP id 4B3EE20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfG2IN1 (ORCPT
+        id S1727541AbfG2IQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:13:27 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34686 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfG2IN1 (ORCPT
+        Mon, 29 Jul 2019 04:16:01 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:41008 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbfG2IQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:13:27 -0400
-Received: by mail-wm1-f67.google.com with SMTP id w9so42409795wmd.1;
-        Mon, 29 Jul 2019 01:13:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SyFl8pL1iDZjmoOSkzXlnQ91ZUZpLkZdLRiM5vUWoME=;
-        b=RMc4NRl9Idazs+XYRc2PCVJrla+XcMB5QI9fW4vskcW4AWdCAjW114u0ltcwv3J3kS
-         MejM0+8lWjKST59WU3AMIZxd4/R8oxvP5WYmQZ/s+MfdW0r6aFSv4SZMNIv8js7Nr4IX
-         7Gaa0m/10cn1v9XCIjcejFparxRsgjkUPGkLrC907ae/L4wg583BzHLdcoNoI1Xw+JJL
-         J4QUDcdP7QMkggQGmKsgFfCqz9l+OvK80s89AN0hnR8wIaN8/pIPLxO/Jq7oo4ieNU4W
-         2n2Ym18F3HuEavyXhWQ9Wbjei3xF1zzsbxx0b3hGtD55UjczEVPEeLSlS6D+SvQpiqid
-         wP1w==
+        Mon, 29 Jul 2019 04:16:01 -0400
+Received: by mail-io1-f72.google.com with SMTP id x17so66337871iog.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 01:16:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SyFl8pL1iDZjmoOSkzXlnQ91ZUZpLkZdLRiM5vUWoME=;
-        b=EOTzOhZSouXAe9wGvfqX8QNJf3XlGPafKuOvNgKeB/TkSASVeeW40rBN1KuIQoXIqt
-         4pwMAVBsxcyVRPACcINZ+I/kaGgb+Ka5C91KSzZVENB/s321KJ3N2LfjlsiEuMdLhZ22
-         jfO4WBxgL/dFzwn/BH/O0RXlO8p381udF3xxBDQ9jelJiZVA0VVq7lgOexOeYYFoXyf2
-         sAi4UKlzX9Lex3PgOgf8vJQ9TBek8UI6MP2M9xJwAzliShy6pd9Gw6R6ZHnaCJMF1CaW
-         r37HrFP4DzwC5ZD9Nx4y47KZrkeIO13o5Shwj1HP3F7TfsahdAcvreg/zDA38HyFO8Br
-         5jXQ==
-X-Gm-Message-State: APjAAAXw2JaYHpBjkta+ERTioOoc0IL8Aomsh1YsubRdopSHt05tKELL
-        Qfcv6fFOdnGjmVKggncR3l7NvUMzM6vQq7JVwF4=
-X-Google-Smtp-Source: APXvYqyJSF9giFQVsItTxUvBm5InpdKI0AD91vYK8YMt/vMVNe8Bcy9zHxVTrPIj7PKEgF2MKDJZ8Wm9t5JIOx9xuEE=
-X-Received: by 2002:a7b:c247:: with SMTP id b7mr102240187wmj.13.1564388004695;
- Mon, 29 Jul 2019 01:13:24 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=0rPakemNyIs9fbLrhB6s/ulRRU21c/3n0kSBtdCA0Eo=;
+        b=olBX2UC5qaVKO9vhHcnEqug8nBQCGmFLwMEMebjgO9bfbr89AbjJDnITiYukfiseE0
+         f57luSdAtKUUIJj1Hz4sm6LrVw/CG8K6RmvKE56mugLzEGzvR7de7EDWdiCKv5X0Ns7c
+         f+NexgJDq5GI6kempG7/hhSbVX9/rfrZ3zMSXOUeAle7gCDSl4NvtK9c+ojjrdH6p7Mt
+         D5oqtR8jTuuUj8Taia+rha+o/1Dl8o4cOTTkNHaytlXeIZvYU6lz+nXcUJ88N1IBRL42
+         MxGXJjugyCjh6H89Lze/dPZ7b3RPSGOo6qoJTc7msLXg+pT9hcomHWRmJ3l7ZVRY/kUU
+         +J9A==
+X-Gm-Message-State: APjAAAUsg243K9i1FJxKKCTO1HVdPJgkU/hbVB3iEDRpkEsKoc6x27XB
+        tlQwJ+Yc8vEIB+j+Brg5rBmksJCYie3VfJmbtmiaSaybdTOV
+X-Google-Smtp-Source: APXvYqxSkxuHca0jLTiQmdMdnlp+TfywXlCfVmn/nxBSNrXe+PgHcKdxjXDq/A4yJcJjcL3n5aaCmQIspC/xzgAeN42nGa5pW21x
 MIME-Version: 1.0
-References: <20190705045612.27665-1-Anson.Huang@nxp.com> <20190705045612.27665-5-Anson.Huang@nxp.com>
- <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
- <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAEnQRZCrZybzcy__u4p_Eq4zSVc2ESyfKLk5sPf1JYba1JSOiA@mail.gmail.com>
- <20190727161736.4dkfqgwftre67v56@fsr-ub1664-175> <DB3PR0402MB391600891BA75DFFA9674058F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAEnQRZB6tmYFA8wwh0Fm49LTTDuCLq-SWVfrcUkRWWBo=0U13w@mail.gmail.com>
- <DB3PR0402MB391627F725AA7237BCACBE87F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAEnQRZBrmikenTvnh7syhy=PDPcTL3fn2TJ+ya=ToZ+SFmH5tw@mail.gmail.com>
- <CAEnQRZDSjmcU8Q7+kMeFf12tx0NuMNjrcsgnXayvHpu4ChwHGA@mail.gmail.com> <DB3PR0402MB3916F32F03E542AEFBD39A43F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916F32F03E542AEFBD39A43F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Mon, 29 Jul 2019 11:13:12 +0300
-Message-ID: <CAEnQRZBqdGY9A69ew=ukdp1iWVR_jvJih-cZPx_XzAri+xWppA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Abel Vesa <abel.vesa@nxp.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Carlo Caione <ccaione@baylibre.com>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a5d:994b:: with SMTP id v11mr53971532ios.165.1564388160200;
+ Mon, 29 Jul 2019 01:16:00 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 01:16:00 -0700
+In-Reply-To: <0000000000005718ef058b3a0fcf@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000094699a058ecd8017@google.com>
+Subject: Re: memory leak in __nf_hook_entries_try_shrink
+From:   syzbot <syzbot+c51f73e78e7e2ce3a31e@syzkaller.appspotmail.com>
+To:     catalin.marinas@arm.com, coreteam@netfilter.org,
+        davem@davemloft.net, deller@gmx.de, fw@strlen.de,
+        jejb@parisc-linux.org, kadlec@blackhole.kfki.hu,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-parisc@vger.kernel.org, mingo@redhat.com,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, rostedt@goodmis.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:49 AM Anson Huang <anson.huang@nxp.com> wrote:
+syzbot has bisected this bug to:
 
-> > We are all set then. Thanks Anson for clarifications!
->
-> Thanks, so we are all clear about this issue, need to wait thermal maintainer to review
-> the rest patch in this series, but I did NOT receive any response from thermal sub-system
-> maintainer for really long time, NOT sure when the thermal patches can be accepted.
+commit fc79168a7c75423047d60a033dc4844955ccae0b
+Author: Helge Deller <deller@gmx.de>
+Date:   Wed Apr 13 20:44:54 2016 +0000
 
-This is really unfortunate. I think it is safe to do a RESEND of the
-patches as it has
-been at least 3 weeks since your first send them.
+     parisc: Add syscall tracepoint support
 
-Pick any reviewed-by you got and do a resend.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16ad2cd8600000
+start commit:   b076173a Merge tag 'selinux-pr-20190612' of git://git.kern..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=15ad2cd8600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11ad2cd8600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cb38d33cd06d8d48
+dashboard link: https://syzkaller.appspot.com/bug?extid=c51f73e78e7e2ce3a31e
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=105a958ea00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=103c758ea00000
+
+Reported-by: syzbot+c51f73e78e7e2ce3a31e@syzkaller.appspotmail.com
+Fixes: fc79168a7c75 ("parisc: Add syscall tracepoint support")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
