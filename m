@@ -1,84 +1,111 @@
-Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=l61U=V2=cfc-corps.com=info@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,HTML_MESSAGE,SPF_HELO_NONE,SPF_PASS,
+	URIBL_ABUSE_SURBL,URIBL_BLOCKED,URIBL_PH_SURBL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4788EC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:25:04 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC4852075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564381504;
-	bh=o7Y4gnoBkfgwdcSl3a/KZkez69zJ7peWRa+sloNUEr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nuMP+G18vxE+vWx0cNu2749GkreXkezS7LibmjRJLv2+ped1m39Jp/ldUjiLnMQ3P
-	 uFd+x8BisjOiDA3yKC+25viXgc2tqIvSJstpIZFqsPyIYIYLitYBK/nZ3ZR5oJvAER
-	 mJkjQlLehB/xrE3Bav1mZ9Ir56Xg3E4IJzuJqFk8=
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfG2GZD (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 02:25:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47252 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725934AbfG2GZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 02:25:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 765A3ADFC;
-        Mon, 29 Jul 2019 06:25:01 +0000 (UTC)
-Date:   Mon, 29 Jul 2019 08:25:00 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Miles Chen <miles.chen@mediatek.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH v2] mm: memcontrol: fix use after free in
- mem_cgroup_iter()
-Message-ID: <20190729062500.GB9330@dhcp22.suse.cz>
-References: <20190726021247.16162-1-miles.chen@mediatek.com>
- <20190726124933.GN6142@dhcp22.suse.cz>
- <20190726125533.GO6142@dhcp22.suse.cz>
- <1564184878.19817.5.camel@mtkswgap22>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9282BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:27:27 +0000 (UTC)
+X-Greylist: delayed 617 seconds by postgrey-1.34 at mail.kernel.org; Mon, 29 Jul 2019 06:27:27 UTC
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=cfc-corps.com header.i=info@cfc-corps.com header.b="LSB2W1Rf"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 5C57B2070B
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=cfc-corps.com
+Authentication-Results: mail.kernel.org; spf=fail smtp.mailfrom=info@cfc-corps.com
+Received: from merega.com (unknown [23.96.227.124])
+	by mail.kernel.org (Postfix) with ESMTP id 5C57B2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=dkim; d=cfc-corps.com;
+ h=Content-Type:MIME-Version:Subject:To:From:Date:Reply-To; i=info@cfc-corps.com;
+ bh=PjiLZ3Lh2lh1tpYuzTWzyHXz+58=;
+ b=LSB2W1RfUZbcoG6JYrn2LFJr+mUFUPOqYggMEIH0PIRUqSJAXbar0mmXnpGiriFZPToQIQPv0p9r
+   JcAiMltkvgAJSRvrXqUupwy1CN2FznnMgy+zLwhVY/dOZ4O6jzuvwICz/F3ro60H3H0u0E+6dFqE
+   yC6fiQbjGuNuEsKiKpQ=
+DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=dkim; d=cfc-corps.com;
+ b=TPc2+4zD3j4k/aZn94Bz7OKpdInuXkysTV3NP9oV3E7az7gaYUi3c+cAcUto0BUAElu3CUF+6soq
+   esm3SJrVl91oD0q5qdcoJODvSDW7RY+WAedxD7w0i5xse0aEIslobX+Wxmhko86StB7PldZe0p7N
+   Etfs16KmY9WzJKOxIMs=;
+Content-Type: multipart/alternative; boundary="===============1806536715=="
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564184878.19817.5.camel@mtkswgap22>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Subject: RE:funding for projects
+To: linux-kernel@archiver.kernel.org
+From: "Paul Taga" <info@cfc-corps.com>
+Date: Sun, 28 Jul 2019 23:17:08 -0700
+Reply-To: paul.taga@cfccorps.com
+Message-Id: <20190729062727.5C57B2070B@mail.kernel.org>
+List-Id: <linux-kernel.vger.kernel.org>
 
-On Sat 27-07-19 07:47:58, Miles Chen wrote:
-> On Fri, 2019-07-26 at 14:55 +0200, Michal Hocko wrote:
-[...]
-> > > I am sorry, I didn't get to comment an earlier version but I am
-> > > wondering whether it makes more sense to do and explicit invalidation.
-> > > 
-> 
-> I think we should keep the original v2 version, the reason is the 
-> !use_hierarchy does not imply we can reach root_mem_cgroup:
-> 
-> cd /sys/fs/cgroup/memory/0
-> mkdir 1
-> cd /sys/fs/cgroup/memory/0/1
-> echo 1 > memory.use_hierarchy // only 1 and its children has
-> use_hierarchy set
-> mkdir 2
-> 
-> rmdir 2 // parent_mem_cgroup(2) goes up to 1
+You will not see this in a MIME-aware mail reader.
+--===============1806536715==
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
 
-You are right I have missed this case. I am not sure anybody is using
-layout like that but your fix is more robust and catches that case as
-well.
+Hi,
+ We specialize in providing  funding for projects, corporate and personal l=
+oan funding at 3% interest rate for a duration of 10-15 Years.Kindly contac=
+t us as we are looking forward to providing the needed services to you as w=
+ell as discussing further businesses with you.
+ Please get back to me if you are interested for more details.
+ Regards,
+ Paul Taga,
+Investment Specialist/New Client Acquisition
+AFG Capital Investment,
+Administrative Office: Square de Mee=FBs 38, 1000 Bruxelles, Belgium.
+Email: paul.taga@cfccorps.com
 
-Acked-by: Michal Hocko <mhocko@suse.com>
--- 
-Michal Hocko
-SUSE Labs
+--===============1806536715==
+Content-Type: text/html; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+
+<HTML><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3Diso-8859-1"/></head><BODY><P style=3D"FONT-SIZE: small; FONT-FAMILY: Ari=
+al, Helvetica, sans-serif; WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRA=
+NSFORM: none; FONT-WEIGHT: 400; COLOR: rgb(34,34,34); FONT-STYLE: normal; O=
+RPHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACKGROUND-COLOR: rgb(255,255=
+,255); TEXT-INDENT: 0px; font-variant-ligatures: normal; font-variant-caps:=
+ normal; -webkit-text-stroke-width: 0px; text-decoration-style: initial; te=
+xt-decoration-color: initial">Hi,<U></U><U></U></P>
+<P style=3D"FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif; WH=
+ITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 40=
+0; COLOR: rgb(34,34,34); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTER-=
+SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; font=
+-variant-ligatures: normal; font-variant-caps: normal; -webkit-text-stroke-=
+width: 0px; text-decoration-style: initial; text-decoration-color: initial"=
+>We specialize in providing&nbsp; funding for projects, corporate and perso=
+nal loan funding at 3% interest rate for a duration of 10-15 Years.Kindly c=
+ontact us as we are looking forward to providing the needed services to you=
+ as well as discussing further businesses with you.<U></U><U></U></P>
+<P style=3D"FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif; WH=
+ITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 40=
+0; COLOR: rgb(34,34,34); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTER-=
+SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; font=
+-variant-ligatures: normal; font-variant-caps: normal; -webkit-text-stroke-=
+width: 0px; text-decoration-style: initial; text-decoration-color: initial"=
+>Please get back to me if you are interested for more details.<U></U><U></U=
+></P>
+<P style=3D"FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif; WH=
+ITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 40=
+0; COLOR: rgb(34,34,34); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTER-=
+SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; font=
+-variant-ligatures: normal; font-variant-caps: normal; -webkit-text-stroke-=
+width: 0px; text-decoration-style: initial; text-decoration-color: initial"=
+>Regards,<U></U><U></U></P>
+<P style=3D"FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif; WH=
+ITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; FONT-WEIGHT: 40=
+0; COLOR: rgb(34,34,34); FONT-STYLE: normal; ORPHANS: 2; WIDOWS: 2; LETTER-=
+SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; font=
+-variant-ligatures: normal; font-variant-caps: normal; -webkit-text-stroke-=
+width: 0px; text-decoration-style: initial; text-decoration-color: initial"=
+>Paul Taga,<BR>Investment Specialist/New Client Acquisition<BR>AFG Capital =
+Investment,<BR>Administrative Office: Square de Mee=FBs 38, 1000 Bruxelles,=
+ Belgium.<BR>Email:<SPAN>&nbsp;</SPAN><A style=3D"COLOR: rgb(17,85,204)" hr=
+ef=3D"mailto:paul.taga@cfccorps.com" target=3D_blank>paul.taga@cfccorps.com=
+</A></P></BODY></HTML>
+--===============1806536715==--
