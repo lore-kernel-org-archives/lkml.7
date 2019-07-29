@@ -2,110 +2,81 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C21C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277FEC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4611620657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC374205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ESrg15vv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ONNUn0+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbfG2UL2 (ORCPT
+        id S1730292AbfG2ULq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:11:28 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37178 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbfG2ULY (ORCPT
+        Mon, 29 Jul 2019 16:11:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44508 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbfG2ULo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:11:24 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so38128896wrr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 13:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lBs2XH1stLT9RSq/8zHtTMENwlKXXKYro8AoKfkCRxU=;
-        b=ESrg15vvIX2QliCdNOmD818metRcak3U4lgoyUOfJF5b5qpQcOFHk0C5rbPIKNw1qq
-         1/YcdaNMcX/6zvstceGw4yvHU1Rf/KH+kAvcYEprQkif0v58fm2J4T4LKWE+ujWj8ACl
-         /6Cn7fMp0R/3d3Q5rNzDwfnJ6yr6pFBaNu9F2uUh7KXxX0hA0Of4ytteaddwvPWjr2ai
-         IHueRhtmbIcmgRtC4iBgos3HVH7sOSkTIh66bPU+d5V7kcxvFHzIMKQYVyEDKop8Cbvo
-         mqpZn0O4GvhScLBcknDAPX3u/sNr6wdE8yeeZnp6BC2CP44/ofXvyC6F0UELTqafJhKM
-         SJ2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lBs2XH1stLT9RSq/8zHtTMENwlKXXKYro8AoKfkCRxU=;
-        b=TOodspb6ReMZSMJgsxgxFQHVwfigo13lOlX6Fqmypwax38WkcJlBGO2LU+LYi0Mvyg
-         5MMthOBUrZUCKAiCA/1dO+MUHB2NsIF/M3tPUZ4tnMfp1ZSqrpGzFOufNg3vS3pts0Fy
-         C8woaIqHR4gHnHWJDcEh3ctWvoUQoBe8I0SQo6wjczmk2qdFJhh/G9yc8fgCxfKK+3Ex
-         wnT7hv3Iq//ROFqmZhNasDU9xiq5LWp0t7TtrkFDJTvQ0Siei+/PKX3Ze8R2ulfjJpSM
-         GWSDGViy0uXzCqeYOtbs2lx3KwokAysxpUiwCFTtE++K2I5y1K6TmQN61reWd1tGf+jJ
-         VsWg==
-X-Gm-Message-State: APjAAAVZhbKThxqjeRsQTvSchvgPdkJXQo+LpinMUhJg50nwBAKKmk6H
-        I/5VZEH3euwWwnZastfnkzf8TzmDT3k8DhkhpUq6WQ==
-X-Google-Smtp-Source: APXvYqxFKlb66t4oKcBaMb48wYrx+/EeOSc5Ncb8ZjsZuiaefe638OkpcAYIjYItOQWGw5Iw4GJc21WafT9t8sruOeQ=
-X-Received: by 2002:a5d:46cf:: with SMTP id g15mr126611598wrs.93.1564431082241;
- Mon, 29 Jul 2019 13:11:22 -0700 (PDT)
+        Mon, 29 Jul 2019 16:11:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tVzGNh46p11xJCp/QVEqOCFK+AgFdqni/w2NTMqBXpI=; b=ONNUn0+v6UKGefnLp5MlICEj8
+        rs8jlW8TeLmb6brykyu7WcXTpzoSEfnFKN2gctJaqCiYf3EOqHq3hx8B3WnL3+pBaZTx59kERW4/k
+        01EOXsLxSe8YpwCZOi4DlTw19lrVIKWakVQXSx+P7kPfrhjtA5/OMx4SHf33bdCYIeox6Ksbt/tCf
+        j88syn/qIMQNzel7ONs4JM9bF65DxADLWHOubUTPVrsZKg/sakq1GJ/fjoIxJxu5F/giZ6/eTdbzS
+        Q294ksVxVF7Ww7lUoe2qtKQATn96WFumplhPzXjaHOUtzF4kbEHfezrdK+nlUlAV7Wj++0ODviCcC
+        LvmH7Crbw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsBza-0004j9-5c; Mon, 29 Jul 2019 20:11:34 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 971CE20AF2C00; Mon, 29 Jul 2019 22:11:32 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 22:11:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Rik van Riel <riel@surriel.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, pjt@google.com,
+        dietmar.eggemann@arm.com, mingo@redhat.com,
+        morten.rasmussen@arm.com, tglx@linutronix.de,
+        mgorman@techsingularity.net, vincent.guittot@linaro.org
+Subject: Re: [PATCH 03/14] sched,fair: redefine runnable_load_avg as the sum
+ of task_h_load
+Message-ID: <20190729201132.GS31398@hirez.programming.kicks-ass.net>
+References: <20190722173348.9241-1-riel@surriel.com>
+ <20190722173348.9241-4-riel@surriel.com>
 MIME-Version: 1.0
-References: <20190729194205.212846-1-surenb@google.com> <20190729195614.GA31529@kroah.com>
-In-Reply-To: <20190729195614.GA31529@kroah.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Mon, 29 Jul 2019 13:11:11 -0700
-Message-ID: <CAJuCfpFRsmN0gim_4fXNouzOxZWSJO6xkpLzoGvbBUE8tMOECA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] psi: do not require setsched permission from the
- trigger creator
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     lizefan@huawei.com, Johannes Weiner <hannes@cmpxchg.org>,
-        axboe@kernel.dk, Dennis Zhou <dennis@kernel.org>,
-        Dennis Zhou <dennisszhou@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        Nick Kralevich <nnk@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722173348.9241-4-riel@surriel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 12:57 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Jul 29, 2019 at 12:42:05PM -0700, Suren Baghdasaryan wrote:
-> > When a process creates a new trigger by writing into /proc/pressure/*
-> > files, permissions to write such a file should be used to determine whether
-> > the process is allowed to do so or not. Current implementation would also
-> > require such a process to have setsched capability. Setting of psi trigger
-> > thread's scheduling policy is an implementation detail and should not be
-> > exposed to the user level. Remove the permission check by using _nocheck
-> > version of the function.
-> >
-> > Suggested-by: Nick Kralevich <nnk@google.com>
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > ---
-> >  kernel/sched/psi.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> $ ./scripts/get_maintainer.pl --file kernel/sched/psi.c
-> Ingo Molnar <mingo@redhat.com> (maintainer:SCHEDULER)
-> Peter Zijlstra <peterz@infradead.org> (maintainer:SCHEDULER)
-> linux-kernel@vger.kernel.org (open list:SCHEDULER)
->
->
-> No where am I listed there, so why did you send this "To:" me?
->
+On Mon, Jul 22, 2019 at 01:33:37PM -0400, Rik van Riel wrote:
+> The runnable_load magic is used to quickly propagate information about
+> runnable tasks up the hierarchy of runqueues. The runnable_load_avg is
+> mostly used for the load balancing code, which only examines the value at
+> the root cfs_rq.
+> 
+> Redefine the root cfs_rq runnable_load_avg to be the sum of task_h_loads
+> of the runnable tasks. This works because the hierarchical runnable_load of
+> a task is already equal to the task_se_h_load today. This provides enough
+> information to the load balancer.
+> 
+> The runnable_load_avg of the cgroup cfs_rqs does not appear to be
+> used for anything, so don't bother calculating those.
+> 
+> This removes one of the things that the code currently traverses the
+> cgroup hierarchy for, and getting rid of it brings us one step closer
+> to a flat runqueue for the CPU controller.
 
-Oh, sorry about that. Both Ingo and Peter are CC'ed directly. Should I
-still resend?
-
-> please fix up and resend.
->
-> greg k-h
+Nice!
