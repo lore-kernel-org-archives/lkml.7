@@ -2,194 +2,126 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D39C76193
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDABEC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9CA20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D88206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:42:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IQmmqup/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388211AbfG2Sku (ORCPT
+        id S2388163AbfG2SmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:40:50 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40763 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387621AbfG2Sku (ORCPT
+        Mon, 29 Jul 2019 14:42:22 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41161 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387980AbfG2SmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 14:40:50 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hsAZg-0004z0-MR; Mon, 29 Jul 2019 20:40:44 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hsAZd-0001w2-Kr; Mon, 29 Jul 2019 20:40:41 +0200
-Date:   Mon, 29 Jul 2019 20:40:41 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
-Message-ID: <20190729184041.vlvfz3vz3ykhufdk@pengutronix.de>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <CAGb2v66C=ghjck6rxTg6Vt4xN2DcXntzVOa=KJWh98KRjkhnHQ@mail.gmail.com>
- <20190729162428.bxuzgxg5sjqptlbp@pengutronix.de>
- <2346193.MplWYqIveT@jernej-laptop>
+        Mon, 29 Jul 2019 14:42:22 -0400
+Received: by mail-io1-f67.google.com with SMTP id j5so118171266ioj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 11:42:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3tfpxcMIOawO8s0nF6u5AxpRiYOClgINgvc5ma6ttZw=;
+        b=IQmmqup/6r9M4vGzFNJ2eQeqgw7xlIoAUs5jeMBIFXwMw1/6E8KZwGF59gU1R/s1wr
+         od8n0zVv12PnonheCchmyOFja2Rj5CqOQgVE6IuSCXp0atpMNpN4A4t4/7Vf5jI1f1tC
+         bqmDTxp9EjXqdrgmgE7jOAMpjGGp01BzpAfRmS/bOjpScIYhwcfWKhJCbOf4mGM/MuOx
+         kfDC4rfXTjw6TLq0kV/0cEZZi4Hv/UOPJ9FqlF/1RHxu+j97c80UihRGIktDhfVOQUtm
+         u+Knabw655Ohtf9vz38yQiZVVGmgt0OllVIj/2aK5dgiGvZqqDwcxin29m4BabmpHLuu
+         rFwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3tfpxcMIOawO8s0nF6u5AxpRiYOClgINgvc5ma6ttZw=;
+        b=tGaHCJLMBl7hNuGXr4e1dJs7eYUbdo91MJ2igJ0HgW/B/VutQBDDkX+pBPsRTkby6n
+         G1ZHR3+fSZrHAdRJ+Z4aeyUv4Dq03cqPh4S02MkSVd+gz+h1Yfr3zbq9RN69aE3rmX+5
+         0wyVjDt839dATRkizYAlnpI44c78xIs871iddv8fIqMbULF6el1DKIpXNG9tJeGYCD66
+         4Lac3uvrRM2wK61HvZxwsXFQEGTYR/jtuCg/0fAp+TPMg8m3q9F+CXLeKSB42k0kXc/g
+         GztbIHdJCmfUvmYZ7MA4bOgG4KUgxMdzBTj0zPIpMVM+sIXs1DljImh4X3COFYpWpooj
+         KJGw==
+X-Gm-Message-State: APjAAAU4a0y4CPnzxAbcSJ/PcMT1yRWoQ/bw7EbZEtIsAYDynyzoRNdS
+        G/o3ktOBXwRC9fggIQ+AlHtFiR3ljPhujH+MK4GnYw==
+X-Google-Smtp-Source: APXvYqwjLiqzT6+l8biMGbT+ubzfDFZQP3pdxi7Bs2LEIu59aazQJHsn2226HIPI6J8GkYWgkqquogjLf6r6kCe70Dg=
+X-Received: by 2002:a6b:c38b:: with SMTP id t133mr38575856iof.162.1564425741290;
+ Mon, 29 Jul 2019 11:42:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2346193.MplWYqIveT@jernej-laptop>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20190726224810.79660-1-henryburns@google.com> <20190726224810.79660-2-henryburns@google.com>
+ <CA+VK+GPC+akF0qGrKFivtNneweEfdC9uEx=QgmztB4M_xvMeKQ@mail.gmail.com>
+In-Reply-To: <CA+VK+GPC+akF0qGrKFivtNneweEfdC9uEx=QgmztB4M_xvMeKQ@mail.gmail.com>
+From:   Henry Burns <henryburns@google.com>
+Date:   Mon, 29 Jul 2019 11:41:45 -0700
+Message-ID: <CAGQXPTi8+EanC2ygr4W7qDN1bnas_3utxFkSCj4Xdzo4H134nw@mail.gmail.com>
+Subject: Re: [PATCH] mm/z3fold.c: Fix z3fold_destroy_pool() race condition
+To:     Jonathan Adams <jwadams@google.com>
+Cc:     Vitaly Vul <vitaly.vul@sony.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej Škrabec wrote:
-> Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König 
-> napisal(a):
-> > Hello,
-> > 
-> > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
-> > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
-> > > 
-> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
-> > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König
-> > > > > 
-> > > > > napisal(a):
-> > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
-> > > > > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
-> > > > > > > sun4i_pwm_single_bypass = {>
-> > > > > > > 
-> > > > > > >   .npwm = 1,
-> > > > > > >  
-> > > > > > >  };
-> > > > > > > 
-> > > > > > > +static const struct sun4i_pwm_data sun50i_pwm_dual_bypass_clk_rst
-> > > > > > > = {
-> > > > > > > + .has_bus_clock = true,
-> > > > > > > + .has_prescaler_bypass = true,
-> > > > > > > + .has_reset = true,
-> > > > > > > + .npwm = 2,
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > 
-> > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
-> > > > > > >  
-> > > > > > >   {
-> > > > > > >   
-> > > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
-> > > > > > > 
-> > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
-> > > > > > > sun4i_pwm_dt_ids[] =
-> > > > > > > {
-> > > > > > > 
-> > > > > > >   }, {
-> > > > > > >   
-> > > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
-> > > > > > >           .data = &sun4i_pwm_single_bypass,
-> > > > > > > 
-> > > > > > > + }, {
-> > > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
-> > > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
-> > > > > > 
-> > > > > > If you follow my suggestion for the two previous patches, you can
-> > > > > > just
-> > > > > > 
-> > > > > > use:
-> > > > > >     compatible = "allwinner,sun50i-h6-pwm",
-> > > > > >     "allwinner,sun5i-a10s-pwm";
-> > > > > > 
-> > > > > > and drop this patch.
-> > > > > 
-> > > > > Maxime found out that it's not compatible with A10s due to difference
-> > > > > in bypass bit, but yes, I know what you mean.
-> > > > > 
-> > > > > Since H6 requires reset line and bus clock to be specified, it's not
-> > > > > compatible from DT binding side. New yaml based binding must somehow
-> > > > > know that in order to be able to validate DT node, so it needs
-> > > > > standalone compatible. However, depending on conclusions of other
-> > > > > discussions, this new compatible can be associated with already
-> > > > > available quirks structure or have it's own.> > 
-> > > > I cannot follow. You should be able to specify in the binding that the
-> > > > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
-> > > > without a reset line and bus clock also verifies, but this doesn't
-> > > > really hurt (and who knows, maybe the next allwinner chip needs exactly
-> > > > this).
-> > > 
-> > > It is not optional. It will not work if either the clocks or reset
-> > > controls
-> > > are missing. How would these be optional anyway? Either it's connected and
-> > > thus required, or it's not and therefore should be omitted from the
-> > > description.
-> > 
-> > [Just arguing about the clock here, the argumentation is analogous for
-> > the reset control.]
-> > 
-> > From the driver's perspective it's optional: There are devices with and
-> > without a bus clock. This doesn't mean that you can just ignore this
-> > clock if it's specified. It's optional in the sense "If dt doesn't
-> > specify it, then assume this is a device that doesn't have it and so you
-> > don't need to handle it." but not in the sense "it doesn't matter if
-> > you handle it or not.".
-> > 
-> > Other than that I'm on your side. So for example I think it's not
-> > optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
-> > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
-> > because this hides exactly the kind of problem you point out here.
+The constraint from the zpool use of z3fold_destroy_pool() is there
+are no outstanding handles to memory (so no active allocations), but
+it is possible for there to be outstanding work on either of the two
+wqs in the pool.
+
+Calling z3fold_deregister_migration() before the workqueues are drained
+means that there can be allocated pages referencing a freed inode,
+causing any thread in compaction to be able to trip over the bad
+pointer in PageMovable().
+
+Fixes: 1f862989b04a ("mm/z3fold.c: support page migration")
+
+Signed-off-by: Henry Burns <henryburns@google.com>
+
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> Reviewed-by: Jonathan Adams <jwadams@google.com>
+>
+> > Cc: <stable@vger.kernel.org>
+> > ---
+> >  mm/z3fold.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
 > >
-> 
-> I think there's misunderstanding. I only argued that we can't use
-> 
-> compatible = "allwinner,sun50i-h6-pwm",
-> 	 "allwinner,sun5i-a10s-pwm";
-> 
-> as you suggested and only 
-> 
-> compatible = "allwinner,sun50i-h6-pwm"; 
-> 
-> will work. Not because of driver itself (it can still use _optional() 
-> variants), but because of DT binding, which should be able to validate H6 PWM 
-> node - reset and bus clock references are required in this case.
-
-I think I understood. In my eyes there is no need to let validation of
-the DT bindings catch a missing "optional" property that is needed on
-H6.
-
-You have to draw the line somewhere which information the driver has
-hard-coded and what is only provided by the device tree and just assumed
-to be correct by the driver. You argue the driver should know that if it
-cares for a "allwinner,sun50i-h6-pwm" device it should know (and check)
-that there is a clock named "bus" and a resets property that links to a
-reset controller. How is that different from checking that the base
-address is 0x0300a000 or that the "pwm" clock is the osc24M clock
-running at 24 MHz? This isn't checked in the driver or the dt schema.
-Still if the device tree got one of them wrong this yields an
-non-working pwm device that isn't catched in the driver.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > diff --git a/mm/z3fold.c b/mm/z3fold.c
+> > index 43de92f52961..ed19d98c9dcd 100644
+> > --- a/mm/z3fold.c
+> > +++ b/mm/z3fold.c
+> > @@ -817,16 +817,19 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
+> >  static void z3fold_destroy_pool(struct z3fold_pool *pool)
+> >  {
+> >         kmem_cache_destroy(pool->c_handle);
+> > -       z3fold_unregister_migration(pool);
+> >
+> >         /*
+> >          * We need to destroy pool->compact_wq before pool->release_wq,
+> >          * as any pending work on pool->compact_wq will call
+> >          * queue_work(pool->release_wq, &pool->work).
+> > +        *
+> > +        * There are still outstanding pages until both workqueues are drained,
+> > +        * so we cannot unregister migration until then.
+> >          */
+> >
+> >         destroy_workqueue(pool->compact_wq);
+> >         destroy_workqueue(pool->release_wq);
+> > +       z3fold_unregister_migration(pool);
+> >         kfree(pool);
+> >  }
+> >
+> > --
+> > 2.22.0.709.g102302147b-goog
+> >
