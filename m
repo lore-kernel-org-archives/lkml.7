@@ -2,87 +2,146 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE89AC7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C18C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD738217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:03:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e8QOlcrR"
+	by mail.kernel.org (Postfix) with ESMTP id 03F59216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564412674;
+	bh=ZJaCH6/EG+GnwaN6bqP7F/RqkgpTASOAGcigZFAnIpA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=plVKX7WAUcrLxIQNjOK9nLJRgHQTJ9AtZBMf6SXpWrUXXIAmA+qC8EMmB75FvQtrf
+	 bWT50xhCbvOho3Rk1xilUmFsOxT/Hq2KzYZKodIzPrenNnBpQNqNQMqVIVUknQPBkU
+	 eVllASxpS/oNyIBNdJ1fIMpwkn4MOqB8CjBSjdzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387857AbfG2PDn (ORCPT
+        id S2387878AbfG2PEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:03:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58656 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387425AbfG2PDn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:03:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/ETHf94MjVCsWoGJmgma/XCP9Q3AJ/2BeOPSWh2RAN0=; b=e8QOlcrR5gXbft+ShFMb4+YS4
-        rBL0ALsF9M+9MNxs0Ya0+3kn28QWVH01B+T5M8QN9a4XxGOK4RtCQVjhEeVv/q2NUltmBov90qUlo
-        SjXcHbwNkXLoDw/iBM5riNlGFNlsG2T/bHGkbD0ULfU6asner3o9yiBuA7R6bdKq6XhPw0heiEiuT
-        6NkZ6uF9uU3e2E9eQQdCtyVCM6/BWmaCf6IdpECaYLr/0WshUQ3I2hYU1lGWaDvsdrASxE9CxDIVL
-        1RqFDZwbdslIqQ6VdLf4h4o8N7tvACdOnaSJPmWMXAjn646Mq0/V+uJfRbGwcNxwfZKaAj6iz4CfO
-        Uz3JqkB/g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs7Bc-00052G-Ff; Mon, 29 Jul 2019 15:03:40 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E260F20AF2C00; Mon, 29 Jul 2019 17:03:38 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 17:03:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>, Rik van Riel <riel@surriel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2] sched/core: Don't use dying mm as active_mm of
- kthreads
-Message-ID: <20190729150338.GF31398@hirez.programming.kicks-ass.net>
-References: <20190727171047.31610-1-longman@redhat.com>
- <20190729085235.GT31381@hirez.programming.kicks-ass.net>
- <4cd17c3a-428c-37a0-b3a2-04e6195a61d5@redhat.com>
+        Mon, 29 Jul 2019 11:04:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387425AbfG2PEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:04:32 -0400
+Received: from localhost.localdomain (unknown [180.111.32.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 481482067D;
+        Mon, 29 Jul 2019 15:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564412671;
+        bh=ZJaCH6/EG+GnwaN6bqP7F/RqkgpTASOAGcigZFAnIpA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=g0MSFz+7OMkPIZ47mW81FpS9ruO3sSfKpaef/30p3Z6MGVRdKqFaraBrtSZq3Nhle
+         Aep6OaQqNL6CZCAVhiTN0usFYDoVGDZiDgqNitz4eFgApTAZp2ApjiOFibdA4WtkMa
+         Lt/DWlMfcMovyrZDTQalLLQnAQhkdrvOkr/XAw50=
+From:   Chao Yu <chao@kernel.org>
+To:     jaegeuk@kernel.org
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v3 RESEND] f2fs: introduce sb.required_features to store incompatible features
+Date:   Mon, 29 Jul 2019 23:03:51 +0800
+Message-Id: <20190729150351.12223-1-chao@kernel.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4cd17c3a-428c-37a0-b3a2-04e6195a61d5@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:51:51AM -0400, Waiman Long wrote:
-> On 7/29/19 4:52 AM, Peter Zijlstra wrote:
-> > On Sat, Jul 27, 2019 at 01:10:47PM -0400, Waiman Long wrote:
-> >> It was found that a dying mm_struct where the owning task has exited
-> >> can stay on as active_mm of kernel threads as long as no other user
-> >> tasks run on those CPUs that use it as active_mm. This prolongs the
-> >> life time of dying mm holding up memory and other resources like swap
-> >> space that cannot be freed.
-> > Sure, but this has been so 'forever', why is it a problem now?
-> 
-> I ran into this probem when running a test program that keeps on
-> allocating and touch memory and it eventually fails as the swap space is
-> full. After the failure, I could not rerun the test program again
-> because the swap space remained full. I finally track it down to the
-> fact that the mm stayed on as active_mm of kernel threads. I have to
-> make sure that all the idle cpus get a user task to run to bump the
-> dying mm off the active_mm of those cpus, but this is just a workaround,
-> not a solution to this problem.
+From: Chao Yu <yuchao0@huawei.com>
 
-The 'sad' part is that x86 already switches to init_mm on idle and we
-only keep the active_mm around for 'stupid'.
+Later after this patch was merged, all new incompatible feature's
+bit should be added into sb.required_features field, and define new
+feature function with F2FS_INCOMPAT_FEATURE_FUNCS() macro.
 
-Rik and Andy were working on getting that 'fixed' a while ago, not sure
-where that went.
+Then during mount, we will do sanity check with enabled features in
+image, if there are features in sb.required_features that kernel can
+not recognize, just fail the mount.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+v3:
+- change commit title.
+- fix wrong macro name.
+ fs/f2fs/f2fs.h          | 15 +++++++++++++++
+ fs/f2fs/super.c         | 10 ++++++++++
+ include/linux/f2fs_fs.h |  3 ++-
+ 3 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index a6eb828af57f..b8e17d4ddb8d 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -163,6 +163,15 @@ struct f2fs_mount_info {
+ #define F2FS_CLEAR_FEATURE(sbi, mask)					\
+ 	(sbi->raw_super->feature &= ~cpu_to_le32(mask))
+ 
++#define F2FS_INCOMPAT_FEATURES		0
++
++#define F2FS_HAS_INCOMPAT_FEATURE(sbi, mask)				\
++	((sbi->raw_super->required_features & cpu_to_le32(mask)) != 0)
++#define F2FS_SET_INCOMPAT_FEATURE(sbi, mask)				\
++	(sbi->raw_super->required_features |= cpu_to_le32(mask))
++#define F2FS_CLEAR_INCOMPAT_FEATURE(sbi, mask)				\
++	(sbi->raw_super->required_features &= ~cpu_to_le32(mask))
++
+ /*
+  * Default values for user and/or group using reserved blocks
+  */
+@@ -3585,6 +3594,12 @@ F2FS_FEATURE_FUNCS(lost_found, LOST_FOUND);
+ F2FS_FEATURE_FUNCS(sb_chksum, SB_CHKSUM);
+ F2FS_FEATURE_FUNCS(casefold, CASEFOLD);
+ 
++#define F2FS_INCOMPAT_FEATURE_FUNCS(name, flagname) \
++static inline int f2fs_sb_has_##name(struct f2fs_sb_info *sbi) \
++{ \
++	return F2FS_HAS_INCOMPAT_FEATURE(sbi, F2FS_FEATURE_##flagname); \
++}
++
+ #ifdef CONFIG_BLK_DEV_ZONED
+ static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+ 				    block_t blkaddr)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 5540fee0fe3f..3701dcce90e6 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2513,6 +2513,16 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+ 		return -EINVAL;
+ 	}
+ 
++	/* check whether current kernel supports all features on image */
++	if (le32_to_cpu(raw_super->required_features) &
++			~F2FS_INCOMPAT_FEATURES) {
++		f2fs_info(sbi, "Unsupported feature: %x: supported: %x",
++			  le32_to_cpu(raw_super->required_features) ^
++			  F2FS_INCOMPAT_FEATURES,
++			  F2FS_INCOMPAT_FEATURES);
++		return -EINVAL;
++	}
++
+ 	/* Check checksum_offset and crc in superblock */
+ 	if (__F2FS_HAS_FEATURE(raw_super, F2FS_FEATURE_SB_CHKSUM)) {
+ 		crc_offset = le32_to_cpu(raw_super->checksum_offset);
+diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+index a2b36b2e286f..4141be3f219c 100644
+--- a/include/linux/f2fs_fs.h
++++ b/include/linux/f2fs_fs.h
+@@ -117,7 +117,8 @@ struct f2fs_super_block {
+ 	__u8 hot_ext_count;		/* # of hot file extension */
+ 	__le16	s_encoding;		/* Filename charset encoding */
+ 	__le16	s_encoding_flags;	/* Filename charset encoding flags */
+-	__u8 reserved[306];		/* valid reserved region */
++	__le32 required_features;       /* incompatible features to old kernel */
++	__u8 reserved[302];		/* valid reserved region */
+ 	__le32 crc;			/* checksum of superblock */
+ } __packed;
+ 
+-- 
+2.22.0
+
