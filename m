@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AB6C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C333DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24F62064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D3C205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431233;
-	bh=UuliqgOTkTmntToZ81rjcCYcGZUswTVPwrY3Yz1BCyw=;
+	s=default; t=1564431240;
+	bh=DQmGO2/rHpH4BIoutncEkm80QuwmDwo+n4TZCChVJG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ug1AAyW6G0xsSc1flrBN9h1u0Y9IYB7753Y26vTjq6rIjP5o0/A2VL/KIxbafd2U7
-	 dr6yrBF+Wy5GcqSUXM1mg4cP4QLft38fdftGb380q8Hc0L7AI0CDAjmO0dHLhPfWga
-	 9++ZVflWNiy/I7k2mbxjczjWGPqpODw6CydqcutY=
+	b=z4VtRnJfGmsTAtV28AcoD/H2mbcHr+Q9MI8u51zWQ830/q9mmOzuLbwcROH6TS29k
+	 yCwlRJDgZtfD59Khr+Dow8sy33UNUZswKWElRzL1ysQMFdY1TwEjyWIN4U0/nviVOn
+	 eNe/oxLI2RZSDeflVw2vdo5/uHz7vEztgRhwTaaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730470AbfG2UNw (ORCPT
+        id S1730575AbfG2UN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:13:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42102 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:13:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727721AbfG2T3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:29:25 -0400
+        id S1730061AbfG2T3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:29:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC1482070B;
-        Mon, 29 Jul 2019 19:29:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0BAC217D4;
+        Mon, 29 Jul 2019 19:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428564;
-        bh=UuliqgOTkTmntToZ81rjcCYcGZUswTVPwrY3Yz1BCyw=;
+        s=default; t=1564428545;
+        bh=DQmGO2/rHpH4BIoutncEkm80QuwmDwo+n4TZCChVJG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVgqmETs6QxFxBnLJg29Iv3GftPGSlDv3UiziWago28pgcnDrrwlOq4qPeEcyxhpB
-         R+rruj2p/WdI8BPnofcH9bKR9O8ZLKDpLwqcPCkoT5vabVbBPe6WdEsRlMH/BW/QWF
-         EmJV+PIvlbmHWKKixxal0lWdqou8e6lDQeaS5OGc=
+        b=vXDTMBYt6o3f/abxeByZqV8pDMPbpOLI5OodPdcBiDGpS2ODsTNAshrsK6CQlTkBr
+         q3rGQ3sq0bjKNWDCQtCAHFnfAVKNKAzZgWXmMmuyCuhcy/xwfOOmbMmOFINwgePGfL
+         kdPOKb8w03J5sEuEI36utafdLN0aSoQEuNIeEx14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 117/293] scsi: mac_scsi: Increase PIO/PDMA transfer length threshold
-Date:   Mon, 29 Jul 2019 21:20:08 +0200
-Message-Id: <20190729190833.551407790@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>
+Subject: [PATCH 4.14 111/293] xen: let alloc_xenballooned_pages() fail if not enough memory free
+Date:   Mon, 29 Jul 2019 21:20:02 +0200
+Message-Id: <20190729190833.160577291@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,62 +58,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Juergen Gross <jgross@suse.com>
 
-commit 7398cee4c3e6aea1ba07a6449e5533ecd0b92cdd upstream.
+commit a1078e821b605813b63bf6bca414a85f804d5c66 upstream.
 
-Some targets introduce delays when handshaking the response to certain
-commands. For example, a disk may send a 96-byte response to an INQUIRY
-command (or a 24-byte response to a MODE SENSE command) too slowly.
+Instead of trying to allocate pages with GFP_USER in
+add_ballooned_pages() check the available free memory via
+si_mem_available(). GFP_USER is far less limiting memory exhaustion
+than the test via si_mem_available().
 
-Apparently the first 12 or 14 bytes are handshaked okay but then the system
-bus error timeout is reached while transferring the next word.
+This will avoid dom0 running out of memory due to excessive foreign
+page mappings especially on ARM and on x86 in PVH mode, as those don't
+have a pre-ballooned area which can be used for foreign mappings.
 
-Since the scsi bus phase hasn't changed, the driver then sets the target
-borken flag to prevent further PDMA transfers. The driver also logs the
-warning, "switching to slow handshake".
+As the normal ballooning suffers from the same problem don't balloon
+down more than si_mem_available() pages in one iteration. At the same
+time limit the default maximum number of retries.
 
-Raise the PDMA threshold to 512 bytes so that PIO transfers will be used
-for these commands. This default is sufficiently low that PDMA will still
-be used for READ and WRITE commands.
+This is part of XSA-300.
 
-The existing threshold (16 bytes) was chosen more or less at random.
-However, best performance requires the threshold to be as low as possible.
-Those systems that don't need the PIO workaround at all may benefit from
-mac_scsi.setup_use_pdma=1
-
-Cc: Michael Schmitz <schmitzmic@gmail.com>
-Cc: stable@vger.kernel.org # v4.14+
-Fixes: 3a0f64bfa907 ("mac_scsi: Fix pseudo DMA implementation")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/mac_scsi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/xen/balloon.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/drivers/scsi/mac_scsi.c
-+++ b/drivers/scsi/mac_scsi.c
-@@ -52,7 +52,7 @@ static int setup_cmd_per_lun = -1;
- module_param(setup_cmd_per_lun, int, 0);
- static int setup_sg_tablesize = -1;
- module_param(setup_sg_tablesize, int, 0);
--static int setup_use_pdma = -1;
-+static int setup_use_pdma = 512;
- module_param(setup_use_pdma, int, 0);
- static int setup_hostid = -1;
- module_param(setup_hostid, int, 0);
-@@ -305,7 +305,7 @@ static int macscsi_dma_xfer_len(struct N
-                                 struct scsi_cmnd *cmd)
- {
- 	if (hostdata->flags & FLAG_NO_PSEUDO_DMA ||
--	    cmd->SCp.this_residual < 16)
-+	    cmd->SCp.this_residual < setup_use_pdma)
- 		return 0;
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -590,8 +590,15 @@ static void balloon_process(struct work_
+ 				state = reserve_additional_memory();
+ 		}
  
- 	return cmd->SCp.this_residual;
+-		if (credit < 0)
+-			state = decrease_reservation(-credit, GFP_BALLOON);
++		if (credit < 0) {
++			long n_pages;
++
++			n_pages = min(-credit, si_mem_available());
++			state = decrease_reservation(n_pages, GFP_BALLOON);
++			if (state == BP_DONE && n_pages != -credit &&
++			    n_pages < totalreserve_pages)
++				state = BP_EAGAIN;
++		}
+ 
+ 		state = update_schedule(state);
+ 
+@@ -630,6 +637,9 @@ static int add_ballooned_pages(int nr_pa
+ 		}
+ 	}
+ 
++	if (si_mem_available() < nr_pages)
++		return -ENOMEM;
++
+ 	st = decrease_reservation(nr_pages, GFP_USER);
+ 	if (st != BP_DONE)
+ 		return -ENOMEM;
+@@ -759,7 +769,7 @@ static int __init balloon_init(void)
+ 	balloon_stats.schedule_delay = 1;
+ 	balloon_stats.max_schedule_delay = 32;
+ 	balloon_stats.retry_count = 1;
+-	balloon_stats.max_retry_count = RETRY_UNLIMITED;
++	balloon_stats.max_retry_count = 4;
+ 
+ #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
+ 	set_online_page_callback(&xen_online_page);
 
 
