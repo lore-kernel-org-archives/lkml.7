@@ -2,170 +2,103 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF5DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB39C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A63206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:19:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ld68ao26"
+	by mail.kernel.org (Postfix) with ESMTP id 84C9721655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564420820;
+	bh=SE7D4UW949P+LhXzehMT6r003HA4cD5w+3etvxplmHs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vQHhzxU/CxFc3z/FfhkbhYpsd6v3NOco8brmeLDWKJ3egVhosYRiop0bX6Kx/1d1C
+	 6kyqkmMFp8rxSPqQyXJd3T89R2AV5Y2Eeru3sZ/nz6LL/TpqjMq0EkX8nSap1Vcam5
+	 MYcxvLJOdRnF50hmYZIsQTdvhgr/ycHr+GqFpmuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfG2RTe (ORCPT
+        id S2387591AbfG2RUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 13:19:34 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:40900 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726601AbfG2RTd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:19:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1564420771; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=n8E4jxEmkny3KYi/27FNI9LuXpecTWt4GD8+XB/Ki9w=;
-        b=ld68ao2693if3y+5k9n2v4iD3Tr1wo1bSDYqyRtQDHGrjbRHNm7d9GIybz2nt4o9eaDwU8
-        rBzd0kmXRaz+ZaRywMxBbQbxdD8JPP/VqzC9w2NwU3ftcutP1d5G4iVUZ+TWOe0JqExRww
-        wohj74rYHgC/H7/SaegAykIc20AFXuc=
-Date:   Mon, 29 Jul 2019 13:19:14 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/4 v4] irqchip: Ingenic: Change interrupt handling form
- cascade to chained_irq.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, tglx@linutronix.de, mark.rutland@arm.com,
-        jason@lakedaemon.net, marc.zyngier@arm.com
-Message-Id: <1564420754.6633.0@crapouillou.net>
-In-Reply-To: <1564335273-22931-2-git-send-email-zhouyanjie@zoho.com>
-References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
-        <1564335273-22931-1-git-send-email-zhouyanjie@zoho.com>
-        <1564335273-22931-2-git-send-email-zhouyanjie@zoho.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Mon, 29 Jul 2019 13:20:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387518AbfG2RUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 13:20:19 -0400
+Received: from localhost.localdomain (unknown [194.230.155.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4826B206BA;
+        Mon, 29 Jul 2019 17:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564420818;
+        bh=SE7D4UW949P+LhXzehMT6r003HA4cD5w+3etvxplmHs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=uUcJ1kpkTOuUtrrS4TyO6Vq2XZw/h+h3iTHlcQDzTnw1jVo5jyeRYdLVIWBGo+U04
+         W3gwImWmXA1veYvQqTuH1eTgyuVjRNo0Qws2FNwyjKREPQFLbdVbcxgxNOxElKtIsS
+         NF0WSvI4koRYwgzX+fUjuCgT7mb5EQHuMz9HR5eo=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 1/2] dt-bindings: vendor-prefixes: Add Admatec GmbH and Anvo-Systems
+Date:   Mon, 29 Jul 2019 19:20:06 +0200
+Message-Id: <20190729172007.3275-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+Add vendor prefix for Admatec GmbH (not to be confused with Admatec AG
+in Switzerland) and Anvo-Systems Dresden GmbH.
 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
+---
 
-Le dim. 28 juil. 2019 =E0 13:34, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=E9crit :
-> The interrupt handling method is changed from old-style cascade to
-> chained_irq which is more appropriate. Also, it can process the
-> corner situation that more than one irq is coming to a single
-> chip at the same time.
->=20
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> ---
->  drivers/irqchip/irq-ingenic.c | 37=20
-> +++++++++++++++++++++++--------------
->  1 file changed, 23 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/irqchip/irq-ingenic.c=20
-> b/drivers/irqchip/irq-ingenic.c
-> index f126255..49f7685 100644
-> --- a/drivers/irqchip/irq-ingenic.c
-> +++ b/drivers/irqchip/irq-ingenic.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0-or-later
->  /*
->   *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
-> - *  JZ4740 platform IRQ support
-> + *  Ingenic XBurst platform IRQ support
->   */
->=20
->  #include <linux/errno.h>
-> @@ -10,6 +10,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/ioport.h>
->  #include <linux/irqchip.h>
-> +#include <linux/irqchip/chained_irq.h>
->  #include <linux/irqchip/ingenic.h>
->  #include <linux/of_address.h>
->  #include <linux/of_irq.h>
-> @@ -32,22 +33,34 @@ struct ingenic_intc_data {
->  #define JZ_REG_INTC_PENDING	0x10
->  #define CHIP_SIZE		0x20
->=20
-> -static irqreturn_t intc_cascade(int irq, void *data)
-> +static void ingenic_chained_handle_irq(struct irq_desc *desc)
->  {
-> -	struct ingenic_intc_data *intc =3D irq_get_handler_data(irq);
-> -	uint32_t irq_reg;
-> +	struct ingenic_intc_data *intc =3D irq_desc_get_handler_data(desc);
-> +	struct irq_chip *chip =3D irq_desc_get_chip(desc);
-> +	bool have_irq =3D false;
-> +	uint32_t pending;
->  	unsigned i;
->=20
-> +	chained_irq_enter(chip, desc);
->  	for (i =3D 0; i < intc->num_chips; i++) {
-> -		irq_reg =3D readl(intc->base + (i * CHIP_SIZE) +
-> +		pending =3D readl(intc->base + (i * CHIP_SIZE) +
->  				JZ_REG_INTC_PENDING);
-> -		if (!irq_reg)
-> +		if (!pending)
->  			continue;
->=20
-> -		generic_handle_irq(__fls(irq_reg) + (i * 32) + JZ4740_IRQ_BASE);
-> +		have_irq =3D true;
-> +		while (pending) {
-> +			int bit =3D __fls(pending);
+Changes since v2:
+1. Use admatecde vendor prefix.
+2. Add Anvo-Systems Dresden GmbH.
 
-Use the for_each_set_bit() macro here, that will be simpler.
+Changes since v1:
+New patch
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-
-> +
-> +			generic_handle_irq(bit + (i * 32) + JZ4740_IRQ_BASE);
-> +			pending &=3D ~BIT(bit);
-> +		}
->  	}
->=20
-> -	return IRQ_HANDLED;
-> +	if (!have_irq)
-> +		spurious_interrupt();
-> +
-> +	chained_irq_exit(chip, desc);
->  }
->=20
->  static void intc_irq_set_mask(struct irq_chip_generic *gc, uint32_t=20
-> mask)
-> @@ -70,11 +83,6 @@ void ingenic_intc_irq_resume(struct irq_data *data)
->  	intc_irq_set_mask(gc, gc->mask_cache);
->  }
->=20
-> -static struct irqaction intc_cascade_action =3D {
-> -	.handler =3D intc_cascade,
-> -	.name =3D "SoC intc cascade interrupt",
-> -};
-> -
->  static int __init ingenic_intc_of_init(struct device_node *node,
->  				       unsigned num_chips)
->  {
-> @@ -139,7 +147,8 @@ static int __init ingenic_intc_of_init(struct=20
-> device_node *node,
->  	if (!domain)
->  		pr_warn("unable to register IRQ domain\n");
->=20
-> -	setup_irq(parent_irq, &intc_cascade_action);
-> +	irq_set_chained_handler_and_data(parent_irq,
-> +					ingenic_chained_handle_irq, intc);
->  	return 0;
->=20
->  out_unmap_irq:
-> --
-> 2.7.4
-
-=
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 6992bbbbffab..2a644fb01bb4 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -43,6 +43,8 @@ patternProperties:
+     description: AD Holdings Plc.
+   "^adi,.*":
+     description: Analog Devices, Inc.
++  "^admatecde,.*":
++    description: Admatec GmbH
+   "^advantech,.*":
+     description: Advantech Corporation
+   "^aeroflexgaisler,.*":
+@@ -81,6 +83,8 @@ patternProperties:
+     description: Analogix Semiconductor, Inc.
+   "^andestech,.*":
+     description: Andes Technology Corporation
++  "^anvo,.*":
++    description: Anvo-Systems Dresden GmbH
+   "^apm,.*":
+     description: Applied Micro Circuits Corporation (APM)
+   "^aptina,.*":
+-- 
+2.17.1
 
