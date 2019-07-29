@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54382C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1790C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9E2205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D91205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430531;
-	bh=fQxvfeb8Oau7nGkThdwi/x3SxOWcDMjxQ9XNvSRw1Rw=;
+	s=default; t=1564430539;
+	bh=oECJ7UF9WFWlDfQ3kjKWWh6o07C5LWhV8cJjOLM7LJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vhwivTyEDkTMlrmG1YNtnnGsZpshifDLqdxf6geRnK27buGAG8etJoA+QyqRqboW1
-	 Iy4uIumIuXTjceW6NdMkw/rDuZzQcX1LO3RKjaq4KsWlHWWuLBSxI3nGlF4BXu92F3
-	 i2DyEltlpGEZf7Gx30T9gCzMKr02bqsmyKZVaS/Y=
+	b=WkP/gulKvJBhe2p7TWxwLMboYAJyYOc2yX9dDTDa8qbCOW6CAuluG/3qqTIP6EfQj
+	 x4CXYIJlP0C8H0K3MVkecrUoHzTczdsfl1KsDZ+FvBxjXdqqNh9ixn/tNEEwxfv4M1
+	 Xm3HAvX4rUWxyWiJ+dqkc6ZpPQVGWh+6NzGt8sZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390876AbfG2UBK (ORCPT
+        id S2388561AbfG2UCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:01:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43108 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:02:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390800AbfG2Tvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:51:36 -0400
+        id S2390461AbfG2Ts7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:48:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C88E204EC;
-        Mon, 29 Jul 2019 19:51:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44A8A2054F;
+        Mon, 29 Jul 2019 19:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429896;
-        bh=fQxvfeb8Oau7nGkThdwi/x3SxOWcDMjxQ9XNvSRw1Rw=;
+        s=default; t=1564429738;
+        bh=oECJ7UF9WFWlDfQ3kjKWWh6o07C5LWhV8cJjOLM7LJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=znLvocsgLa9YSqIBZTMG5DIwbdEQu2vO7gOaMz+iJnqak2jh3qNxfOfHGjlEutkkW
-         pgPHPbAQp435CD8rtpfRawQfzKtP9AbDCLqykotzOuLnnFsN7CTPGRW79//28N1Gsl
-         xlnxbGUfEBnlqCpRkLos9VKrvll72odLbvWj2aJ4=
+        b=dWZ9I9IiOUz+FYo1yFKGNxZvNb255s9DFIt2HJIxSaYhFjvxpr9zhMA7FsYvf57W2
+         UZkRryGFuw7HPc/YYK2mm6M1N5bnq9twhBWN79PK987A7RSW8H/qeqgdXj2yBJ7WYA
+         Ip+Ku3L3FdJLpYDDHNWuYsoVk/Rc3gC2jJZgfgY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dag Moxnes <dag.moxnes@oracle.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Oak Zeng <Oak.Zeng@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 131/215] RDMA/core: Fix race when resolving IP address
-Date:   Mon, 29 Jul 2019 21:22:07 +0200
-Message-Id: <20190729190802.158910889@linuxfoundation.org>
+Subject: [PATCH 5.2 030/215] drm/amdkfd: Fix sdma queue map issue
+Date:   Mon, 29 Jul 2019 21:20:26 +0200
+Message-Id: <20190729190745.366931434@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -61,59 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d8d9ec7dc5abbb3f11d866e983c4984f5c2de9d6 ]
+[ Upstream commit 065e4bdfa1f3ab2884c110394d8b7e7ebe3b988c ]
 
-Use the neighbour lock when copying the MAC address from the neighbour
-data struct in dst_fetch_ha.
+Previous codes assumes there are two sdma engines.
+This is not true e.g., Raven only has 1 SDMA engine.
+Fix the issue by using sdma engine number info in
+device_info.
 
-When not using the lock, it is possible for the function to race with
-neigh_update(), causing it to copy an torn MAC address:
-
-rdma_resolve_addr()
-  rdma_resolve_ip()
-    addr_resolve()
-      addr_resolve_neigh()
-        fetch_ha()
-          dst_fetch_ha()
-	     memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN)
-
-and
-
-net_ioctl()
-  arp_ioctl()
-    arp_rec_delete()
-      arp_invalidate()
-        neigh_update()
-          __neigh_update()
-	    memcpy(&neigh->ha, lladdr, dev->addr_len)
-
-It is possible to provoke this error by calling rdma_resolve_addr() in a
-tight loop, while deleting the corresponding ARP entry in another tight
-loop.
-
-Fixes: 51d45974515c ("infiniband: addr: Consolidate code to fetch neighbour hardware address from dst.")
-Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Oak Zeng <Oak.Zeng@amd.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/addr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../drm/amd/amdkfd/kfd_device_queue_manager.c | 21 +++++++++++--------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
-index 2f7d14159841..9b76a8fcdd24 100644
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -337,7 +337,7 @@ static int dst_fetch_ha(const struct dst_entry *dst,
- 		neigh_event_send(n, NULL);
- 		ret = -ENODATA;
- 	} else {
--		memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
-+		neigh_ha_snapshot(dev_addr->dst_dev_addr, n, dst->dev);
- 	}
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
+index ae381450601c..afbaf6f5131e 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
+@@ -1268,12 +1268,17 @@ int amdkfd_fence_wait_timeout(unsigned int *fence_addr,
+ 	return 0;
+ }
  
- 	neigh_release(n);
+-static int unmap_sdma_queues(struct device_queue_manager *dqm,
+-				unsigned int sdma_engine)
++static int unmap_sdma_queues(struct device_queue_manager *dqm)
+ {
+-	return pm_send_unmap_queue(&dqm->packets, KFD_QUEUE_TYPE_SDMA,
+-			KFD_UNMAP_QUEUES_FILTER_DYNAMIC_QUEUES, 0, false,
+-			sdma_engine);
++	int i, retval = 0;
++
++	for (i = 0; i < dqm->dev->device_info->num_sdma_engines; i++) {
++		retval = pm_send_unmap_queue(&dqm->packets, KFD_QUEUE_TYPE_SDMA,
++			KFD_UNMAP_QUEUES_FILTER_DYNAMIC_QUEUES, 0, false, i);
++		if (retval)
++			return retval;
++	}
++	return retval;
+ }
+ 
+ /* dqm->lock mutex has to be locked before calling this function */
+@@ -1312,10 +1317,8 @@ static int unmap_queues_cpsch(struct device_queue_manager *dqm,
+ 	pr_debug("Before destroying queues, sdma queue count is : %u\n",
+ 		dqm->sdma_queue_count);
+ 
+-	if (dqm->sdma_queue_count > 0) {
+-		unmap_sdma_queues(dqm, 0);
+-		unmap_sdma_queues(dqm, 1);
+-	}
++	if (dqm->sdma_queue_count > 0)
++		unmap_sdma_queues(dqm);
+ 
+ 	retval = pm_send_unmap_queue(&dqm->packets, KFD_QUEUE_TYPE_COMPUTE,
+ 			filter, filter_param, false, 0);
 -- 
 2.20.1
 
