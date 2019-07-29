@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D15DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94267C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707B1217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6913321655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430153;
-	bh=roI165Huh2YZwrrESWI0FM6qfxa7DS7JW2FonjcqrGc=;
+	s=default; t=1564430161;
+	bh=wh1zoquakyM/0TPKZ8B93mtc776SuJUVqVduk7mbb1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yf00afYObCVaBLokDIBViv267PqbPGaDY5ygutgz6/PlbluHQDlmtslD37OfyaSr6
-	 92SD5gT+rVATwrPuyx8+giBbb/xCWEoH68e+QOqjl4xFe3hlXLZksD/Fpfdtnv4q7D
-	 kkO2yPrB+d9VmkjZXBD+0vKQloiVrUlPddaCGP8k=
+	b=gvyiesyGdOssWknk6TPIEZIIastcZ9vCN+5VLB2UGQfBE/GlXKw5t80GvlZRtpX1K
+	 v9bk+UaOW2UVqYdADcaxSt/+JTOonzPG8c6D8FDjdg9YgyA98d5CN+E6daFwgzHJAW
+	 YPctxgAIhsXU8nTPUfUiHcOk/wfkfcwSRYQUUK4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404240AbfG2Tzv (ORCPT
+        id S2404296AbfG2T4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:55:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48612 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:56:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404209AbfG2Tzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:55:47 -0400
+        id S2404250AbfG2Tz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:55:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8DB121655;
-        Mon, 29 Jul 2019 19:55:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2A02204EC;
+        Mon, 29 Jul 2019 19:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430146;
-        bh=roI165Huh2YZwrrESWI0FM6qfxa7DS7JW2FonjcqrGc=;
+        s=default; t=1564430156;
+        bh=wh1zoquakyM/0TPKZ8B93mtc776SuJUVqVduk7mbb1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YrZ/tdQkMif5oBfxu18Q+8U0Dzqp5Z8JNB2T2XFgLJY3HIN+MK/fYyAyM/imjQl2+
-         aHS4mRxxQMsyesbOxch6Y/nf/MSizcs19hrQvdolke/cbOW6PqCAS+31MI5VVL/9Y7
-         s13ov+6FYN+AVNsGOPaqd+244jlKeniHlyvIsmLE=
+        b=M3tuxRCYanLZzQp/zqBPSh71Iix5KaghalvfjpR7lHpWjc+L+t2Ddss9VRBz/z4h/
+         LYS2TT9P7F7gJ/kvZ6TtZt8ocy2e7GPkK7ohWQQvqz5xHPgZV5J+rMem+t/vaMw+VA
+         NnFUy4vcMYXqdtcHWbnHXHUpIYfuQ6wAGJW+EM2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        stable@vger.kernel.org, Hrvoje Zeba <zeba.hrvoje@gmail.com>,
         Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.2 212/215] io_uring: add a memory barrier before atomic_read
-Date:   Mon, 29 Jul 2019 21:23:28 +0200
-Message-Id: <20190729190816.660689010@linuxfoundation.org>
+Subject: [PATCH 5.2 215/215] io_uring: dont use iov_iter_advance() for fixed buffers
+Date:   Mon, 29 Jul 2019 21:23:31 +0200
+Message-Id: <20190729190817.178599978@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -59,93 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit c0e48f9dea9129aa11bec3ed13803bcc26e96e49 upstream.
+commit bd11b3a391e3df6fa958facbe4b3f9f4cca9bd49 upstream.
 
-There is a hang issue while using fio to do some basic test. The issue
-can be easily reproduced using the below script:
+Hrvoje reports that when a large fixed buffer is registered and IO is
+being done to the latter pages of said buffer, the IO submission time
+is much worse:
 
-        while true
-        do
-                fio  --ioengine=io_uring  -rw=write -bs=4k -numjobs=1 \
-                     -size=1G -iodepth=64 -name=uring   --filename=/dev/zero
-        done
+reading to the start of the buffer: 11238 ns
+reading to the end of the buffer:   1039879 ns
 
-After several minutes (or more), fio would block at
-io_uring_enter->io_cqring_wait in order to waiting for previously
-committed sqes to be completed and can't return to user anymore until
-we send a SIGTERM to fio. After receiving SIGTERM, fio hangs at
-io_ring_ctx_wait_and_kill with a backtrace like this:
+In fact, it's worse by two orders of magnitude. The reason for that is
+how io_uring figures out how to setup the iov_iter. We point the iter
+at the first bvec, and then use iov_iter_advance() to fast-forward to
+the offset within that buffer we need.
 
-        [54133.243816] Call Trace:
-        [54133.243842]  __schedule+0x3a0/0x790
-        [54133.243868]  schedule+0x38/0xa0
-        [54133.243880]  schedule_timeout+0x218/0x3b0
-        [54133.243891]  ? sched_clock+0x9/0x10
-        [54133.243903]  ? wait_for_completion+0xa3/0x130
-        [54133.243916]  ? _raw_spin_unlock_irq+0x2c/0x40
-        [54133.243930]  ? trace_hardirqs_on+0x3f/0xe0
-        [54133.243951]  wait_for_completion+0xab/0x130
-        [54133.243962]  ? wake_up_q+0x70/0x70
-        [54133.243984]  io_ring_ctx_wait_and_kill+0xa0/0x1d0
-        [54133.243998]  io_uring_release+0x20/0x30
-        [54133.244008]  __fput+0xcf/0x270
-        [54133.244029]  ____fput+0xe/0x10
-        [54133.244040]  task_work_run+0x7f/0xa0
-        [54133.244056]  do_exit+0x305/0xc40
-        [54133.244067]  ? get_signal+0x13b/0xbd0
-        [54133.244088]  do_group_exit+0x50/0xd0
-        [54133.244103]  get_signal+0x18d/0xbd0
-        [54133.244112]  ? _raw_spin_unlock_irqrestore+0x36/0x60
-        [54133.244142]  do_signal+0x34/0x720
-        [54133.244171]  ? exit_to_usermode_loop+0x7e/0x130
-        [54133.244190]  exit_to_usermode_loop+0xc0/0x130
-        [54133.244209]  do_syscall_64+0x16b/0x1d0
-        [54133.244221]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+However, that is abysmally slow, as it entails iterating the bvecs
+that we setup as part of buffer registration. There's really no need
+to use this generic helper, as we know it's a BVEC type iterator, and
+we also know that each bvec is PAGE_SIZE in size, apart from possibly
+the first and last. Hence we can just use a shift on the offset to
+find the right index, and then adjust the iov_iter appropriately.
+After this fix, the timings are:
 
-The reason is that we had added a req to ctx->pending_async at the very
-end, but it didn't get a chance to be processed. How could this happen?
+reading to the start of the buffer: 10135 ns
+reading to the end of the buffer:   1377 ns
 
-        fio#cpu0                                        wq#cpu1
+Or about an 755x improvement for the tail page.
 
-        io_add_to_prev_work                    io_sq_wq_submit_work
-
-          atomic_read() <<< 1
-
-                                                  atomic_dec_return() << 1->0
-                                                  list_empty();    <<< true;
-
-          list_add_tail()
-          atomic_read() << 0 or 1?
-
-As atomic_ops.rst states, atomic_read does not guarantee that the
-runtime modification by any other thread is visible yet, so we must take
-care of that with a proper implicit or explicit memory barrier.
-
-This issue was detected with the help of Jackie's <liuyun01@kylinos.cn>
-
-Fixes: 31b515106428 ("io_uring: allow workqueue item to handle multiple buffered requests")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+Reported-by: Hrvoje Zeba <zeba.hrvoje@gmail.com>
+Tested-by: Hrvoje Zeba <zeba.hrvoje@gmail.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+
 ---
- fs/io_uring.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/io_uring.c |   39 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 37 insertions(+), 2 deletions(-)
 
 --- a/fs/io_uring.c
 +++ b/fs/io_uring.c
-@@ -1769,6 +1769,10 @@ static bool io_add_to_prev_work(struct a
- 	ret = true;
- 	spin_lock(&list->lock);
- 	list_add_tail(&req->list, &list->list);
-+	/*
-+	 * Ensure we see a simultaneous modification from io_sq_wq_submit_work()
-+	 */
-+	smp_mb();
- 	if (!atomic_read(&list->cnt)) {
- 		list_del_init(&req->list);
- 		ret = false;
+@@ -1001,8 +1001,43 @@ static int io_import_fixed(struct io_rin
+ 	 */
+ 	offset = buf_addr - imu->ubuf;
+ 	iov_iter_bvec(iter, rw, imu->bvec, imu->nr_bvecs, offset + len);
+-	if (offset)
+-		iov_iter_advance(iter, offset);
++
++	if (offset) {
++		/*
++		 * Don't use iov_iter_advance() here, as it's really slow for
++		 * using the latter parts of a big fixed buffer - it iterates
++		 * over each segment manually. We can cheat a bit here, because
++		 * we know that:
++		 *
++		 * 1) it's a BVEC iter, we set it up
++		 * 2) all bvecs are PAGE_SIZE in size, except potentially the
++		 *    first and last bvec
++		 *
++		 * So just find our index, and adjust the iterator afterwards.
++		 * If the offset is within the first bvec (or the whole first
++		 * bvec, just use iov_iter_advance(). This makes it easier
++		 * since we can just skip the first segment, which may not
++		 * be PAGE_SIZE aligned.
++		 */
++		const struct bio_vec *bvec = imu->bvec;
++
++		if (offset <= bvec->bv_len) {
++			iov_iter_advance(iter, offset);
++		} else {
++			unsigned long seg_skip;
++
++			/* skip first vec */
++			offset -= bvec->bv_len;
++			seg_skip = 1 + (offset >> PAGE_SHIFT);
++
++			iter->bvec = bvec + seg_skip;
++			iter->nr_segs -= seg_skip;
++			iter->count -= (seg_skip << PAGE_SHIFT);
++			iter->iov_offset = offset & ~PAGE_MASK;
++			if (iter->iov_offset)
++				iter->count -= iter->iov_offset;
++		}
++	}
+ 
+ 	/* don't drop a reference to these pages */
+ 	iter->type |= ITER_BVEC_FLAG_NO_REF;
 
 
