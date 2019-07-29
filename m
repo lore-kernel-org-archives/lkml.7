@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60ED7C7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DBCC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3282B217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757CC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:53:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeaGhFXM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAOt2i5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390622AbfG2TxK (ORCPT
+        id S2403970AbfG2TxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:53:10 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46456 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390810AbfG2Twx (ORCPT
+        Mon, 29 Jul 2019 15:53:14 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42562 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390072AbfG2Twz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:52:53 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k189so9730081pgk.13;
-        Mon, 29 Jul 2019 12:52:52 -0700 (PDT)
+        Mon, 29 Jul 2019 15:52:55 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t132so28763676pgb.9;
+        Mon, 29 Jul 2019 12:52:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3ZUYQjsQOSoF7cnt3apJdVFojNnNOlP5fhhY2kvbOSU=;
-        b=DeaGhFXMF9XdWQknLV+nN6xPae5Jm2cRHRe9s3LxJE3nLYEehp5BhGyWsomktzRz3P
-         CEXnkZtiAP3ERhQpGE+tfuPugVDQ48ftruowp0g0Fm9947/JEfTihdGndH3B7dUqyEc4
-         2InRiWkyyDcB5OQIC5XtqQD5eKv77T4il7IVVyh3JqOYxnt8uWh+DiJFkxfCpAQInuJu
-         2LdxkuYWDE/Yznp4sTNVQ0JF6qwFMYNXOHDmdUOo/NlbFJJkxSf8UiMl0a7Ma/OLA3tE
-         Sk1fXJLCG9hKbx9rk37pdVm0bSKp0YdK8M/lMi7xUosB2CBQdXaeJAuTg76Hd2/KBNgN
-         5q7Q==
+        bh=xtSi5hMWCu8JmvkiHqNyb+90M3Uuthpu/boJgJFrMS8=;
+        b=XAOt2i5iNbNF5eecoaE500/fo2HxMdtBQqKYZ+L9aYfSEx2WcbVxHD7I2bJm0Ude2T
+         Gp/OJfYydHnCaIrDEk6aZfoiJXOPv/KK0pD4yWBERUc2dlsX3DjHQLi4AJ1Ce66nKacM
+         vlJaSkvNg/qJW6oOqeLDYwBp5xy7+O4sytvurgh+iPGzTy52I44L0E/kubboGh/euroy
+         e6UWfHpo7dE4lZC7isJd11/HnPWqySa9V+CZngahHQrEyzHWqIL8cv+GBDUywjUYNN+9
+         +U9pALSWkZ4TAvjFimWfhFNd9NrWXKLRbYLlduU0rkZkLTdFMwB8OQYH9qEXVYrJU2ZJ
+         qyKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3ZUYQjsQOSoF7cnt3apJdVFojNnNOlP5fhhY2kvbOSU=;
-        b=GMIVabYn4OBm8vx3CtNM62T6OvYp7BGy/9SMW8l+qa7b/EKUvAAf+vg841C3YFe/8U
-         ibooNrq9ho/P/xvVZ5nnRFVvmp9ESBgh0/2ZRT9d2wYbbHhqGOj0ChZRUVsMnhy+sl3i
-         3Ib3TVM0lKpi8xRrald9mIbcEapHP1BryYNAYIA5HmlwWeooG9ICMohtwzJl+2fNJceR
-         o+2gyXJTBj9F3EWPIh1lcKnnrW2VxRN7OBq8w9/WoaObD2qIxbBOeWVmh6uNDH+N+IS7
-         /UkM5t94ACRQjXGB/bN2YPi24e/yvYNb/vfuvoeTiFcn1sdf0gZjmySUbphhmXga0IdX
-         54jg==
-X-Gm-Message-State: APjAAAVDVtMylOiM5Znp8eEIS3hIDrsIh1HMStW59Z8VJNbW/Bv94lAd
-        jB1nsl7pkxS9xGC6dMHLKfQg1ioq
-X-Google-Smtp-Source: APXvYqyV1Z0Sf8gr+Uz6USWetj3sLpLYNqGuQS1ggbcha6KBTqCIdDTFsxSatObzdcPEsQtAEJcPCg==
-X-Received: by 2002:aa7:957c:: with SMTP id x28mr38078342pfq.42.1564429972121;
-        Mon, 29 Jul 2019 12:52:52 -0700 (PDT)
+        bh=xtSi5hMWCu8JmvkiHqNyb+90M3Uuthpu/boJgJFrMS8=;
+        b=MzsAUOh8UoQXkI28xublwdPMpgik58Isv3YfGMrg/QKDzLDTOwHvIEk6Oz25OE0At2
+         OKKC2zZt7cuRV0SKmsfASjwo9a7N8CJxMCtN7CaIepmolXvMvKTrE+kXt4sTwEfj+KHc
+         flFUadF4TIY0bFu3gMAxuVuXlMmNlafXqO5/77bwxGBJN/oig3AUyT6ggzccONTSTzZy
+         GvMbHhZWv6gdUvnunwzq5+bzer5dakRLrUW8Nb42s4bbxyO3C1tXyI/2J7e4as1A/BTu
+         V0+d+/v6tRok/Zl434IqAyASA0ljfT37IHUMeo1mRscIFJ86i0bdTUx/DX+ASk6Zj4eI
+         KlYQ==
+X-Gm-Message-State: APjAAAVAjXLaWYchWEtsw7qfHyzo4b8FTim7Fdmk0W6AdUQBEnLwtdSZ
+        BjfjikCK1vGlUYKWTyZT/crkD2GI
+X-Google-Smtp-Source: APXvYqzGx/LDBvhX6noBNGjlI/f+61wd2oA06XDK9QEc36Z30+fSnrspzeDUJW1EX6YaRurOpptVaA==
+X-Received: by 2002:a17:90a:ac13:: with SMTP id o19mr114010053pjq.143.1564429973604;
+        Mon, 29 Jul 2019 12:52:53 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.52.50
+        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.52.52
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 12:52:51 -0700 (PDT)
+        Mon, 29 Jul 2019 12:52:52 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-serial@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 05/24] tty: serial: fsl_lpuart: Fix bogus indentation
-Date:   Mon, 29 Jul 2019 12:52:07 -0700
-Message-Id: <20190729195226.8862-6-andrew.smirnov@gmail.com>
+Subject: [PATCH 06/24] tty: serial: fsl_lpuart: Drop unnecessary sg_set_buf() call
+Date:   Mon, 29 Jul 2019 12:52:08 -0700
+Message-Id: <20190729195226.8862-7-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190729195226.8862-1-andrew.smirnov@gmail.com>
 References: <20190729195226.8862-1-andrew.smirnov@gmail.com>
@@ -81,7 +81,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix bogus indentation in rx_dma_timer_init().
+Sg_init_one() will already call sg_set_buf(), so another explicit call
+right after it is unnecessary. Drop it.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Stefan Agner <stefan@agner.ch>
@@ -95,26 +96,21 @@ Cc: linux-imx@nxp.com
 Cc: linux-serial@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/tty/serial/fsl_lpuart.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 3e38970a444e..1b3f2a87e558 100644
+index 1b3f2a87e558..b600f591c8c2 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -1409,9 +1409,9 @@ static void lpuart32_setup_watermark(struct lpuart_port *sport)
+@@ -1144,7 +1144,6 @@ static inline int lpuart_start_rx_dma(struct lpuart_port *sport)
+ 		return -ENOMEM;
  
- static void rx_dma_timer_init(struct lpuart_port *sport)
- {
--		timer_setup(&sport->lpuart_timer, lpuart_timer_func, 0);
--		sport->lpuart_timer.expires = jiffies + sport->dma_rx_timeout;
--		add_timer(&sport->lpuart_timer);
-+	timer_setup(&sport->lpuart_timer, lpuart_timer_func, 0);
-+	sport->lpuart_timer.expires = jiffies + sport->dma_rx_timeout;
-+	add_timer(&sport->lpuart_timer);
- }
+ 	sg_init_one(&sport->rx_sgl, ring->buf, sport->rx_dma_rng_buf_len);
+-	sg_set_buf(&sport->rx_sgl, ring->buf, sport->rx_dma_rng_buf_len);
+ 	nent = dma_map_sg(sport->port.dev, &sport->rx_sgl, 1, DMA_FROM_DEVICE);
  
- static int lpuart_startup(struct uart_port *port)
+ 	if (!nent) {
 -- 
 2.21.0
 
