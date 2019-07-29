@@ -2,53 +2,59 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0F5C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5F5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB6F205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9618B20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431017;
-	bh=/m2an7s1sFqcU6+qyBjy8ciiojZwwZYQb8ABLzQYBCU=;
+	s=default; t=1564431024;
+	bh=DBxuIdXXEGkzb8kZ1WbKf384j2DKFnAhtb36t7aZy2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jsx6lpQvoapVumoMsUMbSCucVwQ/TPbwGEBvQ1Ci3J+sNIjSB2xxp9nMcj65+Qss3
-	 fRO7pZC5KIJLP89edhk9NPWhczCVQjAdwPVyzNcrscmlYQtm8E8KSnNZP6+sQvHbIM
-	 C0Z8lkaFTdhGsWzDsQKGTmmuYgQggkv/00f/SBaQ=
+	b=waAzkaN+Mqmyrl/wu8c7+kWoO4TAxeU4ZT+exRKu1NwrCx9lvzy6ABAFOZ3+KPx8i
+	 RpJIH1edcnrlNUGOAhXaxuxwtqfKjRKr5CjK7CptgfWCM6euZouvFpl+UlufFrWGVe
+	 gJr2XmdQaxS+XWwbzDyWZcJHC/AFCDz9XRAsVjiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730417AbfG2UKQ (ORCPT
+        id S2388476AbfG2Teo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:10:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:34:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727719AbfG2TfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:35:02 -0400
+        id S2388344AbfG2Tel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:34:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FB9E217D4;
-        Mon, 29 Jul 2019 19:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41E9B21655;
+        Mon, 29 Jul 2019 19:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428901;
-        bh=/m2an7s1sFqcU6+qyBjy8ciiojZwwZYQb8ABLzQYBCU=;
+        s=default; t=1564428879;
+        bh=DBxuIdXXEGkzb8kZ1WbKf384j2DKFnAhtb36t7aZy2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bzd/106AgpcSTut+Vz/pr3WqV1VBz2ixKhjZtvbmrA1MCG1vy8OXkXeCA+3WBU5aU
-         vYFQcWuIK+udWQ6EaqMHD52QMVQ9ltbKYxlr5zI7M+2UY2kODteTREWAHGJwpcjamI
-         lBAzemB2IYqxadgEkFH1U6ldIbnrqVdRaYunQDfQ=
+        b=haNZHjj7vm/AnY/zo73amSNg8s05bvfelHO3ldTCW30ovzHAuSW0/XR1n1+pp0U5Z
+         Ug0F1xDLFTkE45cx1LjFbeG1ogJiHpdW+Z6WDDp5M69SXUTB6Gt59igf6+QVH4d3UA
+         5UOi2oofER5Z+hjORiTdYaMIdNy75rtgL7vnWXyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 221/293] hvsock: fix epollout hang from race condition
-Date:   Mon, 29 Jul 2019 21:21:52 +0200
-Message-Id: <20190729190841.448142400@linuxfoundation.org>
+        stable@vger.kernel.org, Kuo-Hsin Yang <vovoy@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@redhat.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 214/293] mm: vmscan: scan anonymous pages on file refaults
+Date:   Mon, 29 Jul 2019 21:21:45 +0200
+Message-Id: <20190729190840.885952466@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,148 +67,241 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cb359b60416701c8bed82fec79de25a144beb893 ]
+From: Kuo-Hsin Yang <vovoy@chromium.org>
 
-Currently, hvsock can enter into a state where epoll_wait on EPOLLOUT will
-not return even when the hvsock socket is writable, under some race
-condition. This can happen under the following sequence:
-- fd = socket(hvsocket)
-- fd_out = dup(fd)
-- fd_in = dup(fd)
-- start a writer thread that writes data to fd_out with a combination of
-  epoll_wait(fd_out, EPOLLOUT) and
-- start a reader thread that reads data from fd_in with a combination of
-  epoll_wait(fd_in, EPOLLIN)
-- On the host, there are two threads that are reading/writing data to the
-  hvsocket
+commit 2c012a4ad1a2cd3fb5a0f9307b9d219f84eda1fa upstream.
 
-stack:
-hvs_stream_has_space
-hvs_notify_poll_out
-vsock_poll
-sock_poll
-ep_poll
+When file refaults are detected and there are many inactive file pages,
+the system never reclaim anonymous pages, the file pages are dropped
+aggressively when there are still a lot of cold anonymous pages and
+system thrashes.  This issue impacts the performance of applications
+with large executable, e.g.  chrome.
 
-Race condition:
-check for epollout from ep_poll():
-	assume no writable space in the socket
-	hvs_stream_has_space() returns 0
-check for epollin from ep_poll():
-	assume socket has some free space < HVS_PKT_LEN(HVS_SEND_BUF_SIZE)
-	hvs_stream_has_space() will clear the channel pending send size
-	host will not notify the guest because the pending send size has
-		been cleared and so the hvsocket will never mark the
-		socket writable
+With this patch, when file refault is detected, inactive_list_is_low()
+always returns true for file pages in get_scan_count() to enable
+scanning anonymous pages.
 
-Now, the EPOLLOUT will never return even if the socket write buffer is
-empty.
+The problem can be reproduced by the following test program.
 
-The fix is to set the pending size to the default size and never change it.
-This way the host will always notify the guest whenever the writable space
-is bigger than the pending size. The host is already optimized to *only*
-notify the guest when the pending size threshold boundary is crossed and
-not everytime.
+---8<---
+void fallocate_file(const char *filename, off_t size)
+{
+	struct stat st;
+	int fd;
 
-This change also reduces the cpu usage somewhat since hv_stream_has_space()
-is in the hotpath of send:
-vsock_stream_sendmsg()->hv_stream_has_space()
-Earlier hv_stream_has_space was setting/clearing the pending size on every
-call.
+	if (!stat(filename, &st) && st.st_size >= size)
+		return;
 
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+	fd = open(filename, O_WRONLY | O_CREAT, 0600);
+	if (fd < 0) {
+		perror("create file");
+		exit(1);
+	}
+	if (posix_fallocate(fd, 0, size)) {
+		perror("fallocate");
+		exit(1);
+	}
+	close(fd);
+}
+
+long *alloc_anon(long size)
+{
+	long *start = malloc(size);
+	memset(start, 1, size);
+	return start;
+}
+
+long access_file(const char *filename, long size, long rounds)
+{
+	int fd, i;
+	volatile char *start1, *end1, *start2;
+	const int page_size = getpagesize();
+	long sum = 0;
+
+	fd = open(filename, O_RDONLY);
+	if (fd == -1) {
+		perror("open");
+		exit(1);
+	}
+
+	/*
+	 * Some applications, e.g. chrome, use a lot of executable file
+	 * pages, map some of the pages with PROT_EXEC flag to simulate
+	 * the behavior.
+	 */
+	start1 = mmap(NULL, size / 2, PROT_READ | PROT_EXEC, MAP_SHARED,
+		      fd, 0);
+	if (start1 == MAP_FAILED) {
+		perror("mmap");
+		exit(1);
+	}
+	end1 = start1 + size / 2;
+
+	start2 = mmap(NULL, size / 2, PROT_READ, MAP_SHARED, fd, size / 2);
+	if (start2 == MAP_FAILED) {
+		perror("mmap");
+		exit(1);
+	}
+
+	for (i = 0; i < rounds; ++i) {
+		struct timeval before, after;
+		volatile char *ptr1 = start1, *ptr2 = start2;
+		gettimeofday(&before, NULL);
+		for (; ptr1 < end1; ptr1 += page_size, ptr2 += page_size)
+			sum += *ptr1 + *ptr2;
+		gettimeofday(&after, NULL);
+		printf("File access time, round %d: %f (sec)
+", i,
+		       (after.tv_sec - before.tv_sec) +
+		       (after.tv_usec - before.tv_usec) / 1000000.0);
+	}
+	return sum;
+}
+
+int main(int argc, char *argv[])
+{
+	const long MB = 1024 * 1024;
+	long anon_mb, file_mb, file_rounds;
+	const char filename[] = "large";
+	long *ret1;
+	long ret2;
+
+	if (argc != 4) {
+		printf("usage: thrash ANON_MB FILE_MB FILE_ROUNDS
+");
+		exit(0);
+	}
+	anon_mb = atoi(argv[1]);
+	file_mb = atoi(argv[2]);
+	file_rounds = atoi(argv[3]);
+
+	fallocate_file(filename, file_mb * MB);
+	printf("Allocate %ld MB anonymous pages
+", anon_mb);
+	ret1 = alloc_anon(anon_mb * MB);
+	printf("Access %ld MB file pages
+", file_mb);
+	ret2 = access_file(filename, file_mb * MB, file_rounds);
+	printf("Print result to prevent optimization: %ld
+",
+	       *ret1 + ret2);
+	return 0;
+}
+---8<---
+
+Running the test program on 2GB RAM VM with kernel 5.2.0-rc5, the program
+fills ram with 2048 MB memory, access a 200 MB file for 10 times.  Without
+this patch, the file cache is dropped aggresively and every access to the
+file is from disk.
+
+  $ ./thrash 2048 200 10
+  Allocate 2048 MB anonymous pages
+  Access 200 MB file pages
+  File access time, round 0: 2.489316 (sec)
+  File access time, round 1: 2.581277 (sec)
+  File access time, round 2: 2.487624 (sec)
+  File access time, round 3: 2.449100 (sec)
+  File access time, round 4: 2.420423 (sec)
+  File access time, round 5: 2.343411 (sec)
+  File access time, round 6: 2.454833 (sec)
+  File access time, round 7: 2.483398 (sec)
+  File access time, round 8: 2.572701 (sec)
+  File access time, round 9: 2.493014 (sec)
+
+With this patch, these file pages can be cached.
+
+  $ ./thrash 2048 200 10
+  Allocate 2048 MB anonymous pages
+  Access 200 MB file pages
+  File access time, round 0: 2.475189 (sec)
+  File access time, round 1: 2.440777 (sec)
+  File access time, round 2: 2.411671 (sec)
+  File access time, round 3: 1.955267 (sec)
+  File access time, round 4: 0.029924 (sec)
+  File access time, round 5: 0.000808 (sec)
+  File access time, round 6: 0.000771 (sec)
+  File access time, round 7: 0.000746 (sec)
+  File access time, round 8: 0.000738 (sec)
+  File access time, round 9: 0.000747 (sec)
+
+Checked the swap out stats during the test [1], 19006 pages swapped out
+with this patch, 3418 pages swapped out without this patch. There are
+more swap out, but I think it's within reasonable range when file backed
+data set doesn't fit into the memory.
+
+$ ./thrash 2000 100 2100 5 1 # ANON_MB FILE_EXEC FILE_NOEXEC ROUNDS
+PROCESSES Allocate 2000 MB anonymous pages active_anon: 1613644,
+inactive_anon: 348656, active_file: 892, inactive_file: 1384 (kB)
+pswpout: 7972443, pgpgin: 478615246 Access 100 MB executable file pages
+Access 2100 MB regular file pages File access time, round 0: 12.165,
+(sec) active_anon: 1433788, inactive_anon: 478116, active_file: 17896,
+inactive_file: 24328 (kB) File access time, round 1: 11.493, (sec)
+active_anon: 1430576, inactive_anon: 477144, active_file: 25440,
+inactive_file: 26172 (kB) File access time, round 2: 11.455, (sec)
+active_anon: 1427436, inactive_anon: 476060, active_file: 21112,
+inactive_file: 28808 (kB) File access time, round 3: 11.454, (sec)
+active_anon: 1420444, inactive_anon: 473632, active_file: 23216,
+inactive_file: 35036 (kB) File access time, round 4: 11.479, (sec)
+active_anon: 1413964, inactive_anon: 471460, active_file: 31728,
+inactive_file: 32224 (kB) pswpout: 7991449 (+ 19006), pgpgin: 489924366
+(+ 11309120)
+
+With 4 processes accessing non-overlapping parts of a large file, 30316
+pages swapped out with this patch, 5152 pages swapped out without this
+patch.  The swapout number is small comparing to pgpgin.
+
+[1]: https://github.com/vovo/testing/blob/master/mem_thrash.c
+
+Link: http://lkml.kernel.org/r/20190701081038.GA83398@google.com
+Fixes: e9868505987a ("mm,vmscan: only evict file pages when we have plenty")
+Fixes: 7c5bd705d8f9 ("mm: memcg: only evict file pages when we have plenty")
+Signed-off-by: Kuo-Hsin Yang <vovoy@chromium.org>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Sonny Rao <sonnyrao@chromium.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Rik van Riel <riel@redhat.com>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: <stable@vger.kernel.org>	[4.12+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[backported to 4.14.y, 4.19.y, 5.1.y: adjust context]
+Signed-off-by: Kuo-Hsin Yang <vovoy@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/vmw_vsock/hyperv_transport.c | 44 ++++++++------------------------
- 1 file changed, 11 insertions(+), 33 deletions(-)
+ mm/vmscan.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-index 2c63f7b169b5..3bee93bc5d11 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -217,18 +217,6 @@ static void hvs_set_channel_pending_send_size(struct vmbus_channel *chan)
- 	set_channel_pending_send_size(chan,
- 				      HVS_PKT_LEN(HVS_SEND_BUF_SIZE));
- 
--	/* See hvs_stream_has_space(): we must make sure the host has seen
--	 * the new pending send size, before we can re-check the writable
--	 * bytes.
--	 */
--	virt_mb();
--}
--
--static void hvs_clear_channel_pending_send_size(struct vmbus_channel *chan)
--{
--	set_channel_pending_send_size(chan, 0);
--
--	/* Ditto */
- 	virt_mb();
- }
- 
-@@ -298,9 +286,6 @@ static void hvs_channel_cb(void *ctx)
- 	if (hvs_channel_readable(chan))
- 		sk->sk_data_ready(sk);
- 
--	/* See hvs_stream_has_space(): when we reach here, the writable bytes
--	 * may be already less than HVS_PKT_LEN(HVS_SEND_BUF_SIZE).
--	 */
- 	if (hv_get_bytes_to_write(&chan->outbound) > 0)
- 		sk->sk_write_space(sk);
- }
-@@ -328,8 +313,9 @@ static void hvs_open_connection(struct vmbus_channel *chan)
- 
- 	struct sockaddr_vm addr;
- 	struct sock *sk, *new = NULL;
--	struct vsock_sock *vnew;
--	struct hvsock *hvs, *hvs_new;
-+	struct vsock_sock *vnew = NULL;
-+	struct hvsock *hvs = NULL;
-+	struct hvsock *hvs_new = NULL;
- 	int ret;
- 
- 	if_type = &chan->offermsg.offer.if_type;
-@@ -389,6 +375,13 @@ static void hvs_open_connection(struct vmbus_channel *chan)
- 	set_per_channel_state(chan, conn_from_host ? new : sk);
- 	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
- 
-+	/* Set the pending send size to max packet size to always get
-+	 * notifications from the host when there is enough writable space.
-+	 * The host is optimized to send notifications only when the pending
-+	 * size boundary is crossed, and not always.
-+	 */
-+	hvs_set_channel_pending_send_size(chan);
-+
- 	if (conn_from_host) {
- 		new->sk_state = SS_CONNECTED;
- 		sk->sk_ack_backlog++;
-@@ -652,23 +645,8 @@ static s64 hvs_stream_has_data(struct vsock_sock *vsk)
- static s64 hvs_stream_has_space(struct vsock_sock *vsk)
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2120,7 +2120,7 @@ static void shrink_active_list(unsigned
+  *   10TB     320        32GB
+  */
+ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
+-				 struct scan_control *sc, bool actual_reclaim)
++				 struct scan_control *sc, bool trace)
  {
- 	struct hvsock *hvs = vsk->trans;
--	struct vmbus_channel *chan = hvs->chan;
--	s64 ret;
--
--	ret = hvs_channel_writable_bytes(chan);
--	if (ret > 0)  {
--		hvs_clear_channel_pending_send_size(chan);
--	} else {
--		/* See hvs_channel_cb() */
--		hvs_set_channel_pending_send_size(chan);
--
--		/* Re-check the writable bytes to avoid race */
--		ret = hvs_channel_writable_bytes(chan);
--		if (ret > 0)
--			hvs_clear_channel_pending_send_size(chan);
--	}
+ 	enum lru_list active_lru = file * LRU_FILE + LRU_ACTIVE;
+ 	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
+@@ -2146,7 +2146,7 @@ static bool inactive_list_is_low(struct
+ 	 * rid of the stale workingset quickly.
+ 	 */
+ 	refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
+-	if (file && actual_reclaim && lruvec->refaults != refaults) {
++	if (file && lruvec->refaults != refaults) {
+ 		inactive_ratio = 0;
+ 	} else {
+ 		gb = (inactive + active) >> (30 - PAGE_SHIFT);
+@@ -2156,7 +2156,7 @@ static bool inactive_list_is_low(struct
+ 			inactive_ratio = 1;
+ 	}
  
--	return ret;
-+	return hvs_channel_writable_bytes(hvs->chan);
- }
- 
- static u64 hvs_stream_rcvhiwat(struct vsock_sock *vsk)
--- 
-2.20.1
-
+-	if (actual_reclaim)
++	if (trace)
+ 		trace_mm_vmscan_inactive_list_is_low(pgdat->node_id, sc->reclaim_idx,
+ 			lruvec_lru_size(lruvec, inactive_lru, MAX_NR_ZONES), inactive,
+ 			lruvec_lru_size(lruvec, active_lru, MAX_NR_ZONES), active,
 
 
