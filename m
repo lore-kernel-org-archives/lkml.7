@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1AEC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10460C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30B92054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A73204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430239;
-	bh=n6R0gcYCZXGZoQwAw6Op0fgmjeV8rEY30bF0MOUNEQk=;
+	s=default; t=1564430242;
+	bh=hM3Cw06sG+uY9q8n7DVamsw6wKd9UJaB/2X3M9tvu20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LMmK+hU7OQ3JirCAuPcCA+C7PvQx+nr4MWrt+dEiPBKIByC0rtUN/FaDqZ5Z18+Vv
-	 dSKtFTnFGzS4AjRkQzV7lChzAL3Q4Ek1Lrrv79FrN29R3XoWpOzrZUvoBX5VoApdLu
-	 e6xSQnBy/iGtkEwtKl7WTtthKZEIuqvLxjx3rL1Q=
+	b=gfAGYohjXv/Y93905g+yFoaAnB6+OkRlj+++DsNDkmB1W11odT3uenjByN5kAJNCJ
+	 Pur2SQCRWGPlckNYZkieu9VVWtgB7q+Ukj2sh4KxkAeyva1E0bDQkHVK0VMKQCMpVN
+	 ly+xRXjwObNP6FPhhxnawiKosKa1MmMnRPVDhYOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390615AbfG2Tyb (ORCPT
+        id S2391104AbfG2T5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:54:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46996 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:57:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390733AbfG2TyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:54:20 -0400
+        id S2404060AbfG2Tyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:54:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8A5E21655;
-        Mon, 29 Jul 2019 19:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FD832054F;
+        Mon, 29 Jul 2019 19:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430060;
-        bh=n6R0gcYCZXGZoQwAw6Op0fgmjeV8rEY30bF0MOUNEQk=;
+        s=default; t=1564430070;
+        bh=hM3Cw06sG+uY9q8n7DVamsw6wKd9UJaB/2X3M9tvu20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uoPegt/eW+KezImSpriYL+1Fv6R1v/T3rLO274BQJccIWtZhy0emhGxUcrWH5hAJN
-         Th/LMofQ8SoADUxdAIzWhq1RJxBOAOfuQEq+asA5AD1fmaAQqSbmyz0JFd6rliT4ID
-         liUAElfC8rMT81IfLAQVhtX07v0U+QeB6W0U5tqA=
+        b=QstDM+oPVmkYE+ltiX84k6DTKUVlvSWalygPy6zLR+Eh2waE/nJC+fTxOxZI8dYEj
+         jD0eFgXNO/Nyfe6LE3Psol4XSP+roFiRraqIlq0hXkFPRcLHH/QusL4qmWo2nWZq2i
+         cfKE8Y0coph4v7EFtn/8lTAJWvx97K4fzvmx/O84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juri Lelli <juri.lelli@gmail.com>,
-        Eiichi Tsukata <devel@etsukata.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.2 183/215] x86/stacktrace: Prevent access_ok() warnings in arch_stack_walk_user()
-Date:   Mon, 29 Jul 2019 21:22:59 +0200
-Message-Id: <20190729190811.906620918@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Moritz Fischer <mdf@kernel.org>
+Subject: [PATCH 5.2 186/215] fpga-manager: altera-ps-spi: Fix build error
+Date:   Mon, 29 Jul 2019 21:23:02 +0200
+Message-Id: <20190729190812.422865445@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,62 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <devel@etsukata.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 2af7c85714d8cafadf925d55441458eae312cd6b upstream.
+commit 3d139703d397f6281368047ba7ad1c8bf95aa8ab upstream.
 
-When arch_stack_walk_user() is called from atomic contexts, access_ok() can
-trigger the following warning if compiled with CONFIG_DEBUG_ATOMIC_SLEEP=y.
+If BITREVERSE is m and FPGA_MGR_ALTERA_PS_SPI is y,
+build fails:
 
-Reproducer:
+drivers/fpga/altera-ps-spi.o: In function `altera_ps_write':
+altera-ps-spi.c:(.text+0x4ec): undefined reference to `byte_rev_table'
 
-  // CONFIG_DEBUG_ATOMIC_SLEEP=y
-  # cd /sys/kernel/debug/tracing
-  # echo 1 > options/userstacktrace
-  # echo 1 > events/irq/irq_handler_entry/enable
+Select BITREVERSE to fix this.
 
-  WARNING: CPU: 0 PID: 2649 at arch/x86/kernel/stacktrace.c:103 arch_stack_walk_user+0x6e/0xf6
-  CPU: 0 PID: 2649 Comm: bash Not tainted 5.3.0-rc1+ #99
-  RIP: 0010:arch_stack_walk_user+0x6e/0xf6
-  Call Trace:
-   <IRQ>
-   stack_trace_save_user+0x10a/0x16d
-   trace_buffer_unlock_commit_regs+0x185/0x240
-   trace_event_buffer_commit+0xec/0x330
-   trace_event_raw_event_irq_handler_entry+0x159/0x1e0
-   __handle_irq_event_percpu+0x22d/0x440
-   handle_irq_event_percpu+0x70/0x100
-   handle_irq_event+0x5a/0x8b
-   handle_edge_irq+0x12f/0x3f0
-   handle_irq+0x34/0x40
-   do_IRQ+0xa6/0x1f0
-   common_interrupt+0xf/0xf
-   </IRQ>
-
-Fix it by calling __range_not_ok() directly instead of access_ok() as
-copy_from_user_nmi() does. This is fine here because the actual copy is
-inside a pagefault disabled region.
-
-Reported-by: Juri Lelli <juri.lelli@gmail.com>
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190722083216.16192-2-devel@etsukata.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: fcfe18f885f6 ("fpga-manager: altera-ps-spi: use bitrev8x4")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Moritz Fischer <mdf@kernel.org>
+Link: https://lore.kernel.org/r/20190708071356.50928-1-yuehaibing@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/stacktrace.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/fpga/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -100,7 +100,7 @@ copy_stack_frame(const void __user *fp,
- {
- 	int ret;
- 
--	if (!access_ok(fp, sizeof(*frame)))
-+	if (__range_not_ok(fp, sizeof(*frame), TASK_SIZE))
- 		return 0;
- 
- 	ret = 1;
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -40,6 +40,7 @@ config ALTERA_PR_IP_CORE_PLAT
+ config FPGA_MGR_ALTERA_PS_SPI
+ 	tristate "Altera FPGA Passive Serial over SPI"
+ 	depends on SPI
++	select BITREVERSE
+ 	help
+ 	  FPGA manager driver support for Altera Arria/Cyclone/Stratix
+ 	  using the passive serial interface over SPI.
 
 
