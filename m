@@ -2,134 +2,185 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17015C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89813C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E880D2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676882070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfG2OfM (ORCPT
+        id S1728305AbfG2Ogg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:35:12 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:33507 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727324AbfG2OfL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:35:11 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Allan.Nielsen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="Allan.Nielsen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: PvxHzyGMjwszKpUYApDD/v/JSkAUvEiJfnAnWccnM0ZPnZ8QcbwU7efZpX8HIZYIsrFxgmfpjU
- hBS2g0B29MVca5KPRZuOep1ROkpbsqcB6qy7ghXd75fMES9ulZmjR4TLLdhQ9TLlUHhHh+yuW3
- nb0jC2PJLntUZ9EzdcSUbFIoDFI96JrD3jpFGcUAZb6GPmHqukCosyqrMCI9O5kD8HqsTRz5zh
- NVYa0v+XBL34PmZxzMkFGekYyx9nPB8/YUHejphmd/oaq4AOHqs7mNpHWM0+OqntROR3Hcy/VV
- 0oA=
-X-IronPort-AV: E=Sophos;i="5.64,323,1559545200"; 
-   d="scan'208";a="40097631"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Jul 2019 07:35:10 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex01.mchp-main.com (10.10.87.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 29 Jul 2019 07:35:09 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 29 Jul 2019 07:35:09 -0700
-Date:   Mon, 29 Jul 2019 16:35:09 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
-        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-Message-ID: <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
-References: <b9ce433a-3ef7-fe15-642a-659c5715d992@cumulusnetworks.com>
- <e6ad982f-4706-46f9-b8f0-1337b09de350@cumulusnetworks.com>
- <20190726120214.c26oj5vks7g5ntwu@soft-dev3.microsemi.net>
- <b755f613-e6d8-a2e6-16cd-6f13ec0a6ddc@cumulusnetworks.com>
- <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
- <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
- <20190729131420.tqukz55tz26jkg73@lx-anielsen.microsemi.net>
- <3cc69103-d194-2eca-e7dd-e2fa6a730223@cumulusnetworks.com>
- <20190729135205.oiuthcyesal4b4ct@lx-anielsen.microsemi.net>
- <e4cd0db9-695a-82a7-7dc0-623ded66a4e5@cumulusnetworks.com>
+        Mon, 29 Jul 2019 10:36:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37466 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727000AbfG2Ogf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 10:36:35 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 19BEA300CA4D;
+        Mon, 29 Jul 2019 14:36:35 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 643436443F;
+        Mon, 29 Jul 2019 14:36:34 +0000 (UTC)
+Subject: Re: [PATCH -tip] locking/rwsem: Check for operations on an
+ uninitialized rwsem
+To:     Davidlohr Bueso <dave@stgolabs.net>, mingo@kernel.org,
+        peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+References: <20190729044735.9632-1-dave@stgolabs.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <9f55534d-7654-0697-4a87-a9d6a10a9bb2@redhat.com>
+Date:   Mon, 29 Jul 2019 10:36:33 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <e4cd0db9-695a-82a7-7dc0-623ded66a4e5@cumulusnetworks.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190729044735.9632-1-dave@stgolabs.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 29 Jul 2019 14:36:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 07/29/2019 17:21, Nikolay Aleksandrov wrote:
-> On 29/07/2019 16:52, Allan W. Nielsen wrote:
-> > The 07/29/2019 15:50, Nikolay Aleksandrov wrote:
-> >> On 29/07/2019 15:22, Nikolay Aleksandrov wrote:
-> >>> Hi Allan,
-> >>> On 29/07/2019 15:14, Allan W. Nielsen wrote:
-> >>>> First of all, as mentioned further down in this thread, I realized that our
-> >>>> implementation of the multicast floodmasks does not align with the existing SW
-> >>>> implementation. We will change this, such that all multicast packets goes to the
-> >>>> SW bridge.
-> >>>>
-> >>>> This changes things a bit, not that much.
-> >>>>
-> >>>> I actually think you summarized the issue we have (after changing to multicast
-> >>>> flood-masks) right here:
-> >>>>
-> >>>> The 07/26/2019 12:26, Nikolay Aleksandrov wrote:
-> >>>>>>> Actually you mentioned non-IP traffic, so the querier stuff is not a problem. This
-> >>>>>>> traffic will always be flooded by the bridge (and also a copy will be locally sent up).
-> >>>>>>> Thus only the flooding may need to be controlled.
-> >>>>
-> >>>> This seems to be exactly what we need.
-> >>>>
-> >>>> Assuming we have a SW bridge (br0) with 4 slave interfaces (eth0-3). We use this
-> >>>> on a network where we want to limit the flooding of frames with dmac
-> >>>> 01:21:6C:00:00:01 (which is non IP traffic) to eth0 and eth1.
-> >>>>
-> >>>> One way of doing this could potentially be to support the following command:
-> >>>>
-> >>>> bridge fdb add    01:21:6C:00:00:01 port eth0
-> >>>> bridge fdb append 01:21:6C:00:00:01 port eth1
-> >> And the fdbs become linked lists?
-> > Yes, it will most likely become a linked list
-> > 
-> >> So we'll increase the complexity for something that is already supported by
-> >> ACLs (e.g. tc) and also bridge per-port multicast flood flag ?
-> > I do not think it can be supported with the facilities we have today in tc.
-> > 
-> > We can do half of it (copy more fraems to the CPU) with tc, but we can not limit
-> > the floodmask of a frame with tc (say we want it to flood to 2 out of 4 slave
-> > ports).
-> Why not ? You attach an egress filter for the ports and allow that dmac on only
-> 2 of the ports.
-Because we want a solution which we eventually can offload in HW. And the HW
-facilities we have is doing ingress processing (we have no egress ACLs in this
-design), and if we try to offload an egress rule, with an ingress HW facility,
-then we will run into other issues.
+On 7/29/19 12:47 AM, Davidlohr Bueso wrote:
+> Currently rwsems is the only locking primitive that lacks this
+> debug feature. Add it under CONFIG_DEBUG_RWSEMS and do the magic
+> checking in the locking fastpath (trylock) operation such that
+> we cover all cases. The unlocking part is pretty straightforward.
+>
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+> ---
+>  include/linux/rwsem.h  | 10 ++++++++++
+>  kernel/locking/rwsem.c | 22 ++++++++++++++++++----
+>  2 files changed, 28 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+> index 9d9c663987d8..00d6054687dd 100644
+> --- a/include/linux/rwsem.h
+> +++ b/include/linux/rwsem.h
+> @@ -45,6 +45,9 @@ struct rw_semaphore {
+>  #endif
+>  	raw_spinlock_t wait_lock;
+>  	struct list_head wait_list;
+> +#ifdef CONFIG_DEBUG_RWSEMS
+> +	void *magic;
+> +#endif
+>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>  	struct lockdep_map	dep_map;
+>  #endif
+> @@ -73,6 +76,12 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
+>  # define __RWSEM_DEP_MAP_INIT(lockname)
+>  #endif
+>  
+> +#ifdef CONFIG_DEBUG_RWSEMS
+> +# define __DEBUG_RWSEM_INITIALIZER(lockname) , .magic = &lockname
+> +#else
+> +# define __DEBUG_RWSEM_INITIALIZER(lockname)
+> +#endif
+> +
+>  #ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+>  #define __RWSEM_OPT_INIT(lockname) , .osq = OSQ_LOCK_UNLOCKED
+>  #else
+> @@ -85,6 +94,7 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
+>  	  .wait_list = LIST_HEAD_INIT((name).wait_list),	\
+>  	  .wait_lock = __RAW_SPIN_LOCK_UNLOCKED(name.wait_lock)	\
+>  	  __RWSEM_OPT_INIT(name)				\
+> +	  __DEBUG_RWSEM_INITIALIZER(name)			\
+>  	  __RWSEM_DEP_MAP_INIT(name) }
+>  
+>  #define DECLARE_RWSEM(name) \
+> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+> index 37524a47f002..ab392ec51252 100644
+> --- a/kernel/locking/rwsem.c
+> +++ b/kernel/locking/rwsem.c
+> @@ -105,8 +105,9 @@
+>  #ifdef CONFIG_DEBUG_RWSEMS
+>  # define DEBUG_RWSEMS_WARN_ON(c, sem)	do {			\
+>  	if (!debug_locks_silent &&				\
+> -	    WARN_ONCE(c, "DEBUG_RWSEMS_WARN_ON(%s): count = 0x%lx, owner = 0x%lx, curr 0x%lx, list %sempty\n",\
+> +	    WARN_ONCE(c, "DEBUG_RWSEMS_WARN_ON(%s): count = 0x%lx, magic = 0x%lx, owner = 0x%lx, curr 0x%lx, list %sempty\n",\
+>  		#c, atomic_long_read(&(sem)->count),		\
+> +		(unsigned long) sem->magic,			\
+>  		atomic_long_read(&(sem)->owner), (long)current,	\
+>  		list_empty(&(sem)->wait_list) ? "" : "not "))	\
+>  			debug_locks_off();			\
+> @@ -329,6 +330,9 @@ void __init_rwsem(struct rw_semaphore *sem, const char *name,
+>  	 */
+>  	debug_check_no_locks_freed((void *)sem, sizeof(*sem));
+>  	lockdep_init_map(&sem->dep_map, name, key, 0);
+> +#endif
+> +#ifdef CONFIG_DEBUG_RWSEMS
+> +	sem->magic = sem;
+>  #endif
+>  	atomic_long_set(&sem->count, RWSEM_UNLOCKED_VALUE);
+>  	raw_spin_lock_init(&sem->wait_lock);
+> @@ -1322,11 +1326,14 @@ static inline int __down_read_killable(struct rw_semaphore *sem)
+>  
+>  static inline int __down_read_trylock(struct rw_semaphore *sem)
+>  {
+> +	long tmp;
+> +
+> +	DEBUG_RWSEMS_WARN_ON(sem->magic != sem, sem);
+> +
+>  	/*
+>  	 * Optimize for the case when the rwsem is not locked at all.
+>  	 */
+> -	long tmp = RWSEM_UNLOCKED_VALUE;
+> -
+> +	tmp = RWSEM_UNLOCKED_VALUE;
+>  	do {
+>  		if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
+>  					tmp + RWSEM_READER_BIAS)) {
+> @@ -1367,8 +1374,11 @@ static inline int __down_write_killable(struct rw_semaphore *sem)
+>  
+>  static inline int __down_write_trylock(struct rw_semaphore *sem)
+>  {
+> -	long tmp = RWSEM_UNLOCKED_VALUE;
+> +	long tmp;
+>  
+> +	DEBUG_RWSEMS_WARN_ON(sem->magic != sem, sem);
+> +
+> +	tmp  = RWSEM_UNLOCKED_VALUE;
+>  	if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
+>  					    RWSEM_WRITER_LOCKED)) {
+>  		rwsem_set_owner(sem);
+> @@ -1384,7 +1394,9 @@ inline void __up_read(struct rw_semaphore *sem)
+>  {
+>  	long tmp;
+>  
+> +	DEBUG_RWSEMS_WARN_ON(sem->magic != sem, sem);
+>  	DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+> +
+>  	rwsem_clear_reader_owned(sem);
+>  	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
+>  	DEBUG_RWSEMS_WARN_ON(tmp < 0, sem);
+> @@ -1402,12 +1414,14 @@ static inline void __up_write(struct rw_semaphore *sem)
+>  {
+>  	long tmp;
+>  
+> +	DEBUG_RWSEMS_WARN_ON(sem->magic != sem, sem);
+>  	/*
+>  	 * sem->owner may differ from current if the ownership is transferred
+>  	 * to an anonymous writer by setting the RWSEM_NONSPINNABLE bits.
+>  	 */
+>  	DEBUG_RWSEMS_WARN_ON((rwsem_owner(sem) != current) &&
+>  			    !rwsem_test_oflags(sem, RWSEM_NONSPINNABLE), sem);
+> +
+>  	rwsem_clear_owner(sem);
+>  	tmp = atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED, &sem->count);
+>  	if (unlikely(tmp & RWSEM_FLAG_WAITERS))
 
-/Allan
+Acked-by:  Waiman Long <longman@redhat.com>
+
+Thanks for the patch.
+-Longman
+
