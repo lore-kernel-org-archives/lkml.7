@@ -2,108 +2,190 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB311C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E8FC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10DD20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A525E2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbfG2TEN (ORCPT
+        id S1729298AbfG2TKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:04:13 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38661 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbfG2TEN (ORCPT
+        Mon, 29 Jul 2019 15:10:24 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:45769 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbfG2TKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:04:13 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hsAwI-00078Z-O8; Mon, 29 Jul 2019 21:04:06 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hsAwG-0002rt-PT; Mon, 29 Jul 2019 21:04:04 +0200
-Date:   Mon, 29 Jul 2019 21:04:04 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
-        mark.rutland@arm.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-sunxi@googlegroups.com,
-        linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org,
-        thierry.reding@gmail.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/6] pwm: sun4i: Add a quirk for bus clock
-Message-ID: <20190729190404.rnxw2aihmciafy6c@pengutronix.de>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-4-jernej.skrabec@siol.net>
- <20190729063825.wxfky6nswcru26g7@pengutronix.de>
- <4022372.WfP88Fa4Lu@jernej-laptop>
- <20190729161435.5bnj3ikocsyep4dd@pengutronix.de>
- <20190729164516.yxfgj2zd3d5ii4c4@flea.home>
+        Mon, 29 Jul 2019 15:10:23 -0400
+Received: by mail-vk1-f196.google.com with SMTP id e83so12238586vke.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 12:10:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=okCdMq9mPshN0DGM4+W0kc8Ipb0i9EdacMckArHhxzo=;
+        b=PTCxYPTsFaK9a75htoA66EHF9zv/ZJXbNrED2fl7HZGQoumjlOEycQkVgmnXhTPIKy
+         l1/7onPrwdyB5HmjuPneafwTZUJoMps/DswwcyJnXASaAuoIIYpVwmd45/E6oJNDv+VU
+         muD9XbuDazLIOm6S9QPz8+5Jt2bAp+/+/cl9O3FELpSC1Exb9DdMgDoZCanB8w8rX0vM
+         T9tCEP36bWW1/UiDDijRyEX19a591nfq2kv5IGibnOYwMNdfv1wNdeOtH8biZbvsxmd8
+         +JCdY1LDFtkZvZxh8VypY5bjyjTz2Aqp9wF285rRJo7xhv1/NLu/ufAyziJJ2aDwpBay
+         IFaA==
+X-Gm-Message-State: APjAAAVIh4swgyo5cOedEsSJHR14uKNnyWblwDSKNzpFvfnghO4xIkWA
+        eS2jQwUpHrSbYq7KMmbAC2Hb5A==
+X-Google-Smtp-Source: APXvYqxJuGfM/8WOBGep+SmJ6LLdsnWULNoYX2FfsgUCqsSEV+3gjCfQbmSagDu0KtvY3LdWGK3TWw==
+X-Received: by 2002:a1f:728b:: with SMTP id n133mr42422085vkc.84.1564427422314;
+        Mon, 29 Jul 2019 12:10:22 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id i137sm29091929vkd.24.2019.07.29.12.10.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 12:10:21 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 15:10:15 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
+Message-ID: <20190729143622-mutt-send-email-mst@kernel.org>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-2-sgarzare@redhat.com>
+ <20190729095956-mutt-send-email-mst@kernel.org>
+ <20190729153656.zk4q4rob5oi6iq7l@steredhat>
+ <20190729114302-mutt-send-email-mst@kernel.org>
+ <20190729161903.yhaj5rfcvleexkhc@steredhat>
+ <20190729165056.r32uzj6om3o6vfvp@steredhat>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190729164516.yxfgj2zd3d5ii4c4@flea.home>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190729165056.r32uzj6om3o6vfvp@steredhat>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Maxime,
-
-On Mon, Jul 29, 2019 at 06:45:16PM +0200, Maxime Ripard wrote:
-> On Mon, Jul 29, 2019 at 06:14:35PM +0200, Uwe Kleine-König wrote:
-> > Then maybe something like the following?:
-> >
-> > 	busclk = devm_clk_get_optional(..., "bus");
-> > 	modclk = devm_clk_get_optional(..., "mod");
-> >
-> > 	/*
-> > 	 * old dtbs might have a single clock but no clock names. Fall
-> > 	 * back to this for compatibility reasons.
-> > 	 */
-> > 	if (!modclk) {
-> > 		modclk = devm_clk_get(..., NULL);
-> > 	}
+On Mon, Jul 29, 2019 at 06:50:56PM +0200, Stefano Garzarella wrote:
+> On Mon, Jul 29, 2019 at 06:19:03PM +0200, Stefano Garzarella wrote:
+> > On Mon, Jul 29, 2019 at 11:49:02AM -0400, Michael S. Tsirkin wrote:
+> > > On Mon, Jul 29, 2019 at 05:36:56PM +0200, Stefano Garzarella wrote:
+> > > > On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
+> > > > > On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
+> > > > > > Since virtio-vsock was introduced, the buffers filled by the host
+> > > > > > and pushed to the guest using the vring, are directly queued in
+> > > > > > a per-socket list. These buffers are preallocated by the guest
+> > > > > > with a fixed size (4 KB).
+> > > > > > 
+> > > > > > The maximum amount of memory used by each socket should be
+> > > > > > controlled by the credit mechanism.
+> > > > > > The default credit available per-socket is 256 KB, but if we use
+> > > > > > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
+> > > > > > buffers, using up to 1 GB of memory per-socket. In addition, the
+> > > > > > guest will continue to fill the vring with new 4 KB free buffers
+> > > > > > to avoid starvation of other sockets.
+> > > > > > 
+> > > > > > This patch mitigates this issue copying the payload of small
+> > > > > > packets (< 128 bytes) into the buffer of last packet queued, in
+> > > > > > order to avoid wasting memory.
+> > > > > > 
+> > > > > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > > > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > > > > 
+> > > > > This is good enough for net-next, but for net I think we
+> > > > > should figure out how to address the issue completely.
+> > > > > Can we make the accounting precise? What happens to
+> > > > > performance if we do?
+> > > > > 
+> > > > 
+> > > > In order to do more precise accounting maybe we can use the buffer size,
+> > > > instead of payload size when we update the credit available.
+> > > > In this way, the credit available for each socket will reflect the memory
+> > > > actually used.
+> > > > 
+> > > > I should check better, because I'm not sure what happen if the peer sees
+> > > > 1KB of space available, then it sends 1KB of payload (using a 4KB
+> > > > buffer).
+> > > > 
+> > > > The other option is to copy each packet in a new buffer like I did in
+> > > > the v2 [2], but this forces us to make a copy for each packet that does
+> > > > not fill the entire buffer, perhaps too expensive.
+> > > > 
+> > > > [2] https://patchwork.kernel.org/patch/10938741/
+> > > > 
+> > > > 
+> > > > Thanks,
+> > > > Stefano
+> > > 
+> > > Interesting. You are right, and at some level the protocol forces copies.
+> > > 
+> > > We could try to detect that the actual memory is getting close to
+> > > admin limits and force copies on queued packets after the fact.
+> > > Is that practical?
+> > 
+> > Yes, I think it is doable!
+> > We can decrease the credit available with the buffer size queued, and
+> > when the buffer size of packet to queue is bigger than the credit
+> > available, we can copy it.
+> > 
+> > > 
+> > > And yes we can extend the credit accounting to include buffer size.
+> > > That's a protocol change but maybe it makes sense.
+> > 
+> > Since we send to the other peer the credit available, maybe this
+> > change can be backwards compatible (I'll check better this).
 > 
-> Again, there's nothing optional about these clocks. You need a
-> particular set of clocks for a given generation, and a separate set of
-> them on another generation of SoCs.
+> What I said was wrong.
+> 
+> We send a counter (increased when the user consumes the packets) and the
+> "buf_alloc" (the max memory allowed) to the other peer.
+> It makes a difference between a local counter (increased when the
+> packets are sent) and the remote counter to calculate the credit available:
+> 
+>     u32 virtio_transport_get_credit(struct virtio_vsock_sock *vvs, u32 credit)
+>     {
+>     	u32 ret;
+> 
+>     	spin_lock_bh(&vvs->tx_lock);
+>     	ret = vvs->peer_buf_alloc - (vvs->tx_cnt - vvs->peer_fwd_cnt);
+>     	if (ret > credit)
+>     		ret = credit;
+>     	vvs->tx_cnt += ret;
+>     	spin_unlock_bh(&vvs->tx_lock);
+> 
+>     	return ret;
+>     }
+> 
+> Maybe I can play with "buf_alloc" to take care of bytes queued but not
+> used.
+> 
+> Thanks,
+> Stefano
 
-It depends on the way how "optional" is understood. The semantic of
-"optional" as it is used and implemented by devm_clk_get_optional (and
-gpiod_get_optional and devm_reset_control_get_optional) is different
-than yours when saying "on H6 the clock is not optional". If it was
-about the "it doesn't matter if it's taken care of or not" semantic you
-seem to mean the function would be useless and no driver would need to
-actually use it. In the sense of the functions listed above "optional"
-means: Some devices need it, others don't. Using this semantic the "bus"
-clock is optional.
+Right. And the idea behind it all was that if we send a credit
+to remote then we have space for it.
+I think the basic idea was that if we have actual allocated
+memory and can copy data there, then we send the credit to
+remote.
 
-> It really isn't about DT validation. We're really making sure that the
-> device can be operational. It's as much of a validation step than
-> making sure we have mapped registers (reg), or an interrupt if we had
-> any.
+Of course that means an extra copy every packet.
+So as an optimization, it seems that we just assume
+that we will be able to allocate a new buffer.
 
-Do you agree with Jernej in the other end of this thread? If so I don't
-think that repeating the same arguments here is sensible. Please read
-what I wrote there.
+First this is not the best we can do. We can actually do
+allocate memory in the socket before sending credit.
+If packet is small then we copy it there.
+If packet is big then we queue the packet,
+take the buffer out of socket and add it to the virtqueue.
 
-Best regards
-Uwe
+Second question is what to do about medium sized packets.
+Packet is 1K but buffer is 4K, what do we do?
+And here I wonder - why don't we add the 3K buffer
+to the vq?
+
+
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+MST
