@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DA2C76193
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6578C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D21FB2182B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA56C217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429613;
-	bh=mWccI4xWigLd6uiRvL/JVMP3itla6nFDg60Gd8TVgGI=;
+	s=default; t=1564429615;
+	bh=VXt4mxRZygTiPKRvtfmFm5ZTuq8VmnsWphZV2ka10o0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ijj5Laoby8La2J4Uf9qj6mUc5+r1aX9e3HM+BS4K6AdM4zjZsN9qIqQAkLtnlebFL
-	 oXDVi7IksZ/Sg/iwewXnLaSzDhqZ5iz6QzvOYO5vVqNs1cIIZ9GGf0vs+aEbDSWdjD
-	 ZU9SktE051vDb8q4y//2a4/q4HZXYx+Yu/WUpNP4=
+	b=kbbgpYdQ+oRpuPHX5vi1M7+3ajNis3m7nPRW9Gy4iJAq9bEXRG9Jhnm3QkFTFv5gK
+	 qleYqp0g6u8Zs3/LWvmpyodQBH8unxIlNE1R94E0hc7PA2GkXz/nQvfqaKdAoN33VL
+	 5gXT1AtsKI9j0kaGFhUo9au0MyIJINsPuv6Mx/sQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390216AbfG2Tqm (ORCPT
+        id S2389891AbfG2Tqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:46:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35968 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:46:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390200AbfG2Tqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:46:38 -0400
+        id S2389700AbfG2Tqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:46:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 823E2217D7;
-        Mon, 29 Jul 2019 19:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBCFE21655;
+        Mon, 29 Jul 2019 19:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429597;
-        bh=mWccI4xWigLd6uiRvL/JVMP3itla6nFDg60Gd8TVgGI=;
+        s=default; t=1564429610;
+        bh=VXt4mxRZygTiPKRvtfmFm5ZTuq8VmnsWphZV2ka10o0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yiWgXPpkdm959RTb9kozg5kB6Te5hTVupxQ+R40ffCsLyyT5mzSgFdeE6rgg+LtmN
-         F3rPXT3MSB/FSZTse/Kwqieaup8X6WnNu8Azi5Lig6GqUO0joxmMessaBJPobOI3mN
-         8dL00klMfYH3fMXXt2EEsmcuTKQszcFVc7zw8TIc=
+        b=ibfHCSJCkUNSFUI9yo460Cv9yfO4fewJ3AD9a6T/XOXP6tVmmaklyFQ/5piSTXORc
+         XlLJB1K/2SHpMi0vjDbkE7eA/wP8cXH593MUiMnyHui5SWxsVw5fzeD9mkCB6DExS8
+         1nCsgBUmSbgeVYDwaRSGZYujBtUjyP3pvPyY5j/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Gen Zhang <blackgod016574@gmail.com>,
+        Jani Nikula <jani.nikula@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 007/215] iio: adc: stm32-dfsdm: missing error case during probe
-Date:   Mon, 29 Jul 2019 21:20:03 +0200
-Message-Id: <20190729190740.935777268@linuxfoundation.org>
+Subject: [PATCH 5.2 031/215] drm/edid: Fix a missing-check bug in drm_load_edid_firmware()
+Date:   Mon, 29 Jul 2019 21:20:27 +0200
+Message-Id: <20190729190745.556351742@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -61,45 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d2fc0156963cae8f1eec8e2dd645fbbf1e1c1c8e ]
+[ Upstream commit 9f1f1a2dab38d4ce87a13565cf4dc1b73bef3a5f ]
 
-During probe, check the devm_ioremap_resource() error value.
-Also return the devm_clk_get() error value instead of -EINVAL.
+In drm_load_edid_firmware(), fwstr is allocated by kstrdup(). And fwstr
+is dereferenced in the following codes. However, memory allocation
+functions such as kstrdup() may fail and returns NULL. Dereferencing
+this null pointer may cause the kernel go wrong. Thus we should check
+this kstrdup() operation.
+Further, if kstrdup() returns NULL, we should return ERR_PTR(-ENOMEM) to
+the caller site.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190524023222.GA5302@zhanggen-UX430UQ
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/stm32-dfsdm-core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_edid_load.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
-index 0a4d3746d21c..26e2011c5868 100644
---- a/drivers/iio/adc/stm32-dfsdm-core.c
-+++ b/drivers/iio/adc/stm32-dfsdm-core.c
-@@ -233,6 +233,8 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
- 	}
- 	priv->dfsdm.phys_base = res->start;
- 	priv->dfsdm.base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->dfsdm.base))
-+		return PTR_ERR(priv->dfsdm.base);
- 
- 	/*
- 	 * "dfsdm" clock is mandatory for DFSDM peripheral clocking.
-@@ -242,8 +244,10 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
+diff --git a/drivers/gpu/drm/drm_edid_load.c b/drivers/gpu/drm/drm_edid_load.c
+index 1e5593575d23..6192b7b20d84 100644
+--- a/drivers/gpu/drm/drm_edid_load.c
++++ b/drivers/gpu/drm/drm_edid_load.c
+@@ -278,6 +278,8 @@ struct edid *drm_load_edid_firmware(struct drm_connector *connector)
+ 	 * the last one found one as a fallback.
  	 */
- 	priv->clk = devm_clk_get(&pdev->dev, "dfsdm");
- 	if (IS_ERR(priv->clk)) {
--		dev_err(&pdev->dev, "No stm32_dfsdm_clk clock found\n");
--		return -EINVAL;
-+		ret = PTR_ERR(priv->clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get clock (%d)\n", ret);
-+		return ret;
- 	}
+ 	fwstr = kstrdup(edid_firmware, GFP_KERNEL);
++	if (!fwstr)
++		return ERR_PTR(-ENOMEM);
+ 	edidstr = fwstr;
  
- 	priv->aclk = devm_clk_get(&pdev->dev, "audio");
+ 	while ((edidname = strsep(&edidstr, ","))) {
 -- 
 2.20.1
 
