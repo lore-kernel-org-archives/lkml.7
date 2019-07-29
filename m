@@ -2,232 +2,264 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69641C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2C2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3472F2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:37:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564389469;
-	bh=knet6KVnV1LE5iZFyD1wUyD7XHc/EZesMMVj+Wnb9Ks=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qoURtwMUNcVRtarsB67lWXsGFphm12ThIJye1JiOZKqASWcRrPYskfG5wxB1rwuZt
-	 4d06LWp8xxcjBKO7Daw+c5eFrBwQT5xBoeMFJFcYUpQhgtrwsX2G/1KT56t9d3elCy
-	 2wOMeHm1PI1dgthV96fidpN8E07AToJve2yeffcI=
+	by mail.kernel.org (Postfix) with ESMTP id 8F11020693
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:38:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfG2Ihs (ORCPT
+        id S1727745AbfG2IiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:37:48 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38208 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727739AbfG2Ihr (ORCPT
+        Mon, 29 Jul 2019 04:38:23 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35025 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727478AbfG2IiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:37:47 -0400
-Received: by mail-ot1-f67.google.com with SMTP id d17so61767628oth.5;
-        Mon, 29 Jul 2019 01:37:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0FNJJFcF3C8wNVBynkeaKAIuICl/dlha/IHcRCFKwAY=;
-        b=USJ7q3aWNCJHO5PSfCzOBJrnBFFWEKv42VsLlkoqRMY1gTx9bJbL1gJxH6fXbACh3V
-         7QGUgYahsnvdLd3ZLW8Ud5gsJhe30mZf5INQcr6z/afgvM1bYCOSFYgfTMlWaBgiCX3m
-         B7hWKah70XePNuGIjmwXS3L/HroG2bVgLGPjk5nZ+r1xtpgn5BMUEMVWi5nMXbMrohTg
-         RDxp+tJd/8IiWn/EQdZo7bZRfFu35YlQs2ZgP7+foQ1NNPTNzfe+pcmVeDJq3J+O+40F
-         vsylama+d3/uNpy/Byt22qgQBOEyS4ogecUTvS2cD+4AgoaPxWdMdBbOHSDotST+ikE9
-         rmuw==
-X-Gm-Message-State: APjAAAXIwc7wLSy9z/WwzmbbpkEPKZ+6VRKq2reVl5OntGLFfNiTcCKy
-        LQB8Ih8EfMNt/VPpSdz9v/hPoJpgxALn4B6LgBI=
-X-Google-Smtp-Source: APXvYqw2A4zHAxw1daqPl8bUdwnOEy78fNX1ADvTHdF0vLutd32wL302dlwNu18JqghX+NM1u7+hY+8+bFw5cSdxF+E=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr65277955oto.118.1564389466248;
- Mon, 29 Jul 2019 01:37:46 -0700 (PDT)
+        Mon, 29 Jul 2019 04:38:23 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1hs1Ai-0003hV-Kq; Mon, 29 Jul 2019 10:38:20 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1hs1Ai-0007CB-2a; Mon, 29 Jul 2019 10:38:20 +0200
+Date:   Mon, 29 Jul 2019 10:38:20 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     jassisinghbrar@gmail.com, aisheng.dong@nxp.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] mailbox: imx: add support for imx v1 mu
+Message-ID: <20190729083820.feoc3ohetzaomb32@pengutronix.de>
+References: <1564366440-10970-1-git-send-email-hongxing.zhu@nxp.com>
 MIME-Version: 1.0
-References: <1563431200-3042-1-git-send-email-dsmythies@telus.net>
- <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org>
- <001201d54125$a6a82350$f3f869f0$@net> <20190723091551.nchopfpqlmdmzvge@vireshk-i7>
- <CAJZ5v0ji+ksapJ4kc2m5UM_O+AShAvJWmYhTQHiXiHnpTq+xRg@mail.gmail.com>
- <20190724114327.apmx35c7a4tv3qt5@vireshk-i7> <000c01d542fc$703ff850$50bfe8f0$@net>
- <20190726065739.xjvyvqpkb3o6m4ty@vireshk-i7> <000001d545e3$047d9750$0d78c5f0$@net>
- <20190729083219.fe4xxq4ugmetzntm@vireshk-i7>
-In-Reply-To: <20190729083219.fe4xxq4ugmetzntm@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 29 Jul 2019 10:37:35 +0200
-Message-ID: <CAJZ5v0gaW=ujtsDmewrVXL7V8K0YZysNqwu=qKLw+kPC86ydqA@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Doug Smythies <dsmythies@telus.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "v4 . 18+" <stable@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564366440-10970-1-git-send-email-hongxing.zhu@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:29:11 up 72 days, 14:47, 49 users,  load average: 0.00, 0.01,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 29-07-19, 00:55, Doug Smythies wrote:
-> > On 2019.07.25 23:58 Viresh Kumar wrote:
-> > > Hmm, so I tried to reproduce your setup on my ARM board.
-> > > - booted only with CPU0 so I hit the sugov_update_single() routine
-> > > - And applied below diff to make CPU look permanently busy:
-> > >
-> > > -------------------------8<-------------------------
-> > >diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> > > index 2f382b0959e5..afb47490e5dc 100644
-> > > --- a/kernel/sched/cpufreq_schedutil.c
-> > > +++ b/kernel/sched/cpufreq_schedutil.c
-> > > @@ -121,6 +121,7 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
-> > >         if (!sugov_update_next_freq(sg_policy, time, next_freq))
-> > >                return;
-> > >
-> > > +       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
-> >
-> > ?? there is no "freq" variable here, and so this doesn't compile. However this works:
-> >
-> > +       pr_info("%s: %d: %u\n", __func__, __LINE__, next_freq);
->
-> There are two paths we can take to change the frequency, normal
-> sleep-able path (sugov_work) or fast path. Only one of them is taken
-> by any driver ever. In your case it is the fast path always and in
-> mine it was the slow path.
->
-> I only tested the diff with slow-path and copy pasted to fast path
-> while giving out to you and so the build issue. Sorry about that.
->
-> Also make sure that the print is added after sugov_update_next_freq()
-> is called, not before it.
->
-> > >         next_freq = cpufreq_driver_fast_switch(policy, next_freq);
-> > >        if (!next_freq)
-> > >                return;
-> > > @@ -424,14 +425,10 @@ static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
-> > > #ifdef CONFIG_NO_HZ_COMMON
-> > > static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
-> > > {
-> > > -       unsigned long idle_calls = tick_nohz_get_idle_calls_cpu(sg_cpu->cpu);
-> > > -       bool ret = idle_calls == sg_cpu->saved_idle_calls;
-> > > -
-> > > -       sg_cpu->saved_idle_calls = idle_calls;
-> > > -       return ret;
-> > > +       return true;
-> > >  }
-> > >  #else
-> > > -static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
-> > > +static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return true; }
-> > > #endif /* CONFIG_NO_HZ_COMMON */
-> > >
-> > >  /*
-> > > @@ -565,6 +562,7 @@ static void sugov_work(struct kthread_work *work)
-> > >         sg_policy->work_in_progress = false;
-> > >         raw_spin_unlock_irqrestore(&sg_policy->update_lock, flags);
-> > >
-> > > +       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
-> > >         mutex_lock(&sg_policy->work_lock);
-> > >         __cpufreq_driver_target(sg_policy->policy, freq, CPUFREQ_RELATION_L);
-> > >         mutex_unlock(&sg_policy->work_lock);
-> > >
-> > > -------------------------8<-------------------------
-> > >
-> > > Now, the frequency never gets down and so gets set to the maximum
-> > > possible after a bit.
-> > >
-> > > - Then I did:
-> > >
-> > > echo <any-low-freq-value> > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
-> > >
-> > > Without my patch applied:
-> > >        The print never gets printed and so frequency doesn't go down.
-> > >
-> > > With my patch applied:
-> > >        The print gets printed immediately from sugov_work() and so
-> > >        the frequency reduces.
-> > >
-> > > Can you try with this diff along with my Patch2 ? I suspect there may
-> > > be something wrong with the intel_cpufreq driver as the patch fixes
-> > > the only path we have in the schedutil governor which takes busyness
-> > > of a CPU into account.
-> >
-> > With this diff along with your patch2 There is never a print message
-> > from sugov_work. There are from sugov_fast_switch.
->
-> Which is okay. sugov_work won't get hit in your case as I explained
-> above.
->
-> > Note that for the intel_cpufreq CPU scaling driver and the schedutil
-> > governor I adjust the maximum clock frequency this way:
-> >
-> > echo <any-low-percent> > /sys/devices/system/cpu/intel_pstate/max_perf_pct
->
-> This should eventually call sugov_limits() in schedutil governor, this
-> can be easily checked with another print message.
->
-> > I also applied the pr_info messages to the reverted kernel, and re-did
-> > my tests (where everything works as expected). There is never a print
-> > message from sugov_work. There are from sugov_fast_switch.
->
-> that's fine.
->
-> > Notes:
-> >
-> > I do not know if:
-> > /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
-> > /sys/devices/system/cpu/cpufreq/policy*/scaling_min_freq
-> > Need to be accurate when using the intel_pstate driver in passive mode.
-> > They are not.
-> > The commit comment for 9083e4986124389e2a7c0ffca95630a4983887f0
-> > suggests that they might need to be representative.
-> > I wonder if something similar to that commit is needed
-> > for other global changes, such as max_perf_pct and min_perf_pct?
->
-> We are already calling intel_pstate_update_policies() in that case, so
-> it should be fine I believe.
->
-> > intel_cpufreq/ondemand doesn't work properly on the reverted kernel.
->
-> reverted kernel ? The patch you reverted was only for schedutil and it
-> shouldn't have anything to do with ondemand.
->
-> > (just discovered, not investigated)
-> > I don't know about other governors.
->
-> When you do:
->
-> echo <any-low-percent> > /sys/devices/system/cpu/intel_pstate/max_perf_pct
->
-> How soon does the print from sugov_fast_switch() gets printed ?
-> Immediately ? Check with both the kernels, with my patch and with the
-> reverted patch.
->
-> Also see if there is any difference in the next_freq value in both the
-> kernels when you change max_perf_pct.
->
-> FWIW, we now know the difference between intel-pstate and
-> acpi-cpufreq/my testcase and why we see differences here. In the cases
-> where my patch fixed the issue (acpi/ARM), we were really changing the
-> limits, i.e. policy->min/max. This happened because we touched
-> scaling_max_freq directly.
->
-> For the case of intel-pstate, you are changing max_perf_pct which
-> doesn't change policy->max directly. I am not very sure how all of it
-> work really, but at least schedutil will not see policy->max changing.
->
-> @Rafael: Do you understand why things don't work properly with
-> intel_cpufreq driver ?
+please use format [PATCH v2] description. It is automatically done with
+git format-patch -v2
 
-I haven't tried to understand this yet, so no.
+On Mon, Jul 29, 2019 at 10:14:00AM +0800, Richard Zhu wrote:
+> There is a version1.0 MU on i.MX7ULP platform.
+> One new version ID register is added, and it's offset is 0.
+> TRn registers are defined at the offset 0x20 ~ 0x2C.
+> RRn registers are defined at the offset 0x40 ~ 0x4C.
+> SR/CR registers are defined at 0x60/0x64.
+> Extend this driver to support it.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
 
-My somewhat educated guess is that using max_perf_pct has to do with
-it, so I would try to retest to see if there's any difference when
-scaling_max_freq is used instead of that.
+change log can be done here or in a message automatically generate by
+format patch:
+git format-patch --cover-letter -v2
+
+>  drivers/mailbox/imx-mailbox.c | 67 ++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 50 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+> index 25be8bb..8423a38 100644
+> --- a/drivers/mailbox/imx-mailbox.c
+> +++ b/drivers/mailbox/imx-mailbox.c
+> @@ -12,19 +12,11 @@
+>  #include <linux/of_device.h>
+>  #include <linux/slab.h>
+>  
+> -/* Transmit Register */
+> -#define IMX_MU_xTRn(x)		(0x00 + 4 * (x))
+> -/* Receive Register */
+> -#define IMX_MU_xRRn(x)		(0x10 + 4 * (x))
+> -/* Status Register */
+> -#define IMX_MU_xSR		0x20
+>  #define IMX_MU_xSR_GIPn(x)	BIT(28 + (3 - (x)))
+>  #define IMX_MU_xSR_RFn(x)	BIT(24 + (3 - (x)))
+>  #define IMX_MU_xSR_TEn(x)	BIT(20 + (3 - (x)))
+>  #define IMX_MU_xSR_BRDIP	BIT(9)
+>  
+> -/* Control Register */
+> -#define IMX_MU_xCR		0x24
+>  /* General Purpose Interrupt Enable */
+>  #define IMX_MU_xCR_GIEn(x)	BIT(28 + (3 - (x)))
+>  /* Receive Interrupt Enable */
+> @@ -44,6 +36,13 @@ enum imx_mu_chan_type {
+>  	IMX_MU_TYPE_RXDB,	/* Rx doorbell */
+>  };
+>  
+> +struct imx_mu_dcfg {
+> +	u32	xTR[4];		/* Transmit Registers */
+> +	u32	xRR[4];		/* Receive Registers */
+> +	u32	xSR;		/* Status Register */
+> +	u32	xCR;		/* Control Register */
+> +};
+> +
+>  struct imx_mu_con_priv {
+>  	unsigned int		idx;
+>  	char			irq_desc[IMX_MU_CHAN_NAME_SIZE];
+> @@ -61,12 +60,39 @@ struct imx_mu_priv {
+>  	struct mbox_chan	mbox_chans[IMX_MU_CHANS];
+>  
+>  	struct imx_mu_con_priv  con_priv[IMX_MU_CHANS];
+> +	const struct imx_mu_dcfg	*dcfg;
+>  	struct clk		*clk;
+>  	int			irq;
+>  
+>  	bool			side_b;
+>  };
+>  
+> +static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
+> +	.xTR[0]	= 0x0,
+> +	.xTR[1]	= 0x4,
+> +	.xTR[2]	= 0x8,
+> +	.xTR[3]	= 0xC,
+
+I would prefer to init arrays this way:
+        .xTR[] = {0x0, 0x4, 0x8, 0xc},
+
+For every thing else
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+
+> +	.xRR[0]	= 0x10,
+> +	.xRR[1]	= 0x14,
+> +	.xRR[2]	= 0x18,
+> +	.xRR[3]	= 0x1C,
+> +	.xSR	= 0x20,
+> +	.xCR	= 0x24,
+> +};
+> +
+> +static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
+> +	.xTR[0]	= 0x20,
+> +	.xTR[1]	= 0x24,
+> +	.xTR[2]	= 0x28,
+> +	.xTR[3]	= 0x2C,
+> +	.xRR[0]	= 0x40,
+> +	.xRR[1]	= 0x44,
+> +	.xRR[2]	= 0x48,
+> +	.xRR[3]	= 0x4C,
+> +	.xSR	= 0x60,
+> +	.xCR	= 0x64,
+> +};
+> +
+>  static struct imx_mu_priv *to_imx_mu_priv(struct mbox_controller *mbox)
+>  {
+>  	return container_of(mbox, struct imx_mu_priv, mbox);
+> @@ -88,10 +114,10 @@ static u32 imx_mu_xcr_rmw(struct imx_mu_priv *priv, u32 set, u32 clr)
+>  	u32 val;
+>  
+>  	spin_lock_irqsave(&priv->xcr_lock, flags);
+> -	val = imx_mu_read(priv, IMX_MU_xCR);
+> +	val = imx_mu_read(priv, priv->dcfg->xCR);
+>  	val &= ~clr;
+>  	val |= set;
+> -	imx_mu_write(priv, val, IMX_MU_xCR);
+> +	imx_mu_write(priv, val, priv->dcfg->xCR);
+>  	spin_unlock_irqrestore(&priv->xcr_lock, flags);
+>  
+>  	return val;
+> @@ -111,8 +137,8 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
+>  	struct imx_mu_con_priv *cp = chan->con_priv;
+>  	u32 val, ctrl, dat;
+>  
+> -	ctrl = imx_mu_read(priv, IMX_MU_xCR);
+> -	val = imx_mu_read(priv, IMX_MU_xSR);
+> +	ctrl = imx_mu_read(priv, priv->dcfg->xCR);
+> +	val = imx_mu_read(priv, priv->dcfg->xSR);
+>  
+>  	switch (cp->type) {
+>  	case IMX_MU_TYPE_TX:
+> @@ -138,10 +164,10 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
+>  		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
+>  		mbox_chan_txdone(chan, 0);
+>  	} else if (val == IMX_MU_xSR_RFn(cp->idx)) {
+> -		dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
+> +		dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
+>  		mbox_chan_received_data(chan, (void *)&dat);
+>  	} else if (val == IMX_MU_xSR_GIPn(cp->idx)) {
+> -		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), IMX_MU_xSR);
+> +		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), priv->dcfg->xSR);
+>  		mbox_chan_received_data(chan, NULL);
+>  	} else {
+>  		dev_warn_ratelimited(priv->dev, "Not handled interrupt\n");
+> @@ -159,7 +185,7 @@ static int imx_mu_send_data(struct mbox_chan *chan, void *data)
+>  
+>  	switch (cp->type) {
+>  	case IMX_MU_TYPE_TX:
+> -		imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
+> +		imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
+>  		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
+>  		break;
+>  	case IMX_MU_TYPE_TXDB:
+> @@ -257,7 +283,7 @@ static void imx_mu_init_generic(struct imx_mu_priv *priv)
+>  		return;
+>  
+>  	/* Set default MU configuration */
+> -	imx_mu_write(priv, 0, IMX_MU_xCR);
+> +	imx_mu_write(priv, 0, priv->dcfg->xCR);
+>  }
+>  
+>  static int imx_mu_probe(struct platform_device *pdev)
+> @@ -265,6 +291,7 @@ static int imx_mu_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct device_node *np = dev->of_node;
+>  	struct imx_mu_priv *priv;
+> +	const struct imx_mu_dcfg *dcfg;
+>  	unsigned int i;
+>  	int ret;
+>  
+> @@ -282,6 +309,11 @@ static int imx_mu_probe(struct platform_device *pdev)
+>  	if (priv->irq < 0)
+>  		return priv->irq;
+>  
+> +	dcfg = of_device_get_match_data(dev);
+> +	if (!dcfg)
+> +		return -EINVAL;
+> +	priv->dcfg = dcfg;
+> +
+>  	priv->clk = devm_clk_get(dev, NULL);
+>  	if (IS_ERR(priv->clk)) {
+>  		if (PTR_ERR(priv->clk) != -ENOENT)
+> @@ -335,7 +367,8 @@ static int imx_mu_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id imx_mu_dt_ids[] = {
+> -	{ .compatible = "fsl,imx6sx-mu" },
+> +	{ .compatible = "fsl,imx7ulp-mu", .data = &imx_mu_cfg_imx7ulp },
+> +	{ .compatible = "fsl,imx6sx-mu", .data = &imx_mu_cfg_imx6sx },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
