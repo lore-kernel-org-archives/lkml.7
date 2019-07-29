@@ -2,54 +2,54 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D41C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED86C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C2D205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED252064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431382;
-	bh=t7Di/nW8zHaZ4oltp5kAHKlaau4jSGhr1gABisjElM0=;
+	s=default; t=1564431386;
+	bh=e1qs+ioypLgGdvKj2f16B/R8pllIlpDGzR/4OVXgcG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oyAQJHpSVF3b9f63lXPJ+9N7pTEQEvqQQU5MI6xqoc1Y4AOZn5uDPViPZpP1sthBK
-	 x9Y8/agGoJky4PQuh7s+OZpQ6Mr2uK+Eq8xhUIe25299S/RtTG0tH7e6iOvYQVshhS
-	 s++n8Yhnsxi3XvFTO663Yd/VNBTzotASzXJkXwvk=
+	b=X25oK9DBpi0l2yfzwSntwDN9KdM/3LA9/iZfdxx+/1gPxOrwYsDqS6YenNLtiBCez
+	 F36oFmIl+j/n7derYFPyt8oDL3xKpj3GKHo0x0sWvjXpI1BL6QvHg2IHN373HxyMBa
+	 CjTaukNkRbZoXms2NLhLnQ7PWHq8WXXZu2C8lSjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfG2UQV (ORCPT
+        id S1729478AbfG2TYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:16:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36552 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:24:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387988AbfG2TYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:24:20 -0400
+        id S1729452AbfG2TYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:24:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C675A216C8;
-        Mon, 29 Jul 2019 19:24:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10EE42070B;
+        Mon, 29 Jul 2019 19:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428259;
-        bh=t7Di/nW8zHaZ4oltp5kAHKlaau4jSGhr1gABisjElM0=;
+        s=default; t=1564428250;
+        bh=e1qs+ioypLgGdvKj2f16B/R8pllIlpDGzR/4OVXgcG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+uB1y0UBVlFQcVZj1zaqEAqPvLU9Oh/HzVZdNIzmfGgkfqyEe+c4y29kRR9AlQ4R
-         dOS9xTEWG/chhucBHjhD2YeE3MERQk7Ax+BCC6qlWZfa5WexiBHHJqB+CjcnT0FBMJ
-         RTdb29ycDDnD9fDT2/5khazVGPJ+41X9Pn1XOtvA=
+        b=jItDKl6oRICVGdHxtnztMOs9h8HUUsAu/Stok3OciBEexhE6LyoEk6lOFDanrEFH9
+         ZVKSjvHU7OtiD0Lp0fhsRt7EP9lBFb0ab+HFy/FG+MLG5PNeeVf4fyzVWUWzMHa5D4
+         YUMStZERc/FV+Y8K87zJUV8kWGBQsZg1Gv17LXdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 006/293] wil6210: fix potential out-of-bounds read
-Date:   Mon, 29 Jul 2019 21:18:17 +0200
-Message-Id: <20190729190820.822625516@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Fangrui Song <maskray@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        Peter Smith <peter.smith@linaro.org>
+Subject: [PATCH 4.14 003/293] arm64/efi: Mark __efistub_stext_offset as an absolute symbol explicitly
+Date:   Mon, 29 Jul 2019 21:18:14 +0200
+Message-Id: <20190729190820.605423017@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -62,50 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bfabdd6997323adbedccb13a3fed1967fb8cf8f5 ]
+[ Upstream commit aa69fb62bea15126e744af2e02acc0d6cf3ed4da ]
 
-Notice that *rc* can evaluate to up to 5, include/linux/netdevice.h:
+After r363059 and r363928 in LLVM, a build using ld.lld as the linker
+with CONFIG_RANDOMIZE_BASE enabled fails like so:
 
-enum gro_result {
-        GRO_MERGED,
-        GRO_MERGED_FREE,
-        GRO_HELD,
-        GRO_NORMAL,
-        GRO_DROP,
-        GRO_CONSUMED,
-};
-typedef enum gro_result gro_result_t;
+ld.lld: error: relocation R_AARCH64_ABS32 cannot be used against symbol
+__efistub_stext_offset; recompile with -fPIC
 
-In case *rc* evaluates to 5, we end up having an out-of-bounds read
-at drivers/net/wireless/ath/wil6210/txrx.c:821:
+Fangrui and Peter figured out that ld.lld is incorrectly considering
+__efistub_stext_offset as a relative symbol because of the order in
+which symbols are evaluated. _text is treated as an absolute symbol
+and stext is a relative symbol, making __efistub_stext_offset a
+relative symbol.
 
-	wil_dbg_txrx(wil, "Rx complete %d bytes => %s\n",
-		     len, gro_res_str[rc]);
+Adding ABSOLUTE will force ld.lld to evalute this expression in the
+right context and does not change ld.bfd's behavior. ld.lld will
+need to be fixed but the developers do not see a quick or simple fix
+without some research (see the linked issue for further explanation).
+Add this simple workaround so that ld.lld can continue to link kernels.
 
-Fix this by adding element "GRO_CONSUMED" to array gro_res_str.
-
-Addresses-Coverity-ID: 1444666 ("Out-of-bounds read")
-Fixes: 194b482b5055 ("wil6210: Debug print GRO Rx result")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/561
+Link: https://github.com/llvm/llvm-project/commit/025a815d75d2356f2944136269aa5874721ec236
+Link: https://github.com/llvm/llvm-project/commit/249fde85832c33f8b06c6b4ac65d1c4b96d23b83
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Debugged-by: Fangrui Song <maskray@google.com>
+Debugged-by: Peter Smith <peter.smith@linaro.org>
+Suggested-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+[will: add comment]
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/txrx.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kernel/image.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
-index 389c718cd257..16750056b8b5 100644
---- a/drivers/net/wireless/ath/wil6210/txrx.c
-+++ b/drivers/net/wireless/ath/wil6210/txrx.c
-@@ -732,6 +732,7 @@ void wil_netif_rx_any(struct sk_buff *skb, struct net_device *ndev)
- 		[GRO_HELD]		= "GRO_HELD",
- 		[GRO_NORMAL]		= "GRO_NORMAL",
- 		[GRO_DROP]		= "GRO_DROP",
-+		[GRO_CONSUMED]		= "GRO_CONSUMED",
- 	};
+diff --git a/arch/arm64/kernel/image.h b/arch/arm64/kernel/image.h
+index 40f9f0b078a4..12af2ba8d558 100644
+--- a/arch/arm64/kernel/image.h
++++ b/arch/arm64/kernel/image.h
+@@ -73,7 +73,11 @@
  
- 	if (ndev->features & NETIF_F_RXHASH)
+ #ifdef CONFIG_EFI
+ 
+-__efistub_stext_offset = stext - _text;
++/*
++ * Use ABSOLUTE() to avoid ld.lld treating this as a relative symbol:
++ * https://github.com/ClangBuiltLinux/linux/issues/561
++ */
++__efistub_stext_offset = ABSOLUTE(stext - _text);
+ 
+ /*
+  * The EFI stub has its own symbol namespace prefixed by __efistub_, to
 -- 
 2.20.1
 
