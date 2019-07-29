@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E5CC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A45C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CDA2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457A021773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429565;
-	bh=jrpCRU7RNX2OUhJEobXkjrzJAnaWpqzHmQBAcu2M4bM=;
+	s=default; t=1564429571;
+	bh=jL6soxADRzGMY10b5XUC2QT0RohrDKfEA6oRGfMtswo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kj0AXlzaB8kj5WoAfRjq6+Q+7jp0Ig3wdMXWCsGYeMBF3pguiqPMIMAZIhm7MPXx1
-	 4S32PAWygdwfSoqJyefydGTG7kST/b0XFr2+adXOHOzQb1MI950pkDfuT/VUpdy19E
-	 EnFgdSUdhtLWwIghU261gRjWNVF4pyhuYCJ/+Ut8=
+	b=NTKLjfHLHAXJp+PkfQGmbZ21aKnP9jZ0WDc/4H7TvDNgAphQItRmFY1dC5NC0uEeT
+	 rIoSxn7PJ6RHJF2tgM1L/B1ncvNoMe446WaowDdn2iLdqL1RWo5rNEbX36U/GGwqBk
+	 pgJwwhkvNAgP4gpUdWh5WzMee6RQd9I992NXAafg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390056AbfG2TqD (ORCPT
+        id S2390079AbfG2TqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:46:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35084 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:46:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390029AbfG2Tp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:45:59 -0400
+        id S2390067AbfG2TqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:46:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 485D82171F;
-        Mon, 29 Jul 2019 19:45:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C28021773;
+        Mon, 29 Jul 2019 19:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429558;
-        bh=jrpCRU7RNX2OUhJEobXkjrzJAnaWpqzHmQBAcu2M4bM=;
+        s=default; t=1564429565;
+        bh=jL6soxADRzGMY10b5XUC2QT0RohrDKfEA6oRGfMtswo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nZOPJd+8gOdhiHzgbqWeeEUJeBH7VQVhjb3LJbMGGEHOKRcFpf+Mo1G82UjPQ5qii
-         PFi32y9wn4ZdcBSTAaXSi/NjK4A59xwNW17u09zf9DL9Tq0G6ynn5ujOVkBKrkg/Yc
-         3RRQc3nLZaUzbpaBDCyA3rMaop5cOBtAg7UJzs4o=
+        b=vadi5+i824bC8P9w3w/xPw0SB0yo4D4Fji+zBxs7l1JlR2BuHm4LBtZcbzX+nE/YL
+         wN0PQSS9kmxSNPnHjDGssFhI26pCC+jdOuCJ/Rc7wcQnGvu3Y+yC/cVkO0tnyGXfC3
+         tLYf0TjzktbQBHEUSr9cp1KPR8AwAfQ5mazU0Vd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jordan Crouse <jcrouse@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>,
+        stable@vger.kernel.org, Roman Li <Roman.Li@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 022/215] drm/msm/a6xx: Avoid freeing gmu resources multiple times
-Date:   Mon, 29 Jul 2019 21:20:18 +0200
-Message-Id: <20190729190743.669849531@linuxfoundation.org>
+Subject: [PATCH 5.2 024/215] drm/amd/display: Fill plane attrs only for valid pxl format
+Date:   Mon, 29 Jul 2019 21:20:20 +0200
+Message-Id: <20190729190744.105634175@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,111 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 606ec90fc2266284f584a96ebf7f874589f56251 ]
+[ Upstream commit 1894478ad1f8fd7366edc5cee49ee9caea0e3d52 ]
 
-The driver checks for gmu->mmio as a sign that the device has been
-initialized, however there are failures in probe below the mmio init.
-If one of those is hit, mmio will be non-null but freed.
+[Why]
+In fill_plane_buffer_attributes() we calculate chroma/luma
+assuming that the surface_pixel_format is always valid.
+If it's not the case, there's a risk of divide by zero error.
 
-In that case, a6xx_gmu_probe will return an error to a6xx_gpu_init which
-will in turn call a6xx_gmu_remove which checks gmu->mmio and tries to free
-resources for a second time. This causes a great boom.
+[How]
+Check if format valid before calculating pixel format attributes
 
-Fix this by adding an initialized member to gmu which is set on
-successful probe and cleared on removal.
-
-Changes in v2:
-- None
-
-Cc: Jordan Crouse <jcrouse@codeaurora.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190523171653.138678-1-sean@poorly.run
+Signed-off-by: Roman Li <Roman.Li@amd.com>
+Reviewed-by: David Francis <David.Francis@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 14 +++++++++-----
- drivers/gpu/drm/msm/adreno/a6xx_gmu.h |  1 +
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index 418bb08bbed7..6910d0468e3c 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -74,7 +74,7 @@ bool a6xx_gmu_sptprac_is_on(struct a6xx_gmu *gmu)
- 	u32 val;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index fa268dd736f4..31530bfd002a 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -2592,7 +2592,7 @@ fill_plane_buffer_attributes(struct amdgpu_device *adev,
+ 		address->type = PLN_ADDR_TYPE_GRAPHICS;
+ 		address->grph.addr.low_part = lower_32_bits(afb->address);
+ 		address->grph.addr.high_part = upper_32_bits(afb->address);
+-	} else {
++	} else if (format < SURFACE_PIXEL_FORMAT_INVALID) {
+ 		uint64_t chroma_addr = afb->address + fb->offsets[1];
  
- 	/* This can be called from gpu state code so make sure GMU is valid */
--	if (IS_ERR_OR_NULL(gmu->mmio))
-+	if (!gmu->initialized)
- 		return false;
- 
- 	val = gmu_read(gmu, REG_A6XX_GMU_SPTPRAC_PWR_CLK_STATUS);
-@@ -90,7 +90,7 @@ bool a6xx_gmu_gx_is_on(struct a6xx_gmu *gmu)
- 	u32 val;
- 
- 	/* This can be called from gpu state code so make sure GMU is valid */
--	if (IS_ERR_OR_NULL(gmu->mmio))
-+	if (!gmu->initialized)
- 		return false;
- 
- 	val = gmu_read(gmu, REG_A6XX_GMU_SPTPRAC_PWR_CLK_STATUS);
-@@ -697,7 +697,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
- 	struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
- 	int status, ret;
- 
--	if (WARN(!gmu->mmio, "The GMU is not set up yet\n"))
-+	if (WARN(!gmu->initialized, "The GMU is not set up yet\n"))
- 		return 0;
- 
- 	gmu->hung = false;
-@@ -767,7 +767,7 @@ bool a6xx_gmu_isidle(struct a6xx_gmu *gmu)
- {
- 	u32 reg;
- 
--	if (!gmu->mmio)
-+	if (!gmu->initialized)
- 		return true;
- 
- 	reg = gmu_read(gmu, REG_A6XX_GPU_GMU_AO_GPU_CX_BUSY_STATUS);
-@@ -1229,7 +1229,7 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
- {
- 	struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
- 
--	if (IS_ERR_OR_NULL(gmu->mmio))
-+	if (!gmu->initialized)
- 		return;
- 
- 	a6xx_gmu_stop(a6xx_gpu);
-@@ -1247,6 +1247,8 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
- 	iommu_detach_device(gmu->domain, gmu->dev);
- 
- 	iommu_domain_free(gmu->domain);
-+
-+	gmu->initialized = false;
- }
- 
- int a6xx_gmu_probe(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
-@@ -1311,6 +1313,8 @@ int a6xx_gmu_probe(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
- 	/* Set up the HFI queues */
- 	a6xx_hfi_init(gmu);
- 
-+	gmu->initialized = true;
-+
- 	return 0;
- err:
- 	a6xx_gmu_memory_free(gmu, gmu->hfi);
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-index bedd8e6a63aa..39a26dd63674 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-@@ -75,6 +75,7 @@ struct a6xx_gmu {
- 
- 	struct a6xx_hfi_queue queues[2];
- 
-+	bool initialized;
- 	bool hung;
- };
- 
+ 		plane_size->video.luma_size.x = 0;
 -- 
 2.20.1
 
