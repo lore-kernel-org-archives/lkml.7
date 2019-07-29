@@ -2,104 +2,121 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34E2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBD0C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769492070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564426301;
-	bh=Gv5AzgJVYR0OR8ORqDsTIgG2lMNj1bZUmB0KGfpUC0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bP6Fbxvi6/k43jE7BoPafU79blIfUufTiAnOlO9wrcQawhi4T8CA5vflYwvdCQP9O
-	 mVZ0kzlsKFUvZr5DNpJatBklxaPRUzPBEImllEF29XDGxc5P9g0pMv0BTpKayv2Aod
-	 ro8KaESacRx1aNXSCZadJFNdRwWQsF3qEHTzyzRc=
+	by mail.kernel.org (Postfix) with ESMTP id A2B6C2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:51:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="L0uv2X3i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbfG2Svj (ORCPT
+        id S1729256AbfG2Svn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:51:39 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37907 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728342AbfG2Svi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 14:51:38 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f5so19880415pgu.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 11:51:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mIzsxTD2036Q7QvIHHotBeBumqv5A66UAXgo+x9j748=;
-        b=cg0o23QRoMZ7W5DbVCtainjm3/p+NSRaI05Vu0Bz5krkrO5GVWvFPs0adN5GfmlWSX
-         wLG0DouSgJyAsN0hE7Zp5lIU6xY3J1raD23/x3600j0tFJ7WmDCXgriz9Z4Rn0qEyCld
-         ggYydjo8qEBn4y/45mxZdJThF2cdjhyUKFkOI6bQ2VCEo3XXVp5NaNm9j+tL7AwA73mm
-         5s5gKMPNa8m5UDg7QrZkaamYwVV/5fhH5YuBUEuXDDov38ab/ForJfHBdpQR+mlnHXlq
-         mfmAtZ0WL97oVID2PcUYjEGyj9bZxL1U/OJnJ9DBfexlEdwNoPfvYYk34GF6/SXuzOvG
-         JaYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mIzsxTD2036Q7QvIHHotBeBumqv5A66UAXgo+x9j748=;
-        b=Z2PaHl5haX9oXwwHndQZWgUckt1CrbktnOSGtBsRjg7BK6GQVXMoU+Mka3wMcbEwf2
-         8n/kh/6XHNUsw7RYruz5LdWCtP87QPih/CAW3NJ8lLJ0IvbSmMPXnmnwR7CEsB3+l+dl
-         MXo1jNjL7wIU8u2DtBMA3MKTMbylsM5bEAyNSq5fp9ofO3Ib9WnAiZVkYcAUJPZueYfm
-         Up2XZdqgRpNgWzxYIiGY3x8HdM3EDw24sTnx8ZvKZnUoDhD8if1EYbZyG+3O2zvnppyA
-         9mX7ysKfSYt7KvrjGvdKg0dXNMU8fFgbNgj1G+VjmoMpKDvwQvpnBoxfWOF8/PvDEEmf
-         LZhg==
-X-Gm-Message-State: APjAAAXA8qaUbF9Nsg9TXtfA6rTJIw3a4pJwPLDDVmdPo8YHaJqy474s
-        l0oafvj9hbOkBh5q6jgl0is6IDB2
-X-Google-Smtp-Source: APXvYqyB72GINqzqkmpUpMmCQJpl67wduDAAaEMOfR8V6m6sgGtR8uNh0RiYqWJ8vLsnYAGxQq+v9A==
-X-Received: by 2002:a62:3543:: with SMTP id c64mr37171137pfa.242.1564426297958;
-        Mon, 29 Jul 2019 11:51:37 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:309b])
-        by smtp.gmail.com with ESMTPSA id f64sm65823853pfa.115.2019.07.29.11.51.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 11:51:36 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 11:51:33 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: kernfs: Fix possible null-pointer dereferences in
- kernfs_path_from_node_locked()
-Message-ID: <20190729185133.GD569612@devbig004.ftw2.facebook.com>
-References: <20190724022242.27505-1-baijiaju1990@gmail.com>
+        Mon, 29 Jul 2019 14:51:43 -0400
+Received: from mail-eopbgr80077.outbound.protection.outlook.com ([40.107.8.77]:8134
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728342AbfG2Svm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 14:51:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XCc0S8/zZ++O1Ol6BlO3lZA+NlLWnBs8GmGoNEYq8lQNm5/ytCx9TZcKK7pGxsfJcjdROPMrDHUxiFiuyfb/1UgQmu/ilA9IfgEVHPsBExPiElDh37NSZ2xEpRvqsjNdNXNnT/UDKPR5pa6goOppJ/RKluGLBxeKzIgEGPPQ+ZbdLkiT8+jmiQX/PbEP/2o6/56B+VRmf1bxduJgPE1FC1ybmQwC9SrAOmb6fRx1w0szJqE/K8q48SoNMtiqswzqMfVGpf0/8VOjhWXmb1CGWO/UZ1WIFAbPfYV5OAr8VYmGhXe1e9ze47b0Z4B1ADHTt3HfGl8f9NhtWQ6DOvOI7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XS6ZyFGklzjUe8E9Wn/DzGAD6vBh1IX1sjSOdWdzqQQ=;
+ b=JIaSMCGORev+vrtTCCc5iAejVNh9mQixoidSAcG+RzsB3M7J0eTmk8rk1rF+ErcJKO2VGHgumb6xdFHUSuwIfe5dvSZu3EOFoP6Omn1m1JSU3jw7pSqx7P7CmI2muhO63PLYdfFNMXbAIXwSk/Q6oSm0uZzn/lGWMGcrQ25caYupX3aUXrUqRAnVKIeB/zqFNfaPTlqvhTWC97SbfPk26kKgoUBFQXKU5ssuG0qHFZN/05XWHj5kJZqExLrMfjlLOOsXKj8B5SsTSrBoVcbk4xqR1SGcdlKgYOuxD/jtU+YzqvnETU3aY6FZNMj7S7EHtpvkWf1X8YaIPNWblwLHIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XS6ZyFGklzjUe8E9Wn/DzGAD6vBh1IX1sjSOdWdzqQQ=;
+ b=L0uv2X3io+XeiRCBvKPuVLKnHU3yntux1+NaKj1n93k7ZPITbtW9Bk8vl1bglGrYqSOo+F9DWQIIrRyP8VdimGhBrILZbofJCQq4WhhvqOrl6o1I39DzPGnNdaYI8qYB1CNUiJnF0wWaVVpp/F81aLoayLK7VSrfwQ2+3sssykE=
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
+ DB6PR0501MB2822.eurprd05.prod.outlook.com (10.172.227.146) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.14; Mon, 29 Jul 2019 18:51:38 +0000
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::3c28:c77d:55b0:15b2]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::3c28:c77d:55b0:15b2%5]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
+ 18:51:38 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "cai@lca.pw" <cai@lca.pw>, Leon Romanovsky <leonro@mellanox.com>
+CC:     Yishai Hadas <yishaih@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net/mlx5: fix -Wtype-limits compilation warnings
+Thread-Topic: [PATCH] net/mlx5: fix -Wtype-limits compilation warnings
+Thread-Index: AQHVQLxlv3OY64S2zEK8JohEEQAAcabh+9IA
+Date:   Mon, 29 Jul 2019 18:51:38 +0000
+Message-ID: <dc0c3064e253c4fdf2a2a8351995ff061d722588.camel@mellanox.com>
+References: <1563820482-10302-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1563820482-10302-1-git-send-email-cai@lca.pw>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [209.116.155.178]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f5e70aa5-de7b-4ef1-0860-08d71455c9da
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2822;
+x-ms-traffictypediagnostic: DB6PR0501MB2822:
+x-microsoft-antispam-prvs: <DB6PR0501MB2822036012FB5F6928080FC7BEDD0@DB6PR0501MB2822.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:257;
+x-forefront-prvs: 01136D2D90
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(346002)(136003)(396003)(189003)(199004)(6436002)(229853002)(7736002)(3846002)(305945005)(6116002)(58126008)(110136005)(54906003)(4326008)(316002)(478600001)(6636002)(26005)(2906002)(14444005)(71190400001)(71200400001)(6506007)(14454004)(11346002)(446003)(102836004)(76176011)(2616005)(6486002)(36756003)(6512007)(25786009)(256004)(6246003)(53936002)(186003)(66556008)(64756008)(66446008)(81166006)(81156014)(8936002)(8676002)(66946007)(118296001)(476003)(486006)(2501003)(66066001)(91956017)(86362001)(99286004)(68736007)(66476007)(5660300002)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2822;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6GPZEPXx3FXdbDfPmcrE7Mxthqv/Ry70jYpWAoG87f/+oTK2eUDdIyj0azirWUKHMcbLuqixTYdz5rS5sQeaoLznD6sXuJZLzj1JVdDKG/V4tEWTCIgrO07A8fbM2OBrNPp0VwbmX1U0nhrftSlNV8+wJ5xkhto3yGC2SQlVQeUUmLb0qnIghTm5CGziuKZ8ad98hRTc6QWPffGiPOnFQxj3oEkV/VUkuSXtm1A6FHk0oXsy/y60IREtd8e1nrakk4RW4QlivRk0O84WkT63KRq1PRVawGZsF+HrYycdqL3c2J0IknI58tixH70w2fvbYkB59SPm4qLtFoUMH9N5CGsnRx/ucStQNtNtAN/+fc+Ld/wnDGVPh7M11BYJiU6SJb4siw5US6Sw+XRScpTV0XvG7vgu+ssQjPSfsUUr9uc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AE9B7DCC1A0B634F8A84CB41021A4424@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724022242.27505-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5e70aa5-de7b-4ef1-0860-08d71455c9da
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 18:51:38.6280
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2822
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:22:42AM +0800, Jia-Ju Bai wrote:
-> In kernfs_path_from_node_locked(), there is an if statement on line 147
-> to check whether buf is NULL:
->     if (buf)
-> 
-> When buf is NULL, it is used on line 151:
->     len += strlcpy(buf + len, parent_str, ...)
-> and line 158:
->     len += strlcpy(buf + len, "/", ...)
-> and line 160:
->     len += strlcpy(buf + len, kn->name, ...)
-> 
-> Thus, possible null-pointer dereferences may occur.
-> 
-> To fix these possible bugs, buf is checked before being used.
-> If it is NULL, -EINVAL is returned.
-> 
-> These bugs are found by a static analysis tool STCheck written by us.
-
-Can we just get rid of the NULL testing?
-
-Thanks.
-
--- 
-tejun
+T24gTW9uLCAyMDE5LTA3LTIyIGF0IDE0OjM0IC0wNDAwLCBRaWFuIENhaSB3cm90ZToNCj4gVGhl
+IGNvbW1pdCBiOWE3YmE1NTYyMDcgKCJuZXQvbWx4NTogVXNlIGV2ZW50IG1hc2sgYmFzZWQgb24g
+ZGV2aWNlDQo+IGNhcGFiaWxpdGllcyIpIGludHJvZHVjZWQgYSBmZXcgY29tcGlsYXRpb24gd2Fy
+bmluZ3MgZHVlIHRvIGl0IGJ1bXBzDQo+IE1MWDVfRVZFTlRfVFlQRV9NQVggZnJvbSAweDI3IHRv
+IDB4MTAwIHdoaWNoIGlzIGFsd2F5cyBncmVhdGVyIHRoYW4NCj4gYW4gInN0cnVjdCB7bWx4NV9l
+cWV8bWx4NV9uYn0udHlwZSIgdGhhdCBpcyBhbiAidTgiLg0KPiANCj4gZHJpdmVycy9uZXQvZXRo
+ZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2VxLmM6IEluIGZ1bmN0aW9uDQo+ICdtbHg1X2VxX25v
+dGlmaWVyX3JlZ2lzdGVyJzoNCj4gZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9j
+b3JlL2VxLmM6OTQ4OjIxOiB3YXJuaW5nOg0KPiBjb21wYXJpc29uDQo+IGlzIGFsd2F5cyBmYWxz
+ZSBkdWUgdG8gbGltaXRlZCByYW5nZSBvZiBkYXRhIHR5cGUgWy1XdHlwZS1saW1pdHNdDQo+ICAg
+aWYgKG5iLT5ldmVudF90eXBlID49IE1MWDVfRVZFTlRfVFlQRV9NQVgpDQo+ICAgICAgICAgICAg
+ICAgICAgICAgIF5+DQo+IGRyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9l
+cS5jOiBJbiBmdW5jdGlvbg0KPiAnbWx4NV9lcV9ub3RpZmllcl91bnJlZ2lzdGVyJzoNCj4gZHJp
+dmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2VxLmM6OTU5OjIxOiB3YXJuaW5n
+Og0KPiBjb21wYXJpc29uDQo+IGlzIGFsd2F5cyBmYWxzZSBkdWUgdG8gbGltaXRlZCByYW5nZSBv
+ZiBkYXRhIHR5cGUgWy1XdHlwZS1saW1pdHNdDQo+ICAgaWYgKG5iLT5ldmVudF90eXBlID49IE1M
+WDVfRVZFTlRfVFlQRV9NQVgpDQo+IA0KPiBGaXggdGhlbSBieSByZW1vdmluZyB1bm5lY2Vzc2Fy
+eSBjaGVja2luZ3MuDQo+IA0KPiBGaXhlczogYjlhN2JhNTU2MjA3ICgibmV0L21seDU6IFVzZSBl
+dmVudCBtYXNrIGJhc2VkIG9uIGRldmljZQ0KPiBjYXBhYmlsaXRpZXMiKQ0KPiBTaWduZWQtb2Zm
+LWJ5OiBRaWFuIENhaSA8Y2FpQGxjYS5wdz4NCj4gDQoNCkFwcGxpZWQgdG8gbWx4NS1uZXh0Lg0K
+DQpUaGFua3MsDQpTYWVlZC4NCg0K
