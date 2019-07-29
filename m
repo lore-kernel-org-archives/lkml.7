@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A53C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4549C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421A1206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E5D217D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429097;
-	bh=rzK8yFcGfbKCpoDsOUVJ4omD30vq1XPdn/iIvLzLvw4=;
+	s=default; t=1564429104;
+	bh=F3xEu7dp5QQ6tel3JOLvaCiGrTfOh3hsxHZD8ZXf8Tc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zYW8H1IB0jZdPpE2Yo5lPaM4JOMM0HQL5rneg8yenzD6DmwPwkIj87D4DbIsJl7Q5
-	 +T+mGL1emxtjciv7Qkx6zEEgz+YqppOIEvml6tOOj6BEGZNubxzrbM7m5jr7cqUPgJ
-	 7+JItlVHmnYXaFqGR0iv+Li2x1q1v05jAzMSCGK0=
+	b=K0maa/RZwqJFxtxs0Y1IMwhu/GXyikuP7i35Da5xOZ9+6YXDRmJBGwB6qljjdJlaJ
+	 dItXcaYMnRCUVNf25XIuAteXnHxSrv4qUTaTj/u456qv9913lanAeTXWHoLtFVzdRt
+	 C3cELD+UHkdbZ2ymgs8Hl8s+x2EYcpiKgagbaVQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbfG2TiQ (ORCPT
+        id S2388856AbfG2TiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:38:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53146 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:38:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388136AbfG2TiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:38:11 -0400
+        id S2387731AbfG2TiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:38:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11C0E206DD;
-        Mon, 29 Jul 2019 19:38:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C86F2054F;
+        Mon, 29 Jul 2019 19:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429090;
-        bh=rzK8yFcGfbKCpoDsOUVJ4omD30vq1XPdn/iIvLzLvw4=;
+        s=default; t=1564429096;
+        bh=F3xEu7dp5QQ6tel3JOLvaCiGrTfOh3hsxHZD8ZXf8Tc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NAwncUoP3cJnIhnAcKy+uKBkNYlPGc7jVVQ1isK4SSkVuqAA67zQXLwEFudFxD2K2
-         qf9hXi00xDIdQNr/V2qszEc16IK4XASGEAmz9Hoft9HIFvA4Pk2xORw8YeijpD9+2b
-         NbDpMlaDwoaZg7TM3jQe7J/d5/3jy538uQAuaVCw=
+        b=o6sY04T8t6nVOZoVXdirrwLAB82dxGGsIlh7AEGLUq99g4JhhvOTMNYVbJWHXmd27
+         xyXdXp5pMyv1KF2FLMa0Mbw87+ydBTIDssKdekS6EF0FBDZVTFkwVp9taIB//taEsZ
+         8ADCHTDoSr0VM5COXlQKkhRJLAvoOcrHjSMvx0eo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 282/293] KVM: nVMX: do not use dangling shadow VMCS after guest reset
-Date:   Mon, 29 Jul 2019 21:22:53 +0200
-Message-Id: <20190729190845.859639288@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 284/293] x86/sysfb_efi: Add quirks for some devices with swapped width and height
+Date:   Mon, 29 Jul 2019 21:22:55 +0200
+Message-Id: <20190729190846.009515213@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,65 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 88dddc11a8d6b09201b4db9d255b3394d9bc9e57 upstream.
+commit d02f1aa39189e0619c3525d5cd03254e61bf606a upstream.
 
-If a KVM guest is reset while running a nested guest, free_nested will
-disable the shadow VMCS execution control in the vmcs01.  However,
-on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
-the VMCS12 to the shadow VMCS which has since been freed.
+Some Lenovo 2-in-1s with a detachable keyboard have a portrait screen but
+advertise a landscape resolution and pitch, resulting in a messed up
+display if the kernel tries to show anything on the efifb (because of the
+wrong pitch).
 
-This causes a vmptrld of a NULL pointer on my machime, but Jan reports
-the host to hang altogether.  Let's see how much this trivial patch fixes.
+Fix this by adding a new DMI match table for devices which need to have
+their width and height swapped.
 
-Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Liran Alon <liran.alon@oracle.com>
+At first it was tried to use the existing table for overriding some of the
+efifb parameters, but some of the affected devices have variants with
+different LCD resolutions which will not work with hardcoded override
+values.
+
+Reference: https://bugzilla.redhat.com/show_bug.cgi?id=1730783
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://lkml.kernel.org/r/20190721152418.11644-1-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/kernel/sysfb_efi.c |   46 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -7694,6 +7694,7 @@ static void vmx_disable_shadow_vmcs(stru
+--- a/arch/x86/kernel/sysfb_efi.c
++++ b/arch/x86/kernel/sysfb_efi.c
+@@ -231,9 +231,55 @@ static const struct dmi_system_id efifb_
+ 	{},
+ };
+ 
++/*
++ * Some devices have a portrait LCD but advertise a landscape resolution (and
++ * pitch). We simply swap width and height for these devices so that we can
++ * correctly deal with some of them coming with multiple resolutions.
++ */
++static const struct dmi_system_id efifb_dmi_swap_width_height[] __initconst = {
++	{
++		/*
++		 * Lenovo MIIX310-10ICR, only some batches have the troublesome
++		 * 800x1280 portrait screen. Luckily the portrait version has
++		 * its own BIOS version, so we match on that.
++		 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION, "MIIX 310-10ICR"),
++			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "1HCN44WW"),
++		},
++	},
++	{
++		/* Lenovo MIIX 320-10ICR with 800x1280 portrait screen */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION,
++					"Lenovo MIIX 320-10ICR"),
++		},
++	},
++	{
++		/* Lenovo D330 with 800x1280 or 1200x1920 portrait screen */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION,
++					"Lenovo ideapad D330-10IGM"),
++		},
++	},
++	{},
++};
++
+ __init void sysfb_apply_efi_quirks(void)
  {
- 	vmcs_clear_bits(SECONDARY_VM_EXEC_CONTROL, SECONDARY_EXEC_SHADOW_VMCS);
- 	vmcs_write64(VMCS_LINK_POINTER, -1ull);
-+	vmx->nested.sync_shadow_vmcs = false;
+ 	if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI ||
+ 	    !(screen_info.capabilities & VIDEO_CAPABILITY_SKIP_QUIRKS))
+ 		dmi_check_system(efifb_dmi_system_table);
++
++	if (screen_info.orig_video_isVGA == VIDEO_TYPE_EFI &&
++	    dmi_check_system(efifb_dmi_swap_width_height)) {
++		u16 temp = screen_info.lfb_width;
++
++		screen_info.lfb_width = screen_info.lfb_height;
++		screen_info.lfb_height = temp;
++		screen_info.lfb_linelength = 4 * screen_info.lfb_width;
++	}
  }
- 
- static inline void nested_release_vmcs12(struct vcpu_vmx *vmx)
-@@ -7705,7 +7706,6 @@ static inline void nested_release_vmcs12
- 		/* copy to memory all shadowed fields in case
- 		   they were modified */
- 		copy_shadow_to_vmcs12(vmx);
--		vmx->nested.sync_shadow_vmcs = false;
- 		vmx_disable_shadow_vmcs(vmx);
- 	}
- 	vmx->nested.posted_intr_nv = -1;
-@@ -7891,6 +7891,9 @@ static void copy_shadow_to_vmcs12(struct
- 	const unsigned long *fields = shadow_read_write_fields;
- 	const int num_fields = max_shadow_read_write_fields;
- 
-+	if (WARN_ON(!shadow_vmcs))
-+		return;
-+
- 	preempt_disable();
- 
- 	vmcs_load(shadow_vmcs);
-@@ -7938,6 +7941,9 @@ static void copy_vmcs12_to_shadow(struct
- 	u64 field_value = 0;
- 	struct vmcs *shadow_vmcs = vmx->vmcs01.shadow_vmcs;
- 
-+	if (WARN_ON(!shadow_vmcs))
-+		return;
-+
- 	vmcs_load(shadow_vmcs);
- 
- 	for (q = 0; q < ARRAY_SIZE(fields); q++) {
 
 
