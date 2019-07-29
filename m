@@ -2,179 +2,143 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0B3C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E052CC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5623F2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:53:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="mwSun/Dx"
+	by mail.kernel.org (Postfix) with ESMTP id BF2BA206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388172AbfG2Pxd (ORCPT
+        id S2388227AbfG2Pz4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:53:33 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:58882 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387467AbfG2Pxc (ORCPT
+        Mon, 29 Jul 2019 11:55:56 -0400
+Received: from mailoutvs54.siol.net ([185.57.226.245]:56000 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387593AbfG2Pz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:53:32 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6TFiK3T006805;
-        Mon, 29 Jul 2019 11:53:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=2q97VoKTLol6hqzznRi5AK9oOy1nejb2onfq1aZxkCc=;
- b=mwSun/DxgNwZi1a1aa2jrA4KJAtfNdNxqcnS6PL+huLVagv66ytnR87/eu3XjVwJ0WWT
- STurONOZTanwYA+TAi1hMR7rnBTMsrnL1TBV+znWu1IDWf6IwBgW1cAOZejpi4bUGZtQ
- tA/mGXoE1hYG2TRuFNOHZ02n24mJ43xp/0/+gtOPTLs8sQjCNSQFvSKrNKqF3ZWAx3sb
- D9iizCZvLVtANKm+zn+XfyhW9U3OPMF8UMSrlCGGCwa9JMfOyqyQl9UvCUx2SBjC66Re
- LbN2r4X2p3pQuXT8NSuDe+8J1s6NHkqBnnVKn6WDQcOs4dAhZToqAZTnMSU9kvOvWMWW 5g== 
-Received: from mx0b-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 2u22qrrdqt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jul 2019 11:53:31 -0400
-Received: from pps.filterd (m0090350.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6TFlagu055022;
-        Mon, 29 Jul 2019 11:53:31 -0400
-Received: from ausc60ps301.us.dell.com (ausc60ps301.us.dell.com [143.166.148.206])
-        by mx0b-00154901.pphosted.com with ESMTP id 2u20yvkcvq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jul 2019 11:53:30 -0400
-X-LoopCount0: from 10.166.132.130
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="1338051051"
-From:   <Mario.Limonciello@dell.com>
-To:     <rafael@kernel.org>, <kai.heng.feng@canonical.com>
-CC:     <rjw@rjwysocki.net>, <kbusch@kernel.org>, <keith.busch@intel.com>,
-        <hch@lst.de>, <sagi@grimberg.me>, <linux-nvme@lists.infradead.org>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: RE: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-Thread-Topic: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-Thread-Index: AQHVQs6UiIesxZzK0UKkUWrQRuKoE6bbv0cAgABS64CAAAEhgIAAAsaAgAEtwoCAAX9fgIADAZew
-Date:   Mon, 29 Jul 2019 15:51:50 +0000
-Message-ID: <868a042a9422463fa1166653982bb985@AUSX13MPC105.AMER.DELL.COM>
-References: <2332799.izEFUvJP67@kreacher> <2428826.VBuqOhikiK@kreacher>
- <20190725195258.GA7307@localhost.localdomain> <15043168.halW6uqc8m@kreacher>
- <D33632F4-E119-4833-816C-79084DA03DE4@canonical.com>
- <CAJZ5v0imsVS-eDB+Lmd5qzAfmb0UpJ5AwV_Vf+v8D21KAtqTOg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0imsVS-eDB+Lmd5qzAfmb0UpJ5AwV_Vf+v8D21KAtqTOg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-07-29T15:51:48.5689646Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.18.86]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 29 Jul 2019 11:55:56 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 8DCAD522BB3;
+        Mon, 29 Jul 2019 17:55:53 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id u-_fD2Ny9KTo; Mon, 29 Jul 2019 17:55:53 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 266D5522D23;
+        Mon, 29 Jul 2019 17:55:53 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id A1875522BB3;
+        Mon, 29 Jul 2019 17:55:52 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     thierry.reding@gmail.com, mripard@kernel.org, wens@csie.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, kernel@pengutronix.de
+Subject: Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Date:   Mon, 29 Jul 2019 17:55:52 +0200
+Message-ID: <223488703.0I5IR7NXoI@jernej-laptop>
+In-Reply-To: <20190729064030.7uenld2kbof45zti@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net> <20190726184045.14669-5-jernej.skrabec@siol.net> <20190729064030.7uenld2kbof45zti@pengutronix.de>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-29_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907290178
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907290178
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSYWZhZWwgSi4gV3lzb2NraSA8
-cmFmYWVsQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IFNhdHVyZGF5LCBKdWx5IDI3LCAyMDE5IDc6NTUg
-QU0NCj4gVG86IEthaS1IZW5nIEZlbmcNCj4gQ2M6IFJhZmFlbCBKLiBXeXNvY2tpOyBLZWl0aCBC
-dXNjaDsgQnVzY2gsIEtlaXRoOyBDaHJpc3RvcGggSGVsbHdpZzsgU2FnaSBHcmltYmVyZzsNCj4g
-bGludXgtbnZtZUBsaXN0cy5pbmZyYWRlYWQub3JnOyBMaW1vbmNpZWxsbywgTWFyaW87IExpbnV4
-IFBNOyBMS01MDQo+IFN1YmplY3Q6IFJlOiBbUmVncmVzc2lvbl0gQ29tbWl0ICJudm1lL3BjaTog
-VXNlIGhvc3QgbWFuYWdlZCBwb3dlciBzdGF0ZSBmb3INCj4gc3VzcGVuZCIgaGFzIHByb2JsZW1z
-DQo+IA0KPiANCj4gW0VYVEVSTkFMIEVNQUlMXQ0KPiANCj4gT24gRnJpLCBKdWwgMjYsIDIwMTkg
-YXQgNDowMyBQTSBLYWktSGVuZyBGZW5nDQo+IDxrYWkuaGVuZy5mZW5nQGNhbm9uaWNhbC5jb20+
-IHdyb3RlOg0KPiA+DQo+ID4gYXQgMDQ6MDIsIFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNv
-Y2tpLm5ldD4gd3JvdGU6DQo+ID4NCj4gPiA+IE9uIFRodXJzZGF5LCBKdWx5IDI1LCAyMDE5IDk6
-NTI6NTkgUE0gQ0VTVCBLZWl0aCBCdXNjaCB3cm90ZToNCj4gPiA+PiBPbiBUaHUsIEp1bCAyNSwg
-MjAxOSBhdCAwOTo0ODo1N1BNICswMjAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90ZToNCj4gPiA+
-Pj4gTlZNRSBJZGVudGlmeSBDb250cm9sbGVyOg0KPiA+ID4+PiB2aWQgICAgIDogMHgxYzVjDQo+
-ID4gPj4+IHNzdmlkICAgOiAweDFjNWMNCj4gPiA+Pj4gc24gICAgICA6IE1TOTJOMTcxMzEyOTAy
-SjBODQo+ID4gPj4+IG1uICAgICAgOiBQQzQwMSBOVk1lIFNLIGh5bml4IDI1NkdCDQo+ID4gPj4+
-IGZyICAgICAgOiA4MDAwN0UwMA0KPiA+ID4+PiByYWIgICAgIDogMg0KPiA+ID4+PiBpZWVlICAg
-IDogYWNlNDJlDQo+ID4gPj4+IGNtaWMgICAgOiAwDQo+ID4gPj4+IG1kdHMgICAgOiA1DQo+ID4g
-Pj4+IGNudGxpZCAgOiAxDQo+ID4gPj4+IHZlciAgICAgOiAxMDIwMA0KPiA+ID4+PiBydGQzciAg
-IDogN2ExMjANCj4gPiA+Pj4gcnRkM2UgICA6IDFlODQ4MA0KPiA+ID4+PiBvYWVzICAgIDogMHgy
-MDANCj4gPiA+Pj4gY3RyYXR0ICA6IDANCj4gPiA+Pj4gb2FjcyAgICA6IDB4MTcNCj4gPiA+Pj4g
-YWNsICAgICA6IDcNCj4gPiA+Pj4gYWVybCAgICA6IDMNCj4gPiA+Pj4gZnJtdyAgICA6IDB4MTQN
-Cj4gPiA+Pj4gbHBhICAgICA6IDB4Mg0KPiA+ID4+PiBlbHBlICAgIDogMjU1DQo+ID4gPj4+IG5w
-c3MgICAgOiA0DQo+ID4gPj4+IGF2c2NjICAgOiAweDENCj4gPiA+Pj4gYXBzdGEgICA6IDB4MQ0K
-PiA+ID4+PiB3Y3RlbXAgIDogMzUyDQo+ID4gPj4+IGNjdGVtcCAgOiAzNTQNCj4gPiA+Pj4gbXRm
-YSAgICA6IDANCj4gPiA+Pj4gaG1wcmUgICA6IDANCj4gPiA+Pj4gaG1taW4gICA6IDANCj4gPiA+
-Pj4gdG52bWNhcCA6IDANCj4gPiA+Pj4gdW52bWNhcCA6IDANCj4gPiA+Pj4gcnBtYnMgICA6IDAN
-Cj4gPiA+Pj4gZWRzdHQgICA6IDEwDQo+ID4gPj4+IGRzdG8gICAgOiAwDQo+ID4gPj4+IGZ3dWcg
-ICAgOiAwDQo+ID4gPj4+IGthcyAgICAgOiAwDQo+ID4gPj4+IGhjdG1hICAgOiAwDQo+ID4gPj4+
-IG1udG10ICAgOiAwDQo+ID4gPj4+IG14dG10ICAgOiAwDQo+ID4gPj4+IHNhbmljYXAgOiAwDQo+
-ID4gPj4+IGhtbWluZHMgOiAwDQo+ID4gPj4+IGhtbWF4ZCAgOiAwDQo+ID4gPj4+IG5zZXRpZG1h
-eCA6IDANCj4gPiA+Pj4gYW5hdHQgICA6IDANCj4gPiA+Pj4gYW5hY2FwICA6IDANCj4gPiA+Pj4g
-YW5hZ3JwbWF4IDogMA0KPiA+ID4+PiBuYW5hZ3JwaWQgOiAwDQo+ID4gPj4+IHNxZXMgICAgOiAw
-eDY2DQo+ID4gPj4+IGNxZXMgICAgOiAweDQ0DQo+ID4gPj4+IG1heGNtZCAgOiAwDQo+ID4gPj4+
-IG5uICAgICAgOiAxDQo+ID4gPj4+IG9uY3MgICAgOiAweDFmDQo+ID4gPj4+IGZ1c2VzICAgOiAw
-eDENCj4gPiA+Pj4gZm5hICAgICA6IDANCj4gPiA+Pj4gdndjICAgICA6IDB4MQ0KPiA+ID4+PiBh
-d3VuICAgIDogNw0KPiA+ID4+PiBhd3VwZiAgIDogNw0KPiA+ID4+PiBudnNjYyAgIDogMQ0KPiA+
-ID4+PiBhY3d1ICAgIDogNw0KPiA+ID4+PiBzZ2xzICAgIDogMA0KPiA+ID4+PiBtbmFuICAgIDog
-MA0KPiA+ID4+PiBzdWJucW4gIDoNCj4gPiA+Pj4gaW9jY3N6ICA6IDANCj4gPiA+Pj4gaW9yY3N6
-ICA6IDANCj4gPiA+Pj4gaWNkb2ZmICA6IDANCj4gPiA+Pj4gY3RyYXR0ciA6IDANCj4gPiA+Pj4g
-bXNkYmQgICA6IDANCj4gPiA+Pj4gcHMgICAgMCA6IG1wOjYuMDBXIG9wZXJhdGlvbmFsIGVubGF0
-OjUgZXhsYXQ6NSBycnQ6MCBycmw6MA0KPiA+ID4+PiAgICAgICAgICAgcnd0OjAgcndsOjAgaWRs
-ZV9wb3dlcjotIGFjdGl2ZV9wb3dlcjotDQo+ID4gPj4+IHBzICAgIDEgOiBtcDozLjgwVyBvcGVy
-YXRpb25hbCBlbmxhdDozMCBleGxhdDozMCBycnQ6MSBycmw6MQ0KPiA+ID4+PiAgICAgICAgICAg
-cnd0OjEgcndsOjEgaWRsZV9wb3dlcjotIGFjdGl2ZV9wb3dlcjotDQo+ID4gPj4+IHBzICAgIDIg
-OiBtcDoyLjQwVyBvcGVyYXRpb25hbCBlbmxhdDoxMDAgZXhsYXQ6MTAwIHJydDoyIHJybDoyDQo+
-ID4gPj4+ICAgICAgICAgICByd3Q6MiByd2w6MiBpZGxlX3Bvd2VyOi0gYWN0aXZlX3Bvd2VyOi0N
-Cj4gPiA+Pj4gcHMgICAgMyA6IG1wOjAuMDcwMFcgbm9uLW9wZXJhdGlvbmFsIGVubGF0OjEwMDAg
-ZXhsYXQ6MTAwMCBycnQ6MyBycmw6Mw0KPiA+ID4+PiAgICAgICAgICAgcnd0OjMgcndsOjMgaWRs
-ZV9wb3dlcjotIGFjdGl2ZV9wb3dlcjotDQo+ID4gPj4+IHBzICAgIDQgOiBtcDowLjAwNzBXIG5v
-bi1vcGVyYXRpb25hbCBlbmxhdDoxMDAwIGV4bGF0OjUwMDAgcnJ0OjMgcnJsOjMNCj4gPiA+Pj4g
-ICAgICAgICAgIHJ3dDozIHJ3bDozIGlkbGVfcG93ZXI6LSBhY3RpdmVfcG93ZXI6LQ0KPiA+ID4+
-DQo+ID4gPj4gSG0sIG5vdGhpbmcgc3RhbmRzIG91dCBhcyBzb21ldGhpbmcgd2UgY2FuIHVzZSB0
-byBkZXRlcm1pbmUgaWYgd2Ugc2hvdWxkDQo+ID4gPj4gc2tpcCB0aGUgbnZtZSBzcGVjaWZpYyBz
-ZXR0aW5ncyBvciBhbGxvdyBEMy4gSSd2ZSBubyBvdGhlciBpZGVhcyBhdCB0aGUNCj4gPiA+PiBt
-b21lbnQgZm9yIHdoYXQgd2UgbWF5IGNoZWNrLg0KPiA+ID4NCj4gPiA+IFdlbGwsIGRvIEFTUE0g
-c2V0dGluZ3MgbWF0dGVyIGhlcmU/DQo+ID4NCj4gPiBTZWVtcyBsaWtlIGl0J3MgYSByZWdyZXNz
-aW9uIGluIHRoZSBmaXJtd2FyZS4NCj4gPg0KPiA+IFRoZSBpc3N1ZSBoYXBwZW5zIGluIHZlcnNp
-b24gODAwMDdFMDAgYnV0IG5vdCB2ZXJzaW9uIDgwMDA2RTAwLg0KPiANCj4gU28geW91IG1lYW4g
-dGhlIE5WTWUgZmlybXdhcmUsIHRvIGJlIGVudGlyZWx5IHByZWNpc2UuDQoNClllcy4NCg0KPiAN
-Cj4gPiBJIGFtIG5vdCBzdXJlIGhvdyB0byBkb3duZ3JhZGUgaXQgdW5kZXIgTGludXggdGhvdWdo
-Lg0KPiANCj4gTWUgbmVpdGhlci4NCg0KSSdsbCBhc2sgdGhlIHN0b3JhZ2UgdGVhbSB0byBhc2sg
-SHluaXggdG8gbWFrZSBib3RoIHRoZXNlIEZXIGF2YWlsYWJsZSBvbiBMVkZTLg0KRnd1cGQgY2Fu
-IHVwZ3JhZGUgYW5kIGRvd25ncmFkZSBmaXJtd2FyZSB3aGVuIHRoZSBiaW5hcmllcyBhcmUgbWFk
-ZSBhdmFpbGFibGUuDQoNClRoZXkgY291bGQgcG90ZW50aWFsbHkgYmUgcHVsbGVkIGRpcmVjdGx5
-IG91dCBvZiB0aGUgV2luZG93cyBleGVjdXRhYmxlcyB0b28sIGJ1dCBJIGRvbid0DQprbm93IGhv
-dyB0byBpZGVudGlmeSB0aGVtIG15c2VsZi4NCg0KPiANCj4gPiBUaGUgZmlybXdhcmUgY2hhbmdl
-bG9nIFsxXSBpcyB2ZXJ5IGludGVyZXN0aW5nOg0KPiA+IC0gSW1wcm92ZXMgdGhlIHBlcmZvcm1h
-bmNlIG9mIHRoZSBzb2xpZC1zdGF0ZSBkcml2ZSAoU1NEKSBieSBkaXN0cmlidXRpbmcNCj4gPiBw
-b3dlciBpbnRvIHRoZSBTU0QgZWZmaWNpZW50bHkgYWNjb3JkaW5nIHRvIHRoZSBwb3dlciBzdGF0
-ZSBvZiB0aGUgc3lzdGVtLg0KPiA+DQo+ID4gWzFdDQo+ID4NCj4gaHR0cHM6Ly93d3cuZGVsbC5j
-b20vc3VwcG9ydC9ob21lL3VzL2VuLzA0L2RyaXZlcnMvZHJpdmVyc2RldGFpbHM/ZHJpdmVyaWQ9
-bQ0KPiBjeG04DQo+IA0KPiBIdWguDQo+IA0KPiBJdCBsb29rcyBsaWtlIHNvbWV0aGluZyBlbHNl
-IHByZXZlbnRzIHRoZSBQQ0ggb24gbXkgOTM4MCBmcm9tIHJlYWNoaW5nDQo+IHRoZSByaWdodCBz
-dGF0ZSBmb3IgUzBpeCwgdGhvdWdoLiAgSSBzdGlsbCBuZWVkIHRvIGZpbmQgb3V0IHdoYXQgaXQN
-Cj4gaXMuDQo=
+Hi Uwe,
+
+Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König 
+napisal(a):
+> On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
+> > Now that sun4i PWM driver supports deasserting reset line and enabling
+> > bus clock, support for H6 PWM can be added.
+> > 
+> > Note that while H6 PWM has two channels, only first one is wired to
+> > output pin. Second channel is used as a clock source to companion AC200
+> > chip which is bundled into same package.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/pwm/pwm-sun4i.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index 7d3ac3f2dc3f..9e0eca79ff88 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
+> > sun4i_pwm_single_bypass = {> 
+> >  	.npwm = 1,
+> >  
+> >  };
+> > 
+> > +static const struct sun4i_pwm_data sun50i_pwm_dual_bypass_clk_rst = {
+> > +	.has_bus_clock = true,
+> > +	.has_prescaler_bypass = true,
+> > +	.has_reset = true,
+> > +	.npwm = 2,
+> > +};
+> > +
+> > 
+> >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
+> >  
+> >  	{
+> >  	
+> >  		.compatible = "allwinner,sun4i-a10-pwm",
+> > 
+> > @@ -347,6 +354,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] =
+> > {
+> > 
+> >  	}, {
+> >  	
+> >  		.compatible = "allwinner,sun8i-h3-pwm",
+> >  		.data = &sun4i_pwm_single_bypass,
+> > 
+> > +	}, {
+> > +		.compatible = "allwinner,sun50i-h6-pwm",
+> > +		.data = &sun50i_pwm_dual_bypass_clk_rst,
+> 
+> If you follow my suggestion for the two previous patches, you can just
+> use:
+> 
+> 	compatible = "allwinner,sun50i-h6-pwm", "allwinner,sun5i-a10s-pwm";
+> 
+> and drop this patch.
+
+Maxime found out that it's not compatible with A10s due to difference in bypass 
+bit, but yes, I know what you mean.
+
+Since H6 requires reset line and bus clock to be specified, it's not compatible 
+from DT binding side. New yaml based binding must somehow know that in order 
+to be able to validate DT node, so it needs standalone compatible. However, 
+depending on conclusions of other discussions, this new compatible can be 
+associated with already available quirks structure or have it's own.
+
+Best regards,
+Jernej
+
+> 
+> Best regards
+> Uwe
+> 
+> >  	}, {
+> >  	
+> >  		/* sentinel */
+> >  	
+> >  	},
+
+
+
+
