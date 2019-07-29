@@ -2,77 +2,60 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B48BBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8837FC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6DC21842
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NEamSqOt"
+	by mail.kernel.org (Postfix) with ESMTP id 699C5206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:25:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388023AbfG2PYm (ORCPT
+        id S2387998AbfG2PZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:24:42 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47632 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387693AbfG2PYl (ORCPT
+        Mon, 29 Jul 2019 11:25:25 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:34558 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387925AbfG2PZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:24:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FZx89eZZ1cBDWZtSjJDEcEp5nFP6/pPHiWDDeTBCfTQ=; b=NEamSqOt48WRoVpCxOh3/8dAG
-        WK6u8E+U0XGi+29bUCas9/PJV88ERYN99TwdcLcCpKfjLzLqrDM8FdSx/dTIlB2Ing2wOMyoLFjWn
-        O6mAt5DIepAlznjW+8hEOqoiEaeK6PhXdb2HCHz4pfVSTEs6FMylJTYdzxnkV/Sukg+Av5Qro6FYq
-        o0id/pAs8wRem/+ipiqiWLAjB+dw/52cXSb22+/uY53njU52OY/4QW3Ioe02/p1UWOpaOu1Ya/XfG
-        50sBtZKx+vHul9PmG3i6d9GVwwgmX9Jeskujp+zNWUanH30zVG23FpIT4fovM+0+D2nOZ+HlrSlUw
-        GMs4YIWkw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs7Vl-0003Ua-SO; Mon, 29 Jul 2019 15:24:30 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A15AB20B00021; Mon, 29 Jul 2019 17:24:28 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 17:24:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        Jan Stancek <jstancek@redhat.com>,
-        Waiman Long <longman@redhat.com>, dbueso@suse.de,
-        mingo@redhat.com, jade.alglave@arm.com, paulmck@linux.vnet.ibm.com
-Subject: Re: [PATCH 1/4] locking/rwsem: Add missing ACQUIRE to read_slowpath
- exit when queue is empty
-Message-ID: <20190729152428.GH31398@hirez.programming.kicks-ass.net>
-References: <20190718134954.496297975@infradead.org>
- <20190718135205.916241783@infradead.org>
- <20190719084956.GA6750@andrea>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190719084956.GA6750@andrea>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 29 Jul 2019 11:25:25 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6AEE212652B26;
+        Mon, 29 Jul 2019 08:25:24 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 08:25:21 -0700 (PDT)
+Message-Id: <20190729.082521.779227260174091484.davem@davemloft.net>
+To:     saeedm@mellanox.com
+Cc:     tanhuazhong@huawei.com, yisen.zhuang@huawei.com,
+        salil.mehta@huawei.com, linuxarm@huawei.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 net-next 00/10] net: hns3: some code optimizations &
+ bugfixes & features
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1aa604e4afe85fa9cfd2e47fbb5386c2c1041310.camel@mellanox.com>
+References: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
+        <1aa604e4afe85fa9cfd2e47fbb5386c2c1041310.camel@mellanox.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 08:25:24 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 10:49:56AM +0200, Andrea Parri wrote:
-> > @@ -1032,6 +1032,8 @@ rwsem_down_read_slowpath(struct rw_semap
-> >  		 */
-> >  		if (adjustment && !(atomic_long_read(&sem->count) &
-> >  		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
-> > +			/* Provide lock ACQUIRE */
-> > +			smp_acquire__after_ctrl_dep();
+From: Saeed Mahameed <saeedm@mellanox.com>
+Date: Mon, 29 Jul 2019 05:48:28 +0000
+
+> On Mon, 2019-07-29 at 10:53 +0800, Huazhong Tan wrote:
+>> This patch-set includes code optimizations, bugfixes and features for
+>> the HNS3 ethernet controller driver.
+ ...
 > 
-> Does this also make the lock RCtso?  Or maybe RCtso was already
-> guaranteed (and I'm failing to see why)?
+> Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
 
-I didn't specifically look for that, but I suspect not, esp given the
-next patch.
-
+Series applied.
