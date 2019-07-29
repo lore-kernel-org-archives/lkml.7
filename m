@@ -2,85 +2,152 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BA2C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CE2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC0821655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAECE2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:00:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="leQUpB9X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387543AbfG2K7a (ORCPT
+        id S2387551AbfG2LAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:59:30 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39076 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387424AbfG2K7a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:59:30 -0400
-Received: by mail-wm1-f67.google.com with SMTP id u25so42686804wmc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 03:59:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ZofcKDycB29XhDLuv66ThbXp2pcFI/cJTwXP21ke4VY=;
-        b=SGsICIkqW7Vf099EvOe8kfKjqr7WsNio+xUj5WqAyl81Y0YsSAIWzNQ91lhuikYzlW
-         q4WFo8SRra6AmOD6Q6Mz8WEGbeyx+H6D3RkyWZE8dExpLhIORuUvD84GR9tQH5BXhVlV
-         pqSFD0fjj/sJoFHfsQgjY0Dw2xF1asnbC9S+zPXqgYkTqhGhvlCP1GQ+GDHkjzo82Yqp
-         gnOF6bCqMPEfoVTkOjSjExJt7Wcoz7EpR6xrh1Nvqes7zYATwXGvhzcG5ra2hX0d8iRN
-         F7iI8b3fgr/krtR6dJuxa0IYkb/WgNhE5Py4BbrGUVewMv1bGqLowYqU3lrmnGcIzPO0
-         tVow==
-X-Gm-Message-State: APjAAAUwPbNnODnNMFD3JQfRMqJ5tz14vfXzuV1Gh3VN+8uGkVhPqVC0
-        6I2ugB3fyJod4FYpgF5Z5ukOLQ==
-X-Google-Smtp-Source: APXvYqz9v8tCt46RmejEdVRBDjbdRLOyKVUpwyHmlB+2XfNpS4AtquhMMTujdQfnT/E1zDJNlBGawA==
-X-Received: by 2002:a1c:9e90:: with SMTP id h138mr102770113wme.67.1564397968266;
-        Mon, 29 Jul 2019 03:59:28 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id o126sm56535812wmo.1.2019.07.29.03.59.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 03:59:27 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     lantianyu1986@gmail.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
-        daniel.lezcano@linaro.org, arnd@arndb.de,
-        michael.h.kelley@microsoft.com, ashal@kernel.org
-Subject: Re: [PATCH 0/2] clocksource/Hyper-V: Add Hyper-V specific sched clock function
-In-Reply-To: <20190729075243.22745-1-Tianyu.Lan@microsoft.com>
-References: <20190729075243.22745-1-Tianyu.Lan@microsoft.com>
-Date:   Mon, 29 Jul 2019 12:59:26 +0200
-Message-ID: <87zhkxksxd.fsf@vitty.brq.redhat.com>
+        Mon, 29 Jul 2019 07:00:04 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:9306 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387424AbfG2LAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:00:03 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45xxXs1Mfbz9v9MV;
+        Mon, 29 Jul 2019 12:59:57 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=leQUpB9X; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id pqQ-asZwJxQ2; Mon, 29 Jul 2019 12:59:57 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45xxXs04sfz9v9MP;
+        Mon, 29 Jul 2019 12:59:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1564397997; bh=Q6zyw4EZJ5gEddzqQzUfic9Tvl1l+HpodOi7ui8iTfk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=leQUpB9Xqg7PNZa+MMm508ZZMjjdEQ6GYlCSGxwOOFuR2y9NMrKz2TKUAy8cfIEfk
+         ypofah6XTB1nRdPum1An5DrULnmuHjws9Rf6JkUJuvYLTh04QOwqiznc8+E2zLJKYR
+         8D4lvMcw5Dm3rVjq6ATjqK+f0LVsO6abMnMOJKvI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D4D758B7CB;
+        Mon, 29 Jul 2019 13:00:01 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id wz0I_dwkhhke; Mon, 29 Jul 2019 13:00:01 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9DD3E8B7B3;
+        Mon, 29 Jul 2019 13:00:01 +0200 (CEST)
+Subject: Re: [RFC PATCH 02/10] powerpc: move memstart_addr and kernstart_addr
+ to init-common.c
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com
+Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
+        yebin10@huawei.com, thunder.leizhen@huawei.com,
+        jingxiangfeng@huawei.com, fanchengyang@huawei.com
+References: <20190717080621.40424-1-yanaijie@huawei.com>
+ <20190717080621.40424-3-yanaijie@huawei.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <28797c00-8ab7-207b-554a-e8dc3a457c6a@c-s.fr>
+Date:   Mon, 29 Jul 2019 13:00:01 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190717080621.40424-3-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lantianyu1986@gmail.com writes:
 
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->
-> Hyper-V guests use the default native_sched_clock() in pv_ops.time.sched_clock
-> on x86.  But native_sched_clock() directly uses the raw TSC value, which
-> can be discontinuous in a Hyper-V VM.   Add the generic hv_setup_sched_clock()
-> to set the sched clock function appropriately.  On x86, this sets
-> pv_ops.time.sched_clock to read the Hyper-V reference TSC value that is
-> scaled and adjusted to be continuous.
 
-Hypervisor can, in theory, disable TSC page and then we're forced to use
-MSR-based clocksource but using it as sched_clock() can be very slow,
-I'm afraid.
+Le 17/07/2019 à 10:06, Jason Yan a écrit :
+> These two variables are both defined in init_32.c and init_64.c. Move
+> them to init-common.c.
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Cc: Diana Craciun <diana.craciun@nxp.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Kees Cook <keescook@chromium.org>
 
-On the other hand, what we have now is probably worse: TSC can,
-actually, jump backwards (e.g. on migration) and we're breaking the
-requirements for sched_clock().
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
--- 
-Vitaly
+
+> ---
+>   arch/powerpc/mm/init-common.c | 5 +++++
+>   arch/powerpc/mm/init_32.c     | 5 -----
+>   arch/powerpc/mm/init_64.c     | 5 -----
+>   3 files changed, 5 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/init-common.c b/arch/powerpc/mm/init-common.c
+> index a84da92920f7..9273c38009cb 100644
+> --- a/arch/powerpc/mm/init-common.c
+> +++ b/arch/powerpc/mm/init-common.c
+> @@ -21,6 +21,11 @@
+>   #include <asm/pgtable.h>
+>   #include <asm/kup.h>
+>   
+> +phys_addr_t memstart_addr = (phys_addr_t)~0ull;
+> +EXPORT_SYMBOL(memstart_addr);
+> +phys_addr_t kernstart_addr;
+> +EXPORT_SYMBOL(kernstart_addr);
+> +
+>   static bool disable_kuep = !IS_ENABLED(CONFIG_PPC_KUEP);
+>   static bool disable_kuap = !IS_ENABLED(CONFIG_PPC_KUAP);
+>   
+> diff --git a/arch/powerpc/mm/init_32.c b/arch/powerpc/mm/init_32.c
+> index b04896a88d79..872df48ae41b 100644
+> --- a/arch/powerpc/mm/init_32.c
+> +++ b/arch/powerpc/mm/init_32.c
+> @@ -56,11 +56,6 @@
+>   phys_addr_t total_memory;
+>   phys_addr_t total_lowmem;
+>   
+> -phys_addr_t memstart_addr = (phys_addr_t)~0ull;
+> -EXPORT_SYMBOL(memstart_addr);
+> -phys_addr_t kernstart_addr;
+> -EXPORT_SYMBOL(kernstart_addr);
+> -
+>   #ifdef CONFIG_RELOCATABLE
+>   /* Used in __va()/__pa() */
+>   long long virt_phys_offset;
+> diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
+> index a44f6281ca3a..c836f1269ee7 100644
+> --- a/arch/powerpc/mm/init_64.c
+> +++ b/arch/powerpc/mm/init_64.c
+> @@ -63,11 +63,6 @@
+>   
+>   #include <mm/mmu_decl.h>
+>   
+> -phys_addr_t memstart_addr = ~0;
+> -EXPORT_SYMBOL_GPL(memstart_addr);
+> -phys_addr_t kernstart_addr;
+> -EXPORT_SYMBOL_GPL(kernstart_addr);
+> -
+>   #ifdef CONFIG_SPARSEMEM_VMEMMAP
+>   /*
+>    * Given an address within the vmemmap, determine the pfn of the page that
+> 
