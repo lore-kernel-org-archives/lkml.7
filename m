@@ -2,55 +2,54 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEC6C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7BDC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850F92171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA1322171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429753;
-	bh=0K6RHdAK4FBoesDM4xqngRUIE526J2Hk2OhVGo0EqLo=;
+	s=default; t=1564429756;
+	bh=GXLQEAEmuYk2XNPqRZ4LjIT/TEVruiwv4dJS6yy00WM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q9xohxziq4dPARj+2NHLKlKBXUfTHJ54M54fOrKwhUoRvJiB/V6dmhAezZtz0zxP0
-	 7CtwEqZiz2lF8l8ZmBm83icBq1e8i+iioINVTnCk0qVoWBNxXxBUmXJXpy8z6BUxug
-	 sMxcHLNRfmcGeU9qr8orxTV/B8qDAG/R5Fowk0x8=
+	b=L+PEJY6JqNQJywRoFYN3FTW3eIUjY8scNm7yWdn0OPN9rIBIAt0IWXSwCm0aOM5vZ
+	 y8yLPONrWk2cgzxudK4DuCynKtdnX8+cxdCx3pOudzOQvx12HcTTVI207yFyxjJcz1
+	 NlVp2yYM25+M+Ats8Yp34xfvPfOpG6Qtd0lTDggM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390062AbfG2TtL (ORCPT
+        id S2390493AbfG2TtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39562 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:49:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390478AbfG2TtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:49:08 -0400
+        id S2390283AbfG2TtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:49:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 401332171F;
-        Mon, 29 Jul 2019 19:49:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D66E221773;
+        Mon, 29 Jul 2019 19:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429747;
-        bh=0K6RHdAK4FBoesDM4xqngRUIE526J2Hk2OhVGo0EqLo=;
+        s=default; t=1564429750;
+        bh=GXLQEAEmuYk2XNPqRZ4LjIT/TEVruiwv4dJS6yy00WM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uZ4h28bWIAHZ3n5MjD8ZkGqW1Eg2Jc848Hq214RptRXfmCD1d4EjVUleDb9j+qOAb
-         5mbTPX2S6VKyRsabpqXrOJJiHoZ39rgwRJ7LV3Xm7tZlIJQYt3EwxKpwuE2/vhD11X
-         BQwDwWbj3Bh8MOswE2s/hc8hsl7wHDijlHjdEycE=
+        b=Y8iHJhz/V1h8V80yOyeZqS+OOikuc+Sc6p2u4AplILRB7aowa6gDt7JDK+4Bocit/
+         XX1F/7vuY+D7i8P+I93zzo8CyYWTYbf699uauTqveQG3WC59dFpz+Ai+0m2zWu4Bd6
+         Fxk13z3tJyejfR3sfx/LEUcdCoo/XauhwV7SJ3bw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
+        stable@vger.kernel.org, Peter Smith <peter.smith@linaro.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 083/215] net/ipv4: fib_trie: Avoid cryptic ternary expressions
-Date:   Mon, 29 Jul 2019 21:21:19 +0200
-Message-Id: <20190729190753.998851246@linuxfoundation.org>
+Subject: [PATCH 5.2 084/215] kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS
+Date:   Mon, 29 Jul 2019 21:21:20 +0200
+Message-Id: <20190729190754.125100755@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -63,46 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 25cec756891e8733433efea63b2254ddc93aa5cc ]
+[ Upstream commit 589834b3a0097a4908f4112eac0ca2feb486fa32 ]
 
-empty_child_inc/dec() use the ternary operator for conditional
-operations. The conditions involve the post/pre in/decrement
-operator and the operation is only performed when the condition
-is *not* true. This is hard to parse for humans, use a regular
-'if' construct instead and perform the in/decrement separately.
+In commit ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI
+drift"), the arm64 Makefile added -Wno-psabi to KBUILD_CFLAGS, which is
+a GCC only option so clang rightfully complains:
 
-This also fixes two warnings that are emitted about the value
-of the ternary expression being unused, when building the kernel
-with clang + "kbuild: Remove unnecessary -Wno-unused-value"
-(https://lore.kernel.org/patchwork/patch/1089869/):
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
 
-CC      net/ipv4/fib_trie.o
-net/ipv4/fib_trie.c:351:2: error: expression result unused [-Werror,-Wunused-value]
-        ++tn_info(n)->empty_children ? : ++tn_info(n)->full_children;
+https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
 
-Fixes: 95f60ea3e99a ("fib_trie: Add collapse() and should_collapse() to resize")
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+However, by default, this is merely a warning so the build happily goes
+on with a slew of these warnings in the process.
+
+Commit c3f0d0bc5b01 ("kbuild, LLVMLinux: Add -Werror to cc-option to
+support clang") worked around this behavior in cc-option by adding
+-Werror so that unknown flags cause an error. However, this all happens
+silently and when an unknown flag is added to the build unconditionally
+like -Wno-psabi, cc-option will always fail because there is always an
+unknown flag in the list of flags. This manifested as link time failures
+in the arm64 libstub because -fno-stack-protector didn't get added to
+KBUILD_CFLAGS.
+
+To avoid these weird cryptic failures in the future, make clang behave
+like gcc and immediately error when it encounters an unknown flag by
+adding -Werror=unknown-warning-option to CLANG_FLAGS. This can be added
+unconditionally for clang because it is supported by at least 3.0.0,
+according to godbolt [1] and 4.0.0, according to its documentation [2],
+which is far earlier than we typically support.
+
+[1]: https://godbolt.org/z/7F7rm3
+[2]: https://releases.llvm.org/4.0.0/tools/clang/docs/DiagnosticsReference.html#wunknown-warning-option
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/511
+Link: https://github.com/ClangBuiltLinux/linux/issues/517
+Suggested-by: Peter Smith <peter.smith@linaro.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Makefile.extrawarn | 1 -
- 1 file changed, 1 deletion(-)
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index 3ab8d1a303cd..b293246e48fe 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -68,7 +68,6 @@ else
- 
- ifdef CONFIG_CC_IS_CLANG
- KBUILD_CFLAGS += -Wno-initializer-overrides
--KBUILD_CFLAGS += -Wno-unused-value
- KBUILD_CFLAGS += -Wno-format
- KBUILD_CFLAGS += -Wno-sign-compare
- KBUILD_CFLAGS += -Wno-format-zero-length
+diff --git a/Makefile b/Makefile
+index 68ee97784c4d..fa0f48c43ab2 100644
+--- a/Makefile
++++ b/Makefile
+@@ -528,6 +528,7 @@ ifneq ($(GCC_TOOLCHAIN),)
+ CLANG_FLAGS	+= --gcc-toolchain=$(GCC_TOOLCHAIN)
+ endif
+ CLANG_FLAGS	+= -no-integrated-as
++CLANG_FLAGS	+= -Werror=unknown-warning-option
+ KBUILD_CFLAGS	+= $(CLANG_FLAGS)
+ KBUILD_AFLAGS	+= $(CLANG_FLAGS)
+ export CLANG_FLAGS
 -- 
 2.20.1
 
