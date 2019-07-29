@@ -2,134 +2,143 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B6AC7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D722AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9B7206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:02:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VlPXaYyP"
+	by mail.kernel.org (Postfix) with ESMTP id B067F206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564405376;
+	bh=Nj50RvGIEgpAZ37LNTWS5ynqsMWjn3lmP7Ky+d2eWR0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=EyfxGpCpokLgWV8S8WDf/Vix8hB25jMmTNPRXlYgN8axc6cx7M6VHq32fEW1Q23M5
+	 AZuo2IN7HW8MtjGwfh45moS1u5IcGsAH912tkypFA3YEYVCzdsCMpfxe4wJuCWFwAl
+	 cxTxIxucIEyVYcCVYp/iA0KCcc1yvMRzoupVMA+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387947AbfG2NCd (ORCPT
+        id S1728460AbfG2NCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 09:02:33 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56073 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbfG2NCZ (ORCPT
+        Mon, 29 Jul 2019 09:02:55 -0400
+Received: from icp-osb-irony-out3.external.iinet.net.au ([203.59.1.153]:13992
+        "EHLO icp-osb-irony-out3.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726674AbfG2NCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 09:02:25 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a15so53775962wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 06:02:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EvlHbCW1OevHbW9Yaby9CFqayEK2s/Y2m4Jve2BO5WQ=;
-        b=VlPXaYyPE4XBjSsfVxe3EjW4kowH8F7+G6YW+blqO2MW2TSUgeQr0Zuos0Ma6FWy/Q
-         5jcd3ND8KK+L+x0oslsy145/BK7NM9ViNdZo/8QCWFQprAkPDSwl2KYfBBp6HiI2qZE2
-         rdQyfzIZwe0u/l9+AyZKwG+LVikNAaoJwCMevQEkp+n1IpRQXYiF2NnpIB2iXNBQZ6KF
-         94G4LF7tuhl/TLiFfMZ9THMM5mSQLg+tdfLsLD0x1JagkBkV2Q9sc7UV4TzvAvJyZDgf
-         k8pu5zAAvVwvgZi7bvs7ogdjx7dL6M3AZ42kEuUVUXwcGX03X4tQAA/PN7iXN/iAcahm
-         iOew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EvlHbCW1OevHbW9Yaby9CFqayEK2s/Y2m4Jve2BO5WQ=;
-        b=mVwkt5pRMdYsUE5CJ0m0vu15yoM2ploaq08e8f4aJYsktQJK/9SmHqJHNOYah5OnwV
-         AmS7W81jCdY3pnDX0z/IAPhHXuBXu8BVmc/O/bPOdl1UhuVPZuDFkSqKoYjf4zH81RGl
-         H9WE40gi/FF/1U388N3H+idesLe26J3X1t9SfWOueFAnO+BtzCb7oIQ1/XIzkCY3iqXF
-         JfBH3WFV4VnlzlVdmnUWKnPVtN1ldiyhCbyQNvuRDjwYVdsKe9hv40uepLLvVfV8HoZF
-         SfrdCOcSCnyQnDuM+gBX0tbLyGFUR7N+VwjGQReeAqEfkrG2YbXYBACv4h05+0nQNNAL
-         uvLA==
-X-Gm-Message-State: APjAAAVGyWKCNzlY8TALCQWVTgGtfsPIliwU1PzzTlJB0MZbPVjPTTUf
-        mJsVagtJTxyKZtXLPC5jZ6sLMhvqiis=
-X-Google-Smtp-Source: APXvYqwQo1q5iaW3jvl4f3ZJ8VQMUpxNO5ykvWK67eymaccK4cp71AzuQkWF8mYx0Mt+HvpBngFHmw==
-X-Received: by 2002:a7b:c1c1:: with SMTP id a1mr104511842wmj.31.1564405343272;
-        Mon, 29 Jul 2019 06:02:23 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id x185sm52990545wmg.46.2019.07.29.06.02.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 06:02:22 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/2] soc: amlogic: meson-clk-measure: protect measure with a mutex
-Date:   Mon, 29 Jul 2019 15:02:17 +0200
-Message-Id: <20190729130218.6635-2-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729130218.6635-1-narmstrong@baylibre.com>
-References: <20190729130218.6635-1-narmstrong@baylibre.com>
+        Mon, 29 Jul 2019 09:02:54 -0400
+X-Greylist: delayed 558 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 09:02:53 EDT
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AWAAAF6z5d/zXSMGcNWRkBAQEBAQE?=
+ =?us-ascii?q?BAQEBAQEHAQEBAQEBgWeDBIEuhB6RZQEBAQEBBoEJCCWDZIV+kRoJAQEBAQE?=
+ =?us-ascii?q?BAQEBKwwBAYRAAoMPOBMBAwEBAQQBAQEBBQGFUjmFVgEBAQECASMVQQULCw0?=
+ =?us-ascii?q?LAgImAgJXBg0GAgEBgx4BgXYFHqsccYEyGoQZARRAQIMxgUiBDCiBY4oUeIE?=
+ =?us-ascii?q?HgTgMgl8+gmEEgTiDMoJYBIxFggSGL5V/CYIchluNMwYbgxuKMgOKPpQpXJI?=
+ =?us-ascii?q?bgXkzGggoCDuCOAEBMgmGKoRZhgxgjBmCUgEB?=
+X-IPAS-Result: =?us-ascii?q?A2AWAAAF6z5d/zXSMGcNWRkBAQEBAQEBAQEBAQEHAQEBA?=
+ =?us-ascii?q?QEBgWeDBIEuhB6RZQEBAQEBBoEJCCWDZIV+kRoJAQEBAQEBAQEBKwwBAYRAA?=
+ =?us-ascii?q?oMPOBMBAwEBAQQBAQEBBQGFUjmFVgEBAQECASMVQQULCw0LAgImAgJXBg0GA?=
+ =?us-ascii?q?gEBgx4BgXYFHqsccYEyGoQZARRAQIMxgUiBDCiBY4oUeIEHgTgMgl8+gmEEg?=
+ =?us-ascii?q?TiDMoJYBIxFggSGL5V/CYIchluNMwYbgxuKMgOKPpQpXJIbgXkzGggoCDuCO?=
+ =?us-ascii?q?AEBMgmGKoRZhgxgjBmCUgEB?=
+X-IronPort-AV: E=Sophos;i="5.64,322,1559491200"; 
+   d="scan'208";a="200466061"
+Received: from unknown (HELO [10.44.0.193]) ([103.48.210.53])
+  by icp-osb-irony-out3.iinet.net.au with ESMTP; 29 Jul 2019 20:53:32 +0800
+Subject: Re: [PATCH 1/6] ARM: ks8695: watchdog: stop using mach/*.h
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        arm-soc <arm@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+References: <20190415202501.941196-1-arnd@arndb.de>
+ <2424c672-e3fb-4c32-4c24-fafc59d03a96@uclinux.org>
+ <CACRpkdaJ+2bub_nDp9=5b4kyKjWDnOGKscWg3KsEVixDpk8rzA@mail.gmail.com>
+ <20190503170613.GA1783@roeck-us.net>
+ <d8d81aca-722d-8b5f-cd5f-30cc3e4e407b@kernel.org>
+ <CAK8P3a0StV==jMq1L9k91qEsvRD1Cw2FB1V25wr1AQqzmjsTVw@mail.gmail.com>
+From:   Greg Ungerer <gerg@kernel.org>
+Message-ID: <2bc41895-d4f9-896c-0726-0b2862fcbf25@kernel.org>
+Date:   Mon, 29 Jul 2019 22:53:30 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a0StV==jMq1L9k91qEsvRD1Cw2FB1V25wr1AQqzmjsTVw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to protect clock measuring when multiple process asks for
-a measure, protect the main measure function with mutexes.
+Hi Arnd,
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/soc/amlogic/meson-clk-measure.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+On 23/7/19 12:44 am, Arnd Bergmann wrote:
+> On Sat, May 4, 2019 at 4:27 PM Greg Ungerer <gerg@kernel.org> wrote:
+>> On 4/5/19 3:06 am, Guenter Roeck wrote:
+>>> On Fri, May 03, 2019 at 08:16:05AM +0100, Linus Walleij wrote:
+>>>> On Fri, May 3, 2019 at 8:02 AM Greg Ungerer <gerg@uclinux.org> wrote:
+>>>>> Ultimately though I am left wondering if the ks8695 support in the
+>>>>> kernel is useful to anyone the way it is at the moment. With a minimal
+>>>>> kernel configuration I can boot up to a shell - but the system is
+>>>>> really unreliable if you try to interactively use it. I don't think
+>>>>> it is the hardware - it seems to run reliably with the old code
+>>>>> it has running from flash on it. I am only testing the new kernel,
+>>>>> running with the existing user space root filesystem on it (which
+>>>>> dates from 2004 :-)
+>>>>
+>>>> Personally I think it is a bad sign that this subarch and boards do
+>>>> not have active OpenWrt support, they are routers after all (right?)
+>>>> and any active use of networking equipment should use a recent
+>>>> userspace as well, given all the security bugs that popped up over
+>>>> the years.
+> 
+> Looking around on the internet, I found that Micrel at some point
+> had their own openwrt fork for ks8695, but I can't find a copy
+> any more, as the micrel.com domain is no longer used after the
+> acquisition by Microchip.
 
-diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-index 19d4cbc93a17..c470e24f1dfa 100644
---- a/drivers/soc/amlogic/meson-clk-measure.c
-+++ b/drivers/soc/amlogic/meson-clk-measure.c
-@@ -11,6 +11,8 @@
- #include <linux/debugfs.h>
- #include <linux/regmap.h>
- 
-+static DEFINE_MUTEX(measure_lock);
-+
- #define MSR_CLK_DUTY		0x0
- #define MSR_CLK_REG0		0x4
- #define MSR_CLK_REG1		0x8
-@@ -360,6 +362,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 	unsigned int val;
- 	int ret;
- 
-+	ret = mutex_lock_interruptible(&measure_lock);
-+	if (ret)
-+		return ret;
-+
- 	regmap_write(priv->regmap, MSR_CLK_REG0, 0);
- 
- 	/* Set measurement duration */
-@@ -377,8 +383,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 
- 	ret = regmap_read_poll_timeout(priv->regmap, MSR_CLK_REG0,
- 				       val, !(val & MSR_BUSY), 10, 10000);
--	if (ret)
-+	if (ret) {
-+		mutex_unlock(&measure_lock);
- 		return ret;
-+	}
- 
- 	/* Disable */
- 	regmap_update_bits(priv->regmap, MSR_CLK_REG0, MSR_ENABLE, 0);
-@@ -386,6 +394,8 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 	/* Get the value in multiple of gate time counts */
- 	regmap_read(priv->regmap, MSR_CLK_REG2, &val);
- 
-+	mutex_unlock(&measure_lock);
-+
- 	if (val >= MSR_VAL_MASK)
- 		return -EINVAL;
- 
--- 
-2.22.0
+I build it with uClinux-dist, https://sourceforge.net/projects/uclinux/files/uClinux%20Stable/.
+And again I can build for it, it just doesn't currently work
+in any sort of reasonable way. So I get the impression it
+hasn't worked for a while and nobody has noticed.
+
+
+> https://wikidevi.com/wiki/Micrel has a list of devices based on
+> ks8695, and it seems that most of these are rather memory
+> limited, which is a problem for recent openwrt builds.
+> 
+> Only two of the 17 listed devices have the absolute minimum of 4MB
+> flash and 32MB RAM for openwrt, two more have 8/32 and one
+> or two have 4/64, but all these configurations are too limited for the
+> web U/I now.
+
+
+>>>> With IXP4xx, Gemini and EP93xx we have found active users and
+>>>> companies selling the chips and reference designs and even
+>>>> recommending it for new products (!) at times.  If this is not the
+>>>> case with KS8695 and no hobbyists are willing to submit it
+>>>> to OpenWrt and modernize it to use device tree I think it should be
+>>>> deleted from the kernel.
+>>>>
+>>>
+>>> That may be the best approach if indeed no one is using it,
+>>> much less maintaining it.
+>>
+>> Well, I for one don't really use it any more. So I don't have a lot
+>> of motivation to maintain it any longer.
+> 
+> I came across my patches while rebasing my backlog to 5.3-rc1.
+> 
+> Should I save the (very small) trouble of sending them out again
+> and just remove the platform then?
+
+At this time I have no issue with removing it.
+
+Regards
+Greg
 
