@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A717AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86E1C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6617A21773
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A5F2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428874;
-	bh=i8k7dCpkFk85zm07G0bXS/wey0EkGA6BUjPmersWp/g=;
+	s=default; t=1564428877;
+	bh=ItaiDneyzVoTv3qjq7MuM6mtz8MIKKdHSZqu5PLeKSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N4MdUw0AQoGGcLGUcYNudIDR4eALDKXQCUpGZFo6d1Id/qfSUnEoo/RF1Aj3deKpK
-	 h/AAlzckDK3zHbbTRO3pb+vz0URAgYqzZ5+4HdjiWPvai4NPxZfxOHQf1Ujwm88wSF
-	 UcFW7/FQm5ZakgQ42mK9eduSbvbe0vxxtPyosl+E=
+	b=CEADcCpU13M7nOB7X4oVcLzxgLgLFecksODwtHTo8aBARWBQMqLJP5ZpV8JSdCGNq
+	 DF00qCKxF7JoC5Y3+2AiAyCtY7r99gSrrC8hXNvUsZnwNmubGzhT262hIx8FMl9xMM
+	 JfRSfsw0h3BB6oIg3aM60K3sN8/MXNff47qSCQxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388048AbfG2Tec (ORCPT
+        id S2387571AbfG2Teg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:34:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48842 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:34:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388434AbfG2Te2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:34:28 -0400
+        id S2388446AbfG2Teb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:34:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5EA02070B;
-        Mon, 29 Jul 2019 19:34:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6158B2171F;
+        Mon, 29 Jul 2019 19:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428867;
-        bh=i8k7dCpkFk85zm07G0bXS/wey0EkGA6BUjPmersWp/g=;
+        s=default; t=1564428869;
+        bh=ItaiDneyzVoTv3qjq7MuM6mtz8MIKKdHSZqu5PLeKSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2bEjW6EDDsdJRqnG5wH3x5uuToSccWPg1A9BEo+djifcfTWzG8LsnHPuOdgRGZPUH
-         zm0ScUgYB3Go23bH9aFSEwJ9Z3fLloQpfyvPDfiAjy6cM6GiNC7IipjXvd4F4qNWW8
-         nciu2dZi9+ugQiiGNl11NBrctBBXKgwHNDkXxETk=
+        b=ND7pr93K997W8kvDv7eP6ewVDeU/urIjnVfKPk+KlkjsekRx4nbYnjjzV5vaxK+Nm
+         k/5WhZhnMsCCGn2+n167ybOimFTS/cfvG9iWsTRYttTMv5PZy4QRDcRuFHef9CWNau
+         RT5/QasWCA+tkxHWgObb3H+MSHsFgEZoqUpaD6io=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
         Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 211/293] jbd2: introduce jbd2_inode dirty range scoping
-Date:   Mon, 29 Jul 2019 21:21:42 +0200
-Message-Id: <20190729190840.630244034@linuxfoundation.org>
+Subject: [PATCH 4.14 212/293] ext4: use jbd2_inode dirty range scoping
+Date:   Mon, 29 Jul 2019 21:21:43 +0200
+Message-Id: <20190729190840.707790839@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,31 +61,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ross Zwisler <zwisler@chromium.org>
 
-commit 6ba0e7dc64a5adcda2fbe65adc466891795d639e upstream.
+commit 73131fbb003b3691cfcf9656f234b00da497fcd6 upstream.
 
-Currently both journal_submit_inode_data_buffers() and
-journal_finish_inode_data_buffers() operate on the entire address space
-of each of the inodes associated with a given journal entry.  The
-consequence of this is that if we have an inode where we are constantly
-appending dirty pages we can end up waiting for an indefinite amount of
-time in journal_finish_inode_data_buffers() while we wait for all the
-pages under writeback to be written out.
-
-The easiest way to cause this type of workload is do just dd from
-/dev/zero to a file until it fills the entire filesystem.  This can
-cause journal_finish_inode_data_buffers() to wait for the duration of
-the entire dd operation.
-
-We can improve this situation by scoping each of the inode dirty ranges
-associated with a given transaction.  We do this via the jbd2_inode
-structure so that the scoping is contained within jbd2 and so that it
-follows the lifetime and locking rules for that structure.
-
-This allows us to limit the writeback & wait in
-journal_submit_inode_data_buffers() and
-journal_finish_inode_data_buffers() respectively to the dirty range for
-a given struct jdb2_inode, keeping us from waiting forever if the inode
-in question is still being appended to.
+Use the newly introduced jbd2_inode dirty range scoping to prevent us
+from waiting forever when trying to complete a journal transaction.
 
 Signed-off-by: Ross Zwisler <zwisler@google.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
@@ -94,216 +73,82 @@ Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/commit.c      |   23 +++++++++++++++++------
- fs/jbd2/journal.c     |    4 ++++
- fs/jbd2/transaction.c |   49 ++++++++++++++++++++++++++++---------------------
- include/linux/jbd2.h  |   22 ++++++++++++++++++++++
- 4 files changed, 71 insertions(+), 27 deletions(-)
+ fs/ext4/ext4_jbd2.h   |   12 ++++++------
+ fs/ext4/inode.c       |   13 ++++++++++---
+ fs/ext4/move_extent.c |    3 ++-
+ 3 files changed, 18 insertions(+), 10 deletions(-)
 
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -189,14 +189,15 @@ static int journal_wait_on_commit_record
-  * use writepages() because with dealyed allocation we may be doing
-  * block allocation in writepages().
-  */
--static int journal_submit_inode_data_buffers(struct address_space *mapping)
-+static int journal_submit_inode_data_buffers(struct address_space *mapping,
-+		loff_t dirty_start, loff_t dirty_end)
+--- a/fs/ext4/ext4_jbd2.h
++++ b/fs/ext4/ext4_jbd2.h
+@@ -364,20 +364,20 @@ static inline int ext4_journal_force_com
+ }
+ 
+ static inline int ext4_jbd2_inode_add_write(handle_t *handle,
+-					    struct inode *inode)
++		struct inode *inode, loff_t start_byte, loff_t length)
  {
- 	int ret;
- 	struct writeback_control wbc = {
- 		.sync_mode =  WB_SYNC_ALL,
- 		.nr_to_write = mapping->nrpages * 2,
--		.range_start = 0,
--		.range_end = i_size_read(mapping->host),
-+		.range_start = dirty_start,
-+		.range_end = dirty_end,
- 	};
+ 	if (ext4_handle_valid(handle))
+-		return jbd2_journal_inode_add_write(handle,
+-						    EXT4_I(inode)->jinode);
++		return jbd2_journal_inode_ranged_write(handle,
++				EXT4_I(inode)->jinode, start_byte, length);
+ 	return 0;
+ }
  
- 	ret = generic_writepages(mapping, &wbc);
-@@ -220,6 +221,9 @@ static int journal_submit_data_buffers(j
+ static inline int ext4_jbd2_inode_add_wait(handle_t *handle,
+-					   struct inode *inode)
++		struct inode *inode, loff_t start_byte, loff_t length)
+ {
+ 	if (ext4_handle_valid(handle))
+-		return jbd2_journal_inode_add_wait(handle,
+-						   EXT4_I(inode)->jinode);
++		return jbd2_journal_inode_ranged_wait(handle,
++				EXT4_I(inode)->jinode, start_byte, length);
+ 	return 0;
+ }
  
- 	spin_lock(&journal->j_list_lock);
- 	list_for_each_entry(jinode, &commit_transaction->t_inode_list, i_list) {
-+		loff_t dirty_start = jinode->i_dirty_start;
-+		loff_t dirty_end = jinode->i_dirty_end;
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -728,10 +728,16 @@ out_sem:
+ 		    !(flags & EXT4_GET_BLOCKS_ZERO) &&
+ 		    !ext4_is_quota_file(inode) &&
+ 		    ext4_should_order_data(inode)) {
++			loff_t start_byte =
++				(loff_t)map->m_lblk << inode->i_blkbits;
++			loff_t length = (loff_t)map->m_len << inode->i_blkbits;
 +
- 		if (!(jinode->i_flags & JI_WRITE_DATA))
- 			continue;
- 		mapping = jinode->i_vfs_inode->i_mapping;
-@@ -232,7 +236,8 @@ static int journal_submit_data_buffers(j
- 		 * only allocated blocks here.
- 		 */
- 		trace_jbd2_submit_inode_data(jinode->i_vfs_inode);
--		err = journal_submit_inode_data_buffers(mapping);
-+		err = journal_submit_inode_data_buffers(mapping, dirty_start,
-+				dirty_end);
- 		if (!ret)
- 			ret = err;
- 		spin_lock(&journal->j_list_lock);
-@@ -259,12 +264,16 @@ static int journal_finish_inode_data_buf
- 	/* For locking, see the comment in journal_submit_data_buffers() */
- 	spin_lock(&journal->j_list_lock);
- 	list_for_each_entry(jinode, &commit_transaction->t_inode_list, i_list) {
-+		loff_t dirty_start = jinode->i_dirty_start;
-+		loff_t dirty_end = jinode->i_dirty_end;
-+
- 		if (!(jinode->i_flags & JI_WAIT_DATA))
- 			continue;
- 		jinode->i_flags |= JI_COMMIT_RUNNING;
- 		spin_unlock(&journal->j_list_lock);
--		err = filemap_fdatawait_keep_errors(
--				jinode->i_vfs_inode->i_mapping);
-+		err = filemap_fdatawait_range_keep_errors(
-+				jinode->i_vfs_inode->i_mapping, dirty_start,
-+				dirty_end);
- 		if (!ret)
- 			ret = err;
- 		spin_lock(&journal->j_list_lock);
-@@ -284,6 +293,8 @@ static int journal_finish_inode_data_buf
- 				&jinode->i_transaction->t_inode_list);
- 		} else {
- 			jinode->i_transaction = NULL;
-+			jinode->i_dirty_start = 0;
-+			jinode->i_dirty_end = 0;
+ 			if (flags & EXT4_GET_BLOCKS_IO_SUBMIT)
+-				ret = ext4_jbd2_inode_add_wait(handle, inode);
++				ret = ext4_jbd2_inode_add_wait(handle, inode,
++						start_byte, length);
+ 			else
+-				ret = ext4_jbd2_inode_add_write(handle, inode);
++				ret = ext4_jbd2_inode_add_write(handle, inode,
++						start_byte, length);
+ 			if (ret)
+ 				return ret;
  		}
+@@ -4004,7 +4010,8 @@ static int __ext4_block_zero_page_range(
+ 		err = 0;
+ 		mark_buffer_dirty(bh);
+ 		if (ext4_should_order_data(inode))
+-			err = ext4_jbd2_inode_add_write(handle, inode);
++			err = ext4_jbd2_inode_add_write(handle, inode, from,
++					length);
  	}
- 	spin_unlock(&journal->j_list_lock);
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -97,6 +97,8 @@ EXPORT_SYMBOL(jbd2_journal_try_to_free_b
- EXPORT_SYMBOL(jbd2_journal_force_commit);
- EXPORT_SYMBOL(jbd2_journal_inode_add_write);
- EXPORT_SYMBOL(jbd2_journal_inode_add_wait);
-+EXPORT_SYMBOL(jbd2_journal_inode_ranged_write);
-+EXPORT_SYMBOL(jbd2_journal_inode_ranged_wait);
- EXPORT_SYMBOL(jbd2_journal_init_jbd_inode);
- EXPORT_SYMBOL(jbd2_journal_release_jbd_inode);
- EXPORT_SYMBOL(jbd2_journal_begin_ordered_truncate);
-@@ -2581,6 +2583,8 @@ void jbd2_journal_init_jbd_inode(struct
- 	jinode->i_next_transaction = NULL;
- 	jinode->i_vfs_inode = inode;
- 	jinode->i_flags = 0;
-+	jinode->i_dirty_start = 0;
-+	jinode->i_dirty_end = 0;
- 	INIT_LIST_HEAD(&jinode->i_list);
- }
  
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -2503,7 +2503,7 @@ void jbd2_journal_refile_buffer(journal_
-  * File inode in the inode list of the handle's transaction
-  */
- static int jbd2_journal_file_inode(handle_t *handle, struct jbd2_inode *jinode,
--				   unsigned long flags)
-+		unsigned long flags, loff_t start_byte, loff_t end_byte)
- {
- 	transaction_t *transaction = handle->h_transaction;
- 	journal_t *journal;
-@@ -2515,26 +2515,17 @@ static int jbd2_journal_file_inode(handl
- 	jbd_debug(4, "Adding inode %lu, tid:%d\n", jinode->i_vfs_inode->i_ino,
- 			transaction->t_tid);
+ unlock:
+--- a/fs/ext4/move_extent.c
++++ b/fs/ext4/move_extent.c
+@@ -400,7 +400,8 @@ data_copy:
  
--	/*
--	 * First check whether inode isn't already on the transaction's
--	 * lists without taking the lock. Note that this check is safe
--	 * without the lock as we cannot race with somebody removing inode
--	 * from the transaction. The reason is that we remove inode from the
--	 * transaction only in journal_release_jbd_inode() and when we commit
--	 * the transaction. We are guarded from the first case by holding
--	 * a reference to the inode. We are safe against the second case
--	 * because if jinode->i_transaction == transaction, commit code
--	 * cannot touch the transaction because we hold reference to it,
--	 * and if jinode->i_next_transaction == transaction, commit code
--	 * will only file the inode where we want it.
--	 */
--	if ((jinode->i_transaction == transaction ||
--	    jinode->i_next_transaction == transaction) &&
--	    (jinode->i_flags & flags) == flags)
--		return 0;
--
- 	spin_lock(&journal->j_list_lock);
- 	jinode->i_flags |= flags;
-+
-+	if (jinode->i_dirty_end) {
-+		jinode->i_dirty_start = min(jinode->i_dirty_start, start_byte);
-+		jinode->i_dirty_end = max(jinode->i_dirty_end, end_byte);
-+	} else {
-+		jinode->i_dirty_start = start_byte;
-+		jinode->i_dirty_end = end_byte;
-+	}
-+
- 	/* Is inode already attached where we need it? */
- 	if (jinode->i_transaction == transaction ||
- 	    jinode->i_next_transaction == transaction)
-@@ -2569,12 +2560,28 @@ done:
- int jbd2_journal_inode_add_write(handle_t *handle, struct jbd2_inode *jinode)
- {
- 	return jbd2_journal_file_inode(handle, jinode,
--				       JI_WRITE_DATA | JI_WAIT_DATA);
-+			JI_WRITE_DATA | JI_WAIT_DATA, 0, LLONG_MAX);
- }
+ 	/* Even in case of data=writeback it is reasonable to pin
+ 	 * inode to transaction, to prevent unexpected data loss */
+-	*err = ext4_jbd2_inode_add_write(handle, orig_inode);
++	*err = ext4_jbd2_inode_add_write(handle, orig_inode,
++			(loff_t)orig_page_offset << PAGE_SHIFT, replaced_size);
  
- int jbd2_journal_inode_add_wait(handle_t *handle, struct jbd2_inode *jinode)
- {
--	return jbd2_journal_file_inode(handle, jinode, JI_WAIT_DATA);
-+	return jbd2_journal_file_inode(handle, jinode, JI_WAIT_DATA, 0,
-+			LLONG_MAX);
-+}
-+
-+int jbd2_journal_inode_ranged_write(handle_t *handle,
-+		struct jbd2_inode *jinode, loff_t start_byte, loff_t length)
-+{
-+	return jbd2_journal_file_inode(handle, jinode,
-+			JI_WRITE_DATA | JI_WAIT_DATA, start_byte,
-+			start_byte + length - 1);
-+}
-+
-+int jbd2_journal_inode_ranged_wait(handle_t *handle, struct jbd2_inode *jinode,
-+		loff_t start_byte, loff_t length)
-+{
-+	return jbd2_journal_file_inode(handle, jinode, JI_WAIT_DATA,
-+			start_byte, start_byte + length - 1);
- }
- 
- /*
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -454,6 +454,22 @@ struct jbd2_inode {
- 	 * @i_flags: Flags of inode [j_list_lock]
- 	 */
- 	unsigned long i_flags;
-+
-+	/**
-+	 * @i_dirty_start:
-+	 *
-+	 * Offset in bytes where the dirty range for this inode starts.
-+	 * [j_list_lock]
-+	 */
-+	loff_t i_dirty_start;
-+
-+	/**
-+	 * @i_dirty_end:
-+	 *
-+	 * Inclusive offset in bytes where the dirty range for this inode
-+	 * ends. [j_list_lock]
-+	 */
-+	loff_t i_dirty_end;
- };
- 
- struct jbd2_revoke_table_s;
-@@ -1399,6 +1415,12 @@ extern int	   jbd2_journal_force_commit(
- extern int	   jbd2_journal_force_commit_nested(journal_t *);
- extern int	   jbd2_journal_inode_add_write(handle_t *handle, struct jbd2_inode *inode);
- extern int	   jbd2_journal_inode_add_wait(handle_t *handle, struct jbd2_inode *inode);
-+extern int	   jbd2_journal_inode_ranged_write(handle_t *handle,
-+			struct jbd2_inode *inode, loff_t start_byte,
-+			loff_t length);
-+extern int	   jbd2_journal_inode_ranged_wait(handle_t *handle,
-+			struct jbd2_inode *inode, loff_t start_byte,
-+			loff_t length);
- extern int	   jbd2_journal_begin_ordered_truncate(journal_t *journal,
- 				struct jbd2_inode *inode, loff_t new_size);
- extern void	   jbd2_journal_init_jbd_inode(struct jbd2_inode *jinode, struct inode *inode);
+ unlock_pages:
+ 	unlock_page(pagep[0]);
 
 
