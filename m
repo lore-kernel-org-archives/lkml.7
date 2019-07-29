@@ -2,146 +2,135 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08570C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCBAC7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF04520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DwZvqBjX"
+	by mail.kernel.org (Postfix) with ESMTP id 71F4F20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbfG2Q1e (ORCPT
+        id S2387534AbfG2Q2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:27:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45171 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbfG2Q1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:27:34 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so62511318wre.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mHHPMQ336CdhvDwSHAm2ZkUObmC6MYlngRuFkjj6+rQ=;
-        b=DwZvqBjX9KZPS22QyEa1iILLH2hTN+dUD4/1b4KsFWjmUYFEpnvMp5tSzwCOjk7nXb
-         47dFo9DlBP6wgTwKxLmF9vyO4cn8qs5wQBO3Omtt8RKttUKk/isZrTTkLcrQdd1Z7rRs
-         D46FJFRHuv3mVsh6Y7jppOHWDuC0krJot6cLHZjhOkilCIqI+IccrKR5Wgj8v288QNhh
-         Tm5F5iCRaAl3tKxEvEcc8RgJY7oAHbrGH0Ly1ylK9L/y6pN0E7y5Qftdv8n8Pr5y5F9q
-         oicicY+3MN+3DuQaNUXBk9ldinCIorc4sLE/AzB8zq6Q6VeVknCRYat0EcKOmFDaTqsI
-         ZCQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mHHPMQ336CdhvDwSHAm2ZkUObmC6MYlngRuFkjj6+rQ=;
-        b=uNsq7FD2GzBk+QieX4VeN0eVW6eGqyBqfQz9CQAvAkGtc3G5D/Xdy8AMeCYXYcgDMD
-         THXblzgfYmfikOa1nLQTS0dzoIvtg/QA+4bIh5sO0UzYRwNB6o8iTW66CUlsevf66wdM
-         rvTdr0c1zDxTwVrUL66d3tx7kvwHnWTs7jyTgwDKkD3+V2Uy3kqUMhtKk/XI1KUkBh0Y
-         BQwLo07V/9W3yUvq1o+P6vV42qoFMDhvXVQbrncPTcM8qJuXAnje8hbkHscfebgmkyss
-         BVsVk/bInXXPZfgheup73fZykfgeR7fyFbajcpQbiDNUzsxlVAcAziOK/UcVZzugduKo
-         4AMw==
-X-Gm-Message-State: APjAAAWX5nvxj7CmtskjUbh9+lVNVddBuyrBQNn5QL20SxynpN9rRKqv
-        iEZCopVXC09CNqgdGEzWQ4Y9c64oPG5oA2OzR+VPnA==
-X-Google-Smtp-Source: APXvYqzQB1oJO3+x7XEVtNxM0vZcfRsQTHn2vaqSNFdzqGSy1CwX28tXj8TGjJHa9RkugwuUHla2pK2K30V09V6Y15E=
-X-Received: by 2002:adf:e50c:: with SMTP id j12mr37995479wrm.117.1564417651286;
- Mon, 29 Jul 2019 09:27:31 -0700 (PDT)
+        Mon, 29 Jul 2019 12:28:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37658 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727823AbfG2Q2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:28:13 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 22DA04DB1F;
+        Mon, 29 Jul 2019 16:28:13 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D26E5D9C3;
+        Mon, 29 Jul 2019 16:28:11 +0000 (UTC)
+Message-ID: <ee858ba02e8e560672aff68aead2323bc2136b6c.camel@redhat.com>
+Subject: Re: [PATCH] infiniband: hw: cxgb3: Fix a possible null-pointer
+ dereference in connect_reply_upcall()
+From:   Doug Ledford <dledford@redhat.com>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>, bharat@chelsio.com,
+        jgg@ziepe.ca
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 29 Jul 2019 12:28:09 -0400
+In-Reply-To: <20190725121508.16352-1-baijiaju1990@gmail.com>
+References: <20190725121508.16352-1-baijiaju1990@gmail.com>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-YogQSHis/dLMip/kO+pD"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-References: <1563864339-2621-1-git-send-email-kerneljasonxing@linux.alibaba.com>
- <20190729152957.GA21958@cmpxchg.org>
-In-Reply-To: <20190729152957.GA21958@cmpxchg.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Mon, 29 Jul 2019 09:27:20 -0700
-Message-ID: <CAJuCfpFsPn9MeS-pWcrAj1ZcVZXJNn94Vina6se2MgApgEFxHQ@mail.gmail.com>
-Subject: Re: [PATCH] psi: get poll_work to run when calling poll syscall next time
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Jason Xing <kerneljasonxing@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dennis Zhou <dennis@kernel.org>, axboe@kernel.dk,
-        lizefan@huawei.com, Tejun Heo <tj@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 29 Jul 2019 16:28:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 8:30 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> Hi Jason,
->
-> On Tue, Jul 23, 2019 at 02:45:39PM +0800, Jason Xing wrote:
-> > Only when calling the poll syscall the first time can user
-> > receive POLLPRI correctly. After that, user always fails to
-> > acquire the event signal.
-> >
-> > Reproduce case:
-> > 1. Get the monitor code in Documentation/accounting/psi.txt
-> > 2. Run it, and wait for the event triggered.
-> > 3. Kill and restart the process.
-> >
-> > If the user doesn't kill the monitor process, it seems the
-> > poll_work works fine. After killing and restarting the monitor,
-> > the poll_work in kernel will never run again due to the wrong
-> > value of poll_scheduled. Therefore, we should reset the value
-> > as group_init() does after the last trigger is destroyed.
-> >
-> > Signed-off-by: Jason Xing <kerneljasonxing@linux.alibaba.com>
->
-> Good catch, and the fix makes sense to me. However, it was a bit hard
-> to understand how the problem occurs:
->
-> > ---
-> >  kernel/sched/psi.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> > index 7acc632..66f4385 100644
-> > --- a/kernel/sched/psi.c
-> > +++ b/kernel/sched/psi.c
-> > @@ -1133,6 +1133,12 @@ static void psi_trigger_destroy(struct kref *ref)
-> >       if (kworker_to_destroy) {
-> >               kthread_cancel_delayed_work_sync(&group->poll_work);
-> >               kthread_destroy_worker(kworker_to_destroy);
-> > +             /*
-> > +              * The poll_work should have the chance to be put into the
-> > +              * kthread queue when calling poll syscall next time. So
-> > +              * reset poll_scheduled to zero as group_init() does
-> > +              */
-> > +             atomic_set(&group->poll_scheduled, 0);
->
-> The question is why we can end up with poll_scheduled = 1 but the work
-> not running (which would reset it to 0). And the answer is because the
-> scheduling side sees group->poll_kworker under RCU protection and then
-> schedules it, but here we cancel the work and destroy the worker. The
-> cancel needs to pair with resetting the poll_scheduled flag:
->
->         if (kworker_to_destroy) {
->                 /*
->                  * After the RCU grace period has expired, the worker
->                  * can no longer be found through group->poll_kworker.
->                  * But it might have been already scheduled before
->                  * that - deschedule it cleanly before destroying it.
->                  */
->                 kthread_cancel_delayed_work_sync(&group->poll_work);
->                 atomic_set(&group->poll_scheduled, 0);
->
->                 kthread_destroy_worker(kworker_to_destroy);
->         }
->
-> With that change, please add:
->
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
->
-> Thanks!
 
-The changes makes sense to me as well. Thanks!
+--=-YogQSHis/dLMip/kO+pD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+On Thu, 2019-07-25 at 20:15 +0800, Jia-Ju Bai wrote:
+> In connect_reply_upcall(), there is an if statement on line 730 to
+> check
+> whether ep->com.cm_id is NULL:
+>     if (ep->com.cm_id)
+>=20
+> When ep->com.cm_id is NULL, it is used on line 736:
+>     ep->com.cm_id->rem_ref(ep->com.cm_id);
+>=20
+> Thus, a possible null-pointer dereference may occur.
+>=20
+> To fix this bug, ep->com.cm_id is checked before being used.
+>=20
+> This bug is found by a static analysis tool STCheck written by us.
+
+I think this is one of those theoretical issues that is a non-issue in
+practice.  The cxgb3 driver is older than dirt and only hangs around
+because people out there are still using it in a few places.  We have no
+reports of bugs in this function.  I looked through the code, but it
+wasn't quickly obvious why this isn't an issue, but I suspect the real
+answer is "we can never have a negative status and not have a cm_id" as
+a result of the design of the code.  Verifying that with an audit is
+more time than I want to spend though.  So, I'm going to drop this
+patch.  If you can find a plausible path by which this is actually a
+bug, then we can revisit it.  But I don't want to go around changing a
+known working for years driver on the basis of "my new static code
+checker found this thing" versus someone who reports an actual crash
+(which is what this bug would cause if it exists).
+
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> ---
+>  drivers/infiniband/hw/cxgb3/iwch_cm.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/infiniband/hw/cxgb3/iwch_cm.c
+> b/drivers/infiniband/hw/cxgb3/iwch_cm.c
+> index 0bca72cb4d9a..2b31c4726d3e 100644
+> --- a/drivers/infiniband/hw/cxgb3/iwch_cm.c
+> +++ b/drivers/infiniband/hw/cxgb3/iwch_cm.c
+> @@ -733,7 +733,8 @@ static void connect_reply_upcall(struct iwch_ep
+> *ep, int status)
+>  		ep->com.cm_id->event_handler(ep->com.cm_id, &event);
+>  	}
+>  	if (status < 0) {
+> -		ep->com.cm_id->rem_ref(ep->com.cm_id);
+> +		if (ep->com.cm_id)
+> +			ep->com.cm_id->rem_ref(ep->com.cm_id);
+>  		ep->com.cm_id =3D NULL;
+>  		ep->com.qp =3D NULL;
+>  	}
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-YogQSHis/dLMip/kO+pD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl0/HpkACgkQuCajMw5X
+L90CNw//Y6UQ1pxYfjyvEe7fu8Ltg+vL3hoLkfuH5MEGWSYUdyntysX3sj3iYWtP
+w4WniX9GtVbTcKZCU82FZrajQcFWvh+5+O/ouyKLeMXs6DXPej8G0zt4p8XnlI60
+1uct3Kjytw3Fmr3iGk86190S3Gh1eRx8CMOZhKPKeb84VhpJg2evqu9VTjwwcCSG
+a7k9sEBiXzfblUQT4kvWEDQF7ycbZtF5e2EO78gv2g+t66u5N8U+WWgzxIpLD1Jw
+qeIHnvV/ymp2OzW5aHZCjJPacZOTFlTBMy2CLJCpaRU5anh1KGIsb0e/mDprNL/w
+rX48cnTSQym67wq7w67HRj7mRfi+S38YEHqYlWZfkYvlf62yuKpNoQCTWTUYj8N7
+biWz2bvXEpFfTN5uw1QQmfx2bOyGByyCqj23ZrvcXSPE0dZigUXAOxAfi8LyuXil
+9PzLZ2ezuqxQOu5TJNTTe8kIJgFHjQZW2FrJqC40wRrcXcoqvDdQDbDmqWiNPSiw
+xihr213HIzlrNf4Hu5Bv+9ai/WeH0xrF124ieW7sYRNG8uh81b2C5Ammg2hgjeLs
+AU3KmQnY6gcVnlVrG0FwgxDeZi20lu8SPMwi3XMT5sq4Ytq/jXUnr0iEMUjv6NZ/
+5lSdWianq6yxOKeQjDm1fYIbHHl4mhoz3k4DGySjqXuFNE2aaJU=
+=dMEI
+-----END PGP SIGNATURE-----
+
+--=-YogQSHis/dLMip/kO+pD--
+
