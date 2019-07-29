@@ -2,79 +2,154 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E30C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC03C76193
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8789206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0754021773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="KW0x3QFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbfG2MuW (ORCPT
+        id S1728428AbfG2MuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jul 2019 08:50:23 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34045 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbfG2MuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 08:50:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:43638 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbfG2MuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:50:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5EA528;
-        Mon, 29 Jul 2019 05:50:21 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C2A43F71F;
+Received: by mail-wr1-f66.google.com with SMTP id 31so61760013wrm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 05:50:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FaAv73c7/caKA+SdXX+K+mh6Cm/86re9CSFJB7tkoPQ=;
+        b=KW0x3QFgAkbJtmPiI15VrDGcIK27GRcEgALtT7jEwcEraGN0NVvEz0pwJrsydt95ER
+         Gscowby0iaA/F56RCBP3ZeYqmxbBk0IT8HWNux4xxYpbZXYyoOy5qSmYe11ZL7x4A70k
+         GOuwSowPaBiPvlK5jU1gZjN8I57ndtLQhpu2M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FaAv73c7/caKA+SdXX+K+mh6Cm/86re9CSFJB7tkoPQ=;
+        b=Rd0loNjJYxd4Nn0f/EbR74AsRfkL9I8NtoeyZw/Rtfg97PXtEuUd7cmVySLIYkBF1+
+         Q6WDnHoT3YZ5uulFXihsR+cDg6zkbyTn5Cv8iXqammirVhuXq9mCHc2f/JtdULSbTIpF
+         Oh1zyffBTbcD8WCvtTPd1SOqVf2TFCc0ZNcqBX5Jk7sevM9e4olsOmdigiWbqB3CrGPM
+         j5ikZE2dMnNmoMcUo+3j6qSqQMkPzfcZu9WA1y/pu/fM7XhHoYoMY0yvQwi28N41qRLt
+         onJqtw8wO0Y3ZPdVMO4O2N8dzrMkwCNPz27DysIyTUohFvyVODrYOfwX61msE3eCS3aK
+         671Q==
+X-Gm-Message-State: APjAAAU7AA/VzdBfRTE8GEi8XqAjqo6eKNXiDh+EAoElmH8IPfFhuIsC
+        hSXS3DorcYVhhPY2Zp0Vk8a++NBats0=
+X-Google-Smtp-Source: APXvYqylO0ojx7HMCNib0ntkfakVQdA8p4X9NuiyKtM1VMknioWDrk4uX2Xz5EwZvObFvgSjRiOTJw==
+X-Received: by 2002:a5d:6a52:: with SMTP id t18mr19177948wrw.178.1564404620043;
+        Mon, 29 Jul 2019 05:50:20 -0700 (PDT)
+Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id a67sm67519549wmh.40.2019.07.29.05.50.18
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
         Mon, 29 Jul 2019 05:50:19 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 13:50:13 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v9 10/21] mm: Add generic p?d_leaf() macros
-Message-ID: <20190729125013.GA33794@lakrids.cambridge.arm.com>
-References: <20190722154210.42799-1-steven.price@arm.com>
- <20190722154210.42799-11-steven.price@arm.com>
- <20190723094113.GA8085@lakrids.cambridge.arm.com>
- <ce4e21f2-020f-6677-d79c-5432e3061d6e@arm.com>
+Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, davem@davemloft.net,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1564055044-27593-1-git-send-email-horatiu.vultur@microchip.com>
+ <7e7a7015-6072-d884-b2ba-0a51177245ab@cumulusnetworks.com>
+ <eef063fe-fd3a-7e02-89c2-e40728a17578@cumulusnetworks.com>
+ <20190725142101.65tusauc6fzxb2yp@soft-dev3.microsemi.net>
+ <b9ce433a-3ef7-fe15-642a-659c5715d992@cumulusnetworks.com>
+ <e6ad982f-4706-46f9-b8f0-1337b09de350@cumulusnetworks.com>
+ <20190726120214.c26oj5vks7g5ntwu@soft-dev3.microsemi.net>
+ <b755f613-e6d8-a2e6-16cd-6f13ec0a6ddc@cumulusnetworks.com>
+ <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
+ <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
+Message-ID: <f4347439-0b96-f7f6-db34-4c7afbeba141@cumulusnetworks.com>
+Date:   Mon, 29 Jul 2019 15:50:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce4e21f2-020f-6677-d79c-5432e3061d6e@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 05:14:31PM +0530, Anshuman Khandual wrote:
-> On 07/23/2019 03:11 PM, Mark Rutland wrote:
-> > It might also be worth pointing out the reasons for this naming, e.g.
-> > p?d_large() aren't currently generic, and this name minimizes potential
-> > confusion between p?d_{large,huge}().
+On 29/07/2019 15:22, Nikolay Aleksandrov wrote:
+> Hi Allan,
+> On 29/07/2019 15:14, Allan W. Nielsen wrote:
+>> Hi Nikolay,
+>>
+>> First of all, as mentioned further down in this thread, I realized that our
+>> implementation of the multicast floodmasks does not align with the existing SW
+>> implementation. We will change this, such that all multicast packets goes to the
+>> SW bridge.
+>>
+>> This changes things a bit, not that much.
+>>
+>> I actually think you summarized the issue we have (after changing to multicast
+>> flood-masks) right here:
+>>
+>> The 07/26/2019 12:26, Nikolay Aleksandrov wrote:
+>>>>> Actually you mentioned non-IP traffic, so the querier stuff is not a problem. This
+>>>>> traffic will always be flooded by the bridge (and also a copy will be locally sent up).
+>>>>> Thus only the flooding may need to be controlled.
+>>
+>> This seems to be exactly what we need.
+>>
+>> Assuming we have a SW bridge (br0) with 4 slave interfaces (eth0-3). We use this
+>> on a network where we want to limit the flooding of frames with dmac
+>> 01:21:6C:00:00:01 (which is non IP traffic) to eth0 and eth1.
+>>
+>> One way of doing this could potentially be to support the following command:
+>>
+>> bridge fdb add    01:21:6C:00:00:01 port eth0
+>> bridge fdb append 01:21:6C:00:00:01 port eth1
+>>
+
+And the fdbs become linked lists ? So we'll increase the complexity for something
+that is already supported by ACLs (e.g. tc) and also bridge per-port multicast
+flood flag ?
+
+I'm sorry but that doesn't sound good to me for a case which is very rare and
+there are existing ways to solve without incurring performance hits or increasing
+code complexity.
+
+>> On 25/07/2019 16:06, Nikolay Aleksandrov wrote:
+>>>>>>>>>  In general NLM_F_APPEND is only used in vxlan, the bridge does not
+>>>>>>>>>  handle that flag at all.  FDB is only for *unicast*, nothing is joined
+>>>>>>>>>  and no multicast should be used with fdbs. MDB is used for multicast
+>>>>>>>>>  handling, but both of these are used for forwarding.
+>> This is true, and this should have been addressed in the patch, we were too
+>> focused on setting up the offload patch in the driver, and forgot to do the SW
+>> implementation.
+>>
+>> Do you see any issues in supporting this flag, and updating the SW
+>> forwarding in br_handle_frame_finish such that it can support/allow a FDB entry
+>> to be a multicast?
+>>
 > 
-> Agreed. But these fallback also need to first check non-availability of large
-> pages. 
+> Yes, all of the multicast code is handled differently, it doesn't go through the fdb
+> lookup or code at all. I don't see how you'll do a lookup in the fdb table with a
+> multicast mac address, take a look at br_handle_frame_finish() and you'll notice
+> that when a multicast dmac is detected then we use the bridge mcast code for lookups
+> and forwarding. If you're trying to achieve Rx only on the bridge of these then
+> why not just use Ido's tc suggestion or even the ip maddr add offload for each port ?
+> 
+> If you add a multicast mac in the fdb (currently allowed, but has no effect) and you
+> use dev_mc_add() as suggested that'd just be a hack to pass it down and it is already
+> possible to achieve via other methods, no need to go through the bridge.
+> 
+>> /Allan
+>>
+> 
 
-We're deliberately not making the p?d_large() helpers generic, so this
-shouldn't fall back on those.
-
-It's up to the architecture to implement these correctly, and the
-architecture-specific implementations will be added in subsequent
-patches.
-
-Thanks,
-Mark.
