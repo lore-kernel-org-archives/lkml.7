@@ -4,50 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4ADC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFD4C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 777E9205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B759E21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429491;
-	bh=3RBmIbVz/P6boZ7SW2P+1w26QZFMYvqU6w6bzmkz8Vw=;
+	s=default; t=1564429499;
+	bh=XmTPoFu+VFvni9Pud1Y8ed/jNm/MyGdjF1WyV9HyFwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kuEy6Fy/7iOe2HKMd1n2tMu9F/MYZNGAFui1w0uCa29VCeG1f5vf+5ynA+TUJlc26
-	 QjJOjX0qGmQMRPlQeb2leFw4NrKC7THXoqVScXH5utkpP9eyEz6vmyNRdeC3AFoyv3
-	 6Gq0QeWSmVo1D6aaYrq5w+ArYbhQobW0k9xfaipQ=
+	b=gZFufje60tGE8Evp4iFrFLKqQPnvPdf4AePrCiz5GPp7/0wthfjrbH90pRX6u3o0i
+	 Y1fG7G/dzCbGG/zwUKUsU1H/UGrY1aCBZC9hTE3UnS5TWFmX+vlbG0zlG6FjgbfQOo
+	 ew/EVNJ6hTE+nVgHdCbtknGFs5JiiCZ09hQxYoPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389846AbfG2Tot (ORCPT
+        id S2389876AbfG2To6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:44:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33284 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:44:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389813AbfG2Tol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:44:41 -0400
+        id S2389851AbfG2Tox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:44:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44E4C205F4;
-        Mon, 29 Jul 2019 19:44:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE2D7205F4;
+        Mon, 29 Jul 2019 19:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429479;
-        bh=3RBmIbVz/P6boZ7SW2P+1w26QZFMYvqU6w6bzmkz8Vw=;
+        s=default; t=1564429492;
+        bh=XmTPoFu+VFvni9Pud1Y8ed/jNm/MyGdjF1WyV9HyFwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GpJ8RWim4zr5VmHt2j2iATOMgCU31oVsXy8d7SdhirYq/8R/GqvxGLdRlVwr+6KR1
-         K0wZ9p6s9JWJVHjIlMqWG9kSHSYEaQIALKh2g6bMTO48FXL5MuMAG0wNt/Qii5dF0o
-         yXRLr/9LEx0Mhua22Hq2mCdnKSFApkmYAdV9Tifw=
+        b=F+1SiI6xNghSN3SrarpDcX1hwMi9kzAylxOgUmI2hMjehdBlrqqDf+W2DSTEV4XoM
+         EP4quxqdTNijNqp/Cqp6aTwNDTMVUfdGM6h6jfRM1AlljxTbQJqLX/q49I/4Y5oXhp
+         Jrcp8cYC9iRl1YwYbe5ax1y9rT3fT03O0PCteER0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Indira P. Joga" <indira.priya@in.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 110/113] powerpc/xive: Fix loop exit-condition in xive_find_target_in_mask()
-Date:   Mon, 29 Jul 2019 21:23:17 +0200
-Message-Id: <20190729190721.260301815@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        Greg KH <greg@kroah.com>, Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 113/113] access: avoid the RCU grace period for the temporary subjective credentials
+Date:   Mon, 29 Jul 2019 21:23:20 +0200
+Message-Id: <20190729190721.769129969@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,119 +70,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 4d202c8c8ed3822327285747db1765967110b274 upstream.
+commit d7852fbd0f0423937fa287a598bfde188bb68c22 upstream.
 
-xive_find_target_in_mask() has the following for(;;) loop which has a
-bug when @first == cpumask_first(@mask) and condition 1 fails to hold
-for every CPU in @mask. In this case we loop forever in the for-loop.
+It turns out that 'access()' (and 'faccessat()') can cause a lot of RCU
+work because it installs a temporary credential that gets allocated and
+freed for each system call.
 
-  first = cpu;
-  for (;;) {
-  	  if (cpu_online(cpu) && xive_try_pick_target(cpu)) // condition 1
-		  return cpu;
-	  cpu = cpumask_next(cpu, mask);
-	  if (cpu == first) // condition 2
-		  break;
+The allocation and freeing overhead is mostly benign, but because
+credentials can be accessed under the RCU read lock, the freeing
+involves a RCU grace period.
 
-	  if (cpu >= nr_cpu_ids) // condition 3
-		  cpu = cpumask_first(mask);
-  }
+Which is not a huge deal normally, but if you have a lot of access()
+calls, this causes a fair amount of seconday damage: instead of having a
+nice alloc/free patterns that hits in hot per-CPU slab caches, you have
+all those delayed free's, and on big machines with hundreds of cores,
+the RCU overhead can end up being enormous.
 
-This is because, when @first == cpumask_first(@mask), we never hit the
-condition 2 (cpu == first) since prior to this check, we would have
-executed "cpu = cpumask_next(cpu, mask)" which will set the value of
-@cpu to a value greater than @first or to nr_cpus_ids. When this is
-coupled with the fact that condition 1 is not met, we will never exit
-this loop.
+But it turns out that all of this is entirely unnecessary.  Exactly
+because access() only installs the credential as the thread-local
+subjective credential, the temporary cred pointer doesn't actually need
+to be RCU free'd at all.  Once we're done using it, we can just free it
+synchronously and avoid all the RCU overhead.
 
-This was discovered by the hard-lockup detector while running LTP test
-concurrently with SMT switch tests.
+So add a 'non_rcu' flag to 'struct cred', which can be set by users that
+know they only use it in non-RCU context (there are other potential
+users for this).  We can make it a union with the rcu freeing list head
+that we need for the RCU case, so this doesn't need any extra storage.
 
- watchdog: CPU 12 detected hard LOCKUP on other CPUs 68
- watchdog: CPU 12 TB:85587019220796, last SMP heartbeat TB:85578827223399 (15999ms ago)
- watchdog: CPU 68 Hard LOCKUP
- watchdog: CPU 68 TB:85587019361273, last heartbeat TB:85576815065016 (19930ms ago)
- CPU: 68 PID: 45050 Comm: hxediag Kdump: loaded Not tainted 4.18.0-100.el8.ppc64le #1
- NIP:  c0000000006f5578 LR: c000000000cba9ec CTR: 0000000000000000
- REGS: c000201fff3c7d80 TRAP: 0100   Not tainted  (4.18.0-100.el8.ppc64le)
- MSR:  9000000002883033 <SF,HV,VEC,VSX,FP,ME,IR,DR,RI,LE>  CR: 24028424  XER: 00000000
- CFAR: c0000000006f558c IRQMASK: 1
- GPR00: c0000000000afc58 c000201c01c43400 c0000000015ce500 c000201cae26ec18
- GPR04: 0000000000000800 0000000000000540 0000000000000800 00000000000000f8
- GPR08: 0000000000000020 00000000000000a8 0000000080000000 c00800001a1beed8
- GPR12: c0000000000b1410 c000201fff7f4c00 0000000000000000 0000000000000000
- GPR16: 0000000000000000 0000000000000000 0000000000000540 0000000000000001
- GPR20: 0000000000000048 0000000010110000 c00800001a1e3780 c000201cae26ed18
- GPR24: 0000000000000000 c000201cae26ed8c 0000000000000001 c000000001116bc0
- GPR28: c000000001601ee8 c000000001602494 c000201cae26ec18 000000000000001f
- NIP [c0000000006f5578] find_next_bit+0x38/0x90
- LR [c000000000cba9ec] cpumask_next+0x2c/0x50
- Call Trace:
- [c000201c01c43400] [c000201cae26ec18] 0xc000201cae26ec18 (unreliable)
- [c000201c01c43420] [c0000000000afc58] xive_find_target_in_mask+0x1b8/0x240
- [c000201c01c43470] [c0000000000b0228] xive_pick_irq_target.isra.3+0x168/0x1f0
- [c000201c01c435c0] [c0000000000b1470] xive_irq_startup+0x60/0x260
- [c000201c01c43640] [c0000000001d8328] __irq_startup+0x58/0xf0
- [c000201c01c43670] [c0000000001d844c] irq_startup+0x8c/0x1a0
- [c000201c01c436b0] [c0000000001d57b0] __setup_irq+0x9f0/0xa90
- [c000201c01c43760] [c0000000001d5aa0] request_threaded_irq+0x140/0x220
- [c000201c01c437d0] [c00800001a17b3d4] bnx2x_nic_load+0x188c/0x3040 [bnx2x]
- [c000201c01c43950] [c00800001a187c44] bnx2x_self_test+0x1fc/0x1f70 [bnx2x]
- [c000201c01c43a90] [c000000000adc748] dev_ethtool+0x11d8/0x2cb0
- [c000201c01c43b60] [c000000000b0b61c] dev_ioctl+0x5ac/0xa50
- [c000201c01c43bf0] [c000000000a8d4ec] sock_do_ioctl+0xbc/0x1b0
- [c000201c01c43c60] [c000000000a8dfb8] sock_ioctl+0x258/0x4f0
- [c000201c01c43d20] [c0000000004c9704] do_vfs_ioctl+0xd4/0xa70
- [c000201c01c43de0] [c0000000004ca274] sys_ioctl+0xc4/0x160
- [c000201c01c43e30] [c00000000000b388] system_call+0x5c/0x70
- Instruction dump:
- 78aad182 54a806be 3920ffff 78a50664 794a1f24 7d294036 7d43502a 7d295039
- 4182001c 48000034 78a9d182 79291f24 <7d23482a> 2fa90000 409e0020 38a50040
+Note that this also makes 'get_current_cred()' clear the new non_rcu
+flag, in case we have filesystems that take a long-term reference to the
+cred and then expect the RCU delayed freeing afterwards.  It's not
+entirely clear that this is required, but it makes for clear semantics:
+the subjective cred remains non-RCU as long as you only access it
+synchronously using the thread-local accessors, but you _can_ use it as
+a generic cred if you want to.
 
-To fix this, move the check for condition 2 after the check for
-condition 3, so that we are able to break out of the loop soon after
-iterating through all the CPUs in the @mask in the problem case. Use
-do..while() to achieve this.
+It is possible that we should just remove the whole RCU markings for
+->cred entirely.  Only ->real_cred is really supposed to be accessed
+through RCU, and the long-term cred copies that nfs uses might want to
+explicitly re-enable RCU freeing if required, rather than have
+get_current_cred() do it implicitly.
 
-Fixes: 243e25112d06 ("powerpc/xive: Native exploitation of the XIVE interrupt controller")
-Cc: stable@vger.kernel.org # v4.12+
-Reported-by: Indira P. Joga <indira.priya@in.ibm.com>
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1563359724-13931-1-git-send-email-ego@linux.vnet.ibm.com
+But this is a "minimal semantic changes" change for the immediate
+problem.
+
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Jan Glauber <jglauber@marvell.com>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Jayachandran Chandrasekharan Nair <jnair@marvell.com>
+Cc: Greg KH <greg@kroah.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/sysdev/xive/common.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ fs/open.c            |   19 +++++++++++++++++++
+ include/linux/cred.h |    7 ++++++-
+ kernel/cred.c        |   21 +++++++++++++++++++--
+ 3 files changed, 44 insertions(+), 3 deletions(-)
 
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -483,7 +483,7 @@ static int xive_find_target_in_mask(cons
- 	 * Now go through the entire mask until we find a valid
- 	 * target.
- 	 */
--	for (;;) {
-+	do {
- 		/*
- 		 * We re-check online as the fallback case passes us
- 		 * an untested affinity mask
-@@ -491,12 +491,11 @@ static int xive_find_target_in_mask(cons
- 		if (cpu_online(cpu) && xive_try_pick_target(cpu))
- 			return cpu;
- 		cpu = cpumask_next(cpu, mask);
--		if (cpu == first)
--			break;
- 		/* Wrap around */
- 		if (cpu >= nr_cpu_ids)
- 			cpu = cpumask_first(mask);
--	}
-+	} while (cpu != first);
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -373,6 +373,25 @@ long do_faccessat(int dfd, const char __
+ 				override_cred->cap_permitted;
+ 	}
+ 
++	/*
++	 * The new set of credentials can *only* be used in
++	 * task-synchronous circumstances, and does not need
++	 * RCU freeing, unless somebody then takes a separate
++	 * reference to it.
++	 *
++	 * NOTE! This is _only_ true because this credential
++	 * is used purely for override_creds() that installs
++	 * it as the subjective cred. Other threads will be
++	 * accessing ->real_cred, not the subjective cred.
++	 *
++	 * If somebody _does_ make a copy of this (using the
++	 * 'get_current_cred()' function), that will clear the
++	 * non_rcu field, because now that other user may be
++	 * expecting RCU freeing. But normal thread-synchronous
++	 * cred accesses will keep things non-RCY.
++	 */
++	override_cred->non_rcu = 1;
 +
- 	return -1;
+ 	old_cred = override_creds(override_cred);
+ retry:
+ 	res = user_path_at(dfd, filename, lookup_flags, &path);
+--- a/include/linux/cred.h
++++ b/include/linux/cred.h
+@@ -150,7 +150,11 @@ struct cred {
+ 	struct user_struct *user;	/* real user ID subscription */
+ 	struct user_namespace *user_ns; /* user_ns the caps and keyrings are relative to. */
+ 	struct group_info *group_info;	/* supplementary groups for euid/fsgid */
+-	struct rcu_head	rcu;		/* RCU deletion hook */
++	/* RCU deletion */
++	union {
++		int non_rcu;			/* Can we skip RCU deletion? */
++		struct rcu_head	rcu;		/* RCU deletion hook */
++	};
+ } __randomize_layout;
+ 
+ extern void __put_cred(struct cred *);
+@@ -248,6 +252,7 @@ static inline const struct cred *get_cre
+ {
+ 	struct cred *nonconst_cred = (struct cred *) cred;
+ 	validate_creds(cred);
++	nonconst_cred->non_rcu = 0;
+ 	return get_new_cred(nonconst_cred);
  }
  
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -147,7 +147,10 @@ void __put_cred(struct cred *cred)
+ 	BUG_ON(cred == current->cred);
+ 	BUG_ON(cred == current->real_cred);
+ 
+-	call_rcu(&cred->rcu, put_cred_rcu);
++	if (cred->non_rcu)
++		put_cred_rcu(&cred->rcu);
++	else
++		call_rcu(&cred->rcu, put_cred_rcu);
+ }
+ EXPORT_SYMBOL(__put_cred);
+ 
+@@ -258,6 +261,7 @@ struct cred *prepare_creds(void)
+ 	old = task->cred;
+ 	memcpy(new, old, sizeof(struct cred));
+ 
++	new->non_rcu = 0;
+ 	atomic_set(&new->usage, 1);
+ 	set_cred_subscribers(new, 0);
+ 	get_group_info(new->group_info);
+@@ -537,7 +541,19 @@ const struct cred *override_creds(const
+ 
+ 	validate_creds(old);
+ 	validate_creds(new);
+-	get_cred(new);
++
++	/*
++	 * NOTE! This uses 'get_new_cred()' rather than 'get_cred()'.
++	 *
++	 * That means that we do not clear the 'non_rcu' flag, since
++	 * we are only installing the cred into the thread-synchronous
++	 * '->cred' pointer, not the '->real_cred' pointer that is
++	 * visible to other threads under RCU.
++	 *
++	 * Also note that we did validate_creds() manually, not depending
++	 * on the validation in 'get_cred()'.
++	 */
++	get_new_cred((struct cred *)new);
+ 	alter_cred_subscribers(new, 1);
+ 	rcu_assign_pointer(current->cred, new);
+ 	alter_cred_subscribers(old, -1);
+@@ -620,6 +636,7 @@ struct cred *prepare_kernel_cred(struct
+ 	validate_creds(old);
+ 
+ 	*new = *old;
++	new->non_rcu = 0;
+ 	atomic_set(&new->usage, 1);
+ 	set_cred_subscribers(new, 0);
+ 	get_uid(new->user);
 
 
