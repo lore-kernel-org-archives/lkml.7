@@ -2,615 +2,173 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283B2C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D0DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5392070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E1221655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388856AbfG2VuP convert rfc822-to-8bit (ORCPT
+        id S2388885AbfG2VvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:50:15 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:54903 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727862AbfG2VuP (ORCPT
+        Mon, 29 Jul 2019 17:51:01 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60255 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbfG2VvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:50:15 -0400
-Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 16efcff3697d4c82; Mon, 29 Jul 2019 23:50:06 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2] driver core: Remove device link creation limitation
-Date:   Mon, 29 Jul 2019 23:50:05 +0200
-Message-ID: <7944678.tFQQHhpDPp@kreacher>
-In-Reply-To: <c8960d91-4446-9acf-5575-e442a652bd05@gmail.com>
-References: <2305283.AStDPdUUnE@kreacher> <c8960d91-4446-9acf-5575-e442a652bd05@gmail.com>
+        Mon, 29 Jul 2019 17:51:00 -0400
+X-Originating-IP: 37.176.111.81
+Received: from uno.localdomain (mob-37-176-111-81.net.vodafone.it [37.176.111.81])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9443C20005;
+        Mon, 29 Jul 2019 21:50:56 +0000 (UTC)
+Date:   Mon, 29 Jul 2019 23:52:14 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH 04/12] iio: adc: max9611: Fix misuse of GENMASK macro
+Message-ID: <20190729215214.eueitve4tfxmqer3@uno.localdomain>
+References: <cover.1562734889.git.joe@perches.com>
+ <2929234bd4ecec41c0d012edc52416ef80f3e368.1562734889.git.joe@perches.com>
+ <20190714125403.0789dc9e@archlinux>
+ <b3744e64b22de98bfe8885f76811d4fc7e41b8eb.camel@perches.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bspti6iz3s7zaaw6"
+Content-Disposition: inline
+In-Reply-To: <b3744e64b22de98bfe8885f76811d4fc7e41b8eb.camel@perches.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, July 29, 2019 5:48:57 PM CEST Dmitry Osipenko wrote:
-> 16.07.2019 18:21, Rafael J. Wysocki пишет:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Subject: [PATCH] driver core: Remove device link creation limitation
-> > 
-> > If device_link_add() is called for a consumer/supplier pair with an
-> > existing device link between them and the existing link's type is
-> > not in agreement with the flags passed to that function by its
-> > caller, NULL will be returned.  That is seriously inconvenient,
-> > because it forces the callers of device_link_add() to worry about
-> > what others may or may not do even if that is not relevant to them
-> > for any other reasons.
-> > 
-> > It turns out, however, that this limitation can be made go away
-> > relatively easily.
-> > 
-> > The underlying observation is that if DL_FLAG_STATELESS has been
-> > passed to device_link_add() in flags for the given consumer/supplier
-> > pair at least once, calling either device_link_del() or
-> > device_link_remove() to release the link returned by it should work,
-> > but there are no other requirements associated with that flag.  In
-> > turn, if at least one of the callers of device_link_add() for the
-> > given consumer/supplier pair has not passed DL_FLAG_STATELESS to it
-> > in flags, the driver core should track the status of the link and act
-> > on it as appropriate (ie. the link should be treated as "managed").
-> > This means that DL_FLAG_STATELESS needs to be set for managed device
-> > links and it should be valid to call device_link_del() or
-> > device_link_remove() to drop references to them in certain
-> > sutiations.
-> > 
-> > To allow that to happen, introduce a new (internal) device link flag
-> > called DL_FLAG_MANAGED and make device_link_add() set it automatically
-> > whenever DL_FLAG_STATELESS is not passed to it.  Also make it take
-> > additional references to existing device links that were previously
-> > stateless (that is, with DL_FLAG_STATELESS set and DL_FLAG_MANAGED
-> > unset) and will need to be managed going forward and initialize
-> > their status (which has been DL_STATE_NONE so far).
-> > 
-> > Accordingly, when a managed device link is dropped automatically
-> > by the driver core, make it clear DL_FLAG_MANAGED, reset the link's
-> > status back to DL_STATE_NONE and drop the reference to it associated
-> > with DL_FLAG_MANAGED instead of just deleting it right away (to
-> > allow it to stay around in case it still needs to be released
-> > explicitly by someone).
-> > 
-> > With that, since setting DL_FLAG_STATELESS doesn't mean that the
-> > device link in question is not managed any more, replace all of the
-> > status-tracking checks against DL_FLAG_STATELESS with analogous
-> > checks against DL_FLAG_MANAGED and update the documentation to
-> > reflect these changes.
-> > 
-> > While at it, make device_link_add() reject flags that it does not
-> > recognize, including DL_FLAG_MANAGED.
-> > 
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Reviewed-by: Saravana Kannan <saravanak@google.com>
-> > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > ---
-> > 
-> > -> v2:
-> >    * Add a check to device_link_add() to return NULL if unrecognized flags are
-> >      passed to it.
-> >    * Modify kerneldoc comments around DL_FLAG_MANAGED.
-> > 
-> > I've tentatively added the Tested-by tag from Marek, because I don't expect
-> > the changes made between the initial posting and the v2 to make any difference
-> > for him.
-> > 
-> > ---
-> >  Documentation/driver-api/device_link.rst |    4 
-> >  drivers/base/core.c                      |  176 +++++++++++++++++--------------
-> >  drivers/base/power/runtime.c             |    4 
-> >  include/linux/device.h                   |    4 
-> >  4 files changed, 106 insertions(+), 82 deletions(-)
-> > 
-> > Index: linux-pm/drivers/base/core.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/base/core.c
-> > +++ linux-pm/drivers/base/core.c
-> > @@ -124,6 +124,50 @@ static int device_is_dependent(struct de
-> >  	return ret;
-> >  }
-> >  
-> > +static void device_link_init_status(struct device_link *link,
-> > +				    struct device *consumer,
-> > +				    struct device *supplier)
-> > +{
-> > +	switch (supplier->links.status) {
-> > +	case DL_DEV_PROBING:
-> > +		switch (consumer->links.status) {
-> > +		case DL_DEV_PROBING:
-> > +			/*
-> > +			 * A consumer driver can create a link to a supplier
-> > +			 * that has not completed its probing yet as long as it
-> > +			 * knows that the supplier is already functional (for
-> > +			 * example, it has just acquired some resources from the
-> > +			 * supplier).
-> > +			 */
-> > +			link->status = DL_STATE_CONSUMER_PROBE;
-> > +			break;
-> > +		default:
-> > +			link->status = DL_STATE_DORMANT;
-> > +			break;
-> > +		}
-> > +		break;
-> > +	case DL_DEV_DRIVER_BOUND:
-> > +		switch (consumer->links.status) {
-> > +		case DL_DEV_PROBING:
-> > +			link->status = DL_STATE_CONSUMER_PROBE;
-> > +			break;
-> > +		case DL_DEV_DRIVER_BOUND:
-> > +			link->status = DL_STATE_ACTIVE;
-> > +			break;
-> > +		default:
-> > +			link->status = DL_STATE_AVAILABLE;
-> > +			break;
-> > +		}
-> > +		break;
-> > +	case DL_DEV_UNBINDING:
-> > +		link->status = DL_STATE_SUPPLIER_UNBIND;
-> > +		break;
-> > +	default:
-> > +		link->status = DL_STATE_DORMANT;
-> > +		break;
-> > +	}
-> > +}
-> > +
-> >  static int device_reorder_to_tail(struct device *dev, void *not_used)
-> >  {
-> >  	struct device_link *link;
-> > @@ -165,6 +209,10 @@ void device_pm_move_to_tail(struct devic
-> >  	device_links_read_unlock(idx);
-> >  }
-> >  
-> > +#define DL_MANAGED_LINK_FLAGS (DL_FLAG_AUTOREMOVE_CONSUMER | \
-> > +			       DL_FLAG_AUTOREMOVE_SUPPLIER | \
-> > +			       DL_FLAG_AUTOPROBE_CONSUMER)
-> > +
-> >  /**
-> >   * device_link_add - Create a link between two devices.
-> >   * @consumer: Consumer end of the link.
-> > @@ -179,9 +227,9 @@ void device_pm_move_to_tail(struct devic
-> >   * of the link.  If DL_FLAG_PM_RUNTIME is not set, DL_FLAG_RPM_ACTIVE will be
-> >   * ignored.
-> >   *
-> > - * If DL_FLAG_STATELESS is set in @flags, the link is not going to be managed by
-> > - * the driver core and, in particular, the caller of this function is expected
-> > - * to drop the reference to the link acquired by it directly.
-> > + * If DL_FLAG_STATELESS is set in @flags, the caller of this function is
-> > + * expected to release the link returned by it directly with the help of either
-> > + * device_link_del() or device_link_remove().
-> >   *
-> >   * If that flag is not set, however, the caller of this function is handing the
-> >   * management of the link over to the driver core entirely and its return value
-> > @@ -201,9 +249,16 @@ void device_pm_move_to_tail(struct devic
-> >   * be used to request the driver core to automaticall probe for a consmer
-> >   * driver after successfully binding a driver to the supplier device.
-> >   *
-> > - * The combination of DL_FLAG_STATELESS and either DL_FLAG_AUTOREMOVE_CONSUMER
-> > - * or DL_FLAG_AUTOREMOVE_SUPPLIER set in @flags at the same time is invalid and
-> > - * will cause NULL to be returned upfront.
-> > + * The combination of DL_FLAG_STATELESS and one of DL_FLAG_AUTOREMOVE_CONSUMER,
-> > + * DL_FLAG_AUTOREMOVE_SUPPLIER, or DL_FLAG_AUTOPROBE_CONSUMER set in @flags at
-> > + * the same time is invalid and will cause NULL to be returned upfront.
-> > + * However, if a device link between the given @consumer and @supplier pair
-> > + * exists already when this function is called for them, the existing link will
-> > + * be returned regardless of its current type and status (the link's flags may
-> > + * be modified then).  The caller of this function is then expected to treat
-> > + * the link as though it has just been created, so (in particular) if
-> > + * DL_FLAG_STATELESS was passed in @flags, the link needs to be released
-> > + * explicitly when not needed any more (as stated above).
-> >   *
-> >   * A side effect of the link creation is re-ordering of dpm_list and the
-> >   * devices_kset list by moving the consumer device and all devices depending
-> > @@ -220,10 +275,8 @@ struct device_link *device_link_add(stru
-> >  	struct device_link *link;
-> >  
-> >  	if (!consumer || !supplier ||
-> > -	    (flags & DL_FLAG_STATELESS &&
-> > -	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
-> > -		      DL_FLAG_AUTOREMOVE_SUPPLIER |
-> > -		      DL_FLAG_AUTOPROBE_CONSUMER)) ||
-> > +	    (flags & ~(DL_FLAG_STATELESS | DL_MANAGED_LINK_FLAGS)) ||
-> > +	    (flags & DL_FLAG_STATELESS && flags & DL_MANAGED_LINK_FLAGS) ||
-> >  	    (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
-> >  	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
-> >  		      DL_FLAG_AUTOREMOVE_SUPPLIER)))
-> > @@ -236,6 +289,9 @@ struct device_link *device_link_add(stru
-> >  		}
-> >  	}
-> >  
-> > +	if (!(flags & DL_FLAG_STATELESS))
-> > +		flags |= DL_FLAG_MANAGED;
-> > +
-> >  	device_links_write_lock();
-> >  	device_pm_lock();
-> >  
-> > @@ -262,15 +318,6 @@ struct device_link *device_link_add(stru
-> >  		if (link->consumer != consumer)
-> >  			continue;
-> >  
-> > -		/*
-> > -		 * Don't return a stateless link if the caller wants a stateful
-> > -		 * one and vice versa.
-> > -		 */
-> > -		if (WARN_ON((flags & DL_FLAG_STATELESS) != (link->flags & DL_FLAG_STATELESS))) {
-> > -			link = NULL;
-> > -			goto out;
-> > -		}
-> > -
-> >  		if (flags & DL_FLAG_PM_RUNTIME) {
-> >  			if (!(link->flags & DL_FLAG_PM_RUNTIME)) {
-> >  				pm_runtime_new_link(consumer);
-> > @@ -281,6 +328,7 @@ struct device_link *device_link_add(stru
-> >  		}
-> >  
-> >  		if (flags & DL_FLAG_STATELESS) {
-> > +			link->flags |= DL_FLAG_STATELESS;
-> >  			kref_get(&link->kref);
-> >  			goto out;
-> >  		}
-> > @@ -299,6 +347,11 @@ struct device_link *device_link_add(stru
-> >  			link->flags &= ~(DL_FLAG_AUTOREMOVE_CONSUMER |
-> >  					 DL_FLAG_AUTOREMOVE_SUPPLIER);
-> >  		}
-> > +		if (!(link->flags & DL_FLAG_MANAGED)) {
-> > +			kref_get(&link->kref);
-> > +			link->flags |= DL_FLAG_MANAGED;
-> > +			device_link_init_status(link, consumer, supplier);
-> > +		}
-> >  		goto out;
-> >  	}
-> >  
-> > @@ -325,48 +378,10 @@ struct device_link *device_link_add(stru
-> >  	kref_init(&link->kref);
-> >  
-> >  	/* Determine the initial link state. */
-> > -	if (flags & DL_FLAG_STATELESS) {
-> > +	if (flags & DL_FLAG_STATELESS)
-> >  		link->status = DL_STATE_NONE;
-> > -	} else {
-> > -		switch (supplier->links.status) {
-> > -		case DL_DEV_PROBING:
-> > -			switch (consumer->links.status) {
-> > -			case DL_DEV_PROBING:
-> > -				/*
-> > -				 * A consumer driver can create a link to a
-> > -				 * supplier that has not completed its probing
-> > -				 * yet as long as it knows that the supplier is
-> > -				 * already functional (for example, it has just
-> > -				 * acquired some resources from the supplier).
-> > -				 */
-> > -				link->status = DL_STATE_CONSUMER_PROBE;
-> > -				break;
-> > -			default:
-> > -				link->status = DL_STATE_DORMANT;
-> > -				break;
-> > -			}
-> > -			break;
-> > -		case DL_DEV_DRIVER_BOUND:
-> > -			switch (consumer->links.status) {
-> > -			case DL_DEV_PROBING:
-> > -				link->status = DL_STATE_CONSUMER_PROBE;
-> > -				break;
-> > -			case DL_DEV_DRIVER_BOUND:
-> > -				link->status = DL_STATE_ACTIVE;
-> > -				break;
-> > -			default:
-> > -				link->status = DL_STATE_AVAILABLE;
-> > -				break;
-> > -			}
-> > -			break;
-> > -		case DL_DEV_UNBINDING:
-> > -			link->status = DL_STATE_SUPPLIER_UNBIND;
-> > -			break;
-> > -		default:
-> > -			link->status = DL_STATE_DORMANT;
-> > -			break;
-> > -		}
-> > -	}
-> > +	else
-> > +		device_link_init_status(link, consumer, supplier);
-> >  
-> >  	/*
-> >  	 * Some callers expect the link creation during consumer driver probe to
-> > @@ -528,7 +543,7 @@ static void device_links_missing_supplie
-> >   * mark the link as "consumer probe in progress" to make the supplier removal
-> >   * wait for us to complete (or bad things may happen).
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
-> >   */
-> >  int device_links_check_suppliers(struct device *dev)
-> >  {
-> > @@ -538,7 +553,7 @@ int device_links_check_suppliers(struct
-> >  	device_links_write_lock();
-> >  
-> >  	list_for_each_entry(link, &dev->links.suppliers, c_node) {
-> > -		if (link->flags & DL_FLAG_STATELESS)
-> > +		if (!(link->flags & DL_FLAG_MANAGED))
-> >  			continue;
-> >  
-> >  		if (link->status != DL_STATE_AVAILABLE) {
-> > @@ -563,7 +578,7 @@ int device_links_check_suppliers(struct
-> >   *
-> >   * Also change the status of @dev's links to suppliers to "active".
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
-> >   */
-> >  void device_links_driver_bound(struct device *dev)
-> >  {
-> > @@ -572,7 +587,7 @@ void device_links_driver_bound(struct de
-> >  	device_links_write_lock();
-> >  
-> >  	list_for_each_entry(link, &dev->links.consumers, s_node) {
-> > -		if (link->flags & DL_FLAG_STATELESS)
-> > +		if (!(link->flags & DL_FLAG_MANAGED))
-> >  			continue;
-> >  
-> >  		/*
-> > @@ -593,7 +608,7 @@ void device_links_driver_bound(struct de
-> >  	}
-> >  
-> >  	list_for_each_entry(link, &dev->links.suppliers, c_node) {
-> > -		if (link->flags & DL_FLAG_STATELESS)
-> > +		if (!(link->flags & DL_FLAG_MANAGED))
-> >  			continue;
-> >  
-> >  		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
-> > @@ -605,6 +620,13 @@ void device_links_driver_bound(struct de
-> >  	device_links_write_unlock();
-> >  }
-> >  
-> > +static void device_link_drop_managed(struct device_link *link)
-> > +{
-> > +	link->flags &= ~DL_FLAG_MANAGED;
-> > +	WRITE_ONCE(link->status, DL_STATE_NONE);
-> > +	kref_put(&link->kref, __device_link_del);
-> > +}
-> > +
-> >  /**
-> >   * __device_links_no_driver - Update links of a device without a driver.
-> >   * @dev: Device without a drvier.
-> > @@ -615,18 +637,18 @@ void device_links_driver_bound(struct de
-> >   * unless they already are in the "supplier unbind in progress" state in which
-> >   * case they need not be updated.
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
-> >   */
-> >  static void __device_links_no_driver(struct device *dev)
-> >  {
-> >  	struct device_link *link, *ln;
-> >  
-> >  	list_for_each_entry_safe_reverse(link, ln, &dev->links.suppliers, c_node) {
-> > -		if (link->flags & DL_FLAG_STATELESS)
-> > +		if (!(link->flags & DL_FLAG_MANAGED))
-> >  			continue;
-> >  
-> >  		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
-> > -			__device_link_del(&link->kref);
-> > +			device_link_drop_managed(link);
-> >  		else if (link->status == DL_STATE_CONSUMER_PROBE ||
-> >  			 link->status == DL_STATE_ACTIVE)
-> >  			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
-> > @@ -643,7 +665,7 @@ static void __device_links_no_driver(str
-> >   * %__device_links_no_driver() to update links to suppliers for it as
-> >   * appropriate.
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
-> >   */
-> >  void device_links_no_driver(struct device *dev)
-> >  {
-> > @@ -652,7 +674,7 @@ void device_links_no_driver(struct devic
-> >  	device_links_write_lock();
-> >  
-> >  	list_for_each_entry(link, &dev->links.consumers, s_node) {
-> > -		if (link->flags & DL_FLAG_STATELESS)
-> > +		if (!(link->flags & DL_FLAG_MANAGED))
-> >  			continue;
-> >  
-> >  		/*
-> > @@ -680,7 +702,7 @@ void device_links_no_driver(struct devic
-> >   * invoke %__device_links_no_driver() to update links to suppliers for it as
-> >   * appropriate.
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
-> >   */
-> >  void device_links_driver_cleanup(struct device *dev)
-> >  {
-> > @@ -689,7 +711,7 @@ void device_links_driver_cleanup(struct
-> >  	device_links_write_lock();
-> >  
-> >  	list_for_each_entry_safe(link, ln, &dev->links.consumers, s_node) {
-> > -		if (link->flags & DL_FLAG_STATELESS)
-> > +		if (!(link->flags & DL_FLAG_MANAGED))
-> >  			continue;
-> >  
-> >  		WARN_ON(link->flags & DL_FLAG_AUTOREMOVE_CONSUMER);
-> > @@ -702,7 +724,7 @@ void device_links_driver_cleanup(struct
-> >  		 */
-> >  		if (link->status == DL_STATE_SUPPLIER_UNBIND &&
-> >  		    link->flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
-> > -			__device_link_del(&link->kref);
-> > +			device_link_drop_managed(link);
-> >  
-> >  		WRITE_ONCE(link->status, DL_STATE_DORMANT);
-> >  	}
-> > @@ -724,7 +746,7 @@ void device_links_driver_cleanup(struct
-> >   *
-> >   * Return 'false' if there are no probing or active consumers.
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
-> >   */
-> >  bool device_links_busy(struct device *dev)
-> >  {
-> > @@ -734,7 +756,7 @@ bool device_links_busy(struct device *de
-> >  	device_links_write_lock();
-> >  
-> >  	list_for_each_entry(link, &dev->links.consumers, s_node) {
-> > -		if (link->flags & DL_FLAG_STATELESS)
-> > +		if (!(link->flags & DL_FLAG_MANAGED))
-> >  			continue;
-> >  
-> >  		if (link->status == DL_STATE_CONSUMER_PROBE
-> > @@ -764,7 +786,7 @@ bool device_links_busy(struct device *de
-> >   * driver to unbind and start over (the consumer will not re-probe as we have
-> >   * changed the state of the link already).
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
-> >   */
-> >  void device_links_unbind_consumers(struct device *dev)
-> >  {
-> > @@ -776,7 +798,7 @@ void device_links_unbind_consumers(struc
-> >  	list_for_each_entry(link, &dev->links.consumers, s_node) {
-> >  		enum device_link_state status;
-> >  
-> > -		if (link->flags & DL_FLAG_STATELESS)
-> > +		if (!(link->flags & DL_FLAG_MANAGED))
-> >  			continue;
-> >  
-> >  		status = link->status;
-> > Index: linux-pm/drivers/base/power/runtime.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/base/power/runtime.c
-> > +++ linux-pm/drivers/base/power/runtime.c
-> > @@ -1624,7 +1624,7 @@ void pm_runtime_remove(struct device *de
-> >   * runtime PM references to the device, drop the usage counter of the device
-> >   * (as many times as needed).
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links with the DL_FLAG_MANAGED flag unset are ignored.
-> >   *
-> >   * Since the device is guaranteed to be runtime-active at the point this is
-> >   * called, nothing else needs to be done here.
-> > @@ -1641,7 +1641,7 @@ void pm_runtime_clean_up_links(struct de
-> >  	idx = device_links_read_lock();
-> >  
-> >  	list_for_each_entry_rcu(link, &dev->links.consumers, s_node) {
-> > -		if (link->flags & DL_FLAG_STATELESS)
-> > +		if (!(link->flags & DL_FLAG_MANAGED))
-> >  			continue;
-> >  
-> >  		while (refcount_dec_not_one(&link->rpm_active))
-> > Index: linux-pm/include/linux/device.h
-> > ===================================================================
-> > --- linux-pm.orig/include/linux/device.h
-> > +++ linux-pm/include/linux/device.h
-> > @@ -829,12 +829,13 @@ enum device_link_state {
-> >  /*
-> >   * Device link flags.
-> >   *
-> > - * STATELESS: The core won't track the presence of supplier/consumer drivers.
-> > + * STATELESS: The core will not remove this link automatically.
-> >   * AUTOREMOVE_CONSUMER: Remove the link automatically on consumer driver unbind.
-> >   * PM_RUNTIME: If set, the runtime PM framework will use this link.
-> >   * RPM_ACTIVE: Run pm_runtime_get_sync() on the supplier during link creation.
-> >   * AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driver unbind.
-> >   * AUTOPROBE_CONSUMER: Probe consumer driver automatically after supplier binds.
-> > + * MANAGED: The core tracks presence of supplier/consumer drivers (internal).
-> >   */
-> >  #define DL_FLAG_STATELESS		BIT(0)
-> >  #define DL_FLAG_AUTOREMOVE_CONSUMER	BIT(1)
-> > @@ -842,6 +843,7 @@ enum device_link_state {
-> >  #define DL_FLAG_RPM_ACTIVE		BIT(3)
-> >  #define DL_FLAG_AUTOREMOVE_SUPPLIER	BIT(4)
-> >  #define DL_FLAG_AUTOPROBE_CONSUMER	BIT(5)
-> > +#define DL_FLAG_MANAGED			BIT(6)
-> >  
-> >  /**
-> >   * struct device_link - Device link representation.
-> > Index: linux-pm/Documentation/driver-api/device_link.rst
-> > ===================================================================
-> > --- linux-pm.orig/Documentation/driver-api/device_link.rst
-> > +++ linux-pm/Documentation/driver-api/device_link.rst
-> > @@ -78,8 +78,8 @@ typically deleted in its ``->remove`` ca
-> >  driver is compiled as a module, the device link is added on module load and
-> >  orderly deleted on unload.  The same restrictions that apply to device link
-> >  addition (e.g. exclusion of a parallel suspend/resume transition) apply equally
-> > -to deletion.  Device links with ``DL_FLAG_STATELESS`` unset (i.e. managed
-> > -device links) are deleted automatically by the driver core.
-> > +to deletion.  Device links managed by the driver core are deleted automatically
-> > +by it.
-> >  
-> >  Several flags may be specified on device link addition, two of which
-> >  have already been mentioned above:  ``DL_FLAG_STATELESS`` to express that no
-> > 
-> > 
-> > 
-> > 
-> 
-> Hello Rafael,
-> 
-> This patch breaks NVIDIA Tegra DRM driver, which fails to probe now
-> using the recent linux-next.
-> 
-> 	tegra-dc 54240000.dc: failed to link controllers
-> 
 
-Thanks for the report and sorry for the breakage!
+--bspti6iz3s7zaaw6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-My bad, obviously DL_FLAG_PM_RUNTIME must be accepted by device_link_add(),
-as well as DL_FLAG_RPM_ACTIVE.
+Hello,
+  so I finally run some test and...
 
-Please test the appended patch and let me know if it helps.
+On Sun, Jul 14, 2019 at 05:19:32AM -0700, Joe Perches wrote:
+> On Sun, 2019-07-14 at 12:54 +0100, Jonathan Cameron wrote:
+> > On Tue,  9 Jul 2019 22:04:17 -0700
+> > Joe Perches <joe@perches.com> wrote:
+> >
+> > > Arguments are supposed to be ordered high then low.
+> > >
+> > > Signed-off-by: Joe Perches <joe@perches.com>
+> >
+> > Applied to the fixes-togreg branch of iio.git and marked for
+> > stable etc.
 
-Greg, in case this is confirmed to fix the issue, do you want me to post it as a
-separate patch, or would you prefer a v3 of the $subject one?
+I don't see it in v5.3-rc2, has it been collected or are we still in
+time for an additional fix?
 
----
- drivers/base/core.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> This mask is used in an init function called from a probe.
+>
+> I don't have this hardware but it looks as if it could
+> never have worked so I doubt the driver and the hardware
+> have ever been tested.
+>
+> Does anyone have this device in actual use?
 
-Index: linux-pm/drivers/base/core.c
-===================================================================
---- linux-pm.orig/drivers/base/core.c
-+++ linux-pm/drivers/base/core.c
-@@ -213,6 +213,9 @@ void device_pm_move_to_tail(struct devic
- 			       DL_FLAG_AUTOREMOVE_SUPPLIER | \
- 			       DL_FLAG_AUTOPROBE_CONSUMER)
- 
-+#define DL_ADD_VALID_FLAGS (DL_MANAGED_LINK_FLAGS | DL_FLAG_STATELESS | \
-+			    DL_FLAG_PM_RUNTIME | DL_FLAG_RPM_ACTIVE)
-+
- /**
-  * device_link_add - Create a link between two devices.
-  * @consumer: Consumer end of the link.
-@@ -274,8 +277,7 @@ struct device_link *device_link_add(stru
- {
- 	struct device_link *link;
- 
--	if (!consumer || !supplier ||
--	    (flags & ~(DL_FLAG_STATELESS | DL_MANAGED_LINK_FLAGS)) ||
-+	if (!consumer || !supplier || flags & ~DL_ADD_VALID_FLAGS ||
- 	    (flags & DL_FLAG_STATELESS && flags & DL_MANAGED_LINK_FLAGS) ||
- 	    (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
- 	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
+Because it turns out this is 2 times embarrassing. The mask definition
+is indeed wrong, as Joe reported and fixed, but also this line
+>
+> 	regval = ret & MAX9611_TEMP_MASK;
 
+is very wrong as regval is read as:
+        ret = max9611_read_single(max9611, CONF_TEMP, &regval);
 
+So that should actually be:
+        regval &= MAX9611_TEMP_MASK;
+not
+ 	regval = ret & MAX9611_TEMP_MASK;
+Ups...
 
+Yes, it worked by chance, as regval was always 0, which is in the
+range of acceptable temperatures :/
 
+>
+> 	if ((regval > MAX9611_TEMP_MAX_POS &&
+> 	     regval < MAX9611_TEMP_MIN_NEG) ||
+> 	     regval > MAX9611_TEMP_MAX_NEG) {
+
+Also reading this condition and how I had defined the temperature
+calculation formula makes me wonder if this it totally correct, but
+for the moment:
+
+1) if Joe's patch has been collected, I can send an additional patch to
+fix how regval is computed.
+2) If Joe's patch still have to be collected, the regval computation
+might be fixed there.
+
+Sorry for taking so long to get back to you and thanks for noticing.
+
+Thanks
+  j
+
+> 		dev_err(max9611->dev,
+> 			"Invalid value received from ADC 0x%4x: aborting\n",
+> 			regval);
+> 		return -EIO;
+> 	}
+>
+>
+> > Thanks,
+> >
+> > Jonathan
+> >
+> > > ---
+> > >  drivers/iio/adc/max9611.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+> > > index 917223d5ff5b..0e3c6529fc4c 100644
+> > > --- a/drivers/iio/adc/max9611.c
+> > > +++ b/drivers/iio/adc/max9611.c
+> > > @@ -83,7 +83,7 @@
+> > >  #define MAX9611_TEMP_MAX_POS		0x7f80
+> > >  #define MAX9611_TEMP_MAX_NEG		0xff80
+> > >  #define MAX9611_TEMP_MIN_NEG		0xd980
+> > > -#define MAX9611_TEMP_MASK		GENMASK(7, 15)
+> > > +#define MAX9611_TEMP_MASK		GENMASK(15, 7)
+> > >  #define MAX9611_TEMP_SHIFT		0x07
+> > >  #define MAX9611_TEMP_RAW(_r)		((_r) >> MAX9611_TEMP_SHIFT)
+> > >  #define MAX9611_TEMP_SCALE_NUM		1000000
+>
+
+--bspti6iz3s7zaaw6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0/aogACgkQcjQGjxah
+VjyVXBAAjXySZDbxeeH6TCp5TWOwWLpebJjJ99v++lJUK4A6ohVeqyyGbyZt7ak6
+ADGJEjNkeh1ilm/DXcyCCqTQ7w4loj6RsYPK5AHPT2jYaCf43VIkHArYg20SKtYI
+5nREJc2RYXpmOk+2s3oaosA4RgL6WV2shsLF/OYGubvdDWhGfRlAlPAZTtNG/siv
+GLidkma6RAbi1iqQUw4hsI7LJTmFn6F1T4wkiRx0SejBkLqHmLnrtvFjsWH1hgXW
+k9urqsRYR9Io3wVBvMOiKcQUVrfneOW6wo2KMYMVhNfxwUtKU6NWyWUzfgGpk8Hl
+jDG1FoRs3u86e3gTsN+yT4JSZuOjsPovuGOo7NO0MepRRGbfHqFJRBBL7Z9T04pL
+QySWlgMZvVQIi40uI/QHLmgm0ztzl19Ez/rJm6fYVSyBE8VKtLCkySI+pmiL8OWl
+JcjfMMq2KgElToxFfSF+CuU0Qe6hn8ye/boKsnuWfz9Vk7em07uPGaCDTe+gD4RR
+c3pQLaGO16FhSQygRDpiO9/3K9OsGUDCDPrkOoCi5nDqXjmBD4Uu2OEJvch86rku
+bmnyJ4ejXzsStjpUUbsNP1AmLT8yPxMA+SvZ8nrUIvfeKkEbD4Mff61ndJP52BX/
+g1yN+rSGk8OWRoB++9TUqmHr5EXxgLyJI0hJ9+B+chlgmvapGCM=
+=5EgF
+-----END PGP SIGNATURE-----
+
+--bspti6iz3s7zaaw6--
