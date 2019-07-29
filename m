@@ -2,94 +2,58 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111DFC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3D4C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4466206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0EB206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387573AbfG2SIn convert rfc822-to-8bit (ORCPT
+        id S1729160AbfG2SJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:08:43 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:42270 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727482AbfG2SIm (ORCPT
+        Mon, 29 Jul 2019 14:09:07 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:37078 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727482AbfG2SJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 14:08:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id E832A60632C0;
-        Mon, 29 Jul 2019 20:08:38 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ehX5VuQgnl7G; Mon, 29 Jul 2019 20:08:38 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 70E276083139;
-        Mon, 29 Jul 2019 20:08:38 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id XjNoOe8nauWF; Mon, 29 Jul 2019 20:08:38 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id D590B608311C;
-        Mon, 29 Jul 2019 20:08:37 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 20:08:37 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Richard Weinberger <richard.weinberger@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        alsa-devel <alsa-devel@alsa-project.org>,
-        linux-pm@vger.kernel.org, linux-mips@vger.kernel.org,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, od@zcrc.me,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        dmaengine@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
-Message-ID: <339409106.53616.1564423717793.JavaMail.zimbra@nod.at>
-In-Reply-To: <1564419921.1759.1@crapouillou.net>
-References: <20190725220215.460-1-paul@crapouillou.net> <CAFLxGvyi0+0E3M12A7cRoHfEKd8-7Yr8EMG9J=2XcjCxPWY5pA@mail.gmail.com> <1564419921.1759.1@crapouillou.net>
-Subject: Re: [PATCH 00/11] JZ4740 SoC cleanup
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
-Thread-Topic: JZ4740 SoC cleanup
-Thread-Index: pyW9XJwx/g8VXIVrZC/ODWU++joHAw==
+        Mon, 29 Jul 2019 14:09:06 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 498C014051852;
+        Mon, 29 Jul 2019 11:09:06 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 11:09:05 -0700 (PDT)
+Message-Id: <20190729.110905.966194099406946434.davem@davemloft.net>
+To:     mcroce@redhat.com
+Cc:     netdev@vger.kernel.org, antoine.tenart@bootlin.com,
+        maxime.chevallier@bootlin.com, mw@semihalf.com,
+        stefanc@marvell.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] mvpp2: refactor the HW checksum setup
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190728173549.32034-1-mcroce@redhat.com>
+References: <20190728173549.32034-1-mcroce@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 11:09:06 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
->> Was this series tested with the Ben Nanonote device?
->> I have one of these and from time to time I upgrade the kernel on it.
-> 
-> Yes! Artur (Cc'd) tested it.
-> 
-> You can test it yourself, after merging this patchset with:
-> https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/slave-dma.git
-> branch next,
-> git://git.freedesktop.org/git/drm-misc branch drm-misc-next.
-> 
-> These will be in 5.4-rc1.
+From: Matteo Croce <mcroce@redhat.com>
+Date: Sun, 28 Jul 2019 19:35:49 +0200
 
-Awesome! Thanks a lot for cleaning this up.
+> The hardware can only offload checksum calculation on first port due to
+> the Tx FIFO size limitation, and has a maximum L3 offset of 128 bytes.
+> Document this in a comment and move duplicated code in a function.
+> 
+> Fixes: 576193f2d579 ("net: mvpp2: jumbo frames support")
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
-Thanks,
-//richard
+Applied.
