@@ -2,174 +2,186 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D9BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689C0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5F620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3680720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:55:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L8sOkg7A"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="tfxv4tuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfG2Hyg (ORCPT
+        id S1727244AbfG2Hzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 03:54:36 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:32865 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfG2Hyf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 03:54:35 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h10so57634857ljg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 00:54:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8547tTieJTlVcp1ebRnVxi/sn+gdsxGXf1dlpzxnCUw=;
-        b=L8sOkg7Ax87vy+96EbbXXe/57YWfMfL5VN12MJf0jWV2nZrspx9wgCZekwqwSafd+U
-         ZRyGHhnULDy68f7hnWZPmk7IKc+tNUGqcMJRpeyjY78EgutxWvTEr4fq/8sfr87zj/vH
-         GZAvXJswddC6YrbIKnEbsOHxrwqAF0t8pW7jyTBFPuxMiiQCoEIdEWWQNWzt2Vy+ruNF
-         EeXQiBZGrIN/lw84IuwycszDODdxj5/tTnNzSKWgQzwc4m/8tA5/JitSBkOp3WPyFW+l
-         D9cUX7ZgMX+vsw7kKdMQaE78AQyO+sTBk6vnQ25VQKkj+pWK3VGjFkA8POTzzxpygod0
-         7FgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8547tTieJTlVcp1ebRnVxi/sn+gdsxGXf1dlpzxnCUw=;
-        b=rZ0ZEQYOvajtk4LkzpS5gmtzKCzmB6cCuoIpMRw2xrr+A8YwcQi388nU1K95rqurUI
-         Uj3dmrY3Hw+BvXhdKKldAjff3q43dK3LpuyS7NFjSml+znWw1Vk4KEoRMazCu5VB/WS8
-         7eY0AE7R84YxZg04uNDoJWY8TXQaX0e9zcBuDSyU9+N3sSIOB/Txb1b++d5fSBaiyttH
-         FdQBX+T1OCuMP9PmP1ULp0lw8DGlo81TordethP4MYA9bUl3f/uA1H8ziY2+7fBR9rjc
-         XKnUEMbw81Tfs+UNgoOiDRLWBgejTfUyVFZv+H/icbhvKS8u6OfRNPzVhjKtCjZChTje
-         cTBg==
-X-Gm-Message-State: APjAAAVK6TufbHbzzfGIIgB5U3WXEeLTvv8RnpO1YoGvPwQ92QM55Gtw
-        vxwqy59/W3n7nNbQUDfETMz0dw==
-X-Google-Smtp-Source: APXvYqz7DCW+GeWXbJrTMfzV+L8GHnWeJgYI0K9b3blm41IrHJaUWwJy69BQehoTrVZg+fDehswliQ==
-X-Received: by 2002:a2e:b0e6:: with SMTP id h6mr5315235ljl.18.1564386872598;
-        Mon, 29 Jul 2019 00:54:32 -0700 (PDT)
-Received: from [192.168.28.50] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id t1sm12678137lji.52.2019.07.29.00.54.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 00:54:31 -0700 (PDT)
-Subject: Re: [PATCH v6 3/4] media: venus: Update to bitrate based clock
- scaling
-To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org
-References: <1563786452-22188-1-git-send-email-amasule@codeaurora.org>
- <1563786452-22188-3-git-send-email-amasule@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <dd436fa8-085b-1c97-26bd-4c1d54a5d612@linaro.org>
-Date:   Mon, 29 Jul 2019 10:54:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 29 Jul 2019 03:55:46 -0400
+Received: from cmta16.telus.net ([209.171.16.89]:46234 "EHLO cmta16.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727085AbfG2Hzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 03:55:45 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id s0VQht9oNJEJss0VRh6Lj3; Mon, 29 Jul 2019 01:55:43 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1564386943; bh=GYX2p8Fr0OGn/XyiBM/DJqUex7myFNsaTyuHy1EFU8E=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=tfxv4tuf9N6DreMSwZ6cpLR3Hf+32nLtS9UZwndEKZQax0JnWvzMm/Q/SE3AeJ15a
+         /1eQq9NaVnNRJGXUGyR2vMTglH4R+BJXe+O7w8jZWxPSPQbJmR0HUBlgbJzHkXCUs7
+         9N3D70autuKqdPZQhCniptdIFTF53WhXE0kQASGnqaXsx6/2UE91GDLsPcfu+nGfDB
+         we7dt2lTfAmm3Jl3MpfN11Ldxv2Qg2DPKRqGw/yx9aBg0Wkm8UBIPTs9Nq+tLygIB9
+         ONjKDNDEaMDOagHXl1KjYiA1MIpaM7N+wrCVi1RITLsPekK5l6Zc5HHPefxtRA1aKJ
+         lscbMyD9SeB9Q==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=S/CnP7kP c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=cRXgKqRiuchQe480gGkA:9 a=CjuIK1q_8ugA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Viresh Kumar'" <viresh.kumar@linaro.org>
+Cc:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        "'Rafael Wysocki'" <rjw@rjwysocki.net>,
+        "'Ingo Molnar'" <mingo@redhat.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
+        "'Joel Fernandes'" <joel@joelfernandes.org>,
+        "'v4 . 18+'" <stable@vger.kernel.org>,
+        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>
+References: <1563431200-3042-1-git-send-email-dsmythies@telus.net> <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org> <001201d54125$a6a82350$f3f869f0$@net> <20190723091551.nchopfpqlmdmzvge@vireshk-i7> <CAJZ5v0ji+ksapJ4kc2m5UM_O+AShAvJWmYhTQHiXiHnpTq+xRg@mail.gmail.com> <20190724114327.apmx35c7a4tv3qt5@vireshk-i7> <000c01d542fc$703ff850$50bfe8f0$@net> <20190726065739.xjvyvqpkb3o6m4ty@vireshk-i7>
+In-Reply-To: <20190726065739.xjvyvqpkb3o6m4ty@vireshk-i7>
+Subject: RE: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
+Date:   Mon, 29 Jul 2019 00:55:37 -0700
+Message-ID: <000001d545e3$047d9750$0d78c5f0$@net>
 MIME-Version: 1.0
-In-Reply-To: <1563786452-22188-3-git-send-email-amasule@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdVDf23WWg3I21oIRx+B4OA3YdQqkgCV+ggg
+Content-Language: en-ca
+X-CMAE-Envelope: MS4wfDS911wo2ee/bgBIVUB73KpSWF+74QZKIitCa86dUdiDZZHzvgv8fA2Ct1Gu8/z5AKNBZ7YaNSAYpBKp5xieSOC0m/ki5wj6L66OVmt7rzsYXs9SPUzD
+ 47wZR3LV+deGHUeZBuKJeaAJ32vV513luLKd+6Hy6faYpuTZxcDYoRcmMsSbPuhCQwD1AYea6nVLaZ7hMSPNb8W90/T6/62fyCDUhhUgDQsSjjxWTsBpuDjG
+ RYfFPin/dm9o1Bu+EeMxHLD1FuNaJS0mMHOXcMMXImgsPwffGb9UgxMqaYMuXTrYziDrsYN2Ao/I+9IPFDdyCe1216DLQnkaZ8XFSX1Vj7nfJyM9D6aOUqwZ
+ K2A/j1/uN1ohm/8N64w6i40Rf3BGYyYJ28w9KCtU8mHnR1rRlOBeq4YZ05JADjHJDNuwzGSsNpHSzfSxwu0KPFkgH/C54Z9TB0Dn4jl5c7bD6POr6Ds=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/22/19 12:07 PM, Aniket Masule wrote:
-> Introduced clock scaling using bitrate, preavious
-> calculations consider only the cycles per mb.
-> Also, clock scaling is now triggered before every
-> buffer being queued to the device. This helps in
-> deciding precise clock cycles required.
+On 2019.07.25 23:58 Viresh Kumar wrote:
+> On 25-07-19, 08:20, Doug Smythies wrote:
+>> I tried the patch ("patch2"). It did not fix the issue.
+>> 
+>> To summarize, all kernel 5.2 based, all intel_cpufreq driver and schedutil governor:
+>> 
+>> Test: Does a busy system respond to maximum CPU clock frequency reduction?
+>> 
+>> stock, unaltered: No.
+>> revert ecd2884291261e3fddbc7651ee11a20d596bb514: Yes
+>> viresh patch: No.
+>> fast_switch edit: No.
+>> viresh patch2: No.
+>
+> Hmm, so I tried to reproduce your setup on my ARM board.
+> - booted only with CPU0 so I hit the sugov_update_single() routine
+> - And applied below diff to make CPU look permanently busy:
+>
+> -------------------------8<-------------------------
+>diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> index 2f382b0959e5..afb47490e5dc 100644
+> --- a/kernel/sched/cpufreq_schedutil.c
+> +++ b/kernel/sched/cpufreq_schedutil.c
+> @@ -121,6 +121,7 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
+>         if (!sugov_update_next_freq(sg_policy, time, next_freq))
+>                return;
 > 
-> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-> ---
->  drivers/media/platform/qcom/venus/helpers.c | 33 +++++++++++++++++++++++++----
->  1 file changed, 29 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-> index 2c976e4..edf403d 100644
-> --- a/drivers/media/platform/qcom/venus/helpers.c
-> +++ b/drivers/media/platform/qcom/venus/helpers.c
-> @@ -399,17 +399,26 @@ static int scale_clocks(struct venus_inst *inst)
->  	return ret;
+> +       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
+
+?? there is no "freq" variable here, and so this doesn't compile. However this works:
+
++       pr_info("%s: %d: %u\n", __func__, __LINE__, next_freq);
+
+>         next_freq = cpufreq_driver_fast_switch(policy, next_freq);
+>        if (!next_freq)
+>                return;
+> @@ -424,14 +425,10 @@ static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
+> #ifdef CONFIG_NO_HZ_COMMON
+> static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
+> {
+> -       unsigned long idle_calls = tick_nohz_get_idle_calls_cpu(sg_cpu->cpu);
+> -       bool ret = idle_calls == sg_cpu->saved_idle_calls;
+> -
+> -       sg_cpu->saved_idle_calls = idle_calls;
+> -       return ret;
+> +       return true;
 >  }
->  
-> -static unsigned long calculate_vpp_freq(struct venus_inst *inst)
-> +static unsigned long calculate_inst_freq(struct venus_inst *inst,
-> +					 unsigned long filled_len)
->  {
-> -	unsigned long vpp_freq = 0;
-> +	unsigned long vpp_freq = 0, vsp_freq = 0;
-> +	u64 fps = inst->fps;
->  	u32 mbs_per_sec;
->  
->  	mbs_per_sec = load_per_instance(inst);
->  	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
->  	/* 21 / 20 is overhead factor */
->  	vpp_freq += vpp_freq / 20;
-> +	vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vsp_freq;
->  
-> -	return vpp_freq;
-> +	/* 10 / 7 is overhead factor */
-> +	if (inst->session_type == VIDC_SESSION_TYPE_ENC)
-> +		vsp_freq += (inst->controls.enc.bitrate * 10) / 7;
-> +	else
-> +		vsp_freq += ((fps * filled_len * 8) * 10) / 7;
-> +
-> +	return max(vpp_freq, vsp_freq);
->  }
->  
->  static int scale_clocks_v4(struct venus_inst *inst)
-> @@ -417,13 +426,27 @@ static int scale_clocks_v4(struct venus_inst *inst)
->  	struct venus_core *core = inst->core;
->  	const struct freq_tbl *table = core->res->freq_tbl;
->  	unsigned int num_rows = core->res->freq_tbl_size;
-> +	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
->  	struct clk *clk = core->clks[0];
->  	struct device *dev = core->dev;
->  	unsigned int i;
->  	unsigned long freq = 0, freq_core1 = 0, freq_core2 = 0;
-> +	unsigned long filled_len = 0;
-> +	struct venus_buffer *buf, *n;
-> +	struct vb2_buffer *vb;
->  	int ret;
->  
-> -	freq = calculate_vpp_freq(inst);
-> +	mutex_lock(&inst->lock);
-
-the lock is not needed and having it will produce a deadlock.
-
-> +	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
-> +		vb = &buf->vb.vb2_buf;
-> +		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
-> +	}
-> +	mutex_unlock(&inst->lock);
-> +
-> +	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len)
-> +		return 0;
-> +
-> +	freq = calculate_inst_freq(inst, filled_len);
->  
->  	if (freq > table[0].freq)
->  		dev_warn(dev, "HW is overloaded, needed: %lu max: %lu\n",
-> @@ -1093,6 +1116,8 @@ void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
->  	if (ret)
->  		goto unlock;
->  
-> +	load_scale_clocks(inst);
-> +
->  	ret = session_process_buf(inst, vbuf);
->  	if (ret)
->  		return_buf_error(inst, vbuf);
+>  #else
+> -static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
+> +static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return true; }
+> #endif /* CONFIG_NO_HZ_COMMON */
 > 
+>  /*
+> @@ -565,6 +562,7 @@ static void sugov_work(struct kthread_work *work)
+>         sg_policy->work_in_progress = false;
+>         raw_spin_unlock_irqrestore(&sg_policy->update_lock, flags);
+> 
+> +       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
+>         mutex_lock(&sg_policy->work_lock);
+>         __cpufreq_driver_target(sg_policy->policy, freq, CPUFREQ_RELATION_L);
+>         mutex_unlock(&sg_policy->work_lock);
+> 
+> -------------------------8<-------------------------
+>
+> Now, the frequency never gets down and so gets set to the maximum
+> possible after a bit.
+>
+> - Then I did:
+>
+> echo <any-low-freq-value> > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+>
+> Without my patch applied:
+>        The print never gets printed and so frequency doesn't go down.
+>
+> With my patch applied:
+>        The print gets printed immediately from sugov_work() and so
+>        the frequency reduces.
+> 
+> Can you try with this diff along with my Patch2 ? I suspect there may
+> be something wrong with the intel_cpufreq driver as the patch fixes
+> the only path we have in the schedutil governor which takes busyness
+> of a CPU into account.
 
--- 
-regards,
-Stan
+With this diff along with your patch2 There is never a print message
+from sugov_work. There are from sugov_fast_switch.
+
+Note that for the intel_cpufreq CPU scaling driver and the schedutil
+governor I adjust the maximum clock frequency this way:
+
+echo <any-low-percent> > /sys/devices/system/cpu/intel_pstate/max_perf_pct
+
+I also applied the pr_info messages to the reverted kernel, and re-did
+my tests (where everything works as expected). There is never a print
+message from sugov_work. There are from sugov_fast_switch.
+
+Notes:
+
+I do not know if:
+/sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
+/sys/devices/system/cpu/cpufreq/policy*/scaling_min_freq
+Need to be accurate when using the intel_pstate driver in passive mode.
+They are not.
+The commit comment for 9083e4986124389e2a7c0ffca95630a4983887f0
+suggests that they might need to be representative.
+I wonder if something similar to that commit is needed
+for other global changes, such as max_perf_pct and min_perf_pct?
+
+intel_cpufreq/ondemand doesn't work properly on the reverted kernel.
+(just discovered, not investigated)
+I don't know about other governors.
+
+... Doug
+
+
