@@ -2,81 +2,90 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E404C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FD9C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 371482070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDBC121773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:06:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PvMHHqEZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PvMHHqEZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387816AbfG2MD3 (ORCPT
+        id S2387781AbfG2MGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:03:29 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57427 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387398AbfG2MD2 (ORCPT
+        Mon, 29 Jul 2019 08:06:49 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:36696 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387637AbfG2MGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:03:28 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hs4NA-0004K2-3O; Mon, 29 Jul 2019 12:03:24 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-pm@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][V2] drivers: thermal: processor_thermal_device: fix missing bitwise-or operators
-Date:   Mon, 29 Jul 2019 13:03:23 +0100
-Message-Id: <20190729120323.15838-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 29 Jul 2019 08:06:48 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B7F3C60736; Mon, 29 Jul 2019 12:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564402007;
+        bh=bvEmJLLutQsxuJQPfWeI2M2lzgG7cHvWewxBuldtSuI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PvMHHqEZEL2gM4bFpn7FBbNeejQumuW3p16GiGQ7d6ZiRaxeoMyqrXa8I4aandisw
+         Me6uFwYemJoIyeddK9w9lPSvOUUbafyWfVT4djfTjMCU6I45iUt6K0cHyNROKpt4Kt
+         0VJ0tFUFeWaU4kJfY7/jc6zxX3cSYlU0Fi2573Oc=
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D07660255;
+        Mon, 29 Jul 2019 12:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564402007;
+        bh=bvEmJLLutQsxuJQPfWeI2M2lzgG7cHvWewxBuldtSuI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PvMHHqEZEL2gM4bFpn7FBbNeejQumuW3p16GiGQ7d6ZiRaxeoMyqrXa8I4aandisw
+         Me6uFwYemJoIyeddK9w9lPSvOUUbafyWfVT4djfTjMCU6I45iUt6K0cHyNROKpt4Kt
+         0VJ0tFUFeWaU4kJfY7/jc6zxX3cSYlU0Fi2573Oc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D07660255
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, vkoul@kernel.org,
+        aneela@codeaurora.org
+Cc:     mark.rutland@arm.com, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
+        clew@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 0/6] Add support for Qualcomm SM8150 and SC7180 SoCs
+Date:   Mon, 29 Jul 2019 17:36:27 +0530
+Message-Id: <20190729120633.20451-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+This patch series adds SCM, APSS shared mailbox and QMP AOSS PD/clock
+support on SM8150 and SC7180 SoCs.
 
-The variable val is having the top 8 bits cleared and then the variable is being
-re-assinged and setting just the top 8 bits.  I believe the intention was bitwise-or
-in the top 8 bits.  Fix this by replacing the = operators with &= and |= instead.
+Sibi Sankar (6):
+  soc: qcom: smem: Update max processor count
+  dt-bindings: firmware: scm: Add SM8150 and SC7180 support
+  dt-bindings: mailbox: Add APSS shared for SM8150 and SC7180 SoCs
+  mailbox: qcom: Add support for Qualcomm SM8150 and SC7180 SoCs
+  dt-bindings: soc: qcom: aoss: Add SM8150 and SC7180 support
+  soc: qcom: aoss: Add AOSS QMP support
 
-Addresses-Coverity: ("Unused value")
-Fixes: b0c74b08517e ("drivers: thermal: processor_thermal_device: Export sysfs inteface for TCC offset")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
+ Documentation/devicetree/bindings/firmware/qcom,scm.txt      | 2 ++
+ .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt    | 2 ++
+ Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt | 5 ++++-
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 2 ++
+ drivers/soc/qcom/qcom_aoss.c                                 | 2 ++
+ drivers/soc/qcom/smem.c                                      | 2 +-
+ 6 files changed, 13 insertions(+), 2 deletions(-)
 
-V2: Add in &= operator missing from V1. Doh.
-
----
- .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-index 6f6ac6a8e82d..97333fc4be42 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-@@ -163,8 +163,8 @@ static int tcc_offset_update(int tcc)
- 	if (err)
- 		return err;
- 
--	val = ~GENMASK_ULL(31, 24);
--	val = (tcc & 0xff) << 24;
-+	val &= ~GENMASK_ULL(31, 24);
-+	val |= (tcc & 0xff) << 24;
- 
- 	err = wrmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, val);
- 	if (err)
 -- 
-2.20.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
