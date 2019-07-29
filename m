@@ -2,89 +2,137 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A0FC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4937C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267D921655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E6D21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:09:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SLLPaiCl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="iTR36zL8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387614AbfG2LJm (ORCPT
+        id S2387624AbfG2LJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:09:42 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:45412 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387531AbfG2LJm (ORCPT
+        Mon, 29 Jul 2019 07:09:57 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.114]:20837 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387531AbfG2LJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:09:42 -0400
+        Mon, 29 Jul 2019 07:09:57 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 75954CE82AF
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 06:09:56 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id s3XQhWcod4FKps3XQhgVoE; Mon, 29 Jul 2019 06:09:56 -0500
+X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gi7iIytxwOSusKBpP3uzUn+8/N2d51dx02iEWqcYI5M=; b=SLLPaiClwMC18Nq1QTBwvP30k
-        YyJhcamnVKRI7yAJ+XWG/FpRaXuKbQXd31bOOgYF9qgZzKE0pW8xN1pjej99z5cllncmQUtC61Vfi
-        E2dO1D8gPpdw3I9sJy8dvjgDjv3rfsa2heKpx2h/zwDhV5MS2GVsrSUTbfHjoeS74Qu3PGduZFpev
-        NVEBtNYI63seQnLGwQtsRhK1k55GYqZOwUOu84PXMhMLDZIWaRsZd5+QSbyrTBuk1Z9p6+1XiVL6L
-        3+maRa07fQD7aoWF4e1PA4I3qI9pGDHXxTZWecArSMtWttaRPgab5KibFYiSGZlUTnJR8W9mR4B+r
-        s8xJBHnaw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs3Wz-0000wX-UW; Mon, 29 Jul 2019 11:09:30 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6EA6B20B51713; Mon, 29 Jul 2019 13:09:27 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 13:09:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     lantianyu1986@gmail.com, Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, daniel.lezcano@linaro.org, arnd@arndb.de,
-        michael.h.kelley@microsoft.com, ashal@kernel.org
-Subject: Re: [PATCH 0/2] clocksource/Hyper-V: Add Hyper-V specific sched
- clock function
-Message-ID: <20190729110927.GC31398@hirez.programming.kicks-ass.net>
-References: <20190729075243.22745-1-Tianyu.Lan@microsoft.com>
- <87zhkxksxd.fsf@vitty.brq.redhat.com>
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zBhKVOqNXWjPvhmyDU3NEueaWG9T6eHgUkI6CNjSGOY=; b=iTR36zL883BYvaTP3y/w06lPL6
+        xSJ9/fYiJuvPV3dA0UWXZ9svWVBQYmNmB3Kw9G/BPGuP0eki4rzCIMBKb2HL44egwslphkPntAGEl
+        zYC9pLwnOS4faKc4Fmph1/NphtiN6jFsIBXqmn3UOUA+yvhj51eb2HEeIUeBl5HL0Dc4l3YJZq8oJ
+        pas/yOcUx7SOYrBJSsMlcsldmm2XZFpRkHL/SSu+iBrrQlYcKRjFL6Tk1pRgnebZqeLQiStYvdziJ
+        WflbGrlqxG2KhkFj1zb2e4GOcMGSzkqF3V8DqtcqvMoXyuxi+EsBo/dgab6aYEHMgC7pm8xrq7Oqz
+        2e4O4QOQ==;
+Received: from [187.192.11.120] (port=46260 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hs3XO-000AJJ-RD; Mon, 29 Jul 2019 06:09:55 -0500
+Date:   Mon, 29 Jul 2019 06:09:53 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] arcnet: com90xx: Mark expected switch fall-throughs
+Message-ID: <20190729110953.GA3048@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87zhkxksxd.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hs3XO-000AJJ-RD
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:46260
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 12:59:26PM +0200, Vitaly Kuznetsov wrote:
-> lantianyu1986@gmail.com writes:
-> 
-> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> >
-> > Hyper-V guests use the default native_sched_clock() in pv_ops.time.sched_clock
-> > on x86.  But native_sched_clock() directly uses the raw TSC value, which
-> > can be discontinuous in a Hyper-V VM.   Add the generic hv_setup_sched_clock()
-> > to set the sched clock function appropriately.  On x86, this sets
-> > pv_ops.time.sched_clock to read the Hyper-V reference TSC value that is
-> > scaled and adjusted to be continuous.
-> 
-> Hypervisor can, in theory, disable TSC page and then we're forced to use
-> MSR-based clocksource but using it as sched_clock() can be very slow,
-> I'm afraid.
-> 
-> On the other hand, what we have now is probably worse: TSC can,
-> actually, jump backwards (e.g. on migration) and we're breaking the
-> requirements for sched_clock().
+Mark switch cases where we are expecting to fall through.
 
-That (obviously) also breaks the requirements for using TSC as
-clocksource.
+This patch fixes the following warnings (Building: powerpc allyesconfig):
 
-IOW, it breaks the entire purpose of having TSC in the first place.
+drivers/net/arcnet/com90xx.c: In function 'com90xx_setup':
+include/linux/printk.h:304:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/arcnet/com90xx.c:695:3: note: in expansion of macro 'pr_err'
+   pr_err("Too many arguments\n");
+   ^~~~~~
+drivers/net/arcnet/com90xx.c:696:2: note: here
+  case 3:  /* Mem address */
+  ^~~~
+drivers/net/arcnet/com90xx.c:697:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   shmem = ints[3];
+   ~~~~~~^~~~~~~~~
+drivers/net/arcnet/com90xx.c:698:2: note: here
+  case 2:  /* IRQ */
+  ^~~~
+drivers/net/arcnet/com90xx.c:699:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   irq = ints[2];
+   ~~~~^~~~~~~~~
+drivers/net/arcnet/com90xx.c:700:2: note: here
+  case 1:  /* IO address */
+  ^~~~
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/arcnet/com90xx.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/arcnet/com90xx.c b/drivers/net/arcnet/com90xx.c
+index ca4a57c30bf8..bd75d06ad7df 100644
+--- a/drivers/net/arcnet/com90xx.c
++++ b/drivers/net/arcnet/com90xx.c
+@@ -693,10 +693,13 @@ static int __init com90xx_setup(char *s)
+ 	switch (ints[0]) {
+ 	default:		/* ERROR */
+ 		pr_err("Too many arguments\n");
++		/* Fall through */
+ 	case 3:		/* Mem address */
+ 		shmem = ints[3];
++		/* Fall through */
+ 	case 2:		/* IRQ */
+ 		irq = ints[2];
++		/* Fall through */
+ 	case 1:		/* IO address */
+ 		io = ints[1];
+ 	}
+-- 
+2.22.0
+
