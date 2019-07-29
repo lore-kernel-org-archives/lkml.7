@@ -8,62 +8,63 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A7BC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F061CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE49521655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C420821655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:14:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUK3INaf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXJjen3f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbfG2PNy (ORCPT
+        id S1728725AbfG2POE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:13:54 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35192 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfG2PNy (ORCPT
+        Mon, 29 Jul 2019 11:14:04 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36917 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfG2POE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:13:54 -0400
-Received: by mail-pg1-f196.google.com with SMTP id s1so22117784pgr.2;
-        Mon, 29 Jul 2019 08:13:54 -0700 (PDT)
+        Mon, 29 Jul 2019 11:14:04 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 19so28191950pfa.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 08:14:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZnLXcFhj+Go8GG8/vsP0gGZ0JCfmJSZ7rbeDeF2qVeE=;
-        b=XUK3INafO/K7rNvFDvDF8JVU+N+jADLF5S80ly0dl6c7dAg3Bn2NK4Xi3vS3+cBW6z
-         k530Dav9ZNTwqZJ1gPbBE7huyQlh36P5Vt5+PcuZ+3tereumhe73oBeYjt1CandmYOwd
-         csjOa6nhfGoWBtDgy7w/dzUn92301/n8eILgg62MHBX/MGo7k6jt7YTO+EnilKFCQ6S4
-         pJvgnA1r2WpJzbU5JnudrG5cZ8fgRfu/22BfZiAonM2S0O9Y0ne4MrC1X7Arz7HUp/sr
-         +2k/LOkqHrtganDCGLJRHHxYjM62wplT1spDMbekbbFIAQNKSCXVIhJ3xLzI8pJfJFrI
-         LqOg==
+        bh=7VhBroyGxGn/uVVtotJh4SOBVCoW5vZobk9B4v8Ue9c=;
+        b=lXJjen3fN3Ee408KHLV8ItbVARbeeRH8QusB5XN/bdyL10ToU0zPjHbw3tviGvtmov
+         1+nuJmhnC8aZTaJuHxY8CinSweSTbWgDIBfm9tFwkmciqu3oE358dI5cpLuX6h/Iiwwo
+         eMIebB6D0dGyb7ouKfTG+OCtjuJcvsub/TGjZwFGQ8aJJlFgBPGoKfTqSuXoLmEplv2p
+         RJcXZz1s2jalkDD4vp2T+ZGURehXZJBl2TIUaxjwSTCimgAiFeii7jIJfiMA9VZKoXRL
+         hWJme+SF0QE7L4CYCdA0Ixw9Cq/KdG8qqanqDX0lQnhtyfFcZgmXRF6ZtAolGXao8XD5
+         y9zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZnLXcFhj+Go8GG8/vsP0gGZ0JCfmJSZ7rbeDeF2qVeE=;
-        b=cuBb1livmVKcFqWPnXLwopcrwggPF9m1jo3jHiF9l6VOZn1N2C/OC9c66cmbu0CzP4
-         il95YY8v1ZUBcv0k1PIacqO6AhKbSh09O5B6XPjvcr4Scgxc6lyJkx1IGRFalRJ5h1ml
-         rqodo8pxm+GsHyFoCxqxkOXVTecIS/QEGTT56DGxG9ViiCYw9q4kCHaF0lhclkGp7jLc
-         TVPgzGzaNAcDsKNns9XM0QMlTew+3TswaFTCde4cUOn2I8mOd3El2QSE3VScx/8aoizD
-         +Ov2W4QtYKJioqI21UAbx5f81sWK5H3TNdp3EQFPDAEPycHsEsXTvDiVcO3EVfKkrrtj
-         pLXg==
-X-Gm-Message-State: APjAAAVuFZrVEDLAKpaUBzUulk8edMkKlYHf1bk8m+neYPesx9VXGAtm
-        /YKde2jG2PZkckebBzUtdeo=
-X-Google-Smtp-Source: APXvYqzMajOUoR19pFuqbmPr8IgmUhfrMFA45ZK9qFI+NJaThzATOY9KVAMv5D52hHPcjJfWOhVCeQ==
-X-Received: by 2002:a63:c009:: with SMTP id h9mr77405961pgg.166.1564413233854;
-        Mon, 29 Jul 2019 08:13:53 -0700 (PDT)
+        bh=7VhBroyGxGn/uVVtotJh4SOBVCoW5vZobk9B4v8Ue9c=;
+        b=CpCZjGDxMOFIvwCjI8NSCQ6SDUqF01RjGil98jlhXQbTbIeJNeqWnmvq6k46EWo3mT
+         FvPpv7WbHlpC4w/z2K2DOuu84rTBnNTCVoTjK6l3r3GORJR6kg2FDQlBizoMDMRNo/c6
+         jdRZu0qnLG/FLMmKm+XGcovvqNy0AputxBN5GG3en/7Sn+f8cgfhne/roCRWbiMb7kaa
+         x6WfGAgmEtOI6ixoBnJ47uG/kLtWK3QlltpSRj0LmZgwDpmmc8/8C25lxlko7ONy8atG
+         0olvssmk42rV5d61pi4bGFZpdZpGj/6yr0lR57a5TMIvrbBkS1pU14U5dst89o6JW4KZ
+         cb+A==
+X-Gm-Message-State: APjAAAWQ87Aa4iQiHgmHrfjQuJdkX0URwnI4tcEt0pXy6GARNjhp3oyw
+        oadqbHdEp6YrdAUrryL/o+c=
+X-Google-Smtp-Source: APXvYqzkKOqzk9ZnxlW7J1CY7+nTn7Zv8asacrJvldoL2+p/rPVCdf0r0PJ9TYacnzPoLzZJvoPeSQ==
+X-Received: by 2002:aa7:8817:: with SMTP id c23mr37633718pfo.146.1564413243726;
+        Mon, 29 Jul 2019 08:14:03 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id q1sm72661765pfg.84.2019.07.29.08.13.51
+        by smtp.gmail.com with ESMTPSA id i126sm73927399pfb.32.2019.07.29.08.14.01
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 08:13:53 -0700 (PDT)
+        Mon, 29 Jul 2019 08:14:03 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH 01/12] rdmacg: Replace strncmp with str_has_prefix
-Date:   Mon, 29 Jul 2019 23:13:46 +0800
-Message-Id: <20190729151346.9280-1-hslester96@gmail.com>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH 02/12] kdb: Replace strncmp with str_has_prefix
+Date:   Mon, 29 Jul 2019 23:13:59 +0800
+Message-Id: <20190729151359.9334-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,21 +80,21 @@ str_has_prefix() instead of it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- kernel/cgroup/rdma.c | 2 +-
+ kernel/debug/kdb/kdb_main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/cgroup/rdma.c b/kernel/cgroup/rdma.c
-index ae042c347c64..fd12a227f8e4 100644
---- a/kernel/cgroup/rdma.c
-+++ b/kernel/cgroup/rdma.c
-@@ -379,7 +379,7 @@ static int parse_resource(char *c, int *intval)
- 			return -EINVAL;
- 		return i;
- 	}
--	if (strncmp(value, RDMACG_MAX_STR, len) == 0) {
-+	if (str_has_prefix(value, RDMACG_MAX_STR)) {
- 		*intval = S32_MAX;
- 		return i;
+diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+index 9ecfa37c7fbf..4567fe998c30 100644
+--- a/kernel/debug/kdb/kdb_main.c
++++ b/kernel/debug/kdb/kdb_main.c
+@@ -830,7 +830,7 @@ static void parse_grep(const char *str)
+ 	cp++;
+ 	while (isspace(*cp))
+ 		cp++;
+-	if (strncmp(cp, "grep ", 5)) {
++	if (!str_has_prefix(cp, "grep ")) {
+ 		kdb_printf("invalid 'pipe', see grephelp\n");
+ 		return;
  	}
 -- 
 2.20.1
