@@ -7,28 +7,29 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF282C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C516EC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2A50206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C6A2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:52:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GaCue3oj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gV9r2Pvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbfG2Wtg (ORCPT
+        id S1728974AbfG2WwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 18:49:36 -0400
-Received: from gateway20.websitewelcome.com ([192.185.64.36]:46524 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727576AbfG2Wtg (ORCPT
+        Mon, 29 Jul 2019 18:52:24 -0400
+Received: from gateway36.websitewelcome.com ([192.185.195.25]:20352 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727091AbfG2WwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 18:49:36 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id B4E2D400C81CF
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 16:46:06 -0500 (CDT)
+        Mon, 29 Jul 2019 18:52:23 -0400
+X-Greylist: delayed 1220 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 18:52:23 EDT
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 9AB56400C88CF
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 17:16:29 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id sESVh1uJZ2qH7sESVh4GOK; Mon, 29 Jul 2019 17:49:35 -0500
+        id sEVDhVwGUiQersEVDhv13B; Mon, 29 Jul 2019 17:52:23 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -36,25 +37,31 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=RsCF2vuzTm3iwzaX6PiskbgBBNm8IovFMRJ8CCI/Gmg=; b=GaCue3ojx2KA5yk8vKLnHWpkW2
-        7DexMxtvyZkfRcB/kCwqzsGtBSXxqfmdiVHfceSNJXIJnnG3zEyI1RCxltTrS4Zmc/27ICiwT45XX
-        ojrNiRulP3299WA31HPphgswkUBxkg9pbhIJzbGAr8hHxepn+xbS942SAUq8Wkfo8OSsyhwtXe911
-        Xg3Rkk0Sp5Ue4s/vvgQdlb0GFdL2IHrbxr5OfTfwHc/NIDMsQrYYFHDY/2wJiOsOf6FDJpC6XnZRa
-        raoymwXO6PMiGYSKmo7n0pCIndftZNEtASHi/bmch+Wov8gzCVlvIKPKpWutNrTznz1PSKJkHlzyH
-        rJoEih4g==;
-Received: from [187.192.11.120] (port=60902 helo=embeddedor)
+        bh=RGM1QOf7Ifka8Lzj21bKpD9jnLg3f9Vd1ITqzxm/VOU=; b=gV9r2PvwJ6rxIRIgwFC2X2SCdZ
+        g7/+BkFcoDz0V9uUOGllyxNtsuluzDThOjYowlhrij65SbkzuX75rigaZDRftzgUiV0o1DPAYUTGb
+        oZrWQybdnVtt/4v1P7Rusa2Q1rTb/30pyx4ExZe2xPRlFQfh/Y/2E8OKwJ448mqa7mUmWwvnwFoLk
+        N5zW03DPfInXg5UpRiUBT5MpkOyVO3BLu5XNZ3fi7uz5wu8vIArdm+DT4elWgYkmikAC/wbkQTP8V
+        a8cEFs8pUOoQmOwXYBaP2ZQsuJWBuIdHKwgY3BlCb8Ix150TlM+sOJanfZFuzXIQNbiBWAQIpRLcT
+        wumxlobw==;
+Received: from [187.192.11.120] (port=60908 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1hsESU-002FpJ-FR; Mon, 29 Jul 2019 17:49:34 -0500
-Date:   Mon, 29 Jul 2019 17:49:33 -0500
+        id 1hsEVB-002HF4-S4; Mon, 29 Jul 2019 17:52:22 -0500
+Date:   Mon, 29 Jul 2019 17:52:21 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Kees Cook <keescook@chromium.org>
-Subject: [PATCH] cpufreq: ti-cpufreq: Mark expected switch fall-through
-Message-ID: <20190729224933.GA23686@embeddedor>
+Subject: [PATCH] dmaengine: imx-dma: Mark expected switch fall-through
+Message-ID: <20190729225221.GA24269@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -68,13 +75,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.192.11.120
 X-Source-L: No
-X-Exim-ID: 1hsESU-002FpJ-FR
+X-Exim-ID: 1hsEVB-002HF4-S4
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:60902
+X-Source-Sender: (embeddedor) [187.192.11.120]:60908
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 43
+X-Email-Count: 54
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,30 +93,34 @@ Mark switch cases where we are expecting to fall through.
 
 This patch fixes the following warning (Building: arm):
 
-drivers/cpufreq/ti-cpufreq.c: In function ‘dra7_efuse_xlate’:
-drivers/cpufreq/ti-cpufreq.c:79:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
-drivers/cpufreq/ti-cpufreq.c:80:2: note: here
-  case DRA7_EFUSE_HAS_OD_MPU_OPP:
+drivers/dma/imx-dma.c: In function ‘imxdma_xfer_desc’:
+drivers/dma/imx-dma.c:542:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if (slot == IMX_DMA_2D_SLOT_A) {
+      ^
+drivers/dma/imx-dma.c:559:2: note: here
+  case IMXDMA_DESC_MEMCPY:
   ^~~~
+
+Notice that, in this particular case, the code comment is
+modified in accordance with what GCC is expecting to find.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/cpufreq/ti-cpufreq.c | 1 +
+ drivers/dma/imx-dma.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
-index 2ad1ae17932d..aeaa883a8c9d 100644
---- a/drivers/cpufreq/ti-cpufreq.c
-+++ b/drivers/cpufreq/ti-cpufreq.c
-@@ -77,6 +77,7 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
- 	case DRA7_EFUSE_HAS_ALL_MPU_OPP:
- 	case DRA7_EFUSE_HAS_HIGH_MPU_OPP:
- 		calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
+diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
+index 00a089e24150..5c0fb3134825 100644
+--- a/drivers/dma/imx-dma.c
++++ b/drivers/dma/imx-dma.c
+@@ -556,6 +556,7 @@ static int imxdma_xfer_desc(struct imxdma_desc *d)
+ 		 * We fall-through here intentionally, since a 2D transfer is
+ 		 * similar to MEMCPY just adding the 2D slot configuration.
+ 		 */
 +		/* Fall through */
- 	case DRA7_EFUSE_HAS_OD_MPU_OPP:
- 		calculated_efuse |= DRA7_EFUSE_OD_MPU_OPP;
- 	}
+ 	case IMXDMA_DESC_MEMCPY:
+ 		imx_dmav1_writel(imxdma, d->src, DMA_SAR(imxdmac->channel));
+ 		imx_dmav1_writel(imxdma, d->dest, DMA_DAR(imxdmac->channel));
 -- 
 2.22.0
 
