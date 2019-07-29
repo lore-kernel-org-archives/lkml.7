@@ -2,114 +2,111 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9F3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621C6206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lP5GqG55"
+	by mail.kernel.org (Postfix) with ESMTP id BC841206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfG2JUR (ORCPT
+        id S1727830AbfG2JUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 29 Jul 2019 05:20:17 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33039 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfG2JUR (ORCPT
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33626 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfG2JUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:20:17 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c14so27205336plo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3alocEzQkvOwDh436VckIPvqKCkr1/ONfYhyc3HCC6U=;
-        b=lP5GqG55Dyw5q7dJRePrFeD4Vo+xWMP9VbWvK9qbiZWztz9sX0u3JEEg9bwi3Qelv/
-         K4Bbd4gXh8SI2XTM6SudJHqwrUpriyQVaKkV7Q3w2QBfJs8/ksKNgnNvs8Kq17eqjGwO
-         IZkacmtTUtHNlN+nSxwxrtuInYWAaQidOdLLAxd0ULiL+dCihfleLcIWD8iL4SXRSWme
-         +Z5O2ciwWgeBg1W61hhEY6T5YtIPR7YzHvKtiZ0AipJOglTfkqdaipfmVVjMudZz4i2O
-         6O3PlX4Te4WeGuVUDovJAGSfp0T/xmiChZDDLIjKbsExzEe656X+11lNfimOHjyxlKgy
-         eW/Q==
+        Mon, 29 Jul 2019 05:20:16 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so61084134wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:20:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3alocEzQkvOwDh436VckIPvqKCkr1/ONfYhyc3HCC6U=;
-        b=Lte1sON8DjN2rl2dsVixGliE9BBFv4bxHIxH2zVAInThInC3S+VNFbhwKOx9NKvgda
-         4dwz+picvA71oXUglaT89uxj+QvEbyHIwDwvCKRDLNIPhGTbdboWzRqQOX9pRRQO5lNU
-         Ai42C1StncjoOlEbfr7JuT1LrqM6jD2zdNxCMxssWOTh5eszoqWiYdzbyp5TWbXF7a98
-         x19uNqYwLyNRkDZqMEnd5N5CEVOIP8hsTtE4i6llvn1AkZECrjcJrCrET70yaOyXpWBa
-         8qEJTk1qBe7KpE4jFjxcWFA/PMLSTf+VvY0srikJ8la0kFhjHMMHgIac7aMu425+AS6F
-         yjRA==
-X-Gm-Message-State: APjAAAWkMAyLnxyL03+mFoEUZnnhTXWCXUZOFNTGut1oxvI8IrNgVt3l
-        Zv+i88aqj88DpY038+RVv/tVdg==
-X-Google-Smtp-Source: APXvYqzKLa/htnlBgwYP5UIMstM9Hmp8PWyPwF3BGDnYJXIAoSflXEa4GnCszC/9bxndDaHastGyKw==
-X-Received: by 2002:a17:902:3103:: with SMTP id w3mr111071711plb.84.1564392016316;
-        Mon, 29 Jul 2019 02:20:16 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id m4sm73215197pgs.71.2019.07.29.02.20.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 02:20:15 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 14:50:13 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Roger Lu <roger.lu@mediatek.com>
-Cc:     Stephen Boyd <sboyd@codeaurora.org>,
-        Andrew-sh Cheng =?utf-8?B?KOmEreW8j+WLsyk=?= 
-        <andrew-sh.cheng@mediatek.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Fan Chen =?utf-8?B?KOmZs+WHoSk=?= <fan.chen@mediatek.com>,
-        yt.lee@mediatek.com
-Subject: Re: [PATCH 6/8] PM / OPP: Support adjusting OPP voltages at runtime
-Message-ID: <20190729092013.5sz2mdqicrit5nta@vireshk-i7>
-References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1557997725-12178-7-git-send-email-andrew-sh.cheng@mediatek.com>
- <20190520044704.unftq6q5vy73z5bo@vireshk-i7>
- <1564371555.18434.11.camel@mtksdaap41>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uXbHp4eBJvOivXe3gCAiTk5IMqXsOx6plzKSBZNiGpQ=;
+        b=ZXg41ZBd57akSc5MyQ/G8Ib8s+ogudl6IpJM94ZHB0A0uwyMazRID0/42dJy9fIZN1
+         qBPdQzXccVo49/PBRDn5J5o7EOoA9VKTDu/S6YViHVXIdbIRE6qRY1OG4Gx2vA0ZtktD
+         v2ehrtsrXNAqNQkAytDKD0Ghhfl9xVbtq+w7+EKaQOSgGm35KorZJa8F7epKNyf+oJLL
+         5yGTYwvJoeTtL3LgP4MObE9CrYtww11eo2fqmOQpVGZZnbUTt04MDu3O0UMqwl2C976E
+         lwhiSW9jo96/INT+paXk58jnzldM+94+IO/WS678+vWs1/d2/oBimfdAzc2LOGXiGNUX
+         Y66Q==
+X-Gm-Message-State: APjAAAV9ok5Oqy0sXDoCJ0zFuLhxcjdImoM0CLIoJUXntk9v7yZggaJi
+        cWCHeUqWT7Nof1QvB7Gv2bguKbr0Va4=
+X-Google-Smtp-Source: APXvYqyLDdpNaY9V1WepUQO0fPV/p+GwAXZPJm4OXn15VZtBt43XB+wYaq6vIkAZVLbjYIdAAle3aw==
+X-Received: by 2002:adf:e6c5:: with SMTP id y5mr124260124wrm.235.1564392014705;
+        Mon, 29 Jul 2019 02:20:14 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:29d3:6123:6d5f:2c04? ([2001:b07:6468:f312:29d3:6123:6d5f:2c04])
+        by smtp.gmail.com with ESMTPSA id w7sm69866212wrn.11.2019.07.29.02.20.13
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 02:20:14 -0700 (PDT)
+Subject: Re: [PATCH v2 3/5] KVM: VMX: Add error handling to VMREAD helper
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190719204110.18306-1-sean.j.christopherson@intel.com>
+ <20190719204110.18306-4-sean.j.christopherson@intel.com>
+ <20190728193641.mjxrtcc6ps72z3sp@treble>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <abcf50fc-0037-446f-36a3-1bd00091ce4f@redhat.com>
+Date:   Mon, 29 Jul 2019 11:20:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564371555.18434.11.camel@mtksdaap41>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190728193641.mjxrtcc6ps72z3sp@treble>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-07-19, 11:39, Roger Lu wrote:
-> Dear Stephen Boyd,
+On 28/07/19 21:36, Josh Poimboeuf wrote:
+> On Fri, Jul 19, 2019 at 01:41:08PM -0700, Sean Christopherson wrote:
+>> @@ -68,8 +67,22 @@ static __always_inline unsigned long __vmcs_readl(unsigned long field)
+>>  {
+>>  	unsigned long value;
+>>  
+>> -	asm volatile (__ex_clear("vmread %1, %0", "%k0")
+>> -		      : "=r"(value) : "r"(field));
+>> +	asm volatile("1: vmread %2, %1\n\t"
+>> +		     ".byte 0x3e\n\t" /* branch taken hint */
+>> +		     "ja 3f\n\t"
+>> +		     "mov %2, %%" _ASM_ARG1 "\n\t"
+>> +		     "xor %%" _ASM_ARG2 ", %%" _ASM_ARG2 "\n\t"
+>> +		     "2: call vmread_error\n\t"
+>> +		     "xor %k1, %k1\n\t"
+>> +		     "3:\n\t"
+>> +
+>> +		     ".pushsection .fixup, \"ax\"\n\t"
+>> +		     "4: mov %2, %%" _ASM_ARG1 "\n\t"
+>> +		     "mov $1, %%" _ASM_ARG2 "\n\t"
+>> +		     "jmp 2b\n\t"
+>> +		     ".popsection\n\t"
+>> +		     _ASM_EXTABLE(1b, 4b)
+>> +		     : ASM_CALL_CONSTRAINT, "=r"(value) : "r"(field) : "cc");
 > 
-> This patch is derived from [1]. Please kindly shares the suggestion to
-> us. Thanks very much.
-> 
-> [1]: https://lore.kernel.org/patchwork/patch/599279/
-> 
-> Dear Viresh,
-> 
-> I followed _opp_set_availability() coding style to refine
-> dev_pm_opp_adjust_voltage() from this patch. Is this refinement suitable
-> for OPP core? Thanks a lot.
+> Was there a reason you didn't do the asm goto thing here like you did
+> for the previous patch?  That seemed cleaner, and needs less asm.  
 
-Looks okay from a quick look.
+It's because asm goto doesn't support outputs.
 
--- 
-viresh
+Paolo
+
+> I think the branch hints aren't needed -- they're ignored on modern
+> processors.  Ditto for the previous patch.
+> 
+> Also please use named asm operands whereever you can, like "%[field]"
+> instead of "%2".  It helps a lot with readability.
+> 
+
