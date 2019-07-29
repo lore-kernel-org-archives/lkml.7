@@ -2,149 +2,127 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CC1C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4C4C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5698216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ECFC216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="A7uomH9H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfG2OZJ (ORCPT
+        id S1727823AbfG2OZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jul 2019 10:25:14 -0400
+Received: from gateway24.websitewelcome.com ([192.185.50.73]:30587 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727739AbfG2OZJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 10:25:09 -0400
-Received: from mga14.intel.com ([192.55.52.115]:45406 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbfG2OZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:25:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 07:25:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,323,1559545200"; 
-   d="scan'208";a="190601545"
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 29 Jul 2019 07:25:01 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 29 Jul 2019 17:25:00 +0300
-Date:   Mon, 29 Jul 2019 17:25:00 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 08/11] usb: roles: get usb-role-switch from parent
-Message-ID: <20190729142500.GE28600@kuha.fi.intel.com>
-References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
- <1563958245-6321-9-git-send-email-chunfeng.yun@mediatek.com>
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 55E9053F43A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:25:07 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id s6aJhNIr8iQers6aJhmRsG; Mon, 29 Jul 2019 09:25:07 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=NBg3ypbm56vJ5nByaMp1eHrBG/oKINIBK+Vq+wESKT0=; b=A7uomH9Hb4wDBRLWnhYsJYAm7d
+        FNXmzwRvmbx2dE54sBW398poQFOThzC6Re1aLy1TBI6QAZY7G0ixMNgyT2/rOih1iZoS3XTrw8Vdw
+        9mKhy+5taaBkKjM7FdByOfZT6fnYet9UevPJUQHn5HurjFBKCTNEEwjLJwcseIv2bfMlGyj25/34d
+        8J36GY+IAE90BzW425xXPtX+ellj4uw+yTI1sxvvOOBTUzQD4lv/2ZGbR4u3+9CI2IDMx8x4ZFLuq
+        NTTej80qtXt2gs+dgDXZaZqxU0y5/CvgC8MeIh7LCdl4SgQz7cCdnExD8KT+mn++DHVxpHvXEOU69
+        YeWTw38Q==;
+Received: from [187.192.11.120] (port=50414 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hs6aH-002Hdm-Vp; Mon, 29 Jul 2019 09:25:06 -0500
+Date:   Mon, 29 Jul 2019 09:25:03 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] arcnet: com20020-isa: Mark expected switch fall-throughs
+Message-ID: <20190729142503.GA7917@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1563958245-6321-9-git-send-email-chunfeng.yun@mediatek.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hs6aH-002Hdm-Vp
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:50414
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 04:50:42PM +0800, Chunfeng Yun wrote:
-> when the USB host controller is the parent of the connector,
-> usually type-B, sometimes don't need the graph, so we should
-> check whether it's parent registers usb-role-switch or not
-> firstly, and get it if exists.
-> 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Mark switch cases where we are expecting to fall through.
 
-I don't think I actually wrote the patch. I may have proposed the code
-for you, but I never prepared a patch out out that. Please drop the
-above Signed-off-by line if that is the case. I case I really did
-write the patch, then you are missing the "From: Heikki..." first
-line, but I really don't remember preparing the patch.
+This patch fixes the following warnings:
 
-If the idea came from me, you can use for example the suggested-by
-tag: "Suggested-by: Heikki Krogerus <heikki.krogerus...".
+drivers/net/arcnet/com20020-isa.c: warning: this statement may fall
+through [-Wimplicit-fallthrough=]:  => 205:13, 203:10, 209:7, 201:11,
+207:8
 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v8: no changes
-> v7:
->   add signed-off-by Chunfeng
-> 
-> v6:
->   new patch
-> ---
->  drivers/usb/roles/class.c | 25 +++++++++++++++++++++----
->  1 file changed, 21 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> index 5b637aaf311f..87439a84c983 100644
-> --- a/drivers/usb/roles/class.c
-> +++ b/drivers/usb/roles/class.c
-> @@ -114,6 +114,19 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
->  	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
->  }
->  
-> +static struct usb_role_switch *
-> +usb_role_switch_is_parent(struct fwnode_handle *fwnode)
-> +{
-> +	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
-> +	struct device *dev;
-> +
-> +	if (!parent || !fwnode_property_present(parent, "usb-role-switch"))
-> +		return NULL;
-> +
-> +	dev = class_find_device(role_class, NULL, parent, switch_fwnode_match);
-> +	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
-> +}
-> +
->  /**
->   * usb_role_switch_get - Find USB role switch linked with the caller
->   * @dev: The caller device
-> @@ -125,8 +138,10 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
->  {
->  	struct usb_role_switch *sw;
->  
-> -	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
-> -					  usb_role_switch_match);
-> +	sw = usb_role_switch_is_parent(dev_fwnode(dev));
-> +	if (!sw)
-> +		sw = device_connection_find_match(dev, "usb-role-switch", NULL,
-> +						  usb_role_switch_match);
->  
->  	if (!IS_ERR_OR_NULL(sw))
->  		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-> @@ -146,8 +161,10 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
->  {
->  	struct usb_role_switch *sw;
->  
-> -	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
-> -					  usb_role_switch_match);
-> +	sw = usb_role_switch_is_parent(fwnode);
-> +	if (!sw)
-> +		sw = fwnode_connection_find_match(fwnode, "usb-role-switch",
-> +						  NULL, usb_role_switch_match);
->  	if (!IS_ERR_OR_NULL(sw))
->  		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
->  
-> -- 
-> 2.21.0
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/arcnet/com20020-isa.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-thanks,
-
+diff --git a/drivers/net/arcnet/com20020-isa.c b/drivers/net/arcnet/com20020-isa.c
+index 28510e33924f..cd27fdc1059b 100644
+--- a/drivers/net/arcnet/com20020-isa.c
++++ b/drivers/net/arcnet/com20020-isa.c
+@@ -197,16 +197,22 @@ static int __init com20020isa_setup(char *s)
+ 	switch (ints[0]) {
+ 	default:		/* ERROR */
+ 		pr_info("Too many arguments\n");
++		/* Fall through */
+ 	case 6:		/* Timeout */
+ 		timeout = ints[6];
++		/* Fall through */
+ 	case 5:		/* CKP value */
+ 		clockp = ints[5];
++		/* Fall through */
+ 	case 4:		/* Backplane flag */
+ 		backplane = ints[4];
++		/* Fall through */
+ 	case 3:		/* Node ID */
+ 		node = ints[3];
++		/* Fall through */
+ 	case 2:		/* IRQ */
+ 		irq = ints[2];
++		/* Fall through */
+ 	case 1:		/* IO address */
+ 		io = ints[1];
+ 	}
 -- 
-heikki
+2.22.0
+
