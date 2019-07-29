@@ -2,108 +2,159 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2794C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BD0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7DFF2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFEAB2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:29:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhGpf7aq"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="IVO7KIIM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfG2DYJ (ORCPT
+        id S1726672AbfG2D3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 23:24:09 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36846 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfG2DYI (ORCPT
+        Sun, 28 Jul 2019 23:29:52 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:51983 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfG2D3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 23:24:08 -0400
-Received: by mail-pl1-f193.google.com with SMTP id k8so26937168plt.3;
-        Sun, 28 Jul 2019 20:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=W41jAG4KiNjmizZVJeUZJe2SLzpaILG6fB/l012JzHM=;
-        b=jhGpf7aqJSRK5XqIo9OP8vYKCI/tp9FJFj8hOiATqvKLsEFAdLHpqA4uf1H84yOHpM
-         EKD/FcLj6fmnjKhXmmtKhygpizhBq2OBSDhMUBAXVoa4VTm+iLd0CvhZ6DPfok6K28V2
-         XP4CvBkOtyR8PQoNr1gmtPW1Wqt6nLeSyBsMIEg8L6nZPzP17c/4zB1s3EolaQNh2bNz
-         XFSWDVY/x68YPUbAHsPOOJ4ALL9d0qpE2Us4eEUaBwRXVahHv374ZD1AI338FQzoMkEK
-         VEKs8wt4RpnC4MW+wHHTow04LDf3JgbMwobyYF+T96vZgJHihhX77RdWNglT4s6CORFH
-         G9zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=W41jAG4KiNjmizZVJeUZJe2SLzpaILG6fB/l012JzHM=;
-        b=kyhqo0nszuvoFXPNFif4eRB6TibRPX78STipnHQ6Pe7Iu5EN80gDtyMIOkBpc87sC6
-         3MzxQA6hsPqT9H79TqW6P5f/0ZgbaVFCh5rlWGj224FwIh1AeGNZjTU6jzEijyPbGz0J
-         4534XpkxleJ7mIWb6Znp5ptk2w0yXoZBKkjR79JJ6VzTECFczClLP35IE3EAJFqflbyg
-         TzkqVuhPRZiBUe5fwBbxtmH6C6OO7+ueDNQiZ3N6J+K7o68DF/4mCyW8UA1UVCiBAh/j
-         UnMmJ5EQjtP9zJzELMi69Sni5KdVVVluNyYTvVmwZWQFg0OCB5WSOIEtNyWYAB5113Fr
-         pgUA==
-X-Gm-Message-State: APjAAAWeQHSR4JiPSvyZH1qd6ko9Rtdp1m7iGA4NSDQRIf23h34YLvhT
-        ysqxOPCjLY6IE0shifstum4=
-X-Google-Smtp-Source: APXvYqyaD0/0WnHCMBEZbRL+veolIi46STfZZHwyJavWKFMbVB/zSJRZODMjhU1G+qfsjdclXwo/2Q==
-X-Received: by 2002:a17:902:6a85:: with SMTP id n5mr100688378plk.73.1564370648141;
-        Sun, 28 Jul 2019 20:24:08 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id t11sm67386761pgb.33.2019.07.28.20.24.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Jul 2019 20:24:07 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     darrick.wong@oracle.com, bfoster@redhat.com, sandeen@sandeen.net
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] fs: xfs: Fix possible null-pointer dereferences in xchk_da_btree_block_check_sibling()
-Date:   Mon, 29 Jul 2019 11:24:01 +0800
-Message-Id: <20190729032401.28081-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Sun, 28 Jul 2019 23:29:52 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x6T3TmJG026343;
+        Mon, 29 Jul 2019 12:29:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6T3TmJG026343
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564370988;
+        bh=gkNAHjCczRsXqca9Q02PCJev39A+w7fs7vtgMWfTnVQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IVO7KIIMzR3PuLfW2sk/eMGLaMmtrPOAcgzlkWtxFd1RN6B8lXTwci4SJdU/tyD5m
+         k3hdhq3wyTAnwUr0nQTlMoyPz6SgCp6QkDFt1+54k3myvjhCL89IdCmXNKXxtLwzUM
+         BzzJ3KvY3DgI1NW/A6WUL2QEScxwPPgnmUcRMId4cKM9ain2ctczQSFMnBJHe3B7NR
+         A8a0SEr0AG2MJvA/4kkyVulp0+eOfY4e5yRPRB5tIT+XDhgy93sizxMr8C/QDfxchD
+         C6ZtVHPU8szdxhFHDvnWLRhQs1C7ne5x9WeqljOtiEzKoj9m/REBvLm/1Hpk91hNJs
+         FSvijY5vb+sHg==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id v6so39873455vsq.4;
+        Sun, 28 Jul 2019 20:29:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAWL3XYGKXsk0dRBiE44D9MfEC0PzW9ObMShBwINEbwME5Sh9Va7
+        eVKHleSZOn0qP7NWipJ6mkH+jRQYhrajUfaR+b4=
+X-Google-Smtp-Source: APXvYqwJ2InMcZT+uS0/jkiI9sAk8YpdCcOgKwFnQ7S4KMKoZWn8ifksFgimLBMVKGniMnfdTHxoemdxLr3HPnzi108=
+X-Received: by 2002:a67:cd1a:: with SMTP id u26mr66121186vsl.155.1564370987596;
+ Sun, 28 Jul 2019 20:29:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190714152817.24693-1-efremov@linux.com> <20190728100906.18847-1-efremov@linux.com>
+In-Reply-To: <20190728100906.18847-1-efremov@linux.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 29 Jul 2019 12:29:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR9Gzeh6s2QGRF55ORCt1MMSit_cagx-+Ooor_sRC1U8w@mail.gmail.com>
+Message-ID: <CAK7LNAR9Gzeh6s2QGRF55ORCt1MMSit_cagx-+Ooor_sRC1U8w@mail.gmail.com>
+Subject: Re: [PATCH] modpost: check for static EXPORT_SYMBOL* functions
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In xchk_da_btree_block_check_sibling(), there is an if statement on 
-line 274 to check whether ds->state->altpath.blk[level].bp is NULL:
-    if (ds->state->altpath.blk[level].bp)
+On Sun, Jul 28, 2019 at 7:09 PM Denis Efremov <efremov@linux.com> wrote:
+>
+> This patch adds a check to warn about static EXPORT_SYMBOL* functions
+> during the modpost. In most of the cases, a static symbol marked for
+> exporting is an odd combination that should be fixed either by deleting
+> the exporting mark or by removing the static attribute and adding the
+> appropriate declaration to headers.
+>
+> This check could help to detect the following problems:
+> 1. 550113d4e9f5 ("i2c: add newly exported functions to the header, too")
+> 2. 54638c6eaf44 ("net: phy: make exported variables non-static")
+> 3. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
+> 4. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
+> 5. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
+> 6. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
+> 7. 14b4c48bb1ce ("gve: Remove the exporting of gve_probe")
+> 8. 9b79ee9773a8 ("scsi: libsas: remove the exporting of sas_wait_eh")
+> 9. ...
+>
+> Build time impact, allmodconfig, Dell XPS 15 9570 (measurements 3x):
+> $ make mrproper; make allmodconfig; time make -j12; \
+>   git checkout HEAD~1; \
+>   make mrproper; make allmodconfig; time make -j12
+> 1.
+>    (with patch) 17635,94s user 1895,54s system 1085% cpu 29:59,22 total
+>    (w/o  patch) 17275,42s user 1803,87s system 1112% cpu 28:35,66 total
+> 2.
+>    (with patch) 17369,51s user 1763,28s system 1111% cpu 28:41,47 total
+>    (w/o  patch) 16880,50s user 1670,93s system 1113% cpu 27:46,56 total
+> 3.
+>    (with patch) 17937,88s user 1842,53s system 1109% cpu 29:42,26 total
+>    (w/o  patch) 17267,55s user 1725,09s system 1111% cpu 28:28,17 total
+>
+> Thus, the current implementation adds approx. 1 min for allmodconfig.
+>
+> Acked-by: Emil Velikov <emil.l.velikov@gmail.com>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+>  scripts/mod/modpost.c | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>
 
-When ds->state->altpath.blk[level].bp is NULL, it is used on line 281: 
-    xfs_trans_brelse(..., ds->state->altpath.blk[level].bp);
-        struct xfs_buf_log_item	*bip = bp->b_log_item;
-        ASSERT(bp->b_transp == tp);
+>
+> @@ -2425,6 +2443,7 @@ int main(int argc, char **argv)
+>         char *dump_write = NULL, *files_source = NULL;
+>         int opt;
+>         int err;
+> +       size_t n;
 
-Thus, possible null-pointer dereferences may occur.
+Sorry, I missed to ask this in the previous version.
 
-To fix these bugs, ds->state->altpath.blk[level].bp is checked before
-being used.
+If there is not a particular reason,
+may I ask you to use 'int' instead of 'size_t' here?
 
-These bugs are found by a static analysis tool STCheck written by us.
+SYMBOL_HASH_SIZE (= 1024) is small enough, and
+it will keep consistency with
+the write_dump() function in this file.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- fs/xfs/scrub/dabtree.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+If it is tedious to send a new version,
+may I fix-up 'size_t' -> 'int' ?
 
-diff --git a/fs/xfs/scrub/dabtree.c b/fs/xfs/scrub/dabtree.c
-index 94c4f1de1922..33ff90c0dd70 100644
---- a/fs/xfs/scrub/dabtree.c
-+++ b/fs/xfs/scrub/dabtree.c
-@@ -278,7 +278,9 @@ xchk_da_btree_block_check_sibling(
- 	/* Compare upper level pointer to sibling pointer. */
- 	if (ds->state->altpath.blk[level].blkno != sibling)
- 		xchk_da_set_corrupt(ds, level);
--	xfs_trans_brelse(ds->dargs.trans, ds->state->altpath.blk[level].bp);
-+	if (ds->state->altpath.blk[level].bp)
-+		xfs_trans_brelse(ds->dargs.trans, 
-+						ds->state->altpath.blk[level].bp);
- out:
- 	return error;
- }
+Thanks.
+
+
+>         struct ext_sym_list *extsym_iter;
+>         struct ext_sym_list *extsym_start = NULL;
+>
+> @@ -2520,6 +2539,19 @@ int main(int argc, char **argv)
+>         if (sec_mismatch_count && sec_mismatch_fatal)
+>                 fatal("modpost: Section mismatches detected.\n"
+>                       "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
+> +       for (n = 0; n < SYMBOL_HASH_SIZE; n++) {
+> +               struct symbol *s = symbolhash[n];
+> +
+> +               while (s) {
+> +                       if (s->is_static)
+> +                               warn("\"%s\" [%s] is the static %s\n",
+> +                                    s->name, s->module->name,
+> +                                    export_str(s->export));
+> +
+> +                       s = s->next;
+> +               }
+> +       }
+> +
+>         free(buf.p);
+>
+>         return err;
+> --
+> 2.21.0
+>
+
+
 -- 
-2.17.0
-
+Best Regards
+Masahiro Yamada
