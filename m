@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8C8C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8012C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E4021773
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA81F21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428441;
-	bh=WNEwlZmblCDELfMHFO9HduNW/EQ4DWBXMScy77tVMug=;
+	s=default; t=1564428446;
+	bh=/ApC7WM3ufv7cj76sw2mx9VGB3VkdUPDImiuF2fr6S4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BoxwMcwFre01uEvSypEbEs3RwnUDAJyFgHAR7EJtDtjeGvoVj7llJPUW7LXKiOsLT
-	 icIb0wE0dMJxGpqqU+cZ2aCJeSxTfAi1eCbFWgVKegTasVz3CEjPx9t5K0W+aIj/NZ
-	 C9aw/mrn8+DvbrL2mxTttAElCr56Vb8bpxJIV08Y=
+	b=ABKdS7IpOISXm/G3BlMHqfOWPBydFYj07BeYUsmJkxrPIieV9wTny4+fTrkGj39mA
+	 cAQZiVqwuybfyFHLJhxTKgT6NniGh4CBglo3S/32I+5A8yvTdOpQ9wCK9yz6DWLpmK
+	 2+4PQqX/aoMngQ12MIzVqsek1cFCXk8J2a7COG+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388353AbfG2T1U (ORCPT
+        id S1729898AbfG2T1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:27:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:27:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729886AbfG2T1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:27:17 -0400
+        id S2388352AbfG2T1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:27:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5A9F2171F;
-        Mon, 29 Jul 2019 19:27:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ECC721655;
+        Mon, 29 Jul 2019 19:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428437;
-        bh=WNEwlZmblCDELfMHFO9HduNW/EQ4DWBXMScy77tVMug=;
+        s=default; t=1564428440;
+        bh=/ApC7WM3ufv7cj76sw2mx9VGB3VkdUPDImiuF2fr6S4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xjyZQIsTvBSAD/RzUmU8a/S6Ho7dYKDS5hk07ej/oXK+ks1uJ6g10HCnt53ZyO7vT
-         zOPJDv+wbFVXZI9fyqmE8efuYGG9cVpg1z2HibnbQG0wER8AMD5EYJl9gIqXJYZAs5
-         RpibLLEWTW7dEy1MGB5tDMnu8RgcBv5lT31HrVCs=
+        b=pUh8Ibggn3bCj/Hfg+zwvsvnSMLv5NvhpdAmQs7/6NKtZBaTejS/CcnZkWGZYfVTH
+         3X2SxIMA4aV0H7Hj3ZF2gfvfQC5Szk8MyZW95UlESHdVjg40se4ylFCYhPT8Lxj29e
+         DdIm8kHMe1AUERLELauiJS7WQTgBVpnbN1eTXvjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Borislav Petkov <bp@suse.de>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
+        stable@vger.kernel.org, Claire Chang <tientzu@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 059/293] EDAC/sysfs: Fix memory leak when creating a csrow object
-Date:   Mon, 29 Jul 2019 21:19:10 +0200
-Message-Id: <20190729190828.825030264@linuxfoundation.org>
+Subject: [PATCH 4.14 077/293] ath10k: add missing error handling
+Date:   Mon, 29 Jul 2019 21:19:28 +0200
+Message-Id: <20190729190830.536417774@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -63,50 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 585fb3d93d32dbe89e718b85009f9c322cc554cd ]
+[ Upstream commit 4b553f3ca4cbde67399aa3a756c37eb92145b8a1 ]
 
-In edac_create_csrow_object(), the reference to the object is not
-released when adding the device to the device hierarchy fails
-(device_add()). This may result in a memory leak.
+In function ath10k_sdio_mbox_rx_alloc() [sdio.c],
+ath10k_sdio_mbox_alloc_rx_pkt() is called without handling the error cases.
+This will make the driver think the allocation for skb is successful and
+try to access the skb. If we enable failslab, system will easily crash with
+NULL pointer dereferencing.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Link: https://lkml.kernel.org/r/1555554438-103953-1-git-send-email-bianpan2016@163.com
+Call trace of CONFIG_FAILSLAB:
+ath10k_sdio_irq_handler+0x570/0xa88 [ath10k_sdio]
+process_sdio_pending_irqs+0x4c/0x174
+sdio_run_irqs+0x3c/0x64
+sdio_irq_work+0x1c/0x28
+
+Fixes: d96db25d2025 ("ath10k: add initial SDIO support")
+Signed-off-by: Claire Chang <tientzu@chromium.org>
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc_sysfs.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/sdio.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 79c13301bf41..148c4649b155 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -426,6 +426,8 @@ static inline int nr_pages_per_csrow(struct csrow_info *csrow)
- static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 				    struct csrow_info *csrow, int index)
- {
-+	int err;
-+
- 	csrow->dev.type = &csrow_attr_type;
- 	csrow->dev.bus = mci->bus;
- 	csrow->dev.groups = csrow_dev_groups;
-@@ -438,7 +440,11 @@ static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 	edac_dbg(0, "creating (virtual) csrow node %s\n",
- 		 dev_name(&csrow->dev));
+diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
+index da9dbf3ddaa5..c6440d28ab48 100644
+--- a/drivers/net/wireless/ath/ath10k/sdio.c
++++ b/drivers/net/wireless/ath/ath10k/sdio.c
+@@ -610,6 +610,10 @@ static int ath10k_sdio_mbox_rx_alloc(struct ath10k *ar,
+ 						    full_len,
+ 						    last_in_bundle,
+ 						    last_in_bundle);
++		if (ret) {
++			ath10k_warn(ar, "alloc_rx_pkt error %d\n", ret);
++			goto err;
++		}
+ 	}
  
--	return device_add(&csrow->dev);
-+	err = device_add(&csrow->dev);
-+	if (err)
-+		put_device(&csrow->dev);
-+
-+	return err;
- }
- 
- /* Create a CSROW object under specifed edac_mc_device */
+ 	ar_sdio->n_rx_pkts = i;
 -- 
 2.20.1
 
