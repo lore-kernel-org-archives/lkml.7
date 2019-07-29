@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AFEC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37C4C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E752064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5D12064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430980;
-	bh=NL0Hfjz45MuNbtUhlnR1TsogGihB0wA2bwbfMTTx4fM=;
+	s=default; t=1564430987;
+	bh=6KoBIfRycs0fd73LI5Ph46OJrdLpdAWCZXhfKYUdFK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=om0gxObqE5njyR8Txdv6hFQW7+g31oCq2SGbsFoqh+KKnDT6Kwcv6OADzbKAM6D9c
-	 +VV8COxiT1ItknwzMMg4RgRPeMpgIAkP8IGpTnKM0JfdZNAkpcQFg60YfKvOUG5moz
-	 UeYxuM2LAMyfEw4XW3xCoSWIMkC1c+lfsMbajA1w=
+	b=fShzsCFg3JLezZYQeOdiXQJRiQE6ufoXN1TctPCkM8n797RWzozsHK2sdu2n1/quq
+	 XHgnLMgIw6Bi3NLEcABcdQmqeRyJYyqpWRME6mBMwv2H0wDVpZDgk5chzLbQVt5uSA
+	 3xdG9X0USOZAW0JaTLLlQlYFuv2EAw81TZJ/EJmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730402AbfG2UJj (ORCPT
+        id S2388551AbfG2Tfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:09:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50472 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:35:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730229AbfG2TgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:36:10 -0400
+        id S2388528AbfG2Tfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:35:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97CFC217D7;
-        Mon, 29 Jul 2019 19:36:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A25A2070B;
+        Mon, 29 Jul 2019 19:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428969;
-        bh=NL0Hfjz45MuNbtUhlnR1TsogGihB0wA2bwbfMTTx4fM=;
+        s=default; t=1564428949;
+        bh=6KoBIfRycs0fd73LI5Ph46OJrdLpdAWCZXhfKYUdFK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i5nt17wju2xrkPcHZNihmtcYT2HJ/Gdb2llreqBP+Y8kUcQekWsTaUAh0YpK/nZzT
-         EHbBaD7WOlPKslewjVtU2gXuu2Xl3rUIIKtuSSEaAQbxd+PNk0is8VH68o5qJuOWGg
-         0yZoW3Zc55IH3l7993J90Az4zCIw3GeyJ1jqgzog=
+        b=UErMUOjxJ5FCw0Qg2LrEju37LfPOYIPwBjxIeFI+RI67YIBBzvMwEpU5nLfLj26fo
+         aUM90/YqU8FPzkI5cwGpUBRl8pTLmZok5uMd7qOBP9a+3KIa6mdo8xExggCYn2FCFm
+         4LrupNdu0CdPVpRL/XsXSwsqj+4ZJsmwo66q+RKQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Roese <sr@denx.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 244/293] serial: mctrl_gpio: Check if GPIO property exisits before requesting it
-Date:   Mon, 29 Jul 2019 21:22:15 +0200
-Message-Id: <20190729190843.157174988@linuxfoundation.org>
+Subject: [PATCH 4.14 238/293] powerpc/pseries/mobility: prevent cpu hotplug during DT update
+Date:   Mon, 29 Jul 2019 21:22:09 +0200
+Message-Id: <20190729190842.688563055@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -63,108 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d99482673f950817b30caf3fcdfb31179b050ce1 ]
+[ Upstream commit e59a175faa8df9d674247946f2a5a9c29c835725 ]
 
-This patch adds a check for the GPIOs property existence, before the
-GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
-support is added (2nd patch in this patch series) on x86 platforms using
-ACPI.
+CPU online/offline code paths are sensitive to parts of the device
+tree (various cpu node properties, cache nodes) that can be changed as
+a result of a migration.
 
-Here Mika's comments from 2016-08-09:
+Prevent CPU hotplug while the device tree potentially is inconsistent.
 
-"
-I noticed that with v4.8-rc1 serial console of some of our Broxton
-systems does not work properly anymore. I'm able to see output but input
-does not work.
-
-I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
-("tty/serial/8250: use mctrl_gpio helpers").
-
-The reason why it fails is that in ACPI we do not have names for GPIOs
-(except when _DSD is used) so we use the "idx" to index into _CRS GPIO
-resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
-calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
-UART device in Broxton has following (simplified) ACPI description:
-
-    Device (URT4)
-    {
-        ...
-        Name (_CRS, ResourceTemplate () {
-            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
-                    "\\_SB.GPO0", 0x00, ResourceConsumer)
-            {
-                0x003A
-            }
-            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
-                    "\\_SB.GPO0", 0x00, ResourceConsumer)
-            {
-                0x003D
-            }
-        })
-
-In this case it finds the first GPIO (0x003A which happens to be RX pin
-for that UART), turns it into GPIO which then breaks input for the UART
-device. This also breaks systems with bluetooth connected to UART (those
-typically have some GPIOs in their _CRS).
-
-Any ideas how to fix this?
-
-We cannot just drop the _CRS index lookup fallback because that would
-break many existing machines out there so maybe we can limit this to
-only DT enabled machines. Or alternatively probe if the property first
-exists before trying to acquire the GPIOs (using
-device_property_present()).
-"
-
-This patch implements the fix suggested by Mika in his statement above.
-
-Signed-off-by: Stefan Roese <sr@denx.de>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Yegor Yefremov <yegorslists@googlemail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Yegor Yefremov <yegorslists@googlemail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/serial_mctrl_gpio.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/powerpc/platforms/pseries/mobility.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
-index d2da6aa7f27d..42e42e3e7a6e 100644
---- a/drivers/tty/serial/serial_mctrl_gpio.c
-+++ b/drivers/tty/serial/serial_mctrl_gpio.c
-@@ -21,6 +21,7 @@
- #include <linux/termios.h>
- #include <linux/serial_core.h>
- #include <linux/module.h>
-+#include <linux/property.h>
+diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+index fbea7db043fa..4addc552eb33 100644
+--- a/arch/powerpc/platforms/pseries/mobility.c
++++ b/arch/powerpc/platforms/pseries/mobility.c
+@@ -9,6 +9,7 @@
+  * 2 as published by the Free Software Foundation.
+  */
  
- #include "serial_mctrl_gpio.h"
++#include <linux/cpu.h>
+ #include <linux/kernel.h>
+ #include <linux/kobject.h>
+ #include <linux/smp.h>
+@@ -343,11 +344,19 @@ void post_mobility_fixup(void)
+ 	if (rc)
+ 		printk(KERN_ERR "Post-mobility activate-fw failed: %d\n", rc);
  
-@@ -124,6 +125,19 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
- 
- 	for (i = 0; i < UART_GPIO_MAX; i++) {
- 		enum gpiod_flags flags;
-+		char *gpio_str;
-+		bool present;
++	/*
++	 * We don't want CPUs to go online/offline while the device
++	 * tree is being updated.
++	 */
++	cpus_read_lock();
 +
-+		/* Check if GPIO property exists and continue if not */
-+		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
-+				     mctrl_gpios_desc[i].name);
-+		if (!gpio_str)
-+			continue;
-+
-+		present = device_property_present(dev, gpio_str);
-+		kfree(gpio_str);
-+		if (!present)
-+			continue;
+ 	rc = pseries_devicetree_update(MIGRATION_SCOPE);
+ 	if (rc)
+ 		printk(KERN_ERR "Post-mobility device tree update "
+ 			"failed: %d\n", rc);
  
- 		if (mctrl_gpios_desc[i].dir_out)
- 			flags = GPIOD_OUT_LOW;
++	cpus_read_unlock();
++
+ 	/* Possibly switch to a new RFI flush type */
+ 	pseries_setup_rfi_flush();
+ 
 -- 
 2.20.1
 
