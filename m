@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52960C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0147BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 315C22073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89B32073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfG2GxW (ORCPT
+        id S1727156AbfG2Gwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 02:53:22 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47962 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727123AbfG2Gwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 02:52:36 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2F802976BC39CD5CD909;
-        Mon, 29 Jul 2019 14:52:35 +0800 (CST)
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47798 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727100AbfG2Gwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 02:52:34 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 23E19FCE5F164ECB604F;
+        Mon, 29 Jul 2019 14:52:30 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 29 Jul
- 2019 14:52:27 +0800
+ 2019 14:52:22 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <devel@driverdev.osuosl.org>
@@ -33,9 +33,9 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH 12/22] staging: erofs: refine erofs_allocpage()
-Date:   Mon, 29 Jul 2019 14:51:49 +0800
-Message-ID: <20190729065159.62378-13-gaoxiang25@huawei.com>
+Subject: [PATCH 08/22] staging: erofs: kill CONFIG_EROFS_FS_IO_MAX_RETRIES
+Date:   Mon, 29 Jul 2019 14:51:45 +0800
+Message-ID: <20190729065159.62378-9-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190729065159.62378-1-gaoxiang25@huawei.com>
 References: <20190729065159.62378-1-gaoxiang25@huawei.com>
@@ -48,89 +48,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove duplicated code in decompressor by introducing
-failable erofs_allocpage().
+CONFIG_EROFS_FS_IO_MAX_RETRIES seems a runtime setting
+and users have no idea about the change in behaviour.
 
+Let's remove the setting currently and fold it into code,
+turn it into a module parameter if it's really needed.
+
+Suggested-by: David Sterba <dsterba@suse.cz>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/decompressor.c | 12 +++---------
- drivers/staging/erofs/internal.h     |  2 +-
- drivers/staging/erofs/utils.c        |  5 +++--
- drivers/staging/erofs/zdata.c        |  2 +-
- 4 files changed, 8 insertions(+), 13 deletions(-)
+ drivers/staging/erofs/Kconfig    | 9 ---------
+ drivers/staging/erofs/data.c     | 2 +-
+ drivers/staging/erofs/internal.h | 6 ------
+ 3 files changed, 1 insertion(+), 16 deletions(-)
 
-diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
-index ee5762351f80..744c43a456e9 100644
---- a/drivers/staging/erofs/decompressor.c
-+++ b/drivers/staging/erofs/decompressor.c
-@@ -74,15 +74,9 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
- 			victim = availables[--top];
- 			get_page(victim);
- 		} else {
--			if (!list_empty(pagepool)) {
--				victim = lru_to_page(pagepool);
--				list_del(&victim->lru);
--				DBG_BUGON(page_ref_count(victim) != 1);
--			} else {
--				victim = alloc_pages(GFP_KERNEL, 0);
--				if (!victim)
--					return -ENOMEM;
--			}
-+			victim = erofs_allocpage(pagepool, GFP_KERNEL, false);
-+			if (unlikely(!victim))
-+				return -ENOMEM;
- 			victim->mapping = Z_EROFS_MAPPING_STAGING;
- 		}
- 		rq->out[i] = victim;
+diff --git a/drivers/staging/erofs/Kconfig b/drivers/staging/erofs/Kconfig
+index 2577cbb46a5b..747e9eebfaa5 100644
+--- a/drivers/staging/erofs/Kconfig
++++ b/drivers/staging/erofs/Kconfig
+@@ -78,15 +78,6 @@ config EROFS_FAULT_INJECTION
+ 	  Test EROFS to inject faults such as ENOMEM, EIO, and so on.
+ 	  If unsure, say N.
+ 
+-config EROFS_FS_IO_MAX_RETRIES
+-	int "EROFS IO Maximum Retries"
+-	depends on EROFS_FS
+-	default "5"
+-	help
+-	  Maximum retry count of IO Errors.
+-
+-	  If unsure, leave the default value (5 retries, 6 IOs at most).
+-
+ config EROFS_FS_ZIP
+ 	bool "EROFS Data Compresssion Support"
+ 	depends on EROFS_FS
+diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
+index 75b859e48084..65e0d288e2a1 100644
+--- a/drivers/staging/erofs/data.c
++++ b/drivers/staging/erofs/data.c
+@@ -49,7 +49,7 @@ struct page *__erofs_get_meta_page(struct super_block *sb,
+ 	/* prefer retrying in the allocator to blindly looping below */
+ 	const gfp_t gfp = mapping_gfp_constraint(mapping, ~__GFP_FS) |
+ 		(nofail ? __GFP_NOFAIL : 0);
+-	unsigned int io_retries = nofail ? EROFS_IO_MAX_RETRIES_NOFAIL : 0;
++	unsigned int io_retries = nofail ? 5 : 0;
+ 	struct page *page;
+ 	int err;
+ 
 diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index b206a85776b4..e35c7d8f75d2 100644
+index ffd4b1a3fc25..58b8bb9cbb9f 100644
 --- a/drivers/staging/erofs/internal.h
 +++ b/drivers/staging/erofs/internal.h
-@@ -517,7 +517,7 @@ int erofs_namei(struct inode *dir, struct qstr *name,
- extern const struct file_operations erofs_dir_fops;
- 
- /* utils.c / zdata.c */
--struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp);
-+struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp, bool nofail);
- 
- #if (EROFS_PCPUBUF_NR_PAGES > 0)
- void *erofs_get_pcpubuf(unsigned int pagenr);
-diff --git a/drivers/staging/erofs/utils.c b/drivers/staging/erofs/utils.c
-index 0e86e44d60d0..260ea2970b4b 100644
---- a/drivers/staging/erofs/utils.c
-+++ b/drivers/staging/erofs/utils.c
-@@ -9,15 +9,16 @@
- #include "internal.h"
- #include <linux/pagevec.h>
- 
--struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp)
-+struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp, bool nofail)
- {
- 	struct page *page;
- 
- 	if (!list_empty(pool)) {
- 		page = lru_to_page(pool);
-+		DBG_BUGON(page_ref_count(page) != 1);
- 		list_del(&page->lru);
- 	} else {
--		page = alloc_pages(gfp | __GFP_NOFAIL, 0);
-+		page = alloc_pages(gfp | (nofail ? __GFP_NOFAIL : 0), 0);
- 	}
- 	return page;
+@@ -470,12 +470,6 @@ static inline void __submit_bio(struct bio *bio, unsigned int op,
+ 	submit_bio(bio);
  }
-diff --git a/drivers/staging/erofs/zdata.c b/drivers/staging/erofs/zdata.c
-index bc478eebf509..02560b940558 100644
---- a/drivers/staging/erofs/zdata.c
-+++ b/drivers/staging/erofs/zdata.c
-@@ -634,7 +634,7 @@ z_erofs_vle_work_iter_end(struct z_erofs_vle_work_builder *builder)
- static inline struct page *__stagingpage_alloc(struct list_head *pagepool,
- 					       gfp_t gfp)
- {
--	struct page *page = erofs_allocpage(pagepool, gfp);
-+	struct page *page = erofs_allocpage(pagepool, gfp, true);
  
- 	if (unlikely(!page))
- 		return NULL;
+-#ifndef CONFIG_EROFS_FS_IO_MAX_RETRIES
+-#define EROFS_IO_MAX_RETRIES_NOFAIL	0
+-#else
+-#define EROFS_IO_MAX_RETRIES_NOFAIL	CONFIG_EROFS_FS_IO_MAX_RETRIES
+-#endif
+-
+ struct page *__erofs_get_meta_page(struct super_block *sb, erofs_blk_t blkaddr,
+ 				   bool prio, bool nofail);
+ 
 -- 
 2.17.1
 
