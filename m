@@ -2,63 +2,150 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291BDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F709C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD6C206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:13:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hd7PN0C/"
+	by mail.kernel.org (Postfix) with ESMTP id 1F6D82067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbfG2QNb (ORCPT
+        id S1727576AbfG2QOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:13:31 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45246 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbfG2QN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:13:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=QYrvNb79Rt5AwwY/wRq3Oon8YU+En/xnuZjb5gkSTYg=; b=hd7PN0C/N/8Oy91rFqnSAtKouM
-        xWA/jAjyxM+wO4EN9+Ny5GtNAGPncviqEdE5yZ4t8sp8e19tdDvwejqH+UTgw77ZiZUEeHESVoRON
-        WsRWrfybFd6YaW7NfR0J4SdGivexrV3kN13qQWY2zFVWiqDn1iceKEy/NMLOj9c03MrM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hs7gK-0002Tp-Ps; Mon, 29 Jul 2019 17:35:24 +0200
-Date:   Mon, 29 Jul 2019 17:35:24 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        alexandru.marginean@nxp.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 2/4] enetc: Add mdio bus driver for the PCIe
- MDIO endpoint
-Message-ID: <20190729153524.GG4110@lunn.ch>
-References: <1564394627-3810-1-git-send-email-claudiu.manoil@nxp.com>
- <1564394627-3810-3-git-send-email-claudiu.manoil@nxp.com>
+        Mon, 29 Jul 2019 12:14:41 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59135 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfG2QOk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:14:40 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hs8IG-0007Bj-LI; Mon, 29 Jul 2019 18:14:36 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hs8IF-0005n0-HF; Mon, 29 Jul 2019 18:14:35 +0200
+Date:   Mon, 29 Jul 2019 18:14:35 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     mark.rutland@arm.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-kernel@vger.kernel.org, mripard@kernel.org, wens@csie.org,
+        robh+dt@kernel.org, thierry.reding@gmail.com,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/6] pwm: sun4i: Add a quirk for bus clock
+Message-ID: <20190729161435.5bnj3ikocsyep4dd@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <20190726184045.14669-4-jernej.skrabec@siol.net>
+ <20190729063825.wxfky6nswcru26g7@pengutronix.de>
+ <4022372.WfP88Fa4Lu@jernej-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1564394627-3810-3-git-send-email-claudiu.manoil@nxp.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4022372.WfP88Fa4Lu@jernej-laptop>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +	hw->port = pci_iomap(pdev, 0, 0);
-> +	if (!bus->priv) {
+Hello Jernej,
 
-hw->port ??
+On Mon, Jul 29, 2019 at 05:48:36PM +0200, Jernej Škrabec wrote:
+> Dne ponedeljek, 29. julij 2019 ob 08:38:25 CEST je Uwe Kleine-König 
+> napisal(a):
+> > Hello,
+> > 
+> > On Fri, Jul 26, 2019 at 08:40:42PM +0200, Jernej Skrabec wrote:
+> > > H6 PWM core needs bus clock to be enabled in order to work.
+> > > 
+> > > Add a quirk for it.
+> > > 
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > > 
+> > >  drivers/pwm/pwm-sun4i.c | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > > 
+> > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > > index 1b7be8fbde86..7d3ac3f2dc3f 100644
+> > > --- a/drivers/pwm/pwm-sun4i.c
+> > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > @@ -72,6 +72,7 @@ static const u32 prescaler_table[] = {
+> > > 
+> > >  };
+> > >  
+> > >  struct sun4i_pwm_data {
+> > > 
+> > > +	bool has_bus_clock;
+> > > 
+> > >  	bool has_prescaler_bypass;
+> > >  	bool has_reset;
+> > >  	unsigned int npwm;
+> > > 
+> > > @@ -79,6 +80,7 @@ struct sun4i_pwm_data {
+> > > 
+> > >  struct sun4i_pwm_chip {
+> > >  
+> > >  	struct pwm_chip chip;
+> > > 
+> > > +	struct clk *bus_clk;
+> > > 
+> > >  	struct clk *clk;
+> > >  	struct reset_control *rst;
+> > >  	void __iomem *base;
+> > > 
+> > > @@ -382,6 +384,16 @@ static int sun4i_pwm_probe(struct platform_device
+> > > *pdev)> 
+> > >  		reset_control_deassert(pwm->rst);
+> > >  	
+> > >  	}
+> > > 
+> > > +	if (pwm->data->has_bus_clock) {
+> > > +		pwm->bus_clk = devm_clk_get(&pdev->dev, "bus");
+> > 
+> > Similar to my suggestion in patch 2: I'd use devm_clk_get_optional() and
+> > drop struct sun4i_pwm_data::has_bus_clock.
+> 
+> This one is not so simple. This patch has incorrect logic. Correct logic would 
+> be to use "devm_clk_get(&pdev->dev, NULL)" for variants without bus clock as 
+> it is done already and "devm_clk_get(&pdev->dev, "bus")" and 
+> "devm_clk_get(&pdev->dev, "mod")" for variants with bus clock.
 
-	 Andrew
+Then maybe something like the following?:
+
+	busclk = devm_clk_get_optional(..., "bus");
+	modclk = devm_clk_get_optional(..., "mod");
+
+	/*
+	 * old dtbs might have a single clock but no clock names. Fall
+	 * back to this for compatibility reasons.
+	 */
+	if (!modclk) {
+		modclk = devm_clk_get(..., NULL);
+	}
+ 
+> You see, DT nodes for other variants don't have clock-names property at all. 
+> If it would be specified, it would be "mod". So, DT nodes for other variants 
+> have "mod" clock specified on first place (the only one), while H6 DT node will 
+> have "mod" clock specified on second place (see one of e-mails from Maxime), so 
+> "NULL" can't be used instead of "mod" in both cases.
+> 
+> So I would say quirk is beneficial to know if you have to look up clocks by 
+> name or you just take first clock specified.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
