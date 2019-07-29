@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4249CC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F563C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1202921773
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249CD217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428757;
-	bh=3kxlx15BudbrPySFa6BLtsawhDJF/So8UAHma6qRBMM=;
+	s=default; t=1564428759;
+	bh=K8tCOehphzHY0IO/sbGLCbhffAbFe0XqUIVhEKI7KQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LJ3zA3zDG2RtBqwaENE1tph1lvzA/GaWG7qfRSQHUjkhAVFrHZWVTtOryTTrAk4Rb
-	 sAXULAsQsW2jrIjypcJOqvqk14VvanNoHmggyMwGIHgcq+Bj35+eFPlZ0t7rG7mRBT
-	 UeOyYoU6yxG+jCo1dFV7uSedfPagYC87wfMaTIBY=
+	b=cPvIdXK+1i0fEXb/cVGEH76N/5kpDVr9q/53LDhEVgcWWHP1gOYcex160PI2TUJTP
+	 7WA9eLSLF0ssYKihcx6M4y8mH5vQlgLWZ68p1DB1xqMO2Tfr+CrXjn6aDSl4x7+NoU
+	 dcJhk7yCGE3gTbf6cS34MUWRCnrvz7eJDDGVgVTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbfG2Tcf (ORCPT
+        id S1730273AbfG2Tch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:32:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46004 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:32:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729111AbfG2Tc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:32:29 -0400
+        id S1730262AbfG2Tcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:32:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 976AD2184D;
-        Mon, 29 Jul 2019 19:32:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA08A217D4;
+        Mon, 29 Jul 2019 19:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428749;
-        bh=3kxlx15BudbrPySFa6BLtsawhDJF/So8UAHma6qRBMM=;
+        s=default; t=1564428755;
+        bh=K8tCOehphzHY0IO/sbGLCbhffAbFe0XqUIVhEKI7KQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LnsikqRLnLgIEQLx3Ge3kIpBABLHOri11OE7/8ZDWWiv9zMTOMf0YL1Jufsw+ivgo
-         RhDmDG3UPuQsp8h0tCnZfn5mEbfOiFdUnqofCPxl4zbqGCR2VLwUw5icw8O+KfQpty
-         X7bPefmEZY/z8yAimDbVk2TGpkK/drIohWzAqiWM=
+        b=mQLQ+mO50plewPK7Dfaek34yU5b1o6MYxAw1nDnPzTYA2pAWi01hfkdbn1NvMjBku
+         hf1qt5ssGcK1m9Cj1xOjL6mgSeAiXLuveRqq6xJ0gOv5WRV25jhmnHwK/51GZ/pxVR
+         B8prRkYyO9ppfVmF/OldordyBhFJvPnOWW/omEjI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Szymon Janc <szymon.janc@codecoup.pl>,
-        Maarten Fonville <maarten.fonville@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.14 173/293] Bluetooth: Add SMP workaround Microsoft Surface Precision Mouse bug
-Date:   Mon, 29 Jul 2019 21:21:04 +0200
-Message-Id: <20190729190837.775633064@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Josua Mayer <josua@solid-run.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 175/293] net: mvmdio: allow up to four clocks to be specified for orion-mdio
+Date:   Mon, 29 Jul 2019 21:21:06 +0200
+Message-Id: <20190729190837.932300658@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,67 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Szymon Janc <szymon.janc@codecoup.pl>
+From: Josua Mayer <josua@solid-run.com>
 
-commit 1d87b88ba26eabd4745e158ecfd87c93a9b51dc2 upstream.
+commit 4aabed699c400810981d3dda170f05fa4d782905 upstream.
 
-Microsoft Surface Precision Mouse provides bogus identity address when
-pairing. It connects with Static Random address but provides Public
-Address in SMP Identity Address Information PDU. Address has same
-value but type is different. Workaround this by dropping IRK if ID
-address discrepancy is detected.
+Allow up to four clocks to be specified and enabled for the orion-mdio
+interface, which are required by the Armada 8k and defined in
+armada-cp110.dtsi.
 
-> HCI Event: LE Meta Event (0x3e) plen 19
-      LE Connection Complete (0x01)
-        Status: Success (0x00)
-        Handle: 75
-        Role: Master (0x00)
-        Peer address type: Random (0x01)
-        Peer address: E0:52:33:93:3B:21 (Static)
-        Connection interval: 50.00 msec (0x0028)
-        Connection latency: 0 (0x0000)
-        Supervision timeout: 420 msec (0x002a)
-        Master clock accuracy: 0x00
+Fixes a hang in probing the mvmdio driver that was encountered on the
+Clearfog GT 8K with all drivers built as modules, but also affects other
+boards such as the MacchiatoBIN.
 
-....
-
-> ACL Data RX: Handle 75 flags 0x02 dlen 12
-      SMP: Identity Address Information (0x09) len 7
-        Address type: Public (0x00)
-        Address: E0:52:33:93:3B:21
-
-Signed-off-by: Szymon Janc <szymon.janc@codecoup.pl>
-Tested-by: Maarten Fonville <maarten.fonville@gmail.com>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=199461
 Cc: stable@vger.kernel.org
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 96cb43423822 ("net: mvmdio: allow up to three clocks to be specified for orion-mdio")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Josua Mayer <josua@solid-run.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/smp.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/net/ethernet/marvell/mvmdio.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bluetooth/smp.c
-+++ b/net/bluetooth/smp.c
-@@ -2571,6 +2571,19 @@ static int smp_cmd_ident_addr_info(struc
- 		goto distribute;
- 	}
+--- a/drivers/net/ethernet/marvell/mvmdio.c
++++ b/drivers/net/ethernet/marvell/mvmdio.c
+@@ -64,7 +64,7 @@
  
-+	/* Drop IRK if peer is using identity address during pairing but is
-+	 * providing different address as identity information.
-+	 *
-+	 * Microsoft Surface Precision Mouse is known to have this bug.
-+	 */
-+	if (hci_is_identity_address(&hcon->dst, hcon->dst_type) &&
-+	    (bacmp(&info->bdaddr, &hcon->dst) ||
-+	     info->addr_type != hcon->dst_type)) {
-+		bt_dev_err(hcon->hdev,
-+			   "ignoring IRK with invalid identity address");
-+		goto distribute;
-+	}
-+
- 	bacpy(&smp->id_addr, &info->bdaddr);
- 	smp->id_addr_type = info->addr_type;
- 
+ struct orion_mdio_dev {
+ 	void __iomem *regs;
+-	struct clk *clk[3];
++	struct clk *clk[4];
+ 	/*
+ 	 * If we have access to the error interrupt pin (which is
+ 	 * somewhat misnamed as it not only reflects internal errors
 
 
