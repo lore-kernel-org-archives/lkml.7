@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF56C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDABC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B442421655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58EAE217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428845;
-	bh=5NwAp73nKV++WnnHW1SKK5D8ojELMkgVwqolVmj/iTs=;
+	s=default; t=1564428850;
+	bh=mU/cphH8ryHrVmuO9omVALk2fgtD/LhRfsJrntv7E2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jjcAbNvS0bFH9Mr1vO3D5htDJUs7MGkVS2Ec94PQ++MA61UdIcRjAdWYi4Jqvc3yI
-	 yNVi2Is5YIQcnP/BEeOUk9M33VLpce+r4eBScb7o6EgQqmgnILwJ5SOi46Oh9N2whD
-	 Afr4yOCocDjxand2wRyUU+Tgbo5VBeGc5al1LQNg=
+	b=QuLNztr0URmUGc6auVVWdalK7sCaZ2ZJ2WpDNtB48FySLY/BGVvwNQNZZD9zbJ7sB
+	 wPmDQdpt5ULPddidxt5QNA/EHVJCIy/91bfgJyVH/iHN/+FDjSjllEN2kj98lYpCms
+	 /T9mz5v1A+dyYmDFLzCeTg7oMnkAdmA0OHz/fqEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388195AbfG2TeE (ORCPT
+        id S2388223AbfG2TeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:34:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48344 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:34:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388054AbfG2Td7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:33:59 -0400
+        id S2388199AbfG2TeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:34:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A89BB217D6;
-        Mon, 29 Jul 2019 19:33:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D459E2171F;
+        Mon, 29 Jul 2019 19:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428838;
-        bh=5NwAp73nKV++WnnHW1SKK5D8ojELMkgVwqolVmj/iTs=;
+        s=default; t=1564428844;
+        bh=mU/cphH8ryHrVmuO9omVALk2fgtD/LhRfsJrntv7E2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pchwhhqfqtJFic2T1HgKwliUmJg534ndH3BEragfQh+7++O9uOlXZNf5PyRvsDwGL
-         BPe7XXn0m4STBM/8ofFkMq0HEEu0qwdR6ZYTXeLyRubNzgGgYi1yJnpvQuXrhqh9zb
-         I8tGrfNwtptOTH95sd+n/0pdBMWGMdaxcbA4W6To=
+        b=TMV9blYZKpjeEIji5DmT2mpWBJQyQNryBQ4jLwpvIv3Ri9Q8mKRaQLFwGWaV0TZnb
+         MnHIi45MvYKG4U6SOkgXX+DlGL4Tlp18kaTBHqb8YrbMgGpodzQ/FVpB7F8ToKjZ+9
+         j9qEx3MnzwIBdGK8W7Bmyb7kQQhp9k/x6bpqPsT4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Martin Weinelt <martin@linuxlounge.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 203/293] net: bridge: mcast: fix stale ipv6 hdr pointer when handling v6 query
-Date:   Mon, 29 Jul 2019 21:21:34 +0200
-Message-Id: <20190729190840.031452347@linuxfoundation.org>
+Subject: [PATCH 4.14 204/293] net: bridge: stp: dont cache eth dest pointer before skb pull
+Date:   Mon, 29 Jul 2019 21:21:35 +0200
+Message-Id: <20190729190840.091972186@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -63,39 +62,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit 3b26a5d03d35d8f732d75951218983c0f7f68dff ]
+[ Upstream commit 2446a68ae6a8cee6d480e2f5b52f5007c7c41312 ]
 
-We get a pointer to the ipv6 hdr in br_ip6_multicast_query but we may
-call pskb_may_pull afterwards and end up using a stale pointer.
-So use the header directly, it's just 1 place where it's needed.
+Don't cache eth dest pointer before calling pskb_may_pull.
 
-Fixes: 08b202b67264 ("bridge br_multicast: IPv6 MLD support.")
+Fixes: cf0f02d04a83 ("[BRIDGE]: use llc for receiving STP packets")
 Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Tested-by: Martin Weinelt <martin@linuxlounge.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_multicast.c |    3 +--
+ net/bridge/br_stp_bpdu.c |    3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -1482,7 +1482,6 @@ static int br_ip6_multicast_query(struct
- 				  struct sk_buff *skb,
- 				  u16 vid)
+--- a/net/bridge/br_stp_bpdu.c
++++ b/net/bridge/br_stp_bpdu.c
+@@ -147,7 +147,6 @@ void br_send_tcn_bpdu(struct net_bridge_
+ void br_stp_rcv(const struct stp_proto *proto, struct sk_buff *skb,
+ 		struct net_device *dev)
  {
--	const struct ipv6hdr *ip6h = ipv6_hdr(skb);
- 	struct mld_msg *mld;
- 	struct net_bridge_mdb_entry *mp;
- 	struct mld2_query *mld2q;
-@@ -1526,7 +1525,7 @@ static int br_ip6_multicast_query(struct
+-	const unsigned char *dest = eth_hdr(skb)->h_dest;
+ 	struct net_bridge_port *p;
+ 	struct net_bridge *br;
+ 	const unsigned char *buf;
+@@ -176,7 +175,7 @@ void br_stp_rcv(const struct stp_proto *
+ 	if (p->state == BR_STATE_DISABLED)
+ 		goto out;
  
- 	if (is_general_query) {
- 		saddr.proto = htons(ETH_P_IPV6);
--		saddr.u.ip6 = ip6h->saddr;
-+		saddr.u.ip6 = ipv6_hdr(skb)->saddr;
+-	if (!ether_addr_equal(dest, br->group_addr))
++	if (!ether_addr_equal(eth_hdr(skb)->h_dest, br->group_addr))
+ 		goto out;
  
- 		br_multicast_query_received(br, port, &br->ip6_other_query,
- 					    &saddr, max_delay);
+ 	if (p->flags & BR_BPDU_GUARD) {
 
 
