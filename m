@@ -2,118 +2,103 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E43BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F304BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C56F2184B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C80B92073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:22:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="HtsVBdFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfG2HW1 (ORCPT
+        id S1726712AbfG2HWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 03:22:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3229 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725917AbfG2HW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 03:22:27 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 75FAC6D82EC4BAD96A58;
-        Mon, 29 Jul 2019 15:22:24 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 29 Jul
- 2019 15:22:22 +0800
-Subject: Re: [f2fs-dev] [PATCH v4 3/3] f2fs: Support case-insensitive file
- name lookups
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
-CC:     Daniel Rosenberg <drosen@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-doc@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <kernel-team@android.com>
-References: <20190723230529.251659-1-drosen@google.com>
- <20190723230529.251659-4-drosen@google.com>
- <9362e4ed-2be8-39f5-b4d9-9c86e37ab993@kernel.org>
- <20190729062735.GA98839@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <fa07a09d-92c9-4e0b-7c2b-e87771273dce@huawei.com>
-Date:   Mon, 29 Jul 2019 15:22:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 29 Jul 2019 03:22:38 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:39101 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725917AbfG2HWh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 03:22:37 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6T7LhjY024911;
+        Mon, 29 Jul 2019 09:22:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=BrcI7CA5OtqOSVGd0MNreUQcr/fWMiNNKrFXwlcauwg=;
+ b=HtsVBdFzeQGhEJOx7laE7SNZm50J5WstAiEevq/LZ+iQZW2lYEJQRyJ7banSr5LH7Tih
+ l1UDVn1J6MArE0IwuGH9FNg8m0cVOKcsE+JPNFLRiSRkRi+etUFsh3aryLgPNweJmVoh
+ sWjNxpxS76Vi386fd0NXzX6oua5xkmoyQHlZIHpsG9nxuLfLev6RffhuIxEXRRG1Gkr5
+ UfWnVsNnb9/1FBdBz7ULimDF1HkHIS8HTIxJL+K/tE8JkX7Bkky32lTBmHYahH8rMMNs
+ fg1QdsQntZpaATKUX/iNemClh5ygi1MdpW2DVyHDmlHefyZ8Lm+UJ3P0CvvZZZUg4kgR fQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2u0ccwanmu-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 29 Jul 2019 09:22:12 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1ABFD38;
+        Mon, 29 Jul 2019 07:22:10 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A2D77569B;
+        Mon, 29 Jul 2019 07:22:10 +0000 (GMT)
+Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 29 Jul
+ 2019 09:22:09 +0200
+Subject: Re: [PATCH 0/5] Add missing pwm-cells to STM32 timers PWM
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        <thierry.reding@gmail.com>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <linux@armlinux.org.uk>,
+        <mcoquelin.stm32@gmail.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <benjamin.gaignard@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1560937925-8990-1-git-send-email-fabrice.gasnier@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <542bd9ed-a93f-fdcc-5dc9-ccaed8a50097@st.com>
+Date:   Mon, 29 Jul 2019 09:22:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190729062735.GA98839@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <1560937925-8990-1-git-send-email-fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-29_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/29 14:27, Jaegeuk Kim wrote:
-> On 07/28, Chao Yu wrote:
->> On 2019-7-24 7:05, Daniel Rosenberg via Linux-f2fs-devel wrote:
->>>  /* Flags that are appropriate for regular files (all but dir-specific ones). */
->>>  #define F2FS_REG_FLMASK		(~(F2FS_DIRSYNC_FL | F2FS_PROJINHERIT_FL))
->>
->> We missed to add F2FS_CASEFOLD_FL here to exclude it in F2FS_REG_FLMASK.
-> 
-> Applied.
-> 
->>
->>> @@ -1660,7 +1660,16 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
->>>  		return -EPERM;
->>>  
->>>  	oldflags = fi->i_flags;
->>> +	if ((iflags ^ oldflags) & F2FS_CASEFOLD_FL) {
->>> +		if (!f2fs_sb_has_casefold(F2FS_I_SB(inode)))
->>> +			return -EOPNOTSUPP;
->>> +
->>> +		if (!S_ISDIR(inode->i_mode))
->>> +			return -ENOTDIR;
->>>  
->>> +		if (!f2fs_empty_dir(inode))
->>> +			return -ENOTEMPTY;
->>> +	}
-> 
-> Modified like this:
-> @@ -1665,6 +1665,13 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
->         if (IS_NOQUOTA(inode))
->                 return -EPERM;
-> 
-> +       if ((iflags ^ fi->i_flags) & F2FS_CASEFOLD_FL) {
-> +               if (!f2fs_sb_has_casefold(F2FS_I_SB(inode)))
-> +                       return -EOPNOTSUPP;
-> +               if (!f2fs_empty_dir(inode))
-> +                       return -ENOTEMPTY;
-> +       }
-> +
-> 
-> Note that, directory is checked by above change.
-> 
-> I've uploaded in f2fs.git, so could you check it out and test a bit?
+Hi Fabrice
 
-I've checked it out, it looks good to me now, and later I will test this new
-version.
-
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks,
-
+On 6/19/19 11:52 AM, Fabrice Gasnier wrote:
+> This series adds missing generic 3-cells PWM to STM32 timers dt-bindings,
+> PWM driver, and the relevant dtsi files for STM32F4, STM32F7 and STM32MP1.
 > 
-> Thanks,
+> Fabrice Gasnier (5):
+>    dt-bindings: pwm-stm32: add #pwm-cells
+>    pwm: stm32: use 3 cells ->of_xlate()
+>    ARM: dts: stm32: add pwm cells to stm32mp157c
+>    ARM: dts: stm32: add pwm cells to stm32f429
+>    ARM: dts: stm32: add pwm cells to stm32f746
 > 
->>
->> I applied the patches based on last Jaegeuk's dev branch, it seems we needs to
->> adjust above code a bit. Otherwise it looks good to me.
->>
->> BTW, it looks the patchset works fine with generic/556 testcase.
->>
->> Thanks,
-> .
+>   Documentation/devicetree/bindings/pwm/pwm-stm32.txt |  3 +++
+>   arch/arm/boot/dts/stm32f429.dtsi                    | 12 ++++++++++++
+>   arch/arm/boot/dts/stm32f746.dtsi                    | 12 ++++++++++++
+>   arch/arm/boot/dts/stm32mp157c.dtsi                  | 12 ++++++++++++
+>   drivers/pwm/pwm-stm32.c                             |  2 ++
+>   5 files changed, 41 insertions(+)
 > 
+
+DT patches applied on stm32-next.
+
+regards
+Alex
