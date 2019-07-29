@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FF2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38870C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03DD82064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04CC12064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430576;
-	bh=5j+OMtqYWQdxW7IWocSN2k+G39CzIhu6wV5/P5JzbDI=;
+	s=default; t=1564430581;
+	bh=Hrbc675MLAsFjEaFA9El9Z7mjy9taTlDFUs376GO9O4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O2la4X1L/FtKlys9jCRSyntE9j3sXWBZG88ddukfTqf3vw3zJdniN5gvprYk0C7Oq
-	 IHjmNfSZqdui7pMDP3XyTblOo6nZ3w1zlpDuB/c2FHvMYLs6gFH2T2APdUzvGDF7hX
-	 VpSUVhXR09kXCEApml0RimOzjWgBx5/6WFediua8=
+	b=DpgUqZYcvGpm7UQf43WWbsutSmjI+yHzsn3I3PEg66sr10jWnw4Y5Jhxv/rX6S4Wz
+	 ZH8umnSGKc1hffFcNzNw4J/7kYXhjYzvPTYa4QcbV2x+PwFn1DHHpn/LrSzyD08hQi
+	 LLP2SyVGC0hEKnJqFYC9dZvEKsx/AZIsjt9QGV78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390401AbfG2TsA (ORCPT
+        id S2390116AbfG2UC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:48:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37768 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:02:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390388AbfG2Try (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:47:54 -0400
+        id S2390377AbfG2Trp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:47:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D1A52054F;
-        Mon, 29 Jul 2019 19:47:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BC332054F;
+        Mon, 29 Jul 2019 19:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429673;
-        bh=5j+OMtqYWQdxW7IWocSN2k+G39CzIhu6wV5/P5JzbDI=;
+        s=default; t=1564429664;
+        bh=Hrbc675MLAsFjEaFA9El9Z7mjy9taTlDFUs376GO9O4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JQ/ZG+DXqMLk3qD8FWe1azdNNJ0n/L7yKP1zTkicqOYTe8tM4CbWdUWSYR7M0wq6r
-         8WvXflVuX13FKWW4bDf711yRUcDNjKrt3726qOGlGvKz3t3VrT7lQkOH2ioz6+LuyZ
-         KkQpNIZYYvHUXRa+0FsEtHhBlw05ZpKraSYyioBI=
+        b=m26QAPY3qY+gP7x6MqURAipOjs6PaI50wVrsluMBACoNo2sTxXJk/zRR+iLMSnulm
+         HXBQQoW6pC2aglgp6xd15j88mM0sjthcGQYvrIHlPG/dwqHsDhAuuGEJxILGnXjisK
+         lk4o6brkDvfS7jeovEl9YXEh1doOQt1dvXUIZ+LM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, Wesley Chalmers <Wesley.Chalmers@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 058/215] phy: renesas: rcar-gen2: Fix memory leak at error paths
-Date:   Mon, 29 Jul 2019 21:20:54 +0200
-Message-Id: <20190729190750.571643093@linuxfoundation.org>
+Subject: [PATCH 5.2 055/215] drm/amd/display: Update link rate from DPCD 10
+Date:   Mon, 29 Jul 2019 21:20:51 +0200
+Message-Id: <20190729190750.056856446@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -62,42 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4a36e82924d3305a17ac987a510f3902df5a4b2 ]
+[ Upstream commit 53c81fc7875bc2dca358485dac3999e14ec91a00 ]
 
-This patch fixes memory leak at error paths of the probe function.
-In for_each_child_of_node, if the loop returns, the driver should
-call of_put_node() before returns.
+[WHY]
+Some panels return a link rate of 0 (unknown) in DPCD 0. In this case,
+an appropriate mode cannot be set, and certain panels will show
+corruption as they are forced to use a mode they do not support.
 
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-Fixes: 1233f59f745b237 ("phy: Renesas R-Car Gen2 PHY driver")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+[HOW]
+Read DPCD 10 in the case where supported link rate from DPCD 0 is
+unknown, and pass that value on to the reported link rate.
+This re-introduces behaviour present in previous versions that appears
+to have been accidentally removed.
+
+Signed-off-by: Wesley Chalmers <Wesley.Chalmers@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/renesas/phy-rcar-gen2.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen2.c b/drivers/phy/renesas/phy-rcar-gen2.c
-index 8dc5710d9c98..2926e4937301 100644
---- a/drivers/phy/renesas/phy-rcar-gen2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen2.c
-@@ -391,6 +391,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
- 		error = of_property_read_u32(np, "reg", &channel_num);
- 		if (error || channel_num > 2) {
- 			dev_err(dev, "Invalid \"reg\" property\n");
-+			of_node_put(np);
- 			return error;
- 		}
- 		channel->select_mask = select_mask[channel_num];
-@@ -406,6 +407,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
- 						   data->gen2_phy_ops);
- 			if (IS_ERR(phy->phy)) {
- 				dev_err(dev, "Failed to create PHY\n");
-+				of_node_put(np);
- 				return PTR_ERR(phy->phy);
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+index 1ee544a32ebb..253311864cdd 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+@@ -1624,8 +1624,7 @@ static bool decide_edp_link_settings(struct dc_link *link, struct dc_link_settin
+ 	uint32_t link_bw;
+ 
+ 	if (link->dpcd_caps.dpcd_rev.raw < DPCD_REV_14 ||
+-			link->dpcd_caps.edp_supported_link_rates_count == 0 ||
+-			link->dc->config.optimize_edp_link_rate == false) {
++			link->dpcd_caps.edp_supported_link_rates_count == 0) {
+ 		*link_setting = link->verified_link_cap;
+ 		return true;
+ 	}
+@@ -2597,7 +2596,8 @@ void detect_edp_sink_caps(struct dc_link *link)
+ 	memset(supported_link_rates, 0, sizeof(supported_link_rates));
+ 
+ 	if (link->dpcd_caps.dpcd_rev.raw >= DPCD_REV_14 &&
+-			link->dc->config.optimize_edp_link_rate) {
++			(link->dc->config.optimize_edp_link_rate ||
++			link->reported_link_cap.link_rate == LINK_RATE_UNKNOWN)) {
+ 		// Read DPCD 00010h - 0001Fh 16 bytes at one shot
+ 		core_link_read_dpcd(link, DP_SUPPORTED_LINK_RATES,
+ 							supported_link_rates, sizeof(supported_link_rates));
+@@ -2612,6 +2612,9 @@ void detect_edp_sink_caps(struct dc_link *link)
+ 				link_rate = linkRateInKHzToLinkRateMultiplier(link_rate_in_khz);
+ 				link->dpcd_caps.edp_supported_link_rates[link->dpcd_caps.edp_supported_link_rates_count] = link_rate;
+ 				link->dpcd_caps.edp_supported_link_rates_count++;
++
++				if (link->reported_link_cap.link_rate < link_rate)
++					link->reported_link_cap.link_rate = link_rate;
  			}
- 			phy_set_drvdata(phy->phy, phy);
+ 		}
+ 	}
 -- 
 2.20.1
 
