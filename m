@@ -2,201 +2,149 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C9FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FB7C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16137206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LpH/Wsz4";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="q2w+OUQ1"
+	by mail.kernel.org (Postfix) with ESMTP id 76831206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387752AbfG2L3z (ORCPT
+        id S2387755AbfG2Lac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:29:55 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:48864 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387629AbfG2L3y (ORCPT
+        Mon, 29 Jul 2019 07:30:32 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39224 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387666AbfG2Lac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:29:54 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D20C7C21D4;
-        Mon, 29 Jul 2019 11:29:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1564399793; bh=1AmAllxgnxHuY2mFSN+Q5zImnjTIrx7ksfZnG1anoBc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=LpH/Wsz4gcmIS3b0qRU9LNcDow69zdbnOh3F8LEZDV68/OAkQmlex1MzYbJXcaZzV
-         KUnAtLuoQ3PgGvXZeZSdF1IVlX8VtprYtbiwbxq27Gn/jhRAO4PDDC2KS2t+b57NPY
-         5ZoEuL0mnHpZTs+k7Q4oLx1qRrQFUNJ1T8uRvsxjeLnWuh1SsGLyNAJyiRwslBXFoh
-         sBYKgOUaauneb4G9QGyzJCAt56lfwmeqeNfRYiiGjfuqLTMEcd7ZY9iCaWz9R/Il4z
-         NU05aJaY0Ke9nfQYWqZbzmt0nENTeAPQATxkFiEjZHnR53zuXx+nHJFVvjn5TLWkZu
-         yGCIdUFMS60uA==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id C5100A0093;
-        Mon, 29 Jul 2019 11:29:51 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 29 Jul 2019 04:29:11 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 29 Jul 2019 04:29:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jpoCHARqylHq0WLHi9y/WWJm8E7Mo0FMIt22N8PP8Dgd7gCu7yHlkniILU8X552toKhIIOs/1IwH7LMO0qQyFZ8uUFDsq/Y3m9FUfm3p7E0NhdpPRs/ZZTFR8nawWNVhmyfqKblDVWnJ+i5w7Fz1Ohmy+PEcJ7gfvMd/qopXhLHsaR/VjZ99TDMOGAZOpzbzAHkYfRGGacKqjidNXUqhxNMDkCQQfMoF3ZJ0LR7rNJwgGiofepz1/oLnoPi68P+/o6G91CmjOYQrge70YRC+HAXWTh0U3FSzt5mXb5SgTPZXTPfYqfo/yI92sJ5R/juOVfEjSjXZ6FYMtU9FgzkvFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1AmAllxgnxHuY2mFSN+Q5zImnjTIrx7ksfZnG1anoBc=;
- b=KP/A5M5HvzJMRICYb1mIxmCgRVsUfGqQU7Ocb6JdTlIgkTwx+pfeqI94xeZQiX7+bNkhZEd2n2YGWYzK9nX5GOVai08da5RBwZ4rU0Afb3OWIYv7lSUwXu86kBOoT0lJJ6WguaSEHiwAStB08SbjPZ/mKhfjuoqeYNcDifqbMOLytbqWDWKU0xxOnvOnEMWAz/CxPmDstSBhfBokS73BGxS6RpNK3wry7QFA3gea1nKkQ+Y9Ti3Y4JSLo1YIdSnNgobkiArB0XMTOtvg+c2U4S9OGtBR5OihxJwZZC9tya7OXMDZaaWJuFJ0QDJ2w7+BhxbmxB2gW0hk2D7bEaIj2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1AmAllxgnxHuY2mFSN+Q5zImnjTIrx7ksfZnG1anoBc=;
- b=q2w+OUQ1oW19gLRbgA8WEsulr5zFxGzX6VtJ4uBbDX6+NSxOz7vWX7jYSKtygQK3A++xLL5N1Q/f+SnyNbsnv85gbdn5hqWDQ6euaEZaQMM/6uuqHB67QJsjRRj2MDo7Oqj3OqZ41RzMtKp5jyCodq+8PmevmwLUc8LrOdOI9IE=
-Received: from MN2PR12MB3279.namprd12.prod.outlook.com (20.179.83.83) by
- MN2PR12MB4078.namprd12.prod.outlook.com (52.135.51.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Mon, 29 Jul 2019 11:29:09 +0000
-Received: from MN2PR12MB3279.namprd12.prod.outlook.com
- ([fe80::3128:f343:a3d9:41a7]) by MN2PR12MB3279.namprd12.prod.outlook.com
- ([fe80::3128:f343:a3d9:41a7%3]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
- 11:29:08 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        "Chen-Yu Tsai" <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: RE: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Topic: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Index: AQHVMYtq2Zx4WVoG/U2kL8GCK0bP/abbdEOAgAAAgcCAABHmgIAADDMggAGB8wCAAa8dIIACpFiggAAs3ACAAAdb0A==
-Date:   Mon, 29 Jul 2019 11:29:08 +0000
-Message-ID: <MN2PR12MB327997BDF2EA5CEE00F45AC3D3DD0@MN2PR12MB3279.namprd12.prod.outlook.com>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <7a79be5d-7ba2-c457-36d3-1ccef6572181@nvidia.com>
- <BYAPR12MB3269927AB1F67D46E150ED6BD3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
- <9e695f33-fd9f-a910-0891-2b63bd75e082@nvidia.com>
- <BYAPR12MB3269B4A401E4DA10A07515C7D3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
- <1e2ea942-28fe-15b9-f675-8d6585f9a33f@nvidia.com>
- <BYAPR12MB326922CDCB1D4B3D4A780CFDD3C30@BYAPR12MB3269.namprd12.prod.outlook.com>
- <MN2PR12MB327907D4A6FB378AC989571AD3DD0@MN2PR12MB3279.namprd12.prod.outlook.com>
- <b99b1e49-0cbc-2c66-6325-50fa6f263d91@nvidia.com>
-In-Reply-To: <b99b1e49-0cbc-2c66-6325-50fa6f263d91@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 46e4c96f-17c4-491f-9b69-08d71417f8e2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR12MB4078;
-x-ms-traffictypediagnostic: MN2PR12MB4078:|MN2PR12MB4078:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MN2PR12MB407890A93A7CB58F3CFFC20AD3DD0@MN2PR12MB4078.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01136D2D90
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39850400004)(396003)(376002)(136003)(346002)(52314003)(199004)(189003)(5024004)(14444005)(66476007)(486006)(110136005)(66556008)(102836004)(66946007)(2201001)(64756008)(2501003)(86362001)(478600001)(446003)(76116006)(476003)(11346002)(5660300002)(52536014)(966005)(7416002)(316002)(76176011)(6506007)(7736002)(7696005)(53546011)(66446008)(186003)(54906003)(99286004)(26005)(3846002)(25786009)(229853002)(6436002)(68736007)(305945005)(8936002)(74316002)(4326008)(33656002)(81166006)(256004)(81156014)(2906002)(6116002)(8676002)(55016002)(6306002)(9686003)(66066001)(71190400001)(14454004)(6246003)(53936002)(71200400001)(440614002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR12MB4078;H:MN2PR12MB3279.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: HcfYRvidqxqcqKmvc4OJYwpHW9//N2U3IhvOO+0F5a7FR9xHweZ5X69aWrakosmtei9oV+Y57siURotlmhwEGuinh4Hwgm9AYrxZzIkfsbG3EZ1yfpWMm3npJBEnYK/a1qaD74hhDH+DNODzt340iEf9/M3Jpp7OZL+aZrYu9zLUurFpyEdsUpTWaRXOF4edh65U7Lvt8S6Cst5K25KVgM8kPHRxPYV0Hnd7H1vUVW4c5OneZn1sAEqg6A87I9zXeofQgJwdK1NYdF7/+Jy/9c+y+twQchCEdcCdU3kBg/PqBeKkYHdW6XGcNDQysTtQSJkLDkuSpBz9x95Mmq880+X6S3m7C3Y6ry604KAxXonSxdlqld0u43Q5IooZVzFxoQNX2bxSsPKoGtUidYKisa5CWP4Pqylkqwv9RB8EUyk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 29 Jul 2019 07:30:32 -0400
+Received: by mail-wm1-f68.google.com with SMTP id u25so42773532wmc.4;
+        Mon, 29 Jul 2019 04:30:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mYgTCADguDanxFOEAPrmobWhF2N2XCa1x0cKc1vynOs=;
+        b=r5F5lq4yaHC3gSbNRzVFesm6pheoa1cmO7sbzThyM3fT7JDySssZx2XFq/WZLTISHD
+         xA/hY/vGccR9Qwed9daWO0P4Ztjjd/W6EAGaRyFtvpmeFHsow08cgaFVLiUnszobt1sV
+         mRZC9GF7naLS2waW5ulIqqwsPdKdWKNDg67TCq6W6z3pjLDQ6bMoVQW0ZugU9O789H5N
+         8G5aPUSYOCGutGFeOXTpDXThYl2s/Ixew1qs6k/7p7inzyOpiK5oDOCHK1OSnMuDIJ11
+         YhwOxND3biSE2V0uRfcUbxfk2KppFigKhCXZrvyyrwVDqR0qWIkWEdY0OKY+X+9GJE6X
+         sO2w==
+X-Gm-Message-State: APjAAAWFZcpY+DxZ/6cr7FrVu2K5JLI7qWTxsf6HZzSF/yATIeVLUDb0
+        cAlHW1S7rSLdAWjuSgB97lAh8v/VeHs4a8dq+ThbiSuE
+X-Google-Smtp-Source: APXvYqwDEPOHPZ3E0KgxisZBB6lCwoAfdCHOdH5TFR4vuced9FNVTwhHtpMIWIn+X32IlCaCma6G7CGcZjlSmETYarA=
+X-Received: by 2002:a1c:a7c6:: with SMTP id q189mr100793795wme.146.1564399829718;
+ Mon, 29 Jul 2019 04:30:29 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46e4c96f-17c4-491f-9b69-08d71417f8e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 11:29:08.7838
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4078
-X-OriginatorOrg: synopsys.com
+References: <20190725180825.31508-1-max@enpas.org> <CAMuHMdURm-9nazOBTL8uRH8WMt7gi=QUYy0qr9kaxzczCr+ujg@mail.gmail.com>
+ <9cde6e79-52da-e0c0-f452-6afc2e5fa5ee@enpas.org>
+In-Reply-To: <9cde6e79-52da-e0c0-f452-6afc2e5fa5ee@enpas.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 29 Jul 2019 13:30:17 +0200
+Message-ID: <CAMuHMdUGsfzQg8xy2OqWfuo09MxwZ5OJz=t5CARJp+A1ZVtqaA@mail.gmail.com>
+Subject: Re: [PATCH v3] ata/pata_buddha: Probe via modalias instead of initcall
+To:     Max Staudt <max@enpas.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-ide@vger.kernel.org,
+        "Linux/m68k" <linux-m68k@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KysgQ2F0YWxpbiwgV2lsbCAoQVJNNjQgTWFpbnRhaW5lcnMpDQoNCkZyb206IEpvbiBIdW50ZXIg
-PGpvbmF0aGFuaEBudmlkaWEuY29tPg0KRGF0ZTogSnVsLzI5LzIwMTksIDExOjU1OjE4IChVVEMr
-MDA6MDApDQoNCj4gDQo+IE9uIDI5LzA3LzIwMTkgMDk6MTYsIEpvc2UgQWJyZXUgd3JvdGU6DQo+
-ID4gRnJvbTogSm9zZSBBYnJldSA8am9hYnJldUBzeW5vcHN5cy5jb20+DQo+ID4gRGF0ZTogSnVs
-LzI3LzIwMTksIDE2OjU2OjM3IChVVEMrMDA6MDApDQo+ID4gDQo+ID4+IEZyb206IEpvbiBIdW50
-ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPg0KPiA+PiBEYXRlOiBKdWwvMjYvMjAxOSwgMTU6MTE6
-MDAgKFVUQyswMDowMCkNCj4gPj4NCj4gPj4+DQo+ID4+PiBPbiAyNS8wNy8yMDE5IDE2OjEyLCBK
-b3NlIEFicmV1IHdyb3RlOg0KPiA+Pj4+IEZyb206IEpvbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlk
-aWEuY29tPg0KPiA+Pj4+IERhdGU6IEp1bC8yNS8yMDE5LCAxNToyNTo1OSAoVVRDKzAwOjAwKQ0K
-PiA+Pj4+DQo+ID4+Pj4+DQo+ID4+Pj4+IE9uIDI1LzA3LzIwMTkgMTQ6MjYsIEpvc2UgQWJyZXUg
-d3JvdGU6DQo+ID4+Pj4+DQo+ID4+Pj4+IC4uLg0KPiA+Pj4+Pg0KPiA+Pj4+Pj4gV2VsbCwgSSB3
-YXNuJ3QgZXhwZWN0aW5nIHRoYXQgOi8NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBQZXIgZG9jdW1lbnRh
-dGlvbiBvZiBiYXJyaWVycyBJIHRoaW5rIHdlIHNob3VsZCBzZXQgZGVzY3JpcHRvciBmaWVsZHMg
-DQo+ID4+Pj4+PiBhbmQgdGhlbiBiYXJyaWVyIGFuZCBmaW5hbGx5IG93bmVyc2hpcCB0byBIVyBz
-byB0aGF0IHJlbWFpbmluZyBmaWVsZHMgDQo+ID4+Pj4+PiBhcmUgY29oZXJlbnQgYmVmb3JlIG93
-bmVyIGlzIHNldC4NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBBbnl3YXksIGNhbiB5b3UgYWxzbyBhZGQg
-YSBkbWFfcm1iKCkgYWZ0ZXIgdGhlIGNhbGwgdG8gDQo+ID4+Pj4+PiBzdG1tYWNfcnhfc3RhdHVz
-KCkgPw0KPiA+Pj4+Pg0KPiA+Pj4+PiBZZXMuIEkgcmVtb3ZlZCB0aGUgZGVidWcgcHJpbnQgYWRk
-ZWQgdGhlIGJhcnJpZXIsIGJ1dCB0aGF0IGRpZCBub3QgaGVscC4NCj4gPj4+Pg0KPiA+Pj4+IFNv
-LCBJIHdhcyBmaW5hbGx5IGFibGUgdG8gc2V0dXAgTkZTIHVzaW5nIHlvdXIgcmVwbGljYXRlZCBz
-ZXR1cCBhbmQgSSANCj4gPj4+PiBjYW4ndCBzZWUgdGhlIGlzc3VlIDooDQo+ID4+Pj4NCj4gPj4+
-PiBUaGUgb25seSBkaWZmZXJlbmNlIEkgaGF2ZSBmcm9tIHlvdXJzIGlzIHRoYXQgSSdtIHVzaW5n
-IFRDUCBpbiBORlMgDQo+ID4+Pj4gd2hpbHN0IHlvdSAoSSBiZWxpZXZlIGZyb20gdGhlIGxvZ3Mp
-LCB1c2UgVURQLg0KPiA+Pj4NCj4gPj4+IFNvIEkgdHJpZWQgVENQIGJ5IHNldHRpbmcgdGhlIGtl
-cm5lbCBib290IHBhcmFtcyB0byAnbmZzdmVycz0zJyBhbmQNCj4gPj4+ICdwcm90bz10Y3AnIGFu
-ZCB0aGlzIGRvZXMgYXBwZWFyIHRvIGJlIG1vcmUgc3RhYmxlLCBidXQgbm90IDEwMCUgc3RhYmxl
-Lg0KPiA+Pj4gSXQgc3RpbGwgYXBwZWFycyB0byBmYWlsIGluIHRoZSBzYW1lIHBsYWNlIGFib3V0
-IDUwJSBvZiB0aGUgdGltZS4NCj4gPj4+DQo+ID4+Pj4gWW91IGRvIGhhdmUgZmxvdyBjb250cm9s
-IGFjdGl2ZSByaWdodCA/IEFuZCB5b3VyIEhXIEZJRk8gc2l6ZSBpcyA+PSA0ayA/DQo+ID4+Pg0K
-PiA+Pj4gSG93IGNhbiBJIHZlcmlmeSBpZiBmbG93IGNvbnRyb2wgaXMgYWN0aXZlPw0KPiA+Pg0K
-PiA+PiBZb3UgY2FuIGNoZWNrIGl0IGJ5IGR1bXBpbmcgcmVnaXN0ZXIgTVRMX1J4UV9PcGVyYXRp
-b25fTW9kZSAoMHhkMzApLg0KPiANCj4gV2hlcmUgd291bGQgYmUgdGhlIGFwcHJvcHJpYXRlIHBs
-YWNlIHRvIGR1bXAgdGhpcz8gQWZ0ZXIgcHJvYmU/IE1heWJlDQo+IGJlc3QgaWYgeW91IGNhbiBz
-aGFyZSBhIGNvZGUgc25pcHBldCBvZiB3aGVyZSB0byBkdW1wIHRoaXMuDQo+IA0KPiA+PiBDYW4g
-eW91IGFsc28gYWRkIElPTU1VIGRlYnVnIGluIGZpbGUgImRyaXZlcnMvaW9tbXUvaW9tbXUuYyIg
-Pw0KPiANCj4gWW91IGNhbiBmaW5kIGEgYm9vdCBsb2cgaGVyZToNCj4gDQo+IGh0dHBzOi8vdXJs
-ZGVmZW5zZS5wcm9vZnBvaW50LmNvbS92Mi91cmw/dT1odHRwcy0zQV9fcGFzdGUudWJ1bnR1LmNv
-bV9wX3F0UnF0WUtIR0ZfJmQ9RHdJQ2FRJmM9RFBMNl9YXzZKa1hGeDdBWFdxQjB0ZyZyPVdIRHNj
-NmtjV0FsNGk5NlZtNWhKXzE5SUppdXh4X3BfUnpvMmctdUhES3cmbT1OcnhzUjJldHBaSEdiN0hr
-TjRYZGdhR21LTTFYWXlsZGloTlBMNnFWU3YwJnM9Q01BVEVjSFZvcVp3NHNJck5PWGM3U0ZFX2tW
-XzVDTzVFVTIxLXlKZXo2YyZlPSANCj4gDQo+ID4gQW5kLCBwbGVhc2UgdHJ5IGF0dGFjaGVkIGRl
-YnVnIHBhdGNoLg0KPiANCj4gV2l0aCB0aGlzIHBhdGNoIGl0IGFwcGVhcnMgdG8gYm9vdCBmaW5l
-LiBTbyBmYXIgbm8gaXNzdWVzIHNlZW4uDQoNClRoYW5rIHlvdSBmb3IgdGVzdGluZy4NCg0KSGkg
-Q2F0YWxpbiBhbmQgV2lsbCwNCg0KU29ycnkgdG8gYWRkIHlvdSBpbiBzdWNoIGEgbG9uZyB0aHJl
-YWQgYnV0IHdlIGFyZSBzZWVpbmcgYSBETUEgaXNzdWUgDQp3aXRoIHN0bW1hYyBkcml2ZXIgaW4g
-YW4gQVJNNjQgcGxhdGZvcm0gd2l0aCBJT01NVSBlbmFibGVkLg0KDQpUaGUgaXNzdWUgc2VlbXMg
-dG8gYmUgc29sdmVkIHdoZW4gYnVmZmVycyBhbGxvY2F0aW9uIGZvciBETUEgYmFzZWQgDQp0cmFu
-c2ZlcnMgYXJlICpub3QqIG1hcHBlZCB3aXRoIHRoZSBETUFfQVRUUl9TS0lQX0NQVV9TWU5DIGZs
-YWcgKk9SKiANCndoZW4gSU9NTVUgaXMgZGlzYWJsZWQuDQoNCk5vdGljZSB0aGF0IGFmdGVyIHRy
-YW5zZmVyIGlzIGRvbmUgd2UgZG8gdXNlIA0KZG1hX3N5bmNfc2luZ2xlX2Zvcl97Y3B1LGRldmlj
-ZX0gYW5kIHRoZW4gd2UgcmV1c2UgKnRoZSBzYW1lKiBwYWdlIGZvciANCmFub3RoZXIgdHJhbnNm
-ZXIuDQoNCkNhbiB5b3UgcGxlYXNlIGNvbW1lbnQgb24gd2hldGhlciBETUFfQVRUUl9TS0lQX0NQ
-VV9TWU5DIGNhbiBub3QgYmUgdXNlZCANCmluIEFSTTY0IHBsYXRmb3JtcyB3aXRoIElPTU1VID8N
-Cg0KLS0tDQpUaGFua3MsDQpKb3NlIE1pZ3VlbCBBYnJldQ0K
+Hi Max,
+
+On Mon, Jul 29, 2019 at 1:10 PM Max Staudt <max@enpas.org> wrote:
+> On 07/29/2019 11:05 AM, Geert Uytterhoeven wrote:
+> >> --- a/drivers/ata/pata_buddha.c
+> >> +++ b/drivers/ata/pata_buddha.c
+> >
+> >> +static const struct zorro_device_id pata_buddha_zorro_tbl[] = {
+> >> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA, },
+> >> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL, },
+> >> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, },
+> >
+> > drivers/net/ethernet/8390/zorro8390.c also matches against
+> > ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, while only
+> > a single zorro_driver can bind to it.  Hence you can no longer use both
+> > IDE and Ethernet on X-Surf :-(
+> > Before, this worked, as the IDE driver just walked the list of devices.
+>
+> Okay, now this gets dirty.
+>
+> The reason why I've submitted this patch is to allow pata_buddha to be built into the kernel at all. Without this patch, its initcall would be called before the Zorro structures are initialised, hence not finding any boards.
+
+IC. I wasn't aware of the new pata_buddha.c driver not working at all
+when builtin.
+
+> That means that not only would the previous driver only make sense as a module that is manually ensured to be loaded after Zorro has started, but the X-Surf IDE support was a really ugly hack to begin with.
+
+Right. Please note that most drivers for Zorro boards predate the device
+driver framework, and thus all started life using zorro_find_device().
+But this did have the advantage of supporting multi-function cards
+out-of-the-box.
+Later, several drivers were converted to the new driver framework.
+but not all of them, due to multi-function cards.
+
+> > I think the proper solution is to create MFD devices for Zorro boards
+> > with multiple functions, and bind against the individual MFD cells.
+> > That would also get rid of the nr_ports loop in the IDE driver, as each
+> > instance would have its own cell.
+> >
+> > I played with this a long time ago, but never finished it.
+> > It worked fine for my Ariadne Ethernet card.
+> > Last state at
+> > https://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git/log/?h=zorro-mfd
+> >
+> > Oh, seems I wrote up most of this before in
+> > https://lore.kernel.org/lkml/CAMuHMdVe1KgQWYZ_BfBkSo3zr0c+TenLMEw3T=BLEQNoZ6ex7A@mail.gmail.com/
+>
+> This looks great!
+>
+> Unfortunately, I don't have any MFD hardware other than a single
+> Buddha to test this with. I especially don't have an X-Surf, hence no
+> good way of testing this other than the two IDE channels on my Buddha.
+> WinUAE doesn't seem to emulate the IDE controller either.
+>
+> What shall I do? Maybe as a stop-gap measure, we could hard-code a
+> module_init() again, just for X-Surf? It's been good enough until a
+> few weeks ago, so what could go wrong ;)
+
+In the short run: keep on using drivers/ide/buddha.c?
+
+Your single Buddha should be sufficient to convert pata_buddha.c from
+a plain Zorro driver to an MFD cell driver, and test it.
+I expect the buddha-mfd.c MFD driver from my zorro-mfd branch to
+work as-is, or with very minor changes.
+
+However, to keep X-Surf working, this needs to be synchronized with
+a Zorro MFD conversion of the zorro8390 driver, too.
+
+> On another note: Maybe your MFD idea could be used to expose the
+> clockports on the Buddhas as well? That wouldn't solve the issue of
+> clockport *expansions* being fundamentally non-enumerable, but maybe
+> you can think of a reasonable way to attach a driver?
+
+Yes, the clockport could be added as an extra MFD cell.  Later, drivers can
+be written to bind against the clockport cell.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
