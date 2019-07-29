@@ -2,226 +2,124 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C6AC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9CDC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5082073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:47:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564379230;
-	bh=yZNgVI84KFPxzIYsaVwbo027q4ATv/wHbHzHadEmIXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RaM2bhJy12D7y2mN+BUYlnTCt9rfAdoy3PVbGHsaeZGzsHQxjtKMUIEc0fnt/N/0V
-	 uE1BJlMQr8/Xmo8Nog5AErVlk7IlvALCWRMj0Ck/N6DcLul+TDK8HWQqo5QJrsgW2A
-	 U+SejeuR7ZqOPjss1+OFld6XnrjCT8Xn/JNcPGVA=
+	by mail.kernel.org (Postfix) with ESMTP id 7443F2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:48:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ZjBKex1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfG2FrI (ORCPT
+        id S1726765AbfG2Fsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 01:47:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfG2FrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 01:47:08 -0400
-Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 948852070B;
-        Mon, 29 Jul 2019 05:47:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564379226;
-        bh=yZNgVI84KFPxzIYsaVwbo027q4ATv/wHbHzHadEmIXQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dFxOndZNPXrVMx5B9kzsiQB0+H226fN4oVSDw8vqJd4ILcT8WGVKZwNdkWGXBTLoY
-         kJhN5gDp27YiIz0P73A+qjuGnKMdpUVOotYeVUgL25Gyp2OGHfiSrodipbZx8LBt9A
-         XX6UWsIkSliIkcQ8UK20ajXO3wIvUU17UiKcAZsY=
-Date:   Sun, 28 Jul 2019 22:47:06 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Chao Yu <chao@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity with enabled features
- in image
-Message-ID: <20190729054706.GB94090@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190424094850.118323-1-yuchao0@huawei.com>
- <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
- <373f4633-d331-5cf3-74b7-e982072bc4b4@kernel.org>
- <20190501032242.GA84420@jaegeuk-macbookpro.roam.corp.google.com>
- <3f170d86-e556-13ae-ce19-3bba3944f5fa@huawei.com>
- <192bae92-2193-570f-7b50-00334271bd2e@huawei.com>
- <a16a0c1c-16c6-5fe8-bfc4-7cc0e0866c77@huawei.com>
- <20190723013546.GA60778@jaegeuk-macbookpro.roam.corp.google.com>
- <00726135-f210-7791-a372-ef9cb1ae209f@huawei.com>
+        Mon, 29 Jul 2019 01:48:35 -0400
+Received: from mail-eopbgr20078.outbound.protection.outlook.com ([40.107.2.78]:35976
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725988AbfG2Fse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 01:48:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CmSqAKG//rp7D9bzwfzxCdPy19blIloaxLHOOOB5B1FpF7GSD9rqKxJB5GPiGPJOuSPKE8T3gkEivmtPZR0ux9A43KTQzEf+GH6++gmOikXRoYquhE3C63oplFeb2BOZezDvZ7M1D3n+6DCNXeDoHBiU9ienya9KRCWHjkAAMIvKyGnkgpW6GhuTJWzBbC29/KTd2DuItrNBKAZX9hb+yv4zWM3HeGwYOsUL2ruNhagVbIyh3p0f23Lg5tH8T/SoN4oZDyN2PQ0oR4ZvqfBgXwRfPwprslC96vIOjVEQEk1D/ky7hXD+nLkIiyEXbwUVm/djKAnlHnJlMIUR7dl6Rg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N9IYg2LtqT4orkyXY5cPb0ZNG/qBkCzLoW0mMATQ/04=;
+ b=iKAfH7BHR9bNdWvgF/TeeJNY8GgTAtUK/SMYMR4uWGD1/mkVEhYV4ubPAaterZ0LHOnjp312Y3NRG4hAp6sAFautclSsUyl5/iGhHsgVf8uqhNAQmQIQVlvZdOrBAwRoTEGIuJwNmsPeY/46Jnx9aZTheI4AvNcoyYITw5f5BJPwG/olMkgnCvczKrwiLt27ZHB7aJDgseHyCFJY0/0wjN9pQsNPMJQPd5nnYlGar1L5cLxZAvtjkBN79X9EbpZZsSakRjg6WZ0/8kFDBKUn94gXFO7dsGtYUZUBbuKCUS3fiJylvLpnWitY+BT/+18KiRWS2/0fHD8X8MqQjkM9eg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N9IYg2LtqT4orkyXY5cPb0ZNG/qBkCzLoW0mMATQ/04=;
+ b=ZjBKex1YX7DyP3uPOo68jzpMg0NQiuBLqCVXwCyQtn9YMswVhXnFP3s0Dq9fDn1H6PrXaYiY+7WHrC1jdjVdhhy22JnNWLSR55EQ2Xie9lp71wy7mYPf3e5CG3WCCbzNNfLoGzirfUiAv3cyJF3FfMbjBVgDWu1+bWLXPS6XXV0=
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
+ DB6PR0501MB2376.eurprd05.prod.outlook.com (10.168.75.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.14; Mon, 29 Jul 2019 05:48:29 +0000
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::3c28:c77d:55b0:15b2]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::3c28:c77d:55b0:15b2%5]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
+ 05:48:29 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "tanhuazhong@huawei.com" <tanhuazhong@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>,
+        "salil.mehta@huawei.com" <salil.mehta@huawei.com>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V4 net-next 00/10] net: hns3: some code optimizations &
+ bugfixes & features
+Thread-Topic: [PATCH V4 net-next 00/10] net: hns3: some code optimizations &
+ bugfixes & features
+Thread-Index: AQHVRbkez66y46wiD02cT7vkv/dyNabhFwqA
+Date:   Mon, 29 Jul 2019 05:48:28 +0000
+Message-ID: <1aa604e4afe85fa9cfd2e47fbb5386c2c1041310.camel@mellanox.com>
+References: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
+In-Reply-To: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 65bd0094-fb7c-44e5-756a-08d713e861ca
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2376;
+x-ms-traffictypediagnostic: DB6PR0501MB2376:
+x-microsoft-antispam-prvs: <DB6PR0501MB2376DD4383F3FCB020E5838FBEDD0@DB6PR0501MB2376.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 01136D2D90
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(199004)(189003)(54534003)(26005)(316002)(186003)(3846002)(25786009)(6116002)(11346002)(68736007)(71190400001)(71200400001)(6486002)(229853002)(54906003)(110136005)(486006)(256004)(36756003)(2906002)(6436002)(2616005)(476003)(446003)(14444005)(66446008)(66946007)(478600001)(8936002)(99286004)(7736002)(5660300002)(6246003)(6506007)(66556008)(102836004)(64756008)(66476007)(305945005)(76116006)(91956017)(86362001)(76176011)(14454004)(8676002)(53936002)(58126008)(2501003)(66066001)(81166006)(81156014)(4326008)(6512007)(118296001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2376;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: S7D6+PZedXk1PNIByIDrfyCU7TB5eHu2+3tPf4PHYsPGdhrncjgrluAsbVH2ey+8IqSBJgR2W4UB8WpaTsIClBnsrE3cNB0cCcqOr40Tl0trIw/IfJ3PGwBhb7dGcOKLRDdFzahnqYCgVQN1+z8gzP0PMoYjFesB9zuKNwHNevl+L9MFwD2mFiQpGVR7a8ioH/gE7ZuEJNnbSypNnroro0cL3R0/6MGE7I+JIBB2ZPoie8uFx9FRdlLpIp72EMkEcwg2ji2e0afViHuQS38JU9OSREldgnRdmqEv8boAr1BdgjOotDYHqTABRWK0w2Y5j+cxhmxaXrzCpshBhJI1gSUVzgfdW5UC8g8Yt//mPppbEAXKUtADW+ueJbDpoyHiiehzRe7hVL4ZozapjqYHYtbSoB7CLxmD1FteMGZfRhs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F3B16A678070FF4993F05AAF527C9563@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00726135-f210-7791-a372-ef9cb1ae209f@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65bd0094-fb7c-44e5-756a-08d713e861ca
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 05:48:28.8414
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2376
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/23, Chao Yu wrote:
-> On 2019/7/23 9:35, Jaegeuk Kim wrote:
-> > On 07/16, Chao Yu wrote:
-> >> Hi Jaegeuk,
-> >>
-> >> On 2019/5/9 9:15, Chao Yu wrote:
-> >>> On 2019/5/5 10:51, Chao Yu wrote:
-> >>>> On 2019/5/1 11:22, Jaegeuk Kim wrote:
-> >>>>> On 04/29, Chao Yu wrote:
-> >>>>>> On 2019-4-28 21:38, Jaegeuk Kim wrote:
-> >>>>>>> On 04/24, Chao Yu wrote:
-> >>>>>>>> This patch fixes to do sanity with enabled features in image, if
-> >>>>>>>> there are features kernel can not recognize, just fail the mount.
-> >>>>>>>
-> >>>>>>> We need to figure out per-feature-based rejection, since some of them can
-> >>>>>>> be set without layout change.
-> >>
-> >> What about adding one field in superblock for compatible features in future?
-> >>
-> >> sb.feature(F2FS_FEATURE_LAST, max] stores uncompatible features
-> >> sb.compatible_feature stores compatible features
-> >>
-> >> If we follow above rule when adding one feature, then, we can fail the mount if
-> >> sb.feature(F2FS_FEATURE_LAST, max] is valid.
-> > 
-> > How about adding required_features flag in sb to check part of features only?
-> 
-> You mean all incompatible features can be add into sb.required_features later
-> like this?
-> 
-> __le32 required_features;	/* incompatible feature to old kernel */
-> 
-> And we can check required_features with supported features in current kernel?
-
-Yeah, I think so.
-
-> 
-> if (le32_to_cpu(raw_super->required_features) &
-> 	(~NOW_SUPPORTED_FEATURES_IN_CURRENT_KERNEL)) {
-> 	print msg & ret error;
-> }
-> 
-> Thanks,
-> 
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>>>>>
-> >>>>>> So any suggestion on how to implement this?
-> >>>>>
-> >>>>> Which features do we need to disallow? When we introduce new features, they
-> >>>>
-> >>>> I guess it should be the new features.
-> >>>>
-> >>>>> didn't hurt the previous flow by checking f2fs_sb_has_###().
-> >>>>
-> >>>> Yes, but new features may use new disk layout, if old kernel handled it with old
-> >>>> disk layout, there must be problematic.
-> >>>>
-> >>>> e.g. format image with -O extra_attr, and mount it with kernel who don't
-> >>>> recognize new inode layout.
-> >>>
-> >>> Jaegeuk,
-> >>>
-> >>> Any thoughts?
-> >>>
-> >>> Thanks,
-> >>>
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>>>
-> >>>>>>
-> >>>>>> Maybe:
-> >>>>>>
-> >>>>>> if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0))
-> >>>>>> 	check 4.14+ features
-> >>>>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 9, 0))
-> >>>>>> 	check 4.9+ features
-> >>>>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0))
-> >>>>>> 	check 4.4+ features
-> >>>>>>
-> >>>>>> Thanks,
-> >>>>>>
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >>>>>>>> ---
-> >>>>>>>>  fs/f2fs/f2fs.h  | 13 +++++++++++++
-> >>>>>>>>  fs/f2fs/super.c |  9 +++++++++
-> >>>>>>>>  2 files changed, 22 insertions(+)
-> >>>>>>>>
-> >>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>>>>>>> index f5ffc09705eb..15b640967e12 100644
-> >>>>>>>> --- a/fs/f2fs/f2fs.h
-> >>>>>>>> +++ b/fs/f2fs/f2fs.h
-> >>>>>>>> @@ -151,6 +151,19 @@ struct f2fs_mount_info {
-> >>>>>>>>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
-> >>>>>>>>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
-> >>>>>>>>  
-> >>>>>>>> +#define F2FS_ALL_FEATURES	(F2FS_FEATURE_ENCRYPT |			\
-> >>>>>>>> +				F2FS_FEATURE_BLKZONED |			\
-> >>>>>>>> +				F2FS_FEATURE_ATOMIC_WRITE |		\
-> >>>>>>>> +				F2FS_FEATURE_EXTRA_ATTR |		\
-> >>>>>>>> +				F2FS_FEATURE_PRJQUOTA |			\
-> >>>>>>>> +				F2FS_FEATURE_INODE_CHKSUM |		\
-> >>>>>>>> +				F2FS_FEATURE_FLEXIBLE_INLINE_XATTR |	\
-> >>>>>>>> +				F2FS_FEATURE_QUOTA_INO |		\
-> >>>>>>>> +				F2FS_FEATURE_INODE_CRTIME |		\
-> >>>>>>>> +				F2FS_FEATURE_LOST_FOUND |		\
-> >>>>>>>> +				F2FS_FEATURE_VERITY |			\
-> >>>>>>>> +				F2FS_FEATURE_SB_CHKSUM)
-> >>>>>>>> +
-> >>>>>>>>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
-> >>>>>>>>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
-> >>>>>>>>  #define F2FS_HAS_FEATURE(sbi, mask)	__F2FS_HAS_FEATURE(sbi->raw_super, mask)
-> >>>>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> >>>>>>>> index 4f8e9ab48b26..57f2fc6d14ba 100644
-> >>>>>>>> --- a/fs/f2fs/super.c
-> >>>>>>>> +++ b/fs/f2fs/super.c
-> >>>>>>>> @@ -2573,6 +2573,15 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
-> >>>>>>>>  		return 1;
-> >>>>>>>>  	}
-> >>>>>>>>  
-> >>>>>>>> +	/* check whether kernel supports all features */
-> >>>>>>>> +	if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
-> >>>>>>>> +		f2fs_msg(sb, KERN_INFO,
-> >>>>>>>> +			"Unsupported feature:%u: supported:%u",
-> >>>>>>>> +			le32_to_cpu(raw_super->feature),
-> >>>>>>>> +			F2FS_ALL_FEATURES);
-> >>>>>>>> +		return 1;
-> >>>>>>>> +	}
-> >>>>>>>> +
-> >>>>>>>>  	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
-> >>>>>>>>  	if (sanity_check_area_boundary(sbi, bh))
-> >>>>>>>>  		return 1;
-> >>>>>>>> -- 
-> >>>>>>>> 2.18.0.rc1
-> >>>>> .
-> >>>>>
-> >>>>
-> >>>>
-> >>>> _______________________________________________
-> >>>> Linux-f2fs-devel mailing list
-> >>>> Linux-f2fs-devel@lists.sourceforge.net
-> >>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> >>>> .
-> >>>>
-> >>>
-> >>>
-> >>> _______________________________________________
-> >>> Linux-f2fs-devel mailing list
-> >>> Linux-f2fs-devel@lists.sourceforge.net
-> >>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> >>> .
-> >>>
-> > .
-> > 
+T24gTW9uLCAyMDE5LTA3LTI5IGF0IDEwOjUzICswODAwLCBIdWF6aG9uZyBUYW4gd3JvdGU6DQo+
+IFRoaXMgcGF0Y2gtc2V0IGluY2x1ZGVzIGNvZGUgb3B0aW1pemF0aW9ucywgYnVnZml4ZXMgYW5k
+IGZlYXR1cmVzIGZvcg0KPiB0aGUgSE5TMyBldGhlcm5ldCBjb250cm9sbGVyIGRyaXZlci4NCj4g
+DQo+IFtwYXRjaCAxLzEwXSBjaGVja3MgcmVzZXQgc3RhdHVzIGJlZm9yZSBzZXR0aW5nIGNoYW5u
+ZWwuDQo+IA0KPiBbcGF0Y2ggMi8xMF0gYWRkcyBhIE5VTEwgcG9pbnRlciBjaGVja2luZy4NCj4g
+DQo+IFtwYXRjaCAzLzEwXSByZW1vdmVzIHJlc2V0IGxldmVsIHVwZ3JhZGluZyB3aGVuIGN1cnJl
+bnQgcmVzZXQgZmFpbHMuDQo+IA0KPiBbcGF0Y2ggNC8xMF0gZml4ZXMgYSBHRlAgZmxhZ3MgZXJy
+b3JzIHdoZW4gaG9sZGluZyBzcGluX2xvY2suDQo+IA0KPiBbcGF0Y2ggNS8xMF0gbW9kaWZpZXMg
+ZmlybXdhcmUgdmVyc2lvbiBmb3JtYXQuDQo+IA0KPiBbcGF0Y2ggNi8xMF0gYWRkcyBzb21lIHBy
+aW50IGluZm9ybWF0aW9uIHdoaWNoIGlzIG9mZiBieSBkZWZhdWx0Lg0KPiANCj4gW3BhdGNoIDcv
+MTAgLSA4LzEwXSBhZGRzIHR3byBjb2RlIG9wdGltaXphdGlvbnMgYWJvdXQgaW50ZXJydXB0DQo+
+IGhhbmRsZXINCj4gYW5kIHdvcmsgdGFzay4NCj4gDQo+IFtwYXRjaCA5LzEwXSBhZGRzIHN1cHBv
+cnQgZm9yIHVzaW5nIG9yZGVyIDEgcGFnZXMgd2l0aCBhIDRLIGJ1ZmZlci4NCj4gDQo+IFtwYXRj
+aCAxMC8xMF0gbW9kaWZpZXMgbWVzc2FnZXMgcHJpbnRzIHdpdGggZGV2X2luZm8oKSBpbnN0ZWFk
+IG9mDQo+IHByX2luZm8oKS4NCj4gDQo+IENoYW5nZSBsb2c6DQo+IFYzLT5WNDogcmVwbGFjZSBu
+ZXRpZl9pbmZvIHdpdGggbmV0aWZfZGJnIGluIFtwYXRjaCA2LzEwXQ0KPiBWMi0+VjM6IGZpeGVz
+IGNvbW1lbnRzIGZyb20gU2FlZWQgTWFoYW1lZWQgYW5kIEpvZSBQZXJjaGVzLg0KPiBWMS0+VjI6
+IGZpeGVzIGNvbW1lbnRzIGZyb20gU2FlZWQgTWFoYW1lZWQgYW5kDQo+IAlyZW1vdmVzIHByZXZp
+b3VzIFtwYXRjaCA0LzExXSBhbmQgW3BhdGNoIDExLzExXQ0KPiAJd2hpY2ggbmVlZHMgZnVydGhl
+ciBkaXNjdXNzaW9uLCBhbmQgYWRkcyBhIG5ldw0KPiAJcGF0Y2ggWzEwLzEwXSBzdWdnZXN0ZWQg
+YnkgU2FlZWQgTWFoYW1lZWQuDQo+IA0KDQpSZXZpZXdlZC1ieTogU2FlZWQgTWFoYW1lZWQgPHNh
+ZWVkbUBtZWxsYW5veC5jb20+DQo=
