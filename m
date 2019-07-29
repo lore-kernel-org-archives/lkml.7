@@ -2,132 +2,110 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA460C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C87C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6312075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564394012;
-	bh=43L5ieMVG6w5TzAxAWjvMrg/c2Xqa/q38AV6ncbvm0o=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=mEuyY81acZGVti1O64pzR7iLr3fwaLTdwXqYXzLOrOkTeyRvyFtM80Opdsg0ka9DQ
-	 lfXyyNnHKp9A75Srh7Fe/TzSab3iUgHbQ8IoMVt0jnUScu+daeaVBxk+4pCt827Yjk
-	 UodQtvPEQ6LnL7sPAYMmd5lWXLghXjJtAwYrLKNY=
+	by mail.kernel.org (Postfix) with ESMTP id 548F4206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:57:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dzGYBm0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbfG2Jxb (ORCPT
+        id S2387426AbfG2J5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:53:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:41040 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbfG2Jxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:53:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EC661597;
-        Mon, 29 Jul 2019 02:53:30 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7C013F694;
-        Mon, 29 Jul 2019 02:53:29 -0700 (PDT)
-Subject: Re: [PATCH] irqchip/gic-v3: mark expected switch fall-through
-To:     Matteo Croce <mcroce@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-References: <20190729001119.2478-1-mcroce@redhat.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <3fe34829-7ae5-58e8-48f4-39f0c6122b92@kernel.org>
-Date:   Mon, 29 Jul 2019 10:53:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190729001119.2478-1-mcroce@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jul 2019 05:57:02 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35776 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfG2J5B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 05:57:01 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s1so21684113pgr.2;
+        Mon, 29 Jul 2019 02:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Boz4CFC7012LYcZRn2NFsg+lEMbJ7x6Jzm6H/OkCj4M=;
+        b=dzGYBm0i5+xbYycnw/1P98m/Td+tn/kioZg5kvlCjnyffm/s3cgtxd6l04UXIlHlIN
+         9XpNVvasz+CC9R78FO7NTLk7WzOoasUv4MjyK30Tz9DKeNZbgaMhLdysWq3HtPWTT8Yf
+         RdvUS5IWFAClnWpmgZ5a9WsJb1rsCOEljo49QU6ohcUybVAKkRFfwnYoMl2yWepxpb2d
+         AmC2ZFLbCTZ3jV3hNMtnNNTEeC5e5ZUzNyA7l+/1Kx58bXz2b1udx/xYnf85KHAiKkD0
+         Mcva4oP7F9qhKnqPKjYINYDY4Ydm2M+H8gxWJ9dok2A9VgWzP+MSzO3ROvatG8++HCKl
+         CgyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Boz4CFC7012LYcZRn2NFsg+lEMbJ7x6Jzm6H/OkCj4M=;
+        b=Xw3BgAYOskQ/cPTQ3+LJs4gmF7oSJegUvJB0VOMnwR74DzdAj+BoK/dSbmp7KLJDpR
+         wTVwV4oxlBwm21WYBbWrA2TmLZVfCp6rdBxAz7H12KdmdDYQ389XAmAOfkmCY1yHtcPf
+         ZcHzuAY7/ZLbYYCv9em1WiSU5GsoNBQMSl6UJI6IWfH6OqhYm1rSD4/VQWyYvbnTqFI1
+         F/pec5QGsCUk6xfHIjz8pyoiRVP5D3/052/bFkMD9e16LPLG2C0tno0loKdXKW2fW8hC
+         abFlYtuFFr1B9nnjONcbz7C4jzTAZVgqqWW72g+zmQ8YILvopNVdFMmLNBdYxnjbFGZZ
+         x0iA==
+X-Gm-Message-State: APjAAAXLzerbd8WbztYouMgyEqGuHtL0cMMROnc2mltAtTQ6w35AiOVJ
+        sKuxv+p6ytOgjPnCAgTW7TA=
+X-Google-Smtp-Source: APXvYqwRNYtT5fZyrSqbg3o+wefLyl/tc7EQg1xRieNdSVRqsO0sKu97NGcWbbw/Fj3NWcBmqMOBQg==
+X-Received: by 2002:aa7:8193:: with SMTP id g19mr34737721pfi.16.1564394220850;
+        Mon, 29 Jul 2019 02:57:00 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id s7sm52910913pjn.28.2019.07.29.02.56.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 02:57:00 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
+        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
+        wright.feng@cypress.com, kvalo@codeaurora.org, davem@davemloft.net,
+        pieter-paul.giesberts@broadcom.com, plaes@plaes.org,
+        rvarsha016@gmail.com
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] brcm80211: Avoid possible null-pointer dereferences in wlc_phy_radio_init_2056()
+Date:   Mon, 29 Jul 2019 17:56:52 +0800
+Message-Id: <20190729095652.1976-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2019 01:11, Matteo Croce wrote:
-> Mark switch cases where we are expecting to fall through,
-> fixes the following warnings:
-> 
-> drivers/irqchip/irq-gic-v3.c: In function ‘gic_cpu_sys_reg_init’:
-> ./arch/arm64/include/asm/sysreg.h:853:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   asm volatile(__msr_s(r, "%x0") : : "rZ" (__val));  \
->   ^~~
-> ./arch/arm64/include/asm/arch_gicv3.h:20:29: note: in expansion of macro ‘write_sysreg_s’
->  #define write_gicreg(v, r)  write_sysreg_s(v, SYS_ ## r)
->                              ^~~~~~~~~~~~~~
-> drivers/irqchip/irq-gic-v3.c:773:4: note: in expansion of macro ‘write_gicreg’
->     write_gicreg(0, ICC_AP0R2_EL1);
->     ^~~~~~~~~~~~
-> drivers/irqchip/irq-gic-v3.c:774:3: note: here
->    case 6:
->    ^~~~
-> 
-> drivers/irqchip/irq-gic-v3.c:788:3: note: in expansion of macro ‘write_gicreg’
->    write_gicreg(0, ICC_AP1R2_EL1);
->    ^~~~~~~~~~~~
->   CC      net/ipv4/af_inet.o
-> drivers/irqchip/irq-gic-v3.c:789:2: note: here
->   case 6:
->   ^~~~
-> 
-> ./arch/arm64/include/asm/arch_gicv3.h:20:29: note: in expansion of macro ‘write_sysreg_s’
->  #define write_gicreg(v, r)  write_sysreg_s(v, SYS_ ## r)
->                              ^~~~~~~~~~~~~~
-> drivers/irqchip/irq-gic-v3.c:790:3: note: in expansion of macro ‘write_gicreg’
->    write_gicreg(0, ICC_AP1R1_EL1);
->    ^~~~~~~~~~~~
-> drivers/irqchip/irq-gic-v3.c:791:2: note: here
->   case 5:
->   ^~~~
-> 
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> ---
->  drivers/irqchip/irq-gic-v3.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index 9bca4896fa6f..4a5d220698f6 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -771,8 +771,10 @@ static void gic_cpu_sys_reg_init(void)
->  		case 7:
->  			write_gicreg(0, ICC_AP0R3_EL1);
->  			write_gicreg(0, ICC_AP0R2_EL1);
-> +			/* fallthrough */
->  		case 6:
->  			write_gicreg(0, ICC_AP0R1_EL1);
-> +			/* fallthrough */
->  		case 5:
->  		case 4:
->  			write_gicreg(0, ICC_AP0R0_EL1);
-> @@ -786,8 +788,10 @@ static void gic_cpu_sys_reg_init(void)
->  	case 7:
->  		write_gicreg(0, ICC_AP1R3_EL1);
->  		write_gicreg(0, ICC_AP1R2_EL1);
-> +		/* fallthrough */
->  	case 6:
->  		write_gicreg(0, ICC_AP1R1_EL1);
-> +		/* fallthrough */
->  	case 5:
->  	case 4:
->  		write_gicreg(0, ICC_AP1R0_EL1);
-> 
+In wlc_phy_radio_init_2056(), regs_SYN_2056_ptr, regs_TX_2056_ptr and
+regs_RX_2056_ptr may be not assigned, and thus they are still NULL.
+Then, they are used on lines 20042-20050:
+    wlc_phy_init_radio_regs(pi, regs_SYN_2056_ptr, (u16) RADIO_2056_SYN);
+	wlc_phy_init_radio_regs(pi, regs_TX_2056_ptr, (u16) RADIO_2056_TX0);
+	wlc_phy_init_radio_regs(pi, regs_TX_2056_ptr, (u16) RADIO_2056_TX1);
+	wlc_phy_init_radio_regs(pi, regs_RX_2056_ptr, (u16) RADIO_2056_RX0);
+	wlc_phy_init_radio_regs(pi, regs_RX_2056_ptr, (u16) RADIO_2056_RX1);
 
-Already fixed here[1].
+Thus, possible null-pointer dereferences may occur.
 
-	M.
+To avoid these bugs, when these variables are not assigned,
+wlc_phy_radio_init_2056() directly returns.
 
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/irqchip-5.3&id=52f8c8b32ea2f2044efcb4214c1857e29f421c5d
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_n.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_n.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_n.c
+index 07f61d6155ea..0c57d48f47b1 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_n.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_n.c
+@@ -20035,7 +20035,7 @@ static void wlc_phy_radio_init_2056(struct brcms_phy *pi)
+ 			break;
+ 
+ 		default:
+-			break;
++			return;
+ 		}
+ 	}
+ 
 -- 
-Jazz is not dead, it just smells funny...
+2.17.0
+
