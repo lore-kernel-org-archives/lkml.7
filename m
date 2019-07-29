@@ -2,103 +2,69 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7631DC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC1AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48CA8206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:22:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kvbooi9h"
+	by mail.kernel.org (Postfix) with ESMTP id F2910206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387486AbfG2NWY (ORCPT
+        id S2387526AbfG2NXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 09:22:24 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39078 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387413AbfG2NWY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 09:22:24 -0400
-Received: by mail-io1-f66.google.com with SMTP id f4so119937769ioh.6;
-        Mon, 29 Jul 2019 06:22:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=vzLD2iW6uYsbIT0oPIQPOII/1STR8lKUywRD1hVm9Ws=;
-        b=Kvbooi9hS7TpZtc5jFcX5PRvKHvgvbySDxOdPNmd6gpDPiNcAlamrAZrG8gFqhFsUA
-         LJB/9aVGl1zFn71NgI8QOz0JVeC873/494ALaAuQ95RyBaA2MbDO4KHBmj/eePkbT5oX
-         5uRnjkZ4BFqoMqy1/62sMqXQ8CrfBt+VWz5jhAzmX8LKu7hofqCX9oYQD42ybccxf+2x
-         IpBCbE21sCuCn/PCxMQ5nZcq9qDDiuZOLxJoznJuTyuYP7EL+7wo/bjq6ExhCLQEFYTX
-         4asN+xx2/PVIaekt5ux8AGz6JMSCTLjRcAFUFtqkSgKxQTeS019KHPP9Id1vgD4BYa38
-         uU+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=vzLD2iW6uYsbIT0oPIQPOII/1STR8lKUywRD1hVm9Ws=;
-        b=DESzfwEu64SiwrblxdRA8HHqQSl45nSA3aa/lVxZoAhCikig886nGEAWeoTXyQn9MC
-         GAcaVv5p+VzPVTAEA11pNX3kCVZdzWA8Uc/NPIvPagbLlO7euGHR5PLA0PoamCzxmqJ/
-         KsKkElUFy1+oYk3UvKsqBgrtTvyZF1EZ4i3//U6uH+B9ZCpKTTiUzahwy+Bvq/MBqpqt
-         RkG+iUcZrCs2MTPd6NE7LO6t/o62PEBFQi9alD4NcH8tGSu0Ax43AAkMVzSnnUtkxpU8
-         cKVHVCiT7xqnuEO9N4QcvB49JnqzBpc4R7I0qd6r41GizBhQrceMHYlpPYmaDoPLnQv5
-         41lg==
-X-Gm-Message-State: APjAAAUEyfyxqPbvgLn+DmYqjuPp48CH3MmXU/jJUCp5QDluo4RHNQu5
-        SjRoAGi2j/B1OC0MJ3fFCHg=
-X-Google-Smtp-Source: APXvYqzMeV7wkb+weEmw78A/cpDyd/pc6AwnkmTtO1Nt+ZrZ2TjKjg197LjIOZicn/nJBqgjJ5UasA==
-X-Received: by 2002:a5d:834f:: with SMTP id q15mr30847950ior.59.1564406542921;
-        Mon, 29 Jul 2019 06:22:22 -0700 (PDT)
-Received: from localhost ([8.46.76.96])
-        by smtp.gmail.com with ESMTPSA id u4sm59826788iol.59.2019.07.29.06.22.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 06:22:21 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 15:22:03 +0200
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mao Wenan <maowenan@huawei.com>,
-        Federico Lorenzi <federico@travelground.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Input: applespi - register touchpad device
- synchronously in probe
-Message-ID: <20190729132203.GB1201@penguin>
-References: <20190721070523.24695-1-ronald@innovation.ch>
+        Mon, 29 Jul 2019 09:23:42 -0400
+Received: from mga11.intel.com ([192.55.52.93]:11886 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387413AbfG2NXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 09:23:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 06:23:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,322,1559545200"; 
+   d="scan'208";a="182744433"
+Received: from mylly.fi.intel.com (HELO [10.237.72.159]) ([10.237.72.159])
+  by orsmga002.jf.intel.com with ESMTP; 29 Jul 2019 06:23:39 -0700
+Subject: Re: [PATCH] i2c: busses: Use dev_get_drvdata where possible
+To:     Jean Delvare <jdelvare@suse.de>,
+        Chuhong Yuan <hslester96@gmail.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190723111110.11121-1-hslester96@gmail.com>
+ <20190723203452.5714f142@endymion>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <c58ef749-fae3-8df5-2d20-59d766256409@linux.intel.com>
+Date:   Mon, 29 Jul 2019 16:23:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190721070523.24695-1-ronald@innovation.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190723203452.5714f142@endymion>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ronald,
-
-On Sun, Jul 21, 2019 at 12:05:23AM -0700, Ronald Tschalär wrote:
-> This allows errors during registration to properly fail the probe
-> function.
+On 7/23/19 9:34 PM, Jean Delvare wrote:
+> On Tue, 23 Jul 2019 19:11:10 +0800, Chuhong Yuan wrote:
+>> Instead of using to_pci_dev + pci_get_drvdata,
+>> use dev_get_drvdata to make code simpler.
+>>
+>> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+>> ---
+>>   drivers/i2c/busses/i2c-designware-pcidrv.c | 6 ++----
+>>   drivers/i2c/busses/i2c-i801.c              | 3 +--
+>>   2 files changed, 3 insertions(+), 6 deletions(-)
+>> (...)
 > 
-> Doing this requires waiting for a response from the device inside the
-> probe function. While this generally takes about 15ms, in case of errors
-> it could be arbitrarily long, and hence a 3 second timeout is used.
+> Looks good to me, thanks.
 > 
-> This also adds 3 second timeouts to the drain functions to avoid the
-> potential for suspend or remove hanging forever.
+> Reviewed-by: Jean Delvare <jdelvare@suse.de>
+> 
+For the i2c-designware-pcidrv.c
 
-Question: is it possible to read command response synchronously as well?
-I.e. I was wondering if we could add 2 (or 1?) more read xfers for the
-actual result that is coming after the status response, and then we
-could use spi_sync() to send the command and read the whole thing.
-
-Thanks.
-
--- 
-Dmitry
+Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
