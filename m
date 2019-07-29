@@ -2,132 +2,89 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD410C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA7AC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA672054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAAC2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430269;
-	bh=7oNkVGkCARzG3ouaad00+6R83JA69aiApiOofGoMXcc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JHCxae/4D8+MdGdtejWtxoFnQWG0PmH5rhA1HQfirRd9Uu41eKlU157FVlKwpqoSn
-	 39Hy0U+X3rNeCzJUVdGbMcgJnbTJg97YQmDpTRq+XqYqc7NkL8y/fJwQxhFro2mG0g
-	 lJP4eQQk5dQiCVWHa50uFCPd4Qwd0a4CC52QsXnE=
+	s=default; t=1564430273;
+	bh=Aa2gIj8xdhHIpCrPfiCJxrfbEsiESRZUaNjO6jjdaio=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dn4qrbAJGX0/vBNxz5WYYpqwV2BBVQJ6RNlbZJDWfiuhq3EPkLN3qKmIHQdk78QGm
+	 +gog5OMMJmCLj6G9cPW6y41N+iHN1ew596HDKfFjpxMuiKZGcHtnnJdy8reYiyW0J5
+	 9KKDhvvEjywtOnvLM12sw4Oxuo/HrdBBzixv53MI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391002AbfG2TyM (ORCPT
+        id S2404125AbfG2T5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:54:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46390 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:57:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390935AbfG2Txw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:53:52 -0400
+        id S2403935AbfG2T5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:57:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6112217D7;
-        Mon, 29 Jul 2019 19:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 392A6217D7;
+        Mon, 29 Jul 2019 19:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430031;
-        bh=7oNkVGkCARzG3ouaad00+6R83JA69aiApiOofGoMXcc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k7r0wJDMUyOUeM+YAxSH2u8P883Csv/BuK6MbXytvsYzC+kotmfR20vip8g268I+l
-         sLR7r7qsrWb4097ZqO+NChPbPaibHtis7IxnFFu2XjouQV3i+W7GZdlulCQdttUC7J
-         ypQ+uZnfveknkaUw9wX/IeHPavxSX+lvLXvXObRA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Lambertz <mail@thomaslambertz.de>,
-        anthony <antdev66@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>
-Subject: [PATCH 5.2 174/215] KVM: X86: Fix fpu state crash in kvm guest
-Date:   Mon, 29 Jul 2019 21:22:50 +0200
-Message-Id: <20190729190810.125640760@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
-References: <20190729190739.971253303@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1564430268;
+        bh=Aa2gIj8xdhHIpCrPfiCJxrfbEsiESRZUaNjO6jjdaio=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=brvTLQ3dY465JfO+z3L0iZVh2jqQkRCPWznTlE+jMyhKrcO3KaEjw561toHX4MuuS
+         vOs82SEdhwHpVHQ5ViPY4p7n8mlObyBgwqHHO8TZubFFr1iHGYQ+uU31vMm4mgvmDu
+         MS1Tqlc+RIcebF09im977FUSFOeAwGQb10JDUIaQ=
+Date:   Mon, 29 Jul 2019 21:56:14 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     lizefan@huawei.com, hannes@cmpxchg.org, axboe@kernel.dk,
+        dennis@kernel.org, dennisszhou@gmail.com, mingo@redhat.com,
+        peterz@infradead.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Nick Kralevich <nnk@google.com>
+Subject: Re: [PATCH 1/1] psi: do not require setsched permission from the
+ trigger creator
+Message-ID: <20190729195614.GA31529@kroah.com>
+References: <20190729194205.212846-1-surenb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729194205.212846-1-surenb@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Mon, Jul 29, 2019 at 12:42:05PM -0700, Suren Baghdasaryan wrote:
+> When a process creates a new trigger by writing into /proc/pressure/*
+> files, permissions to write such a file should be used to determine whether
+> the process is allowed to do so or not. Current implementation would also
+> require such a process to have setsched capability. Setting of psi trigger
+> thread's scheduling policy is an implementation detail and should not be
+> exposed to the user level. Remove the permission check by using _nocheck
+> version of the function.
+> 
+> Suggested-by: Nick Kralevich <nnk@google.com>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> ---
+>  kernel/sched/psi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit e751732486eb3f159089a64d1901992b1357e7cc upstream.
-
-The idea before commit 240c35a37 (which has just been reverted)
-was that we have the following FPU states:
-
-               userspace (QEMU)             guest
----------------------------------------------------------------------------
-               processor                    vcpu->arch.guest_fpu
->>> KVM_RUN: kvm_load_guest_fpu
-               vcpu->arch.user_fpu          processor
->>> preempt out
-               vcpu->arch.user_fpu          current->thread.fpu
->>> preempt in
-               vcpu->arch.user_fpu          processor
->>> back to userspace
->>> kvm_put_guest_fpu
-               processor                    vcpu->arch.guest_fpu
----------------------------------------------------------------------------
-
-With the new lazy model we want to get the state back to the processor
-when schedule in from current->thread.fpu.
-
-Reported-by: Thomas Lambertz <mail@thomaslambertz.de>
-Reported-by: anthony <antdev66@gmail.com>
-Tested-by: anthony <antdev66@gmail.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Thomas Lambertz <mail@thomaslambertz.de>
-Cc: anthony <antdev66@gmail.com>
-Cc: stable@vger.kernel.org
-Fixes: 5f409e20b (x86/fpu: Defer FPU state load until return to userspace)
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-[Add a comment in front of the warning. - Paolo]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/kvm/x86.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3264,6 +3264,10 @@ void kvm_arch_vcpu_load(struct kvm_vcpu
- 
- 	kvm_x86_ops->vcpu_load(vcpu, cpu);
- 
-+	fpregs_assert_state_consistent();
-+	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-+		switch_fpu_return();
-+
- 	/* Apply any externally detected TSC adjustments (due to suspend) */
- 	if (unlikely(vcpu->arch.tsc_offset_adjustment)) {
- 		adjust_tsc_offset_host(vcpu, vcpu->arch.tsc_offset_adjustment);
-@@ -7955,9 +7959,8 @@ static int vcpu_enter_guest(struct kvm_v
- 		wait_lapic_expire(vcpu);
- 	guest_enter_irqoff();
- 
--	fpregs_assert_state_consistent();
--	if (test_thread_flag(TIF_NEED_FPU_LOAD))
--		switch_fpu_return();
-+	/* The preempt notifier should have taken care of the FPU already.  */
-+	WARN_ON_ONCE(test_thread_flag(TIF_NEED_FPU_LOAD));
- 
- 	if (unlikely(vcpu->arch.switch_db_regs)) {
- 		set_debugreg(0, 7);
+$ ./scripts/get_maintainer.pl --file kernel/sched/psi.c
+Ingo Molnar <mingo@redhat.com> (maintainer:SCHEDULER)
+Peter Zijlstra <peterz@infradead.org> (maintainer:SCHEDULER)
+linux-kernel@vger.kernel.org (open list:SCHEDULER)
 
 
+No where am I listed there, so why did you send this "To:" me?
+
+please fix up and resend.
+
+greg k-h
