@@ -2,52 +2,53 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80A4C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B96C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA7E21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5741F21773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430058;
-	bh=ioPk3YKw31K4vnQnSnYIMG2vIxDGN5pbFnq7unsj+BE=;
+	s=default; t=1564430061;
+	bh=uUTjCQoqKEAfufn+gvf1uDv6vHmTzHAe+UG4J0N2pI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=daxgTRQHfd5Ho9hZ3v3CSUpjUauKyLBztPbW8Dc1Qgo4caMaJO1jJJ4KEaPygRWpZ
-	 idybF+u99P7rqXQGW5iruMXK/U98w/WTQeqGBRlQxjELyTp1cZM6+tWorUueuL02BQ
-	 ptUuTOllnkKcmNqR17lDPruq29N4Q7l+yfxcxMiU=
+	b=S8oxAbrI+b2uCKerugde26q5VKI80k2AoQYS3jLXNNiRIpLnL/ocQAIUJzgCbDbqX
+	 IzS9cU9BvPDLnzprMj4vhbPurtqOle+to6aenGa42NeVAGfBSl50Mi0/JpXe6R5fWI
+	 aztLmtiWrBRDvk00jSFpcBBTg8eUFcxg5ZFJ6c5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403978AbfG2TyR (ORCPT
+        id S2390478AbfG2TyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46560 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:54:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390965AbfG2Tx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:53:59 -0400
+        id S2390967AbfG2TyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:54:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A54E217D9;
-        Mon, 29 Jul 2019 19:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85BB42054F;
+        Mon, 29 Jul 2019 19:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430037;
-        bh=ioPk3YKw31K4vnQnSnYIMG2vIxDGN5pbFnq7unsj+BE=;
+        s=default; t=1564430044;
+        bh=uUTjCQoqKEAfufn+gvf1uDv6vHmTzHAe+UG4J0N2pI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q1JcIuT/AmCWYu40H+EJzbCaKtAJqS0oZEUSrbbpemOcQ0lHO/wm+35jgoydfNBxq
-         R/vMctuYdyosDNsERLDhWSGnhziq4Z3Q5zm+2Pp3AvP8R6d8M1QbyhrsPXonrsiw9N
-         Hoqe9V7Im8T70XiwT77ODunkoV/IXL8kWc5aVUZw=
+        b=K9EiD+MFUSlSh95gjN77WG9wTZDVo9tNj7o/ucV/uF+7dc9+BYrLd0ii5hykP9IRM
+         NsY1AWpPlo9/cStiH5un9igywwGe/iRtxbQ8ukoOUUMFPXCQrT+h0kCG86n0LRyxyM
+         6yOKKpXuGpR5MFyh+piEDKa6zszYj0jJP/DVUBSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.2 176/215] KVM: PPC: Book3S HV: Save and restore guest visible PSSCR bits on pseries
-Date:   Mon, 29 Jul 2019 21:22:52 +0200
-Message-Id: <20190729190810.503988213@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.2 178/215] media: videodev2.h: change V4L2_PIX_FMT_BGRA444 define: fourcc was already in use
+Date:   Mon, 29 Jul 2019 21:22:54 +0200
+Message-Id: <20190729190810.865490616@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,82 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-commit c8b4083db915dfe5a3b4a755ad2317e0509b43f1 upstream.
+commit 22be8233b34f4f468934c5fefcbe6151766fb8f2 upstream.
 
-The Performance Stop Status and Control Register (PSSCR) is used to
-control the power saving facilities of the processor. This register
-has various fields, some of which can be modified only in hypervisor
-state, and others which can be modified in both hypervisor and
-privileged non-hypervisor state. The bits which can be modified in
-privileged non-hypervisor state are referred to as guest visible.
+The V4L2_PIX_FMT_BGRA444 define clashed with the pre-existing V4L2_PIX_FMT_SGRBG12
+which strangely enough used the same fourcc, even though that fourcc made no sense
+for a Bayer format. In any case, you can't have duplicates, so change the fourcc of
+V4L2_PIX_FMT_BGRA444.
 
-Currently the L0 hypervisor saves and restores both it's own host
-value as well as the guest value of the PSSCR when context switching
-between the hypervisor and guest. However a nested hypervisor running
-it's own nested guests (as indicated by kvmhv_on_pseries()) doesn't
-context switch the PSSCR register. That means if a nested (L2) guest
-modifies the PSSCR then the L1 guest hypervisor will run with that
-modified value, and if the L1 guest hypervisor modifies the PSSCR and
-then goes to run the nested (L2) guest again then the L2 PSSCR value
-will be lost.
-
-Fix this by having the (L1) nested hypervisor save and restore both
-its host and the guest PSSCR value when entering and exiting a
-nested (L2) guest. Note that only the guest visible parts of the PSSCR
-are context switched since this is all the L1 nested hypervisor can
-access, this is fine however as these are the only fields the L0
-hypervisor provides guest control of anyway and so all other fields
-are ignored.
-
-This could also have been implemented by adding the PSSCR register to
-the hv_regs passed to the L0 hypervisor as input to the H_ENTER_NESTED
-hcall, however this would have meant updating the structure layout and
-thus required modifications to both the L0 and L1 kernels. Whereas the
-approach used doesn't require L0 kernel modifications while achieving
-the same result.
-
-Fixes: 95a6432ce903 ("KVM: PPC: Book3S HV: Streamlined guest entry/exit path on P9 for radix guests")
-Cc: stable@vger.kernel.org # v4.20+
-Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190703012022.15644-3-sjitindarsingh@gmail.com
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: <stable@vger.kernel.org>      # for v5.2 and up
+Fixes: 6c84f9b1d2900 ("media: v4l: Add definitions for missing 16-bit RGB4444 formats")
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/powerpc/kvm/book3s_hv.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
-
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -3569,9 +3569,18 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu
- 	mtspr(SPRN_DEC, vcpu->arch.dec_expires - mftb());
- 
- 	if (kvmhv_on_pseries()) {
-+		/*
-+		 * We need to save and restore the guest visible part of the
-+		 * psscr (i.e. using SPRN_PSSCR_PR) since the hypervisor
-+		 * doesn't do this for us. Note only required if pseries since
-+		 * this is done in kvmhv_load_hv_regs_and_go() below otherwise.
-+		 */
-+		unsigned long host_psscr;
- 		/* call our hypervisor to load up HV regs and go */
- 		struct hv_guest_state hvregs;
- 
-+		host_psscr = mfspr(SPRN_PSSCR_PR);
-+		mtspr(SPRN_PSSCR_PR, vcpu->arch.psscr);
- 		kvmhv_save_hv_regs(vcpu, &hvregs);
- 		hvregs.lpcr = lpcr;
- 		vcpu->arch.regs.msr = vcpu->arch.shregs.msr;
-@@ -3590,6 +3599,8 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu
- 		vcpu->arch.shregs.msr = vcpu->arch.regs.msr;
- 		vcpu->arch.shregs.dar = mfspr(SPRN_DAR);
- 		vcpu->arch.shregs.dsisr = mfspr(SPRN_DSISR);
-+		vcpu->arch.psscr = mfspr(SPRN_PSSCR_PR);
-+		mtspr(SPRN_PSSCR_PR, host_psscr);
- 
- 		/* H_CEDE has to be handled now, not later */
- 		if (trap == BOOK3S_INTERRUPT_SYSCALL && !vcpu->arch.nested &&
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 9d9705ceda76..2427bc4d8eba 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -518,7 +518,13 @@ struct v4l2_pix_format {
+ #define V4L2_PIX_FMT_RGBX444 v4l2_fourcc('R', 'X', '1', '2') /* 16  rrrrgggg bbbbxxxx */
+ #define V4L2_PIX_FMT_ABGR444 v4l2_fourcc('A', 'B', '1', '2') /* 16  aaaabbbb ggggrrrr */
+ #define V4L2_PIX_FMT_XBGR444 v4l2_fourcc('X', 'B', '1', '2') /* 16  xxxxbbbb ggggrrrr */
+-#define V4L2_PIX_FMT_BGRA444 v4l2_fourcc('B', 'A', '1', '2') /* 16  bbbbgggg rrrraaaa */
++
++/*
++ * Originally this had 'BA12' as fourcc, but this clashed with the older
++ * V4L2_PIX_FMT_SGRBG12 which inexplicably used that same fourcc.
++ * So use 'GA12' instead for V4L2_PIX_FMT_BGRA444.
++ */
++#define V4L2_PIX_FMT_BGRA444 v4l2_fourcc('G', 'A', '1', '2') /* 16  bbbbgggg rrrraaaa */
+ #define V4L2_PIX_FMT_BGRX444 v4l2_fourcc('B', 'X', '1', '2') /* 16  bbbbgggg rrrrxxxx */
+ #define V4L2_PIX_FMT_RGB555  v4l2_fourcc('R', 'G', 'B', 'O') /* 16  RGB-5-5-5     */
+ #define V4L2_PIX_FMT_ARGB555 v4l2_fourcc('A', 'R', '1', '5') /* 16  ARGB-1-5-5-5  */
 
 
