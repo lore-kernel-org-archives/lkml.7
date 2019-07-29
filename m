@@ -2,66 +2,65 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D2DC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147A9C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F228216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A27216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:00:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="EPVpiYDp"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="FCLEQQED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbfG2V7z (ORCPT
+        id S1726845AbfG2V67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:59:55 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:36047 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfG2V7B (ORCPT
+        Mon, 29 Jul 2019 17:58:59 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39708 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389327AbfG2V64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:59:01 -0400
-Received: by mail-wm1-f46.google.com with SMTP id g67so50693059wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:58:59 -0700 (PDT)
+        Mon, 29 Jul 2019 17:58:56 -0400
+Received: by mail-wm1-f65.google.com with SMTP id u25so44436589wmc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:58:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=amUBabhq3iz84v9jP6ehP07nPslt2z15Me58KiIaa/4=;
-        b=EPVpiYDpnEbwV0n/VJNsm4iSfcJhatOzhHD4wyZVpkcwpaQUEpgXAT4DKoNkl2cQ9C
-         wOPTolQ941veRjt8tFt1PULiPMliboPq2jt9aA43GteKrKYmIoSoR0HGl9oM9ywG3cbt
-         uiNLBWtAZcDORHd5z9lFgQsi4OZEmLqyYiwwsqvldyk2sZ8GHtan1epQL4IH7o5CMLCK
-         +OJqkZ0pzs0n0fsitv0vZhUtTHqINt3PjGm8CH+wTV400GXIfT9ELPvtjGmm+7S6uVvT
-         mxfg2aB0KvnfTY6iDHQvy2bRnUZzqIZVNdWCjnYSPJfw+SF6KP3a0dx0CJ716pi/UUvD
-         LQ2w==
+        bh=KLK9oMfbasIpMpwpIJOB7RGP16SH8kQ3V/EEqtgGXjs=;
+        b=FCLEQQEDUD4ctLaPX/BoQWYwlem9lQa7qaodTbNGpANpZrFzPEJE/MlIvQlat4E5fe
+         KtcA+1hRG0enVhzkUbJXPJXjF85IHsoNVtprKjZoXMc+SPgwYBs7Ag2sfhxBaQbV/oSy
+         dTDGJKDNFOeCng0AwtXnfTNIj2SjuozrpMlK6at6IBDikoyP8WG9g5k6b4fPgEdJm1XX
+         z6NbTlWNbFlefMxl9PiHZQA5dDp8hI40+6+Wo1/upw9xOqG9QHyvMyCFOP2IUOdHVtjN
+         J2XmfSmtfpzmjFkT2o5iS3TImP2EW/zOIxUwrLw78lNM5yT+lFRCRusA+4HjJ2AEaaH9
+         vZVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=amUBabhq3iz84v9jP6ehP07nPslt2z15Me58KiIaa/4=;
-        b=Xfr7wJqgwRveqE8dTr+2UWt5SOsVYdxMwe7lI194edjQ0HoNrXGrvbSTJKVaj8Avif
-         tYrgDIlu7mwBx3LS29z79rKomMTt3/NnfmVEcjNANCSLVsafgzKN0tNjefdxNfKmRkZP
-         5WjtLQr/npisJtK7zvmszYAg2M82+R0DYu6CMBKLLgfWG5NJCXzDnWxb6+lmH32uQZ2Q
-         gs4VunaOwW59GNl8b3pq0rgAj+yMR3968rAudBrQVVuGGNZIwbcmND3Eecf5VymL+KqZ
-         ahev6XxKfkvIeRSEkeaMjr3PjS5PRM8xNAD0pxCqptuhkkyj8rVs60ma7knN4SeRqULs
-         Nqag==
-X-Gm-Message-State: APjAAAXVg50B/GiD9B2q73t+xin5PDb7wZqDnpFNEYdmvRAiofU/5t4Y
-        fq/TToQGKwB8w0XKgpTu1b3+XaG5Vbi4oCniMkjooNJ7GVzjy5SlMYgdHa4rhJJjLbSo1O5tsKs
-        EwLI7qksZzO+sUUH5Jn92gKGpixhLSEgIqkgsB/v0WfCaBJXTFPBpEtRF10NjPLnhCv1XdAi1H0
-        GeD03N9dHvw4AhHHAEFXjoEZaLuP7V/zC7XpnGol0=
-X-Google-Smtp-Source: APXvYqw4RH/GzCW1SNckLB7i7lr0vZ5axJIJyJX0vVGuNNOs7hJMuHCAhglJvrXzWDCLqc6uXjkx3w==
-X-Received: by 2002:a1c:3587:: with SMTP id c129mr104495132wma.90.1564437538772;
-        Mon, 29 Jul 2019 14:58:58 -0700 (PDT)
+        bh=KLK9oMfbasIpMpwpIJOB7RGP16SH8kQ3V/EEqtgGXjs=;
+        b=ScSTMrP/j0CbsvQTJiCtXkm4C6KdYlf6k2xZ4Url+8Si2tlmCuLuU99bLBaS30zZ3l
+         s6oGsAaTkd+JSA/swLa2Fe6UWnNzvij3+5OhZE4rzScHuS0H+YjdGzMV8S5TQaWE24Dt
+         Qp4aM15Vi3LPpb5OqA9gSp9gFzkzMEdQJjUjE0QiW75COxrKbWUGZSGNL9Iew4bG3oa9
+         94BR5fEI632M6bt+RzRQpwMh3ovJTJM0jJYzDu1rFG3hqbXCYslRVYM4+iuvlno5/6T2
+         NZ6NpSRiEnwiLCnRGAQCenOxp1s+sWFmlylv49ZxBVi2p3rj+3+3d4gB5mFnLdZ0IIUT
+         dChg==
+X-Gm-Message-State: APjAAAUonrvZBE5cvfj39Pd+7X9Mk3ApaaBAd0FqYekOnQQ5e8BHJCqA
+        m77UwF0W/xmpnqA66c4JfMDcwT2X97akYC2eWnMHpavc8O1vMYLl7tkUzsqkNfje/bSD0zMafCj
+        U9nN2N7TvLZr/XvLXFYFnYAtDWl99y9Ry+Y7SqvgTEn5e2CmEWtYr0e9xvm0hy5Dn1zHzkOpOel
+        tb5f0mTR5WDUzPXREXXum4Us3hwHeQFRGzV/TpmWE=
+X-Google-Smtp-Source: APXvYqx5E6gp2L58iuwc30TT1I1MuIalLDTlR3CVwgVQmVSG2os4Izs2ZGqX5JUCcKkwscsjTTH3BA==
+X-Received: by 2002:a1c:a7ca:: with SMTP id q193mr107647553wme.150.1564437533240;
+        Mon, 29 Jul 2019 14:58:53 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id x20sm49230728wmc.1.2019.07.29.14.58.57
+        by smtp.gmail.com with ESMTPSA id x20sm49230728wmc.1.2019.07.29.14.58.52
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 14:58:58 -0700 (PDT)
+        Mon, 29 Jul 2019 14:58:52 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
         Dmitry Safonov <dima@arista.com>,
         Adrian Reber <adrian@lisas.de>,
         Andrei Vagin <avagin@openvz.org>,
@@ -78,14 +77,16 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv5 04/37] posix-clocks: Rename *_clock_get() functions into *_clock_get_timespec()
-Date:   Mon, 29 Jul 2019 22:57:24 +0100
-Message-Id: <20190729215758.28405-43-dima@arista.com>
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCHv5 00/37] kernel: Introduce Time Namespace
+Date:   Mon, 29 Jul 2019 22:57:20 +0100
+Message-Id: <20190729215758.28405-39-dima@arista.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729215758.28405-1-dima@arista.com>
 References: <20190729215758.28405-1-dima@arista.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-CLOUD-SEC-AV-Info: arista,google_mail,monitor
 X-CLOUD-SEC-AV-Sent: true
@@ -96,132 +97,309 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
+Discussions around time namespace are there for a long time. The first
+attempt to implement it was in 2006 by Jeff Dike. From that time, the
+topic appears on and off in various discussions.
 
-The upcoming support for time namespaces requires to have access to:
-  - The time in a task's time namespace for sys_clock_gettime()
-  - The time in the root name space for common_timer_get()
+There are two main use cases for time namespaces:
+1. change date and time inside a container;
+2. adjust clocks for a container restored from a checkpoint.
 
-That adds a valid reason to finally implement a separate callback which
-returns the time in ktime_t format in (struct k_clock).
+“It seems like this might be one of the last major obstacles keeping
+migration from being used in production systems, given that not all
+containers and connections can be migrated as long as a time dependency
+is capable of messing it up.” (by github.com/dav-ell)
 
-As a preparation ground for introducing clock_get_ktime(), the original
-callback clock_get() was renamed into clock_get_timespec().
-Reflect the renaming into callbacks realizations.
+The kernel provides access to several clocks: CLOCK_REALTIME,
+CLOCK_MONOTONIC, CLOCK_BOOTTIME. Last two clocks are monotonous, but the
+start points for them are not defined and are different for each
+system. When a container is migrated from one node to another, all
+clocks have to be restored into consistent states; in other words, they
+have to continue running from the same points where they have been
+dumped.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Co-developed-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- kernel/time/alarmtimer.c   |  6 +++---
- kernel/time/posix-timers.c | 17 +++++++++--------
- 2 files changed, 12 insertions(+), 11 deletions(-)
+The main idea of this patch set is adding per-namespace offsets for
+system clocks. When a process in a non-root time namespace requests
+time of a clock, a namespace offset is added to the current value of
+this clock and the sum is returned.
 
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index cada96fdc615..c191254f178b 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -644,13 +644,13 @@ static int alarm_clock_getres(const clockid_t which_clock, struct timespec64 *tp
- }
- 
- /**
-- * alarm_clock_get - posix clock_get_timespec interface
-+ * alarm_clock_get_timespec - posix clock_get_timespec interface
-  * @which_clock: clockid
-  * @tp: timespec to fill.
-  *
-  * Provides the underlying alarm base time.
-  */
--static int alarm_clock_get(clockid_t which_clock, struct timespec64 *tp)
-+static int alarm_clock_get_timespec(clockid_t which_clock, struct timespec64 *tp)
- {
- 	struct alarm_base *base = &alarm_bases[clock2alarm(which_clock)];
- 
-@@ -824,7 +824,7 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
- 
- const struct k_clock alarm_clock = {
- 	.clock_getres		= alarm_clock_getres,
--	.clock_get_timespec	= alarm_clock_get,
-+	.clock_get_timespec	= alarm_clock_get_timespec,
- 	.timer_create		= alarm_timer_create,
- 	.timer_set		= common_timer_set,
- 	.timer_del		= common_timer_del,
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index 6c9c0f2d2f1e..a71e43178a7d 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -165,7 +165,8 @@ static inline void unlock_timer(struct k_itimer *timr, unsigned long flags)
- }
- 
- /* Get clock_realtime */
--static int posix_clock_realtime_get(clockid_t which_clock, struct timespec64 *tp)
-+static int
-+posix_clock_realtime_get_timespec(clockid_t which_clock, struct timespec64 *tp)
- {
- 	ktime_get_real_ts64(tp);
- 	return 0;
-@@ -187,7 +188,7 @@ static int posix_clock_realtime_adj(const clockid_t which_clock,
- /*
-  * Get monotonic time for posix timers
-  */
--static int posix_ktime_get_ts(clockid_t which_clock, struct timespec64 *tp)
-+static int posix_get_timespec(clockid_t which_clock, struct timespec64 *tp)
- {
- 	ktime_get_ts64(tp);
- 	return 0;
-@@ -222,13 +223,13 @@ static int posix_get_coarse_res(const clockid_t which_clock, struct timespec64 *
- 	return 0;
- }
- 
--static int posix_get_boottime(const clockid_t which_clock, struct timespec64 *tp)
-+static int posix_get_boottime_timespec(const clockid_t which_clock, struct timespec64 *tp)
- {
- 	ktime_get_boottime_ts64(tp);
- 	return 0;
- }
- 
--static int posix_get_tai(clockid_t which_clock, struct timespec64 *tp)
-+static int posix_get_tai_timespec(clockid_t which_clock, struct timespec64 *tp)
- {
- 	ktime_get_clocktai_ts64(tp);
- 	return 0;
-@@ -1226,7 +1227,7 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
- 
- static const struct k_clock clock_realtime = {
- 	.clock_getres		= posix_get_hrtimer_res,
--	.clock_get_timespec	= posix_clock_realtime_get,
-+	.clock_get_timespec	= posix_clock_realtime_get_timespec,
- 	.clock_set		= posix_clock_realtime_set,
- 	.clock_adj		= posix_clock_realtime_adj,
- 	.nsleep			= common_nsleep,
-@@ -1243,7 +1244,7 @@ static const struct k_clock clock_realtime = {
- 
- static const struct k_clock clock_monotonic = {
- 	.clock_getres		= posix_get_hrtimer_res,
--	.clock_get_timespec	= posix_ktime_get_ts,
-+	.clock_get_timespec	= posix_get_timespec,
- 	.nsleep			= common_nsleep,
- 	.timer_create		= common_timer_create,
- 	.timer_set		= common_timer_set,
-@@ -1273,7 +1274,7 @@ static const struct k_clock clock_monotonic_coarse = {
- 
- static const struct k_clock clock_tai = {
- 	.clock_getres		= posix_get_hrtimer_res,
--	.clock_get_timespec	= posix_get_tai,
-+	.clock_get_timespec	= posix_get_tai_timespec,
- 	.nsleep			= common_nsleep,
- 	.timer_create		= common_timer_create,
- 	.timer_set		= common_timer_set,
-@@ -1288,7 +1289,7 @@ static const struct k_clock clock_tai = {
- 
- static const struct k_clock clock_boottime = {
- 	.clock_getres		= posix_get_hrtimer_res,
--	.clock_get_timespec	= posix_get_boottime,
-+	.clock_get_timespec	= posix_get_boottime_timespec,
- 	.nsleep			= common_nsleep,
- 	.timer_create		= common_timer_create,
- 	.timer_set		= common_timer_set,
+All offsets are placed on a separate page, this allows us to map it as
+part of VVAR into user processes and use offsets from VDSO calls.
+
+Now offsets are implemented for CLOCK_MONOTONIC and CLOCK_BOOTTIME
+clocks.
+
+v4..v5 Changes:
+* Rebased over generic vdso (already in master)
+* Addressing review comments by Thomas Gleixner
+  (thanks much for your time and patience):
+  - Dropping `timens` prefix from subjects (it's not a subsystem)
+  - Keeping commit messages in a neutral technical form
+  - Splitting unreasonably large patches
+  - Document code with missing comments
+  - Dropped dead code that's not compiled with !CONFIG_TIME_NS
+* Updated performance results [here, at the bottom]
+* Split vdso jump tables patch
+* Allow unshare() with many threads: it's safe until fork()/clone(),
+  where we check for CLONE_THREADS
+* Add missed check in setns() for CLONE_VM | CLONE_THREADS
+* Fixed compilation with !CONFIG_UTS_NS
+* Add a plan in selftests (prevents new warning "Planned tests != run tests")
+* Set jump table section address & size to (-1UL) just in case if there
+  is no such section while running vdso2c (and WARN() on boot in such
+  case)
+
+[v1..v4 Changelog is at the very bottom here]
+
+Our performance measurements show that the price of VDSO's clock_gettime()
+in a child time namespace is about 8% with a hot CPU cache and about 90%
+with a cold CPU cache. There is no performance regression for host
+processes outside time namespace on those tests.
+
+We wrote two small benchmarks. The first one gettime_perf.c calls
+clock_gettime() in a loop for 3 seconds. It shows us performance with
+a hot CPU cache (more clock_gettime() cycles - the better):
+
+        | before    | CONFIG_TIME_NS=n | host      | inside timens
+--------------------------------------------------------------
+        | 161822960 | 161147792        | 160187142 | 150584782
+        | 161891728 | 161489804        | 159914989 | 150417019
+        | 161891770 | 161098734        | 160123179 | 150601277
+        | 161687686 | 161114738        | 159874249 | 150243276
+        | 161247151 | 161411636        | 159096392 | 149637536
+--------------------------------------------------------------
+avg     | 161708259 | 161252540        | 159839190 | 150296778
+diff %  | 100       | 99.7             | 98.8      | 92.9
+-------------------------------------------------------------
+stdev % | 0.2       | 0.1              | 0.1       | 0.2
+
+The gettime_perf_cold test does 10K iterations. In each iteration, it
+drops cpu caches for vdso pages, clflush is used for this, then it runs
+rdtsc(); clock_gettime; rdtsc(); and prints the number of tsc cycles.
+
+(lesser tsc per cycle - the better):
+
+           | before    | CONFIG_TIME_NS=n | host      | inside timens
+--------------------------------------------------------------
+tsc        | 434       | 433              | 437       | 477
+stdev(tsc) | 5         | 5                | 5         | 3
+diff (%)   | 1         | 1                | 100.1     | 109
+
+vdsotest results: https://gist.github.com/avagin/f290afb8b721ae0522a561d585f34de0
+
+The numbers gathered on Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz.
+
+Cc: Adrian Reber <adrian@lisas.de>
+Cc: Andrei Vagin <avagin@openvz.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Cyrill Gorcunov <gorcunov@openvz.org>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jeff Dike <jdike@addtoit.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Pavel Emelyanov <xemul@virtuozzo.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: containers@lists.linux-foundation.org
+Cc: criu@openvz.org
+Cc: linux-api@vger.kernel.org
+Cc: x86@kernel.org
+
+v5 on github (if someone prefers `git pull` or `git log`):
+https://github.com/0x7f454c46/linux/tree/timens-v5
+
+v4: https://lkml.kernel.org/r/20190612192628.23797-1-dima@arista.com
+v3: https://lkml.kernel.org/r/20190425161416.26600-1-dima@arista.com
+v2: https://lore.kernel.org/lkml/20190206001107.16488-1-dima@arista.com/
+RFC: https://lkml.kernel.org/r/20180919205037.9574-1-dima@arista.com/
+
+v3..v4 Changes:
+
+* CLOCKE_NEWTIME is unshare()-only flag now (CLON_PIDFD took previous value)
+* Addressing Jann Horn's feedback - we don't allow CLONE_THREAD or
+  CLONE_VM together with CLONE_NEWTIME (thanks for spotting!)
+* Addressing issues found by Thomas - removed unmaintainable CLOCK_TIMENS
+  and introduced another call back into k_clock to get ktime instead
+  of getting timespec and converting it (Patch 03)
+* Renaming timens_offsets members to omit _offset postfix
+  (thanks Cyrill for the suggestion)
+* Suggestions, renaming and making code more maintainable from Thomas's
+  feedback (thanks much!)
+* Fixing out-of-bounds and other issues in procfs file (kudos Jann Horn)
+* vdso_fault() can be called on a remote task by /proc/$pid/mem or
+  process_vm_readv() - addressed by adding a slow-path with searching
+  for owner's namespace (thanks for spotting this unobvious issue, Jann)
+* Other nits by Jann Horn
+
+v2..v3: Major changes:
+
+* Simplify two VDSO images by using static_branch() in vclock_gettime()
+  Removes unwanted conflicts with generic VDSO movement patches and
+  simplifies things by dropping too invasive linker magic.
+  As an alternative to static_branch() we tested an attempt to introduce
+  home-made dynamic patching called retcalls:
+  https://github.com/0x7f454c46/linux/commit/4cc0180f6d65
+  Considering some theoretical problems with toolchains, we decided to go
+  with long well-tested nop-patching in static_branch(). Though, it was
+  needed to provide backend for relative code.
+
+* address Thomas' comments.
+* add sanity checks for offsets:
+  - the current clock time in a namespace has to be in [0, KTIME_MAX / 2).
+    KTIME_MAX is divided by two here to be sure that the KTIME_MAX limit
+    is still unreachable.
+Link: https://lkml.org/lkml/2018/9/19/950
+Link: https://lkml.org/lkml/2019/2/5/867
+
+v1..v2: There are two major changes:
+
+* Two versions of the VDSO library to avoid a performance penalty for
+  host tasks outside time namespace (as suggested by Andy and Thomas).
+
+  As it has been discussed on timens RFC, adding a new conditional branch
+  `if (inside_time_ns)` on VDSO for all processes is undesirable.
+  It will add a penalty for everybody as branch predictor may mispredict
+  the jump. Also there are instruction cache lines wasted on cmp/jmp.
+
+  Those effects of introducing time namespace are very much unwanted
+  having in mind how much work have been spent on micro-optimisation
+  VDSO code.
+
+  Addressing those problems, there are two versions of VDSO's .so:
+  for host tasks (without any penalty) and for processes inside of time
+  namespace with clk_to_ns() that subtracts offsets from host's time.
+
+
+* Allow to set clock offsets for a namespace only before any processes
+  appear in it.
+
+  Now a time namespace looks similar to a pid namespace in a way how it is
+  created: unshare(CLONE_NEWTIME) system call creates a new time namespace,
+  but doesn't set it to the current process. Then all children of
+  the process will be born in the new time namespace, or a process can
+  use the setns() system call to join a namespace.
+
+  This scheme allows to create a new time namespaces, set clock offsets
+  and then populate the namespace with processes.
+
+
+Andrei Vagin (25):
+  ns: Introduce Time Namespace
+  timens: Add timens_offsets
+  posix-clocks: Rename the clock_get() into clock_get_timespec()
+  posix-clocks: Rename *_clock_get() functions into
+    *_clock_get_timespec()
+  alarmtimer: Rename gettime() callback to get_ktime()
+  alarmtimer: Provide get_timespec() callback
+  posix-clocks: Introduce clock_get_ktime() callback
+  posix-timers: Use clock_get_ktime() in common_timer_get()
+  posix-clocks: Introduce CLOCK_MONOTONIC time namespace offsets
+  posix-clocks: Introduce CLOCK_BOOTTIME time namespace offset
+  kernel: Add do_timens_ktime_to_host() helper
+  timerfd: Make timerfd_settime() time namespace aware
+  posix-timers: Make timer_settime() time namespace aware
+  alarmtimer: Make nanosleep time namespace aware
+  hrtimers: Prepare hrtimer_nanosleep() for time namespaces
+  posix-timers: Make clock_nanosleep() time namespace aware
+  x86/vdso: Add offsets page in vvar
+  vdso: Introduce vdso_static_branch_unlikely()
+  x86/vdso: Enable static branches for the timens vdso
+  fs/proc: Introduce /proc/pid/timens_offsets
+  selftest/timens: Add a test for timerfd
+  selftest/timens: Add a test for clock_nanosleep()
+  selftest/timens: Add timer offsets test
+  selftests/timens: Add a simple perf test for clock_gettime()
+  selftest/timens: Check that a right vdso is mapped after fork and exec
+
+Dmitry Safonov (12):
+  fd/proc: Respect boottime inside time namespace for /proc/uptime
+  x86/vdso2c: Correct err messages on file opening
+  x86/vdso2c: Convert iterator to unsigned
+  x86/vdso/Makefile: Add vobjs32
+  x86/vdso: Restrict splitting VVAR VMA
+  x86/vdso: Rename vdso_image {.data=>.text}
+  x86/vdso: Allocate timens vdso
+  x86/vdso: Switch image on setns()/clone()
+  x86/vdso2c: Process jump tables
+  posix-clocks: Add align for timens_offsets
+  selftest/timens: Add Time Namespace test for supported clocks
+  selftest/timens: Add procfs selftest
+
+ MAINTAINERS                                   |   3 +
+ arch/Kconfig                                  |   5 +
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/entry/vdso/Makefile                  |  15 +-
+ arch/x86/entry/vdso/vdso-layout.lds.S         |  10 +-
+ arch/x86/entry/vdso/vdso2c.c                  |   7 +-
+ arch/x86/entry/vdso/vdso2c.h                  |  22 +-
+ arch/x86/entry/vdso/vma.c                     | 177 +++++++-
+ arch/x86/include/asm/jump_label.h             |  14 +
+ arch/x86/include/asm/vdso.h                   |  14 +-
+ arch/x86/kernel/jump_label.c                  |  14 +
+ fs/proc/base.c                                |  95 +++++
+ fs/proc/namespaces.c                          |   4 +
+ fs/proc/uptime.c                              |   3 +
+ fs/timerfd.c                                  |   3 +
+ include/linux/hrtimer.h                       |   2 +-
+ include/linux/jump_label.h                    |   8 +
+ include/linux/nsproxy.h                       |   2 +
+ include/linux/posix-timers.h                  |   3 +
+ include/linux/proc_ns.h                       |   3 +
+ include/linux/time_namespace.h                | 114 ++++++
+ include/linux/timens_offsets.h                |  18 +
+ include/linux/user_namespace.h                |   1 +
+ include/uapi/linux/sched.h                    |   6 +
+ init/Kconfig                                  |   9 +
+ kernel/Makefile                               |   1 +
+ kernel/fork.c                                 |  16 +-
+ kernel/nsproxy.c                              |  41 +-
+ kernel/time/alarmtimer.c                      |  68 +++-
+ kernel/time/hrtimer.c                         |   8 +-
+ kernel/time/posix-clock.c                     |   8 +-
+ kernel/time/posix-cpu-timers.c                |  32 +-
+ kernel/time/posix-stubs.c                     |  15 +-
+ kernel/time/posix-timers.c                    |  89 ++--
+ kernel/time/posix-timers.h                    |   7 +-
+ kernel/time_namespace.c                       | 385 ++++++++++++++++++
+ lib/vdso/gettimeofday.c                       |  53 +++
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/timens/.gitignore     |   8 +
+ tools/testing/selftests/timens/Makefile       |  12 +
+ .../selftests/timens/clock_nanosleep.c        | 102 +++++
+ tools/testing/selftests/timens/config         |   1 +
+ tools/testing/selftests/timens/exec.c         |  93 +++++
+ tools/testing/selftests/timens/gettime_perf.c | 101 +++++
+ .../selftests/timens/gettime_perf_cold.c      | 160 ++++++++
+ tools/testing/selftests/timens/log.h          |  26 ++
+ tools/testing/selftests/timens/procfs.c       | 144 +++++++
+ tools/testing/selftests/timens/timens.c       | 185 +++++++++
+ tools/testing/selftests/timens/timens.h       |  63 +++
+ tools/testing/selftests/timens/timer.c        | 118 ++++++
+ tools/testing/selftests/timens/timerfd.c      | 129 ++++++
+ 51 files changed, 2304 insertions(+), 115 deletions(-)
+ create mode 100644 include/linux/time_namespace.h
+ create mode 100644 include/linux/timens_offsets.h
+ create mode 100644 kernel/time_namespace.c
+ create mode 100644 tools/testing/selftests/timens/.gitignore
+ create mode 100644 tools/testing/selftests/timens/Makefile
+ create mode 100644 tools/testing/selftests/timens/clock_nanosleep.c
+ create mode 100644 tools/testing/selftests/timens/config
+ create mode 100644 tools/testing/selftests/timens/exec.c
+ create mode 100644 tools/testing/selftests/timens/gettime_perf.c
+ create mode 100644 tools/testing/selftests/timens/gettime_perf_cold.c
+ create mode 100644 tools/testing/selftests/timens/log.h
+ create mode 100644 tools/testing/selftests/timens/procfs.c
+ create mode 100644 tools/testing/selftests/timens/timens.c
+ create mode 100644 tools/testing/selftests/timens/timens.h
+ create mode 100644 tools/testing/selftests/timens/timer.c
+ create mode 100644 tools/testing/selftests/timens/timerfd.c
+
 -- 
 2.22.0
 
