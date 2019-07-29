@@ -2,103 +2,115 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA3BC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A887BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D48206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D513206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="tGIbEOve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfG2RFt (ORCPT
+        id S1728578AbfG2RFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 13:05:49 -0400
-Received: from mga14.intel.com ([192.55.52.115]:57308 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727487AbfG2RFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:05:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 10:05:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,323,1559545200"; 
-   d="scan'208";a="190627735"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Jul 2019 10:05:47 -0700
-Date:   Mon, 29 Jul 2019 10:05:47 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-sgx@vger.kernel.org
-Subject: Re: [RFC PATCH 04/21] x86/sgx: Add /dev/sgx/virt_epc device to
- allocate "raw" EPC for VMs
-Message-ID: <20190729170547.GH21120@linux.intel.com>
-References: <20190727055214.9282-1-sean.j.christopherson@intel.com>
- <20190727055214.9282-5-sean.j.christopherson@intel.com>
- <CALCETrXLE6RpR9p9eGPNvU+Nt=yyCkqsQHv7hzmNaC61sFK7Jg@mail.gmail.com>
+        Mon, 29 Jul 2019 13:05:52 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:39114 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728100AbfG2RFv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 13:05:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1564419948; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6ct5sfA9aKEmr8hMlVPpfoX1PCyM/MxIecN3pTsFsbo=;
+        b=tGIbEOveRSTKHoZcpg/izsWRXZB3sJbHvlT52bDMqqruC35KNldtJ6Z1UumMknOBTmqxkS
+        L0QxFFWQrtfalRctJpTe/AFwPD5hYLu/miXPRxLnpxQZvMuW30gWEtzMHrKJVpyhyW4MrF
+        oruZx2tu/qGuw0Xp6xod1DxlnpMTbLU=
+Date:   Mon, 29 Jul 2019 13:05:21 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 00/11] JZ4740 SoC cleanup
+To:     Richard Weinberger <richard.weinberger@gmail.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        linux-pm@vger.kernel.org, linux-mips@vger.kernel.org,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, od@zcrc.me,
+        linux-mtd@lists.infradead.org, dmaengine@vger.kernel.org,
+        Artur Rojek <contact@artur-rojek.eu>
+Message-Id: <1564419921.1759.1@crapouillou.net>
+In-Reply-To: <CAFLxGvyi0+0E3M12A7cRoHfEKd8-7Yr8EMG9J=2XcjCxPWY5pA@mail.gmail.com>
+References: <20190725220215.460-1-paul@crapouillou.net>
+        <CAFLxGvyi0+0E3M12A7cRoHfEKd8-7Yr8EMG9J=2XcjCxPWY5pA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrXLE6RpR9p9eGPNvU+Nt=yyCkqsQHv7hzmNaC61sFK7Jg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 10:44:24AM -0700, Andy Lutomirski wrote:
-> On Fri, Jul 26, 2019 at 10:52 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > Add an SGX device to enable userspace to allocate EPC without an
-> > associated enclave.  The intended and only known use case for direct EPC
-> > allocation is to expose EPC to a KVM guest, hence the virt_epc moniker,
-> > virt.{c,h} files and INTEL_SGX_VIRTUALIZATION Kconfig.
-> >
-> > Although KVM is the end consumer of EPC, and will need hooks into the
-> > virtual EPC management if oversubscription of EPC for guest is ever
-> > supported (see below), implement direct access to EPC in the SGX
-> > subsystem instead of in KVM.  Doing so has two major advantages:
-> >
-> >   - Does not require changes to KVM's uAPI, e.g. EPC gets handled as
-> >     just another memory backend for guests.
-> 
-> This is general grumbling more than useful feedback, but I wish there
-> was a way for KVM's userspace to add a memory region that is *not*
-> backed by a memory mapping.  For SGX, this would avoid the slightly
-> awkward situation where useless EPC pages are mapped by QEMU.  For
-> SEV, it would solve the really fairly awful situation where the SEV
-> pages are mapped *incoherently* for QEMU.  And even in the absence of
-> fancy hardware features, it would allow the guest to have secrets in
-> memory that are not exposed to wild reads, speculation attacks, etc
-> coming from QEMU.
-> 
-> I realize the implementation would be extremely intrusive, but it just
-> might make it a lot easier to do things like making SEV pages property
-> movable.  Similarly, I could see EPC oversubscription being less nasty
-> in this model.  For one thing, it would make it more straightforward
-> to keep track of exactly which VMs have a given EPC page mapped,
-> whereas right now this driver only really knows which host userspace
-> mm has the EPC page mapped.
+Hi Richard,
 
-Host userspace vs VM doesn't add much, if any, complexity to EPC
-oversubscription, especially since the problem of supporting multiple mm
-structs needs to be solved for the native driver anyways.
 
-The nastiness of oversubscribing a VM is primarily in dealing with
-EBLOCK/ETRACK/EWB conflicts between guest and host.  The other nasty bit
-is that it all but requires fancier VA page management, e.g. allocating a
-dedicated VA slot for every EPC page doesn't scale when presenting a
-multi-{GB,TB} EPC to a guest, especially since there's no guarantee the
-guest will ever access EPC.
+Le lun. 29 juil. 2019 =E0 7:23, Richard Weinberger=20
+<richard.weinberger@gmail.com> a =E9crit :
+> On Fri, Jul 26, 2019 at 12:02 AM Paul Cercueil <paul@crapouillou.net>=20
+> wrote:
+>>=20
+>>  Hi,
+>>=20
+>>  This patchset converts the Qi LB60 MIPS board to devicetree and=20
+>> makes it
+>>  use all the shiny new drivers that have been developed or updated
+>>  recently.
+>>=20
+>>  All the crappy old drivers and custom code can be dropped since they
+>>  have been replaced by better alternatives.
+>>=20
+>>  Some of these alternatives are not yet in 5.3-rc1 but have already=20
+>> been
+>>  accepted by their respective maintainer for inclusion in 5.4-rc1.
+>>=20
+>>  To upstream this patchset, I think that as soon as MIPS maintainers
+>>  agree to take patches 01-03/11 and 11/11, the other patches can go
+>>  through their respective maintainer's tree.
+>=20
+> Was this series tested with the Ben Nanonote device?
+> I have one of these and from time to time I upgrade the kernel on it.
+
+Yes! Artur (Cc'd) tested it.
+
+You can test it yourself, after merging this patchset with:
+https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/slave-dma.git=20
+branch next,
+git://git.freedesktop.org/git/drm-misc branch drm-misc-next.
+
+These will be in 5.4-rc1.
+
+Cheers,
+-Paul
+
+=
+
