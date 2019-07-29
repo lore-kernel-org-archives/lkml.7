@@ -2,121 +2,130 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6563C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48B9C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4D20217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65C12171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564429561;
+	bh=NljQuSTzO2M/JfMc0jAmcqezMEWVRtpAYocA8vn465Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ApAmISLGjtxu7RfySbCnaXXWA6yzO/hF7k57ZeiNs3gP4NytToduTaVcFOtCufPqY
+	 x6MKZeJk1aw5HnLhRLN4pInNTqBodiIdM6cNHaZD75dQRCbYohojBkSnPdb3xUKzBF
+	 h4VhlO/OqKrk8TtGbc/O3H6bdny+BYDmjWS9sjdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390042AbfG2Tpz (ORCPT
+        id S2390047AbfG2TqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:45:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:30063 "EHLO mx1.redhat.com"
+        Mon, 29 Jul 2019 15:46:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390029AbfG2Tpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:45:52 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2389732AbfG2Tp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:45:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 10E05745DA;
-        Mon, 29 Jul 2019 19:45:52 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D742260856;
-        Mon, 29 Jul 2019 19:45:50 +0000 (UTC)
-Message-ID: <b5775622b2e8360e77f90dddfff9aa84af48240e.camel@redhat.com>
-Subject: Re: [PATCH] rdma: siw: remove unused variable
-From:   Doug Ledford <dledford@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>
-Cc:     Anders Roxell <anders.roxell@linaro.org>, bmt@zurich.ibm.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 29 Jul 2019 15:45:48 -0400
-In-Reply-To: <20190729190326.GG17990@ziepe.ca>
-References: <20190726092540.22467-1-anders.roxell@linaro.org>
-         <08d1942fa99465329348a1bbfd55823b590921c2.camel@redhat.com>
-         <20190729190326.GG17990@ziepe.ca>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-zQeQhpw7Z5g5BWy+Sm6P"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        by mail.kernel.org (Postfix) with ESMTPSA id 924CF2171F;
+        Mon, 29 Jul 2019 19:45:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564429556;
+        bh=NljQuSTzO2M/JfMc0jAmcqezMEWVRtpAYocA8vn465Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mC1GbWLMIZat00zSifSOG3KRw2XE3DQWso6Nc6BLgSueU49hZjeNLjeivMiOOtIgC
+         xNkoD27tA4S3QRjsZX2O9UKU57czJm3KLi5IBZ7Vk3NGeyZoxQeyzvGy1bxD1yshEA
+         QkUSVnadQ8T9lIykU8oVI6WKflHUbt2Rp8A87ZB8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Anthony Koo <anthony.koo@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 021/215] drm/amd/display: fix multi display seamless boot case
+Date:   Mon, 29 Jul 2019 21:20:17 +0200
+Message-Id: <20190729190743.425605466@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
+References: <20190729190739.971253303@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 29 Jul 2019 19:45:52 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[ Upstream commit 4cd75ff096f4ef49c343093b52a952f27aba7796 ]
 
---=-zQeQhpw7Z5g5BWy+Sm6P
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+[Why]
+There is a scenario that causes eDP to become blank if
+there are multiple displays connected, and the external
+display is set as the primary display such that the first
+flip comes to the external display.
 
-On Mon, 2019-07-29 at 16:03 -0300, Jason Gunthorpe wrote:
-> On Mon, Jul 29, 2019 at 02:19:35PM -0400, Doug Ledford wrote:
-> > On Fri, 2019-07-26 at 11:25 +0200, Anders Roxell wrote:
-> > > The variable 'p' si no longer used and the compiler rightly
-> > > complains
-> > > that it should be removed.
-> > >=20
-> > > ../drivers/infiniband/sw/siw/siw_mem.c: In function
-> > > =E2=80=98siw_free_plist=E2=80=99:
-> > > ../drivers/infiniband/sw/siw/siw_mem.c:66:16: warning: unused
-> > > variable
-> > >  =E2=80=98p=E2=80=99 [-Wunused-variable]
-> > >   struct page **p =3D chunk->plist;
-> > >                 ^
-> > >=20
-> > > Rework to remove unused variable.
-> > >=20
-> > > Fixes: 8288d030447f ("mm/gup: add make_dirty arg to
-> > > put_user_pages_dirty_lock()")
-> >=20
-> > This commit hash and the commit subject does not exist in Linus'
-> > tree as
-> > of today.  What tree is this being merged through, and is it slated
-> > to
-> > merge soon or is this a for-next item?
->=20
-> This is though -mm, maybe John knows what is what
+In this scenario, we call our optimize function before
+the eDP even has a chance to flip.
 
-Hmmm...if it's through -mm, doesn't that mean that we can't rely on the
-hash because the next time Andrew's tree rebases (using quilt or
-whatever it is he does) that the hash will change?  It doesn't really
-matter too much...we can't take the fix anyway, it should probably be
-squashed into the patch that it's fixing, and if you follow Bernard's
-advice, you fix the problem by eliminating this function and changing
-the sole call site to just call put_user_pages_dirty_lock() directly.
+[How]
+There is a check that prevents bandwidth optimize from
+occurring before first flip is complete on the seamless boot
+display.
+But actually it assumed the seamless boot display is the
+first one to flip. But in this scenario it is not.
+Modify the check to ensure the steam with the seamless
+boot flag set is the one that has completed the first flip.
 
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+Signed-off-by: Anthony Koo <anthony.koo@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---=-zQeQhpw7Z5g5BWy+Sm6P
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 18c775a950cc..ee6b646180b6 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -1138,9 +1138,6 @@ static enum dc_status dc_commit_state_no_check(struct dc *dc, struct dc_state *c
+ 		const struct dc_link *link = context->streams[i]->link;
+ 		struct dc_stream_status *status;
+ 
+-		if (context->streams[i]->apply_seamless_boot_optimization)
+-			context->streams[i]->apply_seamless_boot_optimization = false;
+-
+ 		if (!context->streams[i]->mode_changed)
+ 			continue;
+ 
+@@ -1792,10 +1789,15 @@ static void commit_planes_for_stream(struct dc *dc,
+ 	if (dc->optimize_seamless_boot && surface_count > 0) {
+ 		/* Optimize seamless boot flag keeps clocks and watermarks high until
+ 		 * first flip. After first flip, optimization is required to lower
+-		 * bandwidth.
++		 * bandwidth. Important to note that it is expected UEFI will
++		 * only light up a single display on POST, therefore we only expect
++		 * one stream with seamless boot flag set.
+ 		 */
+-		dc->optimize_seamless_boot = false;
+-		dc->optimized_required = true;
++		if (stream->apply_seamless_boot_optimization) {
++			stream->apply_seamless_boot_optimization = false;
++			dc->optimize_seamless_boot = false;
++			dc->optimized_required = true;
++		}
+ 	}
+ 
+ 	if (update_type == UPDATE_TYPE_FULL && !dc->optimize_seamless_boot) {
+-- 
+2.20.1
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl0/TOwACgkQuCajMw5X
-L92IYBAArJFeJhpQQYWGFlda2rlbsvZs2yZTilsFoMR68teBg4hc31CBsF1y34LM
-A/7FJ1I2fNprtBvy2Sz/vfJ4+GT0rm9gKQFtDrA4Fro2JuOEw1LsoTOD8OrWNlsN
-O8CbmKT9hrSbAGsD5CAWNybAPOFltUrNR/m9XkUytfj6EX9j1ZPFQs9QIXeqtaY3
-A/mFqiPGgEcc7ROLME/z+MiW8nowz6vFQlKAOn8VGc6hKYPh2xS5kLcWQtZOWj0O
-KEEsv8jm/BGvdfm6lJ4NF+pf07Bhgo+YJ3f9lw2qP6Fy7nXsFE6W75dGphSxuZf6
-t78pF4exsDTr5Jy9c27btebhMnxIv1stq5Ko73RhG1jPAgfOOdYdSRmgulhasqyN
-MyUhfo9JMzs+RN7UL98yQnDYIQAwU5bLd1QgdtFLcJxc3sMrFRrw7jRIb3MLpCOr
-wagZ3exarpjbB8MoVIAtFKkDwWoGrA6Nh3xwYm6ZvWd0J0udA5xEMJvVpBGQAZkc
-O0IMlBJxdqE1STE6fRHVA54aLzMbU+oKKPNWmfK96PStVmPz2wow2VafkVJe0ftC
-EJq7xTgjmNZZIviUpGmjZS5WwQ+PDCqy4BW52GUtVmuqmRVTn64x7lePVP1vCpOG
-XHb6OfxrG7RljZLXFnK5UmFuMIA/VgOE86Ai35akp3UyL0MkRjg=
-=hLxB
------END PGP SIGNATURE-----
-
---=-zQeQhpw7Z5g5BWy+Sm6P--
 
