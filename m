@@ -5,55 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A54C7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C597DC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6DD217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 940D1217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429408;
-	bh=EyK6gRJlxAvJzXu89B1/5FdgCOahdnNn1sjhMN82MkY=;
+	s=default; t=1564429411;
+	bh=SCTpNe73w03WFMGCTgSs09EQkuxblGIon7LU4ul75hk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r57CpmqdndFsXFlf7oKt/4MDHbglhbNc63QGXv17Koxeo1aT8+QsHR0FP68zumJZd
-	 fuUhkjSCMLUkSY/Kb/yIfRL601C2oZ6TCPOJ4sEkGycQsy85zOdxbxk7RnU818VSDP
-	 bM7jHc8CDnqpjwrjA7B+J+5tneB4uGmp4QC/LCK4=
+	b=VfQNLPSUZz9c7kFoVs+2MZFJ25vRhSrHym78rTKeJrw8quVeSWNBIRlFKTW0Qnf8W
+	 HLTNEH4miV+QqjtJnJzxNbvq7UMiC5gZMIN5NVEP/V8waedMnG9zeYjNKYh8p6sUMe
+	 3eFyk/mLiDFYe+TBdXegq/+nt/v+4jOmH/bpYilc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389649AbfG2Tn0 (ORCPT
+        id S2389660AbfG2Tna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:43:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59632 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:43:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389639AbfG2TnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:43:24 -0400
+        id S2389647AbfG2Tn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:43:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE31A2054F;
-        Mon, 29 Jul 2019 19:43:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7091A21773;
+        Mon, 29 Jul 2019 19:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429403;
-        bh=EyK6gRJlxAvJzXu89B1/5FdgCOahdnNn1sjhMN82MkY=;
+        s=default; t=1564429405;
+        bh=SCTpNe73w03WFMGCTgSs09EQkuxblGIon7LU4ul75hk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hfXjZlv35bc7R72ujLkIBP6YZLOmMUP+xlGsa6pKVWaDCcAGUIb99OoyOz5EA4bMH
-         m8E/txlplzLfig+DOj79PM2Q0smmK1JZ7Vx+gpkltTGO+aXo0zsl0kL5xxYSyfo38q
-         Qrb9y8FzETsKPplttIMRk2n6Jun/MSGQGBxZkDvU=
+        b=QUIWVHZg+LZUHkDQr+VI78tv2Th4WOUK4S9X+Y+6zBvrbBxFA4MZwum1elgEhh0Mr
+         gjNZo3c128D3zGRtq0URUJpkOE9B1BttHFdFb5avGUK0MC5D+MQCjRgzsH4o86GCv+
+         c2KbdTX85I5TSzCOroTOO0OxO8kgLIjT7FCFughg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>, Jan Kara <jack@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         Michal Hocko <mhocko@suse.com>,
-        Amir Goldstein <amir73il@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 087/113] memcg, fsnotify: no oom-kill for remote memcg charging
-Date:   Mon, 29 Jul 2019 21:22:54 +0200
-Message-Id: <20190729190716.336041721@linuxfoundation.org>
+Subject: [PATCH 4.19 088/113] mm/mmu_notifier: use hlist_add_head_rcu()
+Date:   Mon, 29 Jul 2019 21:22:55 +0200
+Message-Id: <20190729190716.582894769@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -66,75 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ec165450968b26298bd1c373de37b0ab6d826b33 ]
+[ Upstream commit 543bdb2d825fe2400d6e951f1786d92139a16931 ]
 
-Commit d46eb14b735b ("fs: fsnotify: account fsnotify metadata to
-kmemcg") added remote memcg charging for fanotify and inotify event
-objects.  The aim was to charge the memory to the listener who is
-interested in the events but without triggering the OOM killer.
-Otherwise there would be security concerns for the listener.
+Make mmu_notifier_register() safer by issuing a memory barrier before
+registering a new notifier.  This fixes a theoretical bug on weakly
+ordered CPUs.  For example, take this simplified use of notifiers by a
+driver:
 
-At the time, oom-kill trigger was not in the charging path.  A parallel
-work added the oom-kill back to charging path i.e.  commit 29ef680ae7c2
-("memcg, oom: move out_of_memory back to the charge path").  So to not
-trigger oom-killer in the remote memcg, explicitly add
-__GFP_RETRY_MAYFAIL to the fanotigy and inotify event allocations.
+	my_struct->mn.ops = &my_ops; /* (1) */
+	mmu_notifier_register(&my_struct->mn, mm)
+		...
+		hlist_add_head(&mn->hlist, &mm->mmu_notifiers); /* (2) */
+		...
 
-Link: http://lkml.kernel.org/r/20190514212259.156585-2-shakeelb@google.com
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Acked-by: Jan Kara <jack@suse.cz>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Once mmu_notifier_register() releases the mm locks, another thread can
+invalidate a range:
+
+	mmu_notifier_invalidate_range()
+		...
+		hlist_for_each_entry_rcu(mn, &mm->mmu_notifiers, hlist) {
+			if (mn->ops->invalidate_range)
+
+The read side relies on the data dependency between mn and ops to ensure
+that the pointer is properly initialized.  But the write side doesn't have
+any dependency between (1) and (2), so they could be reordered and the
+readers could dereference an invalid mn->ops.  mmu_notifier_register()
+does take all the mm locks before adding to the hlist, but those have
+acquire semantics which isn't sufficient.
+
+By calling hlist_add_head_rcu() instead of hlist_add_head() we update the
+hlist using a store-release, ensuring that readers see prior
+initialization of my_struct.  This situation is better illustated by
+litmus test MP+onceassign+derefonce.
+
+Link: http://lkml.kernel.org/r/20190502133532.24981-1-jean-philippe.brucker@arm.com
+Fixes: cddb8a5c14aa ("mmu-notifiers: core")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
 Cc: Michal Hocko <mhocko@suse.com>
-Cc: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/notify/fanotify/fanotify.c        | 5 ++++-
- fs/notify/inotify/inotify_fsnotify.c | 8 ++++++--
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ mm/mmu_notifier.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
-index 29dee9630eec..a18b8d7a3075 100644
---- a/fs/notify/fanotify/fanotify.c
-+++ b/fs/notify/fanotify/fanotify.c
-@@ -148,10 +148,13 @@ struct fanotify_event_info *fanotify_alloc_event(struct fsnotify_group *group,
- 	/*
- 	 * For queues with unlimited length lost events are not expected and
- 	 * can possibly have security implications. Avoid losing events when
--	 * memory is short.
-+	 * memory is short. For the limited size queues, avoid OOM killer in the
-+	 * target monitoring memcg as it may have security repercussion.
+diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+index 82bb1a939c0e..06dedb175572 100644
+--- a/mm/mmu_notifier.c
++++ b/mm/mmu_notifier.c
+@@ -316,7 +316,7 @@ static int do_mmu_notifier_register(struct mmu_notifier *mn,
+ 	 * thanks to mm_take_all_locks().
  	 */
- 	if (group->max_events == UINT_MAX)
- 		gfp |= __GFP_NOFAIL;
-+	else
-+		gfp |= __GFP_RETRY_MAYFAIL;
+ 	spin_lock(&mm->mmu_notifier_mm->lock);
+-	hlist_add_head(&mn->hlist, &mm->mmu_notifier_mm->list);
++	hlist_add_head_rcu(&mn->hlist, &mm->mmu_notifier_mm->list);
+ 	spin_unlock(&mm->mmu_notifier_mm->lock);
  
- 	/* Whoever is interested in the event, pays for the allocation. */
- 	memalloc_use_memcg(group->memcg);
-diff --git a/fs/notify/inotify/inotify_fsnotify.c b/fs/notify/inotify/inotify_fsnotify.c
-index f4184b4f3815..16b8702af0e7 100644
---- a/fs/notify/inotify/inotify_fsnotify.c
-+++ b/fs/notify/inotify/inotify_fsnotify.c
-@@ -99,9 +99,13 @@ int inotify_handle_event(struct fsnotify_group *group,
- 	i_mark = container_of(inode_mark, struct inotify_inode_mark,
- 			      fsn_mark);
- 
--	/* Whoever is interested in the event, pays for the allocation. */
-+	/*
-+	 * Whoever is interested in the event, pays for the allocation. Do not
-+	 * trigger OOM killer in the target monitoring memcg as it may have
-+	 * security repercussion.
-+	 */
- 	memalloc_use_memcg(group->memcg);
--	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT);
-+	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
- 	memalloc_unuse_memcg();
- 
- 	if (unlikely(!event)) {
+ 	mm_drop_all_locks(mm);
 -- 
 2.20.1
 
