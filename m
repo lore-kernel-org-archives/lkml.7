@@ -2,174 +2,214 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C97C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C741AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170172073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564393581;
-	bh=b+tI6bHDOwG6E+/q3x1v00SGmcoiUnOU93dUmX8r/cA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=z6x9Vi19TY86mtPB9ulStpeaNuiXEDMDYPoeSGqKO9b5svmutobafUR3m61zi44AE
-	 LKxYdI40gmgzD1O2nfTsEPCxAmIXtS/ZvhOnsCUenQwmcnR/6I2yhKEf61nJzLGvEU
-	 BfLgl9ycYgbSobM8I9QzCAtgVxfJ3Wm/by6rr9UM=
+	by mail.kernel.org (Postfix) with ESMTP id 7899420679
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:46:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SdzpILNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfG2JqT (ORCPT
+        id S2387414AbfG2Jqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:46:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:40846 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbfG2JqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:46:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D7B8152D;
-        Mon, 29 Jul 2019 02:46:18 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF3FB3F694;
-        Mon, 29 Jul 2019 02:46:17 -0700 (PDT)
-Subject: Re: [PATCH] KVM: arm64: mark expected switch fall-through
-To:     Matteo Croce <mcroce@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-References: <20190728225311.5414-1-mcroce@redhat.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <e14529dd-a517-afcb-24f3-198dc8ebb364@kernel.org>
-Date:   Mon, 29 Jul 2019 10:46:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 05:46:47 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38149 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfG2Jqp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 05:46:45 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r9so57937344ljg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:46:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tg+McBFqpd0f2zrbI/7wxxs8tzmhTKN9nAWzW3WwxlU=;
+        b=SdzpILNFfLN2CAMRhUndFy579p7sz+RKl4jBviLx7P4+/bERXmVC/UiiTSMRWKrMbX
+         8bTH6PKDi08vqZQEYB2X5pFK3LNC/A/C4zXxij1ZjTkmeEjPgRNkXTVQF1HFRVP2sAL8
+         t+md7uPWRSaUSdU6lzsMWeqrH+mWgjQPXv+8Vr+XUb/7p9YrPgYFQ/nT151DcKviIZWt
+         BbJyCvFlyWX0tO0PAg3xyTSpmDtasav0EkA5oUQiMHY2mMR9S3aVsyewqLbcFVIA2Kvo
+         NhCQGC3ZcHSCmdkPbFYHqcqF/qbyHC6cBiw5VoZdFqARuIbpdZiicaQcLEI821OoV8Ay
+         /5EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tg+McBFqpd0f2zrbI/7wxxs8tzmhTKN9nAWzW3WwxlU=;
+        b=Afd8dXqKZ8ydGndJf/qGlSVJRP5kqLS4dUaAVYCw2pqHW3kEFvUe8njTfq3xdAOJCN
+         /rJIyDz2PEIuLgKv+pJNWJbd0yebIb3M1EJl0XU1IWoiVP48o5sR//C6stqVKzunC0lQ
+         vlMb1AWSgxkaTBdGUe96pgz2j4mwgbG4dHvmvq4PRWJ1ogbVKfIkTERM2eoJxlpRxvRX
+         aoIjvCsFsCtf7RG5Qqb482pCnvgMT3xoE9ESkcq6lSEXJy6O5AG28BE0TqHJXORJSszP
+         2RL237g1wdwPzxcmnZY7DPqnW5s346RK1YUyG0bG8mmuKqHvoQ4+c72a+VO5y/DQIUg4
+         Rc+w==
+X-Gm-Message-State: APjAAAU2fP72oDCi+e71qP0OEctzKFWKdrnQW9UBLnY3I94v6JehF/Om
+        gpXixlp4nh6+qTGCeKJfu0kk5g==
+X-Google-Smtp-Source: APXvYqwJv8qOr+vXkmc+GxaKZiQqHVqnVgciB2XEWBb1mWCh7+Z9mup+2Pp1i+NZLxz9ELM1Pk0/Bg==
+X-Received: by 2002:a2e:a0d6:: with SMTP id f22mr32148813ljm.182.1564393602547;
+        Mon, 29 Jul 2019 02:46:42 -0700 (PDT)
+Received: from [192.168.28.50] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id 27sm7398736ljv.21.2019.07.29.02.46.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 02:46:41 -0700 (PDT)
+Subject: Re: [PATCH v6 4/4] media: venus: Update core selection
+To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org
+References: <1563786452-22188-1-git-send-email-amasule@codeaurora.org>
+ <1563786452-22188-4-git-send-email-amasule@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <d8fb8806-df3f-dd30-9d40-79667cf5cc37@linaro.org>
+Date:   Mon, 29 Jul 2019 12:46:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190728225311.5414-1-mcroce@redhat.com>
+In-Reply-To: <1563786452-22188-4-git-send-email-amasule@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/07/2019 23:53, Matteo Croce wrote:
-> Mark switch cases where we are expecting to fall through,
-> fixes the following warning:
+Hi,
+
+On 7/22/19 12:07 PM, Aniket Masule wrote:
+> Present core assignment is static. Introduced load balancing
+> across the cores. Load on earch core is calculated and core
+> with minimum load is assigned to given instance.
 > 
-> In file included from ./arch/arm64/include/asm/kvm_emulate.h:19,
->                  from arch/arm64/kvm/regmap.c:13:
-> arch/arm64/kvm/regmap.c: In function ‘vcpu_write_spsr32’:
-> ./arch/arm64/include/asm/kvm_hyp.h:31:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    asm volatile(ALTERNATIVE(__msr_s(r##nvh, "%x0"), \
->    ^~~
-> ./arch/arm64/include/asm/kvm_hyp.h:46:31: note: in expansion of macro ‘write_sysreg_elx’
->  #define write_sysreg_el1(v,r) write_sysreg_elx(v, r, _EL1, _EL12)
->                                ^~~~~~~~~~~~~~~~
-> arch/arm64/kvm/regmap.c:180:3: note: in expansion of macro ‘write_sysreg_el1’
->    write_sysreg_el1(v, SYS_SPSR);
->    ^~~~~~~~~~~~~~~~
-> arch/arm64/kvm/regmap.c:181:2: note: here
->   case KVM_SPSR_ABT:
->   ^~~~
-> In file included from ./arch/arm64/include/asm/cputype.h:132,
->                  from ./arch/arm64/include/asm/cache.h:8,
->                  from ./include/linux/cache.h:6,
->                  from ./include/linux/printk.h:9,
->                  from ./include/linux/kernel.h:15,
->                  from ./include/asm-generic/bug.h:18,
->                  from ./arch/arm64/include/asm/bug.h:26,
->                  from ./include/linux/bug.h:5,
->                  from ./include/linux/mmdebug.h:5,
->                  from ./include/linux/mm.h:9,
->                  from arch/arm64/kvm/regmap.c:11:
-> ./arch/arm64/include/asm/sysreg.h:837:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   asm volatile("msr " __stringify(r) ", %x0"  \
->   ^~~
-> arch/arm64/kvm/regmap.c:182:3: note: in expansion of macro ‘write_sysreg’
->    write_sysreg(v, spsr_abt);
->    ^~~~~~~~~~~~
-> arch/arm64/kvm/regmap.c:183:2: note: here
->   case KVM_SPSR_UND:
->   ^~~~
-> In file included from ./arch/arm64/include/asm/cputype.h:132,
->                  from ./arch/arm64/include/asm/cache.h:8,
->                  from ./include/linux/cache.h:6,
->                  from ./include/linux/printk.h:9,
->                  from ./include/linux/kernel.h:15,
->                  from ./include/asm-generic/bug.h:18,
->                  from ./arch/arm64/include/asm/bug.h:26,
->                  from ./include/linux/bug.h:5,
->                  from ./include/linux/mmdebug.h:5,
->                  from ./include/linux/mm.h:9,
->                  from arch/arm64/kvm/regmap.c:11:
-> ./arch/arm64/include/asm/sysreg.h:837:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   asm volatile("msr " __stringify(r) ", %x0"  \
->   ^~~
-> arch/arm64/kvm/regmap.c:184:3: note: in expansion of macro ‘write_sysreg’
->    write_sysreg(v, spsr_und);
->    ^~~~~~~~~~~~
-> arch/arm64/kvm/regmap.c:185:2: note: here
->   case KVM_SPSR_IRQ:
->   ^~~~
-> In file included from ./arch/arm64/include/asm/cputype.h:132,
->                  from ./arch/arm64/include/asm/cache.h:8,
->                  from ./include/linux/cache.h:6,
->                  from ./include/linux/printk.h:9,
->                  from ./include/linux/kernel.h:15,
->                  from ./include/asm-generic/bug.h:18,
->                  from ./arch/arm64/include/asm/bug.h:26,
->                  from ./include/linux/bug.h:5,
->                  from ./include/linux/mmdebug.h:5,
->                  from ./include/linux/mm.h:9,
->                  from arch/arm64/kvm/regmap.c:11:
-> ./arch/arm64/include/asm/sysreg.h:837:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   asm volatile("msr " __stringify(r) ", %x0"  \
->   ^~~
-> arch/arm64/kvm/regmap.c:186:3: note: in expansion of macro ‘write_sysreg’
->    write_sysreg(v, spsr_irq);
->    ^~~~~~~~~~~~
-> arch/arm64/kvm/regmap.c:187:2: note: here
->   case KVM_SPSR_FIQ:
->   ^~~~
-> 
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
 > ---
->  arch/arm64/kvm/regmap.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/media/platform/qcom/venus/helpers.c    | 69 +++++++++++++++++++++++---
+>  drivers/media/platform/qcom/venus/helpers.h    |  2 +-
+>  drivers/media/platform/qcom/venus/hfi_helper.h |  1 +
+>  drivers/media/platform/qcom/venus/hfi_parser.h |  5 ++
+>  drivers/media/platform/qcom/venus/vdec.c       |  2 +-
+>  drivers/media/platform/qcom/venus/venc.c       |  2 +-
+>  6 files changed, 72 insertions(+), 9 deletions(-)
 > 
-> diff --git a/arch/arm64/kvm/regmap.c b/arch/arm64/kvm/regmap.c
-> index 0d60e4f0af66..b376b2fdbf51 100644
-> --- a/arch/arm64/kvm/regmap.c
-> +++ b/arch/arm64/kvm/regmap.c
-> @@ -178,12 +178,16 @@ void vcpu_write_spsr32(struct kvm_vcpu *vcpu, unsigned long v)
->  	switch (spsr_idx) {
->  	case KVM_SPSR_SVC:
->  		write_sysreg_el1(v, SYS_SPSR);
-> +		/* fallthrough */
->  	case KVM_SPSR_ABT:
->  		write_sysreg(v, spsr_abt);
-> +		/* fallthrough */
->  	case KVM_SPSR_UND:
->  		write_sysreg(v, spsr_und);
-> +		/* fallthrough */
->  	case KVM_SPSR_IRQ:
->  		write_sysreg(v, spsr_irq);
-> +		/* fallthrough */
->  	case KVM_SPSR_FIQ:
->  		write_sysreg(v, spsr_fiq);
->  	}
-> 
+> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+> index edf403d..3b6cbbf 100644
+> --- a/drivers/media/platform/qcom/venus/helpers.c
+> +++ b/drivers/media/platform/qcom/venus/helpers.c
+> @@ -26,6 +26,7 @@
+>  #include "helpers.h"
+>  #include "hfi_helper.h"
+>  #include "hfi_venus_io.h"
+> +#include "hfi_parser.h"
+>  
+>  struct intbuf {
+>  	struct list_head list;
+> @@ -331,6 +332,24 @@ static u32 load_per_instance(struct venus_inst *inst)
+>  	return mbs * inst->fps;
+>  }
+>  
+> +static u32 load_per_core(struct venus_core *core, u32 core_id)
+> +{
+> +	struct venus_inst *inst = NULL;
+> +	u32 mbs_per_sec = 0, load = 0;
+> +
+> +	mutex_lock(&core->lock);
+> +	list_for_each_entry(inst, &core->instances, list) {
+> +		if (inst->clk_data.core_id != core_id)
+> +			continue;
+> +
+> +		mbs_per_sec = load_per_instance(inst);
+> +		load += mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
+> +	}
+> +	mutex_unlock(&core->lock);
+> +
+> +	return load;
+> +}
+> +
+>  static u32 load_per_type(struct venus_core *core, u32 session_type)
+>  {
+>  	struct venus_inst *inst = NULL;
+> @@ -505,6 +524,16 @@ static int load_scale_clocks(struct venus_inst *inst)
+>  	return scale_clocks(inst);
+>  }
+>  
+> +int set_core_usage(struct venus_inst *inst, u32 usage)
+> +{
+> +	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
+> +	struct hfi_videocores_usage_type cu;
+> +
+> +	cu.video_core_enable_mask = usage;
+> +
+> +	return hfi_session_set_property(inst, ptype, &cu);
+> +}
+> +
+>  static void fill_buffer_desc(const struct venus_buffer *buf,
+>  			     struct hfi_buffer_desc *bd, bool response)
+>  {
+> @@ -808,19 +837,47 @@ int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode)
+>  }
+>  EXPORT_SYMBOL_GPL(venus_helper_set_work_mode);
+>  
+> -int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage)
+> +int venus_helper_set_core(struct venus_inst *inst)
+>  {
+> -	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
+> -	struct hfi_videocores_usage_type cu;
+> +	struct venus_core *core = inst->core;
+> +	u32 min_core_id = 0, core1_load = 0, core2_load = 0;
+> +	unsigned long min_load, max_freq, cur_inst_load;
+> +	u32 cores_max;
+> +	int ret;
+>  
+>  	if (!IS_V4(inst->core))
+>  		return 0;
+>  
+> -	cu.video_core_enable_mask = usage;
+> +	core1_load = load_per_core(core, VIDC_CORE_ID_1);
+> +	core2_load = load_per_core(core, VIDC_CORE_ID_2);
+> +	min_core_id = core1_load < core2_load ? VIDC_CORE_ID_1 : VIDC_CORE_ID_2;
+> +	min_load = min(core1_load, core2_load);
+> +	cores_max = core_num_max(inst);
+>  
+> -	return hfi_session_set_property(inst, ptype, &cu);
+> +	if (cores_max < VIDC_CORE_ID_2) {
+> +		min_core_id = VIDC_CORE_ID_1;
+> +		min_load = core1_load;
+> +	}
+> +
+> +	cur_inst_load = load_per_instance(inst) *
+> +		inst->clk_data.codec_freq_data->vpp_freq;
+> +	max_freq = core->res->freq_tbl[0].freq;
+> +
+> +	if ((cur_inst_load + min_load) > max_freq) {
+> +		dev_warn(core->dev, "HW is overloaded, needed: %lu max: %lu\n",
+> +			 cur_inst_load, max_freq);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = set_core_usage(inst, min_core_id);
 
-That's absolutely the *WRONG* fix. Please see [1] for the real thing.
+We have a problem here. Lets assume that we have only one running
+decoder session and the code above decides that it should be handled by
+core2, but core2 clocks presently are enabled only if there is an
+encoder session (see DT subnodes), thus we select core2 but without
+enabling core2 clocks and power domain.
 
-Thanks,
+> +	if (ret)
+> +		return ret;
+> +
+> +	inst->clk_data.core_id = min_core_id;
+> +
+> +	return 0;
+>  }
+> -EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
+> +EXPORT_SYMBOL_GPL(venus_helper_set_core);
+>  
 
-	M.
 
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git/commit/?id=3d584a3c85d6fe2cf878f220d4ad7145e7f89218
 -- 
-Jazz is not dead, it just smells funny...
+regards,
+Stan
