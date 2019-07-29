@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E608C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45ED9C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D151B205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E56E205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429847;
-	bh=SLoCrE+l3z1bj2/xRj9SHLZmNuZjXvDISzhJ4Qw/hkU=;
+	s=default; t=1564429851;
+	bh=xHRtyLYIyNDPifgkcbUKFdk8gN2kucNNVgwC5pjLSqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zl/kqlgwJeKJU8RmODM9oQY2mpZIWLPl4vG4WjDN8AQMvHA77A8JcZvPBd3VxM5cF
-	 hMkQib6QyEI20HX5mjFeE4X8yiRtFYFE9ioyJEt1SRpfgvqPSngnbqbyG61DVZcBPL
-	 1Jp9QOIUZso4avH/myTkFrKmUxrL6gsm9RfgGob8=
+	b=KIXCFVlIOauqV2bRCFsMrUV+zcnqP9yNXo3MQ9WpWr/yW/u05FVeA5ZN4LFam6MRb
+	 TlJGzmJw388pt8FXG6INfRMDLNrYGrJQN9S2y8pgYAuE+zoFapU+zjSLUrNekMDv1u
+	 L01es9M0wyTnxWGRBujxLP6Dj+mwxhrL8bdf4cM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390701AbfG2Tuq (ORCPT
+        id S2390710AbfG2Tut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41760 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:50:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403822AbfG2Tuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:50:44 -0400
+        id S2390003AbfG2Tur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:50:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70DEF2054F;
-        Mon, 29 Jul 2019 19:50:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15B5C2054F;
+        Mon, 29 Jul 2019 19:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429843;
-        bh=SLoCrE+l3z1bj2/xRj9SHLZmNuZjXvDISzhJ4Qw/hkU=;
+        s=default; t=1564429846;
+        bh=xHRtyLYIyNDPifgkcbUKFdk8gN2kucNNVgwC5pjLSqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EMz+W7Z5FPeUeCm8meKe2thgmvrYPcOl9e06T86YBQBZfdA0kZlHK2kzThsas5Tdz
-         6el7BA/xPPUYEV2xjUQ6RFrCdbAcO8jBf13SXPqN1YhNNxZVN7/oJASKmWU22eOn9v
-         w2HeQxV0SfVI4M9Wn16XHHOn4v13zEzFa5YGFEHo=
+        b=ch+YbIFHdIJTsBZZFoxTstNkRLOoUPaPBP1rrqML3l7xcBrFDleJc/IKg66aa8I8M
+         c8+tjv4TkGnG24kJfGHQQFHnzDzZ9Igxmd5bZBMxAy9DHaXnph19HrZq48hNNLOtUR
+         07CC/XUo6Fi/KeYgVRhobAiL/ElZ016mjkUrvipY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jordan Crouse <jcrouse@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 076/215] drm/msm/adreno: Ensure that the zap shader region is big enough
-Date:   Mon, 29 Jul 2019 21:21:12 +0200
-Message-Id: <20190729190753.184172489@linuxfoundation.org>
+Subject: [PATCH 5.2 112/215] arm64: assembler: Switch ESB-instruction with a vanilla nop if !ARM64_HAS_RAS
+Date:   Mon, 29 Jul 2019 21:21:48 +0200
+Message-Id: <20190729190758.376366301@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -62,46 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6672e11cad662ce6631e04c38f92a140a99c042c ]
+[ Upstream commit 2b68a2a963a157f024c67c0697b16f5f792c8a35 ]
 
-Before loading the zap shader we should ensure that the reserved memory
-region is big enough to hold the loaded file.
+The ESB-instruction is a nop on CPUs that don't implement the RAS
+extensions. This lets us use it in places like the vectors without
+having to use alternatives.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+If someone disables CONFIG_ARM64_RAS_EXTN, this instruction still has
+its RAS extensions behaviour, but we no longer read DISR_EL1 as this
+register does depend on alternatives.
+
+This could go wrong if we want to synchronize an SError from a KVM
+guest. On a CPU that has the RAS extensions, but the KConfig option
+was disabled, we consume the pending SError with no chance of ever
+reading it.
+
+Hide the ESB-instruction behind the CONFIG_ARM64_RAS_EXTN option,
+outputting a regular nop if the feature has been disabled.
+
+Reported-by: Julien Thierry <julien.thierry@arm.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/assembler.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index a9c0ac937b00..9acbbc0f3232 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -56,7 +56,6 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
- 		return ret;
+diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+index 570d195a184d..e3a15c751b13 100644
+--- a/arch/arm64/include/asm/assembler.h
++++ b/arch/arm64/include/asm/assembler.h
+@@ -96,7 +96,11 @@
+  * RAS Error Synchronization barrier
+  */
+ 	.macro  esb
++#ifdef CONFIG_ARM64_RAS_EXTN
+ 	hint    #16
++#else
++	nop
++#endif
+ 	.endm
  
- 	mem_phys = r.start;
--	mem_size = resource_size(&r);
- 
- 	/* Request the MDT file for the firmware */
- 	fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
-@@ -72,6 +71,13 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
- 		goto out;
- 	}
- 
-+	if (mem_size > resource_size(&r)) {
-+		DRM_DEV_ERROR(dev,
-+			"memory region is too small to load the MDT\n");
-+		ret = -E2BIG;
-+		goto out;
-+	}
-+
- 	/* Allocate memory for the firmware image */
- 	mem_region = memremap(mem_phys, mem_size,  MEMREMAP_WC);
- 	if (!mem_region) {
+ /*
 -- 
 2.20.1
 
