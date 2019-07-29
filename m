@@ -2,127 +2,242 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C05C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034F4206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A776206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:32:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uqUejA0E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfG2IcQ (ORCPT
+        id S1727660AbfG2Ic0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:32:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:39908 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726305AbfG2IcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:32:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9CDF337;
-        Mon, 29 Jul 2019 01:32:15 -0700 (PDT)
-Received: from [10.162.40.126] (p8cg001049571a15.blr.arm.com [10.162.40.126])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 990293F575;
-        Mon, 29 Jul 2019 01:32:11 -0700 (PDT)
-Subject: Re: [RFC] mm/pgtable/debug: Add test validating architecture page
- table helpers
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <Mark.Brown@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1564037723-26676-1-git-send-email-anshuman.khandual@arm.com>
- <1564037723-26676-2-git-send-email-anshuman.khandual@arm.com>
- <20190725143920.GW363@bombadil.infradead.org>
- <c3bb0420-584c-de3b-2439-8702bc09595e@arm.com>
- <20190726195457.GI30641@bombadil.infradead.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <10ed1022-a5c0-c80c-c0c9-025bb2307666@arm.com>
-Date:   Mon, 29 Jul 2019 14:02:52 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 29 Jul 2019 04:32:26 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36671 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727640AbfG2IcZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 04:32:25 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l21so27866703pgm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 01:32:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WHaq3M20Ot3yD9q3jZA3bbH8rV0oyCs/pORTq+gdhH8=;
+        b=uqUejA0EH3kemF6NQ6pGhsU3Fq5FM7C9tWduTlyp50Arft+zEDFwvJfgv4M9KyxDVk
+         QotJv/qGvVG+jrZDBltv5Bd5N2+FZ7+HmXF8vhosQ6OBZYK73ALBO7JDlM1mrRCcwXL7
+         LOlRNhdUR7xEYzv3QoUU/eYQUWRu4ZkuSaXnBJGek/fFzyTsxA8r7gE2BQ1O9x4ka3Mk
+         JqIniR93f3FS2lD8S4uvyYRpN2tBUo2gZRAUsgqBrtFI9KPhqMyAQ6Apl0Ias1A2UygP
+         tGR7X7TwWVYG55o2+0neApQS1t6PFXuBOELuYts9QDxbIzoiPmDRafs+mULeY9z7aCxX
+         P++A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WHaq3M20Ot3yD9q3jZA3bbH8rV0oyCs/pORTq+gdhH8=;
+        b=iowpDTujHBra3otOvCsDN2e3rZ/bY1qBMfqsvLuEf3IbtOS9k7mySzL5c5Sk429KmR
+         EvWxJgGOXafdX0IViFpLEcjL517ytuYyXMAwnAs160CyOY9SJ/0w6uao2amyTc0IXpoE
+         X47xXrw9UwJZqDCgOL3cZJs9GBghx099GvzH/tSrA52A4VmspoBvEPQ44rarxH6ClZht
+         dJy8eW2GFX/HV4paqfa/eZrlR07MBRRZCGgM6K6Dw47VChGBkFLYXDRQp9mo+kc//4/X
+         iYH8s123unpUWi/hoI0GuJUUXVGBapXsmxNQwHFP62jNo1IBvMKZtPdHSKUnp6IqRUt4
+         0ErA==
+X-Gm-Message-State: APjAAAXozDvqOsEwdrs0fviqyWQ63jmyy98WQrnMDyMmCWRzIOB540eE
+        leyNWr8AHPt2bfvE5cYNXsEp9Q==
+X-Google-Smtp-Source: APXvYqxAXHJpPry35tSmqF6jbpYEQWXwhy4sIUOj/N1AeysW+OUR+W6jO4UTLm2BRDHFjzS2FJLunw==
+X-Received: by 2002:a62:642:: with SMTP id 63mr35593651pfg.257.1564389143416;
+        Mon, 29 Jul 2019 01:32:23 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id q21sm46580020pgb.48.2019.07.29.01.32.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 01:32:21 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 14:02:19 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        'Rafael Wysocki' <rjw@rjwysocki.net>,
+        'Ingo Molnar' <mingo@redhat.com>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        'Linux PM' <linux-pm@vger.kernel.org>,
+        'Vincent Guittot' <vincent.guittot@linaro.org>,
+        'Joel Fernandes' <joel@joelfernandes.org>,
+        "'v4 . 18+'" <stable@vger.kernel.org>,
+        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: schedutil: Don't skip freq update when limits
+ change
+Message-ID: <20190729083219.fe4xxq4ugmetzntm@vireshk-i7>
+References: <1563431200-3042-1-git-send-email-dsmythies@telus.net>
+ <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org>
+ <001201d54125$a6a82350$f3f869f0$@net>
+ <20190723091551.nchopfpqlmdmzvge@vireshk-i7>
+ <CAJZ5v0ji+ksapJ4kc2m5UM_O+AShAvJWmYhTQHiXiHnpTq+xRg@mail.gmail.com>
+ <20190724114327.apmx35c7a4tv3qt5@vireshk-i7>
+ <000c01d542fc$703ff850$50bfe8f0$@net>
+ <20190726065739.xjvyvqpkb3o6m4ty@vireshk-i7>
+ <000001d545e3$047d9750$0d78c5f0$@net>
 MIME-Version: 1.0
-In-Reply-To: <20190726195457.GI30641@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000001d545e3$047d9750$0d78c5f0$@net>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/27/2019 01:24 AM, Matthew Wilcox wrote:
-> On Fri, Jul 26, 2019 at 10:17:11AM +0530, Anshuman Khandual wrote:
->>> But 'page' isn't necessarily PMD-aligned.  I don't think we can rely on
->>> architectures doing the right thing if asked to make a PMD for a randomly
->>> aligned page.
->>>
->>> How about finding the physical address of something like kernel_init(),
->>
->> Physical address corresponding to the symbol in the kernel text segment ?
+On 29-07-19, 00:55, Doug Smythies wrote:
+> On 2019.07.25 23:58 Viresh Kumar wrote:
+> > Hmm, so I tried to reproduce your setup on my ARM board.
+> > - booted only with CPU0 so I hit the sugov_update_single() routine
+> > - And applied below diff to make CPU look permanently busy:
+> >
+> > -------------------------8<-------------------------
+> >diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > index 2f382b0959e5..afb47490e5dc 100644
+> > --- a/kernel/sched/cpufreq_schedutil.c
+> > +++ b/kernel/sched/cpufreq_schedutil.c
+> > @@ -121,6 +121,7 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
+> >         if (!sugov_update_next_freq(sg_policy, time, next_freq))
+> >                return;
+> > 
+> > +       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
 > 
-> Yes.  We need the address of something that's definitely memory.
-> The stack might be in vmalloc space.  We can't allocate memory from the
-> allocator that's PUD-aligned.  This seems like a reasonable approximation
-> to something that might work.
-
-Okay sure. What is about vmalloc space being PUD aligned and how that is
-problematic here ? Could you please give some details. Just being curious.
-
+> ?? there is no "freq" variable here, and so this doesn't compile. However this works:
 > 
->>> and using the corresponding pte/pmd/pud/p4d/pgd that encompasses that
->>
->> So I guess this will help us use pte/pmd/pud/p4d/pgd entries from a real and
->> present mapping rather then making them up for test purpose. Although we are
->> not creating real page tables here just wondering if this could some how
->> affect these real mapping in anyway from some accessors. The current proposal
->> stays clear from anything real - allocates, evaluates and releases.
-> 
-> I think that's a mistake.  As Russell said, the ARM p*d manipulation
-> functions expect to operate on tables, not on individual entries
-> constructed on the stack.
+> +       pr_info("%s: %d: %u\n", __func__, __LINE__, next_freq);
 
-Hmm. I assume that it will take care of dual 32 bit entry updates on arm
-platform through various helper functions as Russel had mentioned earlier.
-After we create page table with p?d_alloc() functions and pick an entry at
-each page table level.
+There are two paths we can take to change the frequency, normal
+sleep-able path (sugov_work) or fast path. Only one of them is taken
+by any driver ever. In your case it is the fast path always and in
+mine it was the slow path.
 
-> 
-> So I think the right thing to do here is allocate an mm, then do the
-> pgd_alloc / p4d_alloc / pud_alloc / pmd_alloc / pte_alloc() steps giving
-> you real page tables that you can manipulate.
-> 
-> Then destroy them, of course.  And don't access through them.
+I only tested the diff with slow-path and copy pasted to fast path
+while giving out to you and so the build issue. Sorry about that.
 
-mm_alloc() seems like a comprehensive helper to allocate and initialize a
-mm_struct. But could we use mm_init() with 'current' in the driver context or we
-need to create a dummy task_struct for this purpose. Some initial tests show that
-p?d_alloc() and p?d_free() at each level with a fixed virtual address gives p?d_t
-entries required at various page table level to test upon.
+Also make sure that the print is added after sugov_update_next_freq()
+is called, not before it.
 
+> >         next_freq = cpufreq_driver_fast_switch(policy, next_freq);
+> >        if (!next_freq)
+> >                return;
+> > @@ -424,14 +425,10 @@ static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
+> > #ifdef CONFIG_NO_HZ_COMMON
+> > static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
+> > {
+> > -       unsigned long idle_calls = tick_nohz_get_idle_calls_cpu(sg_cpu->cpu);
+> > -       bool ret = idle_calls == sg_cpu->saved_idle_calls;
+> > -
+> > -       sg_cpu->saved_idle_calls = idle_calls;
+> > -       return ret;
+> > +       return true;
+> >  }
+> >  #else
+> > -static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
+> > +static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return true; }
+> > #endif /* CONFIG_NO_HZ_COMMON */
+> > 
+> >  /*
+> > @@ -565,6 +562,7 @@ static void sugov_work(struct kthread_work *work)
+> >         sg_policy->work_in_progress = false;
+> >         raw_spin_unlock_irqrestore(&sg_policy->update_lock, flags);
+> > 
+> > +       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
+> >         mutex_lock(&sg_policy->work_lock);
+> >         __cpufreq_driver_target(sg_policy->policy, freq, CPUFREQ_RELATION_L);
+> >         mutex_unlock(&sg_policy->work_lock);
+> > 
+> > -------------------------8<-------------------------
+> >
+> > Now, the frequency never gets down and so gets set to the maximum
+> > possible after a bit.
+> >
+> > - Then I did:
+> >
+> > echo <any-low-freq-value> > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+> >
+> > Without my patch applied:
+> >        The print never gets printed and so frequency doesn't go down.
+> >
+> > With my patch applied:
+> >        The print gets printed immediately from sugov_work() and so
+> >        the frequency reduces.
+> > 
+> > Can you try with this diff along with my Patch2 ? I suspect there may
+> > be something wrong with the intel_cpufreq driver as the patch fixes
+> > the only path we have in the schedutil governor which takes busyness
+> > of a CPU into account.
 > 
->>>> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
->>>> +static void pud_basic_tests(void)
->>>
->>> Is this the right ifdef?
->>
->> IIUC THP at PUD is where the pud_t entries are directly operated upon and the
->> corresponding accessors are present only when HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
->> is enabled. Am I missing something here ?
-> 
-> Maybe I am.  I thought we could end up operating on PUDs for kernel mappings,
-> even without transparent hugepages turned on.
+> With this diff along with your patch2 There is never a print message
+> from sugov_work. There are from sugov_fast_switch.
 
-In generic MM ? IIUC except ioremap mapping all other PUD handling for kernel virtual
-range is platform specific. All the helpers used in the function pud_basic_tests() are
-part of THP and used in mm/huge_memory.c
+Which is okay. sugov_work won't get hit in your case as I explained
+above.
+
+> Note that for the intel_cpufreq CPU scaling driver and the schedutil
+> governor I adjust the maximum clock frequency this way:
+> 
+> echo <any-low-percent> > /sys/devices/system/cpu/intel_pstate/max_perf_pct
+
+This should eventually call sugov_limits() in schedutil governor, this
+can be easily checked with another print message.
+
+> I also applied the pr_info messages to the reverted kernel, and re-did
+> my tests (where everything works as expected). There is never a print
+> message from sugov_work. There are from sugov_fast_switch.
+
+that's fine.
+
+> Notes:
+> 
+> I do not know if:
+> /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
+> /sys/devices/system/cpu/cpufreq/policy*/scaling_min_freq
+> Need to be accurate when using the intel_pstate driver in passive mode.
+> They are not.
+> The commit comment for 9083e4986124389e2a7c0ffca95630a4983887f0
+> suggests that they might need to be representative.
+> I wonder if something similar to that commit is needed
+> for other global changes, such as max_perf_pct and min_perf_pct?
+
+We are already calling intel_pstate_update_policies() in that case, so
+it should be fine I believe.
+
+> intel_cpufreq/ondemand doesn't work properly on the reverted kernel.
+
+reverted kernel ? The patch you reverted was only for schedutil and it
+shouldn't have anything to do with ondemand.
+
+> (just discovered, not investigated)
+> I don't know about other governors.
+
+When you do:
+
+echo <any-low-percent> > /sys/devices/system/cpu/intel_pstate/max_perf_pct
+
+How soon does the print from sugov_fast_switch() gets printed ?
+Immediately ? Check with both the kernels, with my patch and with the
+reverted patch.
+
+Also see if there is any difference in the next_freq value in both the
+kernels when you change max_perf_pct.
+
+FWIW, we now know the difference between intel-pstate and
+acpi-cpufreq/my testcase and why we see differences here. In the cases
+where my patch fixed the issue (acpi/ARM), we were really changing the
+limits, i.e. policy->min/max. This happened because we touched
+scaling_max_freq directly.
+
+For the case of intel-pstate, you are changing max_perf_pct which
+doesn't change policy->max directly. I am not very sure how all of it
+work really, but at least schedutil will not see policy->max changing.
+
+@Rafael: Do you understand why things don't work properly with
+intel_cpufreq driver ?
+
+-- 
+viresh
