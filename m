@@ -2,152 +2,145 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEBCC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8403C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F9A2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF8A621773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564443850;
+	bh=IxOu/iSvnh/L0ZVNT/mjrBwuShkqS1cn9KOIl+RrKJk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=w1uDHCI2Lgxew07GcyBDLhqQCSInp2r6g64xuRoD6DFQCqQ9FFkifVSWTxGz0cypF
+	 ggb6GOZOoNPm4FZSdVim+vh3gBOl2SzdxBqtOqQlz1Y7s8j04SKANITT4pB8ZAVwf4
+	 rdQiwrRgnZdmhOY99GvRRXNh2RKuOTwyu7zw5oc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbfG2XnU (ORCPT
+        id S1729868AbfG2XoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 19:43:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43308 "EHLO mx1.redhat.com"
+        Mon, 29 Jul 2019 19:44:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729671AbfG2XnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 19:43:20 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728492AbfG2XoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 19:44:08 -0400
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 953C7BDF9;
-        Mon, 29 Jul 2019 23:43:19 +0000 (UTC)
-Received: from redhat.com (ovpn-112-31.rdu2.redhat.com [10.10.112.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F0455D6A0;
-        Mon, 29 Jul 2019 23:43:16 +0000 (UTC)
-Date:   Mon, 29 Jul 2019 19:43:12 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/9] mm: turn migrate_vma upside down
-Message-ID: <20190729234312.GB7171@redhat.com>
-References: <20190729142843.22320-1-hch@lst.de>
- <20190729142843.22320-2-hch@lst.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F83421773;
+        Mon, 29 Jul 2019 23:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564443847;
+        bh=IxOu/iSvnh/L0ZVNT/mjrBwuShkqS1cn9KOIl+RrKJk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=r95SCpHEMs9q9vTklvT2DcO7DVoioYsxCpnyXW/92OPQywcixAqLI0Yt1IOES73b5
+         UATEroFniVQYZxHsWqsby/Gv9drl9vt1OTX6duOvubSzXHVG2amm7nHTiuFtiF24+z
+         8gv+0ph9NR1IdjzZaGOrFMpKY5MhiGs0Uduzgncs=
+Received: by mail-qk1-f175.google.com with SMTP id w190so45288035qkc.6;
+        Mon, 29 Jul 2019 16:44:07 -0700 (PDT)
+X-Gm-Message-State: APjAAAUy6gzZCUzvXQC0+KPVtqKATAvMMXQXE3SmOtau52D+PAt/fdeV
+        QMtkY1YpzuQwNQvCt/YleNhtFuTCHYpE0RAwXQ==
+X-Google-Smtp-Source: APXvYqzgNhcznp2+LVmYunsMkWxwj73/VsAe1JVQ931+ebUN7alNApAeftUQlmusggGCH8szHpLFoGVGMQwGn00/cZ4=
+X-Received: by 2002:a37:a44a:: with SMTP id n71mr9950009qke.393.1564443846662;
+ Mon, 29 Jul 2019 16:44:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729142843.22320-2-hch@lst.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 29 Jul 2019 23:43:19 +0000 (UTC)
+References: <20190721175915.27192-1-martin@kaiser.cx> <20190729114531.12386-1-martin@kaiser.cx>
+ <20190729114531.12386-2-martin@kaiser.cx>
+In-Reply-To: <20190729114531.12386-2-martin@kaiser.cx>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 29 Jul 2019 17:43:54 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLfMhR819mxTtam8AJQmy321-b1ut0az+tpPARE3HWzmg@mail.gmail.com>
+Message-ID: <CAL_JsqLfMhR819mxTtam8AJQmy321-b1ut0az+tpPARE3HWzmg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: iio: potentiometer: add max5432.yaml binding
+To:     Martin Kaiser <martin@kaiser.cx>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 05:28:35PM +0300, Christoph Hellwig wrote:
-> There isn't any good reason to pass callbacks to migrate_vma.  Instead
-> we can just export the three steps done by this function to drivers and
-> let them sequence the operation without callbacks.  This removes a lot
-> of boilerplate code as-is, and will allow the drivers to drastically
-> improve code flow and error handling further on.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-
-I haven't finished review, especialy the nouveau code, i will look
-into this once i get back. In the meantime below are few corrections.
-
+On Mon, Jul 29, 2019 at 5:46 AM Martin Kaiser <martin@kaiser.cx> wrote:
+>
+> Add a binding for the Maxim Integrated MAX5432-MAX5435 family of digital
+> potentiometers.
+>
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 > ---
->  Documentation/vm/hmm.rst               |  55 +-----
->  drivers/gpu/drm/nouveau/nouveau_dmem.c | 122 +++++++------
->  include/linux/migrate.h                | 118 ++----------
->  mm/migrate.c                           | 242 +++++++++++--------------
->  4 files changed, 193 insertions(+), 344 deletions(-)
-> 
+> changes in v3
+>  - split dt bindings and driver code into separate patches
+>  - use yaml format for dt bindings
+>  - fix formatting of parameter lists
+>
+> changes in v2
+>  - use MAX5432_ prefix for all defines
+>  - fix indentation
+>  - convert void * to unsigned long, not to u32
+>    (warning from kbuild test robot)
+>
+>  .../bindings/iio/potentiometer/max5432.yaml        | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/max5432.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/max5432.yaml b/Documentation/devicetree/bindings/iio/potentiometer/max5432.yaml
+> new file mode 100644
+> index 000000000000..448781b80f39
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/potentiometer/max5432.yaml
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/potentiometer/max5432.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Maxim Integrated MAX5432-MAX5435 Digital Potentiometers
+> +
+> +maintainers:
+> +  - Martin Kaiser <martin@kaiser.cx>
+> +
+> +description: |
+> +  Maxim Integrated MAX5432-MAX5435 Digital Potentiometers connected via I2C
+> +
+> +  Datasheet:
+> +    https://datasheets.maximintegrated.com/en/ds/MAX5432-MAX5435.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - maxim,max5432
+> +      - maxim,max5433
+> +      - maxim,max5434
+> +      - maxim,max5435
+> +
 
-[...]
+reg?
 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 8992741f10aa..dc4e60a496f2 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -2118,16 +2118,6 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
->  #endif /* CONFIG_NUMA */
->  
->  #if defined(CONFIG_MIGRATE_VMA_HELPER)
-> -struct migrate_vma {
-> -	struct vm_area_struct	*vma;
-> -	unsigned long		*dst;
-> -	unsigned long		*src;
-> -	unsigned long		cpages;
-> -	unsigned long		npages;
-> -	unsigned long		start;
-> -	unsigned long		end;
-> -};
-> -
->  static int migrate_vma_collect_hole(unsigned long start,
->  				    unsigned long end,
->  				    struct mm_walk *walk)
-> @@ -2578,6 +2568,108 @@ static void migrate_vma_unmap(struct migrate_vma *migrate)
->  	}
->  }
->  
-> +/**
-> + * migrate_vma_setup() - prepare to migrate a range of memory
-> + * @args: contains the vma, start, and and pfns arrays for the migration
-> + *
-> + * Returns: negative errno on failures, 0 when 0 or more pages were migrated
-> + * without an error.
-> + *
-> + * Prepare to migrate a range of memory virtual address range by collecting all
-> + * the pages backing each virtual address in the range, saving them inside the
-> + * src array.  Then lock those pages and unmap them. Once the pages are locked
-> + * and unmapped, check whether each page is pinned or not.  Pages that aren't
-> + * pinned have the MIGRATE_PFN_MIGRATE flag set (by this function) in the
-> + * corresponding src array entry.  Then restores any pages that are pinned, by
-> + * remapping and unlocking those pages.
-> + *
-> + * The caller should then allocate destination memory and copy source memory to
-> + * it for all those entries (ie with MIGRATE_PFN_VALID and MIGRATE_PFN_MIGRATE
-> + * flag set).  Once these are allocated and copied, the caller must update each
-> + * corresponding entry in the dst array with the pfn value of the destination
-> + * page and with the MIGRATE_PFN_VALID and MIGRATE_PFN_LOCKED flags set
-> + * (destination pages must have their struct pages locked, via lock_page()).
-> + *
-> + * Note that the caller does not have to migrate all the pages that are marked
-> + * with MIGRATE_PFN_MIGRATE flag in src array unless this is a migration from
-> + * device memory to system memory.  If the caller cannot migrate a device page
-> + * back to system memory, then it must return VM_FAULT_SIGBUS, which will
-> + * might have severe consequences for the userspace process, so it should best
+Also, add an 'additionalProperties: false' line. This means other
+properties can't be present (except 'status' and a few we
+automatically add).
 
-      ^s/might//                                                      ^s/should best/must/
+> +examples:
+> +  - |
+> +    i2c0 {
 
-> + * be avoided if possible.
-                 ^s/if possible//
+i2c {
 
-Maybe adding something about failing only on unrecoverable device error. The
-only reason we allow failure for migration here is because GPU devices can
-go into bad state (GPU lockup) and when that happens the GPU memory might be
-corrupted (power to GPU memory might be cut by GPU driver to recover the
-GPU).
-
-So failing migration back to main memory is only a last resort event.
-
-
-> + *
-> + * For empty entries inside CPU page table (pte_none() or pmd_none() is true) we
-> + * do set MIGRATE_PFN_MIGRATE flag inside the corresponding source array thus
-> + * allowing the caller to allocate device memory for those unback virtual
-> + * address.  For this the caller simply havs to allocate device memory and
-                                           ^ haves
-
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      max5434@28 {
+> +        compatible = "maxim,max5434";
+> +        reg = <0x28>;
+> +      };
+> +    };
+> --
+> 2.11.0
+>
