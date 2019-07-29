@@ -5,50 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B97FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD143C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA02D205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC95205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431243;
-	bh=wK7b6COeD7dL3yqszsDzRkPT8M+NtPOZ+usPFbJcXvs=;
+	s=default; t=1564431252;
+	bh=AQNp5ECe9sgyjFWOGgvv1e6tRkk2iwL30xwMF+qUeZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nFL+hebmDWq0+Ez9XhLFfNdeIUqSziESt8RJSnki46yP4fH0IiBkVLxnxDEWkWO+m
-	 /gT1jsqAVlAf9WCJn3LqqGwiikxOuARgSgZns619qeCaTJ4glOwJ64rUKj6MHFuivF
-	 Y7Eig3/FOJLTD5rGO0xhuYNNrMEBJpIVaZKvAmOA=
+	b=B5YCZVZKDCRAX3fGOtF5FGqsAMEb4YeF1ph0JhuLQVqACyaeLfLnx94bGveOJTh14
+	 h0aI0uE3ikGaZOzwluSpoUi0gvoHOlCXb5BLRWK8jaX8vCrvXjdhIcxeArbcZDnNK0
+	 EaZVPWOvmwn+XeptV4HSljwVxeW947bIeAFMW9Bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbfG2T26 (ORCPT
+        id S1730498AbfG2UOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41608 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:14:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727564AbfG2T2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:28:53 -0400
+        id S1730022AbfG2T2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:28:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22C692070B;
-        Mon, 29 Jul 2019 19:28:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79BE52171F;
+        Mon, 29 Jul 2019 19:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428532;
-        bh=wK7b6COeD7dL3yqszsDzRkPT8M+NtPOZ+usPFbJcXvs=;
+        s=default; t=1564428530;
+        bh=AQNp5ECe9sgyjFWOGgvv1e6tRkk2iwL30xwMF+qUeZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QEk4dfNT2LOBs2CGwzTFq2SucBWmLlVzRJ/Sit8IapDl3cyVE7yUQwTEUOnuuG/0c
-         ccC2vzqbB7/wIy0rTmrWx/ubmNRhBlNOkx4/PUhCqLKy6ynmry9cv7K3jUxh2zdRyB
-         Mrynq+iTXzuCD6RzsJdEAgPnHDOIq/T4kUkQoPVM=
+        b=y9EnJhSZ3jwZdGyexIDK9WfXewr0s1Wr0UcVpjQMx0f5zUBg6G9JUyUX51xydxT/W
+         k/b06tnSa2j7QqRKd3va9gJCqC3SJxXjVnRmeFw5iREfFNnQppgyKdfKZuQLVt2mis
+         m+wFhEM5tBGlorXQR7pkYao4U4//Vmh9PJgaBEdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Graeme Gregory <graeme.gregory@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 057/293] vhost_net: disable zerocopy by default
-Date:   Mon, 29 Jul 2019 21:19:08 +0200
-Message-Id: <20190729190828.485573190@linuxfoundation.org>
+Subject: [PATCH 4.14 066/293] acpi/arm64: ignore 5.1 FADTs that are reported as 5.0
+Date:   Mon, 29 Jul 2019 21:19:17 +0200
+Message-Id: <20190729190829.714016734@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,41 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 098eadce3c622c07b328d0a43dda379b38cf7c5e ]
+[ Upstream commit 2af22f3ec3ca452f1e79b967f634708ff01ced8a ]
 
-Vhost_net was known to suffer from HOL[1] issues which is not easy to
-fix. Several downstream disable the feature by default. What's more,
-the datapath was split and datacopy path got the support of batching
-and XDP support recently which makes it faster than zerocopy part for
-small packets transmission.
+Some Qualcomm Snapdragon based laptops built to run Microsoft Windows
+are clearly ACPI 5.1 based, given that that is the first ACPI revision
+that supports ARM, and introduced the FADT 'arm_boot_flags' field,
+which has a non-zero field on those systems.
 
-It looks to me that disable zerocopy by default is more
-appropriate. It cold be enabled by default again in the future if we
-fix the above issues.
+So in these cases, infer from the ARM boot flags that the FADT must be
+5.1 or later, and treat it as 5.1.
 
-[1] https://patchwork.kernel.org/patch/3787671/
-
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Tested-by: Lee Jones <lee.jones@linaro.org>
+Reviewed-by: Graeme Gregory <graeme.gregory@linaro.org>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/net.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/acpi.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index b40e8ded49c6..4d11152e60c1 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -35,7 +35,7 @@
+diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+index b3162715ed78..285f0b4851fc 100644
+--- a/arch/arm64/kernel/acpi.c
++++ b/arch/arm64/kernel/acpi.c
+@@ -157,10 +157,14 @@ static int __init acpi_fadt_sanity_check(void)
+ 	 */
+ 	if (table->revision < 5 ||
+ 	   (table->revision == 5 && fadt->minor_revision < 1)) {
+-		pr_err("Unsupported FADT revision %d.%d, should be 5.1+\n",
++		pr_err(FW_BUG "Unsupported FADT revision %d.%d, should be 5.1+\n",
+ 		       table->revision, fadt->minor_revision);
+-		ret = -EINVAL;
+-		goto out;
++
++		if (!fadt->arm_boot_flags) {
++			ret = -EINVAL;
++			goto out;
++		}
++		pr_err("FADT has ARM boot flags set, assuming 5.1\n");
+ 	}
  
- #include "vhost.h"
- 
--static int experimental_zcopytx = 1;
-+static int experimental_zcopytx = 0;
- module_param(experimental_zcopytx, int, 0444);
- MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
- 		                       " 1 -Enable; 0 - Disable");
+ 	if (!(fadt->flags & ACPI_FADT_HW_REDUCED)) {
 -- 
 2.20.1
 
