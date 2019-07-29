@@ -2,187 +2,152 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E27C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 00:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585BFC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 00:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C21E2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 00:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303382075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 00:08:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="TqpU6DfB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tYyC/bS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfG2AGf (ORCPT
+        id S1726496AbfG2AIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 20:06:35 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.178]:34894 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726247AbfG2AGe (ORCPT
+        Sun, 28 Jul 2019 20:08:30 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:41306 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfG2AIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 20:06:34 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 798D78AC987
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 19:06:33 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id rtBRh1qnRdnCertBRhVME7; Sun, 28 Jul 2019 19:06:33 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QkjKvpubCqC9ZQhSC933F0e4W2yO6Nx357J3l7vriHU=; b=TqpU6DfBuif22wWrSzC8X/0qqJ
-        ZPuwot/n0fdBuaqk5eTTW8BYNTRwI6NKzVzY5Yd80GV/svEbnqd/3dRFWiPGE5pZd8WEini7LUje8
-        7xBJn3LTQObVtXGwSdpQNqhj8srxsXqdcJpqCZ5A+rgsmgiLs2wQXRSgQLAr+plsaR8VoJtXO3jWZ
-        agxetzyXVb0H+PmLhrgZcItvYsaOOInfYL9NOgA82eMAt4gkgVFycIKAP6g1kG7sbpyByuMuQpIc6
-        LtDN5pWii6+279CBjB11s1oH/tqXAW4bR3yOKanxy5JaftSIwum4a5QwKyGP3wgCidQtBx0r/W3Tw
-        J5w7oXzg==;
-Received: from [187.192.11.120] (port=39678 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hrtBP-003qoQ-Mr; Sun, 28 Jul 2019 19:06:31 -0500
-Date:   Sun, 28 Jul 2019 19:06:31 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] usb: phy: ab8500-usb: Mark expected switch fall-throughs
-Message-ID: <20190729000631.GA24165@embeddedor>
+        Sun, 28 Jul 2019 20:08:30 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6T07EFJ051956;
+        Mon, 29 Jul 2019 00:08:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=1Xbfu53Ww+9Z+XNOFW2PofuFqfEK+HKRB6513qm7i5Y=;
+ b=tYyC/bS8yk5A4Rgyi3odQeC+rThpG7kZYc9fOlzrTmkjCxQl9ts582umcexy7zj7Ts8J
+ knNzh9ry4/9OWmxqKoHxJlFYlkwL7REjLLG71x6W9ZX0cOBenLPYAHKGyNsZ9gfX0fT2
+ PpqvkECfJCP6lrByktB9s/LY5z4pgPghB4ZWdw5Fy2TTCOcCM05pvScdtTBsZEBrfBLG
+ Sj215QeUv90xHqGsR7frNhT4zgy1Bg/fcJ/JqcZQp0LieLZMKj6cUX7nNtUmu2niI332
+ kZvUL3auUknYIxUjRY2RN463dr2jCbyH09bIiWEK8fZRD1bhH1oNm9bAJ8SsSUIa7WFk EQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2u0ejp47uw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jul 2019 00:08:09 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6T02Y0B035038;
+        Mon, 29 Jul 2019 00:06:09 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2u0ee3mfyd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jul 2019 00:06:09 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6T0625R028613;
+        Mon, 29 Jul 2019 00:06:02 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 29 Jul 2019 00:06:02 +0000
+Date:   Sun, 28 Jul 2019 17:06:03 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        linux-xfs@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: lift the xfs writepage code into iomap v3
+Message-ID: <20190729000603.GL1561054@magnolia>
+References: <20190722095024.19075-1-hch@lst.de>
+ <20190726233753.GD2166993@magnolia>
+ <CAHc6FU7L52soLiRafnOiTsaMYp4X_NmjjimpMMzdaoSH_afT+A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAHc6FU7L52soLiRafnOiTsaMYp4X_NmjjimpMMzdaoSH_afT+A@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hrtBP-003qoQ-Mr
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:39678
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9332 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907280302
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9332 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907280302
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+On Sat, Jul 27, 2019 at 03:33:14PM +0200, Andreas Gruenbacher wrote:
+> On Sat, 27 Jul 2019 at 01:38, Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> > On Mon, Jul 23, 2019 at 11:50:12AM +0200, Christoph Hellwig wrote:
+> > > Hi all,
+> > >
+> > > this series cleans up the xfs writepage code and then lifts it to
+> > > fs/iomap.c so that it could be use by other file system.  I've been
+> > > wanting to this for a while so that I could eventually convert gfs2
+> > > over to it, but I never got to it.  Now Damien has a new zonefs
+> > > file system for semi-raw access to zoned block devices that would
+> > > like to use the iomap code instead of reinventing it, so I finally
+> > > had to do the work.
+> >
+> > Hmm... I don't like how there are xfs changes mixed in with the iomap
+> > changes, because were I to take this series as-is then I'd have to
+> > commit both to adding iomap writeback code /and/ converting xfs at the
+> > same time.
+> >
+> > I think I'd be more comfortable creating a branch to merge the changes
+> > to list.h and fs/iomap/, and then gfs2/zonefs/xfs can sprout their own
+> > branches from there to do whatever conversions are necessary.
+> >
+> > To me what that means is splitting patch 7 into 7a which does the iomap
+> > changes and 7b which does the xfs changes.  To get there, I'd create a
+> > iomap-writeback branch containing:
+> >
+> > 1 7a 8 9 10 11 12
+> >
+> > and then a new xfs-iomap-writeback branch containing:
+> >
+> > 2 4 7b
+> >
+> > This eliminates the need for patches 3, 5, and 6, though the cost is
+> > that it's less clear from the history that we did some reorganizing of
+> > the xfs writeback code and then moved it over to iomap.  OTOH, I also
+> > see this as a way to lower risk because if some patch in the
+> > xfs-iomap-writeback branch shakes loose a bug that doesn't affect gfs2
+> > or zonedfs we don't have to hold them up.
+> >
+> > I'll try to restructure this series along those lines and report back
+> > how it went.
+> 
+> Keeping the infrastructure changes in separate commits would certainly
+> make the patches easier to work with for me. Keeping the commits
+> interleaved should be fine though: patch "iomap: zero newly allocated
+> mapped blocks" depends on "xfs: set IOMAP_F_NEW more carefully", so a
+> pure infrastructure branch without "xfs: set IOMAP_F_NEW more
+> carefully" probably wouldn't be correct.
 
-This patch fixes the following warnings:
+<nod> In the end I went with:
 
-drivers/usb/phy/phy-ab8500-usb.c: In function 'ab8500_usb_link_status_update':
-drivers/usb/phy/phy-ab8500-usb.c:424:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   event = UX500_MUSB_RIDB;
-   ~~~~~~^~~~~~~~~~~~~~~~~
-drivers/usb/phy/phy-ab8500-usb.c:425:2: note: here
-  case USB_LINK_NOT_CONFIGURED_8500:
-  ^~~~
-drivers/usb/phy/phy-ab8500-usb.c:440:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   event = UX500_MUSB_RIDC;
-   ~~~~~~^~~~~~~~~~~~~~~~~
-drivers/usb/phy/phy-ab8500-usb.c:441:2: note: here
-  case USB_LINK_STD_HOST_NC_8500:
-  ^~~~
-drivers/usb/phy/phy-ab8500-usb.c:459:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   event = UX500_MUSB_RIDA;
-   ~~~~~~^~~~~~~~~~~~~~~~~
-drivers/usb/phy/phy-ab8500-usb.c:460:2: note: here
-  case USB_LINK_HM_IDGND_8500:
-  ^~~~
-drivers/usb/phy/phy-ab8500-usb.c: In function 'ab8505_usb_link_status_update':
-drivers/usb/phy/phy-ab8500-usb.c:332:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   event = UX500_MUSB_RIDB;
-   ~~~~~~^~~~~~~~~~~~~~~~~
-drivers/usb/phy/phy-ab8500-usb.c:333:2: note: here
-  case USB_LINK_NOT_CONFIGURED_8505:
-  ^~~~
-drivers/usb/phy/phy-ab8500-usb.c:352:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   event = UX500_MUSB_RIDC;
-   ~~~~~~^~~~~~~~~~~~~~~~~
-drivers/usb/phy/phy-ab8500-usb.c:353:2: note: here
-  case USB_LINK_STD_HOST_NC_8505:
-  ^~~~
-drivers/usb/phy/phy-ab8500-usb.c:370:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   event = UX500_MUSB_RIDA;
-   ~~~~~~^~~~~~~~~~~~~~~~~
-drivers/usb/phy/phy-ab8500-usb.c:371:2: note: here
-  case USB_LINK_HM_IDGND_8505:
-  ^~~~
+iomap: 1 7a 8 9 10 11 12
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/usb/phy/phy-ab8500-usb.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+and then atop that:
 
-diff --git a/drivers/usb/phy/phy-ab8500-usb.c b/drivers/usb/phy/phy-ab8500-usb.c
-index aaf363f19714..14b432982fd3 100644
---- a/drivers/usb/phy/phy-ab8500-usb.c
-+++ b/drivers/usb/phy/phy-ab8500-usb.c
-@@ -330,6 +330,7 @@ static int ab8505_usb_link_status_update(struct ab8500_usb *ab,
- 	switch (lsts) {
- 	case USB_LINK_ACA_RID_B_8505:
- 		event = UX500_MUSB_RIDB;
-+		/* Fall through */
- 	case USB_LINK_NOT_CONFIGURED_8505:
- 	case USB_LINK_RESERVED0_8505:
- 	case USB_LINK_RESERVED1_8505:
-@@ -350,6 +351,7 @@ static int ab8505_usb_link_status_update(struct ab8500_usb *ab,
- 
- 	case USB_LINK_ACA_RID_C_NM_8505:
- 		event = UX500_MUSB_RIDC;
-+		/* Fall through */
- 	case USB_LINK_STD_HOST_NC_8505:
- 	case USB_LINK_STD_HOST_C_NS_8505:
- 	case USB_LINK_STD_HOST_C_S_8505:
-@@ -368,6 +370,7 @@ static int ab8505_usb_link_status_update(struct ab8500_usb *ab,
- 	case USB_LINK_ACA_RID_A_8505:
- 	case USB_LINK_ACA_DOCK_CHGR_8505:
- 		event = UX500_MUSB_RIDA;
-+		/* Fall through */
- 	case USB_LINK_HM_IDGND_8505:
- 		if (ab->mode == USB_IDLE) {
- 			ab->mode = USB_HOST;
-@@ -422,6 +425,7 @@ static int ab8500_usb_link_status_update(struct ab8500_usb *ab,
- 	switch (lsts) {
- 	case USB_LINK_ACA_RID_B_8500:
- 		event = UX500_MUSB_RIDB;
-+		/* Fall through */
- 	case USB_LINK_NOT_CONFIGURED_8500:
- 	case USB_LINK_NOT_VALID_LINK_8500:
- 		ab->mode = USB_IDLE;
-@@ -438,6 +442,7 @@ static int ab8500_usb_link_status_update(struct ab8500_usb *ab,
- 	case USB_LINK_ACA_RID_C_HS_8500:
- 	case USB_LINK_ACA_RID_C_HS_CHIRP_8500:
- 		event = UX500_MUSB_RIDC;
-+		/* Fall through */
- 	case USB_LINK_STD_HOST_NC_8500:
- 	case USB_LINK_STD_HOST_C_NS_8500:
- 	case USB_LINK_STD_HOST_C_S_8500:
-@@ -457,6 +462,7 @@ static int ab8500_usb_link_status_update(struct ab8500_usb *ab,
- 
- 	case USB_LINK_ACA_RID_A_8500:
- 		event = UX500_MUSB_RIDA;
-+		/* Fall through */
- 	case USB_LINK_HM_IDGND_8500:
- 		if (ab->mode == USB_IDLE) {
- 			ab->mode = USB_HOST;
--- 
-2.22.0
+xfs: 2 4 3 5 6 7b
 
+Because xfs can merge the refactoring in patches 2 & 4 without needing
+to take patches 3-7b.  Will retest overnight with -rc2 (now that scsi
+works again <cough>).
+
+--D
+
+> Thanks,
+> Andreas
