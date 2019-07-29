@@ -7,381 +7,144 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89788C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88DAC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C9920578
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B953820578
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbfG2N4t (ORCPT
+        id S1727984AbfG2N71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 09:56:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:44680 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbfG2N4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 09:56:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BD2028;
-        Mon, 29 Jul 2019 06:56:45 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 912203F71F;
-        Mon, 29 Jul 2019 06:56:42 -0700 (PDT)
-Subject: Re: [PATCH v9 19/21] mm: Add generic ptdump
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190722154210.42799-1-steven.price@arm.com>
- <20190722154210.42799-20-steven.price@arm.com>
- <f8444b1f-c886-9bfd-4873-3ed9068d3c44@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <75e314f2-b4e6-0a5f-20f0-ad5f56ce77f6@arm.com>
-Date:   Mon, 29 Jul 2019 14:56:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 09:59:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33868 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726767AbfG2N71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 09:59:27 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AC2E8B87C8480C7DA8F3;
+        Mon, 29 Jul 2019 21:43:42 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
+ 21:43:36 +0800
+Subject: Re: [RFC PATCH 08/10] powerpc/fsl_booke/kaslr: clear the original
+ kernel if randomized
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
+        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
+        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>
+References: <20190717080621.40424-1-yanaijie@huawei.com>
+ <20190717080621.40424-9-yanaijie@huawei.com>
+ <a09b4f53-2ccd-e675-4385-b53fd91fbafc@c-s.fr>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <704624a1-36b7-50d7-cf8d-2923b2a97367@huawei.com>
+Date:   Mon, 29 Jul 2019 21:43:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-In-Reply-To: <f8444b1f-c886-9bfd-4873-3ed9068d3c44@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <a09b4f53-2ccd-e675-4385-b53fd91fbafc@c-s.fr>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2019 03:59, Anshuman Khandual wrote:
+
+On 2019/7/29 19:19, Christophe Leroy wrote:
 > 
-> On 07/22/2019 09:12 PM, Steven Price wrote:
->> Add a generic version of page table dumping that architectures can
->> opt-in to
+> 
+> Le 17/07/2019 à 10:06, Jason Yan a écrit :
+>> The original kernel still exists in the memory, clear it now.
 >>
->> Signed-off-by: Steven Price <steven.price@arm.com>
+>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>> Cc: Diana Craciun <diana.craciun@nxp.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Paul Mackerras <paulus@samba.org>
+>> Cc: Nicholas Piggin <npiggin@gmail.com>
+>> Cc: Kees Cook <keescook@chromium.org>
 >> ---
->>  include/linux/ptdump.h |  19 +++++
->>  mm/Kconfig.debug       |  21 ++++++
->>  mm/Makefile            |   1 +
->>  mm/ptdump.c            | 161 +++++++++++++++++++++++++++++++++++++++++
->>  4 files changed, 202 insertions(+)
->>  create mode 100644 include/linux/ptdump.h
->>  create mode 100644 mm/ptdump.c
+>>   arch/powerpc/kernel/kaslr_booke.c  | 11 +++++++++++
+>>   arch/powerpc/mm/mmu_decl.h         |  2 ++
+>>   arch/powerpc/mm/nohash/fsl_booke.c |  1 +
+>>   3 files changed, 14 insertions(+)
 >>
->> diff --git a/include/linux/ptdump.h b/include/linux/ptdump.h
->> new file mode 100644
->> index 000000000000..eb8e78154be3
->> --- /dev/null
->> +++ b/include/linux/ptdump.h
->> @@ -0,0 +1,19 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
+>> diff --git a/arch/powerpc/kernel/kaslr_booke.c 
+>> b/arch/powerpc/kernel/kaslr_booke.c
+>> index 90357f4bd313..00339c05879f 100644
+>> --- a/arch/powerpc/kernel/kaslr_booke.c
+>> +++ b/arch/powerpc/kernel/kaslr_booke.c
+>> @@ -412,3 +412,14 @@ notrace void __init kaslr_early_init(void 
+>> *dt_ptr, phys_addr_t size)
+>>       reloc_kernel_entry(dt_ptr, kimage_vaddr);
+>>   }
 >> +
->> +#ifndef _LINUX_PTDUMP_H
->> +#define _LINUX_PTDUMP_H
+>> +void __init kaslr_second_init(void)
+>> +{
+>> +    /* If randomized, clear the original kernel */
+>> +    if (kimage_vaddr != KERNELBASE) {
+>> +        unsigned long kernel_sz;
 >> +
->> +struct ptdump_range {
->> +	unsigned long start;
->> +	unsigned long end;
->> +};
->> +
->> +struct ptdump_state {
->> +	void (*note_page)(struct ptdump_state *st, unsigned long addr,
->> +			  int level, unsigned long val);
->> +	const struct ptdump_range *range;
->> +};
->> +
->> +void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm);
->> +
->> +#endif /* _LINUX_PTDUMP_H */
->> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
->> index 82b6a20898bd..7ad939b7140f 100644
->> --- a/mm/Kconfig.debug
->> +++ b/mm/Kconfig.debug
->> @@ -115,3 +115,24 @@ config DEBUG_RODATA_TEST
->>      depends on STRICT_KERNEL_RWX
->>      ---help---
->>        This option enables a testcase for the setting rodata read-only.
->> +
->> +config GENERIC_PTDUMP
->> +	bool
->> +
->> +config PTDUMP_CORE
->> +	bool
->> +
->> +config PTDUMP_DEBUGFS
->> +	bool "Export kernel pagetable layout to userspace via debugfs"
->> +	depends on DEBUG_KERNEL
->> +	depends on DEBUG_FS
->> +	depends on GENERIC_PTDUMP
->> +	select PTDUMP_CORE
+>> +        kernel_sz = (unsigned long)_end - kimage_vaddr;
+>> +        memset((void *)KERNELBASE, 0, kernel_sz);
 > 
-> So PTDUMP_DEBUGFS depends on GENERIC_PTDUMP but selects PTDUMP_CORE. So any arch
-> subscribing this new generic PTDUMP by selecting GENERIC_PTDUMP needs to provide
-> some functions for PTDUMP_DEBUGFS which does not really have any code in generic
-> MM. Also ptdump_walk_pgd() is wrapped in PTDUMP_CORE not GENERIC_PTDUMP. Then what
-> does PTDUMP_GENERIC really indicate ? Bit confusing here.
-
-The intention is:
-
-* PTDUMP_DEBUGFS: Controls if the debugfs file is available. This
-enables arch specific code which creates the debugfs file (as the files
-available vary between architectures).
-
-* GENERIC_PTDUMP: Architecture is opting in to the generic ptdump
-infrastructure. The arch code is expected to provide the debugfs code
-for PTDUMP_DBEUGFS.
-
-* PTDUMP_CORE: The core page table walker is enabled. This code is used
-by both PTDUMP_DEBUGFS as well as the DEBUG_WX ("Warn on W+X mappings at
-boot"). x86 also has EFI_PGT_DUMP which uses the core.
-
-> The new ptdump_walk_pgd() symbol needs to be wrapped in a config symbol for sure
-> which should be selected in all platforms wishing to use it. GENERIC_PTDUMP can
-> be that config.
-
-The intention is that GENERIC_PTDUMP is signalling that the architecture
-supports PTDUMP_DEBUGFS. PTDUMP_CORE is the configuration which chooses
-whether ptdump_walk_pgd() is built - selected by the options that
-require it.
-
-> PTDUMP_DEBUGFS will require a full implementation (i.e PTDUMP_CORE) irrespective
-> of whether the platform subscribes GENERIC_PTDUMP or not. It should be something
-> like this.
+> Why are we clearing ? Is that just to tidy up or is it of security 
+> importance ?
 > 
-> config PTDUMP_DEBUGFS
-> 	bool "Export kernel pagetable layout to userspace via debugfs"
-> 	depends on DEBUG_KERNEL
-> 	depends on DEBUG_FS
-> 	select PTDUMP_CORE
+
+If we leave it there, attackers can still find the kernel object very
+easy, it's still dangerous especially if without 
+CONFIG_STRICT_KERNEL_RWX enabled.
+
+> If so, maybe memzero_explicit() should be used instead ?
 > 
-> PTDUMP_DEBUGFS need not depend on GENERIC_PTDUMP. All it requires is a PTDUMP_CORE
-> implementation which can optionally use ptdump_walk_pgd() through GENERIC_PTDUMP.
-> s/GENERIC_PTDUMP/PTDUMP_GENERIC to match and group with other configs.
 
-The intention here is to hide PTDUMP_DEBUGFS on architectures that
-haven't migrated to it. Because the generic code isn't responsible for
-creating the debugfs entries if we don't hide it then it will compile
-but nothing will appear in debugfs.
+OK
 
-> DEBUG_WX can also be moved to generic MM like PTDUMP_DEBUGFS ?
-
-Well the DEBUG_WX requires some arch specific code (separate from
-PTDUMP_DEBUGFS), so while the config option could be moved you would
-then require a "ARCH_HAS_DEBUG_WX" to hide it on the architectures that
-don't support it. I'm not sure that's worth doing when only 3
-architectures support it, and I would argue it's separate to this patch
-series so can be done at a different time.
-
->> +	help
->> +	  Say Y here if you want to show the kernel pagetable layout in a
->> +	  debugfs file. This information is only useful for kernel developers
->> +	  who are working in architecture specific areas of the kernel.
->> +	  It is probably not a good idea to enable this feature in a production
->> +	  kernel.
->> +
->> +	  If in doubt, say N.
->> diff --git a/mm/Makefile b/mm/Makefile
->> index 338e528ad436..750a4c12d5da 100644
->> --- a/mm/Makefile
->> +++ b/mm/Makefile
->> @@ -104,3 +104,4 @@ obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
->>  obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
->>  obj-$(CONFIG_HMM_MIRROR) += hmm.o
->>  obj-$(CONFIG_MEMFD_CREATE) += memfd.o
->> +obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
+>> +    }
+>> +}
+>> diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+>> index 754ae1e69f92..9912ee598f9b 100644
+>> --- a/arch/powerpc/mm/mmu_decl.h
+>> +++ b/arch/powerpc/mm/mmu_decl.h
+>> @@ -150,8 +150,10 @@ extern void loadcam_multi(int first_idx, int num, 
+>> int tmp_idx);
+>>   #ifdef CONFIG_RANDOMIZE_BASE
+>>   extern void kaslr_early_init(void *dt_ptr, phys_addr_t size);
+>> +extern void kaslr_second_init(void);
 > 
-> Should be GENERIC_PTDUMP instead ?
-
-No - GENERIC_PTDUMP is just signalling the architecture support it, we
-don't want to compile in the code unless it is used.
-
->> diff --git a/mm/ptdump.c b/mm/ptdump.c
->> new file mode 100644
->> index 000000000000..39befc9088b8
->> --- /dev/null
->> +++ b/mm/ptdump.c
->> @@ -0,0 +1,161 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/mm.h>
->> +#include <linux/ptdump.h>
->> +#include <linux/kasan.h>
->> +
->> +static int ptdump_pgd_entry(pgd_t *pgd, unsigned long addr,
->> +			    unsigned long next, struct mm_walk *walk)
->> +{
->> +	struct ptdump_state *st = walk->private;
->> +	pgd_t val = READ_ONCE(*pgd);
->> +
->> +	if (pgd_leaf(val))
->> +		st->note_page(st, addr, 1, pgd_val(val));
->> +
->> +	return 0;
->> +}
->> +
->> +static int ptdump_p4d_entry(p4d_t *p4d, unsigned long addr,
->> +			    unsigned long next, struct mm_walk *walk)
->> +{
->> +	struct ptdump_state *st = walk->private;
->> +	p4d_t val = READ_ONCE(*p4d);
->> +
->> +	if (p4d_leaf(val))
->> +		st->note_page(st, addr, 2, p4d_val(val));
->> +
->> +	return 0;
->> +}
->> +
->> +static int ptdump_pud_entry(pud_t *pud, unsigned long addr,
->> +			    unsigned long next, struct mm_walk *walk)
->> +{
->> +	struct ptdump_state *st = walk->private;
->> +	pud_t val = READ_ONCE(*pud);
->> +
->> +	if (pud_leaf(val))
->> +		st->note_page(st, addr, 3, pud_val(val));
->> +
->> +	return 0;
->> +}
->> +
->> +static int ptdump_pmd_entry(pmd_t *pmd, unsigned long addr,
->> +			    unsigned long next, struct mm_walk *walk)
->> +{
->> +	struct ptdump_state *st = walk->private;
->> +	pmd_t val = READ_ONCE(*pmd);
->> +
->> +	if (pmd_leaf(val))
->> +		st->note_page(st, addr, 4, pmd_val(val));
->> +
->> +	return 0;
->> +}
->> +
->> +static int ptdump_pte_entry(pte_t *pte, unsigned long addr,
->> +			    unsigned long next, struct mm_walk *walk)
->> +{
->> +	struct ptdump_state *st = walk->private;
->> +
->> +	st->note_page(st, addr, 5, pte_val(READ_ONCE(*pte)));
->> +
->> +	return 0;
->> +}
->> +
->> +#ifdef CONFIG_KASAN
->> +/*
->> + * This is an optimization for KASAN=y case. Since all kasan page tables
->> + * eventually point to the kasan_early_shadow_page we could call note_page()
->> + * right away without walking through lower level page tables. This saves
->> + * us dozens of seconds (minutes for 5-level config) while checking for
->> + * W+X mapping or reading kernel_page_tables debugfs file.
->> + */
->> +static inline bool kasan_page_table(struct ptdump_state *st, void *pt,
->> +				    unsigned long addr)
->> +{
->> +	if (__pa(pt) == __pa(kasan_early_shadow_pmd) ||
->> +#ifdef CONFIG_X86
->> +	    (pgtable_l5_enabled() &&
->> +			__pa(pt) == __pa(kasan_early_shadow_p4d)) ||
->> +#endif
->> +	    __pa(pt) == __pa(kasan_early_shadow_pud)) {
->> +		st->note_page(st, addr, 5, pte_val(kasan_early_shadow_pte[0]));
->> +		return true;
->> +	}
->> +	return false;
->> +}
->> +#else
->> +static inline bool kasan_page_table(struct ptdump_state *st, void *pt,
->> +				    unsigned long addr)
->> +{
->> +	return false;
->> +}
->> +#endif
->> +
->> +static int ptdump_test_p4d(unsigned long addr, unsigned long next,
->> +			   p4d_t *p4d, struct mm_walk *walk)
->> +{
->> +	struct ptdump_state *st = walk->private;
->> +
->> +	if (kasan_page_table(st, p4d, addr))
->> +		return 1;
->> +	return 0;
->> +}
->> +
->> +static int ptdump_test_pud(unsigned long addr, unsigned long next,
->> +			   pud_t *pud, struct mm_walk *walk)
->> +{
->> +	struct ptdump_state *st = walk->private;
->> +
->> +	if (kasan_page_table(st, pud, addr))
->> +		return 1;
->> +	return 0;
->> +}
->> +
->> +static int ptdump_test_pmd(unsigned long addr, unsigned long next,
->> +			   pmd_t *pmd, struct mm_walk *walk)
->> +{
->> +	struct ptdump_state *st = walk->private;
->> +
->> +	if (kasan_page_table(st, pmd, addr))
->> +		return 1;
->> +	return 0;
->> +}
->> +
->> +static int ptdump_hole(unsigned long addr, unsigned long next,
->> +		       struct mm_walk *walk)
->> +{
->> +	struct ptdump_state *st = walk->private;
->> +
->> +	st->note_page(st, addr, -1, 0);
->> +
->> +	return 0;
->> +}
->> +
->> +void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm)
->> +{
->> +	struct mm_walk walk = {
->> +		.mm		= mm,
->> +		.pgd_entry	= ptdump_pgd_entry,
->> +		.p4d_entry	= ptdump_p4d_entry,
->> +		.pud_entry	= ptdump_pud_entry,
->> +		.pmd_entry	= ptdump_pmd_entry,
->> +		.pte_entry	= ptdump_pte_entry,
->> +		.test_p4d	= ptdump_test_p4d,
->> +		.test_pud	= ptdump_test_pud,
->> +		.test_pmd	= ptdump_test_pmd,
->> +		.pte_hole	= ptdump_hole,
->> +		.private	= st
->> +	};
->> +	const struct ptdump_range *range = st->range;
->> +
->> +	down_read(&mm->mmap_sem);
->> +	while (range->start != range->end) {
->> +		walk_page_range(range->start, range->end, &walk);
->> +		range++;
->> +	}
->> +	up_read(&mm->mmap_sem);
+> No new 'extern' please.
 > 
-> Does walk_page_range() really needed here when it is definitely walking a
-> kernel page table. Why not directly use walk_pgd_range() instead which can
-> save some cycles avoiding going over VMAs, checking for HugeTLB, taking the
-> mmap_sem lock etc. AFAICS only thing it will miss is the opportunity to call
-> walk->test_walk() via walk_page_test(). IIUC test_walk() callback is primarily
-> for testing a VMA for it's eligibility and for kernel page table now there are
-> test callbacks like p?d_test() for individual levels anyway.
+>>   #else
+>>   static inline void kaslr_early_init(void *dt_ptr, phys_addr_t size) {}
+>> +static inline void kaslr_second_init(void) {}
+>>   #endif
+>>   struct tlbcam {
+>> diff --git a/arch/powerpc/mm/nohash/fsl_booke.c 
+>> b/arch/powerpc/mm/nohash/fsl_booke.c
+>> index 8d25a8dc965f..fa5a87f5c08e 100644
+>> --- a/arch/powerpc/mm/nohash/fsl_booke.c
+>> +++ b/arch/powerpc/mm/nohash/fsl_booke.c
+>> @@ -269,6 +269,7 @@ notrace void __init relocate_init(u64 dt_ptr, 
+>> phys_addr_t start)
+>>       kernstart_addr = start;
+>>       if (is_second_reloc) {
+>>           virt_phys_offset = PAGE_OFFSET - memstart_addr;
+>> +        kaslr_second_init();
+>>           return;
+>>       }
+>>
+> 
+> Christophe
+> 
+> .
+> 
 
-Well it's a debug interface so saving a few cycles is largely
-irrelevant. I'm reluctant to export walk_pgd_range() in case it gets
-used to walk real VMAs. Having just one interface is cleanest. But I
-agree for kernel mappings all the extra work in walk_page_range() isn't
-needed.
-
-Steve
