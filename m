@@ -2,135 +2,148 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F28C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BD7C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76CCB20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202ED20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="lyIFFZOD"
+	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="WBSjQ597"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730584AbfG2V7S (ORCPT
+        id S1730615AbfG2V7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:59:18 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41426 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389497AbfG2V7N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:59:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so60263156wrm.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:59:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aoCU6uPiHr0PzNNlgylsAXV9auaD7Fl9k+QB3VPTwmU=;
-        b=lyIFFZOD5gGnj2VKFbxI8Hxm8GCuaJLZOdM1TyAWTYxIPvJazlmaSBv32iCYrkk9A5
-         DfFEvqo6cOZTHKDRnFIdSlBt8YD/QZ8veboYXgj4rB+mpr//AYCUP4yKtAAzfbm+Nw14
-         mJ03K6t68W5ENcS05b+wwnmCMlkOaDoX6b03Qe8GTZOa9fy7qFMb3+H7oFCig63RkBEn
-         rlQ36OfCpIKR4G/fJWpg/Qs2MUcYqJTKypbbp4nl7UKrVyZwUDn559vkbLSVW6GIb2F9
-         jHRXiTd2wswHPS5WdJTjC2JHRc9AQmguOe9J1Xz+EfKWXT4WtQree65HPLVX3qjngW3I
-         o1MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aoCU6uPiHr0PzNNlgylsAXV9auaD7Fl9k+QB3VPTwmU=;
-        b=jyZkKftqAuwe4nHZufmQ2uwlzUSPJ7nnterZeuMVYvYCM1YLdMd8Yi/p+of6m0XHhA
-         1U8IqhKfP1IYjYR2bviy0S5Z2HgSZRgU/47RLxbKhxtX0yS6ZqwxKG1zbEO3NP1DQqam
-         +A0Xt2oV8rTIbLd1rSlG9JAipTFXDYAFWQgh4omLDXTNnzoaY8uVJlrK6modDuiLyyLq
-         ngyV7ADnrgsyAWosTjafVW1yvl2cIrGgV8V8MeWp9Bw7jcQWB4g6e9RAwiOFHRH/znnn
-         ActLB9tfAzWi6gV+1BQ0dk7xA3FdolNV9r+WsAhrGq17I7LjJVDovRcec1pPijXU7RDo
-         65Kg==
-X-Gm-Message-State: APjAAAVOoXCmh8HbqlvyDA9egUaxnklgch/ZuFXGmYVFV6ZKsg8zuXZg
-        DRUMjB278wPzR2XfiZXgvgIO5DcCsfJVbXzJahuFpJx3xMMrtGojkkn1a4NNbjs0xiI5H7hUkml
-        uDtuqyKQcFBcWAz6M2CG8HfxOQ2FU5JqkM5MPgbdJDucmOFPo1TG9jsNIrZ4NERdBgFKGWI+2QC
-        qZQrv2QrbXwTgF/YBtFBIwO/b+1mNwVk1zg1TCd2w=
-X-Google-Smtp-Source: APXvYqwo+T0JZn8gYaWYPlQ7YHb0W1CWyxIgG9rZ2SMtPY56m1Y6nTv2AwANMMtSkZjoHgHSB+0fqg==
-X-Received: by 2002:adf:aac8:: with SMTP id i8mr17425wrc.56.1564437551664;
-        Mon, 29 Jul 2019 14:59:11 -0700 (PDT)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id x20sm49230728wmc.1.2019.07.29.14.59.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 14:59:11 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv5 13/37] posix-timers: Make timer_settime() time namespace aware
-Date:   Mon, 29 Jul 2019 22:57:33 +0100
-Message-Id: <20190729215758.28405-52-dima@arista.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729215758.28405-1-dima@arista.com>
-References: <20190729215758.28405-1-dima@arista.com>
+        Mon, 29 Jul 2019 17:59:22 -0400
+Received: from mx.kolabnow.com ([95.128.36.42]:29794 "EHLO mx.kolabnow.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730602AbfG2V7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 17:59:21 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out001.mykolab.com (Postfix) with ESMTP id 2221C5B5;
+        Mon, 29 Jul 2019 23:59:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
+        content-transfer-encoding:content-type:content-type:mime-version
+        :message-id:date:date:subject:subject:from:from:received
+        :received:received; s=dkim20160331; t=1564437558; x=1566251959;
+         bh=gmrks1gL8rsotA022rT28bK42uNcWkGQHEPJY39U71w=; b=WBSjQ597086J
+        LZMCKHP/8Pwv73dnSnLFg177Cs/8lH6bQ3/j7n25tVkEf1QZeuDWZ5kTbK1lUS90
+        R1ZUgIQW996FjzCadA6aOM3wXtTYar0C6pE5YecvwsUzOLn8Jkx3Fh9AR+hRQtNM
+        y3+KqSa+XsdiDyv9N4BFQcZduillxAtRCm4X8y4P1GANKrBnnbXP9KDYZ50M51cF
+        5ea0TxZxYBpKXb3j7L96qYYLm/J7+85gle8VJpjkwcVHY5VKXbzEtclrhFA55am/
+        Ea4BE9hUs7WQ1lpKvq7RxBFLnLzy+43wFVU9S6Ou6j9Tk1HD4ggYFGedHjhwGKP2
+        nju7MCwtKCzxd6Y/Bz0oHRi2hehqiaoiY20j8EUidTyNVSZpW6qZ+8+VclY7wL6l
+        aG+Nib9G37L09U0XHyTpF5xcTSoJq/zBagbeaUALPMAyx1JX0c+vjSNCQ97U80kN
+        KlsPD/Z/7ARr3+LRuYn+/U7gTJVs3Id78qL5mjm2ZBvzxJ2JCCOX4HhT9NDYMxJi
+        6mzZrWCSVSfSQvsXvx+uXcEUwpZguQQjkhDgOkBHIZEJfxexkndiI4vDkzmX7NnJ
+        vZTFBC/N4lvMSlNWBodj2hGht3UB7WRb4357GYRZoaxn6D0aNWYUWhbRqorTWjxZ
+        I6EBiJ4a5kMGmUiHrAL/IQ0GfomBLxU=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out001.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Wqn3w0dfto0H; Mon, 29 Jul 2019 23:59:18 +0200 (CEST)
+Received: from int-mx001.mykolab.com (unknown [10.9.13.1])
+        by ext-mx-out001.mykolab.com (Postfix) with ESMTPS id 7413135F;
+        Mon, 29 Jul 2019 23:59:17 +0200 (CEST)
+Received: from ext-subm003.mykolab.com (unknown [10.9.6.3])
+        by int-mx001.mykolab.com (Postfix) with ESMTPS id 52444B23;
+        Mon, 29 Jul 2019 23:59:16 +0200 (CEST)
+From:   Federico Vaga <federico.vaga@vaga.pv.it>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Alessia Mantegazza <amantegazza@vaga.pv.it>
+Subject: [PATCH] doc:it_IT: align translation to mainline
+Date:   Mon, 29 Jul 2019 23:58:56 +0200
+Message-Id: <20190729215856.11128-1-federico.vaga@vaga.pv.it>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CLOUD-SEC-AV-Info: arista,google_mail,monitor
-X-CLOUD-SEC-AV-Sent: true
-X-Gm-Spam: 0
-X-Gm-Phishy: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
+The patch translates the following patches in Italian:
 
-Wire timer_settime() syscall into time namespace virtualization.
+1fb12b35e5ff kbuild: Raise the minimum required binutils version to 2.21
+9c3c0c204814 isdn: remove isdn4linux
 
-sys_timer_settime() calls the ktime->timer_set() callback. Right now,
-common_timer_set() is the only implementation for the callback.
-
-There user-supplied timer's value is converted from timespec64 to ktime
-and then timens_ktime_to_host() can be used to convert namespace's time
-to the host time.
-
-Inside a time namespace kernel's time differ on a fixed offset from
-a user-supplied, but only absolute values (TIMER_ABSTIME) must
-be converted.
-
-Signed-off-by: Andrei Vagin <avagin@openvz.org>
-Co-developed-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
 ---
- kernel/time/posix-timers.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../translations/it_IT/process/changes.rst    | 22 ++++---------------
+ 1 file changed, 4 insertions(+), 18 deletions(-)
 
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index 265fbc816520..c979e720a5a1 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -857,6 +857,8 @@ int common_timer_set(struct k_itimer *timr, int flags,
+diff --git a/Documentation/translations/it_IT/process/changes.rst b/Documentation/translations/it_IT/process/changes.rst
+index d0874327f301..94a6499742ac 100644
+--- a/Documentation/translations/it_IT/process/changes.rst
++++ b/Documentation/translations/it_IT/process/changes.rst
+@@ -26,16 +26,15 @@ Prima di pensare d'avere trovato un baco, aggiornate i seguenti programmi
+ usando, il comando indicato dovrebbe dirvelo.
  
- 	timr->it_interval = timespec64_to_ktime(new_setting->it_interval);
- 	expires = timespec64_to_ktime(new_setting->it_value);
-+	if (flags & TIMER_ABSTIME)
-+		expires = timens_ktime_to_host(timr->it_clock, expires);
- 	sigev_none = timr->it_sigev_notify == SIGEV_NONE;
+ Questa lista presume che abbiate già un kernel Linux funzionante.  In aggiunta,
+-non tutti gli strumenti sono necessari ovunque; ovviamente, se non avete un
+-modem ISDN, per esempio, probabilmente non dovreste preoccuparvi di
+-isdn4k-utils.
++non tutti gli strumenti sono necessari ovunque; ovviamente, se non avete una
++PC Card, per esempio, probabilmente non dovreste preoccuparvi di pcmciautils.
  
- 	kc->timer_arm(timr, expires, flags & TIMER_ABSTIME, sigev_none);
+ ====================== =================  ========================================
+         Programma       Versione minima       Comando per verificare la versione
+ ====================== =================  ========================================
+ GNU C                  4.6                gcc --version
+ GNU make               3.81               make --version
+-binutils               2.20               ld -v
++binutils               2.21               ld -v
+ flex                   2.5.35             flex --version
+ bison                  2.0                bison --version
+ util-linux             2.10o              fdformat --version
+@@ -49,7 +48,6 @@ btrfs-progs            0.18               btrfsck
+ pcmciautils            004                pccardctl -V
+ quota-tools            3.09               quota -V
+ PPP                    2.4.0              pppd --version
+-isdn4k-utils           3.1pre1            isdnctrl 2>&1|grep version
+ nfs-utils              1.0.5              showmount --version
+ procps                 3.2.0              ps --version
+ oprofile               0.9                oprofiled --version
+@@ -81,10 +79,7 @@ Per compilare il kernel vi servirà GNU make 3.81 o successivo.
+ Binutils
+ --------
+ 
+-Il sistema di compilazione, dalla versione 4.13,  per la produzione dei passi
+-intermedi, si è convertito all'uso di *thin archive* (`ar T`) piuttosto che
+-all'uso del *linking* incrementale (`ld -r`). Questo richiede binutils 2.20 o
+-successivo.
++Per generare il kernel è necessario avere Binutils 2.21 o superiore.
+ 
+ pkg-config
+ ----------
+@@ -286,11 +281,6 @@ col seguente comando::
+ 
+   mknod /dev/ppp c 108 0
+ 
+-Isdn4k-utils
+-------------
+-
+-Per via della modifica del campo per il numero di telefono, il pacchetto
+-isdn4k-utils dev'essere ricompilato o (preferibilmente) aggiornato.
+ 
+ NFS-utils
+ ---------
+@@ -456,10 +446,6 @@ PPP
+ 
+ - <ftp://ftp.samba.org/pub/ppp/>
+ 
+-Isdn4k-utils
+-------------
+-
+-- <ftp://ftp.isdn4linux.de/pub/isdn4linux/utils/>
+ 
+ NFS-utils
+ ---------
 -- 
-2.22.0
+2.21.0
 
