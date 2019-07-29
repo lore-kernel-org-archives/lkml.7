@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2765BC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B872FC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4435217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A396217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430091;
-	bh=g9+3tq7GHZg1jHvz0me+UF46Jac2M0bJEWaDcS19MQQ=;
+	s=default; t=1564430093;
+	bh=FuVe1aUyl4DTNAxS4rKHxiILjtEQIiyN+w8ZHcmkfZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U8WQifY0h7WnZwtQvsc0jT5Nd4F/enVPGBnAOWTl/14TjGLaUtKUmREFqhVIM7bnN
-	 Imdmrsh1JA5MCue1ekgnAQHfFAzSvej90bICWg8oSwXuMWeid7wwPgCVTUiBZYD1/W
-	 2WDamwcVFWr+EqqPTr9Q7yqCksnvczkdyHLz46SA=
+	b=zYgDFqk6KLv4LrHzMWnS+j21Wf7cm5gzu5Fwz1yQaTC/7hofUuXMb+7iMVFXbs5wd
+	 rCb527heeFnU0mWpzWG02PC/VxTP6mfaNVRi0Wu8Lj4YbD+XRqyIw3FdzjpP6FlS2p
+	 L9G48a2VGV1De6nF7qMWg0H9PNZD//6GUwyniS1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404119AbfG2Tyu (ORCPT
+        id S2404130AbfG2Tyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:54:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47442 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:54:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404109AbfG2Tyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:54:47 -0400
+        id S2390345AbfG2Tyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:54:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE19C217D4;
-        Mon, 29 Jul 2019 19:54:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69494217D9;
+        Mon, 29 Jul 2019 19:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430086;
-        bh=g9+3tq7GHZg1jHvz0me+UF46Jac2M0bJEWaDcS19MQQ=;
+        s=default; t=1564430088;
+        bh=FuVe1aUyl4DTNAxS4rKHxiILjtEQIiyN+w8ZHcmkfZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zcUvpz0hVGloEuQhyzdadXBADtPaJhaHbo+9a54pw8WXUw/jytERWhHGdVkWrVqbT
-         5lwEAiUHscSWypDg8JB8Z7cyS/w1Y7lLc1xdxcpgTRajGq2/ECrg9LDeOG1sJjugHw
-         o8/+2MXhp9k3KcjYOJcC/SvsCZTwI4oxtS4Y0vj4=
+        b=BpVKcNMgUElBzAARuR7rbJTQTUS02+z5zhkexiD1QjXRAHmFaH0gWu6nnvW7oGeFZ
+         DuCg0UKBN/SH9E8WaZdGTId0VOSOa9IYoZJVPbxD/rvzM8smoRMiMBXxELG8DGtrQY
+         /oNRUiVzIsH1fjE2hZIe5gZrf2c8utz7iCGVAShw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.2 191/215] ALSA: ac97: Fix double free of ac97_codec_device
-Date:   Mon, 29 Jul 2019 21:23:07 +0200
-Message-Id: <20190729190813.075531827@linuxfoundation.org>
+Subject: [PATCH 5.2 192/215] ALSA: line6: Fix wrong altsetting for LINE6_PODHD500_1
+Date:   Mon, 29 Jul 2019 21:23:08 +0200
+Message-Id: <20190729190813.212196073@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,47 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 607975b30db41aad6edc846ed567191aa6b7d893 upstream.
+commit 70256b42caaf3e13c2932c2be7903a73fbe8bb8b upstream.
 
-put_device will call ac97_codec_release to free
-ac97_codec_device and other resources, so remove the kfree
-and other redundant code.
+Commit 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
+set a wrong altsetting for LINE6_PODHD500_1 during refactoring.
 
-Fixes: 74426fbff66e ("ALSA: ac97: add an ac97 bus")
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Set the correct altsetting number to fix the issue.
+
+BugLink: https://bugs.launchpad.net/bugs/1790595
+Fixes: 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/ac97/bus.c |   13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ sound/usb/line6/podhd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/ac97/bus.c
-+++ b/sound/ac97/bus.c
-@@ -122,17 +122,12 @@ static int ac97_codec_add(struct ac97_co
- 						      vendor_id);
- 
- 	ret = device_add(&codec->dev);
--	if (ret)
--		goto err_free_codec;
-+	if (ret) {
-+		put_device(&codec->dev);
-+		return ret;
-+	}
- 
- 	return 0;
--err_free_codec:
--	of_node_put(codec->dev.of_node);
--	put_device(&codec->dev);
--	kfree(codec);
--	ac97_ctrl->codecs[idx] = NULL;
--
--	return ret;
- }
- 
- unsigned int snd_ac97_bus_scan_one(struct ac97_controller *adrv,
+--- a/sound/usb/line6/podhd.c
++++ b/sound/usb/line6/podhd.c
+@@ -413,7 +413,7 @@ static const struct line6_properties pod
+ 		.name = "POD HD500",
+ 		.capabilities	= LINE6_CAP_PCM
+ 				| LINE6_CAP_HWMON,
+-		.altsetting = 1,
++		.altsetting = 0,
+ 		.ep_ctrl_r = 0x81,
+ 		.ep_ctrl_w = 0x01,
+ 		.ep_audio_r = 0x86,
 
 
