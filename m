@@ -2,91 +2,163 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6ECC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8DCC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F1D206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1585D206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfG2Kik (ORCPT
+        id S1728312AbfG2Kiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:38:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53187 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbfG2Kik (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:38:40 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hs331-0007e8-9y; Mon, 29 Jul 2019 12:38:31 +0200
-Date:   Mon, 29 Jul 2019 12:38:30 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: sched: Unexpected reschedule of offline CPU#2!
-In-Reply-To: <20190729101349.GX31381@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.DEB.2.21.1907291235580.1791@nanos.tec.linutronix.de>
-References: <20190727164450.GA11726@roeck-us.net> <20190729093545.GV31381@hirez.programming.kicks-ass.net> <alpine.DEB.2.21.1907291156170.1791@nanos.tec.linutronix.de> <20190729101349.GX31381@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 29 Jul 2019 06:38:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:41696 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728151AbfG2Kiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:38:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DF5E344;
+        Mon, 29 Jul 2019 03:38:45 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 90E693F694;
+        Mon, 29 Jul 2019 03:38:44 -0700 (PDT)
+Subject: Re: [PATCH 3/4] irqchip: ingenic: Get virq number from IRQ domain
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     linux-kernel@vger.kernel.org, od@zcrc.me,
+        Zhou Yanjie <zhouyanjie@zoho.com>
+References: <20190727191741.30317-1-paul@crapouillou.net>
+ <20190727191741.30317-3-paul@crapouillou.net>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <538e79e5-539b-3066-b662-8ed4ec8bf261@arm.com>
+Date:   Mon, 29 Jul 2019 11:38:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190727191741.30317-3-paul@crapouillou.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jul 2019, Peter Zijlstra wrote:
-> On Mon, Jul 29, 2019 at 11:58:24AM +0200, Thomas Gleixner wrote:
-> > On Mon, 29 Jul 2019, Peter Zijlstra wrote:
-> > > On Sat, Jul 27, 2019 at 09:44:50AM -0700, Guenter Roeck wrote:
-> > > > [   61.348866] Call Trace:
-> > > > [   61.349392]  kick_ilb+0x90/0xa0
-> > > > [   61.349629]  trigger_load_balance+0xf0/0x5c0
-> > > > [   61.349859]  ? check_preempt_wakeup+0x1b0/0x1b0
-> > > > [   61.350057]  scheduler_tick+0xa7/0xd0
-> > > 
-> > > kick_ilb() iterates nohz.idle_cpus_mask to find itself an idle_cpu().
-> > > 
-> > > idle_cpus_mask() is set from nohz_balance_enter_idle() and cleared from
-> > > nohz_balance_exit_idle(). nohz_balance_enter_idle() is called from
-> > > __tick_nohz_idle_stop_tick() when entering nohz idle, this includes the
-> > > cpu_is_offline() clause of the idle loop.
-> > > 
-> > > However, when offline, cpu_active() should also be false, and this
-> > > function should no-op.
-> > 
-> > Ha. That reboot mess is not clearing cpu active as it's not going through
-> > the regular cpu hotplug path. It's using reboot IPI which 'stops' the cpus
-> > dead in their tracks after clearing cpu online....
+[+ Zhou Yanjie]
+
+Paul,
+
+On 27/07/2019 20:17, Paul Cercueil wrote:
+> Get the virq number from the IRQ domain instead of calculating it from
+> the hardcoded irq base.
 > 
-> $string-of-cock-compliant-curses
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/irqchip/irq-ingenic.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> What a trainwreck...
+> diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
+> index d97a3a500249..82a079fa3a3d 100644
+> --- a/drivers/irqchip/irq-ingenic.c
+> +++ b/drivers/irqchip/irq-ingenic.c
+> @@ -21,6 +21,7 @@
+>  
+>  struct ingenic_intc_data {
+>  	void __iomem *base;
+> +	struct irq_domain *domain;
+>  	unsigned num_chips;
+>  };
+>  
+> @@ -34,6 +35,7 @@ struct ingenic_intc_data {
+>  static irqreturn_t intc_cascade(int irq, void *data)
+>  {
+>  	struct ingenic_intc_data *intc = irq_get_handler_data(irq);
+> +	struct irq_domain *domain = intc->domain;
+>  	uint32_t irq_reg;
+>  	unsigned i;
+>  
+> @@ -43,7 +45,8 @@ static irqreturn_t intc_cascade(int irq, void *data)
+>  		if (!irq_reg)
+>  			continue;
+>  
+> -		generic_handle_irq(__fls(irq_reg) + (i * 32) + JZ4740_IRQ_BASE);
+> +		irq = irq_find_mapping(domain, __fls(irq_reg) + (i * 32));
+> +		generic_handle_irq(irq);
+>  	}
+>  
+>  	return IRQ_HANDLED;
+> @@ -95,6 +98,8 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+>  		goto out_unmap_base;
+>  	}
+>  
+> +	intc->domain = domain;
+> +
+>  	for (i = 0; i < num_chips; i++) {
+>  		/* Mask all irqs */
+>  		writel(0xffffffff, intc->base + (i * CHIP_SIZE) +
 > 
-> So if it doesn't play by the normal rules; how does it expect to work?
-> 
-> So what do we do? 'Fix' reboot or extend the rules?
 
-Reboot has two modes:
+This is likely to conflict with this[1] series, which turns the
+intc_cascade function into a chained handler (which it should have been
+from the start). Can you please work with Zhou to post a unified series?
 
- - Regular reboot initiated from user space
+Having two people working independently on the same file is likely to
+end badly otherwise.
 
- - Panic reboot
+Thanks,
 
-For the regular reboot we can make it go through proper hotplug, for the
-panic case not so much.
+	M.
 
-thanks,
-
-	tglx
+[1]
+https://lore.kernel.org/lkml/1564335273-22931-1-git-send-email-zhouyanjie@zoho.com/
+-- 
+Jazz is not dead. It just smells funny...
