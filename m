@@ -2,85 +2,127 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E68AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD80C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C297206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1AF206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:48:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfG2MrJ (ORCPT
+        id S1728331AbfG2Msv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:47:09 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38501 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfG2MrI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:47:08 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r12so24406454edo.5;
-        Mon, 29 Jul 2019 05:47:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=3/PzPbZkEB5/N/cLAuzFRUW0qob6QXaQyM+vpTh0XMA=;
-        b=SR6fsddqfkFP2vlQfxvtUB4n7ciwqG7XI0C1g1dUkHkNFd/6NYj7WYVddcNMWconG9
-         XX1aN7T6GytWo12JrjX5Wxhq8JfDgsFdTCgBEsJnFb1WLdJxxlsovA0456eVPBVqfhbe
-         RLOTzexTrOjHaSYPV5/IRBXXJorDCjODEfC2C4fpDHx66iKvXM9n5qpBar5+AbC06M9J
-         2cLJ9gbwDDSS3S0jNxx6MSblK5zpmv8AHzSMS8KpRqVebKCm6MKLCaO1ygUd8MlvMXXt
-         zhmUV3X/HFaE817tdt01V4ZuU3YpCr1SE61CVarowowbs4QFPRfsBkS1MzaaLfRW5Rje
-         +MZQ==
-X-Gm-Message-State: APjAAAUoI2tMFuMeIcSma4Gx0v3GmsDpt+CdVVt88DnfL6F8dDtYjPrz
-        kgVlmPEf4ITBKPlnMWSntbzEdx0FaU0=
-X-Google-Smtp-Source: APXvYqwLtIdFpDiJiStZ5SRASFMXor63A75/giBun54t56BFNcyVhaVUFQn77zhDuOua4E6nNuBXsg==
-X-Received: by 2002:a50:f05a:: with SMTP id u26mr96123281edl.116.1564404426839;
-        Mon, 29 Jul 2019 05:47:06 -0700 (PDT)
-Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
-        by smtp.gmail.com with ESMTPSA id p23sm11473636ejl.43.2019.07.29.05.47.05
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 05:47:06 -0700 (PDT)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH v2] modpost: check for static EXPORT_SYMBOL* functions
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190714152817.24693-1-efremov@linux.com>
- <20190729092250.32670-1-efremov@linux.com>
- <20190729222045.4b491ffb@canb.auug.org.au>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <2b6fc296-bf42-f99d-e420-3293471db033@linux.com>
-Date:   Mon, 29 Jul 2019 15:47:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 08:48:51 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:53574 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726432AbfG2Msu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:48:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 291E8FB03;
+        Mon, 29 Jul 2019 14:48:47 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id kaCWHnVd1ww1; Mon, 29 Jul 2019 14:48:46 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 9752146CDF; Mon, 29 Jul 2019 14:48:45 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 14:48:45 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     shawnguo@kernel.org, devicetree@vger.kernel.org, baruch@tkos.co.il,
+        abel.vesa@nxp.com, Anson.Huang@nxp.com, ccaione@baylibre.com,
+        andrew.smirnov@gmail.com, s.hauer@pengutronix.de, angus@akkea.ca,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        festevam@gmail.com, shengjiu.wang@nxp.com,
+        linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+Subject: Re: [PATCH v4] arm64: dts: imx8mq: Init rates and parents configs
+ for clocks
+Message-ID: <20190729124845.GA12650@bogon.m.sigxcpu.org>
+References: <20190728152040.15323-1-daniel.baluta@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190729222045.4b491ffb@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190728152040.15323-1-daniel.baluta@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/19 3:20 PM, Stephen Rothwell wrote:
-> Hi Denis,
+Hi,
+On Sun, Jul 28, 2019 at 06:20:40PM +0300, Daniel Baluta wrote:
+> From: Abel Vesa <abel.vesa@nxp.com>
 > 
-> Just a small note (nit? :-)):
+> Add the initial configuration for clocks that need default parent and rate
+> setting. This is based on the vendor tree clock provider parents and rates
+> configuration except this is doing the setup in dts rather then using clock
+> consumer API in a clock provider driver.
 > 
-> On Mon, 29 Jul 2019 12:22:50 +0300 Denis Efremov <efremov@linux.com> wrote:
->>
->> +			if (s->is_static)
->> +				warn("\"%s\" [%s] is the static %s\n",
+> Note that by adding the initial rate setting for audio_pll1/audio_pll
+> setting we need to remove it from imx8mq-librem5-devkit.dts
 > 
-> This read a little wrong to me, maybe "is a static"?
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> Tested-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> ---
+> Changes since v3:
+> 	- fix extra new lines
 > 
+>  .../dts/freescale/imx8mq-librem5-devkit.dts   |  5 -----
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 19 +++++++++++++++++++
+>  2 files changed, 19 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> index 683a11035643..c702ccc82867 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> @@ -169,11 +169,6 @@
+>  	};
+>  };
+>  
+> -&clk {
+> -	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL2>;
+> -	assigned-clock-rates = <786432000>, <722534400>;
+> -};
+> -
+>  &dphy {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 02fbd0625318..a55d72ba2e05 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -494,6 +494,25 @@
+>  				clock-names = "ckil", "osc_25m", "osc_27m",
+>  				              "clk_ext1", "clk_ext2",
+>  				              "clk_ext3", "clk_ext4";
+> +				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
+> +					<&clk IMX8MQ_AUDIO_PLL1>,
+> +					<&clk IMX8MQ_AUDIO_PLL2>,
+> +					<&clk IMX8MQ_CLK_AHB>,
+> +					<&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
+> +					<&clk IMX8MQ_CLK_AUDIO_AHB>,
+> +					<&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
+> +					<&clk IMX8MQ_CLK_NOC>;
+> +				assigned-clock-parents = <0>,
+> +						<0>,
+> +						<0>,
+> +						<&clk IMX8MQ_SYS1_PLL_133M>,
+> +						<&clk IMX8MQ_SYS1_PLL_266M>,
+> +						<&clk IMX8MQ_SYS2_PLL_500M>,
+> +						<&clk IMX8MQ_CLK_27M>,
+> +						<&clk IMX8MQ_SYS1_PLL_800M>;
+> +				assigned-clock-rates = <593999999>,
+> +						<786432000>,
+> +						<722534400>;
+>  			};
+>  
+>  			src: reset-controller@30390000 {
 
-Thank you! I will fix this in v3 in an hour.
+Tested-by: Guido Günther <agx@sigxcpu.org> 
 
-Denis
+Cheers,
+ -- Guido
