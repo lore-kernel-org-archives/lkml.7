@@ -2,93 +2,101 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AD4C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CF9C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F77206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0832921655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:33:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B5KEvVPs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cJ+QBiHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbfG2QdY (ORCPT
+        id S1729106AbfG2Qd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:33:24 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:40859 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729076AbfG2QdX (ORCPT
+        Mon, 29 Jul 2019 12:33:29 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:37466 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729090AbfG2Qd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:33:23 -0400
-Received: by mail-vs1-f65.google.com with SMTP id a186so39634619vsd.7
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:33:23 -0700 (PDT)
+        Mon, 29 Jul 2019 12:33:26 -0400
+Received: by mail-vk1-f196.google.com with SMTP id 9so12131759vkw.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:33:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=hkKjlu5QjGs/T3e0RTvio/pt/qKYz2W25QWtnEmwNpA=;
-        b=B5KEvVPs/R08nW/X8iJscPrmioD+SoELM7xRWLLE0Zm0kwBVrdY5pYjdN1Xuf2NBT0
-         rS+xv97P7PgJRnFBFXBXRtPn0E6W8lS1Bco9qxudNc9iL/dKJ3HsHgSqpj2UYPRVsgN5
-         ZGNl7/PVqT9L/ByfL+YvaOjXN5cBf1edMWfNbwx88NweWNrqOGBliZDi5RaOsuG9+12l
-         SBAJLKE7nb5zTU6lJZRC6vzU0W/76o9x+TMm5WhF9A/8v5aDZpHxkhV0Q7RwkGSqUcKN
-         3pib9KPjkAh42bgicvh7s95J8JLdISFwiVd6WK0YEk1m6YRIl+/h4TfD6cWh7joVYsGX
-         zDpg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=a/t4nyA1Q5Ire67bzt1cmZdzjlm5dY9UznxFZlUXgxs=;
+        b=cJ+QBiHtj4joLDdWo3ko8KyT7anFWu3nS4m2R2ggcQLExoCvgemhSOm4R3MGuuAS+R
+         UUhc3FfMLQFaMQgUK+4pz2vGHUcoT733fpPJWC4x4SfKh57m73DCBNz2hmcx9rBziXUg
+         edFE+J9YCSGbq4oUZUl4T7C5YbRj+6BQ+d2hMJVE07S1s642wHolqPQPivrxotpNlkus
+         9nDE/wQb2YGhOMUK6aHNATji2FQZfwxOlPW6lRM+E0eAE0vN9vED3F6wfKgQCXumybj+
+         ekk40r5L0I1F6AfGNmDiOJAI3mU/o4QQJQrdGoQkswdjtUNiQzqdTvk3PkHCozetl/C9
+         ka/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hkKjlu5QjGs/T3e0RTvio/pt/qKYz2W25QWtnEmwNpA=;
-        b=kbd1tRuM+DikzHPbMy3xbY62r36b8Eeq0eHcjxqXs0BhvLWvVX0ROAQMTnO1OTbVzq
-         hcTA0/ZuQKYDZbJVNCAlpp1ALf6Tk0iifJhzNfMT2rnI9jmljAE7UXcyFBOR9jbHON7q
-         VAnLVr5qQYeEJ3NTSb6ExXpxZgl23366xLoRyPgHeMYEfyue3EFfUoMoHSbF8iRaYOdl
-         uMEuT71BmnfDGe3QmjSHbvh8FZ7qdqrJzOdXj+/6huKldUaq4xg4dQjTUHRrf2yfKeFz
-         3vbDfSj6T30xcHAWuk8m6smJ4/YmffrwBg3BK2qypD2iwd6uK+EPNBwUB+YQrA8LpgrE
-         apuA==
-X-Gm-Message-State: APjAAAXvKdWfel+eqWtuKgVMUenXU+1lajLDTShZmXfWKzlXmh/BrovN
-        cLR1kJML2pcuw1aHZHKpw0BJeA==
-X-Google-Smtp-Source: APXvYqxb+t1CMrD4OgI0r5vaUyMz9p0pH+fzMZGSO+XV5OIRRL5VmlcXYTgTA0qJr0wh7Hy/R/B+PA==
-X-Received: by 2002:a67:8e48:: with SMTP id q69mr24743215vsd.72.1564418002818;
-        Mon, 29 Jul 2019 09:33:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=a/t4nyA1Q5Ire67bzt1cmZdzjlm5dY9UznxFZlUXgxs=;
+        b=s/OQuJnQCbBm7+fwfgh+Tm/jgq0OlBnVAYolKxJ0p7FYj/V6z0RatLYGpGkpmUWedB
+         vcPsT5WrwTk1u3yjFqRGlBqnzcmws0VtFvi/34gODshvaqJHcYHmBjftbv4xjtNtZiNn
+         9i0z/MtHer4dVvJ+i1MMyhL/a2tdKi4QjrxXC96jziifHeaN21VNSn//+4rJfn/sOwRx
+         nMk9MRyJWJJP33rx8Cx07abJeP8a4Pjbbe1I7tFUWTIb204tehVJZ8g2ZUFhQnZp0C13
+         +rJ4FuH1/3z6eWqmNFwtWd0VAokYJ9qoPaGrVruBNRkoi7bQITfAAL2FRir1Xdc1fhbb
+         QtMA==
+X-Gm-Message-State: APjAAAWyrJpLQSxHNVbTuAnpoVhL+d0wNrEIuZCny3489s8wdzJDuBBU
+        5uRb9AiVHeZ3hs5Hyk38z63MmA==
+X-Google-Smtp-Source: APXvYqxruim+XfgMG1TgZXYZ4llcXHm+qO2F5Xfw42zvdX1iAL6Pruu/xnt08WS99QNb5hXXF7Tcpg==
+X-Received: by 2002:a1f:b552:: with SMTP id e79mr26613652vkf.90.1564418005133;
+        Mon, 29 Jul 2019 09:33:25 -0700 (PDT)
 Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
-        by smtp.googlemail.com with ESMTPSA id o9sm39762738vkd.27.2019.07.29.09.33.21
+        by smtp.googlemail.com with ESMTPSA id o9sm39762738vkd.27.2019.07.29.09.33.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 29 Jul 2019 09:33:22 -0700 (PDT)
+        Mon, 29 Jul 2019 09:33:24 -0700 (PDT)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, agross@kernel.org,
         robh+dt@kernel.org, mark.rutland@arm.com
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] Add support for AOSS resources that are used to warm up the SoC
-Date:   Mon, 29 Jul 2019 12:33:19 -0400
-Message-Id: <1564418001-24940-1-git-send-email-thara.gopinath@linaro.org>
+Subject: [PATCH 2/2] arm64: dts: qcom: Extend AOSS QMP node
+Date:   Mon, 29 Jul 2019 12:33:21 -0400
+Message-Id: <1564418001-24940-3-git-send-email-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1564418001-24940-1-git-send-email-thara.gopinath@linaro.org>
+References: <1564418001-24940-1-git-send-email-thara.gopinath@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Always On Sub System (AOSS) hosts certain resources
-that are used to warm up the soc if the temperature falls
-below certain threshold. These resources are
-added can be considered as thermal warming devices
-(opposite of thermal cooling devices).
+AOSS hosts resources that can be used to warm up the SoC.
+Add nodes for these resources.
 
-These resources are controlled via AOSS QMP protocol
-In kernel, these devices can be treated the same way as any other
-thermal cooling device and hence are registered with the thermal
-cooling framework.
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-To use these resources as warming devices require further tweaks in
-the thermal framework which are out of scope of this patch series.
-
-Thara Gopinath (2):
-  soc: qcom: Extend AOSS QMP driver to support resources that are used
-    to wake up the SoC.
-  arm64: dts: qcom: Extend AOSS QMP node
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi |   8 +++
- drivers/soc/qcom/qcom_aoss.c         | 129 +++++++++++++++++++++++++++++++++++
- 2 files changed, 137 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 4babff5..d0c0d4f 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2411,6 +2411,14 @@
+ 
+ 			#clock-cells = <0>;
+ 			#power-domain-cells = <1>;
++
++			cx_cdev: cx {
++				#cooling-cells = <2>;
++			};
++
++			ebi_cdev: ebi {
++				#cooling-cells = <2>;
++			};
+ 		};
+ 
+ 		spmi_bus: spmi@c440000 {
 -- 
 2.1.4
 
