@@ -2,168 +2,100 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFA3C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA677C7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F3620C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:19:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+0Hj67X"
+	by mail.kernel.org (Postfix) with ESMTP id 9C49520C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564428227;
+	bh=HP3/a2oZIL74Jk6LrFo/J/9++kAyvAYs/l+UguAunkM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fZ7O1qGMXdRZB5Pd5w6z5ylpyl3E3oqX2imWEcPCgDupio2TDLMgPJtIjigMJD9da
+	 Cb444L2HmQyiIoCSu0m5QOeQGg9x4m4jeEY+V/HKFU5y7a0g/eiEOujSeknlU5CDKM
+	 f8BJ9y7Is7HD4o0b9xvwealOwLMEYxhbmciI92Cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbfG2TTu (ORCPT
+        id S1729377AbfG2TXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:19:50 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40467 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729141AbfG2TTu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:19:50 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r1so63062876wrl.7;
-        Mon, 29 Jul 2019 12:19:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IC6AhNaUochbr8eNg202VjmvgNDySHaGSRtYPT5r/sM=;
-        b=R+0Hj67XY9BrfvpMkvSqIevAupXwChaHlUgYHXqCsDnLscnmXsXiOYFGulz5gUva06
-         FMymicoOHogtuo/yX3rPEtxA9ZSayDRa/8OBEqoouqkMwL8HRBRiS7SYYi5OjDTTfaUd
-         rZwgw0zgdvaxxJFJgGLnYsdQyLYSZkO4s31EbmZlyGiFcssqMnow2BGtpZ5bTJ/wVuXI
-         /LuptZV3zLtv3yFrfUo0dZo7XPYE3lO/rqJL/rYl5G3Oo4457RHak75ruVXYXeLFp2a7
-         FPsI4PfccYTuaWqwXn38BkK0k9/9luuNd1pyb9mu1LQ/+Ee5/50FirBg4dtgpUbxJKeU
-         mZxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=IC6AhNaUochbr8eNg202VjmvgNDySHaGSRtYPT5r/sM=;
-        b=M52VESZZqHyhCRel8s8EH7ukskwCRMybMUSFISssnuJaHjl7toLvCsD59/JNG7nc6q
-         zQvf4XVjhkhagSMSzK9+gB1ZkMOjeR0n9eXJvCILYNcQbEmSXwYBxWwmtpU2DSbF/zxN
-         C+bneH4ZPPK1yO5a2e8zGNXpzMbTJajnle2IxgTHDkHzl0q0mOPhue+awYtH/eM/VoUA
-         Th/kM8GcFryT7bk9/BRPNeVzZ6ILbW2lUTJIzK2OERShGO4Fp8oUoOp31PAoQ4LUL+u5
-         4sJBVTbxxZ3Cm19vapecR8ENNzYUBBmrfYke9CP5xo7zpOHPLoYC2kqZDu3Le5qp+Dpi
-         QyiA==
-X-Gm-Message-State: APjAAAXvfu4XuVxa//j1gNMp9jJaBY4Nj78OjnistmKXvluElxwyTKcm
-        8btTrQFG4P4TwObzsCRynv1KLFm4
-X-Google-Smtp-Source: APXvYqw5Mq/gKZ2qpEiRMEF78yzwj/BTsegOW50yX9sNhgabpRIWgKzbRCDvkXneVFBHLkmHmVHciQ==
-X-Received: by 2002:a5d:514f:: with SMTP id u15mr23030729wrt.183.1564427986784;
-        Mon, 29 Jul 2019 12:19:46 -0700 (PDT)
-Received: from [192.168.1.19] (civ151.neoplus.adsl.tpnet.pl. [83.31.45.151])
-        by smtp.gmail.com with ESMTPSA id s188sm51714022wmf.40.2019.07.29.12.19.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 12:19:46 -0700 (PDT)
-Subject: Re: [PATCH] leds: netxbig: remove legacy board-file support
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-References: <20190728164015.15405-1-yamada.masahiro@socionext.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <3723142a-30b9-0ca3-5e31-73eabda54145@gmail.com>
-Date:   Mon, 29 Jul 2019 21:19:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 15:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbfG2TXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:23:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAFE52070B;
+        Mon, 29 Jul 2019 19:23:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564428225;
+        bh=HP3/a2oZIL74Jk6LrFo/J/9++kAyvAYs/l+UguAunkM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BxTFwV/MmFZB0+bz461wi1uZCS3rzoacLMe/JGbo8qf7ehqfVf4QNo3PHsrbG1OBT
+         EniQH/Zsf7L3rOP30RcXCP3swc9opctO/pRq4QJoxcncAFlBDZtfPdT9sStfBlrTeq
+         9EFEVyvsH/VaM4987xWcSbs0YRdrZWrRHJGyzW1s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stefan Hellermann <stefan@the2masters.de>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 001/293] MIPS: ath79: fix ar933x uart parity mode
+Date:   Mon, 29 Jul 2019 21:18:12 +0200
+Message-Id: <20190729190820.454391880@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
+References: <20190729190820.321094988@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20190728164015.15405-1-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
+[ Upstream commit db13a5ba2732755cf13320f3987b77cf2a71e790 ]
 
-Thank you for the patch.
+While trying to get the uart with parity working I found setting even
+parity enabled odd parity insted. Fix the register settings to match
+the datasheet of AR9331.
 
-On 7/28/19 6:40 PM, Masahiro Yamada wrote:
-> Since commit ebc278f15759 ("ARM: mvebu: remove static LED setup for
-> netxbig boards"), no one in upstream passes in the platform data to
-> this driver.
-> 
-> Squash leds-kirkwood-netxbig.h into the driver, and remove the legacy
-> board-file support.
-> 
-> Link: https://lkml.org/lkml/2019/7/20/83
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  drivers/leds/Kconfig                          |  1 +
->  drivers/leds/leds-netxbig.c                   | 70 +++++++++++++------
->  .../platform_data/leds-kirkwood-netxbig.h     | 54 --------------
->  3 files changed, 51 insertions(+), 74 deletions(-)
->  delete mode 100644 include/linux/platform_data/leds-kirkwood-netxbig.h
-[...]
+A similar patch was created by 8devices, but not sent upstream.
+https://github.com/8devices/openwrt-8devices/commit/77c5586ade3bb72cda010afad3f209ed0c98ea7c
 
+Signed-off-by: Stefan Hellermann <stefan@the2masters.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/include/asm/mach-ath79/ar933x_uart.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Applied.
-
+diff --git a/arch/mips/include/asm/mach-ath79/ar933x_uart.h b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
+index c2917b39966b..bba2c8837951 100644
+--- a/arch/mips/include/asm/mach-ath79/ar933x_uart.h
++++ b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
+@@ -27,8 +27,8 @@
+ #define AR933X_UART_CS_PARITY_S		0
+ #define AR933X_UART_CS_PARITY_M		0x3
+ #define	  AR933X_UART_CS_PARITY_NONE	0
+-#define	  AR933X_UART_CS_PARITY_ODD	1
+-#define	  AR933X_UART_CS_PARITY_EVEN	2
++#define	  AR933X_UART_CS_PARITY_ODD	2
++#define	  AR933X_UART_CS_PARITY_EVEN	3
+ #define AR933X_UART_CS_IF_MODE_S	2
+ #define AR933X_UART_CS_IF_MODE_M	0x3
+ #define	  AR933X_UART_CS_IF_MODE_NONE	0
 -- 
-Best regards,
-Jacek Anaszewski
+2.20.1
+
+
+
