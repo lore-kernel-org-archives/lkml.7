@@ -2,145 +2,83 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B278C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BC9C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C521206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C67206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:54:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhM52LN5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YHqMNYEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbfG2Qx3 (ORCPT
+        id S2387454AbfG2Qyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:53:29 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37346 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726601AbfG2Qx3 (ORCPT
+        Mon, 29 Jul 2019 12:54:39 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48710 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfG2Qyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:53:29 -0400
-Received: by mail-io1-f65.google.com with SMTP id q22so1753863iog.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iCFQqYIsIHUuEI1zjQL1qrOWxSUO9qXF3sIVxAvbwSY=;
-        b=UhM52LN5XGqZ/4g08xPziW3KDRUTEYB3xh9AsB6YP6onaqTgFL+t8JnUilZJPBphTf
-         VOiFZ1mKxTZzB+w9GRMUJCcDgmVAkmgzg/fqacrvgcKw1pxSZI/ASWGFKY+JsovGG5aZ
-         anR/x+yLweATOEOOXXqqan6a12Bl7TQmZUv20cb9ngMA0dQbIAIuURSuG2XxXZO8Fpf0
-         7EXQVrPRBNrHaujN/NOSoT7yQIgaBEGpHNOCKA0kDeAs5y+MQg0/dUjIinn0pXB5Z6yY
-         4wmMGaK7Hw7p8HsangTL0+vFadK5zWNpK1K7zzT3lEgPTemNiHCajcKlPd5Ykb2EmzNo
-         EVSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iCFQqYIsIHUuEI1zjQL1qrOWxSUO9qXF3sIVxAvbwSY=;
-        b=kBNy+tVbRykKerKauJqlRLtmzyWO/e9dVR0IwGzdnmlZjsawPUfbuQPkoNO2HtdHw3
-         YBeVb0uxA8+fGw1iga3bB6Olp8OOXgA6avS1sA6IYnqUDW+IuFVKM5lz6osFjzrY2oCS
-         hz7moyBT4FQygNQPm09+rvtfRcZObDPHoPyvm4lvPm+XnpTaP8NxqoRvzKW9ALXYUKIH
-         8r/A229iohBGi7M3TNzBWmgHBJOaUnX6pCM9w7n8XYG4A5oMaLD6JCHpokjYTXzxYQP2
-         NiaVM9Zfz6LG2024vNf/G9uIQlEJ2BuCfu/RcjTtMnh9XmMgTi8wKr2wqoAK4AwyK0e8
-         k+VQ==
-X-Gm-Message-State: APjAAAXSTjh2sLGvGyiDlzUPyVfEvMJvC795vpGlH4Rgyf82oWZm0P+M
-        BQwqHrFTH7Ae7V7kX5wR0WVlO0TV/h6CZvGoyA==
-X-Google-Smtp-Source: APXvYqzZXOeuD12CYNHQ2l59sm2VPqnEtZIuLx75p0SpOLCZi3eb/xpaCQOIR5sti4CZP+hxeUxLHIx+meDoNv/SjSU=
-X-Received: by 2002:a6b:f80e:: with SMTP id o14mr32870690ioh.1.1564419208818;
- Mon, 29 Jul 2019 09:53:28 -0700 (PDT)
+        Mon, 29 Jul 2019 12:54:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ih+8jGaNPkIieBi7y6bE+jbDtJCtU3TtT+BWz5ZYUcs=; b=YHqMNYELuuLbpvCffz34gvm64
+        xLn8QrmVCqumw256N1Tbr3Q1IxHdrbm604ifmdOlJZzH9c3ZcHf6PAB5RJEiXGlELnKv72M6zPKqZ
+        tZ3e2wrxlTnz1e1lVWerHYxaJDZUHWP5tEl58G/uss02SCnKj+1j9sGwV6iw69y9KPTpSpwfVamts
+        SueXsslp9WaFwo2kT6/hrq7d/VTKD2VdJZ86gS+h2H0wzewhCkl9IOIOwYEP/OWKW2hNRrAN4nkM7
+        4YYJW3c7lgO2y6x8F2aFpNuv7lVtQD3XeU1OdJUeiaClyJ/MAaS+g4ZmQRGK0UOiRcQEEIRG6TXx3
+        nIVSfpPWA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hs8ux-0004Ib-Pq; Mon, 29 Jul 2019 16:54:36 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8DFF320AFFEAD; Mon, 29 Jul 2019 18:54:34 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 18:54:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     luca abeni <luca.abeni@santannapisa.it>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <Valentin.Schneider@arm.com>,
+        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] sched/deadline: Use return value of SCHED_WARN_ON()
+ in bw accounting
+Message-ID: <20190729165434.GO31398@hirez.programming.kicks-ass.net>
+References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
+ <20190726082756.5525-6-dietmar.eggemann@arm.com>
+ <20190726121819.32be6fb1@sweethome>
 MIME-Version: 1.0
-References: <20190729164307.200716-1-avifishman70@gmail.com> <CAKKbWA6=9rBhR7iTfH27FZXPtuin9FengQh77T6Qgb3XDuZaYA@mail.gmail.com>
-In-Reply-To: <CAKKbWA6=9rBhR7iTfH27FZXPtuin9FengQh77T6Qgb3XDuZaYA@mail.gmail.com>
-From:   Avi Fishman <avifishman70@gmail.com>
-Date:   Mon, 29 Jul 2019 19:52:39 +0300
-Message-ID: <CAKKbWA6K4=qL7i5i2_jhB7KHBX3D+YsREP7yECdgD4j6VZFrLg@mail.gmail.com>
-Subject: Re: [PATCH] [v4] clocksource/drivers/npcm: fix GENMASK and timer operation
-To:     Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Avi Fishman <avifishman70@gmail.com>
-Cc:     OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190726121819.32be6fb1@sweethome>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please discard this. my mail tool corruppted it again.
+On Fri, Jul 26, 2019 at 12:18:19PM +0200, luca abeni wrote:
+> Hi Dietmar,
+> 
+> On Fri, 26 Jul 2019 09:27:56 +0100
+> Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> 
+> > To make the decision whether to set rq or running bw to 0 in underflow
+> > case use the return value of SCHED_WARN_ON() rather than an extra if
+> > condition.
+> 
+> I think I tried this at some point, but if I remember well this
+> solution does not work correctly when SCHED_DEBUG is not enabled.
 
-On Mon, Jul 29, 2019 at 7:50 PM Avi Fishman <avifishman70@gmail.com> wrote:
->
-> NPCM7XX_Tx_OPER GENMASK bits where wrong,
-> Since NPCM7XX_REG_TICR0 register reset value of those bits was 0,
-> it did not cause an issue.
-> in npcm7xx_timer_oneshot() the original NPCM7XX_REG_TCSR0 register was
-> read again after masking it with ~NPCM7XX_Tx_OPER so the masking didn't
-> take effect.
->
-> npcm7xx_timer_periodic() was not wrong but it wrote to NPCM7XX_REG_TICR0
-> in a middle of read modify write to NPCM7XX_REG_TCSR0 which is
-> confusing.
-> npcm7xx_timer_oneshot() did wrong calculation
->
-> Signed-off-by: Avi Fishman <avifishman70@gmail.com>
-> ---
->  drivers/clocksource/timer-npcm7xx.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/clocksource/timer-npcm7xx.c
-> b/drivers/clocksource/timer-npcm7xx.c
-> index 8a30da7f083b..9780ffd8010e 100644
-> --- a/drivers/clocksource/timer-npcm7xx.c
-> +++ b/drivers/clocksource/timer-npcm7xx.c
-> @@ -32,7 +32,7 @@
->  #define NPCM7XX_Tx_INTEN               BIT(29)
->  #define NPCM7XX_Tx_COUNTEN             BIT(30)
->  #define NPCM7XX_Tx_ONESHOT             0x0
-> -#define NPCM7XX_Tx_OPER                        GENMASK(27, 3)
-> +#define NPCM7XX_Tx_OPER                        GENMASK(28, 27)
->  #define NPCM7XX_Tx_MIN_PRESCALE                0x1
->  #define NPCM7XX_Tx_TDR_MASK_BITS       24
->  #define NPCM7XX_Tx_MAX_CNT             0xFFFFFF
-> @@ -84,8 +84,6 @@ static int npcm7xx_timer_oneshot(struct
-> clock_event_device *evt)
->
->         val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->         val &= ~NPCM7XX_Tx_OPER;
-> -
-> -       val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->         val |= NPCM7XX_START_ONESHOT_Tx;
->         writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
->
-> @@ -97,12 +95,11 @@ static int npcm7xx_timer_periodic(struct
-> clock_event_device *evt)
->         struct timer_of *to = to_timer_of(evt);
->         u32 val;
->
-> +       writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
-> +
->         val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->         val &= ~NPCM7XX_Tx_OPER;
-> -
-> -       writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
->         val |= NPCM7XX_START_PERIODIC_Tx;
-> -
->         writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
->
->         return 0;
-> --
-> 2.18.0
+Well, it 'works' in so far that it compiles. But it might not be what
+one expects. That is, for !SCHED_DEBUG the return value is an
+unconditional false.
 
-
-
--- 
-Regards,
-Avi
+In this case I think that's fine, the WARN _should_ not be happending.
