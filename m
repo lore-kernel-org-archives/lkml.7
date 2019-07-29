@@ -4,263 +4,270 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D28BC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42482C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5826820659
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E19642075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564379578;
-	bh=UiNBXbmf99+A8o4np2k48EixMun1+j7M93uj9CQm3L8=;
+	s=default; t=1564379699;
+	bh=Es0XHxeZvLEv07xBP9nni5sHh8xrD51dZ25CaXeHaIU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d9YzgB1uK+mTifn285QEVIQHlm+xRSI9o2r1UP+xkmKS04JiQ0hsmQ4ntKBjLxJ1m
-	 SOsvaR4PNFwPZ+y9k3wqrbUczuD4m3MhW4gIFuxLJAyo2sW/Q/Ghpk98nAopEL5Shi
-	 P6l0RVxkLjIrIdVlfEN+C/LM2BwvNkg75QIQ2HvI=
+	b=cLjNqGHe68lGtnFVd7/JY6KCMmrFOxQylog6VsGhjCbxtfJgfkqoJLvkQmG1s+Yjo
+	 MRAh/oIDSup85ssNtgAzpuU+tMOn9uqJymYck9Xm0efJhr3LusOenhlAjSD+xJPab3
+	 96L0ryaiXNDiTY953vmGyTlnQ3QvGuCcXkkGIqj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfG2Fw5 (ORCPT
+        id S1726835AbfG2Fy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 01:52:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37298 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 01:54:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfG2Fw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 01:52:56 -0400
-Received: from localhost (unknown [77.137.115.125])
+        id S1725988AbfG2Fy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 01:54:57 -0400
+Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BEB920659;
-        Mon, 29 Jul 2019 05:52:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ADBA20659;
+        Mon, 29 Jul 2019 05:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564379574;
-        bh=UiNBXbmf99+A8o4np2k48EixMun1+j7M93uj9CQm3L8=;
+        s=default; t=1564379695;
+        bh=Es0XHxeZvLEv07xBP9nni5sHh8xrD51dZ25CaXeHaIU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0+LuK+ZfLYUUwKvVLnCi9F/3wrH5QtwM4e91g8DZ/yNXIS7PxaNdv7Qqe8KhMvrK/
-         PSY/Af4JgP2C2nrbpPUtcOGTqtUCzaE1Y4YaB3rk0/RLLHaaVscd3xM9JhPiNyItsb
-         XhoqerhT2tee6svSxYvPrZm4qqxwAj2l62o/IEbI=
-Date:   Mon, 29 Jul 2019 08:52:50 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "dledford@redhat.com" <dledford@redhat.com>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [BUG] infiniband: mlx5: a possible null-pointer dereference in
- set_roce_addr()
-Message-ID: <20190729055250.GL4674@mtr-leonro.mtl.com>
-References: <f99031cc-795e-92bd-9310-29c669ada7dc@gmail.com>
- <AM0PR05MB48664AE114EE357CC33EA945D1DD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <AM0PR05MB4866CE3362B36EB4257C858ED1DD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        b=hU1kuFnQV6yHMT39IlH8+xC7EBz07nbhhziXHh3iGWdGalxEF5niCbLeS8UbI0eC7
+         PasfGwGXL356HtO/aaAAu4lJWvvhUVhsHkSFipovDkltkOhUt10y9W7AXvpk6+Caw/
+         QFubjvaLIG4rTZO12dR+m+wPiD4dL+qMEpcgp3rA=
+Date:   Sun, 28 Jul 2019 22:54:54 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix to read source block before
+ invalidating it
+Message-ID: <20190729055454.GC94090@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190718013718.70335-1-jaegeuk@kernel.org>
+ <20190718031214.GA78336@jaegeuk-macbookpro.roam.corp.google.com>
+ <19a25101-da74-de98-6ca4-a9fd9fa09ef2@huawei.com>
+ <20190718040005.GA81995@jaegeuk-macbookpro.roam.corp.google.com>
+ <91dbfa33-cda0-e6e7-d62f-6604939142d4@huawei.com>
+ <20190723012721.GA60134@jaegeuk-macbookpro.roam.corp.google.com>
+ <45a9f47b-337c-527c-420d-b29e77a8ed22@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM0PR05MB4866CE3362B36EB4257C858ED1DD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <45a9f47b-337c-527c-420d-b29e77a8ed22@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 05:26:30AM +0000, Parav Pandit wrote:
->
->
-> > -----Original Message-----
-> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-
-> > owner@vger.kernel.org> On Behalf Of Parav Pandit
-> > Sent: Monday, July 29, 2019 10:55 AM
-> > To: Jia-Ju Bai <baijiaju1990@gmail.com>; leon@kernel.org;
-> > dledford@redhat.com; jgg@ziepe.ca
-> > Cc: linux-rdma@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: RE: [BUG] infiniband: mlx5: a possible null-pointer dereference in
-> > set_roce_addr()
-> >
-> > Hi Jia,
-> >
-> > > -----Original Message-----
-> > > From: linux-rdma-owner@vger.kernel.org <linux-rdma-
-> > > owner@vger.kernel.org> On Behalf Of Jia-Ju Bai
-> > > Sent: Monday, July 29, 2019 7:47 AM
-> > > To: leon@kernel.org; dledford@redhat.com; jgg@ziepe.ca
-> > > Cc: linux-rdma@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > Subject: [BUG] infiniband: mlx5: a possible null-pointer dereference
-> > > in
-> > > set_roce_addr()
-> > >
-> > > In set_roce_addr(), there is an if statement on line 589 to check
-> > > whether gid is
-> > > NULL:
-> > >      if (gid)
-> > >
-> > > When gid is NULL, it is used on line 613:
-> > >      return mlx5_core_roce_gid_set(..., gid->raw, ...);
-> > >
-> > > Thus, a possible null-pointer dereference may occur.
-> > >
-> > > This bug is found by a static analysis tool STCheck written by us.
-> > >
-> > While static checker is right, it is not a real bug, because gid->raw pointer
-> > points to GID entry itself so when GID is NULL, gid->raw is NULL too.
-> >
-> > One way to suppress the static checker warning/error is below patch.
-> > Will let Leon review it.
-> >
-> > > I do not know how to correctly fix this bug, so I only report it.
-> > >
-> > >
-> > > Best wishes,
-> > > Jia-Ju Bai
-> >
-> > From 30e055dba77e595bf88aebd3a9c75ed76bc9c65a Mon Sep 17 00:00:00
-> > 2001
-> > From: Parav Pandit <parav@mellanox.com>
-> > Date: Mon, 29 Jul 2019 00:13:21 -0500
-> > Subject: [PATCH] IB/mlx5: Avoid static checker warning for NULL access
-> >
-> > union ib_gid *gid and gid->raw pointers refers to the same address.
-> > However some static checker reports this as possible NULL access warning in
-> > call to mlx5_core_roce_gid_set().
-> >
-> > To suppress such warning, instead of working on raw GID element, expose API
-> > using union ib_gid*.
-> >
-> > Reported-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> > Signed-off-by: Parav Pandit <parav@mellanox.com>
-> > ---
-> >  drivers/infiniband/hw/mlx5/main.c                   |  2 +-
-> >  drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c | 12 +++++++-----
-> >  drivers/net/ethernet/mellanox/mlx5/core/lib/gid.c   |  5 +++--
-> >  drivers/net/ethernet/mellanox/mlx5/core/rdma.c      |  2 +-
-> >  include/linux/mlx5/driver.h                         |  4 +++-
-> >  5 files changed, 15 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/infiniband/hw/mlx5/main.c
-> > b/drivers/infiniband/hw/mlx5/main.c
-> > index c2a5780cb394..e60785bad7ef 100644
-> > --- a/drivers/infiniband/hw/mlx5/main.c
-> > +++ b/drivers/infiniband/hw/mlx5/main.c
-> > @@ -610,7 +610,7 @@ static int set_roce_addr(struct mlx5_ib_dev *dev, u8
-> > port_num,
-> >  	}
-> >
-> >  	return mlx5_core_roce_gid_set(dev->mdev, index, roce_version,
-> > -				      roce_l3_type, gid->raw, mac,
-> > +				      roce_l3_type, &gid, mac,
-> >  				      vlan_id < VLAN_CFI_MASK, vlan_id,
-> >  				      port_num);
-> >  }
-> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-> > b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-> > index 4c50efe4e7f1..76b8236af9c7 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-> > @@ -850,6 +850,7 @@ struct mlx5_fpga_conn *mlx5_fpga_conn_create(struct
-> > mlx5_fpga_device *fdev,
-> >  					     enum mlx5_ifc_fpga_qp_type
-> > qp_type)  {
-> >  	struct mlx5_fpga_conn *ret, *conn;
-> > +	struct ib_gid remote_gid = {};
-> >  	u8 *remote_mac, *remote_ip;
-> >  	int err;
-> >
-> > @@ -876,11 +877,12 @@ struct mlx5_fpga_conn
-> > *mlx5_fpga_conn_create(struct mlx5_fpga_device *fdev,
-> >  		goto err;
-> >  	}
-> >
-> > -	/* Build Modified EUI-64 IPv6 address from the MAC address */
-> >  	remote_ip = MLX5_ADDR_OF(fpga_qpc, conn->fpga_qpc, remote_ip);
-> > -	remote_ip[0] = 0xfe;
-> > -	remote_ip[1] = 0x80;
-> > -	addrconf_addr_eui48(&remote_ip[8], remote_mac);
-> > +	memcpy(remote_gid.raw[0], remote_ip, sizeof(remote_gid.raw));
-> > +	/* Build Modified EUI-64 IPv6 address from the MAC address */
-> > +	remte_gid.raw[0] = 0xfe;
-> > +	remte_gid.raw[1] = 0x80;
-> > +	addrconf_addr_eui48(&remote_gid.raw[8], remote_mac);
-> >
-> >  	err = mlx5_core_reserved_gid_alloc(fdev->mdev, &conn-
-> > >qp.sgid_index);
-> >  	if (err) {
-> > @@ -892,7 +894,7 @@ struct mlx5_fpga_conn *mlx5_fpga_conn_create(struct
-> > mlx5_fpga_device *fdev,
-> >  	err = mlx5_core_roce_gid_set(fdev->mdev, conn->qp.sgid_index,
-> >  				     MLX5_ROCE_VERSION_2,
-> >  				     MLX5_ROCE_L3_TYPE_IPV6,
-> > -				     remote_ip, remote_mac, true, 0,
-> > +				     &remote_gid, remote_mac, true, 0,
-> >  				     MLX5_FPGA_PORT_NUM);
-> >  	if (err) {
-> >  		mlx5_fpga_err(fdev, "Failed to set SGID: %d\n", err); diff --git
-> > a/drivers/net/ethernet/mellanox/mlx5/core/lib/gid.c
-> > b/drivers/net/ethernet/mellanox/mlx5/core/lib/gid.c
-> > index 7722a3f9bb68..9b8563a2bd50 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/lib/gid.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/gid.c
-> > @@ -120,7 +120,8 @@ unsigned int mlx5_core_reserved_gids_count(struct
-> > mlx5_core_dev *dev)
-> > EXPORT_SYMBOL_GPL(mlx5_core_reserved_gids_count);
-> >
-> >  int mlx5_core_roce_gid_set(struct mlx5_core_dev *dev, unsigned int index,
-> > -			   u8 roce_version, u8 roce_l3_type, const u8 *gid,
-> > +			   u8 roce_version, u8 roce_l3_type,
-> > +			   const union ib_gid *gid,
-> >  			   const u8 *mac, bool vlan, u16 vlan_id, u8 port_num)
-> > {  #define MLX5_SET_RA(p, f, v) MLX5_SET(roce_addr_layout, p, f, v) @@ -
-> > 145,7 +146,7 @@ int mlx5_core_roce_gid_set(struct mlx5_core_dev *dev,
-> > unsigned int index,
-> >  		ether_addr_copy(addr_mac, mac);
-> >  		MLX5_SET_RA(in_addr, roce_version, roce_version);
-> >  		MLX5_SET_RA(in_addr, roce_l3_type, roce_l3_type);
-> > -		memcpy(addr_l3_addr, gid, gidsz);
-> > +		memcpy(addr_l3_addr, &gid->raw[0], gidsz);
-> >  	}
-> >
-> >  	if (MLX5_CAP_GEN(dev, num_vhca_ports) > 0) diff --git
-> > a/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
-> > b/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
-> > index 17ce9dd56b13..2a4467346231 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
-> > @@ -139,7 +139,7 @@ static int mlx5_rdma_add_roce_addr(struct
-> > mlx5_core_dev *dev)
-> >  	mlx5_rdma_make_default_gid(dev, &gid);
-> >  	return mlx5_core_roce_gid_set(dev, 0,
-> >  				      MLX5_ROCE_VERSION_1,
-> > -				      0, gid.raw, mac,
-> > +				      0, &gid, mac,
-> >  				      false, 0, 1);
-> >  }
-> >
-> > diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h index
-> > 1e42c13819ae..691864e853be 100644
-> > --- a/include/linux/mlx5/driver.h
-> > +++ b/include/linux/mlx5/driver.h
-> > @@ -47,6 +47,7 @@
-> >  #include <linux/interrupt.h>
-> >  #include <linux/idr.h>
-> >  #include <linux/notifier.h>
-> > +#include <rdma/ib_verbs.h>
-> >
-> >  #include <linux/mlx5/device.h>
-> >  #include <linux/mlx5/doorbell.h>
-> > @@ -1002,7 +1003,8 @@ struct cpumask *
-> >  mlx5_comp_irq_get_affinity_mask(struct mlx5_core_dev *dev, int vector);
-> > unsigned int mlx5_core_reserved_gids_count(struct mlx5_core_dev *dev);  int
-> > mlx5_core_roce_gid_set(struct mlx5_core_dev *dev, unsigned int index,
-> > -			   u8 roce_version, u8 roce_l3_type, const u8 *gid,
-> > +			   u8 roce_version, u8 roce_l3_type,
-> > +			   const union ib_gid *gid,
-> >  			   const u8 *mac, bool vlan, u16 vlan_id, u8 port_num);
-> >
-> >  static inline int fw_initializing(struct mlx5_core_dev *dev)
-> > --
-> > 2.19.2
->
-> Leon just replied. Thanks.
+On 07/23, Chao Yu wrote:
+> On 2019/7/23 9:27, Jaegeuk Kim wrote:
+> > On 07/18, Chao Yu wrote:
+> >> On 2019/7/18 12:00, Jaegeuk Kim wrote:
+> >>> On 07/18, Chao Yu wrote:
+> >>>> On 2019/7/18 11:12, Jaegeuk Kim wrote:
+> >>>>> f2fs_allocate_data_block() invalidates old block address and enable new block
+> >>>>> address. Then, if we try to read old block by f2fs_submit_page_bio(), it will
+> >>>>> give WARN due to reading invalid blocks.
+> >>>>>
+> >>>>> Let's make the order sanely back.
+> >>>>
+> >>>> Hmm.. to avoid WARM, we may suffer one more memcpy, I suspect this can reduce
+> >>>> online resize or foreground gc ioctl performance...
+> >>>
+> >>> I worried about performance tho, more concern came to me that there may exist a
+> >>> chance that other thread can allocate and write something in old block address.
+> >>
+> >> Me too, however, previous invalid block address should be reused after a
+> >> checkpoint, and checkpoint should have invalidated meta cache already, so there
+> >> shouldn't be any race here.
+> > 
+> > I think SSR can reuse that before checkpoint.
+> 
+> Yes, I should have considered that when I introduced readahead feature for
+> migration of block, we've kept invalidating meta page cache in old block address
+> whenever the block address is not valid.
+> 
+> quoted from ("f2fs: readahead encrypted block during GC")
+> 
+> "Note that for OPU, truncation, deletion, we need to invalid meta
+> page after we invalid old block address, to make sure we won't load
+> invalid data from target meta page during encrypted block migration."
+> 
+> But to avoid potential issue, how about just enable meta page cache during GC?
+> that is saying we should truncate all valid meta cache after one section has
+> been moved.
 
-Just to be clear, NAK.
+We may need to invalidate metapage when writing new data, which looks like
+different issue.
 
-Thanks
+> 
+> One more concern is whether below case exists during SSR?
+> - write 4k to fileA;
+> - fsync fileA, 4k data is writebacked to lbaA;
+> - write 4k to fileA;
+> - kworker flushs 4k to lbaB; dnode contain lbaB didn't be persisted yet;
+> - write 4k to fileB;
+> - kworker flush 4k to lbaA due to SSR;
+> - SPOR  -> dnode with lbaA will be recovered, however lbaA contains fileB's data..
+
+Yes, it seems that's possible. We may need to keep another bitmap to record
+all the block allocation?
+
+> 
+> Thanks,
+> 
+> > 
+> >>
+> >> 	/*
+> >> 	 * invalidate intermediate page cache borrowed from meta inode
+> >> 	 * which are used for migration of encrypted inode's blocks.
+> >> 	 */
+> >> 	if (f2fs_sb_has_encrypt(sbi))
+> >> 		invalidate_mapping_pages(META_MAPPING(sbi),
+> >> 				MAIN_BLKADDR(sbi), MAX_BLKADDR(sbi) - 1);
+> >>
+> >> Thanks,
+> >>
+> >>>
+> >>>>
+> >>>> Can we just relief to use DATA_GENERIC_ENHANCE_READ for this case...?
+> >>>
+> >>> We need to keep consistency for this api.
+> >>>
+> >>> Thanks,
+> >>>
+> >>>>
+> >>>>>
+> >>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> >>>>
+> >>>> Except performance, I'm okay with this change.
+> >>>>
+> >>>> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> >>>>
+> >>>> Thanks,
+> >>>>
+> >>>>> ---
+> >>>>> v2:
+> >>>>> I was fixing the comments. :)
+> >>>>>
+> >>>>>  fs/f2fs/gc.c | 70 +++++++++++++++++++++++++---------------------------
+> >>>>>  1 file changed, 34 insertions(+), 36 deletions(-)
+> >>>>>
+> >>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> >>>>> index 6691f526fa40..8974672db78f 100644
+> >>>>> --- a/fs/f2fs/gc.c
+> >>>>> +++ b/fs/f2fs/gc.c
+> >>>>> @@ -796,6 +796,29 @@ static int move_data_block(struct inode *inode, block_t bidx,
+> >>>>>  	if (lfs_mode)
+> >>>>>  		down_write(&fio.sbi->io_order_lock);
+> >>>>>  
+> >>>>> +	mpage = f2fs_grab_cache_page(META_MAPPING(fio.sbi),
+> >>>>> +					fio.old_blkaddr, false);
+> >>>>> +	if (!mpage)
+> >>>>> +		goto up_out;
+> >>>>> +
+> >>>>> +	fio.encrypted_page = mpage;
+> >>>>> +
+> >>>>> +	/* read source block in mpage */
+> >>>>> +	if (!PageUptodate(mpage)) {
+> >>>>> +		err = f2fs_submit_page_bio(&fio);
+> >>>>> +		if (err) {
+> >>>>> +			f2fs_put_page(mpage, 1);
+> >>>>> +			goto up_out;
+> >>>>> +		}
+> >>>>> +		lock_page(mpage);
+> >>>>> +		if (unlikely(mpage->mapping != META_MAPPING(fio.sbi) ||
+> >>>>> +						!PageUptodate(mpage))) {
+> >>>>> +			err = -EIO;
+> >>>>> +			f2fs_put_page(mpage, 1);
+> >>>>> +			goto up_out;
+> >>>>> +		}
+> >>>>> +	}
+> >>>>> +
+> >>>>>  	f2fs_allocate_data_block(fio.sbi, NULL, fio.old_blkaddr, &newaddr,
+> >>>>>  					&sum, CURSEG_COLD_DATA, NULL, false);
+> >>>>>  
+> >>>>> @@ -803,44 +826,18 @@ static int move_data_block(struct inode *inode, block_t bidx,
+> >>>>>  				newaddr, FGP_LOCK | FGP_CREAT, GFP_NOFS);
+> >>>>>  	if (!fio.encrypted_page) {
+> >>>>>  		err = -ENOMEM;
+> >>>>> -		goto recover_block;
+> >>>>> -	}
+> >>>>> -
+> >>>>> -	mpage = f2fs_pagecache_get_page(META_MAPPING(fio.sbi),
+> >>>>> -					fio.old_blkaddr, FGP_LOCK, GFP_NOFS);
+> >>>>> -	if (mpage) {
+> >>>>> -		bool updated = false;
+> >>>>> -
+> >>>>> -		if (PageUptodate(mpage)) {
+> >>>>> -			memcpy(page_address(fio.encrypted_page),
+> >>>>> -					page_address(mpage), PAGE_SIZE);
+> >>>>> -			updated = true;
+> >>>>> -		}
+> >>>>>  		f2fs_put_page(mpage, 1);
+> >>>>> -		invalidate_mapping_pages(META_MAPPING(fio.sbi),
+> >>>>> -					fio.old_blkaddr, fio.old_blkaddr);
+> >>>>> -		if (updated)
+> >>>>> -			goto write_page;
+> >>>>> -	}
+> >>>>> -
+> >>>>> -	err = f2fs_submit_page_bio(&fio);
+> >>>>> -	if (err)
+> >>>>> -		goto put_page_out;
+> >>>>> -
+> >>>>> -	/* write page */
+> >>>>> -	lock_page(fio.encrypted_page);
+> >>>>> -
+> >>>>> -	if (unlikely(fio.encrypted_page->mapping != META_MAPPING(fio.sbi))) {
+> >>>>> -		err = -EIO;
+> >>>>> -		goto put_page_out;
+> >>>>> -	}
+> >>>>> -	if (unlikely(!PageUptodate(fio.encrypted_page))) {
+> >>>>> -		err = -EIO;
+> >>>>> -		goto put_page_out;
+> >>>>> +		goto recover_block;
+> >>>>>  	}
+> >>>>>  
+> >>>>> -write_page:
+> >>>>> +	/* write target block */
+> >>>>>  	f2fs_wait_on_page_writeback(fio.encrypted_page, DATA, true, true);
+> >>>>> +	memcpy(page_address(fio.encrypted_page),
+> >>>>> +				page_address(mpage), PAGE_SIZE);
+> >>>>> +	f2fs_put_page(mpage, 1);
+> >>>>> +	invalidate_mapping_pages(META_MAPPING(fio.sbi),
+> >>>>> +				fio.old_blkaddr, fio.old_blkaddr);
+> >>>>> +
+> >>>>>  	set_page_dirty(fio.encrypted_page);
+> >>>>>  	if (clear_page_dirty_for_io(fio.encrypted_page))
+> >>>>>  		dec_page_count(fio.sbi, F2FS_DIRTY_META);
+> >>>>> @@ -871,11 +868,12 @@ static int move_data_block(struct inode *inode, block_t bidx,
+> >>>>>  put_page_out:
+> >>>>>  	f2fs_put_page(fio.encrypted_page, 1);
+> >>>>>  recover_block:
+> >>>>> -	if (lfs_mode)
+> >>>>> -		up_write(&fio.sbi->io_order_lock);
+> >>>>>  	if (err)
+> >>>>>  		f2fs_do_replace_block(fio.sbi, &sum, newaddr, fio.old_blkaddr,
+> >>>>>  								true, true);
+> >>>>> +up_out:
+> >>>>> +	if (lfs_mode)
+> >>>>> +		up_write(&fio.sbi->io_order_lock);
+> >>>>>  put_out:
+> >>>>>  	f2fs_put_dnode(&dn);
+> >>>>>  out:
+> >>>>>
+> >>>>
+> >>>>
+> >>>> _______________________________________________
+> >>>> Linux-f2fs-devel mailing list
+> >>>> Linux-f2fs-devel@lists.sourceforge.net
+> >>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> >>> .
+> >>>
+> > .
+> > 
