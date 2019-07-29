@@ -5,55 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675D3C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A481C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277CD2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A5D21773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428375;
-	bh=yd6864k3XuVp8SmYT1XPXXWL1SzNXpGGilzBZ+3VdBk=;
+	s=default; t=1564428378;
+	bh=3BeJpKaq+DjbFnhS2ryuE8FGycUhgPvepnWyWM0en0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6gH2cz6n1eEQZu/DsrbGDDTbff1Fq31edUc4VDsaB4u1xXla4j1FmHBmBvWSEKm6
-	 TIr7sZZcSUEp7pzrckcJJMJOg4chGK9Izxp6otiKAq13aTh83HcWVtIniw1aeE/tDE
-	 iop/+H3WjC0yQ75g0dtKQKinzQVPZDAqCPj+KNGs=
+	b=oKFEPiiuEupjkICLL3SBlbGoWMSM4DFtLqjiSvnih34KcQUV9JfWYxXRM3pTAdMpx
+	 G+Zi3Ef9GNS0nl2HBuVVntQLjsErh7BAId4kuhZav8LnENapHKbH8OnYWHIogpEhUv
+	 W6zUz6ReGi/MIMxf/likbe+plXluwApAia2yCaJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbfG2T0N (ORCPT
+        id S1729735AbfG2T0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:26:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:26:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727801AbfG2T0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:26:11 -0400
+        id S1729211AbfG2T0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:26:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7106820C01;
-        Mon, 29 Jul 2019 19:26:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0285A21655;
+        Mon, 29 Jul 2019 19:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428370;
-        bh=yd6864k3XuVp8SmYT1XPXXWL1SzNXpGGilzBZ+3VdBk=;
+        s=default; t=1564428373;
+        bh=3BeJpKaq+DjbFnhS2ryuE8FGycUhgPvepnWyWM0en0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hmt4jhtWgTYx5WQlZv3AKSLUdsN/G4ZKTEY3C6xsTruPYGxLTQdWQdg9brkLINh7r
-         hGOJxW+shG7vW/fPhU11uwIB+djgTn7fJ5GyfhzxVlWfFvvtRGSWYxdK/9Lxro6YS8
-         uQJlovmB6hDHlnRUhddXky7pnBu+XsRsVfnmqcwY=
+        b=tdAbFtStYHa2XqiNWwpxaLE6vr7UuaIr5SyGGiICG4KgZZoVAmuoBk+pg6zsh7HHW
+         z11QeL3aTzsVtK/UtB/EIrtrJsg26XNgVlPW1Y6ONLFStZAttn+sE3VpZ+7JDmKetf
+         jqTi5PgLrDhsJO0LBSAvh+q+u27p40JWITlNBRdo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jilong Kou <koujilong@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Miao Xie <miaoxie@huawei.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 053/293] sched/core: Add __sched tag for io_schedule()
-Date:   Mon, 29 Jul 2019 21:19:04 +0200
-Message-Id: <20190729190827.868949370@linuxfoundation.org>
+Subject: [PATCH 4.14 054/293] sched/fair: Fix "runnable_avg_yN_inv" not used warnings
+Date:   Mon, 29 Jul 2019 21:19:05 +0200
+Message-Id: <20190729190828.058944959@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -66,45 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e3b929b0a184edb35531153c5afcaebb09014f9d ]
+[ Upstream commit 509466b7d480bc5d22e90b9fbe6122ae0e2fbe39 ]
 
-Non-inline io_schedule() was introduced in:
+runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
+included in several other places because they need other macros all
+came from kernel/sched/sched-pelt.h which was generated by
+Documentation/scheduler/sched-pelt. As the result, it causes compilation
+a lot of warnings,
 
-  commit 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  ...
 
-Keep in line with io_schedule_timeout(), otherwise "/proc/<pid>/wchan" will
-report io_schedule() rather than its callers when waiting for IO.
+Silence it by appending the __maybe_unused attribute for it, so all
+generated variables and macros can still be kept in the same file.
 
-Reported-by: Jilong Kou <koujilong@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miao Xie <miaoxie@huawei.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
-Link: https://lkml.kernel.org/r/20190603091338.2695-1-gaoxiang25@huawei.com
+Link: https://lkml.kernel.org/r/1559596304-31581-1-git-send-email-cai@lca.pw
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/scheduler/sched-pelt.c | 3 ++-
+ kernel/sched/sched-pelt.h            | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index b3ff73d6a4c2..ff128e281d1c 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5026,7 +5026,7 @@ long __sched io_schedule_timeout(long timeout)
- }
- EXPORT_SYMBOL(io_schedule_timeout);
+diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
+index e4219139386a..7238b355919c 100644
+--- a/Documentation/scheduler/sched-pelt.c
++++ b/Documentation/scheduler/sched-pelt.c
+@@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
+ 	int i;
+ 	unsigned int x;
  
--void io_schedule(void)
-+void __sched io_schedule(void)
- {
- 	int token;
+-	printf("static const u32 runnable_avg_yN_inv[] = {");
++	/* To silence -Wunused-but-set-variable warnings. */
++	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
+ 	for (i = 0; i < HALFLIFE; i++) {
+ 		x = ((1UL<<32)-1)*pow(y, i);
  
+diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
+index a26473674fb7..c529706bed11 100644
+--- a/kernel/sched/sched-pelt.h
++++ b/kernel/sched/sched-pelt.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
+ 
+-static const u32 runnable_avg_yN_inv[] = {
++static const u32 runnable_avg_yN_inv[] __maybe_unused = {
+ 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
+ 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
+ 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
 -- 
 2.20.1
 
