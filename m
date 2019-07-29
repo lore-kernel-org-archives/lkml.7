@@ -8,62 +8,60 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3B5C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F13C1C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4E3D2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85A02171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:15:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4rzKkb2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+Q4hSFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbfG2PP0 (ORCPT
+        id S1728831AbfG2PPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:15:26 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34380 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbfG2PP0 (ORCPT
+        Mon, 29 Jul 2019 11:15:32 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36485 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728023AbfG2PPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:15:26 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b13so28199142pfo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 08:15:25 -0700 (PDT)
+        Mon, 29 Jul 2019 11:15:32 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l21so28418694pgm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 08:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=koA2wZvY1xMhA3KsE1/9Z0pBqrsMdAu4nwh2NZ9LbVk=;
-        b=e4rzKkb2RcZY6CXq6oqa9fgnPRCiI/und8SOuBoGXaRlBhhEJbekWH21nMrMJ8OqE5
-         nEcmwMn3FhROJt7eKaKQT9XxBjoqDQplHcQrPCYsnKjTo7pFQ8vQ8ESUdRvooqw2f49J
-         EQIrBIbb1mlsWJI3sem1xKhmYQoiU51Kn7twObObN0/m4TCagI+wQOUIjXOUq3voR9Ni
-         /K8PtiyKvPfMb3e+EVYVqbMBfkFaXurEfZDJcDPPGB7YkZG7qtLZNZmV87RNGDp942dD
-         L3W5C83yrBxG5nBWdQRPC4KcCPvB+j4yMxVdYXp3FhXPIfOHAVS0BsNzxhmmj/zXCQML
-         /66g==
+        bh=IZw5zJlUaHZqjTi8v7H9aY2VgBMCyLLOX5E3euuUe8A=;
+        b=A+Q4hSFeN/v8VhH2QhtaBTcxMp1KevW34tUAFJnIfjOabcdYI5JZPWNZt4C1xVYR5b
+         Q+8C1vWoO0X8bW4h7I8bb4nvqr5DDBnXps/erEkKudRObCxl3XDdS/9yRgDVIN5dA7P2
+         JkoPYysUudx9eQZrRiWKggKgdWPt4Cz46niYOSdH4FYIMVF67rLEj32mxvEGyXP9xNqo
+         ARVQdvqpMbyKNxS9ttPjUgQVya65z00IKE2HqH89cbIxi2l6jAM3AgLGauFnVJOgkQ/t
+         VdP7YdL2JaYvUGPBx7dsPNyDzbEtC48OS8FxdedCO0za6CCsqF+D+J/yZFWSbRAtrCzh
+         cc1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=koA2wZvY1xMhA3KsE1/9Z0pBqrsMdAu4nwh2NZ9LbVk=;
-        b=HicXIjGdvEm8xgRo+FPHVNRkzLk/AIO9fVDZXxHj+oFHKroxaTDKV5epar1DRjq5p0
-         hLwhXl77lR5HkJ9rHP0D1/iDwuEpm6cTRYjhFp/Hm2FqDHjnyOg0Fe9VH13fu6+/vw5G
-         gNGRZFfQEjqnwYq52eGe7i5A2oXtkGjhXUnQMIWzxdaArGevGNFENUuN6pZpMHvsyj2m
-         4PnI0Y9mu1DikJOwAzmdPFGUOu51Z/PQnNzeNqvlLLGoTE62fCOIWzOxUp3QE0ty3fh5
-         708fJAZgZib8CcSp53933QVzAbKvopUSCZWicFqpgEL7uuQM5sBKeUBbwFIUfik+JcvK
-         Py2w==
-X-Gm-Message-State: APjAAAW9tGbQUhXVwImbiPilfoWtn/uKJE/3pOsTJx7HH5NWrUSXfNtF
-        cba+mxg2HVpP6+BlFpyBENWIK2XPv4E=
-X-Google-Smtp-Source: APXvYqyB3jEiUjeBfqg1+3Yu/roidjNXiYN99hvJxwu3FlxQzIprglzNWcCjcFFd3YGe78AkBfeaLA==
-X-Received: by 2002:a63:20d:: with SMTP id 13mr94245627pgc.253.1564413325640;
-        Mon, 29 Jul 2019 08:15:25 -0700 (PDT)
+        bh=IZw5zJlUaHZqjTi8v7H9aY2VgBMCyLLOX5E3euuUe8A=;
+        b=Togf3AIa2LjUrXrxAiXF0s+mX2zR3rSEVjc5SJMykmIWLY4ezkPtJJo8KJLBjP9ayk
+         h13bjvG+oiurmOyiYSmWjIUavAJ58iX1vi8obQ+7/xdOKgbLfiWjQWI+CzaWM9dwt+Ns
+         9zeASzaYRQb49FbLRNcXJnm25Ocjz58Je3nQXvmSKm2N2ajsy3+B1tZug5XCRZouxy6x
+         Q0fcnHFHw/pgZ41yXrjCCfzcXY2W3LQpljsyOqQSunPlnFuokZC7nA349KgbZrIiF/e4
+         jvQrTKUatkN1yG5NSBLl2nWbBAObAaBZqWIJRdlmJ2xsAwxsNMuKiBBenEtY3YY/j+0v
+         jkRw==
+X-Gm-Message-State: APjAAAVSLu0K0L3NTnpTTOnlWH6+TkqvNGM3/IrEUsY/Bk8LPotHgcIv
+        vNg2EHK9RDk+Nqz0v6Id2gMadzrwQlk=
+X-Google-Smtp-Source: APXvYqxES8bUCkCu4Ofmhlv0jhodKV0iMkhe8omZ/+or1DrB+WtjdiSHeipQUZGVKOf7PKm9UlgmJw==
+X-Received: by 2002:a65:5c4b:: with SMTP id v11mr62169605pgr.62.1564413331402;
+        Mon, 29 Jul 2019 08:15:31 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id o128sm67667764pfb.42.2019.07.29.08.15.23
+        by smtp.gmail.com with ESMTPSA id y194sm29691319pfg.116.2019.07.29.08.15.29
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 08:15:25 -0700 (PDT)
+        Mon, 29 Jul 2019 08:15:30 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH 10/12] sched: Replace strncmp with str_has_prefix
-Date:   Mon, 29 Jul 2019 23:15:21 +0800
-Message-Id: <20190729151521.9768-1-hslester96@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH 11/12] userns: Replace strncmp with str_has_prefix
+Date:   Mon, 29 Jul 2019 23:15:27 +0800
+Message-Id: <20190729151527.9822-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,43 +77,27 @@ str_has_prefix() instead of it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- kernel/sched/debug.c     | 2 +-
- kernel/sched/isolation.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ kernel/user_namespace.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index f7e4579e746c..6a77bf51e4d3 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -103,7 +103,7 @@ static int sched_feat_set(char *cmp)
- 	int i;
- 	int neg = 0;
+diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
+index 8eadadc478f9..4a06ba563531 100644
+--- a/kernel/user_namespace.c
++++ b/kernel/user_namespace.c
+@@ -1153,11 +1153,10 @@ ssize_t proc_setgroups_write(struct file *file, const char __user *buf,
  
--	if (strncmp(cmp, "NO_", 3) == 0) {
-+	if (str_has_prefix(cmp, "NO_")) {
- 		neg = 1;
- 		cmp += 3;
+ 	/* What is being requested? */
+ 	ret = -EINVAL;
+-	if (strncmp(pos, "allow", 5) == 0) {
++	if (str_has_prefix(pos, "allow")) {
+ 		pos += 5;
+ 		setgroups_allowed = true;
+-	}
+-	else if (strncmp(pos, "deny", 4) == 0) {
++	} else if (str_has_prefix(pos, "deny")) {
+ 		pos += 4;
+ 		setgroups_allowed = false;
  	}
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index ccb28085b114..cd5dfa93095d 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -143,13 +143,13 @@ static int __init housekeeping_isolcpus_setup(char *str)
- 	unsigned int flags = 0;
- 
- 	while (isalpha(*str)) {
--		if (!strncmp(str, "nohz,", 5)) {
-+		if (str_has_prefix(str, "nohz,")) {
- 			str += 5;
- 			flags |= HK_FLAG_TICK;
- 			continue;
- 		}
- 
--		if (!strncmp(str, "domain,", 7)) {
-+		if (str_has_prefix(str, "domain,")) {
- 			str += 7;
- 			flags |= HK_FLAG_DOMAIN;
- 			continue;
 -- 
 2.20.1
 
