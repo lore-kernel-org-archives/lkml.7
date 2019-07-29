@@ -2,120 +2,117 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076D0C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D176C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D565C217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:24:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="P2gaG9Qs"
+	by mail.kernel.org (Postfix) with ESMTP id 4BDC62067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387684AbfG2LY4 (ORCPT
+        id S2387691AbfG2L0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:24:56 -0400
-Received: from mx01-fr.bfs.de ([193.174.231.67]:51171 "EHLO mx01-fr.bfs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387450AbfG2LYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:24:55 -0400
-Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
-        by mx01-fr.bfs.de (Postfix) with ESMTPS id 120DA20189;
-        Mon, 29 Jul 2019 13:24:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1564399490; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WmlXqkmds8g4l2sZZVC0NbuTSq+L6u5Hywts6yOE/DE=;
-        b=P2gaG9Qshu1YGUCXyU+ZC5GpryOcsTWcN7tbGQESId4jsD25pqFqkmyJg66rC9RvsA7Km+
-        I4URapGaWUD3/kphIFWZUdRH+lUE3hRTRPFCVNsACe3ILW31KM1Gd11OIwi2oLYG5CK2MR
-        q26XQGwRSrcBxzhM/5/Dz7Wqr+V0tKz1kVcdmJSKPLEvN/caaKks6AD0Pxuq/R7ZHk8Dct
-        xTfoyupYtOcChJLGbi6kg6Sk8htEXDFrdT0c62Pis2nidEwybR44f6kGOLxuPCKuXV51JH
-        R7cBpn/a1STF+ExZsFv7tSiglBCz/ivpx17Dp0Pl6kW6mi8m/+6VqRa9jSjZJg==
-Received: from [134.92.181.33] (unknown [134.92.181.33])
-        by mail-fr.bfs.de (Postfix) with ESMTPS id 75646BEEBD;
-        Mon, 29 Jul 2019 13:24:49 +0200 (CEST)
-Message-ID: <5D3ED780.7010407@bfs.de>
-Date:   Mon, 29 Jul 2019 13:24:48 +0200
-From:   walter harms <wharms@bfs.de>
-Reply-To: wharms@bfs.de
-User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
-MIME-Version: 1.0
-To:     Colin King <colin.king@canonical.com>
-CC:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-pm@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] drivers: thermal: processor_thermal_device: fix
- missing bitwise-or operator
-References: <20190729102930.2956-1-colin.king@canonical.com>
-In-Reply-To: <20190729102930.2956-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=UTF-8
+        Mon, 29 Jul 2019 07:26:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40042 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387450AbfG2L0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:26:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3F6FAB01C;
+        Mon, 29 Jul 2019 11:26:04 +0000 (UTC)
+Message-ID: <1564399552.25582.8.camel@suse.com>
+Subject: Re: WARNING in iguanair_probe/usb_submit_urb
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com>,
+        gustavo@embeddedor.com, andreyknvl@google.com,
+        syzkaller-bugs@googlegroups.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Date:   Mon, 29 Jul 2019 13:25:52 +0200
+In-Reply-To: <0000000000009af3e9058e94ac05@google.com>
+References: <0000000000009af3e9058e94ac05@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Authentication-Results: mx01-fr.bfs.de
-X-Spamd-Result: default: False [-3.10 / 7.00];
-         ARC_NA(0.00)[];
-         HAS_REPLYTO(0.00)[wharms@bfs.de];
-         BAYES_HAM(-3.00)[100.00%];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         MIME_GOOD(-0.10)[text/plain];
-         REPLYTO_ADDR_EQ_FROM(0.00)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[9];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         RCVD_TLS_ALL(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Am 29.07.2019 12:29, schrieb Colin King:
-> From: Colin Ian King <colin.king@canonical.com>
+Am Freitag, den 26.07.2019, 05:28 -0700 schrieb syzbot:
+> Hello,
 > 
-> The variable val is having the top 8 bits cleared and then the variable
-> is being re-assinged and setting just the top 8 bits.  I believe the
-> intention was bitwise-or in the top 8 bits.  Fix this by replacing
-> the = operator with |= instead.
+> syzbot found the following crash on:
 > 
-> Addresses-Coverity: ("Unused value")
-> Fixes: b0c74b08517e ("drivers: thermal: processor_thermal_device: Export sysfs inteface for TCC offset")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  .../thermal/intel/int340x_thermal/processor_thermal_device.c    | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=164ab1f0600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
+> dashboard link: https://syzkaller.appspot.com/bug?extid=01a77b82edaa374068e1
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143d7978600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134623f4600000
 > 
-> diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> index 6f6ac6a8e82d..cb22317911ef 100644
-> --- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> +++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> @@ -164,7 +164,7 @@ static int tcc_offset_update(int tcc)
->  		return err;
->  
->  	val = ~GENMASK_ULL(31, 24);
-> -	val = (tcc & 0xff) << 24;
-> +	val |= (tcc & 0xff) << 24;
->  
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
 
-I do not think that GENMASK makes sence here.
+#syz test: https://github.com/google/kasan.git usb-fuzzer-usb-testing-2019.07.11]
 
-re,
- wh
+From 0b0a7f7e980973e0c0d17f1dfe2bd7742492bfcc Mon Sep 17 00:00:00 2001
+From: Oliver Neukum <oneukum@suse.com>
+Date: Mon, 29 Jul 2019 11:49:00 +0200
+Subject: [PATCH] iguanair: add sanity checks
 
->  	err = wrmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, val);
->  	if (err)
+The driver needs to check the endpoint types, too, as opposed
+to the number of endpoints. This also requires moving the check earlier.
+
+Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+---
+ drivers/media/rc/iguanair.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
+index ea05e125016a..663083a6b399 100644
+--- a/drivers/media/rc/iguanair.c
++++ b/drivers/media/rc/iguanair.c
+@@ -413,6 +413,10 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	int ret, pipein, pipeout;
+ 	struct usb_host_interface *idesc;
+ 
++	idesc = intf->altsetting;
++	if (idesc->desc.bNumEndpoints < 2)
++		return -ENODEV;
++
+ 	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
+ 	rc = rc_allocate_device(RC_DRIVER_IR_RAW);
+ 	if (!ir || !rc) {
+@@ -427,18 +431,13 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	ir->urb_in = usb_alloc_urb(0, GFP_KERNEL);
+ 	ir->urb_out = usb_alloc_urb(0, GFP_KERNEL);
+ 
+-	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out) {
++	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out ||
++			!usb_endpoint_is_int_in(&idesc->endpoint[0].desc) ||
++			!usb_endpoint_is_int_out(&idesc->endpoint[1].desc)) {
+ 		ret = -ENOMEM;
+ 		goto out;
+ 	}
+ 
+-	idesc = intf->altsetting;
+-
+-	if (idesc->desc.bNumEndpoints < 2) {
+-		ret = -ENODEV;
+-		goto out;
+-	}
+-
+ 	ir->rc = rc;
+ 	ir->dev = &intf->dev;
+ 	ir->udev = udev;
+-- 
+2.16.4
+
