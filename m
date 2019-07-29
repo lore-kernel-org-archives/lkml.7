@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE54AC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA460C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B402075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6312075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564393948;
-	bh=kHSp0C6ppSqBxiDeeX215bblYjEwf3WbxrJDFsC0pMU=;
+	s=default; t=1564394012;
+	bh=43L5ieMVG6w5TzAxAWjvMrg/c2Xqa/q38AV6ncbvm0o=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=bAbl7bjTdD7ZN6uaQawNE8idM4wxbBuLH5CGa4nBgHB3fk9E0qLoQ0XUo5BoOgJWl
-	 81AfjU0rjbRd2jAjYCaritw6j/lxPEBmXX8CnP4/ASIMtM94QpXZPd8DTlzhxstOYG
-	 ICl4Y9D5ECL1qIvISpyCDe1NbUk/rRSUowsgoM7Q=
+	b=mEuyY81acZGVti1O64pzR7iLr3fwaLTdwXqYXzLOrOkTeyRvyFtM80Opdsg0ka9DQ
+	 lfXyyNnHKp9A75Srh7Fe/TzSab3iUgHbQ8IoMVt0jnUScu+daeaVBxk+4pCt827Yjk
+	 UodQtvPEQ6LnL7sPAYMmd5lWXLghXjJtAwYrLKNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbfG2Jw1 (ORCPT
+        id S1728157AbfG2Jxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:52:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:41002 "EHLO foss.arm.com"
+        Mon, 29 Jul 2019 05:53:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:41040 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728088AbfG2JwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:52:25 -0400
+        id S1726358AbfG2Jxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 05:53:31 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E4121596;
-        Mon, 29 Jul 2019 02:52:25 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EC661597;
+        Mon, 29 Jul 2019 02:53:30 -0700 (PDT)
 Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 40F703F694;
-        Mon, 29 Jul 2019 02:52:24 -0700 (PDT)
-Subject: Re: [PATCH] KVM: arm64: vgic-v3: mark expected switch fall-through
-To:     Matteo Croce <mcroce@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20190728233347.7856-1-mcroce@redhat.com>
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7C013F694;
+        Mon, 29 Jul 2019 02:53:29 -0700 (PDT)
+Subject: Re: [PATCH] irqchip/gic-v3: mark expected switch fall-through
+To:     Matteo Croce <mcroce@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+References: <20190729001119.2478-1-mcroce@redhat.com>
 From:   Marc Zyngier <maz@kernel.org>
 Organization: Approximate
-Message-ID: <e59eb35f-a83b-69e4-c72f-fe3f674f1fec@kernel.org>
-Date:   Mon, 29 Jul 2019 10:52:23 +0100
+Message-ID: <3fe34829-7ae5-58e8-48f4-39f0c6122b92@kernel.org>
+Date:   Mon, 29 Jul 2019 10:53:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190728233347.7856-1-mcroce@redhat.com>
+In-Reply-To: <20190729001119.2478-1-mcroce@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -56,114 +54,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2019 00:33, Matteo Croce wrote:
+On 29/07/2019 01:11, Matteo Croce wrote:
 > Mark switch cases where we are expecting to fall through,
-> fixes the following warning:
+> fixes the following warnings:
 > 
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c: In function ‘__vgic_v3_save_aprs’:
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:351:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    cpu_if->vgic_ap0r[2] = __vgic_v3_read_ap0rn(2);
->    ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:352:2: note: here
+> drivers/irqchip/irq-gic-v3.c: In function ‘gic_cpu_sys_reg_init’:
+> ./arch/arm64/include/asm/sysreg.h:853:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   asm volatile(__msr_s(r, "%x0") : : "rZ" (__val));  \
+>   ^~~
+> ./arch/arm64/include/asm/arch_gicv3.h:20:29: note: in expansion of macro ‘write_sysreg_s’
+>  #define write_gicreg(v, r)  write_sysreg_s(v, SYS_ ## r)
+>                              ^~~~~~~~~~~~~~
+> drivers/irqchip/irq-gic-v3.c:773:4: note: in expansion of macro ‘write_gicreg’
+>     write_gicreg(0, ICC_AP0R2_EL1);
+>     ^~~~~~~~~~~~
+> drivers/irqchip/irq-gic-v3.c:774:3: note: here
+>    case 6:
+>    ^~~~
+> 
+> drivers/irqchip/irq-gic-v3.c:788:3: note: in expansion of macro ‘write_gicreg’
+>    write_gicreg(0, ICC_AP1R2_EL1);
+>    ^~~~~~~~~~~~
+>   CC      net/ipv4/af_inet.o
+> drivers/irqchip/irq-gic-v3.c:789:2: note: here
 >   case 6:
 >   ^~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:353:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    cpu_if->vgic_ap0r[1] = __vgic_v3_read_ap0rn(1);
->    ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:354:2: note: here
->   default:
->   ^~~~~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:361:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    cpu_if->vgic_ap1r[2] = __vgic_v3_read_ap1rn(2);
->    ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:362:2: note: here
->   case 6:
+> 
+> ./arch/arm64/include/asm/arch_gicv3.h:20:29: note: in expansion of macro ‘write_sysreg_s’
+>  #define write_gicreg(v, r)  write_sysreg_s(v, SYS_ ## r)
+>                              ^~~~~~~~~~~~~~
+> drivers/irqchip/irq-gic-v3.c:790:3: note: in expansion of macro ‘write_gicreg’
+>    write_gicreg(0, ICC_AP1R1_EL1);
+>    ^~~~~~~~~~~~
+> drivers/irqchip/irq-gic-v3.c:791:2: note: here
+>   case 5:
 >   ^~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:363:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    cpu_if->vgic_ap1r[1] = __vgic_v3_read_ap1rn(1);
->    ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:364:2: note: here
->   default:
->   ^~~~~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c: In function ‘__vgic_v3_restore_aprs’:
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:384:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    __vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[2], 2);
->    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:385:2: note: here
->   case 6:
->   ^~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:386:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    __vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[1], 1);
->    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:387:2: note: here
->   default:
->   ^~~~~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:394:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    __vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[2], 2);
->    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:395:2: note: here
->   case 6:
->   ^~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:396:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    __vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[1], 1);
->    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:397:2: note: here
->   default:
->   ^~~~~~~
 > 
 > Signed-off-by: Matteo Croce <mcroce@redhat.com>
 > ---
->  virt/kvm/arm/hyp/vgic-v3-sr.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  drivers/irqchip/irq-gic-v3.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/virt/kvm/arm/hyp/vgic-v3-sr.c b/virt/kvm/arm/hyp/vgic-v3-sr.c
-> index 254c5f190a3d..622fb4d18c5c 100644
-> --- a/virt/kvm/arm/hyp/vgic-v3-sr.c
-> +++ b/virt/kvm/arm/hyp/vgic-v3-sr.c
-> @@ -349,8 +349,10 @@ void __hyp_text __vgic_v3_save_aprs(struct kvm_vcpu *vcpu)
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index 9bca4896fa6f..4a5d220698f6 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -771,8 +771,10 @@ static void gic_cpu_sys_reg_init(void)
+>  		case 7:
+>  			write_gicreg(0, ICC_AP0R3_EL1);
+>  			write_gicreg(0, ICC_AP0R2_EL1);
+> +			/* fallthrough */
+>  		case 6:
+>  			write_gicreg(0, ICC_AP0R1_EL1);
+> +			/* fallthrough */
+>  		case 5:
+>  		case 4:
+>  			write_gicreg(0, ICC_AP0R0_EL1);
+> @@ -786,8 +788,10 @@ static void gic_cpu_sys_reg_init(void)
 >  	case 7:
->  		cpu_if->vgic_ap0r[3] = __vgic_v3_read_ap0rn(3);
->  		cpu_if->vgic_ap0r[2] = __vgic_v3_read_ap0rn(2);
+>  		write_gicreg(0, ICC_AP1R3_EL1);
+>  		write_gicreg(0, ICC_AP1R2_EL1);
 > +		/* fallthrough */
 >  	case 6:
->  		cpu_if->vgic_ap0r[1] = __vgic_v3_read_ap0rn(1);
+>  		write_gicreg(0, ICC_AP1R1_EL1);
 > +		/* fallthrough */
->  	default:
->  		cpu_if->vgic_ap0r[0] = __vgic_v3_read_ap0rn(0);
->  	}
-> @@ -359,8 +361,10 @@ void __hyp_text __vgic_v3_save_aprs(struct kvm_vcpu *vcpu)
->  	case 7:
->  		cpu_if->vgic_ap1r[3] = __vgic_v3_read_ap1rn(3);
->  		cpu_if->vgic_ap1r[2] = __vgic_v3_read_ap1rn(2);
-> +		/* fallthrough */
->  	case 6:
->  		cpu_if->vgic_ap1r[1] = __vgic_v3_read_ap1rn(1);
-> +		/* fallthrough */
->  	default:
->  		cpu_if->vgic_ap1r[0] = __vgic_v3_read_ap1rn(0);
->  	}
-> @@ -382,8 +386,10 @@ void __hyp_text __vgic_v3_restore_aprs(struct kvm_vcpu *vcpu)
->  	case 7:
->  		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[3], 3);
->  		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[2], 2);
-> +		/* fallthrough */
->  	case 6:
->  		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[1], 1);
-> +		/* fallthrough */
->  	default:
->  		__vgic_v3_write_ap0rn(cpu_if->vgic_ap0r[0], 0);
->  	}
-> @@ -392,8 +398,10 @@ void __hyp_text __vgic_v3_restore_aprs(struct kvm_vcpu *vcpu)
->  	case 7:
->  		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[3], 3);
->  		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[2], 2);
-> +		/* fallthrough */
->  	case 6:
->  		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[1], 1);
-> +		/* fallthrough */
->  	default:
->  		__vgic_v3_write_ap1rn(cpu_if->vgic_ap1r[0], 0);
->  	}
+>  	case 5:
+>  	case 4:
+>  		write_gicreg(0, ICC_AP1R0_EL1);
 > 
 
 Already fixed here[1].
@@ -171,6 +128,6 @@ Already fixed here[1].
 	M.
 
 [1]
-https://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git/commit/?id=1a8248c74c81a15a32dc3344fb5c622e19072791
+https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/irqchip-5.3&id=52f8c8b32ea2f2044efcb4214c1857e29f421c5d
 -- 
 Jazz is not dead, it just smells funny...
