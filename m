@@ -2,127 +2,243 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB52C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7499C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB4720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F382206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V2bEtTKv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGTyfCF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbfG2UVH (ORCPT
+        id S1729531AbfG2UVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:21:07 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46595 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728367AbfG2UVG (ORCPT
+        Mon, 29 Jul 2019 16:21:45 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39349 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbfG2UVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:21:06 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c3so5446564pfa.13;
-        Mon, 29 Jul 2019 13:21:06 -0700 (PDT)
+        Mon, 29 Jul 2019 16:21:45 -0400
+Received: by mail-io1-f66.google.com with SMTP id f4so122987927ioh.6;
+        Mon, 29 Jul 2019 13:21:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6re2IOy9UuGPutWHpeGmXvl/6Yqi6FxHUujTvDV/BjQ=;
-        b=V2bEtTKvIsIZP7A1vJKuVqPpf7homhWyKeJgc0gsY5Z3kXNvZlP58HtatQ2APTHTQL
-         w/yt1hQJSg5pQ8g7O8I+F5FjAHS+wqDRDwU9COzkhvC72JlHa8fTfT+GuFGPm4JCenk+
-         YIA6hQJykR5s4FxUuMqNlbBI6QxKAhY93l2iHCHqYlXQwUn6IrYjlmFNWIF1bw/g6Pwc
-         15OsgbiVs+8hC61RgeXG5KfunptQicwUnYVKZKQ1iSdD8P6X7MMT+r5xyGhnkvZjE60I
-         gFFkwH4Lmojxh4FbeDcEL3/ZaumoV+Ue1iQmfQObzj4OGWcwlNY5c8w3ZNdOABpWWPwf
-         4L2g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n8DLn2LYXdUmw+h/HTxf60HAiTkzuB3IJKREzqD9s/Q=;
+        b=GGTyfCF9D1FXaYL8c9rffDjQhmiB9H+lZHKurCJJWlWcM94Z5Fb77cuFxpP5VfSbp5
+         usHdNLO5tsbiqmPLgb20qjML8n5I9r/osRbZoPxf4AwssfBgDC3tzMd2exoqknwVVUWV
+         CmJStdkK1tqgayauq/V3rm+zlQ/rC43PJBT/56F2XZ7eY1+dp0PmLcUbdahyCFZmBhpV
+         1AaiALzUgCpIVF0/w7C99Wi4iBzTN7FlxlrnzW3+/+tXK+bteJsEjADGUIQxUKVAwl/9
+         VDP3mR4K+GS10yshXjHrEGe1F6DZXw7z+lOnpzC8Z+axHXt5z8qgcJgeS+mMtn2J4Mys
+         dxBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6re2IOy9UuGPutWHpeGmXvl/6Yqi6FxHUujTvDV/BjQ=;
-        b=AX7X0OD+ElxjMiweQO3Fu8gFJBeoMzcK+BxEShOSj7bzOE4T/GlcvM4gbIDQ0QtQEo
-         mf8NuhqU+4bvEYpa913EDc2+on6vH/zrWgFuxrni5BimxyAs+Gob/jjUYCD1JNQ8Eyk0
-         3VAWtzc+zVuAbKaXPdzefSvEyXhAqREKu86ub2xtV/QsrBKBerXoSPwUBxcNmxK9Mvh2
-         g7M0dPubZWuL31puvzZa7V+2OhDLlsT6Z6xF80ZkuVTfM0Hq2WNMfQO2HsJOWtDBHcBu
-         wuZ+qhYZAGhAeU607go51bwwJ8j1et4CGZdx6+6yiQtf9/PPNY0Db24NYYoZC6WbtdB0
-         lcGw==
-X-Gm-Message-State: APjAAAV8kRDdEfKWcYKKEIPKh7KUQyvLjmf0/dP3C+Db7XFj8mT0GFXi
-        HJug3yFy1aJbwVLchEtk7rM=
-X-Google-Smtp-Source: APXvYqyWLQm4Cgt5unABdbXidAVUUD4LbAvUUcL7RPKc8STUBXVR75FNm4vHlTcuIbVnqszh/IXkPg==
-X-Received: by 2002:a65:6846:: with SMTP id q6mr67264436pgt.150.1564431666039;
-        Mon, 29 Jul 2019 13:21:06 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id d129sm67610834pfc.168.2019.07.29.13.21.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 13:21:05 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 13:21:54 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     broonie@kernel.org, l.stach@pengutronix.de, mihai.serban@gmail.com,
-        alsa-devel@alsa-project.org, viorel.suman@nxp.com,
-        timur@kernel.org, shengjiu.wang@nxp.com, angus@akkea.ca,
-        tiwai@suse.com, linux-imx@nxp.com, kernel@pengutronix.de,
-        festevam@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org
-Subject: Re: [PATCH v2 3/7] ASoC: fsl_sai: Add support to enable multiple
- data lines
-Message-ID: <20190729202154.GC20594@Asurada-Nvidia.nvidia.com>
-References: <20190728192429.1514-1-daniel.baluta@nxp.com>
- <20190728192429.1514-4-daniel.baluta@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n8DLn2LYXdUmw+h/HTxf60HAiTkzuB3IJKREzqD9s/Q=;
+        b=B15bxl/lRYgoiNfKiD/W7NhXQi0deimtDBcLfEITrBj6GqK7tEwoD1ZtFMr1ymS6+f
+         AagnqTJ4VRm8NLSEHdAPSBJ6hfT+rcOC975LrEpP+qdYO7gMgkrxA2hPhum6ynKzCPI9
+         t0IyCJIKB40UhEhbfyDwp1d10luRe86qeYBRr/jik1AratEtrnzusocuAwsQS3GyIQSY
+         VX1Em7ic9o3KdxxuARZ2oIm3T/iOeMUXvjG8p9sRPpwOWx0Zois+c6Dc11fwwkq1VA4Q
+         dbG1tVwJF7Vd4vOx7eazFcWcAJE4FJZUk3WghTKfmINxbkBA4Y+0RWyaEeN3/0PR9Sws
+         xXVw==
+X-Gm-Message-State: APjAAAUQA6VoPKiYUmZPq53h0D+F5VGgDUQ+haBDFij1CAAC2y/c/jVH
+        7zNnsljO/fBovoQjHg/WwbQxPLBxTk45zJDkP+M=
+X-Google-Smtp-Source: APXvYqwJIHzXroHCiBp0LszY7ioYxcPydX2pjUCjfRzyByJnT47TA51DeKVUdrS0xVLduo1P5eJyHyqlxUFd41i8TPI=
+X-Received: by 2002:a6b:901:: with SMTP id t1mr29552549ioi.42.1564431703764;
+ Mon, 29 Jul 2019 13:21:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190728192429.1514-4-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+ <20190724171050.7888.62199.stgit@localhost.localdomain> <20190724150224-mutt-send-email-mst@kernel.org>
+ <6218af96d7d55935f2cf607d47680edc9b90816e.camel@linux.intel.com>
+ <ee5387b1-89af-daf4-8492-8139216c6dcf@redhat.com> <20190724164023-mutt-send-email-mst@kernel.org>
+ <CAKgT0Ud6jPpsvJWFAMSnQXAXeNZb116kR7D2Xb7U-7BOtctK_Q@mail.gmail.com> <20190729151805-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190729151805-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 29 Jul 2019 13:21:32 -0700
+Message-ID: <CAKgT0Ufq9RE_4B5bdsYyEf65WJkZsDHMD+MEJVJyev22+J3XAg@mail.gmail.com>
+Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble hinting"
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     wei.w.wang@intel.com, Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 10:24:25PM +0300, Daniel Baluta wrote:
-> SAI supports up to 8 Rx/Tx data lines which can be enabled
-> using TCE/RCE bits of TCR3/RCR3 registers.
-> 
-> Data lines to be enabled are read from DT fsl,dl-mask property.
-> By default (if no DT entry is provided) only data line 0 is enabled.
-> 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  sound/soc/fsl/fsl_sai.c | 11 ++++++++++-
->  sound/soc/fsl/fsl_sai.h |  4 +++-
->  2 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> index 637b1d12a575..5e7cb7fd29f5 100644
-> --- a/sound/soc/fsl/fsl_sai.c
-> +++ b/sound/soc/fsl/fsl_sai.c
-> @@ -601,7 +601,7 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
->  
->  	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
->  			   FSL_SAI_CR3_TRCE_MASK,
-> -			   FSL_SAI_CR3_TRCE);
-> +			   FSL_SAI_CR3_TRCE(sai->soc_data->dl_mask[tx]);
->  
->  	ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
->  			SNDRV_PCM_HW_PARAM_RATE, &fsl_sai_rate_constraints);
-> @@ -888,6 +888,15 @@ static int fsl_sai_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	/*
-> +	 * active data lines mask for TX/RX, defaults to 1 (only the first
-> +	 * data line is enabled
-> +	 */
-> +	sai->dl_mask[RX] = 1;
-> +	sai->dl_mask[TX] = 1;
-> +	of_property_read_u32_index(np, "fsl,dl-mask", RX, &sai->dl_mask[RX]);
-> +	of_property_read_u32_index(np, "fsl,dl-mask", TX, &sai->dl_mask[TX]);
+On Mon, Jul 29, 2019 at 12:25 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Mon, Jul 29, 2019 at 09:58:04AM -0700, Alexander Duyck wrote:
+> > On Wed, Jul 24, 2019 at 1:42 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > >
+> > > On Wed, Jul 24, 2019 at 04:29:27PM -0400, Nitesh Narayan Lal wrote:
+> > > >
+> > > > On 7/24/19 4:18 PM, Alexander Duyck wrote:
+> > > > > On Wed, 2019-07-24 at 15:02 -0400, Michael S. Tsirkin wrote:
+> > > > >> On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
+> > > > >>> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > >>>
+> > > > >>> Add support for what I am referring to as "bubble hinting". Basically the
+> > > > >>> idea is to function very similar to how the balloon works in that we
+> > > > >>> basically end up madvising the page as not being used. However we don't
+> > > > >>> really need to bother with any deflate type logic since the page will be
+> > > > >>> faulted back into the guest when it is read or written to.
+> > > > >>>
+> > > > >>> This is meant to be a simplification of the existing balloon interface
+> > > > >>> to use for providing hints to what memory needs to be freed. I am assuming
+> > > > >>> this is safe to do as the deflate logic does not actually appear to do very
+> > > > >>> much other than tracking what subpages have been released and which ones
+> > > > >>> haven't.
+> > > > >>>
+> > > > >>> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > >>> ---
+> > > > >>>  hw/virtio/virtio-balloon.c                      |   40 +++++++++++++++++++++++
+> > > > >>>  include/hw/virtio/virtio-balloon.h              |    2 +
+> > > > >>>  include/standard-headers/linux/virtio_balloon.h |    1 +
+> > > > >>>  3 files changed, 42 insertions(+), 1 deletion(-)
+> > > > >>>
+> > > > >>> diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+> > > > >>> index 2112874055fb..70c0004c0f88 100644
+> > > > >>> --- a/hw/virtio/virtio-balloon.c
+> > > > >>> +++ b/hw/virtio/virtio-balloon.c
+> > > > >>> @@ -328,6 +328,39 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
+> > > > >>>      balloon_stats_change_timer(s, 0);
+> > > > >>>  }
+> > > > >>>
+> > > > >>> +static void virtio_bubble_handle_output(VirtIODevice *vdev, VirtQueue *vq)
+> > > > >>> +{
+> > > > >>> +    VirtQueueElement *elem;
+> > > > >>> +
+> > > > >>> +    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
+> > > > >>> +         unsigned int i;
+> > > > >>> +
+> > > > >>> +        for (i = 0; i < elem->in_num; i++) {
+> > > > >>> +            void *addr = elem->in_sg[i].iov_base;
+> > > > >>> +            size_t size = elem->in_sg[i].iov_len;
+> > > > >>> +            ram_addr_t ram_offset;
+> > > > >>> +            size_t rb_page_size;
+> > > > >>> +            RAMBlock *rb;
+> > > > >>> +
+> > > > >>> +            if (qemu_balloon_is_inhibited())
+> > > > >>> +                continue;
+> > > > >>> +
+> > > > >>> +            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
+> > > > >>> +            rb_page_size = qemu_ram_pagesize(rb);
+> > > > >>> +
+> > > > >>> +            /* For now we will simply ignore unaligned memory regions */
+> > > > >>> +            if ((ram_offset | size) & (rb_page_size - 1))
+> > > > >>> +                continue;
+> > > > >>> +
+> > > > >>> +            ram_block_discard_range(rb, ram_offset, size);
+> > > > >> I suspect this needs to do like the migration type of
+> > > > >> hinting and get disabled if page poisoning is in effect.
+> > > > >> Right?
+> > > > > Shouldn't something like that end up getting handled via
+> > > > > qemu_balloon_is_inhibited, or did I miss something there? I assumed cases
+> > > > > like that would end up setting qemu_balloon_is_inhibited to true, if that
+> > > > > isn't the case then I could add some additional conditions. I would do it
+> > > > > in about the same spot as the qemu_balloon_is_inhibited check.
+> > > > I don't think qemu_balloon_is_inhibited() will take care of the page poisoning
+> > > > situations.
+> > > > If I am not wrong we may have to look to extend VIRTIO_BALLOON_F_PAGE_POISON
+> > > > support as per Michael's suggestion.
+> > >
+> > >
+> > > BTW upstream qemu seems to ignore VIRTIO_BALLOON_F_PAGE_POISON ATM.
+> > > Which is probably a bug.
+> > > Wei, could you take a look pls?
+> >
+> > So I was looking at sorting out this for the unused page reporting
+> > that I am working on and it occurred to me that I don't think we can
+> > do the free page hinting if any sort of poison validation is present.
+> > The problem is that free page hinting simply stops the page from being
+> > migrated. As a result if there was stale data present it will just
+> > leave it there instead of zeroing it or writing it to alternating 1s
+> > and 0s.
+>
+> stale data where? on source or on destination?
+> do you mean the case where memory was corrupted?
+>
 
-Just curious what if we enable 8 data lines through DT bindings
-while an audio file only has 1 or 2 channels. Will TRCE bits be
-okay to stay with 8 data channels configurations? Btw, how does
-DMA work for the data registers? ESAI has one entry at a fixed
-address for all data channels while SAI seems to have different
-data registers.
+Actually I am getting my implementation and this one partially mixed
+up again. I was thinking that the page just gets put back. However it
+doesn't. Instead free_pages is called. As such it is going to dirty
+the page by poisoning it as soon as the hinting is complete.
+
+In some ways it is worse because I think page poisoning combined with
+free page hinting will make the VM nearly unusable because it will be
+burning cycles allocating all memory, and then poisoning all those
+pages on free. So it will be populating the dirty bitmap with all free
+memory each time it goes through and attempts to determine what memory
+is free.
+
+> >
+> > Also it looks like the VIRTIO_BALLOON_F_PAGE_POISON feature is
+> > assuming that 0 means that page poisoning is disabled,
+> > when in reality
+> > it might just mean we are using the value zero to poison pages instead
+> > of the 0xaa pattern. As such I think there are several cases where we
+> > could incorrectly flag the pages with the hint and result in the
+> > migrated guest reporting pages that contain non-poison values.
+> >
+>
+>
+> Well guest has this code:
+> static int virtballoon_validate(struct virtio_device *vdev)
+> {
+>         if (!page_poisoning_enabled())
+>                 __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_PAGE_POISON);
+>
+>         __virtio_clear_bit(vdev, VIRTIO_F_IOMMU_PLATFORM);
+>         return 0;
+> }
+>
+> So it seems that host can figure out what is going on easily enough.
+> What did I miss?
+
+Okay. So it is clearing that feature bit. I didn't see that part.
+However that leads to the question of where we should be setting that
+feature bit in the QEMU side of things. I was looking at setting that
+bit in virtio_balloon_get_features(). Would that be the appropriate
+place to set that so that the feature flag is reset when we are
+changing OSes or rebooting the guest?
+
+> > The zero assumption works for unused page reporting since we will be
+> > zeroing out the page when it is faulted back into the guest, however
+> > the same doesn't work for the free page hint since it is simply
+> > skipping the migration of the recently dirtied page.
+>
+> Right but the dirtied page is normally full of 0 since that is the
+> poison value, if we just leave it there we still get 0s, right?
+
+So for the unused page reporting which I am working on we can still
+hint the page away since it will be 0s, and us returning the pages
+doesn't alter the page data. However for the free page hinting I don't
+think we can.
+
+With page poisoning and free page hinting I am thinking we should just
+disable the free page hinting as I don't see how there can be any
+advantage to it if page poisoning is enbled. Basically the thing that
+makes the hinting "safe" will sabotage it since for every page we
+don't migrate we will also be marking as dirty for the next iteration
+through migration. As such we are just pushing the migration of any
+free pages until the VM has stopped since the VM will just keep
+dirtying the free pages until it stops hinting.
