@@ -2,62 +2,54 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B39BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB2BC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19E3206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16EAA2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429139;
-	bh=ZK3hZGNoAg4qgV9UlJLIID+6v6ypA+jGWdm0izOQr88=;
+	s=default; t=1564429142;
+	bh=39Qn7CY0gvfGkgBGKGn1BAgs9YVFAcqlkY3UDE5wr94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Adi4aylqDN9Ear++ck4DofCUSzYqNP9jZX7xYcf3dbPq/y9OfZ1R2piTGO1Wtz3/E
-	 7I8Sj3zMzU+WR0beQ7y5gRKilXQClaZpi97zLmReB0iuleXJGFjQccHT/8bX5w9BXN
-	 Z3QKhdkfEz1O+a7Dzasyw3U5Xy6T1fN3rSQd4Zos=
+	b=xHd8nEXaJy9sUm+gzUWk/Z4KqrxN9tig171iO2OR3ysaaej0mSEknpVkNXFvBayWO
+	 KTMQWIhtjs6i5klhKQ3+cvaGk5oCrw1TIn2AL/nsVpQNQu8vZKZ7b0fXZxnD5t4z/Z
+	 COEJh+m+Wk9DUs/uljCGnTaJIjGpQBfKLpqocxIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388636AbfG2Ti5 (ORCPT
+        id S2388919AbfG2TjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:38:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53754 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:39:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727247AbfG2Tit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:38:49 -0400
+        id S1729051AbfG2Ti4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:38:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A380206DD;
-        Mon, 29 Jul 2019 19:38:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D8672171F;
+        Mon, 29 Jul 2019 19:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429128;
-        bh=ZK3hZGNoAg4qgV9UlJLIID+6v6ypA+jGWdm0izOQr88=;
+        s=default; t=1564429135;
+        bh=39Qn7CY0gvfGkgBGKGn1BAgs9YVFAcqlkY3UDE5wr94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WS76KBOQExUzQfp/J++LjYoHMfj1PMQ19zS4OD4Fbml7i+0qp+STDI/Ctoiiwn/b6
-         WPYd3T272b+FI+fte2i5B4c+HNYua64gOXb7iYEf4eiYBrNyK52KneXGC+QrPjQ5Uh
-         qwMfOBTtbK22EjEvdwKSOgqQrKb7hQ5t5SYU83JE=
+        b=mVxr//HpKIYjZsxq56eeI7T0sRQTZ6Oy6XOjMjFPMuBbvR2B/3i0HElHxupfWv4ed
+         FJoU/bzXaeAjVGjYVjgEneXri552FWKQ+mR8mXH0+wqi2zk/fI57grrI312haxur0v
+         SJ/OovYnli9DpeuD9q8MRIBPF9yL/1FvTc6NwmfQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        Greg KH <greg@kroah.com>, Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 293/293] access: avoid the RCU grace period for the temporary subjective credentials
-Date:   Mon, 29 Jul 2019 21:23:04 +0200
-Message-Id: <20190729190846.684672650@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 271/293] mm/kmemleak.c: fix check for softirq context
+Date:   Mon, 29 Jul 2019 21:22:42 +0200
+Message-Id: <20190729190845.102079643@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -70,174 +62,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+[ Upstream commit 6ef9056952532c3b746de46aa10d45b4d7797bd8 ]
 
-commit d7852fbd0f0423937fa287a598bfde188bb68c22 upstream.
+in_softirq() is a wrong predicate to check if we are in a softirq
+context.  It also returns true if we have BH disabled, so objects are
+falsely stamped with "softirq" comm.  The correct predicate is
+in_serving_softirq().
 
-It turns out that 'access()' (and 'faccessat()') can cause a lot of RCU
-work because it installs a temporary credential that gets allocated and
-freed for each system call.
+If user does cat from /sys/kernel/debug/kmemleak previously they would
+see this, which is clearly wrong, this is system call context (see the
+comm):
 
-The allocation and freeing overhead is mostly benign, but because
-credentials can be accessed under the RCU read lock, the freeing
-involves a RCU grace period.
+unreferenced object 0xffff88805bd661c0 (size 64):
+  comm "softirq", pid 0, jiffies 4294942959 (age 12.400s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000007dcb30c>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
+    [<0000000007dcb30c>] slab_post_alloc_hook mm/slab.h:439 [inline]
+    [<0000000007dcb30c>] slab_alloc mm/slab.c:3326 [inline]
+    [<0000000007dcb30c>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+    [<00000000969722b7>] kmalloc include/linux/slab.h:547 [inline]
+    [<00000000969722b7>] kzalloc include/linux/slab.h:742 [inline]
+    [<00000000969722b7>] ip_mc_add1_src net/ipv4/igmp.c:1961 [inline]
+    [<00000000969722b7>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2085
+    [<00000000a4134b5f>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2475
+    [<00000000d20248ad>] do_ip_setsockopt.isra.0+0x19fe/0x1c00 net/ipv4/ip_sockglue.c:957
+    [<000000003d367be7>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1246
+    [<000000003c7c76af>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2616
+    [<000000000c1aeb23>] sock_common_setsockopt+0x3e/0x50 net/core/sock.c:3130
+    [<000000000157b92b>] __sys_setsockopt+0x9e/0x120 net/socket.c:2078
+    [<00000000a9f3d058>] __do_sys_setsockopt net/socket.c:2089 [inline]
+    [<00000000a9f3d058>] __se_sys_setsockopt net/socket.c:2086 [inline]
+    [<00000000a9f3d058>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
+    [<000000001b8da885>] do_syscall_64+0x7c/0x1a0 arch/x86/entry/common.c:301
+    [<00000000ba770c62>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Which is not a huge deal normally, but if you have a lot of access()
-calls, this causes a fair amount of seconday damage: instead of having a
-nice alloc/free patterns that hits in hot per-CPU slab caches, you have
-all those delayed free's, and on big machines with hundreds of cores,
-the RCU overhead can end up being enormous.
+now they will see this:
 
-But it turns out that all of this is entirely unnecessary.  Exactly
-because access() only installs the credential as the thread-local
-subjective credential, the temporary cred pointer doesn't actually need
-to be RCU free'd at all.  Once we're done using it, we can just free it
-synchronously and avoid all the RCU overhead.
+unreferenced object 0xffff88805413c800 (size 64):
+  comm "syz-executor.4", pid 8960, jiffies 4294994003 (age 14.350s)
+  hex dump (first 32 bytes):
+    00 7a 8a 57 80 88 ff ff e0 00 00 01 00 00 00 00  .z.W............
+    00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000c5d3be64>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
+    [<00000000c5d3be64>] slab_post_alloc_hook mm/slab.h:439 [inline]
+    [<00000000c5d3be64>] slab_alloc mm/slab.c:3326 [inline]
+    [<00000000c5d3be64>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+    [<0000000023865be2>] kmalloc include/linux/slab.h:547 [inline]
+    [<0000000023865be2>] kzalloc include/linux/slab.h:742 [inline]
+    [<0000000023865be2>] ip_mc_add1_src net/ipv4/igmp.c:1961 [inline]
+    [<0000000023865be2>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2085
+    [<000000003029a9d4>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2475
+    [<00000000ccd0a87c>] do_ip_setsockopt.isra.0+0x19fe/0x1c00 net/ipv4/ip_sockglue.c:957
+    [<00000000a85a3785>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1246
+    [<00000000ec13c18d>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2616
+    [<0000000052d748e3>] sock_common_setsockopt+0x3e/0x50 net/core/sock.c:3130
+    [<00000000512f1014>] __sys_setsockopt+0x9e/0x120 net/socket.c:2078
+    [<00000000181758bc>] __do_sys_setsockopt net/socket.c:2089 [inline]
+    [<00000000181758bc>] __se_sys_setsockopt net/socket.c:2086 [inline]
+    [<00000000181758bc>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
+    [<00000000d4b73623>] do_syscall_64+0x7c/0x1a0 arch/x86/entry/common.c:301
+    [<00000000c1098bec>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-So add a 'non_rcu' flag to 'struct cred', which can be set by users that
-know they only use it in non-RCU context (there are other potential
-users for this).  We can make it a union with the rcu freeing list head
-that we need for the RCU case, so this doesn't need any extra storage.
-
-Note that this also makes 'get_current_cred()' clear the new non_rcu
-flag, in case we have filesystems that take a long-term reference to the
-cred and then expect the RCU delayed freeing afterwards.  It's not
-entirely clear that this is required, but it makes for clear semantics:
-the subjective cred remains non-RCU as long as you only access it
-synchronously using the thread-local accessors, but you _can_ use it as
-a generic cred if you want to.
-
-It is possible that we should just remove the whole RCU markings for
-->cred entirely.  Only ->real_cred is really supposed to be accessed
-through RCU, and the long-term cred copies that nfs uses might want to
-explicitly re-enable RCU freeing if required, rather than have
-get_current_cred() do it implicitly.
-
-But this is a "minimal semantic changes" change for the immediate
-problem.
-
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Jan Glauber <jglauber@marvell.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Jayachandran Chandrasekharan Nair <jnair@marvell.com>
-Cc: Greg KH <greg@kroah.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
+Link: http://lkml.kernel.org/r/20190517171507.96046-1-dvyukov@gmail.com
+Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/open.c            |   19 +++++++++++++++++++
- include/linux/cred.h |    7 ++++++-
- kernel/cred.c        |   21 +++++++++++++++++++--
- 3 files changed, 44 insertions(+), 3 deletions(-)
+ mm/kmemleak.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -379,6 +379,25 @@ SYSCALL_DEFINE3(faccessat, int, dfd, con
- 				override_cred->cap_permitted;
- 	}
- 
-+	/*
-+	 * The new set of credentials can *only* be used in
-+	 * task-synchronous circumstances, and does not need
-+	 * RCU freeing, unless somebody then takes a separate
-+	 * reference to it.
-+	 *
-+	 * NOTE! This is _only_ true because this credential
-+	 * is used purely for override_creds() that installs
-+	 * it as the subjective cred. Other threads will be
-+	 * accessing ->real_cred, not the subjective cred.
-+	 *
-+	 * If somebody _does_ make a copy of this (using the
-+	 * 'get_current_cred()' function), that will clear the
-+	 * non_rcu field, because now that other user may be
-+	 * expecting RCU freeing. But normal thread-synchronous
-+	 * cred accesses will keep things non-RCY.
-+	 */
-+	override_cred->non_rcu = 1;
-+
- 	old_cred = override_creds(override_cred);
- retry:
- 	res = user_path_at(dfd, filename, lookup_flags, &path);
---- a/include/linux/cred.h
-+++ b/include/linux/cred.h
-@@ -145,7 +145,11 @@ struct cred {
- 	struct user_struct *user;	/* real user ID subscription */
- 	struct user_namespace *user_ns; /* user_ns the caps and keyrings are relative to. */
- 	struct group_info *group_info;	/* supplementary groups for euid/fsgid */
--	struct rcu_head	rcu;		/* RCU deletion hook */
-+	/* RCU deletion */
-+	union {
-+		int non_rcu;			/* Can we skip RCU deletion? */
-+		struct rcu_head	rcu;		/* RCU deletion hook */
-+	};
- } __randomize_layout;
- 
- extern void __put_cred(struct cred *);
-@@ -243,6 +247,7 @@ static inline const struct cred *get_cre
- {
- 	struct cred *nonconst_cred = (struct cred *) cred;
- 	validate_creds(cred);
-+	nonconst_cred->non_rcu = 0;
- 	return get_new_cred(nonconst_cred);
- }
- 
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -147,7 +147,10 @@ void __put_cred(struct cred *cred)
- 	BUG_ON(cred == current->cred);
- 	BUG_ON(cred == current->real_cred);
- 
--	call_rcu(&cred->rcu, put_cred_rcu);
-+	if (cred->non_rcu)
-+		put_cred_rcu(&cred->rcu);
-+	else
-+		call_rcu(&cred->rcu, put_cred_rcu);
- }
- EXPORT_SYMBOL(__put_cred);
- 
-@@ -258,6 +261,7 @@ struct cred *prepare_creds(void)
- 	old = task->cred;
- 	memcpy(new, old, sizeof(struct cred));
- 
-+	new->non_rcu = 0;
- 	atomic_set(&new->usage, 1);
- 	set_cred_subscribers(new, 0);
- 	get_group_info(new->group_info);
-@@ -537,7 +541,19 @@ const struct cred *override_creds(const
- 
- 	validate_creds(old);
- 	validate_creds(new);
--	get_cred(new);
-+
-+	/*
-+	 * NOTE! This uses 'get_new_cred()' rather than 'get_cred()'.
-+	 *
-+	 * That means that we do not clear the 'non_rcu' flag, since
-+	 * we are only installing the cred into the thread-synchronous
-+	 * '->cred' pointer, not the '->real_cred' pointer that is
-+	 * visible to other threads under RCU.
-+	 *
-+	 * Also note that we did validate_creds() manually, not depending
-+	 * on the validation in 'get_cred()'.
-+	 */
-+	get_new_cred((struct cred *)new);
- 	alter_cred_subscribers(new, 1);
- 	rcu_assign_pointer(current->cred, new);
- 	alter_cred_subscribers(old, -1);
-@@ -620,6 +636,7 @@ struct cred *prepare_kernel_cred(struct
- 	validate_creds(old);
- 
- 	*new = *old;
-+	new->non_rcu = 0;
- 	atomic_set(&new->usage, 1);
- 	set_cred_subscribers(new, 0);
- 	get_uid(new->user);
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index 71ba1c7f8892..d779181bed4d 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -577,7 +577,7 @@ static struct kmemleak_object *create_object(unsigned long ptr, size_t size,
+ 	if (in_irq()) {
+ 		object->pid = 0;
+ 		strncpy(object->comm, "hardirq", sizeof(object->comm));
+-	} else if (in_softirq()) {
++	} else if (in_serving_softirq()) {
+ 		object->pid = 0;
+ 		strncpy(object->comm, "softirq", sizeof(object->comm));
+ 	} else {
+-- 
+2.20.1
+
 
 
