@@ -2,149 +2,94 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48AFC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6817C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B9620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC94216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564442695;
+	bh=wfISxyG+4xV3u+yxlqZGIvkRUeNLBrZabreIQWxsSdU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jUaCF9uZL9CA5TjZTNUr1tQU8bYz5v+A8xBs68okdrsBtJn3tZqS3hCuOG2uJKPqM
+	 MbcHalDJUZuHZC6rha39ng9V/clYjZnrW4ynysnK4W4g/aFm3DBCPu33bmRm1GFJg9
+	 W/TULvl4B78YI+Nzd+qSYUR1D+Hq/2q9F8GjFcOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbfG2XYc (ORCPT
+        id S1729639AbfG2XYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 19:24:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:25700 "EHLO mga01.intel.com"
+        Mon, 29 Jul 2019 19:24:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726748AbfG2XYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 19:24:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 16:24:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,324,1559545200"; 
-   d="scan'208";a="346810144"
-Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by orsmga005.jf.intel.com with ESMTP; 29 Jul 2019 16:24:30 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     akpm@linux-foundation.org, urezki@gmail.com
-Cc:     dave.hansen@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v1 1/1] mm/vmalloc.c: Fix percpu free VM area search criteria
-Date:   Mon, 29 Jul 2019 16:21:39 -0700
-Message-Id: <20190729232139.91131-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
+        id S1726748AbfG2XYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 19:24:53 -0400
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD869216C8;
+        Mon, 29 Jul 2019 23:24:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564442693;
+        bh=wfISxyG+4xV3u+yxlqZGIvkRUeNLBrZabreIQWxsSdU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bVE23u721FLzaxngi2MUY4F06qPgLJvv/baqfJ6t0A1bKOG4E2spxg+kxW2ulkWvm
+         cDzEfghfNit9mk3GAvhHOdaNayc4Tf81WbmjLunXTR6v8e8aVKqu3wyb64wT336kuF
+         2Eggm/9o13I1XnSPwzmNOtz2xP+4B6Pej6IrjsaY=
+Received: by mail-qk1-f172.google.com with SMTP id s22so45312671qkj.12;
+        Mon, 29 Jul 2019 16:24:52 -0700 (PDT)
+X-Gm-Message-State: APjAAAVfNLEnOx3hj9aAXKF/0r4MDuB8KfWG1hFHkAMYRO2oOPgqyFAX
+        gJcbDdgkFQScEaHtNVJ9iu/GKO71v6FaVLHv2Q==
+X-Google-Smtp-Source: APXvYqzY5ya7QJ0w5KWtcD8heY+Jsyhgj4n66xL29WKjYNOqnCvGQoUberoWQj9zJEk4fySsTU/pGiOPBLYiuMGT7Ak=
+X-Received: by 2002:a05:620a:1447:: with SMTP id i7mr75655382qkl.254.1564442692098;
+ Mon, 29 Jul 2019 16:24:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190723073641.27801-1-alexandru.ardelean@analog.com>
+ <20190723073641.27801-4-alexandru.ardelean@analog.com> <20190727195623.42c8b4f3@archlinux>
+In-Reply-To: <20190727195623.42c8b4f3@archlinux>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 29 Jul 2019 17:24:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLXTnrtCr4hVVc9HrOkkvwGWk02EibdutfUBm4JDnJO5Q@mail.gmail.com>
+Message-ID: <CAL_JsqLXTnrtCr4hVVc9HrOkkvwGWk02EibdutfUBm4JDnJO5Q@mail.gmail.com>
+Subject: Re: [PATCH 3/3][V4] dt-bindings: iio: imu: add bindings for ADIS16460
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Sat, Jul 27, 2019 at 12:56 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Tue, 23 Jul 2019 10:36:40 +0300
+> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+>
+> > This change adds device-tree bindings for the ADIS16460.
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+>
+> Really trivial, but convention (as driven by what git am -s does if nothing
+> else, is to add extra tags in chronological order.  So Rob would be after
+> you.  I tweaked it which I don't always remember to do.
 
-Recent changes to the vmalloc code by Commit 68ad4a330433
-("mm/vmalloc.c: keep track of free blocks for vmap allocation") can
-cause spurious percpu allocation failures. These, in turn, can result in
-panic()s in the slub code. One such possible panic was reported by
-Dave Hansen in following link https://lkml.org/lkml/2019/6/19/939.
-Another related panic observed is,
+I'd argue it is in chronological order as the submitter added my tag
+and then sent it out. If you applied it and added my tag, then it
+would be after (but before yours).
 
- RIP: 0033:0x7f46f7441b9b
- Call Trace:
-  dump_stack+0x61/0x80
-  pcpu_alloc.cold.30+0x22/0x4f
-  mem_cgroup_css_alloc+0x110/0x650
-  cgroup_apply_control_enable+0x133/0x330
-  cgroup_mkdir+0x41b/0x500
-  kernfs_iop_mkdir+0x5a/0x90
-  vfs_mkdir+0x102/0x1b0
-  do_mkdirat+0x7d/0xf0
-  do_syscall_64+0x5b/0x180
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> It's not consistent across the kernel but I'll fight for my little corner
+> to be :)
 
-VMALLOC memory manager divides the entire VMALLOC space (VMALLOC_START
-to VMALLOC_END) into multiple VM areas (struct vm_areas), and it mainly
-uses two lists (vmap_area_list & free_vmap_area_list) to track the used
-and free VM areas in VMALLOC space. And pcpu_get_vm_areas(offsets[],
-sizes[], nr_vms, align) function is used for allocating congruent VM
-areas for percpu memory allocator. In order to not conflict with VMALLOC
-users, pcpu_get_vm_areas allocates VM areas near the end of the VMALLOC
-space. So the search for free vm_area for the given requirement starts
-near VMALLOC_END and moves upwards towards VMALLOC_START.
+More consistency would be nice then there's less tribal knowledge
+about maintainers for submitters to learn.
 
-Prior to commit 68ad4a330433, the search for free vm_area in
-pcpu_get_vm_areas() involves following two main steps.
-
-Step 1:
-    Find a aligned "base" adress near VMALLOC_END.
-    va = free vm area near VMALLOC_END
-Step 2:
-    Loop through number of requested vm_areas and check,
-        Step 2.1:
-           if (base < VMALLOC_START)
-              1. fail with error
-        Step 2.2:
-           // end is offsets[area] + sizes[area]
-           if (base + end > va->vm_end)
-               1. Move the base downwards and repeat Step 2
-        Step 2.3:
-           if (base + start < va->vm_start)
-              1. Move to previous free vm_area node, find aligned
-                 base address and repeat Step 2
-
-But Commit 68ad4a330433 removed Step 2.2 and modified Step 2.3 as below:
-
-        Step 2.3:
-           if (base + start < va->vm_start || base + end > va->vm_end)
-              1. Move to previous free vm_area node, find aligned
-                 base address and repeat Step 2
-
-Above change is the root cause of spurious percpu memory allocation
-failures. For example, consider a case where a relatively large vm_area
-(~ 30 TB) was ignored in free vm_area search because it did not pass the
-base + end  < vm->vm_end boundary check. Ignoring such large free
-vm_area's would lead to not finding free vm_area within boundary of
-VMALLOC_start to VMALLOC_END which in turn leads to allocation failures.
-
-So modify the search algorithm to include Step 2.2.
-
-Fixes: 68ad4a330433 ("mm/vmalloc.c: keep track of free blocks for vmap allocation")
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- mm/vmalloc.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 4fa8d84599b0..1faa45a38c08 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -3269,10 +3269,20 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
- 		if (va == NULL)
- 			goto overflow;
- 
-+		/*
-+		 * If required width exeeds current VA block, move
-+		 * base downwards and then recheck.
-+		 */
-+		if (base + end > va->va_end) {
-+			base = pvm_determine_end_from_reverse(&va, align) - end;
-+			term_area = area;
-+			continue;
-+		}
-+
- 		/*
- 		 * If this VA does not fit, move base downwards and recheck.
- 		 */
--		if (base + start < va->va_start || base + end > va->va_end) {
-+		if (base + start < va->va_start) {
- 			va = node_to_va(rb_prev(&va->rb_node));
- 			base = pvm_determine_end_from_reverse(&va, align) - end;
- 			term_area = area;
--- 
-2.21.0
-
+Rob
