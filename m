@@ -2,99 +2,87 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C71BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE89AC7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1D12067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD738217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="XukWqnN+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e8QOlcrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387774AbfG2PDg (ORCPT
+        id S2387857AbfG2PDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:03:36 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37222 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728494AbfG2PDg (ORCPT
+        Mon, 29 Jul 2019 11:03:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58656 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387425AbfG2PDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:03:36 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d15so44325432qkl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 08:03:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=GGm6OI70suTpFjV7qqNRDI5ovSLydBxQ6ymCIyOGOuM=;
-        b=XukWqnN+f7ASzP5xRS7xN7QmRS+fXyMi9aH+eIpObdFSFmM2Gwij6HW9xnCcGW2VFJ
-         0YVbOT+7tMf7rh/VIU4tRsqaFhkPC087YYO46peiQmEZm7rEYjEsOKMMguuBrnskL2zs
-         97Nu8ezE53m/foi6CrL4xGRPzJXyMEJvZD3aw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=GGm6OI70suTpFjV7qqNRDI5ovSLydBxQ6ymCIyOGOuM=;
-        b=ghIlV9ycyC32mLFPTVhtMCYnt5s9MVUMzPqSb6a46MH4dum3IjYXQb7EN0Kv4Sp9OZ
-         FMMsxQihwOfmwwP7n4pbqYwgD/PJd6TpAMkbGgBMXoEhYM/v1gvyWrTZSJDvaVtzDY8a
-         HZ3qxxns1JZjfh2CMK3fWm4C9kpTvohXNCuyHOiu0LGQX0I7AP0p6T4DB1kAMv1eZh0z
-         0i0xLpktg/kM1ywAc/I4YNFMKEL4b4YZcr7Y1D976eux3kezRSZerb7PoSdIEK9Kck5p
-         4fYMjH9aA+wxX7fb9zcMk8gxqplJ8e2KR53i+E+UXRUlMPm0sqy2Q8N05sjrW+iel2Wf
-         coQw==
-X-Gm-Message-State: APjAAAWyyZUJ3PLEGVsMZ6Iikk2qT2AT2Q6x1ZsXMW2MHcyVrlkRz4cj
-        Pj8brsGGFwimf456fEhqkUyPRseQfwc=
-X-Google-Smtp-Source: APXvYqzUFRaqL/T3JR8xJ5iKiBBlmGvkH1xB3cm3TfaXnPHjOK6x5UFBJP8eP/q4e8U2SNn6vsoWzw==
-X-Received: by 2002:a37:9d1:: with SMTP id 200mr71450094qkj.306.1564412615532;
-        Mon, 29 Jul 2019 08:03:35 -0700 (PDT)
-Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id u1sm34198651qth.21.2019.07.29.08.03.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 08:03:34 -0700 (PDT)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Mon, 29 Jul 2019 11:03:26 -0400 (EDT)
-X-X-Sender: vince@macbook-air
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: perf: perf report stuck in an infinite loop
-In-Reply-To: <20190726211415.GE24867@kernel.org>
-Message-ID: <alpine.DEB.2.21.1907291102500.31029@macbook-air>
-References: <alpine.DEB.2.21.1907261640590.27043@macbook-air> <20190726211415.GE24867@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 29 Jul 2019 11:03:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/ETHf94MjVCsWoGJmgma/XCP9Q3AJ/2BeOPSWh2RAN0=; b=e8QOlcrR5gXbft+ShFMb4+YS4
+        rBL0ALsF9M+9MNxs0Ya0+3kn28QWVH01B+T5M8QN9a4XxGOK4RtCQVjhEeVv/q2NUltmBov90qUlo
+        SjXcHbwNkXLoDw/iBM5riNlGFNlsG2T/bHGkbD0ULfU6asner3o9yiBuA7R6bdKq6XhPw0heiEiuT
+        6NkZ6uF9uU3e2E9eQQdCtyVCM6/BWmaCf6IdpECaYLr/0WshUQ3I2hYU1lGWaDvsdrASxE9CxDIVL
+        1RqFDZwbdslIqQ6VdLf4h4o8N7tvACdOnaSJPmWMXAjn646Mq0/V+uJfRbGwcNxwfZKaAj6iz4CfO
+        Uz3JqkB/g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hs7Bc-00052G-Ff; Mon, 29 Jul 2019 15:03:40 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E260F20AF2C00; Mon, 29 Jul 2019 17:03:38 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 17:03:38 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Phil Auld <pauld@redhat.com>, Rik van Riel <riel@surriel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v2] sched/core: Don't use dying mm as active_mm of
+ kthreads
+Message-ID: <20190729150338.GF31398@hirez.programming.kicks-ass.net>
+References: <20190727171047.31610-1-longman@redhat.com>
+ <20190729085235.GT31381@hirez.programming.kicks-ass.net>
+ <4cd17c3a-428c-37a0-b3a2-04e6195a61d5@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4cd17c3a-428c-37a0-b3a2-04e6195a61d5@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019, Arnaldo Carvalho de Melo wrote:
-
-> Em Fri, Jul 26, 2019 at 04:46:51PM -0400, Vince Weaver escreveu:
-> > 
-> > Currently the perf_data_fuzzer causes perf report to get stuck in an 
-> > infinite loop.
-> > 
-> > >From what I can tell, the issue happens in reader__process_events()
-> > when an event is mapped using mmap(), but when it goes to process the
-> > event finds out the internal event header has the size (invalidly) set to 
-> > something much larger than the mmap buffer size.  This means 
-> > fetch_mmaped_event() fails, which gotos remap: which tries again with
-> > the exact same mmap size, and this will loop forever.
-> > 
-> > I haven't been able to puzzle out how to fix this, but maybe you have a 
-> > better feel for what's going on here.
+On Mon, Jul 29, 2019 at 10:51:51AM -0400, Waiman Long wrote:
+> On 7/29/19 4:52 AM, Peter Zijlstra wrote:
+> > On Sat, Jul 27, 2019 at 01:10:47PM -0400, Waiman Long wrote:
+> >> It was found that a dying mm_struct where the owning task has exited
+> >> can stay on as active_mm of kernel threads as long as no other user
+> >> tasks run on those CPUs that use it as active_mm. This prolongs the
+> >> life time of dying mm holding up memory and other resources like swap
+> >> space that cannot be freed.
+> > Sure, but this has been so 'forever', why is it a problem now?
 > 
-> Perhaps the patch below?
+> I ran into this probem when running a test program that keeps on
+> allocating and touch memory and it eventually fails as the swap space is
+> full. After the failure, I could not rerun the test program again
+> because the swap space remained full. I finally track it down to the
+> fact that the mm stayed on as active_mm of kernel threads. I have to
+> make sure that all the idle cpus get a user task to run to bump the
+> dying mm off the active_mm of those cpus, but this is just a workaround,
+> not a solution to this problem.
 
-yes, with the patch you provided I can no longer trigger the infinite 
-loop.
+The 'sad' part is that x86 already switches to init_mm on idle and we
+only keep the active_mm around for 'stupid'.
 
-Tested-by: Vince Weaver <vincent.weaver@maine.edu>
+Rik and Andy were working on getting that 'fixed' a while ago, not sure
+where that went.
