@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE94C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE47C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712BB217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E761B21773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429266;
-	bh=WNI63ClIKFam02JLlz0hE4qcHBWjAksWtoewTpu32O0=;
+	s=default; t=1564429278;
+	bh=tzF3dBTTCnPCPooP6vi1/rbCELf+dBO/NrCJBH4Whj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LCXH2S9QNjTmuL6ZhlR9ac4IWu/uOpbfR2/VK1fLlSIbuye4XDaovFrRS0cu7X5cW
-	 ATN4U81Hsu65C+YF5wjfFSsB3uqjrMkik90t5BOVt220OxjaMXSRRbffXHEVhitFg7
-	 EAaEYPY5CKBtNDjydgdPXUowNeIEBwRaSaFhLalM=
+	b=dT9Q3xc4Y6JlJR5kgrVMT7E+HUAt0L6fM1iKIw4Ysu97p1MgGwXEhojB8/48/GBro
+	 Lm3msWEKEH/fZI6PYQX/twnfcy5v5oWGC4w82sG15i0MUi0yUdXbU5rfvvJLBmjhpQ
+	 9MpSTnPD+/ie8F4DvBBV5g7LJEeCDZXeQIOPvRiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389255AbfG2TlF (ORCPT
+        id S2389347AbfG2TlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56376 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:41:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389237AbfG2TlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:41:00 -0400
+        id S2389301AbfG2TlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:41:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90EBC217D7;
-        Mon, 29 Jul 2019 19:40:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57CCD2054F;
+        Mon, 29 Jul 2019 19:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429259;
-        bh=WNI63ClIKFam02JLlz0hE4qcHBWjAksWtoewTpu32O0=;
+        s=default; t=1564429268;
+        bh=tzF3dBTTCnPCPooP6vi1/rbCELf+dBO/NrCJBH4Whj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FTxiNHvbjVOeBNnx8Oyzhu5/Iqe8jAyhs0HpPTLWYYm6p2ML/NfmGyj6pFlSipII9
-         CeDI4QCEEcAj/4Hz3XLw/BpGrqQm4MUwvj5h6tnCuOSE7gHjXz8sLO7GRWP20TEkjD
-         nt7zXDNL2jsZuQPwk3KyYy1HqqMzSlb5uiaw9SBo=
+        b=jBXvxnCGEDbdR5eqJrO+qqUJk05tuMU3q5cdptPK/pHLzVVrxrNG+vjaAjuwALBuC
+         QsTlXTj0E4zlS384L2JOPH1+ZyZsigwEZ2VRCiRu0eU2oEJ6m9iPXA+l3bRAg8bqLv
+         WqSrzdUVAJKprefk5TfVFD2mx4A1KJ22ziocePl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 042/113] genksyms: Teach parser about 128-bit built-in types
-Date:   Mon, 29 Jul 2019 21:22:09 +0200
-Message-Id: <20190729190705.751204828@linuxfoundation.org>
+Subject: [PATCH 4.19 045/113] powerpc/cacheflush: fix variable set but not used
+Date:   Mon, 29 Jul 2019 21:22:12 +0200
+Message-Id: <20190729190706.452249457@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -61,65 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a222061b85234d8a44486a46bd4df7e2cda52385 ]
+[ Upstream commit 04db3ede40ae4fc23a5c4237254c4a53bbe4c1f2 ]
 
-__uint128_t crops up in a few files that export symbols to modules, so
-teach genksyms about it and the other GCC built-in 128-bit integer types
-so that we don't end up skipping the CRC generation for some symbols due
-to the parser failing to spot them:
+The powerpc's flush_cache_vmap() is defined as a macro and never use
+both of its arguments, so it will generate a compilation warning,
 
-  | WARNING: EXPORT symbol "kernel_neon_begin" [vmlinux] version
-  |          generation failed, symbol will not be versioned.
-  | ld: arch/arm64/kernel/fpsimd.o: relocation R_AARCH64_ABS32 against
-  |     `__crc_kernel_neon_begin' can not be used when making a shared
-  |     object
-  | ld: arch/arm64/kernel/fpsimd.o:(.data+0x0): dangerous relocation:
-  |     unsupported relocation
+lib/ioremap.c: In function 'ioremap_page_range':
+lib/ioremap.c:203:16: warning: variable 'start' set but not used
+[-Wunused-but-set-variable]
 
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fix it by making it an inline function.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/genksyms/keywords.c | 4 ++++
- scripts/genksyms/parse.y    | 2 ++
- 2 files changed, 6 insertions(+)
+ arch/powerpc/include/asm/cacheflush.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/genksyms/keywords.c b/scripts/genksyms/keywords.c
-index 9f40bcd17d07..f6956aa41366 100644
---- a/scripts/genksyms/keywords.c
-+++ b/scripts/genksyms/keywords.c
-@@ -24,6 +24,10 @@ static struct resword {
- 	{ "__volatile__", VOLATILE_KEYW },
- 	{ "__builtin_va_list", VA_LIST_KEYW },
+diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
+index d5a8d7bf0759..b189f7aee222 100644
+--- a/arch/powerpc/include/asm/cacheflush.h
++++ b/arch/powerpc/include/asm/cacheflush.h
+@@ -32,9 +32,12 @@
+  * not expect this type of fault. flush_cache_vmap is not exactly the right
+  * place to put this, but it seems to work well enough.
+  */
+-#define flush_cache_vmap(start, end)		do { asm volatile("ptesync" ::: "memory"); } while (0)
++static inline void flush_cache_vmap(unsigned long start, unsigned long end)
++{
++	asm volatile("ptesync" ::: "memory");
++}
+ #else
+-#define flush_cache_vmap(start, end)		do { } while (0)
++static inline void flush_cache_vmap(unsigned long start, unsigned long end) { }
+ #endif
  
-+	{ "__int128", BUILTIN_INT_KEYW },
-+	{ "__int128_t", BUILTIN_INT_KEYW },
-+	{ "__uint128_t", BUILTIN_INT_KEYW },
-+
- 	// According to rth, c99 defines "_Bool", __restrict", __restrict__", "restrict".  KAO
- 	{ "_Bool", BOOL_KEYW },
- 	{ "_restrict", RESTRICT_KEYW },
-diff --git a/scripts/genksyms/parse.y b/scripts/genksyms/parse.y
-index 00a6d7e54971..1ebcf52cd0f9 100644
---- a/scripts/genksyms/parse.y
-+++ b/scripts/genksyms/parse.y
-@@ -76,6 +76,7 @@ static void record_compound(struct string_list **keyw,
- %token ATTRIBUTE_KEYW
- %token AUTO_KEYW
- %token BOOL_KEYW
-+%token BUILTIN_INT_KEYW
- %token CHAR_KEYW
- %token CONST_KEYW
- %token DOUBLE_KEYW
-@@ -263,6 +264,7 @@ simple_type_specifier:
- 	| VOID_KEYW
- 	| BOOL_KEYW
- 	| VA_LIST_KEYW
-+	| BUILTIN_INT_KEYW
- 	| TYPE			{ (*$1)->tag = SYM_TYPEDEF; $$ = $1; }
- 	;
- 
+ #define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
 -- 
 2.20.1
 
