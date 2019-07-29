@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34ECFC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E48C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0234E2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CB7217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428811;
-	bh=aHqgQJKP03ZM+yob4oeTuv5fUdGLTHzvHiuLjfYAErc=;
+	s=default; t=1564428819;
+	bh=Spq1VlnlnuzsW8NhJTaAcjbOlVC+MolHVVvuLLUYAEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rIAH8Ruow0mm+kD/pVWWKrIIViT6RJbFVgz/FQnt3gV5GnixoNkSpTyRkxvD0IMR9
-	 iiZOh5WVZhMoN05G9VVwCUyFEGZi3fWDwqiSidss1H7SfHTt8Mgpzaf5EN2x08naC/
-	 bNEe1jccynVgwr9wn0Du+2crcMZ+/XdUAvHRPdWw=
+	b=hsiapqmWCyHm49CxkLhtw9USTgsgN6/c6BmPi3O3QToC7DsIjrWOLjppNSb6qrZbZ
+	 zwhiE3ogAHXEG5Wnhuz9AoEjjKbdy5PK9kN8paxTNd8x+hCPYIltV7ZcRs+Ec6DrGK
+	 OtXAWY4OXscagOrd4xK6EVjmHutVbumF88ywAOGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbfG2Td3 (ORCPT
+        id S2387694AbfG2Tdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:33:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47528 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:33:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730342AbfG2TdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:33:24 -0400
+        id S1730352AbfG2Td1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:33:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B787217D4;
-        Mon, 29 Jul 2019 19:33:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E871D2171F;
+        Mon, 29 Jul 2019 19:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428803;
-        bh=aHqgQJKP03ZM+yob4oeTuv5fUdGLTHzvHiuLjfYAErc=;
+        s=default; t=1564428806;
+        bh=Spq1VlnlnuzsW8NhJTaAcjbOlVC+MolHVVvuLLUYAEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kbG8wIchETwt1spsQ3w3MjkZ36ZB8KsozrOE1urUD5/7sGKBX2cXXmPJin+P1xVLt
-         S1gCk1AluWYECVoMhTE1gcGWqLObP0RCFA8S1Z14t1LSOpovnABBU5FZodoUpp5bVM
-         +wzFD/xugVe1r6+SpYE8d++O3tRrsyr4Y8uKpRMQ=
+        b=D7LNUUvrF7gBoX2adgndwxTtrrEH8BIYOQjbC2SpuQf+FKXT4NH6sLv8S8vwCAoIn
+         D+RNbWPwlelmPg3iyw/BLiam2pHh9fT/BXQ+YPovGXjkuwz+UCdrlbA0WXm8LTkKvh
+         D7KM06qlVrUIeoyU1sxgWE/ZMpsphWh4VTZlzBTw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.14 142/293] media: coda: Remove unbalanced and unneeded mutex unlock
-Date:   Mon, 29 Jul 2019 21:20:33 +0200
-Message-Id: <20190729190835.422548498@linuxfoundation.org>
+        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 185/293] ipv4: dont set IPv6 only flags to IPv4 addresses
+Date:   Mon, 29 Jul 2019 21:21:16 +0200
+Message-Id: <20190729190838.662412124@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,36 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Matteo Croce <mcroce@redhat.com>
 
-commit 766b9b168f6c75c350dd87c3e0bc6a9b322f0013 upstream.
+[ Upstream commit 2e60546368165c2449564d71f6005dda9205b5fb ]
 
-The mutex unlock in the threaded interrupt handler is not paired
-with any mutex lock. Remove it.
+Avoid the situation where an IPV6 only flag is applied to an IPv4 address:
 
-This bug has been here for a really long time, so it applies
-to any stable repo.
+    # ip addr add 192.0.2.1/24 dev dummy0 nodad home mngtmpaddr noprefixroute
+    # ip -4 addr show dev dummy0
+    2: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+        inet 192.0.2.1/24 scope global noprefixroute dummy0
+           valid_lft forever preferred_lft forever
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: stable@vger.kernel.org
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Or worse, by sending a malicious netlink command:
+
+    # ip -4 addr show dev dummy0
+    2: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+        inet 192.0.2.1/24 scope global nodad optimistic dadfailed home tentative mngtmpaddr noprefixroute stable-privacy dummy0
+           valid_lft forever preferred_lft forever
+
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/media/platform/coda/coda-bit.c |    1 -
- 1 file changed, 1 deletion(-)
+ net/ipv4/devinet.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/media/platform/coda/coda-bit.c
-+++ b/drivers/media/platform/coda/coda-bit.c
-@@ -2257,7 +2257,6 @@ irqreturn_t coda_irq_handler(int irq, vo
- 	if (ctx == NULL) {
- 		v4l2_err(&dev->v4l2_dev,
- 			 "Instance released before the end of transaction\n");
--		mutex_unlock(&dev->coda_mutex);
- 		return IRQ_HANDLED;
- 	}
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -66,6 +66,11 @@
+ #include <net/net_namespace.h>
+ #include <net/addrconf.h>
  
++#define IPV6ONLY_FLAGS	\
++		(IFA_F_NODAD | IFA_F_OPTIMISTIC | IFA_F_DADFAILED | \
++		 IFA_F_HOMEADDRESS | IFA_F_TENTATIVE | \
++		 IFA_F_MANAGETEMPADDR | IFA_F_STABLE_PRIVACY)
++
+ static struct ipv4_devconf ipv4_devconf = {
+ 	.data = {
+ 		[IPV4_DEVCONF_ACCEPT_REDIRECTS - 1] = 1,
+@@ -455,6 +460,9 @@ static int __inet_insert_ifa(struct in_i
+ 	ifa->ifa_flags &= ~IFA_F_SECONDARY;
+ 	last_primary = &in_dev->ifa_list;
+ 
++	/* Don't set IPv6 only flags to IPv4 addresses */
++	ifa->ifa_flags &= ~IPV6ONLY_FLAGS;
++
+ 	for (ifap = &in_dev->ifa_list; (ifa1 = *ifap) != NULL;
+ 	     ifap = &ifa1->ifa_next) {
+ 		if (!(ifa1->ifa_flags & IFA_F_SECONDARY) &&
 
 
