@@ -2,95 +2,86 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72423C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A15C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DEC7205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBF7205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SN8oRnKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbfG2UD5 (ORCPT
+        id S1729899AbfG2UDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:03:57 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:52746 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729843AbfG2UDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:03:55 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x6TK3VOW005690;
-        Mon, 29 Jul 2019 23:03:32 +0300
-Date:   Mon, 29 Jul 2019 23:03:31 +0300 (EEST)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-cc:     "David S. Miller" <davem@davemloft.net>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Simon Horman <horms@verge.net.au>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Subject: Re: [net-next 1/2] ipvs: batch __ip_vs_cleanup
-In-Reply-To: <8441EA26-E197-4F40-A6D7-5B7D59AA7F7F@cmss.chinamobile.com>
-Message-ID: <alpine.LFD.2.21.1907292300580.2909@ja.home.ssi.bg>
-References: <1563031186-2101-1-git-send-email-yanhaishuang@cmss.chinamobile.com> <1563031186-2101-2-git-send-email-yanhaishuang@cmss.chinamobile.com> <alpine.LFD.2.21.1907152333300.5700@ja.home.ssi.bg>
- <8441EA26-E197-4F40-A6D7-5B7D59AA7F7F@cmss.chinamobile.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Mon, 29 Jul 2019 16:03:54 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50528 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390053AbfG2TqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:46:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=arjAFJhp7h7y5/Rhm9vbvSAfd/7R4cvilJkOjN26CHs=; b=SN8oRnKNdwiYVQc5vagAqPbm+
+        nhxf5g6kbo+jKIaT6WgKBcfCA8UcqWtLb5tfvvfPr0DnCW4uPrM2lOtfI2Fox14O7d9d/Bl0Hvb2X
+        OQBjh31Ya9sBlmKEvwiddNcyOKFWtTMswOB+Iobowmyi48gpJUkxMGD1ABNN7QrOWfmR4/zORTOjr
+        ePtw/rxjoexYv6kZpzSRnYMWA6r+WBQxmFTho+98N2VB2Z6XXL5C1yglMxjq2KMDaoGzdMBu049b2
+        c8uWJ1RE7Qal8WtUdrLdzFAuyUPkktjOOqxfaZPtxSJvHqAhYYRA9B+mApJCjR2WJH+7hqvKtJp6r
+        gwnx5hhLg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsBaj-0006AY-6P; Mon, 29 Jul 2019 19:45:53 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8C45020C9B161; Mon, 29 Jul 2019 21:45:50 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 21:45:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: Re: [patch 00/12] (hr)timers: Prepare for PREEMPT_RT support
+Message-ID: <20190729194550.GP31398@hirez.programming.kicks-ass.net>
+References: <20190726183048.982726647@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190726183048.982726647@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-	Hello,
-
-On Thu, 18 Jul 2019, Haishuang Yan wrote:
-
-> As the following benchmark testing results show, there is a little performance improvement:
-
-	OK, can you send v2 after removing the LIST_HEAD(list) from
-both patches, I guess, it is not needed. If you prefer, you can
-include these benchmark results too.
-
-> $  cat add_del_unshare.sh
-> #!/bin/bash
+On Fri, Jul 26, 2019 at 08:30:48PM +0200, Thomas Gleixner wrote:
+> The following series brings the bulk of PREEMPT_RT specific changes for the
+> (hr)timer code:
 > 
-> for i in `seq 1 100`
->     do
->      (for j in `seq 1 40` ; do  unshare -n ipvsadm -A -t 172.16.$i.$j:80 >/dev/null ; done) &
->     done
-> wait; grep net_namespace /proc/slabinfo
+>   - Handle timer deletion correctly under RT to avoid priority inversion
+>     and life locks
 > 
-> Befor patch:
-> $  time sh add_del_unshare.sh
-> net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
+>     This mechanism might be useful for VMs as well when a vCPU
+>     executing a timer callback gets scheduled out and on another vCPU
+>     del_timer_sync() or hrtimer_cancel() is invoked.
 > 
-> real    0m8.086s
-> user    0m2.025s
-> sys     0m36.956s
+>     The mitigation would only work when paravirt spinlocks are
+>     enabled. I've not implemented that, as I don't know whether this is a
+>     real world issue. I just noticed that it is basically the same
+>     problem. Adding it would be trivial.
 > 
-> After patch:
-> $  time sh add_del_unshare.sh
-> net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
+>   - Prepare for moving most hrtimer callbacks into softirq context and mark
+>     timers which need to expire in hard interrupt context even on RT so
+>     they don't get moved.
 > 
-> real    0m7.623s
-> user    0m2.003s
-> sys     0m32.935s
-> 
-> 
-> > 
-> >> +		ipvs = net_ipvs(net);
-> >> +		ip_vs_conn_net_cleanup(ipvs);
-> >> +		ip_vs_app_net_cleanup(ipvs);
-> >> +		ip_vs_protocol_net_cleanup(ipvs);
-> >> +		ip_vs_control_net_cleanup(ipvs);
-> >> +		ip_vs_estimator_net_cleanup(ipvs);
-> >> +		IP_VS_DBG(2, "ipvs netns %d released\n", ipvs->gen);
-> >> +		net->ipvs = NULL;
 
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
