@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99B3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD23C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7732064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDD02064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431039;
-	bh=0FtMzQeacx4AziLkDO6Q+rba4VKfE90ATh2vY7YtSE0=;
+	s=default; t=1564431047;
+	bh=wiDEyZdYXykqNWuoM8qvCbURYYqsywdDXaN71XOl2YM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sgPaAzONa8pdGxHomgzn4ZRB0jc+2ykh/wlnA3p7FMTVoUaAuqKVAqCJ4ByTaXkez
-	 2vv6DngLAKb0WUIl993EKS5nLXihYzOjnF1RXVYPE+uOjDnI32+umqAEbBvnmAe89z
-	 wJ9wObhNQdVt9LoKyebVEHNify93doUTReTmE1fg=
+	b=2SvccGBueO+cqpYoJN4qX++t2prXl4lNOabI3jWtnGSwzbr8B54uT+p2tsis283KH
+	 wCxUrnGKIx57jF4Afki/OSCdkxcpfJPiFDScHqaSz51CwfEuzkQymgMpQVJQShUW1T
+	 1Pw0D3Z8HCtm9kr1SWQZNK/uGsj/2x+FsWS35Bhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730427AbfG2UKi (ORCPT
+        id S1730445AbfG2UKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:10:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48646 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:10:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388099AbfG2TeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:34:15 -0400
+        id S2388157AbfG2TeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:34:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D9052171F;
-        Mon, 29 Jul 2019 19:34:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FE2421655;
+        Mon, 29 Jul 2019 19:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428854;
-        bh=0FtMzQeacx4AziLkDO6Q+rba4VKfE90ATh2vY7YtSE0=;
+        s=default; t=1564428841;
+        bh=wiDEyZdYXykqNWuoM8qvCbURYYqsywdDXaN71XOl2YM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fR0aqyqrWNZN/+nMj7fKTtfPOU1v1qa0y/8Q5folA3kmz0S1RRkKDB2hsJHotYyH+
-         vCQIp0Vx6tPWxQWOKz2hPaSj1MRCe/QYIFjEkJZjpemWV+8e1A2xgaX1g7V8yTin96
-         eRCnUPLGWdMif0+NR6ittRIJZdGSYkiSyWZZ42xM=
+        b=GfgZHFTXNXQpf3g+eeR8mepgE6bsyPaA8ByNHC//wzzXDKoA3EudWE6mREf/bD8zY
+         0Mg6wgDNGZ5NR9zbQi3d3HVV4xuxkV4eAlHf4MxwLAmin6Iqcb7gvJiNhko3OPFiHe
+         rooGQPkXn2xEzst6ephCh8KZYOIID/Uja77xL0oQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, od@zcrc.me,
-        linux-mips@vger.kernel.org
-Subject: [PATCH 4.14 207/293] MIPS: lb60: Fix pin mappings
-Date:   Mon, 29 Jul 2019 21:21:38 +0200
-Message-Id: <20190729190840.314387141@linuxfoundation.org>
+        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 186/293] net: bcmgenet: use promisc for unsupported filters
+Date:   Mon, 29 Jul 2019 21:21:17 +0200
+Message-Id: <20190729190838.747798668@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -63,68 +60,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Justin Chen <justinpopo6@gmail.com>
 
-commit 1323c3b72a987de57141cabc44bf9cd83656bc70 upstream.
+[ Upstream commit 35cbef9863640f06107144687bd13151bc2e8ce3 ]
 
-The pin mappings introduced in commit 636f8ba67fb6
-("MIPS: JZ4740: Qi LB60: Add pinctrl configuration for several drivers")
-are completely wrong. The pinctrl driver name is incorrect, and the
-function and group fields are swapped.
+Currently we silently ignore filters if we cannot meet the filter
+requirements. This will lead to the MAC dropping packets that are
+expected to pass. A better solution would be to set the NIC to promisc
+mode when the required filters cannot be met.
 
-Fixes: 636f8ba67fb6 ("MIPS: JZ4740: Qi LB60: Add pinctrl configuration for several drivers")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: od@zcrc.me
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Also correct the number of MDF filters supported. It should be 17,
+not 16.
+
+Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/mips/jz4740/board-qi_lb60.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |   57 +++++++++++--------------
+ 1 file changed, 26 insertions(+), 31 deletions(-)
 
---- a/arch/mips/jz4740/board-qi_lb60.c
-+++ b/arch/mips/jz4740/board-qi_lb60.c
-@@ -456,27 +456,27 @@ static unsigned long pin_cfg_bias_disabl
- static struct pinctrl_map pin_map[] __initdata = {
- 	/* NAND pin configuration */
- 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-nand",
--			"10010000.jz4740-pinctrl", "nand", "nand-cs1"),
-+			"10010000.pin-controller", "nand-cs1", "nand"),
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -3088,39 +3088,42 @@ static void bcmgenet_timeout(struct net_
+ 	netif_tx_wake_all_queues(dev);
+ }
  
- 	/* fbdev pin configuration */
- 	PIN_MAP_MUX_GROUP("jz4740-fb", PINCTRL_STATE_DEFAULT,
--			"10010000.jz4740-pinctrl", "lcd", "lcd-8bit"),
-+			"10010000.pin-controller", "lcd-8bit", "lcd"),
- 	PIN_MAP_MUX_GROUP("jz4740-fb", PINCTRL_STATE_SLEEP,
--			"10010000.jz4740-pinctrl", "lcd", "lcd-no-pins"),
-+			"10010000.pin-controller", "lcd-no-pins", "lcd"),
+-#define MAX_MC_COUNT	16
++#define MAX_MDF_FILTER	17
  
- 	/* MMC pin configuration */
- 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-mmc.0",
--			"10010000.jz4740-pinctrl", "mmc", "mmc-1bit"),
-+			"10010000.pin-controller", "mmc-1bit", "mmc"),
- 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-mmc.0",
--			"10010000.jz4740-pinctrl", "mmc", "mmc-4bit"),
-+			"10010000.pin-controller", "mmc-4bit", "mmc"),
- 	PIN_MAP_CONFIGS_PIN_DEFAULT("jz4740-mmc.0",
--			"10010000.jz4740-pinctrl", "PD0", pin_cfg_bias_disable),
-+			"10010000.pin-controller", "PD0", pin_cfg_bias_disable),
- 	PIN_MAP_CONFIGS_PIN_DEFAULT("jz4740-mmc.0",
--			"10010000.jz4740-pinctrl", "PD2", pin_cfg_bias_disable),
-+			"10010000.pin-controller", "PD2", pin_cfg_bias_disable),
+ static inline void bcmgenet_set_mdf_addr(struct bcmgenet_priv *priv,
+ 					 unsigned char *addr,
+-					 int *i,
+-					 int *mc)
++					 int *i)
+ {
+-	u32 reg;
+-
+ 	bcmgenet_umac_writel(priv, addr[0] << 8 | addr[1],
+ 			     UMAC_MDF_ADDR + (*i * 4));
+ 	bcmgenet_umac_writel(priv, addr[2] << 24 | addr[3] << 16 |
+ 			     addr[4] << 8 | addr[5],
+ 			     UMAC_MDF_ADDR + ((*i + 1) * 4));
+-	reg = bcmgenet_umac_readl(priv, UMAC_MDF_CTRL);
+-	reg |= (1 << (MAX_MC_COUNT - *mc));
+-	bcmgenet_umac_writel(priv, reg, UMAC_MDF_CTRL);
+ 	*i += 2;
+-	(*mc)++;
+ }
  
- 	/* PWM pin configuration */
- 	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-pwm",
--			"10010000.jz4740-pinctrl", "pwm4", "pwm4"),
-+			"10010000.pin-controller", "pwm4", "pwm4"),
- };
+ static void bcmgenet_set_rx_mode(struct net_device *dev)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	struct netdev_hw_addr *ha;
+-	int i, mc;
++	int i, nfilter;
+ 	u32 reg;
  
+ 	netif_dbg(priv, hw, dev, "%s: %08X\n", __func__, dev->flags);
  
+-	/* Promiscuous mode */
++	/* Number of filters needed */
++	nfilter = netdev_uc_count(dev) + netdev_mc_count(dev) + 2;
++
++	/*
++	 * Turn on promicuous mode for three scenarios
++	 * 1. IFF_PROMISC flag is set
++	 * 2. IFF_ALLMULTI flag is set
++	 * 3. The number of filters needed exceeds the number filters
++	 *    supported by the hardware.
++	*/
+ 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
+-	if (dev->flags & IFF_PROMISC) {
++	if ((dev->flags & (IFF_PROMISC | IFF_ALLMULTI)) ||
++	    (nfilter > MAX_MDF_FILTER)) {
+ 		reg |= CMD_PROMISC;
+ 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
+ 		bcmgenet_umac_writel(priv, 0, UMAC_MDF_CTRL);
+@@ -3130,32 +3133,24 @@ static void bcmgenet_set_rx_mode(struct
+ 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
+ 	}
+ 
+-	/* UniMac doesn't support ALLMULTI */
+-	if (dev->flags & IFF_ALLMULTI) {
+-		netdev_warn(dev, "ALLMULTI is not supported\n");
+-		return;
+-	}
+-
+ 	/* update MDF filter */
+ 	i = 0;
+-	mc = 0;
+ 	/* Broadcast */
+-	bcmgenet_set_mdf_addr(priv, dev->broadcast, &i, &mc);
++	bcmgenet_set_mdf_addr(priv, dev->broadcast, &i);
+ 	/* my own address.*/
+-	bcmgenet_set_mdf_addr(priv, dev->dev_addr, &i, &mc);
+-	/* Unicast list*/
+-	if (netdev_uc_count(dev) > (MAX_MC_COUNT - mc))
+-		return;
++	bcmgenet_set_mdf_addr(priv, dev->dev_addr, &i);
+ 
+-	if (!netdev_uc_empty(dev))
+-		netdev_for_each_uc_addr(ha, dev)
+-			bcmgenet_set_mdf_addr(priv, ha->addr, &i, &mc);
+-	/* Multicast */
+-	if (netdev_mc_empty(dev) || netdev_mc_count(dev) >= (MAX_MC_COUNT - mc))
+-		return;
++	/* Unicast */
++	netdev_for_each_uc_addr(ha, dev)
++		bcmgenet_set_mdf_addr(priv, ha->addr, &i);
+ 
++	/* Multicast */
+ 	netdev_for_each_mc_addr(ha, dev)
+-		bcmgenet_set_mdf_addr(priv, ha->addr, &i, &mc);
++		bcmgenet_set_mdf_addr(priv, ha->addr, &i);
++
++	/* Enable filters */
++	reg = GENMASK(MAX_MDF_FILTER - 1, MAX_MDF_FILTER - nfilter);
++	bcmgenet_umac_writel(priv, reg, UMAC_MDF_CTRL);
+ }
+ 
+ /* Set the hardware MAC address. */
 
 
