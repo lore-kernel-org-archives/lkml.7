@@ -2,36 +2,37 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D91C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C60C41517
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F732073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD8142073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="R9ZrFy29"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UmqJim9r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbfG2RnP (ORCPT
+        id S2387848AbfG2RnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 13:43:15 -0400
-Received: from mout.gmx.net ([212.227.15.19]:50601 "EHLO mout.gmx.net"
+        Mon, 29 Jul 2019 13:43:09 -0400
+Received: from mout.gmx.net ([212.227.15.18]:39867 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387822AbfG2RnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:43:10 -0400
+        id S2387681AbfG2RnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 13:43:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1564422129;
-        bh=RdzV7ibrX+DwP2/BCdjL01crPjcknaV01tD0aoWIdDg=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=R9ZrFy29vedWnJJeYzRWI5kBNGitmtGhHhCP3B9ig27ts59fWQFKCzV97vz/8OzDY
-         n6mCgzrWb1jtHN57Y6ItnOZCHxkP8tDgVFPdEL5iLjcvrd5ZsiqKmSnZEHKTLgK4Ir
-         DeeCkmABc5HnZPTN1+C1vbQYuY0J+H1KK2m2mVGU=
+        s=badeba3b8450; t=1564422141;
+        bh=dzo7VpO1uUdQBSkujY0kbWJNhQ71gTV1phA9QbhtsCo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=UmqJim9rhKYYI6rg1gxZHvdyPwGur0+DZZ0Al0NvImxc1/42K6ZznDtK5I+UE4FkU
+         CH8Ckn7NSl+PE8DYdPpn7MBOuz0sCuLgopubbWdHfSp38AFPj3TSaKpXnzXJ1Fnqv6
+         qGVQgfRn4OjBkq4blGyemMlReFXIznQ/sfs7N97Y=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([185.76.97.79]) by mail.gmx.com
  (mrgmx001 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 0LzskF-1iV7102Ez5-014xXw; Mon, 29 Jul 2019 19:42:09 +0200
+ 0McDl1-1i7tEI19k7-00Ja6q; Mon, 29 Jul 2019 19:42:21 +0200
 From:   Frank Wunderlich <frank-w@public-files.de>
 To:     Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -54,100 +55,67 @@ To:     Alessandro Zummo <a.zummo@towertech.it>,
         Sebastian Reichel <sre@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Tianping . Fang" <tianping.fang@mediatek.com>
-Cc:     Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v3 00/10] implement poweroff for mt6323 / bpi-r2
-Date:   Mon, 29 Jul 2019 19:41:44 +0200
-Message-Id: <20190729174154.4335-1-frank-w@public-files.de>
+Cc:     Josef Friedl <josef.friedl@speed.at>,
+        Frank Wunderlich <frank-w@public-files.de>
+Subject: [PATCH v3 05/10] rtc: mt6397: add compatible for mt6323
+Date:   Mon, 29 Jul 2019 19:41:49 +0200
+Message-Id: <20190729174154.4335-6-frank-w@public-files.de>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190729174154.4335-1-frank-w@public-files.de>
+References: <20190729174154.4335-1-frank-w@public-files.de>
+X-Provags-ID: V03:K1:wxxknIib8Ozn5fRGGdL5blyAR19Ib6OBg90MqLFfw8GTFHxWpjh
+ Qpy9UZvf36GuixWQCNxGEoRPdgoZMsujvnPVmdCOD317NbzrIihWrc99GLDxCHitJUkm6xA
+ IyETGHnqpx3lPWjUznCNCTlZmhEeVBSt2ZoqibwTNq8DsS+YUcdk2WuwgfoyqNsK3le1Fnh
+ 5ZfPi2l+Qp7hdiFt4pXzg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xqnkkcUrSzE=:v6qNQBXYEiH6f/XVCnuvr2
+ Gesj4iyGIi6cG6nBK0kuG+DpbOpg/f8oKKBF/rFtG2+8g4id+v7+lRnL7RcjYYPFLjHJ7tWHe
+ PeqAG2j27WUWDHighouBhLbZ6biSQ/Tn+ueFOmy8MFjOHTwi6UQ4w9a8n1DNSdUpatK/eoaVd
+ dmVpOS95YcBate5CavOxcMC0BSsZCpOCaNUrYjc458b+Bi4ZV4GDNSGG8yioeeXGDioz0N/Eb
+ dUN4haKMwS5Glj5CNgJgXEbNVmFwflqZ3waZEe2Or82L0PSLNs5jWd0wL6k7ZGpKrI6+RDUtT
+ x6VM5IftuUAEiEqYV9eXbkjtaLsYtZ9RN1+0oytQBbpjc2+BH90fXx0OpCdZAdmCyLMeX4gtn
+ fJw8oF4UtEyB8TbTKh/3jmYPsQ5TTrGCp/tUCdpIT1mu5ZCc62R/b9f8IlHykv61a66hXArHM
+ QrnX/FEPY4JBYb5v03ORDb6negchM0Hs3jqal+p30/txIyunne+/166uvTixFDsxzkISP1TtI
+ aGzzi5gXp+lnXu9OLY3iw/sFrAh25B7v3ThQHsD8ZWIHYk8ARLkRGCjXzWLhv8wf8Vegnhe9h
+ d8Bi4pjMLf/tQzLt+RII8bTZEa2Fg2dK6zb0ZYdBeZrfIkCvDaDOGyH0x8aL4cWQ8ttA3G8qb
+ YWrpLtI4d5em3N5WyA96hjaUe0dgpEko+gCrNraeqxKHuW25E7R4uiEZKlQDOi/ea2QGPpjyv
+ UXYeZsRAav+t9wU6CYqVHbUWS+WXgAD1c4u+Jo2UjOzB0KDK4VFU2EkSihtEYGRj65eoPFq6m
+ thbwC09b7Zr3jPEei+aKyls+h0/uo+K0nA43z06nPmSRZXSddliN0GR1n6pYNC6mz0ETM2FKM
+ yMRfi8DR7+tezV09FPIoeQS5C3YvuvzIZHRVBw8mZl9VvJnUxjR9rXLe81zK8mgJ0uoYaApD7
+ LRDSA8YfxH4PeYs38ZRck79RQMM9ufG4MLhlDD4zeP5SVYyLLmfcB78+eOQ1a0AvG5vLHmCq/
+ 83/Ib4+NzjIB4zSmTvledXS0P/ZzE5u+l5m1QwtYG3PwY2Y7i+c/gCleFvPmLi6ucQMgRXu6f
+ bcz9JphWkQOuSQ=
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eaB03qW1RdZHhSSwGKsKQ5ipDCg+qmUpRIGapr9mOzrFy6CA0gx
- pz2or5Jz0m/M9Qv2WF+ghf9EH2MsOqsPCwN08N5B7E1g7UGFfTI3HJ+h15PC4DVZUlZl3ms
- Ho9F5fTbpA8NIggLdlvetC6qOgK+0GU9Baeq4OYqZUrc0peTECs3o5j/2V8HKESuUQIOeLd
- mIQqBZ2JLaJTffUIw8qQw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/HfsKFt0IkQ=:O6NiHfNSSWLslNZ2emBoSG
- 3VE4lb75JDVpkh0pU4mnlj4DCCz8wrM46AxzVryqq/4jrwBGdE8zf5nHHd8FCHwVeiwF2dQOe
- c4hw7A3ZPyKQSTp+VjcSoY7ViYIocfgEQe1Rmtv1QKyKHYVB8RypT97Hl4xh9rsCNQKov31ZR
- Kh09x91Fe6+V+QVYs1ldQ6ue/UPuf5x7Z5ttCRO4b/C/HupnIX8TELpRf4SJbs/fHjDUowMvS
- s0WsYVHXi3Mf0kbI6w322RGXHO5ouSwsFPfuHMnYJcN6e9hMqg359/xdavduRXNfbjr9+66ag
- b73SyLlBC+VvqVLr7LdZ1ulevSzFTtViC0lqqqQoKxC/YpxF+y2oAegEGos3xSR0NcOJ14tGO
- Ix4oH90ojljyY5lMBZRPEnDIA1ciHvjd8aF1kN+07WPNpF8RfIabSMfgFx0kxDnPEM79DzWYW
- 9CmniUHxAVkrLE73XiwRLpmiVxhICUdHtJtykDGiIFRYX1bsNbGRB3+lRVdcTcg1jjJ61Bkzc
- XanCObGqjjwGQBV0lxtpsPoRdhI87GFqURmW+BQsYwKdOSBDqz1UdvzJYJNg5SnrZZcG0+bzW
- v78/pNEbdvPI+PCoOSlFr48xxDQnIPo6FGGZhEX2kFRjDRTnKfl1fIS4nj7ytLwrkkLGZmR9g
- joq8YSOAPXfUBhlR843i8iLLlgpptHakCm1DKZfV3g2nOb68J0iYHCfZYrinZUhhf3GkgJbBQ
- NNfqYzbluzq7X/DH9sBz1gVSviWE+idaU7vg8uwUO1OCDB4ztzqK9ZtnI9mjbloc2zZ0hn8ux
- pyZOmpSHSHtgN4X6EyF0uIwRBRQySv1FoA7QHuIF8WKf9d0sGJDK2xjc9D5mAXdy0e/DS6sG0
- h5SI0fPzvoHtN/Ug6kttZOyAYptN2u5XGvb2fWfoNGaaTnkoSdychfXritF3eC5CsJJqsH2Ss
- rKpjNiKlLZtK8NX+Cxk2dx41HbodyTigWZESf8vxyhdT2aYguOQYmYGWm+QXmEZv44qehYR9p
- Y7riK9MFJTWkINuhFSe9O3LuLnzWJ0CWLgxNCjNKKBlq0EvaFiKjh3aa53x2vHO31WrK0AAcp
- +5qSgXM+s/WGDPtW51uZ1Hg/NqmNalg2b8A
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mainline-driver does not support mt6323
+From: Josef Friedl <josef.friedl@speed.at>
 
-this series makes some cleanup to mt6397-rtc-driver, adds mt6323 and
-implement power-controller on it.
+use mt6397 rtc driver also for mt6323
+compatible needed because of different rtc-base/size see part 7
 
-tested on bananapi-r2
+changes since v2: splitted this from v2.3 suggested-by Alexandre Belloni
 
-Original Patch from Josef Friedl
+Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+=2D--
+ drivers/rtc/rtc-mt6397.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-changes since v2:
-	- Splitted some parts and rebased on 5.3-rc2:
+diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+index 9370b7fc9f81..21cd9cc8b4c7 100644
+=2D-- a/drivers/rtc/rtc-mt6397.c
++++ b/drivers/rtc/rtc-mt6397.c
+@@ -325,6 +325,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_sus=
+pend,
+ 			mt6397_rtc_resume);
 
-	v2.1 dt-bindings: add powercontroller =E2=80=93 try to make better subjec=
-t
-	v2.2 separate rtc-mt6397.txt (suggested by Alexandre Belloni)
-		add missing commit-message (suggested by Matthias Brugger)
-	v2.3 fix alloc after IRQ (suggested by Alexandre Belloni)
-		new compatible (splitting suggested by Alexandre Belloni)
-		needed due to different rtc-base/size see #7
-	v2.4 simplifications (Define-res-macros)
-		add mt6323 rtc+pwrc
-	v2.5 add poweroff-driver (no change)
-	v2.6 MAINTAINERS (no change)
-	v2.7 DTS-Changes (no change)
-
-changes since v1:
-	- splitted into functional parts
-	- more infos about changes
-
-Josef Friedl (10):
-  dt-bindings: add powercontroller
-  dt-bindings: add missing mt6397 rtc
-  rtc: mt6397: move some common definitions into rtc.h
-  rtc: mt6397: improvements of rtc driver
-  rtc: mt6397: add compatible for mt6323
-  mfd: mt6323: some improvements of mt6397-core
-  mfd: mt6323: add mt6323 rtc+pwrc
-  power: reset: add driver for mt6323 poweroff
-  MAINTAINERS: add Mediatek shutdown drivers
-  arm: dts: mt6323: add keys, power-controller, rtc and codec
-
- .../devicetree/bindings/mfd/mt6397.txt        |  10 +-
- .../bindings/power/reset/mt6323-poweroff.txt  |  20 ++++
- .../devicetree/bindings/rtc/rtc-mt6397.txt    |  29 +++++
- MAINTAINERS                                   |   7 ++
- arch/arm/boot/dts/mt6323.dtsi                 |  27 +++++
- drivers/mfd/mt6397-core.c                     |  40 +++++--
- drivers/power/reset/Kconfig                   |  10 ++
- drivers/power/reset/Makefile                  |   1 +
- drivers/power/reset/mt6323-poweroff.c         |  97 ++++++++++++++++
- drivers/rtc/rtc-mt6397.c                      | 107 ++++--------------
- include/linux/mfd/mt6397/core.h               |   2 +
- include/linux/mfd/mt6397/rtc.h                |  71 ++++++++++++
- 12 files changed, 323 insertions(+), 98 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-p=
-oweroff.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
- create mode 100644 drivers/power/reset/mt6323-poweroff.c
- create mode 100644 include/linux/mfd/mt6397/rtc.h
-
+ static const struct of_device_id mt6397_rtc_of_match[] =3D {
++	{ .compatible =3D "mediatek,mt6323-rtc", },
+ 	{ .compatible =3D "mediatek,mt6397-rtc", },
+ 	{ }
+ };
 =2D-
 2.17.1
 
