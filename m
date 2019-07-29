@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67746C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADC4C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A4C205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B16F2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429855;
-	bh=QueKZpFioLCWZ5HWzxdo1ui1KolDHEvoj+ONRnWPBjU=;
+	s=default; t=1564429858;
+	bh=rZ6BEF+/vB0pxBk7idytzu53Gz6bfW7NZdFFkIUd7Mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J3k0Ah85HoGAF59CcN7bBVxazXRE7k0378hCR53hKtnZiZP0jrLOdVY6zdiHpIw04
-	 aui35DaxOOGruF3qs8h4931x5uDc0veerA6HYG/w0hJWCJI/RiUy6SH7nuB7I2g/5t
-	 AMNPFlezHJwJgyWin5iqxhUgGJHQsGe+GYq7JcCs=
+	b=MmdqVXo/942xhX2TJsbRMbv91roCPT8hlxbppBrZknVMaqWmC3NmCR0cXkJcEfdO3
+	 JA6z6bBV+ZQ/qCUZXUwJp1tDkULiHguxE/b2NONIansvsIAnFRpPiEAM/ruBPZL5rX
+	 xnIpwpRwwVvA5HawTy1tCFXlqGwz3Cyqz/JTeDl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390719AbfG2Tuy (ORCPT
+        id S2403822AbfG2Tu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41908 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390003AbfG2Tuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:50:51 -0400
+        id S2390715AbfG2Tuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:50:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1A8D2054F;
-        Mon, 29 Jul 2019 19:50:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F6042054F;
+        Mon, 29 Jul 2019 19:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429850;
-        bh=QueKZpFioLCWZ5HWzxdo1ui1KolDHEvoj+ONRnWPBjU=;
+        s=default; t=1564429853;
+        bh=rZ6BEF+/vB0pxBk7idytzu53Gz6bfW7NZdFFkIUd7Mk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hjVnfjDqIvdf8y1uk6yGOggvuWufQoGCiBOO1LRNfi1thEgPpThYZCQM7F7BQwBzl
-         q2tUBS4+3UugUcpr9ziHzJb6H7POi2WWmDzrlTRv6uclgPGf9AgzAVB6W9MExWHWC4
-         2opK+jVHVh+LLz/hVfWMu8wmvqQgh80p791osXpQ=
+        b=lVk4POuAZ2fnVI9F7Myx8FLoAfMPfO9qa0vt2zM+Szr9z2ZC87dpueMMMJ2jI768d
+         /pFE0szJvDZWjFA8ysH54JnGPLw4aX4ctsoCueO7+s4LfZAlbaua+BvI47Tyvw3KRW
+         s9oDzsnneegioWc537wU7uSyqkvUBe3/7Wv1OS5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver OHalloran <oohall@gmail.com>,
+        Shawn Anastasio <shawn@anastas.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 113/215] KVM: nVMX: Stash L1s CR3 in vmcs01.GUEST_CR3 on nested entry w/o EPT
-Date:   Mon, 29 Jul 2019 21:21:49 +0200
-Message-Id: <20190729190758.588311502@linuxfoundation.org>
+Subject: [PATCH 5.2 077/215] powerpc/pci/of: Fix OF flags parsing for 64bit BARs
+Date:   Mon, 29 Jul 2019 21:21:13 +0200
+Message-Id: <20190729190753.294904333@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -61,160 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f087a02941feacf7d6f097522bc67c602fda18e6 ]
+[ Upstream commit df5be5be8735ef2ae80d5ae1f2453cd81a035c4b ]
 
-KVM does not have 100% coverage of VMX consistency checks, i.e. some
-checks that cause VM-Fail may only be detected by hardware during a
-nested VM-Entry.  In such a case, KVM must restore L1's state to the
-pre-VM-Enter state as L2's state has already been loaded into KVM's
-software model.
+When the firmware does PCI BAR resource allocation, it passes the assigned
+addresses and flags (prefetch/64bit/...) via the "reg" property of
+a PCI device device tree node so the kernel does not need to do
+resource allocation.
 
-L1's CR3 and PDPTRs in particular are loaded from vmcs01.GUEST_*.  But
-when EPT is disabled, the associated fields hold KVM's shadow values,
-not L1's "real" values.  Fortunately, when EPT is disabled the PDPTRs
-come from memory, i.e. are not cached in the VMCS.  Which leaves CR3
-as the sole anomaly.
+The flags are stored in resource::flags - the lower byte stores
+PCI_BASE_ADDRESS_SPACE/etc bits and the other bytes are IORESOURCE_IO/etc.
+Some flags from PCI_BASE_ADDRESS_xxx and IORESOURCE_xxx are duplicated,
+such as PCI_BASE_ADDRESS_MEM_PREFETCH/PCI_BASE_ADDRESS_MEM_TYPE_64/etc.
+When parsing the "reg" property, we copy the prefetch flag but we skip
+on PCI_BASE_ADDRESS_MEM_TYPE_64 which leaves the flags out of sync.
 
-A previously applied workaround to handle CR3 was to force nested early
-checks if EPT is disabled:
+The missing IORESOURCE_MEM_64 flag comes into play under 2 conditions:
+1. we remove PCI_PROBE_ONLY for pseries (by hacking pSeries_setup_arch()
+or by passing "/chosen/linux,pci-probe-only");
+2. we request resource alignment (by passing pci=resource_alignment=
+via the kernel cmd line to request PAGE_SIZE alignment or defining
+ppc_md.pcibios_default_alignment which returns anything but 0). Note that
+the alignment requests are ignored if PCI_PROBE_ONLY is enabled.
 
-  commit 2b27924bb1d48 ("KVM: nVMX: always use early vmcs check when EPT
-                         is disabled")
+With 1) and 2), the generic PCI code in the kernel unconditionally
+decides to:
+- reassign the BARs in pci_specified_resource_alignment() (works fine)
+- write new BARs to the device - this fails for 64bit BARs as the generic
+code looks at IORESOURCE_MEM_64 (not set) and writes only lower 32bits
+of the BAR and leaves the upper 32bit unmodified which breaks BAR mapping
+in the hypervisor.
 
-Forcing nested early checks is undesirable as doing so adds hundreds of
-cycles to every nested VM-Entry.  Rather than take this performance hit,
-handle CR3 by overwriting vmcs01.GUEST_CR3 with L1's CR3 during nested
-VM-Entry when EPT is disabled *and* nested early checks are disabled.
-By stuffing vmcs01.GUEST_CR3, nested_vmx_restore_host_state() will
-naturally restore the correct vcpu->arch.cr3 from vmcs01.GUEST_CR3.
+This fixes the issue by copying the flag. This is useful if we want to
+enforce certain BAR alignment per platform as handling subpage sized BARs
+is proven to cause problems with hotplug (SLOF already aligns BARs to 64k).
 
-These shenanigans work because nested_vmx_restore_host_state() does a
-full kvm_mmu_reset_context(), i.e. unloads the current MMU, which
-guarantees vmcs01.GUEST_CR3 will be rewritten with a new shadow CR3
-prior to re-entering L1.
-
-vcpu->arch.root_mmu.root_hpa is set to INVALID_PAGE via:
-
-    nested_vmx_restore_host_state() ->
-        kvm_mmu_reset_context() ->
-            kvm_mmu_unload() ->
-                kvm_mmu_free_roots()
-
-kvm_mmu_unload() has WARN_ON(root_hpa != INVALID_PAGE), i.e. we can bank
-on 'root_hpa == INVALID_PAGE' unless the implementation of
-kvm_mmu_reset_context() is changed.
-
-On the way into L1, VMCS.GUEST_CR3 is guaranteed to be written (on a
-successful entry) via:
-
-    vcpu_enter_guest() ->
-        kvm_mmu_reload() ->
-            kvm_mmu_load() ->
-                kvm_mmu_load_cr3() ->
-                    vmx_set_cr3()
-
-Stuff vmcs01.GUEST_CR3 if and only if nested early checks are disabled
-as a "late" VM-Fail should never happen win that case (KVM WARNs), and
-the conditional write avoids the need to restore the correct GUEST_CR3
-when nested_vmx_check_vmentry_hw() fails.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20190607185534.24368-1-sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Shawn Anastasio <shawn@anastas.io>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/uapi/asm/vmx.h |  1 -
- arch/x86/kvm/vmx/nested.c       | 44 +++++++++++++++++----------------
- 2 files changed, 23 insertions(+), 22 deletions(-)
+ arch/powerpc/kernel/pci_of_scan.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/asm/vmx.h
-index d213ec5c3766..f0b0c90dd398 100644
---- a/arch/x86/include/uapi/asm/vmx.h
-+++ b/arch/x86/include/uapi/asm/vmx.h
-@@ -146,7 +146,6 @@
- 
- #define VMX_ABORT_SAVE_GUEST_MSR_FAIL        1
- #define VMX_ABORT_LOAD_HOST_PDPTE_FAIL       2
--#define VMX_ABORT_VMCS_CORRUPTED             3
- #define VMX_ABORT_LOAD_HOST_MSR_FAIL         4
- 
- #endif /* _UAPIVMX_H */
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index c1d118f4dc72..ef6575ab60ed 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2973,6 +2973,25 @@ int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry)
- 		!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS))
- 		vmx->nested.vmcs01_guest_bndcfgs = vmcs_read64(GUEST_BNDCFGS);
- 
-+	/*
-+	 * Overwrite vmcs01.GUEST_CR3 with L1's CR3 if EPT is disabled *and*
-+	 * nested early checks are disabled.  In the event of a "late" VM-Fail,
-+	 * i.e. a VM-Fail detected by hardware but not KVM, KVM must unwind its
-+	 * software model to the pre-VMEntry host state.  When EPT is disabled,
-+	 * GUEST_CR3 holds KVM's shadow CR3, not L1's "real" CR3, which causes
-+	 * nested_vmx_restore_host_state() to corrupt vcpu->arch.cr3.  Stuffing
-+	 * vmcs01.GUEST_CR3 results in the unwind naturally setting arch.cr3 to
-+	 * the correct value.  Smashing vmcs01.GUEST_CR3 is safe because nested
-+	 * VM-Exits, and the unwind, reset KVM's MMU, i.e. vmcs01.GUEST_CR3 is
-+	 * guaranteed to be overwritten with a shadow CR3 prior to re-entering
-+	 * L1.  Don't stuff vmcs01.GUEST_CR3 when using nested early checks as
-+	 * KVM modifies vcpu->arch.cr3 if and only if the early hardware checks
-+	 * pass, and early VM-Fails do not reset KVM's MMU, i.e. the VM-Fail
-+	 * path would need to manually save/restore vmcs01.GUEST_CR3.
-+	 */
-+	if (!enable_ept && !nested_early_check)
-+		vmcs_writel(GUEST_CR3, vcpu->arch.cr3);
-+
- 	vmx_switch_vmcs(vcpu, &vmx->nested.vmcs02);
- 
- 	prepare_vmcs02_early(vmx, vmcs12);
-@@ -3784,18 +3803,8 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
- 	vmx_set_cr4(vcpu, vmcs_readl(CR4_READ_SHADOW));
- 
- 	nested_ept_uninit_mmu_context(vcpu);
--
--	/*
--	 * This is only valid if EPT is in use, otherwise the vmcs01 GUEST_CR3
--	 * points to shadow pages!  Fortunately we only get here after a WARN_ON
--	 * if EPT is disabled, so a VMabort is perfectly fine.
--	 */
--	if (enable_ept) {
--		vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
--		__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
--	} else {
--		nested_vmx_abort(vcpu, VMX_ABORT_VMCS_CORRUPTED);
--	}
-+	vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
-+	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
- 
- 	/*
- 	 * Use ept_save_pdptrs(vcpu) to load the MMU's cached PDPTRs
-@@ -3803,7 +3812,8 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
- 	 * VMFail, like everything else we just need to ensure our
- 	 * software model is up-to-date.
- 	 */
--	ept_save_pdptrs(vcpu);
-+	if (enable_ept)
-+		ept_save_pdptrs(vcpu);
- 
- 	kvm_mmu_reset_context(vcpu);
- 
-@@ -5772,14 +5782,6 @@ __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *))
- {
- 	int i;
- 
--	/*
--	 * Without EPT it is not possible to restore L1's CR3 and PDPTR on
--	 * VMfail, because they are not available in vmcs01.  Just always
--	 * use hardware checks.
--	 */
--	if (!enable_ept)
--		nested_early_check = 1;
--
- 	if (!cpu_has_vmx_shadow_vmcs())
- 		enable_shadow_vmcs = 0;
- 	if (enable_shadow_vmcs) {
+diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
+index 24522aa37665..c63c53b37e8e 100644
+--- a/arch/powerpc/kernel/pci_of_scan.c
++++ b/arch/powerpc/kernel/pci_of_scan.c
+@@ -42,6 +42,8 @@ unsigned int pci_parse_of_flags(u32 addr0, int bridge)
+ 	if (addr0 & 0x02000000) {
+ 		flags = IORESOURCE_MEM | PCI_BASE_ADDRESS_SPACE_MEMORY;
+ 		flags |= (addr0 >> 22) & PCI_BASE_ADDRESS_MEM_TYPE_64;
++		if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
++			flags |= IORESOURCE_MEM_64;
+ 		flags |= (addr0 >> 28) & PCI_BASE_ADDRESS_MEM_TYPE_1M;
+ 		if (addr0 & 0x40000000)
+ 			flags |= IORESOURCE_PREFETCH
 -- 
 2.20.1
 
