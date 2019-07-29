@@ -2,94 +2,122 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F96C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9786C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACB6206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE112206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:23:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k86W0aoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfG2OXE (ORCPT
+        id S1727567AbfG2OXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:23:04 -0400
-Received: from verein.lst.de ([213.95.11.211]:40322 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbfG2OXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:23:04 -0400
-Received: by verein.lst.de (Postfix, from userid 2005)
-        id E55C468AEF; Mon, 29 Jul 2019 16:22:58 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 16:22:58 +0200
-From:   Torsten Duwe <duwe@lst.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6a/7] dt-bindings: Add ANX6345 DP/eDP transmitter
- binding
-Message-ID: <20190729142258.GB7946@lst.de>
-References: <20190722150414.9F97668B20@verein.lst.de> <20190725151829.DC20968B02@verein.lst.de> <20190726163601.o32bxqew5xavjgyi@flea>
+        Mon, 29 Jul 2019 10:23:42 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37974 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbfG2OXl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 10:23:41 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f5so19530392pgu.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 07:23:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:subject:cc:user-agent:date;
+        bh=kqUnPKiz6VvTqc0+3BE84kZ35KLnOhXxMY+yopDUPhY=;
+        b=k86W0aohKTIyLzBKu/wc2N16ENz7QVuJCm9eOV3rf+vXz48wbkR6TSL3KnMNu+Qg9u
+         QwKbRBGZVkYTYR7rmUEX9cVlei8WTfWGVGQeVr42nqCKd7VzgcrsSLCm88DonZsNdxaY
+         e9jZiEiFJMVjy054rF8KvLZqdz94yA3Q0rK/M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:subject:cc
+         :user-agent:date;
+        bh=kqUnPKiz6VvTqc0+3BE84kZ35KLnOhXxMY+yopDUPhY=;
+        b=F0F+94Fg/maxnUSJaYBrBxIYewKYoglTPHlsHKnr6Kbx9xVdWKRS8DNOyNAfsJrWHv
+         Dj9jDnutfYdMl6VxQz+ut+wxyNC+ZFpmh4sd1xPOXpB4DgAYpRViVOQDV0mBvVmIzhyU
+         5oPpnLWyfgmLxX3trDUGYuZxqvgyL2PE245gvINXiaSFb3og3dj9RwRXQkDQS5/48dMT
+         FkdvBfH4p8ZX3XDNMDo0V8RZvZaQOX5gmrAJSTKZJxl/hXIerMgM2Hjbuk2BzsAn+x8Y
+         NHG+pp/qlXeZcFy4j7fUiEspqkNL6j7euhLKokiRaH3vWiehiUsZ2URoqrTeICDGiY5A
+         ct+g==
+X-Gm-Message-State: APjAAAXJMZUcr0LsqVdUT15ecHCxXIDiOMXxHp5y7vC8OfID1qqvXas8
+        PJFgpKuTlYLl8Bob+7IrOu51+Jgpd8w=
+X-Google-Smtp-Source: APXvYqw/PF2vE+zBYn0D8DUzj3HuB5GsG03DneqIHvSfRszws4YVVcUlAfy/9QpCj7nC6Zl53Whsmw==
+X-Received: by 2002:a63:5c07:: with SMTP id q7mr52206048pgb.436.1564410221179;
+        Mon, 29 Jul 2019 07:23:41 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id y14sm11289667pge.7.2019.07.29.07.23.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 07:23:40 -0700 (PDT)
+Message-ID: <5d3f016c.1c69fb81.b4775.c7d0@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726163601.o32bxqew5xavjgyi@flea>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAK7LNAQZJgkx-yEwgHcTapKFayExgUCb3=zLBpJmVMJMeEA_WA@mail.gmail.com>
+References: <20190725154730.80169-1-swboyd@chromium.org> <CAK7LNAQZJgkx-yEwgHcTapKFayExgUCb3=zLBpJmVMJMeEA_WA@mail.gmail.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2] kbuild: Check for unknown options with cc-option usage in Kconfig and clang
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Peter Smith <peter.smith@linaro.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Douglas Anderson <dianders@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 29 Jul 2019 07:23:39 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 06:36:01PM +0200, Maxime Ripard wrote:
-> > +
-> > +  dvdd12-supply:
-> > +    maxItems: 1
-> > +    description: Regulator for 1.2V digital core power.
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +
-> > +  dvdd25-supply:
-> > +    maxItems: 1
-> > +    description: Regulator for 2.5V digital core power.
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> 
-> There's no need to specify the type here, all the properties ending in
-> -supply are already checked for that type
+Quoting Masahiro Yamada (2019-07-29 03:02:40)
+>=20
+> Thanks for catching this.
+>=20
+> I wonder if we could fix this issue
+> by one-liner, like this:
+>=20
+>=20
+> diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+> index 8a5c4d645eb1..4bbf4fc163a2 100644
+> --- a/scripts/Kconfig.include
+> +++ b/scripts/Kconfig.include
+> @@ -25,7 +25,7 @@ failure =3D $(if-success,$(1),n,y)
+>=20
+>  # $(cc-option,<flag>)
+>  # Return y if the compiler supports <flag>, n otherwise
+> -cc-option =3D $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/nul=
+l)
+> +cc-option =3D $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c
+> /dev/null -o /dev/null)
+>=20
+>  # $(ld-option,<flag>)
+>  # Return y if the linker supports <flag>, n otherwise
+>=20
+>=20
+>=20
+> This propagates not only -Werror=3Dunknown-warning-option
+> but also other clang flags to Kconfig.
+>=20
+>=20
+> Currently, we do not pass the target triplet to Kconfig.
+> This means, cc-option in Kconfig evaluates the given flags
+> against host-arch instead of target-arch.
+> The compiler flags are mostly independent of the architecture,
+> and this is not a big deal, I think.
+> But, maybe, would it make more sense to pass the other
+> basic clang flags as well?
+>=20
 
-Ok, thanks for the hint.
-
-> > +  ports:
-> > +    type: object
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    description: |
-> > +      Video port 0 for LVTTL input,
-> > +      Video port 1 for eDP output (panel or connector)
-> > +      using the DT bindings defined in
-> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> 
-> You should probably describe the port@0 and port@1 nodes here as
-> well. It would allow you to express that the port 0 is mandatory and
-> the port 1 optional, which got dropped in the conversion.
-
-I would have liked to, but have not discovered yet a comprehensive source
-of information about recommended syntax and semantics of the YAML schemes.
-
-Is there some central reference for these types of issues? I mean not the
-"here is a git repo with the meta-schemes" but sort of a cookbook?
-
-	Torsten
-
+Yes that also works and I had that earlier. I wanted to mirror what was
+done in scripts/Kbuild.include where there's a CC_OPTION_CFLAGS
+variable. I'm happy either way, so it's up to you.
 
