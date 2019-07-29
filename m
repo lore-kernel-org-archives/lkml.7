@@ -2,158 +2,251 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723E2C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF07CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 499A72070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D0B2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=essensium-com.20150623.gappssmtp.com header.i=@essensium-com.20150623.gappssmtp.com header.b="p97UEoNg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="SJI7B9H2";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="QfWTUrrC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387860AbfG2LxA (ORCPT
+        id S2387756AbfG2L4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:53:00 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46110 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387482AbfG2Lw7 (ORCPT
+        Mon, 29 Jul 2019 07:56:23 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:55665 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387482AbfG2L4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:52:59 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z23so33874233ote.13
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 04:52:59 -0700 (PDT)
+        Mon, 29 Jul 2019 07:56:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1564401390; x=1595937390;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=1w8+KdjZoQbDyZTswnKPIFaNkOHkAqJAgl5ucvJJ8fk=;
+  b=SJI7B9H22E/btj3du8TaIXVc7y4DzrHXr1Q/8rse1lpLrUuVbGom6vLu
+   WPXzYGJFpyfKo4ehSk0aCvYpKaK6ur6nif3pbPAbCzKtIwTOeq38h3Emu
+   YE55vRzwnrwQFLJmvu7tWENHorPUv2p5FG20YlRBXuxwUtL+F7g+qgHVh
+   BUnYDH88Y8fbpoIzWS4MEldnjMR1+JWRgmRMh4UolxlM+umAab2nr8z+k
+   6XmPcJ8Anjhq/jI+F/FYObvtrfkb60zs4F9QIGkjZGZLR58x0RTmynlUS
+   imZ8elrR0EzI0tRXkoSjB6LF1YTyv29pWRzpQX0fjWp7Op5UmDrDEvyZq
+   g==;
+IronPort-SDR: bncCUDA+z6dv7C/d/uC758MT5EfV7PWDwURq/S780CfVXefcyrtwfBveyQAH5r6ku6cIWiBa9R
+ TGn8QWzb/gCd2fIUWknz1d2mW52uUQoV7f0VDEEZKwnwzwdVMnNIZDtf9qFPl7FcooBJzto27Q
+ PYKEpKHdeToK+7/ppXbRp+Np9kZ7xiNL9xhmPxDpmaYb9sEjG17gqeTWvoBDqhFLVK3ZZJYkG0
+ 8rrPxjqSW91AybfaGhS4pa7IxgeYzhrLof4sYEgB/8OBTTYI/aqzHF2CYxBXuUnODNyp6elSD6
+ OKU=
+X-IronPort-AV: E=Sophos;i="5.64,322,1559491200"; 
+   d="scan'208";a="214553044"
+Received: from mail-sn1nam04lp2057.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.57])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Jul 2019 19:56:28 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oUTRaRvGjwSjtQdLNy0t21QyhqKsLDIAg2KJt4eJXKz4fHClFsLXrAvpdjKvR/mzxHT5UA0i24s1DOPG1YPMNHJJ+/rBUbJ0vDBpv0jNeSLa+oMMlBRB1XDYCjW1kPavhv0LUWIv+Ns7v/Jr+q6rICAE6Sgz/TNJJKhXH+fx48ZDAh3aokgYGwEb0k5YPcPpKFFH9s1UuaJygqT6TKlZGkqRu0teB4+buNL3Mjj8IbHywt1zjMaEE81kQWmPSSmvds6h8WRaxi2SB+VhpVq8Ghc8lRpFaKqes/phoWziYZAU7G5bjaEdL6qopmIXwBamC/N5woK+WT+bR//WeJeUpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4R1fAgBtm/P4noUaDa5HAqUibITEOBaYk9JDAsExLQM=;
+ b=bjL7uZnK/0Zfw8hHcVeTJkD6FeSvJDmb9qazrZwbfyH+28b+JU0iq27TkPvFYIfBJCjk8QN3WuXOSwstubZ3Wb+Xj/6wHLCQghGCQqX+mCKCFilccTI7i73c30Xcq7NHkQPE9jer5VwGvl9jFS41+P0lNg3rRwZ55low1MZ5M959To6BDZdzwatLvksV58s8y9gtx4iPgtkZqMm3CpTJfHZjMAIGjZTD6DVjPkjkzPj7J1/OgFMiowwpPHqsi9wHQn6ug2ffEUHF2E51I6EbYTnndWMUrcgCr1z4F2UmiNqd/J7yXuyZrVaiw89M4Gq9nYM4zFo4ajHvX0uCbZVqZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
+ header.d=wdc.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=essensium-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PPGf0kPbvhe2HXNESzGCCBqYTl2vqafsajjrV11C25I=;
-        b=p97UEoNg/4v5WyEnvrg6cBEmCngBnKeqFcpQlsDLMsJijmNXQOucbWp+t+TFovLOXZ
-         qgqyVce9UCFzNi2sjQ7Zt9gV2tetGlakx45j63Mpcia5m09PM9omEz3/9LkbQmwePBL0
-         VIF48g2yFADHWzzsSYLAgHOgCSTVNqoVcqaUU6txNjq6wdlFeZykRdbr6oFPL8FaU8+N
-         dThYCT69kkPPeOrsWEGninxKcQ497ZwrJyIUU11P2AOJnQotM+PNQmu/63YJNzXRZwdv
-         GLIEsRZvBtfJbs0do5wKLVvnCcRT1tm49qlpeRTJckOuQf8JWRg21d6AaUqUz4mY25if
-         ZdtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PPGf0kPbvhe2HXNESzGCCBqYTl2vqafsajjrV11C25I=;
-        b=s8ltYE/piqn903wCEAmKJIlWp026hMSIXRnR3ojuCjB2WtuiHwsPiR8j+tGuHY22Bl
-         C53s1CdB4SdpPF/APwNjQ9ojTuOR4Po097bDDM2reFl9vvYcH6tuZr4cur0qzxJrJrao
-         j9K9A7LtJvRCrVZe2KvOdmQryAsvjsHfhhWaG+BspjhqvZJTITY/K4m4+2p/5fdkm0G8
-         e0/rSvXpMzKgjaO2WvZprObcg+IDKjWwXtCazSmKeCuqdS/TpPDRHqt0Nw623dxFeBnj
-         NkEKU4UU4P1Dv2VCDFs+ptLbtve0xgMkeGrAhXHSJVuS935hNcu7o82IPJy0S1BrjBdo
-         Zumg==
-X-Gm-Message-State: APjAAAUTfjALc3xoww9yZvn646eCVvBcaAKK2jv6CSIv9QEy9n9KJfps
-        MUJKPzCjWFNV2tcRxjc1JuMCCwCOmNTyDupGOW0IAw==
-X-Google-Smtp-Source: APXvYqyS81a5YCskF+EiZflTcgNqYeRMHdvCBcOv1gxPheP1eba17RzCLqIog5cAcS4IbQhdIPt/ugH4upY8MEazw/A=
-X-Received: by 2002:a9d:48f:: with SMTP id 15mr49061044otm.160.1564401178640;
- Mon, 29 Jul 2019 04:52:58 -0700 (PDT)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4R1fAgBtm/P4noUaDa5HAqUibITEOBaYk9JDAsExLQM=;
+ b=QfWTUrrCkYh2N4ADABxbPBb8ajm4Te0GKTAgfi80ZQbX7ISPTYY/9WDsMgX8Ly2IEnPc0dQgbC95PQaULafANDYcuJc054jy2aoTxrNra3/Id4+3lOCHM8UyycbHxSZ5yGSi3T36gt+gcDFvwrVbnS3hFh/XWkmNOJnDSyfWDZI=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB5952.namprd04.prod.outlook.com (20.179.21.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.15; Mon, 29 Jul 2019 11:56:19 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::a815:e61a:b4aa:60c8]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::a815:e61a:b4aa:60c8%7]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
+ 11:56:19 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: [RFC PATCH 00/16] KVM RISC-V Support
+Thread-Topic: [RFC PATCH 00/16] KVM RISC-V Support
+Thread-Index: AQHVRgSiwwiv+vb1mEmL735Or1vKMg==
+Date:   Mon, 29 Jul 2019 11:56:19 +0000
+Message-ID: <20190729115544.17895-1-anup.patel@wdc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PN1PR01CA0116.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00::32)
+ To MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [106.51.23.101]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 325ef1f5-8903-4ed5-2b12-08d7141bc45f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5952;
+x-ms-traffictypediagnostic: MN2PR04MB5952:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <MN2PR04MB59522AB858AF1B73B7F8DB248DDD0@MN2PR04MB5952.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1468;
+x-forefront-prvs: 01136D2D90
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(376002)(396003)(136003)(346002)(189003)(199004)(966005)(478600001)(2906002)(6436002)(486006)(6512007)(6306002)(53936002)(36756003)(2616005)(44832011)(78486014)(386003)(6506007)(102836004)(55236004)(4326008)(71200400001)(476003)(71190400001)(9456002)(7736002)(26005)(50226002)(81166006)(81156014)(8676002)(8936002)(186003)(99286004)(6486002)(68736007)(14444005)(1076003)(256004)(7416002)(305945005)(66446008)(25786009)(66066001)(6116002)(3846002)(52116002)(14454004)(316002)(54906003)(86362001)(66556008)(66476007)(110136005)(66946007)(5660300002)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5952;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qhShs2lhk2k9H7LAF68MRqvN1BifUmWrfBSqaRZSY29BJg/McN7xy10B77A8xAiIdUG0a21hSYtgUfMOiVMEOTwiFhgMsIAxYzcjyDXB0KRk0wowPMMyWTIh8UyXjExSrMr2Wp3traZXDawH6puuwDsIX1XoVF0WCVHJ0BaGbHkS0gClMUx0PylU/pBJDDD0nlOLJnJticXDMNsz80GCC2BszG2dQlWUDsbE+uVdcl68cP6vcJQmcnNJjS/QNQ9fPN1nvjhPl7EVh9dM9/szczRPXK1ENi3F/6DYXuSmrY4kHwXQEQ/PRD9bRxNQ3eOy6S7h+xSI6psPflPvm/JE33OgwlgwGGh1XvVWDKayT9hqui70DqR83LTOBQ6IJ9FQ2xOtfB07Gn2yKO+3F6hHd4nDk3xbC9AzHrkdnYtNJxc=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190726133916.26186-1-hslester96@gmail.com>
-In-Reply-To: <20190726133916.26186-1-hslester96@gmail.com>
-From:   Patrick Havelange <patrick.havelange@essensium.com>
-Date:   Mon, 29 Jul 2019 13:52:47 +0200
-Message-ID: <CAKKE0ZFgdiViNiHD2KXvJAW4MB+0T2BM0-k+2UYWubTRHN9Sww@mail.gmail.com>
-Subject: Re: [PATCH v2] counter/ftm-quaddec: Use device-managed registration API
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 325ef1f5-8903-4ed5-2b12-08d7141bc45f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 11:56:19.1595
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Anup.Patel@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5952
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 3:39 PM Chuhong Yuan <hslester96@gmail.com> wrote:
->
-> Make use of devm_counter_register.
-> Then we can remove redundant unregistration API
-> usage to make code simpler.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+This series adds initial KVM RISC-V support. Currently, we are able to boot
+RISC-V 64bit Linux Guests with multiple VCPUs.
 
-Reviewed-by: Patrick Havelange <patrick.havelange@essensium.com>
+Few key aspects of KVM RISC-V added by this series are:
+1. Minimal possible KVM world-switch which touches only GPRs and few CSRs.
+2. Full Guest/VM switch is done via vcpu_get/vcpu_put infrastructure.
+3. KVM ONE_REG interface for VCPU register access from user-space.
+4. PLIC emulation is done in user-space. In-kernel PLIC emulation, will
+   be added in future.
+5. Timer and IPI emuation is done in-kernel.
+6. MMU notifiers supported.
+7. FP lazy save/restore supported.
+8. SBI v0.1 emulation for KVM Guest available.
 
-Maybe a bit too late, sorry for that. Thanks for the patch.
+More feature additions and enhancments will follow after this series and
+eventually KVM RISC-V will be at-par with other architectures.
 
-Patrick H.
+This series is based upon KVM pre-patches sent by Atish earlier
+(https://lkml.org/lkml/2019/7/26/1271) and it can be found in
+riscv_kvm_v1 branch at:
+https//github.com/avpatel/linux.git
 
-> ---
-> Changes in v2:
->   - Use devm_add_action_or_reset to keep
->     resource release order.
->   - remove() function is redundant now,
->     delete it.
->
->  drivers/counter/ftm-quaddec.c | 30 ++++++++++++------------------
->  1 file changed, 12 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quaddec.c
-> index 68a9b7393457..4046aa9f9234 100644
-> --- a/drivers/counter/ftm-quaddec.c
-> +++ b/drivers/counter/ftm-quaddec.c
-> @@ -100,16 +100,18 @@ static void ftm_quaddec_init(struct ftm_quaddec *ftm)
->         ftm_set_write_protection(ftm);
->  }
->
-> -static void ftm_quaddec_disable(struct ftm_quaddec *ftm)
-> +static void ftm_quaddec_disable(void *ftm)
->  {
-> -       ftm_clear_write_protection(ftm);
-> -       ftm_write(ftm, FTM_MODE, 0);
-> -       ftm_write(ftm, FTM_QDCTRL, 0);
-> +       struct ftm_quaddec *ftm_qua = ftm;
-> +
-> +       ftm_clear_write_protection(ftm_qua);
-> +       ftm_write(ftm_qua, FTM_MODE, 0);
-> +       ftm_write(ftm_qua, FTM_QDCTRL, 0);
->         /*
->          * This is enough to disable the counter. No clock has been
->          * selected by writing to FTM_SC in init()
->          */
-> -       ftm_set_write_protection(ftm);
-> +       ftm_set_write_protection(ftm_qua);
->  }
->
->  static int ftm_quaddec_get_prescaler(struct counter_device *counter,
-> @@ -317,20 +319,13 @@ static int ftm_quaddec_probe(struct platform_device *pdev)
->
->         ftm_quaddec_init(ftm);
->
-> -       ret = counter_register(&ftm->counter);
-> +       ret = devm_add_action_or_reset(&pdev->dev, ftm_quaddec_disable, ftm);
->         if (ret)
-> -               ftm_quaddec_disable(ftm);
-> -
-> -       return ret;
-> -}
-> +               return ret;
->
-> -static int ftm_quaddec_remove(struct platform_device *pdev)
-> -{
-> -       struct ftm_quaddec *ftm = platform_get_drvdata(pdev);
-> -
-> -       counter_unregister(&ftm->counter);
-> -
-> -       ftm_quaddec_disable(ftm);
-> +       ret = devm_counter_register(&pdev->dev, &ftm->counter);
-> +       if (ret)
-> +               return ret;
->
->         return 0;
->  }
-> @@ -346,7 +341,6 @@ static struct platform_driver ftm_quaddec_driver = {
->                 .of_match_table = ftm_quaddec_match,
->         },
->         .probe = ftm_quaddec_probe,
-> -       .remove = ftm_quaddec_remove,
->  };
->
->  module_platform_driver(ftm_quaddec_driver);
-> --
-> 2.20.1
->
+Our work-in-progress KVMTOOL RISC-V port can be found in riscv_v1 branch at=
+:
+https//github.com/avpatel/kvmtool.git
+
+We need OpenSBI with RISC-V hypervisor extension support which can be
+found in hyp_ext_changes_v1 branch at:
+https://github.com/riscv/opensbi.git
+
+The QEMU RISC-V hypervisor emulation is done by Alistair and is available
+in riscv-hyp-work.next branch at:
+https://github.com/alistair23/qemu.git
+
+To play around with KVM RISC-V, here are few reference commands:
+1) To cross-compile KVMTOOL:
+   $ make lkvm-static
+2) To launch RISC-V Host Linux:
+   $ qemu-system-riscv64 -monitor null -cpu rv64,h=3Dtrue -M virt \
+   -m 512M -display none -serial mon:stdio \
+   -kernel opensbi/build/platform/qemu/virt/firmware/fw_jump.elf \
+   -device loader,file=3Dbuild-riscv64/arch/riscv/boot/Image,addr=3D0x80200=
+000 \
+   -initrd ./rootfs_kvm_riscv64.img \
+   -append "root=3D/dev/ram rw console=3DttyS0 earlycon=3Dsbi"
+3) To launch RISC-V Guest Linux with 9P rootfs:
+   $ ./apps/lkvm-static run -m 128 -c2 --console serial \
+   -p "console=3DttyS0 earlycon=3Duart8250,mmio,0x3f8" -k ./apps/Image --de=
+bug
+4) To launch RISC-V Guest Linux with initrd:
+   $ ./apps/lkvm-static run -m 128 -c2 --console serial \
+   -p "console=3DttyS0 earlycon=3Duart8250,mmio,0x3f8" -k ./apps/Image \
+   -i ./apps/rootfs.img --debug
+
+Anup Patel (13):
+  KVM: RISC-V: Add KVM_REG_RISCV for ONE_REG interface
+  RISC-V: Add hypervisor extension related CSR defines
+  RISC-V: Add initial skeletal KVM support
+  RISC-V: KVM: Implement VCPU create, init and destroy functions
+  RISC-V: KVM: Implement VCPU interrupts and requests handling
+  RISC-V: KVM: Implement KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls
+  RISC-V: KVM: Implement VCPU world-switch
+  RISC-V: KVM: Handle MMIO exits for VCPU
+  RISC-V: KVM: Handle WFI exits for VCPU
+  RISC-V: KVM: Implement VMID allocator
+  RISC-V: KVM: Implement stage2 page table programming
+  RISC-V: KVM: Implement MMU notifiers
+  RISC-V: Enable VIRTIO drivers in RV64 and RV32 defconfig
+
+Atish Patra (3):
+  RISC-V: KVM: Add timer functionality
+  RISC-V: KVM: FP lazy save/restore
+  RISC-V: KVM: Add SBI v0.1 support
+
+ arch/riscv/Kconfig                      |   2 +
+ arch/riscv/Makefile                     |   2 +
+ arch/riscv/configs/defconfig            |  23 +-
+ arch/riscv/configs/rv32_defconfig       |  13 +
+ arch/riscv/include/asm/csr.h            |  58 ++
+ arch/riscv/include/asm/kvm_host.h       | 232 ++++++
+ arch/riscv/include/asm/kvm_vcpu_timer.h |  32 +
+ arch/riscv/include/asm/pgtable-bits.h   |   1 +
+ arch/riscv/include/uapi/asm/kvm.h       |  74 ++
+ arch/riscv/kernel/asm-offsets.c         | 148 ++++
+ arch/riscv/kvm/Kconfig                  |  34 +
+ arch/riscv/kvm/Makefile                 |  14 +
+ arch/riscv/kvm/main.c                   |  64 ++
+ arch/riscv/kvm/mmu.c                    | 904 ++++++++++++++++++++++++
+ arch/riscv/kvm/tlb.S                    |  42 ++
+ arch/riscv/kvm/vcpu.c                   | 817 +++++++++++++++++++++
+ arch/riscv/kvm/vcpu_exit.c              | 553 +++++++++++++++
+ arch/riscv/kvm/vcpu_sbi.c               | 118 ++++
+ arch/riscv/kvm/vcpu_switch.S            | 367 ++++++++++
+ arch/riscv/kvm/vcpu_timer.c             | 106 +++
+ arch/riscv/kvm/vm.c                     | 107 +++
+ arch/riscv/kvm/vmid.c                   | 130 ++++
+ drivers/clocksource/timer-riscv.c       |   6 +
+ include/clocksource/timer-riscv.h       |  14 +
+ include/uapi/linux/kvm.h                |   1 +
+ 25 files changed, 3857 insertions(+), 5 deletions(-)
+ create mode 100644 arch/riscv/include/asm/kvm_host.h
+ create mode 100644 arch/riscv/include/asm/kvm_vcpu_timer.h
+ create mode 100644 arch/riscv/include/uapi/asm/kvm.h
+ create mode 100644 arch/riscv/kvm/Kconfig
+ create mode 100644 arch/riscv/kvm/Makefile
+ create mode 100644 arch/riscv/kvm/main.c
+ create mode 100644 arch/riscv/kvm/mmu.c
+ create mode 100644 arch/riscv/kvm/tlb.S
+ create mode 100644 arch/riscv/kvm/vcpu.c
+ create mode 100644 arch/riscv/kvm/vcpu_exit.c
+ create mode 100644 arch/riscv/kvm/vcpu_sbi.c
+ create mode 100644 arch/riscv/kvm/vcpu_switch.S
+ create mode 100644 arch/riscv/kvm/vcpu_timer.c
+ create mode 100644 arch/riscv/kvm/vm.c
+ create mode 100644 arch/riscv/kvm/vmid.c
+ create mode 100644 include/clocksource/timer-riscv.h
+
+--
+2.17.1
