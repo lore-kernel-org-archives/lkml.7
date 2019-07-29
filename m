@@ -2,108 +2,134 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07413C76192
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE213C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B31206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 821D2206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="hp55ISoU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Sfu5Udh3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h5jHjY/K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfG2Ejq (ORCPT
+        id S1726332AbfG2EoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 00:39:46 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:56253 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726818AbfG2Ejm (ORCPT
+        Mon, 29 Jul 2019 00:44:16 -0400
+Received: from mail-pf1-f180.google.com ([209.85.210.180]:38170 "EHLO
+        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfG2EoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 00:39:42 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 0AEB815E6;
-        Mon, 29 Jul 2019 00:39:41 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 29 Jul 2019 00:39:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=gbLCW5fm9NgGd
-        7NHSQsOKrpG0gqK4d9GLmhDrnziGJs=; b=hp55ISoU8+QgD334QT5GIX0PfHxLJ
-        cWMvGN9B788ZGK9aVgcIsD2ftEo+x9HRPTXoFnXiCrzRpIVPGM3pc+BfAtjZWkgP
-        CwIKZAN+/9ZqOfooOhvWy/GdAIrIq/BLf1eSqIkFPYYtNCqSH1QzX+yTwYUiTHkF
-        OaNdFXCl8O51IgFY2G51Kx6lkU9QM1hgZPO3gdrdSE46P7r+WCPZX6Sk1uyGtEai
-        BDxO3QVb0AOsqZrvnrJ366LV8Wfc95ymwrJn4OwkBG/3Vwzvrr/19kMn5+XVxnqh
-        kDttFzMPueC52PJQMoA+B21s09Ov8YTiQ9aj0lP6cy1Pgm6VB8opK78Pg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=gbLCW5fm9NgGd7NHSQsOKrpG0gqK4d9GLmhDrnziGJs=; b=Sfu5Udh3
-        PIIwUkU+eLLEDQPjOSZXztBhSJDvGsjmlZVef8IFw3zQaslUaFHBXRSkfqlWjgE9
-        WTz4hJp+2vBF8aQbaeVW4OWsxz75fHNegnguK3gCFVwGNR9nF9P/J2zyc3BqItqQ
-        bM+eFcW5VGHz5QQjpwWQhfj9DEA2nNWn2FL2cHUc9N3xBo3/f1SW2jLvC4SrqNpy
-        Mh9nANtV9BR9VQHHt+I3s5InfjFFhik+GDtyW++WGWPoi2swiRtRzkWrH/MI5dwM
-        wMo9xH2W8aVO3atUUfM30BWxKrMwDa9pTIUCqGKA9mvJFWssh4GKoluzRRJsPMIG
-        HaoEb3nwEc1hmg==
-X-ME-Sender: <xms:jHg-XXPK51iR4BfWppR7-D7MruukohO680rZTa-7jaOXfakR5sv-lw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledtgdekgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
-    ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
-    rdhiugdrrghuqeenucfkphepvddtvddrkedurddukedrfedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
-    vd
-X-ME-Proxy: <xmx:jHg-XXOOl4VUPd_LYePOGJ5Pmw0bLPq_LYXBF1DFfVcTi5JkuYLOQw>
-    <xmx:jHg-XX-YGvCONlIW1rtRfkSmX3OErjkltvkCFRk7HF3-EwZA8-HRSQ>
-    <xmx:jHg-XT7-sQvC5-4mj0JPeWJ1H8emLKDxCd1k8t7sNFmA8pM47Ipdxw>
-    <xmx:jXg-XW6cX41nswoNqn4yEttHtHJMqDRsP0avOLrCJLO2nfNvOKDiGQ>
-Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DE0FF8005A;
-        Mon, 29 Jul 2019 00:39:36 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     netdev@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
-        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] net: ftgmac100: Select ASPEED MDIO driver for the AST2600
-Date:   Mon, 29 Jul 2019 14:09:26 +0930
-Message-Id: <20190729043926.32679-5-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190729043926.32679-1-andrew@aj.id.au>
-References: <20190729043926.32679-1-andrew@aj.id.au>
+        Mon, 29 Jul 2019 00:44:15 -0400
+Received: by mail-pf1-f180.google.com with SMTP id y15so27334928pfn.5
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 21:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lFDI6SML6T6xaZaSiFzp/ikbG+8fwaD6/E8/Mnuljfg=;
+        b=h5jHjY/K6yyqOXtr5yOFQiZMVcjFt24L6rHKI5BuA7OBu3Cjn+VR1YEZlnBj7VInC6
+         +XNc4pCtZhXR8YuDKQiaCoOXSDd8YiTC/Ly6N2wgQBi7BQ3cGaYrMO4ToyHKFjVqti8F
+         A0tWvJhOIqveB3JbCmV8q8U/WNkJjZ4A5Kkv1l52kvNv0MxNU4B14YsIbrcJlNirsbN+
+         b58rS1tbIv5jjCiQHcpm01lw+XZySDgAIaeYSE9G4mqLbU+vN1klIjXyxlI2+E0aL4Xm
+         SjgXYAxPS2fzaaQ7Zzesk2ME/qvFJ/AKgSRpqsNizd1t3Yj2aoWWDQbcChaPitj1oiOF
+         luCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lFDI6SML6T6xaZaSiFzp/ikbG+8fwaD6/E8/Mnuljfg=;
+        b=VwdoDtCEPty91Nk2Au8aHTIv5zCcUB0UpkTlSHFXaWxfiB9j82GkqHM2cB8elfKRG+
+         9/JZq2dJQs2QpYeGM862wJeww98JWlwDi2MGnzSBlC68RZbVO9Yy54rOiNYhVzvI8Pg4
+         axjYaabYFc90Wp7GoT7JzxhhrWE9nVFYsYGnzxVGD830MZOKEberpEy8f9mvIqOQs/zO
+         o4ApqoJErE6r6PyVy2QakoaT9wn2Grzi94VRyyhoUGQlTwn3CuhU2RQXKk1hBbvdbBVl
+         3pKrC6SUKUDjUNHOD1KQ5I6vVwd9pGm10Qt+MdSq4H1/kxraG6G3ySo6o3xpGmJ4PriF
+         V81w==
+X-Gm-Message-State: APjAAAV5JqiZ9+cUAbTF2eNHrHfVsVgoR5aK3UCfMTWnxForiUJKbrkQ
+        eLsN5B2a/WIxfEz89IM/xsxfAaxmfnsBjQ==
+X-Google-Smtp-Source: APXvYqxX94zHNdhAue7Yk3IksR9BaJt7Qg//LgZYQuJL1V+4Kkm3SpOBcIiiSN+iFdIo+B3IXXwYpQ==
+X-Received: by 2002:a63:8ac3:: with SMTP id y186mr102007247pgd.13.1564375455041;
+        Sun, 28 Jul 2019 21:44:15 -0700 (PDT)
+Received: from OpenSuse ([103.231.91.66])
+        by smtp.gmail.com with ESMTPSA id h11sm60843675pfn.120.2019.07.28.21.44.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 28 Jul 2019 21:44:14 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 10:14:05 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Subject: Re: build error
+Message-ID: <20190729044403.GA27065@OpenSuse>
+References: <CAGnkfhySwXY7YwuQezyx6cEpemZW4Hox1_4fQJm3-5hvM3G6gw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="VS++wcV0S1rZb1Fb"
+Content-Disposition: inline
+In-Reply-To: <CAGnkfhySwXY7YwuQezyx6cEpemZW4Hox1_4fQJm3-5hvM3G6gw@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ensures we can talk to a PHY via MDIO on the AST2600, as the MDIO
-controller is now separate from the MAC.
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/net/ethernet/faraday/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+--VS++wcV0S1rZb1Fb
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/ethernet/faraday/Kconfig b/drivers/net/ethernet/faraday/Kconfig
-index a9b105803fb7..73e4f2648e49 100644
---- a/drivers/net/ethernet/faraday/Kconfig
-+++ b/drivers/net/ethernet/faraday/Kconfig
-@@ -32,6 +32,7 @@ config FTGMAC100
- 	depends on ARM || NDS32 || COMPILE_TEST
- 	depends on !64BIT || BROKEN
- 	select PHYLIB
-+	select MDIO_ASPEED if MACH_ASPEED_G6
- 	---help---
- 	  This driver supports the FTGMAC100 Gigabit Ethernet controller
- 	  from Faraday. It is used on Faraday A369, Andes AG102 and some
--- 
-2.20.1
 
+Matteo,
+
+it's look like gcc is not in your normal PATH. Could you please locate
+that fellow and realign it ,where is suppose to be.
+
+Or if I understood right (I doubt that is why asking) that you might put
+explicitly the architecture to target build with make also, that might
+help.
+
+Please do let me know, if I derailed grossly ...am not sure.. :)
+
+Thanks,
+Bhaskar
+
+On 22:08 Sun 28 Jul 2019, Matteo Croce wrote:
+>Hi,
+>
+>I get this build error with 5.3-rc2"
+>
+># make
+>arch/arm64/Makefile:58: gcc not found, check CROSS_COMPILE_COMPAT.  Stop.
+>
+>I didn't bisect the tree, but I guess that this kconfig can be related
+>
+># grep CROSS_COMPILE_COMPAT .config
+>CONFIG_CROSS_COMPILE_COMPAT_VDSO=3D""
+>
+>Does someone have any idea? Am I missing something?
+>
+>Thanks,
+>--=20
+>Matteo Croce
+>per aspera ad upstream
+
+--VS++wcV0S1rZb1Fb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl0+eYAACgkQsjqdtxFL
+KRWD8gf7B3C4eQbJDjr+qcikIHk5D7vFZl6zTkyjyELHFJF9PLCpPjkBPV6XTBqt
++LzajOLzOhVQO30b/8uwi6FZYECxAFWGfk6qVmAJ4sjFFAvzFapoBdAe72/9D9Bc
+3pQAKpgmuHmrE8gG2f7FXoSd4/38DWg69AvhE+a0wMHMAu2Ku09khH4BB9TZkZBG
+OQrdPHhWDBZmBVRauaPjCrQlEJWvHXrjxSLhCBipxStTp4KbfhzdLPiaF1s3AbJi
+c6aalQYBQj+KVhWKUS4RrTHXCJ1XHFhTVZ9buoRrSrM8qHuN9TzOsSzo51d5B8wB
+PAYzSd0RSH4eCyCgGsCUW7og4QizXA==
+=sTEb
+-----END PGP SIGNATURE-----
+
+--VS++wcV0S1rZb1Fb--
