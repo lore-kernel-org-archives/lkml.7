@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D98C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A02C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8633D206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E1120C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429188;
-	bh=w6P2RXLs4wLpR1iPJ0bPAFG4Cw4EbkP9xLa2G7BB7CI=;
+	s=default; t=1564429191;
+	bh=Dy+mP6/z7F+URNGN847OT3oP1xXKieBtNARvfCIfpKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ck+UKB3gofaQP1CXI1cmhFj2QHjn7DlsfYZZlFJln3Ya2FomXqzj8/8gxufu0MhHr
-	 qhWjv3v4F/FyzVlXswGfoW6jVEazGWbeGrwqXgOBc7WVWNNjeF8Pa/GgA3HPC10r5l
-	 wvXUNRzNF+AfZ4J9A1zmgbtg1uaCU4SbYM3djAA0=
+	b=BUwYyf58RKxUv3xBZ+OKS5f3JOxzCqy4cWvDOQG6+rmPNSP3Tx4Ww4OWHENgDt/6x
+	 TZe9Zucq/KprAvkte4SYjujSRQnrcTuPBGWmgx1EryRooLI4cWp1o2NRbUE0dNknvq
+	 KrdyvO/RXzUQKCrc7YhxdWgyncvEX1z5Y5SYKsjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389040AbfG2Tjq (ORCPT
+        id S2389049AbfG2Tju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:39:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54836 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:39:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389027AbfG2Tjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:39:40 -0400
+        id S2389031AbfG2Tjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:39:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C064206DD;
-        Mon, 29 Jul 2019 19:39:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 224B0206DD;
+        Mon, 29 Jul 2019 19:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429179;
-        bh=w6P2RXLs4wLpR1iPJ0bPAFG4Cw4EbkP9xLa2G7BB7CI=;
+        s=default; t=1564429182;
+        bh=Dy+mP6/z7F+URNGN847OT3oP1xXKieBtNARvfCIfpKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwW7nHPFFgWySVRuQLi/uemSfxuYzd2ybiPSJDROTgjkadObLyNLvzOtFkVjvnl1T
-         zx0rGQErlL0X23dUtiGeK06TyMQF9UXaOxIOBGDC+//f0rFAZe5Z51HfYEIywyRuAU
-         MA/pQNWhLDiOBHREkb2eoBaEzp0yGta9ZEEUK7Ho=
+        b=yijx176YnDdgr4Qd78B7x1GD2Znx0FE4GuI3acGOgDY48IMisGNQu+rQwjcrctQaL
+         nKfz/o4/R7IRKy2sVzUlSxvNP209+kyLVljQFvG1S4deOwBEVNGQ54Kk/0qmD8h0B2
+         VuJbfGHp5pekrg2izyPyJnqHx9lpfknVH4888bKQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        stable@vger.kernel.org, Jyri Sarha <jsarha@ti.com>,
         Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 017/113] drm/bridge: tc358767: read display_props in get_modes()
-Date:   Mon, 29 Jul 2019 21:21:44 +0200
-Message-Id: <20190729190659.938799926@linuxfoundation.org>
+Subject: [PATCH 4.19 018/113] drm/bridge: sii902x: pixel clock unit is 10kHz instead of 1kHz
+Date:   Mon, 29 Jul 2019 21:21:45 +0200
+Message-Id: <20190729190700.176112881@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,42 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3231573065ad4f4ecc5c9147b24f29f846dc0c2f ]
+[ Upstream commit 8dbfc5b65023b67397aca28e8adb25c819f6398c ]
 
-We need to know the link bandwidth to filter out modes we cannot
-support, so we need to have read the display props before doing the
-filtering.
+The pixel clock unit in the first two registers (0x00 and 0x01) of
+sii9022 is 10kHz, not 1kHz as in struct drm_display_mode. Division by
+10 fixes the issue.
 
-To ensure we have up to date display props, call tc_get_display_props()
-in the beginning of tc_connector_get_modes().
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190528082747.3631-22-tomi.valkeinen@ti.com
+Link: https://patchwork.freedesktop.org/patch/msgid/1a2a8eae0b9d6333e7a5841026bf7fd65c9ccd09.1558964241.git.jsarha@ti.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/tc358767.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/bridge/sii902x.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index 391547358756..aaca5248da07 100644
---- a/drivers/gpu/drm/bridge/tc358767.c
-+++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -1149,6 +1149,13 @@ static int tc_connector_get_modes(struct drm_connector *connector)
- 	struct tc_data *tc = connector_to_tc(connector);
- 	struct edid *edid;
- 	unsigned int count;
-+	int ret;
-+
-+	ret = tc_get_display_props(tc);
-+	if (ret < 0) {
-+		dev_err(tc->dev, "failed to read display props: %d\n", ret);
-+		return 0;
-+	}
+diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+index e59a13542333..0cc6dbbcddcf 100644
+--- a/drivers/gpu/drm/bridge/sii902x.c
++++ b/drivers/gpu/drm/bridge/sii902x.c
+@@ -261,10 +261,11 @@ static void sii902x_bridge_mode_set(struct drm_bridge *bridge,
+ 	struct regmap *regmap = sii902x->regmap;
+ 	u8 buf[HDMI_INFOFRAME_SIZE(AVI)];
+ 	struct hdmi_avi_infoframe frame;
++	u16 pixel_clock_10kHz = adj->clock / 10;
+ 	int ret;
  
- 	if (tc->panel && tc->panel->funcs && tc->panel->funcs->get_modes) {
- 		count = tc->panel->funcs->get_modes(tc->panel);
+-	buf[0] = adj->clock;
+-	buf[1] = adj->clock >> 8;
++	buf[0] = pixel_clock_10kHz & 0xff;
++	buf[1] = pixel_clock_10kHz >> 8;
+ 	buf[2] = adj->vrefresh;
+ 	buf[3] = 0x00;
+ 	buf[4] = adj->hdisplay;
 -- 
 2.20.1
 
