@@ -7,61 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A41C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21938C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCFE02073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA273206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:30:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="n/Yd1qw+"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="A/Z1UCRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388490AbfG2V3p (ORCPT
+        id S2388577AbfG2VaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:29:45 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54137 "EHLO
+        Mon, 29 Jul 2019 17:30:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42273 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387905AbfG2V3p (ORCPT
+        with ESMTP id S1727952AbfG2VaW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:29:45 -0400
+        Mon, 29 Jul 2019 17:30:22 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6TLTQwc2940623
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6TLU9Q52940848
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 29 Jul 2019 14:29:27 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6TLTQwc2940623
+        Mon, 29 Jul 2019 14:30:09 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6TLU9Q52940848
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564435767;
-        bh=o3MBluRnNgMlgnWkAQGCskmFywAsnd/PHSQzzPvYUjI=;
+        s=2019071901; t=1564435810;
+        bh=hzGhLpR2fcVwu+IlVksH3f8Q3dephyCErzWfeOqEbSU=;
         h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=n/Yd1qw+PPQ899A5FIodBBP6Lg22iyffsQOCFhvhqnliIgiQIaUAuq59/ZnveA9DO
-         frdCbYQo2TlFlMaFwAGQbLtJHn8fvtoWKWV8GmcIqfwSpLeY15ivcQ65bE2y7SIYnh
-         BzKyOrwDwoBmBPxrtozFffZopsja/3TXUGYz6v6f+6V+UNQqq0tRyn3F/koxZQ22Bm
-         9bV4w9gNqF3CBWK2dg0HZakl+UYUGCKGg6/3xRWo0XvXOE6reubsLh1gZmD/x3Qvy6
-         Cql8/YIrggKXt2xEopk+S4oqjMyxpLPkReZqF9m5aAXFuqgRWVJ8lCRbgmIHXVuQKe
-         YeS4CPy22JcUQ==
+        b=A/Z1UCRueTVzBhDe1ah39y5byu8sD2VdNR1+gnQgnXowFfLD98BSQeZTY5aWWBQL6
+         W6P4GJmzdUcsNGe0heu0l518sRk2UqemSVAHF/3FAI6a8mEQyvnNQHKw1NFJtoVJCC
+         b7hqus+Dy+0ZLPQKjkR5559xYk2kptiR9QAmg2s1Q1h/6aHzKzyXr19+Ez6ZVIxeyL
+         Mgxb6wukIJM18cahCHaTt/lfUO7OzqhKKv1mMpHftCjybFn0yYkFjV+g+ZgSAWEtid
+         5QXeLSCdg85SOOruGYnYVCv26cZoyw0d6SUJHYpeFSoxeBAvfeazca8VkBSp8acEuL
+         oxXQ+gqLhcv1A==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6TLTQKq2940620;
-        Mon, 29 Jul 2019 14:29:26 -0700
-Date:   Mon, 29 Jul 2019 14:29:26 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6TLU9X62940845;
+        Mon, 29 Jul 2019 14:30:09 -0700
+Date:   Mon, 29 Jul 2019 14:30:09 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-py1gcmt6rboehlwg6zvagfg2@git.kernel.org>
-Cc:     hpa@zytor.com, jolsa@kernel.org, pbonzini@redhat.com,
-        lclaudio@redhat.com, namhyung@kernel.org, ehankland@google.com,
-        brendan.d.gregg@gmail.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, andre.przywara@arm.com,
-        sean.j.christopherson@intel.com, adrian.hunter@intel.com,
-        marc.zyngier@arm.com, mingo@kernel.org, acme@redhat.com
-Reply-To: lclaudio@redhat.com, pbonzini@redhat.com, jolsa@kernel.org,
-          hpa@zytor.com, acme@redhat.com, mingo@kernel.org,
-          marc.zyngier@arm.com, adrian.hunter@intel.com,
-          andre.przywara@arm.com, sean.j.christopherson@intel.com,
-          tglx@linutronix.de, brendan.d.gregg@gmail.com,
-          linux-kernel@vger.kernel.org, namhyung@kernel.org,
-          ehankland@google.com
+Message-ID: <tip-fzqvzni9megaurmsp0k4vy27@git.kernel.org>
+Cc:     adrian.hunter@intel.com, hpa@zytor.com, hch@lst.de,
+        acme@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        aneesh.kumar@linux.ibm.com, mingo@kernel.org, tglx@linutronix.de,
+        jolsa@kernel.org, lclaudio@redhat.com
+Reply-To: lclaudio@redhat.com, jolsa@kernel.org, tglx@linutronix.de,
+          aneesh.kumar@linux.ibm.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
+          hpa@zytor.com, hch@lst.de, acme@redhat.com, namhyung@kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] tools headers UAPI: Update tools's copy of kvm.h
+Subject: [tip:perf/urgent] tools headers UAPI: Update tools's copy of mman.h
  headers
-Git-Commit-ID: e0d99c4d24fd8861da724b88ebd18a9fae8a2260
+Git-Commit-ID: b830f94f7303a49d509d5b1bb34ecb2e648b23c4
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -75,186 +70,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e0d99c4d24fd8861da724b88ebd18a9fae8a2260
-Gitweb:     https://git.kernel.org/tip/e0d99c4d24fd8861da724b88ebd18a9fae8a2260
+Commit-ID:  b830f94f7303a49d509d5b1bb34ecb2e648b23c4
+Gitweb:     https://git.kernel.org/tip/b830f94f7303a49d509d5b1bb34ecb2e648b23c4
 Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Fri, 26 Jul 2019 12:43:23 -0300
+AuthorDate: Fri, 26 Jul 2019 12:49:00 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Fri, 26 Jul 2019 12:43:23 -0300
+CommitDate: Mon, 29 Jul 2019 09:02:58 -0300
 
-tools headers UAPI: Update tools's copy of kvm.h headers
+tools headers UAPI: Update tools's copy of mman.h headers
 
-Picking the changes from:
+To pick up the changes from:
 
-  66bb8a065f5a ("KVM: x86: PMU Event Filter")
-  f087a02941fe ("KVM: nVMX: Stash L1's CR3 in vmcs01.GUEST_CR3 on nested entry w/o EPT")
-  99adb567632b ("KVM: arm/arm64: Add save/restore support for firmware workaround state")
+  8aa3c927ec10 ("mm/mmap: move common defines to mman-common.h")
+  22fcea6f85f2 ("mm: move MAP_SYNC to asm-generic/mman-common.h")
+  0bf5f9492389 ("mm: fix the MAP_UNINITIALIZED flag")
 
-Silencing this perf build warning:
+To address the following perf build warnings:
 
-  Warning: Kernel ABI header at 'tools/arch/arm/include/uapi/asm/kvm.h' differs from latest version at 'arch/arm/include/uapi/asm/kvm.h'
-  diff -u tools/arch/arm/include/uapi/asm/kvm.h arch/arm/include/uapi/asm/kvm.h
-  Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/kvm.h' differs from latest version at 'arch/arm64/include/uapi/asm/kvm.h'
-  diff -u tools/arch/arm64/include/uapi/asm/kvm.h arch/arm64/include/uapi/asm/kvm.h
-  Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/vmx.h' differs from latest version at 'arch/x86/include/uapi/asm/vmx.h'
-  diff -u tools/arch/x86/include/uapi/asm/vmx.h arch/x86/include/uapi/asm/vmx.h
-  Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/kvm.h' differs from latest version at 'arch/x86/include/uapi/asm/kvm.h'
-  diff -u tools/arch/x86/include/uapi/asm/kvm.h arch/x86/include/uapi/asm/kvm.h
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs from latest version at 'include/uapi/linux/kvm.h'
-  diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
+  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/mman-common.h' differs from latest version at 'include/uapi/asm-generic/mman-common.h'
+  diff -u tools/include/uapi/asm-generic/mman-common.h include/uapi/asm-generic/mman-common.h
+  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/mman.h' differs from latest version at 'include/uapi/asm-generic/mman.h'
+  diff -u tools/include/uapi/asm-generic/mman.h include/uapi/asm-generic/mman.h
 
-Now 'perf trace' and other code that might use the tools/perf/trace/beauty autogenerated
-tables will be able to translate this new ioctl code into a string:
+That ends up just moving a bit the auto-generated code->string tables:
 
-  $ tools/perf/trace/beauty/kvm_ioctl.sh > before
-  $
-  $ cp include/uapi/linux/kvm.h tools/include/uapi/linux/kvm.h
-  $ tools/perf/trace/beauty/kvm_ioctl.sh > after
+  $ tools/perf/trace/beauty/mmap_flags.sh > before
+  $ cp include/uapi/asm-generic/mman.h tools/include/uapi/asm-generic/mman.h
+  $ cp include/uapi/asm-generic/mman-common.h tools/include/uapi/asm-generic/mman-common.h
+  $ tools/perf/trace/beauty/mmap_flags.sh > after
   $ diff -u before after
-  --- before 2019-07-26 12:32:47.959220236 -0300
-  +++ after 2019-07-26 12:33:05.766464871 -0300
-  @@ -79,6 +79,7 @@
-        [0xac] = "SET_ONE_REG",
-        [0xad] = "KVMCLOCK_CTRL",
-        [0xb0] = "GET_REG_LIST",
-  +     [0xb2] = "SET_PMU_EVENT_FILTER",
-        [0xb7] = "SMI",
-        [0xba] = "MEMORY_ENCRYPT_OP",
-        [0xbb] = "MEMORY_ENCRYPT_REG_REGION",
+  --- before 2019-07-26 12:45:02.948335904 -0300
+  +++ after 2019-07-26 12:48:05.342893539 -0300
+  @@ -4,15 +4,15 @@
+          [ilog2(0x02) + 1] = "PRIVATE",
+          [ilog2(0x10) + 1] = "FIXED",
+          [ilog2(0x20) + 1] = "ANONYMOUS",
+  +       [ilog2(0x008000) + 1] = "POPULATE",
+  +       [ilog2(0x010000) + 1] = "NONBLOCK",
+  +       [ilog2(0x020000) + 1] = "STACK",
+  +       [ilog2(0x040000) + 1] = "HUGETLB",
+  +       [ilog2(0x080000) + 1] = "SYNC",
+          [ilog2(0x100000) + 1] = "FIXED_NOREPLACE",
+          [ilog2(0x0100) + 1] = "GROWSDOWN",
+          [ilog2(0x0800) + 1] = "DENYWRITE",
+          [ilog2(0x1000) + 1] = "EXECUTABLE",
+          [ilog2(0x2000) + 1] = "LOCKED",
+          [ilog2(0x4000) + 1] = "NORESERVE",
+  -       [ilog2(0x8000) + 1] = "POPULATE",
+  -       [ilog2(0x10000) + 1] = "NONBLOCK",
+  -       [ilog2(0x20000) + 1] = "STACK",
+  -       [ilog2(0x40000) + 1] = "HUGETLB",
+  -       [ilog2(0x80000) + 1] = "SYNC",
+   };
   $
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andre Przywara <andre.przywara@arm.com>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Eric Hankland <ehankland@google.com>
+Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Christoph Hellwig <hch@lst.de>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Link: https://lkml.kernel.org/n/tip-py1gcmt6rboehlwg6zvagfg2@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-fzqvzni9megaurmsp0k4vy27@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/arm/include/uapi/asm/kvm.h   | 12 ++++++++++++
- tools/arch/arm64/include/uapi/asm/kvm.h | 10 ++++++++++
- tools/arch/x86/include/uapi/asm/kvm.h   | 22 ++++++++++++++++++----
- tools/arch/x86/include/uapi/asm/vmx.h   |  1 -
- tools/include/uapi/linux/kvm.h          |  3 +++
- 5 files changed, 43 insertions(+), 5 deletions(-)
+ tools/arch/powerpc/include/uapi/asm/mman.h   |  4 ----
+ tools/arch/sparc/include/uapi/asm/mman.h     |  4 ----
+ tools/include/uapi/asm-generic/mman-common.h | 15 +++++++++------
+ tools/include/uapi/asm-generic/mman.h        | 10 ++++------
+ 4 files changed, 13 insertions(+), 20 deletions(-)
 
-diff --git a/tools/arch/arm/include/uapi/asm/kvm.h b/tools/arch/arm/include/uapi/asm/kvm.h
-index 4602464ebdfb..a4217c1a5d01 100644
---- a/tools/arch/arm/include/uapi/asm/kvm.h
-+++ b/tools/arch/arm/include/uapi/asm/kvm.h
-@@ -214,6 +214,18 @@ struct kvm_vcpu_events {
- #define KVM_REG_ARM_FW_REG(r)		(KVM_REG_ARM | KVM_REG_SIZE_U64 | \
- 					 KVM_REG_ARM_FW | ((r) & 0xffff))
- #define KVM_REG_ARM_PSCI_VERSION	KVM_REG_ARM_FW_REG(0)
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_1	KVM_REG_ARM_FW_REG(1)
-+	/* Higher values mean better protection. */
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_1_NOT_AVAIL		0
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_1_AVAIL		1
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_1_NOT_REQUIRED	2
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2	KVM_REG_ARM_FW_REG(2)
-+	/* Higher values mean better protection. */
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2_NOT_AVAIL		0
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2_UNKNOWN		1
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2_AVAIL		2
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2_NOT_REQUIRED	3
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2_ENABLED	(1U << 4)
+diff --git a/tools/arch/powerpc/include/uapi/asm/mman.h b/tools/arch/powerpc/include/uapi/asm/mman.h
+index f33105bc5ca6..8601d824a9c6 100644
+--- a/tools/arch/powerpc/include/uapi/asm/mman.h
++++ b/tools/arch/powerpc/include/uapi/asm/mman.h
+@@ -4,12 +4,8 @@
+ #define MAP_DENYWRITE	0x0800
+ #define MAP_EXECUTABLE	0x1000
+ #define MAP_GROWSDOWN	0x0100
+-#define MAP_HUGETLB	0x40000
+ #define MAP_LOCKED	0x80
+-#define MAP_NONBLOCK	0x10000
+ #define MAP_NORESERVE   0x40
+-#define MAP_POPULATE	0x8000
+-#define MAP_STACK	0x20000
+ #include <uapi/asm-generic/mman-common.h>
+ /* MAP_32BIT is undefined on powerpc, fix it for perf */
+ #define MAP_32BIT	0
+diff --git a/tools/arch/sparc/include/uapi/asm/mman.h b/tools/arch/sparc/include/uapi/asm/mman.h
+index 38920eed8cbf..7b94dccc843d 100644
+--- a/tools/arch/sparc/include/uapi/asm/mman.h
++++ b/tools/arch/sparc/include/uapi/asm/mman.h
+@@ -4,12 +4,8 @@
+ #define MAP_DENYWRITE	0x0800
+ #define MAP_EXECUTABLE	0x1000
+ #define MAP_GROWSDOWN	0x0200
+-#define MAP_HUGETLB	0x40000
+ #define MAP_LOCKED      0x100
+-#define MAP_NONBLOCK	0x10000
+ #define MAP_NORESERVE   0x40
+-#define MAP_POPULATE	0x8000
+-#define MAP_STACK	0x20000
+ #include <uapi/asm-generic/mman-common.h>
+ /* MAP_32BIT is undefined on sparc, fix it for perf */
+ #define MAP_32BIT	0
+diff --git a/tools/include/uapi/asm-generic/mman-common.h b/tools/include/uapi/asm-generic/mman-common.h
+index abd238d0f7a4..63b1f506ea67 100644
+--- a/tools/include/uapi/asm-generic/mman-common.h
++++ b/tools/include/uapi/asm-generic/mman-common.h
+@@ -19,15 +19,18 @@
+ #define MAP_TYPE	0x0f		/* Mask for type of mapping */
+ #define MAP_FIXED	0x10		/* Interpret addr exactly */
+ #define MAP_ANONYMOUS	0x20		/* don't use a file */
+-#ifdef CONFIG_MMAP_ALLOW_UNINITIALIZED
+-# define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be uninitialized */
+-#else
+-# define MAP_UNINITIALIZED 0x0		/* Don't support this flag */
+-#endif
  
- /* Device Control API: ARM VGIC */
- #define KVM_DEV_ARM_VGIC_GRP_ADDR	0
-diff --git a/tools/arch/arm64/include/uapi/asm/kvm.h b/tools/arch/arm64/include/uapi/asm/kvm.h
-index d819a3e8b552..9a507716ae2f 100644
---- a/tools/arch/arm64/include/uapi/asm/kvm.h
-+++ b/tools/arch/arm64/include/uapi/asm/kvm.h
-@@ -229,6 +229,16 @@ struct kvm_vcpu_events {
- #define KVM_REG_ARM_FW_REG(r)		(KVM_REG_ARM64 | KVM_REG_SIZE_U64 | \
- 					 KVM_REG_ARM_FW | ((r) & 0xffff))
- #define KVM_REG_ARM_PSCI_VERSION	KVM_REG_ARM_FW_REG(0)
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_1	KVM_REG_ARM_FW_REG(1)
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_1_NOT_AVAIL		0
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_1_AVAIL		1
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_1_NOT_REQUIRED	2
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2	KVM_REG_ARM_FW_REG(2)
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2_NOT_AVAIL		0
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2_UNKNOWN		1
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2_AVAIL		2
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2_NOT_REQUIRED	3
-+#define KVM_REG_ARM_SMCCC_ARCH_WORKAROUND_2_ENABLED     	(1U << 4)
+-/* 0x0100 - 0x80000 flags are defined in asm-generic/mman.h */
++/* 0x0100 - 0x4000 flags are defined in asm-generic/mman.h */
++#define MAP_POPULATE		0x008000	/* populate (prefault) pagetables */
++#define MAP_NONBLOCK		0x010000	/* do not block on IO */
++#define MAP_STACK		0x020000	/* give out an address that is best suited for process/thread stacks */
++#define MAP_HUGETLB		0x040000	/* create a huge page mapping */
++#define MAP_SYNC		0x080000 /* perform synchronous page faults for the mapping */
+ #define MAP_FIXED_NOREPLACE	0x100000	/* MAP_FIXED which doesn't unmap underlying mapping */
  
- /* SVE registers */
- #define KVM_REG_ARM64_SVE		(0x15 << KVM_REG_ARM_COPROC_SHIFT)
-diff --git a/tools/arch/x86/include/uapi/asm/kvm.h b/tools/arch/x86/include/uapi/asm/kvm.h
-index d6ab5b4d15e5..503d3f42da16 100644
---- a/tools/arch/x86/include/uapi/asm/kvm.h
-+++ b/tools/arch/x86/include/uapi/asm/kvm.h
-@@ -378,10 +378,11 @@ struct kvm_sync_regs {
- 	struct kvm_vcpu_events events;
- };
- 
--#define KVM_X86_QUIRK_LINT0_REENABLED	(1 << 0)
--#define KVM_X86_QUIRK_CD_NW_CLEARED	(1 << 1)
--#define KVM_X86_QUIRK_LAPIC_MMIO_HOLE	(1 << 2)
--#define KVM_X86_QUIRK_OUT_7E_INC_RIP	(1 << 3)
-+#define KVM_X86_QUIRK_LINT0_REENABLED	   (1 << 0)
-+#define KVM_X86_QUIRK_CD_NW_CLEARED	   (1 << 1)
-+#define KVM_X86_QUIRK_LAPIC_MMIO_HOLE	   (1 << 2)
-+#define KVM_X86_QUIRK_OUT_7E_INC_RIP	   (1 << 3)
-+#define KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT (1 << 4)
- 
- #define KVM_STATE_NESTED_FORMAT_VMX	0
- #define KVM_STATE_NESTED_FORMAT_SVM	1	/* unused */
-@@ -432,4 +433,17 @@ struct kvm_nested_state {
- 	} data;
- };
- 
-+/* for KVM_CAP_PMU_EVENT_FILTER */
-+struct kvm_pmu_event_filter {
-+	__u32 action;
-+	__u32 nevents;
-+	__u32 fixed_counter_bitmap;
-+	__u32 flags;
-+	__u32 pad[4];
-+	__u64 events[0];
-+};
++#define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
++					 * uninitialized */
 +
-+#define KVM_PMU_EVENT_ALLOW 0
-+#define KVM_PMU_EVENT_DENY 1
-+
- #endif /* _ASM_X86_KVM_H */
-diff --git a/tools/arch/x86/include/uapi/asm/vmx.h b/tools/arch/x86/include/uapi/asm/vmx.h
-index d213ec5c3766..f0b0c90dd398 100644
---- a/tools/arch/x86/include/uapi/asm/vmx.h
-+++ b/tools/arch/x86/include/uapi/asm/vmx.h
-@@ -146,7 +146,6 @@
+ /*
+  * Flags for mlock
+  */
+diff --git a/tools/include/uapi/asm-generic/mman.h b/tools/include/uapi/asm-generic/mman.h
+index 36c197fc44a0..406f7718f9ad 100644
+--- a/tools/include/uapi/asm-generic/mman.h
++++ b/tools/include/uapi/asm-generic/mman.h
+@@ -9,13 +9,11 @@
+ #define MAP_EXECUTABLE	0x1000		/* mark it as an executable */
+ #define MAP_LOCKED	0x2000		/* pages are locked */
+ #define MAP_NORESERVE	0x4000		/* don't check for reservations */
+-#define MAP_POPULATE	0x8000		/* populate (prefault) pagetables */
+-#define MAP_NONBLOCK	0x10000		/* do not block on IO */
+-#define MAP_STACK	0x20000		/* give out an address that is best suited for process/thread stacks */
+-#define MAP_HUGETLB	0x40000		/* create a huge page mapping */
+-#define MAP_SYNC	0x80000		/* perform synchronous page faults for the mapping */
  
- #define VMX_ABORT_SAVE_GUEST_MSR_FAIL        1
- #define VMX_ABORT_LOAD_HOST_PDPTE_FAIL       2
--#define VMX_ABORT_VMCS_CORRUPTED             3
- #define VMX_ABORT_LOAD_HOST_MSR_FAIL         4
+-/* Bits [26:31] are reserved, see mman-common.h for MAP_HUGETLB usage */
++/*
++ * Bits [26:31] are reserved, see asm-generic/hugetlb_encode.h
++ * for MAP_HUGETLB usage
++ */
  
- #endif /* _UAPIVMX_H */
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index c2152f3dd02d..a7c19540ce21 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -995,6 +995,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_ARM_SVE 170
- #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
- #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
-+#define KVM_CAP_PMU_EVENT_FILTER 173
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-@@ -1329,6 +1330,8 @@ struct kvm_s390_ucas_mapping {
- #define KVM_PPC_GET_RMMU_INFO	  _IOW(KVMIO,  0xb0, struct kvm_ppc_rmmu_info)
- /* Available with KVM_CAP_PPC_GET_CPU_CHAR */
- #define KVM_PPC_GET_CPU_CHAR	  _IOR(KVMIO,  0xb1, struct kvm_ppc_cpu_char)
-+/* Available with KVM_CAP_PMU_EVENT_FILTER */
-+#define KVM_SET_PMU_EVENT_FILTER  _IOW(KVMIO,  0xb2, struct kvm_pmu_event_filter)
- 
- /* ioctl for vm fd */
- #define KVM_CREATE_DEVICE	  _IOWR(KVMIO,  0xe0, struct kvm_create_device)
+ #define MCL_CURRENT	1		/* lock all current mappings */
+ #define MCL_FUTURE	2		/* lock all future mappings */
