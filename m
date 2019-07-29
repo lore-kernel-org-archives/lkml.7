@@ -2,116 +2,106 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922FBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EADC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9442067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:39:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qtPhQ+bN"
+	by mail.kernel.org (Postfix) with ESMTP id 229622067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388021AbfG2Pjg (ORCPT
+        id S2388093AbfG2PkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:39:36 -0400
-Received: from mail-eopbgr20063.outbound.protection.outlook.com ([40.107.2.63]:58894
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387496AbfG2Pjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:39:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GaNdccnlO4Vhm73ip3X1mpCWN5iJAKPJCP1aWNMkYl8fb9giwhrCB08uguVESxzXC04HtBFqLLkeA+OkoUeOWFaY1fmCiyOPuRDXAjQllub+GbB/szEoUy504qmuj8KVA7OT8UBb1UyX6fwld9gB3dvH+SbwxS5N2sev65dJDzkpSQ44XJWSMSHOLoCmbIVbxEFLPd1rahjS5J9/VRRevTwNfcC64g+7rS09HIzee78LI5Q/mZ3Ak87Lucimb+8XUx9IZU+Z+5sY/PSuyegfhQpZIxX562jcFrdkwl0JpCJZtfkOjS9LXY/cHE0+dXm36FtShE1tqCVArE/UwuDDxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M0VGKXhn0DuBIy37MHBwPHlh7x1/6FWHVs/R1HlowrY=;
- b=MAB8/6PsPy7OLxu2hrMzXPKuI589dKT9lnI7yBMzJfWp/XyFsH7+RolLisOVxER38X5L5gxuYxhk3droZvT4urB1U4rpU56I2LfycuvTla9OWk62bDHPWgD65qkoutmLgVbbSYZiqyNVOCbJV720ihk41dBil20FJ2RKZv+zIciTYZ40mveOnrJThq8MrChzxDTSN21Q8fCRhVaVY+qhv0qKYzmF3xcOW6CjPXZZdfhwlq025kykaV5ojDXQg+IKu4+iT3yHItpwY+vKOPUIo423GJBd9WB2wy/7qdN/L217+Rx+/hpvUOrvpY3stHkIISHHQVhFbgx2HkfjuBOdUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M0VGKXhn0DuBIy37MHBwPHlh7x1/6FWHVs/R1HlowrY=;
- b=qtPhQ+bN7IsQR4z4q7LMRSv/xzJEh994YdjYZQT3b+oyWLkqvPWKFrs4sadFG1qE09Bne1uHCHTPMCHylz3d+touN8oEdpHn0v8zKWMrVx7NcH8JM5rl3bpVxzJHhcyKzGHLOWZvXVeVVuAVLKeQBgA1Ii2hdSPluIEEnToaurc=
-Received: from VI1PR04MB4880.eurprd04.prod.outlook.com (20.177.49.153) by
- VI1PR04MB5197.eurprd04.prod.outlook.com (20.177.51.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Mon, 29 Jul 2019 15:39:32 +0000
-Received: from VI1PR04MB4880.eurprd04.prod.outlook.com
- ([fe80::e401:6546:3729:47c0]) by VI1PR04MB4880.eurprd04.prod.outlook.com
- ([fe80::e401:6546:3729:47c0%6]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
- 15:39:32 +0000
-From:   Claudiu Manoil <claudiu.manoil@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next v3 2/4] enetc: Add mdio bus driver for the PCIe
- MDIO endpoint
-Thread-Topic: [PATCH net-next v3 2/4] enetc: Add mdio bus driver for the PCIe
- MDIO endpoint
-Thread-Index: AQHVRfTzIlSQL21yzUKJl+LDCQ5gdabhupAA////0TA=
-Date:   Mon, 29 Jul 2019 15:39:31 +0000
-Message-ID: <VI1PR04MB48806AF2F6CEDE105B78086696DD0@VI1PR04MB4880.eurprd04.prod.outlook.com>
-References: <1564394627-3810-1-git-send-email-claudiu.manoil@nxp.com>
- <1564394627-3810-3-git-send-email-claudiu.manoil@nxp.com>
- <20190729153524.GG4110@lunn.ch>
-In-Reply-To: <20190729153524.GG4110@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=claudiu.manoil@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2c90a2cd-1c52-4d3b-864a-08d7143af364
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB5197;
-x-ms-traffictypediagnostic: VI1PR04MB5197:
-x-microsoft-antispam-prvs: <VI1PR04MB5197B8012BA2CFCFC392D2EF96DD0@VI1PR04MB5197.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 01136D2D90
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(396003)(346002)(376002)(366004)(39860400002)(136003)(13464003)(189003)(199004)(33656002)(71190400001)(86362001)(52536014)(6916009)(99286004)(8676002)(305945005)(71200400001)(5660300002)(25786009)(256004)(76176011)(7736002)(76116006)(66946007)(6246003)(66556008)(64756008)(66476007)(66446008)(74316002)(4326008)(68736007)(102836004)(6506007)(66066001)(6436002)(26005)(55016002)(14454004)(229853002)(7696005)(446003)(316002)(54906003)(486006)(11346002)(186003)(44832011)(476003)(478600001)(8936002)(53936002)(9686003)(81166006)(81156014)(2906002)(3846002)(6116002)(4744005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5197;H:VI1PR04MB4880.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: A43O05XHdcMAWQlB14ieyvWtnEva87NU3cFbAMxKn51xArS9s4uDXfl6bxqThgH2KVJmejPwD9pLttZX/zHs5nfM8MM1KwIPKy4nsjMKzHf+5yHQbmyIT9MNbJCCxWCkzvBupfApUmqxrc7J/xSDPJa6tpVNLxZ734JjU8RaohJ9ti2RvdJ7pAg0yjNvYcygIHPNZIxINdGPCm3gCxADTNNceNWYOKnevSffIN4e7CFvzoPWwQScEVJkLp1BHZwhkUHgd2YEyU2wqNpVjb2O4SI/HZOABQyiCag7woefH9+zHqz/jZE+5/o+PqUczEU+4a18/I4t/0Q6x/uDdvV23iYQceEpLQpH/QqbA2Tww8U4p60YEPdS6fofm9N5X/VHRWqE9mi1kiX6ZN+8E7+gTh+Jurc/cAenlTworOfyiaE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 29 Jul 2019 11:40:04 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50994 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387496AbfG2PkE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:40:04 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v15so54313856wml.0;
+        Mon, 29 Jul 2019 08:40:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CmXay1x1IIZbcae9B/nzgC2i3GQA4IAuHtEVfu4g9Tw=;
+        b=UcKVtZ+GtKoGy23ls5y7hSLAMqN0maOm/n84NQv7B2QKT3CXLXVTcMzy4xYpSSxQ0Z
+         7KaB0jDrm/HJNiLSSQcAgQu/6BziGAcPrQqan4fX0WrW2YSbdVmKSVQFudJC+h+Qa+09
+         YillfqN8G0jMA/n4BECainDr0rp6tku2Xnhze1x2i8g/NxiAYgqnJS0JLKce6B9uD9hp
+         8c57jiTUQqwf+3q1jrlbMAvWDVIfeBFmyr1pLuCda2Z+uKJyYXpD1Dji00+WATg4eSEo
+         rpt3sVcB0R734uQo7iz/nsDdKeJGCpCnkuDYb+CObpFoJi/BeaJl2x4EfLsuqeMs9tTE
+         YAhw==
+X-Gm-Message-State: APjAAAUfY8ahv9y1SHcII8Kzr1ax78LMSZ9oPB0bcupYLejJxDK5MOOV
+        f4tfCiGcucXHQiY0ie6/k9HQvonLUUcSxx4WlZI=
+X-Google-Smtp-Source: APXvYqyQ3OcPxTZE79jySvwMYC8vjamWQiriNCux9/VdFtqDzRVM9Aw+s9kJqqoO9rN8rBLFEyB5tDfAGslo++GFlu8=
+X-Received: by 2002:a7b:c310:: with SMTP id k16mr59906778wmj.133.1564414801859;
+ Mon, 29 Jul 2019 08:40:01 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c90a2cd-1c52-4d3b-864a-08d7143af364
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 15:39:31.8995
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: claudiu.manoil@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5197
+References: <20190729143007.GA8067@embeddedor>
+In-Reply-To: <20190729143007.GA8067@embeddedor>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 29 Jul 2019 17:39:49 +0200
+Message-ID: <CAMuHMdXEU4eUEdNyY=K2B_Tj=unJV2eSJo1BQ8vDwZ-D-2wDWg@mail.gmail.com>
+Subject: Re: [PATCH] scsi: sun3_scsi: Mark expected switch fall-throughs
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        scsi <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQW5kcmV3IEx1bm4gPGFuZHJld0Bs
-dW5uLmNoPg0KPlNlbnQ6IE1vbmRheSwgSnVseSAyOSwgMjAxOSA2OjM1IFBNDQo+VG86IENsYXVk
-aXUgTWFub2lsIDxjbGF1ZGl1Lm1hbm9pbEBueHAuY29tPg0KPkNjOiBEYXZpZCBTIC4gTWlsbGVy
-IDxkYXZlbUBkYXZlbWxvZnQubmV0PjsgUm9iIEhlcnJpbmcNCj48cm9iaCtkdEBrZXJuZWwub3Jn
-PjsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBBbGV4YW5kcnUgTWFyZ2luZWFuDQo+PGFs
-ZXhhbmRydS5tYXJnaW5lYW5AbnhwLmNvbT47IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7DQo+ZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZzsgbGludXgtDQo+a2VybmVsQHZnZXIua2VybmVsLm9yZw0KPlN1YmplY3Q6IFJlOiBbUEFU
-Q0ggbmV0LW5leHQgdjMgMi80XSBlbmV0YzogQWRkIG1kaW8gYnVzIGRyaXZlciBmb3IgdGhlIFBD
-SWUNCj5NRElPIGVuZHBvaW50DQo+DQo+PiArCWh3LT5wb3J0ID0gcGNpX2lvbWFwKHBkZXYsIDAs
-IDApOw0KPj4gKwlpZiAoIWJ1cy0+cHJpdikgew0KPg0KPmh3LT5wb3J0ID8/DQo+DQoNClllYWgs
-IGJldHRlciBpZ25vcmUgdGhpcyBmb3Igbm93IPCfmIoNCkl0J3MgZm9yIHRoZSBlbmV0YyBhY2Nl
-c3NvcnMsIGVuZXRjX3BvcnRfLi4oKS4NCg==
+Hi Gustavo,
+
+On Mon, Jul 29, 2019 at 4:32 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+> Mark switch cases where we are expecting to fall through.
+>
+> This patch fixes the following warnings:
+>
+> drivers/scsi/sun3_scsi.c: warning: this statement may fall through
+> [-Wimplicit-fallthrough=]:  => 399:9, 403:9
+>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Thanks!
+Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+> --- a/drivers/scsi/sun3_scsi.c
+> +++ b/drivers/scsi/sun3_scsi.c
+> @@ -397,10 +397,12 @@ static int sun3scsi_dma_finish(int write_flag)
+>                 case CSR_LEFT_3:
+>                         *vaddr = (dregs->bpack_lo & 0xff00) >> 8;
+>                         vaddr--;
+> +                       /* Fall through */
+>
+>                 case CSR_LEFT_2:
+>                         *vaddr = (dregs->bpack_hi & 0x00ff);
+>                         vaddr--;
+> +                       /* Fall through */
+>
+
+I think it would be clearer if you would drop the blank lines.
+
+>                 case CSR_LEFT_1:
+>                         *vaddr = (dregs->bpack_hi & 0xff00) >> 8;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
