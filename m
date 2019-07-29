@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DC2C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCAEC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5064F2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E12621773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429129;
-	bh=enbuu8t9GaBicpNlpAn707aS23fyEb1khxDDcKNmsY0=;
+	s=default; t=1564429130;
+	bh=RB9hIpH/8Qdkva/l9o2yes0mx8YaAiHanj/V/Q1RVWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PSw9B248rvY4bi26RBENAUBICTpTz8zLI9F5hHan9E1nOGed+BtojWy5Wj/M5w4O3
-	 We3R40VegKM8It8elRoPHdSys+hU4my72Lv6j9tL08IYvNL75RATdXqBr/Rs2UjHS1
-	 ySWjeamjv2PArJ4o5Prno+CB4nIvJDJ7EjTQ3CJk=
+	b=c4KUNWfCF4D/+W9pP5ngCmF8d+IEfoHf8xnJParM39QnipTH+PutiHsGXpbputjtj
+	 jW6ISfPg+mHe+Ah7x1TQiLPOqv7w6dxI+G/1VbvRtTHA1OEpTJCz7B97tVjIZ+Pmop
+	 H6vBPqGj3nL3/0IRJ9o5oHhoUQ3hzLmvXTki5EuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388259AbfG2Tio (ORCPT
+        id S2388616AbfG2Tis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:38:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53582 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:38:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388879AbfG2Tih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:38:37 -0400
+        id S2388889AbfG2Tij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:38:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D92A820C01;
-        Mon, 29 Jul 2019 19:38:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DAAD206DD;
+        Mon, 29 Jul 2019 19:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429116;
-        bh=enbuu8t9GaBicpNlpAn707aS23fyEb1khxDDcKNmsY0=;
+        s=default; t=1564429119;
+        bh=RB9hIpH/8Qdkva/l9o2yes0mx8YaAiHanj/V/Q1RVWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NIkE4tw1+vQBVAqWEjq0n9KuK2H4ZflGIBKdD+MExvAlkYNgqD7aLp16RIYsqHJ2I
-         GMYNqoSPRbWpCcUtjoAJxa9sJhZd0MX3GHlefmbjWIWfM/raU7Y1hSTV521hVn7M3i
-         cbxV/norkR9f9Cb4H/4gvxHM7N6jgU8vUttwiVYQ=
+        b=UjSpSEGwHMdiW6CjYnlYF+w5U2rlH9xsHYLEJfk/h/nN2TwDO55rKm7ys3O8ect6y
+         Z+qdhC5ewN2Gqr7+Bbl2uAO53J2OhhRCJYGSDNLFWGwcRTS2tTy2RuqrgQ/Xgqmu6I
+         +kqKgLt/wu4s1CCoRY5ARweG5EQDSKiA61S6Ij9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 289/293] ALSA: line6: Fix wrong altsetting for LINE6_PODHD500_1
-Date:   Mon, 29 Jul 2019 21:23:00 +0200
-Message-Id: <20190729190846.376843353@linuxfoundation.org>
+Subject: [PATCH 4.14 290/293] ALSA: hda - Add a conexant codec entry to let mute led work
+Date:   Mon, 29 Jul 2019 21:23:01 +0200
+Message-Id: <20190729190846.459586057@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,36 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 70256b42caaf3e13c2932c2be7903a73fbe8bb8b upstream.
+commit 3f8809499bf02ef7874254c5e23fc764a47a21a0 upstream.
 
-Commit 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
-set a wrong altsetting for LINE6_PODHD500_1 during refactoring.
+This conexant codec isn't in the supported codec list yet, the hda
+generic driver can drive this codec well, but on a Lenovo machine
+with mute/mic-mute leds, we need to apply CXT_FIXUP_THINKPAD_ACPI
+to make the leds work. After adding this codec to the list, the
+driver patch_conexant.c will apply THINKPAD_ACPI to this machine.
 
-Set the correct altsetting number to fix the issue.
-
-BugLink: https://bugs.launchpad.net/bugs/1790595
-Fixes: 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: <stable@vger.kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/line6/podhd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_conexant.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/usb/line6/podhd.c
-+++ b/sound/usb/line6/podhd.c
-@@ -415,7 +415,7 @@ static const struct line6_properties pod
- 		.name = "POD HD500",
- 		.capabilities	= LINE6_CAP_PCM
- 				| LINE6_CAP_HWMON,
--		.altsetting = 1,
-+		.altsetting = 0,
- 		.ep_ctrl_r = 0x81,
- 		.ep_ctrl_w = 0x01,
- 		.ep_audio_r = 0x86,
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -1127,6 +1127,7 @@ static int patch_conexant_auto(struct hd
+  */
+ 
+ static const struct hda_device_id snd_hda_id_conexant[] = {
++	HDA_CODEC_ENTRY(0x14f11f86, "CX8070", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f12008, "CX8200", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f15045, "CX20549 (Venice)", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f15047, "CX20551 (Waikiki)", patch_conexant_auto),
 
 
