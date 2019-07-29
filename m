@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB67C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43870C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7BEF2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D322171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428858;
-	bh=JTbbLUrqNFcBTWKuNtawhRcJdyH9435aAAWqmKj3o2I=;
+	s=default; t=1564428867;
+	bh=JXXnD+mSNHBXC3kUYw63taAy32BnqtO0iu62oDfcaok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2TKeEIBCy/RVOGCgGjLI0YAZO9ej5+SewAsgl4aGFhe1A0bgpCrbrNLtlQCbw4ihR
-	 KbEelkqY47bfD/eNg4uGv2i6ODOud3zCUaIDQoZ8vplQcC9qsxhUMqgnMLVp3kuZyT
-	 s6wn60hAqshX4m1fDWSeTN0tPmYXFBk0nEiPerSE=
+	b=og/+2tQpPQSfBzRosmdxVBm4HA+BpZj5WrAdbzEtw+O4v53dEqCawePhL7jllAXF2
+	 34o/wYNXC9JjtG6BQC54s2DAhNaEcKH8XsPQ3RDlxEs04vCMTqO/ssDSI1h/mKusqc
+	 AI8iZOmyqF60+sMd72dpZ18eZCIMS+uGXEa9YJDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388280AbfG2TeR (ORCPT
+        id S2388376AbfG2TeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:34:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48584 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:34:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388245AbfG2TeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:34:11 -0400
+        id S2388300AbfG2TeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:34:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40D9F2171F;
-        Mon, 29 Jul 2019 19:34:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D4A12070B;
+        Mon, 29 Jul 2019 19:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428850;
-        bh=JTbbLUrqNFcBTWKuNtawhRcJdyH9435aAAWqmKj3o2I=;
+        s=default; t=1564428861;
+        bh=JXXnD+mSNHBXC3kUYw63taAy32BnqtO0iu62oDfcaok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SDA2ejk42ePxmcfd6iyh8zRiGAVBFpMOYd3Se2WkppzlRoLYS1916fVlFVFrJJgXP
-         DPxxr7wAbZuqN26XntPlBauxpbYSEhv9EMgUp8PtcwUMEIuyosZz49MtveDbQ7iSXa
-         LsSUk2ykxR05tz8Kb9wXJKayGIphxkdhdsPyEWtk=
+        b=bQ4zcNCDc8FMuTGGkrm4rMTzaTIacgEYog1U1ZUBFy/nxhlSng3oEsBlO42l0ZRd0
+         dbT4g2JHXfYu8z4+RhMgHyX2RAaNgd8vTWYst4pgq2rE4kQAP6RoEMGeL78jTHadEq
+         9p5FZtq4CrVK1tw51EBYWrgTG8w7LaU999REPifU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH 4.14 206/293] dma-buf: Discard old fence_excl on retrying get_fences_rcu for realloc
-Date:   Mon, 29 Jul 2019 21:21:37 +0200
-Message-Id: <20190729190840.230106531@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>, stable@kernel.org
+Subject: [PATCH 4.14 209/293] ext4: enforce the immutable flag on open files
+Date:   Mon, 29 Jul 2019 21:21:40 +0200
+Message-Id: <20190729190840.474798256@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -63,42 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit f5b07b04e5f090a85d1e96938520f2b2b58e4a8e upstream.
+commit 02b016ca7f99229ae6227e7b2fc950c4e140d74a upstream.
 
-If we have to drop the seqcount & rcu lock to perform a krealloc, we
-have to restart the loop. In doing so, be careful not to lose track of
-the already acquired exclusive fence.
+According to the chattr man page, "a file with the 'i' attribute
+cannot be modified..."  Historically, this was only enforced when the
+file was opened, per the rest of the description, "... and the file
+can not be opened in write mode".
 
-Fixes: fedf54132d24 ("dma-buf: Restart reservation_object_get_fences_rcu() after writes")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: stable@vger.kernel.org #v4.10
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190604125323.21396-1-chris@chris-wilson.co.uk
+There is general agreement that we should standardize all file systems
+to prevent modifications even for files that were opened at the time
+the immutable flag is set.  Eventually, a change to enforce this at
+the VFS layer should be landing in mainline.  Until then, enforce this
+at the ext4 level to prevent xfstests generic/553 from failing.
+
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma-buf/reservation.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/ext4/file.c  |    4 ++++
+ fs/ext4/inode.c |   11 +++++++++++
+ 2 files changed, 15 insertions(+)
 
---- a/drivers/dma-buf/reservation.c
-+++ b/drivers/dma-buf/reservation.c
-@@ -394,6 +394,10 @@ int reservation_object_get_fences_rcu(st
- 					   GFP_NOWAIT | __GFP_NOWARN);
- 			if (!nshared) {
- 				rcu_read_unlock();
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -163,6 +163,10 @@ static ssize_t ext4_write_checks(struct
+ 	ret = generic_write_checks(iocb, from);
+ 	if (ret <= 0)
+ 		return ret;
 +
-+				dma_fence_put(fence_excl);
-+				fence_excl = NULL;
++	if (unlikely(IS_IMMUTABLE(inode)))
++		return -EPERM;
 +
- 				nshared = krealloc(shared, sz, GFP_KERNEL);
- 				if (nshared) {
- 					shared = nshared;
+ 	/*
+ 	 * If we have encountered a bitmap-format file, the size limit
+ 	 * is smaller than s_maxbytes, which is for extent-mapped files.
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5341,6 +5341,14 @@ int ext4_setattr(struct dentry *dentry,
+ 	if (unlikely(ext4_forced_shutdown(EXT4_SB(inode->i_sb))))
+ 		return -EIO;
+ 
++	if (unlikely(IS_IMMUTABLE(inode)))
++		return -EPERM;
++
++	if (unlikely(IS_APPEND(inode) &&
++		     (ia_valid & (ATTR_MODE | ATTR_UID |
++				  ATTR_GID | ATTR_TIMES_SET))))
++		return -EPERM;
++
+ 	error = setattr_prepare(dentry, attr);
+ 	if (error)
+ 		return error;
+@@ -6045,6 +6053,9 @@ int ext4_page_mkwrite(struct vm_fault *v
+ 	get_block_t *get_block;
+ 	int retries = 0;
+ 
++	if (unlikely(IS_IMMUTABLE(inode)))
++		return VM_FAULT_SIGBUS;
++
+ 	sb_start_pagefault(inode->i_sb);
+ 	file_update_time(vma->vm_file);
+ 
 
 
