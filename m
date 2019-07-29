@@ -2,152 +2,213 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECDEC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81A1C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B28A206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D11A21773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VDIZSjBO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfG2OZA (ORCPT
+        id S1727604AbfG2OZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:25:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37868 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbfG2OY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:24:59 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 81BE3C049E12;
-        Mon, 29 Jul 2019 14:24:58 +0000 (UTC)
-Received: from [10.72.12.68] (ovpn-12-68.pek2.redhat.com [10.72.12.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 14E8E5D6A0;
-        Mon, 29 Jul 2019 14:24:44 +0000 (UTC)
-Subject: Re: WARNING in __mmdrop
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-References: <84bb2e31-0606-adff-cf2a-e1878225a847@redhat.com>
- <20190725092332-mutt-send-email-mst@kernel.org>
- <11802a8a-ce41-f427-63d5-b6a4cf96bb3f@redhat.com>
- <20190726074644-mutt-send-email-mst@kernel.org>
- <5cc94f15-b229-a290-55f3-8295266edb2b@redhat.com>
- <20190726082837-mutt-send-email-mst@kernel.org>
- <ada10dc9-6cab-e189-5289-6f9d3ff8fed2@redhat.com>
- <aaefa93e-a0de-1c55-feb0-509c87aae1f3@redhat.com>
- <20190726094756-mutt-send-email-mst@kernel.org>
- <0792ee09-b4b7-673c-2251-e5e0ce0fbe32@redhat.com>
- <20190729045127-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <4d43c094-44ed-dbac-b863-48fc3d754378@redhat.com>
-Date:   Mon, 29 Jul 2019 22:24:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 10:25:05 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46904 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbfG2OZE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 10:25:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=r2R3bvPPA7z+Zk5Z5T/eRlqnLR0fPm6kMZLrDw0T1mM=; b=VDIZSjBOQQ5VujuzGXLUd8ztg
+        s9lZP8iQA6DasO0eCjfCdN66UHKmyiRi268O6wWJUP/0aANp/x59QPcYqoSJh4IQgpSRF/DL6KxWH
+        0kgwwmK2eRnOAE0i+uA7PqX2cxYVQVHKzmsRWBOClTrWQfNY4Q8lOsTlLHBoT0MAKh23KApH1NXDP
+        9wewptlleUm83XE3JiybClJJZMT0obX31Swo2M25QwiC+YOSR2hf83+aWTCGjpQYy0EgbryP7TBgU
+        cSenMrQzb/jwtG5VGK6iivMyfYv4imx8GubCaG31CtFlipADI9USL2jpugr46Sz83fOplbiTV39Ir
+        /bWQ4t3xA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hs6a4-0002qo-N7; Mon, 29 Jul 2019 14:24:53 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 130FF20AFFEAD; Mon, 29 Jul 2019 16:24:50 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 16:24:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Phil Auld <pauld@redhat.com>, riel@surriel.com,
+        luto@kernel.org, mathieu.desnoyers@efficios.com
+Subject: [PATCH] sched: Clean up active_mm reference counting
+Message-ID: <20190729142450.GE31425@hirez.programming.kicks-ass.net>
+References: <20190727171047.31610-1-longman@redhat.com>
+ <20190729085235.GT31381@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190729045127-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 29 Jul 2019 14:24:59 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729085235.GT31381@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 29, 2019 at 10:52:35AM +0200, Peter Zijlstra wrote:
+> On Sat, Jul 27, 2019 at 01:10:47PM -0400, Waiman Long wrote:
 
-On 2019/7/29 下午4:59, Michael S. Tsirkin wrote:
-> On Mon, Jul 29, 2019 at 01:54:49PM +0800, Jason Wang wrote:
->> On 2019/7/26 下午9:49, Michael S. Tsirkin wrote:
->>>>> Ok, let me retry if necessary (but I do remember I end up with deadlocks
->>>>> last try).
->>>> Ok, I play a little with this. And it works so far. Will do more testing
->>>> tomorrow.
->>>>
->>>> One reason could be I switch to use get_user_pages_fast() to
->>>> __get_user_pages_fast() which doesn't need mmap_sem.
->>>>
->>>> Thanks
->>> OK that sounds good. If we also set a flag to make
->>> vhost_exceeds_weight exit, then I think it will be all good.
->>
->> After some experiments, I came up two methods:
->>
->> 1) switch to use vq->mutex, then we must take the vq lock during range
->> checking (but I don't see obvious slowdown for 16vcpus + 16queues). Setting
->> flags during weight check should work but it still can't address the worst
->> case: wait for the page to be swapped in. Is this acceptable?
->>
->> 2) using current RCU but replace synchronize_rcu() with vhost_work_flush().
->> The worst case is the same as 1) but we can check range without holding any
->> locks.
->>
->> Which one did you prefer?
->>
->> Thanks
-> I would rather we start with 1 and switch to 2 after we
-> can show some gain.
->
-> But the worst case needs to be addressed.
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 2b037f195473..923a63262dfd 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -3233,13 +3233,22 @@ context_switch(struct rq *rq, struct task_struct *prev,
+> >  	 * Both of these contain the full memory barrier required by
+> >  	 * membarrier after storing to rq->curr, before returning to
+> >  	 * user-space.
+> > +	 *
+> > +	 * If mm is NULL and oldmm is dying (!owner), we switch to
+> > +	 * init_mm instead to make sure that oldmm can be freed ASAP.
+> >  	 */
+> > -	if (!mm) {
+> > +	if (!mm && !mm_dying(oldmm)) {
+> >  		next->active_mm = oldmm;
+> >  		mmgrab(oldmm);
+> >  		enter_lazy_tlb(oldmm, next);
+> > -	} else
+> > +	} else {
+> > +		if (!mm) {
+> > +			mm = &init_mm;
+> > +			next->active_mm = mm;
+> > +			mmgrab(mm);
+> > +		}
+> >  		switch_mm_irqs_off(oldmm, mm, next);
+> > +	}
+> >  
+> >  	if (!prev->mm) {
+> >  		prev->active_mm = NULL;
+> 
+> Bah, I see we _still_ haven't 'fixed' that code. And you're making an
+> even bigger mess of it.
+> 
+> Let me go find where that cleanup went.
 
+---
+Subject: sched: Clean up active_mm reference counting
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Mon Jul 29 16:05:15 CEST 2019
 
-Yes.
+The current active_mm reference counting is confusing and sub-optimal.
 
+Rewrite the code to explicitly consider the 4 separate cases:
 
-> How about sending a signal to
-> the vhost thread?  We will need to fix up error handling (I think that
-> at the moment it will error out in that case, handling this as EFAULT -
-> and we don't want to drop packets if we can help it, and surely not
-> enter any error states.  In particular it might be especially tricky if
-> we wrote into userspace memory and are now trying to log the write.
-> I guess we can disable the optimization if log is enabled?).
+    user -> user
 
+	When switching between two user tasks, all we need to consider
+	is switch_mm().
 
-This may work but requires a lot of changes. And actually it's the price 
-of using vq mutex. Actually, the critical section should be rather 
-small, e.g just inside memory accessors.
+    user -> kernel
 
-I wonder whether or not just do synchronize our self like:
+	When switching from a user task to a kernel task (which
+	doesn't have an associated mm) we retain the last mm in our
+	active_mm. Increment a reference count on active_mm.
 
-static void inline vhost_inc_vq_ref(struct vhost_virtqueue *vq)
-{
-         int ref = READ_ONCE(vq->ref);
+  kernel -> kernel
 
-         WRITE_ONCE(vq->ref, ref + 1);
-smp_rmb();
-}
+	When switching between kernel threads, all we need to do is
+	pass along the active_mm reference.
 
-static void inline vhost_dec_vq_ref(struct vhost_virtqueue *vq)
-{
-         int ref = READ_ONCE(vq->ref);
+  kernel -> user
 
-smp_wmb();
-         WRITE_ONCE(vq->ref, ref - 1);
-}
+	When switching between a kernel and user task, we must switch
+	from the last active_mm to the next mm, hoping of course that
+	these are the same. Decrement a reference on the active_mm.
 
-static void inline vhost_wait_for_ref(struct vhost_virtqueue *vq)
-{
-         while (READ_ONCE(vq->ref));
-mb();
-}
+The code keeps a different order, because as you'll note, both 'to
+user' cases require switch_mm().
 
+And where the old code would increment/decrement for the 'kernel ->
+kernel' case, the new code observes this is a neutral operation and
+avoids touching the reference count.
 
-Or using smp_load_acquire()/smp_store_release() instead?
+Cc: riel@surriel.com
+Cc: luto@kernel.org
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/sched/core.c |   49 ++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 30 insertions(+), 19 deletions(-)
 
-Thanks
-
->
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3214,12 +3214,8 @@ static __always_inline struct rq *
+ context_switch(struct rq *rq, struct task_struct *prev,
+ 	       struct task_struct *next, struct rq_flags *rf)
+ {
+-	struct mm_struct *mm, *oldmm;
+-
+ 	prepare_task_switch(rq, prev, next);
+ 
+-	mm = next->mm;
+-	oldmm = prev->active_mm;
+ 	/*
+ 	 * For paravirt, this is coupled with an exit in switch_to to
+ 	 * combine the page table reload and the switch backend into
+@@ -3228,22 +3224,37 @@ context_switch(struct rq *rq, struct tas
+ 	arch_start_context_switch(prev);
+ 
+ 	/*
+-	 * If mm is non-NULL, we pass through switch_mm(). If mm is
+-	 * NULL, we will pass through mmdrop() in finish_task_switch().
+-	 * Both of these contain the full memory barrier required by
+-	 * membarrier after storing to rq->curr, before returning to
+-	 * user-space.
++	 * kernel -> kernel   lazy + transfer active
++	 *   user -> kernel   lazy + mmgrab() active
++	 *
++	 * kernel ->   user   switch + mmdrop() active
++	 *   user ->   user   switch
+ 	 */
+-	if (!mm) {
+-		next->active_mm = oldmm;
+-		mmgrab(oldmm);
+-		enter_lazy_tlb(oldmm, next);
+-	} else
+-		switch_mm_irqs_off(oldmm, mm, next);
+-
+-	if (!prev->mm) {
+-		prev->active_mm = NULL;
+-		rq->prev_mm = oldmm;
++	if (!next->mm) {                                // to kernel
++		enter_lazy_tlb(prev->active_mm, next);
++
++		next->active_mm = prev->active_mm;
++		if (prev->mm)                           // from user
++			mmgrab(prev->active_mm);
++		else
++			prev->active_mm = NULL;
++	} else {                                        // to user
++		/*
++		 * sys_membarrier() requires an smp_mb() between setting
++		 * rq->curr and returning to userspace.
++		 *
++		 * The below provides this either through switch_mm(), or in
++		 * case 'prev->active_mm == next->mm' through
++		 * finish_task_switch()'s mmdrop().
++		 */
++
++		switch_mm_irqs_off(prev->active_mm, next->mm, next);
++
++		if (!prev->mm) {                        // from kernel
++			/* will mmdrop() in finish_task_switch(). */
++			rq->prev_mm = prev->active_mm;
++			prev->active_mm = NULL;
++		}
+ 	}
+ 
+ 	rq->clock_update_flags &= ~(RQCF_ACT_SKIP|RQCF_REQ_SKIP);
