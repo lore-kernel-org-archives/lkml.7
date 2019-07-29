@@ -2,91 +2,94 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B011C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E72A0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C86C206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:13:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cd8FfgOj"
+	by mail.kernel.org (Postfix) with ESMTP id C6AB5206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:14:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfG2KN4 (ORCPT
+        id S1728228AbfG2KOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:13:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57664 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfG2KNz (ORCPT
+        Mon, 29 Jul 2019 06:14:20 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41174 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfG2KOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:13:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=POkWbYSzgMMetxfnUpRwoxKNTv69Z5Jby4ut6IgKLxA=; b=cd8FfgOjNl0dMpnrFQZIJlJyM
-        82FG2WPHwGf4qgHzITxlwy11tommB5/OOvyseY3NOgWP4y3l5W2mgDFZcguWvzpoIYbLFDXwEBEB0
-        ZfzySigRiawmp4TVh5bd5xMO99K3IwYpJpFMMcxK3psTGCZxLBGUoVSBiTdyyxCHo3cyS84gJer2E
-        CK1C9ve6wUv7jYPZTJC6fD+oS1Dw+O94JwjgVyWUydNCWietPk1Pr6FhQIbFm3XNXnFep8cTxRv48
-        hxJ14jvz5pUpHxqYl04LHU3/exAuVH0nHanGkAssCi1iZXk8DJsPywNmGR79uo6eZAm7izibGckG5
-        JQq6E2IUw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs2f9-0001Uc-N9; Mon, 29 Jul 2019 10:13:51 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0292B20AF2C34; Mon, 29 Jul 2019 12:13:49 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 12:13:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: sched: Unexpected reschedule of offline CPU#2!
-Message-ID: <20190729101349.GX31381@hirez.programming.kicks-ass.net>
-References: <20190727164450.GA11726@roeck-us.net>
- <20190729093545.GV31381@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1907291156170.1791@nanos.tec.linutronix.de>
+        Mon, 29 Jul 2019 06:14:20 -0400
+Received: by mail-lj1-f193.google.com with SMTP id d24so58007369ljg.8;
+        Mon, 29 Jul 2019 03:14:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6Um6ED6I3PME6LFQVQV/8kHAjm+sTMuYfm30McVPwl0=;
+        b=muEQwF5sfkPqLXxoJKCwfZTHi6dX/YAQOB9rM1EhQnDv904DPXibUeYBKUFluCo+86
+         uGUM1WvkQATgbWednnf5cT7LytrhUHqT5vlZwpRO6vFmUQPTdQZFzFKta1AwpLPhiXm4
+         kZlYEoSv+B+lsrpnpCMVL0paFVGlqhoEFUHRGAY8UKGP8a1YKCjlSxEluMb5JriYjJTz
+         n9tU1kpIqZJAgGkWn3iXidaYJFEwDEZluXhD5qjaeQO2MRyj/K3nYjhkN/lfdzqTYr1M
+         cnMUwEkvpWIbiWzAQtymALRNlXgEZoJqsZxJAexBPwx2miyoLOGnk+gUn9h2FuOp9yc9
+         Y6Ig==
+X-Gm-Message-State: APjAAAVAyLNKYyU6cWKIf9AnksV2B56V4kiGfLdVV9TNUrlAupcfYF9n
+        B/JQdnACvguiNUqELnyLWI4=
+X-Google-Smtp-Source: APXvYqzW1ctvjiacKpwN/B8Wf3TwQY8a0G1QokUxEp47Rts8HLz1rJBfR1Qfky77XQ61Z4d7nS9tnA==
+X-Received: by 2002:a2e:970d:: with SMTP id r13mr57395760lji.126.1564395257826;
+        Mon, 29 Jul 2019 03:14:17 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id y12sm11814834lfy.36.2019.07.29.03.14.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 03:14:17 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Michal Simek <monstr@monstr.eu>, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] PCI: Convert pci_resource_to_user() to a weak function
+Date:   Mon, 29 Jul 2019 13:13:56 +0300
+Message-Id: <20190729101401.28068-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907291156170.1791@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 11:58:24AM +0200, Thomas Gleixner wrote:
-> On Mon, 29 Jul 2019, Peter Zijlstra wrote:
-> > On Sat, Jul 27, 2019 at 09:44:50AM -0700, Guenter Roeck wrote:
-> > > [   61.348866] Call Trace:
-> > > [   61.349392]  kick_ilb+0x90/0xa0
-> > > [   61.349629]  trigger_load_balance+0xf0/0x5c0
-> > > [   61.349859]  ? check_preempt_wakeup+0x1b0/0x1b0
-> > > [   61.350057]  scheduler_tick+0xa7/0xd0
-> > 
-> > kick_ilb() iterates nohz.idle_cpus_mask to find itself an idle_cpu().
-> > 
-> > idle_cpus_mask() is set from nohz_balance_enter_idle() and cleared from
-> > nohz_balance_exit_idle(). nohz_balance_enter_idle() is called from
-> > __tick_nohz_idle_stop_tick() when entering nohz idle, this includes the
-> > cpu_is_offline() clause of the idle loop.
-> > 
-> > However, when offline, cpu_active() should also be false, and this
-> > function should no-op.
-> 
-> Ha. That reboot mess is not clearing cpu active as it's not going through
-> the regular cpu hotplug path. It's using reboot IPI which 'stops' the cpus
-> dead in their tracks after clearing cpu online....
+Architectures currently define HAVE_ARCH_PCI_RESOURCE_TO_USER if they want
+to provide their own pci_resource_to_user() implementation. This could be
+simplified if we make the generic version a weak function. Thus,
+architecture specific versions will automatically override the generic one.
 
-$string-of-cock-compliant-curses
+Changes in v2:
+1. Removed __weak from pci_resource_to_user() declaration
+2. Fixed typo s/spark/sparc/g
 
-What a trainwreck...
+Denis Efremov (5):
+  PCI: Convert pci_resource_to_user to a weak function
+  microblaze/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+  mips/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+  powerpc/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+  sparc/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
 
-So if it doesn't play by the normal rules; how does it expect to work?
+ arch/microblaze/include/asm/pci.h |  2 --
+ arch/mips/include/asm/pci.h       |  1 -
+ arch/powerpc/include/asm/pci.h    |  2 --
+ arch/sparc/include/asm/pci.h      |  2 --
+ drivers/pci/pci.c                 |  8 ++++++++
+ include/linux/pci.h               | 12 ------------
+ 6 files changed, 8 insertions(+), 19 deletions(-)
 
-So what do we do? 'Fix' reboot or extend the rules?
+-- 
+2.21.0
+
