@@ -2,109 +2,100 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A1FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9E4C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45419206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A878F206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:26:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="sw7qv0bB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RIMq7lbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfG2RZx (ORCPT
+        id S1728894AbfG2R0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 13:25:53 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:41776 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfG2RZx (ORCPT
+        Mon, 29 Jul 2019 13:26:23 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43724 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfG2R0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:25:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1564421150; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8+qV28YYJniA0AukbbbJEysxFPjT+avEllLJr1CUVTc=;
-        b=sw7qv0bBtbgyJbzjIoXXSS5FQUZvEZVn+PBWp+obxwOs3LGxECaxlAlmHs21P/b5RUAAT2
-        hq6FrRaKanu/AvUQ+9uDVSKCtxex0VPrTUwZ6r9t9aKZFL10PAYPf2AkIALQERSqS8sSyJ
-        P+HgUycY6IzIHqJMAUh1dl/zHZM8GZA=
-Date:   Mon, 29 Jul 2019 13:25:33 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 4/4 v4] irqchip: Ingenic: Add support for new Ingenic
- Socs.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, tglx@linutronix.de, mark.rutland@arm.com,
-        jason@lakedaemon.net, marc.zyngier@arm.com
-Message-Id: <1564421133.6633.1@crapouillou.net>
-In-Reply-To: <1564335273-22931-5-git-send-email-zhouyanjie@zoho.com>
-References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
-        <1564335273-22931-1-git-send-email-zhouyanjie@zoho.com>
-        <1564335273-22931-5-git-send-email-zhouyanjie@zoho.com>
+        Mon, 29 Jul 2019 13:26:22 -0400
+Received: by mail-io1-f65.google.com with SMTP id k20so121758338ios.10;
+        Mon, 29 Jul 2019 10:26:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1gop2WQakw39EVmEG3HQ5R3ia+tj0ahEugcn6D7gzBs=;
+        b=RIMq7lbWoqJyQm8c7nRO9/Zk71C3qWZ97+yIYo6C/GaFfvgX68BC+TNK4BgfE37czl
+         kpca1j6v8gKHHFwI/ZpDqRm00VtMLV8vvOvCJ8BCaSZZpycocrn7osdEFw0e72CaSZCy
+         XOkDTm2D2xzP6P7+k/CbPSPjR9qwE0eatRTzp2oIF88zR2G90oaY7EEtD7oFJOav2WpK
+         fUF2i/EbVmtpvEeCagmV8kJUWPXTCTJ9CYP0O+q1/DlnkHu5u9njlUc+6U0XroxpXETm
+         78uBfiOFvQqLiTlURK9BwQ3ErOT6uvN0Lcm8izTARFdhvj0W3ArcDah9eZEZ10vG3Io5
+         a+8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1gop2WQakw39EVmEG3HQ5R3ia+tj0ahEugcn6D7gzBs=;
+        b=eaP5we1XMztkH3JUSr+DYmRnhI489glKHf8gxyZpAmBDcR2NIufYbi4arG/E3WNuWr
+         UjzW9mZJs025uuUWihptropfJHCAulxo0A/FFrC79KxzRku3nA1MoFi84JHVTE5jI8wL
+         usfS56kWyOzJS2ye4Af1CrP+L9gLgDPRDQttorvSEuDVikoH4AbSs6rgy71WvP58vPjC
+         JkZlSFnm1mlfQvwk/kLSNr7qV4DHyLW0SrIZDSWWp7fvYcRxTBZRlVLHFtDlpgZmhi+A
+         8QWKVK/GTeuLVlBRyDOzL7pfOtUmTKUz3FfTlRaXJm65+b44QjOfsr4EGfPxWZYvfnbc
+         s/0A==
+X-Gm-Message-State: APjAAAU/IeVfZiUaByl7x23HcLqXuYQ+0Reuv8GUYrrrzxHJQI6m92Ws
+        T1kPtxtPQMweNDOerAVUrZ4=
+X-Google-Smtp-Source: APXvYqzJNAFmbawPrIKO1SZsPcWwKj0EIBjmHORHpTn7Q31bYs6DiSNdqpCrIblGpQd5dtimgBJRaw==
+X-Received: by 2002:a5d:9291:: with SMTP id s17mr16425770iom.10.1564421181746;
+        Mon, 29 Jul 2019 10:26:21 -0700 (PDT)
+Received: from localhost ([8.46.76.96])
+        by smtp.gmail.com with ESMTPSA id p10sm78171880iob.54.2019.07.29.10.26.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 10:26:21 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 19:26:07 +0200
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH 1/2] input: keyboard: gpio_keys_polled: use gpio lookup
+ table
+Message-ID: <20190729172607.GB755@penguin>
+References: <1564415994-22871-1-git-send-email-info@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564415994-22871-1-git-send-email-info@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Enrico,
 
+On Mon, Jul 29, 2019 at 05:59:53PM +0200, Enrico Weigelt, metux IT consult wrote:
+> From: Enrico Weigelt <info@metux.net>
+> 
+> Support the recently introduced gpio lookup tables for
+> attaching to gpio lines. So, harcoded gpio numbers aren't
+> needed anymore.
+> 
+> changes v3:
+>     * fix printf string in gpio_keys_polled_get_gpiod()
+>     * fix unused variable 'error' in gpio_keys_polled_get_gpiod()
+>     * fix uninitialized variable in gpio_keys_polled_get_gpiod_fwnode()
 
-Le dim. 28 juil. 2019 =E0 13:34, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=E9crit :
-> Add support for probing the irq-ingenic driver on the JZ4760/JZ4760B
-> and the X1000/X1000E and the X1500 Socs from Ingenic.
->=20
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> ---
->  drivers/irqchip/irq-ingenic.c | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/drivers/irqchip/irq-ingenic.c=20
-> b/drivers/irqchip/irq-ingenic.c
-> index 8430f5a..b72430c 100644
-> --- a/drivers/irqchip/irq-ingenic.c
-> +++ b/drivers/irqchip/irq-ingenic.c
-> @@ -173,6 +173,11 @@ static int __init intc_2chip_of_init(struct=20
-> device_node *node,
->  {
->  	return ingenic_intc_of_init(node, 2);
->  }
-> +IRQCHIP_DECLARE(jz4760_intc, "ingenic,jz4760-intc",=20
-> intc_2chip_of_init);
-> +IRQCHIP_DECLARE(jz4760b_intc, "ingenic,jz4760b-intc",=20
-> intc_2chip_of_init);
->  IRQCHIP_DECLARE(jz4770_intc, "ingenic,jz4770-intc",=20
-> intc_2chip_of_init);
->  IRQCHIP_DECLARE(jz4775_intc, "ingenic,jz4775-intc",=20
-> intc_2chip_of_init);
->  IRQCHIP_DECLARE(jz4780_intc, "ingenic,jz4780-intc",=20
-> intc_2chip_of_init);
-> +IRQCHIP_DECLARE(x1000_intc, "ingenic,x1000-intc",=20
-> intc_2chip_of_init);
-> +IRQCHIP_DECLARE(x1000e_intc, "ingenic,x1000e-intc",=20
-> intc_2chip_of_init);
-> +IRQCHIP_DECLARE(x1500_intc, "ingenic,x1500-intc",=20
-> intc_2chip_of_init);
+As I think I mentioned a while back I would prefer to get gpiolob
+support swnode-backed properties so that the driver would not need to
+know about differences between ACPI, DT and static board files.
 
-All these compatible strings point to the exact same behaviour. It was
-already a mistake to have the three "ingenic,jz47[70,75,80]-intc" here;
-there should have been only one, e.g. "ingenic,jz4770-intc" and the=20
-other
-two SoCs using it as a fallback compatible.
+I just recently re-posted patches for this, let's see if we can get them
+landed in the kernel.
 
-I think you don't need to add these, and in your devicetree just use
-"ingenic,jz4780-intc" as a fallback compatible.
+Thanks.
 
-Cheers,
--Paul
-
-=
-
+-- 
+Dmitry
