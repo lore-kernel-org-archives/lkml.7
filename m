@@ -2,52 +2,51 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AD7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5627EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351BD205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9F0205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431197;
-	bh=PyKlQJ2rHOcrBoZ4zSJoeq3lpGNSP6Q6qpHvyYDs3wE=;
+	s=default; t=1564431202;
+	bh=faUFouGVsvnKvzfagFEBAOX962ina06t1NfPmZeNwOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LQuXe0hRgxjbjFtruadF5AytCYbMpuVSaKBC1j0lGWOJi5W0WmQZMxVJDdw265eAt
-	 tV/zwgI8LiHKIKObTPW+acKkV+1yYrCn1FigXvBvoK8mZMdkzXvhjnM+xXLaiySp/Q
-	 X+zI3TMtnLaNosnoJ36MafCBeh9+jsuxqnmOrfDU=
+	b=mIMfQHDjKjn/iiVIXs6yX+uxs5R2k3IuIekTx8qn9Nlzqn10gxZhzF2f6geXI+OiG
+	 wytJfrzyB7U/+4YTnSefO/mnTyNJNz8MqRAflXMScx/IdsOqKxNjSPeSgOQS8qO5ht
+	 +sosA91E7FdpU0KekdUmbaInkZgfxR5Oc/g6PZNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730553AbfG2UNQ (ORCPT
+        id S2387894AbfG2TaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:13:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729342AbfG2Tal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:30:41 -0400
+        id S1728364AbfG2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:30:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D3BA217D4;
-        Mon, 29 Jul 2019 19:30:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AA8A21655;
+        Mon, 29 Jul 2019 19:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428640;
-        bh=PyKlQJ2rHOcrBoZ4zSJoeq3lpGNSP6Q6qpHvyYDs3wE=;
+        s=default; t=1564428619;
+        bh=faUFouGVsvnKvzfagFEBAOX962ina06t1NfPmZeNwOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2cOf1QpXV9Hya8b9Un2qaZDBRp+8x0Tk7lBM/BXoD0WX8z2kvU79iDBM/tkKjv/ho
-         Gxp0vnUZ67JagJZWdoVNCQ19SV6BBMGakejwHI1q08KxkGOU/KB3fmzA6YMe/qXIDC
-         qf4g+a8Ya5UDNmCqD+DcXH7R1loxVS/u/OBgTQSM=
+        b=KS9QXyaukvyZJlspk2/N9zATBA8vnxlD11j6W/spY0X343kGRG3JbyhopK0rCOIos
+         gVoqIgoedrWbi0aDEO3prs1Pn5IARep53SCdkTb809oGtpmoa6A+IapYO0G+GTOoqu
+         iZPn90Oy+nQADyd4ISmd73HOXeu8XaWRlKYKWsMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 103/293] gtp: fix use-after-free in gtp_encap_destroy()
-Date:   Mon, 29 Jul 2019 21:19:54 +0200
-Message-Id: <20190729190832.541477515@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.14 132/293] arm64: tegra: Update Jetson TX1 GPU regulator timings
+Date:   Mon, 29 Jul 2019 21:20:23 +0200
+Message-Id: <20190729190834.673617776@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,131 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1788b8569f5de27da09087fa3f6580d2aa04cc75 ]
+From: Jon Hunter <jonathanh@nvidia.com>
 
-gtp_encap_destroy() is called twice.
-1. When interface is deleted.
-2. When udp socket is destroyed.
-either gtp->sk0 or gtp->sk1u could be freed by sock_put() in
-gtp_encap_destroy(). so, when gtp_encap_destroy() is called again,
-it would uses freed sk pointer.
+commit ece6031ece2dd64d63708cfe1088016cee5b10c0 upstream.
 
-patch makes gtp_encap_destroy() to set either gtp->sk0 or gtp->sk1u to
-null. in addition, both gtp->sk0 and gtp->sk1u pointer are protected
-by rtnl_lock. so, rtnl_lock() is added.
+The GPU regulator enable ramp delay for Jetson TX1 is set to 1ms which
+not sufficient because the enable ramp delay has been measured to be
+greater than 1ms. Furthermore, the downstream kernels released by NVIDIA
+for Jetson TX1 are using a enable ramp delay 2ms and a settling delay of
+160us. Update the GPU regulator enable ramp delay for Jetson TX1 to be
+2ms and add a settling delay of 160us.
 
-Test command:
-   gtp-link add gtp1 &
-   killall gtp-link
-   ip link del gtp1
+Cc: stable@vger.kernel.org
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Fixes: 5e6b9a89afce ("arm64: tegra: Add VDD_GPU regulator to Jetson TX1")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Splat looks like:
-[   83.182767] BUG: KASAN: use-after-free in __lock_acquire+0x3a20/0x46a0
-[   83.184128] Read of size 8 at addr ffff8880cc7d5360 by task ip/1008
-[   83.185567] CPU: 1 PID: 1008 Comm: ip Not tainted 5.2.0-rc6+ #50
-[   83.188469] Call Trace:
-[ ... ]
-[   83.200126]  lock_acquire+0x141/0x380
-[   83.200575]  ? lock_sock_nested+0x3a/0xf0
-[   83.201069]  _raw_spin_lock_bh+0x38/0x70
-[   83.201551]  ? lock_sock_nested+0x3a/0xf0
-[   83.202044]  lock_sock_nested+0x3a/0xf0
-[   83.202520]  gtp_encap_destroy+0x18/0xe0 [gtp]
-[   83.203065]  gtp_encap_disable.isra.14+0x13/0x50 [gtp]
-[   83.203687]  gtp_dellink+0x56/0x170 [gtp]
-[   83.204190]  rtnl_delete_link+0xb4/0x100
-[ ... ]
-[   83.236513] Allocated by task 976:
-[   83.236925]  save_stack+0x19/0x80
-[   83.237332]  __kasan_kmalloc.constprop.3+0xa0/0xd0
-[   83.237894]  kmem_cache_alloc+0xd8/0x280
-[   83.238360]  sk_prot_alloc.isra.42+0x50/0x200
-[   83.238874]  sk_alloc+0x32/0x940
-[   83.239264]  inet_create+0x283/0xc20
-[   83.239684]  __sock_create+0x2dd/0x540
-[   83.240136]  __sys_socket+0xca/0x1a0
-[   83.240550]  __x64_sys_socket+0x6f/0xb0
-[   83.240998]  do_syscall_64+0x9c/0x450
-[   83.241466]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   83.242061]
-[   83.242249] Freed by task 0:
-[   83.242616]  save_stack+0x19/0x80
-[   83.243013]  __kasan_slab_free+0x111/0x150
-[   83.243498]  kmem_cache_free+0x89/0x250
-[   83.244444]  __sk_destruct+0x38f/0x5a0
-[   83.245366]  rcu_core+0x7e9/0x1c20
-[   83.245766]  __do_softirq+0x213/0x8fa
-
-Fixes: 1e3a3abd8b28 ("gtp: make GTP sockets in gtp_newlink optional")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index c751f87c935e..53fd66534e3a 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -289,13 +289,17 @@ static int gtp1u_udp_encap_recv(struct gtp_dev *gtp, struct sk_buff *skb)
- 	return gtp_rx(pctx, skb, hdrlen, gtp->role);
- }
- 
--static void gtp_encap_destroy(struct sock *sk)
-+static void __gtp_encap_destroy(struct sock *sk)
- {
- 	struct gtp_dev *gtp;
- 
- 	lock_sock(sk);
- 	gtp = sk->sk_user_data;
- 	if (gtp) {
-+		if (gtp->sk0 == sk)
-+			gtp->sk0 = NULL;
-+		else
-+			gtp->sk1u = NULL;
- 		udp_sk(sk)->encap_type = 0;
- 		rcu_assign_sk_user_data(sk, NULL);
- 		sock_put(sk);
-@@ -303,12 +307,19 @@ static void gtp_encap_destroy(struct sock *sk)
- 	release_sock(sk);
- }
- 
-+static void gtp_encap_destroy(struct sock *sk)
-+{
-+	rtnl_lock();
-+	__gtp_encap_destroy(sk);
-+	rtnl_unlock();
-+}
-+
- static void gtp_encap_disable_sock(struct sock *sk)
- {
- 	if (!sk)
- 		return;
- 
--	gtp_encap_destroy(sk);
-+	__gtp_encap_destroy(sk);
- }
- 
- static void gtp_encap_disable(struct gtp_dev *gtp)
-@@ -1045,6 +1056,7 @@ static int gtp_genl_new_pdp(struct sk_buff *skb, struct genl_info *info)
- 		return -EINVAL;
- 	}
- 
-+	rtnl_lock();
- 	rcu_read_lock();
- 
- 	gtp = gtp_find_dev(sock_net(skb->sk), info->attrs);
-@@ -1069,6 +1081,7 @@ static int gtp_genl_new_pdp(struct sk_buff *skb, struct genl_info *info)
- 
- out_unlock:
- 	rcu_read_unlock();
-+	rtnl_unlock();
- 	return err;
- }
- 
--- 
-2.20.1
-
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+@@ -307,7 +307,8 @@
+ 			regulator-max-microvolt = <1320000>;
+ 			enable-gpios = <&pmic 6 GPIO_ACTIVE_HIGH>;
+ 			regulator-ramp-delay = <80>;
+-			regulator-enable-ramp-delay = <1000>;
++			regulator-enable-ramp-delay = <2000>;
++			regulator-settling-time-us = <160>;
+ 		};
+ 	};
+ };
 
 
