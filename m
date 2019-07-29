@@ -2,50 +2,53 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C333DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B97FC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D3C205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA02D205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431240;
-	bh=DQmGO2/rHpH4BIoutncEkm80QuwmDwo+n4TZCChVJG8=;
+	s=default; t=1564431243;
+	bh=wK7b6COeD7dL3yqszsDzRkPT8M+NtPOZ+usPFbJcXvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z4VtRnJfGmsTAtV28AcoD/H2mbcHr+Q9MI8u51zWQ830/q9mmOzuLbwcROH6TS29k
-	 yCwlRJDgZtfD59Khr+Dow8sy33UNUZswKWElRzL1ysQMFdY1TwEjyWIN4U0/nviVOn
-	 eNe/oxLI2RZSDeflVw2vdo5/uHz7vEztgRhwTaaE=
+	b=nFL+hebmDWq0+Ez9XhLFfNdeIUqSziESt8RJSnki46yP4fH0IiBkVLxnxDEWkWO+m
+	 /gT1jsqAVlAf9WCJn3LqqGwiikxOuARgSgZns619qeCaTJ4glOwJ64rUKj6MHFuivF
+	 Y7Eig3/FOJLTD5rGO0xhuYNNrMEBJpIVaZKvAmOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbfG2UN7 (ORCPT
+        id S1729127AbfG2T26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:13:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41818 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:28:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730061AbfG2T3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:29:06 -0400
+        id S1727564AbfG2T2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:28:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0BAC217D4;
-        Mon, 29 Jul 2019 19:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22C692070B;
+        Mon, 29 Jul 2019 19:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428545;
-        bh=DQmGO2/rHpH4BIoutncEkm80QuwmDwo+n4TZCChVJG8=;
+        s=default; t=1564428532;
+        bh=wK7b6COeD7dL3yqszsDzRkPT8M+NtPOZ+usPFbJcXvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vXDTMBYt6o3f/abxeByZqV8pDMPbpOLI5OodPdcBiDGpS2ODsTNAshrsK6CQlTkBr
-         q3rGQ3sq0bjKNWDCQtCAHFnfAVKNKAzZgWXmMmuyCuhcy/xwfOOmbMmOFINwgePGfL
-         kdPOKb8w03J5sEuEI36utafdLN0aSoQEuNIeEx14=
+        b=QEk4dfNT2LOBs2CGwzTFq2SucBWmLlVzRJ/Sit8IapDl3cyVE7yUQwTEUOnuuG/0c
+         ccC2vzqbB7/wIy0rTmrWx/ubmNRhBlNOkx4/PUhCqLKy6ynmry9cv7K3jUxh2zdRyB
+         Mrynq+iTXzuCD6RzsJdEAgPnHDOIq/T4kUkQoPVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>
-Subject: [PATCH 4.14 111/293] xen: let alloc_xenballooned_pages() fail if not enough memory free
-Date:   Mon, 29 Jul 2019 21:20:02 +0200
-Message-Id: <20190729190833.160577291@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 057/293] vhost_net: disable zerocopy by default
+Date:   Mon, 29 Jul 2019 21:19:08 +0200
+Message-Id: <20190729190828.485573190@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -58,70 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+[ Upstream commit 098eadce3c622c07b328d0a43dda379b38cf7c5e ]
 
-commit a1078e821b605813b63bf6bca414a85f804d5c66 upstream.
+Vhost_net was known to suffer from HOL[1] issues which is not easy to
+fix. Several downstream disable the feature by default. What's more,
+the datapath was split and datacopy path got the support of batching
+and XDP support recently which makes it faster than zerocopy part for
+small packets transmission.
 
-Instead of trying to allocate pages with GFP_USER in
-add_ballooned_pages() check the available free memory via
-si_mem_available(). GFP_USER is far less limiting memory exhaustion
-than the test via si_mem_available().
+It looks to me that disable zerocopy by default is more
+appropriate. It cold be enabled by default again in the future if we
+fix the above issues.
 
-This will avoid dom0 running out of memory due to excessive foreign
-page mappings especially on ARM and on x86 in PVH mode, as those don't
-have a pre-ballooned area which can be used for foreign mappings.
+[1] https://patchwork.kernel.org/patch/3787671/
 
-As the normal ballooning suffers from the same problem don't balloon
-down more than si_mem_available() pages in one iteration. At the same
-time limit the default maximum number of retries.
-
-This is part of XSA-300.
-
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/balloon.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/vhost/net.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -590,8 +590,15 @@ static void balloon_process(struct work_
- 				state = reserve_additional_memory();
- 		}
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index b40e8ded49c6..4d11152e60c1 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -35,7 +35,7 @@
  
--		if (credit < 0)
--			state = decrease_reservation(-credit, GFP_BALLOON);
-+		if (credit < 0) {
-+			long n_pages;
-+
-+			n_pages = min(-credit, si_mem_available());
-+			state = decrease_reservation(n_pages, GFP_BALLOON);
-+			if (state == BP_DONE && n_pages != -credit &&
-+			    n_pages < totalreserve_pages)
-+				state = BP_EAGAIN;
-+		}
+ #include "vhost.h"
  
- 		state = update_schedule(state);
- 
-@@ -630,6 +637,9 @@ static int add_ballooned_pages(int nr_pa
- 		}
- 	}
- 
-+	if (si_mem_available() < nr_pages)
-+		return -ENOMEM;
-+
- 	st = decrease_reservation(nr_pages, GFP_USER);
- 	if (st != BP_DONE)
- 		return -ENOMEM;
-@@ -759,7 +769,7 @@ static int __init balloon_init(void)
- 	balloon_stats.schedule_delay = 1;
- 	balloon_stats.max_schedule_delay = 32;
- 	balloon_stats.retry_count = 1;
--	balloon_stats.max_retry_count = RETRY_UNLIMITED;
-+	balloon_stats.max_retry_count = 4;
- 
- #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
- 	set_online_page_callback(&xen_online_page);
+-static int experimental_zcopytx = 1;
++static int experimental_zcopytx = 0;
+ module_param(experimental_zcopytx, int, 0444);
+ MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
+ 		                       " 1 -Enable; 0 - Disable");
+-- 
+2.20.1
+
 
 
