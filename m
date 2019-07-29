@@ -2,106 +2,176 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB1EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8FEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A982070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D652070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYkbKVYb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P1CWbXcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfG2DDN (ORCPT
+        id S1726633AbfG2DDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 23:03:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46989 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfG2DDN (ORCPT
+        Sun, 28 Jul 2019 23:03:16 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40247 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfG2DDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 28 Jul 2019 23:03:13 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k189so8406761pgk.13;
-        Sun, 28 Jul 2019 20:03:13 -0700 (PDT)
+Received: by mail-ed1-f67.google.com with SMTP id k8so57934494eds.7;
+        Sun, 28 Jul 2019 20:03:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=vhdyHKbr6BRELOCiWIx8QFrf2iWsG4qCQT0zVGLttDQ=;
-        b=fYkbKVYbMf7WylANOPWUxOmxhD0YEN3Arb+f4/5LmCJvzWI/K7DodlBOlT/0Dv97xB
-         hXR41NQfxhGHng8dn5Wi7pv5WiWYA9ZnpivmMzmBCBcZFs5dalWXv08FTCRV/NHF+zQl
-         4ttOfg6yC8yU7jbOF5XFNpAG+klbqalXmZC4Fb0DQlaepm6hWzrhQpDTt7SxJzS1j8Wy
-         Rt5dgMjxwjQkRMoX8/Iu/I4EdkJ0Do8pp1PMwNPoMy95fvz7oB2E+ZkEq7deZw5a/YyN
-         5XM3okKO7MCXLRC4r5dzsQU7z28G6i/DbBi4BjAuETipwPfylJ3bMPLg5mI4l44V3KIZ
-         wcGg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fXVvE8jAIC1NNZIfikHDR/1QE5dXSm7MFMLRP9/brXQ=;
+        b=P1CWbXcBwor5hFfN6eM0+AZeIpRuigARlpWFs0jelf9IA36v5ICoIlMCwgXaWmDvR3
+         /QiTkrYUa1MEMIP8Q0hsBw9fZDe5/zr1BkIhoMXo+tLCEBSgTPqlT9jRmInlLb1z4RZ/
+         slc8QwWFz4/T7l4QyY9jTsP19d/g7cRQ+Eh9aT8PsEEQYIKyXAEZKJ8KBlSCUOdkfryn
+         FpxQ+HkX/qhvxC67cK9Z6n8LC7ebtmVP9ZxHcra2IziDVfBLEit6D+hPX9KmGOA7VeCQ
+         rxKfQQIAyhmHk8S1iR7dSCNhUkCemuGkg0f3njn5YR0+7yUTPZ4nVRRsxNCZNjt6v445
+         FDaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vhdyHKbr6BRELOCiWIx8QFrf2iWsG4qCQT0zVGLttDQ=;
-        b=dXKauXZqnFuaPIqlHXmzDLchO5WM0Eau77ftTevClwOZ32o/swJO1Ii4FE8xFt+EW4
-         +LXgZafWYN3hwcE23IKRqy3jKFO1ovZCXscdUbYNlGK0h12Jo2/NfbTI8GnJwch1pGte
-         liQFHBefRj33Oku5h7m3NZWlcE5AqVynYJ5KMOTL9Co0vD3Nod7AFS2BgAllR3DJAUOo
-         0lXJmYnixhncgiGV3rqkSVnxf1ihxzLu7us0UOthcECmaDV03cJlv2Z/BZHSqCFGyE8B
-         d5xa4ceY2wEiHlPXdiq7n0SS8nUMSm2BRKRan/742Xphacz3dxh6gewtW9kxXw6MOlY1
-         aeWA==
-X-Gm-Message-State: APjAAAUWIisMkMNLcOaoTOWO4R7yWLi3UYtYv8vqGt5xpbbqQEATwuBL
-        x5TzCLTbSHPLdrfkDNzyJmg=
-X-Google-Smtp-Source: APXvYqy24B8Gn7MJsm4X2EXqziW8iKygHbrckYkajJkAi6vD9kLgfy2gVbVm/575Xf9i/1X6dbULzQ==
-X-Received: by 2002:a05:6a00:4c:: with SMTP id i12mr34459331pfk.134.1564369392804;
-        Sun, 28 Jul 2019 20:03:12 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id h14sm74535781pfq.22.2019.07.28.20.03.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Jul 2019 20:03:12 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     kvalo@codeaurora.org, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] ath6kl: Fix a possible null-pointer dereference in ath6kl_htc_mbox_create()
-Date:   Mon, 29 Jul 2019 11:03:05 +0800
-Message-Id: <20190729030305.18410-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fXVvE8jAIC1NNZIfikHDR/1QE5dXSm7MFMLRP9/brXQ=;
+        b=HK26qDV1Vjikk3M8Cjokwf5tLFwyQJt9EFhWAcv5bXjJ+aW96fZXpdZyrCke1tN0Gu
+         wNx3gBWiT6NL6tp5TzwdSTQPFGdOXpP7gMZbzEO8EfjyJQTZO5bwikJL/MBmrpCRti43
+         obK6p6bTDUiEds0IeKj3AahQhftjiw/+oT80r8f9c1nTH4gXV1e77tmtJzRW6lPKLg3y
+         nErSYQBOL2oLDpNis65h5CCQY7rQoKe+4EUTPQYYb+fKFLYRfeHi1bxxh9FP/9mfUYaT
+         efQAGiQWCITpFG3foiouHU2lj0Nmrfd2i4Ss8xs97GbyA+hounfP1V1rqiRlVDLcnoy6
+         n5dw==
+X-Gm-Message-State: APjAAAXCTCeOsSLzd9xcqgj+spVH73R0emIBemHgudT28XcSBkS7K81s
+        ZzwyD+V0S+cEMLpVzEv9LfponBdnU9ByguMuGfE=
+X-Google-Smtp-Source: APXvYqztZbNHWBjSUVnHMw4zUWMdTxfXHtkbV4nwpJQsA4Cbwma358T7+XXK91et5uMJwGA2a51svvZGHt8E4wrdLtA=
+X-Received: by 2002:a17:906:8317:: with SMTP id j23mr69799975ejx.51.1564369391203;
+ Sun, 28 Jul 2019 20:03:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190726123058.22915-1-hslester96@gmail.com> <20190727125749.63297c28@archlinux>
+ <20190728083141.GA14194@onstation.org>
+In-Reply-To: <20190728083141.GA14194@onstation.org>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Mon, 29 Jul 2019 11:03:00 +0800
+Message-ID: <CANhBUQ3QiV1mPD6p+AROv6YnK+1CB5voVAHKbmzueUWc7P6vcQ@mail.gmail.com>
+Subject: Re: [PATCH] iio: tsl2772: Use device-managed API
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ath6kl_htc_mbox_create(), when kzalloc() on line 2855 fails,
-target->dev is assigned to NULL, and ath6kl_htc_mbox_cleanup(target) is
-called on line 2885.
+Brian Masney <masneyb@onstation.org> =E4=BA=8E2019=E5=B9=B47=E6=9C=8828=E6=
+=97=A5=E5=91=A8=E6=97=A5 =E4=B8=8B=E5=8D=884:31=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Sat, Jul 27, 2019 at 12:57:49PM +0100, Jonathan Cameron wrote:
+> > On Fri, 26 Jul 2019 20:30:58 +0800
+> > Chuhong Yuan <hslester96@gmail.com> wrote:
+> >
+> > > Use devm_iio_device_register to simplify
+> > > the code.
+> > >
+> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> >
+> > Please try to pick up on likely reviewers in your cc list.  In this cas=
+e
+> > Brian did a lot of work cleaning these drivers up so I've added him.
+> > Not everyone keeps up with the linux-iio list for some reason ;)
+> >
+> > Immediate thought was that you had broken the ordering but turns out
+> > it is already buggy.
+> >
+> > As things stand, we remove the userspace interfaces (iio_device_unregis=
+ter)
+> > after turning off the power.   This is obviously a bad idea and also
+> > form a purely "obviously correct" stand point, we aren't doing the reve=
+rse
+> > of probe.
+> >
+> > So, I 'think' the right option is to reorder remove so that the power l=
+eft
+> > on until after the iio_device_unregister call. At that point, we can't
+> > use devm_iio_device_register as we'll have the same incorrect ordering
+> > we currently have.
+> >
+> > Brian, you looked at this driver most recently.  Thoughts?
+>
+> devm_add_action() could be used in the probe function to schedule the cal=
+l
+> to tsl2772_chip_off(). That would eliminate the need for
+> tsl2772_remove(). See tsl2772_disable_regulators_action() for an example =
+in
+> that driver.
+>
 
-In ath6kl_htc_mbox_cleanup(), target->dev is used on line 2895:
-    ath6kl_hif_cleanup_scatter(target->dev->ar);
+I find that we can use devm_add_action_or_reset() for
+tsl2772_disable_regulators_action() to eliminate the fault handling code.
 
-Thus, a null-pointer dereference may occur.
+I am not sure whether devm_add_action() can be used for
+tsl2772_chip_off() because it returns an integer, not void.
+And the return value is used in several functions.
 
-To fix this bug, kfree(target) is called and NULL is returned when
-kzalloc() on line 2855 fails.
+> Chuhong: Another potential cleanup to shrink the size of this driver is
+> to move it over to the regulator_bulk_() API. I didn't realize that API
+> existed at the time I introduced the regulator support. If you're
+> interested in taking on that cleanup as well, I can test those changes
+> for you if you don't have the hardware.
+>
+> Brian
+>
 
-This bug is found by a static analysis tool STCheck written by us.
+Does that mean merging vdd_supply and vddio_supply to an array of
+regulator_bulk_data and utilize regulator_bulk_() API to operate them
+together?
+If so, I can do that cleanup in next version.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/net/wireless/ath/ath6kl/htc_mbox.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I have an additional question that I find regulator_disable() is used in th=
+e
+end of many .remove functions of drivers, which hinders us to use devm
+functions.
+One example is drivers/iio/light/gp2ap020a00f.c.
+Is there any solution to this problem?
 
-diff --git a/drivers/net/wireless/ath/ath6kl/htc_mbox.c b/drivers/net/wireless/ath/ath6kl/htc_mbox.c
-index 65c31da43c47..998947ef63b6 100644
---- a/drivers/net/wireless/ath/ath6kl/htc_mbox.c
-+++ b/drivers/net/wireless/ath/ath6kl/htc_mbox.c
-@@ -2855,8 +2855,8 @@ static void *ath6kl_htc_mbox_create(struct ath6kl *ar)
- 	target->dev = kzalloc(sizeof(*target->dev), GFP_KERNEL);
- 	if (!target->dev) {
- 		ath6kl_err("unable to allocate memory\n");
--		status = -ENOMEM;
--		goto err_htc_cleanup;
-+		kfree(target);
-+		return NULL;
- 	}
- 
- 	spin_lock_init(&target->htc_lock);
--- 
-2.17.0
+Regards,
+Chuhong
 
+>
+> > > ---
+> > >  drivers/iio/light/tsl2772.c | 4 +---
+> > >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.=
+c
+> > > index 83cece921843..aa5891d105e8 100644
+> > > --- a/drivers/iio/light/tsl2772.c
+> > > +++ b/drivers/iio/light/tsl2772.c
+> > > @@ -1877,7 +1877,7 @@ static int tsl2772_probe(struct i2c_client *cli=
+entp,
+> > >     if (ret < 0)
+> > >             return ret;
+> > >
+> > > -   ret =3D iio_device_register(indio_dev);
+> > > +   ret =3D devm_iio_device_register(&clientp->dev, indio_dev);
+> > >     if (ret) {
+> > >             tsl2772_chip_off(indio_dev);
+> > >             dev_err(&clientp->dev,
+> > > @@ -1928,8 +1928,6 @@ static int tsl2772_remove(struct i2c_client *cl=
+ient)
+> > >
+> > >     tsl2772_chip_off(indio_dev);
+> > >
+> > > -   iio_device_unregister(indio_dev);
+> > > -
+> > >     return 0;
+> > >  }
+> > >
