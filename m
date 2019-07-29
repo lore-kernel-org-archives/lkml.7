@@ -5,70 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B49AC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B7CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0A8204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6B72064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430481;
-	bh=WC/j/sIjThtlobfzS6nVKzO7mZHYA9bZW6rokSFNWWI=;
+	s=default; t=1564430488;
+	bh=c3zoSHUz8pJvYgBPw8Tl4wiqoh1+WwLpB/LZ0rx2DHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=srsJBqTt9q087MYOKCMshkno6wpSndhJp5vH2rm+z+XCOmvcM9DCW/C2D17ChFruw
-	 5IMEVHY/djmV79nF5IGmkcwuCIsWZKw4QZPFKkLxr0ByIirMChYDSeOz1b/bfBxZKa
-	 EnwQw6oJOfYQWfpkgrGoqqyehfp25U/1a/wze4OM=
+	b=UQoqlJGIOICZnQRyxoCXy5sRtXDnIaug2PqoFJqxCkVxbnTe8aNFUTEiLvd97uMOj
+	 nziO4KPGyeh8NyCLcGZQ9OVgtV3Hc5bjjlqgoKzaK7tx1R7CiE30h+Z75XdJuFb4x7
+	 /0TSdfeHPhLcxNvxbnAKoodEIz/uFRlgD0MmbENU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390173AbfG2TvX (ORCPT
+        id S2403988AbfG2UB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:51:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42586 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:01:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403846AbfG2TvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:51:19 -0400
+        id S2390736AbfG2TvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:51:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E6BF21773;
-        Mon, 29 Jul 2019 19:51:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43DF9205F4;
+        Mon, 29 Jul 2019 19:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429878;
-        bh=WC/j/sIjThtlobfzS6nVKzO7mZHYA9bZW6rokSFNWWI=;
+        s=default; t=1564429865;
+        bh=c3zoSHUz8pJvYgBPw8Tl4wiqoh1+WwLpB/LZ0rx2DHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P0m1GikyM10M2aFm7plIQWVIjAqqWOestowzb4NVULm5EjLajk4EyznbR6/FW6Odr
-         OuPcU0kFaYbZaQtWFRpPHhhUhBG6dMkFIWYZfKXxtW5RPv2z7Alr744rX5wflYJukz
-         +xvbr/6S7KvxE5Z0392m/Jg8DiY4zU7FlK77wg7E=
+        b=mdvtzHz9h4NuPcINUKuxoxgbPmWVrGAVziUbXOxVWMhAVNr4rk3ZE+0tHmdPCH7OK
+         a2YHTL6lBuuH/+nXuEBoT3r7W6nGCAvWJ7T3hDKtThLxRItxjIf/hSzZd8XtcknuW3
+         KTwq1KOYHewm1RZKyncDf1njFbrbqCwuxXheXY5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Song Liu <songliubraving@fb.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Tejun Heo <tj@kernel.org>, Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 125/215] perf map: Fix potential NULL pointer dereference found by smatch tool
-Date:   Mon, 29 Jul 2019 21:22:01 +0200
-Message-Id: <20190729190800.952187231@linuxfoundation.org>
+Subject: [PATCH 5.2 081/215] PCI: sysfs: Ignore lockdep for remove attribute
+Date:   Mon, 29 Jul 2019 21:21:17 +0200
+Message-Id: <20190729190753.778442141@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -81,85 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 363bbaef63ffebcc745239fe80a953ebb5ac9ec9 ]
+[ Upstream commit dc6b698a86fe40a50525433eb8e92a267847f6f9 ]
 
-Based on the following report from Smatch, fix the potential NULL
-pointer dereference check.
+With CONFIG_PROVE_LOCKING=y, using sysfs to remove a bridge with a device
+below it causes a lockdep warning, e.g.,
 
-  tools/perf/util/map.c:479
-  map__fprintf_srccode() error: we previously assumed 'state' could be
-  null (see line 466)
+  # echo 1 > /sys/class/pci_bus/0000:00/device/0000:00:00.0/remove
+  ============================================
+  WARNING: possible recursive locking detected
+  ...
+  pci_bus 0000:01: busn_res: [bus 01] is released
 
-  tools/perf/util/map.c
-  465         /* Avoid redundant printing */
-  466         if (state &&
-  467             state->srcfile &&
-  468             !strcmp(state->srcfile, srcfile) &&
-  469             state->line == line) {
-  470                 free(srcfile);
-  471                 return 0;
-  472         }
-  473
-  474         srccode = find_sourceline(srcfile, line, &len);
-  475         if (!srccode)
-  476                 goto out_free_line;
-  477
-  478         ret = fprintf(fp, "|%-8d %.*s", line, len, srccode);
-  479         state->srcfile = srcfile;
-              ^^^^^^^
-  480         state->line = line;
-              ^^^^^^^
+The remove recursively removes the subtree below the bridge.  Each call
+uses a different lock so there's no deadlock, but the locks were all
+created with the same lockdep key so the lockdep checker can't tell them
+apart.
 
-This patch validates 'state' pointer before access its elements.
+Mark the "remove" sysfs attribute with __ATTR_IGNORE_LOCKDEP() as it is
+safe to ignore the lockdep check between different "remove" kernfs
+instances.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Fixes: dd2e18e9ac20 ("perf tools: Support 'srccode' output")
-Link: http://lkml.kernel.org/r/20190702103420.27540-8-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+There's discussion about a similar issue in USB at [1], which resulted in
+356c05d58af0 ("sysfs: get rid of some lockdep false positives") and
+e9b526fe7048 ("i2c: suppress lockdep warning on delete_device"), which do
+basically the same thing for USB "remove" and i2c "delete_device" files.
+
+[1] https://lore.kernel.org/r/Pine.LNX.4.44L0.1204251436140.1206-100000@iolanthe.rowland.org
+Link: https://lore.kernel.org/r/20190526225151.3865-1-marek.vasut@gmail.com
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+[bhelgaas: trim commit log, details at above links]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/map.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/pci/pci-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index ee71efb9db62..9c81ee092784 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -470,8 +470,11 @@ int map__fprintf_srccode(struct map *map, u64 addr,
- 		goto out_free_line;
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 6d27475e39b2..4e83c347de5d 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -477,7 +477,7 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+ 		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+ 	return count;
+ }
+-static struct device_attribute dev_remove_attr = __ATTR(remove,
++static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+ 							(S_IWUSR|S_IWGRP),
+ 							NULL, remove_store);
  
- 	ret = fprintf(fp, "|%-8d %.*s", line, len, srccode);
--	state->srcfile = srcfile;
--	state->line = line;
-+
-+	if (state) {
-+		state->srcfile = srcfile;
-+		state->line = line;
-+	}
- 	return ret;
- 
- out_free_line:
 -- 
 2.20.1
 
