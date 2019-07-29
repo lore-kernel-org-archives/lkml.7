@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C6DC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AB6C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6D22070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24F62064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431228;
-	bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
+	s=default; t=1564431233;
+	bh=UuliqgOTkTmntToZ81rjcCYcGZUswTVPwrY3Yz1BCyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gi9yLg8pLGohio0L8Aa4Sjm5Om/fQjg2pM3aPqrRGXwPC+wEbw7vGDF9ikxwglS5j
-	 vrXCYrCpsPYC0dYE4UWA0Ur64FPsbE/9QCo/qvDGWa8QSu7EHMfZPy8hh1W3gVZs3w
-	 IZjaDE/xbbS6lQy/1/hXIlgaY4rKt0MsDSfxeNFc=
+	b=ug1AAyW6G0xsSc1flrBN9h1u0Y9IYB7753Y26vTjq6rIjP5o0/A2VL/KIxbafd2U7
+	 dr6yrBF+Wy5GcqSUXM1mg4cP4QLft38fdftGb380q8Hc0L7AI0CDAjmO0dHLhPfWga
+	 9++ZVflWNiy/I7k2mbxjczjWGPqpODw6CydqcutY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfG2T31 (ORCPT
+        id S1730470AbfG2UNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:29:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41980 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:13:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727533AbfG2T3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:29:16 -0400
+        id S1727721AbfG2T3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:29:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F714217D4;
-        Mon, 29 Jul 2019 19:29:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC1482070B;
+        Mon, 29 Jul 2019 19:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428555;
-        bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
+        s=default; t=1564428564;
+        bh=UuliqgOTkTmntToZ81rjcCYcGZUswTVPwrY3Yz1BCyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PheJRNPBQkjYTRJP91yw8vNrqWik0wZQkQrf1+Q6ysDoQsv28Izj6D5cE58bkyLWJ
-         IPh38ehUMlznbLrrf3ewBGOxgnBNzy991+weKGDXBSHvZPUzDUOwkEnRZERdrFGJDU
-         tu6O/47HD+LuzURPc5BY7PjEctEsFwjpM3Xo/pIk=
+        b=DVgqmETs6QxFxBnLJg29Iv3GftPGSlDv3UiziWago28pgcnDrrwlOq4qPeEcyxhpB
+         R+rruj2p/WdI8BPnofcH9bKR9O8ZLKDpLwqcPCkoT5vabVbBPe6WdEsRlMH/BW/QWF
+         EmJV+PIvlbmHWKKixxal0lWdqou8e6lDQeaS5OGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Finn Thain <fthain@telegraphics.com.au>,
         Stan Johnson <userm57@yahoo.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 114/293] Revert "scsi: ncr5380: Increase register polling limit"
-Date:   Mon, 29 Jul 2019 21:20:05 +0200
-Message-Id: <20190729190833.357775795@linuxfoundation.org>
+Subject: [PATCH 4.14 117/293] scsi: mac_scsi: Increase PIO/PDMA transfer length threshold
+Date:   Mon, 29 Jul 2019 21:20:08 +0200
+Message-Id: <20190729190833.551407790@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -63,21 +63,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 25fcf94a2fa89dd3e73e965ebb0b38a2a4f72aa4 upstream.
+commit 7398cee4c3e6aea1ba07a6449e5533ecd0b92cdd upstream.
 
-This reverts commit 4822827a69d7cd3bc5a07b7637484ebd2cf88db6.
+Some targets introduce delays when handshaking the response to certain
+commands. For example, a disk may send a 96-byte response to an INQUIRY
+command (or a 24-byte response to a MODE SENSE command) too slowly.
 
-The purpose of that commit was to suppress a timeout warning message which
-appeared to be caused by target latency. But suppressing the warning is
-undesirable as the warning may indicate a messed up transfer count.
+Apparently the first 12 or 14 bytes are handshaked okay but then the system
+bus error timeout is reached while transferring the next word.
 
-Another problem with that commit is that 15 ms is too long to keep
-interrupts disabled as interrupt latency can cause system clock drift and
-other problems.
+Since the scsi bus phase hasn't changed, the driver then sets the target
+borken flag to prevent further PDMA transfers. The driver also logs the
+warning, "switching to slow handshake".
+
+Raise the PDMA threshold to 512 bytes so that PIO transfers will be used
+for these commands. This default is sufficiently low that PDMA will still
+be used for READ and WRITE commands.
+
+The existing threshold (16 bytes) was chosen more or less at random.
+However, best performance requires the threshold to be as low as possible.
+Those systems that don't need the PIO workaround at all may benefit from
+mac_scsi.setup_use_pdma=1
 
 Cc: Michael Schmitz <schmitzmic@gmail.com>
-Cc: stable@vger.kernel.org
-Fixes: 4822827a69d7 ("scsi: ncr5380: Increase register polling limit")
+Cc: stable@vger.kernel.org # v4.14+
+Fixes: 3a0f64bfa907 ("mac_scsi: Fix pseudo DMA implementation")
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 Tested-by: Stan Johnson <userm57@yahoo.com>
 Tested-by: Michael Schmitz <schmitzmic@gmail.com>
@@ -85,19 +95,28 @@ Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/NCR5380.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/mac_scsi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/NCR5380.h
-+++ b/drivers/scsi/NCR5380.h
-@@ -235,7 +235,7 @@ struct NCR5380_cmd {
- #define NCR5380_PIO_CHUNK_SIZE		256
- 
- /* Time limit (ms) to poll registers when IRQs are disabled, e.g. during PDMA */
--#define NCR5380_REG_POLL_TIME		15
-+#define NCR5380_REG_POLL_TIME		10
- 
- static inline struct scsi_cmnd *NCR5380_to_scmd(struct NCR5380_cmd *ncmd_ptr)
+--- a/drivers/scsi/mac_scsi.c
++++ b/drivers/scsi/mac_scsi.c
+@@ -52,7 +52,7 @@ static int setup_cmd_per_lun = -1;
+ module_param(setup_cmd_per_lun, int, 0);
+ static int setup_sg_tablesize = -1;
+ module_param(setup_sg_tablesize, int, 0);
+-static int setup_use_pdma = -1;
++static int setup_use_pdma = 512;
+ module_param(setup_use_pdma, int, 0);
+ static int setup_hostid = -1;
+ module_param(setup_hostid, int, 0);
+@@ -305,7 +305,7 @@ static int macscsi_dma_xfer_len(struct N
+                                 struct scsi_cmnd *cmd)
  {
+ 	if (hostdata->flags & FLAG_NO_PSEUDO_DMA ||
+-	    cmd->SCp.this_residual < 16)
++	    cmd->SCp.this_residual < setup_use_pdma)
+ 		return 0;
+ 
+ 	return cmd->SCp.this_residual;
 
 
