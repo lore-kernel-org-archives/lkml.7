@@ -2,86 +2,142 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE08C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9620EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF23A206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:51:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="kbsI0aGk"
+	by mail.kernel.org (Postfix) with ESMTP id 6F18C217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbfG2NvP (ORCPT
+        id S1727616AbfG2NwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 09:51:15 -0400
-Received: from onstation.org ([52.200.56.107]:35686 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbfG2NvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 09:51:14 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id EC8B83E910;
-        Mon, 29 Jul 2019 13:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1564408274;
-        bh=89xXheC+LLFYyAGIZ9A+v7CcZyeg5IL9Z5vUpZcHPb8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kbsI0aGkwYytIrBOPD/CK+DXISYKi28m6BHuin/ZTIMgn3x17Vakg34uk1Wx0bumG
-         K6AhnmXln3A7avFH4ZPkG2sIJBeVqWBfdw3u+IvSGH2HhCJ+49kmuUKSCQ4gzCwUzt
-         quVBmys2OrnS790WbkkIQ9oMPDLtyjWRNLbG1pKU=
-Date:   Mon, 29 Jul 2019 09:51:13 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: tsl2772: Use device-managed API
-Message-ID: <20190729135113.GA3049@onstation.org>
-References: <20190726123058.22915-1-hslester96@gmail.com>
- <20190727125749.63297c28@archlinux>
- <20190728083141.GA14194@onstation.org>
- <CANhBUQ3QiV1mPD6p+AROv6YnK+1CB5voVAHKbmzueUWc7P6vcQ@mail.gmail.com>
- <20190729080307.GA360@onstation.org>
- <20190729120802.000025e8@huawei.com>
+        Mon, 29 Jul 2019 09:52:09 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:17927 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbfG2NwI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 09:52:08 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: Q2m3xpDPgjjxj23DYoeUpZ4quvmA8ESbiWJQs2VDQYn1U0RGudOEp+0oFH/bzu2W5UhZHlx9kQ
+ TEQ3kq1AxAa9ASwgJ8ql9rrzk3HEyao1aGhqxDYdjEQ3JYUXXroE3JPSOG73aVW31JCixXnAWK
+ U7M2NC2dDw3crndKHrSNMc6Vc74OMiWUeml1NVJNEIf606zx/CbEyGOdcKaLeiRAGZBKTRP0N7
+ aGOTojYeGg47Pum0d+gSyWHCBPjbX79Nh2sk6idKAiwfxNKSAibeHrF2E/ANrmbcX/LdcgyAOr
+ +iE=
+X-IronPort-AV: E=Sophos;i="5.64,322,1559545200"; 
+   d="scan'208";a="41516577"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Jul 2019 06:52:07 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
+ chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 29 Jul 2019 06:52:07 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 29 Jul 2019 06:52:07 -0700
+Date:   Mon, 29 Jul 2019 15:52:06 +0200
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
+        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
+Message-ID: <20190729135205.oiuthcyesal4b4ct@lx-anielsen.microsemi.net>
+References: <eef063fe-fd3a-7e02-89c2-e40728a17578@cumulusnetworks.com>
+ <20190725142101.65tusauc6fzxb2yp@soft-dev3.microsemi.net>
+ <b9ce433a-3ef7-fe15-642a-659c5715d992@cumulusnetworks.com>
+ <e6ad982f-4706-46f9-b8f0-1337b09de350@cumulusnetworks.com>
+ <20190726120214.c26oj5vks7g5ntwu@soft-dev3.microsemi.net>
+ <b755f613-e6d8-a2e6-16cd-6f13ec0a6ddc@cumulusnetworks.com>
+ <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
+ <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
+ <20190729131420.tqukz55tz26jkg73@lx-anielsen.microsemi.net>
+ <3cc69103-d194-2eca-e7dd-e2fa6a730223@cumulusnetworks.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20190729120802.000025e8@huawei.com>
+In-Reply-To: <3cc69103-d194-2eca-e7dd-e2fa6a730223@cumulusnetworks.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 12:08:02PM +0100, Jonathan Cameron wrote:
-> On Mon, 29 Jul 2019 04:03:07 -0400
-> Brian Masney <masneyb@onstation.org> wrote:
-> > There are devm_regulator_*() variants of the regulator API available
-> > that you can use. Lots of other APIs in the kernel have devm variants
-> > to simply drivers.
-> I don't think there are any devm_ versions of regulator disable.
+The 07/29/2019 15:50, Nikolay Aleksandrov wrote:
+> On 29/07/2019 15:22, Nikolay Aleksandrov wrote:
+> > Hi Allan,
+> > On 29/07/2019 15:14, Allan W. Nielsen wrote:
+> >> First of all, as mentioned further down in this thread, I realized that our
+> >> implementation of the multicast floodmasks does not align with the existing SW
+> >> implementation. We will change this, such that all multicast packets goes to the
+> >> SW bridge.
+> >>
+> >> This changes things a bit, not that much.
+> >>
+> >> I actually think you summarized the issue we have (after changing to multicast
+> >> flood-masks) right here:
+> >>
+> >> The 07/26/2019 12:26, Nikolay Aleksandrov wrote:
+> >>>>> Actually you mentioned non-IP traffic, so the querier stuff is not a problem. This
+> >>>>> traffic will always be flooded by the bridge (and also a copy will be locally sent up).
+> >>>>> Thus only the flooding may need to be controlled.
+> >>
+> >> This seems to be exactly what we need.
+> >>
+> >> Assuming we have a SW bridge (br0) with 4 slave interfaces (eth0-3). We use this
+> >> on a network where we want to limit the flooding of frames with dmac
+> >> 01:21:6C:00:00:01 (which is non IP traffic) to eth0 and eth1.
+> >>
+> >> One way of doing this could potentially be to support the following command:
+> >>
+> >> bridge fdb add    01:21:6C:00:00:01 port eth0
+> >> bridge fdb append 01:21:6C:00:00:01 port eth1
+> >>
 > 
-> IIRC the argument made when this last came up was that it was rarely correct
-> to be as course grained as a lot of IIO drivers are.   We should probably
-> do runtime pm and turn these regulators off a lot more frequently.
-> 
-> The reality is that it is an optimization that doesn't get done in 
-> IIO drivers that often as we mostly just want them to work and many
-> usecases aren't actually power constrained,
-> 
-> So we end up doing a lot of devm_add_action_or_reset to power down the
-> regulators.
+> And the fdbs become linked lists?
+Yes, it will most likely become a linked list
 
-That makes sense. I have an out-of-tree patch where I started to add
-runtime pm support to the tsl2772 driver around the time I was working
-on the staging cleanup. I was unsure of how to do this when the user
-configures an interrupt threshold via sysfs since we don't want to
-completely power off the chip in that case. At the time, I couldn't
-find any other examples in IIO that showed how to do that. I should
-dust off that patch and send it out as a RFC to get some feedback.
+> So we'll increase the complexity for something that is already supported by
+> ACLs (e.g. tc) and also bridge per-port multicast flood flag ?
+I do not think it can be supported with the facilities we have today in tc.
 
-Brian
+We can do half of it (copy more fraems to the CPU) with tc, but we can not limit
+the floodmask of a frame with tc (say we want it to flood to 2 out of 4 slave
+ports).
+
+> I'm sorry but that doesn't sound good to me for a case which is very rare and
+> there are existing ways to solve without incurring performance hits or increasing
+> code complexity.
+I do not consider it rarely, controling the forwarding of L2 multicast frames is
+quite common in the applications we are doing.
+
+> If you find a way to achieve this without incurring a performance hit or significant
+> code complexity increase, and without breaking current use-cases (e.g. unexpected default
+> forwarding behaviour changes) then please send a patch and we can discuss it further with
+> all details present. People have provided enough alternatives which avoid all of the
+> problems.
+Will do, thanks for the guidance.
+
+/Allan
+
