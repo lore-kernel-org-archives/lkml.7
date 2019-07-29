@@ -2,231 +2,119 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A450C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42231C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26272206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092FB206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:33:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yj2x/YP+"
+	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="r6Umbo20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbfG2IdJ (ORCPT
+        id S1727739AbfG2Idz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:33:09 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41026 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfG2IdJ (ORCPT
+        Mon, 29 Jul 2019 04:33:55 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43291 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbfG2Idy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:33:09 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 62so36568667lfa.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 01:33:07 -0700 (PDT)
+        Mon, 29 Jul 2019 04:33:54 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so60783850wru.10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 01:33:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fzjgi5IYwtgWKCD94QQKl1WKdW6R14NVG7cIaq5hNd0=;
-        b=Yj2x/YP+GQx3u0ETLl95DFn76V+nUeZ0HgcyvoUS0J23BQZRtMVjzIjCk80uAnKs7Q
-         HQlRZ1Ixt54mk2Xl0CPAS4hhA/sUUWDDv5/rRB2v+KHQ4C83QqlXf3PwcGVgrK44gXGK
-         T8QwJf/xyMFHhs2/N13YRy+O5ZrAaWHzCrT+9uVBY8T0e9XoY4vKw0aMc3l5RNtlaUye
-         2VNkfpFLe1kIUERcSgFAVPZYdYW3WF1u+Y7yXdwTmDoI1JjojonOcWFQNJEu9zZ2L+Ms
-         iR7gq/NDAQVjh7NAv7l7QBoZvm7uLNemt8yUQrhf5sdM60rK76dfCnEyAtS40qTLkvPy
-         d9ag==
+        d=linbit-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1oADSOD4kjZ1dqW/2Ui0ZnHxXiMQh/ptauFbEpo8Vo8=;
+        b=r6Umbo20Hap5YkpBHAoy7Vc3/ihU0piqjaCdPXTVL7nw+8vYKjAAzxohdcz9o/y51r
+         TyrDkzFAs1R6ZHZ06c7O2BZMT6j/S4MCfalfInn14cvf0WWAHPzih3ZYjvLga/XFZiR/
+         DvHsjlNNk1nD+JNTMGbENean0MjqOr/l1tK4708UbzMCUGm3b2PE3Q713mr+v3O1h9Kv
+         HAZZXRXSF5JcftNmdjQV88kx67XoklUDEPaFDWkHhU37MR9YlxL3CjUx/VdTIBPyx3sL
+         utvpItaXj0qSOAjdnZZIegVXlVhHo27Usofbwu/bsI4swva9jCg11XH9ViCVaFyozwR6
+         ox6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fzjgi5IYwtgWKCD94QQKl1WKdW6R14NVG7cIaq5hNd0=;
-        b=qFqFX15699i5pVKnmvmgp6xCheXTbEIccEl9xPnjqstv88w2yDNg3Ov/52XHsUbZGk
-         oMQD6c4Tj3CjOgr8joXF+IQ6XT8VEfKJi+RxMcdoKARh3USoL1JzTxLNaikXCN3Kt7Ng
-         Mib1VbA4Eqw83Muf1G4HTXJ9sEzfDxtE/7yfj5osmn71avUjdNsiCrqekPabTmpY90ck
-         bHBVuGWQywtfV7NEiSVOWpJ3HXXeq9s6j0v2wqbrvAbDT0s7P2ge0wclJhTFrQqevcX4
-         VzZsXfJ71p9sdVNq7VnFcsByxj3jsC+K4N8Y8lM919YIdCSO95anD7EkROXlX8KHnE3n
-         rI3g==
-X-Gm-Message-State: APjAAAXu6R9o9H/Qac5peR9b6BOxxUAAGGPFUBTe3HY0MB9XVuvYBbap
-        gPapBjODt/sL9nI93mr9XNhmwNpCL93Hg2+Lz5FHFw==
-X-Google-Smtp-Source: APXvYqxOB3hlBmp/ELmfdAvewRmPGBGlLy908aDcnO5gzCSlHvcgEUZGOZj5/xu4Z+SD47jako1Nt3Hob11dDINtGdM=
-X-Received: by 2002:a19:5e10:: with SMTP id s16mr49683043lfb.13.1564389186319;
- Mon, 29 Jul 2019 01:33:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1oADSOD4kjZ1dqW/2Ui0ZnHxXiMQh/ptauFbEpo8Vo8=;
+        b=lJw48FVQQTo4LekgFNEVeAtDKzw/Z7zGENIkrXBFOQ+IPJ6Ys3gFbs9J6vc3Fd37bo
+         slNX9WMYqO6RA+H1kR5uImrMVg9bpuUFpGoVAq680HmDvcvrJPwmnJiWziUx/GbalStl
+         yvjU0Ax0Mc4eHcqoxbwLqKXybX8ZMIEfHT6rB2rqF/dXSyYqD1dZ/rWuCFEo9XwId9g1
+         2BM8wcbb/319EtEnPd6dw5hItC/YpMBkN/JKOI5l5wpOR0z21WeHjqMjwSMtkZPV13MB
+         aHTX1zLnZ2k4PvLOTKn2KLZdWC4H/upKM85WDpEqd2qTP2Gico0fjxq7AcfS0ApWjPR3
+         GCkw==
+X-Gm-Message-State: APjAAAUpTxvdWb5oHwoG1JQ2VMPvVOO0GmZV3Nx/0QPGbxHiAiC5vvxc
+        9LtRtTeJ9RkMuxeDwi6RRevVzzjE+XHLRw==
+X-Google-Smtp-Source: APXvYqxMGuL7m1YDC9Rc/HvOu4n6UhkpN7IQYCHtUlbxpWkT+Hyzhf2KVwI3s+e5tzMFeqXyaLcemA==
+X-Received: by 2002:adf:e40e:: with SMTP id g14mr35397526wrm.161.1564389232614;
+        Mon, 29 Jul 2019 01:33:52 -0700 (PDT)
+Received: from gintonic.linbit ([2001:858:107:1:6428:48d1:352:f871])
+        by smtp.gmail.com with ESMTPSA id b2sm77606191wrp.72.2019.07.29.01.33.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 01:33:52 -0700 (PDT)
+From:   =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Eric W . Biederman" <ebiederm@xmission.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] drbd: do not ignore signals in threads
+Date:   Mon, 29 Jul 2019 10:32:48 +0200
+Message-Id: <20190729083248.30362-1-christoph.boehmwalder@linbit.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20190215024830.GA26477@jordon-HP-15-Notebook-PC>
- <20190728180611.GA20589@mail-itl> <CAFqt6zaMDnpB-RuapQAyYAub1t7oSdHH_pTD=f5k-s327ZvqMA@mail.gmail.com>
-In-Reply-To: <CAFqt6zaMDnpB-RuapQAyYAub1t7oSdHH_pTD=f5k-s327ZvqMA@mail.gmail.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Mon, 29 Jul 2019 14:02:54 +0530
-Message-ID: <CAFqt6zY+07JBxAVfMqb+X78mXwFOj2VBh0nbR2tGnQOP9RrNkQ@mail.gmail.com>
-Subject: Re: [Xen-devel] [PATCH v4 8/9] xen/gntdev.c: Convert to use vm_map_pages()
-To:     =?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        robin.murphy@arm.com, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 1:35 PM Souptick Joarder <jrdr.linux@gmail.com> wro=
-te:
->
-> On Sun, Jul 28, 2019 at 11:36 PM Marek Marczykowski-G=C3=B3recki
-> <marmarek@invisiblethingslab.com> wrote:
-> >
-> > On Fri, Feb 15, 2019 at 08:18:31AM +0530, Souptick Joarder wrote:
-> > > Convert to use vm_map_pages() to map range of kernel
-> > > memory to user vma.
-> > >
-> > > map->count is passed to vm_map_pages() and internal API
-> > > verify map->count against count ( count =3D vma_pages(vma))
-> > > for page array boundary overrun condition.
-> >
-> > This commit breaks gntdev driver. If vma->vm_pgoff > 0, vm_map_pages
-> > will:
-> >  - use map->pages starting at vma->vm_pgoff instead of 0
->
-> The actual code ignores vma->vm_pgoff > 0 scenario and mapped
-> the entire map->pages[i]. Why the entire map->pages[i] needs to be mapped
-> if vma->vm_pgoff > 0 (in original code) ?
->
-> are you referring to set vma->vm_pgoff =3D 0 irrespective of value passed
-> from user space ? If yes, using vm_map_pages_zero() is an alternate
-> option.
->
->
-> >  - verify map->count against vma_pages()+vma->vm_pgoff instead of just
-> >    vma_pages().
->
-> In original code ->
->
-> diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-> index 559d4b7f807d..469dfbd6cf90 100644
-> --- a/drivers/xen/gntdev.c
-> +++ b/drivers/xen/gntdev.c
-> @@ -1084,7 +1084,7 @@ static int gntdev_mmap(struct file *flip, struct
-> vm_area_struct *vma)
-> int index =3D vma->vm_pgoff;
-> int count =3D vma_pages(vma);
->
-> Count is user passed value.
->
-> struct gntdev_grant_map *map;
-> - int i, err =3D -EINVAL;
-> + int err =3D -EINVAL;
-> if ((vma->vm_flags & VM_WRITE) && !(vma->vm_flags & VM_SHARED))
-> return -EINVAL;
-> @@ -1145,12 +1145,9 @@ static int gntdev_mmap(struct file *flip,
-> struct vm_area_struct *vma)
-> goto out_put_map;
-> if (!use_ptemod) {
-> - for (i =3D 0; i < count; i++) {
-> - err =3D vm_insert_page(vma, vma->vm_start + i*PAGE_SIZE,
-> - map->pages[i]);
->
-> and when count > i , we end up with trying to map memory outside
-> boundary of map->pages[i], which was not correct.
+Fix a regression introduced by upstream commit fee109901f39
+('signal/drbd: Use send_sig not force_sig').
 
-typo.
-s/count > i / count > map->count
->
-> - if (err)
-> - goto out_put_map;
-> - }
-> + err =3D vm_map_pages(vma, map->pages, map->count);
-> + if (err)
-> + goto out_put_map;
->
-> With this commit, inside __vm_map_pages(), we have addressed this scenari=
-o.
->
-> +static int __vm_map_pages(struct vm_area_struct *vma, struct page **page=
-s,
-> + unsigned long num, unsigned long offset)
-> +{
-> + unsigned long count =3D vma_pages(vma);
-> + unsigned long uaddr =3D vma->vm_start;
-> + int ret, i;
-> +
-> + /* Fail if the user requested offset is beyond the end of the object */
-> + if (offset > num)
-> + return -ENXIO;
-> +
-> + /* Fail if the user requested size exceeds available object size */
-> + if (count > num - offset)
-> + return -ENXIO;
->
-> By checking count > num -offset. (considering vma->vm_pgoff !=3D 0 as wel=
-l).
-> So we will never cross the boundary of map->pages[i].
->
->
-> >
-> > In practice, this breaks using a single gntdev FD for mapping multiple
-> > grants.
->
-> How ?
->
-> >
-> > It looks like vm_map_pages() is not a good fit for this code and IMO it
-> > should be reverted.
->
-> Did you hit any issue around this code in real time ?
->
->
-> >
-> > > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> > > Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> > > ---
-> > >  drivers/xen/gntdev.c | 11 ++++-------
-> > >  1 file changed, 4 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-> > > index 5efc5ee..5d64262 100644
-> > > --- a/drivers/xen/gntdev.c
-> > > +++ b/drivers/xen/gntdev.c
-> > > @@ -1084,7 +1084,7 @@ static int gntdev_mmap(struct file *flip, struc=
-t vm_area_struct *vma)
-> > >       int index =3D vma->vm_pgoff;
-> > >       int count =3D vma_pages(vma);
-> > >       struct gntdev_grant_map *map;
-> > > -     int i, err =3D -EINVAL;
-> > > +     int err =3D -EINVAL;
-> > >
-> > >       if ((vma->vm_flags & VM_WRITE) && !(vma->vm_flags & VM_SHARED))
-> > >               return -EINVAL;
-> > > @@ -1145,12 +1145,9 @@ static int gntdev_mmap(struct file *flip, stru=
-ct vm_area_struct *vma)
-> > >               goto out_put_map;
-> > >
-> > >       if (!use_ptemod) {
-> > > -             for (i =3D 0; i < count; i++) {
-> > > -                     err =3D vm_insert_page(vma, vma->vm_start + i*P=
-AGE_SIZE,
-> > > -                             map->pages[i]);
-> > > -                     if (err)
-> > > -                             goto out_put_map;
-> > > -             }
-> > > +             err =3D vm_map_pages(vma, map->pages, map->count);
-> > > +             if (err)
-> > > +                     goto out_put_map;
-> > >       } else {
-> > >  #ifdef CONFIG_X86
-> > >               /*
-> >
-> > --
-> > Best Regards,
-> > Marek Marczykowski-G=C3=B3recki
-> > Invisible Things Lab
-> > A: Because it messes up the order in which people normally read text.
-> > Q: Why is top-posting such a bad thing?
+Currently, when a thread is initialized, all signals are set to be
+ignored by default. DRBD uses SIGHUP to end its threads, which means it
+is now no longer possible to bring down a DRBD resource because the
+signals do not make it through to the thread in question.
+
+This circumstance was previously hidden by the fact that DRBD used
+force_sig() to kill its threads. The aforementioned upstream commit
+changed this to send_sig(), which means the effects of the signals being
+ignored by default are now becoming visible.
+
+Thus, issue an allow_signal() at the start of the thread to explicitly
+allow the desired signals.
+
+Signed-off-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
+Signed-off-by: Philipp Reisner <philipp.reisner@linbit.com>
+Fixes: fee109901f39 ("signal/drbd: Use send_sig not force_sig")
+Cc: stable@vger.kernel.org
+---
+ drivers/block/drbd/drbd_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+index 9bd4ddd12b25..b8b986df6814 100644
+--- a/drivers/block/drbd/drbd_main.c
++++ b/drivers/block/drbd/drbd_main.c
+@@ -318,6 +318,9 @@ static int drbd_thread_setup(void *arg)
+ 	unsigned long flags;
+ 	int retval;
+ 
++	allow_signal(DRBD_SIGKILL);
++	allow_signal(SIGXCPU);
++
+ 	snprintf(current->comm, sizeof(current->comm), "drbd_%c_%s",
+ 		 thi->name[0],
+ 		 resource->name);
+-- 
+2.22.0
+
