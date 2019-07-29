@@ -2,157 +2,182 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B37C7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F6DC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4ACB206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:43:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PHC2FXYu"
+	by mail.kernel.org (Postfix) with ESMTP id 33ECA206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:45:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564418724;
+	bh=x+aqiC/5J6cLRqB5rlt0xIXHK2pvRJY+eBKePLiGn7c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jbeuhsDOxzHrijqQHB76ZJCpYecCdO/xsKdcF+9UeV6xbcPwqVqatAUnCzFKqb5an
+	 xMrMzQoDB9B8kL0ppHI9nXPa8vBcH1VTqLpHKtC7pF+2fx5qHfiURTJRLhT7TZ9iih
+	 jKxW1gVbgI+/BjSfCYtfeTieemQMlIRlO8Mc/ORM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbfG2Qnv (ORCPT
+        id S1727924AbfG2QpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:43:51 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39920 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbfG2Qnv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:43:51 -0400
-Received: by mail-pf1-f196.google.com with SMTP id f17so24324580pfn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:43:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GTxqOtx/tULQyH+zO3Bz0gEKEdO5gP/P6N04rGxbcPI=;
-        b=PHC2FXYu2saZhEvftEBHC72CB1sBvN3g2hGFT2XM8a3oViVN66MvcLKC6N9rWOAkJ+
-         NRIgvA6YNK8FD/3xcIQx2vHRPbwcoVP4SKP8jGWsHDxpftaDIX3YRiEvqARs8ebbAfZb
-         0bfNOsXZJzfkDV4KRrAtBb5S6Tv01axWsa/Hc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GTxqOtx/tULQyH+zO3Bz0gEKEdO5gP/P6N04rGxbcPI=;
-        b=DqBPrDqSdeQR/WYue7b+uU06acGpVed5O4+kocGtP8BwxveHorgscefQoABjxTK0P1
-         m5aZ6DO1wtSap5TXWhi/gIiUJX8qhxPJZ1zJ3EjHq7BMOpGjHiZs1nWTsym2heogoHtA
-         hpv9aHsC1Sel+JZrs8ajGspwFQ80Xa9fTozt41NTo4osUTgY2oemNQPjeis4hDSSlWir
-         8f4z1RtKCGRnX3IBJHa/F+xHj/ck63op35ciEngBpe9ePu3Q4dZKFnpnMQCatLmRSO6X
-         FShGz9Ha04iw2qSwKQbB6QKurPSxMHaW26V2hbcmXvx/LYihx1Hj/k4ZVOvZRhtUcDQA
-         g0aQ==
-X-Gm-Message-State: APjAAAXbtqhuVQeFWb5EJ7pFENH1V5Pmf30pZbMOqfKy3jLFN4qYDZQ6
-        NyIb2at/Dd4Uhs+de6y+dAPdtw==
-X-Google-Smtp-Source: APXvYqwY+cdKqt/jiGYWCzxUKnexFNPVOjkqUZM2+zcOxvIsY1mNeS37X+qQARmwQd5Rya5w/9CdCA==
-X-Received: by 2002:a17:90a:a613:: with SMTP id c19mr115416417pjq.17.1564418630555;
-        Mon, 29 Jul 2019 09:43:50 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h9sm57029156pgh.51.2019.07.29.09.43.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 09:43:49 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 09:43:48 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] watchdog: Mark expected switch fall-throughs
-Message-ID: <201907290943.28A73DF@keescook>
-References: <20190729151033.GA10143@embeddedor>
+        Mon, 29 Jul 2019 12:45:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbfG2QpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:45:22 -0400
+Received: from localhost (lpr83-1-88-168-111-231.fbx.proxad.net [88.168.111.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2248206A2;
+        Mon, 29 Jul 2019 16:45:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564418721;
+        bh=x+aqiC/5J6cLRqB5rlt0xIXHK2pvRJY+eBKePLiGn7c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cmypc6YcpSic4RB5SNHXuEL2hvJ1i959kKLp5fSR2JBZ/YiIpnuaCvXPHqhKHUh+t
+         e3bB7LrJRRTjCMLIrwmoPdP+ziiPNqcxnkj5iOizdBCFhO1GI+NKQX8ox9cMW3ipbK
+         28ReKNhep3bbt5pMbDMTBhyNsPtjRu/hoIqjJahM=
+Date:   Mon, 29 Jul 2019 18:45:16 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        mark.rutland@arm.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org,
+        thierry.reding@gmail.com, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/6] pwm: sun4i: Add a quirk for bus clock
+Message-ID: <20190729164516.yxfgj2zd3d5ii4c4@flea.home>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <20190726184045.14669-4-jernej.skrabec@siol.net>
+ <20190729063825.wxfky6nswcru26g7@pengutronix.de>
+ <4022372.WfP88Fa4Lu@jernej-laptop>
+ <20190729161435.5bnj3ikocsyep4dd@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="szfghxy2ac5dvf2h"
 Content-Disposition: inline
-In-Reply-To: <20190729151033.GA10143@embeddedor>
+In-Reply-To: <20190729161435.5bnj3ikocsyep4dd@pengutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:10:33AM -0500, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings:
-> 
-> drivers/watchdog/ar7_wdt.c: warning: this statement may fall
-> through [-Wimplicit-fallthrough=]:  => 237:3
-> drivers/watchdog/pcwd.c: warning: this statement may fall
-> through [-Wimplicit-fallthrough=]:  => 653:3
-> drivers/watchdog/sb_wdog.c: warning: this statement may fall
-> through [-Wimplicit-fallthrough=]:  => 204:3
-> drivers/watchdog/wdt.c: warning: this statement may fall
-> through [-Wimplicit-fallthrough=]:  => 391:3
-> 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+--szfghxy2ac5dvf2h
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--Kees
+On Mon, Jul 29, 2019 at 06:14:35PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Jernej,
+>
+> On Mon, Jul 29, 2019 at 05:48:36PM +0200, Jernej =C5=A0krabec wrote:
+> > Dne ponedeljek, 29. julij 2019 ob 08:38:25 CEST je Uwe Kleine-K=C3=B6nig
+> > napisal(a):
+> > > Hello,
+> > >
+> > > On Fri, Jul 26, 2019 at 08:40:42PM +0200, Jernej Skrabec wrote:
+> > > > H6 PWM core needs bus clock to be enabled in order to work.
+> > > >
+> > > > Add a quirk for it.
+> > > >
+> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > ---
+> > > >
+> > > >  drivers/pwm/pwm-sun4i.c | 15 +++++++++++++++
+> > > >  1 file changed, 15 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > > > index 1b7be8fbde86..7d3ac3f2dc3f 100644
+> > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > @@ -72,6 +72,7 @@ static const u32 prescaler_table[] =3D {
+> > > >
+> > > >  };
+> > > >
+> > > >  struct sun4i_pwm_data {
+> > > >
+> > > > +	bool has_bus_clock;
+> > > >
+> > > >  	bool has_prescaler_bypass;
+> > > >  	bool has_reset;
+> > > >  	unsigned int npwm;
+> > > >
+> > > > @@ -79,6 +80,7 @@ struct sun4i_pwm_data {
+> > > >
+> > > >  struct sun4i_pwm_chip {
+> > > >
+> > > >  	struct pwm_chip chip;
+> > > >
+> > > > +	struct clk *bus_clk;
+> > > >
+> > > >  	struct clk *clk;
+> > > >  	struct reset_control *rst;
+> > > >  	void __iomem *base;
+> > > >
+> > > > @@ -382,6 +384,16 @@ static int sun4i_pwm_probe(struct platform_dev=
+ice
+> > > > *pdev)>
+> > > >  		reset_control_deassert(pwm->rst);
+> > > >
+> > > >  	}
+> > > >
+> > > > +	if (pwm->data->has_bus_clock) {
+> > > > +		pwm->bus_clk =3D devm_clk_get(&pdev->dev, "bus");
+> > >
+> > > Similar to my suggestion in patch 2: I'd use devm_clk_get_optional() =
+and
+> > > drop struct sun4i_pwm_data::has_bus_clock.
+> >
+> > This one is not so simple. This patch has incorrect logic. Correct logi=
+c would
+> > be to use "devm_clk_get(&pdev->dev, NULL)" for variants without bus clo=
+ck as
+> > it is done already and "devm_clk_get(&pdev->dev, "bus")" and
+> > "devm_clk_get(&pdev->dev, "mod")" for variants with bus clock.
+>
+> Then maybe something like the following?:
+>
+> 	busclk =3D devm_clk_get_optional(..., "bus");
+> 	modclk =3D devm_clk_get_optional(..., "mod");
+>
+> 	/*
+> 	 * old dtbs might have a single clock but no clock names. Fall
+> 	 * back to this for compatibility reasons.
+> 	 */
+> 	if (!modclk) {
+> 		modclk =3D devm_clk_get(..., NULL);
+> 	}
 
-> ---
->  drivers/watchdog/ar7_wdt.c | 1 +
->  drivers/watchdog/pcwd.c    | 2 +-
->  drivers/watchdog/sb_wdog.c | 1 +
->  drivers/watchdog/wdt.c     | 2 +-
->  4 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/watchdog/ar7_wdt.c b/drivers/watchdog/ar7_wdt.c
-> index b9b2d06b3879..668a1c704f28 100644
-> --- a/drivers/watchdog/ar7_wdt.c
-> +++ b/drivers/watchdog/ar7_wdt.c
-> @@ -235,6 +235,7 @@ static long ar7_wdt_ioctl(struct file *file,
->  		ar7_wdt_update_margin(new_margin);
->  		ar7_wdt_kick(1);
->  		spin_unlock(&wdt_lock);
-> +		/* Fall through */
->  
->  	case WDIOC_GETTIMEOUT:
->  		if (put_user(margin, (int *)arg))
-> diff --git a/drivers/watchdog/pcwd.c b/drivers/watchdog/pcwd.c
-> index 1b2cf5b95a89..c3c93e00b320 100644
-> --- a/drivers/watchdog/pcwd.c
-> +++ b/drivers/watchdog/pcwd.c
-> @@ -651,7 +651,7 @@ static long pcwd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->  			return -EINVAL;
->  
->  		pcwd_keepalive();
-> -		/* Fall */
-> +		/* Fall through */
->  
->  	case WDIOC_GETTIMEOUT:
->  		return put_user(heartbeat, argp);
-> diff --git a/drivers/watchdog/sb_wdog.c b/drivers/watchdog/sb_wdog.c
-> index 5a6ced7a7e8f..202fc8d8ca5f 100644
-> --- a/drivers/watchdog/sb_wdog.c
-> +++ b/drivers/watchdog/sb_wdog.c
-> @@ -202,6 +202,7 @@ static long sbwdog_ioctl(struct file *file, unsigned int cmd,
->  		timeout = time;
->  		sbwdog_set(user_dog, timeout);
->  		sbwdog_pet(user_dog);
-> +		/* Fall through */
->  
->  	case WDIOC_GETTIMEOUT:
->  		/*
-> diff --git a/drivers/watchdog/wdt.c b/drivers/watchdog/wdt.c
-> index 0650100fad00..7d278b37e083 100644
-> --- a/drivers/watchdog/wdt.c
-> +++ b/drivers/watchdog/wdt.c
-> @@ -389,7 +389,7 @@ static long wdt_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->  		if (wdt_set_heartbeat(new_heartbeat))
->  			return -EINVAL;
->  		wdt_ping();
-> -		/* Fall */
-> +		/* Fall through */
->  	case WDIOC_GETTIMEOUT:
->  		return put_user(heartbeat, p);
->  	default:
-> -- 
-> 2.22.0
-> 
+Again, there's nothing optional about these clocks. You need a
+particular set of clocks for a given generation, and a separate set of
+them on another generation of SoCs.
 
--- 
-Kees Cook
+It really isn't about DT validation. We're really making sure that the
+device can be operational. It's as much of a validation step than
+making sure we have mapped registers (reg), or an interrupt if we had
+any.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--szfghxy2ac5dvf2h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXT8inAAKCRDj7w1vZxhR
+xfAvAQDPD/W10siMsbxXt0TnODSzxIn/7DF49wiKOuWZz6OwFwEAnwlydOCmRVBw
+8J0s2aXuCVfbyJpDqk/FcreSk6jcPQE=
+=dYSs
+-----END PGP SIGNATURE-----
+
+--szfghxy2ac5dvf2h--
