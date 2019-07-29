@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2893C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C03C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3367217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5DD217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428947;
-	bh=G65mtQ9TaQSShLzvl+hKMv4/rU9GifJgKQgXHhXgXD4=;
+	s=default; t=1564428950;
+	bh=H5VIOUyEePA3e7YILjunOmQC973IRxnSoT1mO4GezMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NGLZpluPKQKg3mCHZXzI8ORbHSmjYM6/7lS2qgcpHWjM7sncCC0h0XJ/kzwf6lbN7
-	 dCaEQkCgBEtuE9okKHteU/PpiEBSuU1tKISFXLj1OyVCqoSe8Ju+d2DGTqCqarzQ+0
-	 rPoonozF/VLaaV44FeHk3cLQRsr+xJ5Hhqjh1Ado=
+	b=wnPiPS0bRwQQwtRMRV6ldQxVxropXopF/4npRonTKr8HBqe4NVAqOPTQceQcI83t5
+	 ai2xpvsJM8I4FPlJmdZhgH7ngqQJsN+272vfjTF6p4i6nakDNWZREG1ouQ6JY314YP
+	 hLIqiyIE31Nt05W/S2h7tan3CbBpekbdk18oEkGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388529AbfG2Tfq (ORCPT
+        id S2388540AbfG2Tft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:35:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50012 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:35:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbfG2Tfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:35:40 -0400
+        id S2388528AbfG2Tfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:35:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2561C217D4;
-        Mon, 29 Jul 2019 19:35:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82145217D9;
+        Mon, 29 Jul 2019 19:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428939;
-        bh=G65mtQ9TaQSShLzvl+hKMv4/rU9GifJgKQgXHhXgXD4=;
+        s=default; t=1564428946;
+        bh=H5VIOUyEePA3e7YILjunOmQC973IRxnSoT1mO4GezMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dw8z936XlyXTcRO5jTpfZfiBG79gKLA7j8ltcUg9KGx2bTEM1aUd7Zh4RlWE3mmbK
-         Ue3dsEw0CFIhZ2V6zIGcPP59i9G2evmAgNRs9Mhv2YVWdOzEmtf2hXTnbum4SGXCfN
-         hfzTFXxnfAw+vpVCtztL+2elJDHXsbHr3Bzdh/jA=
+        b=ge0sY79RohgICVETjNcTBc7DIreW3WXAzt/+VKS0u3uxvn3yaccdxwpmqslKuCoep
+         kjUykcHIUuLt3u0DgmC+C/BtF2TswQb0Bfipfn88lvIntYxfiUubpgHDpMG1JzWTRN
+         gqUv8z11iZVIM8szbwJanH/ULlKSktPrjrQ5xPRI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gen Zhang <blackgod016574@gmail.com>,
-        Jani Nikula <jani.nikula@intel.com>,
+        stable@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 227/293] drm/edid: Fix a missing-check bug in drm_load_edid_firmware()
-Date:   Mon, 29 Jul 2019 21:21:58 +0200
-Message-Id: <20190729190841.890464443@linuxfoundation.org>
+Subject: [PATCH 4.14 237/293] phy: renesas: rcar-gen2: Fix memory leak at error paths
+Date:   Mon, 29 Jul 2019 21:22:08 +0200
+Message-Id: <20190729190842.604743846@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,38 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9f1f1a2dab38d4ce87a13565cf4dc1b73bef3a5f ]
+[ Upstream commit d4a36e82924d3305a17ac987a510f3902df5a4b2 ]
 
-In drm_load_edid_firmware(), fwstr is allocated by kstrdup(). And fwstr
-is dereferenced in the following codes. However, memory allocation
-functions such as kstrdup() may fail and returns NULL. Dereferencing
-this null pointer may cause the kernel go wrong. Thus we should check
-this kstrdup() operation.
-Further, if kstrdup() returns NULL, we should return ERR_PTR(-ENOMEM) to
-the caller site.
+This patch fixes memory leak at error paths of the probe function.
+In for_each_child_of_node, if the loop returns, the driver should
+call of_put_node() before returns.
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190524023222.GA5302@zhanggen-UX430UQ
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+Fixes: 1233f59f745b237 ("phy: Renesas R-Car Gen2 PHY driver")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_edid_load.c | 2 ++
+ drivers/phy/renesas/phy-rcar-gen2.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_edid_load.c b/drivers/gpu/drm/drm_edid_load.c
-index 1c0495acf341..06656acea420 100644
---- a/drivers/gpu/drm/drm_edid_load.c
-+++ b/drivers/gpu/drm/drm_edid_load.c
-@@ -274,6 +274,8 @@ struct edid *drm_load_edid_firmware(struct drm_connector *connector)
- 	 * the last one found one as a fallback.
- 	 */
- 	fwstr = kstrdup(edid_firmware, GFP_KERNEL);
-+	if (!fwstr)
-+		return ERR_PTR(-ENOMEM);
- 	edidstr = fwstr;
- 
- 	while ((edidname = strsep(&edidstr, ","))) {
+diff --git a/drivers/phy/renesas/phy-rcar-gen2.c b/drivers/phy/renesas/phy-rcar-gen2.c
+index 97d4dd6ea924..aa02b19b7e0e 100644
+--- a/drivers/phy/renesas/phy-rcar-gen2.c
++++ b/drivers/phy/renesas/phy-rcar-gen2.c
+@@ -288,6 +288,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 		error = of_property_read_u32(np, "reg", &channel_num);
+ 		if (error || channel_num > 2) {
+ 			dev_err(dev, "Invalid \"reg\" property\n");
++			of_node_put(np);
+ 			return error;
+ 		}
+ 		channel->select_mask = select_mask[channel_num];
+@@ -303,6 +304,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 						   &rcar_gen2_phy_ops);
+ 			if (IS_ERR(phy->phy)) {
+ 				dev_err(dev, "Failed to create PHY\n");
++				of_node_put(np);
+ 				return PTR_ERR(phy->phy);
+ 			}
+ 			phy_set_drvdata(phy->phy, phy);
 -- 
 2.20.1
 
