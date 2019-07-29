@@ -2,101 +2,96 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FE6C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D718AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597B7206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC24B20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:31:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="M8NG4S2P"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cw5OnLdN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbfG2Qab (ORCPT
+        id S1729048AbfG2Qb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:30:31 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46077 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfG2Qaa (ORCPT
+        Mon, 29 Jul 2019 12:31:26 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43823 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728124AbfG2Qb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:30:30 -0400
-Received: by mail-io1-f66.google.com with SMTP id g20so121355275ioc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:30:30 -0700 (PDT)
+        Mon, 29 Jul 2019 12:31:26 -0400
+Received: by mail-pl1-f196.google.com with SMTP id 4so20723550pld.10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:31:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+gzxQ1amGLjMFB5E07agK4fzVRqjFnh1FNoqJj1CdRE=;
-        b=M8NG4S2PH/gszkul25OY1fcWbX2BnVaOYvZHVXvuGcDZSdiBBoaVDKrFCVSabT+FLg
-         arM65PkdRQP0fFDhD8ovNvi4iV8J6y2DHAG704jwLt9adzCEXuzOXn4n0V+T/otxRtas
-         avpmAu0n16IvYcMXB81W7t3VKgXmQgtoPUTGLMhwKWqiacf9RHIykvYPxXJ9fj9jJ3VH
-         okV4v/0HBvI1QRaDMyuzNYHOwR8ABHIXnH7RnjUQCd8tThgSyhod59TyN0P+SkaLGjAr
-         7yyBvCzcPEaImvsXSxmZqhQbdfuaQJW/Tv3yhpR4hf85vuNMRz2A986gNxg6rWkGUX0Z
-         b69w==
+         :content-disposition:in-reply-to;
+        bh=Vq1Kz8k0O51lzb+4+nT4SnOcDRvvPOMVuyD9fuPhFbU=;
+        b=Cw5OnLdNSKm6b88kLuQsbNDuU1qthb2yQQwAtKotZ5fUhc+DTrvjuYqwCTVAGDtH1t
+         1tsZSW12ZyO9fXG3YB3xN3XlFBsKRBOJ9QIMDkK+awpKYxWJwBzA5TDAhSNd2yEfZk/U
+         A35fXtlk26AesBlPqkZO+pFSjuOe55jkRx73A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+gzxQ1amGLjMFB5E07agK4fzVRqjFnh1FNoqJj1CdRE=;
-        b=gh0RQRpJ/jDBoED5Y+hy2xO36+dD8qzRaOi3qKnHnIJ7JnLnUUmzKoV9N9B9yhGblw
-         pxNedXdZzABKJKO/geykPUO4tWT7TCIv+pJekP18O4hiYEbUXdsDdmf7gxOG44QUN8NB
-         90sdWMcVX/HV9cNaq0CJSoP4CCFFxQyz+0oW3ZoRQ5kp4fRLM35v6ivuzTyABmCGx8e9
-         /HZ+ob7AR/H64vOmA3lzZp718O3l2RbH9z1IrutjXba+05CS6ddtMA3R1dAzSlOcZV+O
-         /4GW5jiIPdMbfYoGMDLb8UAt8s4EqXadXUB3aJchHFmTDlZ/zmt3dMcBkbG+Tdko2O1J
-         fxiQ==
-X-Gm-Message-State: APjAAAWB1B8Wmv6W2iE2+OMWoCcNmFdXP7m2tN9wgkMNWRSPFXFd3f/A
-        b5wowhAXeF/YAQW7bw5QWEs=
-X-Google-Smtp-Source: APXvYqzb/8KWjUnh6FhXiBLI4YaHXUfTNDs/wUUO30D4k+n3LUQA01dG1RLiOC77dzkC9lg+j9kJRA==
-X-Received: by 2002:a02:bb05:: with SMTP id y5mr1741821jan.93.1564417828671;
-        Mon, 29 Jul 2019 09:30:28 -0700 (PDT)
-Received: from brauner.io ([162.223.5.124])
-        by smtp.gmail.com with ESMTPSA id k5sm65133943ioj.47.2019.07.29.09.30.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 09:30:28 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 18:30:27 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     oleg@redhat.com, linux-kernel@vger.kernel.org
-Cc:     akpm@linux-foundation.org, tj@kernel.org, tglx@linutronix.de,
-        prsood@codeaurora.org, avagin@gmail.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] exit: make setting exit_state consistent
-Message-ID: <20190729163025.4jc6d4nkdcdhve2k@brauner.io>
-References: <20190729162757.22694-1-christian@brauner.io>
+         :mime-version:content-disposition:in-reply-to;
+        bh=Vq1Kz8k0O51lzb+4+nT4SnOcDRvvPOMVuyD9fuPhFbU=;
+        b=Nz6RNYHOXvs1JzKZfAtnXWyj+eRjG2FGZBhoa/tlZstssaVVW6gBac7qz8bmbmYTLk
+         MZQOxyD7rBXNq/r5IywjvbXZ54pcZNmUMShy9rzVMBveOM7DN65nvif/jpibzzTZ77De
+         duT5mQFrNK3xQx5nrtBbDXEJtrmWyZz+yUHz04U7WDWPwpQSLwpJomS3oXigTiu3kp1Q
+         JtvJKg54NFhYzEbSp6T81a17UI5a/Z26eUCamrh+0MMgHIHABwwvXU8FRCpHB7SqcjZc
+         bTwMjtv//hnouHXxMXjbachk6C3HnhRIOgzcJ7qf7bANvRSccB2c6T/7KtxOHVASquOM
+         Aktg==
+X-Gm-Message-State: APjAAAVMqBQw2iAIn/PNXtnLPaCQz4MXx7nntPaJ5NdmrnRkgVXpuEBo
+        UjgZndy0jO7wDiMkek7uzz2FCQ==
+X-Google-Smtp-Source: APXvYqwBFstQTHiCdChdn7F2ZhZ2y89R5nQrYhZKFeYNPKq/ZhzQUR5UbsmgLdCLjqGWJ0L6iy+ORg==
+X-Received: by 2002:a17:902:a03:: with SMTP id 3mr109536484plo.302.1564417885250;
+        Mon, 29 Jul 2019 09:31:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y11sm64852299pfb.119.2019.07.29.09.31.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 09:31:24 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:31:23 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     linux-kernel@vger.kernel.org, oleg@redhat.com,
+        torvalds@linux-foundation.org, arnd@arndb.de,
+        ebiederm@xmission.com, joel@joelfernandes.org, tglx@linutronix.de,
+        tj@kernel.org, dhowells@redhat.com, jannh@google.com,
+        luto@kernel.org, akpm@linux-foundation.org, cyphar@cyphar.com,
+        viro@zeniv.linux.org.uk, kernel-team@android.com
+Subject: Re: [PATCH v3 2/2] pidfd: add pidfd_wait tests
+Message-ID: <201907290929.09B5189@keescook>
+References: <20190727222229.6516-1-christian@brauner.io>
+ <20190727222229.6516-3-christian@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190729162757.22694-1-christian@brauner.io>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190727222229.6516-3-christian@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 06:27:57PM +0200, Christian Brauner wrote:
-> Since commit [1] we unconditionally set exit_state to EXIT_ZOMBIE before
-> calling into do_notify_parent(). This was done to eliminate a race when
-> querying exit_state in do_notify_pidfd().
-> Back then we decided to do the absolute minimal thing to fix this and
-> not touch the rest of the exit_notify() function where exit_state is
-> set.
-> Since this fix has not caused any issues change the setting of
-> exit_state to EXIT_DEAD in the autoreap case to account for the fact hat
-> exit_state is set to EXIT_ZOMBIE unconditionally. This fix was planned
-> but also explicitly requested in [2] and makes the whole code more
-> consistent.
-> 
-> /* References */
-> [1]: b191d6491be6 ("pidfd: fix a poll race when setting exit_state")
-> [2]: https://lore.kernel.org/lkml/CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com
-> 
-> Signed-off-by: Christian Brauner <christian@brauner.io>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+On Sun, Jul 28, 2019 at 12:22:30AM +0200, Christian Brauner wrote:
+> Add tests for pidfd_wait() and CLONE_WAIT_PID:
+> - test that waitid(P_PIDFD) can wait on a pidfd
+> - test that waitid(P_PIDFD) can wait on a pidfd and return siginfo_t
+> - test that waitid(P_PIDFD) works with WEXITED
+> - test that waitid(P_PIDFD) works with WSTOPPED
+> - test that waitid(P_PIDFD) works with WUNTRACED
+> - test that waitid(P_PIDFD) works with WCONTINUED
+> - test that waitid(P_PIDFD) works with WNOWAIT
+> - test that waitid(P_PIDFD)works with WNOHANG
 
-I plan on sending this together with a few other fixes later. (Assuming
-the change here is correct of course.)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Christian
+This all looks good to me! :) One note that doesn't apply to this patch
+in particular, but might be nice to add (as I didn't see in the existing
+tests) was testing for pathological conditions: passing in /dev/zero for
+the pidfd, etc. (Maybe I missed those?)
+
+-- 
+Kees Cook
