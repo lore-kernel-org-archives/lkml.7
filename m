@@ -5,56 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34D3C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3964AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B50DC2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFAD2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429154;
-	bh=5mzxjAS4pS7jkVa0En5RhnwJAGCwyMt7ZuowPMiUu0c=;
+	s=default; t=1564429157;
+	bh=18PvMK3IzPiBGJaA0mcdhTC0A3bQpt3XEH68L8UAk+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1bH0qgwgq+fRz2RWsn+VqEzOBxrMsFX6LGcXuFafyMWAhbFD45rO35s0gseztWsN
-	 i70A1jQ3gGgliHUgEwa9oAvHxI79t2fthoNjADEG3ytpwYmtdYEkAie75JavPlgZH1
-	 eX5sUohxXadeU5dzJX4uda/KLnWDSuG0lindFix0=
+	b=o5ZScfkDmv3fvLPTRDY5wCZIaLT6ptW378ybh30PCd1K++IM4C0b6rGz+KwqNb0WN
+	 s/BtfhmogNBT9eKkL82BxOOnPigJ5ZLXqUcE/8hquzEPduSH0BnoePZdQE5BDHxYJw
+	 4waQNzCJ+olI1HW03i3DeJFg10TXwNGFu/ZD5A50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388960AbfG2TjN (ORCPT
+        id S2388969AbfG2TjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:39:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54206 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:39:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388660AbfG2TjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:39:09 -0400
+        id S2388956AbfG2TjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:39:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58E0320C01;
-        Mon, 29 Jul 2019 19:39:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 070CB2054F;
+        Mon, 29 Jul 2019 19:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429148;
-        bh=5mzxjAS4pS7jkVa0En5RhnwJAGCwyMt7ZuowPMiUu0c=;
+        s=default; t=1564429151;
+        bh=18PvMK3IzPiBGJaA0mcdhTC0A3bQpt3XEH68L8UAk+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVpofo8w72ykROevhy5FrzLSqSgBn1v2Ni680c4RUBsYp4kzxl59P57SQX7a13TcM
-         J7LnTu+0NgPcvqSB5/Sk0noNIZn89EHmACaQtCIVnZ/8BWoeDudhYJwiL1f8EHSnEN
-         w9EeqOLe/seqpYIauw+X9zCpypsQgTNPWR7/sBIw=
+        b=GQxifqedc8bJ5MZ0RA5ACtoiJv2zMaKAC6ICFXA76LeXSpj5m6rFhFpoMD6IlIv/p
+         flwJNAerCqWHFrceFNJaGLd+LmmBnVILNyLS4bzUSzj5Xp9GQs3EfJ8qRroOGk3VTR
+         EtFjTCHD7qG444WwFBjYzT810yABW3gSAYzaEN8I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Yuyang Du <duyuyang@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, arnd@arndb.de,
-        frederic@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Morten Borup Petersen <morten_bp@live.dk>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 276/293] locking/lockdep: Fix lock used or unused stats error
-Date:   Mon, 29 Jul 2019 21:22:47 +0200
-Message-Id: <20190729190845.451271035@linuxfoundation.org>
+Subject: [PATCH 4.14 267/293] mailbox: handle failed named mailbox channel request
+Date:   Mon, 29 Jul 2019 21:22:38 +0200
+Message-Id: <20190729190844.826530235@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -67,75 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 68d41d8c94a31dfb8233ab90b9baf41a2ed2da68 ]
+[ Upstream commit 25777e5784a7b417967460d4fcf9660d05a0c320 ]
 
-The stats variable nr_unused_locks is incremented every time a new lock
-class is register and decremented when the lock is first used in
-__lock_acquire(). And after all, it is shown and checked in lockdep_stats.
+Previously, if mbox_request_channel_byname was used with a name
+which did not exist in the "mbox-names" property of a mailbox
+client, the mailbox corresponding to the last entry in the
+"mbox-names" list would be incorrectly selected.
+With this patch, -EINVAL is returned if the named mailbox is
+not found.
 
-However, under configurations that either CONFIG_TRACE_IRQFLAGS or
-CONFIG_PROVE_LOCKING is not defined:
-
-The commit:
-
-  091806515124b20 ("locking/lockdep: Consolidate lock usage bit initialization")
-
-missed marking the LOCK_USED flag at IRQ usage initialization because
-as mark_usage() is not called. And the commit:
-
-  886532aee3cd42d ("locking/lockdep: Move mark_lock() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING")
-
-further made mark_lock() not defined such that the LOCK_USED cannot be
-marked at all when the lock is first acquired.
-
-As a result, we fix this by not showing and checking the stats under such
-configurations for lockdep_stats.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: arnd@arndb.de
-Cc: frederic@kernel.org
-Link: https://lkml.kernel.org/r/20190709101522.9117-1-duyuyang@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Morten Borup Petersen <morten_bp@live.dk>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep_proc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/mailbox/mailbox.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index ad69bbc9bd28..71631bef0e84 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -234,6 +234,7 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
- 		      nr_hardirq_read_safe = 0, nr_hardirq_read_unsafe = 0,
- 		      sum_forward_deps = 0;
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index 537f4f6d009b..44b49a2676f0 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -391,11 +391,13 @@ struct mbox_chan *mbox_request_channel_byname(struct mbox_client *cl,
  
-+#ifdef CONFIG_PROVE_LOCKING
- 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
- 
- 		if (class->usage_mask == 0)
-@@ -265,12 +266,12 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
- 		if (class->usage_mask & LOCKF_ENABLED_HARDIRQ_READ)
- 			nr_hardirq_read_unsafe++;
- 
--#ifdef CONFIG_PROVE_LOCKING
- 		sum_forward_deps += lockdep_count_forward_deps(class);
--#endif
+ 	of_property_for_each_string(np, "mbox-names", prop, mbox_name) {
+ 		if (!strncmp(name, mbox_name, strlen(name)))
+-			break;
++			return mbox_request_channel(cl, index);
+ 		index++;
  	}
- #ifdef CONFIG_DEBUG_LOCKDEP
- 	DEBUG_LOCKS_WARN_ON(debug_atomic_read(nr_unused_locks) != nr_unused);
-+#endif
-+
- #endif
- 	seq_printf(m, " lock-classes:                  %11lu [max: %lu]\n",
- 			nr_lock_classes, MAX_LOCKDEP_KEYS);
+ 
+-	return mbox_request_channel(cl, index);
++	dev_err(cl->dev, "%s() could not locate channel named \"%s\"\n",
++		__func__, name);
++	return ERR_PTR(-EINVAL);
+ }
+ EXPORT_SYMBOL_GPL(mbox_request_channel_byname);
+ 
 -- 
 2.20.1
 
