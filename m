@@ -2,178 +2,229 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4005C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BA7C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C2E206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23BBC2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:52:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hYU/+XcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387849AbfG2LwG (ORCPT
+        id S2387858AbfG2LwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:52:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:42708 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387482AbfG2LwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:52:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CC9E28;
-        Mon, 29 Jul 2019 04:52:05 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1E553F694;
-        Mon, 29 Jul 2019 04:52:03 -0700 (PDT)
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S . Miller" <davem@davemloft.net>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <7a79be5d-7ba2-c457-36d3-1ccef6572181@nvidia.com>
- <BYAPR12MB3269927AB1F67D46E150ED6BD3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
- <9e695f33-fd9f-a910-0891-2b63bd75e082@nvidia.com>
- <BYAPR12MB3269B4A401E4DA10A07515C7D3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
- <1e2ea942-28fe-15b9-f675-8d6585f9a33f@nvidia.com>
- <BYAPR12MB326922CDCB1D4B3D4A780CFDD3C30@BYAPR12MB3269.namprd12.prod.outlook.com>
- <MN2PR12MB327907D4A6FB378AC989571AD3DD0@MN2PR12MB3279.namprd12.prod.outlook.com>
- <b99b1e49-0cbc-2c66-6325-50fa6f263d91@nvidia.com>
- <MN2PR12MB327997BDF2EA5CEE00F45AC3D3DD0@MN2PR12MB3279.namprd12.prod.outlook.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <fcf648d2-70cc-d734-871a-ca7f745791b7@arm.com>
-Date:   Mon, 29 Jul 2019 12:52:02 +0100
+        Mon, 29 Jul 2019 07:52:22 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:53985 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387482AbfG2LwW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:52:22 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190729115220euoutp02ab853a4d2bcedea55e755ba07a4bf7c7~13ox05m2R1852918529euoutp02U
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 11:52:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190729115220euoutp02ab853a4d2bcedea55e755ba07a4bf7c7~13ox05m2R1852918529euoutp02U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1564401140;
+        bh=gp3W8C8kFm2/cZPC6dvOVHLsDheOwe7O7ni8wdNNKh8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=hYU/+XcSESJ3ny8NRgh38MlEw27iqI8itUskxkeUHb1GISBjglwPCDEFI3+W6LLyj
+         tQh1phrgQxaDOwljaukbmo4bgVIA0CkfW/oOSmAEHu/ZwTdunbBHr9SWg5uBtWBtxs
+         F2slwaQT8JYjmHTTqvw4xig1rJSSngli0T++k+FA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190729115219eucas1p202d0b90eb0a461d27e89caa7b1723730~13oxLu8mQ0970109701eucas1p2m;
+        Mon, 29 Jul 2019 11:52:19 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 21.84.04298.3FDDE3D5; Mon, 29
+        Jul 2019 12:52:19 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190729115218eucas1p26d902f7fe92ed478c8674c4e661e4ba7~13owERqTd1766217662eucas1p2l;
+        Mon, 29 Jul 2019 11:52:18 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190729115218eusmtrp2f36a65dec3323f5f949a27954114a539~13ov2PK9D3066930669eusmtrp2B;
+        Mon, 29 Jul 2019 11:52:18 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-bb-5d3eddf3e682
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id BF.EE.04146.2FDDE3D5; Mon, 29
+        Jul 2019 12:52:18 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190729115217eusmtip17c879854ef64b77b38d271dcad87fd19~13overT571225412254eusmtip1g;
+        Mon, 29 Jul 2019 11:52:17 +0000 (GMT)
+Subject: Re: [PATCH v3] ata/pata_buddha: Probe via modalias instead of
+ initcall
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Max Staudt <max@enpas.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-ide@vger.kernel.org, Linux/m68k <linux-m68k@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <3fb686e0-1f60-b7c3-5b88-83f63e56a563@samsung.com>
+Date:   Mon, 29 Jul 2019 13:52:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <MN2PR12MB327997BDF2EA5CEE00F45AC3D3DD0@MN2PR12MB3279.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <CAMuHMdUGsfzQg8xy2OqWfuo09MxwZ5OJz=t5CARJp+A1ZVtqaA@mail.gmail.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCKsWRmVeSWpSXmKPExsWy7djPc7qf79rFGjTfk7RYfbefzeLZrb1M
+        FrPfK1sc2/GIyeLyrjlsFrvf32e0eNj0gclibut0dgcOj8NfN7N57Jx1l93j8tlSj0OHOxg9
+        Dp47x+jxeZNcAFsUl01Kak5mWWqRvl0CV8bF7QfYCpYoVay+voa5gfG7VBcjJ4eEgInEgd+d
+        rF2MXBxCAisYJWbtvMYO4XxhlNj68RmU85lRYsqiw4xwLdvmMEIkljNKtO9/wQLhvGWU2PNg
+        DitIlbBAoET7teXMILaIgKfErzXL2ECKmAXamCQO3t3ODpJgE7CSmNi+Cmwsr4CdxMTtc8Bs
+        FgFVib8XL4A1iwpESNw/toEVokZQ4uTMJywgNifQgomnj4DZzALiEreezGeCsOUltr+dwwyy
+        TELgELtE55njQMs4gBwXiZZbXhAvCEu8Or6FHcKWkfi/E6QXpH4do8TfjhdQzdsZJZZP/scG
+        UWUtcfj4RVaQQcwCmhLrd+lDhB0llu5fxgIxn0/ixltBiBv4JCZtm84MEeaV6GgTgqhWk9iw
+        bAMbzNqunSuZJzAqzULy2Swk38xC8s0shL0LGFlWMYqnlhbnpqcWG+allusVJ+YWl+al6yXn
+        525iBKal0/+Of9rB+PVS0iFGAQ5GJR5eh5u2sUKsiWXFlbmHGCU4mJVEeLcoWccK8aYkVlal
+        FuXHF5XmpBYfYpTmYFES561meBAtJJCeWJKanZpakFoEk2Xi4JRqYBST1Th2RTXw42uWua/5
+        VugcSVpdVrZQKUYhMqg9I/nwjV/TtxmoN0QcWPs+z/eB9zrlHWddZl+ebT1fsSKnifvxpbiZ
+        xf4m7ueDOgyrd7CbiQrxftliU7zZ/bvwdvEW/1kHz0su3eUtISP1+gJT24mAbxcFPgkslJt2
+        79kBbrbss+92fPh50kaJpTgj0VCLuag4EQD/h26URwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7qf7trFGrw9zG+x+m4/m8WzW3uZ
+        LGa/V7Y4tuMRk8XlXXPYLHa/v89o8bDpA5PF3Nbp7A4cHoe/bmbz2DnrLrvH5bOlHocOdzB6
+        HDx3jtHj8ya5ALYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzM
+        stQifbsEvYyL2w+wFSxRqlh9fQ1zA+N3qS5GTg4JAROJA9vmMHYxcnEICSxllNg6Yz9TFyMH
+        UEJG4vj6MogaYYk/17rYIGpeM0q82rWRBSQhLBAo0X5tOTOILSLgKfFrzTKwImaBDiaJyV+X
+        s0J0HGeSuL9vJlgVm4CVxMT2VYwgNq+AncTE7XPAbBYBVYm/Fy+A1YgKREiceb+CBaJGUOLk
+        zCdgNifQtomnj4DZzALqEn/mXWKGsMUlbj2ZzwRhy0tsfzuHeQKj0Cwk7bOQtMxC0jILScsC
+        RpZVjCKppcW56bnFhnrFibnFpXnpesn5uZsYgXG47djPzTsYL20MPsQowMGoxMPrcNM2Vog1
+        say4MvcQowQHs5II7xYl61gh3pTEyqrUovz4otKc1OJDjKZAz01klhJNzgemiLySeENTQ3ML
+        S0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYymz97mnMvb4WG99O2RSw/4fJ7L
+        iLc7bWqqrODf8PrViRBtj8gd6xRmyPffK495rv/76+1JPAKdKyr5n3f5RnS4+/ybW8z34ZHz
+        Ec3IO53KJ9Zdvfx4QnrO9U/yx8MyYg/5fNLc3vb61YdH6m1pqhk7l6pbnnE0kZybzyAny/Nt
+        fuzEvb+nPw5WYinOSDTUYi4qTgQA6ZsMCNkCAAA=
+X-CMS-MailID: 20190729115218eucas1p26d902f7fe92ed478c8674c4e661e4ba7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190729113035epcas2p213400dfb13ca10b4f24cedf856cf2187
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190729113035epcas2p213400dfb13ca10b4f24cedf856cf2187
+References: <20190725180825.31508-1-max@enpas.org>
+        <CAMuHMdURm-9nazOBTL8uRH8WMt7gi=QUYy0qr9kaxzczCr+ujg@mail.gmail.com>
+        <9cde6e79-52da-e0c0-f452-6afc2e5fa5ee@enpas.org>
+        <CGME20190729113035epcas2p213400dfb13ca10b4f24cedf856cf2187@epcas2p2.samsung.com>
+        <CAMuHMdUGsfzQg8xy2OqWfuo09MxwZ5OJz=t5CARJp+A1ZVtqaA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2019 12:29, Jose Abreu wrote:
-> ++ Catalin, Will (ARM64 Maintainers)
+
+Hi,
+
+On 7/29/19 1:30 PM, Geert Uytterhoeven wrote:
+> Hi Max,
 > 
-> From: Jon Hunter <jonathanh@nvidia.com>
-> Date: Jul/29/2019, 11:55:18 (UTC+00:00)
-> 
->>
->> On 29/07/2019 09:16, Jose Abreu wrote:
->>> From: Jose Abreu <joabreu@synopsys.com>
->>> Date: Jul/27/2019, 16:56:37 (UTC+00:00)
+> On Mon, Jul 29, 2019 at 1:10 PM Max Staudt <max@enpas.org> wrote:
+>> On 07/29/2019 11:05 AM, Geert Uytterhoeven wrote:
+>>>> --- a/drivers/ata/pata_buddha.c
+>>>> +++ b/drivers/ata/pata_buddha.c
 >>>
->>>> From: Jon Hunter <jonathanh@nvidia.com>
->>>> Date: Jul/26/2019, 15:11:00 (UTC+00:00)
->>>>
->>>>>
->>>>> On 25/07/2019 16:12, Jose Abreu wrote:
->>>>>> From: Jon Hunter <jonathanh@nvidia.com>
->>>>>> Date: Jul/25/2019, 15:25:59 (UTC+00:00)
->>>>>>
->>>>>>>
->>>>>>> On 25/07/2019 14:26, Jose Abreu wrote:
->>>>>>>
->>>>>>> ...
->>>>>>>
->>>>>>>> Well, I wasn't expecting that :/
->>>>>>>>
->>>>>>>> Per documentation of barriers I think we should set descriptor fields
->>>>>>>> and then barrier and finally ownership to HW so that remaining fields
->>>>>>>> are coherent before owner is set.
->>>>>>>>
->>>>>>>> Anyway, can you also add a dma_rmb() after the call to
->>>>>>>> stmmac_rx_status() ?
->>>>>>>
->>>>>>> Yes. I removed the debug print added the barrier, but that did not help.
->>>>>>
->>>>>> So, I was finally able to setup NFS using your replicated setup and I
->>>>>> can't see the issue :(
->>>>>>
->>>>>> The only difference I have from yours is that I'm using TCP in NFS
->>>>>> whilst you (I believe from the logs), use UDP.
->>>>>
->>>>> So I tried TCP by setting the kernel boot params to 'nfsvers=3' and
->>>>> 'proto=tcp' and this does appear to be more stable, but not 100% stable.
->>>>> It still appears to fail in the same place about 50% of the time.
->>>>>
->>>>>> You do have flow control active right ? And your HW FIFO size is >= 4k ?
->>>>>
->>>>> How can I verify if flow control is active?
->>>>
->>>> You can check it by dumping register MTL_RxQ_Operation_Mode (0xd30).
+>>>> +static const struct zorro_device_id pata_buddha_zorro_tbl[] = {
+>>>> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA, },
+>>>> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL, },
+>>>> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, },
+>>>
+>>> drivers/net/ethernet/8390/zorro8390.c also matches against
+>>> ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, while only
+>>> a single zorro_driver can bind to it.  Hence you can no longer use both
+>>> IDE and Ethernet on X-Surf :-(
+>>> Before, this worked, as the IDE driver just walked the list of devices.
 >>
->> Where would be the appropriate place to dump this? After probe? Maybe
->> best if you can share a code snippet of where to dump this.
+>> Okay, now this gets dirty.
 >>
->>>> Can you also add IOMMU debug in file "drivers/iommu/iommu.c" ?
->>
->> You can find a boot log here:
->>
->> https://urldefense.proofpoint.com/v2/url?u=https-3A__paste.ubuntu.com_p_qtRqtYKHGF_&d=DwICaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=WHDsc6kcWAl4i96Vm5hJ_19IJiuxx_p_Rzo2g-uHDKw&m=NrxsR2etpZHGb7HkN4XdgaGmKM1XYyldihNPL6qVSv0&s=CMATEcHVoqZw4sIrNOXc7SFE_kV_5CO5EU21-yJez6c&e=
->>
->>> And, please try attached debug patch.
->>
->> With this patch it appears to boot fine. So far no issues seen.
+>> The reason why I've submitted this patch is to allow pata_buddha to be built into the kernel at all. Without this patch, its initcall would be called before the Zorro structures are initialised, hence not finding any boards.
 > 
-> Thank you for testing.
-> 
-> Hi Catalin and Will,
-> 
-> Sorry to add you in such a long thread but we are seeing a DMA issue
-> with stmmac driver in an ARM64 platform with IOMMU enabled.
-> 
-> The issue seems to be solved when buffers allocation for DMA based
-> transfers are *not* mapped with the DMA_ATTR_SKIP_CPU_SYNC flag *OR*
-> when IOMMU is disabled.
-> 
-> Notice that after transfer is done we do use
-> dma_sync_single_for_{cpu,device} and then we reuse *the same* page for
-> another transfer.
-> 
-> Can you please comment on whether DMA_ATTR_SKIP_CPU_SYNC can not be used
-> in ARM64 platforms with IOMMU ?
+> IC. I wasn't aware of the new pata_buddha.c driver not working at all
+> when builtin.
 
-In terms of what they do, there should be no difference on arm64 between:
+Isn't the same true also for old buddha.c driver?
+(please see below)
 
-dma_map_page(..., dir);
+>> That means that not only would the previous driver only make sense as a module that is manually ensured to be loaded after Zorro has started, but the X-Surf IDE support was a really ugly hack to begin with.
+> 
+> Right. Please note that most drivers for Zorro boards predate the device
+> driver framework, and thus all started life using zorro_find_device().
+> But this did have the advantage of supporting multi-function cards
+> out-of-the-box.
+> Later, several drivers were converted to the new driver framework.
+> but not all of them, due to multi-function cards.
+> 
+>>> I think the proper solution is to create MFD devices for Zorro boards
+>>> with multiple functions, and bind against the individual MFD cells.
+>>> That would also get rid of the nr_ports loop in the IDE driver, as each
+>>> instance would have its own cell.
+>>>
+>>> I played with this a long time ago, but never finished it.
+>>> It worked fine for my Ariadne Ethernet card.
+>>> Last state at
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git/log/?h=zorro-mfd
+>>>
+>>> Oh, seems I wrote up most of this before in
+>>> https://lore.kernel.org/lkml/CAMuHMdVe1KgQWYZ_BfBkSo3zr0c+TenLMEw3T=BLEQNoZ6ex7A@mail.gmail.com/
+>>
+>> This looks great!
+>>
+>> Unfortunately, I don't have any MFD hardware other than a single
+>> Buddha to test this with. I especially don't have an X-Surf, hence no
+>> good way of testing this other than the two IDE channels on my Buddha.
+>> WinUAE doesn't seem to emulate the IDE controller either.
+>>
+>> What shall I do? Maybe as a stop-gap measure, we could hard-code a
+>> module_init() again, just for X-Surf? It's been good enough until a
+>> few weeks ago, so what could go wrong ;)
+> 
+> In the short run: keep on using drivers/ide/buddha.c?
+
+IDE subsystem is initialized even before libata so I cannot see how
+this would help?
+
+drivers/Makefile:
 ...
-dma_unmap_page(..., dir);
-
-and:
-
-dma_map_page_attrs(..., dir, DMA_ATTR_SKIP_CPU_SYNC);
-dma_sync_single_for_device(..., dir);
+obj-$(CONFIG_IDE)               += ide/
+obj-y                           += scsi/
+obj-y                           += nvme/
+obj-$(CONFIG_ATA)               += ata/
 ...
-dma_sync_single_for_cpu(..., dir);
-dma_unmap_page_attrs(..., dir, DMA_ATTR_SKIP_CPU_SYNC);
+obj-$(CONFIG_ZORRO)             += zorro/
+...
 
-provided that the first sync covers the whole buffer and any subsequent 
-ones cover at least the parts of the buffer which may have changed. Plus 
-for coherent hardware it's entirely moot either way.
+What am I missing?
 
-Given Jon's previous findings, I would lean towards the idea that 
-performing the extra (redundant) cache maintenance plus barrier in 
-dma_unmap is mostly just perturbing timing in the same way as the debug 
-print which also made things seem OK.
+> Your single Buddha should be sufficient to convert pata_buddha.c from
+> a plain Zorro driver to an MFD cell driver, and test it.
+> I expect the buddha-mfd.c MFD driver from my zorro-mfd branch to
+> work as-is, or with very minor changes.
+> 
+> However, to keep X-Surf working, this needs to be synchronized with
+> a Zorro MFD conversion of the zorro8390 driver, too.
+> 
+>> On another note: Maybe your MFD idea could be used to expose the
+>> clockports on the Buddhas as well? That wouldn't solve the issue of
+>> clockport *expansions* being fundamentally non-enumerable, but maybe
+>> you can think of a reasonable way to attach a driver?
+> 
+> Yes, the clockport could be added as an extra MFD cell.  Later, drivers can
+> be written to bind against the clockport cell.
+> 
+> Thanks!
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
 
-Robin.
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
