@@ -2,209 +2,108 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11392C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C81C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E5220651
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 289AC214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:49:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eo/5Z10v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387825AbfG2LsL (ORCPT
+        id S2387826AbfG2Ltn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:48:11 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:52679 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387728AbfG2LsH (ORCPT
+        Mon, 29 Jul 2019 07:49:43 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:47094 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387482AbfG2Ltn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:48:07 -0400
-Received: by mail-io1-f72.google.com with SMTP id p12so67244418iog.19
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 04:48:06 -0700 (PDT)
+        Mon, 29 Jul 2019 07:49:43 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c3so4772434pfa.13;
+        Mon, 29 Jul 2019 04:49:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=t4LrUjq6T4dirnuW+FmcNbvRfUA+DI+0HKJt+m2bWqc=;
+        b=eo/5Z10vJWswbhZ9Liy5f3E/5hKOoioHrjunY9OWkIDNBuYO9CPUY4Hep3kZuuOR92
+         /ncIb+PR8zLWvRXC8k6awPKhRgY4Qa+qQBpLG3vER8qVzic5LUM7Pi7kneKywt8AKkS3
+         terYnDeO56bO1rs86xancM02QDKUuh9dLzQDiTFzxTCslCHTvUPVpzAOkBtjzfgaBhtn
+         iYLV4kE6GZzDTXXi7pKoe28TApuM4Bsd7xHbkzgqhfIWdpW44cgdqoHPVX3hBG0jz37c
+         3ATMEIXYebV6LRFQq77V2j+24/US12CJWXpKpvi5XbjuriwQuUZFlIw9f3vh6GakZF3i
+         qk9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=kZ37XenQa1BiXC+YxE40YDF1Kab2aLWtcRgow9fgtEY=;
-        b=eEMqs8+bYPrJKLkCz+wMB+a/8kN94Um0Fwm06CEuraHth8bNfNExt16ubawXkYAseQ
-         7vsm9oIQKJxrIkrSqNYi4OEmUZ4qqlW5qbwKp7BI8+Zkz8Z6WWWxrDu+kzUH6zDw4J6l
-         ez0dVxcBDlcMmmLVHSQ7bevs3K5HQsmPX83pXDJp09mEUXI4zkUjbNiMzcHvtpZqkT1V
-         8NhXYgD3ISISvBikXckjhPjUIcs/6oL86Qtd3s4auiiClFVwGDNCFQrezBh+EUlNPWVT
-         GtXE8lOH31HQe+9dVGOh56eIcsc2eO7S42NLuWekUIESutMye2dKBmptIpzjh29GJScM
-         Qx8A==
-X-Gm-Message-State: APjAAAUuh3O2XaYeKu2wd5lpqaVz4sNda97fOt0t08KfhOaAujbezgMN
-        ixdBX7Qix04TNJgGX3bOykXmdytO1tqedLNuV5LmO9JOtqzd
-X-Google-Smtp-Source: APXvYqzeBzlcm1whsgBJI46ajx9HT7GM3Dpn9vMSlT57UUSUTirQbcCmnNmFpRwexcd9Yz7r1jU17mMCD4ydOXAaYMgNxZWNx6D6
-MIME-Version: 1.0
-X-Received: by 2002:a6b:6505:: with SMTP id z5mr98047140iob.295.1564400886105;
- Mon, 29 Jul 2019 04:48:06 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 04:48:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001a4e93058ed07733@google.com>
-Subject: KASAN: use-after-free Write in usbvision_scratch_alloc
-From:   syzbot <syzbot+fa317310495b601f2c3e@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, bigeasy@linutronix.de, hverkuil@xs4all.nl,
-        kjlu@umn.edu, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=t4LrUjq6T4dirnuW+FmcNbvRfUA+DI+0HKJt+m2bWqc=;
+        b=sWV5TtZr9iA/wM95iXdsZ53WFk1DbBAQzzgaV5d0twepgDoFkTUtgLaGvkTHnWIXaR
+         bf8zyA148370qfHNhsLImV2/oNSYYdwe8Y/nJCyP1f6oLrEbt64p1+AVmh2eWvvqKNOn
+         HapHRnifphf9DPReSvU6kQ4S8rSMekzWkdFSxsOU19e3EOo4WPzGHK/5WIenI138qXbe
+         puYfUIf14TXoYiK2eHQtVwjRoYmgoVef+UO3aBSVWw1zz45xGFsgAQ8nTIE0f2YvPH88
+         KPsBYkfq6CQbujfezVEISi6YarL9wv4EDcBnbR9qVIB3mjl5qUA1Ei6iAcmZZkvKUUgc
+         cJvA==
+X-Gm-Message-State: APjAAAXHyOonSisXabpqnSHydIRrU1tPKSaxy97dL9iQ5Elej5Rlzc1L
+        jIhdYrUD/FHRXcjdJekBLQE=
+X-Google-Smtp-Source: APXvYqy33Qp2byQh79yNYIetAkyhvaxtnAn6cxcHG55JXV0s6XNNCvNvnKJUszQYhHI+enW0sLmk/A==
+X-Received: by 2002:a63:2252:: with SMTP id t18mr104148160pgm.5.1564400982701;
+        Mon, 29 Jul 2019 04:49:42 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id x1sm50673215pjo.4.2019.07.29.04.49.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 04:49:42 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH v2] usb: storage: sddr55: Fix a possible null-pointer dereference in sddr55_transport()
+Date:   Mon, 29 Jul 2019 19:49:36 +0800
+Message-Id: <20190729114936.6103-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+In sddr55_transport(), there is an if statement on line 836 to check
+whether info->lba_to_pba is NULL:
+    if (info->lba_to_pba == NULL || ...)
 
-syzbot found the following crash on:
+When info->lba_to_pba is NULL, it is used on line 948:
+    pba = info->lba_to_pba[lba];
 
-HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=14089192600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-dashboard link: https://syzkaller.appspot.com/bug?extid=fa317310495b601f2c3e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Thus, a possible null-pointer dereference may occur.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+To fix this bug, info->lba_to_pba is checked before being used.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+fa317310495b601f2c3e@syzkaller.appspotmail.com
+This bug is found by a static analysis tool STCheck written by us.
 
-==================================================================
-BUG: KASAN: use-after-free in usbvision_scratch_alloc+0x8c/0xa0  
-drivers/media/usb/usbvision/usbvision-core.c:350
-Write of size 8 at addr ffff8881cd2adc00 by task v4l_id/5718
-
-CPU: 0 PID: 5718 Comm: v4l_id Not tainted 5.2.0-rc6+ #15
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x67/0x231 mm/kasan/report.c:188
-  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
-  kasan_report+0xe/0x20 mm/kasan/common.c:614
-  usbvision_scratch_alloc+0x8c/0xa0  
-drivers/media/usb/usbvision/usbvision-core.c:350
-  usbvision_v4l2_open+0x148/0x2f0  
-drivers/media/usb/usbvision/usbvision-video.c:325
-  v4l2_open+0x1af/0x350 drivers/media/v4l2-core/v4l2-dev.c:423
-  chrdev_open+0x219/0x5c0 fs/char_dev.c:413
-  do_dentry_open+0x497/0x1040 fs/open.c:778
-  do_last fs/namei.c:3416 [inline]
-  path_openat+0x1430/0x3ff0 fs/namei.c:3533
-  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-  do_sys_open+0x3c0/0x580 fs/open.c:1070
-  do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f655947e120
-Code: 48 8b 15 1b 4d 2b 00 f7 d8 64 89 02 83 c8 ff c3 90 90 90 90 90 90 90  
-90 90 90 83 3d d5 a4 2b 00 00 75 10 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 73 31 c3 48 83 ec 08 e8 5e 8c 01 00 48 89 04 24
-RSP: 002b:00007ffd1bdddb58 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007ffd1bdddcb8 RCX: 00007f655947e120
-RDX: 00007f6559733138 RSI: 0000000000000000 RDI: 00007ffd1bdddf1c
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
-R13: 00007ffd1bdddcb0 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 2779:
-  save_stack+0x1b/0x80 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
-  kmalloc include/linux/slab.h:547 [inline]
-  kzalloc include/linux/slab.h:742 [inline]
-  usbvision_alloc drivers/media/usb/usbvision/usbvision-video.c:1310 [inline]
-  usbvision_probe.cold+0x586/0x1d69  
-drivers/media/usb/usbvision/usbvision-video.c:1464
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_new_device.cold+0x6a4/0xe61 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1abd/0x3550 drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 2779:
-  save_stack+0x1b/0x80 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
-  slab_free_hook mm/slub.c:1421 [inline]
-  slab_free_freelist_hook mm/slub.c:1448 [inline]
-  slab_free mm/slub.c:2994 [inline]
-  kfree+0xd7/0x280 mm/slub.c:3949
-  usbvision_release+0x181/0x1c0  
-drivers/media/usb/usbvision/usbvision-video.c:1359
-  usbvision_disconnect+0x16c/0x1d0  
-drivers/media/usb/usbvision/usbvision-video.c:1582
-  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-  __device_release_driver drivers/base/dd.c:1081 [inline]
-  device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1112
-  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
-  device_del+0x460/0xb80 drivers/base/core.c:2274
-  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-  usb_disconnect+0x284/0x830 drivers/usb/core/hub.c:2199
-  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x13bd/0x3550 drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881cd2ac200
-  which belongs to the cache kmalloc-8k of size 8192
-The buggy address is located 6656 bytes inside of
-  8192-byte region [ffff8881cd2ac200, ffff8881cd2ae200)
-The buggy address belongs to the page:
-page:ffffea000734aa00 refcount:1 mapcount:0 mapping:ffff8881dac02400  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000200 ffff8881dac02400
-raw: 0000000000000000 0000000080030003 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881cd2adb00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881cd2adb80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8881cd2adc00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                    ^
-  ffff8881cd2adc80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881cd2add00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+v2:
+* Avoid uninitialized access of pba.
+  Thank Oliver for helpful advice.
 
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/usb/storage/sddr55.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/usb/storage/sddr55.c b/drivers/usb/storage/sddr55.c
+index b8527c55335b..d23aff16091e 100644
+--- a/drivers/usb/storage/sddr55.c
++++ b/drivers/usb/storage/sddr55.c
+@@ -945,7 +945,7 @@ static int sddr55_transport(struct scsi_cmnd *srb, struct us_data *us)
+ 			return USB_STOR_TRANSPORT_FAILED;
+ 		}
+ 
+-		pba = info->lba_to_pba[lba];
++		pba = info->lba_to_pba ? info->lba_to_pba[lba] : 0;
+ 
+ 		if (srb->cmnd[0] == WRITE_10) {
+ 			usb_stor_dbg(us, "WRITE_10: write block %04X (LBA %04X) page %01X pages %d\n",
+-- 
+2.17.0
+
