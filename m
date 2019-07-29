@@ -3,51 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259D4C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABAAC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C6021655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB2A206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbfG2Qi7 (ORCPT
+        id S2387862AbfG2QjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:38:59 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:35580 "EHLO
+        Mon, 29 Jul 2019 12:39:05 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35604 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbfG2Qi4 (ORCPT
+        with ESMTP id S1726680AbfG2QjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:38:56 -0400
+        Mon, 29 Jul 2019 12:39:04 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5064C12662B78;
-        Mon, 29 Jul 2019 09:38:55 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 09:38:52 -0700 (PDT)
-Message-Id: <20190729.093852.1973086117742095476.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BDE9F12662B76;
+        Mon, 29 Jul 2019 09:39:03 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:39:03 -0700 (PDT)
+Message-Id: <20190729.093903.637838713920137841.davem@davemloft.net>
 To:     gustavo@embeddedor.com
 Cc:     m.grzeschik@pengutronix.de, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, sfr@canb.auug.org.au,
         keescook@chromium.org
-Subject: Re: [PATCH] arcnet: com90xx: Mark expected switch fall-throughs
+Subject: Re: [PATCH] arcnet: com90io: Mark expected switch fall-throughs
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190729110953.GA3048@embeddedor>
-References: <20190729110953.GA3048@embeddedor>
+In-Reply-To: <20190729111320.GA3193@embeddedor>
+References: <20190729111320.GA3193@embeddedor>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 09:38:55 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 09:39:04 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date: Mon, 29 Jul 2019 06:09:53 -0500
+Date: Mon, 29 Jul 2019 06:13:20 -0500
 
 > Mark switch cases where we are expecting to fall through.
 > 
