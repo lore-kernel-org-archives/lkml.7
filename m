@@ -2,285 +2,177 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545C5C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B53BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B96420679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:32:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="z5f1wjJK"
+	by mail.kernel.org (Postfix) with ESMTP id E44892070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564443456;
+	bh=1qfSx+UsNMVlps6cSiR+Fnt7FDGRR1/iLTnDFyMcZUA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LnWKNOAwteJLIPpivAgx1EJ9tzCuqNhWEesd8cqGNTXXvImcEURVTYk4j3JAhsZO+
+	 dT+O2Bt4Q/IvyPl+CfIgsQo3r1/3/B1PKCkdyGYAXk1C3CKR63XU2/MjjtL8qwYSxq
+	 QuVQQ6hFIRdoqZnvHTQUXnzpGPKCCXke6EWNvg4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbfG2XcO (ORCPT
+        id S1729725AbfG2Xhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 19:32:14 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.170]:31361 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726748AbfG2XcN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 19:32:13 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 91DBB4A5C5E
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 18:32:12 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id sF7khWSDpiQersF7khvWhj; Mon, 29 Jul 2019 18:32:12 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KpUpOxxdU+KhG7Hocsjej/GA+sI7fVcCM88qfdZm4Nk=; b=z5f1wjJKlzs0jlKdEdS03CIAiU
-        asTWm2FuWtrMWHm4TAL1uQg5hBgvO6HgRa04/BfwxMrtF6R5jI2Dldkl8uKPBcmF/vTyQL6rLQG3P
-        p0VCBi5NJMns6GaJzkMrpu5o2wVHhDfML87lbncx5Ae2225YbDpu9Ul/Je47cwZ+6G/Tj1eVbjRcP
-        qkTBzpYM6Z7+/Kqih/W7Haf0RjaVjF0Zuev8UCBMtaY8rEIu3g5Ggzhef2ywZbyilOJO261rHFaMV
-        OpYDDGfFCIb1eqLmyksnaMGGn7wJIiNL1+ZauI9nS4YWdeopFgzxUpSDWMpzTKFJawByzwZiQRcAY
-        7+ugJ65Q==;
-Received: from [187.192.11.120] (port=33296 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hsF7j-002agT-EA; Mon, 29 Jul 2019 18:32:11 -0500
-Date:   Mon, 29 Jul 2019 18:32:10 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Robert Richter <rric@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>
-Cc:     oprofile-list@lists.sf.net, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] MIPS: OProfile: Mark expected switch fall-throughs
-Message-ID: <20190729233209.GA28779@embeddedor>
+        Mon, 29 Jul 2019 19:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727533AbfG2Xhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 19:37:33 -0400
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C10DF217F4;
+        Mon, 29 Jul 2019 23:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564443451;
+        bh=1qfSx+UsNMVlps6cSiR+Fnt7FDGRR1/iLTnDFyMcZUA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jY/kR7aYsvzGjePWSBWU1HZSgQVZSTJVa4kURbXxRC1hxgI3BhwGrz3TiOP7HyC02
+         S3ZHlRUVebzVtesX/QoafRNxvkEDsc1dM5fWhNKSHAuy5nWFYqawNMUJgp6u15rAK3
+         xl+4fDVdmCoNFixRMYwVv3JNUm+KgH/DHzxkzG+A=
+Received: by mail-qk1-f171.google.com with SMTP id m14so19613501qka.10;
+        Mon, 29 Jul 2019 16:37:31 -0700 (PDT)
+X-Gm-Message-State: APjAAAWlBs+ClWyWxPqwiAJH8OZi1186lplF8nLh0SbWZ/LMKl9AjGgp
+        tUYzUxmnXAPEJSdbXNf59k7kemtWKJtMvjkJXg==
+X-Google-Smtp-Source: APXvYqx10EVolBe1nZc74TUTVuzkzQVea8UaThML/DaB+Laxs522U+FPo5bibjFkeIeUlaR3zWKjRDi9Ct5/EhcD1OM=
+X-Received: by 2002:a37:6944:: with SMTP id e65mr68650213qkc.119.1564443450862;
+ Mon, 29 Jul 2019 16:37:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hsF7j-002agT-EA
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:33296
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190729043926.32679-1-andrew@aj.id.au> <20190729043926.32679-2-andrew@aj.id.au>
+In-Reply-To: <20190729043926.32679-2-andrew@aj.id.au>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 29 Jul 2019 17:37:19 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLytwfsoyS6TSnpPgTjRTOR0TeQwroX21AHqj3A1mPJ5Q@mail.gmail.com>
+Message-ID: <CAL_JsqLytwfsoyS6TSnpPgTjRTOR0TeQwroX21AHqj3A1mPJ5Q@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: net: Add aspeed,ast2600-mdio binding
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     netdev <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+On Sun, Jul 28, 2019 at 10:39 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> The AST2600 splits out the MDIO bus controller from the MAC into its own
+> IP block and rearranges the register layout. Add a new binding to
+> describe the new hardware.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  .../bindings/net/aspeed,ast2600-mdio.yaml     | 61 +++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml b/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
+> new file mode 100644
+> index 000000000000..fa86f6438473
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/aspeed,ast2600-mdio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ASPEED AST2600 MDIO Controller
+> +
+> +maintainers:
+> +  - Andrew Jeffery <andrew@aj.id.au>
+> +
+> +description: |+
+> +  The ASPEED AST2600 MDIO controller is the third iteration of ASPEED's MDIO
+> +  bus register interface, this time also separating out the controller from the
+> +  MAC.
+> +
 
-This patch fixes the following warning (Building: mips):
+Should have a:
 
-arch/mips/oprofile/op_model_mipsxx.c: In function ‘mipsxx_cpu_stop’:
-arch/mips/oprofile/op_model_mipsxx.c:217:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfctrl3(0);
-   ^~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:218:2: note: here
-  case 3:
-  ^~~~
-arch/mips/oprofile/op_model_mipsxx.c:219:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfctrl2(0);
-   ^~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:220:2: note: here
-  case 2:
-  ^~~~
-arch/mips/oprofile/op_model_mipsxx.c:221:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfctrl1(0);
-   ^~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:222:2: note: here
-  case 1:
-  ^~~~
-arch/mips/oprofile/op_model_mipsxx.c: In function ‘mipsxx_cpu_start’:
-arch/mips/oprofile/op_model_mipsxx.c:197:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfctrl3(WHAT | reg.control[3]);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:198:2: note: here
-  case 3:
-  ^~~~
-arch/mips/oprofile/op_model_mipsxx.c:199:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfctrl2(WHAT | reg.control[2]);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:200:2: note: here
-  case 2:
-  ^~~~
-arch/mips/oprofile/op_model_mipsxx.c:201:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfctrl1(WHAT | reg.control[1]);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:202:2: note: here
-  case 1:
-  ^~~~
-arch/mips/oprofile/op_model_mipsxx.c: In function ‘reset_counters’:
-arch/mips/oprofile/op_model_mipsxx.c:299:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfcntr3(0);
-   ^~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:300:2: note: here
-  case 3:
-  ^~~~
-arch/mips/oprofile/op_model_mipsxx.c:302:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfcntr2(0);
-   ^~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:303:2: note: here
-  case 2:
-  ^~~~
-arch/mips/oprofile/op_model_mipsxx.c:305:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfcntr1(0);
-   ^~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:306:2: note: here
-  case 1:
-  ^~~~
-arch/mips/oprofile/op_model_mipsxx.c: In function ‘mipsxx_perfcount_handler’:
-arch/mips/oprofile/op_model_mipsxx.c:242:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if ((control & MIPS_PERFCTRL_IE) &&   \
-      ^
-arch/mips/oprofile/op_model_mipsxx.c:248:2: note: in expansion of macro ‘HANDLE_COUNTER’
-  HANDLE_COUNTER(3)
-  ^~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:239:2: note: here
-  case n + 1:       \
-  ^
-arch/mips/oprofile/op_model_mipsxx.c:249:2: note: in expansion of macro ‘HANDLE_COUNTER’
-  HANDLE_COUNTER(2)
-  ^~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:242:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if ((control & MIPS_PERFCTRL_IE) &&   \
-      ^
-arch/mips/oprofile/op_model_mipsxx.c:249:2: note: in expansion of macro ‘HANDLE_COUNTER’
-  HANDLE_COUNTER(2)
-  ^~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:239:2: note: here
-  case n + 1:       \
-  ^
-arch/mips/oprofile/op_model_mipsxx.c:250:2: note: in expansion of macro ‘HANDLE_COUNTER’
-  HANDLE_COUNTER(1)
-  ^~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:242:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if ((control & MIPS_PERFCTRL_IE) &&   \
-      ^
-arch/mips/oprofile/op_model_mipsxx.c:250:2: note: in expansion of macro ‘HANDLE_COUNTER’
-  HANDLE_COUNTER(1)
-  ^~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:239:2: note: here
-  case n + 1:       \
-  ^
-arch/mips/oprofile/op_model_mipsxx.c:251:2: note: in expansion of macro ‘HANDLE_COUNTER’
-  HANDLE_COUNTER(0)
-  ^~~~~~~~~~~~~~
-  CC      usr/include/linux/pmu.h.s
-arch/mips/oprofile/op_model_mipsxx.c: In function ‘mipsxx_cpu_setup’:
-arch/mips/oprofile/op_model_mipsxx.c:174:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfcntr3(reg.counter[3]);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:175:2: note: here
-  case 3:
-  ^~~~
-arch/mips/oprofile/op_model_mipsxx.c:177:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfcntr2(reg.counter[2]);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:178:2: note: here
-  case 2:
-  ^~~~
-arch/mips/oprofile/op_model_mipsxx.c:180:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   w_c0_perfcntr1(reg.counter[1]);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/mips/oprofile/op_model_mipsxx.c:181:2: note: here
-  case 1:
-  ^~~~
+allOf:
+  - $ref: "mdio.yaml#"
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- arch/mips/oprofile/op_model_mipsxx.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> +properties:
+> +  compatible:
+> +    const: aspeed,ast2600-mdio
+> +  reg:
+> +    maxItems: 1
+> +    description: The register range of the MDIO controller instance
 
-diff --git a/arch/mips/oprofile/op_model_mipsxx.c b/arch/mips/oprofile/op_model_mipsxx.c
-index 7c04b17f4a48..96c13a0ab078 100644
---- a/arch/mips/oprofile/op_model_mipsxx.c
-+++ b/arch/mips/oprofile/op_model_mipsxx.c
-@@ -172,12 +172,15 @@ static void mipsxx_cpu_setup(void *args)
- 	case 4:
- 		w_c0_perfctrl3(0);
- 		w_c0_perfcntr3(reg.counter[3]);
-+		/* fall through */
- 	case 3:
- 		w_c0_perfctrl2(0);
- 		w_c0_perfcntr2(reg.counter[2]);
-+		/* fall through */
- 	case 2:
- 		w_c0_perfctrl1(0);
- 		w_c0_perfcntr1(reg.counter[1]);
-+		/* fall through */
- 	case 1:
- 		w_c0_perfctrl0(0);
- 		w_c0_perfcntr0(reg.counter[0]);
-@@ -195,10 +198,13 @@ static void mipsxx_cpu_start(void *args)
- 	switch (counters) {
- 	case 4:
- 		w_c0_perfctrl3(WHAT | reg.control[3]);
-+		/* fall through */
- 	case 3:
- 		w_c0_perfctrl2(WHAT | reg.control[2]);
-+		/* fall through */
- 	case 2:
- 		w_c0_perfctrl1(WHAT | reg.control[1]);
-+		/* fall through */
- 	case 1:
- 		w_c0_perfctrl0(WHAT | reg.control[0]);
- 	}
-@@ -215,10 +221,13 @@ static void mipsxx_cpu_stop(void *args)
- 	switch (counters) {
- 	case 4:
- 		w_c0_perfctrl3(0);
-+		/* fall through */
- 	case 3:
- 		w_c0_perfctrl2(0);
-+		/* fall through */
- 	case 2:
- 		w_c0_perfctrl1(0);
-+		/* fall through */
- 	case 1:
- 		w_c0_perfctrl0(0);
- 	}
-@@ -236,6 +245,7 @@ static int mipsxx_perfcount_handler(void)
- 
- 	switch (counters) {
- #define HANDLE_COUNTER(n)						\
-+	/* fall through */						\
- 	case n + 1:							\
- 		control = r_c0_perfctrl ## n();				\
- 		counter = r_c0_perfcntr ## n();				\
-@@ -297,12 +307,15 @@ static void reset_counters(void *arg)
- 	case 4:
- 		w_c0_perfctrl3(0);
- 		w_c0_perfcntr3(0);
-+		/* fall through */
- 	case 3:
- 		w_c0_perfctrl2(0);
- 		w_c0_perfcntr2(0);
-+		/* fall through */
- 	case 2:
- 		w_c0_perfctrl1(0);
- 		w_c0_perfcntr1(0);
-+		/* fall through */
- 	case 1:
- 		w_c0_perfctrl0(0);
- 		w_c0_perfcntr0(0);
--- 
-2.22.0
+> +  "#address-cells":
+> +    const: 1
+> +  "#size-cells":
+> +    const: 0
 
+Then you can drop these 2.
+
+> +
+> +patternProperties:
+> +  "^ethernet-phy@[a-f0-9]$":
+> +    properties:
+> +      reg:
+> +        description:
+> +          The MDIO bus index of the PHY
+
+And this.
+
+> +      compatible:
+> +        enum:
+> +          - ethernet-phy-ieee802.3-c22
+> +          - ethernet-phy-ieee802.3-c45
+
+This isn't specific to ASpeed either and is already covered by
+ethernet-phy.yaml.
+
+So that means none of the child node schema is needed here.
+
+> +    required:
+> +      - reg
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    mdio0: mdio@1e650000 {
+> +            compatible = "aspeed,ast2600-mdio";
+> +            reg = <0x1e650000 0x8>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            status = "okay";
+
+Don't show status in examples.
+
+> +
+> +            ethphy0: ethernet-phy@0 {
+> +                    compatible = "ethernet-phy-ieee802.3-c22";
+> +                    reg = <0>;
+> +            };
+> +    };
+> --
+> 2.20.1
+>
