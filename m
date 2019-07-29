@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B3FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FEDC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B50120C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4095221655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428382;
-	bh=4vUBLUZM6+m3RWzu3LosGWAQjA/ux+1Bd9FlcolO6q8=;
+	s=default; t=1564428384;
+	bh=c0QN6XzbHZvWbQ/ngMjX6N5OMm7wXKy0+mCGT6v1Ckw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sxWI7BvAHINbeXjLxpBzbJyME60w5qZzlixyDx10Mo1eMUMtOytvUqjrgoVKHMWNR
-	 +DqGiQxussYccK3x7JUcURczGDTa0GuRyt4IoCGMHH2RXuvIfIG4GtuM7nEBRNgg26
-	 VbvpJ/PuFHaFm4ykjdDsJoz2HubxV1ZoDecm4N9M=
+	b=voaGXoPDU+/fGh22GQiPLZBAjI5UgSC6LWF8tmD6+kYekaIs+LxGtCoamHEHzwfQi
+	 gQXjJVi6zfohfzA4t4lzlS4BRa6zsDJiVDDLMU0mGEAj4ZJx/dNEvniuIKHG164Iv1
+	 rNia3w0EklzWYmLwhQRWuCtbX7ZhUsqBMQBMiVvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfG2T0U (ORCPT
+        id S1729756AbfG2T0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:26:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38696 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727739AbfG2T0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:26:18 -0400
+        id S1728102AbfG2T0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:26:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBF78216C8;
-        Mon, 29 Jul 2019 19:26:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 718C82171F;
+        Mon, 29 Jul 2019 19:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428377;
-        bh=4vUBLUZM6+m3RWzu3LosGWAQjA/ux+1Bd9FlcolO6q8=;
+        s=default; t=1564428379;
+        bh=c0QN6XzbHZvWbQ/ngMjX6N5OMm7wXKy0+mCGT6v1Ckw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=thcRFQ+YpReor0JfnlYUdBfleRqu+ZqJDsb1hOskrMIjHY2K81Id/00kQyQx3GPmx
-         oarIuUrdAQHlWyxErzfFkWq9xiPjFIJKDn9CFN0UsVX4f8gVmW2lANhkreVsFi2ckP
-         I5HsMfeqFHhfZlHxT2iRy8o78/HGe1J/+1tQY8FA=
+        b=Fqb75d/38+b7zDlHtmOEMGNSoAioFiaDSmcJ27w6eOxvioxGU9RbLQI43f1ozyM1O
+         MeqfEBOmofE7iFfWpPBi2FZHvv2WYMJLh+Q0Dd8O3XUkz2+DMDEt+gEdmFlyAMuaPT
+         sySYWeUYik3hYJOnSVMUstmFq8cbVYpHREuXyds4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 055/293] x86/atomic: Fix smp_mb__{before,after}_atomic()
-Date:   Mon, 29 Jul 2019 21:19:06 +0200
-Message-Id: <20190729190828.187288298@linuxfoundation.org>
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 020/293] qed: Set the doorbell address correctly
+Date:   Mon, 29 Jul 2019 21:18:31 +0200
+Message-Id: <20190729190822.355531212@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -62,161 +62,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 69d927bba39517d0980462efc051875b7f4db185 ]
+[ Upstream commit 8366d520019f366fabd6c7a13032bdcd837e18d4 ]
 
-Recent probing at the Linux Kernel Memory Model uncovered a
-'surprise'. Strongly ordered architectures where the atomic RmW
-primitive implies full memory ordering and
-smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
-fail for:
+In 100g mode the doorbell bar is united for both engines. Set
+the correct offset in the hwfn so that the doorbell returned
+for RoCE is in the affined hwfn.
 
-	*x = 1;
-	atomic_inc(u);
-	smp_mb__after_atomic();
-	r0 = *y;
-
-Because, while the atomic_inc() implies memory order, it
-(surprisingly) does not provide a compiler barrier. This then allows
-the compiler to re-order like so:
-
-	atomic_inc(u);
-	*x = 1;
-	smp_mb__after_atomic();
-	r0 = *y;
-
-Which the CPU is then allowed to re-order (under TSO rules) like:
-
-	atomic_inc(u);
-	r0 = *y;
-	*x = 1;
-
-And this very much was not intended. Therefore strengthen the atomic
-RmW ops to include a compiler barrier.
-
-NOTE: atomic_{or,and,xor} and the bitops already had the compiler
-barrier.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Denis Bolotin <denis.bolotin@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/atomic_t.txt         | 3 +++
- arch/x86/include/asm/atomic.h      | 8 ++++----
- arch/x86/include/asm/atomic64_64.h | 8 ++++----
- arch/x86/include/asm/barrier.h     | 4 ++--
- 4 files changed, 13 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_dev.c  | 29 ++++++++++++++--------
+ drivers/net/ethernet/qlogic/qed/qed_rdma.c |  2 +-
+ 2 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-index 913396ac5824..ed0d814df7e0 100644
---- a/Documentation/atomic_t.txt
-+++ b/Documentation/atomic_t.txt
-@@ -177,6 +177,9 @@ These helper barriers exist because architectures have varying implicit
- ordering on their SMP atomic primitives. For example our TSO architectures
- provide full ordered atomics and these barriers are no-ops.
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+index 410528e7d927..c4e8bf0773fe 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -2947,6 +2947,7 @@ static int qed_get_dev_info(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt)
+ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
+ 				 void __iomem *p_regview,
+ 				 void __iomem *p_doorbells,
++				 u64 db_phys_addr,
+ 				 enum qed_pci_personality personality)
+ {
+ 	int rc = 0;
+@@ -2954,6 +2955,7 @@ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
+ 	/* Split PCI bars evenly between hwfns */
+ 	p_hwfn->regview = p_regview;
+ 	p_hwfn->doorbells = p_doorbells;
++	p_hwfn->db_phys_addr = db_phys_addr;
  
-+NOTE: when the atomic RmW ops are fully ordered, they should also imply a
-+compiler barrier.
+ 	if (IS_VF(p_hwfn->cdev))
+ 		return qed_vf_hw_prepare(p_hwfn);
+@@ -3036,7 +3038,9 @@ int qed_hw_prepare(struct qed_dev *cdev,
+ 	/* Initialize the first hwfn - will learn number of hwfns */
+ 	rc = qed_hw_prepare_single(p_hwfn,
+ 				   cdev->regview,
+-				   cdev->doorbells, personality);
++				   cdev->doorbells,
++				   cdev->db_phys_addr,
++				   personality);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -3045,22 +3049,25 @@ int qed_hw_prepare(struct qed_dev *cdev,
+ 	/* Initialize the rest of the hwfns */
+ 	if (cdev->num_hwfns > 1) {
+ 		void __iomem *p_regview, *p_doorbell;
+-		u8 __iomem *addr;
++		u64 db_phys_addr;
++		u32 offset;
+ 
+ 		/* adjust bar offset for second engine */
+-		addr = cdev->regview +
+-		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
+-				       BAR_ID_0) / 2;
+-		p_regview = addr;
++		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
++					 BAR_ID_0) / 2;
++		p_regview = cdev->regview + offset;
+ 
+-		addr = cdev->doorbells +
+-		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
+-				       BAR_ID_1) / 2;
+-		p_doorbell = addr;
++		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
++					 BAR_ID_1) / 2;
 +
- Thus:
++		p_doorbell = cdev->doorbells + offset;
++
++		db_phys_addr = cdev->db_phys_addr + offset;
  
-   atomic_fetch_add();
-diff --git a/arch/x86/include/asm/atomic.h b/arch/x86/include/asm/atomic.h
-index 72759f131cc5..d09dd91dd0b6 100644
---- a/arch/x86/include/asm/atomic.h
-+++ b/arch/x86/include/asm/atomic.h
-@@ -50,7 +50,7 @@ static __always_inline void atomic_add(int i, atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "addl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
- }
+ 		/* prepare second hw function */
+ 		rc = qed_hw_prepare_single(&cdev->hwfns[1], p_regview,
+-					   p_doorbell, personality);
++					   p_doorbell, db_phys_addr,
++					   personality);
  
- /**
-@@ -64,7 +64,7 @@ static __always_inline void atomic_sub(int i, atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "subl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
- }
+ 		/* in case of error, need to free the previously
+ 		 * initiliazed hwfn 0.
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+index 1b6554866138..1e13dea66989 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+@@ -753,7 +753,7 @@ static int qed_rdma_add_user(void *rdma_cxt,
+ 				     dpi_start_offset +
+ 				     ((out_params->dpi) * p_hwfn->dpi_size));
  
- /**
-@@ -90,7 +90,7 @@ static __always_inline bool atomic_sub_and_test(int i, atomic_t *v)
- static __always_inline void atomic_inc(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "incl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- 
- /**
-@@ -102,7 +102,7 @@ static __always_inline void atomic_inc(atomic_t *v)
- static __always_inline void atomic_dec(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "decl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- 
- /**
-diff --git a/arch/x86/include/asm/atomic64_64.h b/arch/x86/include/asm/atomic64_64.h
-index 738495caf05f..e6fad6bbb2ee 100644
---- a/arch/x86/include/asm/atomic64_64.h
-+++ b/arch/x86/include/asm/atomic64_64.h
-@@ -45,7 +45,7 @@ static __always_inline void atomic64_add(long i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "addq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -59,7 +59,7 @@ static inline void atomic64_sub(long i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "subq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -86,7 +86,7 @@ static __always_inline void atomic64_inc(atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "incq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -99,7 +99,7 @@ static __always_inline void atomic64_dec(atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "decq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- 
- /**
-diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-index a04f0c242a28..bc88797cfa61 100644
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -106,8 +106,8 @@ do {									\
- #endif
- 
- /* Atomic operations are already serializing on x86 */
--#define __smp_mb__before_atomic()	barrier()
--#define __smp_mb__after_atomic()	barrier()
-+#define __smp_mb__before_atomic()	do { } while (0)
-+#define __smp_mb__after_atomic()	do { } while (0)
- 
- #include <asm-generic/barrier.h>
+-	out_params->dpi_phys_addr = p_hwfn->cdev->db_phys_addr +
++	out_params->dpi_phys_addr = p_hwfn->db_phys_addr +
+ 				    dpi_start_offset +
+ 				    ((out_params->dpi) * p_hwfn->dpi_size);
  
 -- 
 2.20.1
