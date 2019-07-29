@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E48C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB59C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95CB7217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8982070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428819;
-	bh=Spq1VlnlnuzsW8NhJTaAcjbOlVC+MolHVVvuLLUYAEo=;
+	s=default; t=1564428824;
+	bh=6E5EdRJFvwwKHTg6u4GGDRI6rGEUkE2S1UcB+Lhht64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hsiapqmWCyHm49CxkLhtw9USTgsgN6/c6BmPi3O3QToC7DsIjrWOLjppNSb6qrZbZ
-	 zwhiE3ogAHXEG5Wnhuz9AoEjjKbdy5PK9kN8paxTNd8x+hCPYIltV7ZcRs+Ec6DrGK
-	 OtXAWY4OXscagOrd4xK6EVjmHutVbumF88ywAOGU=
+	b=XdhZgLQwrdiqRn4DgPHMbB+q7Anp9Wdmu8EyolIo7Dz6MZ6q6MeWa9PXllfMfJ9mo
+	 KlDr/SVmOXmm0Eh1xGy/99dh1RpImz5FbnporWCIlVqTeqf4OFAgbJC1zutjelzo8o
+	 cCmg/pozk4xpeifeXHhuYYr/e0DH24X7qHC/WaE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387694AbfG2Tdi (ORCPT
+        id S1729646AbfG2Tdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:33:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47580 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730352AbfG2Td1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:33:27 -0400
+        id S2387604AbfG2Tdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:33:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E871D2171F;
-        Mon, 29 Jul 2019 19:33:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E66F621773;
+        Mon, 29 Jul 2019 19:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428806;
-        bh=Spq1VlnlnuzsW8NhJTaAcjbOlVC+MolHVVvuLLUYAEo=;
+        s=default; t=1564428816;
+        bh=6E5EdRJFvwwKHTg6u4GGDRI6rGEUkE2S1UcB+Lhht64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D7LNUUvrF7gBoX2adgndwxTtrrEH8BIYOQjbC2SpuQf+FKXT4NH6sLv8S8vwCAoIn
-         D+RNbWPwlelmPg3iyw/BLiam2pHh9fT/BXQ+YPovGXjkuwz+UCdrlbA0WXm8LTkKvh
-         D7KM06qlVrUIeoyU1sxgWE/ZMpsphWh4VTZlzBTw=
+        b=pZbVSYS1j499uu8rlH9GyT2u1k7uh5AQKpAWQ2cyfOI5GaErvWi44frzaB+KY92lz
+         dvMYUrj+w4QGQ5K38t3IFK9fTsfGgpc0MhI4QJgVF0GJCA6OvHR9hCoaPF6F4Zc3a4
+         5sjnZXJNY1SAA98eM8l5CMmgOXb8RUxpzb1zo4Nc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org,
+        syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 185/293] ipv4: dont set IPv6 only flags to IPv4 addresses
-Date:   Mon, 29 Jul 2019 21:21:16 +0200
-Message-Id: <20190729190838.662412124@linuxfoundation.org>
+Subject: [PATCH 4.14 196/293] netrom: fix a memory leak in nr_rx_frame()
+Date:   Mon, 29 Jul 2019 21:21:27 +0200
+Message-Id: <20190729190839.483361877@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,56 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 2e60546368165c2449564d71f6005dda9205b5fb ]
+[ Upstream commit c8c8218ec5af5d2598381883acbefbf604e56b5e ]
 
-Avoid the situation where an IPV6 only flag is applied to an IPv4 address:
+When the skb is associated with a new sock, just assigning
+it to skb->sk is not sufficient, we have to set its destructor
+to free the sock properly too.
 
-    # ip addr add 192.0.2.1/24 dev dummy0 nodad home mngtmpaddr noprefixroute
-    # ip -4 addr show dev dummy0
-    2: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
-        inet 192.0.2.1/24 scope global noprefixroute dummy0
-           valid_lft forever preferred_lft forever
-
-Or worse, by sending a malicious netlink command:
-
-    # ip -4 addr show dev dummy0
-    2: dummy0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
-        inet 192.0.2.1/24 scope global nodad optimistic dadfailed home tentative mngtmpaddr noprefixroute stable-privacy dummy0
-           valid_lft forever preferred_lft forever
-
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Reported-by: syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/devinet.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/netrom/af_netrom.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -66,6 +66,11 @@
- #include <net/net_namespace.h>
- #include <net/addrconf.h>
+--- a/net/netrom/af_netrom.c
++++ b/net/netrom/af_netrom.c
+@@ -871,7 +871,7 @@ int nr_rx_frame(struct sk_buff *skb, str
+ 	unsigned short frametype, flags, window, timeout;
+ 	int ret;
  
-+#define IPV6ONLY_FLAGS	\
-+		(IFA_F_NODAD | IFA_F_OPTIMISTIC | IFA_F_DADFAILED | \
-+		 IFA_F_HOMEADDRESS | IFA_F_TENTATIVE | \
-+		 IFA_F_MANAGETEMPADDR | IFA_F_STABLE_PRIVACY)
-+
- static struct ipv4_devconf ipv4_devconf = {
- 	.data = {
- 		[IPV4_DEVCONF_ACCEPT_REDIRECTS - 1] = 1,
-@@ -455,6 +460,9 @@ static int __inet_insert_ifa(struct in_i
- 	ifa->ifa_flags &= ~IFA_F_SECONDARY;
- 	last_primary = &in_dev->ifa_list;
+-	skb->sk = NULL;		/* Initially we don't know who it's for */
++	skb_orphan(skb);
  
-+	/* Don't set IPv6 only flags to IPv4 addresses */
-+	ifa->ifa_flags &= ~IPV6ONLY_FLAGS;
-+
- 	for (ifap = &in_dev->ifa_list; (ifa1 = *ifap) != NULL;
- 	     ifap = &ifa1->ifa_next) {
- 		if (!(ifa1->ifa_flags & IFA_F_SECONDARY) &&
+ 	/*
+ 	 *	skb->data points to the netrom frame start
+@@ -970,6 +970,7 @@ int nr_rx_frame(struct sk_buff *skb, str
+ 	window = skb->data[20];
+ 
+ 	skb->sk             = make;
++	skb->destructor     = sock_efree;
+ 	make->sk_state	    = TCP_ESTABLISHED;
+ 
+ 	/* Fill in his circuit details */
 
 
