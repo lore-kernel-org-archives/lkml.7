@@ -2,56 +2,54 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE967C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F0EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA55021655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFBAF2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430130;
-	bh=lRxTkn5ni5yFAnlGU5me0IUymEJm74FXaiFGQ5FWTWQ=;
+	s=default; t=1564430134;
+	bh=jpiYO6UhX/+Nry9iVGij3iDA4znT7/AZPOkgIwLbhGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YxRF3A8pMyRtd/zHAkKfMYecMYBCfGzr0Wbgoo/FZtV6Z1+91r74MGiusWQ+X+9jO
-	 moSfh4ok4dqbkf1Jrw5cUCNXEbKOqoDe5w+8VqaFCFC1uAR+lsoyf8LQRZB7NRo2Wy
-	 EONg4YokUenxMt+LXZRdPqsNJ3aqLRpS8bvGlF7s=
+	b=MH6K5fP1e2t4IWneQQIdx81GCTrMYd8Ey3fDghOoEz9hD4c1sQhLbWfop7jbP46I3
+	 JAmSrS9AJv1sTPY++6i8bB+VvUFNCGSNa+OEswJJ1P6MqvIy3iJ4+cqunVc/wFgHi/
+	 EfLJm0poeL9fw/4obvSIKiV6PVokVp6cUk4KSiZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404220AbfG2Tz3 (ORCPT
+        id S2404019AbfG2Tzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:55:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48222 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403997AbfG2TzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:55:25 -0400
+        id S2404195AbfG2Tz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:55:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 564F721655;
-        Mon, 29 Jul 2019 19:55:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE3AE2054F;
+        Mon, 29 Jul 2019 19:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430124;
-        bh=lRxTkn5ni5yFAnlGU5me0IUymEJm74FXaiFGQ5FWTWQ=;
+        s=default; t=1564430127;
+        bh=jpiYO6UhX/+Nry9iVGij3iDA4znT7/AZPOkgIwLbhGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2H/iHirPzYkcIkDFhI449nYPgbyF9Iv9AbF6q31OOnO2IdD7Co9fAFHNKBGh4hx1d
-         dXr+xS7zSbcrtjcC84jdnImlnkeKhjK6sMu4SzVDicoVE/HFYhH3i3F+P5e80EeAb5
-         pay/+r+645PFPQFQZXj6A51R6T0h2g/Y85vUS+gI=
+        b=fE/lpywctwFWzThy8xJohc4S8PtP7Vfvy449f2OZ5k6xj5LT8zQiU2vN0zBZdvzXe
+         OWoTrfQmZ6F9aS71fMfYF1U+Tl79xoi31TvPCseD8URWZ2GQ1KIMPaADPEBgH9IaM1
+         T3+i/i11PfvD4kNlNQOKk1d7icPndQD7glsqKL2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 154/215] mm/gup.c: remove some BUG_ONs from get_gate_page()
-Date:   Mon, 29 Jul 2019 21:22:30 +0200
-Message-Id: <20190729190806.462204986@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.2 198/215] powerpc/mm: Limit rma_size to 1TB when running without HV mode
+Date:   Mon, 29 Jul 2019 21:23:14 +0200
+Message-Id: <20190729190814.236671780@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -64,53 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b5d1c39f34d1c9bca0c4b9ae2e339fbbe264a9c7 ]
+From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
 
-If we end up without a PGD or PUD entry backing the gate area, don't BUG
--- just fail gracefully.
+commit da0ef93310e67ae6902efded60b6724dab27a5d1 upstream.
 
-It's not entirely implausible that this could happen some day on x86.  It
-doesn't right now even with an execute-only emulated vsyscall page because
-the fixmap shares the PUD, but the core mm code shouldn't rely on that
-particular detail to avoid OOPSing.
+The virtual real mode addressing (VRMA) mechanism is used when a
+partition is using HPT (Hash Page Table) translation and performs real
+mode accesses (MSR[IR|DR] = 0) in non-hypervisor mode. In this mode
+effective address bits 0:23 are treated as zero (i.e. the access is
+aliased to 0) and the access is performed using an implicit 1TB SLB
+entry.
 
-Link: http://lkml.kernel.org/r/a1d9f4efb75b9d464e59fd6af00104b21c58f6f7.1561610798.git.luto@kernel.org
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The size of the RMA (Real Memory Area) is communicated to the guest as
+the size of the first memory region in the device tree. And because of
+the mechanism described above can be expected to not exceed 1TB. In
+the event that the host erroneously represents the RMA as being larger
+than 1TB, guest accesses in real mode to memory addresses above 1TB
+will be aliased down to below 1TB. This means that a memory access
+performed in real mode may differ to one performed in virtual mode for
+the same memory address, which would likely have unintended
+consequences.
+
+To avoid this outcome have the guest explicitly limit the size of the
+RMA to the current maximum, which is 1TB. This means that even if the
+first memory block is larger than 1TB, only the first 1TB should be
+accessed in real mode.
+
+Fixes: c610d65c0ad0 ("powerpc/pseries: lift RTAS limit for hash")
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Tested-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190710052018.14628-1-sjitindarsingh@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- mm/gup.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/powerpc/mm/book3s64/hash_utils.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 22855ff0b448..d2c14fc4b5d4 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -585,11 +585,14 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
- 		pgd = pgd_offset_k(address);
- 	else
- 		pgd = pgd_offset_gate(mm, address);
--	BUG_ON(pgd_none(*pgd));
-+	if (pgd_none(*pgd))
-+		return -EFAULT;
- 	p4d = p4d_offset(pgd, address);
--	BUG_ON(p4d_none(*p4d));
-+	if (p4d_none(*p4d))
-+		return -EFAULT;
- 	pud = pud_offset(p4d, address);
--	BUG_ON(pud_none(*pud));
-+	if (pud_none(*pud))
-+		return -EFAULT;
- 	pmd = pmd_offset(pud, address);
- 	if (!pmd_present(*pmd))
- 		return -EFAULT;
--- 
-2.20.1
-
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -1901,11 +1901,20 @@ void hash__setup_initial_memory_limit(ph
+ 	 *
+ 	 * For guests on platforms before POWER9, we clamp the it limit to 1G
+ 	 * to avoid some funky things such as RTAS bugs etc...
++	 *
++	 * On POWER9 we limit to 1TB in case the host erroneously told us that
++	 * the RMA was >1TB. Effective address bits 0:23 are treated as zero
++	 * (meaning the access is aliased to zero i.e. addr = addr % 1TB)
++	 * for virtual real mode addressing and so it doesn't make sense to
++	 * have an area larger than 1TB as it can't be addressed.
+ 	 */
+ 	if (!early_cpu_has_feature(CPU_FTR_HVMODE)) {
+ 		ppc64_rma_size = first_memblock_size;
+ 		if (!early_cpu_has_feature(CPU_FTR_ARCH_300))
+ 			ppc64_rma_size = min_t(u64, ppc64_rma_size, 0x40000000);
++		else
++			ppc64_rma_size = min_t(u64, ppc64_rma_size,
++					       1UL << SID_SHIFT_1T);
+ 
+ 		/* Finally limit subsequent allocations */
+ 		memblock_set_current_limit(ppc64_rma_size);
 
 
