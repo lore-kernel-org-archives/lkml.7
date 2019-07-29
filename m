@@ -2,58 +2,52 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66601C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A53C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342A92171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421A1206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429085;
-	bh=KJf2K2UdkZTGt+0mCo4df6+uIaLto5eUYkcRQ8ZM+Rk=;
+	s=default; t=1564429097;
+	bh=rzK8yFcGfbKCpoDsOUVJ4omD30vq1XPdn/iIvLzLvw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ch/B6iTn9O1sqm1xCKJWvutXsp4LxDuvCnC5FAV2gpSyWpPnCtrrt6a9hX9SclcFW
-	 soKLHI8Angv/BuS2Qd8s/h3+kq0Fhb/F4+1SVJGnVrBs3oz4CHwbrz8XzM9af7ZCE2
-	 dwzcTSIEcTqaq9OfCVriXmBZibGftF4CcdIFgDMU=
+	b=zYW8H1IB0jZdPpE2Yo5lPaM4JOMM0HQL5rneg8yenzD6DmwPwkIj87D4DbIsJl7Q5
+	 +T+mGL1emxtjciv7Qkx6zEEgz+YqppOIEvml6tOOj6BEGZNubxzrbM7m5jr7cqUPgJ
+	 7+JItlVHmnYXaFqGR0iv+Li2x1q1v05jAzMSCGK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388828AbfG2TiD (ORCPT
+        id S1728729AbfG2TiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:38:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:38:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388437AbfG2TiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:38:01 -0400
+        id S2388136AbfG2TiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:38:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E96DC2171F;
-        Mon, 29 Jul 2019 19:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11C0E206DD;
+        Mon, 29 Jul 2019 19:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429080;
-        bh=KJf2K2UdkZTGt+0mCo4df6+uIaLto5eUYkcRQ8ZM+Rk=;
+        s=default; t=1564429090;
+        bh=rzK8yFcGfbKCpoDsOUVJ4omD30vq1XPdn/iIvLzLvw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e/hPW1vwK1CB+RKtrY0TBiJNfHtnjkYKclF7WLLFS9zsy3Wez9h2MLcrxvSSzIyc9
-         M51B79wW3mx3d5BtMoZqzzO5IIN7hadk3DXJnzvrUEYERvb9jss6kpmkTXVctTEp8Y
-         xNdO6j/Ywxzd6UPvvKvhn0yT7ajf5TcX9u8gYs+0=
+        b=NAwncUoP3cJnIhnAcKy+uKBkNYlPGc7jVVQ1isK4SSkVuqAA67zQXLwEFudFxD2K2
+         qf9hXi00xDIdQNr/V2qszEc16IK4XASGEAmz9Hoft9HIFvA4Pk2xORw8YeijpD9+2b
+         NbDpMlaDwoaZg7TM3jQe7J/d5/3jy538uQAuaVCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 279/293] drm/crc-debugfs: Also sprinkle irqrestore over early exits
-Date:   Mon, 29 Jul 2019 21:22:50 +0200
-Message-Id: <20190729190845.641798943@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 282/293] KVM: nVMX: do not use dangling shadow VMCS after guest reset
+Date:   Mon, 29 Jul 2019 21:22:53 +0200
+Message-Id: <20190729190845.859639288@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -66,51 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d99004d7201aa653658ff2390d6e516567c96ebc ]
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-I. was. blind.
+commit 88dddc11a8d6b09201b4db9d255b3394d9bc9e57 upstream.
 
-Caught with vkms, which has some really slow crc computation function.
+If a KVM guest is reset while running a nested guest, free_nested will
+disable the shadow VMCS execution control in the vmcs01.  However,
+on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
+the VMCS12 to the shadow VMCS which has since been freed.
 
-Fixes: 1882018a70e0 ("drm/crc-debugfs: User irqsafe spinlock in drm_crtc_add_crc_entry")
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Emil Velikov <emil.velikov@collabora.com>
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
-Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190606211544.5389-1-daniel.vetter@ffwll.ch
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This causes a vmptrld of a NULL pointer on my machime, but Jan reports
+the host to hang altogether.  Let's see how much this trivial patch fixes.
+
+Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Liran Alon <liran.alon@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/drm_debugfs_crc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
-index f689c75474e5..2901b7944068 100644
---- a/drivers/gpu/drm/drm_debugfs_crc.c
-+++ b/drivers/gpu/drm/drm_debugfs_crc.c
-@@ -366,7 +366,7 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -7694,6 +7694,7 @@ static void vmx_disable_shadow_vmcs(stru
+ {
+ 	vmcs_clear_bits(SECONDARY_VM_EXEC_CONTROL, SECONDARY_EXEC_SHADOW_VMCS);
+ 	vmcs_write64(VMCS_LINK_POINTER, -1ull);
++	vmx->nested.sync_shadow_vmcs = false;
+ }
  
- 	/* Caller may not have noticed yet that userspace has stopped reading */
- 	if (!crc->entries) {
--		spin_unlock(&crc->lock);
-+		spin_unlock_irqrestore(&crc->lock, flags);
- 		return -EINVAL;
+ static inline void nested_release_vmcs12(struct vcpu_vmx *vmx)
+@@ -7705,7 +7706,6 @@ static inline void nested_release_vmcs12
+ 		/* copy to memory all shadowed fields in case
+ 		   they were modified */
+ 		copy_shadow_to_vmcs12(vmx);
+-		vmx->nested.sync_shadow_vmcs = false;
+ 		vmx_disable_shadow_vmcs(vmx);
  	}
+ 	vmx->nested.posted_intr_nv = -1;
+@@ -7891,6 +7891,9 @@ static void copy_shadow_to_vmcs12(struct
+ 	const unsigned long *fields = shadow_read_write_fields;
+ 	const int num_fields = max_shadow_read_write_fields;
  
-@@ -377,7 +377,7 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
- 		bool was_overflow = crc->overflow;
++	if (WARN_ON(!shadow_vmcs))
++		return;
++
+ 	preempt_disable();
  
- 		crc->overflow = true;
--		spin_unlock(&crc->lock);
-+		spin_unlock_irqrestore(&crc->lock, flags);
+ 	vmcs_load(shadow_vmcs);
+@@ -7938,6 +7941,9 @@ static void copy_vmcs12_to_shadow(struct
+ 	u64 field_value = 0;
+ 	struct vmcs *shadow_vmcs = vmx->vmcs01.shadow_vmcs;
  
- 		if (!was_overflow)
- 			DRM_ERROR("Overflow of CRC buffer, userspace reads too slow.\n");
--- 
-2.20.1
-
++	if (WARN_ON(!shadow_vmcs))
++		return;
++
+ 	vmcs_load(shadow_vmcs);
+ 
+ 	for (q = 0; q < ARRAY_SIZE(fields); q++) {
 
 
