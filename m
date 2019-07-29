@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC65C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1E4C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADCC2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFBC2205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429301;
-	bh=weLFiGRUtpvtMwP/GcwCVI6hg7EVRdiSe3BgEGYjJxo=;
+	s=default; t=1564429304;
+	bh=Sfb8OS3U2e2x5qmCLlDtDVvs6ClLocIR+p5SM0N5PPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOTXeXHMtpxdI+gGahpoy89PZMWxfRIxT/Nl3d84jdKEQKfJTeqSEf9xeZ5yk+KY2
-	 n8SmCDNUfD9ZOytfWLDZWSPzOp/xEvxJ/LOqfAV5Ykym4PmO881n9uWj/pfqLOn4Vf
-	 ZHJEeNUOPqB1UmUW41+bf1ko7DB1KJ/vfeWUNUuc=
+	b=Kb5BBtROPAOtMemOR+rt4NFFOA2tabI2uFw1gWItZt8GwhIiIvUBBdOam+3mtrdwg
+	 Y+zPsalBEN7VRwpGY6J8yNOMMgfee68sCToEogP+zTa2ZeDKl1xeJ4o1Dcu7ssxT5O
+	 5VY3n+OpEczB64JA/OJNJdDKdmYDjcG8gO9x9L64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389396AbfG2Tlk (ORCPT
+        id S2389404AbfG2Tln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57088 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:41:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388784AbfG2Tlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:41:36 -0400
+        id S2388784AbfG2Tll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:41:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9D60205F4;
-        Mon, 29 Jul 2019 19:41:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74B8E205F4;
+        Mon, 29 Jul 2019 19:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429295;
-        bh=weLFiGRUtpvtMwP/GcwCVI6hg7EVRdiSe3BgEGYjJxo=;
+        s=default; t=1564429301;
+        bh=Sfb8OS3U2e2x5qmCLlDtDVvs6ClLocIR+p5SM0N5PPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ccc2sn0UkFu6bGWMhSOqTj7+gP0HVzTTpK5zuEnC5DhSDXJYPRCYtcM8v+EK9E9pX
-         ZSzI2kC6rmLlU6gC2NQ9tEZ5XxPjLtnAUE4BJ9MS/tNc/flLhvFBr6SyPzj6YPxODw
-         B79brS6egk6MuldYPurv8ogOXGKGRja9j4iv5r6U=
+        b=yc0ML4hb7LE63x/cIDUkfMxZ8YD6nJEI0IJiv0MN/E7niB+98Wg7A9nEcoCcG+ro/
+         tHkinCRrb4yf1x1eJZZdnGWC2L++PklBO+kWBy+DEaxEiDRMm/3cqMfSkXvJ8XvQPF
+         QOlr4DFQ4AUI1nwJYOBpv3gq4/pwUlnfnR11+Q4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 052/113] mm/swap: fix release_pages() when releasing devmap pages
-Date:   Mon, 29 Jul 2019 21:22:19 +0200
-Message-Id: <20190729190707.992644933@linuxfoundation.org>
+Subject: [PATCH 4.19 054/113] powerpc/4xx/uic: clear pending interrupt after irq type/pol change
+Date:   Mon, 29 Jul 2019 21:22:21 +0200
+Message-Id: <20190729190708.438823272@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -65,72 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c5d6c45e90c49150670346967971e14576afd7f1 ]
+[ Upstream commit 3ab3a0689e74e6aa5b41360bc18861040ddef5b1 ]
 
-release_pages() is an optimized version of a loop around put_page().
-Unfortunately for devmap pages the logic is not entirely correct in
-release_pages().  This is because device pages can be more than type
-MEMORY_DEVICE_PUBLIC.  There are in fact 4 types, private, public, FS DAX,
-and PCI P2PDMA.  Some of these have specific needs to "put" the page while
-others do not.
+When testing out gpio-keys with a button, a spurious
+interrupt (and therefore a key press or release event)
+gets triggered as soon as the driver enables the irq
+line for the first time.
 
-This logic to handle any special needs is contained in
-put_devmap_managed_page().  Therefore all devmap pages should be processed
-by this function where we can contain the correct logic for a page put.
+This patch clears any potential bogus generated interrupt
+that was caused by the switching of the associated irq's
+type and polarity.
 
-Handle all device type pages within release_pages() by calling
-put_devmap_managed_page() on all devmap pages.  If
-put_devmap_managed_page() returns true the page has been put and we
-continue with the next page.  A false return of put_devmap_managed_page()
-means the page did not require special processing and should fall to
-"normal" processing.
-
-This was found via code inspection while determining if release_pages()
-and the new put_user_pages() could be interchangeable.[1]
-
-[1] https://lkml.kernel.org/r/20190523172852.GA27175@iweiny-DESK2.sc.intel.com
-
-Link: https://lkml.kernel.org/r/20190605214922.17684-1-ira.weiny@intel.com
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/swap.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/powerpc/platforms/4xx/uic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index a3fc028e338e..45fdbfb6b2a6 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -740,15 +740,20 @@ void release_pages(struct page **pages, int nr)
- 		if (is_huge_zero_page(page))
- 			continue;
+diff --git a/arch/powerpc/platforms/4xx/uic.c b/arch/powerpc/platforms/4xx/uic.c
+index 8b4dd0da0839..9e27cfe27026 100644
+--- a/arch/powerpc/platforms/4xx/uic.c
++++ b/arch/powerpc/platforms/4xx/uic.c
+@@ -158,6 +158,7 @@ static int uic_set_irq_type(struct irq_data *d, unsigned int flow_type)
  
--		/* Device public page can not be huge page */
--		if (is_device_public_page(page)) {
-+		if (is_zone_device_page(page)) {
- 			if (locked_pgdat) {
- 				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
- 						       flags);
- 				locked_pgdat = NULL;
- 			}
--			put_devmap_managed_page(page);
--			continue;
-+			/*
-+			 * ZONE_DEVICE pages that return 'false' from
-+			 * put_devmap_managed_page() do not require special
-+			 * processing, and instead, expect a call to
-+			 * put_page_testzero().
-+			 */
-+			if (put_devmap_managed_page(page))
-+				continue;
- 		}
+ 	mtdcr(uic->dcrbase + UIC_PR, pr);
+ 	mtdcr(uic->dcrbase + UIC_TR, tr);
++	mtdcr(uic->dcrbase + UIC_SR, ~mask);
  
- 		page = compound_head(page);
+ 	raw_spin_unlock_irqrestore(&uic->lock, flags);
+ 
 -- 
 2.20.1
 
