@@ -2,124 +2,90 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CBDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DE5C7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A8E2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC12C2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:47:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Sxm6JuVI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JX9vGziM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbfG2VqE (ORCPT
+        id S2388796AbfG2VrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:46:04 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35711 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbfG2VqD (ORCPT
+        Mon, 29 Jul 2019 17:47:16 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44634 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfG2VrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:46:03 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a127so46370739oii.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:46:03 -0700 (PDT)
+        Mon, 29 Jul 2019 17:47:15 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so123297975iob.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:47:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=N3q7xJdwh8PFVLuqry097P3Xvdg3K97aXzT+h+VJXcs=;
-        b=Sxm6JuVIa/VBOyYU6R6afowaBbcZWBLQ8edTLaMy6eWWGnu2Do83jIjFSm89RTjzLQ
-         WNcZYaXlNOS1PN98f4DahJMh63AQ54FoFxJyE8SGfv08OEpnF+XHgHKz1NpvWKuurj3s
-         uRo6TgOuKm0klWbvezGd+QDPTLlLkmywlgospjfgk5xrWKas/gu25VksFkXytRpBjemG
-         8lEbYNCYq/Qw9xroqwUx9dGGV1OVktApy0a++h+hf9a11R2CrgkyyH7ZMRRPA+0F82m3
-         wepW205mRdVUF6qELog6dHXbdBJzGJFNDHBIIlBIXbow1EsTA8UFXLDw8fm2efcoMP04
-         7b5A==
+        bh=j10iEndEcfl7GFmx0FBUfHkT/DIF6Lz0Je3WuUXspf4=;
+        b=JX9vGziMLV0bTzWdDEXuN2wORxj61dz7dEOXT8Y9SKYKtqwU+xD6ErVpMeRWiEzuI9
+         98yyj3qE8qXIZZMfgOvU/ScnBtJ2CDT7V5DT0pjTOgpoyLSl95jt69WDW0iNODp2cmw9
+         oF09HKKjSA6zgwa6539xg9dw/7oNc3Q6Debx/rjZCXOUFxjL/1CUBhy5gRGjz0EDELiY
+         9DcD3CI1ee7sVs5VlAd44Xw0XZ16251YPtko3DyygrdJoTjMekRrdWrFZ1Nb2c4cLzEf
+         KpxJZbxyRTy9MEYf/AHlJ0Sd8kVCJIC6j3PJvb19FoT65p1ROCUKwFKE9pqk9jvoKbBq
+         E1eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=N3q7xJdwh8PFVLuqry097P3Xvdg3K97aXzT+h+VJXcs=;
-        b=qZrSJpl4JkzaFojDfIyDeUWvZqmZkhhoo0W6Qb4UDDvej4592oD8lm2BfNvj7Z9mC9
-         NEpqP10FzsoSdsYNtAM1AVuazirnVo/Y0xqgaBYogQL+oLsps6totQii2IT83ITkjJ41
-         KNZwlB6l1qmzIMHuJs5qIqQGJ6SB1b7svQsqHOEyqUtYQEoCK2avMUcPtqsUrbCGRpaF
-         jfuS+jOTfXBcm2szfR4iofoYVhuiW6G+Bd5AkxpG3HvtQH/Ax/eC36aVf4Y1qAMb5cEM
-         y7v2lP10BYpe/VP/bD2UQD9DSI6Z9LBEA6m3xbjmwuEy/R6EXVCwDtJFB3KahjubJogs
-         7U8Q==
-X-Gm-Message-State: APjAAAWVn2OgpqsyzL4N/sTuvRJ2zyM9LCrbiE1qXuHF3wauXMs2xXv1
-        9jGdYnVog9wgHis+uRpBmzAdVfN0aixBF3SbUJ4=
-X-Google-Smtp-Source: APXvYqzH9o6vMPXW5m2jTBkNKSzRv8Plc0jl6T3q9UDoCcIxmNEvygjudEsgt5EPfe13VReOdigLLl5CWKltcKD27jY=
-X-Received: by 2002:a05:6808:8f0:: with SMTP id d16mr57350197oic.47.1564436762794;
- Mon, 29 Jul 2019 14:46:02 -0700 (PDT)
+        bh=j10iEndEcfl7GFmx0FBUfHkT/DIF6Lz0Je3WuUXspf4=;
+        b=gqhKO0WR/87Xy+kOAtDQrJUiiRyLqL1QkOi7oa9J7RfTcrd9LM10Py9tkfbclESKe0
+         G1zcdMNSPqiyFrvdxIDh4Mp2Io46RsuvxE15CpEu4xssST9kdHFN1G873Qb6SJ+hHBXq
+         NQ8llgvq6vp5yuU32EPxBjQ3UR9OUXKxJMG7RqT8SZKKXOaseC7+MuPtxu52g5ak2fUo
+         CGHW7G7otdFXaEKb936GXRXcMHGbCXkMBD8XPtZFDZhwJs3Sqxok0VG8sEHMP7tN4+Vn
+         VYNns8pyclIbxOMp+i47NQ07XrKkdi9EbxS+vWjYdDsdMVHTjYn8V7BqSBxArc6CC74I
+         mD4A==
+X-Gm-Message-State: APjAAAXU1hXxCg/lQUmP8YOuv4Okj517mTQeO7mn4Bu1H9FJgGkU1JDN
+        fNz9giBaJGBdNQuff6B2QFeMtt4yHrOB0Khcc8BzYw==
+X-Google-Smtp-Source: APXvYqzm3EZUnnvVpNns0C5pcvCXqaLAcYBywGrdM9ZfVRZDiZMOV9R7ercGbfHFqw5oA66zZL1UqInfPCyK99Izl1k=
+X-Received: by 2002:a5e:8c11:: with SMTP id n17mr35080222ioj.64.1564436834661;
+ Mon, 29 Jul 2019 14:47:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190727194647.15355-1-martin.blumenstingl@googlemail.com>
- <20190727194647.15355-2-martin.blumenstingl@googlemail.com> <9814939f-8580-c8f6-5c2f-7e64db60e6ae@baylibre.com>
-In-Reply-To: <9814939f-8580-c8f6-5c2f-7e64db60e6ae@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 29 Jul 2019 23:45:51 +0200
-Message-ID: <CAFBinCC5Bz-Oe4G1dtABrU+RFWUmqpdgyuDdRPp=Mo_Cucz7Wg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: meson8b: add the nvmem cell with the
- board's MAC address
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        hexdump0815@googlemail.com
-Cc:     linux-amlogic@lists.infradead.org, khilman@baylibre.com,
-        linux.amoon@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, ottuzzi@gmail.com
+References: <20190718194415.108476-1-matthewgarrett@google.com> <20190718194415.108476-24-matthewgarrett@google.com>
+In-Reply-To: <20190718194415.108476-24-matthewgarrett@google.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Mon, 29 Jul 2019 14:47:03 -0700
+Message-ID: <CACdnJuvFBQCpR4hk1YBQ2HSxJcweB0_XBqYZxn=LpG6NFU7S6w@mail.gmail.com>
+Subject: Re: [PATCH V36 23/29] bpf: Restrict bpf when kernel lockdown is in
+ confidentiality mode
+To:     James Morris <jmorris@namei.org>
+Cc:     LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Chun-Yi Lee <jlee@suse.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 9:11 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Thu, Jul 18, 2019 at 12:45 PM Matthew Garrett
+<matthewgarrett@google.com> wrote:
+> bpf_read() and bpf_read_str() could potentially be abused to (eg) allow
+> private keys in kernel memory to be leaked. Disable them if the kernel
+> has been locked down in confidentiality mode.
 >
-> Hi Martin,
->
-> On 27/07/2019 21:46, Martin Blumenstingl wrote:
-> > Amlogic's BSP kernel defines that all boards with a MAC address stored
-> > in the eFuse have it at offset 0x1b4. It is up to the board to
-> > decide whether to use this MAC address or not:
-> > - Odroid-C1 uses the MAC address from the eFuse
-> > - EC-100 seems to read the MAC address from eMMC
-> >
-> > Add the nvmem cell which describes the Ethernet MAC address. Don't
-> > assign it to the Ethernet controller, because depending on the board the
-> > actual MAC address may be read from somewhere else.
-> >
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> >  arch/arm/boot/dts/meson8b.dtsi | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-> > index 30fca9bb4bbe..c7de58b71d08 100644
-> > --- a/arch/arm/boot/dts/meson8b.dtsi
-> > +++ b/arch/arm/boot/dts/meson8b.dtsi
-> > @@ -402,6 +402,10 @@
-> >       clocks = <&clkc CLKID_EFUSE>;
-> >       clock-names = "core";
-> >
-> > +     ethernet_mac_address: mac@1b4 {
-> > +             reg = <0x1b4 0x6>;
-> > +     };
->
-> Is this a fixed position for all boards ? if not, I'll suggest moving
-> it to the odroid-c1 dt until you have more users.
-the 0x1b4 offset is hardcoded in Amlogic's kernel sources
-if some board uses another offset then the manufacturer had to patch
-the kernel to make it work (like Endless did)
+> Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> cc: netdev@vger.kernel.org
+> cc: Chun-Yi Lee <jlee@suse.com>
+> cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
 
-+Cc hexdump0815 - can you please run the following command on your
-Meson8b MXQ board:
-$ hexdump -C /sys/bus/nvmem/devices/meson8b-efuse0/nvmem | grep
-000001b0 | cut -d' ' -f7,8,9,10,12,13
-
-this should print the MAC address that is also used by the stock
-firmware and/or printed on the board
-if it is then I'm happy to provide a patch also for your MXQ board so
-it also uses the correct MAC address
-
-
-Martin
+Any further feedback on this?
