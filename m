@@ -2,103 +2,100 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B6CC7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB20C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160362067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C81F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfG2QPJ (ORCPT
+        id S1728086AbfG2QQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:15:09 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44212 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfG2QPJ (ORCPT
+        Mon, 29 Jul 2019 12:16:12 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:36419 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfG2QQM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:15:09 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i18so28499042pgl.11;
-        Mon, 29 Jul 2019 09:15:08 -0700 (PDT)
+        Mon, 29 Jul 2019 12:16:12 -0400
+Received: by mail-ua1-f68.google.com with SMTP id v20so24189289uao.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:16:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2/uoNs6vHyO3yeTHZpt1irIA1A/s4WXB9GVkMSlWRRE=;
-        b=h58UnGsdoWIrRoq/ZAAp4VoChpO8eIQk9rqeN8VPi42Fd7QkGPpt/VMHw02eMUiwLv
-         yGPFQ6YZkPFFYZbwRRIsjLyI1AZ7aypNV4E6QzzWNSBT6qb7OjVI0tw3i1dvA1Pd0d1k
-         NKnRzHu0va81fzsXhTbKWQWAKKKXEOHFxNTUoLM9NvzpQegQThYFJWmX6FgZyIUEfIXV
-         +G7H8nUE3uCsAruKc/B+j2xVloXlQ1wVjQFf6dkP2w3orXZ3R31O1f6HhYpzjsXKhawP
-         uymJyvnxMIbaGAsQtnIyXfuhAq95EVVFrncF/cTkIntk6IjDasN4x/kXlHjzS4H5n2sq
-         5t2g==
-X-Gm-Message-State: APjAAAXHgg5rIvziXlalP272ld/DoNXBLf3auPA45esoY55hHTIEYpgN
-        DMsiN6rkEP9isa9VSYwna6EuR6yI
-X-Google-Smtp-Source: APXvYqxvmRfMLtWjctTI+NBPENOugc0Re1KJKbTr0Q9VzZj2iX3jBmqvW9TdNQgLxS05uGk+p9MGBQ==
-X-Received: by 2002:a17:90a:8985:: with SMTP id v5mr111210220pjn.136.1564416908477;
-        Mon, 29 Jul 2019 09:15:08 -0700 (PDT)
-Received: from ?IPv6:2601:647:4800:973f:68b1:d8a0:b9e3:285e? ([2601:647:4800:973f:68b1:d8a0:b9e3:285e])
-        by smtp.gmail.com with ESMTPSA id b36sm93895852pjc.16.2019.07.29.09.15.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 09:15:07 -0700 (PDT)
-Subject: Re: [PATCH v6 00/16] nvmet: add target passthru commands support
-To:     Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Hannes Reinecke <hare@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>
-References: <20190725172335.6825-1-logang@deltatee.com>
- <1f202de3-1122-f4a3-debd-0d169f545047@suse.de>
- <8fd8813f-f8e1-2139-13bf-b0635a03bc30@deltatee.com>
- <175fa142-4815-ee48-82a4-18eb411db1ae@grimberg.me>
- <76f617b9-1137-48b6-f10d-bfb1be2301df@deltatee.com>
- <e166c392-1548-f0bb-02bc-ced3dd85f301@grimberg.me>
- <1260e01c-6731-52f7-ae83-0b90e0345c68@deltatee.com>
- <6DF00EEF-5A9D-49C9-A27C-BE34E594D9A9@raithlin.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <322df1b1-dbba-2018-44da-c108336f8d55@grimberg.me>
-Date:   Mon, 29 Jul 2019 09:15:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=AyvJSduUmZn33FbpJeTkP5NHm1ThVmp/uEoZugiTS6k=;
+        b=Hdv75bp3y7N0KY9LQEjenz9ab3aSVFTwcD6WpRCNfc+twZKK2yxtzWZF/HDyNzfG5j
+         oPPhEXpM1rbkNurayAbSYEnkZ5IhIkoefwlCerQT+JTM24jliJhE3dC3oaOlSYlnPE71
+         iwXFJljKueslDOcFe/A9f5bzY8ySAt8FwjzXhXRhpQ1Q3uIq0BviDE9e7aiiSkyijxbY
+         aSQQYvLC8K0YAU1QZjHWokVHC1qwKeum1EhBtlMl1innfnGP7P5v/8yS0QdIbj+E4kxl
+         IK4k2nQE63WTmMWqjIu3GGObh7Jrb7LzOv7F1kjQLvM94h/nJAKBnO4g7LZ90WpV33HN
+         9FPw==
+X-Gm-Message-State: APjAAAWV12ns46RukSODcTrVCWBrVxTFcC7+i0tqMWyqHNBA3vk5PN/m
+        juLKmx8OShoza5qniTUt8NnHtw==
+X-Google-Smtp-Source: APXvYqwG8Q4XQWblCYfrnvjYrxOZIt94OjzyFiLAXTSDaMhX/fRr5dDybVH26+paFqcxZZfddeveUQ==
+X-Received: by 2002:a9f:31a2:: with SMTP id v31mr67985907uad.15.1564416971073;
+        Mon, 29 Jul 2019 09:16:11 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id u5sm60539788uah.0.2019.07.29.09.16.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 09:16:10 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 12:16:05 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eric.auger@redhat.com, jean-philippe@linaro.org, jroedel@suse.de,
+        mst@redhat.com, namit@vmware.com, wei.w.wang@intel.com
+Subject: [PULL] vhost,virtio: cleanups and fixes
+Message-ID: <20190729121605-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <6DF00EEF-5A9D-49C9-A27C-BE34E594D9A9@raithlin.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
->> This is different from multipath on say a multi-controller PCI device
->> and trying to expose both those controllers through passthru. this is
->> where the problems we are discussing come up.
-> 
-> I *think* there is some confusion. I *think* Sagi is talking about network multi-path (i.e. the ability for the host to connect to a controller on the target via two different network paths that fail-over as needed). I *think* Logan is talking about multi-port PCIe NVMe devices that allow namespaces to be accessed via more than one controller over PCIe (dual-port NVMe SSDs being the most obvious example of this today).
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
-Yes, I was referring to fabrics multipathing which is somewhat
-orthogonal to the backend pci multipathing (unless I'm missing
-something).
+are available in the Git repository at:
 
->> But it's the multipath through different ports that
->>   seems important for fabrics. ie. If I have a host with a path through
->>   RDMA and a path through TCP they should both work and allow fail over.
-> 
-> Yes, or even two paths that are both RDMA or both TCP but which take a different path through the network from host to target.
-> 
->> Our real-world use case is to support our PCI device which has a bunch
->> of vendor unique commands and isn't likely to support multiple
->> controllers in the foreseeable future.
-> 
-> I think solving passthru for single-port PCIe controllers would be a good start.
+  git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
 
-Me too.
+for you to fetch changes up to 73f628ec9e6bcc45b77c53fe6d0c0ec55eaf82af:
+
+  vhost: disable metadata prefetch optimization (2019-07-26 07:49:29 -0400)
+
+----------------------------------------------------------------
+virtio, vhost: bugfixes
+
+Fixes in the iommu and balloon devices.
+Disable the meta-data optimization for now - I hope we can get it fixed
+shortly, but there's no point in making users suffer crashes while we
+are working on that.
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+
+----------------------------------------------------------------
+Jean-Philippe Brucker (1):
+      iommu/virtio: Update to most recent specification
+
+Michael S. Tsirkin (2):
+      balloon: fix up comments
+      vhost: disable metadata prefetch optimization
+
+Wei Wang (1):
+      mm/balloon_compaction: avoid duplicate page removal
+
+ drivers/iommu/virtio-iommu.c      | 40 ++++++++++++++++-------
+ drivers/vhost/vhost.h             |  2 +-
+ include/uapi/linux/virtio_iommu.h | 32 ++++++++++--------
+ mm/balloon_compaction.c           | 69 +++++++++++++++++++++++----------------
+ 4 files changed, 89 insertions(+), 54 deletions(-)
