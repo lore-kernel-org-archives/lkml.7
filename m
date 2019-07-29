@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94572C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70C5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 668582070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A382070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428260;
-	bh=0ec6NeFqmFZxWWpQ73b8nQMKU7+faETgn/Bt1DHjJ4c=;
+	s=default; t=1564428264;
+	bh=G2bbweMEWk37RuRfeZkhAnlhnD8IaKCChWQMszFGcC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=INuZ/EGDSSFNh5eLTBoNBNsW3rZf1V46Vkdsh2EJr0m6GslzC69OQRVSwpRLO7XUn
-	 9uYrPV9pk26a1qA2zCirXHZ4YcXRspsX2q5isq7JucIpHjvl4maouWerqxfF0j9uEx
-	 86Q0Opjh44aoXRF+IMx7rDLOfwlwhbjRXghH1PP8=
+	b=PXe8cGda+SHB968un5lJTnCHdgAOn4MGHw3jX9uLHPzoEMZV8SPDbdoR8BeWJ/lpf
+	 wCJp/Z5Qc5JUyok5Xd3DjY+N4jcVnk360NNiJmhEBLveWAUzuMOCrrOjEtkqB7xMyA
+	 wh2VNUHx/ED44EXuRpykShijEIS2RvXEAfncQgAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387576AbfG2TYT (ORCPT
+        id S1729495AbfG2TYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36458 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729460AbfG2TYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:24:14 -0400
+        id S2387561AbfG2TYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:24:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF69F21655;
-        Mon, 29 Jul 2019 19:24:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F30D2070B;
+        Mon, 29 Jul 2019 19:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428253;
-        bh=0ec6NeFqmFZxWWpQ73b8nQMKU7+faETgn/Bt1DHjJ4c=;
+        s=default; t=1564428256;
+        bh=G2bbweMEWk37RuRfeZkhAnlhnD8IaKCChWQMszFGcC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZlvA6UC5TXsh75mXogLCSNXv0WaVKXwp3r2+2ns4RqKw8p8HSqYQg4z8APHLpUGTd
-         OS4FIorlTJfq0DdKfqNhudXLuX6++57vHXO/LgRSO7nRjeXNJLlw39TqXg7wsj0gHi
-         a0MYvwDq5CMLOXdSjz8HUUzhyCB/qxfwEhC/ByQM=
+        b=dUHDWeDTQ+SFvMJBVMzwmyug92EKQFA0NSlA2qf8rsGX4MfAx1CfXiCDvSuggka6z
+         Gg3R/fDohqxxZlEvyD4OijFydlvv01v0UtSar+8aS7jlh/z6AaWTgrHD4dqBkwSPND
+         x99xD0bGQeTAwrAz1L12EfrkqCE51TwfYy75zWk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maurizio Lombardi <mlombard@redhat.com>,
-        Chris Leech <cleech@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 004/293] scsi: iscsi: set auth_protocol back to NULL if CHAP_A value is not supported
-Date:   Mon, 29 Jul 2019 21:18:15 +0200
-Message-Id: <20190729190820.686197057@linuxfoundation.org>
+Subject: [PATCH 4.14 005/293] dmaengine: imx-sdma: fix use-after-free on probe error path
+Date:   Mon, 29 Jul 2019 21:18:16 +0200
+Message-Id: <20190729190820.752569822@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,75 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5dd6c49339126c2c8df2179041373222362d6e49 ]
+[ Upstream commit 2b8066c3deb9140fdf258417a51479b2aeaa7622 ]
 
-If the CHAP_A value is not supported, the chap_server_open() function
-should free the auth_protocol pointer and set it to NULL, or we will leave
-a dangling pointer around.
+If probe() fails anywhere beyond the point where
+sdma_get_firmware() is called, then a kernel oops may occur.
 
-[   66.010905] Unsupported CHAP_A value
-[   66.011660] Security negotiation failed.
-[   66.012443] iSCSI Login negotiation failed.
-[   68.413924] general protection fault: 0000 [#1] SMP PTI
-[   68.414962] CPU: 0 PID: 1562 Comm: targetcli Kdump: loaded Not tainted 4.18.0-80.el8.x86_64 #1
-[   68.416589] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-[   68.417677] RIP: 0010:__kmalloc_track_caller+0xc2/0x210
+Problematic sequence of events:
+1. probe() calls sdma_get_firmware(), which schedules the
+   firmware callback to run when firmware becomes available,
+   using the sdma instance structure as the context
+2. probe() encounters an error, which deallocates the
+   sdma instance structure
+3. firmware becomes available, firmware callback is
+   called with deallocated sdma instance structure
+4. use after free - kernel oops !
 
-Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
-Reviewed-by: Chris Leech <cleech@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Solution: only attempt to load firmware when we're certain
+that probe() will succeed. This guarantees that the firmware
+callback's context will remain valid.
+
+Note that the remove() path is unaffected by this issue: the
+firmware loader will increment the driver module's use count,
+ensuring that the module cannot be unloaded while the
+firmware callback is pending or running.
+
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+[vkoul: fixed braces for if condition]
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/iscsi/iscsi_target_auth.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/dma/imx-sdma.c | 48 ++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
-index 4e680d753941..e2fa3a3bc81d 100644
---- a/drivers/target/iscsi/iscsi_target_auth.c
-+++ b/drivers/target/iscsi/iscsi_target_auth.c
-@@ -89,6 +89,12 @@ static int chap_check_algorithm(const char *a_str)
- 	return CHAP_DIGEST_UNKNOWN;
- }
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index b8e7c2d8915e..0fc12a8783e3 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1821,27 +1821,6 @@ static int sdma_probe(struct platform_device *pdev)
+ 	if (pdata && pdata->script_addrs)
+ 		sdma_add_scripts(sdma, pdata->script_addrs);
  
-+static void chap_close(struct iscsi_conn *conn)
-+{
-+	kfree(conn->auth_protocol);
-+	conn->auth_protocol = NULL;
-+}
-+
- static struct iscsi_chap *chap_server_open(
- 	struct iscsi_conn *conn,
- 	struct iscsi_node_auth *auth,
-@@ -126,7 +132,7 @@ static struct iscsi_chap *chap_server_open(
- 	case CHAP_DIGEST_UNKNOWN:
- 	default:
- 		pr_err("Unsupported CHAP_A value\n");
--		kfree(conn->auth_protocol);
-+		chap_close(conn);
- 		return NULL;
- 	}
- 
-@@ -141,19 +147,13 @@ static struct iscsi_chap *chap_server_open(
- 	 * Generate Challenge.
- 	 */
- 	if (chap_gen_challenge(conn, 1, aic_str, aic_len) < 0) {
--		kfree(conn->auth_protocol);
-+		chap_close(conn);
- 		return NULL;
- 	}
- 
- 	return chap;
- }
- 
--static void chap_close(struct iscsi_conn *conn)
--{
--	kfree(conn->auth_protocol);
--	conn->auth_protocol = NULL;
--}
+-	if (pdata) {
+-		ret = sdma_get_firmware(sdma, pdata->fw_name);
+-		if (ret)
+-			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
+-	} else {
+-		/*
+-		 * Because that device tree does not encode ROM script address,
+-		 * the RAM script in firmware is mandatory for device tree
+-		 * probe, otherwise it fails.
+-		 */
+-		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
+-					      &fw_name);
+-		if (ret)
+-			dev_warn(&pdev->dev, "failed to get firmware name\n");
+-		else {
+-			ret = sdma_get_firmware(sdma, fw_name);
+-			if (ret)
+-				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
+-		}
+-	}
 -
- static int chap_server_compute_md5(
- 	struct iscsi_conn *conn,
- 	struct iscsi_node_auth *auth,
+ 	sdma->dma_device.dev = &pdev->dev;
+ 
+ 	sdma->dma_device.device_alloc_chan_resources = sdma_alloc_chan_resources;
+@@ -1883,6 +1862,33 @@ static int sdma_probe(struct platform_device *pdev)
+ 		of_node_put(spba_bus);
+ 	}
+ 
++	/*
++	 * Kick off firmware loading as the very last step:
++	 * attempt to load firmware only if we're not on the error path, because
++	 * the firmware callback requires a fully functional and allocated sdma
++	 * instance.
++	 */
++	if (pdata) {
++		ret = sdma_get_firmware(sdma, pdata->fw_name);
++		if (ret)
++			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
++	} else {
++		/*
++		 * Because that device tree does not encode ROM script address,
++		 * the RAM script in firmware is mandatory for device tree
++		 * probe, otherwise it fails.
++		 */
++		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
++					      &fw_name);
++		if (ret) {
++			dev_warn(&pdev->dev, "failed to get firmware name\n");
++		} else {
++			ret = sdma_get_firmware(sdma, fw_name);
++			if (ret)
++				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
++		}
++	}
++
+ 	return 0;
+ 
+ err_register:
 -- 
 2.20.1
 
