@@ -2,228 +2,149 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4C9C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F0DC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89565206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:33:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HDBTO8bO"
+	by mail.kernel.org (Postfix) with ESMTP id 3EA5B206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:35:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfG2NdO (ORCPT
+        id S2387721AbfG2Nfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 09:33:14 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:44746 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727531AbfG2NdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 09:33:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=U3tRa9QfgN1HYp59kKYY38Ral1fkU/m2XaKVscV3imU=; b=HDBTO8bOTZVjt8lna6mpSqKPsk
-        wHSqFCzFxaLqaO0X2AJ/xnLlmNWIs/QcMOcPun/pP3vEl6E92+wES/7zMVV2CwjYirvKD+Fx5CTvG
-        OURuoajnEZxy2u2QyFW5Kv3HH3RrMDBGyklzW7e8/4iSmvXZ2bJhT3+wv+vnyconzdKg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hs5li-0001HY-QM; Mon, 29 Jul 2019 15:32:50 +0200
-Date:   Mon, 29 Jul 2019 15:32:50 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, joel@jms.id.au, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] net: phy: Add mdio-aspeed
-Message-ID: <20190729133250.GB4110@lunn.ch>
-References: <20190729043926.32679-1-andrew@aj.id.au>
- <20190729043926.32679-3-andrew@aj.id.au>
+        Mon, 29 Jul 2019 09:35:36 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3233 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387638AbfG2Nff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 09:35:35 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 55120CB76ABAB4BC196D;
+        Mon, 29 Jul 2019 21:35:30 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
+ 21:35:19 +0800
+Subject: Re: [RFC PATCH 05/10] powerpc/fsl_booke/32: introduce
+ reloc_kernel_entry() helper
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
+        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
+        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>
+References: <20190717080621.40424-1-yanaijie@huawei.com>
+ <20190717080621.40424-6-yanaijie@huawei.com>
+ <e4ccd015-a9c4-b0a6-e3ca-d37a04e29ec6@c-s.fr>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <60238fe3-a6ec-3537-d56d-29ebeb38f5fd@huawei.com>
+Date:   Mon, 29 Jul 2019 21:35:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729043926.32679-3-andrew@aj.id.au>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <e4ccd015-a9c4-b0a6-e3ca-d37a04e29ec6@c-s.fr>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 02:09:24PM +0930, Andrew Jeffery wrote:
-> The AST2600 design separates the MDIO controllers from the MAC, which is
-> where they were placed in the AST2400 and AST2500. Further, the register
-> interface is reworked again, so now we have three possible different
-> interface implementations, however this driver only supports the
-> interface provided by the AST2600. The AST2400 and AST2500 will continue
-> to be supported by the MDIO support embedded in the FTGMAC100 driver.
+
+On 2019/7/29 19:08, Christophe Leroy wrote:
 > 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  drivers/net/phy/Kconfig       |  13 +++
->  drivers/net/phy/Makefile      |   1 +
->  drivers/net/phy/mdio-aspeed.c | 159 ++++++++++++++++++++++++++++++++++
->  3 files changed, 173 insertions(+)
->  create mode 100644 drivers/net/phy/mdio-aspeed.c
 > 
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index 20f14c5fbb7e..206d8650ee7f 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -21,6 +21,19 @@ config MDIO_BUS
->  
->  if MDIO_BUS
->  
-> +config MDIO_ASPEED
-> +	tristate "ASPEED MDIO bus controller"
-> +	depends on ARCH_ASPEED || COMPILE_TEST
-> +	depends on OF_MDIO && HAS_IOMEM
-> +	help
-> +	  This module provides a driver for the independent MDIO bus
-> +	  controllers found in the ASPEED AST2600 SoC. This is a driver for the
-> +	  third revision of the ASPEED MDIO register interface - the first two
-> +	  revisions are the "old" and "new" interfaces found in the AST2400 and
-> +	  AST2500, embedded in the MAC. For legacy reasons, FTGMAC100 driver
-> +	  continues to drive the embedded MDIO controller for the AST2400 and
-> +	  AST2500 SoCs, so say N if AST2600 support is not required.
-> +
->  config MDIO_BCM_IPROC
->  	tristate "Broadcom iProc MDIO bus controller"
->  	depends on ARCH_BCM_IPROC || COMPILE_TEST
-> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> index 839acb292c38..ba07c27e4208 100644
-> --- a/drivers/net/phy/Makefile
-> +++ b/drivers/net/phy/Makefile
-> @@ -22,6 +22,7 @@ libphy-$(CONFIG_LED_TRIGGER_PHY)	+= phy_led_triggers.o
->  obj-$(CONFIG_PHYLINK)		+= phylink.o
->  obj-$(CONFIG_PHYLIB)		+= libphy.o
->  
-> +obj-$(CONFIG_MDIO_ASPEED)	+= mdio-aspeed.o
->  obj-$(CONFIG_MDIO_BCM_IPROC)	+= mdio-bcm-iproc.o
->  obj-$(CONFIG_MDIO_BCM_UNIMAC)	+= mdio-bcm-unimac.o
->  obj-$(CONFIG_MDIO_BITBANG)	+= mdio-bitbang.o
-> diff --git a/drivers/net/phy/mdio-aspeed.c b/drivers/net/phy/mdio-aspeed.c
-> new file mode 100644
-> index 000000000000..71496a9ff54a
-> --- /dev/null
-> +++ b/drivers/net/phy/mdio-aspeed.c
-> @@ -0,0 +1,159 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/* Copyright (C) 2019 IBM Corp. */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/delay.h>
-> +#include <linux/mdio.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/phy.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define DRV_NAME "mdio-aspeed"
-> +
-> +#define ASPEED_MDIO_CTRL		0x0
-> +#define   ASPEED_MDIO_CTRL_FIRE		BIT(31)
-> +#define   ASPEED_MDIO_CTRL_ST		BIT(28)
-> +#define     ASPEED_MDIO_CTRL_ST_C45	0
-> +#define     ASPEED_MDIO_CTRL_ST_C22	1
-> +#define   ASPEED_MDIO_CTRL_OP		GENMASK(27, 26)
-> +#define     MDIO_C22_OP_WRITE		0b01
-> +#define     MDIO_C22_OP_READ		0b10
-> +#define   ASPEED_MDIO_CTRL_PHYAD	GENMASK(25, 21)
-> +#define   ASPEED_MDIO_CTRL_REGAD	GENMASK(20, 16)
-> +#define   ASPEED_MDIO_CTRL_MIIWDATA	GENMASK(15, 0)
-> +
-> +#define ASPEED_MDIO_DATA		0x4
-> +#define   ASPEED_MDIO_DATA_MDC_THRES	GENMASK(31, 24)
-> +#define   ASPEED_MDIO_DATA_MDIO_EDGE	BIT(23)
-> +#define   ASPEED_MDIO_DATA_MDIO_LATCH	GENMASK(22, 20)
-> +#define   ASPEED_MDIO_DATA_IDLE		BIT(16)
-> +#define   ASPEED_MDIO_DATA_MIIRDATA	GENMASK(15, 0)
-> +
-> +#define ASPEED_MDIO_RETRIES		10
-> +
-> +struct aspeed_mdio {
-> +	void __iomem *base;
-> +};
-> +
-> +static int aspeed_mdio_read(struct mii_bus *bus, int addr, int regnum)
-> +{
-> +	struct aspeed_mdio *ctx = bus->priv;
-> +	u32 ctrl;
-> +	int i;
-> +
-> +	dev_dbg(&bus->dev, "%s: addr: %d, regnum: %d\n", __func__, addr,
-> +		regnum);
-> +
-> +	/* Just clause 22 for the moment */
-> +	ctrl = ASPEED_MDIO_CTRL_FIRE
+> Le 17/07/2019 à 10:06, Jason Yan a écrit :
+>> Add a new helper reloc_kernel_entry() to jump back to the start of the
+>> new kernel. After we put the new kernel in a randomized place we can use
+>> this new helper to enter the kernel and begin to relocate again.
+>>
+>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>> Cc: Diana Craciun <diana.craciun@nxp.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Paul Mackerras <paulus@samba.org>
+>> Cc: Nicholas Piggin <npiggin@gmail.com>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> ---
+>>   arch/powerpc/kernel/head_fsl_booke.S | 16 ++++++++++++++++
+>>   arch/powerpc/mm/mmu_decl.h           |  1 +
+>>   2 files changed, 17 insertions(+)
+>>
+>> diff --git a/arch/powerpc/kernel/head_fsl_booke.S 
+>> b/arch/powerpc/kernel/head_fsl_booke.S
+>> index a57d44638031..ce40f96dae20 100644
+>> --- a/arch/powerpc/kernel/head_fsl_booke.S
+>> +++ b/arch/powerpc/kernel/head_fsl_booke.S
+>> @@ -1144,6 +1144,22 @@ _GLOBAL(create_tlb_entry)
+>>       sync
+>>       blr
+>> +/*
+>> + * Return to the start of the relocated kernel and run again
+>> + * r3 - virtual address of fdt
+>> + * r4 - entry of the kernel
+>> + */
+>> +_GLOBAL(reloc_kernel_entry)
+>> +    mfmsr    r7
+>> +    li    r8,(MSR_IS | MSR_DS)
+>> +    andc    r7,r7,r8
+> 
+> Instead of the li/andc, what about the following:
+> 
+> rlwinm r7, r7, 0, ~(MSR_IS | MSR_DS)
+> 
 
-Hi Andrew
+Good idea.
 
-In the binding, you say C45 is supported. Here you don't. It would be
-nice to be consistent.
+>> +
+>> +    mtspr    SPRN_SRR0,r4
+>> +    mtspr    SPRN_SRR1,r7
+>> +    isync
+>> +    sync
+>> +    rfi
+> 
+> Are the isync/sync really necessary ? AFAIK, rfi is context synchronising.
+> 
 
+I see some code with sync before rfi so I'm not sure. I will check this
+and drop the isync/sync if it's true.
 
-> +		| FIELD_PREP(ASPEED_MDIO_CTRL_ST, ASPEED_MDIO_CTRL_ST_C22)
-> +		| FIELD_PREP(ASPEED_MDIO_CTRL_OP, MDIO_C22_OP_READ)
-> +		| FIELD_PREP(ASPEED_MDIO_CTRL_PHYAD, addr)
-> +		| FIELD_PREP(ASPEED_MDIO_CTRL_REGAD, regnum);
-> +
-> +	iowrite32(ctrl, ctx->base + ASPEED_MDIO_CTRL);
-> +
-> +	for (i = 0; i < ASPEED_MDIO_RETRIES; i++) {
-> +		u32 data;
-> +
-> +		data = ioread32(ctx->base + ASPEED_MDIO_DATA);
-> +		if (data & ASPEED_MDIO_DATA_IDLE)
-> +			return FIELD_GET(ASPEED_MDIO_DATA_MIIRDATA, data);
-> +
-> +		udelay(100);
-> +	}
+Thanks.
 
-One of the readx_poll_timeout functions could be used.
+>> +
+>>   /*
+>>    * Create a tlb entry with the same effective and physical address as
+>>    * the tlb entry used by the current running code. But set the TS to 1.
+>> diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+>> index d7737cf97cee..dae8e9177574 100644
+>> --- a/arch/powerpc/mm/mmu_decl.h
+>> +++ b/arch/powerpc/mm/mmu_decl.h
+>> @@ -143,6 +143,7 @@ extern void adjust_total_lowmem(void);
+>>   extern int switch_to_as1(void);
+>>   extern void restore_to_as0(int esel, int offset, void *dt_ptr, int 
+>> bootcpu);
+>>   extern void create_tlb_entry(phys_addr_t phys, unsigned long virt, 
+>> int entry);
+>> +extern void reloc_kernel_entry(void *fdt, int addr);
+> 
+> No new 'extern' please, see 
+> https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/8125//artifact/linux/checkpatch.log 
+> 
+> 
+> 
+>>   #endif
+>>   extern void loadcam_entry(unsigned int index);
+>>   extern void loadcam_multi(int first_idx, int num, int tmp_idx);
+>>
+> 
+> Christophe
+> 
+> .
+> 
 
-> +
-> +	dev_err(&bus->dev, "MDIO read failed\n");
-> +	return -EIO;
-> +}
-> +
-> +static int aspeed_mdio_write(struct mii_bus *bus, int addr, int regnum, u16 val)
-> +{
-> +	struct aspeed_mdio *ctx = bus->priv;
-> +	u32 ctrl;
-> +	int i;
-> +
-> +	dev_dbg(&bus->dev, "%s: addr: %d, regnum: %d, val: 0x%x\n",
-> +		__func__, addr, regnum, val);
-> +
-> +	/* Just clause 22 for the moment */
-> +	ctrl = ASPEED_MDIO_CTRL_FIRE
-> +		| FIELD_PREP(ASPEED_MDIO_CTRL_ST, ASPEED_MDIO_CTRL_ST_C22)
-> +		| FIELD_PREP(ASPEED_MDIO_CTRL_OP, MDIO_C22_OP_WRITE)
-> +		| FIELD_PREP(ASPEED_MDIO_CTRL_PHYAD, addr)
-> +		| FIELD_PREP(ASPEED_MDIO_CTRL_REGAD, regnum)
-> +		| FIELD_PREP(ASPEED_MDIO_CTRL_MIIWDATA, val);
-> +
-> +	iowrite32(ctrl, ctx->base + ASPEED_MDIO_CTRL);
-> +
-> +	for (i = 0; i < ASPEED_MDIO_RETRIES; i++) {
-> +		ctrl = ioread32(ctx->base + ASPEED_MDIO_CTRL);
-> +		if (!(ctrl & ASPEED_MDIO_CTRL_FIRE))
-> +			return 0;
-> +
-> +		udelay(100);
-> +	}
-
-readx_poll_timeout() here as well.
-
-Otherwise this looks good.
-
-	  Andrew
