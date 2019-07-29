@@ -2,101 +2,73 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56105C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D694C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29ADC2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:58:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqvfLHPF"
+	by mail.kernel.org (Postfix) with ESMTP id 28B6B2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfG2I6o (ORCPT
+        id S1727297AbfG2I7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:58:44 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34672 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727195AbfG2I6o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:58:44 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b29so34247708lfq.1;
-        Mon, 29 Jul 2019 01:58:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=I1Kj7YUPvkqZu0AVoqLEWB0rMOmtYob12XhQjO3Ri6Q=;
-        b=cqvfLHPFUr5VxLj7mTj7MPXkdMQrlElRYzxTAKvcRGsHMjXI10VTKm4NlH9fEjQCX7
-         +HyrBLZh73kMWXuARtvgjMlo6mHSUe5xs+i/Jhy4EblsDE7sji2m1JzJ3oaeyt/EuFnb
-         mK0hJ18HHpmV3uHcNB5U6SBZc7ICPlwSSgwX5eQbHPsRuHa9PhFEJnjhPo29ufjn+mwK
-         REBtU646Guh/uerj6wz5DOsVddH3mBBhJ/5AGJO97VwAofsGZeelKO0q0Lemqj50c/Dz
-         nsneBBBi7xzaAPaX/70YoFTn0x2CY4K+SXJKHtxuWSOA8+6uFU4I2i+2HPZNAGKevH7s
-         fV4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=I1Kj7YUPvkqZu0AVoqLEWB0rMOmtYob12XhQjO3Ri6Q=;
-        b=MgHmd4uYtFe8WB38OOp4+SUMj6T76r5U+PX7+WqTQePF+FWrZqlLYdvvtH9SbuxYff
-         RfHnvD+7JlYP/ogyZMlyCZRHI2Ny2wTd230B9EBwEMKWPFj0J5Wk616AdU0OlXXO09Ew
-         /WUOhJjegZbdXNouxW4CH3q+rW7xPRdeZmiEM00WYgppMc7pIGkLHTd+hsZY0Qa/Htfx
-         QYHyCh3fRXpLPd676/YpiXA5rr5Ldj/v6c4vXgNxb93YwMqfHDJq0a2tI6y736u0hCyl
-         a5Yb/g1uJHyUCLm5oJa1DqgcbAkeEn46kzTHmIwn7JxEh3S2wmbPuW5paej+s3LLeJn6
-         tVgw==
-X-Gm-Message-State: APjAAAXBZryT5ctImfqcZnTuRQsY2Nta8R30GPnHmVuSWY2ELajUXD5D
-        7Ak0m4er+tJAn+yHcGB4BqX6bjm2z3qPuUtD9/1iIA==
-X-Google-Smtp-Source: APXvYqwEYMRATv6hJXcp2sN2uBqY7MeCPBYc/cx7vGGCDzzL9FkPA8m7NHC3RC8RJW7yXkhUwM+YmkfaE0n50XYnM0E=
-X-Received: by 2002:a19:4349:: with SMTP id m9mr50210064lfj.64.1564390721868;
- Mon, 29 Jul 2019 01:58:41 -0700 (PDT)
+        Mon, 29 Jul 2019 04:59:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:40234 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726432AbfG2I7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 04:59:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09400337;
+        Mon, 29 Jul 2019 01:59:31 -0700 (PDT)
+Received: from [10.1.32.39] (unknown [10.1.32.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEC823F575;
+        Mon, 29 Jul 2019 01:59:29 -0700 (PDT)
+Subject: Re: [PATCH 1/5] sched/deadline: Fix double accounting of rq/running
+ bw in push_dl_task()
+To:     luca abeni <luca.abeni@santannapisa.it>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <Valentin.Schneider@arm.com>,
+        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
+References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
+ <20190726082756.5525-2-dietmar.eggemann@arm.com>
+ <20190726121159.10fd1138@sweethome>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <531f753a-57ba-408f-42e0-15252d7b1c32@arm.com>
+Date:   Mon, 29 Jul 2019 09:59:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190725104645.30642-1-vkuznets@redhat.com> <20190725104645.30642-2-vkuznets@redhat.com>
-In-Reply-To: <20190725104645.30642-2-vkuznets@redhat.com>
-From:   Jack Wang <jack.wang.usish@gmail.com>
-Date:   Mon, 29 Jul 2019 10:58:30 +0200
-Message-ID: <CA+res+RfqpT=g1QbCqr3OkHVzFFSAt3cfCYNcwqiemWmOifFxg@mail.gmail.com>
-Subject: Re: [PATCH stable-4.19 1/2] KVM: nVMX: do not use dangling shadow
- VMCS after guest reset
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     stable@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190726121159.10fd1138@sweethome>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> =E4=BA=8E2019=E5=B9=B47=E6=9C=8825=
-=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=883:29=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> From: Paolo Bonzini <pbonzini@redhat.com>
->
-> [ Upstream commit 88dddc11a8d6b09201b4db9d255b3394d9bc9e57 ]
->
-> If a KVM guest is reset while running a nested guest, free_nested will
-> disable the shadow VMCS execution control in the vmcs01.  However,
-> on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
-> the VMCS12 to the shadow VMCS which has since been freed.
->
-> This causes a vmptrld of a NULL pointer on my machime, but Jan reports
-> the host to hang altogether.  Let's see how much this trivial patch fixes=
-.
->
-> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
-> Cc: Liran Alon <liran.alon@oracle.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+On 7/26/19 11:11 AM, luca abeni wrote:
+> Hi Dietmar,
+> 
+> On Fri, 26 Jul 2019 09:27:52 +0100
+> Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> 
+>> push_dl_task() always calls deactivate_task() with flags=0 which sets
+>> p->on_rq=TASK_ON_RQ_MIGRATING.
+> 
+> Uhm... This is a recent change in the deactivate_task() behaviour,
+> right? Because I tested SCHED_DEADLINE a lot, but I've never seen this
+> issue :)
 
-Hi all,
+Looks like it was v5.2 commit 7dd778841164 ("sched/core: Unify p->on_rq
+updates").
 
-Do we need to backport the fix also to stable 4.14?  It applies
-cleanly and compiles fine.
+> Anyway, looking at the current code the change looks OK. Thanks for
+> fixing this issue!
 
-Regards,
-Jack Wang
+[...]
