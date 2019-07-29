@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE75C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D623C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CC92070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC8D217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428508;
-	bh=pL1Aa3SPAtQ1KsmWD8g3jrklpTWaWSpltuulPbI1cwA=;
+	s=default; t=1564428513;
+	bh=Ttv837yd2s6WTvxKr8CooEI/4Aewr42eKBjTupPI5Wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bubs9Y4v7NieanTTCxSORqqxLahYQC/Ipthkq4mFfF9tDCa6iU4acwnWYIRclU83b
-	 xa41EscssLdVomIFkuFYmUc03O37o+RlDwIuKoPo2fMFsWxdMKbmzernSLsMQhs75V
-	 wVIqmzk08aG9sBEGIqWAKo9uT5qLYixqgIgWSIxU=
+	b=WdHDP5iQ9nRc+AEMIesYCbVFs+KQvuYJuLHEwJ3wyR1Rw+KQ+zG8dBgbvq93va9rH
+	 5uzYc4W4u5Pnur+CGzgsCuc0q2rVSfEE3bx3S/t9Dp1z5aAJG7hw6J83AFV5d8e4BV
+	 3UKZ5CIRmKHJb/v3hF3idalVrNeTts0sk4E1ghPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbfG2T21 (ORCPT
+        id S1729989AbfG2T2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:28:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41112 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:28:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727585AbfG2T2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:28:25 -0400
+        id S1728172AbfG2T22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:28:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 190332070B;
-        Mon, 29 Jul 2019 19:28:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA56F217D7;
+        Mon, 29 Jul 2019 19:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428504;
-        bh=pL1Aa3SPAtQ1KsmWD8g3jrklpTWaWSpltuulPbI1cwA=;
+        s=default; t=1564428507;
+        bh=Ttv837yd2s6WTvxKr8CooEI/4Aewr42eKBjTupPI5Wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wDukipXFR8n+SINXUjR/+A7qipMlMnA/5C495zpz3m1IPhhNUiGJpB+b84278Oj7Y
-         zw9inOUWGPdxiDK5GEIcV/9rtqe4VNVEhu3kSRQ7BYzIXMneks6fnsQgGmDkHjwlex
-         Vcbrru/mL8eBS1hhIxpcwgiKERyiBa1Xk6WmrTLQ=
+        b=ULCngBoF9m92w+pOORpS2UHwCtpfhg85cMpFv7IEEaoSK0gXn0lX2uJ7107Bjc+9p
+         Mn26xMUB60eG082ic0po8DfBkOoplcVoP4W5vOe6SEFmwAWQ9g2zWeZ6HsjaV13ntB
+         wfv37YCs4LnPzUYZgtFF1hZmI39wz5Xif5URUg+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
-        syzbot+98162c885993b72f19c4@syzkaller.appspotmail.com,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org,
+        syzbot+722da59ccb264bc19910@syzkaller.appspotmail.com,
+        Julian Anastasov <ja@ssi.bg>,
+        Simon Horman <horms@verge.net.au>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 096/293] Bluetooth: hci_bcsp: Fix memory leak in rx_skb
-Date:   Mon, 29 Jul 2019 21:19:47 +0200
-Message-Id: <20190729190831.970958989@linuxfoundation.org>
+Subject: [PATCH 4.14 061/293] ipvs: defer hook registration to avoid leaks
+Date:   Mon, 29 Jul 2019 21:19:12 +0200
+Message-Id: <20190729190829.092678999@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,37 +63,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4ce9146e0370fcd573f0372d9b4e5a211112567c ]
+[ Upstream commit cf47a0b882a4e5f6b34c7949d7b293e9287f1972 ]
 
-Syzkaller found that it is possible to provoke a memory leak by
-never freeing rx_skb in struct bcsp_struct.
+syzkaller reports for memory leak when registering hooks [1]
 
-Fix by freeing in bcsp_close()
+As we moved the nf_unregister_net_hooks() call into
+__ip_vs_dev_cleanup(), defer the nf_register_net_hooks()
+call, so that hooks are allocated and freed from same
+pernet_operations (ipvs_core_dev_ops).
 
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Reported-by: syzbot+98162c885993b72f19c4@syzkaller.appspotmail.com
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+[1]
+BUG: memory leak
+unreferenced object 0xffff88810acd8a80 (size 96):
+ comm "syz-executor073", pid 7254, jiffies 4294950560 (age 22.250s)
+ hex dump (first 32 bytes):
+   02 00 00 00 00 00 00 00 50 8b bb 82 ff ff ff ff  ........P.......
+   00 00 00 00 00 00 00 00 00 77 bb 82 ff ff ff ff  .........w......
+ backtrace:
+   [<0000000013db61f1>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
+   [<0000000013db61f1>] slab_post_alloc_hook mm/slab.h:439 [inline]
+   [<0000000013db61f1>] slab_alloc_node mm/slab.c:3269 [inline]
+   [<0000000013db61f1>] kmem_cache_alloc_node_trace+0x15b/0x2a0 mm/slab.c:3597
+   [<000000001a27307d>] __do_kmalloc_node mm/slab.c:3619 [inline]
+   [<000000001a27307d>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
+   [<0000000025054add>] kmalloc_node include/linux/slab.h:590 [inline]
+   [<0000000025054add>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
+   [<0000000050d1bc00>] kvmalloc include/linux/mm.h:637 [inline]
+   [<0000000050d1bc00>] kvzalloc include/linux/mm.h:645 [inline]
+   [<0000000050d1bc00>] allocate_hook_entries_size+0x3b/0x60 net/netfilter/core.c:61
+   [<00000000e8abe142>] nf_hook_entries_grow+0xae/0x270 net/netfilter/core.c:128
+   [<000000004b94797c>] __nf_register_net_hook+0x9a/0x170 net/netfilter/core.c:337
+   [<00000000d1545cbc>] nf_register_net_hook+0x34/0xc0 net/netfilter/core.c:464
+   [<00000000876c9b55>] nf_register_net_hooks+0x53/0xc0 net/netfilter/core.c:480
+   [<000000002ea868e0>] __ip_vs_init+0xe8/0x170 net/netfilter/ipvs/ip_vs_core.c:2280
+   [<000000002eb2d451>] ops_init+0x4c/0x140 net/core/net_namespace.c:130
+   [<000000000284ec48>] setup_net+0xde/0x230 net/core/net_namespace.c:316
+   [<00000000a70600fa>] copy_net_ns+0xf0/0x1e0 net/core/net_namespace.c:439
+   [<00000000ff26c15e>] create_new_namespaces+0x141/0x2a0 kernel/nsproxy.c:107
+   [<00000000b103dc79>] copy_namespaces+0xa1/0xe0 kernel/nsproxy.c:165
+   [<000000007cc008a2>] copy_process.part.0+0x11fd/0x2150 kernel/fork.c:2035
+   [<00000000c344af7c>] copy_process kernel/fork.c:1800 [inline]
+   [<00000000c344af7c>] _do_fork+0x121/0x4f0 kernel/fork.c:2369
+
+Reported-by: syzbot+722da59ccb264bc19910@syzkaller.appspotmail.com
+Fixes: 719c7d563c17 ("ipvs: Fix use-after-free in ip_vs_in")
+Signed-off-by: Julian Anastasov <ja@ssi.bg>
+Acked-by: Simon Horman <horms@verge.net.au>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_bcsp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/netfilter/ipvs/ip_vs_core.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_bcsp.c b/drivers/bluetooth/hci_bcsp.c
-index d880f4e33c75..57a7f4255ac0 100644
---- a/drivers/bluetooth/hci_bcsp.c
-+++ b/drivers/bluetooth/hci_bcsp.c
-@@ -757,6 +757,11 @@ static int bcsp_close(struct hci_uart *hu)
- 	skb_queue_purge(&bcsp->rel);
- 	skb_queue_purge(&bcsp->unrel);
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index ee97ce176b9a..2156571455db 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -2206,7 +2206,6 @@ static const struct nf_hook_ops ip_vs_ops[] = {
+ static int __net_init __ip_vs_init(struct net *net)
+ {
+ 	struct netns_ipvs *ipvs;
+-	int ret;
  
-+	if (bcsp->rx_skb) {
-+		kfree_skb(bcsp->rx_skb);
-+		bcsp->rx_skb = NULL;
-+	}
-+
- 	kfree(bcsp);
+ 	ipvs = net_generic(net, ip_vs_net_id);
+ 	if (ipvs == NULL)
+@@ -2238,17 +2237,11 @@ static int __net_init __ip_vs_init(struct net *net)
+ 	if (ip_vs_sync_net_init(ipvs) < 0)
+ 		goto sync_fail;
+ 
+-	ret = nf_register_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
+-	if (ret < 0)
+-		goto hook_fail;
+-
  	return 0;
+ /*
+  * Error handling
+  */
+ 
+-hook_fail:
+-	ip_vs_sync_net_cleanup(ipvs);
+ sync_fail:
+ 	ip_vs_conn_net_cleanup(ipvs);
+ conn_fail:
+@@ -2278,6 +2271,19 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
+ 	net->ipvs = NULL;
  }
+ 
++static int __net_init __ip_vs_dev_init(struct net *net)
++{
++	int ret;
++
++	ret = nf_register_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
++	if (ret < 0)
++		goto hook_fail;
++	return 0;
++
++hook_fail:
++	return ret;
++}
++
+ static void __net_exit __ip_vs_dev_cleanup(struct net *net)
+ {
+ 	struct netns_ipvs *ipvs = net_ipvs(net);
+@@ -2297,6 +2303,7 @@ static struct pernet_operations ipvs_core_ops = {
+ };
+ 
+ static struct pernet_operations ipvs_core_dev_ops = {
++	.init = __ip_vs_dev_init,
+ 	.exit = __ip_vs_dev_cleanup,
+ };
+ 
 -- 
 2.20.1
 
