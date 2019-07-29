@@ -2,137 +2,107 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740B5C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6968C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554DC2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04A6206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:21:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QNUdnwD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfG2QTJ (ORCPT
+        id S1728671AbfG2QVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:19:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34821 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbfG2QTI (ORCPT
+        Mon, 29 Jul 2019 12:21:46 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33112 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbfG2QVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:19:08 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y4so62519379wrm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:19:07 -0700 (PDT)
+        Mon, 29 Jul 2019 12:21:46 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c14so27638440plo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:21:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6c39aHCrPSADKgn1QA3sQ/OzJg2W7CUxLj9xwpXNwm8=;
+        b=QNUdnwD+0BnljNKmpSMc4dq1BHiw94BWEcKU6fhvEQa03/4iKV41fAYISj+UN/3NAL
+         4U3SKSKjVySDfUikKeS7kxUw15lpQOIY6MO0E7z+KYjC5MJLO6LXo0+jxLdjCRpKdisd
+         9d5GqsNYlbc9jvHYMxRLbYC1fQPIgz7J9VZ1gGCGAzc+2MhgJW88fvuhsEJRZIKOKUSm
+         wj/WB4k+6L+qzQLCI4Grpkmjj+3If7uPvcS7y1u6H1mDyYfeVqylpARfkL1K0KmJWas6
+         C+NAm3hah4FzqYYgR7uaMLyyl7qdKYmPl2O3w4Y3EIwOGUb+aq/Ro29iUmqbaubuzhqO
+         Fpog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZKDqUs0ayhzO8fC3NvwV+tCFuuA/FPgD3ePdCx1GJqM=;
-        b=dACTMKwu4Gi8WJrOhgrimRZYL7pmU8PA6awVob5n3pqIBq1Z/YiRFKiWNNZ1itIL0x
-         zGbpStXd4hs9G+18BVjjmE+M2myVh1Wi62GdUz1yy4JkBVfGODa9V9OKxOYWsl6vT0i2
-         YY9Fil+Kpm9VNz27butJUmiJetKLlq723GZbmjvaNnsl+CWVeaUOcEmp7Ty89vzEy2ZR
-         qChN41LH/IYK7k4DA0+JGdryglCP6MgtwAHHXFPu6AOYPfYzOuB8XlddyXPc/lPSuhgk
-         J4RzrcP9vEMgEELWkqUxiIUbRtloAMtxIvD+K/O/EMolm8UNeE9VjBfGy4OKZPE05eT7
-         LI6w==
-X-Gm-Message-State: APjAAAV9975PpjGbf0Wkb4Uo2bcduFbCyan6/3m4VBhOGiBNWj8PuHV/
-        9Mvi9vCasaYAhPS1t6egiFXtkAFnWZE=
-X-Google-Smtp-Source: APXvYqx0sc12Pv/jNOPaKvwFRyWt3K0PAbYM2mQ0eNUoR5RWLAC9VV53Iw6ZEaEpC4k4BBzOXgmD7Q==
-X-Received: by 2002:a5d:4b8b:: with SMTP id b11mr40501951wrt.294.1564417146999;
-        Mon, 29 Jul 2019 09:19:06 -0700 (PDT)
-Received: from steredhat (host122-201-dynamic.13-79-r.retail.telecomitalia.it. [79.13.201.122])
-        by smtp.gmail.com with ESMTPSA id c11sm104255286wrq.45.2019.07.29.09.19.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 09:19:06 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 18:19:03 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
-Message-ID: <20190729161903.yhaj5rfcvleexkhc@steredhat>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-2-sgarzare@redhat.com>
- <20190729095956-mutt-send-email-mst@kernel.org>
- <20190729153656.zk4q4rob5oi6iq7l@steredhat>
- <20190729114302-mutt-send-email-mst@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6c39aHCrPSADKgn1QA3sQ/OzJg2W7CUxLj9xwpXNwm8=;
+        b=DFU7VBDRvjWvt4Gy8cCbvIsaVzbKIDrSwm44BYysRUGIGdTBhfvdRo3Sjx3m2jg845
+         /8imH0PduZI4naYnG5Vnm/zDYiPR4U7pxO+tOC3BvN2q7aV3kUmNBRztqePZfjKn2/Gz
+         HkblqrAYDt1rez+PWbDRHgb9f8+JVIVocPmDjJpcPATVOv6VN4wTNIIPESajut5IaVQX
+         WtyMipOIsIEhDPqEcDl5qnj5DDLNFWitYVZPbX3y9VBlqc+2aOMMlWLDsYDz/DGfqq65
+         +5LQF15/gMZoXVLuXtozH6WXa2+EXanCvgwL2ZGaF9YigzFXHadA3sqaBIHtLnMFUzGf
+         EFmw==
+X-Gm-Message-State: APjAAAVQT9+Jpzm3Ye2RQjDyTdROejLWRvw60Z2snpjSF7TjL3kqlUvF
+        ijLulyZDpK/HU+vd6TpKDCGWbiVXXw+eZT0DzHg8EA==
+X-Google-Smtp-Source: APXvYqxNskZ/KQ64ZtfmGcktH0OJHpIo2HF39Q8rmuazafjjU1buTQDpZhkJSEFFXEE2fvgDHJElTStCCkxLT6/DleE=
+X-Received: by 2002:a17:902:e703:: with SMTP id co3mr13856835plb.119.1564417305124;
+ Mon, 29 Jul 2019 09:21:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729114302-mutt-send-email-mst@kernel.org>
-User-Agent: NeoMutt/20180716
+References: <20190729091517.5334-1-yamada.masahiro@socionext.com> <20190729160412.GA100132@archlinux-threadripper>
+In-Reply-To: <20190729160412.GA100132@archlinux-threadripper>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 29 Jul 2019 09:21:33 -0700
+Message-ID: <CAKwvOdnU8tLQ=wYAKs9Fy+3c2e_NmKL6H4kRKsRxH=sv16+8cQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: initialize CLANG_FLAGS correctly in the top Makefile
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 11:49:02AM -0400, Michael S. Tsirkin wrote:
-> On Mon, Jul 29, 2019 at 05:36:56PM +0200, Stefano Garzarella wrote:
-> > On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
-> > > On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
-> > > > Since virtio-vsock was introduced, the buffers filled by the host
-> > > > and pushed to the guest using the vring, are directly queued in
-> > > > a per-socket list. These buffers are preallocated by the guest
-> > > > with a fixed size (4 KB).
-> > > > 
-> > > > The maximum amount of memory used by each socket should be
-> > > > controlled by the credit mechanism.
-> > > > The default credit available per-socket is 256 KB, but if we use
-> > > > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
-> > > > buffers, using up to 1 GB of memory per-socket. In addition, the
-> > > > guest will continue to fill the vring with new 4 KB free buffers
-> > > > to avoid starvation of other sockets.
-> > > > 
-> > > > This patch mitigates this issue copying the payload of small
-> > > > packets (< 128 bytes) into the buffer of last packet queued, in
-> > > > order to avoid wasting memory.
-> > > > 
-> > > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-> > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > > 
-> > > This is good enough for net-next, but for net I think we
-> > > should figure out how to address the issue completely.
-> > > Can we make the accounting precise? What happens to
-> > > performance if we do?
-> > > 
-> > 
-> > In order to do more precise accounting maybe we can use the buffer size,
-> > instead of payload size when we update the credit available.
-> > In this way, the credit available for each socket will reflect the memory
-> > actually used.
-> > 
-> > I should check better, because I'm not sure what happen if the peer sees
-> > 1KB of space available, then it sends 1KB of payload (using a 4KB
-> > buffer).
-> > 
-> > The other option is to copy each packet in a new buffer like I did in
-> > the v2 [2], but this forces us to make a copy for each packet that does
-> > not fill the entire buffer, perhaps too expensive.
-> > 
-> > [2] https://patchwork.kernel.org/patch/10938741/
-> > 
-> > 
-> > Thanks,
-> > Stefano
-> 
-> Interesting. You are right, and at some level the protocol forces copies.
-> 
-> We could try to detect that the actual memory is getting close to
-> admin limits and force copies on queued packets after the fact.
-> Is that practical?
+On Mon, Jul 29, 2019 at 9:04 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Mon, Jul 29, 2019 at 06:15:17PM +0900, Masahiro Yamada wrote:
+> > CLANG_FLAGS is initialized by the following line:
+> >
+> >   CLANG_FLAGS     := --target=$(notdir $(CROSS_COMPILE:%-=%))
+> >
+> > ..., which is run only when CROSS_COMPILE is set.
+> >
+> > Some build targets (bindeb-pkg etc.) recurse to the top Makefile.
+> >
+> > When you build the kernel with Clang but without CROSS_COMPILE,
+> > the same compiler flags such as -no-integrated-as are accumulated
+> > into CLANG_FLAGS.
+> >
+> > If you run 'make CC=clang' and then 'make CC=clang bindeb-pkg',
+> > Kbuild will recompile everything needlessly due to the build command
+> > change.
+> >
+> > Fix this by correctly initializing CLANG_FLAGS.
+> >
+> > Fixes: 238bcbc4e07f ("kbuild: consolidate Clang compiler flags")
+> > Cc: <stable@vger.kernel.org> # v4.20+
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Yes, I think it is doable!
-We can decrease the credit available with the buffer size queued, and
-when the buffer size of packet to queue is bigger than the credit
-available, we can copy it.
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
 
-> 
-> And yes we can extend the credit accounting to include buffer size.
-> That's a protocol change but maybe it makes sense.
-
-Since we send to the other peer the credit available, maybe this
-change can be backwards compatible (I'll check better this).
-
+-- 
 Thanks,
-Stefano
+~Nick Desaulniers
