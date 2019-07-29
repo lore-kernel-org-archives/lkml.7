@@ -2,65 +2,158 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E51BC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB76EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B2F2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91362070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:10:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="g7lWwfb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387911AbfG2PIK (ORCPT
+        id S2387926AbfG2PKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:08:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387402AbfG2PIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:08:10 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92C052070B;
-        Mon, 29 Jul 2019 15:08:08 +0000 (UTC)
-Date:   Mon, 29 Jul 2019 11:08:06 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Juergen Gross <jgross@suse.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [patch 11/12] hrtimer: Prepare support for PREEMPT_RT
-Message-ID: <20190729110806.57c57399@gandalf.local.home>
-In-Reply-To: <42299f02-ff29-f7e3-45f0-b9fef041aec9@suse.com>
-References: <20190726183048.982726647@linutronix.de>
-        <20190726185753.737767218@linutronix.de>
-        <42299f02-ff29-f7e3-45f0-b9fef041aec9@suse.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 29 Jul 2019 11:10:37 -0400
+Received: from gateway33.websitewelcome.com ([192.185.146.210]:39521 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387402AbfG2PKh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:10:37 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 42EA91B41B
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 10:10:36 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id s7IKhuEaK2qH7s7IKhweFx; Mon, 29 Jul 2019 10:10:36 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ezmUYmghSI2oQrQKLe/uAGwuPmnk5NL+l2uSGCKlz2g=; b=g7lWwfb8EWIblZK+memppWODv8
+        Rvv6Ncc2rzJzGz55rar1n1WUAdqPKtRNudRxCypzYdewCJiHE7yq8/IKRpb4baqnZyYAZ74QpX9ye
+        kqxsWYH9BW9ZB6w/iLTSyQCiw4hoEdNQtG/7AmPnU20KGFx4o+bWvgVamDySwz7k263upyc7dINPO
+        hFPvGOzHsWr72GhMSsNmoX8y48/gkyBKSWJSgwoe2ziGq+W1j7XrrxXxj0I4Mev5t18lgWDZLfk8O
+        JNUTlvocW13//J4tNYpsgDN1eK3vZCBdM2W+g1JlJcUr83IZRyTIofyADraAhBGOvWPCj94FJV1Gh
+        rxf4CMiQ==;
+Received: from [187.192.11.120] (port=51632 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hs7IJ-002hzs-4X; Mon, 29 Jul 2019 10:10:35 -0500
+Date:   Mon, 29 Jul 2019 10:10:33 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] watchdog: Mark expected switch fall-throughs
+Message-ID: <20190729151033.GA10143@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hs7IJ-002hzs-4X
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:51632
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Jul 2019 11:06:50 +0200
-Juergen Gross <jgross@suse.com> wrote:
+Mark switch cases where we are expecting to fall through.
 
-> In case we'd want to change that I'd rather not special case timers, but
-> apply a more general solution to the quite large amount of similar
-> cases: I assume the majority of cpu_relax() uses are affected, so adding
-> a paravirt op cpu_relax() might be appropriate.
-> 
-> That could be put under CONFIG_PARAVIRT_SPINLOCK. If called in a guest
-> it could ask the hypervisor to give up the physical cpu voluntarily
-> (in Xen this would be a "yield" hypercall).
+This patch fixes the following warnings:
 
-Seems paravirt wants our cpu_chill() ;-)
+drivers/watchdog/ar7_wdt.c: warning: this statement may fall
+through [-Wimplicit-fallthrough=]:  => 237:3
+drivers/watchdog/pcwd.c: warning: this statement may fall
+through [-Wimplicit-fallthrough=]:  => 653:3
+drivers/watchdog/sb_wdog.c: warning: this statement may fall
+through [-Wimplicit-fallthrough=]:  => 204:3
+drivers/watchdog/wdt.c: warning: this statement may fall
+through [-Wimplicit-fallthrough=]:  => 391:3
 
--- Steve
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/watchdog/ar7_wdt.c | 1 +
+ drivers/watchdog/pcwd.c    | 2 +-
+ drivers/watchdog/sb_wdog.c | 1 +
+ drivers/watchdog/wdt.c     | 2 +-
+ 4 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/watchdog/ar7_wdt.c b/drivers/watchdog/ar7_wdt.c
+index b9b2d06b3879..668a1c704f28 100644
+--- a/drivers/watchdog/ar7_wdt.c
++++ b/drivers/watchdog/ar7_wdt.c
+@@ -235,6 +235,7 @@ static long ar7_wdt_ioctl(struct file *file,
+ 		ar7_wdt_update_margin(new_margin);
+ 		ar7_wdt_kick(1);
+ 		spin_unlock(&wdt_lock);
++		/* Fall through */
+ 
+ 	case WDIOC_GETTIMEOUT:
+ 		if (put_user(margin, (int *)arg))
+diff --git a/drivers/watchdog/pcwd.c b/drivers/watchdog/pcwd.c
+index 1b2cf5b95a89..c3c93e00b320 100644
+--- a/drivers/watchdog/pcwd.c
++++ b/drivers/watchdog/pcwd.c
+@@ -651,7 +651,7 @@ static long pcwd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 			return -EINVAL;
+ 
+ 		pcwd_keepalive();
+-		/* Fall */
++		/* Fall through */
+ 
+ 	case WDIOC_GETTIMEOUT:
+ 		return put_user(heartbeat, argp);
+diff --git a/drivers/watchdog/sb_wdog.c b/drivers/watchdog/sb_wdog.c
+index 5a6ced7a7e8f..202fc8d8ca5f 100644
+--- a/drivers/watchdog/sb_wdog.c
++++ b/drivers/watchdog/sb_wdog.c
+@@ -202,6 +202,7 @@ static long sbwdog_ioctl(struct file *file, unsigned int cmd,
+ 		timeout = time;
+ 		sbwdog_set(user_dog, timeout);
+ 		sbwdog_pet(user_dog);
++		/* Fall through */
+ 
+ 	case WDIOC_GETTIMEOUT:
+ 		/*
+diff --git a/drivers/watchdog/wdt.c b/drivers/watchdog/wdt.c
+index 0650100fad00..7d278b37e083 100644
+--- a/drivers/watchdog/wdt.c
++++ b/drivers/watchdog/wdt.c
+@@ -389,7 +389,7 @@ static long wdt_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		if (wdt_set_heartbeat(new_heartbeat))
+ 			return -EINVAL;
+ 		wdt_ping();
+-		/* Fall */
++		/* Fall through */
+ 	case WDIOC_GETTIMEOUT:
+ 		return put_user(heartbeat, p);
+ 	default:
+-- 
+2.22.0
+
