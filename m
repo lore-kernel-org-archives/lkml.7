@@ -2,238 +2,101 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BD9C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F00C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C282070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FFE2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:33:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="eP5VVgfo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X7ZzQJG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfG2F0i (ORCPT
+        id S1726761AbfG2Fdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 01:26:38 -0400
-Received: from mail-eopbgr140080.outbound.protection.outlook.com ([40.107.14.80]:56497
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726048AbfG2F0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 01:26:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mgOHxaoNUOqMGiziz+06x/UohaRjKegoNpHJryQIrP3KWXDT4t3M6gdYFPid9S57qatXeJ2TGrRprYz5zyksWBcMUC8/40f4qnimOiW3k8jQWKkM1m2pbjPVTsjHz//e891qqZNiPaXT79Ou3iB6WZwNA9QiBIHQRbAbwTVi25/nB/HC6qSQOSBfEOGBwSUt51DhMvPJ1fbDtxmWVlGBYb71hVT5RIzTv1PjbTbOadU0tmtRROBLnzI0U2PaMYgDavMOJtyDvooRWcgSmysmwLDf4mfayriZ6ixxV/uEDYWm7JgjN7NwPznT7k93h7zaRiNVC1FFws2ulWq14UTvKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qmg6MYPJ5Cj+Z9OPvZEkfve+eQXXxuSSNbkyvLl6eMI=;
- b=axkMq26jEy9+Su0cDkZAKRR6KWwphi4Az2EWHuGUDNTvpI4ZdXe/XaHwgL5QUDzXB13veLW3aD6xm4tyyiZYHPJeYMh0jgGWzPbcCxLE9/Gh7Q/nDT6Gnwt5UzqJoKRw2KLjH0YboaxYUzIpH9LIhpC4Z+FnIxQgSLxEIecm/3/Km3RoKahnkXcSIXlsm+oj8lK9vuDV90NoUgPyAhNH/6geH1TGwy63VW6g1GcaGgVtflN40pmZ7uSM9VDdbb9R5WC3VoaeFVXR4CwEZjULVsXxGkhLOL5XjC1DtVn8vvT6seulJXCi5/f4JCzvwbFjz5g4kXUnsddEEMulYxt8TQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qmg6MYPJ5Cj+Z9OPvZEkfve+eQXXxuSSNbkyvLl6eMI=;
- b=eP5VVgfo8ibAOoTJP3AgvR53q4Zmgx/cKTVvufg0wTyPuVKKoR6UtOlSuXeaFpp3rbiVVS3/WCkBbuCrdENAq/fuR5kUilz/5/gCv5lgmlTTXjETihWSlfCMiCJcS7PSXRhByZztzW9fCxsmPWPlcHQqU9Qp4hPPt0pgy/nsw4o=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB6004.eurprd05.prod.outlook.com (20.178.117.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Mon, 29 Jul 2019 05:26:30 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
- 05:26:30 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Parav Pandit <parav@mellanox.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "dledford@redhat.com" <dledford@redhat.com>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [BUG] infiniband: mlx5: a possible null-pointer dereference in
- set_roce_addr()
-Thread-Topic: [BUG] infiniband: mlx5: a possible null-pointer dereference in
- set_roce_addr()
-Thread-Index: AQHVRbOmoai2hQIyp06eljqScufF66bhDLxwgAAEBWA=
-Date:   Mon, 29 Jul 2019 05:26:30 +0000
-Message-ID: <AM0PR05MB4866CE3362B36EB4257C858ED1DD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <f99031cc-795e-92bd-9310-29c669ada7dc@gmail.com>
- <AM0PR05MB48664AE114EE357CC33EA945D1DD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-In-Reply-To: <AM0PR05MB48664AE114EE357CC33EA945D1DD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [49.207.55.248]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4c15a603-c0bc-48cf-a700-08d713e55005
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB6004;
-x-ms-traffictypediagnostic: AM0PR05MB6004:
-x-microsoft-antispam-prvs: <AM0PR05MB6004342A142D2A74E906E146D1DD0@AM0PR05MB6004.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:143;
-x-forefront-prvs: 01136D2D90
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(136003)(396003)(376002)(189003)(199004)(13464003)(186003)(7736002)(5660300002)(446003)(2906002)(74316002)(52536014)(305945005)(26005)(6436002)(71200400001)(71190400001)(55016002)(14454004)(4326008)(476003)(11346002)(486006)(53936002)(9686003)(478600001)(33656002)(110136005)(81156014)(6246003)(54906003)(66066001)(316002)(2501003)(2940100002)(86362001)(66556008)(81166006)(7696005)(8936002)(76176011)(55236004)(68736007)(8676002)(2201001)(66446008)(6116002)(53546011)(6506007)(64756008)(99286004)(66476007)(102836004)(25786009)(256004)(14444005)(66946007)(229853002)(76116006)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB6004;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3lEZhxqdszOhxGHqlqK9rm7i1ctTKanNxApp9+b56NZuf5NeZFenngCZWvJ9LX9kUekTq6qrEO5X5Xq/VLeY4XngKcZqWoju56tjB0lZGXHyTGBRL5vcDrtGifCKqOeA00Jn+q+rsQU5qkiIq/giCoufWYVddsXkdFa7Qul6NolWwe9JnipG/+Q2Vat4pdik2f/cW7S+YnWJo1KXgc/SQWBQW79sDt5/OhEYE7SPQZLxXRPj5CIWjCKHob7tkNjpHW86kgIWiDiomSXlG1BfkyhtWPKeI+Tb++qwctHDKnkFwsDvGn4Q4GBzGfPWt6iNbacOXDjowDamOwCM7LVJKasN/hr5Z46/yCgWbhR2rt4Jqlvno0Kqp0TW187PuoIIgif0zisdYRTsQRA/YdiWlbgy2c5vvp2hkfZBw4v/gCw=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 29 Jul 2019 01:33:54 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37350 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfG2Fdx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 01:33:53 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i70so16880459pgd.4
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 22:33:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DPXHy1a69mKAzAt5eK/5mGSu5mMYfcr+qJqjDh7NSaQ=;
+        b=X7ZzQJG0cNXQD6YQsemOKW/jT5dXIqlD5c4Jcz7JtWEhIqBe209fc02CAGpqr+SYx0
+         gHPYOCrdYg3Ro7wBapt85n2eL90PlzXxI3QY75kWqphNBvBEhfTaqOY9NODoZZKpkG2h
+         jgrZXO+DLTuPGvJ9LjyhDaLG7s2coSQiQVGuM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DPXHy1a69mKAzAt5eK/5mGSu5mMYfcr+qJqjDh7NSaQ=;
+        b=DuGSM4zdKiWfsLd4GJ7suzwvddTRbE6ZqqEAco/63CIWwaphJdxylr6c+PJYvlgpHm
+         OxCMbSjI2hrGRat2GijnoyDQgBwUC0ncO/Ct3LqIStQozaZoWFDeZu7dTSx4jB/CLFNo
+         LoW1BQmkDqjxs0gJWw2j3qNe3IdIV88gNw8y5TEXWJfoYdwcvZxPfM6UdD8mdHiXU+eW
+         SDsNyXftcH3x/6MO5jslqqeKK7Yd4oVjyPxtqVXIPthhnoi9u/E9e/cDN3cIXDAcARkh
+         sLQGlV85vD75tfZICeYGobc4lrhxA/3tQdx95IHE3RPY5GQjgWr1SQFSPBEucYueljGw
+         azEQ==
+X-Gm-Message-State: APjAAAW0AkrOlHCpbFWntLwvqkpUHiNPdD/ObFEN/zFa5lA6PqAYoxli
+        fvTRQXd6/z2uqdtKcga5qigc9Q==
+X-Google-Smtp-Source: APXvYqygDVAWdgpICHSE02DV6msSDKrPaHx2VAR3/vrWfQrTSpR/C3whA4rXoQaV+tRhbTuC/OWZhg==
+X-Received: by 2002:a17:90a:1d8:: with SMTP id 24mr111974489pjd.70.1564378433305;
+        Sun, 28 Jul 2019 22:33:53 -0700 (PDT)
+Received: from acourbot.tok.corp.google.com ([2401:fa00:4:4:9712:8cf1:d0f:7d33])
+        by smtp.gmail.com with ESMTPSA id z4sm93792810pfg.166.2019.07.28.22.33.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 28 Jul 2019 22:33:52 -0700 (PDT)
+From:   Alexandre Courbot <acourbot@chromium.org>
+To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [PATCH v2 0/2] drm/mediatek: make imported PRIME buffers contiguous
+Date:   Mon, 29 Jul 2019 14:33:33 +0900
+Message-Id: <20190729053335.251379-1-acourbot@chromium.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c15a603-c0bc-48cf-a700-08d713e55005
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 05:26:30.5571
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: parav@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6004
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgta2VybmVsLW93
-bmVyQHZnZXIua2VybmVsLm9yZyA8bGludXgta2VybmVsLQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5v
-cmc+IE9uIEJlaGFsZiBPZiBQYXJhdiBQYW5kaXQNCj4gU2VudDogTW9uZGF5LCBKdWx5IDI5LCAy
-MDE5IDEwOjU1IEFNDQo+IFRvOiBKaWEtSnUgQmFpIDxiYWlqaWFqdTE5OTBAZ21haWwuY29tPjsg
-bGVvbkBrZXJuZWwub3JnOw0KPiBkbGVkZm9yZEByZWRoYXQuY29tOyBqZ2dAemllcGUuY2ENCj4g
-Q2M6IGxpbnV4LXJkbWFAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnDQo+IFN1YmplY3Q6IFJFOiBbQlVHXSBpbmZpbmliYW5kOiBtbHg1OiBhIHBvc3NpYmxlIG51
-bGwtcG9pbnRlciBkZXJlZmVyZW5jZSBpbg0KPiBzZXRfcm9jZV9hZGRyKCkNCj4gDQo+IEhpIEpp
-YSwNCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBsaW51eC1y
-ZG1hLW93bmVyQHZnZXIua2VybmVsLm9yZyA8bGludXgtcmRtYS0NCj4gPiBvd25lckB2Z2VyLmtl
-cm5lbC5vcmc+IE9uIEJlaGFsZiBPZiBKaWEtSnUgQmFpDQo+ID4gU2VudDogTW9uZGF5LCBKdWx5
-IDI5LCAyMDE5IDc6NDcgQU0NCj4gPiBUbzogbGVvbkBrZXJuZWwub3JnOyBkbGVkZm9yZEByZWRo
-YXQuY29tOyBqZ2dAemllcGUuY2ENCj4gPiBDYzogbGludXgtcmRtYUB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gPiBTdWJqZWN0OiBbQlVHXSBpbmZpbmli
-YW5kOiBtbHg1OiBhIHBvc3NpYmxlIG51bGwtcG9pbnRlciBkZXJlZmVyZW5jZQ0KPiA+IGluDQo+
-ID4gc2V0X3JvY2VfYWRkcigpDQo+ID4NCj4gPiBJbiBzZXRfcm9jZV9hZGRyKCksIHRoZXJlIGlz
-IGFuIGlmIHN0YXRlbWVudCBvbiBsaW5lIDU4OSB0byBjaGVjaw0KPiA+IHdoZXRoZXIgZ2lkIGlz
-DQo+ID4gTlVMTDoNCj4gPiAgwqDCoMKgIGlmIChnaWQpDQo+ID4NCj4gPiBXaGVuIGdpZCBpcyBO
-VUxMLCBpdCBpcyB1c2VkIG9uIGxpbmUgNjEzOg0KPiA+ICDCoMKgwqAgcmV0dXJuIG1seDVfY29y
-ZV9yb2NlX2dpZF9zZXQoLi4uLCBnaWQtPnJhdywgLi4uKTsNCj4gPg0KPiA+IFRodXMsIGEgcG9z
-c2libGUgbnVsbC1wb2ludGVyIGRlcmVmZXJlbmNlIG1heSBvY2N1ci4NCj4gPg0KPiA+IFRoaXMg
-YnVnIGlzIGZvdW5kIGJ5IGEgc3RhdGljIGFuYWx5c2lzIHRvb2wgU1RDaGVjayB3cml0dGVuIGJ5
-IHVzLg0KPiA+DQo+IFdoaWxlIHN0YXRpYyBjaGVja2VyIGlzIHJpZ2h0LCBpdCBpcyBub3QgYSBy
-ZWFsIGJ1ZywgYmVjYXVzZSBnaWQtPnJhdyBwb2ludGVyDQo+IHBvaW50cyB0byBHSUQgZW50cnkg
-aXRzZWxmIHNvIHdoZW4gR0lEIGlzIE5VTEwsIGdpZC0+cmF3IGlzIE5VTEwgdG9vLg0KPiANCj4g
-T25lIHdheSB0byBzdXBwcmVzcyB0aGUgc3RhdGljIGNoZWNrZXIgd2FybmluZy9lcnJvciBpcyBi
-ZWxvdyBwYXRjaC4NCj4gV2lsbCBsZXQgTGVvbiByZXZpZXcgaXQuDQo+IA0KPiA+IEkgZG8gbm90
-IGtub3cgaG93IHRvIGNvcnJlY3RseSBmaXggdGhpcyBidWcsIHNvIEkgb25seSByZXBvcnQgaXQu
-DQo+ID4NCj4gPg0KPiA+IEJlc3Qgd2lzaGVzLA0KPiA+IEppYS1KdSBCYWkNCj4gDQo+IEZyb20g
-MzBlMDU1ZGJhNzdlNTk1YmY4OGFlYmQzYTljNzVlZDc2YmM5YzY1YSBNb24gU2VwIDE3IDAwOjAw
-OjAwDQo+IDIwMDENCj4gRnJvbTogUGFyYXYgUGFuZGl0IDxwYXJhdkBtZWxsYW5veC5jb20+DQo+
-IERhdGU6IE1vbiwgMjkgSnVsIDIwMTkgMDA6MTM6MjEgLTA1MDANCj4gU3ViamVjdDogW1BBVENI
-XSBJQi9tbHg1OiBBdm9pZCBzdGF0aWMgY2hlY2tlciB3YXJuaW5nIGZvciBOVUxMIGFjY2Vzcw0K
-PiANCj4gdW5pb24gaWJfZ2lkICpnaWQgYW5kIGdpZC0+cmF3IHBvaW50ZXJzIHJlZmVycyB0byB0
-aGUgc2FtZSBhZGRyZXNzLg0KPiBIb3dldmVyIHNvbWUgc3RhdGljIGNoZWNrZXIgcmVwb3J0cyB0
-aGlzIGFzIHBvc3NpYmxlIE5VTEwgYWNjZXNzIHdhcm5pbmcgaW4NCj4gY2FsbCB0byBtbHg1X2Nv
-cmVfcm9jZV9naWRfc2V0KCkuDQo+IA0KPiBUbyBzdXBwcmVzcyBzdWNoIHdhcm5pbmcsIGluc3Rl
-YWQgb2Ygd29ya2luZyBvbiByYXcgR0lEIGVsZW1lbnQsIGV4cG9zZSBBUEkNCj4gdXNpbmcgdW5p
-b24gaWJfZ2lkKi4NCj4gDQo+IFJlcG9ydGVkLWJ5OiBKaWEtSnUgQmFpIDxiYWlqaWFqdTE5OTBA
-Z21haWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBQYXJhdiBQYW5kaXQgPHBhcmF2QG1lbGxhbm94
-LmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2luZmluaWJhbmQvaHcvbWx4NS9tYWluLmMgICAgICAg
-ICAgICAgICAgICAgfCAgMiArLQ0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4
-NS9jb3JlL2ZwZ2EvY29ubi5jIHwgMTIgKysrKysrKy0tLS0tDQo+ICBkcml2ZXJzL25ldC9ldGhl
-cm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbGliL2dpZC5jICAgfCAgNSArKystLQ0KPiAgZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL3JkbWEuYyAgICAgIHwgIDIgKy0NCj4g
-IGluY2x1ZGUvbGludXgvbWx4NS9kcml2ZXIuaCAgICAgICAgICAgICAgICAgICAgICAgICB8ICA0
-ICsrKy0NCj4gIDUgZmlsZXMgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25z
-KC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pbmZpbmliYW5kL2h3L21seDUvbWFpbi5j
-DQo+IGIvZHJpdmVycy9pbmZpbmliYW5kL2h3L21seDUvbWFpbi5jDQo+IGluZGV4IGMyYTU3ODBj
-YjM5NC4uZTYwNzg1YmFkN2VmIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2luZmluaWJhbmQvaHcv
-bWx4NS9tYWluLmMNCj4gKysrIGIvZHJpdmVycy9pbmZpbmliYW5kL2h3L21seDUvbWFpbi5jDQo+
-IEBAIC02MTAsNyArNjEwLDcgQEAgc3RhdGljIGludCBzZXRfcm9jZV9hZGRyKHN0cnVjdCBtbHg1
-X2liX2RldiAqZGV2LCB1OA0KPiBwb3J0X251bSwNCj4gIAl9DQo+IA0KPiAgCXJldHVybiBtbHg1
-X2NvcmVfcm9jZV9naWRfc2V0KGRldi0+bWRldiwgaW5kZXgsIHJvY2VfdmVyc2lvbiwNCj4gLQkJ
-CQkgICAgICByb2NlX2wzX3R5cGUsIGdpZC0+cmF3LCBtYWMsDQo+ICsJCQkJICAgICAgcm9jZV9s
-M190eXBlLCAmZ2lkLCBtYWMsDQo+ICAJCQkJICAgICAgdmxhbl9pZCA8IFZMQU5fQ0ZJX01BU0ss
-IHZsYW5faWQsDQo+ICAJCQkJICAgICAgcG9ydF9udW0pOw0KPiAgfQ0KPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2ZwZ2EvY29ubi5jDQo+IGIv
-ZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2ZwZ2EvY29ubi5jDQo+IGlu
-ZGV4IDRjNTBlZmU0ZTdmMS4uNzZiODIzNmFmOWM3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25l
-dC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZnBnYS9jb25uLmMNCj4gKysrIGIvZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2ZwZ2EvY29ubi5jDQo+IEBAIC04NTAs
-NiArODUwLDcgQEAgc3RydWN0IG1seDVfZnBnYV9jb25uICptbHg1X2ZwZ2FfY29ubl9jcmVhdGUo
-c3RydWN0DQo+IG1seDVfZnBnYV9kZXZpY2UgKmZkZXYsDQo+ICAJCQkJCSAgICAgZW51bSBtbHg1
-X2lmY19mcGdhX3FwX3R5cGUNCj4gcXBfdHlwZSkgIHsNCj4gIAlzdHJ1Y3QgbWx4NV9mcGdhX2Nv
-bm4gKnJldCwgKmNvbm47DQo+ICsJc3RydWN0IGliX2dpZCByZW1vdGVfZ2lkID0ge307DQo+ICAJ
-dTggKnJlbW90ZV9tYWMsICpyZW1vdGVfaXA7DQo+ICAJaW50IGVycjsNCj4gDQo+IEBAIC04NzYs
-MTEgKzg3NywxMiBAQCBzdHJ1Y3QgbWx4NV9mcGdhX2Nvbm4NCj4gKm1seDVfZnBnYV9jb25uX2Ny
-ZWF0ZShzdHJ1Y3QgbWx4NV9mcGdhX2RldmljZSAqZmRldiwNCj4gIAkJZ290byBlcnI7DQo+ICAJ
-fQ0KPiANCj4gLQkvKiBCdWlsZCBNb2RpZmllZCBFVUktNjQgSVB2NiBhZGRyZXNzIGZyb20gdGhl
-IE1BQyBhZGRyZXNzICovDQo+ICAJcmVtb3RlX2lwID0gTUxYNV9BRERSX09GKGZwZ2FfcXBjLCBj
-b25uLT5mcGdhX3FwYywgcmVtb3RlX2lwKTsNCj4gLQlyZW1vdGVfaXBbMF0gPSAweGZlOw0KPiAt
-CXJlbW90ZV9pcFsxXSA9IDB4ODA7DQo+IC0JYWRkcmNvbmZfYWRkcl9ldWk0OCgmcmVtb3RlX2lw
-WzhdLCByZW1vdGVfbWFjKTsNCj4gKwltZW1jcHkocmVtb3RlX2dpZC5yYXdbMF0sIHJlbW90ZV9p
-cCwgc2l6ZW9mKHJlbW90ZV9naWQucmF3KSk7DQo+ICsJLyogQnVpbGQgTW9kaWZpZWQgRVVJLTY0
-IElQdjYgYWRkcmVzcyBmcm9tIHRoZSBNQUMgYWRkcmVzcyAqLw0KPiArCXJlbXRlX2dpZC5yYXdb
-MF0gPSAweGZlOw0KPiArCXJlbXRlX2dpZC5yYXdbMV0gPSAweDgwOw0KPiArCWFkZHJjb25mX2Fk
-ZHJfZXVpNDgoJnJlbW90ZV9naWQucmF3WzhdLCByZW1vdGVfbWFjKTsNCj4gDQo+ICAJZXJyID0g
-bWx4NV9jb3JlX3Jlc2VydmVkX2dpZF9hbGxvYyhmZGV2LT5tZGV2LCAmY29ubi0NCj4gPnFwLnNn
-aWRfaW5kZXgpOw0KPiAgCWlmIChlcnIpIHsNCj4gQEAgLTg5Miw3ICs4OTQsNyBAQCBzdHJ1Y3Qg
-bWx4NV9mcGdhX2Nvbm4gKm1seDVfZnBnYV9jb25uX2NyZWF0ZShzdHJ1Y3QNCj4gbWx4NV9mcGdh
-X2RldmljZSAqZmRldiwNCj4gIAllcnIgPSBtbHg1X2NvcmVfcm9jZV9naWRfc2V0KGZkZXYtPm1k
-ZXYsIGNvbm4tPnFwLnNnaWRfaW5kZXgsDQo+ICAJCQkJICAgICBNTFg1X1JPQ0VfVkVSU0lPTl8y
-LA0KPiAgCQkJCSAgICAgTUxYNV9ST0NFX0wzX1RZUEVfSVBWNiwNCj4gLQkJCQkgICAgIHJlbW90
-ZV9pcCwgcmVtb3RlX21hYywgdHJ1ZSwgMCwNCj4gKwkJCQkgICAgICZyZW1vdGVfZ2lkLCByZW1v
-dGVfbWFjLCB0cnVlLCAwLA0KPiAgCQkJCSAgICAgTUxYNV9GUEdBX1BPUlRfTlVNKTsNCj4gIAlp
-ZiAoZXJyKSB7DQo+ICAJCW1seDVfZnBnYV9lcnIoZmRldiwgIkZhaWxlZCB0byBzZXQgU0dJRDog
-JWRcbiIsIGVycik7IGRpZmYgLS1naXQNCj4gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5v
-eC9tbHg1L2NvcmUvbGliL2dpZC5jDQo+IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gv
-bWx4NS9jb3JlL2xpYi9naWQuYw0KPiBpbmRleCA3NzIyYTNmOWJiNjguLjliODU2M2EyYmQ1MCAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2xp
-Yi9naWQuYw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUv
-bGliL2dpZC5jDQo+IEBAIC0xMjAsNyArMTIwLDggQEAgdW5zaWduZWQgaW50IG1seDVfY29yZV9y
-ZXNlcnZlZF9naWRzX2NvdW50KHN0cnVjdA0KPiBtbHg1X2NvcmVfZGV2ICpkZXYpDQo+IEVYUE9S
-VF9TWU1CT0xfR1BMKG1seDVfY29yZV9yZXNlcnZlZF9naWRzX2NvdW50KTsNCj4gDQo+ICBpbnQg
-bWx4NV9jb3JlX3JvY2VfZ2lkX3NldChzdHJ1Y3QgbWx4NV9jb3JlX2RldiAqZGV2LCB1bnNpZ25l
-ZCBpbnQgaW5kZXgsDQo+IC0JCQkgICB1OCByb2NlX3ZlcnNpb24sIHU4IHJvY2VfbDNfdHlwZSwg
-Y29uc3QgdTggKmdpZCwNCj4gKwkJCSAgIHU4IHJvY2VfdmVyc2lvbiwgdTggcm9jZV9sM190eXBl
-LA0KPiArCQkJICAgY29uc3QgdW5pb24gaWJfZ2lkICpnaWQsDQo+ICAJCQkgICBjb25zdCB1OCAq
-bWFjLCBib29sIHZsYW4sIHUxNiB2bGFuX2lkLCB1OCBwb3J0X251bSkNCj4geyAgI2RlZmluZSBN
-TFg1X1NFVF9SQShwLCBmLCB2KSBNTFg1X1NFVChyb2NlX2FkZHJfbGF5b3V0LCBwLCBmLCB2KSBA
-QCAtDQo+IDE0NSw3ICsxNDYsNyBAQCBpbnQgbWx4NV9jb3JlX3JvY2VfZ2lkX3NldChzdHJ1Y3Qg
-bWx4NV9jb3JlX2RldiAqZGV2LA0KPiB1bnNpZ25lZCBpbnQgaW5kZXgsDQo+ICAJCWV0aGVyX2Fk
-ZHJfY29weShhZGRyX21hYywgbWFjKTsNCj4gIAkJTUxYNV9TRVRfUkEoaW5fYWRkciwgcm9jZV92
-ZXJzaW9uLCByb2NlX3ZlcnNpb24pOw0KPiAgCQlNTFg1X1NFVF9SQShpbl9hZGRyLCByb2NlX2wz
-X3R5cGUsIHJvY2VfbDNfdHlwZSk7DQo+IC0JCW1lbWNweShhZGRyX2wzX2FkZHIsIGdpZCwgZ2lk
-c3opOw0KPiArCQltZW1jcHkoYWRkcl9sM19hZGRyLCAmZ2lkLT5yYXdbMF0sIGdpZHN6KTsNCj4g
-IAl9DQo+IA0KPiAgCWlmIChNTFg1X0NBUF9HRU4oZGV2LCBudW1fdmhjYV9wb3J0cykgPiAwKSBk
-aWZmIC0tZ2l0DQo+IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL3Jk
-bWEuYw0KPiBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9yZG1hLmMN
-Cj4gaW5kZXggMTdjZTlkZDU2YjEzLi4yYTQ0NjczNDYyMzEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
-cnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9yZG1hLmMNCj4gKysrIGIvZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL3JkbWEuYw0KPiBAQCAtMTM5LDcgKzEz
-OSw3IEBAIHN0YXRpYyBpbnQgbWx4NV9yZG1hX2FkZF9yb2NlX2FkZHIoc3RydWN0DQo+IG1seDVf
-Y29yZV9kZXYgKmRldikNCj4gIAltbHg1X3JkbWFfbWFrZV9kZWZhdWx0X2dpZChkZXYsICZnaWQp
-Ow0KPiAgCXJldHVybiBtbHg1X2NvcmVfcm9jZV9naWRfc2V0KGRldiwgMCwNCj4gIAkJCQkgICAg
-ICBNTFg1X1JPQ0VfVkVSU0lPTl8xLA0KPiAtCQkJCSAgICAgIDAsIGdpZC5yYXcsIG1hYywNCj4g
-KwkJCQkgICAgICAwLCAmZ2lkLCBtYWMsDQo+ICAJCQkJICAgICAgZmFsc2UsIDAsIDEpOw0KPiAg
-fQ0KPiANCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWx4NS9kcml2ZXIuaCBiL2luY2x1
-ZGUvbGludXgvbWx4NS9kcml2ZXIuaCBpbmRleA0KPiAxZTQyYzEzODE5YWUuLjY5MTg2NGU4NTNi
-ZSAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9tbHg1L2RyaXZlci5oDQo+ICsrKyBiL2lu
-Y2x1ZGUvbGludXgvbWx4NS9kcml2ZXIuaA0KPiBAQCAtNDcsNiArNDcsNyBAQA0KPiAgI2luY2x1
-ZGUgPGxpbnV4L2ludGVycnVwdC5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L2lkci5oPg0KPiAgI2lu
-Y2x1ZGUgPGxpbnV4L25vdGlmaWVyLmg+DQo+ICsjaW5jbHVkZSA8cmRtYS9pYl92ZXJicy5oPg0K
-PiANCj4gICNpbmNsdWRlIDxsaW51eC9tbHg1L2RldmljZS5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4
-L21seDUvZG9vcmJlbGwuaD4NCj4gQEAgLTEwMDIsNyArMTAwMyw4IEBAIHN0cnVjdCBjcHVtYXNr
-ICoNCj4gIG1seDVfY29tcF9pcnFfZ2V0X2FmZmluaXR5X21hc2soc3RydWN0IG1seDVfY29yZV9k
-ZXYgKmRldiwgaW50IHZlY3Rvcik7DQo+IHVuc2lnbmVkIGludCBtbHg1X2NvcmVfcmVzZXJ2ZWRf
-Z2lkc19jb3VudChzdHJ1Y3QgbWx4NV9jb3JlX2RldiAqZGV2KTsgIGludA0KPiBtbHg1X2NvcmVf
-cm9jZV9naWRfc2V0KHN0cnVjdCBtbHg1X2NvcmVfZGV2ICpkZXYsIHVuc2lnbmVkIGludCBpbmRl
-eCwNCj4gLQkJCSAgIHU4IHJvY2VfdmVyc2lvbiwgdTggcm9jZV9sM190eXBlLCBjb25zdCB1OCAq
-Z2lkLA0KPiArCQkJICAgdTggcm9jZV92ZXJzaW9uLCB1OCByb2NlX2wzX3R5cGUsDQo+ICsJCQkg
-ICBjb25zdCB1bmlvbiBpYl9naWQgKmdpZCwNCj4gIAkJCSAgIGNvbnN0IHU4ICptYWMsIGJvb2wg
-dmxhbiwgdTE2IHZsYW5faWQsIHU4IHBvcnRfbnVtKTsNCj4gDQo+ICBzdGF0aWMgaW5saW5lIGlu
-dCBmd19pbml0aWFsaXppbmcoc3RydWN0IG1seDVfY29yZV9kZXYgKmRldikNCj4gLS0NCj4gMi4x
-OS4yDQoNCkxlb24ganVzdCByZXBsaWVkLiBUaGFua3MuDQo=
+The default DMA segment size was used when importing PRIME buffers,
+which resulted in a chance of them not being contiguous in the virtual
+IO space of the device and mtk_gem_prime_import_sg_table() complaining
+that the SG table was not contiguous as it expects.
+
+This series fixes this issue by
+
+1) Using the correct DMA device when importing PRIME buffers,
+2) Setting a more suitable DMA segment size on the DMA device than the
+default 64KB.
+
+Changes since v1:
+- Split into two patches,
+- Fixed an error path that would have returned 0.
+
+Alexandre Courbot (2):
+  drm/mediatek: use correct device to import PRIME buffers
+  drm/mediatek: set DMA max segment size
+
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 49 ++++++++++++++++++++++++--
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h |  2 ++
+ 2 files changed, 48 insertions(+), 3 deletions(-)
+
+-- 
+2.22.0.709.g102302147b-goog
+
