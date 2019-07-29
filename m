@@ -2,170 +2,123 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4FAC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3120C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1DE21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF651206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387637AbfG2LKE (ORCPT
+        id S2387586AbfG2LNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:10:04 -0400
-Received: from enpas.org ([46.38.239.100]:37238 "EHLO mail.enpas.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387626AbfG2LKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:10:03 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.enpas.org (Postfix) with ESMTPSA id 0AB49100129;
-        Mon, 29 Jul 2019 11:09:58 +0000 (UTC)
-Subject: Re: [PATCH v3] ata/pata_buddha: Probe via modalias instead of
- initcall
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-ide@vger.kernel.org, Linux/m68k <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190725180825.31508-1-max@enpas.org>
- <CAMuHMdURm-9nazOBTL8uRH8WMt7gi=QUYy0qr9kaxzczCr+ujg@mail.gmail.com>
-From:   Max Staudt <max@enpas.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
- 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
- urZIw0nz8zec+73Bv/qF4GHHftLYfA==
-Message-ID: <9cde6e79-52da-e0c0-f452-6afc2e5fa5ee@enpas.org>
-Date:   Mon, 29 Jul 2019 13:09:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 29 Jul 2019 07:13:23 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44591 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387450AbfG2LNW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:13:22 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k18so58152561ljc.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 04:13:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tOeU+CYtImamXwnMBo5r6FB06SkfmeDDgtJvh72e5f8=;
+        b=DTo+QQMfRiez7Two+o3auKjZNTA0c5AZSuawM5vGgftI6FGOiPVgcpQqnzJC0f4yBD
+         MOjTLleeEU4euMZPawQUyEX5YABdKgnFahVKWCL6K0foqRerR1NKjYa1eLNairT5JFsZ
+         GUxsFxVX6rTmfUpr59XkS9lNaOn7G/lRvlfx3XVCfs545DNudSEue3+6AnUgEUFpBs5g
+         NLtRrc0arywTxhVkWJLyjUi/j/YAEHltfe23oLBdDYv5rcoj/EDMCx7gMyp1ZgxDKHry
+         xRbRgLsArKpmgoAlBIxFMHGep3npWtQcOqrkdgmo4jAG12LD8W/bWiN3ClsFBv24OiRQ
+         RLNg==
+X-Gm-Message-State: APjAAAU7Ubi4tDbTsIpO3P4mUr1ldRzDsPXSO0zT38Wxr7xWelo0VCX2
+        4fI2Cab90Sdte65la7k0bUq0syQi8h3j/r6K6IwMtYQ2QKNmug==
+X-Google-Smtp-Source: APXvYqzG7FwJx4QRNGscSaihpY7Vr0ay+3S0b2wkdslvjOo2SttVSKYiJDePex+9EPvXQRl/Az7gXZ/T0xfWNYeJJyI=
+X-Received: by 2002:a2e:9643:: with SMTP id z3mr58586491ljh.43.1564398800931;
+ Mon, 29 Jul 2019 04:13:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdURm-9nazOBTL8uRH8WMt7gi=QUYy0qr9kaxzczCr+ujg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAGnkfhySwXY7YwuQezyx6cEpemZW4Hox1_4fQJm3-5hvM3G6gw@mail.gmail.com>
+ <20190729095047.k45isr7etq3xkyvr@willie-the-truck> <1cfad84e-5a98-99bd-07c2-9db0cf37292b@arm.com>
+ <CAGnkfhxXHPfMZVMy4Wjmy39E3Oh2U8FjVU8p8PprCnj5QFLMEg@mail.gmail.com> <cc6f9c8f-a4a1-7c71-1f89-72e1e8dd0cc8@arm.com>
+In-Reply-To: <cc6f9c8f-a4a1-7c71-1f89-72e1e8dd0cc8@arm.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Mon, 29 Jul 2019 13:12:45 +0200
+Message-ID: <CAGnkfhx6St+MYQuR_Duguk4Q9ieuL7sLCTL=G76-eqUcCAbpoA@mail.gmail.com>
+Subject: Re: build error
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Mon, Jul 29, 2019 at 1:08 PM Vincenzo Frascino
+<vincenzo.frascino@arm.com> wrote:
+>
+> Hi Matteo,
+>
+> On 29/07/2019 11:25, Matteo Croce wrote:
+> > On Mon, Jul 29, 2019 at 12:16 PM Vincenzo Frascino
+> > <vincenzo.frascino@arm.com> wrote:
+> >>
+> >> Hi Matteo and Will,
+> >>
+> >>
+> >> If I try to build a fresh kernel on my machine with the standard "make mrproper
+> >> && make defconfig && make" I do not see the reported issue (Please see below
+> >> scissors).
+> >>
+> >> At this point would be interesting to know more about how Matteo is building the
+> >> kernel, and try to reproduce the issue here.
+> >>
+> >> @Matteo, could you please provide the full .config and the steps you used to
+> >> generate it? Is it an 'oldconfig'?
+> >>
+> >
+> > Hi,
+> >
+> > yes, this is an oldconfig from a vanilla 5.2, I attach it
+> > (the non gzipped config was dropped by the ML filter)
+> >
+> >
+>
+> I tried your config file and seems working correctly:
+>
+> # cp ~/config ../linux-out/.config
+> # make oldconfig
+> # make
+>
+> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the compat
+> vDSO will not be built
+>
+> ---
+>
+> Could you please send to me the config file that does not contain:
+> CONFIG_CROSS_COMPILE_COMPAT_VDSO=""
+>
+> The original one I mean, on which you did not run make oldconfig.
+> My suspect at this point is that the string passed to
+> CONFIG_CROSS_COMPILE_COMPAT_VDSO is not completely empty.
+>
+> In fact if I do CONFIG_CROSS_COMPILE_COMPAT_VDSO=" " (single space),
+> I do have a failure similar to the one you reported.
+>
 
-On 07/29/2019 11:05 AM, Geert Uytterhoeven wrote:
->> --- a/drivers/ata/pata_buddha.c
->> +++ b/drivers/ata/pata_buddha.c
-> 
->> +static const struct zorro_device_id pata_buddha_zorro_tbl[] = {
->> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA, },
->> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL, },
->> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, },
-> 
-> drivers/net/ethernet/8390/zorro8390.c also matches against
-> ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, while only
-> a single zorro_driver can bind to it.  Hence you can no longer use both
-> IDE and Ethernet on X-Surf :-(
-> Before, this worked, as the IDE driver just walked the list of devices.
+That's what I initially thought, but the string is effectively empty:
 
-Okay, now this gets dirty.
-
-The reason why I've submitted this patch is to allow pata_buddha to be built into the kernel at all. Without this patch, its initcall would be called before the Zorro structures are initialised, hence not finding any boards.
-
-That means that not only would the previous driver only make sense as a module that is manually ensured to be loaded after Zorro has started, but the X-Surf IDE support was a really ugly hack to begin with.
+# make
+arch/arm64/Makefile:58: *** gcc not found, check CROSS_COMPILE_COMPAT.  Stop.
+# grep CROSS_COMPILE_COMPAT_VDSO .config |hexdump -C
+00000000  43 4f 4e 46 49 47 5f 43  52 4f 53 53 5f 43 4f 4d  |CONFIG_CROSS_COM|
+00000010  50 49 4c 45 5f 43 4f 4d  50 41 54 5f 56 44 53 4f  |PILE_COMPAT_VDSO|
+00000020  3d 22 22 0a                                       |="".|
+00000024
 
 
-> I think the proper solution is to create MFD devices for Zorro boards
-> with multiple functions, and bind against the individual MFD cells.
-> That would also get rid of the nr_ports loop in the IDE driver, as each
-> instance would have its own cell.
-> 
-> I played with this a long time ago, but never finished it.
-> It worked fine for my Ariadne Ethernet card.
-> Last state at
-> https://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git/log/?h=zorro-mfd
-> 
-> Oh, seems I wrote up most of this before in
-> https://lore.kernel.org/lkml/CAMuHMdVe1KgQWYZ_BfBkSo3zr0c+TenLMEw3T=BLEQNoZ6ex7A@mail.gmail.com/
-
-This looks great!
-
-Unfortunately, I don't have any MFD hardware other than a single Buddha to test this with. I especially don't have an X-Surf, hence no good way of testing this other than the two IDE channels on my Buddha. WinUAE doesn't seem to emulate the IDE controller either.
-
-What shall I do? Maybe as a stop-gap measure, we could hard-code a module_init() again, just for X-Surf? It's been good enough until a few weeks ago, so what could go wrong ;)
-
-
-On another note: Maybe your MFD idea could be used to expose the clockports on the Buddhas as well? That wouldn't solve the issue of clockport *expansions* being fundamentally non-enumerable, but maybe you can think of a reasonable way to attach a driver?
-
-
-Thanks for your feedback,
-Max
+-- 
+Matteo Croce
+per aspera ad upstream
