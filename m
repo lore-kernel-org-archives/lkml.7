@@ -2,264 +2,180 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2C2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84F8C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F11020693
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7780820693
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:40:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bWHHE7p4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfG2IiX (ORCPT
+        id S1727787AbfG2Ikr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:38:23 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35025 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727478AbfG2IiX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:38:23 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1hs1Ai-0003hV-Kq; Mon, 29 Jul 2019 10:38:20 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1hs1Ai-0007CB-2a; Mon, 29 Jul 2019 10:38:20 +0200
-Date:   Mon, 29 Jul 2019 10:38:20 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     jassisinghbrar@gmail.com, aisheng.dong@nxp.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] mailbox: imx: add support for imx v1 mu
-Message-ID: <20190729083820.feoc3ohetzaomb32@pengutronix.de>
-References: <1564366440-10970-1-git-send-email-hongxing.zhu@nxp.com>
+        Mon, 29 Jul 2019 04:40:47 -0400
+Received: from mail-eopbgr20067.outbound.protection.outlook.com ([40.107.2.67]:63558
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726305AbfG2Ikr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 04:40:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CQh229xktp3HrRseLePvP2sWXdBSgK5h7+sUHifLCF4+cPEf0mKktWSoYBwHoeBjqIZTO+hP1/1Fqvab3uj3KKlJAhhrIxxFOvmo3QGQ4Ci90bHtgyVFfpMjUjyPbLvKKaCJq1wt89dS8hxtzWjmxqvHmu2sQUCx3boh/sLa+kpxg+4i5Vbv3cFpcEwQL1LYfp4nMNJ9aV9d66U/odZIfzjmzpnaTZiGKfys+H+7hIK3neEFx5glsVGZC0/+2dun5NVSSJfmB+JCSLkBFQ7csWxoQmJZzS5CqowakqRyuY0IcKINOfDGKO86s9F3LiYKFPXzGFq4C/9GEB3zoOyO2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5NQyQFT0Vc4sAFGL7iH/6CU9hHQJF3qzFIkr/7Hp2Oc=;
+ b=gHhWzOR4yc4QEfG9JavM7QFXnIhUXK6ols++aMYg08g4BVGBeyDxteyxXdmIFvsLhWJgobr/cp9vgJIo44et0Oh+LMxY3TSk2Xgcp1g/C3XTX64G4kP6AMhk5UcWeDFDmbZJOcwxyK9F0KOscy0dqBvA4CDl5U3J/CWAMy/p6i8CjoDSZ2/D2TDl11beYTzJFSk9n/M31uueP0r6QjiIDnorxZlLxIoOLQCZq12uAMBCQrTsfulzaMb8uhJDHRMmLedGz/3mQc5yYOzLVzr64Z23wZF+f02cIj38tJ6dlyrl4Jr2UdMTj2EYekNII/01FPiRldgEZ7ktVKJa2Fg12g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5NQyQFT0Vc4sAFGL7iH/6CU9hHQJF3qzFIkr/7Hp2Oc=;
+ b=bWHHE7p4IzQGZO8YZmlh2t6QvC2LyzsjVsT17IBqlLhybkWuyJQBUZ0uXkP5ndDvgltAgX/bw4EIxr8vdzDCCiN+OnHjcxudU1qZrMQ4TzihUCl7/iPHJLaSJVpkvkInUWSRmLyB4vLo9qF1hiSNw2J7+XutWU2dOtKKwa3TWI8=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3819.eurprd04.prod.outlook.com (52.134.71.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.17; Mon, 29 Jul 2019 08:40:39 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::7cdf:bddc:212c:f77e]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::7cdf:bddc:212c:f77e%4]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
+ 08:40:39 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     =?utf-8?B?R3VpZG8gR8O8bnRoZXI=?= <agx@sigxcpu.org>
+CC:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 4/6] thermal: qoriq: Add clock operations
+Thread-Topic: [PATCH 4/6] thermal: qoriq: Add clock operations
+Thread-Index: AQHVMu9L9eabQCV1yEK0bvOqH0zIxKbhZNKAgAACpdA=
+Date:   Mon, 29 Jul 2019 08:40:39 +0000
+Message-ID: <DB3PR0402MB391682A6263D084198E12DB6F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+ <20190705045612.27665-4-Anson.Huang@nxp.com>
+ <20190729081221.GA2523@bogon.m.sigxcpu.org>
+In-Reply-To: <20190729081221.GA2523@bogon.m.sigxcpu.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7313234e-adaa-462c-60bd-08d714006f2e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3819;
+x-ms-traffictypediagnostic: DB3PR0402MB3819:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DB3PR0402MB38194A36B113D65244148CE9F5DD0@DB3PR0402MB3819.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 01136D2D90
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(346002)(396003)(136003)(199004)(189003)(53936002)(6116002)(3846002)(99286004)(55016002)(66446008)(25786009)(66476007)(6246003)(66556008)(8936002)(76116006)(6306002)(9686003)(33656002)(966005)(7736002)(74316002)(81166006)(305945005)(2906002)(54906003)(64756008)(316002)(86362001)(66574012)(66946007)(8676002)(256004)(6436002)(14454004)(14444005)(45080400002)(68736007)(102836004)(26005)(66066001)(76176011)(476003)(71200400001)(52536014)(7416002)(7696005)(11346002)(446003)(44832011)(4326008)(186003)(229853002)(6506007)(478600001)(6916009)(81156014)(71190400001)(5660300002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3819;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sguznUNbse9euGSeC60eXSACJKpLuWJugqDBWzz8ZlaFUZ7MfUX4AuXAekFHXwrPNHXLqzSx2xHqQD6JFXj77G7ixn6mg6G0Z2w3wPFCE3/Rwdupy7Y4LprEixYo0iWg+3re/VyM2/2ySCrzTGuA9SBhOihEfvxX8UbHDxBIdVSD1QVtKyoo6IgE9Ej0dtdIheiDpxabIIXag4BZVG4vuLS+GDO7DmZeUfBMdmlygPt2YXl/HMc952gfodcCVtuMdULn20CkACqvvQl332KCQDyfP6uL0IIaWVBAkFATZoMa7SHCaqpXMBSo1fA4URxEMAkW9YGd3c40YtKi5UrAXKGm++BJLezdgeHqoA6xBuZbL8m8UPl4sy1Z2mkwZoJW9TwLBb8szlX3rxjk0f6VUk8XaZI8UF4j3LKqrzhRMyo=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564366440-10970-1-git-send-email-hongxing.zhu@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:29:11 up 72 days, 14:47, 49 users,  load average: 0.00, 0.01,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7313234e-adaa-462c-60bd-08d714006f2e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 08:40:39.3730
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3819
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-please use format [PATCH v2] description. It is automatically done with
-git format-patch -v2
-
-On Mon, Jul 29, 2019 at 10:14:00AM +0800, Richard Zhu wrote:
-> There is a version1.0 MU on i.MX7ULP platform.
-> One new version ID register is added, and it's offset is 0.
-> TRn registers are defined at the offset 0x20 ~ 0x2C.
-> RRn registers are defined at the offset 0x40 ~ 0x4C.
-> SR/CR registers are defined at 0x60/0x64.
-> Extend this driver to support it.
-> 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
-
-change log can be done here or in a message automatically generate by
-format patch:
-git format-patch --cover-letter -v2
-
->  drivers/mailbox/imx-mailbox.c | 67 ++++++++++++++++++++++++++++++++-----------
->  1 file changed, 50 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-> index 25be8bb..8423a38 100644
-> --- a/drivers/mailbox/imx-mailbox.c
-> +++ b/drivers/mailbox/imx-mailbox.c
-> @@ -12,19 +12,11 @@
->  #include <linux/of_device.h>
->  #include <linux/slab.h>
->  
-> -/* Transmit Register */
-> -#define IMX_MU_xTRn(x)		(0x00 + 4 * (x))
-> -/* Receive Register */
-> -#define IMX_MU_xRRn(x)		(0x10 + 4 * (x))
-> -/* Status Register */
-> -#define IMX_MU_xSR		0x20
->  #define IMX_MU_xSR_GIPn(x)	BIT(28 + (3 - (x)))
->  #define IMX_MU_xSR_RFn(x)	BIT(24 + (3 - (x)))
->  #define IMX_MU_xSR_TEn(x)	BIT(20 + (3 - (x)))
->  #define IMX_MU_xSR_BRDIP	BIT(9)
->  
-> -/* Control Register */
-> -#define IMX_MU_xCR		0x24
->  /* General Purpose Interrupt Enable */
->  #define IMX_MU_xCR_GIEn(x)	BIT(28 + (3 - (x)))
->  /* Receive Interrupt Enable */
-> @@ -44,6 +36,13 @@ enum imx_mu_chan_type {
->  	IMX_MU_TYPE_RXDB,	/* Rx doorbell */
->  };
->  
-> +struct imx_mu_dcfg {
-> +	u32	xTR[4];		/* Transmit Registers */
-> +	u32	xRR[4];		/* Receive Registers */
-> +	u32	xSR;		/* Status Register */
-> +	u32	xCR;		/* Control Register */
-> +};
-> +
->  struct imx_mu_con_priv {
->  	unsigned int		idx;
->  	char			irq_desc[IMX_MU_CHAN_NAME_SIZE];
-> @@ -61,12 +60,39 @@ struct imx_mu_priv {
->  	struct mbox_chan	mbox_chans[IMX_MU_CHANS];
->  
->  	struct imx_mu_con_priv  con_priv[IMX_MU_CHANS];
-> +	const struct imx_mu_dcfg	*dcfg;
->  	struct clk		*clk;
->  	int			irq;
->  
->  	bool			side_b;
->  };
->  
-> +static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
-> +	.xTR[0]	= 0x0,
-> +	.xTR[1]	= 0x4,
-> +	.xTR[2]	= 0x8,
-> +	.xTR[3]	= 0xC,
-
-I would prefer to init arrays this way:
-        .xTR[] = {0x0, 0x4, 0x8, 0xc},
-
-For every thing else
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
-
-> +	.xRR[0]	= 0x10,
-> +	.xRR[1]	= 0x14,
-> +	.xRR[2]	= 0x18,
-> +	.xRR[3]	= 0x1C,
-> +	.xSR	= 0x20,
-> +	.xCR	= 0x24,
-> +};
-> +
-> +static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
-> +	.xTR[0]	= 0x20,
-> +	.xTR[1]	= 0x24,
-> +	.xTR[2]	= 0x28,
-> +	.xTR[3]	= 0x2C,
-> +	.xRR[0]	= 0x40,
-> +	.xRR[1]	= 0x44,
-> +	.xRR[2]	= 0x48,
-> +	.xRR[3]	= 0x4C,
-> +	.xSR	= 0x60,
-> +	.xCR	= 0x64,
-> +};
-> +
->  static struct imx_mu_priv *to_imx_mu_priv(struct mbox_controller *mbox)
->  {
->  	return container_of(mbox, struct imx_mu_priv, mbox);
-> @@ -88,10 +114,10 @@ static u32 imx_mu_xcr_rmw(struct imx_mu_priv *priv, u32 set, u32 clr)
->  	u32 val;
->  
->  	spin_lock_irqsave(&priv->xcr_lock, flags);
-> -	val = imx_mu_read(priv, IMX_MU_xCR);
-> +	val = imx_mu_read(priv, priv->dcfg->xCR);
->  	val &= ~clr;
->  	val |= set;
-> -	imx_mu_write(priv, val, IMX_MU_xCR);
-> +	imx_mu_write(priv, val, priv->dcfg->xCR);
->  	spin_unlock_irqrestore(&priv->xcr_lock, flags);
->  
->  	return val;
-> @@ -111,8 +137,8 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
->  	struct imx_mu_con_priv *cp = chan->con_priv;
->  	u32 val, ctrl, dat;
->  
-> -	ctrl = imx_mu_read(priv, IMX_MU_xCR);
-> -	val = imx_mu_read(priv, IMX_MU_xSR);
-> +	ctrl = imx_mu_read(priv, priv->dcfg->xCR);
-> +	val = imx_mu_read(priv, priv->dcfg->xSR);
->  
->  	switch (cp->type) {
->  	case IMX_MU_TYPE_TX:
-> @@ -138,10 +164,10 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
->  		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
->  		mbox_chan_txdone(chan, 0);
->  	} else if (val == IMX_MU_xSR_RFn(cp->idx)) {
-> -		dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
-> +		dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
->  		mbox_chan_received_data(chan, (void *)&dat);
->  	} else if (val == IMX_MU_xSR_GIPn(cp->idx)) {
-> -		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), IMX_MU_xSR);
-> +		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), priv->dcfg->xSR);
->  		mbox_chan_received_data(chan, NULL);
->  	} else {
->  		dev_warn_ratelimited(priv->dev, "Not handled interrupt\n");
-> @@ -159,7 +185,7 @@ static int imx_mu_send_data(struct mbox_chan *chan, void *data)
->  
->  	switch (cp->type) {
->  	case IMX_MU_TYPE_TX:
-> -		imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
-> +		imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
->  		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
->  		break;
->  	case IMX_MU_TYPE_TXDB:
-> @@ -257,7 +283,7 @@ static void imx_mu_init_generic(struct imx_mu_priv *priv)
->  		return;
->  
->  	/* Set default MU configuration */
-> -	imx_mu_write(priv, 0, IMX_MU_xCR);
-> +	imx_mu_write(priv, 0, priv->dcfg->xCR);
->  }
->  
->  static int imx_mu_probe(struct platform_device *pdev)
-> @@ -265,6 +291,7 @@ static int imx_mu_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct device_node *np = dev->of_node;
->  	struct imx_mu_priv *priv;
-> +	const struct imx_mu_dcfg *dcfg;
->  	unsigned int i;
->  	int ret;
->  
-> @@ -282,6 +309,11 @@ static int imx_mu_probe(struct platform_device *pdev)
->  	if (priv->irq < 0)
->  		return priv->irq;
->  
-> +	dcfg = of_device_get_match_data(dev);
-> +	if (!dcfg)
-> +		return -EINVAL;
-> +	priv->dcfg = dcfg;
-> +
->  	priv->clk = devm_clk_get(dev, NULL);
->  	if (IS_ERR(priv->clk)) {
->  		if (PTR_ERR(priv->clk) != -ENOENT)
-> @@ -335,7 +367,8 @@ static int imx_mu_remove(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id imx_mu_dt_ids[] = {
-> -	{ .compatible = "fsl,imx6sx-mu" },
-> +	{ .compatible = "fsl,imx7ulp-mu", .data = &imx_mu_cfg_imx7ulp },
-> +	{ .compatible = "fsl,imx6sx-mu", .data = &imx_mu_cfg_imx6sx },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+SGksIEd1aWRvDQoNCj4gT24gRnJpLCBKdWwgMDUsIDIwMTkgYXQgMTI6NTY6MTBQTSArMDgwMCwg
+QW5zb24uSHVhbmdAbnhwLmNvbSB3cm90ZToNCj4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24u
+SHVhbmdAbnhwLmNvbT4NCj4gPg0KPiA+IFNvbWUgcGxhdGZvcm1zIGxpa2UgaS5NWDhNUSBoYXMg
+Y2xvY2sgY29udHJvbCBmb3IgdGhpcyBtb2R1bGUsIG5lZWQgdG8NCj4gPiBhZGQgY2xvY2sgb3Bl
+cmF0aW9ucyB0byBtYWtlIHN1cmUgdGhlIGRyaXZlciBpcyB3b3JraW5nIHByb3Blcmx5Lg0KPiA+
+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+
+ID4gLS0tDQo+ID4gIGRyaXZlcnMvdGhlcm1hbC9xb3JpcV90aGVybWFsLmMgfCAyNCArKysrKysr
+KysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKykN
+Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5jDQo+
+ID4gYi9kcml2ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5jIGluZGV4IDJiMmY3OWIuLjA4MTNj
+MWIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy90aGVybWFsL3FvcmlxX3RoZXJtYWwuYw0KPiA+
+ICsrKyBiL2RyaXZlcnMvdGhlcm1hbC9xb3JpcV90aGVybWFsLmMNCj4gPiBAQCAtMiw2ICsyLDcg
+QEANCj4gPiAgLy8NCj4gPiAgLy8gQ29weXJpZ2h0IDIwMTYgRnJlZXNjYWxlIFNlbWljb25kdWN0
+b3IsIEluYy4NCj4gPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+DQo+ID4gICNpbmNsdWRl
+IDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5o
+Pg0KPiA+ICAjaW5jbHVkZSA8bGludXgvZXJyLmg+DQo+ID4gQEAgLTcyLDYgKzczLDcgQEAgc3Ry
+dWN0IHFvcmlxX3NlbnNvciB7DQo+ID4NCj4gPiAgc3RydWN0IHFvcmlxX3RtdV9kYXRhIHsNCj4g
+PiAgCXN0cnVjdCBxb3JpcV90bXVfcmVncyBfX2lvbWVtICpyZWdzOw0KPiA+ICsJc3RydWN0IGNs
+ayAqY2xrOw0KPiA+ICAJYm9vbCBsaXR0bGVfZW5kaWFuOw0KPiA+ICAJc3RydWN0IHFvcmlxX3Nl
+bnNvcgkqc2Vuc29yW1NJVEVTX01BWF07DQo+ID4gIH07DQo+ID4gQEAgLTIwOCw2ICsyMTAsMTkg
+QEAgc3RhdGljIGludCBxb3JpcV90bXVfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAq
+cGRldikNCj4gPiAgCQlyZXR1cm4gUFRSX0VSUihkYXRhLT5yZWdzKTsNCj4gPiAgCX0NCj4gPg0K
+PiA+ICsJZGF0YS0+Y2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsIE5VTEwpOw0KPiA+ICsJ
+aWYgKElTX0VSUihkYXRhLT5jbGspKSB7DQo+ID4gKwkJaWYgKFBUUl9FUlIoZGF0YS0+Y2xrKSA9
+PSAtRVBST0JFX0RFRkVSKQ0KPiA+ICsJCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsNCj4gPiArCQlk
+YXRhLT5jbGsgPSBOVUxMOw0KPiA+ICsJfQ0KPiANCj4gV291bGRuJ3QgZGV2bV9jbGtfZ2V0X29w
+dGlvbmFsIG1ha2UgbW9yZSBzZW5zZT8NCg0KWWVzLCBsb29rcyBsaWtlIGl0IGlzIGJldHRlciwg
+d2lsbCBmaXggaXQgaW4gVjIuDQoNCj4gDQo+ID4gKw0KPiA+ICsJcmV0ID0gY2xrX3ByZXBhcmVf
+ZW5hYmxlKGRhdGEtPmNsayk7DQo+ID4gKwlpZiAocmV0KSB7DQo+ID4gKwkJZGV2X2VycigmcGRl
+di0+ZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSBjbG9ja1xuIik7DQo+ID4gKwkJcmV0dXJuIHJldDsN
+Cj4gPiArCX0NCj4gPiArDQo+ID4gIAlxb3JpcV90bXVfaW5pdF9kZXZpY2UoZGF0YSk7CS8qIFRN
+VSBpbml0aWFsaXphdGlvbiAqLw0KPiA+DQo+ID4gIAlyZXQgPSBxb3JpcV90bXVfY2FsaWJyYXRp
+b24ocGRldik7CS8qIFRNVSBjYWxpYnJhdGlvbiAqLw0KPiA+IEBAIC0yMzUsNiArMjUwLDggQEAg
+c3RhdGljIGludCBxb3JpcV90bXVfcmVtb3ZlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYpDQo+ID4gIAkvKiBEaXNhYmxlIG1vbml0b3JpbmcgKi8NCj4gPiAgCXRtdV93cml0ZShkYXRh
+LCBUTVJfRElTQUJMRSwgJmRhdGEtPnJlZ3MtPnRtcik7DQo+ID4NCj4gPiArCWNsa19kaXNhYmxl
+X3VucHJlcGFyZShkYXRhLT5jbGspOw0KPiA+ICsNCj4gPiAgCXBsYXRmb3JtX3NldF9kcnZkYXRh
+KHBkZXYsIE5VTEwpOw0KPiA+DQo+ID4gIAlyZXR1cm4gMDsNCj4gPiBAQCAtMjUwLDE0ICsyNjcs
+MjEgQEAgc3RhdGljIGludCBfX21heWJlX3VudXNlZA0KPiBxb3JpcV90bXVfc3VzcGVuZChzdHJ1
+Y3QgZGV2aWNlICpkZXYpDQo+ID4gIAl0bXIgJj0gflRNUl9NRTsNCj4gPiAgCXRtdV93cml0ZShk
+YXRhLCB0bXIsICZkYXRhLT5yZWdzLT50bXIpOw0KPiA+DQo+ID4gKwljbGtfZGlzYWJsZV91bnBy
+ZXBhcmUoZGF0YS0+Y2xrKTsNCj4gPiArDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+DQo+
+ID4gIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgcW9yaXFfdG11X3Jlc3VtZShzdHJ1Y3QgZGV2
+aWNlICpkZXYpICB7DQo+ID4gIAl1MzIgdG1yOw0KPiA+ICsJaW50IHJldDsNCj4gPiAgCXN0cnVj
+dCBxb3JpcV90bXVfZGF0YSAqZGF0YSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiA+DQo+ID4g
+KwlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZGF0YS0+Y2xrKTsNCj4gPiArCWlmIChyZXQpDQo+
+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArDQo+ID4gIAkvKiBFbmFibGUgbW9uaXRvcmluZyAqLw0K
+PiA+ICAJdG1yID0gdG11X3JlYWQoZGF0YSwgJmRhdGEtPnJlZ3MtPnRtcik7DQo+ID4gIAl0bXIg
+fD0gVE1SX01FOw0KPiANCj4gQXBhcnQgZnJvbSB0aGF0IGl0IGxvb2tzIGxpa2Ugd2hhdCBGYWJp
+byBzZW50IGFuZCB3aGF0IGkgdGVzdGVkIHNvDQo+IA0KPiBSZXZpZXdlZC1ieTogR3VpZG8gR8O8
+bnRoZXIgPGFneEBzaWd4Y3B1Lm9yZz4NCg0KVGhhbmtzLA0KQW5zb24NCg0KPiANCj4gQ2hlZXJz
+LA0KPiAgLS0gR3VpZG8NCj4gDQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo+ID4NCj4gPiBfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+IGxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnDQo+ID4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNv
+bS8/dXJsPWh0dHAlM0ElMkYlMkZsaXN0cw0KPiA+IC5pbmZyYWRlYWQub3JnJTJGbWFpbG1hbiUy
+Rmxpc3RpbmZvJTJGbGludXgtYXJtLQ0KPiBrZXJuZWwmYW1wO2RhdGE9MDIlN0MwDQo+ID4NCj4g
+MSU3Q2Fuc29uLmh1YW5nJTQwbnhwLmNvbSU3QzkyNjNjMjQwZGE4MjQ4MmFmNTc5MDhkNzEzZmM3
+ZDBiJTcNCj4gQzY4NmVhMWQNCj4gPg0KPiAzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3
+QzAlN0M2MzY5OTk4NDc0NzI4OTQ2MjQmYW1wO3NkYXQNCj4gYT0wWUFsSw0KPiA+IFY4WlMzN3ZI
+RnozMTFuT2RCUDhxQmJxaXN2akZCdGFTUzFQVjlrJTNEJmFtcDtyZXNlcnZlZD0wDQo+ID4NCg==
