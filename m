@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDB7C76186
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD80C433FF
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374C820C01
+	by mail.kernel.org (Postfix) with ESMTP id 0A04F20651
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="dzOpQ8Xn"
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="TktXLfId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfG2EA3 (ORCPT
+        id S1726675AbfG2EAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 00:00:29 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45070 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfG2EA2 (ORCPT
+        Mon, 29 Jul 2019 00:00:25 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45067 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfG2EAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 00:00:28 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r1so27272126pfq.12
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 21:00:27 -0700 (PDT)
+        Mon, 29 Jul 2019 00:00:24 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so27272031pfq.12
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 21:00:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fossix-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QeuUeEGe1/vHoSUVD7CZG3g0CzW19Ib+t17yb0VRxVM=;
-        b=dzOpQ8XnZPvv9a6HGcnDXu1OaPo7zL6gA6hwqj7dwCXBlH0IH19EkWHnn7evbNTe60
-         K/JJ+2X2ZCD4+5Hg37tUdWDxilG2RU/VOEO3S5BJd97BAr588CWefzcwm63ajh9VAorD
-         daEXwTv717MF+HTyasy9CYpK3aixtemLBAuz33oeyercMkDXHNf1OPMtxGhHRwwxIo14
-         DAMmA+0XzoaEn9DQzIXcU1aPkmQpAIrsdegWKFFRm9rnQo+78Qee/OW1BmCp5lRUXh3T
-         2Bd8FLlB2z/E+AAfZaUczUeTAyZLf+qUDbL2+eLtSyYmYYCSWrzbwAw8pDl0Rt2ZBPtH
-         BWwA==
+        bh=QEGm5RO370+1d5IRbqWLncN9g8dMNoXOhptUJSSSVGY=;
+        b=TktXLfIdMPz/+Bjgtn5c0ycVGKS9Y7wSHxpO/a+O71rjQAzWhK12tGj5OR/ZqnbemN
+         zNUwWdc/AOrcYszNB7f7fIGi344D/K87A/M6kNHxV6OS87FPOGgwrL4JZxdU9pgpVOq4
+         x4LOJrwqpnxhzGVSoMFxE5SjafY0XDa9eanCC05N63udkJOcYOO2ov+I+6cS717oDJqf
+         KR6h9IOlNMIu2jRmO75HsycJGekZqdnZdrIbxvhZTYDXD+bxcU+aXM/v7CsJz9eUr6Nm
+         UCaoJML9mAVyD13/6H2wfZIfpw7CRFlWD+i6QNqet4fs7gSLw66wXa4mLdaNXiOs+BPn
+         VTXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QeuUeEGe1/vHoSUVD7CZG3g0CzW19Ib+t17yb0VRxVM=;
-        b=AWIbXUsD8XY8qC+6z8WaKRUCmBNL3xhkKqnK9VweQXeg9FM60SDzjOQPg9NqpyT09/
-         SPPOJohuPnuwP62uAmWp5mdg9MnYymuZqqkBiNwI1zX/KJsmE1tGAwujnWMUKyTBTQTp
-         wMaWbqGu6Owm2ZyOQBkZXfcmGkiQ3ttbXdynLkbMFRxp864QmUcTKhh1CjHJsHpKTdrk
-         oRFMSIfigaf/ZY9rTfOypK+cOkWhBUiIqaGi1y4xKMEBhq6PW7g4VZ81iOquFeeQFC2F
-         p7xKvaerI7/5IX4EPuFRdl8XFa0AWMbsZFnYJMUmXIZ1Dh+R2g7bUQBblG0Cds8iRiYr
-         ZAMg==
-X-Gm-Message-State: APjAAAWFj8YOivWIRrwelhpsCsWw8yBG885FKvU3ptFnZNYE/5yTwghY
-        bUjKE/tG4P3r2v13EiDJnEg=
-X-Google-Smtp-Source: APXvYqzgnkqIBRED/ppwcsuEs2geqMEAhP7O/UcivsJsnEjYo+OpuUuPsFv5q5o2WteHVelbqQBmUg==
-X-Received: by 2002:a17:90a:bb8a:: with SMTP id v10mr111301558pjr.78.1564372827393;
-        Sun, 28 Jul 2019 21:00:27 -0700 (PDT)
+        bh=QEGm5RO370+1d5IRbqWLncN9g8dMNoXOhptUJSSSVGY=;
+        b=Klv6E0GPE4BGnd/ToObkp2/GG73D0EWiLMpMXdVfLTF2vWyx9qbYMQGPtRS7wjor5c
+         6LTO76/no5O1RwR8YG71mie681DNB/frle6aLQbzmUvP5eS7ZRJFxbXP/eYb/2kOQbl5
+         e4TRhgbusEWDz53zkR1PD/hLUtZPqA5XARrvDyaWcbrwzbuVIXvWif6u06Jmy4TglxWk
+         YsEP4qoRNRSRcDw8JTeoPSPqvTW136oXSJPpfUUEMgE3UqkNWFiukwNaTh3ErkW8W7bW
+         Hx02dG/dNMiB0uBrxAPoFAOKcMFmnR5lgxu2vwAl/Fgbq6E39BOut6U5seQbMOg3PC1K
+         +0xg==
+X-Gm-Message-State: APjAAAXpeBgQ5bd1bgPxWueYHlVyCltqjIaOsHsv8n+MRxwp4Ko1OjSs
+        HkTzzJ/K03TQFWhjyJvB9RE=
+X-Google-Smtp-Source: APXvYqyeOtCjd7IFnPjeLrei396o9gxgYCqFus+m2Ph6YPME9ayUrsVbW4Hbd17abtRLpGeoRHDIzw==
+X-Received: by 2002:a65:57ca:: with SMTP id q10mr105420085pgr.52.1564372823983;
+        Sun, 28 Jul 2019 21:00:23 -0700 (PDT)
 Received: from santosiv.in.ibm.com ([183.82.17.52])
-        by smtp.gmail.com with ESMTPSA id g1sm100033948pgg.27.2019.07.28.21.00.24
+        by smtp.gmail.com with ESMTPSA id g1sm100033948pgg.27.2019.07.28.21.00.20
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 21:00:26 -0700 (PDT)
+        Sun, 28 Jul 2019 21:00:23 -0700 (PDT)
 From:   Santosh Sivaraj <santosh@fossix.org>
 To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         linux-kernel@vger.kernel.org
@@ -67,9 +67,9 @@ Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>,
         christophe leroy <christophe.leroy@c-s.fr>
-Subject: [v6 2/6] powerpc/mce: Fix MCE handling for huge pages
-Date:   Mon, 29 Jul 2019 09:30:07 +0530
-Message-Id: <20190729040011.5086-3-santosh@fossix.org>
+Subject: [v6 1/6] powerpc/mce: Make machine_check_ue_event() static
+Date:   Mon, 29 Jul 2019 09:30:06 +0530
+Message-Id: <20190729040011.5086-2-santosh@fossix.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190729040011.5086-1-santosh@fossix.org>
 References: <20190729040011.5086-1-santosh@fossix.org>
@@ -80,153 +80,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Balbir Singh <bsingharora@gmail.com>
+From: Reza Arbab <arbab@linux.ibm.com>
 
-The current code would fail on huge pages addresses, since the shift would be
-incorrect. Use the correct page shift value returned by __find_linux_pte() to
-get the correct physical address. The code is more generic and can handle both
-regular and compound pages.
+The function doesn't get used outside this file, so make it static.
 
-Fixes: ba41e1e1ccb9 ("powerpc/mce: Hookup derror (load/store) UE errors")
-
-Signed-off-by: Balbir Singh <bsingharora@gmail.com>
-[arbab@linux.ibm.com: Fixup pseries_do_memory_failure()]
 Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
-[santosh: return physical address instead of pfn; change commit log]
 Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/include/asm/mce.h       |  2 +-
- arch/powerpc/kernel/mce_power.c      | 50 ++++++++++++++--------------
- arch/powerpc/platforms/pseries/ras.c |  9 ++---
- 3 files changed, 29 insertions(+), 32 deletions(-)
+ arch/powerpc/kernel/mce.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/mce.h b/arch/powerpc/include/asm/mce.h
-index a4c6a74ad2fb..f3a6036b6bc0 100644
---- a/arch/powerpc/include/asm/mce.h
-+++ b/arch/powerpc/include/asm/mce.h
-@@ -209,7 +209,7 @@ extern void release_mce_event(void);
- extern void machine_check_queue_event(void);
- extern void machine_check_print_event_info(struct machine_check_event *evt,
- 					   bool user_mode, bool in_guest);
--unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr);
-+unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr);
- #ifdef CONFIG_PPC_BOOK3S_64
- void flush_and_reload_slb(void);
- #endif /* CONFIG_PPC_BOOK3S_64 */
-diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
-index a814d2dfb5b0..bed38a8e2e50 100644
---- a/arch/powerpc/kernel/mce_power.c
-+++ b/arch/powerpc/kernel/mce_power.c
-@@ -20,13 +20,14 @@
- #include <asm/exception-64s.h>
+diff --git a/arch/powerpc/kernel/mce.c b/arch/powerpc/kernel/mce.c
+index b18df633eae9..e78c4f18ea0a 100644
+--- a/arch/powerpc/kernel/mce.c
++++ b/arch/powerpc/kernel/mce.c
+@@ -33,7 +33,7 @@ static DEFINE_PER_CPU(struct machine_check_event[MAX_MC_EVT],
+ 					mce_ue_event_queue);
  
+ static void machine_check_process_queued_event(struct irq_work *work);
+-void machine_check_ue_event(struct machine_check_event *evt);
++static void machine_check_ue_event(struct machine_check_event *evt);
+ static void machine_process_ue_event(struct work_struct *work);
+ 
+ static struct irq_work mce_event_process_work = {
+@@ -203,7 +203,7 @@ void release_mce_event(void)
  /*
-- * Convert an address related to an mm to a PFN. NOTE: we are in real
-- * mode, we could potentially race with page table updates.
-+ * Convert an address related to an mm to a physical address.
-+ * NOTE: we are in real mode, we could potentially race with page table updates.
+  * Queue up the MCE event which then can be handled later.
   */
--unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
-+unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr)
+-void machine_check_ue_event(struct machine_check_event *evt)
++static void machine_check_ue_event(struct machine_check_event *evt)
  {
--	pte_t *ptep;
--	unsigned long flags;
-+	pte_t *ptep, pte;
-+	unsigned int shift;
-+	unsigned long flags, phys_addr;
- 	struct mm_struct *mm;
+ 	int index;
  
- 	if (user_mode(regs))
-@@ -35,14 +36,21 @@ unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
- 		mm = &init_mm;
- 
- 	local_irq_save(flags);
--	if (mm == current->mm)
--		ptep = find_current_mm_pte(mm->pgd, addr, NULL, NULL);
--	else
--		ptep = find_init_mm_pte(addr, NULL);
-+	ptep = __find_linux_pte(mm->pgd, addr, NULL, &shift);
- 	local_irq_restore(flags);
-+
- 	if (!ptep || pte_special(*ptep))
- 		return ULONG_MAX;
--	return pte_pfn(*ptep);
-+
-+	pte = *ptep;
-+	if (shift > PAGE_SHIFT) {
-+		unsigned long rpnmask = (1ul << shift) - PAGE_SIZE;
-+
-+		pte = __pte(pte_val(pte) | (addr & rpnmask));
-+	}
-+	phys_addr = pte_pfn(pte) << PAGE_SHIFT;
-+
-+	return phys_addr;
- }
- 
- /* flush SLBs and reload */
-@@ -354,18 +362,16 @@ static int mce_find_instr_ea_and_pfn(struct pt_regs *regs, uint64_t *addr,
- 	 * faults
- 	 */
- 	int instr;
--	unsigned long pfn, instr_addr;
-+	unsigned long instr_addr;
- 	struct instruction_op op;
- 	struct pt_regs tmp = *regs;
- 
--	pfn = addr_to_pfn(regs, regs->nip);
--	if (pfn != ULONG_MAX) {
--		instr_addr = (pfn << PAGE_SHIFT) + (regs->nip & ~PAGE_MASK);
-+	instr_addr = addr_to_phys(regs, regs->nip) + (regs->nip & ~PAGE_MASK);
-+	if (instr_addr != ULONG_MAX) {
- 		instr = *(unsigned int *)(instr_addr);
- 		if (!analyse_instr(&op, &tmp, instr)) {
--			pfn = addr_to_pfn(regs, op.ea);
- 			*addr = op.ea;
--			*phys_addr = (pfn << PAGE_SHIFT);
-+			*phys_addr = addr_to_phys(regs, op.ea);
- 			return 0;
- 		}
- 		/*
-@@ -440,15 +446,9 @@ static int mce_handle_ierror(struct pt_regs *regs,
- 			*addr = regs->nip;
- 			if (mce_err->sync_error &&
- 				table[i].error_type == MCE_ERROR_TYPE_UE) {
--				unsigned long pfn;
--
--				if (get_paca()->in_mce < MAX_MCE_DEPTH) {
--					pfn = addr_to_pfn(regs, regs->nip);
--					if (pfn != ULONG_MAX) {
--						*phys_addr =
--							(pfn << PAGE_SHIFT);
--					}
--				}
-+				if (get_paca()->in_mce < MAX_MCE_DEPTH)
-+					*phys_addr = addr_to_phys(regs,
-+								 regs->nip);
- 			}
- 		}
- 		return handled;
-diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
-index f16fdd0f71f7..5743f6353638 100644
---- a/arch/powerpc/platforms/pseries/ras.c
-+++ b/arch/powerpc/platforms/pseries/ras.c
-@@ -739,13 +739,10 @@ static void pseries_do_memory_failure(struct pt_regs *regs,
- 	if (mce_log->sub_err_type & UE_LOGICAL_ADDR_PROVIDED) {
- 		paddr = be64_to_cpu(mce_log->logical_address);
- 	} else if (mce_log->sub_err_type & UE_EFFECTIVE_ADDR_PROVIDED) {
--		unsigned long pfn;
--
--		pfn = addr_to_pfn(regs,
--				  be64_to_cpu(mce_log->effective_address));
--		if (pfn == ULONG_MAX)
-+		paddr = addr_to_phys(regs,
-+				     be64_to_cpu(mce_log->effective_address));
-+		if (paddr == ULONG_MAX)
- 			return;
--		paddr = pfn << PAGE_SHIFT;
- 	} else {
- 		return;
- 	}
 -- 
 2.20.1
 
