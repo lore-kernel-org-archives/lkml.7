@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39312C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F00C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086892054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A09C20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429230;
-	bh=C2RGfg0cJxGXzEoEg8FNKiIFxXbN0hdGRu6XWsmLnJU=;
+	s=default; t=1564429234;
+	bh=uACrljbtjVrRz/5uwNaTP4YBY9lwZwFCt/Wsvp6Kf4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u3ZIQ4AbPNaq/s7J490GTsvT9Cho2Utt+aUJxDC1r9VRWJBznSUlAL9ovmBTTtHOH
-	 AGM+SggcJXimBvGzz4VVf0h6/bBGgG/RUf8OXGVcXddOPOWP20lo/t1F2gsea2FxNR
-	 jVTQFVRtrk0PZbrfEWJO7C+HYIIEfbNMcQwFf8CM=
+	b=AzUt3LbrTJQfB5IwZU9Sw5OdZzjadWc06BgutHdJFLW3w58TUFkZ6izAWwKyO9rBY
+	 d+4yre8OxV8IwJKNPSQNt1pS5blxQailCUUVqxW+jvpmCzHloxFnSNMC79es10nOt8
+	 mjRBQXx3OD8T4kZWHCe7Xh6ApspDpIec2f7lh654=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389166AbfG2Tk2 (ORCPT
+        id S2389173AbfG2Tkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:40:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55718 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:40:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388588AbfG2TkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:40:25 -0400
+        id S2389120AbfG2Tk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:40:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4388D206DD;
-        Mon, 29 Jul 2019 19:40:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0009220C01;
+        Mon, 29 Jul 2019 19:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429224;
-        bh=C2RGfg0cJxGXzEoEg8FNKiIFxXbN0hdGRu6XWsmLnJU=;
+        s=default; t=1564429227;
+        bh=uACrljbtjVrRz/5uwNaTP4YBY9lwZwFCt/Wsvp6Kf4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=athokIhJy3b7PRVxWYHWU3gHQnPUI9ebx+WqgmFwF3BmD3Ga0HMUFclqWYiPGhCrL
-         a8BdkXtQy7l1A5/ojrbJCMdVaAW1uGx02I6l7vL0E4VIzvahN7KmFCeEFLhCZWpcwk
-         q77Gglx6MZmKzbd7qERCObcL6IyHfdDUJ61ORQXU=
+        b=xoegkL5NKcQLKMo9ws/dvLRlIrlrizqIWvj2HxOzgW2DaQfZ3AlK/rqIzlPr/SKOF
+         i2RVX0tqc/IrLaEWoW7yWTXimIUVWH2Uy+ARR5qP+It85eXlZoVycarY1p04za83+q
+         3biFPBZemVBfGkcq9oR8wGeCNW3Tb34EqbOY2EuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 003/113] iio: adc: stm32-dfsdm: manage the get_irq error case
-Date:   Mon, 29 Jul 2019 21:21:30 +0200
-Message-Id: <20190729190656.450569740@linuxfoundation.org>
+Subject: [PATCH 4.19 030/113] powerpc/pseries/mobility: prevent cpu hotplug during DT update
+Date:   Mon, 29 Jul 2019 21:21:57 +0200
+Message-Id: <20190729190703.085037943@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -61,35 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3e53ef91f826957dec013c47707ffc1bb42b42d7 ]
+[ Upstream commit e59a175faa8df9d674247946f2a5a9c29c835725 ]
 
-During probe, check the "get_irq" error value.
+CPU online/offline code paths are sensitive to parts of the device
+tree (various cpu node properties, cache nodes) that can be changed as
+a result of a migration.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Prevent CPU hotplug while the device tree potentially is inconsistent.
+
+Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/stm32-dfsdm-adc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/powerpc/platforms/pseries/mobility.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index fcd4a1c00ca0..15a115210108 100644
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -1144,6 +1144,12 @@ static int stm32_dfsdm_adc_probe(struct platform_device *pdev)
- 	 * So IRQ associated to filter instance 0 is dedicated to the Filter 0.
- 	 */
- 	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		if (irq != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get IRQ: %d\n", irq);
-+		return irq;
-+	}
+diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+index f0e30dc94988..7b60fcf04dc4 100644
+--- a/arch/powerpc/platforms/pseries/mobility.c
++++ b/arch/powerpc/platforms/pseries/mobility.c
+@@ -9,6 +9,7 @@
+  * 2 as published by the Free Software Foundation.
+  */
+ 
++#include <linux/cpu.h>
+ #include <linux/kernel.h>
+ #include <linux/kobject.h>
+ #include <linux/smp.h>
+@@ -344,11 +345,19 @@ void post_mobility_fixup(void)
+ 	if (rc)
+ 		printk(KERN_ERR "Post-mobility activate-fw failed: %d\n", rc);
+ 
++	/*
++	 * We don't want CPUs to go online/offline while the device
++	 * tree is being updated.
++	 */
++	cpus_read_lock();
 +
- 	ret = devm_request_irq(dev, irq, stm32_dfsdm_irq,
- 			       0, pdev->name, adc);
- 	if (ret < 0) {
+ 	rc = pseries_devicetree_update(MIGRATION_SCOPE);
+ 	if (rc)
+ 		printk(KERN_ERR "Post-mobility device tree update "
+ 			"failed: %d\n", rc);
+ 
++	cpus_read_unlock();
++
+ 	/* Possibly switch to a new RFI flush type */
+ 	pseries_setup_rfi_flush();
+ 
 -- 
 2.20.1
 
