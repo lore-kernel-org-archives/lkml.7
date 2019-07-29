@@ -2,120 +2,150 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B09DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 00:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3227DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E08206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 00:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A2992075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rB+czlHi"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B82Lq/jH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbfG2A4r (ORCPT
+        id S1726425AbfG2BEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 20:56:47 -0400
-Received: from gateway20.websitewelcome.com ([192.185.54.2]:29038 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726238AbfG2A4r (ORCPT
+        Sun, 28 Jul 2019 21:04:42 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56114 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfG2BEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 20:56:47 -0400
-X-Greylist: delayed 1319 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Jul 2019 20:56:46 EDT
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 38C50400C5FBE
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 18:29:28 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id rtawhEdRbiQerrtawhdspi; Sun, 28 Jul 2019 19:32:54 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jsM2jggX28X4Rf3N6HWALVQI3TBcdvqhgj8CBeNFHos=; b=rB+czlHihcm6fnZHM7M1wvFA/j
-        Fz96eEIAmbxFRb6sK+q8LAvnlvJ0ORK5bwwZt89pTIMkG/8DyF6NV48kquwxdS6T7EXMGlitLH50j
-        8nq37GT5uLfD+xwcFFzD4m9Te1vffD/s9SwYDcgmTcYor+ZVGGxpKzyWj4pyqj/1FbfDYGCn904q0
-        Y2uYU9ya/+hsCdd59bSYLLOdmm3ozNrrWJhW7xIFxJuzHjSrN07r2o5j0pkaE5wW2gtoue4t0EM35
-        JGs9+Zj3cex28r44D11jcYsVOUEYSLrjP93YKnRAN3h0EdIcM+WCIv03KlkeeWc4LvHFnVR9PK4/g
-        jYH96FWg==;
-Received: from [187.192.11.120] (port=40114 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hrtav-0040c6-7s; Sun, 28 Jul 2019 19:32:53 -0500
-Date:   Sun, 28 Jul 2019 19:32:51 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Ishizaki Kou <kou.ishizaki@toshiba.co.jp>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] net: spider_net: Mark expected switch fall-through
-Message-ID: <20190729003251.GA25556@embeddedor>
+        Sun, 28 Jul 2019 21:04:41 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6T13Z7j002189;
+        Mon, 29 Jul 2019 01:03:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=PdcdzZqByBsaJyFO6zEiMqm8RLM0rmvXzok8u84h7X0=;
+ b=B82Lq/jHSPm245ufPF5M6jy2Eo6E1wZPk3U4D7Yb5mvr3xuSNflB6H5sN+awMaP5/Nx5
+ /TbzU3VSBQ4la/fRMI5hdNQA8u9NbGBkC4UdGEw0tksCWU8hqsMbBUukJyQ6YrF420TU
+ RWQPElUdaIj/mdBhdRahbwuZc8c8WNnR1h1XH6h7RpjEPDVy/KmdoHcpKyVLU5MMLO+6
+ BwkhFag5ysFg1ATmZqnmPp/pMnh8rwoaRTzyxu/hT3vzGzUaDQDvfWmomyhjB0pq4voa
+ Kcc7DZehQqFfwpxyDZ69ha2zE6pGOmd2xAMyf7ivC72uW7QsQBZCGZKmjXT4viLBEv9w 7A== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2u0e1tcfc2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jul 2019 01:03:34 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6T12tCC124045;
+        Mon, 29 Jul 2019 01:03:34 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2u0ee3n58p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jul 2019 01:03:33 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6T13UEn008054;
+        Mon, 29 Jul 2019 01:03:30 GMT
+Received: from [192.168.1.14] (/180.165.87.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 28 Jul 2019 18:03:30 -0700
+Subject: Re: memory leak in bio_copy_user_iov
+To:     syzbot <syzbot+03e5c8ebd22cc6c3a8cb@syzkaller.appspotmail.com>,
+        agk@redhat.com, axboe@kernel.dk, coreteam@netfilter.org,
+        davem@davemloft.net, dm-devel@redhat.com, hdanton@sina.com,
+        kaber@trash.net, kadlec@blackhole.kfki.hu,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        shli@kernel.org, snitzer@redhat.com,
+        syzkaller-bugs@googlegroups.com
+References: <000000000000aec4ec058ec71a3d@google.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <81dcfa59-152c-4f22-2054-615662364394@oracle.com>
+Date:   Mon, 29 Jul 2019 09:03:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hrtav-0040c6-7s
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:40114
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 58
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <000000000000aec4ec058ec71a3d@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9332 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907290010
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9332 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907290010
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+On 7/29/19 8:38 AM, syzbot wrote:
+> syzbot has bisected this bug to:
+> 
+> commit 664820265d70a759dceca87b6eb200cd2b93cda8
+> Author: Mike Snitzer <snitzer@redhat.com>
+> Date:   Thu Feb 18 20:44:39 2016 +0000
+> 
+>     dm: do not return target from dm_get_live_table_for_ioctl()
+> 
 
-This patch fixes the following warning:
+This(and previous bisection) look not related to the reported leak.
 
-drivers/net/ethernet/toshiba/spider_net.c: In function 'spider_net_release_tx_chain':
-drivers/net/ethernet/toshiba/spider_net.c:783:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    if (!brutal) {
-       ^
-drivers/net/ethernet/toshiba/spider_net.c:792:3: note: here
-   case SPIDER_NET_DESCR_RESPONSE_ERROR:
-   ^~~~
 
-Notice that, in this particular case, the code comment is
-modified in accordance with what GCC is expecting to find.
+A possible reason may be KASAN can't recognize the failure path of bio_alloc_bioset()
+where mempool_free() is called but not kmalloc(p).
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/ethernet/toshiba/spider_net.c | 1 +
- 1 file changed, 1 insertion(+)
+But it's not a real bug, because we have the condition if (nr_iovecs > inline_vecs).
 
-diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
-index 5b196ebfed49..0f346761a2b2 100644
---- a/drivers/net/ethernet/toshiba/spider_net.c
-+++ b/drivers/net/ethernet/toshiba/spider_net.c
-@@ -788,6 +788,7 @@ spider_net_release_tx_chain(struct spider_net_card *card, int brutal)
- 			/* fallthrough, if we release the descriptors
- 			 * brutally (then we don't care about
- 			 * SPIDER_NET_DESCR_CARDOWNED) */
-+			/* Fall through */
+Below fix may avoid the syzbot bug report..
+
+diff --git a/block/bio.c b/block/bio.c
+index 4db1008..04a7879 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -513,8 +513,10 @@ struct bio *bio_alloc_bioset(gfp_t gfp_mask, unsigned int nr_iovecs,
+                        bvl = bvec_alloc(gfp_mask, nr_iovecs, &idx, &bs->bvec_pool);
+                }
  
- 		case SPIDER_NET_DESCR_RESPONSE_ERROR:
- 		case SPIDER_NET_DESCR_PROTECTION_ERROR:
--- 
-2.22.0
+-               if (unlikely(!bvl))
+-                       goto err_free;
++               if (unlikely(!bvl)) {
++                       mempool_free(p, &bs->bio_pool);
++                       return NULL;
++               }
+ 
+                bio->bi_flags |= idx << BVEC_POOL_OFFSET;
+        } else if (nr_iovecs) {
+@@ -525,10 +527,6 @@ struct bio *bio_alloc_bioset(gfp_t gfp_mask, unsigned int nr_iovecs,
+        bio->bi_max_vecs = nr_iovecs;
+        bio->bi_io_vec = bvl;
+        return bio;
+-
+-err_free:
+-       mempool_free(p, &bs->bio_pool);
+-       return NULL;
+ }
+ EXPORT_SYMBOL(bio_alloc_bioset);
+
+
+Regards, -Bob
+
+> bisection log:  https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_bisect.txt-3Fx-3D13f4eb64600000&d=DwIBaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=NfGQRVxYCfZacAKiml9Wue-G1r2h8qkuAhAMOx_uFcc&s=MNjYy_nft_s0ErmK2n89p7y2yhKmeWlxWch0z7_dsm8&e=start commit:   0011572c Merge branch 'for-5.2-fixes' of git://git.kernel...
+> git tree:       upstream
+> final crash:    https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_report.txt-3Fx-3D100ceb64600000&d=DwIBaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=NfGQRVxYCfZacAKiml9Wue-G1r2h8qkuAhAMOx_uFcc&s=iviPOQNPEIjkuqBma_VWEQ9l1Ve3eOiTwads42E4ZPo&e=console output: https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_log.txt-3Fx-3D17f4eb64600000&d=DwIBaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=NfGQRVxYCfZacAKiml9Wue-G1r2h8qkuAhAMOx_uFcc&s=MBwnFwjEcSQfYymfv8EYt_EawVdK9vD-OAqDMutO-YY&e=kernel config:  https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_.config-3Fx-3Dcb38d33cd06d8d48&d=DwIBaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=NfGQRVxYCfZacAKiml9Wue-G1r2h8qkuAhAMOx_uFcc&s=SqmDUenNFS-961PGgiMW5mIUv0nIBrf0oBrzUxYZ8Do&e=dashboard link:
+> https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_bug-3Fextid-3D03e5c8ebd22cc6c3a8cb&d=DwIBaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=NfGQRVxYCfZacAKiml9Wue-G1r2h8qkuAhAMOx_uFcc&s=jKd2ocY5X94uyB8Or-OC3yffbOgClPQPlXqFnLzvvSY&e=syz repro:      https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_repro.syz-3Fx-3D13244221a00000&d=DwIBaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=NfGQRVxYCfZacAKiml9Wue-G1r2h8qkuAhAMOx_uFcc&s=K-C39Kcd1oEOtJKwnby-s1EyEZZA10mr9bcXZ0J9Kh0&e=C reproducer:   https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_repro.c-3Fx-3D117b2432a00000&d=DwIBaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=NfGQRVxYCfZacAKiml9Wue-G1r2h8qkuAhAMOx_uFcc&s=7J685CwQN6_FA2KgO3Vgy1msF0zi5O0OqZj_bgvEqBE&e=
+> Reported-by: syzbot+03e5c8ebd22cc6c3a8cb@syzkaller.appspotmail.com
+> Fixes: 664820265d70 ("dm: do not return target from dm_get_live_table_for_ioctl()")
+> 
+> For information about bisection process see: https://urldefense.proofpoint.com/v2/url?u=https-3A__goo.gl_tpsmEJ-23bisection&d=DwIBaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=NfGQRVxYCfZacAKiml9Wue-G1r2h8qkuAhAMOx_uFcc&s=rs52TkiEQCrV4V8YQa2wT55HD8E-0AX9pn7MNIDcje4&e=
 
