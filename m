@@ -2,53 +2,53 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0382BC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022C3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B75205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA75B205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430872;
-	bh=7TwS66VnkAXcEWwLDrxDGAjg4D9ngN0o0NFESBASDec=;
+	s=default; t=1564430877;
+	bh=fjuEbsoJsz/8BtvzJHjIfCmO5QHPJ5no2YLmeQCMmik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dDBqk8jomE4uT47lW4aNJt++/jM+3aG6xCYCobt2GUP0V2WZPfJMgjkHGhMURAaM0
-	 h+KLk3auFKRHw3cb459nylkw6J9yfhjyfujDjaoc5pS3kIN2B2QbcYhfErjDLUgVIx
-	 w1WpGFvvRvbo4R/iNGSFMwKWiWoOzisSU0DZznow=
+	b=espfyq6D1neHw9KIHQAy/9JzPbX8FJk4WBbK8J0QiM5usrTIl+P02ncC5CQZ7HdDr
+	 B+uBLiMKqdqP3MzUyj4Nsz1xmJ6lbvNxd+n/614F6EaSNRmG9PNYVbbtyicPyrrc+P
+	 E7XRuvwlqxFHuLijVz8SKZ/o1lhwTd3pfEFMlGrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388884AbfG2Tii (ORCPT
+        id S1730172AbfG2UH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:38:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53404 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388857AbfG2Ti1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:38:27 -0400
+        id S2387731AbfG2TiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:38:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAFF62054F;
-        Mon, 29 Jul 2019 19:38:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3928021773;
+        Mon, 29 Jul 2019 19:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429106;
-        bh=7TwS66VnkAXcEWwLDrxDGAjg4D9ngN0o0NFESBASDec=;
+        s=default; t=1564429103;
+        bh=fjuEbsoJsz/8BtvzJHjIfCmO5QHPJ5no2YLmeQCMmik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PSi2kQRdccJ2ieSgrKQ9xv2VhEhHz0t5V+c0GghbQS4m6gbYBfLCzM+jEZD67fKr/
-         JiMb+yLemTZtr+mT6GYl5KwnsrKskcmT0F6hbLFH0zuWSCdsnlGekZDw6CZOT1Wmnl
-         T8FpUrMS7LWbJM/XmZtZkjlkvSPmea3S1OqdjsRM=
+        b=osdCOARnyh2OVsDASTzYyVu1X/Uu9D/eCGwhv8PTNDEPxCoSGg8Y+4thi39BlqiBb
+         /q02j3gzBoahk5+pU+AkVR0PcZz/jzBekW8yil/SM162ooF9AEt0sQmbuaXQwkjUoE
+         DXGuO10M9b1i2tidUGem3FzjN/zV1swAyi+H/6r4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Wenwen Wang <wenwen@cs.uga.edu>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 269/293] block/bio-integrity: fix a memory leak bug
-Date:   Mon, 29 Jul 2019 21:22:40 +0200
-Message-Id: <20190729190844.960449333@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com,
+        Hridya Valsaraju <hridya@google.com>,
+        Todd Kjos <tkjos@google.com>
+Subject: [PATCH 4.14 286/293] binder: prevent transactions to context manager from its own process.
+Date:   Mon, 29 Jul 2019 21:22:57 +0200
+Message-Id: <20190729190846.170358376@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,50 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e7bf90e5afe3aa1d1282c1635a49e17a32c4ecec ]
+From: Hridya Valsaraju <hridya@google.com>
 
-In bio_integrity_prep(), a kernel buffer is allocated through kmalloc() to
-hold integrity metadata. Later on, the buffer will be attached to the bio
-structure through bio_integrity_add_page(), which returns the number of
-bytes of integrity metadata attached. Due to unexpected situations,
-bio_integrity_add_page() may return 0. As a result, bio_integrity_prep()
-needs to be terminated with 'false' returned to indicate this error.
-However, the allocated kernel buffer is not freed on this execution path,
-leading to a memory leak.
+commit 49ed96943a8e0c62cc5a9b0a6cfc88be87d1fcec upstream.
 
-To fix this issue, free the allocated buffer before returning from
-bio_integrity_prep().
+Currently, a transaction to context manager from its own process
+is prevented by checking if its binder_proc struct is the same as
+that of the sender. However, this would not catch cases where the
+process opens the binder device again and uses the new fd to send
+a transaction to the context manager.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
+Signed-off-by: Hridya Valsaraju <hridya@google.com>
+Acked-by: Todd Kjos <tkjos@google.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190715191804.112933-1-hridya@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- block/bio-integrity.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/android/binder.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 5df32907ff3b..7f8010662437 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -313,8 +313,12 @@ bool bio_integrity_prep(struct bio *bio)
- 		ret = bio_integrity_add_page(bio, virt_to_page(buf),
- 					     bytes, offset);
- 
--		if (ret == 0)
--			return false;
-+		if (ret == 0) {
-+			printk(KERN_ERR "could not attach integrity payload\n");
-+			kfree(buf);
-+			status = BLK_STS_RESOURCE;
-+			goto err_end_io;
-+		}
- 
- 		if (ret < bytes)
- 			break;
--- 
-2.20.1
-
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -2785,7 +2785,7 @@ static void binder_transaction(struct bi
+ 			else
+ 				return_error = BR_DEAD_REPLY;
+ 			mutex_unlock(&context->context_mgr_node_lock);
+-			if (target_node && target_proc == proc) {
++			if (target_node && target_proc->pid == proc->pid) {
+ 				binder_user_error("%d:%d got transaction to context manager from process owning it\n",
+ 						  proc->pid, thread->pid);
+ 				return_error = BR_FAILED_REPLY;
 
 
