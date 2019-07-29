@@ -2,393 +2,173 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08D5C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604ECC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8227D21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE0020C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dKqQyEjt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Jzp11b/O";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="smN9E/nv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388046AbfG2Sbr (ORCPT
+        id S2388116AbfG2Sbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:31:47 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:50224 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387397AbfG2Sbq (ORCPT
+        Mon, 29 Jul 2019 14:31:51 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:21167 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387397AbfG2Sbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 14:31:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1564425098; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zRgiwGElrD3GkNjgKUEcwA8NO9VsgpCuqJlhV/Snczk=;
-        b=dKqQyEjtH4/ay0KueeT1jPQFVkFg2CRfJMJXXPvYLbbUakh2AIzO4Fr0RNUuuVH4llRawq
-        c9/pzEDeLETSf+E1ZdgTpkDK5dBJQDsS6Tm85FkR++xM8Tv69AkeE3xFUUiwI9M7+nPjbn
-        L7BgqcCEIVcE7oam08eD6dzWYV+s5yc=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Paul Burton <paul.burton@mips.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 3/3] remoteproc: ingenic: Added remoteproc driver
-Date:   Mon, 29 Jul 2019 14:31:09 -0400
-Message-Id: <20190729183109.18283-3-paul@crapouillou.net>
-In-Reply-To: <20190729183109.18283-1-paul@crapouillou.net>
-References: <20190729183109.18283-1-paul@crapouillou.net>
+        Mon, 29 Jul 2019 14:31:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1564425110; x=1595961110;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=I3u0eN3jpLSX6MmkWRj2yR6KaE3ivdfHq4UfTECioWU=;
+  b=Jzp11b/O77gNX8JiHANA/vIGV/zoa9G/9t6jt5LiZFCCkGuEjuBdpTIU
+   hv45Rhti0jWTUkhpASiIEbplGwCacOuFfRkXX0Op/Q/rBq1tAh61OdhK4
+   N6LfM6uXJ3OV7OBeMV3S1pQ9zEJh1R/76Ph8jvJcWKjN4Up0lHeBBy0lb
+   ImAqr9p0HhpuRsHNqoT2vvaYz3q9TXNx4GP2u2mnS+vcO8PdKEVtreewU
+   tgzltHkdtpWMIc5dy7a9oQDnsJOCjrvRpFUZ9830tWsrkeydH+grCbN3j
+   59Jct67CqKtELjTIa7V/v+YTmb3rsfUbOCVhY18NkWeWg25MRczqu6LSi
+   g==;
+IronPort-SDR: 2kz2EdLmGhD5Bycq7f8LVyOTrwUgOSz9XnfIILsghGzyO0pAfex2TzL6WjQdGDngWBSBZbmZHN
+ p/muyVBmtcT7ZH+sdFNn4qwE1L/IJvX4eFYI28QKonU+HJQLWWFr2CSufLj96k/evu1e7zY0ow
+ LWNdGzv/pgY7zRil862tFTu9JpFbRk9JCk2BPyJRq2M2DcLXwI2YXd80RUkgzaETx3FJngrA2U
+ DyVy0IyTq7NqBSvd3Da1HYy231YNEEj6Z0UOTwjalYBlYelNGVOh8+1mI5IS9dEorAVIPjfsaY
+ 2Tk=
+X-IronPort-AV: E=Sophos;i="5.64,323,1559491200"; 
+   d="scan'208";a="119103625"
+Received: from mail-cys01nam02lp2053.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.53])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Jul 2019 02:31:48 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j9DM+SPo4oovZDVGqiyUTfFILvY1yb4E1atq5VxKhTw2u7oSSad7xtiJ9yjiv0bVV4VbzWw6WHJ1LCTn7UnvQgRfdueeb++Tsx6U7dvnikWYSCMARwYJ5eIwC4rHkogEjAOIZuzojPYs+0Nbj91g3DZc0nATDjhz+g0a5Y5tPI5RONqtqdSUiNy+PlxQmph7y0720ATI430WKG4c6q30yzW/OnltGt9CZXUQNsJlyMqbhFe6k8JLEX/cjiuGR4QjSbEaqPlrMRc8X1QRFbiRCNmuDg94pnx0cahUXO11E5BwNaD7Nuo/TyvISpcygJxwRTjBi+naxKXsbRm6Kh6ufA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I3u0eN3jpLSX6MmkWRj2yR6KaE3ivdfHq4UfTECioWU=;
+ b=DysTij+efFBEndtgrDrOGh4SmSI38PGPmPNGcgScuUBySSYLTnwCIJ9WAu/PyBDMwQu2ckrSZ8TmJADEVIxtLo1JRaE1mVVXOQinma9jdcTaPF3kmAHHYuTGkroApQLus7Ef2H//qmhipHerWNSgQRKM3L7tXV0pc65/UmATjTQSOpum3rP1Rcc94En4nLN0c73rLlkSCD0GUbuBkQdgK2GBggYQIFz8NjiSHFoDddEaHOh0fLSiuy5yNIVqciqDdvs6VA/Jtp2gUpa/79tNIVVWtpzi8BKBGoC80FDjq+hxOsS+f72o5JCKoswt2v/m/6cAAKDYcnQO85IMTko86Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
+ header.d=wdc.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I3u0eN3jpLSX6MmkWRj2yR6KaE3ivdfHq4UfTECioWU=;
+ b=smN9E/nvy3T6bia4ne/NSVIZmAAki7AVN5axjVqORXHL18vi2SP/bVByapQIZ26WYCtTMtqWQbdz/WPzQm34/H7L1+tK/1xwCn4L23Ocle0RV0fnUpskfymwkWIGgEDMEOJOLREk04FaSiyauVp90sr+65EMqUu5IW22rIcsdJA=
+Received: from BYAPR04MB3782.namprd04.prod.outlook.com (52.135.214.142) by
+ BYAPR04MB6072.namprd04.prod.outlook.com (20.178.234.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.14; Mon, 29 Jul 2019 18:31:47 +0000
+Received: from BYAPR04MB3782.namprd04.prod.outlook.com
+ ([fe80::ac9a:967e:70a5:e926]) by BYAPR04MB3782.namprd04.prod.outlook.com
+ ([fe80::ac9a:967e:70a5:e926%7]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
+ 18:31:47 +0000
+From:   Atish Patra <Atish.Patra@wdc.com>
+To:     "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "anup@brainfault.org" <anup@brainfault.org>
+CC:     "alankao@andestech.com" <alankao@andestech.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "johan@kernel.org" <johan@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "allison@lohutok.net" <allison@lohutok.net>
+Subject: Re: [PATCH 3/4] RISC-V: Support case insensitive ISA string parsing.
+Thread-Topic: [PATCH 3/4] RISC-V: Support case insensitive ISA string parsing.
+Thread-Index: AQHVQ+refROWkRWGQ0GJqrWaHX74e6bdXtyAgAAaDYCAABM8AIAAMKIAgABcAYCAAAOGAIAAAveAgAPQpgA=
+Date:   Mon, 29 Jul 2019 18:31:47 +0000
+Message-ID: <8ed4d461ffe5ac41b475d22b38019578b29a8d09.camel@wdc.com>
+References: <20190726194638.8068-1-atish.patra@wdc.com>
+         <20190726194638.8068-3-atish.patra@wdc.com>
+         <alpine.DEB.2.21.9999.1907261346560.26670@viisi.sifive.com>
+         <a8a6be2c-2dcb-fe58-2c32-e3baa357819c@wdc.com>
+         <alpine.DEB.2.21.9999.1907261625220.26670@viisi.sifive.com>
+         <MN2PR04MB6061790AFE4E0AAA838678028DC30@MN2PR04MB6061.namprd04.prod.outlook.com>
+         <alpine.DEB.2.21.9999.1907270043190.26998@viisi.sifive.com>
+         <CAAhSdy0Eycc0ORSnh6LJeC_D_x9yLOkoc7OkPNuN6qOcZEGVWg@mail.gmail.com>
+         <alpine.DEB.2.21.9999.1907270108420.26998@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1907270108420.26998@viisi.sifive.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Atish.Patra@wdc.com; 
+x-originating-ip: [199.255.45.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0c9e69bf-7225-45d6-2788-08d7145303bd
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB6072;
+x-ms-traffictypediagnostic: BYAPR04MB6072:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR04MB6072E990FCD448A37D418B55FADD0@BYAPR04MB6072.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01136D2D90
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(136003)(346002)(376002)(396003)(189003)(199004)(68736007)(81166006)(81156014)(6306002)(6116002)(8676002)(71200400001)(3846002)(2501003)(86362001)(6436002)(7416002)(118296001)(71190400001)(2906002)(8936002)(6512007)(966005)(478600001)(25786009)(14454004)(5660300002)(53936002)(6246003)(102836004)(446003)(26005)(186003)(66066001)(66946007)(36756003)(76116006)(64756008)(66476007)(66446008)(66556008)(14444005)(256004)(2616005)(476003)(6486002)(229853002)(110136005)(486006)(54906003)(76176011)(305945005)(99286004)(6506007)(4326008)(316002)(11346002)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB6072;H:BYAPR04MB3782.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8u3F/d4Yw6JTNQe8Lf4xdSLr7KCCaTDeO+NBiOh8xt5pJg4I9/jnbGi7K3dHQnwuZ/0ae65kS5ZpbrCc+jBBshw7MWxLt/0689s7iesOXN2Sd0vwZM+csBXVz7ql00e5c482dM4HnBsFZK23rP4r4KyH46UlT+kSZJWqnE4SBktUu/gESB8y/ZOOybS2ucKsqba5RVJuKbQky5cRqDOk58BZBuPRd18zkS94Hal0ESPrMFAGVafZZiUdFvvC6MqtvdtSpRWaFxoc6bF7maIm2UVt/Jv/IMiLl2CFZ22oJVZWmd914gkw1qjqSS38Yypo5MlY0Q++LoaBHj42Jie7g9NqNb9Jveqdc8w35B8/DVuqBh3wXR5sfuNMRRMYxMqQb5fUX7Gw4aelKjoIK4rDM/2mcQ7fHbs3Fl+pIoFMySs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B1174BAB203B9D4C8B8F25B87456C7BD@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c9e69bf-7225-45d6-2788-08d7145303bd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 18:31:47.2864
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Atish.Patra@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB6072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver is used to boot, communicate with and load firmwares to the
-MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
-Ingenic.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
-
-Notes:
-    v2: Remove exception for always-mapped memories
-
- drivers/remoteproc/Kconfig         |   8 +
- drivers/remoteproc/Makefile        |   1 +
- drivers/remoteproc/ingenic_rproc.c | 285 +++++++++++++++++++++++++++++
- 3 files changed, 294 insertions(+)
- create mode 100644 drivers/remoteproc/ingenic_rproc.c
-
-diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-index 28ed306982f7..a0be40e2098d 100644
---- a/drivers/remoteproc/Kconfig
-+++ b/drivers/remoteproc/Kconfig
-@@ -214,6 +214,14 @@ config STM32_RPROC
- 
- 	  This can be either built-in or a loadable module.
- 
-+config INGENIC_RPROC
-+	tristate "Ingenic JZ47xx VPU remoteproc support"
-+	depends on MIPS || COMPILE_TEST
-+	help
-+	  Say y or m here to support the VPU in the JZ47xx SoCs from Ingenic.
-+	  This can be either built-in or a loadable module.
-+	  If unsure say N.
-+
- endif # REMOTEPROC
- 
- endmenu
-diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-index 00f09e658cb3..6eb0137abbc7 100644
---- a/drivers/remoteproc/Makefile
-+++ b/drivers/remoteproc/Makefile
-@@ -10,6 +10,7 @@ remoteproc-y				+= remoteproc_sysfs.o
- remoteproc-y				+= remoteproc_virtio.o
- remoteproc-y				+= remoteproc_elf_loader.o
- obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
-+obj-$(CONFIG_INGENIC_RPROC)			+= ingenic_rproc.o
- obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
- obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
- obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
-diff --git a/drivers/remoteproc/ingenic_rproc.c b/drivers/remoteproc/ingenic_rproc.c
-new file mode 100644
-index 000000000000..6fe0530c83a6
---- /dev/null
-+++ b/drivers/remoteproc/ingenic_rproc.c
-@@ -0,0 +1,285 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Ingenic JZ47xx remoteproc driver
-+ * Copyright 2019, Paul Cercueil <paul@crapouillou.net>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/remoteproc.h>
-+
-+#include "remoteproc_internal.h"
-+
-+#define REG_AUX_CTRL		0x0
-+#define REG_AUX_MSG_ACK		0x10
-+#define REG_AUX_MSG		0x14
-+#define REG_CORE_MSG_ACK	0x18
-+#define REG_CORE_MSG		0x1C
-+
-+#define AUX_CTRL_SLEEP		BIT(31)
-+#define AUX_CTRL_MSG_IRQ_EN	BIT(3)
-+#define AUX_CTRL_NMI_RESETS	BIT(2)
-+#define AUX_CTRL_NMI		BIT(1)
-+#define AUX_CTRL_SW_RESET	BIT(0)
-+
-+struct vpu_mem_map {
-+	const char *name;
-+	unsigned int da;
-+};
-+
-+struct vpu_mem_info {
-+	const struct vpu_mem_map *map;
-+	unsigned long len;
-+	void __iomem *base;
-+};
-+
-+static const struct vpu_mem_map vpu_mem_map[] = {
-+	{ "tcsm0", 0x132b0000 },
-+	{ "tcsm1", 0xf4000000 },
-+	{ "sram",  0x132f0000 },
-+};
-+
-+/* Device data */
-+struct vpu {
-+	int irq;
-+	struct clk *vpu_clk;
-+	struct clk *aux_clk;
-+	void __iomem *aux_base;
-+	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
-+	struct device *dev;
-+};
-+
-+static int ingenic_rproc_prepare(struct rproc *rproc)
-+{
-+	struct vpu *vpu = rproc->priv;
-+	int ret;
-+
-+	ret = clk_prepare_enable(vpu->vpu_clk);
-+	if (ret) {
-+		dev_err(vpu->dev, "Unable to start VPU clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(vpu->aux_clk);
-+	if (ret) {
-+		dev_err(vpu->dev, "Unable to start AUX clock: %d\n", ret);
-+		goto err_disable_vpu_clk;
-+	}
-+
-+	return 0;
-+
-+err_disable_vpu_clk:
-+	clk_disable_unprepare(vpu->vpu_clk);
-+	return ret;
-+}
-+
-+static void ingenic_rproc_unprepare(struct rproc *rproc)
-+{
-+	struct vpu *vpu = rproc->priv;
-+
-+	clk_disable_unprepare(vpu->aux_clk);
-+	clk_disable_unprepare(vpu->vpu_clk);
-+}
-+
-+static int ingenic_rproc_start(struct rproc *rproc)
-+{
-+	struct vpu *vpu = rproc->priv;
-+	u32 ctrl;
-+
-+	enable_irq(vpu->irq);
-+
-+	/* Reset the AUX and enable message IRQ */
-+	ctrl = AUX_CTRL_NMI_RESETS | AUX_CTRL_NMI | AUX_CTRL_MSG_IRQ_EN;
-+	writel(ctrl, vpu->aux_base + REG_AUX_CTRL);
-+
-+	return 0;
-+}
-+
-+static int ingenic_rproc_stop(struct rproc *rproc)
-+{
-+	struct vpu *vpu = rproc->priv;
-+
-+	/* Keep AUX in reset mode */
-+	writel(AUX_CTRL_SW_RESET, vpu->aux_base + REG_AUX_CTRL);
-+
-+	disable_irq_nosync(vpu->irq);
-+
-+	return 0;
-+}
-+
-+static void ingenic_rproc_kick(struct rproc *rproc, int vqid)
-+{
-+	struct vpu *vpu = rproc->priv;
-+
-+	writel(vqid, vpu->aux_base + REG_CORE_MSG);
-+}
-+
-+static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-+{
-+	struct vpu *vpu = rproc->priv;
-+	void __iomem *va = NULL;
-+	unsigned int i;
-+
-+	if (len <= 0)
-+		return NULL;
-+
-+	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
-+		const struct vpu_mem_info *info = &vpu->mem_info[i];
-+		const struct vpu_mem_map *map = info->map;
-+
-+		if (da >= map->da && (da + len) < (map->da + info->len)) {
-+			va = info->base + (da - map->da);
-+			break;
-+		}
-+	}
-+
-+	return (__force void *)va;
-+}
-+
-+static struct rproc_ops ingenic_rproc_ops = {
-+	.prepare = ingenic_rproc_prepare,
-+	.unprepare = ingenic_rproc_unprepare,
-+	.start = ingenic_rproc_start,
-+	.stop = ingenic_rproc_stop,
-+	.kick = ingenic_rproc_kick,
-+	.da_to_va = ingenic_rproc_da_to_va,
-+};
-+
-+static irqreturn_t vpu_interrupt(int irq, void *data)
-+{
-+	struct rproc *rproc = data;
-+	struct vpu *vpu = rproc->priv;
-+	u32 vring;
-+
-+	vring = readl(vpu->aux_base + REG_AUX_MSG);
-+
-+	/* Ack the interrupt */
-+	writel(0, vpu->aux_base + REG_AUX_MSG_ACK);
-+
-+	return rproc_vq_interrupt(rproc, vring);
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id ingenic_rproc_of_matches[] = {
-+	{ .compatible = "ingenic,jz4770-vpu-rproc", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, ingenic_rproc_of_matches);
-+#endif
-+
-+static void ingenic_rproc_free(void *rproc)
-+{
-+	rproc_free(rproc);
-+}
-+
-+static void ingenic_rproc_unregister(void *rproc)
-+{
-+	rproc_del(rproc);
-+	rproc_shutdown(rproc);
-+}
-+
-+static int ingenic_rproc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *mem;
-+	struct rproc *rproc;
-+	struct vpu *vpu;
-+	unsigned int i;
-+	int ret;
-+
-+	rproc = rproc_alloc(dev, "ingenic-vpu",
-+			    &ingenic_rproc_ops, NULL, sizeof(*vpu));
-+	if (!rproc)
-+		return -ENOMEM;
-+
-+	ret = devm_add_action_or_reset(dev, ingenic_rproc_free, rproc);
-+	if (ret) {
-+		dev_err(dev, "Unable to add action");
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, rproc);
-+	vpu = rproc->priv;
-+	vpu->dev = &pdev->dev;
-+
-+	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "aux");
-+	vpu->aux_base = devm_ioremap_resource(dev, mem);
-+	if (IS_ERR(vpu->aux_base)) {
-+		dev_err(dev, "Failed to ioremap");
-+		return PTR_ERR(vpu->aux_base);
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
-+		mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						   vpu_mem_map[i].name);
-+
-+		vpu->mem_info[i].base = devm_ioremap_resource(dev, mem);
-+		if (IS_ERR(vpu->mem_info[i].base)) {
-+			ret = PTR_ERR(vpu->mem_info[i].base);
-+			dev_err(dev, "Failed to ioremap");
-+			return ret;
-+		}
-+
-+		vpu->mem_info[i].len = resource_size(mem);
-+		vpu->mem_info[i].map = &vpu_mem_map[i];
-+	}
-+
-+	vpu->vpu_clk = devm_clk_get(dev, "vpu");
-+	if (IS_ERR(vpu->vpu_clk)) {
-+		dev_err(dev, "Failed to get VPU clock");
-+		return PTR_ERR(vpu->vpu_clk);
-+	}
-+
-+	vpu->aux_clk = devm_clk_get(dev, "aux");
-+	if (IS_ERR(vpu->aux_clk)) {
-+		dev_err(dev, "Failed to get AUX clock");
-+		return PTR_ERR(vpu->aux_clk);
-+	}
-+
-+	vpu->irq = platform_get_irq(pdev, 0);
-+	if (vpu->irq < 0) {
-+		dev_err(dev, "Failed to get platform IRQ");
-+		return vpu->irq;
-+	}
-+
-+	ret = devm_request_irq(dev, vpu->irq, vpu_interrupt, 0, "VPU", rproc);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to request IRQ");
-+		return ret;
-+	}
-+
-+	disable_irq_nosync(vpu->irq);
-+
-+	ret = rproc_add(rproc);
-+	if (ret) {
-+		dev_err(dev, "Failed to register remote processor");
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(dev, ingenic_rproc_unregister, rproc);
-+	if (ret) {
-+		dev_err(dev, "Unable to add action");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver ingenic_rproc_driver = {
-+	.probe = ingenic_rproc_probe,
-+	.driver = {
-+		.name = "ingenic-vpu",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(ingenic_rproc_of_matches),
-+	},
-+};
-+module_platform_driver(ingenic_rproc_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-+MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control driver");
--- 
-2.21.0.593.g511ec345e18
-
+T24gU2F0LCAyMDE5LTA3LTI3IGF0IDAxOjE2IC0wNzAwLCBQYXVsIFdhbG1zbGV5IHdyb3RlOg0K
+PiBPbiBTYXQsIDI3IEp1bCAyMDE5LCBBbnVwIFBhdGVsIHdyb3RlOg0KPiANCj4gPiBJZiB5b3Vy
+IG9ubHkgb2JqZWN0aW9uIGlzIHVwcGVyY2FzZSBsZXR0ZXIgbm90IGFncmVlaW5nIHdpdGggWU1B
+TA0KPiA+IHNjaGVtYQ0KPiA+IHRoZW4gd2h5IG5vdCBmaXggdGhlIFlNQUwgc2NoZW1hIHRvIGhh
+dmUgcmVnZXggZm9yIFJJU0MtViBJU0ENCj4gPiBzdHJpbmc/DQo+IA0KPiBJIGRvbid0IGFncmVl
+IHdpdGggeW91IHRoYXQgdGhlIHNwZWNpZmljYXRpb24gY29tcGVscyBzb2Z0d2FyZSB0bw0KPiBh
+Y2NlcHQgDQo+IGFyYml0cmFyeSBjYXNlIGNvbWJpbmF0aW9ucyBpbiB0aGUgcmlzY3YsaXNhIERU
+IHN0cmluZy4NCj4gDQo+ID4gVGhlIFlNQUwgc2NoZW1hIHNob3VsZCBub3QgZW5mb3JjZSBhbnkg
+YXJ0aWZpY2lhbCByZXN0cmljdGlvbiB3aGljaA0KPiA+IGlzDQo+ID4gdGhlb3JldGljYWxseSBh
+bGxvd2VkIGluIHRoZSBSSVNDLVYgc3BlYy4NCj4gDQo+IFVubGVzcyBzb21lb25lIGNhbiBjb21l
+IHVwIHdpdGggYSBjb21wZWxsaW5nIHJlYXNvbiBmb3Igd2h5DQo+IHJlc3RyaWN0aW5nIA0KPiB0
+aGUgRFQgSVNBIHN0cmluZ3MgdG8gYWxsIGxvd2VyY2FzZSBsZXR0ZXJzIGFuZCBudW1iZXJzIGlz
+DQo+IGluc3VmZmljaWVudCB0byANCj4gZXhwcmVzcyB0aGUgZnVsbCByYW5nZSBvZiBvcHRpb25z
+IGluIHRoZSBzcGVjLA0KDQpUaGUgeWFtbCBkb2N1bWVudCBkaWQgbm90IHNwZWNpZnkgYW55dGhp
+bmcgYWJvdXQgYWxsIGlzYS1zdHJpbmdzIGhhcyB0bw0KYmUgbG93ZXJjYXNlIHVubGVzcyBJIG1p
+c3NlZCBzb21ldGhpbmcuIFRoZSB0d28gZW51bSB2YWx1ZXMgYXJlIGFsbA0KbG93ZXJjYXNlIGJ1
+dCB0aGUgZGVzY3JpcHRpb24gc2F5cyBhbGwgSVNBIHN0cmluZ3MgYXJlIGRvY3VtZW50ZWQgaW4N
+CklTQSBzcGVjaWZpY2F0aW9uIHdoaWNoIGRlc2NyaWJlcyB0aGUgSVNBIHN0cmluZ3MgdG8gYmUg
+Y2FzZQ0KaW5zZW5zaXRpdmUuIElNSE8sIHRoaXMgY3JlYXRlcyBjb25mdXNpb24gcmVzdWx0aW5n
+IHRoZSBwYXRjaC4NClRoZSBleGlzdGluZyBlbnVtIHN0cmluZ3MgYXJlIGFscmVhZHkgb3V0ZGF0
+ZWQgd2l0aCBrdm0gcGF0Y2hzZXQuDQoNCkkgYW0gZmluZSB3aXRoIGRyb3BwaW5nIHRoaXMgcGF0
+Y2ggaWYgeWFtbCBjbGVhcmx5IGRvY3VtZW50IHRoZSBjYXNlDQpzZW5zaXRpdHZlIHRoaW5nLg0K
+DQpGb2xsb3dpbmcgYXBwcm9hY2hlcyBjYW4gZG9uZSB0byBhdm9pZCB0aGlzIGNvbmZ1c2lvbiBp
+biBmdXR1cmUuDQoNCjEuIFVwZGF0ZSB0aGUgZW51bSBzdHJpbmdzIHdpdGggZXZlcnkgbmV3IGV4
+dGVuc2lvbiBhZGRlZC4NCgktIEdvb2QgY2hhbmNlIHRoYXQgc29tZWJvZHkgbWlzcyBzb21ldGhp
+bmcgYW5kIHRoaXMgZ2V0cw0Kb3V0ZGF0ZWQgaW4gZnV0dXJlLg0KDQoyLiBKdXN0IGFkZCBvbmUg
+bGluZSBpbiBEVCBiaW5kaW5nIGRlc2NyaXB0aW9uIHNheWluZyB0aGF0IA0KDQoiQWxsIGlzYSBz
+dHJpbmdzIGhhcyB0byBiZSBsb3dlcmNhc2Ugc3RyaW5ncyIuIFdlIHNob3VsZCBtYW5kYXRlIHRo
+aXMNCmluIFVuaXggUGxhdGZvcm0gc3BlY2lmaWNhdGlvbiBhcyB3ZWxsIHRvIGJlIGluIHN5bmMu
+DQoNClRob3VnaHRzID8NCg0KPiAgdGhlIGFkZGl0aW9uYWwgY29tcGxleGl0eSANCj4gdG8gYWRk
+IG1peGVkLWNhc2UgcGFyc2luZywgYm90aCBpbiB0aGlzIHBhdGNoIGFuZCBpbiB0aGUgb3RoZXIN
+Cj4gcGF0Y2hlcyBpbiANCj4gdGhpcyBzZXJpZXMsIHNlZW1zIHBvaW50bGVzcy4NCj4gDQoNCg0K
+PiANCj4gLSBQYXVsDQo+IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXw0KPiBsaW51eC1yaXNjdiBtYWlsaW5nIGxpc3QNCj4gbGludXgtcmlzY3ZAbGlz
+dHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LXJpc2N2DQoNCi0tIA0KUmVnYXJkcywNCkF0aXNoDQo=
