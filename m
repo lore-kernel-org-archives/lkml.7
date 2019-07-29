@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7D2C76193
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E123C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0310721655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E3C21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430433;
-	bh=dLN48frxHIgBkJc6jUET3AT4ObeOAhRSb1d7Fprxev4=;
+	s=default; t=1564430434;
+	bh=EHOYCqdFJJuNXpQX4tmYZLiS2CDBP0SO1pXydWmDMgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C1sVxJYojNj0v0aKQXUFuON24mrKl4bAG/vETovHFgUuQV8liF/gGEn/nB0AgqaBI
-	 ujefkk2C9R69rqBd6mJ9NxvPpy1wgM2lZlC3ec2p3KxsSvlZdQWwre7fFkKxP+XNS1
-	 ecdrBmRt4EvKpEaFmSeNR34ShTr64alLnAviaWRI=
+	b=wF99uty5GnPO9uWX5EmXIsmlN7A6GD5pi2YFu7EYSsMXt4qfbrFujErxxLiK3/1sE
+	 y1ul22nAGtee5obR4bWVRfafAu8+9IKsHKnQKKWLSPPW+sVTDuPEiQ5kY9XzpsmuIg
+	 02HmiwrEdfvK3WFJOQCWqRyrUx8uQqLLgeyRbnCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403788AbfG2Twk (ORCPT
+        id S2403908AbfG2Twd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:52:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44250 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403898AbfG2Tw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:52:26 -0400
+        id S2403753AbfG2TwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:52:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F4A2171F;
-        Mon, 29 Jul 2019 19:52:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D159B21655;
+        Mon, 29 Jul 2019 19:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429945;
-        bh=dLN48frxHIgBkJc6jUET3AT4ObeOAhRSb1d7Fprxev4=;
+        s=default; t=1564429939;
+        bh=EHOYCqdFJJuNXpQX4tmYZLiS2CDBP0SO1pXydWmDMgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F/9MAQgVMnq0M/+EmvwH7cl2Bged338bNhegx0KiHT6NUqBu+3BNuCIZSjqIfyUYK
-         Ner678Th/gaT5+aLrbti098Wgu1hG7NvKjH2FtVm/7yKF9O/UEOAT6bh1vEu3nUdpq
-         ZYV567KcFG6lSUNgS6yflA4vFXcPRCmTcQZL9Sjk=
+        b=HbMxJHTsqNai3n1kJCxjN0MgW/les2qLI5yvwOsaaswjYwd9dmtTL1u5B4vSMQU6x
+         PuOLxgv4fYcrkTKvI6sv9Kq59R/L53gaTI4a4M7064wd6yeVhlytjiOXtCgupYT3pv
+         oKFqRkD2CTAnUpmpx+TB1++gqNF05g/VXVUJqaVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 145/215] powerpc/eeh: Handle hugepages in ioremap space
-Date:   Mon, 29 Jul 2019 21:22:21 +0200
-Message-Id: <20190729190804.835475505@linuxfoundation.org>
+Subject: [PATCH 5.2 117/215] PCI: mobiveil: Initialize Primary/Secondary/Subordinate bus numbers
+Date:   Mon, 29 Jul 2019 21:21:53 +0200
+Message-Id: <20190729190759.367430013@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -61,66 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 33439620680be5225c1b8806579a291e0d761ca0 ]
+[ Upstream commit 6f3ab451aa5c2cbff33197d82fe8489cbd55ad91 ]
 
-In commit 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap
-space") support for using hugepages in the vmalloc and ioremap areas was
-enabled for radix. Unfortunately this broke EEH MMIO error checking.
+The reset value of Primary, Secondary and Subordinate bus numbers is
+zero which is a broken setup.
 
-Detection works by inserting a hook which checks the results of the
-ioreadXX() set of functions.  When a read returns a 0xFFs response we
-need to check for an error which we do by mapping the (virtual) MMIO
-address back to a physical address, then mapping physical address to a
-PCI device via an interval tree.
+Program a sensible default value for Primary/Secondary/Subordinate
+bus numbers.
 
-When translating virt -> phys we currently assume the ioremap space is
-only populated by PAGE_SIZE mappings. If a hugepage mapping is found we
-emit a WARN_ON(), but otherwise handles the check as though a normal
-page was found. In pathalogical cases such as copying a buffer
-containing a lot of 0xFFs from BAR memory this can result in the system
-not booting because it's too busy printing WARN_ON()s.
-
-There's no real reason to assume huge pages can't be present and we're
-prefectly capable of handling them, so do that.
-
-Fixes: 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap space")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190710150517.27114-1-oohall@gmail.com
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
-index f192d57db47d..c0e4b73191f3 100644
---- a/arch/powerpc/kernel/eeh.c
-+++ b/arch/powerpc/kernel/eeh.c
-@@ -354,10 +354,19 @@ static inline unsigned long eeh_token_to_phys(unsigned long token)
- 	ptep = find_init_mm_pte(token, &hugepage_shift);
- 	if (!ptep)
- 		return token;
--	WARN_ON(hugepage_shift);
--	pa = pte_pfn(*ptep) << PAGE_SHIFT;
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index 88e9b70081fc..e4a1964e1b43 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -501,6 +501,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 		return err;
+ 	}
  
--	return pa | (token & (PAGE_SIZE-1));
-+	pa = pte_pfn(*ptep);
++	/* setup bus numbers */
++	value = csr_readl(pcie, PCI_PRIMARY_BUS);
++	value &= 0xff000000;
++	value |= 0x00ff0100;
++	csr_writel(pcie, value, PCI_PRIMARY_BUS);
 +
-+	/* On radix we can do hugepage mappings for io, so handle that */
-+	if (hugepage_shift) {
-+		pa <<= hugepage_shift;
-+		pa |= token & ((1ul << hugepage_shift) - 1);
-+	} else {
-+		pa <<= PAGE_SHIFT;
-+		pa |= token & (PAGE_SIZE - 1);
-+	}
-+
-+	return pa;
- }
- 
- /*
+ 	/*
+ 	 * program Bus Master Enable Bit in Command Register in PAB Config
+ 	 * Space
 -- 
 2.20.1
 
