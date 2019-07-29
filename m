@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC212C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAB2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5EB20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BCC20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431141;
-	bh=d8Rhx9wi7iBHJQRfIlU9sxJP5KGSpoaz0j5bTOi3UgA=;
+	s=default; t=1564431149;
+	bh=WHcO5EoZl0fr/lRyk3dvLveSy6NFjKp82pGRFirSzA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TG8lTRYpVMxhwVqeIzKMPYxBk7sr25Rib1a8SXjnmEdkJPFncmQBVv06/grPZjK6w
-	 QJv5ih5buqWJJLazT59gi6IS9DXccslbIB5iJ1Vsax5Ry7rYtkItELSp7mCzqDIPds
-	 2+uKErSYODdYgv37fMA5Lqm2Q8EdoGTUZKEWX01Q=
+	b=Tu0MYYdUfqMouRUp5l9gQbEnLW0J/Tea+Xfsc4YPXr95jDqIYcQ2wOT0ey0YcZviS
+	 yjjawmapxEShUKUr3zYIfzZEYW1aodN38c2I0JVZv388cWlMc8XHeIBrsrNM1E1uw+
+	 7OQQUq7Cy44yS+/K4jQWPAL+wD/PGghap/zWsK2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbfG2UMU (ORCPT
+        id S1729353AbfG2UM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:12:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45164 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:12:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbfG2TcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:32:01 -0400
+        id S1728931AbfG2Tbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:31:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FD2D217F4;
-        Mon, 29 Jul 2019 19:32:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF8E621655;
+        Mon, 29 Jul 2019 19:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428721;
-        bh=d8Rhx9wi7iBHJQRfIlU9sxJP5KGSpoaz0j5bTOi3UgA=;
+        s=default; t=1564428708;
+        bh=WHcO5EoZl0fr/lRyk3dvLveSy6NFjKp82pGRFirSzA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VD4bb8yTmDGiQx05IiWgLkNsQ7ym6a3nDukB5jYDshpPvkd+lWXXbJ1u68AtfL9c7
-         lyjq0UZdewVOhaOBpqd6VWz2mFqBhat4TQed1SSUey8+bWC5OZ1e9q+7BB+0bhOwQc
-         stoRZd0Ykbc8BWH9vSLkgkRylxwTkh7XqHmpWxJY=
+        b=GpVVF/ANdqEYzm1aW2trJnZPKrZP778zggiLyn3b6VXrmQjDtYNeT9wQYqTTh7ojK
+         hlP3JeJcrCLlQbNMsKWJYq7r5WC0E+cKy7iGzWv5scCcHB4gr7UCQgo1kYdh7zwMHx
+         p3pcF9ftcAX0eFKabEIa7fslmbC6Wr2s6tqFBw/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH 4.14 165/293] PCI: hv: Fix a use-after-free bug in hv_eject_device_work()
-Date:   Mon, 29 Jul 2019 21:20:56 +0200
-Message-Id: <20190729190837.187517038@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.14 144/293] arm64: tegra: Fix AGIC register range
+Date:   Mon, 29 Jul 2019 21:20:35 +0200
+Message-Id: <20190729190835.563268178@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,81 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-commit 4df591b20b80cb77920953812d894db259d85bd7 upstream.
+commit ba24eee6686f6ed3738602b54d959253316a9541 upstream.
 
-Fix a use-after-free in hv_eject_device_work().
+The Tegra AGIC interrupt controller is an ARM GIC400 interrupt
+controller. Per the ARM GIC device-tree binding, the first address
+region is for the GIC distributor registers and the second address
+region is for the GIC CPU interface registers. The address space for
+the distributor registers is 4kB, but currently this is incorrectly
+defined as 8kB for the Tegra AGIC and overlaps with the CPU interface
+registers. Correct the address space for the distributor to be 4kB.
 
-Fixes: 05f151a73ec2 ("PCI: hv: Fix a memory leak in hv_eject_device_work()")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 Cc: stable@vger.kernel.org
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Fixes: bcdbde433542 ("arm64: tegra: Add AGIC node for Tegra210")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/host/pci-hyperv.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/host/pci-hyperv.c
-+++ b/drivers/pci/host/pci-hyperv.c
-@@ -1912,6 +1912,7 @@ static void hv_pci_devices_present(struc
- static void hv_eject_device_work(struct work_struct *work)
- {
- 	struct pci_eject_response *ejct_pkt;
-+	struct hv_pcibus_device *hbus;
- 	struct hv_pci_dev *hpdev;
- 	struct pci_dev *pdev;
- 	unsigned long flags;
-@@ -1922,6 +1923,7 @@ static void hv_eject_device_work(struct
- 	} ctxt;
- 
- 	hpdev = container_of(work, struct hv_pci_dev, wrk);
-+	hbus = hpdev->hbus;
- 
- 	if (hpdev->state != hv_pcichild_ejecting) {
- 		put_pcichild(hpdev, hv_pcidev_ref_pnp);
-@@ -1935,8 +1937,7 @@ static void hv_eject_device_work(struct
- 	 * because hbus->pci_bus may not exist yet.
- 	 */
- 	wslot = wslot_to_devfn(hpdev->desc.win_slot.slot);
--	pdev = pci_get_domain_bus_and_slot(hpdev->hbus->sysdata.domain, 0,
--					   wslot);
-+	pdev = pci_get_domain_bus_and_slot(hbus->sysdata.domain, 0, wslot);
- 	if (pdev) {
- 		pci_lock_rescan_remove();
- 		pci_stop_and_remove_bus_device(pdev);
-@@ -1944,9 +1945,9 @@ static void hv_eject_device_work(struct
- 		pci_unlock_rescan_remove();
- 	}
- 
--	spin_lock_irqsave(&hpdev->hbus->device_list_lock, flags);
-+	spin_lock_irqsave(&hbus->device_list_lock, flags);
- 	list_del(&hpdev->list_entry);
--	spin_unlock_irqrestore(&hpdev->hbus->device_list_lock, flags);
-+	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
- 
- 	if (hpdev->pci_slot)
- 		pci_destroy_slot(hpdev->pci_slot);
-@@ -1955,14 +1956,16 @@ static void hv_eject_device_work(struct
- 	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
- 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
- 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
--	vmbus_sendpacket(hpdev->hbus->hdev->channel, ejct_pkt,
-+	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
- 			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
- 			 VM_PKT_DATA_INBAND, 0);
- 
- 	put_pcichild(hpdev, hv_pcidev_ref_childlist);
- 	put_pcichild(hpdev, hv_pcidev_ref_initial);
- 	put_pcichild(hpdev, hv_pcidev_ref_pnp);
--	put_hvpcibus(hpdev->hbus);
-+
-+	/* hpdev has been freed. Do not use it any more. */
-+	put_hvpcibus(hbus);
- }
- 
- /**
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -1103,7 +1103,7 @@
+ 			compatible = "nvidia,tegra210-agic";
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+-			reg = <0x702f9000 0x2000>,
++			reg = <0x702f9000 0x1000>,
+ 			      <0x702fa000 0x2000>;
+ 			interrupts = <GIC_SPI 102 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 			clocks = <&tegra_car TEGRA210_CLK_APE>;
 
 
