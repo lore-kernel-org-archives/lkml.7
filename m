@@ -2,202 +2,101 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A52A7C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FE6C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A45420657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 597B7206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:30:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="M8NG4S2P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbfG2Q33 (ORCPT
+        id S1729018AbfG2Qab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:29:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58197 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbfG2Q32 (ORCPT
+        Mon, 29 Jul 2019 12:30:31 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46077 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfG2Qaa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:29:28 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hs8WW-0000VG-G7; Mon, 29 Jul 2019 18:29:20 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hs8WW-00069u-3Y; Mon, 29 Jul 2019 18:29:20 +0200
-Date:   Mon, 29 Jul 2019 18:29:20 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     thierry.reding@gmail.com, mripard@kernel.org, wens@csie.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 5/6] pwm: sun4i: Add support to output source clock
- directly
-Message-ID: <20190729162920.orx3rhkrfmp7stzh@pengutronix.de>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-6-jernej.skrabec@siol.net>
- <20190729070605.vlu7kgzn362ph2q3@pengutronix.de>
- <2499807.IN78SsLMYo@jernej-laptop>
+        Mon, 29 Jul 2019 12:30:30 -0400
+Received: by mail-io1-f66.google.com with SMTP id g20so121355275ioc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:30:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+gzxQ1amGLjMFB5E07agK4fzVRqjFnh1FNoqJj1CdRE=;
+        b=M8NG4S2PH/gszkul25OY1fcWbX2BnVaOYvZHVXvuGcDZSdiBBoaVDKrFCVSabT+FLg
+         arM65PkdRQP0fFDhD8ovNvi4iV8J6y2DHAG704jwLt9adzCEXuzOXn4n0V+T/otxRtas
+         avpmAu0n16IvYcMXB81W7t3VKgXmQgtoPUTGLMhwKWqiacf9RHIykvYPxXJ9fj9jJ3VH
+         okV4v/0HBvI1QRaDMyuzNYHOwR8ABHIXnH7RnjUQCd8tThgSyhod59TyN0P+SkaLGjAr
+         7yyBvCzcPEaImvsXSxmZqhQbdfuaQJW/Tv3yhpR4hf85vuNMRz2A986gNxg6rWkGUX0Z
+         b69w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+gzxQ1amGLjMFB5E07agK4fzVRqjFnh1FNoqJj1CdRE=;
+        b=gh0RQRpJ/jDBoED5Y+hy2xO36+dD8qzRaOi3qKnHnIJ7JnLnUUmzKoV9N9B9yhGblw
+         pxNedXdZzABKJKO/geykPUO4tWT7TCIv+pJekP18O4hiYEbUXdsDdmf7gxOG44QUN8NB
+         90sdWMcVX/HV9cNaq0CJSoP4CCFFxQyz+0oW3ZoRQ5kp4fRLM35v6ivuzTyABmCGx8e9
+         /HZ+ob7AR/H64vOmA3lzZp718O3l2RbH9z1IrutjXba+05CS6ddtMA3R1dAzSlOcZV+O
+         /4GW5jiIPdMbfYoGMDLb8UAt8s4EqXadXUB3aJchHFmTDlZ/zmt3dMcBkbG+Tdko2O1J
+         fxiQ==
+X-Gm-Message-State: APjAAAWB1B8Wmv6W2iE2+OMWoCcNmFdXP7m2tN9wgkMNWRSPFXFd3f/A
+        b5wowhAXeF/YAQW7bw5QWEs=
+X-Google-Smtp-Source: APXvYqzb/8KWjUnh6FhXiBLI4YaHXUfTNDs/wUUO30D4k+n3LUQA01dG1RLiOC77dzkC9lg+j9kJRA==
+X-Received: by 2002:a02:bb05:: with SMTP id y5mr1741821jan.93.1564417828671;
+        Mon, 29 Jul 2019 09:30:28 -0700 (PDT)
+Received: from brauner.io ([162.223.5.124])
+        by smtp.gmail.com with ESMTPSA id k5sm65133943ioj.47.2019.07.29.09.30.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 09:30:28 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 18:30:27 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     oleg@redhat.com, linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org, tj@kernel.org, tglx@linutronix.de,
+        prsood@codeaurora.org, avagin@gmail.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] exit: make setting exit_state consistent
+Message-ID: <20190729163025.4jc6d4nkdcdhve2k@brauner.io>
+References: <20190729162757.22694-1-christian@brauner.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2499807.IN78SsLMYo@jernej-laptop>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190729162757.22694-1-christian@brauner.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Mon, Jul 29, 2019 at 06:16:55PM +0200, Jernej Škrabec wrote:
-> Dne ponedeljek, 29. julij 2019 ob 09:06:05 CEST je Uwe Kleine-König 
-> napisal(a):
-> > On Fri, Jul 26, 2019 at 08:40:44PM +0200, Jernej Skrabec wrote:
-> > > PWM core has an option to bypass whole logic and output unchanged source
-> > > clock as PWM output. This is achieved by enabling bypass bit.
-> > > 
-> > > Note that when bypass is enabled, no other setting has any meaning, not
-> > > even enable bit.
-> > > 
-> > > This mode of operation is needed to achieve high enough frequency to
-> > > serve as clock source for AC200 chip, which is integrated into same
-> > > package as H6 SoC.
-> > > 
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > ---
-> > > 
-> > >  drivers/pwm/pwm-sun4i.c | 31 ++++++++++++++++++++++++++++++-
-> > >  1 file changed, 30 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > > index 9e0eca79ff88..848cff26f385 100644
-> > > --- a/drivers/pwm/pwm-sun4i.c
-> > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > @@ -120,6 +120,19 @@ static void sun4i_pwm_get_state(struct pwm_chip
-> > > *chip,
-> > > 
-> > >  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> > > 
-> > > +	/*
-> > > +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
-> > > +	 * bit is set, no other setting has any meaning. Even more, experiment
-> > > +	 * proved that also enable bit is ignored in this case.
-> > > +	 */
-> > > +	if (val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) {
-> > > +		state->period = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, clk_rate);
-> > > +		state->duty_cycle = state->period / 2;
-> > > +		state->polarity = PWM_POLARITY_NORMAL;
-> > > +		state->enabled = true;
-> > > +		return;
-> > > +	}
-> > > +
-> > > 
-> > >  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
-> > >  	
-> > >  	    sun4i_pwm->data->has_prescaler_bypass)
-> > >  		
-> > >  		prescaler = 1;
-> > > 
-> > > @@ -211,7 +224,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
-> > > struct pwm_device *pwm,> 
-> > >  {
-> > >  
-> > >  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
-> > >  	struct pwm_state cstate;
-> > > 
-> > > -	u32 ctrl;
-> > > +	u32 ctrl, clk_rate;
-> > > +	bool bypass;
-> > > 
-> > >  	int ret;
-> > >  	unsigned int delay_us;
-> > >  	unsigned long now;
-> > > 
-> > > @@ -226,6 +240,16 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
-> > > struct pwm_device *pwm,> 
-> > >  		}
-> > >  	
-> > >  	}
-> > > 
-> > > +	/*
-> > > +	 * Although it would make much more sense to check for bypass in
-> > > +	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
-> > > +	 * Period is allowed to be rounded up or down.
-> > > +	 */
-> > 
-> > Every driver seems to implement rounding the way its driver considers it
-> > sensible. @Thierry: This is another patch where it would be good to have
-> > a global directive about how rounding is supposed to work to provide the
-> > users an reliable and uniform way to work with PWMs.
-> > 
-> > > +	clk_rate = clk_get_rate(sun4i_pwm->clk);
-> > > +	bypass = (state->period == NSEC_PER_SEC / clk_rate ||
-> > > +		 state->period == DIV_ROUND_UP(NSEC_PER_SEC, clk_rate)) &&
-> > > +		 state->enabled;
-> > 
-> > Not sure if the compiler is clever enough to notice the obvious
-> > optimisation with this code construct, but you can write this test in a
-> > more clever way which has zero instead of up to two divisions. Something
-> > like:
-> > 
-> > bypass = ((state->period * clk_rate >= NSEC_PER_SEC &&
-> > 	   state->period * clk_rate < NSEC_PER_SEC + clk_rate) &&
-> > 	  state->enabled);
-> > 
-> > In the commit log you write the motivation for using bypass is that it
-> > allows to implement higher frequency then with the "normal" operation.
-> > As you don't skip calculating the normal parameters requesting such a
-> > high-frequency setting either errors out or doesn't catch the impossible
-> > request. In both cases there is something to fix.
+On Mon, Jul 29, 2019 at 06:27:57PM +0200, Christian Brauner wrote:
+> Since commit [1] we unconditionally set exit_state to EXIT_ZOMBIE before
+> calling into do_notify_parent(). This was done to eliminate a race when
+> querying exit_state in do_notify_pidfd().
+> Back then we decided to do the absolute minimal thing to fix this and
+> not touch the rest of the exit_notify() function where exit_state is
+> set.
+> Since this fix has not caused any issues change the setting of
+> exit_state to EXIT_DEAD in the autoreap case to account for the fact hat
+> exit_state is set to EXIT_ZOMBIE unconditionally. This fix was planned
+> but also explicitly requested in [2] and makes the whole code more
+> consistent.
 > 
-> It's the latter, otherwise it wouldn't work for my case. I'll fix the check and 
-> skip additional logic.
-
-Great.
-
-> > > +
-> > > 
-> > >  	spin_lock(&sun4i_pwm->ctrl_lock);
-> > >  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> > > 
-> > > @@ -273,6 +297,11 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
-> > > struct pwm_device *pwm,> 
-> > >  		ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
-> > >  	
-> > >  	}
-> > > 
-> > > +	if (bypass)
-> > > +		ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > > +	else
-> > > +		ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > > +
-> > 
-> > Does switching on (or off) the bypass bit complete the currently running
-> > period?
+> /* References */
+> [1]: b191d6491be6 ("pidfd: fix a poll race when setting exit_state")
+> [2]: https://lore.kernel.org/lkml/CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com
 > 
-> I don't really know. If I understand correctly, it just bypasses PWM logic 
-> completely, so I would say it doesn't complete the currently running period.
+> Signed-off-by: Christian Brauner <christian@brauner.io>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
 
-This is a bug. It's part of the promise of the PWM API that started
-periods are completed. Please at least document this limitation at the
-top of the driver. drivers/pwm/pwm-sifive.c has an example you might
-want to use as a template.
+I plan on sending this together with a few other fixes later. (Assuming
+the change here is correct of course.)
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Christian
