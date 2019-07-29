@@ -2,132 +2,108 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA231C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6915DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D32214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D61F2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:53:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nlRmEDq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387499AbfG2KxA (ORCPT
+        id S2387500AbfG2KxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:53:00 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3230 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387404AbfG2KxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:53:00 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6FA3D36A2727EA394098;
-        Mon, 29 Jul 2019 18:52:57 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 29 Jul 2019 18:52:50 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2] f2fs: fix to do sanity with enabled features in image
-Date:   Mon, 29 Jul 2019 18:52:43 +0800
-Message-ID: <20190729105243.110833-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Mon, 29 Jul 2019 06:53:04 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:51531 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387501AbfG2KxB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:53:01 -0400
+Received: by mail-wm1-f46.google.com with SMTP id 207so53413384wma.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 03:53:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=AOLYj7vZFitbpFqErn7oWDZ99uADKiNehnmJGd1HBMQ=;
+        b=nlRmEDq3Y+gorIJyMNrwNEssz/SMKtx/EbGSW+70sSXgCdPUXRRW4QFGNQHsrRjUHK
+         yk5EhfB9I+l3OqcXJ6syW9AqVN+LZcjMiL0wfMXJmeaJwBw8oejQiKMoTz7TEw6O6FBD
+         QBDIPtIRvfl6dXouSOlZuNHp9CEWKAJHrvL6tM/zsmkD+A/NkxTM9t5Ik/oe8pMn5I4F
+         nIRTm4pXheok5sJZ3rwV/T5Xxx3GrySMKIK+d5JioDOucs7EFRHgGfXxJHzNiM/QmAv4
+         xNR8HXqUjXERpIK8lMphDvUvO+f9oPuOdmpsj44RdUjxYrLGYHAN83FzDj0an1ZCSyUR
+         L8Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=AOLYj7vZFitbpFqErn7oWDZ99uADKiNehnmJGd1HBMQ=;
+        b=okhjTwjqGciHbW5cEJYsNUxEC/4JPApd7fURQplfII1ePy9mGSMC+iRn9hBvw+Gmbp
+         3v87GSfgj8AfKMSv1oWe895Q5hz6ZFCo0g9Jzf/XI1tsd09gtiB+GANSk72ns40ncxe8
+         JKqydC5e2E03HQY21x23iwbkXlxkRWdfNxKeJOP14cvaDBRkpceLUDVmUamOPL+vcnjc
+         ZjZs79H8TgWSkCc339leokABXiEooX+GL+KJfteJBk7m4IcSDI23gqbvPgBloxscNNmQ
+         S8qOdFlC9NYufniJ5pdVmSXQ+IQx+hgc/ycAjYzlwttjmBFk5a293f16FosGlFzCGrT3
+         uugQ==
+X-Gm-Message-State: APjAAAUlnSyTvEh1TpnYnckWcHKIn1HHH20v2GWL8o1O0bYnbANgxbsd
+        bZerAJGVkxEWl+AOep6h/Hw92w==
+X-Google-Smtp-Source: APXvYqxxAq1qeCj6RzXzLrMQuzQ7BjjgL2TJJi51jQeFJRGXJ36dozWZyeLAR3r9r7D1DIVGG85i8A==
+X-Received: by 2002:a05:600c:23d2:: with SMTP id p18mr93454869wmb.160.1564397580031;
+        Mon, 29 Jul 2019 03:53:00 -0700 (PDT)
+Received: from localhost ([2a01:e34:eeb6:4690:ecfa:1144:aa53:4a82])
+        by smtp.gmail.com with ESMTPSA id d10sm50464699wrx.34.2019.07.29.03.52.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 03:52:59 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     khilman@baylibre.com, sboyd@kernel.org, narmstrong@baylibre.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        baylibre-upstreaming@groups.io,
+        Alexandre Mergnat <amergnat@baylibre.com>
+Subject: Re: [PATCH v2] clk: meson: axg-audio: migrate to the new parent description method
+In-Reply-To: <20190725164023.27855-1-amergnat@baylibre.com>
+References: <20190725164023.27855-1-amergnat@baylibre.com>
+Date:   Mon, 29 Jul 2019 12:52:58 +0200
+Message-ID: <1j5znl9kol.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Later after this patch was merged, all new incompatible feature's
-bit should be added into sb.required_features field, and define new
-feature function with F2FS_INCOMPAT_FEATURE_FUNCS() macro.
+On Thu 25 Jul 2019 at 18:40, Alexandre Mergnat <amergnat@baylibre.com> wrote:
+ 
+>  /* Audio Master Clocks */
+> -static const char * const mst_mux_parent_names[] = {
+> -	"aud_mst_in0", "aud_mst_in1", "aud_mst_in2", "aud_mst_in3",
+> -	"aud_mst_in4", "aud_mst_in5", "aud_mst_in6", "aud_mst_in7",
+> +static const struct clk_parent_data mst_mux_parent_data[] = {
+> +	{ .fw_name = "mst_in0", },
+> +	{ .fw_name = "mst_in1", },
+> +	{ .fw_name = "mst_in2", },
+> +	{ .fw_name = "mst_in3", },
+> +	{ .fw_name = "mst_in4", },
+> +	{ .fw_name = "mst_in5", },
+> +	{ .fw_name = "mst_in6", },
+> +	{ .fw_name = "mst_in7", },
+>  };
+>  
+>  #define AUD_MST_MUX(_name, _reg, _flag)				\
+>  	AUD_MUX(_name##_sel, _reg, 0x7, 24, _flag,		\
+> -		mst_mux_parent_names, CLK_SET_RATE_PARENT)
+> +		mst_mux_parent_data, CLK_SET_RATE_PARENT)
 
-Then during mount, we will do sanity check with enabled features in
-image, if there are features in sb.required_features that kernel can
-not recognize, just fail the mount.
+Actually, you should have dropped the CLK_SET_RATE_PARENT above.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v2:
-- add sb.required_features to store new incompatible feature's bit.
- fs/f2fs/f2fs.h          | 15 +++++++++++++++
- fs/f2fs/super.c         | 10 ++++++++++
- include/linux/f2fs_fs.h |  3 ++-
- 3 files changed, 27 insertions(+), 1 deletion(-)
+Before, the rate propagation was stopped by the input clock but now,
+there no such thing so the rate propagation must be stopped here.
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 73e007dca3bb..9923902156f1 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -163,6 +163,15 @@ struct f2fs_mount_info {
- #define F2FS_CLEAR_FEATURE(sbi, mask)					\
- 	(sbi->raw_super->feature &= ~cpu_to_le32(mask))
- 
-+#define F2FS_INCOMPAT_FEATURE		0
-+
-+#define F2FS_HAS_INCOMPAT_FEATURE(sbi, mask)				\
-+	((sbi->raw_super->required_features & cpu_to_le32(mask)) != 0)
-+#define F2FS_SET_INCOMPAT_FEATURE(sbi, mask)				\
-+	(sbi->raw_super->required_features |= cpu_to_le32(mask))
-+#define F2FS_CLEAR_INCOMPAT_FEATURE(sbi, mask)				\
-+	(sbi->raw_super->required_features &= ~cpu_to_le32(mask))
-+
- /*
-  * Default values for user and/or group using reserved blocks
-  */
-@@ -3585,6 +3594,12 @@ F2FS_FEATURE_FUNCS(lost_found, LOST_FOUND);
- F2FS_FEATURE_FUNCS(sb_chksum, SB_CHKSUM);
- F2FS_FEATURE_FUNCS(casefold, CASEFOLD);
- 
-+#define F2FS_INCOMPAT_FEATURE_FUNCS(name, flagname) \
-+static inline int f2fs_sb_has_##name(struct f2fs_sb_info *sbi) \
-+{ \
-+	return F2FS_HAS_INCOMPAT_FEATURE(sbi, F2FS_FEATURE_##flagname); \
-+}
-+
- #ifdef CONFIG_BLK_DEV_ZONED
- static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
- 				    block_t blkaddr)
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 5540fee0fe3f..1ea24fce668e 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2513,6 +2513,16 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
- 		return -EINVAL;
- 	}
- 
-+	/* check whether current kernel supports all features on image */
-+	if (le32_to_cpu(raw_super->required_features) &
-+			~F2FS_INCOMPATIBLE_FEATURE) {
-+		f2fs_info(sbi, "Unsupported feature: %x: supported: %x",
-+			  le32_to_cpu(raw_super->required_features) ^
-+			  F2FS_INCOMPATIBLE_FEATURE,
-+			  F2FS_INCOMPATIBLE_FEATURE);
-+		return -EINVAL;
-+	}
-+
- 	/* Check checksum_offset and crc in superblock */
- 	if (__F2FS_HAS_FEATURE(raw_super, F2FS_FEATURE_SB_CHKSUM)) {
- 		crc_offset = le32_to_cpu(raw_super->checksum_offset);
-diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-index 284738996028..a4bab287814f 100644
---- a/include/linux/f2fs_fs.h
-+++ b/include/linux/f2fs_fs.h
-@@ -117,7 +117,8 @@ struct f2fs_super_block {
- 	__u8 hot_ext_count;		/* # of hot file extension */
- 	__le16  s_encoding;		/* Filename charset encoding */
- 	__le16  s_encoding_flags;	/* Filename charset encoding flags */
--	__u8 reserved[306];		/* valid reserved region */
-+	__le32 required_features;	/* incompatible features to old kernel */
-+	__u8 reserved[302];		/* valid reserved region */
- 	__le32 crc;			/* checksum of superblock */
- } __packed;
- 
--- 
-2.18.0.rc1
+It was almost impossible to know without testing audio, so fixed it
+when applying the change.
+
+Thanks for this rework !
 
