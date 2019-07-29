@@ -2,156 +2,114 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE923C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9F3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F060206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621C6206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:20:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lP5GqG55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfG2JTD convert rfc822-to-8bit (ORCPT
+        id S1727801AbfG2JUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:19:03 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:60246 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726496AbfG2JTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:19:02 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 0CCEC2E88F05F5A130F2;
-        Mon, 29 Jul 2019 17:19:00 +0800 (CST)
-Received: from dggeme707-chm.china.huawei.com (10.1.199.103) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 29 Jul 2019 17:18:59 +0800
-Received: from lhreml703-chm.china.huawei.com (10.201.108.52) by
- dggeme707-chm.china.huawei.com (10.1.199.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Mon, 29 Jul 2019 17:18:57 +0800
-Received: from lhreml703-chm.china.huawei.com ([10.201.68.198]) by
- lhreml703-chm.china.huawei.com ([10.201.68.198]) with mapi id 15.01.1713.004;
- Mon, 29 Jul 2019 10:18:55 +0100
-From:   Salil Mehta <salil.mehta@huawei.com>
-To:     tanhuazhong <tanhuazhong@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Mon, 29 Jul 2019 05:20:17 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33039 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfG2JUR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 05:20:17 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c14so27205336plo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:20:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3alocEzQkvOwDh436VckIPvqKCkr1/ONfYhyc3HCC6U=;
+        b=lP5GqG55Dyw5q7dJRePrFeD4Vo+xWMP9VbWvK9qbiZWztz9sX0u3JEEg9bwi3Qelv/
+         K4Bbd4gXh8SI2XTM6SudJHqwrUpriyQVaKkV7Q3w2QBfJs8/ksKNgnNvs8Kq17eqjGwO
+         IZkacmtTUtHNlN+nSxwxrtuInYWAaQidOdLLAxd0ULiL+dCihfleLcIWD8iL4SXRSWme
+         +Z5O2ciwWgeBg1W61hhEY6T5YtIPR7YzHvKtiZ0AipJOglTfkqdaipfmVVjMudZz4i2O
+         6O3PlX4Te4WeGuVUDovJAGSfp0T/xmiChZDDLIjKbsExzEe656X+11lNfimOHjyxlKgy
+         eW/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3alocEzQkvOwDh436VckIPvqKCkr1/ONfYhyc3HCC6U=;
+        b=Lte1sON8DjN2rl2dsVixGliE9BBFv4bxHIxH2zVAInThInC3S+VNFbhwKOx9NKvgda
+         4dwz+picvA71oXUglaT89uxj+QvEbyHIwDwvCKRDLNIPhGTbdboWzRqQOX9pRRQO5lNU
+         Ai42C1StncjoOlEbfr7JuT1LrqM6jD2zdNxCMxssWOTh5eszoqWiYdzbyp5TWbXF7a98
+         x19uNqYwLyNRkDZqMEnd5N5CEVOIP8hsTtE4i6llvn1AkZECrjcJrCrET70yaOyXpWBa
+         8qEJTk1qBe7KpE4jFjxcWFA/PMLSTf+VvY0srikJ8la0kFhjHMMHgIac7aMu425+AS6F
+         yjRA==
+X-Gm-Message-State: APjAAAWkMAyLnxyL03+mFoEUZnnhTXWCXUZOFNTGut1oxvI8IrNgVt3l
+        Zv+i88aqj88DpY038+RVv/tVdg==
+X-Google-Smtp-Source: APXvYqzKLa/htnlBgwYP5UIMstM9Hmp8PWyPwF3BGDnYJXIAoSflXEa4GnCszC/9bxndDaHastGyKw==
+X-Received: by 2002:a17:902:3103:: with SMTP id w3mr111071711plb.84.1564392016316;
+        Mon, 29 Jul 2019 02:20:16 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id m4sm73215197pgs.71.2019.07.29.02.20.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 02:20:15 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 14:50:13 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Roger Lu <roger.lu@mediatek.com>
+Cc:     Stephen Boyd <sboyd@codeaurora.org>,
+        Andrew-sh Cheng =?utf-8?B?KOmEreW8j+WLsyk=?= 
+        <andrew-sh.cheng@mediatek.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        linyunsheng <linyunsheng@huawei.com>,
-        "lipeng (Y)" <lipeng321@huawei.com>
-Subject: RE: [PATCH net-next 08/11] net: hns3: add interrupt affinity support
- for misc interrupt
-Thread-Topic: [PATCH net-next 08/11] net: hns3: add interrupt affinity support
- for misc interrupt
-Thread-Index: AQHVQc7SvuUmwP6wYkeZvk7xQcNJGqbhV81w
-Date:   Mon, 29 Jul 2019 09:18:55 +0000
-Message-ID: <fa3dbcce9e22453fb1ef111fd107d20f@huawei.com>
-References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
- <1563938327-9865-9-git-send-email-tanhuazhong@huawei.com>
-In-Reply-To: <1563938327-9865-9-git-send-email-tanhuazhong@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.202.226.45]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Fan Chen =?utf-8?B?KOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        yt.lee@mediatek.com
+Subject: Re: [PATCH 6/8] PM / OPP: Support adjusting OPP voltages at runtime
+Message-ID: <20190729092013.5sz2mdqicrit5nta@vireshk-i7>
+References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1557997725-12178-7-git-send-email-andrew-sh.cheng@mediatek.com>
+ <20190520044704.unftq6q5vy73z5bo@vireshk-i7>
+ <1564371555.18434.11.camel@mtksdaap41>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564371555.18434.11.camel@mtksdaap41>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: tanhuazhong
-> Sent: Wednesday, July 24, 2019 4:19 AM
-> To: davem@davemloft.net
-> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Salil Mehta
-> <salil.mehta@huawei.com>; Zhuangyuzeng (Yisen) <yisen.zhuang@huawei.com>;
-> Linuxarm <linuxarm@huawei.com>; linyunsheng <linyunsheng@huawei.com>; lipeng
-> (Y) <lipeng321@huawei.com>; tanhuazhong <tanhuazhong@huawei.com>
-> Subject: [PATCH net-next 08/11] net: hns3: add interrupt affinity support for
-> misc interrupt
+On 29-07-19, 11:39, Roger Lu wrote:
+> Dear Stephen Boyd,
 > 
-> From: Yunsheng Lin <linyunsheng@huawei.com>
+> This patch is derived from [1]. Please kindly shares the suggestion to
+> us. Thanks very much.
 > 
-> The misc interrupt is used to schedule the reset and mailbox
-> subtask, and a 1 sec timer is used to schedule the service
-> subtask, which does periodic work.
+> [1]: https://lore.kernel.org/patchwork/patch/599279/
 > 
-> This patch sets the above three subtask's affinity using the
-> misc interrupt' affinity.
+> Dear Viresh,
 > 
-> Also this patch setups a affinity notify for misc interrupt to
-> allow user to change the above three subtask's affinity.
-> 
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> Signed-off-by: Peng Li <lipeng321@huawei.com>
-> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-> ---
->  .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 59
-> ++++++++++++++++++++--
->  .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  4 ++
->  2 files changed, 59 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-> b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-> index f345095..fe45986 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-> @@ -1270,6 +1270,12 @@ static int hclge_configure(struct hclge_dev *hdev)
-> 
->  	hclge_init_kdump_kernel_config(hdev);
-> 
-> +	/* Set the init affinity based on pci func number */
-> +	i = cpumask_weight(cpumask_of_node(dev_to_node(&hdev->pdev->dev)));
-> +	i = i ? PCI_FUNC(hdev->pdev->devfn) % i : 0;
-> +	cpumask_set_cpu(cpumask_local_spread(i, dev_to_node(&hdev->pdev->dev)),
-> +			&hdev->affinity_mask);
-> +
->  	return ret;
->  }
-> 
-> @@ -2502,14 +2508,16 @@ static void hclge_mbx_task_schedule(struct hclge_dev
-> *hdev)
->  {
->  	if (!test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state) &&
->  	    !test_and_set_bit(HCLGE_STATE_MBX_SERVICE_SCHED, &hdev->state))
-> -		schedule_work(&hdev->mbx_service_task);
-> +		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
+> I followed _opp_set_availability() coding style to refine
+> dev_pm_opp_adjust_voltage() from this patch. Is this refinement suitable
+> for OPP core? Thanks a lot.
 
+Looks okay from a quick look.
 
-Why we have to use system Work Queue here? This could adversely affect
-other work scheduled not related to the HNS3 driver. Mailbox is internal
-to the driver and depending upon utilization of the mbx channel(which could
-be heavy if many VMs are running), this might stress other system tasks
-as well. Have we thought of this?
-
-
-
-> +			      &hdev->mbx_service_task);
->  }
-> 
->  static void hclge_reset_task_schedule(struct hclge_dev *hdev)
->  {
->  	if (!test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
->  	    !test_and_set_bit(HCLGE_STATE_RST_SERVICE_SCHED, &hdev->state))
-> -		schedule_work(&hdev->rst_service_task);
-> +		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
-> +			      &hdev->rst_service_task);
->  }
-> 
->  static void hclge_task_schedule(struct hclge_dev *hdev)
-> @@ -2517,7 +2525,8 @@ static void hclge_task_schedule(struct hclge_dev *hdev)
->  	if (!test_bit(HCLGE_STATE_DOWN, &hdev->state) &&
->  	    !test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
->  	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state))
-> -		(void)schedule_work(&hdev->service_task);
-> +		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
-
-Same here.
-
-
-Salil.
+-- 
+viresh
