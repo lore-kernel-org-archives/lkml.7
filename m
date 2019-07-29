@@ -2,130 +2,165 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546EDC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5658FC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 191B3206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564386327;
-	bh=fcw+ItNxgTFfNQH3V3aXj06Iim3ACDL9ZACEVk/9jJ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RW+PqEeTB7Y3F7mxWZnDVaSeKYR31coHXAm6pL/AxnaV4NVdCm+26BtDrBPmdBqS6
-	 SQVVeyR3my5UsbRpeVy7jwluKpc3gvmqgK8MVANYwblUixzq2mdufKgO/OmXK0m30o
-	 UUXYOfUuriJLJEekav+uX8C4VGxSL70YG2NVlNh0=
+	by mail.kernel.org (Postfix) with ESMTP id 21B8B2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AQyT1gIO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfG2HpZ (ORCPT
+        id S1727093AbfG2Htu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 03:45:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35986 "EHLO mx1.suse.de"
+        Mon, 29 Jul 2019 03:49:50 -0400
+Received: from mail-eopbgr60047.outbound.protection.outlook.com ([40.107.6.47]:45191
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726862AbfG2HpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 03:45:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7FC2CAE5E;
-        Mon, 29 Jul 2019 07:45:24 +0000 (UTC)
-Date:   Mon, 29 Jul 2019 09:45:23 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Miguel de Dios <migueldedios@google.com>,
-        Wei Wang <wvw@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: Re: [PATCH] mm: release the spinlock on zap_pte_range
-Message-ID: <20190729074523.GC9330@dhcp22.suse.cz>
-References: <20190729071037.241581-1-minchan@kernel.org>
+        id S1726717AbfG2Htu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 03:49:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ki1/D6WtsSogiXvtv4PvCJCyAVSpniqnMNJ0hWxogBLAJe6HQ1TPihTmkBLjF0mPFbYVB7HFoLQY8eoMkKGGvmtUm31FhSFzxgPvoDAjyRgPe3C/9tNMdhIgHjws/9KnrwpqQqCC08ltPh9zdfXQ0qWLbOS0ueJXjm0EaCt00i8t8IcngLnakgqldpmSrdPc592wcKhdS9F7p1TbI/F9DMFS2c4xhVbuw/0ie+K4mUHiTYuTU9q75XuEKT+Gvf6aX4JQpGiHpeOmCX+6yPBzemOGtJ9l7bml1RDjp7G25WG1OEC8ZsEha+5UYXt5w/U/FqBDTRlVI93dyUmfxt5f1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xTvtcN/CLQs6tL8Y6bdfQsZg7VVWDqgB2ZU02nYsfNI=;
+ b=MW2dg8gyzHYzHKrHhJlTV38vk6GxuYE23agZbiYHLHNgfibOU5aZ3iFAJnVB6fxMu/jYLM3TtjY2AKb0cZMB57i/bg1UI6Zl+2qnryGuDLbJOoc9lo5FEK8PjA7vcERe/eim/p+7VNic5eab1C2ItwvNbMdJIhpuE5/pB3us1s34JyoFIBhUEt3aVlWRUE/STHs7lUQxOFoS4SXwT3kODkmjPZXtQ3Rb8zvcuUB0frJqFJ8aiJFnevZ1fR/zU+ksDK9pmBKD4XZuUP4yv7LCVgexAByz5iU/rO0Q6qOUfvOFPyIvhOYpVqijaorhKHrSRX1cCks1rLT6yZ/M4O6ugA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xTvtcN/CLQs6tL8Y6bdfQsZg7VVWDqgB2ZU02nYsfNI=;
+ b=AQyT1gIO4fHwutwRXp8IJ/4a5PiEE2/Lo4uKtFpJKMXY3/OhBSRNvy0nunT46tqB07OJC4Sl5ffhpr+Bk81wL02n4apncS8nLHuOaCrGkIC9zKcxeuGzTEeW7Lx/5HIQYuqbJ1+J/eUhqNM0XTPH3hfG0ImVSEtuBOdeJcfXT9g=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3897.eurprd04.prod.outlook.com (52.134.73.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.14; Mon, 29 Jul 2019 07:49:43 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::7cdf:bddc:212c:f77e]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::7cdf:bddc:212c:f77e%4]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
+ 07:49:43 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+CC:     Abel Vesa <abel.vesa@nxp.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Carlo Caione <ccaione@baylibre.com>,
+        =?utf-8?B?R3VpZG8gR8O8bnRoZXI=?= <agx@sigxcpu.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+ IMX8MQ_CLK_TMU_ROOT
+Thread-Topic: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+ IMX8MQ_CLK_TMU_ROOT
+Thread-Index: AQHVMu9Qagn4ZAj9sUKncGzfKuws0abdnJEAgAB74HCAAAwBAIAAo0oAgAIrlTCAAFrfgIAABfvAgAACIoCAAAA8AIAAB3VQ
+Date:   Mon, 29 Jul 2019 07:49:43 +0000
+Message-ID: <DB3PR0402MB3916F32F03E542AEFBD39A43F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+ <20190705045612.27665-5-Anson.Huang@nxp.com>
+ <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
+ <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAEnQRZCrZybzcy__u4p_Eq4zSVc2ESyfKLk5sPf1JYba1JSOiA@mail.gmail.com>
+ <20190727161736.4dkfqgwftre67v56@fsr-ub1664-175>
+ <DB3PR0402MB391600891BA75DFFA9674058F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAEnQRZB6tmYFA8wwh0Fm49LTTDuCLq-SWVfrcUkRWWBo=0U13w@mail.gmail.com>
+ <DB3PR0402MB391627F725AA7237BCACBE87F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAEnQRZBrmikenTvnh7syhy=PDPcTL3fn2TJ+ya=ToZ+SFmH5tw@mail.gmail.com>
+ <CAEnQRZDSjmcU8Q7+kMeFf12tx0NuMNjrcsgnXayvHpu4ChwHGA@mail.gmail.com>
+In-Reply-To: <CAEnQRZDSjmcU8Q7+kMeFf12tx0NuMNjrcsgnXayvHpu4ChwHGA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6c879750-2cc1-423d-a2b0-08d713f951e0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3897;
+x-ms-traffictypediagnostic: DB3PR0402MB3897:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <DB3PR0402MB3897E8708A7E4BFF1F69D450F5DD0@DB3PR0402MB3897.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01136D2D90
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(43544003)(189003)(199004)(486006)(3846002)(76176011)(33656002)(71190400001)(71200400001)(44832011)(446003)(76116006)(66476007)(66556008)(64756008)(66446008)(316002)(66946007)(229853002)(7696005)(6116002)(6916009)(7416002)(476003)(99286004)(53546011)(26005)(25786009)(6506007)(102836004)(11346002)(86362001)(2906002)(8676002)(54906003)(5660300002)(6306002)(55016002)(966005)(478600001)(74316002)(7736002)(14454004)(305945005)(81156014)(66066001)(81166006)(53936002)(9686003)(6246003)(68736007)(14444005)(52536014)(186003)(256004)(8936002)(6436002)(4326008)(45080400002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3897;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: smg9KVH8T0GIkC9PwV3yRgI8jCLuQByiYl6/hGIss7QYu3f32EAA0r+lK0MS5rf8Ti+7JzfS1YgqjFqqxWUS31snFTficf9pkI3f2n2kePRTeBYcrkXLi+uGk/TtrWLu0bMlvhlpnCf5hkQ7InVVbIuXCfKKNAmrlPw70/LrSIAUjE+KPbc/K+hnkd3srAX0LM+waF2B4n1Bx3WN0Cs/Jqq0mfDThdemgUFMwFfHJu14hZTz6FVvHCyFtTCWiHwvM+PLQ7xlg0nZVuYspIG63Sv2Axitan0ELyQyIxXyn32h3DwxLYTJq4qoSpUsBIEO5ikNymbpegnXthZZscHWK3I7kGlGmlhJs8CW0MCWPM3/aAJyEF2Cfatg32yh65YLK3kZ8hWQV48WUlLvUFcf55lcELf0jIrDNbQ4bsEa+Rg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729071037.241581-1-minchan@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c879750-2cc1-423d-a2b0-08d713f951e0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 07:49:43.6465
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3897
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 29-07-19 16:10:37, Minchan Kim wrote:
-> In our testing(carmera recording), Miguel and Wei found unmap_page_range
-> takes above 6ms with preemption disabled easily. When I see that, the
-> reason is it holds page table spinlock during entire 512 page operation
-> in a PMD. 6.2ms is never trivial for user experince if RT task couldn't
-> run in the time because it could make frame drop or glitch audio problem.
-
-Where is the time spent during the tear down? 512 pages doesn't sound
-like a lot to tear down. Is it the TLB flushing?
-
-> This patch adds preemption point like coyp_pte_range.
-> 
-> Reported-by: Miguel de Dios <migueldedios@google.com>
-> Reported-by: Wei Wang <wvw@google.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
-> ---
->  mm/memory.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 2e796372927fd..bc3e0c5e4f89b 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -1007,6 +1007,7 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
->  				struct zap_details *details)
->  {
->  	struct mm_struct *mm = tlb->mm;
-> +	int progress = 0;
->  	int force_flush = 0;
->  	int rss[NR_MM_COUNTERS];
->  	spinlock_t *ptl;
-> @@ -1022,7 +1023,16 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
->  	flush_tlb_batched_pending(mm);
->  	arch_enter_lazy_mmu_mode();
->  	do {
-> -		pte_t ptent = *pte;
-> +		pte_t ptent;
-> +
-> +		if (progress >= 32) {
-> +			progress = 0;
-> +			if (need_resched())
-> +				break;
-> +		}
-> +		progress += 8;
-
-Why 8?
-
-> +
-> +		ptent = *pte;
->  		if (pte_none(ptent))
->  			continue;
->  
-> @@ -1123,8 +1133,11 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
->  	if (force_flush) {
->  		force_flush = 0;
->  		tlb_flush_mmu(tlb);
-> -		if (addr != end)
-> -			goto again;
-> +	}
-> +
-> +	if (addr != end) {
-> +		progress = 0;
-> +		goto again;
->  	}
->  
->  	return addr;
-> -- 
-> 2.22.0.709.g102302147b-goog
-
--- 
-Michal Hocko
-SUSE Labs
+SGksIERhbmllbA0KDQo+IE9uIE1vbiwgSnVsIDI5LCAyMDE5IGF0IDEwOjIwIEFNIERhbmllbCBC
+YWx1dGEgPGRhbmllbC5iYWx1dGFAZ21haWwuY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IDxzbmlw
+Pg0KPiA+ID4gPiBZb3VyIGV4cGxhbmF0aW9uIG1ha2VzIGEgbG90IG9mIHNlbnNlLiBXZSB3aWxs
+IHRha2UgY2FyZSB0b2RheSBvZg0KPiA+ID4gPiBBYmVsJ3MgcGF0Y2guDQo+ID4gPiA+IFdoYXQg
+ZG8geW91IHRoaW5rIGFib3V0IEZhYmlvJ3MgcGF0Y2g/IEkgYWxzbyB0aGluayB0aGlzIGlzIGEg
+dmFsaWQgcGF0Y2g6DQo+ID4gPiA+DQo+ID4gPHNuaXA+DQo+ID4NCj4gPiA+DQo+ID4gPiBIbW0s
+IHdoZW4gZGlkIEZhYmlvIHNlbnQgb3V0IHRoaXMgcGF0Y2g/IEkgY2FuIE5PVCBmaW5kIGl0Li4u
+DQo+ID4gPiBJIGFsc28gaGF2ZSBhIHBhdGNoIGluIHRoaXMgc2VyaWVzICgjNC82KSBkb2luZyBz
+YW1lIHRoaW5nIG9uIEp1bHkgNXRoLi4uDQo+ID4gPg0KPiA+ID4gaHR0cHM6Ly9ldXIwMS5zYWZl
+bGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGcGENCj4gPiA+
+DQo+IHRjaHdvcmsua2VybmVsLm9yZyUyRnBhdGNoJTJGMTEwMzI3ODMlMkYmYW1wO2RhdGE9MDIl
+N0MwMSU3Q2Fuc28NCj4gbi5odQ0KPiA+ID4NCj4gYW5nJTQwbnhwLmNvbSU3QzA0OGQ4Njk1YjNk
+YzRjZWVmNmJkMDhkNzEzZjU1ZThhJTdDNjg2ZWExZDNiYzINCj4gYjRjNmZhDQo+ID4gPg0KPiA5
+MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjk5OTgxNjg4MDExODY3NCZhbXA7c2RhdGE9MUhJ
+TVEwbA0KPiBpS3BFRlMNCj4gPiA+IDZQMldTRyUyRkg5ZXZzcHhJZHhBdkZtYWtsSDF3b0RrJTNE
+JmFtcDtyZXNlcnZlZD0wDQo+ID4NCj4gPiBIZSBkaWRuJ3Qgc2VuZCB0aGUgcGF0Y2ggeWV0LiBJ
+dCB3YXMganVzdCBhIHJlcXVlc3QgZm9yIHRlc3QgaGVyZToNCj4gPg0KPiA+IGh0dHBzOi8vZXVy
+MDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGY29k
+ZS4NCj4gPiBidWxpeC5vcmclMkZwZDg4anAtDQo+IDgxMjM4MSZhbXA7ZGF0YT0wMiU3QzAxJTdD
+YW5zb24uaHVhbmclNDBueHAuY29tJTdDMA0KPiA+DQo+IDQ4ZDg2OTViM2RjNGNlZWY2YmQwOGQ3
+MTNmNTVlOGElN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzDQo+IDUlN0MwDQo+ID4g
+JTdDMCU3QzYzNjk5OTgxNjg4MDExODY3NCZhbXA7c2RhdGE9cDcwbWdDRHVjQ2dMSjhUVFJNbjNh
+JTINCj4gRms2OEZYR1FlaVINCj4gPiBGUjBmVlNWN0psbyUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiA+
+DQo+ID4gQnV0LCBub3cgSSBzZWUgaXMgZXhhY3RseSBsaWtlIHlvdXIgcGF0Y2ggaGVyZToNCj4g
+DQo+IC4uLiBwcmVzc2VkIHNlbmQgdG8gZWFybHkuDQo+IA0KPiBodHRwczovL2V1cjAxLnNhZmVs
+aW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZsa21sLm8NCj4g
+cmclMkZsa21sJTJGMjAxOSUyRjclMkY1JTJGMTkmYW1wO2RhdGE9MDIlN0MwMSU3Q2Fuc29uLmh1
+YW5nJQ0KPiA0MG54cC5jb20lN0MwNDhkODY5NWIzZGM0Y2VlZjZiZDA4ZDcxM2Y1NWU4YSU3QzY4
+NmVhMWQzYmMyYjRjNmYNCj4gYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2OTk5ODE2ODgw
+MTE4Njc0JmFtcDtzZGF0YT1jaVdqOHkNCj4gV1B2a0laNW5pJTJCb2hadWFxQVhmOVBiMkZDV2hw
+OUdRaHBNd0FZJTNEJmFtcDtyZXNlcnZlZD0wDQo+IA0KPiBXZSBhcmUgYWxsIHNldCB0aGVuLiBU
+aGFua3MgQW5zb24gZm9yIGNsYXJpZmljYXRpb25zIQ0KDQpUaGFua3MsIHNvIHdlIGFyZSBhbGwg
+Y2xlYXIgYWJvdXQgdGhpcyBpc3N1ZSwgbmVlZCB0byB3YWl0IHRoZXJtYWwgbWFpbnRhaW5lciB0
+byByZXZpZXcNCnRoZSByZXN0IHBhdGNoIGluIHRoaXMgc2VyaWVzLCBidXQgSSBkaWQgTk9UIHJl
+Y2VpdmUgYW55IHJlc3BvbnNlIGZyb20gdGhlcm1hbCBzdWItc3lzdGVtDQptYWludGFpbmVyIGZv
+ciByZWFsbHkgbG9uZyB0aW1lLCBOT1Qgc3VyZSB3aGVuIHRoZSB0aGVybWFsIHBhdGNoZXMgY2Fu
+IGJlIGFjY2VwdGVkLg0KDQpBbnNvbg0KDQo=
