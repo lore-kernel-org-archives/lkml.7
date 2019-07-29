@@ -2,113 +2,185 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D908C7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B1EC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76352206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564440414;
-	bh=GY1EN1STOR7H1ZBVfrAMZXmsjP1EwB9Atq7uO2OeVlA=;
-	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
-	b=AdG1ZyXxxJQXPkjyEV28J7lUglGiTpIsqaWw1ZYiAtRWRDWXB5HAZZXFWyXRElyQK
-	 f4fKJ9TiruID6RHPl9Yer7O5yG7u9MbVtq01cNv3P1L5UYib6PwF9hJeWWLmEnf+ed
-	 THoPMiHjFuppowey30ReGS9yhtsYd2IG5JO1ycvE=
+	by mail.kernel.org (Postfix) with ESMTP id EF379206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:47:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfrN/y03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbfG2Wqx (ORCPT
+        id S1729114AbfG2Wq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 18:46:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726557AbfG2Wqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 18:46:53 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17291206E0;
-        Mon, 29 Jul 2019 22:46:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564440412;
-        bh=GY1EN1STOR7H1ZBVfrAMZXmsjP1EwB9Atq7uO2OeVlA=;
-        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
-        b=f7OKjL/io6Y/ggE8sL7CVsY3b/PzM44zRDYckx4oFO0dOeDiC+Sk3H1nrcHVw0SdX
-         R6b5QmzavXGLtjH3JTIzZALJBsiZ/18A4blXKrNF6tgzcg9C8uE2cfJyGAHc6c1oKM
-         ut/tNM8e+hAyc9HLskUNrV5j0/qCbCnXBpcuh28A=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 29 Jul 2019 18:46:59 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44637 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbfG2Wq6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 18:46:58 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d79so45181968qke.11;
+        Mon, 29 Jul 2019 15:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=h67qCGvm0vTXKgIvUnIlBDCvJ9/QVn68KTO/eo/1zmM=;
+        b=WfrN/y03AxOglG1Z1TeJp9DyYJ1UTFmyZYGgaLxQjj7b5aT0LtiFaOBq93emjg/fwQ
+         /HC8E818HDinvaSEcih5b952yDsA07fT9mcVTu/edVD1BXqIAiuuDOtjyw7/NBXLb91i
+         Vx7jryKE6n2PfFk5Y06NjdqOrhgn8AvGQg+CyUrMpCCq3QOZKYoNFrp2/wbkft/CpJhL
+         8pr41isaou1xYR+pCDOH1JDZCl2AjhocYK7lVdLGT510oHd7AoxnPUVDPE8OAGWtR7TK
+         2MvPXjVe0a3+duMW9GQXIRQdg+BkHxXtWyqQGmuH1ku9ibIkQYBmoYIqECutPtPPdZ2H
+         f/Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=h67qCGvm0vTXKgIvUnIlBDCvJ9/QVn68KTO/eo/1zmM=;
+        b=dnBxhrQEoJ+ebj77bvHZEyyVWTMbwsMwGcM0MLcQczz/4gC2p2ZaERefbT+iDVilQi
+         QOzxRZm21jPDnguje+DaWyfo3TXw9/pYS2UeJqYks8V1uqfOcbxpL5TdD+rAdQJIUuSM
+         vUlCUC0K4Dl+81fGp66CTxtPCDTD/CTTFEOPHbZM6ElfDDYnNRV2Y4BQvPPvyiO+xqwZ
+         BvzwGO0qLTU3j3noDzAqqL71QwbmJeMXG9xQ5QSQqK8wEL03ovWWCpo9a/q7CWrTUwuY
+         ZXpIwRuBtL4V8rsG/aM26Ed02JwAnlqzHCbPgnJmsWEfv1IacnxZXwJRMIN5znLSuVNy
+         DdQw==
+X-Gm-Message-State: APjAAAU4pTTEVNf7blcokUT1N0ydNEkKfe91kQOKighiuK5z9sG11xpe
+        opZJV/dyVcFMh9fi3qCtIQg=
+X-Google-Smtp-Source: APXvYqxGN/PrqrLwxa0ubP16VJN6Tc9atCYrusn+WPQ9FgY1lJKZQKlZ4iTMyWcdEaH3tcgIGJ0TvA==
+X-Received: by 2002:a37:c45:: with SMTP id 66mr73264687qkm.31.1564440416719;
+        Mon, 29 Jul 2019 15:46:56 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id t6sm27871081qkh.129.2019.07.29.15.46.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 15:46:55 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 18:46:54 -0400
+Message-ID: <20190729184654.GC25249@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] net: dsa: mv88e6xxx: avoid some redundant vtu
+ load/purge operations
+In-Reply-To: <20190722233713.31396-1-rasmus.villemoes@prevas.dk>
+References: <20190722233713.31396-1-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190723051446.20013-1-bjorn.andersson@linaro.org>
-References: <20190723051446.20013-1-bjorn.andersson@linaro.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Rob Clark <robclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [RFC] clk: Remove cached cores in parent map during unregister
-User-Agent: alot/0.8.1
-Date:   Mon, 29 Jul 2019 15:46:51 -0700
-Message-Id: <20190729224652.17291206E0@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-07-22 22:14:46)
-> As clocks are registered their parents are resolved and the parent_map
-> is updated to cache the clk_core objects of each existing parent.
-> But in the event of a clock being unregistered this cache will carry
-> dangling pointers if not invalidated, so do this for all children of the
-> clock being unregistered.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Hi Rasmus,
+
+On Mon, 22 Jul 2019 23:37:26 +0000, Rasmus Villemoes <rasmus.villemoes@prevas.dk> wrote:
+> We have an ERPS (Ethernet Ring Protection Switching) setup involving
+> mv88e6250 switches which we're in the process of switching to a BSP
+> based on the mainline driver. Breaking any link in the ring works as
+> expected, with the ring reconfiguring itself quickly and traffic
+> continuing with almost no noticable drops. However, when plugging back
+> the cable, we see 5+ second stalls.
+> 
+> This has been tracked down to the userspace application in charge of
+> the protocol missing a few CCM messages on the good link (the one that
+> was not unplugged), causing it to broadcast a "signal fail". That
+> message eventually reaches its link partner, which responds by
+> blocking the port. Meanwhile, the first node has continued to block
+> the port with the just plugged-in cable, breaking the network. And the
+> reason for those missing CCM messages has in turn been tracked down to
+> the VTU apparently being too busy servicing load/purge operations that
+> the normal lookups are delayed.
+> 
+> Initial state, the link between C and D is blocked in software.
+> 
+>      _____________________
+>     /                     \
+>    |                       |
+>    A ----- B ----- C *---- D
+> 
+> Unplug the cable between C and D.
+> 
+>      _____________________
+>     /                     \
+>    |                       |
+>    A ----- B ----- C *   * D
+> 
+> Reestablish the link between C and D.
+>      _____________________
+>     /                     \
+>    |                       |
+>    A ----- B ----- C *---- D
+> 
+> Somehow, enough VTU/ATU operations happen inside C that prevents
+> the application from receving the CCM messages from B in a timely
+> manner, so a Signal Fail message is sent by C. When B receives
+> that, it responds by blocking its port.
+> 
+>      _____________________
+>     /                     \
+>    |                       |
+>    A ----- B *---* C *---- D
+> 
+> Very shortly after this, the signal fail condition clears on the
+> BC link (some CCM messages finally make it through), so C
+> unblocks the port. However, a guard timer inside B prevents it
+> from removing the blocking before 5 seconds have elapsed.
+> 
+> It is not unlikely that our userspace ERPS implementation could be
+> smarter and/or is simply buggy. However, this patch fixes the symptoms
+> we see, and is a small optimization that should not break anything
+> (knock wood). The idea is simply to avoid doing an VTU load of an
+> entry identical to the one already present. To do that, we need to
+> know whether mv88e6xxx_vtu_get() actually found an existing entry, or
+> has just prepared a struct mv88e6xxx_vtu_entry for us to load. To that
+> end, let vlan->valid be an output parameter. The other two callers of
+> mv88e6xxx_vtu_get() are not affected by this patch since they pass
+> new=false.
+> 
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 > ---
->=20
-> This resolves the issue seen where the DSI PLL (and it's provided clocks)=
- is
-> being registered and unregistered multiple times due to probe deferral.
->=20
-> Marking it RFC because I don't fully understand the life of the clock yet.
+>  drivers/net/dsa/mv88e6xxx/chip.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+> index 6b17cd961d06..2e500428670c 100644
+> --- a/drivers/net/dsa/mv88e6xxx/chip.c
+> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
+> @@ -1423,7 +1423,6 @@ static int mv88e6xxx_vtu_get(struct mv88e6xxx_chip *chip, u16 vid,
+>  
+>  		/* Initialize a fresh VLAN entry */
+>  		memset(entry, 0, sizeof(*entry));
+> -		entry->valid = true;
+>  		entry->vid = vid;
+>  
+>  		/* Exclude all ports */
+> @@ -1618,6 +1617,9 @@ static int _mv88e6xxx_port_vlan_add(struct mv88e6xxx_chip *chip, int port,
+>  	if (err)
+>  		return err;
+>  
+> +	if (vlan.valid && vlan.member[port] == member)
+> +		return 0;
+> +	vlan.valid = true;
+>  	vlan.member[port] = member;
+>  
+>  	err = mv88e6xxx_vtu_loadpurge(chip, &vlan);
 
-The concept sounds sane but the implementation is going to be not much
-fun. The problem is that a clk can be in many different parent caches,
-even ones for clks that aren't currently parented to it. We would need
-to walk the entire tree(s) and find anywhere that we've cached the
-clk_core pointer and invalidate it. Maybe we can speed that up a little
-bit by keeping a reference to the entry of each parent cache that is for
-the parent we're removing, essentially holding an inverse cache, but I'm
-not sure it will provide any benefit besides wasting space for this one
-operation that we shouldn't be doing very often if at all.
+I'd prefer not to use the mv88e6xxx_vtu_entry structure for output
+parameters, this can be confusing. As you correctly mentioned, this
+initialization is only done for _mv88e6xxx_port_vlan_add, so I'll
+prepare a patch which gets rid of the boolean parameter and move that
+logic up.
 
-It certainly sounds easier to iterate through the whole tree and just
-invalidate entries in all the caches under the prepare lock. We can
-optimize it later.
 
->=20
->  drivers/clk/clk.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index c0990703ce54..8cd1ad977c50 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -2517,7 +2528,8 @@ int clk_set_parent(struct clk *clk, struct clk *par=
-ent)
->                 clk_core_rate_unprotect(clk->core);
-> =20
->         ret =3D clk_core_set_parent_nolock(clk->core,
-> -                                        parent ? parent->core : NULL);
-> +                                        parent ? parent->core : NULL,
-> +                                        false);
-
-Nitpick. I'd prefer another function to invalidate the cache of a clk
-given another clk_core pointer.
-
-> =20
->         if (clk->exclusive_count)
->                 clk_core_rate_protect(clk->core);
+Thanks,
+Vivien
