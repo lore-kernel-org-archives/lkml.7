@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2EBC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BD8C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BD4217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3132F217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428470;
-	bh=6vHvRQBtyfYp/zt+ZKBcm/GfCCmNfiJ/IJqu3vk8oD4=;
+	s=default; t=1564428474;
+	bh=l9gRyO9IidlNojMDzg1+eyqr6O5J4ZzI0DHcDuMu6wM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wnUXnjlDyKBLGAsJbKkle17TYUOqfAOuv4l8Ixm7kL/od5Y/FsLLXVG0JweoXRXcg
-	 +Bcnas9N5GEURnY+CRiy8vOBYKF5veUT2C2X7g61gc2UMZ7xCCTiE6god3SbCw7sgq
-	 arGAjxBUFO0hEjjVQm8kSUuqmyZb4lqB9l8CqY5w=
+	b=ZSKb3kLlfpsRgHiiY46cD0999VMUTiHcdwi4eEevrc1nrD/rDL0bKC7PBNOgwORd4
+	 pdrMGlSYGI277UJxxK0DHuclQkOI8JKOePoCQJ/kaE2gniqWLXCiLMKNQ2SQTDFt39
+	 dXI8kVERklHLf2Wzg7jEFzf9xre/w9WvugKiMI0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbfG2T1t (ORCPT
+        id S2388373AbfG2T1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:27:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40418 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728887AbfG2T1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:27:47 -0400
+        id S1729943AbfG2T1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:27:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07871217D4;
-        Mon, 29 Jul 2019 19:27:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB4CA217D6;
+        Mon, 29 Jul 2019 19:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428466;
-        bh=6vHvRQBtyfYp/zt+ZKBcm/GfCCmNfiJ/IJqu3vk8oD4=;
+        s=default; t=1564428469;
+        bh=l9gRyO9IidlNojMDzg1+eyqr6O5J4ZzI0DHcDuMu6wM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eScyJa+R2Ig64enViY6HqT5Y1CNNfsxwHUKM6gBkJYxwn2JDBKU9Ct2Mad3X6qDHD
-         /Mf5og79BhpUrWk7CyRvBZeaS1zBx+rKwg4N99f+LIIMx4kR0kXng8o+s3odgNp4+a
-         3SuZNAuwHxL8eVGh0EMG5yFms2mUeY44hdjrhovQ=
+        b=1cX4Qm8kOXhU810qEu6sqZaqPRJZH713Dg+bq8HTnpEQH+XY2moCbQ/XP66i07gTP
+         xDAl6bhAFijdaC/l6+AFyXXBVi3D+z8jyFJhbcGsGd/0TMnkVA+icJAU8LRdJ9RPhY
+         BCyYBYKlbiJUBkBUGUT+qC8Xaal4u52xGk9vE78c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Eric Biggers <ebiggers@kernel.org>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 085/293] crypto: serpent - mark __serpent_setkey_sbox noinline
-Date:   Mon, 29 Jul 2019 21:19:36 +0200
-Message-Id: <20190729190831.114721209@linuxfoundation.org>
+Subject: [PATCH 4.14 086/293] crypto: asymmetric_keys - select CRYPTO_HASH where needed
+Date:   Mon, 29 Jul 2019 21:19:37 +0200
+Message-Id: <20190729190831.179501781@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,45 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 473971187d6727609951858c63bf12b0307ef015 ]
+[ Upstream commit 90acc0653d2bee203174e66d519fbaaa513502de ]
 
-The same bug that gcc hit in the past is apparently now showing
-up with clang, which decides to inline __serpent_setkey_sbox:
+Build testing with some core crypto options disabled revealed
+a few modules that are missing CRYPTO_HASH:
 
-crypto/serpent_generic.c:268:5: error: stack frame size of 2112 bytes in function '__serpent_setkey' [-Werror,-Wframe-larger-than=]
+crypto/asymmetric_keys/x509_public_key.o: In function `x509_get_sig_params':
+x509_public_key.c:(.text+0x4c7): undefined reference to `crypto_alloc_shash'
+x509_public_key.c:(.text+0x5e5): undefined reference to `crypto_shash_digest'
+crypto/asymmetric_keys/pkcs7_verify.o: In function `pkcs7_digest.isra.0':
+pkcs7_verify.c:(.text+0xab): undefined reference to `crypto_alloc_shash'
+pkcs7_verify.c:(.text+0x1b2): undefined reference to `crypto_shash_digest'
+pkcs7_verify.c:(.text+0x3c1): undefined reference to `crypto_shash_update'
+pkcs7_verify.c:(.text+0x411): undefined reference to `crypto_shash_finup'
 
-Marking it 'noinline' reduces the stack usage from 2112 bytes to
-192 and 96 bytes, respectively, and seems to generate more
-useful object code.
+This normally doesn't show up in randconfig tests because there is
+a large number of other options that select CRYPTO_HASH.
 
-Fixes: c871c10e4ea7 ("crypto: serpent - improve __serpent_setkey with UBSAN")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Eric Biggers <ebiggers@kernel.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/serpent_generic.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ crypto/asymmetric_keys/Kconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/crypto/serpent_generic.c b/crypto/serpent_generic.c
-index 7c3382facc82..600bd288881d 100644
---- a/crypto/serpent_generic.c
-+++ b/crypto/serpent_generic.c
-@@ -229,7 +229,13 @@
- 	x4 ^= x2;					\
- 	})
- 
--static void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
-+/*
-+ * both gcc and clang have misoptimized this function in the past,
-+ * producing horrible object code from spilling temporary variables
-+ * on the stack. Forcing this part out of line avoids that.
-+ */
-+static noinline void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2,
-+					   u32 r3, u32 r4, u32 *k)
- {
- 	k += 100;
- 	S3(r3, r4, r0, r1, r2); store_and_load_keys(r1, r2, r4, r3, 28, 24);
+diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
+index f3702e533ff4..d8a73d94bb30 100644
+--- a/crypto/asymmetric_keys/Kconfig
++++ b/crypto/asymmetric_keys/Kconfig
+@@ -15,6 +15,7 @@ config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+ 	select MPILIB
+ 	select CRYPTO_HASH_INFO
+ 	select CRYPTO_AKCIPHER
++	select CRYPTO_HASH
+ 	help
+ 	  This option provides support for asymmetric public key type handling.
+ 	  If signature generation and/or verification are to be used,
+@@ -34,6 +35,7 @@ config X509_CERTIFICATE_PARSER
+ config PKCS7_MESSAGE_PARSER
+ 	tristate "PKCS#7 message parser"
+ 	depends on X509_CERTIFICATE_PARSER
++	select CRYPTO_HASH
+ 	select ASN1
+ 	select OID_REGISTRY
+ 	help
+@@ -56,6 +58,7 @@ config SIGNED_PE_FILE_VERIFICATION
+ 	bool "Support for PE file signature verification"
+ 	depends on PKCS7_MESSAGE_PARSER=y
+ 	depends on SYSTEM_DATA_VERIFICATION
++	select CRYPTO_HASH
+ 	select ASN1
+ 	select OID_REGISTRY
+ 	help
 -- 
 2.20.1
 
