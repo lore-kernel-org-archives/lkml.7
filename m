@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C03C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 248F4C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5DD217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA6EC2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428950;
-	bh=H5VIOUyEePA3e7YILjunOmQC973IRxnSoT1mO4GezMc=;
+	s=default; t=1564428958;
+	bh=nfaBBkNgqTdKnb9X8BDpa8JKZUUFpkBnv5zNHO/Pxv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wnPiPS0bRwQQwtRMRV6ldQxVxropXopF/4npRonTKr8HBqe4NVAqOPTQceQcI83t5
-	 ai2xpvsJM8I4FPlJmdZhgH7ngqQJsN+272vfjTF6p4i6nakDNWZREG1ouQ6JY314YP
-	 hLIqiyIE31Nt05W/S2h7tan3CbBpekbdk18oEkGw=
+	b=JntDmK1KTHdPU4PcIk9x45/O/BpfDiQnAdxc3S4AaFDzDZs1CqHVbEaGHD3ljPgG3
+	 gj3mpJEXHDaVGupliafbyt3NeDWgTxDv8ZVtxs1um/gTCuA3WkXLCg+5p11TSuQ9s6
+	 hEwVgyjc2vW3h6hqdDYje0WnrZ/vUZCZfXrlaMkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388540AbfG2Tft (ORCPT
+        id S2388418AbfG2Tf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:35:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50120 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:35:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388528AbfG2Tfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:35:46 -0400
+        id S2388543AbfG2Tfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:35:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82145217D9;
-        Mon, 29 Jul 2019 19:35:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7674217D9;
+        Mon, 29 Jul 2019 19:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428946;
-        bh=H5VIOUyEePA3e7YILjunOmQC973IRxnSoT1mO4GezMc=;
+        s=default; t=1564428952;
+        bh=nfaBBkNgqTdKnb9X8BDpa8JKZUUFpkBnv5zNHO/Pxv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ge0sY79RohgICVETjNcTBc7DIreW3WXAzt/+VKS0u3uxvn3yaccdxwpmqslKuCoep
-         kjUykcHIUuLt3u0DgmC+C/BtF2TswQb0Bfipfn88lvIntYxfiUubpgHDpMG1JzWTRN
-         gqUv8z11iZVIM8szbwJanH/ULlKSktPrjrQ5xPRI=
+        b=uQMgaW+O0kIyeipChtOksdgENJzYVNrYFhDj6OcorELugI6z5+NZMZe0JFZf5Qmo6
+         gX2BNoux7ZoBqUtz+JmDcENW7XGb/H4HnAjiY2fBQSXWtqKhDK8bF7p/gzX5WMupVq
+         aimw7amSr2vot1Levsuq01E8djDtYys2/J80NsYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Yakir Yang <ykk@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 237/293] phy: renesas: rcar-gen2: Fix memory leak at error paths
-Date:   Mon, 29 Jul 2019 21:22:08 +0200
-Message-Id: <20190729190842.604743846@linuxfoundation.org>
+Subject: [PATCH 4.14 239/293] drm/rockchip: Properly adjust to a true clock in adjusted_mode
+Date:   Mon, 29 Jul 2019 21:22:10 +0200
+Message-Id: <20190729190842.772487729@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -62,42 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4a36e82924d3305a17ac987a510f3902df5a4b2 ]
+[ Upstream commit 99b9683f2142b20bad78e61f7f829e8714e45685 ]
 
-This patch fixes memory leak at error paths of the probe function.
-In for_each_child_of_node, if the loop returns, the driver should
-call of_put_node() before returns.
+When fixing up the clock in vop_crtc_mode_fixup() we're not doing it
+quite correctly.  Specifically if we've got the true clock 266666667 Hz,
+we'll perform this calculation:
+   266666667 / 1000 => 266666
 
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-Fixes: 1233f59f745b237 ("phy: Renesas R-Car Gen2 PHY driver")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Later when we try to set the clock we'll do clk_set_rate(266666 *
+1000).  The common clock framework won't actually pick the proper clock
+in this case since it always wants clocks <= the specified one.
+
+Let's solve this by using DIV_ROUND_UP.
+
+Fixes: b59b8de31497 ("drm/rockchip: return a true clock rate to adjusted_mode")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Reviewed-by: Yakir Yang <ykk@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190614224730.98622-1-dianders@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/renesas/phy-rcar-gen2.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen2.c b/drivers/phy/renesas/phy-rcar-gen2.c
-index 97d4dd6ea924..aa02b19b7e0e 100644
---- a/drivers/phy/renesas/phy-rcar-gen2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen2.c
-@@ -288,6 +288,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
- 		error = of_property_read_u32(np, "reg", &channel_num);
- 		if (error || channel_num > 2) {
- 			dev_err(dev, "Invalid \"reg\" property\n");
-+			of_node_put(np);
- 			return error;
- 		}
- 		channel->select_mask = select_mask[channel_num];
-@@ -303,6 +304,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
- 						   &rcar_gen2_phy_ops);
- 			if (IS_ERR(phy->phy)) {
- 				dev_err(dev, "Failed to create PHY\n");
-+				of_node_put(np);
- 				return PTR_ERR(phy->phy);
- 			}
- 			phy_set_drvdata(phy->phy, phy);
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index f1fa8d5c9b52..7010424b2f89 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -861,7 +861,8 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+ 	struct vop *vop = to_vop(crtc);
+ 
+ 	adjusted_mode->clock =
+-		clk_round_rate(vop->dclk, mode->clock * 1000) / 1000;
++		DIV_ROUND_UP(clk_round_rate(vop->dclk, mode->clock * 1000),
++			     1000);
+ 
+ 	return true;
+ }
 -- 
 2.20.1
 
