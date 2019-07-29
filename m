@@ -2,108 +2,128 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C9CC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81237C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62CD020679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE2020679
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:27:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iZ3+oVH8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IE5wQkOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbfG2U0T (ORCPT
+        id S2387599AbfG2U1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:26:19 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51592 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfG2U0S (ORCPT
+        Mon, 29 Jul 2019 16:27:32 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54529 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfG2U1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:26:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kE4otvHLrwNbM6nfc0GGeMt8xggn42O60VMYMYfGMeM=; b=iZ3+oVH8XMUQQS3HNZ6UNEa/f
-        Lc9XLwmuHuzNKqXDtmgLnMy4rZEViJpxJbMIHbIg5yr2u+AG5ox4k7xAKH7vC6zQVNoOIELw6MxK4
-        vDh/CHOiievgXS8Dn/AU+dquGOU2LHvNkBjfUjynFCeZW6oeos3XnX+acSm1dzn9XAFCZ/h4wGFT3
-        WKJjfX2xVi+VdosGR+UXpp45h8DgEYAL2XS70H5CzEk5EBx21QYzFu311HMh/ydjvukKyhOaZDd4i
-        Pb5pDb3KauPfiiugb7sh36X5mu3oIYLQoTxq14jYaYjg+Xj4yBWjmA772oJM/fVO+3QXdfTBv3JmR
-        mpjwDnzTA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsCDi-00078Y-81; Mon, 29 Jul 2019 20:26:10 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B63DA203BF70D; Mon, 29 Jul 2019 22:26:08 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 22:26:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rik van Riel <riel@surriel.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, pjt@google.com,
-        dietmar.eggemann@arm.com, mingo@redhat.com,
-        morten.rasmussen@arm.com, tglx@linutronix.de,
-        mgorman@techsingularity.net, vincent.guittot@linaro.org
-Subject: Re: [PATCH 03/14] sched,fair: redefine runnable_load_avg as the sum
- of task_h_load
-Message-ID: <20190729202608.GT31398@hirez.programming.kicks-ass.net>
-References: <20190722173348.9241-1-riel@surriel.com>
- <20190722173348.9241-4-riel@surriel.com>
+        Mon, 29 Jul 2019 16:27:31 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p74so54990878wme.4;
+        Mon, 29 Jul 2019 13:27:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KBY1KbZOnMvZrZHmdH2FrpwIL93ExhkFfwDFt85kHsI=;
+        b=IE5wQkOHnUoztkMpJoQ2nn1zzhDvX5O97XUsPLi2aDMdVW+n+layGvyv6MI3mNPOpp
+         ZAJMazltzWyWYKegr6OGfe3uxyJmHEHpZ4E+9wJTnNxnB/UaCWJHPDmU7r8dUsxi9EE4
+         n8ra8Z/eVyvZ4upnCQ+YSxREA5nB4Np1YDoUlVWuLsr2ZAwyZpDhuUKg9soY3VrtbYcY
+         YfDx8oMBTIl2q/QzwFto3oNayCEXD4ib7J052e93WO3LCIntgBRZF7ZGNLU3a2imXmSi
+         yj3LbFX7yXoGiSMT9MDTahHz7WBnGesQVGct1FzZtJ3dQlCDDFfPqsInFvTiQkzt6qBm
+         4gdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KBY1KbZOnMvZrZHmdH2FrpwIL93ExhkFfwDFt85kHsI=;
+        b=jUQOOHGsR30IDdl1pWENj4d4WWyDpk1/WKVibyFUH49AV/XjUm0XUZNaM0jX6r2jON
+         LNGjOl/3CJUFETnV+9vXhlwxTohox25pJPT8hopL0fihXRsVZgmRp6Ts8zkXPNaY8JTz
+         VVJjdG9M1W7fVHfD19L8ln10IEks751Fn+NOG9wpbDTE5GJ0JP4oM9o3KxXkm2NP+ZeM
+         2/04z8svEDdmL5TPPKcj9+GiXL7w2gpwazpynQHt5r1YBsLOVB6wCKKHJY8H8piG3+cX
+         CeQ+0Vwyvpt2SovBDSR2Qlh6r5iUh1Mg/4L5Wxr41fJkV3OkHdPLjRK7l9Kx1IzAAXHq
+         LMag==
+X-Gm-Message-State: APjAAAWkyrjQqpC2+PHme+bwvD2Sc2oTqFJ6cVSJTX7yXmNFvdk5HVzh
+        +liV3nOgIrqFO2DIV6vvGfHBaSeAv5BAfQDtfn0=
+X-Google-Smtp-Source: APXvYqxXecdIIZhY5Beq3TXPDd+pnZWkNdeBaugff95dcv/OvRG57PB34sVze96jsSmVe3AVrs6vnWFMTEzHAb47VFA=
+X-Received: by 2002:a1c:18d:: with SMTP id 135mr100779974wmb.171.1564432048929;
+ Mon, 29 Jul 2019 13:27:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722173348.9241-4-riel@surriel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190728192429.1514-1-daniel.baluta@nxp.com> <20190728192429.1514-5-daniel.baluta@nxp.com>
+ <20190729201508.GB20594@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <20190729201508.GB20594@Asurada-Nvidia.nvidia.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Mon, 29 Jul 2019 23:27:17 +0300
+Message-ID: <CAEnQRZCxi9Jo_-MrHaLarX_6uiKaSmJuVgRSA23P+vE305jAuA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] ASoC: dt-bindings: Document dl-mask property
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Mihai Serban <mihai.serban@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Viorel Suman <viorel.suman@nxp.com>,
+        Timur Tabi <timur@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Takashi Iwai <tiwai@suse.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 01:33:37PM -0400, Rik van Riel wrote:
-> @@ -263,8 +258,8 @@ ___update_load_avg(struct sched_avg *sa, unsigned long load, unsigned long runna
->  
->  int __update_load_avg_blocked_se(u64 now, struct sched_entity *se)
->  {
-> -	if (___update_load_sum(now, &se->avg, 0, 0, 0)) {
-> -		___update_load_avg(&se->avg, se_weight(se), se_runnable(se));
-> +	if (___update_load_sum(now, &se->avg, 0, 0)) {
-> +		___update_load_avg(&se->avg, se_weight(se));
->  		return 1;
->  	}
->  
+On Mon, Jul 29, 2019 at 11:15 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+>
+> On Sun, Jul 28, 2019 at 10:24:26PM +0300, Daniel Baluta wrote:
+> > SAI supports up to 8 data lines. This property let the user
+> > configure how many data lines should be used per transfer
+> > direction (Tx/Rx).
+>
+> This sounds a bit less persuasive to me as we are adding a
+> DT property that's used to describe a hardware connections
+> and it would be probably better to mention that the mapping
+> between the mask and the data lines could be more flexible
+> than consecutive active data lines as you said previously.
+>
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/sound/fsl-sai.txt | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> > index 2e726b983845..2b38036a4883 100644
+> > --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> > +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> > @@ -49,6 +49,13 @@ Optional properties:
+> >
+> >    - big-endian               : Boolean property, required if all the SAI
+> >                         registers are big-endian rather than little-endian.
+> > +  - fsl,dl-mask              : list of two integers (bitmask, first for RX, second
+>
+> I am leaving this naming to DT maintainer.
+>
+> > +                       for TX) representing enabled datalines. Bit 0
+> > +                       represents first data line, bit 1 represents second
+> > +                       data line and so on. Data line is enabled if
+> > +                       corresponding bit is set to 1. By default, if property
+> > +                       not present, only dataline 0 is enabled for both
+> > +                       directions.
+>
+> To make this patch more convincing, could we add an example
+> as well in the Example section of this binding file? Like:
+>         /* RX data lines 0/1 and TX data lines 0/2 are connected */
+>         fsl,dl-mask = <0x3 0x5>;
 
-The comment above that needs adjustment too, I think.
-
---- a/kernel/sched/pelt.c
-+++ b/kernel/sched/pelt.c
-@@ -234,28 +234,13 @@ ___update_load_avg(struct sched_avg *sa,
- /*
-  * sched_entity:
-  *
-- *   task:
-- *     se_runnable() == se_weight()
-- *
-- *   group: [ see update_cfs_group() ]
-- *     se_weight()   = tg->weight * grq->load_avg / tg->load_avg
-- *     se_runnable() = se_weight(se) * grq->runnable_load_avg / grq->load_avg
-- *
-  *   load_sum := runnable_sum
-  *   load_avg = se_weight(se) * runnable_avg
-  *
-- *   runnable_load_sum := runnable_sum
-- *   runnable_load_avg = se_runnable(se) * runnable_avg
-- *
-- * XXX collapse load_sum and runnable_load_sum
-- *
-  * cfq_rq:
-  *
-  *   load_sum = \Sum se_weight(se) * se->avg.load_sum
-  *   load_avg = \Sum se->avg.load_avg
-- *
-- *   runnable_load_sum = \Sum se_runnable(se) * se->avg.runnable_load_sum
-- *   runnable_load_avg = \Sum se->avg.runable_load_avg
-  */
- 
- int __update_load_avg_blocked_se(u64 now, struct sched_entity *se)
+Sure, will add an example.
