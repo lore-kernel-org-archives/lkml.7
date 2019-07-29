@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D05C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0ADC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F6A21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DCB2205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429718;
-	bh=swzzTSWVDkECQUft7G79O2Qg7RSN7yfYSx8KiYioYDo=;
+	s=default; t=1564429721;
+	bh=2wxzt5JMsqqpQOcd2Ku1eTy6OT7lVsReh/kZknImlaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FLh6tkudjCbUeIuFPgyyNaChbIPmmJmHjJuSZI0gU+c9d7zYJ4DWnRYBg4sDVGJgs
-	 eASO0aZXyq6hX+vnr4FSWV88Wy9QidT97LdoD2VoK3yC54Fgh8O4DJSxII5IwscVMR
-	 Nw7XmWj4jcQixU8J/ohyJetELyPROwfhhRrCdk4s=
+	b=JPc4Eh8PhJkLzbzZuMibt7fPSyjQDiE+kgxamlOXvnQQKCBV1SwHaFbKlaKpZPwfx
+	 km/CRXnoHSzCkqdaPTyv4szrOENs/olMTI5QAlEfmacRSTVGmxEJOZO6w6q81AxVXS
+	 +Ue+PERZDu6P6ZP7MSVMtQ5Fzdvm2OTicpAeqf6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390193AbfG2Tsh (ORCPT
+        id S2390417AbfG2Tsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:48:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38834 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:48:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390142AbfG2Tse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:48:34 -0400
+        id S2390133AbfG2Tsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:48:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63052205F4;
-        Mon, 29 Jul 2019 19:48:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 084032171F;
+        Mon, 29 Jul 2019 19:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429713;
-        bh=swzzTSWVDkECQUft7G79O2Qg7RSN7yfYSx8KiYioYDo=;
+        s=default; t=1564429716;
+        bh=2wxzt5JMsqqpQOcd2Ku1eTy6OT7lVsReh/kZknImlaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hurK1f/UPT6JlWb5KcHrNCoBnn2ChOGMOLHA/UNN3ZPpH9T9/P91xL1WCN3fJ5cDH
-         +9CC2tbPyez1mve3lg8ZvlmmFw6nze2KQAx0NTXJfeFnJxtGD9ysb1+FOYUNnK2Fqa
-         8dpSeTO8kc5hS16HJgW9Gb98VJjE5QfOfxKi7BOM=
+        b=k3tH/Stvj4Mz6yVvKbr0motY7fodWwi6u+FjW5SE1C0y75NAeCNhgy+fXciz+hKQx
+         vui0Yb5Dvtn5dGsZUso4/kAJYiqa6t8GGN5fjKfjIcl4etWMqXAXM1mvVsW45OulMO
+         qog1C6Qxy20fbLIsZ2urkQT4nhP3ryK9qxtgE/Ro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
+        stable@vger.kernel.org,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 034/215] staging: kpc2000: report error status to spi core
-Date:   Mon, 29 Jul 2019 21:20:30 +0200
-Message-Id: <20190729190746.218831662@linuxfoundation.org>
+Subject: [PATCH 5.2 070/215] usb: gadget: Zero ffs_io_data
+Date:   Mon, 29 Jul 2019 21:21:06 +0200
+Message-Id: <20190729190752.430092823@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -59,53 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9164f336311863d3e9f80840f4a1cce2aee293bd ]
+[ Upstream commit 508595515f4bcfe36246e4a565cf280937aeaade ]
 
-There is an error condition that's not reported to
-the spi core in kp_spi_transfer_one_message().
-It should restore status value to m->status, and
-return it in error path.
+In some cases the "Allocate & copy" block in ffs_epfile_io() is not
+executed. Consequently, in such a case ffs_alloc_buffer() is never called
+and struct ffs_io_data is not initialized properly. This in turn leads to
+problems when ffs_free_buffer() is called at the end of ffs_epfile_io().
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch uses kzalloc() instead of kmalloc() in the aio case and memset()
+in non-aio case to properly initialize struct ffs_io_data.
+
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/kpc2000/kpc_spi/spi_driver.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/kpc2000/kpc_spi/spi_driver.c b/drivers/staging/kpc2000/kpc_spi/spi_driver.c
-index 86df16547a92..2f535022dc03 100644
---- a/drivers/staging/kpc2000/kpc_spi/spi_driver.c
-+++ b/drivers/staging/kpc2000/kpc_spi/spi_driver.c
-@@ -333,7 +333,7 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
-     list_for_each_entry(transfer, &m->transfers, transfer_list) {
-         if (transfer->tx_buf == NULL && transfer->rx_buf == NULL && transfer->len) {
-             status = -EINVAL;
--            break;
-+            goto error;
-         }
-         
-         /* transfer */
-@@ -371,7 +371,7 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
-             
-             if (count != transfer->len) {
-                 status = -EIO;
--                break;
-+                goto error;
-             }
-         }
-         
-@@ -389,6 +389,10 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
-     /* done work */
-     spi_finalize_current_message(master);
-     return 0;
-+
-+ error:
-+    m->status = status;
-+    return status;
- }
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index c7ed90084d1a..213ff03c8a9f 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1183,11 +1183,12 @@ static ssize_t ffs_epfile_write_iter(struct kiocb *kiocb, struct iov_iter *from)
+ 	ENTER();
  
- static void
+ 	if (!is_sync_kiocb(kiocb)) {
+-		p = kmalloc(sizeof(io_data), GFP_KERNEL);
++		p = kzalloc(sizeof(io_data), GFP_KERNEL);
+ 		if (unlikely(!p))
+ 			return -ENOMEM;
+ 		p->aio = true;
+ 	} else {
++		memset(p, 0, sizeof(*p));
+ 		p->aio = false;
+ 	}
+ 
+@@ -1219,11 +1220,12 @@ static ssize_t ffs_epfile_read_iter(struct kiocb *kiocb, struct iov_iter *to)
+ 	ENTER();
+ 
+ 	if (!is_sync_kiocb(kiocb)) {
+-		p = kmalloc(sizeof(io_data), GFP_KERNEL);
++		p = kzalloc(sizeof(io_data), GFP_KERNEL);
+ 		if (unlikely(!p))
+ 			return -ENOMEM;
+ 		p->aio = true;
+ 	} else {
++		memset(p, 0, sizeof(*p));
+ 		p->aio = false;
+ 	}
+ 
 -- 
 2.20.1
 
