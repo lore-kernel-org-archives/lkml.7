@@ -2,207 +2,232 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905C0C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797C5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E94206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46697206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:04:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PJ8/+ox2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbfG2KEz (ORCPT
+        id S1728290AbfG2KEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:04:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48288 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726358AbfG2KEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 06:04:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 74108AE86;
-        Mon, 29 Jul 2019 10:04:52 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 7E6DC1E4379; Mon, 29 Jul 2019 12:04:49 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 12:04:49 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Qian Cai <cai@lca.pw>, mingo@redhat.com, tj@kernel.org,
-        dchinner@redhat.com, fengguang.wu@intel.com, jack@suse.cz,
-        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] trace/writeback: fix Wstringop-truncation warnings
-Message-ID: <20190729100449.GA17833@quack2.suse.cz>
-References: <1562948087-5374-1-git-send-email-cai@lca.pw>
- <20190716170339.1c44719d@gandalf.local.home>
+Received: from bombadil.infradead.org ([198.137.202.133]:50186 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbfG2KEy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:04:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bVrlXLTKjzQSrCNbyRFlcQ9T4V/M3MWibCOzfM4QNPw=; b=PJ8/+ox28kUya6Uv3tkBtkFyO
+        2Rlsaep34YBsQKZuZAMOQx8NVTH0BZpscj74VkHWZ2rhzFz7qpUFrlFGVQqqTboti0XpThDGeNGVm
+        MQ4GuWHGlSZbiwaApIBH2IFjgvg5qBbXqzbquoxEZiL1qxWCFH5UH1iztjljSyvKR72sN8ds/Irwp
+        aKEnzxYgof5adDUR+4FgCaalprWb/egrMxjR93TPTtsT5/Ozsv6FJzTQeDwvzX+Ve7pnpZSKIVawz
+        +bPWvPHe5ikaLPbtziSK9VFsLIdnzMzPGIfny7Lg4I++HVA8eXxTnBhPIqZdqrDLq3MeKxxnP8euC
+        0v/WxCZew==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hs2WP-0005UM-79; Mon, 29 Jul 2019 10:04:49 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1F5C32025E7A9; Mon, 29 Jul 2019 12:04:47 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 12:04:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86: drop REG_OUT macro from hweight functions
+Message-ID: <20190729100447.GD31425@hirez.programming.kicks-ass.net>
+References: <20190728115140.GA32463@avx2>
+ <20190729094329.GW31381@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190716170339.1c44719d@gandalf.local.home>
+In-Reply-To: <20190729094329.GW31381@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 16-07-19 17:03:39, Steven Rostedt wrote:
-> On Fri, 12 Jul 2019 12:14:47 -0400
-> Qian Cai <cai@lca.pw> wrote:
-> 
-> > There are many of those warnings.
-> > 
-> > In file included from ./arch/powerpc/include/asm/paca.h:15,
-> >                  from ./arch/powerpc/include/asm/current.h:13,
-> >                  from ./include/linux/thread_info.h:21,
-> >                  from ./include/asm-generic/preempt.h:5,
-> >                  from ./arch/powerpc/include/generated/asm/preempt.h:1,
-> >                  from ./include/linux/preempt.h:78,
-> >                  from ./include/linux/spinlock.h:51,
-> >                  from fs/fs-writeback.c:19:
-> > In function 'strncpy',
-> >     inlined from 'perf_trace_writeback_page_template' at
-> > ./include/trace/events/writeback.h:56:1:
-> > ./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified
-> > bound 32 equals destination size [-Wstringop-truncation]
-> >   return __builtin_strncpy(p, q, size);
-> >          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Fix it by using strlcpy() which will always be NUL-terminated instead of
-> > strncpy(). strlcpy() has already been used at some places in this file.
-> > 
-> > Fixes: 455b2864686d ("writeback: Initial tracing support")
-> > Fixes: 028c2dd184c0 ("writeback: Add tracing to balance_dirty_pages")
-> > Fixes: e84d0a4f8e39 ("writeback: trace event writeback_queue_io")
-> > Fixes: b48c104d2211 ("writeback: trace event bdi_dirty_ratelimit")
-> > Fixes: cc1676d917f3 ("writeback: Move requeueing when I_SYNC set to writeback_sb_inodes()")
-> > Fixes: 9fb0a7da0c52 ("writeback: add more tracepoints")
-> > 
-> > Signed-off-by: Qian Cai <cai@lca.pw>
-> > ---
-> >  include/trace/events/writeback.h | 20 ++++++++++----------
-> >  1 file changed, 10 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
-> > index aa7f3aeac740..8e3b3c4fd964 100644
-> > --- a/include/trace/events/writeback.h
-> > +++ b/include/trace/events/writeback.h
-> > @@ -66,7 +66,7 @@
-> >  	),
-> >  
-> >  	TP_fast_assign(
-> > -		strncpy(__entry->name,
-> > +		strlcpy(__entry->name,
-> >  			mapping ? dev_name(inode_to_bdi(mapping->host)->dev) : "(unknown)", 32);
-> 
-> 
-> Not sure this is an issue or not, but although the fix looks legit (in
-> case a string is more that 31 bytes), strlcpy() does not pad the rest
-> of the string like strncpy() does. This means we can possibly leak data
-> through the ring buffer.
-> 
-> This may not be an issue as ftrace can only be used by a super user
-> account, but this code can also be used by perf. If it is possible for
-> a non admin account to enable these events through perf, then there is
-> a case of data leak.
-> 
-> Again, it may not be a big issue, but I'm just letting people know.
-> 
-> Note, this needs to go through the maintainer of the writeback.h, who
-> are those that created it, not the tracing maintainers.
+On Mon, Jul 29, 2019 at 11:43:29AM +0200, Peter Zijlstra wrote:
 
-Yeah, I'd prefer to use strscpy_pad() for the copying as I'd be calmer if
-we don't leak uninitialized memory to userspace. Thanks!
+> I _think_ something like the below should also work:
+> 
+> (fwiw _ASM_ARG 5 and 6 are broken, as are all the QLWB variants)
 
-								Honza
+Fixed that, because
 
-> 
-> -- Steve
-> 
-> 
-> >  		__entry->ino = mapping ? mapping->host->i_ino : 0;
-> >  		__entry->index = page->index;
-> > @@ -110,7 +110,7 @@
-> >  		struct backing_dev_info *bdi = inode_to_bdi(inode);
-> >  
-> >  		/* may be called for files on pseudo FSes w/ unregistered bdi */
-> > -		strncpy(__entry->name,
-> > +		strlcpy(__entry->name,
-> >  			bdi->dev ? dev_name(bdi->dev) : "(unknown)", 32);
-> >  		__entry->ino		= inode->i_ino;
-> >  		__entry->state		= inode->i_state;
-> > @@ -190,7 +190,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
-> >  	),
-> >  
-> >  	TP_fast_assign(
-> > -		strncpy(__entry->name,
-> > +		strlcpy(__entry->name,
-> >  			dev_name(inode_to_bdi(inode)->dev), 32);
-> >  		__entry->ino		= inode->i_ino;
-> >  		__entry->sync_mode	= wbc->sync_mode;
-> > @@ -234,7 +234,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
-> >  		__field(unsigned int, cgroup_ino)
-> >  	),
-> >  	TP_fast_assign(
-> > -		strncpy(__entry->name,
-> > +		strlcpy(__entry->name,
-> >  			wb->bdi->dev ? dev_name(wb->bdi->dev) : "(unknown)", 32);
-> >  		__entry->nr_pages = work->nr_pages;
-> >  		__entry->sb_dev = work->sb ? work->sb->s_dev : 0;
-> > @@ -288,7 +288,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
-> >  		__field(unsigned int, cgroup_ino)
-> >  	),
-> >  	TP_fast_assign(
-> > -		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
-> > +		strlcpy(__entry->name, dev_name(wb->bdi->dev), 32);
-> >  		__entry->cgroup_ino = __trace_wb_assign_cgroup(wb);
-> >  	),
-> >  	TP_printk("bdi %s: cgroup_ino=%u",
-> > @@ -310,7 +310,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
-> >  		__array(char, name, 32)
-> >  	),
-> >  	TP_fast_assign(
-> > -		strncpy(__entry->name, dev_name(bdi->dev), 32);
-> > +		strlcpy(__entry->name, dev_name(bdi->dev), 32);
-> >  	),
-> >  	TP_printk("bdi %s",
-> >  		__entry->name
-> > @@ -335,7 +335,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
-> >  	),
-> >  
-> >  	TP_fast_assign(
-> > -		strncpy(__entry->name, dev_name(bdi->dev), 32);
-> > +		strlcpy(__entry->name, dev_name(bdi->dev), 32);
-> >  		__entry->nr_to_write	= wbc->nr_to_write;
-> >  		__entry->pages_skipped	= wbc->pages_skipped;
-> >  		__entry->sync_mode	= wbc->sync_mode;
-> > @@ -386,7 +386,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
-> >  	),
-> >  	TP_fast_assign(
-> >  		unsigned long *older_than_this = work->older_than_this;
-> > -		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
-> > +		strlcpy(__entry->name, dev_name(wb->bdi->dev), 32);
-> >  		__entry->older	= older_than_this ?  *older_than_this : 0;
-> >  		__entry->age	= older_than_this ?
-> >  				  (jiffies - *older_than_this) * 1000 / HZ : -1;
-> > @@ -597,7 +597,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
-> >  	),
-> >  
-> >  	TP_fast_assign(
-> > -		strncpy(__entry->name,
-> > +		strlcpy(__entry->name,
-> >  		        dev_name(inode_to_bdi(inode)->dev), 32);
-> >  		__entry->ino		= inode->i_ino;
-> >  		__entry->state		= inode->i_state;
-> > @@ -671,7 +671,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
-> >  	),
-> >  
-> >  	TP_fast_assign(
-> > -		strncpy(__entry->name,
-> > +		strlcpy(__entry->name,
-> >  			dev_name(inode_to_bdi(inode)->dev), 32);
-> >  		__entry->ino		= inode->i_ino;
-> >  		__entry->state		= inode->i_state;
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> ---
+> diff --git a/arch/x86/include/asm/arch_hweight.h b/arch/x86/include/asm/arch_hweight.h
+> index ba88edd0d58b..88704612b2f7 100644
+> --- a/arch/x86/include/asm/arch_hweight.h
+> +++ b/arch/x86/include/asm/arch_hweight.h
+> @@ -3,22 +3,15 @@
+>  #define _ASM_X86_HWEIGHT_H
+>  
+>  #include <asm/cpufeatures.h>
+> -
+> -#ifdef CONFIG_64BIT
+> -#define REG_IN "D"
+> -#define REG_OUT "a"
+> -#else
+> -#define REG_IN "a"
+> -#define REG_OUT "a"
+> -#endif
+> +#include <asm/asm.h>
+>  
+>  static __always_inline unsigned int __arch_hweight32(unsigned int w)
+>  {
+>  	unsigned int res;
+>  
+>  	asm (ALTERNATIVE("call __sw_hweight32", "popcntl %1, %0", X86_FEATURE_POPCNT)
+> -			 : "="REG_OUT (res)
+> -			 : REG_IN (w));
+> +			 : "=a" (res)
+> +			 : _ASM_ARG1 (w));
+
+That needs _ASM_ARG1L because popcntl..
+
+---
+diff --git a/arch/x86/include/asm/arch_hweight.h b/arch/x86/include/asm/arch_hweight.h
+index ba88edd0d58b..3cab7f382a43 100644
+--- a/arch/x86/include/asm/arch_hweight.h
++++ b/arch/x86/include/asm/arch_hweight.h
+@@ -3,22 +3,15 @@
+ #define _ASM_X86_HWEIGHT_H
+ 
+ #include <asm/cpufeatures.h>
+-
+-#ifdef CONFIG_64BIT
+-#define REG_IN "D"
+-#define REG_OUT "a"
+-#else
+-#define REG_IN "a"
+-#define REG_OUT "a"
+-#endif
++#include <asm/asm.h>
+ 
+ static __always_inline unsigned int __arch_hweight32(unsigned int w)
+ {
+ 	unsigned int res;
+ 
+ 	asm (ALTERNATIVE("call __sw_hweight32", "popcntl %1, %0", X86_FEATURE_POPCNT)
+-			 : "="REG_OUT (res)
+-			 : REG_IN (w));
++			 : "=a" (res)
++			 : _ASM_ARG1L (w));
+ 
+ 	return res;
+ }
+@@ -45,8 +38,8 @@ static __always_inline unsigned long __arch_hweight64(__u64 w)
+ 	unsigned long res;
+ 
+ 	asm (ALTERNATIVE("call __sw_hweight64", "popcntq %1, %0", X86_FEATURE_POPCNT)
+-			 : "="REG_OUT (res)
+-			 : REG_IN (w));
++			 : "=a" (res)
++			 : _ASM_ARG1 (w));
+ 
+ 	return res;
+ }
+diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
+index 3ff577c0b102..0bb0bbcd4551 100644
+--- a/arch/x86/include/asm/asm.h
++++ b/arch/x86/include/asm/asm.h
+@@ -53,17 +53,17 @@
+ #define _ASM_ARG2	_ASM_DX
+ #define _ASM_ARG3	_ASM_CX
+ 
+-#define _ASM_ARG1L	eax
+-#define _ASM_ARG2L	edx
+-#define _ASM_ARG3L	ecx
++#define _ASM_ARG1L	_ASM_ARG1
++#define _ASM_ARG2L	_ASM_ARG2
++#define _ASM_ARG3L	_ASM_ARG3
+ 
+-#define _ASM_ARG1W	ax
+-#define _ASM_ARG2W	dx
+-#define _ASM_ARG3W	cx
++#define _ASM_ARG1W	__ASM_FORM_RAW(ax)
++#define _ASM_ARG2W	__ASM_FORM_RAW(dx)
++#define _ASM_ARG3W	__ASM_FORM_RAW(cx)
+ 
+-#define _ASM_ARG1B	al
+-#define _ASM_ARG2B	dl
+-#define _ASM_ARG3B	cl
++#define _ASM_ARG1B	__ASM_FORM_RAW(al)
++#define _ASM_ARG2B	__ASM_FORM_RAW(dl)
++#define _ASM_ARG3B	__ASM_FORM_RAW(cl)
+ 
+ #else
+ /* 64 bit */
+@@ -72,36 +72,29 @@
+ #define _ASM_ARG2	_ASM_SI
+ #define _ASM_ARG3	_ASM_DX
+ #define _ASM_ARG4	_ASM_CX
+-#define _ASM_ARG5	r8
+-#define _ASM_ARG6	r9
+-
+-#define _ASM_ARG1Q	rdi
+-#define _ASM_ARG2Q	rsi
+-#define _ASM_ARG3Q	rdx
+-#define _ASM_ARG4Q	rcx
+-#define _ASM_ARG5Q	r8
+-#define _ASM_ARG6Q	r9
+-
+-#define _ASM_ARG1L	edi
+-#define _ASM_ARG2L	esi
+-#define _ASM_ARG3L	edx
+-#define _ASM_ARG4L	ecx
+-#define _ASM_ARG5L	r8d
+-#define _ASM_ARG6L	r9d
+-
+-#define _ASM_ARG1W	di
+-#define _ASM_ARG2W	si
+-#define _ASM_ARG3W	dx
+-#define _ASM_ARG4W	cx
+-#define _ASM_ARG5W	r8w
+-#define _ASM_ARG6W	r9w
+-
+-#define _ASM_ARG1B	dil
+-#define _ASM_ARG2B	sil
+-#define _ASM_ARG3B	dl
+-#define _ASM_ARG4B	cl
+-#define _ASM_ARG5B	r8b
+-#define _ASM_ARG6B	r9b
++#define _ASM_ARG5	__ASM_REG(8)
++#define _ASM_ARG6	__ASM_REG(9)
++
++#define _ASM_ARG1L	__ASM_FORM_RAW(edi)
++#define _ASM_ARG2L	__ASM_FORM_RAW(esi)
++#define _ASM_ARG3L	__ASM_FORM_RAW(edx)
++#define _ASM_ARG4L	__ASM_FORM_RAW(ecx)
++#define _ASM_ARG5L	__ASM_FORM_RAW(r8d)
++#define _ASM_ARG6L	__ASM_FORM_RAW(r9d)
++
++#define _ASM_ARG1W	__ASM_FORM_RAW(di)
++#define _ASM_ARG2W	__ASM_FORM_RAW(si)
++#define _ASM_ARG3W	__ASM_FORM_RAW(dx)
++#define _ASM_ARG4W	__ASM_FORM_RAW(cx)
++#define _ASM_ARG5W	__ASM_FORM_RAW(r8w)
++#define _ASM_ARG6W	__ASM_FORM_RAW(r9w)
++
++#define _ASM_ARG1B	__ASM_FORM_RAW(dil)
++#define _ASM_ARG2B	__ASM_FORM_RAW(sil)
++#define _ASM_ARG3B	__ASM_FORM_RAW(dl)
++#define _ASM_ARG4B	__ASM_FORM_RAW(cl)
++#define _ASM_ARG5B	__ASM_FORM_RAW(r8b)
++#define _ASM_ARG6B	__ASM_FORM_RAW(r9b)
+ 
+ #endif
+ 
