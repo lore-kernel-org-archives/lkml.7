@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2662C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA83C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84415217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0BA2184E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429030;
-	bh=MvqptLD9VB/lA821+ZdkiJsOBXA/f2qPI6w8Qu3B/wg=;
+	s=default; t=1564429036;
+	bh=PU7Dd+5IV7sWwb4ymWOHQ82+VRVcPHi0ngUL0BtacQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kIGHifLhhMdk2/Pu1gsXtvZ7AN7AZdl0UWPDMv2mQfC6SCyd7YLd3M0AWYUCn9IqE
-	 09OJBgCxM0tN0ItSn+4Dwj0WrX0Me6E8EesShUSZgvXNjXPnq1EXufANOKH+FaZJRI
-	 S9Q/pydgf9HoU3DRxwwwVyLKnXRd+YbPWKguo1gA=
+	b=rAWx3UXPuigttNtp/uE1ss3cCye8M61KcSaI8mLIutfHDcVHtppViw1SlpbCcv/pY
+	 +IOayRdLVNfOusv0EOJSuayBVsg7/db7u8vH0WS6bwxoWDI1nQC3e5JY6LA0SujVhc
+	 70C1V/55lF60IkWtmXyyYo0B/jAsWyElQH3fp3fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388489AbfG2ThJ (ORCPT
+        id S2388670AbfG2ThP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51646 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388480AbfG2ThI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:37:08 -0400
+        id S1726805AbfG2ThD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:37:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B559A2070B;
-        Mon, 29 Jul 2019 19:37:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D38320C01;
+        Mon, 29 Jul 2019 19:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429027;
-        bh=MvqptLD9VB/lA821+ZdkiJsOBXA/f2qPI6w8Qu3B/wg=;
+        s=default; t=1564429022;
+        bh=PU7Dd+5IV7sWwb4ymWOHQ82+VRVcPHi0ngUL0BtacQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V6RUTZP1x1SGpwOBHXLEIteMrD14sTDKBGp+L/H7xdFT/cOkN9qJqODNp/GIMoQkz
-         s+UuXIQLiLUBS9oXnRZVjjQhLq3zGEYPNSzVbkXhvaMiwAavqI00FsUYhn+lkRhDme
-         Lrvtv1pGcEwfDGTYfh7pTzWM1kMqbSFZw83ZjCRo=
+        b=FkV/uCmRiMDO0Ps6xAM0YX0IvrRUYbT8C8WzuHKF2a787KGM98MFFgq95MKZ9zR5q
+         4bBLiFHsNViw1rcqw8rOhae9fdxPZuzyAckstah5A2nebL9FWYlCboznP61kpWW/LI
+         sjKdTvAbs2CQYiP20KEBkA/9aqJ94FWeZKzzkid8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Drayton <mbd@fb.com>, Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 260/293] perf test mmap-thread-lookup: Initialize variable to suppress memory sanitizer warning
-Date:   Mon, 29 Jul 2019 21:22:31 +0200
-Message-Id: <20190729190844.333962819@linuxfoundation.org>
+Subject: [PATCH 4.14 259/293] kallsyms: exclude kasan local symbols on s390
+Date:   Mon, 29 Jul 2019 21:22:30 +0200
+Message-Id: <20190729190844.262976455@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -66,51 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4e4cf62b37da5ff45c904a3acf242ab29ed5881d ]
+[ Upstream commit 33177f01ca3fe550146bb9001bec2fd806b2f40c ]
 
-Running the 'perf test' command after building perf with a memory
-sanitizer causes a warning that says:
+gcc asan instrumentation emits the following sequence to store frame pc
+when the kernel is built with CONFIG_RELOCATABLE:
+debug/vsprintf.s:
+        .section        .data.rel.ro.local,"aw"
+        .align  8
+.LC3:
+        .quad   .LASANPC4826@GOTOFF
+.text
+        .align  8
+        .type   number, @function
+number:
+.LASANPC4826:
 
-  WARNING: MemorySanitizer: use-of-uninitialized-value... in mmap-thread-lookup.c
+and in case reloc is issued for LASANPC label it also gets into .symtab
+with the same address as actual function symbol:
+$ nm -n vmlinux | grep 0000000001397150
+0000000001397150 t .LASANPC4826
+0000000001397150 t number
 
-Initializing the go variable to 0 silences this harmless warning.
+In the end kernel backtraces are almost unreadable:
+[  143.748476] Call Trace:
+[  143.748484] ([<000000002da3e62c>] .LASANPC2671+0x114/0x190)
+[  143.748492]  [<000000002eca1a58>] .LASANPC2612+0x110/0x160
+[  143.748502]  [<000000002de9d830>] print_address_description+0x80/0x3b0
+[  143.748511]  [<000000002de9dd64>] __kasan_report+0x15c/0x1c8
+[  143.748521]  [<000000002ecb56d4>] strrchr+0x34/0x60
+[  143.748534]  [<000003ff800a9a40>] kasan_strings+0xb0/0x148 [test_kasan]
+[  143.748547]  [<000003ff800a9bba>] kmalloc_tests_init+0xe2/0x528 [test_kasan]
+[  143.748555]  [<000000002da2117c>] .LASANPC4069+0x354/0x748
+[  143.748563]  [<000000002dbfbb16>] do_init_module+0x136/0x3b0
+[  143.748571]  [<000000002dbff3f4>] .LASANPC3191+0x2164/0x25d0
+[  143.748580]  [<000000002dbffc4c>] .LASANPC3196+0x184/0x1b8
+[  143.748587]  [<000000002ecdf2ec>] system_call+0xd8/0x2d8
 
-Committer warning:
+Since LASANPC labels are not even unique and get into .symtab only due
+to relocs filter them out in kallsyms.
 
-This was harmless, just a simple test writing whatever was at that
-sizeof(int) memory area just to signal another thread blocked reading
-that file created with pipe(). Initialize it tho so that we don't get
-this warning.
-
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Drayton <mbd@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190702173716.181223-1-nums@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/mmap-thread-lookup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/kallsyms.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-index 3c3f3e029e33..2ecb86876f10 100644
---- a/tools/perf/tests/mmap-thread-lookup.c
-+++ b/tools/perf/tests/mmap-thread-lookup.c
-@@ -52,7 +52,7 @@ static void *thread_fn(void *arg)
- {
- 	struct thread_data *td = arg;
- 	ssize_t ret;
--	int go;
-+	int go = 0;
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index 1dd24c5b9b47..b471022c8162 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -160,6 +160,9 @@ static int read_symbol(FILE *in, struct sym_entry *s)
+ 	/* exclude debugging symbols */
+ 	else if (stype == 'N' || stype == 'n')
+ 		return -1;
++	/* exclude s390 kasan local symbols */
++	else if (!strncmp(sym, ".LASANPC", 8))
++		return -1;
  
- 	if (thread_init(td))
- 		return NULL;
+ 	/* include the type field in the symbol name, so that it gets
+ 	 * compressed together */
 -- 
 2.20.1
 
