@@ -2,146 +2,114 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10532C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF00C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF5162073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D592073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388350AbfG2VMG (ORCPT
+        id S2388563AbfG2VOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:12:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54192 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387510AbfG2VMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:12:06 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B2F848E22B;
-        Mon, 29 Jul 2019 21:12:05 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E5326600CC;
-        Mon, 29 Jul 2019 21:12:04 +0000 (UTC)
-Subject: Re: [PATCH v3] sched/core: Don't use dying mm as active_mm of
- kthreads
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>, Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>
-References: <20190729210728.21634-1-longman@redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <33039acf-b0c8-9888-9d47-85ff152fd31f@redhat.com>
-Date:   Mon, 29 Jul 2019 17:12:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 29 Jul 2019 17:14:02 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:48766 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388272AbfG2VOC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 17:14:02 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hsCxr-0005ve-07; Mon, 29 Jul 2019 17:13:51 -0400
+Message-ID: <97675ac29db1339ff683bf7eacf97540b00bd2a1.camel@surriel.com>
+Subject: Re: [PATCH 03/14] sched,fair: redefine runnable_load_avg as the sum
+ of task_h_load
+From:   Rik van Riel <riel@surriel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, pjt@google.com,
+        dietmar.eggemann@arm.com, mingo@redhat.com,
+        morten.rasmussen@arm.com, tglx@linutronix.de,
+        mgorman@techsingularity.net, vincent.guittot@linaro.org
+Date:   Mon, 29 Jul 2019 17:13:50 -0400
+In-Reply-To: <20190729200557.GR31398@hirez.programming.kicks-ass.net>
+References: <20190722173348.9241-1-riel@surriel.com>
+         <20190722173348.9241-4-riel@surriel.com>
+         <20190729200557.GR31398@hirez.programming.kicks-ass.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Me4KYEfemhtrh7ZeTQsr"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20190729210728.21634-1-longman@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 29 Jul 2019 21:12:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/19 5:07 PM, Waiman Long wrote:
-> It was found that a dying mm_struct where the owning task has exited
-> can stay on as active_mm of kernel threads as long as no other user
-> tasks run on those CPUs that use it as active_mm. This prolongs the
-> life time of dying mm holding up some resources that cannot be freed
-> on a mostly idle system.
->
-> Fix that by forcing the kernel threads to use init_mm as the active_mm
-> during a kernel thread to kernel thread transition if the previous
-> active_mm is dying (!mm_users). This will allows the freeing of resources
-> associated with the dying mm ASAP.
->
-> The presence of a kernel-to-kernel thread transition indicates that
-> the cpu is probably idling with no higher priority user task to run.
-> So the overhead of loading the mm_users cacheline should not really
-> matter in this case.
->
-> My testing on an x86 system showed that the mm_struct was freed within
-> seconds after the task exited instead of staying alive for minutes or
-> even longer on a mostly idle system before this patch.
->
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  kernel/sched/core.c | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 795077af4f1a..41997e676251 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3214,6 +3214,8 @@ static __always_inline struct rq *
->  context_switch(struct rq *rq, struct task_struct *prev,
->  	       struct task_struct *next, struct rq_flags *rf)
->  {
-> +	struct mm_struct *next_mm = next->mm;
-> +
->  	prepare_task_switch(rq, prev, next);
->  
->  	/*
-> @@ -3229,8 +3231,22 @@ context_switch(struct rq *rq, struct task_struct *prev,
->  	 *
->  	 * kernel ->   user   switch + mmdrop() active
->  	 *   user ->   user   switch
-> +	 *
-> +	 * kernel -> kernel and !prev->active_mm->mm_users:
-> +	 *   switch to init_mm + mmgrab() + mmdrop()
->  	 */
-> -	if (!next->mm) {                                // to kernel
-> +	if (!next_mm) {					// to kernel
-> +		/*
-> +		 * Checking is only done on kernel -> kernel transition
-> +		 * to avoid any performance overhead while user tasks
-> +		 * are running.
-> +		 */
-> +		if (unlikely(!prev->mm &&
-> +			     !atomic_read(&prev->active_mm->mm_users))) {
-> +			next_mm = next->active_mm = &init_mm;
-> +			mmgrab(next_mm);
-> +			goto mm_switch;
-> +		}
->  		enter_lazy_tlb(prev->active_mm, next);
->  
->  		next->active_mm = prev->active_mm;
-> @@ -3239,6 +3255,7 @@ context_switch(struct rq *rq, struct task_struct *prev,
->  		else
->  			prev->active_mm = NULL;
->  	} else {                                        // to user
-> +mm_switch:
->  		/*
->  		 * sys_membarrier() requires an smp_mb() between setting
->  		 * rq->curr and returning to userspace.
-> @@ -3248,7 +3265,7 @@ context_switch(struct rq *rq, struct task_struct *prev,
->  		 * finish_task_switch()'s mmdrop().
->  		 */
->  
-> -		switch_mm_irqs_off(prev->active_mm, next->mm, next);
-> +		switch_mm_irqs_off(prev->active_mm, next_mm, next);
->  
->  		if (!prev->mm) {                        // from kernel
->  			/* will mmdrop() in finish_task_switch(). */
 
-OK, this is my final push.
+--=-Me4KYEfemhtrh7ZeTQsr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-My previous statements are not totally correct. Many of the resources
-are indeed freed when mm_users reaches 0. However, I still think it is
-an issue to let the a dying mm structure to stay alive for minutes or
-even longer. I am totally fine if you think it is not worth doing.
+On Mon, 2019-07-29 at 22:05 +0200, Peter Zijlstra wrote:
+> On Mon, Jul 22, 2019 at 01:33:37PM -0400, Rik van Riel wrote:
+> > @@ -3012,25 +2983,24 @@ static inline int
+> > throttled_hierarchy(struct cfs_rq *cfs_rq);
+> >  static void update_cfs_group(struct sched_entity *se)
+> >  {
+> >  	struct cfs_rq *gcfs_rq =3D group_cfs_rq(se);
+> > -	long shares, runnable;
+> > +	long shares;
+> > =20
+> > -	if (!gcfs_rq)
+> > +	if (!gcfs_rq) {
+> > +		update_runnable_load_avg(se);
+> >  		return;
+> > +	}
+> > =20
+> >  	if (throttled_hierarchy(gcfs_rq))
+> >  		return;
+> > =20
+> >  #ifndef CONFIG_SMP
+> > -	runnable =3D shares =3D READ_ONCE(gcfs_rq->tg->shares);
+> > -
+> >  	if (likely(se->load.weight =3D=3D shares))
+>=20
+> I'm thinking this uses @shares uninitialized...
 
-Thanks,
-Longman
+Oops indeed. Let me put the shares =3D assignment
+back for the !SMP case, and edit that comment.
+
+> >  		return;
+> >  #else
+> >  	shares   =3D calc_group_shares(gcfs_rq);
+> > -	runnable =3D calc_group_runnable(gcfs_rq, shares);
+> >  #endif
+> > =20
+> > -	reweight_entity(cfs_rq_of(se), se, shares, runnable);
+> > +	reweight_entity(cfs_rq_of(se), se, shares);
+> >  }
+--=20
+All Rights Reversed.
+
+--=-Me4KYEfemhtrh7ZeTQsr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl0/YY4ACgkQznnekoTE
+3oPu+QgAtD//6skWmvbZFIfUOWw/4hq1dgCOSNUon92qi/OyTFXLYFlNe+WLb00V
+Oj37stqqWFnmCuVpNGKde1mfP+dW1Gbewi2N3NUHEr6CLWSFaWFAdYQPVMJEc8FF
+cdVCIziMkFjZ2EXaezMRkCVQ09XN962agCiG68BGh5d77THopy7a+cDV/6dw+jjl
+1V1IxeEKuWoBqVu+UJ1jjObUUtHjZOt0cosq5pvxtnAnNSPX/yBu8ZEoeWX49o5m
+Yv+ihmDa+fY1tXIZ53kRzyLnsa8dPaT7q54k48qF4/6S/3ZNSN2n+CkS70bpF+Ta
+IMZyz5gj8agjM3yawliTVx+hy7x27w==
+=VvI1
+-----END PGP SIGNATURE-----
+
+--=-Me4KYEfemhtrh7ZeTQsr--
 
