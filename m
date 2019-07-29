@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA2DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32D4C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78B7205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0EE42171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429704;
-	bh=kTu5OqvrgpLJAICy736VvCxhpsfGdUpXfh8eyIoGUHw=;
+	s=default; t=1564429706;
+	bh=RaUJzPXr4KOk5NwG8VVoKTKUM7U3QKGQwjujiaZ0Zrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QrMlNXg064XAT0IVsnJxnh0sKSrE1qNMaZaCzWcSYevDYKxuhq5BSNS4GssOEFf0y
-	 bUWNs4lUQVKj2HQPd4gcOfDu7dWSpziS/Gf1L+LakJBYjS45akmFW58PF+/e0kCS+V
-	 hUQlVEfi2pUFl4k2ZbNMe8ZU9qkhxcxdjlJ35OYU=
+	b=yiHMwWpZzEORxDYYohi4WajW6rA87HZcIIwXRchx9KuyMbJ/GOaf+XBrD1HTvHgj0
+	 CjKmGcXrXFCyuFKaTQaf3QVNdCo+7eZAn1BgFC4Ydmn1c5TorM5m+5j1Z3dw2Gna6F
+	 y2HG0C3JAiHt6UFzreqdT/+75FmV9cQzGvIQVrOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390091AbfG2TsW (ORCPT
+        id S2390114AbfG2TsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:48:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38362 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:48:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729729AbfG2TsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:48:16 -0400
+        id S1729777AbfG2TsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:48:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0516820C01;
-        Mon, 29 Jul 2019 19:48:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B342C21655;
+        Mon, 29 Jul 2019 19:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429696;
-        bh=kTu5OqvrgpLJAICy736VvCxhpsfGdUpXfh8eyIoGUHw=;
+        s=default; t=1564429699;
+        bh=RaUJzPXr4KOk5NwG8VVoKTKUM7U3QKGQwjujiaZ0Zrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LpAGVNcs7BQMZ3hNG54Bjaq6D58AQ2gBwMwJc6kQAlByTgAaButqHbnLSx0YDDdF9
-         rJCn10hYjX24AY71bgkbpVI0ekfSuTF19u6AEyzY5b0DD6/m8253XU0xoylZY34q20
-         IEAjN2ZUrGyvPX9/xgsJ9LPUpEUUAQIZ5kjegzog=
+        b=KfnwXupL5Xt36Ye56VHeJ60MfiL3M3aTimOaf2VNWNxjpW95JKGlC8iVfQhFxJA/6
+         unhccS0SFgRegzmJmdqCJ7Da4BYl8pAH2aoqJdjQEdE2nK/BkrCK3Eq6ty5l/vHPzj
+         0+kt+/E+4/8MlRdW7RYuwrfKGbd+toap09iPBsEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Yakir Yang <ykk@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org,
+        Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 064/215] drm/rockchip: Properly adjust to a true clock in adjusted_mode
-Date:   Mon, 29 Jul 2019 21:21:00 +0200
-Message-Id: <20190729190751.575791553@linuxfoundation.org>
+Subject: [PATCH 5.2 065/215] platform/x86: asus-wmi: Increase input buffer size of WMI methods
+Date:   Mon, 29 Jul 2019 21:21:01 +0200
+Message-Id: <20190729190751.690267243@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -62,44 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 99b9683f2142b20bad78e61f7f829e8714e45685 ]
+[ Upstream commit 98e865a522983f2afde075648ec9d15ea4bb9194 ]
 
-When fixing up the clock in vop_crtc_mode_fixup() we're not doing it
-quite correctly.  Specifically if we've got the true clock 266666667 Hz,
-we'll perform this calculation:
-   266666667 / 1000 => 266666
+The asus-nb-wmi driver is matched by WMI alias but fails to load on TUF
+Gaming series laptops producing multiple ACPI errors in the kernel log.
 
-Later when we try to set the clock we'll do clk_set_rate(266666 *
-1000).  The common clock framework won't actually pick the proper clock
-in this case since it always wants clocks <= the specified one.
+The input buffer for WMI method invocation size is 2 dwords, whereas
+3 are expected by this model.
 
-Let's solve this by using DIV_ROUND_UP.
+FX505GM:
+..
+Method (WMNB, 3, Serialized)
+{
+    P8XH (Zero, 0x11)
+    CreateDWordField (Arg2, Zero, IIA0)
+    CreateDWordField (Arg2, 0x04, IIA1)
+    CreateDWordField (Arg2, 0x08, IIA2)
+    Local0 = (Arg1 & 0xFFFFFFFF)
+    ...
 
-Fixes: b59b8de31497 ("drm/rockchip: return a true clock rate to adjusted_mode")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Reviewed-by: Yakir Yang <ykk@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190614224730.98622-1-dianders@chromium.org
+Compare with older K54C:
+...
+Method (WMNB, 3, NotSerialized)
+{
+    CreateDWordField (Arg2, 0x00, IIA0)
+    CreateDWordField (Arg2, 0x04, IIA1)
+    Local0 = (Arg1 & 0xFFFFFFFF)
+    ...
+
+Increase buffer size to 3 dwords. No negative consequences of this change
+are expected, as the input buffer size is not verified. The original
+function is replaced by a wrapper for a new method passing value 0 for the
+last parameter. The new function will be used to control RGB keyboard
+backlight.
+
+Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Reviewed-by: Daniel Drake <drake@endlessm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/platform/x86/asus-wmi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-index 12ed5265a90b..09046135e720 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-@@ -1011,7 +1011,8 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
- 	struct vop *vop = to_vop(crtc);
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 9b18a184e0aa..abfa99d18fea 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -85,6 +85,7 @@ static bool ashs_present(void)
+ struct bios_args {
+ 	u32 arg0;
+ 	u32 arg1;
++	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
+ } __packed;
  
- 	adjusted_mode->clock =
--		clk_round_rate(vop->dclk, mode->clock * 1000) / 1000;
-+		DIV_ROUND_UP(clk_round_rate(vop->dclk, mode->clock * 1000),
-+			     1000);
- 
- 	return true;
+ /*
+@@ -211,11 +212,13 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
+ 	asus->inputdev = NULL;
  }
+ 
+-int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
++static int asus_wmi_evaluate_method3(u32 method_id,
++		u32 arg0, u32 arg1, u32 arg2, u32 *retval)
+ {
+ 	struct bios_args args = {
+ 		.arg0 = arg0,
+ 		.arg1 = arg1,
++		.arg2 = arg2,
+ 	};
+ 	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+@@ -247,6 +250,11 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
+ 
+ 	return 0;
+ }
++
++int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
++{
++	return asus_wmi_evaluate_method3(method_id, arg0, arg1, 0, retval);
++}
+ EXPORT_SYMBOL_GPL(asus_wmi_evaluate_method);
+ 
+ static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
 -- 
 2.20.1
 
