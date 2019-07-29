@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3964AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D02C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFAD2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9CA206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429157;
-	bh=18PvMK3IzPiBGJaA0mcdhTC0A3bQpt3XEH68L8UAk+k=;
+	s=default; t=1564429161;
+	bh=9b7c6kU1SYuZX9p5oPrdSDkiGadYewf2Xl7P85wxZzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o5ZScfkDmv3fvLPTRDY5wCZIaLT6ptW378ybh30PCd1K++IM4C0b6rGz+KwqNb0WN
-	 s/BtfhmogNBT9eKkL82BxOOnPigJ5ZLXqUcE/8hquzEPduSH0BnoePZdQE5BDHxYJw
-	 4waQNzCJ+olI1HW03i3DeJFg10TXwNGFu/ZD5A50=
+	b=S18JA5GdZH3nh+RKFWmyAzm4df8jXuosGFTV9JhnOfNQK2Nll3pGAtI5uqtkosbdB
+	 1QvVxqogUrMMk9/s7Pd3qrGfxBhxHiGK52IipK3Hl9lJ1oitEBonrptwcCzHHDLx2U
+	 eFm4037qzFvGYeEpHqB/cSEULr1fAOHKeZG9n290=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388969AbfG2TjP (ORCPT
+        id S2388989AbfG2TjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:39:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54254 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:39:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388956AbfG2TjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:39:12 -0400
+        id S2388931AbfG2TjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:39:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 070CB2054F;
-        Mon, 29 Jul 2019 19:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E005A2054F;
+        Mon, 29 Jul 2019 19:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429151;
-        bh=18PvMK3IzPiBGJaA0mcdhTC0A3bQpt3XEH68L8UAk+k=;
+        s=default; t=1564429157;
+        bh=9b7c6kU1SYuZX9p5oPrdSDkiGadYewf2Xl7P85wxZzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GQxifqedc8bJ5MZ0RA5ACtoiJv2zMaKAC6ICFXA76LeXSpj5m6rFhFpoMD6IlIv/p
-         flwJNAerCqWHFrceFNJaGLd+LmmBnVILNyLS4bzUSzj5Xp9GQs3EfJ8qRroOGk3VTR
-         EtFjTCHD7qG444WwFBjYzT810yABW3gSAYzaEN8I=
+        b=jwiR2EuSg++73Zp05mAJC39j/v2N5wrD81/+g7Z1+O/i4xeqbU1yezWpEhxBc4VRF
+         8atd7PCLIiwz8G/VJmYgtBBpMMwKfQQJH5aiJbMMA6CPuQ1vV6i1z6T+B6NfsYkZyK
+         lJrTy1ReoBZGmPbUHpvCkEsAahz6UjUPAn9xvk7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Morten Borup Petersen <morten_bp@live.dk>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Roman Li <Roman.Li@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 267/293] mailbox: handle failed named mailbox channel request
-Date:   Mon, 29 Jul 2019 21:22:38 +0200
-Message-Id: <20190729190844.826530235@linuxfoundation.org>
+Subject: [PATCH 4.19 010/113] drm/amd/display: Fill prescale_params->scale for RGB565
+Date:   Mon, 29 Jul 2019 21:21:37 +0200
+Message-Id: <20190729190658.243719860@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
-References: <20190729190820.321094988@linuxfoundation.org>
+In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
+References: <20190729190655.455345569@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,42 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 25777e5784a7b417967460d4fcf9660d05a0c320 ]
+[ Upstream commit 1352c779cb74d427f4150cbe779a2f7886f70cae ]
 
-Previously, if mbox_request_channel_byname was used with a name
-which did not exist in the "mbox-names" property of a mailbox
-client, the mailbox corresponding to the last entry in the
-"mbox-names" list would be incorrectly selected.
-With this patch, -EINVAL is returned if the named mailbox is
-not found.
+[Why]
+An assertion is thrown when using SURFACE_PIXEL_FORMAT_GRPH_RGB565
+formats on DCE since the prescale_params->scale wasn't being filled.
 
-Signed-off-by: Morten Borup Petersen <morten_bp@live.dk>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Found by a dmesg-fail when running the
+igt@kms_plane@pixel-format-pipe-a-planes test on Baffin.
+
+[How]
+Fill in the scale parameter.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Roman Li <Roman.Li@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/mailbox.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index 537f4f6d009b..44b49a2676f0 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -391,11 +391,13 @@ struct mbox_chan *mbox_request_channel_byname(struct mbox_client *cl,
+diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
+index 53ccacf99eca..c3ad2bbec1a5 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
+@@ -242,6 +242,9 @@ static void build_prescale_params(struct ipp_prescale_params *prescale_params,
+ 	prescale_params->mode = IPP_PRESCALE_MODE_FIXED_UNSIGNED;
  
- 	of_property_for_each_string(np, "mbox-names", prop, mbox_name) {
- 		if (!strncmp(name, mbox_name, strlen(name)))
--			break;
-+			return mbox_request_channel(cl, index);
- 		index++;
- 	}
- 
--	return mbox_request_channel(cl, index);
-+	dev_err(cl->dev, "%s() could not locate channel named \"%s\"\n",
-+		__func__, name);
-+	return ERR_PTR(-EINVAL);
- }
- EXPORT_SYMBOL_GPL(mbox_request_channel_byname);
- 
+ 	switch (plane_state->format) {
++	case SURFACE_PIXEL_FORMAT_GRPH_RGB565:
++		prescale_params->scale = 0x2082;
++		break;
+ 	case SURFACE_PIXEL_FORMAT_GRPH_ARGB8888:
+ 	case SURFACE_PIXEL_FORMAT_GRPH_ABGR8888:
+ 		prescale_params->scale = 0x2020;
 -- 
 2.20.1
 
