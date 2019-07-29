@@ -4,65 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F140AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B55EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA882217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4B521773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428717;
-	bh=0W16tsMQAcxB/cu+dIZ70l3X1En5LlP5plGhVJf4liE=;
+	s=default; t=1564428720;
+	bh=2JuZ68chLQHkmtttpPeLALXBf11PAatz+Tf3pJxTQ94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bxHkGWKOr6xKdGXSq6rCs3WBq0BzNxHgNMrxbjowKUAZDuBI+DnY6K3w57H4Tpp6S
-	 x/vydN+BMOaasK5+o+Xk0TOq/myGqdj8W7vVb/KPF1xLQoHleTLNwgkzg6B1q51kR7
-	 2//+LnVuODqSQpISOUU/qUNVBuDtq6xINwCtkgkE=
+	b=dLoAgeUgZhBuNqg8o6r28GxA6FvVQRg15rY27zXH3xhRi9Bt/LSgS8WLT86b4gnm7
+	 3HD5sd1OK6bo+s1dUOy4bwovv7FkuJlM8v7amQS0mdtN7BJ8XFnCt3bsHkJB4CwzwU
+	 QqKZprwQRXwn0fuX+keqP/MNzPSu+yZc0sbJa6Wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730197AbfG2Tb4 (ORCPT
+        id S1729350AbfG2Tb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:31:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44856 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:31:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730191AbfG2Tbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:31:52 -0400
+        id S1728692AbfG2Tbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:31:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F90B21655;
-        Mon, 29 Jul 2019 19:31:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C05E217D6;
+        Mon, 29 Jul 2019 19:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428711;
-        bh=0W16tsMQAcxB/cu+dIZ70l3X1En5LlP5plGhVJf4liE=;
+        s=default; t=1564428714;
+        bh=2JuZ68chLQHkmtttpPeLALXBf11PAatz+Tf3pJxTQ94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c8OFItFlk8oSJbwusZNV5sL5UhnFnT4TdYmUuzAkr6Ffsp6bFiXig6g1j5iUj0Syz
-         GnWttL9CSJs9E5ceAXu5S3OF0flsg7Nk99/of8IGvykXz9A8sRmGgZsX+EbZL0Bce5
-         pv2cEubmRcnK0s741rz5KqZzB3cjd6jmsDfN3StU=
+        b=osOxlIe9MM3yaId8ZrwRdJQ+o+7ipcGOoiiSbbjB2YqeV+2nzE/Zztss3k5gwtbrw
+         3VZqhnnC9wmgafI+GPqj8tpr8l6hk65hVPLfjQOgYFDzWcGTUXroYRWOzx7rm7L9Xt
+         R772LWDcuGVJgoYwbe8JcarbA7Ccq1qDRW5voGEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jane Chu <jane.chu@oracle.com>, Jeff Moyer <jmoyer@redhat.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>,
+        stable@vger.kernel.org, Jan Harkes <jaharkes@cs.cmu.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Fabian Frederick <fabf@skynet.be>,
+        Mikko Rapeli <mikko.rapeli@iki.fi>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Yann Droneaud <ydroneaud@opteya.com>,
+        Zhouyang Jia <jiazhouyang09@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH 4.14 162/293] libnvdimm/pfn: fix fsdax-mode namespace info-block zero-fields
-Date:   Mon, 29 Jul 2019 21:20:53 +0200
-Message-Id: <20190729190836.979840257@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 163/293] coda: pass the host file in vma->vm_file on mmap
+Date:   Mon, 29 Jul 2019 21:20:54 +0200
+Message-Id: <20190729190837.050620503@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -75,143 +69,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Jan Harkes <jaharkes@cs.cmu.edu>
 
-commit 7e3e888dfc138089f4c15a81b418e88f0978f744 upstream.
+commit 7fa0a1da3dadfd9216df7745a1331fdaa0940d1c upstream.
 
-At namespace creation time there is the potential for the "expected to
-be zero" fields of a 'pfn' info-block to be filled with indeterminate
-data.  While the kernel buffer is zeroed on allocation it is immediately
-overwritten by nd_pfn_validate() filling it with the current contents of
-the on-media info-block location.  For fields like, 'flags' and the
-'padding' it potentially means that future implementations can not rely on
-those fields being zero.
+Patch series "Coda updates".
 
-In preparation to stop using the 'start_pad' and 'end_trunc' fields for
-section alignment, arrange for fields that are not explicitly
-initialized to be guaranteed zero.  Bump the minor version to indicate
-it is safe to assume the 'padding' and 'flags' are zero.  Otherwise,
-this corruption is expected to benign since all other critical fields
-are explicitly initialized.
+The following patch series is a collection of various fixes for Coda,
+most of which were collected from linux-fsdevel or linux-kernel but
+which have as yet not found their way upstream.
 
-Note The cc: stable is about spreading this new policy to as many
-kernels as possible not fixing an issue in those kernels.  It is not
-until the change titled "libnvdimm/pfn: Stop padding pmem namespaces to
-section alignment" where this improper initialization becomes a problem.
-So if someone decides to backport "libnvdimm/pfn: Stop padding pmem
-namespaces to section alignment" (which is not tagged for stable), make
-sure this pre-requisite is flagged.
+This patch (of 22):
 
-Link: http://lkml.kernel.org/r/156092356065.979959.6681003754765958296.stgit@dwillia2-desk3.amr.corp.intel.com
-Fixes: 32ab0a3f5170 ("libnvdimm, pmem: 'struct page' for pmem")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Tested-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>	[ppc64]
+Various file systems expect that vma->vm_file points at their own file
+handle, several use file_inode(vma->vm_file) to get at their inode or
+use vma->vm_file->private_data.  However the way Coda wrapped mmap on a
+host file broke this assumption, vm_file was still pointing at the Coda
+file and the host file systems would scribble over Coda's inode and
+private file data.
+
+This patch fixes the incorrect expectation and wraps vm_ops->open and
+vm_ops->close to allow Coda to track when the vm_area_struct is
+destroyed so we still release the reference on the Coda file handle at
+the right time.
+
+Link: http://lkml.kernel.org/r/0e850c6e59c0b147dc2dcd51a3af004c948c3697.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Fabian Frederick <fabf@skynet.be>
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Yann Droneaud <ydroneaud@opteya.com>
+Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
 Cc: <stable@vger.kernel.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Jane Chu <jane.chu@oracle.com>
-Cc: Jeff Moyer <jmoyer@redhat.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Toshi Kani <toshi.kani@hpe.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvdimm/dax_devs.c |    2 +-
- drivers/nvdimm/pfn.h      |    1 +
- drivers/nvdimm/pfn_devs.c |   18 +++++++++++++++---
- 3 files changed, 17 insertions(+), 4 deletions(-)
+ fs/coda/file.c |   70 +++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 68 insertions(+), 2 deletions(-)
 
---- a/drivers/nvdimm/dax_devs.c
-+++ b/drivers/nvdimm/dax_devs.c
-@@ -126,7 +126,7 @@ int nd_dax_probe(struct device *dev, str
- 	nvdimm_bus_unlock(&ndns->dev);
- 	if (!dax_dev)
- 		return -ENOMEM;
--	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	nd_pfn->pfn_sb = pfn_sb;
- 	rc = nd_pfn_validate(nd_pfn, DAX_SIG);
- 	dev_dbg(dev, "%s: dax: %s\n", __func__,
---- a/drivers/nvdimm/pfn.h
-+++ b/drivers/nvdimm/pfn.h
-@@ -36,6 +36,7 @@ struct nd_pfn_sb {
- 	__le32 end_trunc;
- 	/* minor-version-2 record the base alignment of the mapping */
- 	__le32 align;
-+	/* minor-version-3 guarantee the padding and flags are zero */
- 	u8 padding[4000];
- 	__le64 checksum;
- };
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -361,6 +361,15 @@ struct device *nd_pfn_create(struct nd_r
- 	return dev;
+--- a/fs/coda/file.c
++++ b/fs/coda/file.c
+@@ -27,6 +27,13 @@
+ #include "coda_linux.h"
+ #include "coda_int.h"
+ 
++struct coda_vm_ops {
++	atomic_t refcnt;
++	struct file *coda_file;
++	const struct vm_operations_struct *host_vm_ops;
++	struct vm_operations_struct vm_ops;
++};
++
+ static ssize_t
+ coda_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ {
+@@ -61,6 +68,34 @@ coda_file_write_iter(struct kiocb *iocb,
+ 	return ret;
  }
  
-+/**
-+ * nd_pfn_validate - read and validate info-block
-+ * @nd_pfn: fsdax namespace runtime state / properties
-+ * @sig: 'devdax' or 'fsdax' signature
-+ *
-+ * Upon return the info-block buffer contents (->pfn_sb) are
-+ * indeterminate when validation fails, and a coherent info-block
-+ * otherwise.
-+ */
- int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
++static void
++coda_vm_open(struct vm_area_struct *vma)
++{
++	struct coda_vm_ops *cvm_ops =
++		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
++
++	atomic_inc(&cvm_ops->refcnt);
++
++	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->open)
++		cvm_ops->host_vm_ops->open(vma);
++}
++
++static void
++coda_vm_close(struct vm_area_struct *vma)
++{
++	struct coda_vm_ops *cvm_ops =
++		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
++
++	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->close)
++		cvm_ops->host_vm_ops->close(vma);
++
++	if (atomic_dec_and_test(&cvm_ops->refcnt)) {
++		vma->vm_ops = cvm_ops->host_vm_ops;
++		fput(cvm_ops->coda_file);
++		kfree(cvm_ops);
++	}
++}
++
+ static int
+ coda_file_mmap(struct file *coda_file, struct vm_area_struct *vma)
  {
- 	u64 checksum, offset;
-@@ -506,7 +515,7 @@ int nd_pfn_probe(struct device *dev, str
- 	nvdimm_bus_unlock(&ndns->dev);
- 	if (!pfn_dev)
- 		return -ENOMEM;
--	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	nd_pfn = to_nd_pfn(pfn_dev);
- 	nd_pfn->pfn_sb = pfn_sb;
- 	rc = nd_pfn_validate(nd_pfn, PFN_SIG);
-@@ -637,7 +646,7 @@ static int nd_pfn_init(struct nd_pfn *nd
- 	u64 checksum;
- 	int rc;
+@@ -68,6 +103,8 @@ coda_file_mmap(struct file *coda_file, s
+ 	struct coda_inode_info *cii;
+ 	struct file *host_file;
+ 	struct inode *coda_inode, *host_inode;
++	struct coda_vm_ops *cvm_ops;
++	int ret;
  
--	pfn_sb = devm_kzalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	if (!pfn_sb)
- 		return -ENOMEM;
+ 	cfi = CODA_FTOC(coda_file);
+ 	BUG_ON(!cfi || cfi->cfi_magic != CODA_MAGIC);
+@@ -76,6 +113,13 @@ coda_file_mmap(struct file *coda_file, s
+ 	if (!host_file->f_op->mmap)
+ 		return -ENODEV;
  
-@@ -646,11 +655,14 @@ static int nd_pfn_init(struct nd_pfn *nd
- 		sig = DAX_SIG;
- 	else
- 		sig = PFN_SIG;
++	if (WARN_ON(coda_file != vma->vm_file))
++		return -EIO;
 +
- 	rc = nd_pfn_validate(nd_pfn, sig);
- 	if (rc != -ENODEV)
- 		return rc;
- 
- 	/* no info block, do init */;
-+	memset(pfn_sb, 0, sizeof(*pfn_sb));
++	cvm_ops = kmalloc(sizeof(struct coda_vm_ops), GFP_KERNEL);
++	if (!cvm_ops)
++		return -ENOMEM;
 +
- 	nd_region = to_nd_region(nd_pfn->dev.parent);
- 	if (nd_region->ro) {
- 		dev_info(&nd_pfn->dev,
-@@ -704,7 +716,7 @@ static int nd_pfn_init(struct nd_pfn *nd
- 	memcpy(pfn_sb->uuid, nd_pfn->uuid, 16);
- 	memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
- 	pfn_sb->version_major = cpu_to_le16(1);
--	pfn_sb->version_minor = cpu_to_le16(2);
-+	pfn_sb->version_minor = cpu_to_le16(3);
- 	pfn_sb->start_pad = cpu_to_le32(start_pad);
- 	pfn_sb->end_trunc = cpu_to_le32(end_trunc);
- 	pfn_sb->align = cpu_to_le32(nd_pfn->align);
+ 	coda_inode = file_inode(coda_file);
+ 	host_inode = file_inode(host_file);
+ 
+@@ -89,6 +133,7 @@ coda_file_mmap(struct file *coda_file, s
+ 	 * the container file on us! */
+ 	else if (coda_inode->i_mapping != host_inode->i_mapping) {
+ 		spin_unlock(&cii->c_lock);
++		kfree(cvm_ops);
+ 		return -EBUSY;
+ 	}
+ 
+@@ -97,7 +142,29 @@ coda_file_mmap(struct file *coda_file, s
+ 	cfi->cfi_mapcount++;
+ 	spin_unlock(&cii->c_lock);
+ 
+-	return call_mmap(host_file, vma);
++	vma->vm_file = get_file(host_file);
++	ret = call_mmap(vma->vm_file, vma);
++
++	if (ret) {
++		/* if call_mmap fails, our caller will put coda_file so we
++		 * should drop the reference to the host_file that we got.
++		 */
++		fput(host_file);
++		kfree(cvm_ops);
++	} else {
++		/* here we add redirects for the open/close vm_operations */
++		cvm_ops->host_vm_ops = vma->vm_ops;
++		if (vma->vm_ops)
++			cvm_ops->vm_ops = *vma->vm_ops;
++
++		cvm_ops->vm_ops.open = coda_vm_open;
++		cvm_ops->vm_ops.close = coda_vm_close;
++		cvm_ops->coda_file = coda_file;
++		atomic_set(&cvm_ops->refcnt, 1);
++
++		vma->vm_ops = &cvm_ops->vm_ops;
++	}
++	return ret;
+ }
+ 
+ int coda_open(struct inode *coda_inode, struct file *coda_file)
+@@ -207,4 +274,3 @@ const struct file_operations coda_file_o
+ 	.fsync		= coda_fsync,
+ 	.splice_read	= generic_file_splice_read,
+ };
+-
 
 
