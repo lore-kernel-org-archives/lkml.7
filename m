@@ -2,52 +2,52 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2155AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E0EC7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E666E2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEFC6205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429772;
-	bh=UKG81nHbOs5b5H96t8JY12N6peRn2i/jtp95vtWKP2U=;
+	s=default; t=1564429774;
+	bh=JjSn7E8NOcXhxNkF6xu/DWhQxbmtqDQN5Q/q+1angIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1tdiZlkjb2ScSBKA5atmpUEyVAmh2JNxsIW/aW+fDa19sQ+udU7swG5xcp3cKCWhj
-	 7J5oR4JeMWFX7PWsG7gN/w7EX+FEBgS/D+5ksERaORZDR2ywn//pZ9YGBj1aCc4i5w
-	 ymOAbNVrCSELm+NS1jeIjOhsIMi1bWMnVGolfCp8=
+	b=SVcbNez6JRCODAFHsOY63Xk8T8aJaLdaNhQy9GTkPBuFIp6V14ect0qs2DeKz3/z9
+	 tfeKeZkzNMUIqa7dFESFMd4ysE3lpU4NifYAtue4cEzGCPo80V93nPrvVR0hzUKdjF
+	 k/iJbDbGr7PcOz+7lb5E9H6S66dw7a/gTAMic91s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390551AbfG2Tta (ORCPT
+        id S2390532AbfG2Tt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:49:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40000 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:49:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390324AbfG2Tt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:49:29 -0400
+        id S1728749AbfG2TtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:49:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 992E621655;
-        Mon, 29 Jul 2019 19:49:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 609952171F;
+        Mon, 29 Jul 2019 19:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429768;
-        bh=UKG81nHbOs5b5H96t8JY12N6peRn2i/jtp95vtWKP2U=;
+        s=default; t=1564429762;
+        bh=JjSn7E8NOcXhxNkF6xu/DWhQxbmtqDQN5Q/q+1angIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iLt/LC/qKkQrjAm8pUw4Hl3qksKN8zyR7oiR7z1fLTwNSUg4XzmOS0OWItllFxy93
-         iqUZtQBSSgNod1s2ovk7k0mdDzDVwITszZYmfQh4kwOL/mDemqgC2jTgUvCUh2MYpE
-         Ft/YE2AYm71wvd18IB4oPLujOOh9TQ0j5EQ1BViw=
+        b=XLCFZ/2Bj5YB+Am0egIwCdvbQLRWNNOAjzYvf/EaGYCM+d2bEALE4pIj8zyLeeLQb
+         BQAiPY1+ywACXMmmDW3yN0OUMQ9MVKk1ZzVUIUd5esItNU9QqxWGI4kCLyxDJhjcjz
+         9daetLb1JfiCI0TCBAwbVwWHwr7/BgCZjaL0oW0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Bastien Nocera <hadess@hadess.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 090/215] powerpc/cacheflush: fix variable set but not used
-Date:   Mon, 29 Jul 2019 21:21:26 +0200
-Message-Id: <20190729190754.981741824@linuxfoundation.org>
+Subject: [PATCH 5.2 088/215] iio: iio-utils: Fix possible incorrect mask calculation
+Date:   Mon, 29 Jul 2019 21:21:24 +0200
+Message-Id: <20190729190754.684061423@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,43 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 04db3ede40ae4fc23a5c4237254c4a53bbe4c1f2 ]
+[ Upstream commit 208a68c8393d6041a90862992222f3d7943d44d6 ]
 
-The powerpc's flush_cache_vmap() is defined as a macro and never use
-both of its arguments, so it will generate a compilation warning,
+On some machines, iio-sensor-proxy was returning all 0's for IIO sensor
+values. It turns out that the bits_used for this sensor is 32, which makes
+the mask calculation:
 
-lib/ioremap.c: In function 'ioremap_page_range':
-lib/ioremap.c:203:16: warning: variable 'start' set but not used
-[-Wunused-but-set-variable]
+*mask = (1 << 32) - 1;
 
-Fix it by making it an inline function.
+If the compiler interprets the 1 literals as 32-bit ints, it generates
+undefined behavior depending on compiler version and optimization level.
+On my system, it optimizes out the shift, so the mask value becomes
 
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+*mask = (1) - 1;
+
+With a mask value of 0, iio-sensor-proxy will always return 0 for every axis.
+
+Avoid incorrect 0 values caused by compiler optimization.
+
+See original fix by Brett Dutro <brett.dutro@gmail.com> in
+iio-sensor-proxy:
+https://github.com/hadess/iio-sensor-proxy/commit/9615ceac7c134d838660e209726cd86aa2064fd3
+
+Signed-off-by: Bastien Nocera <hadess@hadess.net>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/cacheflush.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/iio/iio_utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
-index 74d60cfe8ce5..fd318f7c3eed 100644
---- a/arch/powerpc/include/asm/cacheflush.h
-+++ b/arch/powerpc/include/asm/cacheflush.h
-@@ -29,9 +29,12 @@
-  * not expect this type of fault. flush_cache_vmap is not exactly the right
-  * place to put this, but it seems to work well enough.
-  */
--#define flush_cache_vmap(start, end)		do { asm volatile("ptesync" ::: "memory"); } while (0)
-+static inline void flush_cache_vmap(unsigned long start, unsigned long end)
-+{
-+	asm volatile("ptesync" ::: "memory");
-+}
- #else
--#define flush_cache_vmap(start, end)		do { } while (0)
-+static inline void flush_cache_vmap(unsigned long start, unsigned long end) { }
- #endif
+diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
+index a22b6e8fad46..7399eb7f1378 100644
+--- a/tools/iio/iio_utils.c
++++ b/tools/iio/iio_utils.c
+@@ -156,9 +156,9 @@ int iioutils_get_type(unsigned *is_signed, unsigned *bytes, unsigned *bits_used,
+ 			*be = (endianchar == 'b');
+ 			*bytes = padint / 8;
+ 			if (*bits_used == 64)
+-				*mask = ~0;
++				*mask = ~(0ULL);
+ 			else
+-				*mask = (1ULL << *bits_used) - 1;
++				*mask = (1ULL << *bits_used) - 1ULL;
  
- #define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+ 			*is_signed = (signchar == 's');
+ 			if (fclose(sysfsfp)) {
 -- 
 2.20.1
 
