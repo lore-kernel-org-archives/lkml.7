@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC2FC7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD5DC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF14D2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A05EF21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429789;
-	bh=jimd+J+7ciZKpnau6npdhpH0c9hsi6H1gm/vd/Sec/I=;
+	s=default; t=1564429793;
+	bh=1Np7r3LAsxti73689pvspT3FnyQs5zyBYCe9YqO5YqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LHhDo2MDeIN/x2FC2vQai8TDrcmhh0pyczlVDH1iieozbdpgfYCYK727QzPEU2w1t
-	 qzEqAtWlsJ5gGvHQs5iBaCBGDOMgMZSThtKtqWNJNZ+1+GiJZnts+RFaJPiD6kkNUF
-	 Xiee6e749w4IcDCEpH1lKYkIxHlVYr+3i7R2+Ttg=
+	b=o/F3DFJysZRQACi/2aGdsZIqE73MmLaYQGCL6+qa90uwrqztnSDFV8dGjYuwUdNCY
+	 rp60zwmYz2zBSbMhTLYpgrccGjR46j42nl8XOqhVM97UsAZemaiYVeMvhpUb4XnZmV
+	 eP7i2iiL/pW9ckJoETYEQ3LSI53nOHmh395GxmIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390600AbfG2Tts (ORCPT
+        id S2390603AbfG2Ttw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:49:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40502 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:49:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389840AbfG2Ttr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:49:47 -0400
+        id S2389840AbfG2Ttu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:49:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B5721655;
-        Mon, 29 Jul 2019 19:49:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71BD221655;
+        Mon, 29 Jul 2019 19:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429786;
-        bh=jimd+J+7ciZKpnau6npdhpH0c9hsi6H1gm/vd/Sec/I=;
+        s=default; t=1564429788;
+        bh=1Np7r3LAsxti73689pvspT3FnyQs5zyBYCe9YqO5YqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iV3j+S2l6b9AhrFsIio7PtLalxikm9IE+9LVsIpx0lf4KweRwBwqQ6hg/zLydw8EC
-         FBlXJmlotr+GzQH55yo05n2vp+5/6C/Vef4u5GzkWMvpHAowSD30k9XouwcW8ngOhs
-         ZVmHjul1b2dNQuRYLqX3Kolb/Dp8Oe1G6hp712QE=
+        b=elDc/BnBuLKQ47e//BXXnO5wfThU3U65rt8LvPDc2XvNxS2UArP7IfDZpMLwaLRlZ
+         44jHJx2xslkLzunPDKCAsBxfiEDIoC7+WsUG2wdt8fsn3j0giP8xstIb23cdu7ro3+
+         grLU5Cg0rjehDbyHTE98FcaNcBojELgd5tst5qPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>,
+        stable@vger.kernel.org,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Daniel Gomez <dagmcr@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 095/215] mfd: cros_ec: Register cros_ec_lid_angle driver when presented
-Date:   Mon, 29 Jul 2019 21:21:31 +0200
-Message-Id: <20190729190755.698209247@linuxfoundation.org>
+Subject: [PATCH 5.2 096/215] mfd: madera: Add missing of table registration
+Date:   Mon, 29 Jul 2019 21:21:32 +0200
+Message-Id: <20190729190755.827160052@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,54 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1bb407f17c5316888c3c446e26cb2bb78943f236 ]
+[ Upstream commit 5aa3709c0a5c026735b0ddd4ec80810a23d65f5b ]
 
-Register driver when EC indicates has precise lid angle calculation code
-running.
-Fix incorrect extra resource allocation in cros_ec_sensors_register().
+MODULE_DEVICE_TABLE(of, <of_match_table>) should be called to complete DT
+OF mathing mechanism and register it.
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Before this patch:
+modinfo ./drivers/mfd/madera.ko | grep alias
+
+After this patch:
+modinfo ./drivers/mfd/madera.ko | grep alias
+alias:          of:N*T*Ccirrus,wm1840C*
+alias:          of:N*T*Ccirrus,wm1840
+alias:          of:N*T*Ccirrus,cs47l91C*
+alias:          of:N*T*Ccirrus,cs47l91
+alias:          of:N*T*Ccirrus,cs47l90C*
+alias:          of:N*T*Ccirrus,cs47l90
+alias:          of:N*T*Ccirrus,cs47l85C*
+alias:          of:N*T*Ccirrus,cs47l85
+alias:          of:N*T*Ccirrus,cs47l35C*
+alias:          of:N*T*Ccirrus,cs47l35
+
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/cros_ec_dev.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/mfd/madera-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index a5391f96eafd..607383b67cf1 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -285,13 +285,15 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
+diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
+index 2a77988d0462..826b971ccb86 100644
+--- a/drivers/mfd/madera-core.c
++++ b/drivers/mfd/madera-core.c
+@@ -286,6 +286,7 @@ const struct of_device_id madera_of_match[] = {
+ 	{ .compatible = "cirrus,wm1840", .data = (void *)WM1840 },
+ 	{}
+ };
++MODULE_DEVICE_TABLE(of, madera_of_match);
+ EXPORT_SYMBOL_GPL(madera_of_match);
  
- 	resp = (struct ec_response_motion_sense *)msg->data;
- 	sensor_num = resp->dump.sensor_count;
--	/* Allocate 1 extra sensors in FIFO are needed */
--	sensor_cells = kcalloc(sensor_num + 1, sizeof(struct mfd_cell),
-+	/*
-+	 * Allocate 2 extra sensors if lid angle sensor and/or FIFO are needed.
-+	 */
-+	sensor_cells = kcalloc(sensor_num + 2, sizeof(struct mfd_cell),
- 			       GFP_KERNEL);
- 	if (sensor_cells == NULL)
- 		goto error;
- 
--	sensor_platforms = kcalloc(sensor_num + 1,
-+	sensor_platforms = kcalloc(sensor_num,
- 				   sizeof(struct cros_ec_sensor_platform),
- 				   GFP_KERNEL);
- 	if (sensor_platforms == NULL)
-@@ -351,6 +353,11 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
- 		sensor_cells[id].name = "cros-ec-ring";
- 		id++;
- 	}
-+	if (cros_ec_check_features(ec,
-+				EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS)) {
-+		sensor_cells[id].name = "cros-ec-lid-angle";
-+		id++;
-+	}
- 
- 	ret = mfd_add_devices(ec->dev, 0, sensor_cells, id,
- 			      NULL, 0, NULL);
+ static int madera_get_reset_gpio(struct madera *madera)
 -- 
 2.20.1
 
