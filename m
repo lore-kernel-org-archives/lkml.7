@@ -2,125 +2,495 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6232C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558BFC7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AB22067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224DF2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:49:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388269AbfG2PtK (ORCPT
+        id S2388277AbfG2Pte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:49:10 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:40509 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387495AbfG2PtK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:49:10 -0400
-Received: by mail-vs1-f66.google.com with SMTP id a186so39499069vsd.7
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 08:49:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/niwkJuj+kTChFIxAZJ7R3qyc1S8YzIk+KDkO6xs7tI=;
-        b=SJxA4BD402OPY1nJjj4RNi9QQ4HJlKuQsgAlE5qIrFcjm29XwqUoZ724tXEb5yRqXV
-         C6cKjpaCMNY6tph5ZHWMIn3eW9D9EE0avh5SUehbdjDNOHGw4/jA0QlHgccLox3vxIcs
-         peDG4FQJ1y/mbKOuXOMg/9lZ0xWr9NwWHgPFEBzLsr9WfvZ4RbeECdwS1bTMw9txdcEx
-         9weSVsybHHDmsFF7U5E6YjAr9k8312U09z0vkA8o7gta6EjXhA6KZZ8l05F2Cp+gEbEa
-         S0XZkV3gp7UHapU+esjrGEoWGuEreLYTb0vzeRrVg/DIWExYBEh0NJPEN8RO391KTLZF
-         MZCw==
-X-Gm-Message-State: APjAAAVhOJAABpK3CGXGDZpZvDrJ3LfpQujeCxJTI4N0xSG6olqZtPrm
-        o4eCwcZQWHW1td2B6NxHNtzB3Q==
-X-Google-Smtp-Source: APXvYqzLzOdW28+st9J99eGOoagZRY/+6mNu7Jt6yXi0Ig2fmuLKwy4BkNu3szWlUISUaVAULlX13Q==
-X-Received: by 2002:a67:694f:: with SMTP id e76mr14283114vsc.77.1564415349351;
-        Mon, 29 Jul 2019 08:49:09 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id h81sm16021382vka.19.2019.07.29.08.49.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 08:49:08 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 11:49:02 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
-Message-ID: <20190729114302-mutt-send-email-mst@kernel.org>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-2-sgarzare@redhat.com>
- <20190729095956-mutt-send-email-mst@kernel.org>
- <20190729153656.zk4q4rob5oi6iq7l@steredhat>
+        Mon, 29 Jul 2019 11:49:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24694 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387495AbfG2Ptd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:49:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 07:37:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,323,1559545200"; 
+   d="scan'208";a="190603684"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 29 Jul 2019 07:37:43 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 29 Jul 2019 17:37:42 +0300
+Date:   Mon, 29 Jul 2019 17:37:42 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexander Aring <alex.aring@gmail.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>, Dan Murphy <dmurphy@ti.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wpan@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v3 1/7] drivers: Introduce device lookup variants by name
+Message-ID: <20190729143742.GI28600@kuha.fi.intel.com>
+References: <20190723221838.12024-1-suzuki.poulose@arm.com>
+ <20190723221838.12024-2-suzuki.poulose@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190729153656.zk4q4rob5oi6iq7l@steredhat>
+In-Reply-To: <20190723221838.12024-2-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 05:36:56PM +0200, Stefano Garzarella wrote:
-> On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
-> > On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
-> > > Since virtio-vsock was introduced, the buffers filled by the host
-> > > and pushed to the guest using the vring, are directly queued in
-> > > a per-socket list. These buffers are preallocated by the guest
-> > > with a fixed size (4 KB).
-> > > 
-> > > The maximum amount of memory used by each socket should be
-> > > controlled by the credit mechanism.
-> > > The default credit available per-socket is 256 KB, but if we use
-> > > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
-> > > buffers, using up to 1 GB of memory per-socket. In addition, the
-> > > guest will continue to fill the vring with new 4 KB free buffers
-> > > to avoid starvation of other sockets.
-> > > 
-> > > This patch mitigates this issue copying the payload of small
-> > > packets (< 128 bytes) into the buffer of last packet queued, in
-> > > order to avoid wasting memory.
-> > > 
-> > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-> > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > 
-> > This is good enough for net-next, but for net I think we
-> > should figure out how to address the issue completely.
-> > Can we make the accounting precise? What happens to
-> > performance if we do?
-> > 
+On Tue, Jul 23, 2019 at 11:18:32PM +0100, Suzuki K Poulose wrote:
+> Add a helper to match the device name for device lookup. Also
+> reuse this generic exported helper for the existing bus_find_device_by_name().
+> and add similar variants for driver/class.
 > 
-> In order to do more precise accounting maybe we can use the buffer size,
-> instead of payload size when we update the credit available.
-> In this way, the credit available for each socket will reflect the memory
-> actually used.
-> 
-> I should check better, because I'm not sure what happen if the peer sees
-> 1KB of space available, then it sends 1KB of payload (using a 4KB
-> buffer).
-> 
-> The other option is to copy each packet in a new buffer like I did in
-> the v2 [2], but this forces us to make a copy for each packet that does
-> not fill the entire buffer, perhaps too expensive.
-> 
-> [2] https://patchwork.kernel.org/patch/10938741/
-> 
-> 
-> Thanks,
-> Stefano
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexander Aring <alex.aring@gmail.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Harald Freudenberger <freude@linux.ibm.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: linux-leds@vger.kernel.org
+> Cc: linux-rtc@vger.kernel.org
+> Cc: linux-usb@vger.kernel.org
+> Cc: linux-wpan@vger.kernel.org
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Stefan Schmidt <stefan@datenfreihafen.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Interesting. You are right, and at some level the protocol forces copies.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.coM>
 
-We could try to detect that the actual memory is getting close to
-admin limits and force copies on queued packets after the fact.
-Is that practical?
+> ---
+>  drivers/base/bus.c               | 24 ------------------
+>  drivers/base/core.c              |  6 +++++
+>  drivers/hwtracing/stm/core.c     |  9 +------
+>  drivers/leds/led-class.c         |  9 +------
+>  drivers/rtc/interface.c          | 11 +--------
+>  drivers/s390/cio/ccwgroup.c      | 10 +-------
+>  drivers/s390/cio/device.c        | 15 +-----------
+>  drivers/s390/crypto/zcrypt_api.c | 11 +--------
+>  drivers/usb/roles/class.c        |  8 +-----
+>  drivers/usb/typec/class.c        |  8 +-----
+>  include/linux/device.h           | 42 +++++++++++++++++++++++++++++---
+>  net/ieee802154/core.c            |  7 +-----
+>  12 files changed, 54 insertions(+), 106 deletions(-)
+> 
+> diff --git a/drivers/base/bus.c b/drivers/base/bus.c
+> index df3cac739813..a1d1e8256324 100644
+> --- a/drivers/base/bus.c
+> +++ b/drivers/base/bus.c
+> @@ -342,30 +342,6 @@ struct device *bus_find_device(struct bus_type *bus,
+>  }
+>  EXPORT_SYMBOL_GPL(bus_find_device);
+>  
+> -static int match_name(struct device *dev, const void *data)
+> -{
+> -	const char *name = data;
+> -
+> -	return sysfs_streq(name, dev_name(dev));
+> -}
+> -
+> -/**
+> - * bus_find_device_by_name - device iterator for locating a particular device of a specific name
+> - * @bus: bus type
+> - * @start: Device to begin with
+> - * @name: name of the device to match
+> - *
+> - * This is similar to the bus_find_device() function above, but it handles
+> - * searching by a name automatically, no need to write another strcmp matching
+> - * function.
+> - */
+> -struct device *bus_find_device_by_name(struct bus_type *bus,
+> -				       struct device *start, const char *name)
+> -{
+> -	return bus_find_device(bus, start, (void *)name, match_name);
+> -}
+> -EXPORT_SYMBOL_GPL(bus_find_device_by_name);
+> -
+>  /**
+>   * subsys_find_device_by_id - find a device with a specific enumeration number
+>   * @subsys: subsystem
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index da84a73f2ba6..fb83647d685a 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3357,6 +3357,12 @@ void device_set_of_node_from_dev(struct device *dev, const struct device *dev2)
+>  }
+>  EXPORT_SYMBOL_GPL(device_set_of_node_from_dev);
+>  
+> +int device_match_name(struct device *dev, const void *name)
+> +{
+> +	return sysfs_streq(dev_name(dev), name);
+> +}
+> +EXPORT_SYMBOL_GPL(device_match_name);
+> +
+>  int device_match_of_node(struct device *dev, const void *np)
+>  {
+>  	return dev->of_node == np;
+> diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
+> index e55b902560de..2b6bd42632e8 100644
+> --- a/drivers/hwtracing/stm/core.c
+> +++ b/drivers/hwtracing/stm/core.c
+> @@ -89,13 +89,6 @@ static struct class stm_class = {
+>  	.dev_groups	= stm_groups,
+>  };
+>  
+> -static int stm_dev_match(struct device *dev, const void *data)
+> -{
+> -	const char *name = data;
+> -
+> -	return sysfs_streq(name, dev_name(dev));
+> -}
+> -
+>  /**
+>   * stm_find_device() - find stm device by name
+>   * @buf:	character buffer containing the name
+> @@ -116,7 +109,7 @@ struct stm_device *stm_find_device(const char *buf)
+>  	if (!stm_core_up)
+>  		return NULL;
+>  
+> -	dev = class_find_device(&stm_class, NULL, buf, stm_dev_match);
+> +	dev = class_find_device_by_name(&stm_class, buf);
+>  	if (!dev)
+>  		return NULL;
+>  
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 4793e77808e2..d54c8e4d8954 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -213,13 +213,6 @@ static int led_resume(struct device *dev)
+>  
+>  static SIMPLE_DEV_PM_OPS(leds_class_dev_pm_ops, led_suspend, led_resume);
+>  
+> -static int match_name(struct device *dev, const void *data)
+> -{
+> -	if (!dev_name(dev))
+> -		return 0;
+> -	return !strcmp(dev_name(dev), (char *)data);
+> -}
+> -
+>  static int led_classdev_next_name(const char *init_name, char *name,
+>  				  size_t len)
+>  {
+> @@ -230,7 +223,7 @@ static int led_classdev_next_name(const char *init_name, char *name,
+>  	strlcpy(name, init_name, len);
+>  
+>  	while ((ret < len) &&
+> -	       (dev = class_find_device(leds_class, NULL, name, match_name))) {
+> +	       (dev = class_find_device_by_name(leds_class, name))) {
+>  		put_device(dev);
+>  		ret = snprintf(name, len, "%s_%u", init_name, ++i);
+>  	}
+> diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+> index 72b7ddc43116..c93ef33b01d3 100644
+> --- a/drivers/rtc/interface.c
+> +++ b/drivers/rtc/interface.c
+> @@ -663,21 +663,12 @@ void rtc_update_irq(struct rtc_device *rtc,
+>  }
+>  EXPORT_SYMBOL_GPL(rtc_update_irq);
+>  
+> -static int __rtc_match(struct device *dev, const void *data)
+> -{
+> -	const char *name = data;
+> -
+> -	if (strcmp(dev_name(dev), name) == 0)
+> -		return 1;
+> -	return 0;
+> -}
+> -
+>  struct rtc_device *rtc_class_open(const char *name)
+>  {
+>  	struct device *dev;
+>  	struct rtc_device *rtc = NULL;
+>  
+> -	dev = class_find_device(rtc_class, NULL, name, __rtc_match);
+> +	dev = class_find_device_by_name(rtc_class, name);
+>  	if (dev)
+>  		rtc = to_rtc_device(dev);
+>  
+> diff --git a/drivers/s390/cio/ccwgroup.c b/drivers/s390/cio/ccwgroup.c
+> index c522e9313c50..d843e362c167 100644
+> --- a/drivers/s390/cio/ccwgroup.c
+> +++ b/drivers/s390/cio/ccwgroup.c
+> @@ -608,13 +608,6 @@ void ccwgroup_driver_unregister(struct ccwgroup_driver *cdriver)
+>  }
+>  EXPORT_SYMBOL(ccwgroup_driver_unregister);
+>  
+> -static int __ccwgroupdev_check_busid(struct device *dev, const void *id)
+> -{
+> -	const char *bus_id = id;
+> -
+> -	return (strcmp(bus_id, dev_name(dev)) == 0);
+> -}
+> -
+>  /**
+>   * get_ccwgroupdev_by_busid() - obtain device from a bus id
+>   * @gdrv: driver the device is owned by
+> @@ -631,8 +624,7 @@ struct ccwgroup_device *get_ccwgroupdev_by_busid(struct ccwgroup_driver *gdrv,
+>  {
+>  	struct device *dev;
+>  
+> -	dev = driver_find_device(&gdrv->driver, NULL, bus_id,
+> -				 __ccwgroupdev_check_busid);
+> +	dev = driver_find_device_by_name(&gdrv->driver, bus_id);
+>  
+>  	return dev ? to_ccwgroupdev(dev) : NULL;
+>  }
+> diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+> index c421899be20f..131430bd48d9 100644
+> --- a/drivers/s390/cio/device.c
+> +++ b/drivers/s390/cio/device.c
+> @@ -1695,18 +1695,6 @@ int ccw_device_force_console(struct ccw_device *cdev)
+>  EXPORT_SYMBOL_GPL(ccw_device_force_console);
+>  #endif
+>  
+> -/*
+> - * get ccw_device matching the busid, but only if owned by cdrv
+> - */
+> -static int
+> -__ccwdev_check_busid(struct device *dev, const void *id)
+> -{
+> -	const char *bus_id = id;
+> -
+> -	return (strcmp(bus_id, dev_name(dev)) == 0);
+> -}
+> -
+> -
+>  /**
+>   * get_ccwdev_by_busid() - obtain device from a bus id
+>   * @cdrv: driver the device is owned by
+> @@ -1723,8 +1711,7 @@ struct ccw_device *get_ccwdev_by_busid(struct ccw_driver *cdrv,
+>  {
+>  	struct device *dev;
+>  
+> -	dev = driver_find_device(&cdrv->driver, NULL, (void *)bus_id,
+> -				 __ccwdev_check_busid);
+> +	dev = driver_find_device_by_name(&cdrv->driver, bus_id);
+>  
+>  	return dev ? to_ccwdev(dev) : NULL;
+>  }
+> diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
+> index 1058b4b5cc1e..38a5a47b8c9c 100644
+> --- a/drivers/s390/crypto/zcrypt_api.c
+> +++ b/drivers/s390/crypto/zcrypt_api.c
+> @@ -133,12 +133,6 @@ struct zcdn_device {
+>  static int zcdn_create(const char *name);
+>  static int zcdn_destroy(const char *name);
+>  
+> -/* helper function, matches the name for find_zcdndev_by_name() */
+> -static int __match_zcdn_name(struct device *dev, const void *data)
+> -{
+> -	return strcmp(dev_name(dev), (const char *)data) == 0;
+> -}
+> -
+>  /* helper function, matches the devt value for find_zcdndev_by_devt() */
+>  static int __match_zcdn_devt(struct device *dev, const void *data)
+>  {
+> @@ -152,10 +146,7 @@ static int __match_zcdn_devt(struct device *dev, const void *data)
+>   */
+>  static inline struct zcdn_device *find_zcdndev_by_name(const char *name)
+>  {
+> -	struct device *dev =
+> -		class_find_device(zcrypt_class, NULL,
+> -				  (void *) name,
+> -				  __match_zcdn_name);
+> +	struct device *dev = class_find_device_by_name(zcrypt_class, name);
+>  
+>  	return dev ? to_zcdn_dev(dev) : NULL;
+>  }
+> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> index 86defca6623e..c8efe60e2465 100644
+> --- a/drivers/usb/roles/class.c
+> +++ b/drivers/usb/roles/class.c
+> @@ -90,11 +90,6 @@ static int switch_fwnode_match(struct device *dev, const void *fwnode)
+>  	return dev_fwnode(dev) == fwnode;
+>  }
+>  
+> -static int switch_name_match(struct device *dev, const void *name)
+> -{
+> -	return !strcmp((const char *)name, dev_name(dev));
+> -}
+> -
+>  static void *usb_role_switch_match(struct device_connection *con, int ep,
+>  				   void *data)
+>  {
+> @@ -107,8 +102,7 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
+>  		dev = class_find_device(role_class, NULL, con->fwnode,
+>  					switch_fwnode_match);
+>  	} else {
+> -		dev = class_find_device(role_class, NULL, con->endpoint[ep],
+> -					switch_name_match);
+> +		dev = class_find_device_by_name(role_class, con->endpoint[ep]);
+>  	}
+>  
+>  	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> index a18285a990a8..9b0d15b487e5 100644
+> --- a/drivers/usb/typec/class.c
+> +++ b/drivers/usb/typec/class.c
+> @@ -210,11 +210,6 @@ static int typec_port_fwnode_match(struct device *dev, const void *fwnode)
+>  	return dev_fwnode(dev) == fwnode;
+>  }
+>  
+> -static int typec_port_name_match(struct device *dev, const void *name)
+> -{
+> -	return !strcmp((const char *)name, dev_name(dev));
+> -}
+> -
+>  static void *typec_port_match(struct device_connection *con, int ep, void *data)
+>  {
+>  	struct device *dev;
+> @@ -227,8 +222,7 @@ static void *typec_port_match(struct device_connection *con, int ep, void *data)
+>  		return class_find_device(typec_class, NULL, con->fwnode,
+>  					 typec_port_fwnode_match);
+>  
+> -	dev = class_find_device(typec_class, NULL, con->endpoint[ep],
+> -				typec_port_name_match);
+> +	dev = class_find_device_by_name(typec_class, con->endpoint[ep]);
+>  
+>  	return dev ? dev : ERR_PTR(-EPROBE_DEFER);
+>  }
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index c330b75c6c57..3ba376b8b456 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -164,6 +164,7 @@ void subsys_dev_iter_init(struct subsys_dev_iter *iter,
+>  struct device *subsys_dev_iter_next(struct subsys_dev_iter *iter);
+>  void subsys_dev_iter_exit(struct subsys_dev_iter *iter);
+>  
+> +int device_match_name(struct device *dev, const void *name);
+>  int device_match_of_node(struct device *dev, const void *np);
+>  
+>  int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data,
+> @@ -171,9 +172,20 @@ int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data,
+>  struct device *bus_find_device(struct bus_type *bus, struct device *start,
+>  			       const void *data,
+>  			       int (*match)(struct device *dev, const void *data));
+> -struct device *bus_find_device_by_name(struct bus_type *bus,
+> -				       struct device *start,
+> -				       const char *name);
+> +/**
+> + * bus_find_device_by_name - device iterator for locating a particular device
+> + * of a specific name.
+> + * @bus: bus type
+> + * @start: Device to begin with
+> + * @name: name of the device to match
+> + */
+> +static inline struct device *bus_find_device_by_name(struct bus_type *bus,
+> +						     struct device *start,
+> +						     const char *name)
+> +{
+> +	return bus_find_device(bus, start, name, device_match_name);
+> +}
+> +
+>  struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
+>  					struct device *hint);
+>  int bus_for_each_drv(struct bus_type *bus, struct device_driver *start,
+> @@ -342,6 +354,18 @@ struct device *driver_find_device(struct device_driver *drv,
+>  				  struct device *start, const void *data,
+>  				  int (*match)(struct device *dev, const void *data));
+>  
+> +/**
+> + * driver_find_device_by_name - device iterator for locating a particular device
+> + * of a specific name.
+> + * @driver: the driver we're iterating
+> + * @name: name of the device to match
+> + */
+> +static inline struct device *driver_find_device_by_name(struct device_driver *drv,
+> +							const char *name)
+> +{
+> +	return driver_find_device(drv, NULL, name, device_match_name);
+> +}
+> +
+>  void driver_deferred_probe_add(struct device *dev);
+>  int driver_deferred_probe_check_state(struct device *dev);
+>  int driver_deferred_probe_check_state_continue(struct device *dev);
+> @@ -471,6 +495,18 @@ extern struct device *class_find_device(struct class *class,
+>  					struct device *start, const void *data,
+>  					int (*match)(struct device *, const void *));
+>  
+> +/**
+> + * class_find_device_by_name - device iterator for locating a particular device
+> + * of a specific name.
+> + * @class: class type
+> + * @name: name of the device to match
+> + */
+> +static inline struct device *class_find_device_by_name(struct class *class,
+> +						       const char *name)
+> +{
+> +	return class_find_device(class, NULL, name, device_match_name);
+> +}
+> +
+>  struct class_attribute {
+>  	struct attribute attr;
+>  	ssize_t (*show)(struct class *class, struct class_attribute *attr,
+> diff --git a/net/ieee802154/core.c b/net/ieee802154/core.c
+> index 60b7ac56a1f5..de259b5170ab 100644
+> --- a/net/ieee802154/core.c
+> +++ b/net/ieee802154/core.c
+> @@ -23,11 +23,6 @@
+>  LIST_HEAD(cfg802154_rdev_list);
+>  int cfg802154_rdev_list_generation;
+>  
+> -static int wpan_phy_match(struct device *dev, const void *data)
+> -{
+> -	return !strcmp(dev_name(dev), (const char *)data);
+> -}
+> -
+>  struct wpan_phy *wpan_phy_find(const char *str)
+>  {
+>  	struct device *dev;
+> @@ -35,7 +30,7 @@ struct wpan_phy *wpan_phy_find(const char *str)
+>  	if (WARN_ON(!str))
+>  		return NULL;
+>  
+> -	dev = class_find_device(&wpan_phy_class, NULL, str, wpan_phy_match);
+> +	dev = class_find_device_by_name(&wpan_phy_class, str);
+>  	if (!dev)
+>  		return NULL;
+>  
+> -- 
+> 2.21.0
 
-And yes we can extend the credit accounting to include buffer size.
-That's a protocol change but maybe it makes sense.
+thanks,
 
 -- 
-MST
+heikki
