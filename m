@@ -2,131 +2,140 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEC6C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD46C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E282073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A986D2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:15:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GDOHpV5z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="y/VRyy1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfG2WOM (ORCPT
+        id S1728961AbfG2WPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 18:14:12 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34113 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfG2WOL (ORCPT
+        Mon, 29 Jul 2019 18:15:38 -0400
+Received: from gateway33.websitewelcome.com ([192.185.145.216]:47239 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728089AbfG2WPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 18:14:11 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n5so64269126otk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:14:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=srsaV7rzeEymjAzgSWNLmNrniFdnk6Pa83TgYZnyX/o=;
-        b=GDOHpV5z0vkTp/Hi9k2G9RgZZVziD9cVw4u/mDbabUF6fthqBEpD/8MLgeaoZ54AXl
-         gp0l4hXk6AWGC2IzW4ii/4UQEBxzajmUlkfHWmKxGm24d+k5C45V0pg1L+oyVAX4YD7u
-         h8NXxkhTqhfvFrBdj6h4GOpXGJxxrvxpRVDn2kNMV7WMhIA18dWbtiofquPD9NoIBfQ7
-         zUVtuqXW4rzQFaGb7Feac5wlgC92z0LPraATDJ2Qo9/hSoW6qpBPmDv2n5UdUAi0DT04
-         q2OHystI5so/Rgnn1bJznS4CHAiSrfhiNNdMDQZ4lT+pZ8/1qrm3uIT8I4LhsfaGG8f7
-         F5Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=srsaV7rzeEymjAzgSWNLmNrniFdnk6Pa83TgYZnyX/o=;
-        b=HOq+N7l88ll0S4cPwpBi+rEnJGmaTt2y1lCjzx1FOZxL1yWhxRDF2OdtgcUEGVatUh
-         X0x+WgIm1FoP/krrnGB1erzCww09pJg5jz7DThjPcxoYMLL9rv7SEHfWby2YuUaEqh+M
-         miz9jCHUjkvc0jG20hsNEzqQGAXJ0HomLNyBepvger8gVzr4WwViwyUHykrNwcd7XGov
-         q482Jm72v3InquKfShCbaMg30FsKv0dTX460rzWMedG8obgX3xuBnR8FECGVzNKYc/A4
-         WuP4/XnjCvKY8z/at8MOsGnLJu2kelcQU9jnHMcJZAGWrmX3llDG7ULS1qFxgfd6mYX/
-         gQpA==
-X-Gm-Message-State: APjAAAVNSMsKgeKo74TZZy5FWTj1dSjwePeFq5mharK9+0CTVycANa1h
-        LDwAHF2iZvam59VasQIZwfdThQeRFvbBcObvc9rX+Q==
-X-Google-Smtp-Source: APXvYqyuO53DWB1GnZbL8WPgAO6wYlxjhUKdDeUSsQXNzJYXk94EMFolKbpzDqKJBJk8IqgjhsI+ynp/TAB7yS3S1qk=
-X-Received: by 2002:a9d:6201:: with SMTP id g1mr85088815otj.195.1564438450498;
- Mon, 29 Jul 2019 15:14:10 -0700 (PDT)
+        Mon, 29 Jul 2019 18:15:37 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id CC41C6940A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 17:15:36 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id sDvchk9m73Qi0sDvchUvCj; Mon, 29 Jul 2019 17:15:36 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=dHkN5Os5jg2cDOrRLTVaMd59XWLTmpmxDcRl9QO0zyU=; b=y/VRyy1BNoX63+u2yIgC1UGmJR
+        dbESFrQ68d4/qYDyJ2RVo0mvZ3S0uvMbBTJUY2dAdj07CbPXhEBaM/G52+Ws4xkNDuM0In5EMr5rq
+        F+NZZwRqjmMDa1QSA099NduPVmOHem3sNqM2D1F5iAi9JxQ5tdznah0BoMuiF5N9FxR+tnM+epzNk
+        GDMP9ku0Ghmniegy1HzE0tBn7vgySxnqYdXNpzbPc9VEbbPK8E+rNZauARNzfsxFaOJPLxfUB642D
+        bHEEfVNl84cUlIeU1UamnBWVkiIGjueikfzdiplcuu1Ie5tJ8NklAuaYRylptJ9+Ttgzo44k500to
+        LX18KoSw==;
+Received: from [187.192.11.120] (port=60834 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hsDvb-001z1T-Eq; Mon, 29 Jul 2019 17:15:35 -0500
+Date:   Mon, 29 Jul 2019 17:15:34 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] ASoC: ti: Mark expected switch fall-throughs
+Message-ID: <20190729221534.GA18696@embeddedor>
 MIME-Version: 1.0
-References: <2305283.AStDPdUUnE@kreacher> <c8960d91-4446-9acf-5575-e442a652bd05@gmail.com>
- <CAGETcx_+i6_0Q2rf-UdzZ3bCPUos9Tu4JmvvO0zUoy5gB8_ESQ@mail.gmail.com>
- <CAJZ5v0h5U60yCyaHeHVbWmwWDa4NBnuhgsV022nZm5HuGgV7ow@mail.gmail.com>
- <CAGETcx9oqAJ-VoJnD0Y8k+W8cCGPDz--=amktSgW_sB4MEngDA@mail.gmail.com> <CAJZ5v0gSyPn8sZ2jJ+nZ_nu1Y=8+7Pg+pPvKGSijUm_sKitk4Q@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gSyPn8sZ2jJ+nZ_nu1Y=8+7Pg+pPvKGSijUm_sKitk4Q@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 29 Jul 2019 15:13:34 -0700
-Message-ID: <CAGETcx-g+gbzgy0ZDKdMreRVWqnQyXLmuLRC4g5Zexyj5yThnA@mail.gmail.com>
-Subject: Re: [PATCH v2] driver core: Remove device link creation limitation
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hsDvb-001z1T-Eq
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:60834
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 13
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 3:03 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Mon, Jul 29, 2019 at 11:43 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > On Mon, Jul 29, 2019 at 2:25 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Mon, Jul 29, 2019 at 10:47 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > >
-> > > > Rafael,
-> > > >
-> > > > This is the fix you need. Or something link this.
-> > > >
-> > > > I had asked you to reject DL_FLAG_MANAGED as an input flag if you are
-> > > > marking it as internal (in the comments). But looks like you were also
-> > > > trying to check for "undefined" bit positions. However, the check
-> > > > isn't correct because DL_MANAGED_FLAGS doesn't include (rightfully so)
-> > > > DL_FLAG_PM_RUNTIME and DL_FLAG_RPM_ACTIVE .
-> > > >
-> > > > I tried to write a DL_FLAG_EXTERNAL to include all the external flags,
-> > > > but that felt like a maintenance headache that's not worth carrying. I
-> > > > think it's simpler to just error out when internal flags being passed
-> > > > in and ignore any undefined bit positions.
-> > >
-> > > Well, IMO it is better to prevent people from passing unrecognized
-> > > flags to device_link_add() at all, even if that means some extra
-> > > effort when adding new flags.
-> >
-> > It isn't so much the extra effort that's a concern, but people might
-> > miss updating whatever grouping macro we use.
-> >
-> > >
-> > > I'll post an alternative fix shortly.
-> >
-> > You might want to move the MANAGED_FLAGs and other grouping macros
-> > into the header file then? So that if someone is adding new flags,
-> > it'll be less likely they'll forget to update the grouping macro?
->
-> They would need to update device_link_add() itself, so updating a
-> thing next to it does't seem to be so much of an issue.
->
-> Moreover, the "grouping macro" is not relevant for any users of the
-> API, just for device_link_add() itself, so I'm not sure how much
-> better it is to have it in the header.
->
-> And, of course, if anyone forgets to update the "grouping macro", they
-> will find that the new flags are rejected immediately.
+Mark switch cases where we are expecting to fall through.
 
-Sounds good.
+This patch fixes the following warning (Building: arm):
 
--Saravana
+sound/soc/ti/n810.c: In function ‘n810_ext_control’:
+sound/soc/ti/n810.c:48:10: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   line1l = 1;
+   ~~~~~~~^~~
+sound/soc/ti/n810.c:49:2: note: here
+  case N810_JACK_HP:
+  ^~~~
+
+sound/soc/ti/rx51.c: In function ‘rx51_ext_control’:
+sound/soc/ti/rx51.c:57:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   hs = 1;
+   ~~~^~~
+sound/soc/ti/rx51.c:58:2: note: here
+  case RX51_JACK_HP:
+  ^~~~
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ sound/soc/ti/n810.c | 1 +
+ sound/soc/ti/rx51.c | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/sound/soc/ti/n810.c b/sound/soc/ti/n810.c
+index 2c3f2a4c1700..3ad2b6daf31e 100644
+--- a/sound/soc/ti/n810.c
++++ b/sound/soc/ti/n810.c
+@@ -46,6 +46,7 @@ static void n810_ext_control(struct snd_soc_dapm_context *dapm)
+ 	switch (n810_jack_func) {
+ 	case N810_JACK_HS:
+ 		line1l = 1;
++		/* fall through */
+ 	case N810_JACK_HP:
+ 		hp = 1;
+ 		break;
+diff --git a/sound/soc/ti/rx51.c b/sound/soc/ti/rx51.c
+index bc6046534fa5..ccd0e8a07dd1 100644
+--- a/sound/soc/ti/rx51.c
++++ b/sound/soc/ti/rx51.c
+@@ -55,6 +55,7 @@ static void rx51_ext_control(struct snd_soc_dapm_context *dapm)
+ 		break;
+ 	case RX51_JACK_HS:
+ 		hs = 1;
++		/* fall through */
+ 	case RX51_JACK_HP:
+ 		hp = 1;
+ 		break;
+-- 
+2.22.0
+
