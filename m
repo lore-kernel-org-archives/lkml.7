@@ -2,83 +2,72 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D1AC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97E9C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF9F206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7879206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfG2SO4 (ORCPT
+        id S1729179AbfG2SQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:14:56 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:44781 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfG2SOz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 14:14:55 -0400
-Received: from [192.168.1.110] ([77.4.29.213]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MY5s5-1ht0bI3BML-00YQTu; Mon, 29 Jul 2019 20:14:53 +0200
-Subject: Re: [PATCH 1/2] input: keyboard: gpio_keys_polled: use gpio lookup
- table
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-References: <1564415994-22871-1-git-send-email-info@metux.net>
- <20190729172607.GB755@penguin>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <b2912c1d-a6d8-ad2a-3e37-19e4d3d1bd3b@metux.net>
-Date:   Mon, 29 Jul 2019 20:14:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Jul 2019 14:16:59 -0400
+Received: from mga06.intel.com ([134.134.136.31]:2183 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726242AbfG2SQ7 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 14:16:59 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 11:16:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,323,1559545200"; 
+   d="scan'208";a="199833604"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by fmsmga002.fm.intel.com with ESMTP; 29 Jul 2019 11:16:58 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 5BA6F301BBA; Mon, 29 Jul 2019 11:16:58 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 11:16:58 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, kan.liang@intel.com,
+        yao.jin@intel.com
+Subject: Re: [PATCH] perf pmu-events: Fix the missing "cpu_clk_unhalted.core"
+Message-ID: <20190729181658.GH25319@tassilo.jf.intel.com>
+References: <20190729072755.2166-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190729172607.GB755@penguin>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:niAflXSiIAGvJeBkeW6ZBFwWCpUhgdJKNJaXl4oxp6SZGttm57Q
- KIRHkU7RAxE8TGcFK8192TZRKpf4e7namaJ8/lUqRryKBq1UTwE2bPm8B4fdDV9t9rDSgGp
- wQ7zzxmO5r6NybnZaf4n5NdoTIFmh+fwsq8hx4puN7urem22qsR9Ij9QUbdyN/EkIQ4KHXF
- 11gRyyIOxTt25IiekRmRQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:F7gHLO2/IiY=://7flOcwe6m3nOYtiFi9kB
- CVKOunpf8rjPS34R+NviVt70P5yOP6JeiGmgd6zm7QFy5Cu1cqYCJbRabTOR9F7wcQHTEDhoI
- niwTFZQ6YQ9SgawjBOT723CeKTCpL1VO+vvCMBlCpOJB5iCSi3/dKwWeAIsOMlBgUZ5KqEuHd
- QJ1QmxQNCOFgx0Qpc8aRkQMD0t+VFmAKsDgZ65py85SJY5puAGxuUfAIW1BcjiUrz1GghBp23
- s12OF6VdvSFDsWWvqAi80q5k8TZ9y3AbU0F5/t0antSmzaygxYJaZluxD86txyQd7474Yv01i
- uYO9M5X4GdipJ1nYQtFzUBNXXedCpFlwFNh9NA2Dd6CY9tcar4m4fs2eqAtrGQid5jbXUqwrw
- qLxm3iPSqnvz03zTl6V04s0+GpZ8X7+sxKSXrtYDhMwoY036t5/p7FNNKgxuvdXzDtZwTCjWe
- TFS/jf1zx45Sot1oPGYru8jlWhIPYOyHZdmKS2X2j/g2Qj6kMDg7r6NSdemqoKWEQoLCAZykd
- FkkrCCoBWvY9tzOe+YoSBEGr6g1xFglEiRMWfb/h1HEdSGwVF/Mq43+rjznH7PlQTJISF7EpR
- L4dw4R3ExcDjBuC/ftvOLKv2hEOIgm0wjKQb+rDVBdT4F2E0aM90SeoYDRATOVB/izDnilk/a
- ujTkatbafbKKznS4R8ofuIyDPW4UwbImdzoEhp0RhAInur9nEYSAFIwS6wgIkbEaJqQEnUQvY
- l+lqiUZcfTj4kHiUTOtKfCly+0AYXwzNdpGoLbkU+etgVBw5OilgP2uSbSQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729072755.2166-1-yao.jin@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.07.19 19:26, Dmitry Torokhov wrote:
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index 1a91a197cafb..d413761621b0 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -453,6 +453,7 @@ static struct fixed {
+>  	{ "inst_retired.any_p", "event=0xc0" },
+>  	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
+>  	{ "cpu_clk_unhalted.thread", "event=0x3c" },
+> +	{ "cpu_clk_unhalted.core", "event=0x3c" },
 
-Hi,
+Not sure this is correct for non Atom.
 
-> As I think I mentioned a while back I would prefer to get gpiolob > support swnode-backed properties so that the driver would not need 
-to> know about differences between ACPI, DT and static board files.
-Indeed would be nice. But I think we should get rid of raw gpio IDs in
-favour of gpiod lookup tables first.
+On Atom thread==core, but that is not true with SMT/HyperThreading.
 
-> I just recently re-posted patches for this, let's see if we can get them > landed in the kernel.
-Can you give me a pointer ?
+The big cores currently don't have this event, so it would
+match incorrectly.
 
+This has to be handled on the event list level, perhaps with
+some enhancements.
 
---mtx
-
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+-Andi
