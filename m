@@ -2,72 +2,150 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27745C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401CDC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA812070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13449214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:15:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxlI/uKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbfG2NPf (ORCPT
+        id S2388004AbfG2NPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 09:15:35 -0400
-Received: from correo.us.es ([193.147.175.20]:40180 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbfG2NPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 09:15:35 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 043A2114567
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:15:32 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id EB2CA96177
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:15:31 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id DD549FF6CC; Mon, 29 Jul 2019 15:15:31 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id E633AD2F98;
-        Mon, 29 Jul 2019 15:15:29 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Mon, 29 Jul 2019 15:15:29 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [47.60.40.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id A75F44265A31;
-        Mon, 29 Jul 2019 15:15:29 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 15:15:28 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfilter: add include guard to xt_connlabel.h
-Message-ID: <20190729131528.4vl6zpyyoyqd7np6@salvia>
-References: <20190728155138.29803-1-yamada.masahiro@socionext.com>
+        Mon, 29 Jul 2019 09:15:52 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35852 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfG2NPv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 09:15:51 -0400
+Received: by mail-io1-f65.google.com with SMTP id o9so16255077iom.3;
+        Mon, 29 Jul 2019 06:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hesoZG+TcuR2ee3ESupVuTZ9BAyVWJDa4N1y2VQSFbA=;
+        b=dxlI/uKS1x/I62djieCFmuyPj9xjbstOXhRIT8tlirULC+Cfrf57qeguUW32ksAFai
+         0cCDFsrNt6NNxY7+AW3VzzbTEZNcBvxoMRSPIrPQMdenQIG4v5CDboDBA4A3XsfXTVLU
+         HFmb9d54USSK1Jw7k3B8Nk+OXD7+PF3vBjayG1RUASPYxvowPUKmw65c6Q0TyRWurLb/
+         ZOXNTgFWYirtvTvDlKr8AK+7nRHxZeUs5ARsC8Afvqza6XSWdMt+7VqM6SCYfvidaxsL
+         ivcnl5ug5bRl4IE6nxW7vpF3qTqnze7ewJaaTGMvMs7zYv1UYY4MDdG2WH0qJZZSgMwS
+         KTvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hesoZG+TcuR2ee3ESupVuTZ9BAyVWJDa4N1y2VQSFbA=;
+        b=LNcHsfSYZJv6KkgwbeVuhZu3IL1zzD8ZybAmiLgOthE2m0QnKkg6/whD+daHaARy73
+         Sei70dTDST+DVzgj//RLdSvgI4UGn7pNbGzMlvEYdPDbrWY6GUcoPbm4BYfwpTGTL5sE
+         8q+lBzA+OWtgW+BAtGS5uN61ZY9DPbknFxVyb4h9U3WVvAM2fK/f8p08R6x+fApPSy10
+         jFIPOBB6vi0sRD1ZJF69apeawq9cYxyQBV+pAnvs8uZ70Az5ErLRBb+E6GHePW35n9Wg
+         5Joi8trPfVFoWbjmdKmSMlFCzkPKOqgpwUEL7z7gNQCCvAky//LIpVmEA79+GvPGa+Oj
+         KHqw==
+X-Gm-Message-State: APjAAAWlHdKq8QdDyKJ79k+FHgpeddsWyxTz0e9pe1IalS5NLmqnAU9F
+        7B/o0T/ZgJoH+XsywbsNxnU=
+X-Google-Smtp-Source: APXvYqwoWQTwF5tIsbtyIfsCRBRQp5dFcjhYZlqA4xw1kFYGOW8RBewbcLjn8mmgVWtwQYUdZPRcCA==
+X-Received: by 2002:a5d:8347:: with SMTP id q7mr95370134ior.277.1564406150592;
+        Mon, 29 Jul 2019 06:15:50 -0700 (PDT)
+Received: from localhost ([8.46.76.96])
+        by smtp.gmail.com with ESMTPSA id n22sm100665148iob.37.2019.07.29.06.15.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 06:15:49 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 15:15:32 +0200
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/2] drivers: base: swnode: link devices to software nodes
+Message-ID: <20190729131532.GA1201@penguin>
+References: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
+ <20190713075259.243565-2-dmitry.torokhov@gmail.com>
+ <20190729120715.GA28600@kuha.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190728155138.29803-1-yamada.masahiro@socionext.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20190729120715.GA28600@kuha.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 12:51:38AM +0900, Masahiro Yamada wrote:
-> Add a header include guard just in case.
+On Mon, Jul 29, 2019 at 03:07:15PM +0300, Heikki Krogerus wrote:
+> On Sat, Jul 13, 2019 at 12:52:58AM -0700, Dmitry Torokhov wrote:
+> > It is helpful to know what device, if any, a software node is tied to, so
+> > let's store a pointer to the device in software node structure. Note that
+> > children software nodes will inherit their parent's device pointer, so we
+> > do not have to traverse hierarchy to see what device the [sub]tree belongs
+> > to.
+> > 
+> > We will be using the device pointer to locate GPIO lookup tables for
+> > devices with static properties.
+> > 
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> >  drivers/base/property.c  |  1 +
+> >  drivers/base/swnode.c    | 35 ++++++++++++++++++++++++++++++++++-
+> >  include/linux/property.h |  5 +++++
+> >  3 files changed, 40 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > index 348b37e64944..3bc93d4b35c4 100644
+> > --- a/drivers/base/property.c
+> > +++ b/drivers/base/property.c
+> > @@ -527,6 +527,7 @@ int device_add_properties(struct device *dev,
+> >  	if (IS_ERR(fwnode))
+> >  		return PTR_ERR(fwnode);
+> >  
+> > +	software_node_link_device(fwnode, dev);
+> >  	set_secondary_fwnode(dev, fwnode);
+> >  	return 0;
+> >  }
+> > diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> > index 7fc5a18e02ad..fd12eea539b6 100644
+> > --- a/drivers/base/swnode.c
+> > +++ b/drivers/base/swnode.c
+> > @@ -24,6 +24,9 @@ struct software_node {
+> >  
+> >  	/* properties */
+> >  	const struct property_entry *properties;
+> > +
+> > +	/* device this node is associated with */
+> > +	struct device *dev;
+> >  };
+> 
+> Let's not do that! The nodes can be, and in many cases are, associated
+> with multiple devices.
 
-Applied to nf.git, thanks.
+They do? Where? I see that set of properties can be shared between
+several devices, but when we instantiate SW node we create a new
+instance for device. This is also how ACPI and OF properties work; they
+not shared between devices (or, rather, the kernel creates distinct _and
+single_ devices for instance of ACPI or OF node). I do not think we want
+swnodes work differently from the other firmware nodes.
 
-BTW, is the _UAPI_ prefix really needed? I can see netfilter headers
-under include/uapi/ sometimes are prefixed by UAPI and sometimes not.
+> 
+> Every device is already linked with the software node kobject, so
+> isn't it possible to simply walk trough those links in order to check
+> the devices associated with the node?
+
+No, we need to know the exact instance of a device, not a set of
+devices, because even though some properties can be shared, others can
+not. For example, even if 2 exactly same touch controllers in the system
+have "reset-gpios" property, they won't be the same GPIO for the both of
+them.
 
 Thanks.
+
+-- 
+Dmitry
