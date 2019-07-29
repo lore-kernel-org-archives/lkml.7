@@ -2,134 +2,142 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61593C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7707C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3564820657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CC32070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:55:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="veizmoYv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="k9oWOIqA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388337AbfG2Uy6 (ORCPT
+        id S2388357AbfG2UzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:54:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45302 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfG2Uy5 (ORCPT
+        Mon, 29 Jul 2019 16:55:01 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.187]:46459 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388310AbfG2Uy6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:54:57 -0400
-Received: by mail-wr1-f66.google.com with SMTP id f9so63296312wre.12;
-        Mon, 29 Jul 2019 13:54:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dGV+VgnJbJAnGDX/51DW9mvgG9yE3L7k/29WtRT7Q9E=;
-        b=veizmoYv1cU+nDu6mCN/WCsFjQZ+mj85Gcb8ML4d/y+zQY1xhdTf5rEEolQzHYR5CY
-         /DO4akfCOVk7d2MYUWvnyHCNnU9IzzDDtKZXwgl7H8ICD6PDzU4lrRZctPEfgZajzUQ/
-         xdbRdg+/V9kauxEelwXmyj1ZGJme/NiRW31hhFy5qAZNzUbnzppuCoMan1PkqjHXTudT
-         pglvphAujWgjtNxwzjD5vV9UloThHiuB65o3f7YE0YWRvtq2C891+/D/4BrEOUJ8e23B
-         AMlW2Q2+bZbRbLQptXx9F7OID9RwB2Xi2FPxXz93a5Qs8/FG7YLVJ5FRHb+2su/aymk4
-         XGqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dGV+VgnJbJAnGDX/51DW9mvgG9yE3L7k/29WtRT7Q9E=;
-        b=j2BBgaCHNjDscYudcJLQZDph5dgujbl1YCs/QAtDcfy/W655XNb1aRZtjYcsWbAhCE
-         ypNJcR82CzfDtgyI/U2mLlTiBlCYt33tHu+aiKcGFPNVF3urYJF9ZEzqGielZbqlNPyM
-         Rt00qNCOY+0A4F8LM+nh5fVBxy5VQxo8wHLCC/2Q6+Ac32xUB6SYSnWdovPHx9+56WsI
-         oSSDD3Dney/yp6dVAXHj6SJ9a1AAekFhSB+BWvG5DCiNdTaa7BdN3qlcMq85L6rcK1J0
-         tPjMYoFq5owE/aqurKoAnAL8/mQDrGnO4i8O++HRbdJuhIkNND0KARVTNJgd4bwqm/Te
-         dsKg==
-X-Gm-Message-State: APjAAAXJWk8MSw6L/8Q47gPXcGxwcPYsAhtF+Dnh0MQ5F5XC1dJ7qUvT
-        L9YZBEkC48oiMOD4XyHvsHc=
-X-Google-Smtp-Source: APXvYqw1rwm6Wsr1Pfo+JzROn4IRfK5FXYDymkOjazFc9LWtIkOIQiZYx9IOsn5azOllGbN4OF06Fw==
-X-Received: by 2002:a5d:5644:: with SMTP id j4mr41129290wrw.144.1564433694694;
-        Mon, 29 Jul 2019 13:54:54 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id v65sm69115514wme.31.2019.07.29.13.54.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 13:54:54 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 13:54:52 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        Salvatore Bellizzi <salvatore.bellizzi@linux.seppia.net>,
-        andy.shevchenko@gmail.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        egranata@chromium.org, egranata@google.com,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        linux-acpi@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] driver core: platform: return -ENXIO for missing GpioInt
-Message-ID: <20190729205452.GA22785@archlinux-threadripper>
-References: <20190729204954.25510-1-briannorris@chromium.org>
+        Mon, 29 Jul 2019 16:54:58 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 8D3D31027D1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:54:57 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id sCfZhjEFi3Qi0sCfZhU0I7; Mon, 29 Jul 2019 15:54:57 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=2qRqERqNiuX608wUGfvOMeMcVRj/FE6XROb7xahJa7o=; b=k9oWOIqAFg/2nRf4GJb6CvtGDX
+        513mCkowh1otHfVo16g46ToXHrguzcFXITXPT4b8aE46vPfJBMn7y0HauqIlru0O839nCt1Ebu68p
+        xgME2rRs75418TaFp9gm/ekGuBS8zBrkMfubFUmqzCo73KXX44znu7OH4g8zlwVocX0/DVzBWgwfP
+        3ULmMGJ5wIYzwxrtuIzop64Mq4UV3LIO6RM2ntslHURsX0x4Ogvua2Vau6rjiS4Xu3iO+P/oi/xaT
+        Nyl9YIDC7viwSlCL3iNQh8zj+1aX9If4fXTLmxz7jIQoDNxoEaSSuvMYkm9PpgLZA3l43qTEwh5Q5
+        bz1kG6Rg==;
+Received: from [187.192.11.120] (port=59750 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hsCfX-001L5i-D7; Mon, 29 Jul 2019 15:54:55 -0500
+Date:   Mon, 29 Jul 2019 15:54:54 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2] sound: dmasound_atari: Mark expected switch fall-through
+Message-ID: <20190729205454.GA5084@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190729204954.25510-1-briannorris@chromium.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hsCfX-001L5i-D7
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:59750
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 20
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 01:49:54PM -0700, Brian Norris wrote:
-> Commit daaef255dc96 ("driver: platform: Support parsing GpioInt 0 in
-> platform_get_irq()") broke the Embedded Controller driver on most LPC
-> Chromebooks (i.e., most x86 Chromebooks), because cros_ec_lpc expects
-> platform_get_irq() to return -ENXIO for non-existent IRQs.
-> Unfortunately, acpi_dev_gpio_irq_get() doesn't follow this convention
-> and returns -ENOENT instead. So we get this error from cros_ec_lpc:
-> 
->    couldn't retrieve IRQ number (-2)
-> 
-> I see a variety of drivers that treat -ENXIO specially, so rather than
-> fix all of them, let's fix up the API to restore its previous behavior.
-> 
-> I reported this on v2 of this patch:
-> 
-> https://lore.kernel.org/lkml/20190220180538.GA42642@google.com/
-> 
-> but apparently the patch had already been merged before v3 got sent out:
-> 
-> https://lore.kernel.org/lkml/20190221193429.161300-1-egranata@chromium.org/
-> 
-> and the result is that the bug landed and remains unfixed.
-> 
-> I differ from the v3 patch by:
->  * allowing for ret==0, even though acpi_dev_gpio_irq_get() specifically
->    documents (and enforces) that 0 is not a valid return value (noted on
->    the v3 review)
->  * adding a small comment
-> 
-> Reported-by: Brian Norris <briannorris@chromium.org>
-> Reported-by: Salvatore Bellizzi <salvatore.bellizzi@linux.seppia.net>
-> Cc: Enrico Granata <egranata@chromium.org>
-> Cc: <stable@vger.kernel.org>
-> Fixes: daaef255dc96 ("driver: platform: Support parsing GpioInt 0 in platform_get_irq()")
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
-> Side note: it might have helped alleviate some of this pain if there
-> were email notifications to the mailing list when a patch gets applied.
-> I didn't realize (and I'm not sure if Enrico did) that v2 was already
-> merged by the time I noted its mistakes. If I had known, I would have
-> suggested a follow-up patch, not a v3.
+Mark switch cases where we are expecting to fall through.
 
-I've found this to be fairly reliable for getting notified when
-something gets applied if it is a tree that shows up in -next.
+This patch fixes the following warning (Building: m68k):
 
-https://www.kernel.org/get-notifications-for-your-patches.html
+sound/oss/dmasound/dmasound_atari.c: warning: this statement may fall
+through [-Wimplicit-fallthrough=]:  => 1449:24
 
-Cheers,
-Nathan
+Notice that, in this particular case, the code comment is
+modified in accordance with what GCC is expecting to find.
+
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+Changes in v2:
+ - Update code so switch and case statements are at the same indent.
+
+ sound/oss/dmasound/dmasound_atari.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/sound/oss/dmasound/dmasound_atari.c b/sound/oss/dmasound/dmasound_atari.c
+index 83653683fd68..823ccfa089b2 100644
+--- a/sound/oss/dmasound/dmasound_atari.c
++++ b/sound/oss/dmasound/dmasound_atari.c
+@@ -1432,25 +1432,25 @@ static int FalconMixerIoctl(u_int cmd, u_long arg)
+ {
+ 	int data;
+ 	switch (cmd) {
+-	    case SOUND_MIXER_READ_RECMASK:
++	case SOUND_MIXER_READ_RECMASK:
+ 		return IOCTL_OUT(arg, SOUND_MASK_MIC);
+-	    case SOUND_MIXER_READ_DEVMASK:
++	case SOUND_MIXER_READ_DEVMASK:
+ 		return IOCTL_OUT(arg, SOUND_MASK_VOLUME | SOUND_MASK_MIC | SOUND_MASK_SPEAKER);
+-	    case SOUND_MIXER_READ_STEREODEVS:
++	case SOUND_MIXER_READ_STEREODEVS:
+ 		return IOCTL_OUT(arg, SOUND_MASK_VOLUME | SOUND_MASK_MIC);
+-	    case SOUND_MIXER_READ_VOLUME:
++	case SOUND_MIXER_READ_VOLUME:
+ 		return IOCTL_OUT(arg,
+ 			VOLUME_ATT_TO_VOXWARE(dmasound.volume_left) |
+ 			VOLUME_ATT_TO_VOXWARE(dmasound.volume_right) << 8);
+-	    case SOUND_MIXER_READ_CAPS:
++	case SOUND_MIXER_READ_CAPS:
+ 		return IOCTL_OUT(arg, SOUND_CAP_EXCL_INPUT);
+-	    case SOUND_MIXER_WRITE_MIC:
++	case SOUND_MIXER_WRITE_MIC:
+ 		IOCTL_IN(arg, data);
+ 		tt_dmasnd.input_gain =
+ 			RECLEVEL_VOXWARE_TO_GAIN(data & 0xff) << 4 |
+ 			RECLEVEL_VOXWARE_TO_GAIN(data >> 8 & 0xff);
+-		/* fall thru, return set value */
+-	    case SOUND_MIXER_READ_MIC:
++		/* fall through - return set value */
++	case SOUND_MIXER_READ_MIC:
+ 		return IOCTL_OUT(arg,
+ 			RECLEVEL_GAIN_TO_VOXWARE(tt_dmasnd.input_gain >> 4 & 0xf) |
+ 			RECLEVEL_GAIN_TO_VOXWARE(tt_dmasnd.input_gain & 0xf) << 8);
+-- 
+2.22.0
+
