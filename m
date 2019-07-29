@@ -2,59 +2,104 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601A3C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6325CC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3799C206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30990206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564423302;
+	bh=52c1nW5heDpTP/El9Iy9uFqcvw8UtHQKUJlSWaFumJw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZCvjPOZx4g9WkOKl2bHy+07Y6UaOUrvg9/qPa5R7eB017a3ord9uQVXC1gSMXDCPf
+	 triuWqwd2QLXA6GLhyVFf5iHHzJtrDYNPnAQmzSh/1Zwa3qcc7xxcM/YjB4VTZEUZ7
+	 CgScQxUGrxrRqlLdC7Ye7UilZeQOlwN5rKKtJ/b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbfG2SBI (ORCPT
+        id S1729106AbfG2SBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:01:08 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:36906 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfG2SBH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 14:01:07 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BACAE140505B5;
-        Mon, 29 Jul 2019 11:01:06 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 11:01:06 -0700 (PDT)
-Message-Id: <20190729.110106.1654712144874525336.davem@davemloft.net>
-To:     mcroce@redhat.com
-Cc:     netdev@vger.kernel.org, antoine.tenart@bootlin.com,
-        maxime.chevallier@bootlin.com, mw@semihalf.com,
-        stefanc@marvell.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] mvpp2: refactor MTU change code
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190728004645.4807-1-mcroce@redhat.com>
-References: <20190728004645.4807-1-mcroce@redhat.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 11:01:07 -0700 (PDT)
+        Mon, 29 Jul 2019 14:01:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbfG2SBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 14:01:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39EB3206BA;
+        Mon, 29 Jul 2019 18:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564423299;
+        bh=52c1nW5heDpTP/El9Iy9uFqcvw8UtHQKUJlSWaFumJw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Uw8bJEadKbmw1AuUSVvPa5d6fMyhSN92qJ3owhe6SX7jhpWeOjYUiKxmSfuJ00Z7t
+         FdbCH8ag48dBX8ddhDtTkPC2TCmKb+u/VU/UiZIplDeAFJB0UxecxnntWK90MtxRH6
+         vHuH4SLvxrpy0DouUQ4ZJfitGBswhLEPvuBvLzxM=
+Date:   Mon, 29 Jul 2019 20:01:37 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Daniel Wagner <wagi@monom.org>
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 4.4 0/2] vmstat backports
+Message-ID: <20190729180137.GA3471@kroah.com>
+References: <20190729154046.8824-1-wagi@monom.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729154046.8824-1-wagi@monom.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
-Date: Sun, 28 Jul 2019 02:46:45 +0200
-
-> The MTU change code can call napi_disable() with the device already down,
-> leading to a deadlock. Also, lot of code is duplicated unnecessarily.
+On Mon, Jul 29, 2019 at 05:40:44PM +0200, Daniel Wagner wrote:
+> Hi Greg,
 > 
-> Rework mvpp2_change_mtu() to avoid the deadlock and remove duplicated code.
+> Second attempt on this topic [1]:
 > 
-> Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> """
+> Upstream commmit 0eb77e988032 ("vmstat: make vmstat_updater deferrable
+> again and shut down on idle") was back ported in v4.4.178
+> (bdf3c006b9a2). For -rt we definitely need the bugfix f01f17d3705b
+> ("mm, vmstat: make quiet_vmstat lighter") as well.
+> 
+> Since the offending patch was back ported to v4.4 stable only, the
+> other stable branches don't need an update (offending patch and bug
+> fix are already in).
+> """
+> 
+> Though I missed a dependency as Jon noted[2]. The missing patch is
+> 587198ba5206 ("vmstat: Remove BUG_ON from vmstat_update"). I've tested
+> this on a Tegra K1 one board which exposed the bug. With this should
+> be fine.
+> 
+> While at it, I looked on all relevant changes for
+> vmstat_updated(). These two patches are the only relevant changes
+> which are missing. It seems almost all changes from mainline have made
+> it back to v4.
+> 
+> Could you please queue the above patches for v4.4.y?
+> 
+> Thanks,
+> Daniel
+> 
+> [1] https://lore.kernel.org/stable/20190513061237.4915-1-wagi@monom.org
+> [2] https://lore.kernel.org/stable/f32de22f-c928-2eaa-ee3f-d2b26c184dd4@nvidia.com
+> 
+> 
+> Christoph Lameter (1):
+>   vmstat: Remove BUG_ON from vmstat_update
+> 
+> Michal Hocko (1):
+>   mm, vmstat: make quiet_vmstat lighter
+> 
+>  mm/vmstat.c | 80 +++++++++++++++++++++++++++++++----------------------
+>  1 file changed, 47 insertions(+), 33 deletions(-)
 
-Applied and queued up for -stable, thanks.
+Now queued up.
+
+greg k-h
