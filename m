@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A45C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4751BC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457A021773
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1316D2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429571;
-	bh=jL6soxADRzGMY10b5XUC2QT0RohrDKfEA6oRGfMtswo=;
+	s=default; t=1564429574;
+	bh=MvNMOkezmcVB2765TDn/hRcjd4x9ipr+ymUwktuan7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NTKLjfHLHAXJp+PkfQGmbZ21aKnP9jZ0WDc/4H7TvDNgAphQItRmFY1dC5NC0uEeT
-	 rIoSxn7PJ6RHJF2tgM1L/B1ncvNoMe446WaowDdn2iLdqL1RWo5rNEbX36U/GGwqBk
-	 pgJwwhkvNAgP4gpUdWh5WzMee6RQd9I992NXAafg=
+	b=z5RcYTo9uNiLyY6hfzBINUt4ry8mWTg8HzOJEleW8VLJV378H2TparT4LWrgsQGyx
+	 VPYx2FulfPAWNZSpmKJQpvjd/sHXfNs82cPY6KVSiaJUyUUmGuJcUukg9JIECxTAsh
+	 XNtAEd8BL3ZUMq8UWH+vWrm8DhTwOGi45cbVpaEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390079AbfG2TqH (ORCPT
+        id S2390160AbfG2TqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:46:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35242 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390067AbfG2TqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:46:06 -0400
+        id S2390098AbfG2TqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:46:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C28021773;
-        Mon, 29 Jul 2019 19:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AB9B21655;
+        Mon, 29 Jul 2019 19:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429565;
-        bh=jL6soxADRzGMY10b5XUC2QT0RohrDKfEA6oRGfMtswo=;
+        s=default; t=1564429569;
+        bh=MvNMOkezmcVB2765TDn/hRcjd4x9ipr+ymUwktuan7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vadi5+i824bC8P9w3w/xPw0SB0yo4D4Fji+zBxs7l1JlR2BuHm4LBtZcbzX+nE/YL
-         wN0PQSS9kmxSNPnHjDGssFhI26pCC+jdOuCJ/Rc7wcQnGvu3Y+yC/cVkO0tnyGXfC3
-         tLYf0TjzktbQBHEUSr9cp1KPR8AwAfQ5mazU0Vd8=
+        b=gYHxO5pLXu+jF4PbAihcWeNFcZHK37rvDYZbX69KoN+22fET0dkPDb6uI809engP4
+         JcWoyLwKD5bO+DsOY16LTP6N34zpm3rN2rCkgc7T5BFS+YGxVgrVMaRdd3umyCRcNH
+         VaLA+5QBetwx1MZeQMYHCchMHtiF4KvBhDvadHms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Li <Roman.Li@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        stable@vger.kernel.org, Felix Kuehling <Felix.Kuehling@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 024/215] drm/amd/display: Fill plane attrs only for valid pxl format
-Date:   Mon, 29 Jul 2019 21:20:20 +0200
-Message-Id: <20190729190744.105634175@linuxfoundation.org>
+Subject: [PATCH 5.2 025/215] drm/amdgpu: Reserve shared fence for eviction fence
+Date:   Mon, 29 Jul 2019 21:20:21 +0200
+Message-Id: <20190729190744.332250061@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -62,38 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1894478ad1f8fd7366edc5cee49ee9caea0e3d52 ]
+[ Upstream commit dd68722c427d5b33420dce0ed0c44b4881e0a416 ]
 
-[Why]
-In fill_plane_buffer_attributes() we calculate chroma/luma
-assuming that the surface_pixel_format is always valid.
-If it's not the case, there's a risk of divide by zero error.
+Need to reserve space for the shared eviction fence when initializing
+a KFD VM.
 
-[How]
-Check if format valid before calculating pixel format attributes
-
-Signed-off-by: Roman Li <Roman.Li@amd.com>
-Reviewed-by: David Francis <David.Francis@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index fa268dd736f4..31530bfd002a 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -2592,7 +2592,7 @@ fill_plane_buffer_attributes(struct amdgpu_device *adev,
- 		address->type = PLN_ADDR_TYPE_GRAPHICS;
- 		address->grph.addr.low_part = lower_32_bits(afb->address);
- 		address->grph.addr.high_part = upper_32_bits(afb->address);
--	} else {
-+	} else if (format < SURFACE_PIXEL_FORMAT_INVALID) {
- 		uint64_t chroma_addr = afb->address + fb->offsets[1];
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+index a6e5184d436c..4b192e0ce92f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+@@ -896,6 +896,9 @@ static int init_kfd_vm(struct amdgpu_vm *vm, void **process_info,
+ 				  AMDGPU_FENCE_OWNER_KFD, false);
+ 	if (ret)
+ 		goto wait_pd_fail;
++	ret = reservation_object_reserve_shared(vm->root.base.bo->tbo.resv, 1);
++	if (ret)
++		goto reserve_shared_fail;
+ 	amdgpu_bo_fence(vm->root.base.bo,
+ 			&vm->process_info->eviction_fence->base, true);
+ 	amdgpu_bo_unreserve(vm->root.base.bo);
+@@ -909,6 +912,7 @@ static int init_kfd_vm(struct amdgpu_vm *vm, void **process_info,
  
- 		plane_size->video.luma_size.x = 0;
+ 	return 0;
+ 
++reserve_shared_fail:
+ wait_pd_fail:
+ validate_pd_fail:
+ 	amdgpu_bo_unreserve(vm->root.base.bo);
 -- 
 2.20.1
 
