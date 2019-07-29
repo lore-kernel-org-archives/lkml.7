@@ -2,175 +2,118 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC44C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB33C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B26206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4C5206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:30:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PNwlQ8P7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="aEMwnak/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbfG2O3k (ORCPT
+        id S1727591AbfG2OaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:29:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46876 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfG2O3H (ORCPT
+        Mon, 29 Jul 2019 10:30:11 -0400
+Received: from gateway30.websitewelcome.com ([192.185.148.2]:16276 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726478AbfG2OaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:29:07 -0400
+        Mon, 29 Jul 2019 10:30:10 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 6F12EA110
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:30:09 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id s6fBhNOp8iQers6fBhmXnU; Mon, 29 Jul 2019 09:30:09 -0500
+X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WNbeZsrKTCXULf+D139i7mF6RNWaCytF37Kc/BZsHxE=; b=PNwlQ8P7J1JXZHPMS7QK4NjaHG
-        1+8pEBbPQHaghI0tSWAiWKebJ404qQV4Xce2AcNcWX9NFpjoevp8RCfsf18lI1+fCw1lJJKNjf3FF
-        MsSlQ+bLSfnbxCpCa9NB74M7o25AVZ4thH8mGldmmc45goQWJVzg0laJPaqtvQ7SJhD+Gj4bkTuNJ
-        O0TjODMfJ7YNGm4PkjN1dEUUlWeXMej2J2htzQFjaDwRnUJ6dQUyH+8s67xOKPhi2+BnUaDzhIhqa
-        iC4R6p6ARtEIqs4TqPjrH7YXMsZtpQjnTi/vL+ithy4Tsi3xX+SGuxR6G12prx/Lk8g+dBL5NvP2t
-        PuE+xgUQ==;
-Received: from [195.167.85.94] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs6e6-0006JY-RO; Mon, 29 Jul 2019 14:29:03 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/9] nouveau: factor out device memory address calculation
-Date:   Mon, 29 Jul 2019 17:28:37 +0300
-Message-Id: <20190729142843.22320-4-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190729142843.22320-1-hch@lst.de>
-References: <20190729142843.22320-1-hch@lst.de>
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0RJo8enbcNLdJ2TXKB/Bo9r6HXH+BZhHSn25BJmwwc0=; b=aEMwnak/TqMhZPljJxLMAzT+2z
+        H+18G5XudUiKbSQj3/w+38q2eyf/a+pkOseoZC33aApPWYe/2Dw+BtE3b0fHzTQQTN4UULKZzUW3+
+        /UJU4HVIYvsginxtu9KhcoTZkwDoyufa1/Pr24rkUCJ8DdqDXQ2fbu8UM9nIJMoS2VC+wstAwux/r
+        rUuw74/VBKuKogdVZywvxeuYTcNGHUhp04HMQ6X+sXN+sbMmOVuDt7btihTbdg/31vvkwDW9T8iuh
+        xZ+woM881dhPqLnelNfOkFFJVNpZVm8WFTPScTsxTkcFf4BZKrEJKOIkN/+a3Ls6DF4zFLE24UkUV
+        CM0Wc3nw==;
+Received: from [187.192.11.120] (port=50422 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hs6fA-002KU8-C1; Mon, 29 Jul 2019 09:30:08 -0500
+Date:   Mon, 29 Jul 2019 09:30:07 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] scsi: sun3_scsi: Mark expected switch fall-throughs
+Message-ID: <20190729143007.GA8067@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hs6fA-002KU8-C1
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:50422
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factor out the repeated device memory address calculation into
-a helper.
+Mark switch cases where we are expecting to fall through.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+This patch fixes the following warnings:
+
+drivers/scsi/sun3_scsi.c: warning: this statement may fall through
+[-Wimplicit-fallthrough=]:  => 399:9, 403:9
+
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/gpu/drm/nouveau/nouveau_dmem.c | 42 +++++++++++---------------
- 1 file changed, 17 insertions(+), 25 deletions(-)
+ drivers/scsi/sun3_scsi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-index e696157f771e..d469bc334438 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-@@ -102,6 +102,14 @@ struct nouveau_migrate {
- 	unsigned long dma_nr;
- };
+diff --git a/drivers/scsi/sun3_scsi.c b/drivers/scsi/sun3_scsi.c
+index 3d80ab67a626..955e4c938d49 100644
+--- a/drivers/scsi/sun3_scsi.c
++++ b/drivers/scsi/sun3_scsi.c
+@@ -397,10 +397,12 @@ static int sun3scsi_dma_finish(int write_flag)
+ 		case CSR_LEFT_3:
+ 			*vaddr = (dregs->bpack_lo & 0xff00) >> 8;
+ 			vaddr--;
++			/* Fall through */
  
-+static unsigned long nouveau_dmem_page_addr(struct page *page)
-+{
-+	struct nouveau_dmem_chunk *chunk = page->zone_device_data;
-+	unsigned long idx = page_to_pfn(page) - chunk->pfn_first;
-+
-+	return (idx << PAGE_SHIFT) + chunk->bo->bo.offset;
-+}
-+
- static void nouveau_dmem_page_free(struct page *page)
- {
- 	struct nouveau_dmem_chunk *chunk = page->zone_device_data;
-@@ -169,9 +177,7 @@ nouveau_dmem_fault_alloc_and_copy(struct vm_area_struct *vma,
- 	/* Copy things over */
- 	copy = drm->dmem->migrate.copy_func;
- 	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, i++) {
--		struct nouveau_dmem_chunk *chunk;
- 		struct page *spage, *dpage;
--		u64 src_addr, dst_addr;
+ 		case CSR_LEFT_2:
+ 			*vaddr = (dregs->bpack_hi & 0x00ff);
+ 			vaddr--;
++			/* Fall through */
  
- 		dpage = migrate_pfn_to_page(dst_pfns[i]);
- 		if (!dpage || dst_pfns[i] == MIGRATE_PFN_ERROR)
-@@ -194,14 +200,10 @@ nouveau_dmem_fault_alloc_and_copy(struct vm_area_struct *vma,
- 			continue;
- 		}
- 
--		dst_addr = fault->dma[fault->npages++];
--
--		chunk = spage->zone_device_data;
--		src_addr = page_to_pfn(spage) - chunk->pfn_first;
--		src_addr = (src_addr << PAGE_SHIFT) + chunk->bo->bo.offset;
--
--		ret = copy(drm, 1, NOUVEAU_APER_HOST, dst_addr,
--				   NOUVEAU_APER_VRAM, src_addr);
-+		ret = copy(drm, 1, NOUVEAU_APER_HOST,
-+				fault->dma[fault->npages++],
-+				NOUVEAU_APER_VRAM,
-+				nouveau_dmem_page_addr(spage));
- 		if (ret) {
- 			dst_pfns[i] = MIGRATE_PFN_ERROR;
- 			__free_page(dpage);
-@@ -687,18 +689,12 @@ nouveau_dmem_migrate_alloc_and_copy(struct vm_area_struct *vma,
- 	/* Copy things over */
- 	copy = drm->dmem->migrate.copy_func;
- 	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, i++) {
--		struct nouveau_dmem_chunk *chunk;
- 		struct page *spage, *dpage;
--		u64 src_addr, dst_addr;
- 
- 		dpage = migrate_pfn_to_page(dst_pfns[i]);
- 		if (!dpage || dst_pfns[i] == MIGRATE_PFN_ERROR)
- 			continue;
- 
--		chunk = dpage->zone_device_data;
--		dst_addr = page_to_pfn(dpage) - chunk->pfn_first;
--		dst_addr = (dst_addr << PAGE_SHIFT) + chunk->bo->bo.offset;
--
- 		spage = migrate_pfn_to_page(src_pfns[i]);
- 		if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE)) {
- 			nouveau_dmem_page_free_locked(drm, dpage);
-@@ -716,10 +712,10 @@ nouveau_dmem_migrate_alloc_and_copy(struct vm_area_struct *vma,
- 			continue;
- 		}
- 
--		src_addr = migrate->dma[migrate->dma_nr++];
--
--		ret = copy(drm, 1, NOUVEAU_APER_VRAM, dst_addr,
--				   NOUVEAU_APER_HOST, src_addr);
-+		ret = copy(drm, 1, NOUVEAU_APER_VRAM,
-+				nouveau_dmem_page_addr(dpage),
-+				NOUVEAU_APER_HOST,
-+				migrate->dma[migrate->dma_nr++]);
- 		if (ret) {
- 			nouveau_dmem_page_free_locked(drm, dpage);
- 			dst_pfns[i] = 0;
-@@ -846,7 +842,6 @@ nouveau_dmem_convert_pfn(struct nouveau_drm *drm,
- 
- 	npages = (range->end - range->start) >> PAGE_SHIFT;
- 	for (i = 0; i < npages; ++i) {
--		struct nouveau_dmem_chunk *chunk;
- 		struct page *page;
- 		uint64_t addr;
- 
-@@ -864,10 +859,7 @@ nouveau_dmem_convert_pfn(struct nouveau_drm *drm,
- 			continue;
- 		}
- 
--		chunk = page->zone_device_data;
--		addr = page_to_pfn(page) - chunk->pfn_first;
--		addr = (addr + chunk->bo->bo.mem.start) << PAGE_SHIFT;
--
-+		addr = nouveau_dmem_page_addr(page);
- 		range->pfns[i] &= ((1UL << range->pfn_shift) - 1);
- 		range->pfns[i] |= (addr >> PAGE_SHIFT) << range->pfn_shift;
- 	}
+ 		case CSR_LEFT_1:
+ 			*vaddr = (dregs->bpack_hi & 0xff00) >> 8;
 -- 
-2.20.1
+2.22.0
 
