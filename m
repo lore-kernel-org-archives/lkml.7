@@ -2,100 +2,115 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DE6C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7728AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2406E20693
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CCC20693
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:00:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IL7E+lWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfG2H7Z (ORCPT
+        id S1727337AbfG2IAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 03:59:25 -0400
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:41743 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfG2H7Y (ORCPT
+        Mon, 29 Jul 2019 04:00:30 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40587 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfG2IAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 03:59:24 -0400
-Received: by mail-lj1-f181.google.com with SMTP id d24so57623022ljg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 00:59:23 -0700 (PDT)
+        Mon, 29 Jul 2019 04:00:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p184so27589366pfp.7;
+        Mon, 29 Jul 2019 01:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sHreTI6pjMjpSS3l9XfOzmIgje94ZwckoRy4s15t6gc=;
+        b=IL7E+lWAmJRAOYrpHdkkAku6XU17qS8ac815x+cn7Pi3NZuvBbyEhBRTllzGkFaM17
+         zgxZa4xgDCgCXCa6pLRvwTb0XRHIRfURmP+Y1rRCTZ/NPMhMv8pi+WsXkpa7Kw66ZJR1
+         Y/2JWEAU8qGlBeGPXBckBROIe2lUCe+UG7ZFQ8QbH7Y61hT/9UlZ6ae17ng01nVm47BM
+         MkV2J1ca/Ge5hds5Cu2O/SBFsinTCog4MCj3Yt4JldhUMLqQp8kjMinwr3dBI/Xrx4xJ
+         cwfO45AWPHZV1Tx2fc7LU81EheGEYzZUYdfxOkR13frk1ik+oC1f8H+ReSEKMLPYLM7M
+         qQPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z0X7I7dffw1LhnC4nVMW+8AwSH2HYvA+5a9p+PbDV/Y=;
-        b=Nas8riKaV3xLiD0o4ofuXxboO3JqjVoBPp5N9a0U3KM2ZU7sXVpZZDpKWJsLivA+7A
-         R3qXXmhqUxa0qnlY68HEqMJ6TGqOawcrkhJQNv0v0FOR+oyE9Yzycg1xaUXfXxcJICYo
-         d1YwkIjVz4gQOg3V3fP/VvYXtxUphOAwherXDKc3JQzvKGvLS8KqYqBF0CzBfxG67yDC
-         ZxH91aP5jvijZxM1GR0ibgb7XacAJ9Bo8z4w6nHolk9j6yDPeb7XsepJFEDF2QdympPR
-         gaU+Ph+eNB/R6q72gyZpjUtD9LzmvdrG6a8FGY9tZ+c8D+93k165hS9/J/PyBO4YQhtL
-         LSEQ==
-X-Gm-Message-State: APjAAAVFwiwbn2+eNgB5pRp5W3i2+ZpaudYCuBZJCzOovOlMVm6iTjTl
-        NborSROBVBqFoAMM38oneYmwGu6trqE8nCaN/perEg==
-X-Google-Smtp-Source: APXvYqw7/YBCA9dzyYL9QUBcjLEFOBq8sQ4hNsuED2wZFCVGwW+UaBuvGY/RNusnwUxtFEAT3PdLAci/FZVk4o03W9A=
-X-Received: by 2002:a2e:8756:: with SMTP id q22mr57841858ljj.108.1564387162794;
- Mon, 29 Jul 2019 00:59:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAGnkfhySwXY7YwuQezyx6cEpemZW4Hox1_4fQJm3-5hvM3G6gw@mail.gmail.com>
- <20190729044403.GA27065@OpenSuse>
-In-Reply-To: <20190729044403.GA27065@OpenSuse>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Mon, 29 Jul 2019 09:58:46 +0200
-Message-ID: <CAGnkfhz=RgsPVqk964=hg1kJc=FJJ0WA7ysbhN6B3aNZgbD2aQ@mail.gmail.com>
-Subject: Re: build error
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sHreTI6pjMjpSS3l9XfOzmIgje94ZwckoRy4s15t6gc=;
+        b=Fnl8jqYuLXIeijFrO+NkdyM/ri7Gzroa5ziAWCGzYa2cWUqfbNcfShYZxR6S6MZ0WM
+         5JJuC3A2+eJab3GWrg8a4Q6TCC3P1FQUmRsGcLJ5L5+yBTUBdY7/jwYh941T+BlNy0Sb
+         sAi3nUTchN+s7aUGXd10/Xfbt1+N0YfTs4aqh6WQ/sxKt7onx3C7nNBNuMQIBQyhODHh
+         DInUUrLWy6pcpNu6fofXkQDPxVw8jdk/e8+3YfSPqchh64ZYz5z+gGV7WmT9b0bIjcuT
+         hCWNdzltgRzQD/kt8jKXf71cXuEUr4M9RYPOTXj0M7Y+6H4+Ap7u3t8yX97xmLP1ecRG
+         GGlA==
+X-Gm-Message-State: APjAAAWKbSo8n3VYQKuYZBuEhzaLYOkVBJNCg0j5xJ1gH+dopU7Hnnm9
+        E6REclFn6pr9tW1tMWNnWpVZVDyV4U8=
+X-Google-Smtp-Source: APXvYqwtYEnuKAS9Muhpr3xUIRtlZkMmMYnvmpbRAL8N7K0KvFCMNFzu4hQ3MN5AF1/t9Rg/PbAbdg==
+X-Received: by 2002:a17:90a:c70c:: with SMTP id o12mr85447831pjt.62.1564387229826;
+        Mon, 29 Jul 2019 01:00:29 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id p15sm58050661pjf.27.2019.07.29.01.00.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 01:00:29 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH v2] net: sched: Fix a possible null-pointer dereference in dequeue_func()
+Date:   Mon, 29 Jul 2019 16:00:18 +0800
+Message-Id: <20190729080018.28678-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 6:44 AM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
->
->
-> Matteo,
->
-> it's look like gcc is not in your normal PATH. Could you please locate
-> that fellow and realign it ,where is suppose to be.
->
-> Or if I understood right (I doubt that is why asking) that you might put
-> explicitly the architecture to target build with make also, that might
-> help.
->
-> Please do let me know, if I derailed grossly ...am not sure.. :)
->
-> Thanks,
-> Bhaskar
->
-> On 22:08 Sun 28 Jul 2019, Matteo Croce wrote:
-> >Hi,
-> >
-> >I get this build error with 5.3-rc2"
-> >
-> ># make
-> >arch/arm64/Makefile:58: gcc not found, check CROSS_COMPILE_COMPAT.  Stop.
-> >
-> >I didn't bisect the tree, but I guess that this kconfig can be related
-> >
-> ># grep CROSS_COMPILE_COMPAT .config
-> >CONFIG_CROSS_COMPILE_COMPAT_VDSO=""
-> >
-> >Does someone have any idea? Am I missing something?
-> >
-> >Thanks,
-> >--
-> >Matteo Croce
-> >per aspera ad upstream
+In dequeue_func(), there is an if statement on line 74 to check whether
+skb is NULL:
+    if (skb)
 
-I've  "fixed" the error by unsetting CONFIG_COMPAT
-There should be something broken in the CROSS_COMPILE_COMPAT handling
+When skb is NULL, it is used on line 77:
+    prefetch(&skb->end);
 
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, skb->end is used when skb is not NULL.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Fixes: 79bdc4c862af ("codel: generalize the implementation")
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+v2:
+* Add a fix tag.
+  Thank Jiri Pirko for helpful advice.
+
+---
+ net/sched/sch_codel.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/net/sched/sch_codel.c b/net/sched/sch_codel.c
+index 25ef172c23df..30169b3adbbb 100644
+--- a/net/sched/sch_codel.c
++++ b/net/sched/sch_codel.c
+@@ -71,10 +71,10 @@ static struct sk_buff *dequeue_func(struct codel_vars *vars, void *ctx)
+ 	struct Qdisc *sch = ctx;
+ 	struct sk_buff *skb = __qdisc_dequeue_head(&sch->q);
+ 
+-	if (skb)
++	if (skb) {
+ 		sch->qstats.backlog -= qdisc_pkt_len(skb);
+-
+-	prefetch(&skb->end); /* we'll need skb_shinfo() */
++		prefetch(&skb->end); /* we'll need skb_shinfo() */
++	}
+ 	return skb;
+ }
+ 
 -- 
-Matteo Croce
-per aspera ad upstream
+2.17.0
+
