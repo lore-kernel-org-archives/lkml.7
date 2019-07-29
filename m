@@ -2,214 +2,303 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A900C76193
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C23C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40EE72070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DEA82070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:20:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aX4U9ugW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388066AbfG2NRq (ORCPT
+        id S2387978AbfG2NUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 09:17:46 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52848 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387920AbfG2NRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 09:17:45 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CF713298BD40AEA61126;
-        Mon, 29 Jul 2019 21:17:42 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 29 Jul 2019 21:17:39 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH stable 4.4] tcp: reset sk_send_head in tcp_write_queue_purge
-Date:   Mon, 29 Jul 2019 21:22:42 +0800
-Message-ID: <20190729132242.162505-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 29 Jul 2019 09:20:09 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54655 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727860AbfG2NUI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 09:20:08 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p74so53804758wme.4;
+        Mon, 29 Jul 2019 06:20:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=32LEdh7LykxMmsxy8OKX2RgedO0t1mwvu3U/xLTsRlc=;
+        b=aX4U9ugWLb8baTRc57n0eqJcpB6de0ic7qb+w+46wob8w0qvil/hHe/4yfhOxiJRf2
+         FbXuKYokbEJkYgam7uf5ssQvoIxag6Rks0rEGWdiDOpkX8cCA9MCvEMS9zGPZe17dvWN
+         yQUEpRigazKJHBWk3wHbV39afLKPLU1MYmUnrkV77uzO0ysj/kZtJD0irEHf5azkR31Y
+         dQ4FXOiy9oCXS7ipQ9LrmrmQwU8OWw7H2S6wg56w9S+Z63hNClLMfQ+ePv7doSUOzT3V
+         XhnV4/7f2CXG0dgNFinKpXJI3xCzBw2d3rVt7IrcrWJ2/g4fdraWloxJVp2EPjjcME7p
+         MoIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=32LEdh7LykxMmsxy8OKX2RgedO0t1mwvu3U/xLTsRlc=;
+        b=XQxsZwUVMpTKURVbIVZnDtYERVpXc3TpPoNx+PWnJazV246cBtiigR+tuhAG55c9TM
+         ZpMdCtWEYNZXsBDf7VUo6Hd7AYUlJ8duOXeg3pfvuEj6OXSefN0RPWExfL1Hvp5EeZS5
+         HgW4XAfgbIGkNitU+VCa1dLYNt+QT1607/0hkqCTsPctJQZH+oqc2MBymvHG1kLFVBr2
+         QC+v5pJw4xQfeUVZLb3NJIJ+rKkuMCimM/twGokP+xK+4xjFhHDOciezOhMJ//A6bXLq
+         59yVMmzci8XAaTXjeei46z/voiO3IqtCxfC9e0Nr6Fhp5TZyVC/qR1wQ2WX42WGuM+R2
+         SRUA==
+X-Gm-Message-State: APjAAAVh8RASPoZ8ISPplSKcWsvM2CG1EAiDSFMBQrh3WSymjRDa3896
+        rBLAz8+VNhI7cjOP8XcVrcE=
+X-Google-Smtp-Source: APXvYqzeDjkhChVquCb2FPHIGR5Caewa5mcKLTpUNtIv8rEq2HcrFTJl55ldz2LN+MVUVk7w9Bu4kQ==
+X-Received: by 2002:a1c:a848:: with SMTP id r69mr97100890wme.12.1564406405175;
+        Mon, 29 Jul 2019 06:20:05 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id b19sm44246717wmj.13.2019.07.29.06.20.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 06:20:04 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 14:20:02 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        KVM list <kvm@vger.kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: Re: [PATCH v2 18/30] virtio_fs, dax: Set up virtio_fs dax_device
+Message-ID: <20190729132002.GB6771@stefanha-x1.localdomain>
+References: <20190515192715.18000-19-vgoyal@redhat.com>
+ <20190717192725.25c3d146.pasic@linux.ibm.com>
+ <20190718131532.GA13883@redhat.com>
+ <CAPcyv4i+2nKJYqkbrdm3hWcjaMYkCKUxqLBq96HOZe6xOZzGGg@mail.gmail.com>
+ <c519011e-1df3-3f35-8582-2cb58367ff8a@de.ibm.com>
+ <20190722105630.GC3035@work-vm>
+ <cc96a4a7-ab24-ef2c-a210-dce0966e34c5@de.ibm.com>
+ <20190722134317.39b148ce.cohuck@redhat.com>
+ <b8239073-4c40-0ce6-2576-9d71ca0b1c18@de.ibm.com>
+ <f7426953-8892-9f02-3f85-9f97cd12100b@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jq0ap7NbKX2Kqbes"
+Content-Disposition: inline
+In-Reply-To: <f7426953-8892-9f02-3f85-9f97cd12100b@redhat.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Soheil Hassas Yeganeh <soheil@google.com>
 
-tcp_write_queue_purge clears all the SKBs in the write queue
-but does not reset the sk_send_head. As a result, we can have
-a NULL pointer dereference anywhere that we use tcp_send_head
-instead of the tcp_write_queue_tail.
+--jq0ap7NbKX2Kqbes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For example, after a27fd7a8ed38 (tcp: purge write queue upon RST),
-we can purge the write queue on RST. Prior to
-75c119afe14f (tcp: implement rb-tree based retransmit queue),
-tcp_push will only check tcp_send_head and then accesses
-tcp_write_queue_tail to send the actual SKB. As a result, it will
-dereference a NULL pointer.
+On Mon, Jul 22, 2019 at 02:08:02PM +0200, David Hildenbrand wrote:
+> On 22.07.19 14:00, Christian Borntraeger wrote:
+> >=20
+> >=20
+> > On 22.07.19 13:43, Cornelia Huck wrote:
+> >> On Mon, 22 Jul 2019 13:20:18 +0200
+> >> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+> >>
+> >>> On 22.07.19 12:56, Dr. David Alan Gilbert wrote:
+> >>>> * Christian Borntraeger (borntraeger@de.ibm.com) wrote: =20
+> >>>>>
+> >>>>>
+> >>>>> On 18.07.19 16:30, Dan Williams wrote: =20
+> >>>>>> On Thu, Jul 18, 2019 at 6:15 AM Vivek Goyal <vgoyal@redhat.com> wr=
+ote: =20
+> >>>>>>>
+> >>>>>>> On Wed, Jul 17, 2019 at 07:27:25PM +0200, Halil Pasic wrote: =20
+> >>>>>>>> On Wed, 15 May 2019 15:27:03 -0400
+> >>>>>>>> Vivek Goyal <vgoyal@redhat.com> wrote:
+> >>>>>>>> =20
+> >>>>>>>>> From: Stefan Hajnoczi <stefanha@redhat.com>
+> >>>>>>>>>
+> >>>>>>>>> Setup a dax device.
+> >>>>>>>>>
+> >>>>>>>>> Use the shm capability to find the cache entry and map it.
+> >>>>>>>>>
+> >>>>>>>>> The DAX window is accessed by the fs/dax.c infrastructure and m=
+ust have
+> >>>>>>>>> struct pages (at least on x86).  Use devm_memremap_pages() to m=
+ap the
+> >>>>>>>>> DAX window PCI BAR and allocate struct page.
+> >>>>>>>>> =20
+> >>>>>>>>
+> >>>>>>>> Sorry for being this late. I don't see any more recent version s=
+o I will
+> >>>>>>>> comment here.
+> >>>>>>>>
+> >>>>>>>> I'm trying to figure out how is this supposed to work on s390. M=
+y concern
+> >>>>>>>> is, that on s390 PCI memory needs to be accessed by special
+> >>>>>>>> instructions. This is taken care of by the stuff defined in
+> >>>>>>>> arch/s390/include/asm/io.h. E.g. we 'override' __raw_writew so i=
+t uses
+> >>>>>>>> the appropriate s390 instruction. However if the code does not u=
+se the
+> >>>>>>>> linux abstractions for accessing PCI memory, but assumes it can =
+be
+> >>>>>>>> accessed like RAM, we have a problem.
+> >>>>>>>>
+> >>>>>>>> Looking at this patch, it seems to me, that we might end up with=
+ exactly
+> >>>>>>>> the case described. For example AFAICT copy_to_iter() (3) resolv=
+es to
+> >>>>>>>> the function in lib/iov_iter.c which does not seem to cater for =
+s390
+> >>>>>>>> oddities.
+> >>>>>>>>
+> >>>>>>>> I didn't have the time to investigate this properly, and since v=
+irtio-fs
+> >>>>>>>> is virtual, we may be able to get around what is otherwise a
+> >>>>>>>> limitation on s390. My understanding of these areas is admittedly
+> >>>>>>>> shallow, and since I'm not sure I'll have much more time to
+> >>>>>>>> invest in the near future I decided to raise concern.
+> >>>>>>>>
+> >>>>>>>> Any opinions? =20
+> >>>>>>>
+> >>>>>>> Hi Halil,
+> >>>>>>>
+> >>>>>>> I don't understand s390 and how PCI works there as well. Is there=
+ any
+> >>>>>>> other transport we can use there to map IO memory directly and ac=
+cess
+> >>>>>>> using DAX?
+> >>>>>>>
+> >>>>>>> BTW, is DAX supported for s390.
+> >>>>>>>
+> >>>>>>> I am also hoping somebody who knows better can chip in. Till that=
+ time,
+> >>>>>>> we could still use virtio-fs on s390 without DAX. =20
+> >>>>>>
+> >>>>>> s390 has so-called "limited" dax support, see CONFIG_FS_DAX_LIMITE=
+D.
+> >>>>>> In practice that means that support for PTE_DEVMAP is missing which
+> >>>>>> means no get_user_pages() support for dax mappings. Effectively it=
+'s
+> >>>>>> only useful for execute-in-place as operations like fork() and ptr=
+ace
+> >>>>>> of dax mappings will fail. =20
+> >>>>>
+> >>>>>
+> >>>>> This is only true for the dcssblk device driver (drivers/s390/block=
+/dcssblk.c
+> >>>>> and arch/s390/mm/extmem.c).=20
+> >>>>>
+> >>>>> For what its worth, the dcssblk looks to Linux like normal memory (=
+just above the
+> >>>>> previously detected memory) that can be used like normal memory. In=
+ previous time
+> >>>>> we even had struct pages for this memory - this was removed long ag=
+o (when it was
+> >>>>> still xip) to reduce the memory footprint for large dcss blocks and=
+ small memory
+> >>>>> guests.
+> >>>>> Can the CONFIG_FS_DAX_LIMITED go away if we have struct pages for t=
+hat memory?
+> >>>>>
+> >>>>> Now some observations:=20
+> >>>>> - dcssblk is z/VM only (not KVM)
+> >>>>> - Setting CONFIG_FS_DAX_LIMITED globally as a Kconfig option depend=
+ing on wether
+> >>>>>   a device driver is compiled in or not seems not flexible enough i=
+n case if you
+> >>>>>   have device driver that does have struct pages and another one th=
+at doesn't
+> >>>>> - I do not see a reason why we should not be able to map anything f=
+rom QEMU
+> >>>>>   into the guest real memory via an additional KVM memory slot.=20
+> >>>>>   We would need to handle that in the guest somehow (and not as a P=
+CI bar),
+> >>>>>   register this with struct pages etc.
+> >>
+> >> You mean for ccw, right? I don't think we want pci to behave
+> >> differently than everywhere else.
+> >=20
+> > Yes for virtio-ccw. We would need to have a look at how virtio-ccw can =
+create a memory
+> > mapping with struct pages, so that DAX will work.(Dan, it is just struc=
+t pages that=20
+> > you need, correct?)
+> >=20
+> >=20
+> >>
+> >>>>> - we must then look how we can create the link between the guest me=
+mory and the
+> >>>>>   virtio-fs driver. For virtio-ccw we might be able to add a new cc=
+w command or
+> >>>>>   whatever. Maybe we could also piggy-back on some memory hotplug w=
+ork from David
+> >>>>>   Hildenbrand (add cc).
+> >>>>>
+> >>>>> Regarding limitations on the platform:
+> >>>>> - while we do have PCI, the virtio devices are usually plugged via =
+the ccw bus.
+> >>>>>   That implies no PCI bars. I assume you use those PCI bars only to=
+ implicitely=20
+> >>>>>   have the location of the shared memory
+> >>>>>   Correct? =20
+> >>>>
+> >>>> Right. =20
+> >>>
+> >>> So in essence we just have to provide a vm_get_shm_region callback in=
+ the virtio-ccw
+> >>> guest code?
+> >>>
+> >>> How many regions do we have to support? One region per device? Or man=
+y?
+> >>> Even if we need more, this should be possible with a 2 new CCWs, e.g =
+READ_SHM_BASE(id)
+> >>> and READ_SHM_SIZE(id)
+> >>
+> >> I'd just add a single CCW with a control block containing id and size.
+> >>
+> >> The main issue is where we put those regions, and what happens if we
+> >> use both virtio-pci and virtio-ccw on the same machine.
+> >=20
+> > Then these 2 devices should get independent memory regions that are add=
+ed in an
+> > independent (but still exclusive) way.
+>=20
+> I remember that one discussion was who dictates the physical address
+> mapping. If I'm not wrong, PCI bars can be mapped freely by the guest
+> intot he address space. So it would not just be querying the start+size.
+> Unless we want a pre-determined mapping (which might make more sense for
+> s390x).
 
-This has been reported twice for 4.14 where we don't have
-75c119afe14f:
+Yes, guests can (re)map PCI BARs.  A PCI driver first probes the BAR to
+determine the type (MMIO or PIO) and size.  Then it can set the address
+but often this has been already been set by the firmware and the OS
+keeps the existing location.
 
-By Timofey Titovets:
+Stefan
 
-[  422.081094] BUG: unable to handle kernel NULL pointer dereference
-at 0000000000000038
-[  422.081254] IP: tcp_push+0x42/0x110
-[  422.081314] PGD 0 P4D 0
-[  422.081364] Oops: 0002 [#1] SMP PTI
+--jq0ap7NbKX2Kqbes
+Content-Type: application/pgp-signature; name="signature.asc"
 
-By Yongjian Xu:
+-----BEGIN PGP SIGNATURE-----
 
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000038
-IP: tcp_push+0x48/0x120
-PGD 80000007ff77b067 P4D 80000007ff77b067 PUD 7fd989067 PMD 0
-Oops: 0002 [#18] SMP PTI
-Modules linked in: tcp_diag inet_diag tcp_bbr sch_fq iTCO_wdt
-iTCO_vendor_support pcspkr ixgbe mdio i2c_i801 lpc_ich joydev input_leds shpchp
-e1000e igb dca ptp pps_core hwmon mei_me mei ipmi_si ipmi_msghandler sg ses
-scsi_transport_sas enclosure ext4 jbd2 mbcache sd_mod ahci libahci megaraid_sas
-wmi ast ttm dm_mirror dm_region_hash dm_log dm_mod dax
-CPU: 6 PID: 14156 Comm: [ET_NET 6] Tainted: G D 4.14.26-1.el6.x86_64 #1
-Hardware name: LENOVO ThinkServer RD440 /ThinkServer RD440, BIOS A0TS80A
-09/22/2014
-task: ffff8807d78d8140 task.stack: ffffc9000e944000
-RIP: 0010:tcp_push+0x48/0x120
-RSP: 0018:ffffc9000e947a88 EFLAGS: 00010246
-RAX: 00000000000005b4 RBX: ffff880f7cce9c00 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff8807d00f5000
-RBP: ffffc9000e947aa8 R08: 0000000000001c84 R09: 0000000000000000
-R10: ffff8807d00f5158 R11: 0000000000000000 R12: ffff8807d00f5000
-R13: 0000000000000020 R14: 00000000000256d4 R15: 0000000000000000
-FS: 00007f5916de9700(0000) GS:ffff88107fd00000(0000) knlGS:0000000000000000
-CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000038 CR3: 00000007f8226004 CR4: 00000000001606e0
-Call Trace:
-tcp_sendmsg_locked+0x33d/0xe50
-tcp_sendmsg+0x37/0x60
-inet_sendmsg+0x39/0xc0
-sock_sendmsg+0x49/0x60
-sock_write_iter+0xb6/0x100
-do_iter_readv_writev+0xec/0x130
-? rw_verify_area+0x49/0xb0
-do_iter_write+0x97/0xd0
-vfs_writev+0x7e/0xe0
-? __wake_up_common_lock+0x80/0xa0
-? __fget_light+0x2c/0x70
-? __do_page_fault+0x1e7/0x530
-do_writev+0x60/0xf0
-? inet_shutdown+0xac/0x110
-SyS_writev+0x10/0x20
-do_syscall_64+0x6f/0x140
-? prepare_exit_to_usermode+0x8b/0xa0
-entry_SYSCALL_64_after_hwframe+0x3d/0xa2
-RIP: 0033:0x3135ce0c57
-RSP: 002b:00007f5916de4b00 EFLAGS: 00000293 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000003135ce0c57
-RDX: 0000000000000002 RSI: 00007f5916de4b90 RDI: 000000000000606f
-RBP: 0000000000000000 R08: 0000000000000000 R09: 00007f5916de8c38
-R10: 0000000000000000 R11: 0000000000000293 R12: 00000000000464cc
-R13: 00007f5916de8c30 R14: 00007f58d8bef080 R15: 0000000000000002
-Code: 48 8b 97 60 01 00 00 4c 8d 97 58 01 00 00 41 b9 00 00 00 00 41 89 f3 4c 39
-d2 49 0f 44 d1 41 81 e3 00 80 00 00 0f 85 b0 00 00 00 <80> 4a 38 08 44 8b 8f 74
-06 00 00 44 89 8f 7c 06 00 00 83 e6 01
-RIP: tcp_push+0x48/0x120 RSP: ffffc9000e947a88
-CR2: 0000000000000038
----[ end trace 8d545c2e93515549 ]---
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl0+8oIACgkQnKSrs4Gr
+c8hWrQf/Sdblp/8jCTgWznL9m81xTfmcsx+N4SI+QaKvYH6hCsNFCgWxdgC546uG
+mv5zGUoZRfli1G/IyrLMjqv2DDP42CkHtvSbKyurSguxJy/GdQoGtXZeCK2pkoVw
+1ZaCzKAX0QvtnF/6vM2hZZODozb0lMo6LDeKPnwAoHOS4+Yrgw9L1mNsbGxnRXbW
+0aKWk+C1XjB85X0pw8B2ZF2A1lN5cZ3vGE41fx1sdwd57MBaEU0jLPNhXiNqapyV
+tXqxfd359xNuGE2wQdt1t094EoS52A/VPBZd933SWmpsoyueHZ+QCxZ4I2XihzqL
+E+DQ1lXAeGHi7M1jrCUiEG2K1OvUXA==
+=NF/H
+-----END PGP SIGNATURE-----
 
-There is other scenario which found in stable 4.4:
-Allocated:
- [<ffffffff82f380a6>] __alloc_skb+0xe6/0x600 net/core/skbuff.c:218
- [<ffffffff832466c3>] alloc_skb_fclone include/linux/skbuff.h:856 [inline]
- [<ffffffff832466c3>] sk_stream_alloc_skb+0xa3/0x5d0 net/ipv4/tcp.c:833
- [<ffffffff83249164>] tcp_sendmsg+0xd34/0x2b00 net/ipv4/tcp.c:1178
- [<ffffffff83300ef3>] inet_sendmsg+0x203/0x4d0 net/ipv4/af_inet.c:755
-Freed:
- [<ffffffff82f372fd>] __kfree_skb+0x1d/0x20 net/core/skbuff.c:676
- [<ffffffff83288834>] sk_wmem_free_skb include/net/sock.h:1447 [inline]
- [<ffffffff83288834>] tcp_write_queue_purge include/net/tcp.h:1460 [inline]
- [<ffffffff83288834>] tcp_connect_init net/ipv4/tcp_output.c:3122 [inline]
- [<ffffffff83288834>] tcp_connect+0xb24/0x30c0 net/ipv4/tcp_output.c:3261
- [<ffffffff8329b991>] tcp_v4_connect+0xf31/0x1890 net/ipv4/tcp_ipv4.c:246
-
-BUG: KASAN: use-after-free in tcp_skb_pcount include/net/tcp.h:796 [inline]
-BUG: KASAN: use-after-free in tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
-BUG: KASAN: use-after-free in tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
- [<ffffffff81515cd5>] kasan_report.cold.7+0x175/0x2f7 mm/kasan/report.c:408
- [<ffffffff814f9784>] __asan_report_load2_noabort+0x14/0x20 mm/kasan/report.c:427
- [<ffffffff83286582>] tcp_skb_pcount include/net/tcp.h:796 [inline]
- [<ffffffff83286582>] tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
- [<ffffffff83286582>] tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
- [<ffffffff83287a40>] __tcp_push_pending_frames+0xa0/0x290 net/ipv4/tcp_output.c:2307
-
-stable 4.4 and stable 4.9 don't have the commit abb4a8b870b5 ("tcp: purge write queue upon RST")
-which is referred in dbbf2d1e4077,
-in tcp_connect_init, it calls tcp_write_queue_purge, and does not reset sk_send_head, then UAF.
-
-stable 4.14 have the commit abb4a8b870b5 ("tcp: purge write queue upon RST"),
-in tcp_reset, it calls tcp_write_queue_purge(sk), and does not reset sk_send_head, then UAF.
-
-So this patch can be used to fix stable 4.4 and 4.9.
-
-Fixes: a27fd7a8ed38 (tcp: purge write queue upon RST)
-Reported-by: Timofey Titovets <nefelim4ag@gmail.com>
-Reported-by: Yongjian Xu <yongjianchn@gmail.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Soheil Hassas Yeganeh <soheil@google.com>
-Tested-by: Yongjian Xu <yongjianchn@gmail.com>
-
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- include/net/tcp.h | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index bf8a0dae977a..77438a8406ec 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1443,6 +1443,11 @@ struct sock *tcp_try_fastopen(struct sock *sk, struct sk_buff *skb,
- void tcp_fastopen_init_key_once(bool publish);
- #define TCP_FASTOPEN_KEY_LENGTH 16
- 
-+static inline void tcp_init_send_head(struct sock *sk)
-+{
-+	sk->sk_send_head = NULL;
-+}
-+
- /* Fastopen key context */
- struct tcp_fastopen_context {
- 	struct crypto_cipher	*tfm;
-@@ -1459,6 +1464,7 @@ static inline void tcp_write_queue_purge(struct sock *sk)
- 		sk_wmem_free_skb(sk, skb);
- 	sk_mem_reclaim(sk);
- 	tcp_clear_all_retrans_hints(tcp_sk(sk));
-+	tcp_init_send_head(sk);
- 	inet_csk(sk)->icsk_backoff = 0;
- }
- 
-@@ -1520,11 +1526,6 @@ static inline void tcp_check_send_head(struct sock *sk, struct sk_buff *skb_unli
- 		tcp_sk(sk)->highest_sack = NULL;
- }
- 
--static inline void tcp_init_send_head(struct sock *sk)
--{
--	sk->sk_send_head = NULL;
--}
--
- static inline void __tcp_add_write_queue_tail(struct sock *sk, struct sk_buff *skb)
- {
- 	__skb_queue_tail(&sk->sk_write_queue, skb);
--- 
-2.20.1
-
+--jq0ap7NbKX2Kqbes--
