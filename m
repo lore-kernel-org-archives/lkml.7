@@ -2,121 +2,178 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B954FC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4005C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5D5206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:51:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3Tcex77"
+	by mail.kernel.org (Postfix) with ESMTP id A3C2E206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387840AbfG2Lva (ORCPT
+        id S2387849AbfG2LwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:51:30 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38825 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387482AbfG2Lva (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:51:30 -0400
-Received: by mail-pl1-f195.google.com with SMTP id az7so27408357plb.5;
-        Mon, 29 Jul 2019 04:51:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=WqRMMRupBKE7/qZ1bepdmX1qSW8ae9qt5Rfev+leb0o=;
-        b=o3Tcex775jyj393JOvhgfSQii40lor3lqmNDKnKYrp4RyejYNoFeZbb8c+8pHt4RUG
-         mB6AxYPQvl7abU759YyuyhcmO5iL9CsftWKLqXLuZ+S+1GPKKB34WV/RuoFQFOEVbtCl
-         ADt6brn5ZQXcjAG8WBkjUJ5DanrJmS8CEQ1YB5Kd2yIM6RdocFKPgm8hayCic59SN1NX
-         sMca4fzw6Dy1UYzEsTTAOO5yFzj8bkDh902E2aNoZpDIoZA/4pw0hC+g6NH3cIyrEjCN
-         CdaXtKIq5jL3Enwq94oGP4JwHwlboX/YjQMY1pDRMJvNLeOJaoDblYQy5h+WpCFcpYFu
-         Ulcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=WqRMMRupBKE7/qZ1bepdmX1qSW8ae9qt5Rfev+leb0o=;
-        b=F0w+F5xlo06yYxujSZGfIi3Bn5zYNp7dagM6Xv6S4Hi8oiTnTU0F5GsPoM6fR8tdOv
-         M8c8jS1XK31KYhnj5t2pBOANZ+L/BRMBmHq2+U1CIiZ8QvdzDQYPaOGNzZHweHn61gFF
-         CxjIx07hXzzvZVaL1tJDRGtLEB7lDGsjPGU9c0JJbLwkOjI6BrT76N3/jHAd9/g2Mhwp
-         4LXB7edcxt7QTR32528NK7mdd2Q6v2r6Lc1Wap+Zv//Ua/S81VKkqWa+cRT7MobSe4ls
-         jo3Cx/lJ2GLo7N+ZqRbGdmb2IIb+vAIWHZ19FUT5/vy5t/e3CE+/q2kUkh9VUOXS+TMD
-         7vgw==
-X-Gm-Message-State: APjAAAXvQ8TrmEqZErZpOJe4JmEullBLJA6Q1Iv2k6TBq/QBOpaKwH0F
-        SWmUwPxrHGSD8uvorD8GL5ZRqu0AkMw=
-X-Google-Smtp-Source: APXvYqxoLosNXhTxkQU9yUOK5c7Ht5RUsb+YjkuU+pomYjU99vvynJxGwZxviUZ+S7Apez3HVTQGyw==
-X-Received: by 2002:a17:902:9349:: with SMTP id g9mr107924212plp.262.1564401089268;
-        Mon, 29 Jul 2019 04:51:29 -0700 (PDT)
-Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
-        by smtp.gmail.com with ESMTPSA id h11sm62244985pfn.120.2019.07.29.04.51.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 04:51:28 -0700 (PDT)
-Subject: Re: [PATCH v2] usb: storage: sddr55: Fix a possible null-pointer
- dereference in sddr55_transport()
-To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
-        Oliver Neukum <oneukum@suse.com>
-Cc:     linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        linux-kernel@vger.kernel.org
-References: <20190729114936.6103-1-baijiaju1990@gmail.com>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <b843a770-2262-3d0a-75ee-8c714d804963@gmail.com>
-Date:   Mon, 29 Jul 2019 19:51:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 07:52:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:42708 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387482AbfG2LwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:52:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CC9E28;
+        Mon, 29 Jul 2019 04:52:05 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1E553F694;
+        Mon, 29 Jul 2019 04:52:03 -0700 (PDT)
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "David S . Miller" <davem@davemloft.net>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+ <7a79be5d-7ba2-c457-36d3-1ccef6572181@nvidia.com>
+ <BYAPR12MB3269927AB1F67D46E150ED6BD3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
+ <9e695f33-fd9f-a910-0891-2b63bd75e082@nvidia.com>
+ <BYAPR12MB3269B4A401E4DA10A07515C7D3C10@BYAPR12MB3269.namprd12.prod.outlook.com>
+ <1e2ea942-28fe-15b9-f675-8d6585f9a33f@nvidia.com>
+ <BYAPR12MB326922CDCB1D4B3D4A780CFDD3C30@BYAPR12MB3269.namprd12.prod.outlook.com>
+ <MN2PR12MB327907D4A6FB378AC989571AD3DD0@MN2PR12MB3279.namprd12.prod.outlook.com>
+ <b99b1e49-0cbc-2c66-6325-50fa6f263d91@nvidia.com>
+ <MN2PR12MB327997BDF2EA5CEE00F45AC3D3DD0@MN2PR12MB3279.namprd12.prod.outlook.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <fcf648d2-70cc-d734-871a-ca7f745791b7@arm.com>
+Date:   Mon, 29 Jul 2019 12:52:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190729114936.6103-1-baijiaju1990@gmail.com>
+In-Reply-To: <MN2PR12MB327997BDF2EA5CEE00F45AC3D3DD0@MN2PR12MB3279.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, I forgot to send to Oliver, so send it again.
+On 29/07/2019 12:29, Jose Abreu wrote:
+> ++ Catalin, Will (ARM64 Maintainers)
+> 
+> From: Jon Hunter <jonathanh@nvidia.com>
+> Date: Jul/29/2019, 11:55:18 (UTC+00:00)
+> 
+>>
+>> On 29/07/2019 09:16, Jose Abreu wrote:
+>>> From: Jose Abreu <joabreu@synopsys.com>
+>>> Date: Jul/27/2019, 16:56:37 (UTC+00:00)
+>>>
+>>>> From: Jon Hunter <jonathanh@nvidia.com>
+>>>> Date: Jul/26/2019, 15:11:00 (UTC+00:00)
+>>>>
+>>>>>
+>>>>> On 25/07/2019 16:12, Jose Abreu wrote:
+>>>>>> From: Jon Hunter <jonathanh@nvidia.com>
+>>>>>> Date: Jul/25/2019, 15:25:59 (UTC+00:00)
+>>>>>>
+>>>>>>>
+>>>>>>> On 25/07/2019 14:26, Jose Abreu wrote:
+>>>>>>>
+>>>>>>> ...
+>>>>>>>
+>>>>>>>> Well, I wasn't expecting that :/
+>>>>>>>>
+>>>>>>>> Per documentation of barriers I think we should set descriptor fields
+>>>>>>>> and then barrier and finally ownership to HW so that remaining fields
+>>>>>>>> are coherent before owner is set.
+>>>>>>>>
+>>>>>>>> Anyway, can you also add a dma_rmb() after the call to
+>>>>>>>> stmmac_rx_status() ?
+>>>>>>>
+>>>>>>> Yes. I removed the debug print added the barrier, but that did not help.
+>>>>>>
+>>>>>> So, I was finally able to setup NFS using your replicated setup and I
+>>>>>> can't see the issue :(
+>>>>>>
+>>>>>> The only difference I have from yours is that I'm using TCP in NFS
+>>>>>> whilst you (I believe from the logs), use UDP.
+>>>>>
+>>>>> So I tried TCP by setting the kernel boot params to 'nfsvers=3' and
+>>>>> 'proto=tcp' and this does appear to be more stable, but not 100% stable.
+>>>>> It still appears to fail in the same place about 50% of the time.
+>>>>>
+>>>>>> You do have flow control active right ? And your HW FIFO size is >= 4k ?
+>>>>>
+>>>>> How can I verify if flow control is active?
+>>>>
+>>>> You can check it by dumping register MTL_RxQ_Operation_Mode (0xd30).
+>>
+>> Where would be the appropriate place to dump this? After probe? Maybe
+>> best if you can share a code snippet of where to dump this.
+>>
+>>>> Can you also add IOMMU debug in file "drivers/iommu/iommu.c" ?
+>>
+>> You can find a boot log here:
+>>
+>> https://urldefense.proofpoint.com/v2/url?u=https-3A__paste.ubuntu.com_p_qtRqtYKHGF_&d=DwICaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=WHDsc6kcWAl4i96Vm5hJ_19IJiuxx_p_Rzo2g-uHDKw&m=NrxsR2etpZHGb7HkN4XdgaGmKM1XYyldihNPL6qVSv0&s=CMATEcHVoqZw4sIrNOXc7SFE_kV_5CO5EU21-yJez6c&e=
+>>
+>>> And, please try attached debug patch.
+>>
+>> With this patch it appears to boot fine. So far no issues seen.
+> 
+> Thank you for testing.
+> 
+> Hi Catalin and Will,
+> 
+> Sorry to add you in such a long thread but we are seeing a DMA issue
+> with stmmac driver in an ARM64 platform with IOMMU enabled.
+> 
+> The issue seems to be solved when buffers allocation for DMA based
+> transfers are *not* mapped with the DMA_ATTR_SKIP_CPU_SYNC flag *OR*
+> when IOMMU is disabled.
+> 
+> Notice that after transfer is done we do use
+> dma_sync_single_for_{cpu,device} and then we reuse *the same* page for
+> another transfer.
+> 
+> Can you please comment on whether DMA_ATTR_SKIP_CPU_SYNC can not be used
+> in ARM64 platforms with IOMMU ?
 
-On 2019/7/29 19:49, Jia-Ju Bai wrote:
-> In sddr55_transport(), there is an if statement on line 836 to check
-> whether info->lba_to_pba is NULL:
->      if (info->lba_to_pba == NULL || ...)
->
-> When info->lba_to_pba is NULL, it is used on line 948:
->      pba = info->lba_to_pba[lba];
->
-> Thus, a possible null-pointer dereference may occur.
->
-> To fix this bug, info->lba_to_pba is checked before being used.
->
-> This bug is found by a static analysis tool STCheck written by us.
->
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
-> v2:
-> * Avoid uninitialized access of pba.
->    Thank Oliver for helpful advice.
->
-> ---
->   drivers/usb/storage/sddr55.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/storage/sddr55.c b/drivers/usb/storage/sddr55.c
-> index b8527c55335b..d23aff16091e 100644
-> --- a/drivers/usb/storage/sddr55.c
-> +++ b/drivers/usb/storage/sddr55.c
-> @@ -945,7 +945,7 @@ static int sddr55_transport(struct scsi_cmnd *srb, struct us_data *us)
->   			return USB_STOR_TRANSPORT_FAILED;
->   		}
->   
-> -		pba = info->lba_to_pba[lba];
-> +		pba = info->lba_to_pba ? info->lba_to_pba[lba] : 0;
->   
->   		if (srb->cmnd[0] == WRITE_10) {
->   			usb_stor_dbg(us, "WRITE_10: write block %04X (LBA %04X) page %01X pages %d\n",
+In terms of what they do, there should be no difference on arm64 between:
 
+dma_map_page(..., dir);
+...
+dma_unmap_page(..., dir);
+
+and:
+
+dma_map_page_attrs(..., dir, DMA_ATTR_SKIP_CPU_SYNC);
+dma_sync_single_for_device(..., dir);
+...
+dma_sync_single_for_cpu(..., dir);
+dma_unmap_page_attrs(..., dir, DMA_ATTR_SKIP_CPU_SYNC);
+
+provided that the first sync covers the whole buffer and any subsequent 
+ones cover at least the parts of the buffer which may have changed. Plus 
+for coherent hardware it's entirely moot either way.
+
+Given Jon's previous findings, I would lean towards the idea that 
+performing the extra (redundant) cache maintenance plus barrier in 
+dma_unmap is mostly just perturbing timing in the same way as the debug 
+print which also made things seem OK.
+
+Robin.
