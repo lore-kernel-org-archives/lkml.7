@@ -2,94 +2,104 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93691C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2CEC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C166205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B97205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430618;
-	bh=S61VxJ+X0q7OMIDxTuUqvsnEaogyD56TxSWgEzgvQTM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fk4s0ZZd5FiisnB3vTgfedkJdj3ocKniaEkutv1q5KsZIMbnCa1oZBGTES92E1iK1
-	 VknloNBCuR/YkZFtIlLkZya8gKATcKUcyuNSu+NlOQRolRRM2kc8lXFPe21im35ISj
-	 evBdK8nl820qmNSSKriRaObELNoTpnaGDaRz3hMo=
+	s=default; t=1564430623;
+	bh=Y07Jhuh86TB1zC+Il3gXb0CrcePi+HPbIZrlTPtBLKQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2emZAfDaabhrWHyXxTiu0oYOb/IZGMrXxoQnXu/H2C7UtLrEj6g++e0zv9npKnvxF
+	 /v36oIsos2nJm/s0Dv5y7Hum66H04lH3fqoGDcjsxCULnggboiKPqq6rDeuVYHjDej
+	 qJPF1zwYhiEK5A7hyEAPHphfpDZhlbC1WacfxQNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbfG2UDh (ORCPT
+        id S2390153AbfG2TqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:03:37 -0400
-Received: from mail-pg1-f175.google.com ([209.85.215.175]:37137 "EHLO
-        mail-pg1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390195AbfG2Tql (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:46:41 -0400
-Received: by mail-pg1-f175.google.com with SMTP id i70so18025115pgd.4;
-        Mon, 29 Jul 2019 12:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=U4ngIyFeX8ApEnWIFC9G2C/8xAz/EgLX+z1iJ+q2AHg=;
-        b=BcPkRXVdhSe1/iAVct8pHAcEytxqGvtsr8oidFPs9ZtP4+b4rwvBznPjZ9hGIqtSc8
-         31WUEFWoVjWz0/Va6HDRBCM358AqiEAZ5F5zFpnoazM7ONH/m2mpzjL85UYHOc7vo7FI
-         C85UofKIElrJRGQcHss1zvKt7935lfz/KW3peqUJ6P/QPPBKeIxPDdWjlbxPHGhKW6rd
-         ylu0Iohugj8GIrW79G9a7Tyg7WASqsnPjCqToXXqHq5w2tXgD7rMx4IOXdhFm5liescS
-         H5uhP2FKYoDvwfHZ8IkoNNIKeIT+sNYlTCHLNLvOZuQcm2Sc8XtX0K2bJ+gjqJKv6NBm
-         oclg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U4ngIyFeX8ApEnWIFC9G2C/8xAz/EgLX+z1iJ+q2AHg=;
-        b=CROnH3EbDhl4wsWZ7XZI9RNtXrQjlcvFu8ymq0Ha3FuhDB3Rdq0jiMvzoqyxwpozJC
-         NMNxNl3ordeaoZdZgg44KwyuN18tzHACDe6vP8q+z/UaTyvoMPwimz+CI6dFFa7Q4Amt
-         Oqndl/l/rW5NYBPLlZY6tFvpd/1HtN6IIUtUEOSLLX5HLcDAKq3tq0hKbhP2hgqR8LeE
-         VQUTa6PMdNskfgMj1quOg4RY5cTBewsNqPVrwEZCyYNoXQ9xZ9UBfwQsjn61ypByW6D9
-         a5HWQ/nGp8Y3IjVOe1jyP0qLGc+neNvnuKQ5PtUTBIkjy5mRmf+J+lRzol4zQekB8R2/
-         iNaA==
-X-Gm-Message-State: APjAAAX4XEiF1sIWTlq/z2kqJSvWb19k0HMs2MEz982MifR0jAWZVvfV
-        /GrMq5yq6cUE337e5RMBpLQ=
-X-Google-Smtp-Source: APXvYqwP1f0WiMeLnf541ppBHx0xe7jId0bWUnETovczbdtzGdDYlbp9osWMQ0Z62AYVqlz/EiuiZg==
-X-Received: by 2002:a63:3fc9:: with SMTP id m192mr107730991pga.429.1564429600629;
-        Mon, 29 Jul 2019 12:46:40 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:309b])
-        by smtp.gmail.com with ESMTPSA id j10sm28183281pfn.188.2019.07.29.12.46.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 12:46:39 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 12:46:37 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 2/9] workqueue: unconfine alloc/apply/free_workqueue_attrs()
-Message-ID: <20190729194637.GF569612@devbig004.ftw2.facebook.com>
-References: <20190725212505.15055-1-daniel.m.jordan@oracle.com>
- <20190725212505.15055-3-daniel.m.jordan@oracle.com>
+        Mon, 29 Jul 2019 15:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390125AbfG2TqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:46:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B6A320C01;
+        Mon, 29 Jul 2019 19:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564429581;
+        bh=Y07Jhuh86TB1zC+Il3gXb0CrcePi+HPbIZrlTPtBLKQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pJxxOfyT4WnvDZqHafwrs9iBLZ0kOOQAwMw/X40YGgjYROf6cq8++nXOEYN/U5snp
+         2HgYyBXlv4zM8/qg3rgaeTt2JVjSbMMVF18uQzbWWLxC4z0qQB84WVnPGaWbTv5i2+
+         t7IGJJ79Zpp5uhxpHtavbi/HtNSnM8jkmKpmsiNY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Oak Zeng <ozeng@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 029/215] drm/amdkfd: Fix a potential memory leak
+Date:   Mon, 29 Jul 2019 21:20:25 +0200
+Message-Id: <20190729190745.138948656@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
+References: <20190729190739.971253303@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190725212505.15055-3-daniel.m.jordan@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 05:24:58PM -0400, Daniel Jordan wrote:
-> padata will use these these interfaces in a later patch, so unconfine them.
-> 
-> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+[ Upstream commit e73390d181103a19e1111ec2f25559a0570e9fe0 ]
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Free mqd_mem_obj it GTT buffer allocation for MQD+control stack fails.
 
-Thanks.
+Signed-off-by: Oak Zeng <ozeng@amd.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
+index 9dbba609450e..8fe74b821b32 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
+@@ -76,6 +76,7 @@ static int init_mqd(struct mqd_manager *mm, void **mqd,
+ 	struct v9_mqd *m;
+ 	struct kfd_dev *kfd = mm->dev;
+ 
++	*mqd_mem_obj = NULL;
+ 	/* From V9,  for CWSR, the control stack is located on the next page
+ 	 * boundary after the mqd, we will use the gtt allocation function
+ 	 * instead of sub-allocation function.
+@@ -93,8 +94,10 @@ static int init_mqd(struct mqd_manager *mm, void **mqd,
+ 	} else
+ 		retval = kfd_gtt_sa_allocate(mm->dev, sizeof(struct v9_mqd),
+ 				mqd_mem_obj);
+-	if (retval != 0)
++	if (retval) {
++		kfree(*mqd_mem_obj);
+ 		return -ENOMEM;
++	}
+ 
+ 	m = (struct v9_mqd *) (*mqd_mem_obj)->cpu_ptr;
+ 	addr = (*mqd_mem_obj)->gpu_addr;
 -- 
-tejun
+2.20.1
+
+
+
