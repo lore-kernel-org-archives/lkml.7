@@ -2,92 +2,108 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8747FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CDAC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65071206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343FD206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfG2MwF (ORCPT
+        id S1727336AbfG2MwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:52:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55736 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfG2MwF (ORCPT
+        Mon, 29 Jul 2019 08:52:19 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34421 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfG2MwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:52:05 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id A553028A593
-Subject: Re: [PATCH v2] platform/chrome: cros_ec_trace: update generating
- script
-To:     Tzung-Bi Shih <tzungbi@google.com>, bleung@chromium.org,
-        groeck@chromium.org
-Cc:     linux-kernel@vger.kernel.org, cychiang@google.com,
-        dgreid@google.com
-References: <20190723133322.243286-1-tzungbi@google.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <bacac922-a15d-77c4-e549-cbf41100e4ef@collabora.com>
-Date:   Mon, 29 Jul 2019 14:51:59 +0200
+        Mon, 29 Jul 2019 08:52:18 -0400
+Received: by mail-ed1-f67.google.com with SMTP id s49so24390529edb.1;
+        Mon, 29 Jul 2019 05:52:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DXiSUFwveA5DL37XMYfZztp70YvGAlcNnFn/pPeo5N0=;
+        b=uDeGuibDQNfGNJ6iygayXJkR74yjusf5CzwvqczYa2vD7xgZ3hfCTzUc5dtkwpgsP3
+         7KxHStPY/9WFpNrdvPvB4aTB8Sa8vR+c5pr4xJY5Dg/6foHEjTcBLyhiXGoclCNi+v99
+         5A9ZMBhFGIQemwLsH+o+RTFRFNOj3s9Kf+U/e4ubdAIEMYlDbFcx7QspVz5mwYE2CG58
+         aqPk6y2anjTVNjOhkbRtAYB6bOISLw3PFRYZegZfkhrWLYUvK7oOyPbq1c2ndcv1ydED
+         uewyDw0TDv6PTUhfe1aKO/J9glOwhWd18/bDlqJPpq8L+gb3ShijCcdqLyw3as1unIrU
+         zAhw==
+X-Gm-Message-State: APjAAAXvUQCjOj8p2cbrq7AodafH9Y5Ydvvqk4IVRNo6i67hLdE4hEjE
+        GaLRV7KttAQS/DxBwqymBSCu/wfANvY=
+X-Google-Smtp-Source: APXvYqz3aKDzXTLnWZ7cFc8ZXDfLQ5fmAbSEn1hzcUZRHmiN2vyvhbaVysF756g4yxuo6cuskxepzA==
+X-Received: by 2002:a17:906:4e8f:: with SMTP id v15mr83106803eju.47.1564404736683;
+        Mon, 29 Jul 2019 05:52:16 -0700 (PDT)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id rv16sm11431186ejb.79.2019.07.29.05.52.15
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 05:52:16 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH] modpost: check for static EXPORT_SYMBOL* functions
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190714152817.24693-1-efremov@linux.com>
+ <20190728100906.18847-1-efremov@linux.com>
+ <20190729151351.24f9eeb9@canb.auug.org.au>
+ <e2b5607f-0f74-41c6-a83d-5a22d6828778@linux.com>
+ <20190729224007.2f7fdcb4@canb.auug.org.au>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <65ea1c44-ac7f-b63f-8ba0-85bb12349383@linux.com>
+Date:   Mon, 29 Jul 2019 15:52:15 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190723133322.243286-1-tzungbi@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <20190729224007.2f7fdcb4@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tzung-Bi
-
-On 23/7/19 15:33, Tzung-Bi Shih wrote:
-> To remove ", \" from the last line.
+On 7/29/19 3:40 PM, Stephen Rothwell wrote:
+> Hi Denis,
 > 
-> Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
-> ---
-> Changes from v1:
-> - simpler awk code
+> On Mon, 29 Jul 2019 12:16:29 +0300 Denis Efremov <efremov@linux.com> wrote:
+>>
+>>> Just a reminder that some of us (just me?) do well over 100+ builds per
+>>> day ...  if this can be optimised some what that would be good.  
+>>
+>> These measurements for the worst case (allmodconfig). Is it possible to 
+>> measure the slowdown in your case? How it will perform on your typical 
+>> workflow?
 > 
->  drivers/platform/chrome/cros_ec_trace.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+> I did 3 x86_64 allmodconfig builds without and with the patch (I do
+> -j 80 powerpc64 le hosted cross builds) and it doesn't look like the
+> patch has much impact at all.
 > 
-> diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/chrome/cros_ec_trace.c
-> index 0a76412095a9..667460952dad 100644
-> --- a/drivers/platform/chrome/cros_ec_trace.c
-> +++ b/drivers/platform/chrome/cros_ec_trace.c
-> @@ -6,7 +6,18 @@
->  #define TRACE_SYMBOL(a) {a, #a}
->  
->  // Generate the list using the following script:
-> -// sed -n 's/^#define \(EC_CMD_[[:alnum:]_]*\)\s.*/\tTRACE_SYMBOL(\1), \\/p' include/linux/mfd/cros_ec_commands.h
-> +// sed -n 's/^#define \(EC_CMD_[[:alnum:]_]*\)\s.*/\tTRACE_SYMBOL(\1), \\/p' \
-
-For some reason I accepted the patch using c++ style comments but I shouldn't,
-while we are here could you update the patch and use c style comments instead,
-thanks.
-
-~ Enric
-
-> +// include/linux/mfd/cros_ec_commands.h | awk '
-> +// {
-> +//   if (NR != 1)
-> +//     print buf;
-> +//   buf = $0;
-> +// }
-> +// END {
-> +//   gsub(/, \\/, "", buf);
-> +//   print buf;
-> +// }
-> +// '
->  #define EC_CMDS \
->  	TRACE_SYMBOL(EC_CMD_PROTO_VERSION), \
->  	TRACE_SYMBOL(EC_CMD_HELLO), \
+> Without the patch:
 > 
+> real	8m41.390s user	587m25.249s sys	22m0.411s
+> real	8m40.100s user	587m32.148s sys	21m58.419s
+> real	8m40.084s user	587m25.311s sys	22m2.794s
+> 
+> With the patch:
+> 
+> real	8m40.351s user	587m21.819s sys	21m57.389s
+> real	8m40.868s user	587m23.730s sys	21m58.737s
+> real	8m40.970s user	587m22.525s sys	22m2.467s
+> 
+> I do other builds as well, but that is the biggest, so actually looks
+> ok.
+> 
+
+Is it worth to include your measurements instead of mine in the commit
+description? Maybe the note about performance downgrade could be omitted
+at all in this case?
+
+Denis
