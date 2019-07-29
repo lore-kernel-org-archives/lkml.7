@@ -2,161 +2,124 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26A5C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F17BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9431E2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430413;
-	bh=7gI2jRdswUqOZikL5g6HJFqgYXJPBbm5N+9BTbWMDY0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GhRJgo5TZ96olaQmTbncPL3w6TkMVRkBdCy4miW5x/ey8thpZuHpx6T/YGpey0Y6n
-	 ADWU7dm8CJ+ofwmcK31FNoQW7mYZmwLTczOcxS5TdZEDZZWqfC7fe/Q/v8yR4JeuS/
-	 HLxCYV6+j6dmA738o+57twn44INGBMOt7sZUkICk=
+	by mail.kernel.org (Postfix) with ESMTP id 202FF2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+rwx8XC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbfG2UAI (ORCPT
+        id S2404143AbfG2UAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:00:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403754AbfG2Tws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:52:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3D9B21773;
-        Mon, 29 Jul 2019 19:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429967;
-        bh=7gI2jRdswUqOZikL5g6HJFqgYXJPBbm5N+9BTbWMDY0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UOZJBu4erYTGVEzWfZiOHHNnaGZPNxKRwS1YJphXCKeRdwArOrpQ/rl+fcVfeAp1d
-         Kh5agMQjBeF966n+oOOYR3IrCiHkDqsEgqUD0FetlcWbSCjrXn1tZ0+raI6Egp5TEb
-         xGal4d8uBAwcU0hmUZzAEsxV0TsrVfPmH/pWQSP4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Huang, Ying" <ying.huang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Rientjes <rientjes@google.com>,
-        Rik van Riel <riel@redhat.com>, Jan Kara <jack@suse.cz>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 152/215] mm/mincore.c: fix race between swapoff and mincore
-Date:   Mon, 29 Jul 2019 21:22:28 +0200
-Message-Id: <20190729190806.168930852@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
-References: <20190729190739.971253303@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 29 Jul 2019 16:00:17 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42554 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390586AbfG2Twq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:52:46 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t132so28763504pgb.9;
+        Mon, 29 Jul 2019 12:52:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BisbOojm1L0chpN6FgWkwkJa3SL7jxklJpQDnyixEqU=;
+        b=f+rwx8XC7zkZr/aTm1JcdENObmj3+KH0SoKNOkobp+pzzdBULNYK6xgsuFty9Y77RQ
+         A8lLAIjK1g19EohWEKzNxTIf15wAVexuwRpclK+dPJqPEeyEEq+/Mg7JN5pb09HYnVFQ
+         1XXlznRn3qF5LoVg8/32Bbfiq8TY2XOig5TdnCAt3RmD79dwk82BacqNSBUJ4LmM7qEQ
+         HbcTzUzqSCIZLp1HR760haA2wDyixxnE/GoHDquH/h+0F8sy2HmyFcL2H1pBy6OSN85W
+         f4R+K62/V0H//xJPAWAL0nmkt/8lAfgrnKMtQtzEUYd5zbCoaw4wQ60D1RNxCFfQyZL+
+         6+qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BisbOojm1L0chpN6FgWkwkJa3SL7jxklJpQDnyixEqU=;
+        b=jpiYTanBmiQgZTN6Qe0xI8d+OvH8KqFZR9NduyR0f+u9VESDsv6amKCvW8xIIq+a+d
+         5jvkMLf3guCZCYkp1D2tf42e3dhpVGph9ItHStyL35dEoreOY2MhQTHi+hsNcUhkBVQp
+         g9KeSh997qnI7ZWnA+l5hDaNgMIPzTpUSdcudNCxiA8tTf0IzP5WA6PvOrH+w4zT8wpA
+         mw0YniwqRkCiPcfKOfgm7fgydUenx2Ujp8XF3B8uTtpf1WePjbkkWJYAmhRNRMuREEYs
+         O6Jtt98/EeDqTE443J3w1lKNKTvlsbggeV5CpTnGraM4u2v/daBIdupDTGH8PrOQOf+Z
+         lgTg==
+X-Gm-Message-State: APjAAAWF2YPa7FzJbyiwr7uzNRayKhZODarx2d8l4HZHewIDJuzfc9mM
+        p60xmsQfQnboI+a5QF6keaN7PK+t
+X-Google-Smtp-Source: APXvYqwa8Ei33RrNsx5dj7nvc/Lp68l06u/Bs/qK2sj3O+Zom8jIey/fEY2K+AP7tGUuQjiXOZS0Zw==
+X-Received: by 2002:a63:1908:: with SMTP id z8mr103078604pgl.433.1564429964812;
+        Mon, 29 Jul 2019 12:52:44 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.52.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 12:52:44 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-serial@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/24] LPUART fixes and improvements
+Date:   Mon, 29 Jul 2019 12:52:02 -0700
+Message-Id: <20190729195226.8862-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aeb309b81c6bada783c3695528a3e10748e97285 ]
+Everyone:
 
-Via commit 4b3ef9daa4fc ("mm/swap: split swap cache into 64MB trunks"),
-after swapoff, the address_space associated with the swap device will be
-freed.  So swap_address_space() users which touch the address_space need
-some kind of mechanism to prevent the address_space from being freed
-during accessing.
+This series contains fixes/improvements to LPUART dirver I came up
+with recently as well as fixes picked up from Toradex and NXP Vybrid
+repos.
 
-When mincore processes an unmapped range for swapped shmem pages, it
-doesn't hold the lock to prevent swap device from being swapped off.  So
-the following race is possible:
+Feedback is welcome!
 
-CPU1					CPU2
-do_mincore()				swapoff()
-  walk_page_range()
-    mincore_unmapped_range()
-      __mincore_unmapped_range
-        mincore_page
-	  as = swap_address_space()
-          ...				  exit_swap_address_space()
-          ...				    kvfree(spaces)
-	  find_get_page(as)
+Thanks,
+Andrey Smirnov
 
-The address space may be accessed after being freed.
+Andrey Smirnov (22):
+  tty: serial: fsl_lpuart: Flush HW FIFOs in .flush_buffer
+  tty: serial: fsl_lpuart: Simplify RX/TX IRQ handlers
+  tty: serial: fsl_lpuart: Fix bogus indentation
+  tty: serial: fsl_lpuart: Drop unnecessary sg_set_buf() call
+  tty: serial: fsl_lpuart: Drop unnecessary uart_write_wakeup()
+  tty: serial: fsl_lpuart: Fix issue in software flow control
+  tty: serial: fls_lpuart: Split shared TX IRQ handler into two
+  tty: serial: fsl_lpuart: Drop no-op bit opearation
+  tty: serial: fsl_lpuart: Drop unnecessary extra parenthesis
+  tty: serial: fsl_lpuart: Clear CSTOPB unconditionally
+  tty: serial: fsl_lpuart: Use appropriate lpuart32_* I/O funcs
+  tty: serial: fsl_lpuart: Introduce lpuart_wait_bit_set()
+  tty: serial: fsl_lpuart: Use cpu_relax() instead of barrier()
+  tty: serial: fsl_lpuart: Introduce lpuart_stopped_or_empty()
+  tty: serial: fsl_lpuart: Drop unnecessary lpuart*_stop_tx()
+  tty: serial: fsl_lpuart: Introduce lpuart_dma_shutdown()
+  tty: serial: fsl_lpuart: Introduce lpuart_tx_dma_startup()
+  tty: serial: fsl_lpuart: Introduce lpuart_rx_dma_startup()
+  tty: serial: fsl_lpuart: Introduce lpuart32_configure()
+  tty: serial: fsl_lpuart: Introduce lpuart*_setup_watermark_enable()
+  tty: serial: fsl_lpuart: Don't enable TIE in .startup() or .resume()
+  tty: serial: fsl_lpuart: Ignore TX/RX interrupts if DMA is enabled
 
-To fix the race, get_swap_device()/put_swap_device() is used to enclose
-find_get_page() to check whether the swap entry is valid and prevent the
-swap device from being swapoff during accessing.
+Stefan Agner (2):
+  tty: serial: fsl_lpuart: fix framing error handling when using DMA
+  tty: serial: fsl_lpuart: flush receive FIFO after overruns
 
-Link: http://lkml.kernel.org/r/20190611020510.28251-1-ying.huang@intel.com
-Fixes: 4b3ef9daa4fc ("mm/swap: split swap cache into 64MB trunks")
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- mm/mincore.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 495 +++++++++++++++++---------------
+ 1 file changed, 261 insertions(+), 234 deletions(-)
 
-diff --git a/mm/mincore.c b/mm/mincore.c
-index c3f058bd0faf..4fe91d497436 100644
---- a/mm/mincore.c
-+++ b/mm/mincore.c
-@@ -68,8 +68,16 @@ static unsigned char mincore_page(struct address_space *mapping, pgoff_t pgoff)
- 		 */
- 		if (xa_is_value(page)) {
- 			swp_entry_t swp = radix_to_swp_entry(page);
--			page = find_get_page(swap_address_space(swp),
--					     swp_offset(swp));
-+			struct swap_info_struct *si;
-+
-+			/* Prevent swap device to being swapoff under us */
-+			si = get_swap_device(swp);
-+			if (si) {
-+				page = find_get_page(swap_address_space(swp),
-+						     swp_offset(swp));
-+				put_swap_device(si);
-+			} else
-+				page = NULL;
- 		}
- 	} else
- 		page = find_get_page(mapping, pgoff);
 -- 
-2.20.1
-
-
+2.21.0
 
