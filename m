@@ -2,131 +2,70 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9352C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149CCC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C41D0206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB65D206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387710AbfG2L1H (ORCPT
+        id S2387722AbfG2L1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:27:07 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42923 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387664AbfG2L1H (ORCPT
+        Mon, 29 Jul 2019 07:27:16 -0400
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:42744 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387638AbfG2L1Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:27:07 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x1so11517440wrr.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 04:27:06 -0700 (PDT)
+        Mon, 29 Jul 2019 07:27:16 -0400
+Received: by mail-lj1-f175.google.com with SMTP id t28so58209736lje.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 04:27:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XY9MnmnbN3bR4WP4q1Vs7UayuQZkuHXaeJmGe0r/6yw=;
-        b=XeA2XRTsnDiUkSjB8bCe8Zqi8r2puQr83xDNS2z/n7AKZncRLoQcsDdyg9xEl523JI
-         5lzcK5NxkiCwuNC39bsGji7PxoV1iqAZ9q5Fj80acoBQ8T45aya8VCk8sU93kI7gRS96
-         w5N/FdDNrAp8JVfifPy6Cd+L0/gfygNHgaOubW9K/t0YLuLfF9TvpuIBPCSOn44YmLif
-         5a3nXC4rXZKqGb4Ed8fIGU9AjjJsU9CbS1JDj2EbLtQYQpBiC8/mlQ9TyE8rEpkPFEFv
-         WJEkhRprp2atmHG6CQdbuzYhzwYS5nDPzQE8oU42Uw77sWN522KiXHQOpjHudCC1zVbV
-         tvgA==
-X-Gm-Message-State: APjAAAW8l7dPTMAYxIfTCFa2Jn3O3JrEkyZd6VtzQFsLquZO4qgn6D1l
-        /VhHPqd7AlQlGewdhuDawm0sWQ==
-X-Google-Smtp-Source: APXvYqy37KzTziTHSZm+RtNAM7/AEf2dZOKvrB2ThYc3rZPvpWRBF3G4cnA6pdkbGbsQuSRbXji5/w==
-X-Received: by 2002:a5d:4484:: with SMTP id j4mr120094209wrq.143.1564399625253;
-        Mon, 29 Jul 2019 04:27:05 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.237.107])
-        by smtp.gmail.com with ESMTPSA id p18sm60039427wrm.16.2019.07.29.04.27.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 04:27:04 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 13:27:02 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
-        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
-        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
-        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
-Subject: Re: [RFC][PATCH 04/13] sched/{rt,deadline}: Fix set_next_task vs
- pick_next_task
-Message-ID: <20190729112702.GA8927@localhost.localdomain>
-References: <20190726145409.947503076@infradead.org>
- <20190726161357.579899041@infradead.org>
- <20190729092519.GR25636@localhost.localdomain>
- <20190729111510.GD31398@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PhSMztl9vtcPHrtCcvMgqxG7WnfxjbwUrZSM++0kKfk=;
+        b=OJl29BZHKS0WhGpPMg3wEVXl+sAlwDF0jrgBoeQaujlWxk0BNfDWAku1xJ48eVmy7O
+         HrkbmtvWj/nlJPTbi//+iqVO8kGbmMccnGo4zwwsMSDJci54kWV6O7fGVNea5DQu97py
+         ezAtqthVXt0Iz0G5dPgDdyyOu4o7CV2/TliXevZp6+TDzU6QIDirigfWQxfHxnFyp8l9
+         9RXC97C+y0u0Ahvoy+Lmivn4rjmvCbuSVDXrQIGx05XdOE1x/yfQTcoR+7I26a9F+nuS
+         dKj7T+Q9oeetkXvVJqK6SOFPK6LWP3SpeLenARb9WasC+hCQEGa3qHY86oE9WHp16SFE
+         Ro/w==
+X-Gm-Message-State: APjAAAVIVjkFzB+8ZChL8lsiEspBeE4G4Hfiga/CcO/BqA9IswVBzXyM
+        hY3qZKla0R5sBLj8cUvSG+paJ/SZn2GDsjPLs7Uptw==
+X-Google-Smtp-Source: APXvYqwmGzre91C1xV6WEc9bvK8y6PD3NAo1Y9stcZDW0EJEmZA86HhxhvVEUcD8QyRTdmFfYCdQ0561v6Et3EZw+5Y=
+X-Received: by 2002:a2e:9643:: with SMTP id z3mr58628311ljh.43.1564399634664;
+ Mon, 29 Jul 2019 04:27:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729111510.GD31398@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <CAGnkfhySwXY7YwuQezyx6cEpemZW4Hox1_4fQJm3-5hvM3G6gw@mail.gmail.com>
+ <20190729095047.k45isr7etq3xkyvr@willie-the-truck> <1cfad84e-5a98-99bd-07c2-9db0cf37292b@arm.com>
+ <CAGnkfhxXHPfMZVMy4Wjmy39E3Oh2U8FjVU8p8PprCnj5QFLMEg@mail.gmail.com>
+ <cc6f9c8f-a4a1-7c71-1f89-72e1e8dd0cc8@arm.com> <CAGnkfhx6St+MYQuR_Duguk4Q9ieuL7sLCTL=G76-eqUcCAbpoA@mail.gmail.com>
+ <c8581164-168d-a4a0-46de-4bdd7f7dedbf@arm.com>
+In-Reply-To: <c8581164-168d-a4a0-46de-4bdd7f7dedbf@arm.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Mon, 29 Jul 2019 13:26:38 +0200
+Message-ID: <CAGnkfhyT=2kPsiUy-V=aCA_s-C4BXgD++hAZ9ii1h0p94mMVQA@mail.gmail.com>
+Subject: Re: build error
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/19 13:15, Peter Zijlstra wrote:
-> On Mon, Jul 29, 2019 at 11:25:19AM +0200, Juri Lelli wrote:
-> > Hi,
-> > 
-> > On 26/07/19 16:54, Peter Zijlstra wrote:
-> > > Because pick_next_task() implies set_curr_task() and some of the
-> > > details haven't matter too much, some of what _should_ be in
-> > > set_curr_task() ended up in pick_next_task, correct this.
-> > > 
-> > > This prepares the way for a pick_next_task() variant that does not
-> > > affect the current state; allowing remote picking.
-> > > 
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > ---
-> > >  kernel/sched/deadline.c |   23 ++++++++++++-----------
-> > >  kernel/sched/rt.c       |   27 ++++++++++++++-------------
-> > >  2 files changed, 26 insertions(+), 24 deletions(-)
-> > > 
-> > > --- a/kernel/sched/deadline.c
-> > > +++ b/kernel/sched/deadline.c
-> > > @@ -1694,12 +1694,21 @@ static void start_hrtick_dl(struct rq *r
-> > >  }
-> > >  #endif
-> > >  
-> > > -static inline void set_next_task(struct rq *rq, struct task_struct *p)
-> > > +static void set_next_task_dl(struct rq *rq, struct task_struct *p)
-> > >  {
-> > >  	p->se.exec_start = rq_clock_task(rq);
-> > >  
-> > >  	/* You can't push away the running task */
-> > >  	dequeue_pushable_dl_task(rq, p);
-> > > +
-> > > +	if (hrtick_enabled(rq))
-> > > +		start_hrtick_dl(rq, p);
-> > > +
-> > > +	if (rq->curr->sched_class != &dl_sched_class)
-> > > +		update_dl_rq_load_avg(rq_clock_pelt(rq), rq, 0);
-> > > +
-> > > +	if (rq->curr != p)
-> > > +		deadline_queue_push_tasks(rq);
-> > 
-> > It's a minor thing, but I was wondering why you added the check on curr.
-> > deadline_queue_push_tasks() already checks if are there pushable tasks,
-> > plus curr can still be of a different class at this point?
-> 
-> Hmm, so by moving that code into set_next_task() it is exposed to the:
-> 
->   if (queued)
->     deuque_task();
->   if (running)
->     put_prev_task();
-> 
->   /* do stuff */
-> 
->   if (queued)
->     enqueue_task();
->   if (running)
->     set_next_task();
-> 
-> patter from core.c; and in that case nothing changes. That said; I
-> might've gotten it wrong.
+On Mon, Jul 29, 2019 at 1:18 PM Vincenzo Frascino
+<vincenzo.frascino@arm.com> wrote:
+> Last but not least, are you on any irc channel? Might help speeding up the
+> debugging if we talk there.
+>
 
-Right. But, I was wondering about the __schedule()->pick_next_task()
-case, where, say, prev (rq->curr) is RT/CFS and next (p) is DEADLINE.
+Sure, I'm matteo on FreeNode, #armlinux
+
+-- 
+Matteo Croce
+per aspera ad upstream
