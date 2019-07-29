@@ -2,74 +2,160 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ECCC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3B4C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F2A206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DEB206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387911AbfG2Ml1 (ORCPT
+        id S1728395AbfG2Mnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:41:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60298 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726986AbfG2Ml1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:41:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D7383ADCB;
-        Mon, 29 Jul 2019 12:41:25 +0000 (UTC)
-From:   Anthony Iliopoulos <ailiopoulos@suse.com>
-To:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
-        Anthony Iliopoulos <ailiopoulos@suse.com>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] nvme/multipath: revalidate nvme_ns_head gendisk in nvme_validate_ns
-Date:   Mon, 29 Jul 2019 14:40:40 +0200
-Message-Id: <20190729124040.16581-1-ailiopoulos@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Mon, 29 Jul 2019 08:43:46 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:18027 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfG2Mnq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:43:46 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: QVP+RtM4+DDzDC8jZq3pxzcUzdvIDDn0XDWUHrYFYj32QyQKjV7MJX9kyefoAYguJlY5yyf3ho
+ CJjdi5R5+7CkkBM6lPlG3o8V7SW7WoNSm76rVDt9yYV/Ioy+nIqExCq4a6wW8AIB0dZgYG+2ec
+ Dieyw9EFVFyvfIu3yFh6fVH4yqmRRz5KZCxAC+jMI4MvA//CMFjgPCN5Oi/H004uhQjTIGw2VX
+ M1LcW3i2BAeOmlype0F/EV/kHR+tuW7aaGeLiUuUcVbaKYZALETD5JaxEYC+g/ce8kaYB7c1gI
+ EBY=
+X-IronPort-AV: E=Sophos;i="5.64,322,1559545200"; 
+   d="scan'208";a="43093694"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Jul 2019 05:43:45 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
+ chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 29 Jul 2019 05:43:45 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 29 Jul 2019 05:43:43 -0700
+Date:   Mon, 29 Jul 2019 14:43:43 +0200
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Ido Schimmel <idosch@idosch.org>
+CC:     Andrew Lunn <andrew@lunn.ch>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
+        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
+Message-ID: <20190729124343.rynm5qjdsueonlno@lx-anielsen.microsemi.net>
+References: <eef063fe-fd3a-7e02-89c2-e40728a17578@cumulusnetworks.com>
+ <20190725142101.65tusauc6fzxb2yp@soft-dev3.microsemi.net>
+ <b9ce433a-3ef7-fe15-642a-659c5715d992@cumulusnetworks.com>
+ <e6ad982f-4706-46f9-b8f0-1337b09de350@cumulusnetworks.com>
+ <20190726120214.c26oj5vks7g5ntwu@soft-dev3.microsemi.net>
+ <20190726134613.GD18223@lunn.ch>
+ <20190726195010.7x75rr74v7ph3m6m@lx-anielsen.microsemi.net>
+ <20190727030223.GA29731@lunn.ch>
+ <20190728191558.zuopgfqza2iz5d5b@lx-anielsen.microsemi.net>
+ <20190729060923.GA16938@splinter>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20190729060923.GA16938@splinter>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_NVME_MULTIPATH is set, only the hidden gendisk associated
-with the per-controller ns is run through revalidate_disk when a
-rescan is triggered, while the visible blockdev never gets its size
-(bdev->bd_inode->i_size) updated to reflect any capacity changes that
-may have occurred.
+Hi Ido,
 
-This prevents online resizing of nvme block devices and in extension of
-any filesystems atop that will are unable to expand while mounted, as
-userspace relies on the blockdev size for obtaining the disk capacity
-(via BLKGETSIZE/64 ioctls).
+The 07/29/2019 09:09, Ido Schimmel wrote:
+> External E-Mail
+> 
+> 
+> On Sun, Jul 28, 2019 at 09:15:59PM +0200, Allan W. Nielsen wrote:
+> > If we assume that the SwitchDev driver implemented such that all multicast
+> > traffic goes to the CPU, then we should really have a way to install a HW
+> > offload path in the silicon, such that these packets does not go to the CPU (as
+> > they are known not to be use full, and a frame every 3 us is a significant load
+> > on small DMA connections and CPU resources).
+> > 
+> > If we assume that the SwitchDev driver implemented such that only "needed"
+> > multicast packets goes to the CPU, then we need a way to get these packets in
+> > case we want to implement the DLR protocol.
+> 
+> I'm not familiar with the HW you're working with, so the below might not
+> be relevant.
+> 
+> In case you don't want to send all multicast traffic to the CPU (I'll
+> refer to it later), you can install an ingress tc filter that traps to
+> the CPU the packets you do want to receive. Something like:
+> 
+> # tc qdisc add dev swp1 clsact
+> # tc filter add dev swp1 pref 1 ingress flower skip_sw dst_mac \
+> 	01:21:6C:00:00:01 action trap
+I have actually been looking at this, and it may an idea to go down this road.
+But so far we have chosen not to for the following reasons:
+- It is not only about trapping traffic to the CPU, we also needs to capability
+  to limit the flooding on the front ports.
+- In our case (the silicon), this feature really belongs to the MAC-table, which
+  is why we did prefer to do it via the FDB entries.
+  - But the HW does have TCAM resources, and we are planning on exposing these
+    resources via the tc-flower interface. It is just that we have more MAC
+    table resoruces than TCAM resources, which is another argument for using the
+    MAC table.
 
-Fix this by explicitly revalidating the actual namespace gendisk in
-addition to the per-controller gendisk, when multipath is enabled.
+> If your HW supports sharing the same filter among multiple ports, then
+> you can install your filter in a tc shared block and bind multiple ports
+> to it.
+It does, thanks for making us aware of this optimization option.
 
-Signed-off-by: Anthony Iliopoulos <ailiopoulos@suse.com>
----
- drivers/nvme/host/core.c | 1 +
- 1 file changed, 1 insertion(+)
+> Another option is to always send a *copy* of multicast packets to the
+> CPU, but make sure the HW uses a policer that prevents the CPU from
+> being overwhelmed. To avoid packets being forwarded twice (by HW and
+> SW), you will need to mark such packets in your driver with
+> 'skb->offload_fwd_mark = 1'.
+Understood
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 8f3fbe5ca937..80c7a7ee240b 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1715,6 +1715,7 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
- 	if (ns->head->disk) {
- 		nvme_update_disk_info(ns->head->disk, ns, id);
- 		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
-+		revalidate_disk(ns->head->disk);
- 	}
- #endif
- }
--- 
-2.16.4
+> Now, in case user wants to allow the CPU to receive certain packets at a
+> higher rate, a tc filter can be used. It will be identical to the filter
+> I mentioned earlier, but with a 'police' action chained before 'trap'.
+I see.
+
+> I don't think this is currently supported by any driver, but I believe
+> it's the right way to go: By default the CPU receives all the traffic it
+> should receive and user can fine-tune it using ACLs.
+If all the frames goes to the CPU, then how can I fine-tune frames not to go to
+the CPU?? I can do a TRAP (to get it to the CPU) a DROP (to drop it before
+forwarding), but how can I forward a multicast packet, but prevent it from going
+to the CPU?
+
+I have seen that the mirror command can do re-direction, but not to a list of
+ports...
+
+All in all, thanks a lot for the suggestions, but to begin with I think we will
+explore the MAC table option a bit more. But we will get back to TC to support
+the ACL functions.
+
+/Allan
+
 
