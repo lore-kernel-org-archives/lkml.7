@@ -2,94 +2,55 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89026C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24B4C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2B6206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:48:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k9Tvz2zR"
+	by mail.kernel.org (Postfix) with ESMTP id 832AE21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbfG2QsF (ORCPT
+        id S1728857AbfG2Qsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:48:05 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48632 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbfG2QsE (ORCPT
+        Mon, 29 Jul 2019 12:48:46 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35810 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfG2Qsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:48:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CdO+v4oZa9EnLCDZTQ85n/ETA6xyqhDMpjwT2xbLmSc=; b=k9Tvz2zRatSYev2i6zfTRqEix
-        l781VEZOt+0DIkqBi9YQpJdYaI0hrv47KEUUPj+i6JvAansBYoAf5NNjA/s7kroc3OEsxRQVLO5Hp
-        qReCDt27Aq/iIw7P/lEaXd3QlVqbB4t+ur0LdTOGrOWTMa+9BZrEiCqlC+i2DCTGGXTLKWBxuJdML
-        BO9m4coWzwx7urw1TDVphaTOazhYENrLjOSWXZsxYv6X9Mic11mAW0/Kbn8JNW6YnEuYQCdCHW09Y
-        +AdyNN4axtYb1MMSTfNW1FfDY6YCVVdU+f4VbDVKahyotsj87025ZgZTC5cS4uLzfQ5G8DtaiwLyf
-        7UIlOZCfg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs8oY-0004Fa-5W; Mon, 29 Jul 2019 16:47:58 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D64FC20C7FF00; Mon, 29 Jul 2019 18:47:55 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 18:47:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <Valentin.Schneider@arm.com>,
-        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] sched/deadline: Use __sub_running_bw() throughout
- dl_change_utilization()
-Message-ID: <20190729164755.GM31398@hirez.programming.kicks-ass.net>
-References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
- <20190726082756.5525-4-dietmar.eggemann@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726082756.5525-4-dietmar.eggemann@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 29 Jul 2019 12:48:45 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3AB6F1266535A;
+        Mon, 29 Jul 2019 09:48:45 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:48:44 -0700 (PDT)
+Message-Id: <20190729.094844.56809733624311319.davem@davemloft.net>
+To:     dingxiang@cmss.chinamobile.com
+Cc:     jcliburn@gmail.com, chris.snook@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: ag71xx: use resource_size for the ioremap size
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1564390882-28002-1-git-send-email-dingxiang@cmss.chinamobile.com>
+References: <1564390882-28002-1-git-send-email-dingxiang@cmss.chinamobile.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 09:48:45 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 09:27:54AM +0100, Dietmar Eggemann wrote:
-> dl_change_utilization() has a BUG_ON() to check that no schedutil
-> kthread (sugov) is entering this function. So instead of calling
-> sub_running_bw() which checks for the special entity related to a
-> sugov thread, call the underlying function __sub_running_bw().
-> 
-> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> ---
->  kernel/sched/deadline.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index 99d4c24a8637..1fa005f79307 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -164,7 +164,7 @@ void dl_change_utilization(struct task_struct *p, u64 new_bw)
->  
->  	rq = task_rq(p);
->  	if (p->dl.dl_non_contending) {
-> -		sub_running_bw(&p->dl, &rq->dl);
-> +		__sub_running_bw(p->dl.dl_bw, &rq->dl);
->  		p->dl.dl_non_contending = 0;
->  		/*
->  		 * If the timer handler is currently running and the
+From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Date: Mon, 29 Jul 2019 17:01:22 +0800
 
-I'm confused; the only called of dl_change_utilization() is
-sched_dl_overflow(), and that already checks FLAG_SUGOV and exits before
-calling.
+> use resource_size to calcuate ioremap size and make
+> the code simpler.
+> 
+> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-So how can this matter?
+Applied to net-next.
