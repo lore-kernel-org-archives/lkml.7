@@ -2,97 +2,88 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9709C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE77C76192
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D29520693
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:29:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gQMwxy1N"
+	by mail.kernel.org (Postfix) with ESMTP id 744CB20693
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfG2J35 (ORCPT
+        id S1727985AbfG2JaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:29:57 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41094 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbfG2J35 (ORCPT
+        Mon, 29 Jul 2019 05:30:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41032 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727931AbfG2JaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:29:57 -0400
-Received: by mail-qk1-f194.google.com with SMTP id v22so43616526qkj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:29:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ni9Dwron1DAB/VosEOyb9bTzIzvLrdks0+fVcvOhKzw=;
-        b=gQMwxy1NEfJ4R4DdsragGEeQ1ePMx/vtNIQSPpA1XOQXbdPx507ukDsYGumSvXvKRW
-         CqYqNtmlpcLTzUVwVuy3FksrIh2MYpbrC3CMM3zWlPFhfBtGuI34/HrYWfBihkhCAxtb
-         744VcN0eb6rpIquLvouIHiSDU3rEmaB/o6wT1UJXTa4iDxydMmBmLMPZHmnpryD/9tAd
-         v82HBKIdVMepnufQ6aX9eJxw/+jNDFGRmDRQyrRb7b+x9ospaczHxwFnAIDAaQurc3ii
-         wpqE8opLmS1b6y2UsY4RVIoX0v4Oz7q0FUcSBdPzq7Qcfgr0/l7uZEfejMuSekXcOTJE
-         uh2A==
+        Mon, 29 Jul 2019 05:30:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so57809179wrm.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:30:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ni9Dwron1DAB/VosEOyb9bTzIzvLrdks0+fVcvOhKzw=;
-        b=YytkeJl9sSOxjEPBBBszwd4Ja+SVYiY7FQRTHUbA8SBR7DkQSHTpAheh/W6OzhDNco
-         zgo0rQHplE5boSjHT/0RWjXVjRhYK42goRavBPAQf7iLkGcXRySBMZLAnJ12raek86EK
-         BzUd5ajRX1fqS287My6TBCydrh8iLaJIDuDIto/TT9Ox84zZWt27pA3Nlx18jP/zgyVp
-         BQ2h+h0W7xrUusecAbLs7jd9RQkJEX/EVb045afEBDssKnN6SCT8HGCrRUG3xDZo4fhJ
-         QRep4uxzFxij2ZRVXlmOXV65TEuh0814cK4VttXJv4aWhhsOjXB5xXZft28defhyZMzH
-         YwjA==
-X-Gm-Message-State: APjAAAUFK3BfB15BzDCwA/bsoKuvXT2Ha7o3TAzhNqUiul958xVNZZIb
-        bluA46iCEEOV5mP5klRwEvdbbt+bH9bUf61jI0ORrw==
-X-Google-Smtp-Source: APXvYqzz2PDrlp9N2pc7W/QuOgqLqcGPA9kPz77ASGS4q7fTLpEkpvutYsOf5F4N2ND7QgCLSin3rOzyMs4xSnwLZ0M=
-X-Received: by 2002:a37:4e8f:: with SMTP id c137mr70800649qkb.127.1564392596646;
- Mon, 29 Jul 2019 02:29:56 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9avy5m8auN2z87gWKpbvtw9ce3O/3bqjjaiEc9X8IB4=;
+        b=l0EBy8mRk0PZpNrnPM8xY/uRDq+soEJyuSoJMmNsmMlmeyK+xU4Uy513PH8z0h1X1k
+         PYS1HaEQ0Ln7M3PyV+ISPjGHaq9wM4CSzGBOTflDpWLJar5q7GNKFjOACyUa8XlnR3Xs
+         tU8ilaZvgVK/d4BJk25g5YgC6Afr5moxsmBT7Bne5FfnpNN+LIGeT2P8xhqGkpI8IfcP
+         zpJpuND9Be5qkEUEVAD8BOsD+tmmOq71rAnTL0arK9PXyzG+6nvlplg1Xl5Nm/daM7Q3
+         cqISDqthefPZnqO03Fv+INIX1dKt5aizDzco+SBY3yha5t7zEA6oHE4qH45qWwn7A/Q2
+         NHrg==
+X-Gm-Message-State: APjAAAUmohHiJuzVJk/YpUzs7kDECiBpK5KP3RNou7W7nUOogfZLal3J
+        1L9bSxDs8pZ2K6ArYyhVu4zoSw==
+X-Google-Smtp-Source: APXvYqy0ukqUzu8jgOYkuviFDoJUTuAF/SmhWh3Yh9peouGgMoj42CbJFnks9ZQse0UPz648OOpZQw==
+X-Received: by 2002:adf:f28a:: with SMTP id k10mr41842741wro.343.1564392617641;
+        Mon, 29 Jul 2019 02:30:17 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:29d3:6123:6d5f:2c04? ([2001:b07:6468:f312:29d3:6123:6d5f:2c04])
+        by smtp.gmail.com with ESMTPSA id w24sm48173380wmc.30.2019.07.29.02.30.16
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 02:30:17 -0700 (PDT)
+Subject: Re: [PATCH stable-4.19 1/2] KVM: nVMX: do not use dangling shadow
+ VMCS after guest reset
+To:     Jack Wang <jack.wang.usish@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, stable@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <20190725104645.30642-1-vkuznets@redhat.com>
+ <20190725104645.30642-2-vkuznets@redhat.com>
+ <CA+res+RfqpT=g1QbCqr3OkHVzFFSAt3cfCYNcwqiemWmOifFxg@mail.gmail.com>
+ <2ea5d588-8573-6653-b848-0b06d1f98310@redhat.com>
+ <CA+res+ShqmPcJWj+0F7X8=0DM_ys8HCP+rjg4Nv-7o06EipJQw@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <471a1023-4f0a-5727-e7b2-48701f75188f@redhat.com>
+Date:   Mon, 29 Jul 2019 11:30:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
- <ec8205566eb9c015ad51fbb88f0da7ca60b414fd.1564091601.git.amit.kucheria@linaro.org>
- <2812534.bLfc0ztHNv@g550jk>
-In-Reply-To: <2812534.bLfc0ztHNv@g550jk>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Mon, 29 Jul 2019 14:59:45 +0530
-Message-ID: <CAP245DX1u6JNPaqU_=Dq9HFG=EriGJGD2r4yOa88BmdmSH69GQ@mail.gmail.com>
-Subject: Re: [PATCH 12/15] arm64: dts: msm8974: thermal: Add interrupt support
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Brian Masney <masneyb@onstation.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+res+ShqmPcJWj+0F7X8=0DM_ys8HCP+rjg4Nv-7o06EipJQw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 2:33 PM Luca Weiss <luca@z3ntu.xyz> wrote:
->
-> On Freitag, 26. Juli 2019 00:18:47 CEST Amit Kucheria wrote:
-> > Register upper-lower interrupt for the tsens controller.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> > Cc: masneyb@onstation.org
-> >
-> >  arch/arm/boot/dts/qcom-msm8974.dtsi | 36 +++++++++++++++--------------
-> >  1 file changed, 19 insertions(+), 17 deletions(-)
-> >
->
-> Hi, the title of this patch should be "arm" and not "arm64".
+On 29/07/19 11:29, Jack Wang wrote:
+> Thanks Paolo for confirmation. I'm asking because we had one incident
+> in our production with 4.14.129 kernel,
+> System is Skylake Gold cpu, first kvm errors, host hung afterwards
+> 
+> kernel: [1186161.091160] kvm: vmptrld           (null)/6bfc00000000 failed
+> kernel: [1186161.091537] kvm: vmclear fail:           (null)/6bfc00000000
+> kernel: [1186186.490300] watchdog: BUG: soft lockup - CPU#54 stuck for
+> 23s! [qemu:16639]
+> 
+> Hi Sasha, hi Greg,
+> 
+> Would be great if you can pick this patch also to 4.14 kernel.
 
-Good catch! Copy-paste error, will fix.
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
