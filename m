@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD80C433FF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D66C76194
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A04F20651
+	by mail.kernel.org (Postfix) with ESMTP id 6DD5620651
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="TktXLfId"
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="Fxecae3x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfG2EAZ (ORCPT
+        id S1726762AbfG2EAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 00:00:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45067 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfG2EAY (ORCPT
+        Mon, 29 Jul 2019 00:00:34 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38868 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfG2EAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 00:00:24 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r1so27272031pfq.12
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 21:00:24 -0700 (PDT)
+        Mon, 29 Jul 2019 00:00:32 -0400
+Received: by mail-pl1-f196.google.com with SMTP id az7so26933327plb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 21:00:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fossix-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QEGm5RO370+1d5IRbqWLncN9g8dMNoXOhptUJSSSVGY=;
-        b=TktXLfIdMPz/+Bjgtn5c0ycVGKS9Y7wSHxpO/a+O71rjQAzWhK12tGj5OR/ZqnbemN
-         zNUwWdc/AOrcYszNB7f7fIGi344D/K87A/M6kNHxV6OS87FPOGgwrL4JZxdU9pgpVOq4
-         x4LOJrwqpnxhzGVSoMFxE5SjafY0XDa9eanCC05N63udkJOcYOO2ov+I+6cS717oDJqf
-         KR6h9IOlNMIu2jRmO75HsycJGekZqdnZdrIbxvhZTYDXD+bxcU+aXM/v7CsJz9eUr6Nm
-         UCaoJML9mAVyD13/6H2wfZIfpw7CRFlWD+i6QNqet4fs7gSLw66wXa4mLdaNXiOs+BPn
-         VTXA==
+        bh=WwFeAlQ6IuYgXIVYtx8CQnkRCdX32iDrGGlWM20HRkk=;
+        b=Fxecae3xqy40byOksy98DwNVQZN9qFp551/NzOq4Phfam/XCTu8WtrrY9s7mcvzImk
+         itO4BzaScGz+GvMdZa7H/D/FY/x6QxGFFyXZsQ14s8Ag2WVDs3skBoFUm26JbkETCnTw
+         3gQBqiMBDiaj9rHv115aLNkBhy9u6NxJM0BUOlAqy6/jCBxC0I2gmFKH6ZLryt/2rPS0
+         p9CB+O6XR91xwhNaHA4NNm7HTU8TIbLb+VHLIMcDBvA3dggBXDeh8PdrCKNHyGIGRnF+
+         XbQY3NB+55neS3Ior5YC6LyYP7XPc5wkdTY4ig1waWnr8sJC9+5GqFASHeWnWsANL8r8
+         gk4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QEGm5RO370+1d5IRbqWLncN9g8dMNoXOhptUJSSSVGY=;
-        b=Klv6E0GPE4BGnd/ToObkp2/GG73D0EWiLMpMXdVfLTF2vWyx9qbYMQGPtRS7wjor5c
-         6LTO76/no5O1RwR8YG71mie681DNB/frle6aLQbzmUvP5eS7ZRJFxbXP/eYb/2kOQbl5
-         e4TRhgbusEWDz53zkR1PD/hLUtZPqA5XARrvDyaWcbrwzbuVIXvWif6u06Jmy4TglxWk
-         YsEP4qoRNRSRcDw8JTeoPSPqvTW136oXSJPpfUUEMgE3UqkNWFiukwNaTh3ErkW8W7bW
-         Hx02dG/dNMiB0uBrxAPoFAOKcMFmnR5lgxu2vwAl/Fgbq6E39BOut6U5seQbMOg3PC1K
-         +0xg==
-X-Gm-Message-State: APjAAAXpeBgQ5bd1bgPxWueYHlVyCltqjIaOsHsv8n+MRxwp4Ko1OjSs
-        HkTzzJ/K03TQFWhjyJvB9RE=
-X-Google-Smtp-Source: APXvYqyeOtCjd7IFnPjeLrei396o9gxgYCqFus+m2Ph6YPME9ayUrsVbW4Hbd17abtRLpGeoRHDIzw==
-X-Received: by 2002:a65:57ca:: with SMTP id q10mr105420085pgr.52.1564372823983;
-        Sun, 28 Jul 2019 21:00:23 -0700 (PDT)
+        bh=WwFeAlQ6IuYgXIVYtx8CQnkRCdX32iDrGGlWM20HRkk=;
+        b=FrTqkMfbUu2oGUSZeBpxmxUgoaRFbFV5+euW1h+ObBwIdZQkdwOOagvf00sR56IFUU
+         7zG48387JRYLJGOxL5sW+y8uViSks/bISF9159T/4qltdj1Gdws/G3cKBmWvDEFRGicr
+         1y9VVRDObWNm/xUkButwPHiw4Gyfq4J0FACOBeurD93vJuOOMLPaIKUYwUcqNNlDfgmu
+         6rvU4g0uM/V1R+EpW4CyVujgPvwbXl2uiDWyGkt17FPwaFnejtgV+P1clmJ6e1d7y+Gn
+         ccK77CQ0a+Ik2h0D78ZiztGRCGSqvuICXSsVSOhiMLu6rliITmqOQBAPHM2UKuLML5Jf
+         hdiA==
+X-Gm-Message-State: APjAAAWWPwV6C1/LaOLinTy0evWm+2j+9aIjIFlCoJ350WKPWSo7Ps0b
+        rkGF2wI1S7RrOZu70dfwcZM=
+X-Google-Smtp-Source: APXvYqwd9R3GmaUpLLYf1lGgzZM9NR9zEJpKD3gBITjlGHlKJVGKj9KGuL6LQrtgghl/lRVO+1wXfg==
+X-Received: by 2002:a17:902:b582:: with SMTP id a2mr109947123pls.128.1564372831045;
+        Sun, 28 Jul 2019 21:00:31 -0700 (PDT)
 Received: from santosiv.in.ibm.com ([183.82.17.52])
-        by smtp.gmail.com with ESMTPSA id g1sm100033948pgg.27.2019.07.28.21.00.20
+        by smtp.gmail.com with ESMTPSA id g1sm100033948pgg.27.2019.07.28.21.00.27
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 21:00:23 -0700 (PDT)
+        Sun, 28 Jul 2019 21:00:30 -0700 (PDT)
 From:   Santosh Sivaraj <santosh@fossix.org>
 To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         linux-kernel@vger.kernel.org
@@ -66,10 +66,12 @@ Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Chandan Rajendra <chandan@linux.vnet.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>,
-        christophe leroy <christophe.leroy@c-s.fr>
-Subject: [v6 1/6] powerpc/mce: Make machine_check_ue_event() static
-Date:   Mon, 29 Jul 2019 09:30:06 +0530
-Message-Id: <20190729040011.5086-2-santosh@fossix.org>
+        christophe leroy <christophe.leroy@c-s.fr>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [v6 3/6] extable: Add function to search only kernel exception table
+Date:   Mon, 29 Jul 2019 09:30:08 +0530
+Message-Id: <20190729040011.5086-4-santosh@fossix.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190729040011.5086-1-santosh@fossix.org>
 References: <20190729040011.5086-1-santosh@fossix.org>
@@ -80,39 +82,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reza Arbab <arbab@linux.ibm.com>
+Certain architecture specific operating modes (e.g., in powerpc machine
+check handler that is unable to access vmalloc memory), the
+search_exception_tables cannot be called because it also searches the module
+exception tables if entry is not found in the kernel exception table.
 
-The function doesn't get used outside this file, so make it static.
-
-Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
 Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
 Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/mce.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/extable.h |  2 ++
+ kernel/extable.c        | 11 +++++++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/mce.c b/arch/powerpc/kernel/mce.c
-index b18df633eae9..e78c4f18ea0a 100644
---- a/arch/powerpc/kernel/mce.c
-+++ b/arch/powerpc/kernel/mce.c
-@@ -33,7 +33,7 @@ static DEFINE_PER_CPU(struct machine_check_event[MAX_MC_EVT],
- 					mce_ue_event_queue);
+diff --git a/include/linux/extable.h b/include/linux/extable.h
+index 41c5b3a25f67..81ecfaa83ad3 100644
+--- a/include/linux/extable.h
++++ b/include/linux/extable.h
+@@ -19,6 +19,8 @@ void trim_init_extable(struct module *m);
  
- static void machine_check_process_queued_event(struct irq_work *work);
--void machine_check_ue_event(struct machine_check_event *evt);
-+static void machine_check_ue_event(struct machine_check_event *evt);
- static void machine_process_ue_event(struct work_struct *work);
+ /* Given an address, look for it in the exception tables */
+ const struct exception_table_entry *search_exception_tables(unsigned long add);
++const struct exception_table_entry *
++search_kernel_exception_table(unsigned long addr);
  
- static struct irq_work mce_event_process_work = {
-@@ -203,7 +203,7 @@ void release_mce_event(void)
- /*
-  * Queue up the MCE event which then can be handled later.
-  */
--void machine_check_ue_event(struct machine_check_event *evt)
-+static void machine_check_ue_event(struct machine_check_event *evt)
+ #ifdef CONFIG_MODULES
+ /* For extable.c to search modules' exception tables. */
+diff --git a/kernel/extable.c b/kernel/extable.c
+index e23cce6e6092..f6c9406eec7d 100644
+--- a/kernel/extable.c
++++ b/kernel/extable.c
+@@ -40,13 +40,20 @@ void __init sort_main_extable(void)
+ 	}
+ }
+ 
++/* Given an address, look for it in the kernel exception table */
++const
++struct exception_table_entry *search_kernel_exception_table(unsigned long addr)
++{
++	return search_extable(__start___ex_table,
++			      __stop___ex_table - __start___ex_table, addr);
++}
++
+ /* Given an address, look for it in the exception tables. */
+ const struct exception_table_entry *search_exception_tables(unsigned long addr)
  {
- 	int index;
+ 	const struct exception_table_entry *e;
  
+-	e = search_extable(__start___ex_table,
+-			   __stop___ex_table - __start___ex_table, addr);
++	e = search_kernel_exception_table(addr);
+ 	if (!e)
+ 		e = search_module_extables(addr);
+ 	return e;
 -- 
 2.20.1
 
