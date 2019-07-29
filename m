@@ -2,353 +2,267 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36218C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DDEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F375720C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516AC216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBiVo6Bs"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="gBnsChUp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbfG2V7o (ORCPT
+        id S1730652AbfG2V7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:59:44 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45853 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730386AbfG2V7m (ORCPT
+        Mon, 29 Jul 2019 17:59:51 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35861 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730576AbfG2V7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:59:42 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r1so28688046pfq.12;
-        Mon, 29 Jul 2019 14:59:41 -0700 (PDT)
+        Mon, 29 Jul 2019 17:59:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n4so63546343wrs.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:59:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=NcwrNg7j+HRd7MjLCT3rvayxG213ODRbG4I++1syays=;
-        b=mBiVo6Bs1K3usthxtuR7bVeV4Uh9AcyTyHCY55paZiwp06TMSGR/HB4sCpviCSLmVV
-         V8Lp1+o5ylo6xvmjDA6YW4gkCVyMhBc0cr3qFKomjy4ryaUN7KksGbDm7TrMscpYYmBQ
-         5+iZrSEpmMuQzfiuoG00EY8EpoBdlnBgV6OHtVo/GcuGq6baqrv7ZWHwwCigJJUD+GYh
-         qpKQ5wMrkpTsD3PgM6e7KoxleGpcRh/h4PepjQY58SA6v4mUHYTG1WuzvP1xWkU3ikoU
-         taTebHmv0mqUj5SxWtRu4X4bdLGA8JDWqbvT+KKxltfN8OLFjzqUGXY4a+aDm3G7BRXk
-         wt4Q==
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ajclCtPkHmfsuDyTsBDDeDUaIMIa7xyqZsQj0HfpnOA=;
+        b=gBnsChUpYJqm6KraqywpEqrYdlpGK80yRkwqP/Drik4VT6TtKzuWktoZ/3JcNrnwlE
+         i7wq5oErkFVr6dV4BBG9MPw9UpcYGCNbFelYLIBh0rkpo4DCn6Sc4vd5AfCD1FdHFs9d
+         r2sxOzb7XDXcZyFzPqizBoKGMbQl9gy7t10/zcAkAnbSzaRv5HnxHh0iBk2l6bwXAf+6
+         5CrOge6Bs1iCfGOkud3KsSMRyD9GQehnNUBerWSduCBuy7QjvB48CGCrApTLYCE823+5
+         VcwP4F2q8T4THUreKArju0G9xz8Px0H//ozTe2AHfbLmibNQ0lJxFxUKWuzPv5lEqWZ6
+         Szmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=NcwrNg7j+HRd7MjLCT3rvayxG213ODRbG4I++1syays=;
-        b=adUZIEk/qEVIpuAjzaPlnhp7ujj4t73CR0UFLnpRC4JiH4QwgD4sguJO6gx0v8d6tA
-         kVUkjmgI82KXaIDEItOxrTZeWkFHP98vpe3b8vVB6YJFLygHg9BVopeiqpha1OkBPh2p
-         ebBHaTW6//ghnlu99KVf2Rkgm9sNm7Ne7g7ETx3Cyr7gAtuwbrmXA6Sz/kTgL6VFVxG5
-         4q8SlQ2OOkkHhYmYYHkqXwvicXCyjhvDVVGv8pFU/q8Pn3W6S10jNtfzMnAl75KFHZt2
-         MoSpDeKcaXx1ftqB/+muDe0CB7NraFHS1eEyaeSpqSU0L70KdkzUIbAyumvaBzPZRWaE
-         L6Gg==
-X-Gm-Message-State: APjAAAWIje9olj8jF0ZxUpTueFVoA9uQ03CAmrv7XU+oR5Pl8dGnf7Cd
-        4thYuhXzZY/B0KeqX0GXSOI=
-X-Google-Smtp-Source: APXvYqyQUJUtM0DHntVFZzr1PMFYOgAjZDLwN2PGMlWHawifZJQjZtW9XEYCkikUxYBfalrMMO7rqA==
-X-Received: by 2002:aa7:82da:: with SMTP id f26mr38908871pfn.82.1564437581260;
-        Mon, 29 Jul 2019 14:59:41 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x65sm62307416pfd.139.2019.07.29.14.59.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 14:59:40 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 14:59:38 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Mark Balantzyan <mbalant3@gmail.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watchdog device drivers:pc87413_wdt: Rewriting of
- pc87413_wdt driver to utilize common watchdog interface
-Message-ID: <20190729215938.GA5712@roeck-us.net>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ajclCtPkHmfsuDyTsBDDeDUaIMIa7xyqZsQj0HfpnOA=;
+        b=X10v4KSfH4ckqzMNVKmIk/qTWGbPulTrB0kjrRfFlF7qD+VriMJgTf/jdiEyYCHe6n
+         hrvGylCfVc3aAVGah0BeBsIHz9gKp6i0FD8guu3JzOhY8PU6gTmKJG9UkeQ1gC1fVEJx
+         qc6OxzIIGkRme20EnYFTZKNkLTUV9JDKGuynBgg/aDByjMZP6smf0IW/4o1wXTrncyBJ
+         ZV7kyyhjQAWGtOWZN2TUc+R7svGua9uPGwLCyFLqTHfBUX4OzR2WRmwQnsWiLQUOaIKW
+         19IuHnzRyS+SjmYOqrsiYmCl41qwIBvXRJYhaHjFyUqDV1q44XSeM5N0ay42jFMnwmFb
+         OHiA==
+X-Gm-Message-State: APjAAAXD6tFU6Qwd+W/JJ8uf9bsP9z8yJGZSpK7f/sG10o0fR9bK9mbf
+        q74923qJBPa7MLVXybcnILTL3RcmghRP3iT/3qg35inW9xtHe28kUxsanz8YN9jQzS4Qr+pfRTv
+        jqwa0b57MCI1LxzyAbGWAdal5zdJvuECEF1vyDl9xQvdwkUL7XglbakdZOKP80SS5u9rj490gfi
+        jeEMO4jagS8ZnXBAJHNJ5Ie3DVzyylTZIFQCmOp0I=
+X-Google-Smtp-Source: APXvYqw8DjnIEi6n0UX5ubxSJBV60mBkU5el/jxGXh7P7z7JCUPkiPcrIanIFCpIdocBzkN2z1r+PQ==
+X-Received: by 2002:adf:da4d:: with SMTP id r13mr19656791wrl.281.1564437540219;
+        Mon, 29 Jul 2019 14:59:00 -0700 (PDT)
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id x20sm49230728wmc.1.2019.07.29.14.58.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 14:58:59 -0700 (PDT)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: [PATCHv5 05/37] alarmtimer: Rename gettime() callback to get_ktime()
+Date:   Mon, 29 Jul 2019 22:57:25 +0100
+Message-Id: <20190729215758.28405-44-dima@arista.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729215758.28405-1-dima@arista.com>
+References: <20190729215758.28405-1-dima@arista.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+X-CLOUD-SEC-AV-Info: arista,google_mail,monitor
+X-CLOUD-SEC-AV-Sent: true
+X-Gm-Spam: 0
+X-Gm-Phishy: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 02:20:16PM -0700, Mark Balantzyan wrote:
-> There is a potential for the variable swc_base_addr in the call chain of the
-> driver initialization function (init) to be used before initialization. This
-> brought up the need for, by rewriting the driver to use the common watchdog
-> interface, ensuring to have all resources in place. This patch addresses this
-> need by rewriting into common watchdog interface utilization for the driver.
-> 
-> Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
-> 
+From: Andrei Vagin <avagin@gmail.com>
 
-This patch shows up as corrupted if I try to apply it.
+The upcoming support for time namespaces requires to have access to:
+  - The time in a tasks time namespace for sys_clock_gettime()
+  - The time in the root name space for common_timer_get()
 
-> ---
->  drivers/media/pci/tw686x/Kconfig |  1 +
->  drivers/watchdog/pc87413_wdt.c   | 92 +++++++++++++++-----------------
->  2 files changed, 45 insertions(+), 48 deletions(-)
-> 
-> diff --git a/drivers/media/pci/tw686x/Kconfig
-> b/drivers/media/pci/tw686x/Kconfig
-> index da8bfee7..079d7464 100644
-> --- a/drivers/media/pci/tw686x/Kconfig
-> +++ b/drivers/media/pci/tw686x/Kconfig
-> @@ -5,6 +5,7 @@ config VIDEO_TW686X
->  	select VIDEOBUF2_DMA_CONTIG
->  	select VIDEOBUF2_DMA_SG
->  	select SND_PCM
-> +	select WATCHDOG_CORE
->  	help
->  	  Support for Intersil/Techwell TW686x-based frame grabber cards.
-> 
-> diff --git a/drivers/watchdog/pc87413_wdt.c b/drivers/watchdog/pc87413_wdt.c
-> index 06a892e3..4c330ee5 100644
-> --- a/drivers/watchdog/pc87413_wdt.c
-> +++ b/drivers/watchdog/pc87413_wdt.c
-> @@ -22,12 +22,10 @@
-> 
->  #include <linux/module.h>
->  #include <linux/types.h>
-> -#include <linux/miscdevice.h>
->  #include <linux/watchdog.h>
->  #include <linux/ioport.h>
->  #include <linux/delay.h>
->  #include <linux/notifier.h>
-> -#include <linux/fs.h>
->  #include <linux/reboot.h>
->  #include <linux/init.h>
->  #include <linux/spinlock.h>
-> @@ -65,7 +63,6 @@ static char expect_close;		/* is the close expected? */
-> 
->  static DEFINE_SPINLOCK(io_lock);	/* to guard us from io races */
-> 
-> -static bool nowayout = WATCHDOG_NOWAYOUT;
-> 
->  /* -- Low level function ----------------------------------------*/
-> 
-> @@ -216,9 +213,9 @@ static inline void pc87413_disable_sw_wd_trg(void)
-> 
->  /* -- Higher level functions ------------------------------------*/
-> 
-> -/* Enable the watchdog */
-> +/* Enable/start the watchdog */
-> 
-> -static void pc87413_enable(void)
-> +static void pc87413_start(void)
->  {
->  	spin_lock(&io_lock);
-> 
-> @@ -231,9 +228,9 @@ static void pc87413_enable(void)
->  	spin_unlock(&io_lock);
->  }
-> 
-> -/* Disable the watchdog */
-> +/* Disable/stop the watchdog */
-> 
-> -static void pc87413_disable(void)
-> +static void pc87413_stop(void)
->  {
->  	spin_lock(&io_lock);
+struct alarm_base needs to follow the same name convention, so rename
+.gettime() callback into get_ktime() as a preparation for introducing
+get_timespec().
 
-Locking is handled by the watchdog core. Local locking is no
-longer needed.
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Co-developed-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+---
+ kernel/time/alarmtimer.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-> 
-> @@ -245,9 +242,9 @@ static void pc87413_disable(void)
->  	spin_unlock(&io_lock);
->  }
-> 
-> -/* Refresh the watchdog */
-> +/* Refresh/keepalive the watchdog */
-> 
-> -static void pc87413_refresh(void)
-> +static void pc87413_keepalive(struct watchdog_device *wdd)
->  {
->  	spin_lock(&io_lock);
-> 
-> @@ -260,6 +257,8 @@ static void pc87413_refresh(void)
->  	pc87413_enable_sw_wd_trg();
-> 
->  	spin_unlock(&io_lock);
-> +
-> +	return 0;
->  }
-> 
->  /* -- File operations -------------------------------------------*/
-> @@ -278,9 +277,6 @@ static int pc87413_open(struct inode *inode, struct file
-> *file)
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index c191254f178b..37254eb64459 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -36,13 +36,13 @@
+  * struct alarm_base - Alarm timer bases
+  * @lock:		Lock for syncrhonized access to the base
+  * @timerqueue:		Timerqueue head managing the list of events
+- * @gettime:		Function to read the time correlating to the base
++ * @get_ktime:		Function to read the time correlating to the base
+  * @base_clockid:	clockid for the base
+  */
+ static struct alarm_base {
+ 	spinlock_t		lock;
+ 	struct timerqueue_head	timerqueue;
+-	ktime_t			(*gettime)(void);
++	ktime_t			(*get_ktime)(void);
+ 	clockid_t		base_clockid;
+ } alarm_bases[ALARM_NUMTYPE];
+ 
+@@ -207,7 +207,7 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtimer *timer)
+ 	spin_unlock_irqrestore(&base->lock, flags);
+ 
+ 	if (alarm->function)
+-		restart = alarm->function(alarm, base->gettime());
++		restart = alarm->function(alarm, base->get_ktime());
+ 
+ 	spin_lock_irqsave(&base->lock, flags);
+ 	if (restart != ALARMTIMER_NORESTART) {
+@@ -217,7 +217,7 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtimer *timer)
+ 	}
+ 	spin_unlock_irqrestore(&base->lock, flags);
+ 
+-	trace_alarmtimer_fired(alarm, base->gettime());
++	trace_alarmtimer_fired(alarm, base->get_ktime());
+ 	return ret;
+ 
+ }
+@@ -225,7 +225,7 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtimer *timer)
+ ktime_t alarm_expires_remaining(const struct alarm *alarm)
+ {
+ 	struct alarm_base *base = &alarm_bases[alarm->type];
+-	return ktime_sub(alarm->node.expires, base->gettime());
++	return ktime_sub(alarm->node.expires, base->get_ktime());
+ }
+ EXPORT_SYMBOL_GPL(alarm_expires_remaining);
+ 
+@@ -270,7 +270,7 @@ static int alarmtimer_suspend(struct device *dev)
+ 		spin_unlock_irqrestore(&base->lock, flags);
+ 		if (!next)
+ 			continue;
+-		delta = ktime_sub(next->expires, base->gettime());
++		delta = ktime_sub(next->expires, base->get_ktime());
+ 		if (!min || (delta < min)) {
+ 			expires = next->expires;
+ 			min = delta;
+@@ -364,7 +364,7 @@ void alarm_start(struct alarm *alarm, ktime_t start)
+ 	hrtimer_start(&alarm->timer, alarm->node.expires, HRTIMER_MODE_ABS);
+ 	spin_unlock_irqrestore(&base->lock, flags);
+ 
+-	trace_alarmtimer_start(alarm, base->gettime());
++	trace_alarmtimer_start(alarm, base->get_ktime());
+ }
+ EXPORT_SYMBOL_GPL(alarm_start);
+ 
+@@ -377,7 +377,7 @@ void alarm_start_relative(struct alarm *alarm, ktime_t start)
+ {
+ 	struct alarm_base *base = &alarm_bases[alarm->type];
+ 
+-	start = ktime_add_safe(start, base->gettime());
++	start = ktime_add_safe(start, base->get_ktime());
+ 	alarm_start(alarm, start);
+ }
+ EXPORT_SYMBOL_GPL(alarm_start_relative);
+@@ -414,7 +414,7 @@ int alarm_try_to_cancel(struct alarm *alarm)
+ 		alarmtimer_dequeue(base, alarm);
+ 	spin_unlock_irqrestore(&base->lock, flags);
+ 
+-	trace_alarmtimer_cancel(alarm, base->gettime());
++	trace_alarmtimer_cancel(alarm, base->get_ktime());
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(alarm_try_to_cancel);
+@@ -474,7 +474,7 @@ u64 alarm_forward_now(struct alarm *alarm, ktime_t interval)
+ {
+ 	struct alarm_base *base = &alarm_bases[alarm->type];
+ 
+-	return alarm_forward(alarm, base->gettime(), interval);
++	return alarm_forward(alarm, base->get_ktime(), interval);
+ }
+ EXPORT_SYMBOL_GPL(alarm_forward_now);
+ 
+@@ -500,7 +500,7 @@ static void alarmtimer_freezerset(ktime_t absexp, enum alarmtimer_type type)
+ 		return;
+ 	}
+ 
+-	delta = ktime_sub(absexp, base->gettime());
++	delta = ktime_sub(absexp, base->get_ktime());
+ 
+ 	spin_lock_irqsave(&freezer_delta_lock, flags);
+ 	if (!freezer_delta || (delta < freezer_delta)) {
+@@ -619,7 +619,7 @@ static void alarm_timer_arm(struct k_itimer *timr, ktime_t expires,
+ 	struct alarm_base *base = &alarm_bases[alarm->type];
+ 
+ 	if (!absolute)
+-		expires = ktime_add_safe(expires, base->gettime());
++		expires = ktime_add_safe(expires, base->get_ktime());
+ 	if (sigev_none)
+ 		alarm->node.expires = expires;
+ 	else
+@@ -657,7 +657,7 @@ static int alarm_clock_get_timespec(clockid_t which_clock, struct timespec64 *tp
+ 	if (!alarmtimer_get_rtcdev())
+ 		return -EINVAL;
+ 
+-	*tp = ktime_to_timespec64(base->gettime());
++	*tp = ktime_to_timespec64(base->get_ktime());
+ 	return 0;
+ }
+ 
+@@ -734,7 +734,7 @@ static int alarmtimer_do_nsleep(struct alarm *alarm, ktime_t absexp,
+ 		struct timespec64 rmt;
+ 		ktime_t rem;
+ 
+-		rem = ktime_sub(absexp, alarm_bases[type].gettime());
++		rem = ktime_sub(absexp, alarm_bases[type].get_ktime());
+ 
+ 		if (rem <= 0)
+ 			return 0;
+@@ -803,7 +803,7 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
+ 	exp = timespec64_to_ktime(*tsreq);
+ 	/* Convert (if necessary) to absolute time */
+ 	if (flags != TIMER_ABSTIME) {
+-		ktime_t now = alarm_bases[type].gettime();
++		ktime_t now = alarm_bases[type].get_ktime();
+ 
+ 		exp = ktime_add_safe(now, exp);
+ 	}
+@@ -868,9 +868,9 @@ static int __init alarmtimer_init(void)
+ 
+ 	/* Initialize alarm bases */
+ 	alarm_bases[ALARM_REALTIME].base_clockid = CLOCK_REALTIME;
+-	alarm_bases[ALARM_REALTIME].gettime = &ktime_get_real;
++	alarm_bases[ALARM_REALTIME].get_ktime = &ktime_get_real;
+ 	alarm_bases[ALARM_BOOTTIME].base_clockid = CLOCK_BOOTTIME;
+-	alarm_bases[ALARM_BOOTTIME].gettime = &ktime_get_boottime;
++	alarm_bases[ALARM_BOOTTIME].get_ktime = &ktime_get_boottime;
+ 	for (i = 0; i < ALARM_NUMTYPE; i++) {
+ 		timerqueue_init_head(&alarm_bases[i].timerqueue);
+ 		spin_lock_init(&alarm_bases[i].lock);
+-- 
+2.22.0
 
-WHy is this function still there ?
-
->  	if (test_and_set_bit(0, &timer_enabled))
->  		return -EBUSY;
-> 
-> -	if (nowayout)
-> -		__module_get(THIS_MODULE);
-> -
->  	/* Reload and activate timer */
->  	pc87413_refresh();
-> 
-> @@ -331,7 +327,6 @@ static int pc87413_status(void)
-> 
->  /**
->   *	pc87413_write:
-> - *	@file: file handle to the watchdog
->   *	@data: data buffer to write
->   *	@len: length in bytes
->   *	@ppos: pointer to the position to write. No seeks allowed
-> @@ -345,26 +340,25 @@ static ssize_t pc87413_write(struct file *file, const
-> char __user *data,
->  {
-
-This function is no longer needed or used.
-
->  	/* See if we got the magic character 'V' and reload the timer */
->  	if (len) {
-> -		if (!nowayout) {
-> -			size_t i;
-> -
-> -			/* reset expect flag */
-> -			expect_close = 0;
-> -
-> -			/* scan to see whether or not we got the
-> -			   magic character */
-> -			for (i = 0; i != len; i++) {
-> -				char c;
-> -				if (get_user(c, data + i))
-> -					return -EFAULT;
-> -				if (c == 'V')
-> -					expect_close = 42;
-> -			}
-> +		size_t i;
-> +
-> +		/* reset expect flag */
-> +		expect_close = 0;
-> +
-> +		/* scan to see whether or not we got the
-> +		   magic character */
-> +		for (i = 0; i != len; i++) {
-> +			char c;
-> +			if (get_user(c, data + i))
-> +				return -EFAULT;
-> +			if (c == 'V')
-> +				expect_close = 42;
->  		}
-> +	}
-> 
->  		/* someone wrote to us, we should reload the timer */
-> -		pc87413_refresh();
-> -	}
-> +	pc87413_refresh();
-> +
->  	return len;
->  }
-> 
-> @@ -417,7 +411,7 @@ static long pc87413_ioctl(struct file *file, unsigned int
-> cmd,
-
-Another function that is no longer needed. And the above looks corrupted.
-
->  			retval = 0;
->  		}
->  		if (options & WDIOS_ENABLECARD) {
-> -			pc87413_enable();
-> +			pc87413_start();
->  			retval = 0;
->  		}
->  		return retval;
-> @@ -466,31 +460,32 @@ static int pc87413_notify_sys(struct notifier_block
-> *this,
-
-Drivers using the watchdog core should use the watchdog core's
-restart notifier.
-
->  {
->  	if (code == SYS_DOWN || code == SYS_HALT)
->  		/* Turn the card off */
-> -		pc87413_disable();
-> +		pc87413_stop();
->  	return NOTIFY_DONE;
->  }
-> 
->  /* -- Module's structures ---------------------------------------*/
-> 
-> -static const struct file_operations pc87413_fops = {
-> -	.owner		= THIS_MODULE,
-> -	.llseek		= no_llseek,
-> -	.write		= pc87413_write,
-> -	.unlocked_ioctl	= pc87413_ioctl,
-> -	.open		= pc87413_open,
-> -	.release	= pc87413_release,
-> -};
-> 
-> -static struct notifier_block pc87413_notifier = {
-> +static struct notifier_block pc87413wdt_notifier = {
->  	.notifier_call  = pc87413_notify_sys,
->  };
-> 
-> -static struct miscdevice pc87413_miscdev = {
-> -	.minor          = WATCHDOG_MINOR,
-> -	.name           = "watchdog",
-> -	.fops           = &pc87413_fops,
-> +static struct watchdog_ops pc87413wdt_ops = {
-> +       .owner = THIS_MODULE,
-> +       .start = pc87413wdt_start,
-> +       .stop = pc87413wdt_stop,
-> +       .ping = pc87413wdt_keepalive,
-> +       .set_timeout = pc87413wdt_set_heartbeat,
-> +};
-> +
-> +static struct watchdog_device pc87413wdt_wdd = {
-> +       	.info = &pc87413wdt_ident,
-> +       	.ops = &pc87413wdt_ops,
-> +	.status = WATCHDOG_NOWAYOUT_INIT_STATUS
->  };
-> 
-> +
->  /* -- Module init functions -------------------------------------*/
-> 
->  /**
-> @@ -515,7 +510,7 @@ static int __init pc87413_init(void)
->  	if (ret != 0)
->  		pr_err("cannot register reboot notifier (err=%d)\n", ret);
-> 
-> -	ret = misc_register(&pc87413_miscdev);
-> +	ret = watchdog_register_device(&pc87413wdt_wdd);
->  	if (ret != 0) {
->  		pr_err("cannot register miscdev on minor=%d (err=%d)\n",
->  		       WATCHDOG_MINOR, ret);
-> @@ -533,13 +528,14 @@ static int __init pc87413_init(void)
->  		goto misc_unreg;
->  	}
-> 
-> -	pc87413_enable();
-> +	pc87413_start();
-> 
-Hmm ... I don't think starting the watchdog in the probe function is a good
-idea. One reason to believe that no one is actually using it.
-
->  	release_region(io, 2);
-> +	pc87413_keepalive(&pc87413wdt_wdd);
->  	return 0;
-> 
->  misc_unreg:
-> -	misc_deregister(&pc87413_miscdev);
-> +	watchdog_unregister_device(&pc87413wdt_wdd)
->  reboot_unreg:
->  	unregister_reboot_notifier(&pc87413_notifier);
->  	release_region(io, 2);
-
-Are you sure you even compiled this file ? It still calls
-misc_deregister() in the exit function, but miscdevice.h is
-no longer included. And the now unnecessary but still present
-functions should at the very least trigger a build warning.
-
-Overall, I don't think you have this hardware. If you do, please provide
-logs showing that the new driver is working. Otherwise, I really think it
-would be better to leave it alone.
-
-Thanks,
-Guenter
