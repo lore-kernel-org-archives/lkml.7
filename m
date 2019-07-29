@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1ECC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B385C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85EA217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D30B2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429806;
-	bh=Iy8qZVQ3LH2D9XH8iObm2cxeJ+sPEDDHwG2eVfTr+sk=;
+	s=default; t=1564429811;
+	bh=FfBSftjkxA4VBM6W0bbDtLYMoU+8RUCpM3t+Nkg30sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gk0C/EwNm+9lreqyyysACMZm2K3JraaekFI5H3NKuHZUJ8QyCpHZlKj7fHyBh8reB
-	 1P4KiIFDxbgQzOoxERFLHe/ZQHXxZPKVs7711X8fQH8MCHcCl4eDiH65PvaA78+EcU
-	 C3rQXUE1bNc9jvY4MltX6tGjlfVLyUgI4fzyl88I=
+	b=kBf3K0JMoP0cNxAnrF+qW9KXCjsDWYAi6FZnTYEOM/ZVpd1bf1cDCEUQ2MMxAVX4l
+	 qUjFWmKIXqw6befH8ZSHzeEtFlCc8b/fPYvAhX0SFVrFLuBZ6VOYVuPIZpp9VaTRZt
+	 CjBf/0gK//BnrYuOHBhj8yA4/rzkpWgxvP6tiz7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390638AbfG2TuF (ORCPT
+        id S2390650AbfG2TuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40834 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389663AbfG2TuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:50:03 -0400
+        id S2389663AbfG2TuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:50:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D0E32171F;
-        Mon, 29 Jul 2019 19:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A7452171F;
+        Mon, 29 Jul 2019 19:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429801;
-        bh=Iy8qZVQ3LH2D9XH8iObm2cxeJ+sPEDDHwG2eVfTr+sk=;
+        s=default; t=1564429805;
+        bh=FfBSftjkxA4VBM6W0bbDtLYMoU+8RUCpM3t+Nkg30sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zFJvbW7AhPD2J6UkFYxEGmXeb4gO4+Cz77H95R3tdKp1Hc5ZwgWU+YrwHIOxDXwPK
-         bY/7kgk5J2fAApMUDmhqDmkDjC25kMWX1X2EwBh7MwRWEu7BUMqv5BBc2cHbvsAimU
-         BLXAPS4kYKX8r5SvB2Lib/Y9vkAkNFxrVCSN3S0I=
+        b=vdyaECKvL9grGwGAScU//wnQM3sAISpAq2X/wFvyfGkCkls1oNI+UeVsN39v7z1Dv
+         Hl1BvTQuJAXGXMp0uccTcuWVkqzWMF8xKRKn7Vy3KCm9ttkejo6EFjOL+FixQcQ6W6
+         vf2pBSrUhyA0PDR7idPNa5Q9p7iXf7BisPF6tJL0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 100/215] mm/swap: fix release_pages() when releasing devmap pages
-Date:   Mon, 29 Jul 2019 21:21:36 +0200
-Message-Id: <20190729190756.417958947@linuxfoundation.org>
+Subject: [PATCH 5.2 101/215] um: Silence lockdep complaint about mmap_sem
+Date:   Mon, 29 Jul 2019 21:21:37 +0200
+Message-Id: <20190729190756.571000194@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -65,72 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c5d6c45e90c49150670346967971e14576afd7f1 ]
+[ Upstream commit 80bf6ceaf9310b3f61934c69b382d4912deee049 ]
 
-release_pages() is an optimized version of a loop around put_page().
-Unfortunately for devmap pages the logic is not entirely correct in
-release_pages().  This is because device pages can be more than type
-MEMORY_DEVICE_PUBLIC.  There are in fact 4 types, private, public, FS DAX,
-and PCI P2PDMA.  Some of these have specific needs to "put" the page while
-others do not.
+When we get into activate_mm(), lockdep complains that we're doing
+something strange:
 
-This logic to handle any special needs is contained in
-put_devmap_managed_page().  Therefore all devmap pages should be processed
-by this function where we can contain the correct logic for a page put.
+    WARNING: possible circular locking dependency detected
+    5.1.0-10252-gb00152307319-dirty #121 Not tainted
+    ------------------------------------------------------
+    inside.sh/366 is trying to acquire lock:
+    (____ptrval____) (&(&p->alloc_lock)->rlock){+.+.}, at: flush_old_exec+0x703/0x8d7
 
-Handle all device type pages within release_pages() by calling
-put_devmap_managed_page() on all devmap pages.  If
-put_devmap_managed_page() returns true the page has been put and we
-continue with the next page.  A false return of put_devmap_managed_page()
-means the page did not require special processing and should fall to
-"normal" processing.
+    but task is already holding lock:
+    (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
 
-This was found via code inspection while determining if release_pages()
-and the new put_user_pages() could be interchangeable.[1]
+    which lock already depends on the new lock.
 
-[1] https://lkml.kernel.org/r/20190523172852.GA27175@iweiny-DESK2.sc.intel.com
+    the existing dependency chain (in reverse order) is:
 
-Link: https://lkml.kernel.org/r/20190605214922.17684-1-ira.weiny@intel.com
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+    -> #1 (&mm->mmap_sem){++++}:
+           [...]
+           __lock_acquire+0x12ab/0x139f
+           lock_acquire+0x155/0x18e
+           down_write+0x3f/0x98
+           flush_old_exec+0x748/0x8d7
+           load_elf_binary+0x2ca/0xddb
+           [...]
+
+    -> #0 (&(&p->alloc_lock)->rlock){+.+.}:
+           [...]
+           __lock_acquire+0x12ab/0x139f
+           lock_acquire+0x155/0x18e
+           _raw_spin_lock+0x30/0x83
+           flush_old_exec+0x703/0x8d7
+           load_elf_binary+0x2ca/0xddb
+           [...]
+
+    other info that might help us debug this:
+
+     Possible unsafe locking scenario:
+
+           CPU0                    CPU1
+           ----                    ----
+      lock(&mm->mmap_sem);
+                                   lock(&(&p->alloc_lock)->rlock);
+                                   lock(&mm->mmap_sem);
+      lock(&(&p->alloc_lock)->rlock);
+
+     *** DEADLOCK ***
+
+    2 locks held by inside.sh/366:
+     #0: (____ptrval____) (&sig->cred_guard_mutex){+.+.}, at: __do_execve_file+0x12d/0x869
+     #1: (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
+
+    stack backtrace:
+    CPU: 0 PID: 366 Comm: inside.sh Not tainted 5.1.0-10252-gb00152307319-dirty #121
+    Stack:
+     [...]
+    Call Trace:
+     [<600420de>] show_stack+0x13b/0x155
+     [<6048906b>] dump_stack+0x2a/0x2c
+     [<6009ae64>] print_circular_bug+0x332/0x343
+     [<6009c5c6>] check_prev_add+0x669/0xdad
+     [<600a06b4>] __lock_acquire+0x12ab/0x139f
+     [<6009f3d0>] lock_acquire+0x155/0x18e
+     [<604a07e0>] _raw_spin_lock+0x30/0x83
+     [<60151e6a>] flush_old_exec+0x703/0x8d7
+     [<601a8eb8>] load_elf_binary+0x2ca/0xddb
+     [...]
+
+I think it's because in exec_mmap() we have
+
+	down_read(&old_mm->mmap_sem);
+...
+        task_lock(tsk);
+...
+	activate_mm(active_mm, mm);
+	(which does down_write(&mm->mmap_sem))
+
+I'm not really sure why lockdep throws in the whole knowledge
+about the task lock, but it seems that old_mm and mm shouldn't
+ever be the same (and it doesn't deadlock) so tell lockdep that
+they're different.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/swap.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/um/include/asm/mmu_context.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 7ede3eddc12a..607c48229a1d 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -740,15 +740,20 @@ void release_pages(struct page **pages, int nr)
- 		if (is_huge_zero_page(page))
- 			continue;
- 
--		/* Device public page can not be huge page */
--		if (is_device_public_page(page)) {
-+		if (is_zone_device_page(page)) {
- 			if (locked_pgdat) {
- 				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
- 						       flags);
- 				locked_pgdat = NULL;
- 			}
--			put_devmap_managed_page(page);
--			continue;
-+			/*
-+			 * ZONE_DEVICE pages that return 'false' from
-+			 * put_devmap_managed_page() do not require special
-+			 * processing, and instead, expect a call to
-+			 * put_page_testzero().
-+			 */
-+			if (put_devmap_managed_page(page))
-+				continue;
- 		}
- 
- 		page = compound_head(page);
+diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
+index 9f4b4bb78120..00cefd33afdd 100644
+--- a/arch/um/include/asm/mmu_context.h
++++ b/arch/um/include/asm/mmu_context.h
+@@ -52,7 +52,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
+ 	 * when the new ->mm is used for the first time.
+ 	 */
+ 	__switch_mm(&new->context.id);
+-	down_write(&new->mmap_sem);
++	down_write_nested(&new->mmap_sem, 1);
+ 	uml_setup_stubs(new);
+ 	up_write(&new->mmap_sem);
+ }
 -- 
 2.20.1
 
