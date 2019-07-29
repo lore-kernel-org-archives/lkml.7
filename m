@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C31EC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D410C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD09C2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB87621655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esaCnLO1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJ4WwWNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404356AbfG2T7c (ORCPT
+        id S2404056AbfG2T7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:59:32 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36194 "EHLO
+        Mon, 29 Jul 2019 15:59:31 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46934 "EHLO
         mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403808AbfG2TxD (ORCPT
+        with ESMTP id S2388432AbfG2TxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:53:03 -0400
-Received: by mail-pl1-f196.google.com with SMTP id k8so27923646plt.3;
-        Mon, 29 Jul 2019 12:53:02 -0700 (PDT)
+        Mon, 29 Jul 2019 15:53:04 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c2so27881860plz.13;
+        Mon, 29 Jul 2019 12:53:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XiIa9lXs8v+pYOtT7URPOSD4VArWS1Smglfft6t1XIg=;
-        b=esaCnLO1sT9NJGBg3xQAwvQ26OUBBftQ03MkyOb5d1KiKtZXlji6iRGCYCMv4jQfwg
-         CEdGXMSJgfKmnLvN8ZNXuXTBrUCK/lDIUJeGTSsJSzf4fGVnPCh5cHAwwfjsyu2Qa8bp
-         es1CDdog/4Ib7Gedb1Uwv2dc1b5KlU/KTKjutfmj1IgF88xky4vU20opwlWaBqzRPuwA
-         RTARCivQXv/oEd1sdwq5wRHBf4j/RLFarpZZRzvU65uuG1XeF7zjNS0aD/A8HZW3SjqE
-         wSCwYtrAJOO6mYjUcCvKRnOjp2Kngco5q12DLPhZiRSIa9ycO9lIyYyfG5yQV+o2r8hY
-         oG4g==
+        bh=+kp9NlyUvWGSuGBjaaMhEx2jUU1orNg+BgS3bQvSUoQ=;
+        b=dJ4WwWNl5W0Y8xr4wUOip3VYwrrR2Wy5dKPVcw63R2Fofn+YdzJBK1+DOwhk12m1zX
+         adpIP40lZwUSqBLXWw3PfCUpSg2HQ+sK7VJFWOHliIC8C6hDwPehPEiFk5SzJDYViKvG
+         KrdIJ49W4Cd20HlaBY9hrrcK306SZclLfmL++wpqY5iBhRDfC4pKpHZQBfwXxan565QT
+         Y8GHQTmqUfgnmE8iAw5+I2v7YLcEkGCCSFx7b6b77rnFmnzOZ2tV8p1E3vJ6lqAN1jsM
+         QcPvPn5IxrFPSJKaUOTDdUtw6C5nV3q+l/Qhk5+1f4YLZxj95SQY0TArfbxNGDkl0N3N
+         nR2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XiIa9lXs8v+pYOtT7URPOSD4VArWS1Smglfft6t1XIg=;
-        b=ho+FJcsLVHgnDmYea72xA8iMOiZsanX+zCaidzTjf+tUs0Ey1R1twFaLmhP3aXTGV5
-         tiJSg/0LZskas3JKuGkAsQWeqmvT3ceZ3sFz5hv6fnb3PzWU1/xt5rQpL4ycumOjHaly
-         HjPVQuuHIFDiWXFnTHgreTzNinbJmIIJGjsm9lVlsrIgczQhxmrdOxcseinu2QbTvgqY
-         eVUxy5GnKFcmt7nKrRpT9jZvo7sf7S+3Ochh/HeQdXVwpD1UUGxZcc3x3wvShBV2aIHs
-         MoEwOKDqGaILdYR4/V/oH5+v2WCtY60jthtay8bz/LxW3IxsXJx/MXWxijYw1q/MD4nu
-         29lA==
-X-Gm-Message-State: APjAAAXGbe1+S08BnrLErT7y2OoCK+Rvn7sB5SW59iYKz5Ejgum5tVf0
-        zE3G91zhtqjgE6rlpiVTUeu4E4ll
-X-Google-Smtp-Source: APXvYqztZGUNuIrsL3tAAmpY9hr8MQkaVsR2ZXjk3dHrsBzizrgnpfjidEzOs61cKmbmbVdK0yiJuA==
-X-Received: by 2002:a17:902:7d8b:: with SMTP id a11mr58106268plm.306.1564429982286;
-        Mon, 29 Jul 2019 12:53:02 -0700 (PDT)
+        bh=+kp9NlyUvWGSuGBjaaMhEx2jUU1orNg+BgS3bQvSUoQ=;
+        b=KgQZG6v2qbgC+5ZSDR/Ty+fhyobGGbAmHm4X+muSCx5N9tDKNaPBaYjgxB8H1SfdlM
+         ZMhMTWsw2Y03LxbIqb4ggzPHMtvNvEgOLjzhvuM6Omin3HUS06/ghjqVwuWtv6OYs+Av
+         vsyryPNME6zYIaFaPYzSFU7Swm9pJEAdg70emHMRxNZlbuL8kxdEHVU5dUdZcS2q6gVN
+         nR7PUzuHGowSFRF73WHWFVW4yF2jSlDofCMdGpFne5C1hUU/gQyk75xN8wm5hfJpUecH
+         bVji9LGFkxyunJNoHrh1gTnyk4preB0tDfiaIqz+p2yjIiFc3nR0r9di3yZfMjYRHms7
+         ZMtw==
+X-Gm-Message-State: APjAAAWuouo9cnDC4v6m3pduoj0KkYPk3WWfo9ZTzeeYnisf6SSwx1Fd
+        tE5rMeouQrVQuDbJ+PbsG+0ZBkiV
+X-Google-Smtp-Source: APXvYqz4bLV800O6SVQamkGgA98ToKg19UzIkdYDx8IpNv+UwxaBwOLtOjhx0V2M7hHuCjrpiQuEPg==
+X-Received: by 2002:a17:902:bd49:: with SMTP id b9mr17569555plx.343.1564429983541;
+        Mon, 29 Jul 2019 12:53:03 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.53.00
+        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.53.02
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 12:53:01 -0700 (PDT)
+        Mon, 29 Jul 2019 12:53:02 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-serial@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/24] tty: serial: fsl_lpuart: Clear CSTOPB unconditionally
-Date:   Mon, 29 Jul 2019 12:52:14 -0700
-Message-Id: <20190729195226.8862-13-andrew.smirnov@gmail.com>
+Subject: [PATCH 13/24] tty: serial: fsl_lpuart: Use appropriate lpuart32_* I/O funcs
+Date:   Mon, 29 Jul 2019 12:52:15 -0700
+Message-Id: <20190729195226.8862-14-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190729195226.8862-1-andrew.smirnov@gmail.com>
 References: <20190729195226.8862-1-andrew.smirnov@gmail.com>
@@ -81,9 +81,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clearing CSTOPB bit if it is set is functionally equivalent to jsut
-clearing it unconditionally. Drop unnecessary check.
+When dealing with 32-bit variant of LPUART IP block appropriate I/O
+helpers have to be used to properly deal with endianness
+differences. Change all of the offending code to do that.
 
+Fixes: a5fa2660d787 ("tty/serial/fsl_lpuart: Add CONSOLE_POLL support
+for lpuart32.")
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Stefan Agner <stefan@agner.ch>
 Cc: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
@@ -96,23 +99,73 @@ Cc: linux-imx@nxp.com
 Cc: linux-serial@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/tty/serial/fsl_lpuart.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 5a1e19733353..10f1af51c58d 100644
+index 10f1af51c58d..50a707c88a16 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -1656,8 +1656,7 @@ lpuart_set_termios(struct uart_port *port, struct ktermios *termios,
- 	else
- 		modem &= ~(UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
+@@ -616,26 +616,26 @@ static int lpuart32_poll_init(struct uart_port *port)
+ 	spin_lock_irqsave(&sport->port.lock, flags);
  
--	if (termios->c_cflag & CSTOPB)
--		termios->c_cflag &= ~CSTOPB;
-+	termios->c_cflag &= ~CSTOPB;
+ 	/* Disable Rx & Tx */
+-	writel(0, sport->port.membase + UARTCTRL);
++	lpuart32_write(&sport->port, UARTCTRL, 0);
  
- 	/* parity must be enabled when CS7 to match 8-bits format */
- 	if ((termios->c_cflag & CSIZE) == CS7)
+-	temp = readl(sport->port.membase + UARTFIFO);
++	temp = lpuart32_read(&sport->port, UARTFIFO);
+ 
+ 	/* Enable Rx and Tx FIFO */
+-	writel(temp | UARTFIFO_RXFE | UARTFIFO_TXFE,
+-		   sport->port.membase + UARTFIFO);
++	lpuart32_write(&sport->port, UARTFIFO,
++		       temp | UARTFIFO_RXFE | UARTFIFO_TXFE);
+ 
+ 	/* flush Tx and Rx FIFO */
+-	writel(UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH,
+-			sport->port.membase + UARTFIFO);
++	lpuart32_write(&sport->port, UARTFIFO,
++		       UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH);
+ 
+ 	/* explicitly clear RDRF */
+-	if (readl(sport->port.membase + UARTSTAT) & UARTSTAT_RDRF) {
+-		readl(sport->port.membase + UARTDATA);
+-		writel(UARTFIFO_RXUF, sport->port.membase + UARTFIFO);
++	if (lpuart32_read(&sport->port, UARTSTAT) & UARTSTAT_RDRF) {
++		lpuart32_read(&sport->port, UARTDATA);
++		lpuart32_write(&sport->port, UARTFIFO, UARTFIFO_RXUF);
+ 	}
+ 
+ 	/* Enable Rx and Tx */
+-	writel(UARTCTRL_RE | UARTCTRL_TE, sport->port.membase + UARTCTRL);
++	lpuart32_write(&sport->port, UARTCTRL, UARTCTRL_RE | UARTCTRL_TE);
+ 	spin_unlock_irqrestore(&sport->port.lock, flags);
+ 
+ 	return 0;
+@@ -643,18 +643,18 @@ static int lpuart32_poll_init(struct uart_port *port)
+ 
+ static void lpuart32_poll_put_char(struct uart_port *port, unsigned char c)
+ {
+-	while (!(readl(port->membase + UARTSTAT) & UARTSTAT_TDRE))
++	while (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_TDRE))
+ 		barrier();
+ 
+-	writel(c, port->membase + UARTDATA);
++	lpuart32_write(port, UARTDATA, c);
+ }
+ 
+ static int lpuart32_poll_get_char(struct uart_port *port)
+ {
+-	if (!(readl(port->membase + UARTSTAT) & UARTSTAT_RDRF))
++	if (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_RDRF))
+ 		return NO_POLL_CHAR;
+ 
+-	return readl(port->membase + UARTDATA);
++	return lpuart32_read(port, UARTDATA);
+ }
+ #endif
+ 
 -- 
 2.21.0
 
