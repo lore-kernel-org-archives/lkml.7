@@ -2,103 +2,146 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE882C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08570C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E57206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF04520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:27:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0Bdz75ko"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DwZvqBjX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfG2Q07 (ORCPT
+        id S1728797AbfG2Q1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:26:59 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48306 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbfG2Q07 (ORCPT
+        Mon, 29 Jul 2019 12:27:34 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45171 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfG2Q1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:26:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UR1nwN2DobERwDBbUiUS2eO5vjDIciCJ3KKzmZdKH0Q=; b=0Bdz75ko9JlIuIV7NBooLQGYXZ
-        xKeLkiHp/upUnBeY/3RRAQ0w80wxz5hCRhdmbkGPTGDXX9l34bW83spOgXr7BkgDvyJTpD+nzx5Hk
-        f7FHE5z3duaS40ug1H6vAfes/hnn2Ko81P07zJpuFTAL9ysk0mR3cEIhP4kdMn+6LN68BxDqEqg3v
-        vkbk9UEmf86iZJLfE3J2DUX4/gv/0Oc6UlSCCyR2JKl/sG/g/FaCWfhkauzVmzAft4OuEWMV9uzqL
-        q/iTWXu+CcGDHtSRVDr/0z1kzIMyyfsTEHTStTW5ZEfMyH43HSdf7OqvfzZOKEvTHMaAeCC7x0xSI
-        V21kBB3A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs8UA-00041z-Ot; Mon, 29 Jul 2019 16:26:55 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 75A7C20AFFE9F; Mon, 29 Jul 2019 18:26:53 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 18:26:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rik van Riel <riel@surriel.com>
-Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>, Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2] sched/core: Don't use dying mm as active_mm of
- kthreads
-Message-ID: <20190729162653.GE31381@hirez.programming.kicks-ass.net>
-References: <20190727171047.31610-1-longman@redhat.com>
- <20190729085235.GT31381@hirez.programming.kicks-ass.net>
- <4cd17c3a-428c-37a0-b3a2-04e6195a61d5@redhat.com>
- <20190729150338.GF31398@hirez.programming.kicks-ass.net>
- <25cd74fcee33dfd0b9604a8d1612187734037394.camel@surriel.com>
- <20190729154419.GJ31398@hirez.programming.kicks-ass.net>
- <aba144fbb176666a479420eb75e5d2032a893c83.camel@surriel.com>
+        Mon, 29 Jul 2019 12:27:34 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f9so62511318wre.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mHHPMQ336CdhvDwSHAm2ZkUObmC6MYlngRuFkjj6+rQ=;
+        b=DwZvqBjX9KZPS22QyEa1iILLH2hTN+dUD4/1b4KsFWjmUYFEpnvMp5tSzwCOjk7nXb
+         47dFo9DlBP6wgTwKxLmF9vyO4cn8qs5wQBO3Omtt8RKttUKk/isZrTTkLcrQdd1Z7rRs
+         D46FJFRHuv3mVsh6Y7jppOHWDuC0krJot6cLHZjhOkilCIqI+IccrKR5Wgj8v288QNhh
+         Tm5F5iCRaAl3tKxEvEcc8RgJY7oAHbrGH0Ly1ylK9L/y6pN0E7y5Qftdv8n8Pr5y5F9q
+         oicicY+3MN+3DuQaNUXBk9ldinCIorc4sLE/AzB8zq6Q6VeVknCRYat0EcKOmFDaTqsI
+         ZCQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mHHPMQ336CdhvDwSHAm2ZkUObmC6MYlngRuFkjj6+rQ=;
+        b=uNsq7FD2GzBk+QieX4VeN0eVW6eGqyBqfQz9CQAvAkGtc3G5D/Xdy8AMeCYXYcgDMD
+         THXblzgfYmfikOa1nLQTS0dzoIvtg/QA+4bIh5sO0UzYRwNB6o8iTW66CUlsevf66wdM
+         rvTdr0c1zDxTwVrUL66d3tx7kvwHnWTs7jyTgwDKkD3+V2Uy3kqUMhtKk/XI1KUkBh0Y
+         BQwLo07V/9W3yUvq1o+P6vV42qoFMDhvXVQbrncPTcM8qJuXAnje8hbkHscfebgmkyss
+         BVsVk/bInXXPZfgheup73fZykfgeR7fyFbajcpQbiDNUzsxlVAcAziOK/UcVZzugduKo
+         4AMw==
+X-Gm-Message-State: APjAAAWX5nvxj7CmtskjUbh9+lVNVddBuyrBQNn5QL20SxynpN9rRKqv
+        iEZCopVXC09CNqgdGEzWQ4Y9c64oPG5oA2OzR+VPnA==
+X-Google-Smtp-Source: APXvYqzQB1oJO3+x7XEVtNxM0vZcfRsQTHn2vaqSNFdzqGSy1CwX28tXj8TGjJHa9RkugwuUHla2pK2K30V09V6Y15E=
+X-Received: by 2002:adf:e50c:: with SMTP id j12mr37995479wrm.117.1564417651286;
+ Mon, 29 Jul 2019 09:27:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <aba144fbb176666a479420eb75e5d2032a893c83.camel@surriel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1563864339-2621-1-git-send-email-kerneljasonxing@linux.alibaba.com>
+ <20190729152957.GA21958@cmpxchg.org>
+In-Reply-To: <20190729152957.GA21958@cmpxchg.org>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Mon, 29 Jul 2019 09:27:20 -0700
+Message-ID: <CAJuCfpFsPn9MeS-pWcrAj1ZcVZXJNn94Vina6se2MgApgEFxHQ@mail.gmail.com>
+Subject: Re: [PATCH] psi: get poll_work to run when calling poll syscall next time
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Jason Xing <kerneljasonxing@linux.alibaba.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dennis Zhou <dennis@kernel.org>, axboe@kernel.dk,
+        lizefan@huawei.com, Tejun Heo <tj@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 12:10:12PM -0400, Rik van Riel wrote:
-> On Mon, 2019-07-29 at 17:44 +0200, Peter Zijlstra wrote:
-> > On Mon, Jul 29, 2019 at 11:28:04AM -0400, Rik van Riel wrote:
-> > > On Mon, 2019-07-29 at 17:03 +0200, Peter Zijlstra wrote:
-> > >=20
-> > > > The 'sad' part is that x86 already switches to init_mm on idle
-> > > > and we
-> > > > only keep the active_mm around for 'stupid'.
-> > >=20
-> > > Wait, where do we do that?
-> >=20
-> > drivers/idle/intel_idle.c:              leave_mm(cpu);
-> > drivers/acpi/processor_idle.c:  acpi_unlazy_tlb(smp_processor_id());
->=20
-> This is only done for deeper c-states, isn't it?
+On Mon, Jul 29, 2019 at 8:30 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>
+> Hi Jason,
+>
+> On Tue, Jul 23, 2019 at 02:45:39PM +0800, Jason Xing wrote:
+> > Only when calling the poll syscall the first time can user
+> > receive POLLPRI correctly. After that, user always fails to
+> > acquire the event signal.
+> >
+> > Reproduce case:
+> > 1. Get the monitor code in Documentation/accounting/psi.txt
+> > 2. Run it, and wait for the event triggered.
+> > 3. Kill and restart the process.
+> >
+> > If the user doesn't kill the monitor process, it seems the
+> > poll_work works fine. After killing and restarting the monitor,
+> > the poll_work in kernel will never run again due to the wrong
+> > value of poll_scheduled. Therefore, we should reset the value
+> > as group_init() does after the last trigger is destroyed.
+> >
+> > Signed-off-by: Jason Xing <kerneljasonxing@linux.alibaba.com>
+>
+> Good catch, and the fix makes sense to me. However, it was a bit hard
+> to understand how the problem occurs:
+>
+> > ---
+> >  kernel/sched/psi.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> > index 7acc632..66f4385 100644
+> > --- a/kernel/sched/psi.c
+> > +++ b/kernel/sched/psi.c
+> > @@ -1133,6 +1133,12 @@ static void psi_trigger_destroy(struct kref *ref)
+> >       if (kworker_to_destroy) {
+> >               kthread_cancel_delayed_work_sync(&group->poll_work);
+> >               kthread_destroy_worker(kworker_to_destroy);
+> > +             /*
+> > +              * The poll_work should have the chance to be put into the
+> > +              * kthread queue when calling poll syscall next time. So
+> > +              * reset poll_scheduled to zero as group_init() does
+> > +              */
+> > +             atomic_set(&group->poll_scheduled, 0);
+>
+> The question is why we can end up with poll_scheduled = 1 but the work
+> not running (which would reset it to 0). And the answer is because the
+> scheduling side sees group->poll_kworker under RCU protection and then
+> schedules it, but here we cancel the work and destroy the worker. The
+> cancel needs to pair with resetting the poll_scheduled flag:
+>
+>         if (kworker_to_destroy) {
+>                 /*
+>                  * After the RCU grace period has expired, the worker
+>                  * can no longer be found through group->poll_kworker.
+>                  * But it might have been already scheduled before
+>                  * that - deschedule it cleanly before destroying it.
+>                  */
+>                 kthread_cancel_delayed_work_sync(&group->poll_work);
+>                 atomic_set(&group->poll_scheduled, 0);
+>
+>                 kthread_destroy_worker(kworker_to_destroy);
+>         }
+>
+> With that change, please add:
+>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>
+> Thanks!
 
-Not C1 but I forever forget where it starts doing that. IIRC it isn't
-too hard to hit it often, and I'm fairly sure we always do it when we
-hit NOHZ.
+The changes makes sense to me as well. Thanks!
 
-> > > > Rik and Andy were working on getting that 'fixed' a while ago,
-> > > > not
-> > > > sure
-> > > > where that went.
-> > >=20
-> > > My lazy TLB stuff got merged last year.=20
-> >=20
-> > Yes, but we never got around to getting rid of active_mm for x86,
-> > right?
->=20
-> True, we still use active_mm. Getting rid of the
-> active_mm refcounting alltogether did not look
-> entirely worthwhile the hassle.
-
-OK, clearly I forgot some of the details ;-)
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
