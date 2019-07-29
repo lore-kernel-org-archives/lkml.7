@@ -7,48 +7,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DC6C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D87AC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08272171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35182171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429075;
-	bh=QjnyUyV1hdUPn66Cc6iDCsIzSBxgpn+yWqQs7w7ckww=;
+	s=default; t=1564429079;
+	bh=bmHI5YoGnZ4tyEW1swpCkzC8+CTt/8nwmGZt77rb7Ew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPOndkSKt6ltAI7+0oUbUPpwrcrDy7wZg5PDiiAK0lkY6+CJJ4SoBdOtODtLRH/pI
-	 piQ17mioSiCxJtxhdkTaxgAr06HoxTNiUQv/pSQ5KYiScuuKxX4BmCL7uSXvHRZL8W
-	 0qeaI8r0kRge+ENTThv+z3xsHX1pYhuUgSKQP0Aw=
+	b=1iTF63XXSC8HHQfgDI6hDW5JBOAvFKX/VhgHCbjEonXWdHgPFGrstbg3rz4d2eVu2
+	 xktHhl9njVDrE1g6YuWb/jTqgr/HOb1DYrrskgQM5+CCbSv1guzRi5thER1MSzNTyU
+	 PxxiR95lzhvenqyjFSq83NaE9ftRjbg+b2WVAk88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388800AbfG2Thy (ORCPT
+        id S2388808AbfG2Th5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:37:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52772 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:37:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388233AbfG2Thw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:37:52 -0400
+        id S2388795AbfG2Thz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:37:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0399620C01;
-        Mon, 29 Jul 2019 19:37:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 804DC206DD;
+        Mon, 29 Jul 2019 19:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429071;
-        bh=QjnyUyV1hdUPn66Cc6iDCsIzSBxgpn+yWqQs7w7ckww=;
+        s=default; t=1564429074;
+        bh=bmHI5YoGnZ4tyEW1swpCkzC8+CTt/8nwmGZt77rb7Ew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5K+ASgMTpEi9RG7R6LmUrRuMEXPzz/v91a0pMPjujsr7ZFK3N4Z8GWvInrl2MPRI
-         hqzF6lHv3jw6o6GidtAbUvuLs3zUgZ9v5WXChwWXy2GIxV22CtjF38LQTdTKh/uJHy
-         fZ0NyCoweIi1cAD8+yVOofv84ttehbCvcdIxep+Q=
+        b=JbPLPAGIfIWqb9ZgqGiwqvo9yrCoUijxoabO7n68WLZCQLVCNxN6065CVsK95rSZv
+         mhTrE3P/HgpFNA0m2hOn0g6egp4+e0EJ9N1UEkiPJaUPCmpCi+l5fek3BgBREXRxtQ
+         wjZrG7cOkSCDyVcUo4FpdzZwJ2qb2yERPLhRsLJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Will Deacon <will@kernel.org>, Yuyang Du <duyuyang@gmail.com>,
+        frederic@kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 268/293] powerpc/eeh: Handle hugepages in ioremap space
-Date:   Mon, 29 Jul 2019 21:22:39 +0200
-Message-Id: <20190729190844.891917352@linuxfoundation.org>
+Subject: [PATCH 4.14 277/293] locking/lockdep: Hide unused class variable
+Date:   Mon, 29 Jul 2019 21:22:48 +0200
+Message-Id: <20190729190845.513080090@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,66 +69,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 33439620680be5225c1b8806579a291e0d761ca0 ]
+[ Upstream commit 68037aa78208f34bda4e5cd76c357f718b838cbb ]
 
-In commit 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap
-space") support for using hugepages in the vmalloc and ioremap areas was
-enabled for radix. Unfortunately this broke EEH MMIO error checking.
+The usage is now hidden in an #ifdef, so we need to move
+the variable itself in there as well to avoid this warning:
 
-Detection works by inserting a hook which checks the results of the
-ioreadXX() set of functions.  When a read returns a 0xFFs response we
-need to check for an error which we do by mapping the (virtual) MMIO
-address back to a physical address, then mapping physical address to a
-PCI device via an interval tree.
+  kernel/locking/lockdep_proc.c:203:21: error: unused variable 'class' [-Werror,-Wunused-variable]
 
-When translating virt -> phys we currently assume the ioremap space is
-only populated by PAGE_SIZE mappings. If a hugepage mapping is found we
-emit a WARN_ON(), but otherwise handles the check as though a normal
-page was found. In pathalogical cases such as copying a buffer
-containing a lot of 0xFFs from BAR memory this can result in the system
-not booting because it's too busy printing WARN_ON()s.
-
-There's no real reason to assume huge pages can't be present and we're
-prefectly capable of handling them, so do that.
-
-Fixes: 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap space")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190710150517.27114-1-oohall@gmail.com
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Yuyang Du <duyuyang@gmail.com>
+Cc: frederic@kernel.org
+Fixes: 68d41d8c94a3 ("locking/lockdep: Fix lock used or unused stats error")
+Link: https://lkml.kernel.org/r/20190715092809.736834-1-arnd@arndb.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ kernel/locking/lockdep_proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
-index 45322b37669a..d2ba7936d0d3 100644
---- a/arch/powerpc/kernel/eeh.c
-+++ b/arch/powerpc/kernel/eeh.c
-@@ -361,10 +361,19 @@ static inline unsigned long eeh_token_to_phys(unsigned long token)
- 	ptep = find_init_mm_pte(token, &hugepage_shift);
- 	if (!ptep)
- 		return token;
--	WARN_ON(hugepage_shift);
--	pa = pte_pfn(*ptep) << PAGE_SHIFT;
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 71631bef0e84..8b2ef15e3552 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -224,7 +224,6 @@ static void lockdep_stats_debug_show(struct seq_file *m)
  
--	return pa | (token & (PAGE_SIZE-1));
-+	pa = pte_pfn(*ptep);
-+
-+	/* On radix we can do hugepage mappings for io, so handle that */
-+	if (hugepage_shift) {
-+		pa <<= hugepage_shift;
-+		pa |= token & ((1ul << hugepage_shift) - 1);
-+	} else {
-+		pa <<= PAGE_SHIFT;
-+		pa |= token & (PAGE_SIZE - 1);
-+	}
-+
-+	return pa;
- }
+ static int lockdep_stats_show(struct seq_file *m, void *v)
+ {
+-	struct lock_class *class;
+ 	unsigned long nr_unused = 0, nr_uncategorized = 0,
+ 		      nr_irq_safe = 0, nr_irq_unsafe = 0,
+ 		      nr_softirq_safe = 0, nr_softirq_unsafe = 0,
+@@ -235,6 +234,8 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		      sum_forward_deps = 0;
  
- /*
+ #ifdef CONFIG_PROVE_LOCKING
++	struct lock_class *class;
++
+ 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
+ 
+ 		if (class->usage_mask == 0)
 -- 
 2.20.1
 
