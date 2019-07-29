@@ -2,92 +2,83 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F1DC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A61BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96317206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086352075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:07:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfG2JHB (ORCPT
+        id S1727786AbfG2JHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:07:01 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58648 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfG2JHB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:07:01 -0400
-Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id a3ba5d91a3f87a99; Mon, 29 Jul 2019 11:06:58 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Tri Vo <trong@android.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Subject: Re: [PATCH] PM / wakeup: Avoid dev_name collisions in wakeup class
-Date:   Mon, 29 Jul 2019 11:06:58 +0200
-Message-ID: <1771170.ZfA44AmTq3@kreacher>
-In-Reply-To: <CANA+-vDNkSG39SLd0_B_L8gkDkfQ2uJLcuvCaRgHkU8DiBzMTw@mail.gmail.com>
-References: <20190727011040.89582-1-swboyd@chromium.org> <CAJZ5v0hroRuGQ5N42Z8=yFVXiJPdid3wJrHoKqr2BZVx=sfnBQ@mail.gmail.com> <CANA+-vDNkSG39SLd0_B_L8gkDkfQ2uJLcuvCaRgHkU8DiBzMTw@mail.gmail.com>
+        Mon, 29 Jul 2019 05:07:06 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36054 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725917AbfG2JHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 05:07:05 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 39A4953CA7CE7A5079F3;
+        Mon, 29 Jul 2019 17:07:03 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
+ 17:06:55 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@siol.net>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] drm/bridge: tc358764: Fix build error
+Date:   Mon, 29 Jul 2019 17:05:20 +0800
+Message-ID: <20190729090520.25968-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday, July 27, 2019 7:37:07 PM CEST Tri Vo wrote:
-> On Sat, Jul 27, 2019 at 6:10 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Sat, Jul 27, 2019 at 3:11 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > If a device is wakeup capable and the driver calls device_wakeup_init()
-> > > on it during probe and then userspace writes 'enabled' to that device's
-> > > power/wakeup file in sysfs we'll try to create the same named wakeup
-> > > device in sysfs. The kernel will complain about duplicate file names.
-> 
-> Thanks for reporting the issue, Stephen!
-> > >
-> > > sysfs: cannot create duplicate filename '/devices/virtual/wakeup/1-1.1'
-> > > kobject_add_internal failed for 1-1.1 with -EEXIST, don't try to register things with the same name in the same directory.
-> > >
-> > > It may be advantageous to not write 'enabled' to the wakeup file (see
-> > > wakeup_store()) from userspace for these devices because we allocate
-> > > devices and register them and then throw them all away later on if the
-> > > device driver has already initialized the wakeup attribute. The
-> > > implementation currently tries to avoid taking locks here so it seems
-> > > best to optimize that path in a separate patch.
-> > >
-> > > Let's rename the wakeup class devices as 'wakeupN' with an IDA that's
-> > > simple enough to just return some sort of number. In addition, let's
-> > > make the device registering the wakeup the parent and include a 'name'
-> > > attribute in case userspace wants to figure out the type of wakeup it is
-> > > (in the case of virtual wakeups) or the device associated with the
-> > > wakeup. This makes it easier for userspace to go from /sys/class/wakeup
-> > > to a place in the device hierarchy where the wakeup is generated from
-> > > like an input device.
-> > >
-> > > Cc: Tri Vo <trong@android.com>
-> > > Cc: Kalesh Singh <kaleshsingh@google.com>
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
-> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> >
-> > I'd rather change the commit that introduced this issue which is only
-> > in linux-next for now.
-> 
-> Raphael, could you roll back my patch? I'll work with Stephen to fix it.
+If CONFIG_DRM_TOSHIBA_TC358764=y but CONFIG_DRM_KMS_HELPER=m,
+building fails:
 
-I'll drop it, thanks!
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x228): undefined reference to `drm_atomic_helper_connector_reset'
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x240): undefined reference to `drm_helper_probe_single_connector_modes'
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x268): undefined reference to `drm_atomic_helper_connector_duplicate_state'
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x270): undefined reference to `drm_atomic_helper_connector_destroy_state'
 
+Like TC358767, select DRM_KMS_HELPER to fix this, and
+change to select DRM_PANEL to avoid recursive dependency.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: f38b7cca6d0e ("drm/bridge: tc358764: Add DSI to LVDS bridge driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/gpu/drm/bridge/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index a6eec90..323f72d 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -116,9 +116,10 @@ config DRM_THINE_THC63LVD1024
+ 
+ config DRM_TOSHIBA_TC358764
+ 	tristate "TC358764 DSI/LVDS bridge"
+-	depends on DRM && DRM_PANEL
+ 	depends on OF
+ 	select DRM_MIPI_DSI
++	select DRM_KMS_HELPER
++	select DRM_PANEL
+ 	help
+ 	  Toshiba TC358764 DSI/LVDS bridge driver.
+ 
+-- 
+2.7.4
 
 
