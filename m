@@ -2,131 +2,142 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7069FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CBDC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379DB2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:20:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VzTddNoF"
+	by mail.kernel.org (Postfix) with ESMTP id E02912070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564374373;
+	bh=CzttnjlFh6UNzw5qv7d7Z1f2832TtQ+OkE9O6nLJJZ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FGhDCS0hnII051OLNmkWFFnkcE/cTPttzVxbDXnva2wgpwAuDBk48VKAKPecOQ8Hq
+	 pkmEWtp/bM4zw2ZqoTjTgr+xQsmqQirHaYI0JmJL01OEqqHIuwqbg3ZU6WjY7LzNoo
+	 JLNPbFtbBaNmgUvGkLLIYvavPQxXbY25lRvkk1us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfG2EUx (ORCPT
+        id S1726592AbfG2E0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 00:20:53 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:53078 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfG2EUw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 00:20:52 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6T4JQ2t135574;
-        Mon, 29 Jul 2019 04:20:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=KJOwyKfBt2HnHY+cw2gWHTBRREdfic7k/AhbXGx7f3g=;
- b=VzTddNoFOlQpv3f6xBFCY1P8iJGShnkogLd7tc2Kbo60tNv3szbv7GQRFD2RNLznRcpN
- KQ5M9CHRfmOBYqH2v5IVo3faYRJUaF2ZhFXBfKS+t9e1APU0UIKZyzaVNk0DFllddlTn
- LpbeCAh7F2oBXxNy7YVSj5e2Hqp6Sn3B2mw9bH06C/I0zWEujiIvYRt3jFo3HXRscjjz
- 8d5n0rt9CUL1wZAal/y4ehlrTvZzb8xVtY/3eo8Kz/ocbLCB1l3LXuyp4cRFhfO++VoW
- qPHsuipHcnjPsDLxQ5jgCHcqf+FMFx+yEIItMXkn3EOUFaN4LJS4NQ5YkpeSX5dVeNzv rA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2u0f8qmpw9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jul 2019 04:20:35 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6T4HnoI087007;
-        Mon, 29 Jul 2019 04:20:34 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2u0bqt8xe6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jul 2019 04:20:34 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6T4KXcq030951;
-        Mon, 29 Jul 2019 04:20:33 GMT
-Received: from localhost (/10.159.132.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 28 Jul 2019 21:20:32 -0700
-Date:   Sun, 28 Jul 2019 21:20:34 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     bfoster@redhat.com, sandeen@sandeen.net, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: xfs: Fix possible null-pointer dereferences in
- xchk_da_btree_block_check_sibling()
-Message-ID: <20190729042034.GM1561054@magnolia>
-References: <20190729032401.28081-1-baijiaju1990@gmail.com>
+        Mon, 29 Jul 2019 00:26:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726164AbfG2E0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 00:26:11 -0400
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F1C42075B
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 04:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564374370;
+        bh=CzttnjlFh6UNzw5qv7d7Z1f2832TtQ+OkE9O6nLJJZ8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wuvz1Bdsr270oQaXKbsBoVoUwpOdZTeaJ5DN0Sl+cVeTA6afYvndWsZuu38GDBDYW
+         jx6797SZ/GtrzOwzfcQbxLYJzm8Nlvic/Vu2ic4OyHzwxGmNrGeorIeU+n89IiCcX1
+         ogqPy4PB1E+EUEG0ie6213kbJehjVi6Q7zF1hI18=
+Received: by mail-wm1-f43.google.com with SMTP id v15so52520680wml.0
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 21:26:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAW8VKWVB7zexCDEcjizfFQlUVukToA90wzb6W6lI3d9OsNsk8Wo
+        CQFMSsX13MVUvmmXQem5FowX3MH92Ll7NkpQQ5KNcg==
+X-Google-Smtp-Source: APXvYqwJ+771E+nh3CDUcgUmU42g0hgbAA6c8xaMFMiyy+NfW9b/zbOuW2go9yk5QO5L7Nl+HAyQaHd2kY9juqJ7hD4=
+X-Received: by 2002:a1c:9a53:: with SMTP id c80mr36652865wme.173.1564374369164;
+ Sun, 28 Jul 2019 21:26:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729032401.28081-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9332 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907290052
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9332 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907290052
+References: <20190729010734.3352-1-devel@etsukata.com>
+In-Reply-To: <20190729010734.3352-1-devel@etsukata.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 28 Jul 2019 21:25:58 -0700
+X-Gmail-Original-Message-ID: <CALCETrVavLdQ8Rp+6fmTd7kJJwvRKdaEnudaiMAu8g9ZXuNfWA@mail.gmail.com>
+Message-ID: <CALCETrVavLdQ8Rp+6fmTd7kJJwvRKdaEnudaiMAu8g9ZXuNfWA@mail.gmail.com>
+Subject: Re: [PATCH] tracing: Prevent RCU EQS breakage in preemptirq events
+To:     Eiichi Tsukata <devel@etsukata.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 11:24:01AM +0800, Jia-Ju Bai wrote:
-> In xchk_da_btree_block_check_sibling(), there is an if statement on 
-> line 274 to check whether ds->state->altpath.blk[level].bp is NULL:
->     if (ds->state->altpath.blk[level].bp)
-> 
-> When ds->state->altpath.blk[level].bp is NULL, it is used on line 281: 
->     xfs_trans_brelse(..., ds->state->altpath.blk[level].bp);
->         struct xfs_buf_log_item	*bip = bp->b_log_item;
->         ASSERT(bp->b_transp == tp);
-> 
-> Thus, possible null-pointer dereferences may occur.
-> 
-> To fix these bugs, ds->state->altpath.blk[level].bp is checked before
-> being used.
-> 
-> These bugs are found by a static analysis tool STCheck written by us.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  fs/xfs/scrub/dabtree.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/scrub/dabtree.c b/fs/xfs/scrub/dabtree.c
-> index 94c4f1de1922..33ff90c0dd70 100644
-> --- a/fs/xfs/scrub/dabtree.c
-> +++ b/fs/xfs/scrub/dabtree.c
-> @@ -278,7 +278,9 @@ xchk_da_btree_block_check_sibling(
->  	/* Compare upper level pointer to sibling pointer. */
->  	if (ds->state->altpath.blk[level].blkno != sibling)
->  		xchk_da_set_corrupt(ds, level);
-> -	xfs_trans_brelse(ds->dargs.trans, ds->state->altpath.blk[level].bp);
-> +	if (ds->state->altpath.blk[level].bp)
-> +		xfs_trans_brelse(ds->dargs.trans, 
-> +						ds->state->altpath.blk[level].bp);
+On Sun, Jul 28, 2019 at 6:08 PM Eiichi Tsukata <devel@etsukata.com> wrote:
+>
+> If context tracking is enabled, causing page fault in preemptirq
+> irq_enable or irq_disable events triggers the following RCU EQS warning.
+>
 
-Indentation here (in xfs we use two spaces)
+Yuck.
 
-Also, uh, shouldn't we set ds->state->altpath.blk[level].bp to NULL
-since we've released the buffer?
+> diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
+> index be01a4d627c9..860eaf9780e5 100644
+> --- a/kernel/context_tracking.c
+> +++ b/kernel/context_tracking.c
+> @@ -148,6 +148,11 @@ void __context_tracking_exit(enum ctx_state state)
+>                 return;
+>
+>         if (__this_cpu_read(context_tracking.state) == state) {
+> +               /*
+> +                * Change state before executing codes which can trigger
+> +                * page fault leading unnecessary re-entrance.
+> +                */
+> +               __this_cpu_write(context_tracking.state, CONTEXT_KERNEL);
 
---D
+Seems reasonable.
 
->  out:
->  	return error;
+>                 if (__this_cpu_read(context_tracking.active)) {
+>                         /*
+>                          * We are going to run code that may use RCU. Inform
+> @@ -159,7 +164,6 @@ void __context_tracking_exit(enum ctx_state state)
+>                                 trace_user_exit(0);
+>                         }
+>                 }
+> -               __this_cpu_write(context_tracking.state, CONTEXT_KERNEL);
+>         }
+>         context_tracking_recursion_exit();
 >  }
-> -- 
-> 2.17.0
-> 
+> diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
+> index 4d8e99fdbbbe..031b51cb94d0 100644
+> --- a/kernel/trace/trace_preemptirq.c
+> +++ b/kernel/trace/trace_preemptirq.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/module.h>
+>  #include <linux/ftrace.h>
+>  #include <linux/kprobes.h>
+> +#include <linux/context_tracking.h>
+>  #include "trace.h"
+>
+>  #define CREATE_TRACE_POINTS
+> @@ -49,9 +50,14 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
+>
+>  __visible void trace_hardirqs_on_caller(unsigned long caller_addr)
+>  {
+> +       enum ctx_state prev_state;
+> +
+>         if (this_cpu_read(tracing_irq_cpu)) {
+> -               if (!in_nmi())
+> +               if (!in_nmi()) {
+> +                       prev_state = exception_enter();
+>                         trace_irq_enable_rcuidle(CALLER_ADDR0, caller_addr);
+> +                       exception_exit(prev_state);
+> +               }
+>                 tracer_hardirqs_on(CALLER_ADDR0, caller_addr);
+>                 this_cpu_write(tracing_irq_cpu, 0);
+>         }
+
+This seems a bit distressing.  Now we're going to do a whole bunch of
+context tracking transitions for each kernel entry.  Would a better
+fix me to change trace_hardirqs_on_caller to skip the trace event if
+the previous state was already IRQs on and, more importantly, to skip
+tracing IRQs off if IRQs were already off?  The x86 code is very
+careful to avoid ever having IRQs on and CONTEXT_USER at the same
+time.
+
+--Andy
