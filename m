@@ -2,90 +2,142 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6717C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64350C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F452070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D202067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:48:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l/RL7Y2K"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aLXoYLOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730195AbfG2VsJ (ORCPT
+        id S1730222AbfG2Vse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:48:09 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42851 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725209AbfG2VsI (ORCPT
+        Mon, 29 Jul 2019 17:48:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39178 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfG2Vsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:48:08 -0400
-Received: by mail-io1-f68.google.com with SMTP id e20so93051985iob.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:48:08 -0700 (PDT)
+        Mon, 29 Jul 2019 17:48:33 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b7so28057338pls.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:48:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=piQh2aqA30RCLiw+cIf1d6IHR82wSEf3qDisOX1wwys=;
-        b=l/RL7Y2Kyz2I8kqXJkJw/9E/ltkRzEbVMXQD38G56U8PUZAmwtnkKyk1cYdnW4RkE/
-         BRx+ImBhz8Kd0e72PSmi6DzIFPzZz64kGMHUiXYdecWyOMNgVaC54BmGAJFKRoNTuut8
-         PZd4JDjulvHHx4sqTgtjDyqilDAzhxkxGuPCGpSJoxbcIGu7fdFKOObX4H8TdzQlWyCM
-         G23CxF+/n1MtU/bkyCuBe7R2qSG66UQrAnRhW82VgKpIhP1sJHF6XJdewBfIXFoJb6tR
-         EDp+Xzcfwt3MI6laa6/wlpnuRJwSVMA/8v0UeVucDpQ8IOX0/R1elEKP78IJ2z5WBQ0k
-         ESlA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mHb7K/quzh/o9A0rhyew79DzGwVBiK/JKWkURFhBbPg=;
+        b=aLXoYLOL9bhkDKwRtYhOygieMGKXSKL7OIukbB5IHhN9BIlS95bKQZUqFFb32huu4N
+         noBkyP1aNp6N+UNxp0EvxGURLyduEawdLwt7dMSZ3fye87lVjcqTeBgcdWeTWO0nGRyp
+         8AlwzN7d0PZSga4djNARnHts+njcY0DCqcd14=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=piQh2aqA30RCLiw+cIf1d6IHR82wSEf3qDisOX1wwys=;
-        b=D5tBuOygr6npUVpukKcDstFKooVQyvtK6jCdTDN2u1aP/ioHLL0iIxWd6QnrSc/UEZ
-         +h1ehcfqu97yHHy0NFLOKj136EvNz4qsiQOBuQRICPgezGupmEzhH/TX4X7daxD/8zcX
-         xHRyMHD0fLNLT5KptnW77pE3mBXldPXz4pUkUe8slPov0S5HnEsUt7Wp54+1wrdvZStZ
-         kaRIgZhe8A5hIGvc1d00ZBz24k5giXsCjCfNNHaZwExFkijo4/3eyUUerzKD4sDS3+jS
-         Yqc3B4xwpvQpGQr/FeCNi9I8qNqlH4caDbnwhLI0YeYipjA1kmaWmObAh68KfXZwOzlO
-         rzMw==
-X-Gm-Message-State: APjAAAUKMRH7d71z5CLTmu3WlmJza0wwBnZbzzHu4A/m01NmqaykITrr
-        LBbseOQe2/HfqWitI58TIcKGUj+MIDQC35CmE6SGeYCqVbk=
-X-Google-Smtp-Source: APXvYqxS/upLfLcv1Opnwp9lYxlnoZ2TkKlbL41OpS0AiGsoLM5gWBwfxkyYcoAUnk0nANWmnZfxFJngb/NBSwuBQkk=
-X-Received: by 2002:a5e:9404:: with SMTP id q4mr42722436ioj.46.1564436887846;
- Mon, 29 Jul 2019 14:48:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mHb7K/quzh/o9A0rhyew79DzGwVBiK/JKWkURFhBbPg=;
+        b=W244l1NXnRms8YakX63gG8zCN/Ca1Zu0IbwNlcsYcTVIQKztKdUTa3sP+3te2O/AUY
+         Ua2pqRiAEdqZrDBD8wYEYJW7SMrQ1/SS7N1oOB73dNL48+hYBPV+RT1IPKbxl9VnQQrj
+         HF7fYM2Mif0pDGLBEcYt4mjmC5HnTW+Xlat97XA7rpwGatV+jC+Jq/EPBeW4+XuvefM8
+         cajqmEHbFcv9dEH77X3wl/u18YWOOw/cSkbHXadgGVmzDFSaTfN3BQWZ0lHlLru6gZo2
+         bV10PUIP6GUP4rV+U3rTo/zCg6UQA8GM5/ckHVJdEVlhOkdXFnjv98soa/8LUBp1x9TO
+         POeg==
+X-Gm-Message-State: APjAAAWhPyx36FJjyCs19Wf5XqPyAMBZyGKsdiYE+xslH8RLv9D+G6jf
+        tMqD9+Ia9t+MGiDBJli4E6qSOVl/k3A=
+X-Google-Smtp-Source: APXvYqyX4/6lzKkOPc8+bZ/Wr8naVik9Xqd0hoI58Yfve8v7GAHab9WzvrM4B0ZwL294T52ZxlWhnA==
+X-Received: by 2002:a17:902:2ac7:: with SMTP id j65mr113085915plb.242.1564436913282;
+        Mon, 29 Jul 2019 14:48:33 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a3sm65759270pfi.63.2019.07.29.14.48.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 14:48:32 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 14:48:31 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] sound: dmasound_atari: Mark expected switch
+ fall-through
+Message-ID: <201907291448.E375AA59F@keescook>
+References: <20190729205454.GA5084@embeddedor>
 MIME-Version: 1.0
-References: <20190718194415.108476-1-matthewgarrett@google.com> <20190718194415.108476-20-matthewgarrett@google.com>
-In-Reply-To: <20190718194415.108476-20-matthewgarrett@google.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Mon, 29 Jul 2019 14:47:56 -0700
-Message-ID: <CACdnJute8aakro+Cb7oNrxgCiZTYj2BOt2WMc1dYF-xktxBucQ@mail.gmail.com>
-Subject: Re: [PATCH V36 19/29] Lock down module params that specify hardware
- parameters (eg. ioport)
-To:     James Morris <jmorris@namei.org>
-Cc:     LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729205454.GA5084@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:45 PM Matthew Garrett
-<matthewgarrett@google.com> wrote:
->
-> From: David Howells <dhowells@redhat.com>
->
-> Provided an annotation for module parameters that specify hardware
-> parameters (such as io ports, iomem addresses, irqs, dma channels, fixed
-> dma buffers and other types).
->
-> Suggested-by: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Cc: Jessica Yu <jeyu@kernel.org>
+On Mon, Jul 29, 2019 at 03:54:54PM -0500, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following warning (Building: m68k):
+> 
+> sound/oss/dmasound/dmasound_atari.c: warning: this statement may fall
+> through [-Wimplicit-fallthrough=]:  => 1449:24
+> 
+> Notice that, in this particular case, the code comment is
+> modified in accordance with what GCC is expecting to find.
+> 
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Jessica, any feedback on this?
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+> Changes in v2:
+>  - Update code so switch and case statements are at the same indent.
+> 
+>  sound/oss/dmasound/dmasound_atari.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/sound/oss/dmasound/dmasound_atari.c b/sound/oss/dmasound/dmasound_atari.c
+> index 83653683fd68..823ccfa089b2 100644
+> --- a/sound/oss/dmasound/dmasound_atari.c
+> +++ b/sound/oss/dmasound/dmasound_atari.c
+> @@ -1432,25 +1432,25 @@ static int FalconMixerIoctl(u_int cmd, u_long arg)
+>  {
+>  	int data;
+>  	switch (cmd) {
+> -	    case SOUND_MIXER_READ_RECMASK:
+> +	case SOUND_MIXER_READ_RECMASK:
+>  		return IOCTL_OUT(arg, SOUND_MASK_MIC);
+> -	    case SOUND_MIXER_READ_DEVMASK:
+> +	case SOUND_MIXER_READ_DEVMASK:
+>  		return IOCTL_OUT(arg, SOUND_MASK_VOLUME | SOUND_MASK_MIC | SOUND_MASK_SPEAKER);
+> -	    case SOUND_MIXER_READ_STEREODEVS:
+> +	case SOUND_MIXER_READ_STEREODEVS:
+>  		return IOCTL_OUT(arg, SOUND_MASK_VOLUME | SOUND_MASK_MIC);
+> -	    case SOUND_MIXER_READ_VOLUME:
+> +	case SOUND_MIXER_READ_VOLUME:
+>  		return IOCTL_OUT(arg,
+>  			VOLUME_ATT_TO_VOXWARE(dmasound.volume_left) |
+>  			VOLUME_ATT_TO_VOXWARE(dmasound.volume_right) << 8);
+> -	    case SOUND_MIXER_READ_CAPS:
+> +	case SOUND_MIXER_READ_CAPS:
+>  		return IOCTL_OUT(arg, SOUND_CAP_EXCL_INPUT);
+> -	    case SOUND_MIXER_WRITE_MIC:
+> +	case SOUND_MIXER_WRITE_MIC:
+>  		IOCTL_IN(arg, data);
+>  		tt_dmasnd.input_gain =
+>  			RECLEVEL_VOXWARE_TO_GAIN(data & 0xff) << 4 |
+>  			RECLEVEL_VOXWARE_TO_GAIN(data >> 8 & 0xff);
+> -		/* fall thru, return set value */
+> -	    case SOUND_MIXER_READ_MIC:
+> +		/* fall through - return set value */
+> +	case SOUND_MIXER_READ_MIC:
+>  		return IOCTL_OUT(arg,
+>  			RECLEVEL_GAIN_TO_VOXWARE(tt_dmasnd.input_gain >> 4 & 0xf) |
+>  			RECLEVEL_GAIN_TO_VOXWARE(tt_dmasnd.input_gain & 0xf) << 8);
+> -- 
+> 2.22.0
+> 
+
+-- 
+Kees Cook
