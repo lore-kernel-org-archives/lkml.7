@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C59C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2860EC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8512D2184B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF221216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VrM9+6Je"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RAfvxQcl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387676AbfG2WLa (ORCPT
+        id S2388344AbfG2WLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 18:11:30 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:35005 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388139AbfG2WL0 (ORCPT
+        Mon, 29 Jul 2019 18:11:32 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:37146 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387769AbfG2WL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 18:11:26 -0400
-Received: by mail-pf1-f202.google.com with SMTP id r142so39330597pfc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:11:25 -0700 (PDT)
+        Mon, 29 Jul 2019 18:11:29 -0400
+Received: by mail-qt1-f202.google.com with SMTP id 41so50626753qtm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:11:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=L03s0/cCwSibWbjOlLSetg9NEt3OrkecIhAnIwN841s=;
-        b=VrM9+6Jeuyus6gfzx0tt0vpujpOq1lM4J0CpFBP6EbVrDOiOcbDqT6YblvCCw8pIev
-         Q27p2U31u9VmZP6HPR/K4hRpiEuyfh7y4GXjmPvJsvFKPuELyq6BPlAPDt4HlZMoSMmr
-         OBah55/PaMNagby1o/DB0OIoqe7z6al8HNa/NCbY+hcV7kGFERpajO9Nmtwyq7afiFIg
-         mDdIhHATE8xUOsPEriA7GyopHSLkb+ULW/BxNTGOovFIpJZDTHKiRXQYkBLsWWBwISUz
-         aS3SXcyErlPtBxQ4CamHiGmmflWNr2eIICs47t7NSkNfNF2z3xawOSaF17yJmdJcjal4
-         4wZQ==
+        bh=q/JO0jIzFDUcBLNa0OLAVEbtuFfd8ssnFHaHdmtCpxU=;
+        b=RAfvxQcl4h2BOyaK31H1/xWYCyBx/eMduTNV0vQvG5cGkn5cGK3RzQnHoHIatewHnm
+         Fg1LrxZP4gf7iMy/GnI+7ngsBGnaRAZjvWfL4bpRWJKpKv0/5v8jJJ54kIYZll1fkhrs
+         CXXej9PXznYSVaqvLO4jibT0OH+iqf5eceI834QosZHeYCIlkQTBEqAYfwFwSt4dLmuw
+         p49wppWLaI3vC7K4KJRvbYvAbQ8Uu8YGMIn/Ymu/YE8ZZOEgVLlGivl3A6edYaBM1xtW
+         +v4tiDen5L66O2NJg/9wyISohBTn/MqJv8xjwO5aYduPo5+sY0d122+2EzQXQz0RNUx5
+         j4nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=L03s0/cCwSibWbjOlLSetg9NEt3OrkecIhAnIwN841s=;
-        b=bVj/wSBvPvNfTE0PCi210Lir0z2IFzpjavW7WGsYwhDdSG10qucwBnv2McML2bO0f2
-         KMQURplCyFNWBtwTVe8BtBHjOQ6cjz73zgBz8c41woLMR55cQDj2BLqXfhC6fdCi0cf4
-         cwQBeB50+aETG/j6pdQ/x5X5i8PW3ll38UsYdN2JbW1LFWnKJazitFGt2ACrzlvLBpOF
-         XCw7ITQw08gsxKbhHlNC0OI53bD4eLYdTYgBMzD5xI7CYh3/ijOGQCjOAYU0B5MuKFVP
-         qoe6mB31RaCzSWwzAlxbxM4UhU/zIgCatfHyWnucwLsQOXti9P9O2RTQEAhUr/hhMUbF
-         T2gg==
-X-Gm-Message-State: APjAAAU7Np5W0E9i+1scoh6TZxdis7T0dVEHuxLxF+Gq67VMoiPCuJiK
-        GomnnPWaewHStSRcvOWD8z3+qrxXVrFiI9E=
-X-Google-Smtp-Source: APXvYqzDP8jpkSAzzKbaA1r99wk0GQdAWzUwsLuWQUct0DtdlcQ/Zd9FoZLjcSEA7m0zOZ7OMYAAXnRmeV4DUcc=
-X-Received: by 2002:a65:5348:: with SMTP id w8mr105232049pgr.176.1564438284888;
- Mon, 29 Jul 2019 15:11:24 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 15:11:00 -0700
+        bh=q/JO0jIzFDUcBLNa0OLAVEbtuFfd8ssnFHaHdmtCpxU=;
+        b=CyPpxDwtlcIJg89DP6xyW/6+UU8XHZDurqvNtuM5w/SqMqyGu2RP7nsgJqDqe9v4Js
+         F0hyvIa1cCRX3Me0Y1Md3LTmfk1/y6+3mTsDbrAnxEKNYvfdURwVQhWNNaCPSQ/Kxhoi
+         1Z6K+BsQj/2KC9XzrKX1YSJhbsLty0eXLep1gvmrTEGoImeKQtbA62PJieGyiqs9f0nr
+         fr8hDp28rP74phgrSXT2iPBaOasnhnkpNhBN+OVJedCfEWFJ48AwLyI1b0w207LvDBM2
+         G7tzmZPm+JpQuebZNVe12ojsFOpOw8wauTQmopHYABG+3yVXJTbZgJi09e0cH4DCibha
+         U32g==
+X-Gm-Message-State: APjAAAXHuQfx57JhEJhuS6pBJWZVbzjtk7zCL5bOLrQ2zDhdqN+Q307l
+        vC9yaFCvE1zsnGrNZJ5k9l5bxTX/CRRb8J4=
+X-Google-Smtp-Source: APXvYqydELxRbsHighcxSWgGx87UveXV5heA+fTgZ2mjwG8HEYlndd5i5Hfoa3E9mNglZFW6alDPgxqaqeQ/Og8=
+X-Received: by 2002:a05:620a:1228:: with SMTP id v8mr29782991qkj.357.1564438288576;
+ Mon, 29 Jul 2019 15:11:28 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 15:11:01 -0700
 In-Reply-To: <20190729221101.228240-1-saravanak@google.com>
-Message-Id: <20190729221101.228240-7-saravanak@google.com>
+Message-Id: <20190729221101.228240-8-saravanak@google.com>
 Mime-Version: 1.0
 References: <20190729221101.228240-1-saravanak@google.com>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v8 6/7] of/platform: Create device links for all
- child-supplier depencencies
+Subject: [PATCH v8 7/7] of/platform: Don't create device links for default busses
 From:   Saravana Kannan <saravanak@google.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -76,115 +75,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A parent device can have child devices that it adds when it probes. But
-this probing of the parent device can happen way after kernel init is done
--- for example, when the parent device's driver is loaded as a module.
-
-In such cases, if the child devices depend on a supplier in the system, we
-need to make sure the supplier gets the sync_state() callback only after
-these child devices are added and probed.
-
-To achieve this, when creating device links for a device by looking at its
-DT node, don't just look at DT references at the top node level. Look at DT
-references in all the descendant nodes too and create device links from the
-ancestor device to all these supplier devices.
-
-This way, when the parent device probes and adds child devices, the child
-devices can then create their own device links to the suppliers and further
-delay the supplier's sync_state() callback to after the child devices are
-probed.
-
-Example:
-In this illustration, -> denotes DT references and indentation
-represents child status.
-
-Device node A
-	Device node B -> D
-	Device node C -> B, D
-
-Device node D
-
-Assume all these devices have their drivers loaded as modules.
-
-Without this patch, this is the sequence of events:
-1. D is added.
-2. A is added.
-3. Device D probes.
-4. Device D gets its sync_state() callback.
-5. Device B and C might malfunction because their resources got
-   altered/turned off before they can make active requests for them.
-
-With this patch, this is the sequence of events:
-1. D is added.
-2. A is added and creates device links to D.
-3. Device link from A to B is not added because A is a parent of B.
-4. Device D probes.
-5. Device D does not get it's sync_state() callback because consumer A
-   hasn't probed yet.
-5. Device A probes.
-5. a. Devices B and C are added.
-5. b. Device links from B and C to D are added.
-5. c. Device A's probe completes.
-6. Device D does not get it's sync_state() callback because consumer A
-   has probed but consumers B and C haven't probed yet.
-7. Device B and C probe.
-8. Device D gets it's sync_state() callback because all its consumers
-   have probed.
-9. None of the devices malfunction.
+Default busses also have devices created for them. But there's no point
+in creating device links for them. It's especially wasteful as it'll
+cause the traversal of the entire device tree and also spend a lot of
+time checking and figuring out that creating those links isn't allowed.
+So check for default busses and skip trying to create device links for
+them.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/of/platform.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+ drivers/of/platform.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 71d6138698ec..41499ddc8d95 100644
+index 41499ddc8d95..676b2f730d1b 100644
 --- a/drivers/of/platform.c
 +++ b/drivers/of/platform.c
-@@ -655,24 +655,35 @@ static bool of_link_property(struct device *dev, struct device_node *con_np,
- 	return done ? 0 : -ENODEV;
- }
- 
-+static int __of_link_to_suppliers(struct device *dev,
-+				  struct device_node *con_np)
-+{
-+	struct device_node *child;
-+	struct property *p;
-+	bool done = true;
-+
-+	for_each_property_of_node(con_np, p)
-+		if (of_link_property(dev, con_np, p->name))
-+			done = false;
-+
-+	for_each_child_of_node(con_np, child)
-+		if (__of_link_to_suppliers(dev, child))
-+			done = false;
-+
-+	return done ? 0 : -ENODEV;
-+}
-+
- static bool of_devlink;
- core_param(of_devlink, of_devlink, bool, 0);
- 
- static int of_link_to_suppliers(struct device *dev)
- {
--	struct property *p;
--	bool done = true;
--
- 	if (!of_devlink)
+@@ -682,6 +682,8 @@ static int of_link_to_suppliers(struct device *dev)
  		return 0;
  	if (unlikely(!dev->of_node))
  		return 0;
++	if (of_match_node(of_default_bus_match_table, dev->of_node))
++		return 0;
  
--	for_each_property_of_node(dev->of_node, p)
--		if (of_link_property(dev, dev->of_node, p->name))
--			done = false;
--
--	return done ? 0 : -ENODEV;
-+	return __of_link_to_suppliers(dev, dev->of_node);
+ 	return __of_link_to_suppliers(dev, dev->of_node);
  }
- 
- #ifndef CONFIG_PPC
 -- 
 2.22.0.709.g102302147b-goog
 
