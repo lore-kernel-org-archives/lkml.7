@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A8EC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E935C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5FD20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21AFB216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="NLaEBoeZ"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="K3YZLTWn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbfG2V6b (ORCPT
+        id S1730372AbfG2V6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:58:31 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44352 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389273AbfG2V62 (ORCPT
+        Mon, 29 Jul 2019 17:58:34 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39677 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730318AbfG2V6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:58:28 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p17so63447530wrf.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:58:27 -0700 (PDT)
+        Mon, 29 Jul 2019 17:58:31 -0400
+Received: by mail-wm1-f67.google.com with SMTP id u25so44435778wmc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:58:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eQTvfg8Tpo4N8AzFTEat5V09DvUQksH5vgyoMyK5UTo=;
-        b=NLaEBoeZTwPxMkgcmIz5vSw3SbBuMmx/qS0b8Fx5gte/oiZ6F7BusGo71S2hsYxYyw
-         sCGf03gIKzWNLG9ZQnZGG6eDBUB2135zeGJVOsz5PBAJB5ktk+pgZsPvz61NPGxoWDI5
-         YLxbKs4dYFOJ8UP08nBW1oVqMURXEC1usMeQhF751DA0+4mER4w+tWpmCthUvwc3hlhE
-         3p6lNCce1osI3dY8leTznQTuFZw4DFCLtC8+mhPG2bjfDUK/lMInpJlm/BiU06Ej3/4x
-         IHkz0Pp9OjVWjp3apin3No/JflZaIYZNa6FCI2f+8oZ33ex7ea8+V5qVLDGV9hTUhw/g
-         T1lA==
+        bh=3MjEHvnSKKqtqfjPruFAI4NMd2j71wVzmmWx9wAlQuc=;
+        b=K3YZLTWnOhf9uJPUr1iQ87BSk5m9pfk0LQyZSfVvG/3zHnum6jcfJs/niIFFRVn7Wk
+         ZyiuRJE0z3pZSrJZnl3vJoU7znYGhcJZU016YnXI5L8d9FBV5wqmKUDLVJGnNlshvmU6
+         ln5pxw4cUpvOEp2RAoz2B85ngRKuO/0iRLtUsRDz9uUnjdciIXp7L9Fchfdu2ip6BT5H
+         Gt0iObe/GQoNpJjwmZBroAmMmOcGibN5hPgsQkiqsbGb0x71aexNdlve45nROsPPgSla
+         TSDYviucQQHMJ+z+AvlR1at+BZFIausmWWI55UK9BTk8jaJmJiW40eFE/R9gldOycy2s
+         qJ4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eQTvfg8Tpo4N8AzFTEat5V09DvUQksH5vgyoMyK5UTo=;
-        b=VEtQCUlsofzaW9gRm3lT+sBKtCn8V8xcpDX2DxCFf6sB05MsyLgJPLw4CIUzFwJjB6
-         dv5XXLos6VpipKWJEUTovpKc1HvoR7yuwOwsNje3QlKCruF7JSH5WpIFsCVACYxNuuQb
-         Up8xRc+JsG313y7MqxxVCT01kDLUtTVA368+XvYsZ0ilNQnBvdiPYiJRn2R55CAUa9Wc
-         0lgp71lU05RrmY5EvNWayiqDxWJCMNS9u21f0epzvT/BK2Gdoaa92Q/yQOqbsYSEXGhk
-         aMnmYpV6S3cta2MkJGyX5eaBJK9MCqIqnfM6geq293XLHMs8OcDW8luWO0kkIgCQF66H
-         s0Ng==
-X-Gm-Message-State: APjAAAX1YRk5VFciGFEbfyFNFRb+ov3GtpWl3oabgBdCvOI4BrEmQQt4
-        jbpWe+cmTBW+DcDzmLEFgbmUVPYiLMonT+7zVVCsKF469bMav9LXdJz6aO50uloEWLEc4rM4/dB
-        ABeRnt/vOEyq9ArnCuEH5lI8XDwUUsmTH7HNBUoe4HKsts7GnYQMFd8h/zeTdvi6EQUgNVMubs3
-        uwbCSsYgdTjeef+xofo3Xl17rKOm2IuFVFkm0GL2E=
-X-Google-Smtp-Source: APXvYqw7JuvakPP3L9h8/7x/ktyciKK0UqTWtoa9A4x8UUTtY1gHos1WvIOBr2xACzdJnnLxdgNNCw==
-X-Received: by 2002:adf:c803:: with SMTP id d3mr48994066wrh.130.1564437506554;
-        Mon, 29 Jul 2019 14:58:26 -0700 (PDT)
+        bh=3MjEHvnSKKqtqfjPruFAI4NMd2j71wVzmmWx9wAlQuc=;
+        b=nkDxmyc6iVAhPezzb8Iz59pfbbARypGUPCRo+DFoowrdjLluhj+oZvZgdNG46tFTvJ
+         eF6IlUqTqN3+u3pMqzU+U1BTXooAn792wab/6vNxoBqstqeM5LbPAoAqnlopl4o9BoP4
+         yUosT4zG2Z94aICeeiHLlGNoHCkHEcVjf74/cOm1p068mF3QdXbnpm6fkfDaEHP7o07R
+         EqawWLEuYL0TMquOiiv8lSFVVbOgcyOvf7S4xAZFDbT8HjE2SIOSmsL9V8PYdlp+kP4Q
+         6RhbWxDNfWRQ33k8kAxWFEhr8sH+yixN1sldXjQcF1LdBOUCshoR1i8GborDfzdhfwcZ
+         yfUQ==
+X-Gm-Message-State: APjAAAVp+T+SD70gNNAduCHTpccxXHGkVU41S2TJ7kxjfUVtQw62/gVR
+        6miC72emmnFE4jZVBibGksoDss7H9kjPW6ueg5munfqd6Oj9h02J5Oe8Ri17yXMsGxtrfW7i4hf
+        sKdq46Nm/oaJnsa/FNlFRxMx82/nigYOj5ho1SpRDI0YrQIOcnq7mRpA10TqE9XdrX25H8EMUEB
+        f2+Nyjfjfuoea0yztXrqZwxCpsegm2M3s3u3aEBjs=
+X-Google-Smtp-Source: APXvYqy+v04cNfd4RJctLqUo6ZeyXSD8ECZHh591uGR9Ntn/QZseT7nfkt1SZHQmdPRXi4AKP1fgPg==
+X-Received: by 2002:a1c:6555:: with SMTP id z82mr103936726wmb.129.1564437509377;
+        Mon, 29 Jul 2019 14:58:29 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id x20sm49230728wmc.1.2019.07.29.14.58.25
+        by smtp.gmail.com with ESMTPSA id x20sm49230728wmc.1.2019.07.29.14.58.28
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 14:58:25 -0700 (PDT)
+        Mon, 29 Jul 2019 14:58:28 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -78,9 +78,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv5 19/37] x86/vdso2c: Convert iterator to unsigned
-Date:   Mon, 29 Jul 2019 22:57:01 +0100
-Message-Id: <20190729215758.28405-20-dima@arista.com>
+Subject: [PATCHv5 21/37] x86/vdso: Restrict splitting VVAR VMA
+Date:   Mon, 29 Jul 2019 22:57:03 +0100
+Message-Id: <20190729215758.28405-22-dima@arista.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729215758.28405-1-dima@arista.com>
 References: <20190729215758.28405-1-dima@arista.com>
@@ -95,48 +95,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i and j are used everywhere with unsigned types.
-Cleanup and prettify the code a bit.
+Although, time namespace can work with VVAR VMA split, it seems worth
+to forbid splitting VVAR resulting in stricter ABI and reducing amount
+of corner-cases to consider while working further on VDSO.
 
-Introduce syms_nr for readability and as a preparation for allocating an
-array of vDSO entries that will be needed for creating two vdso .so's:
-one for host tasks and another for processes inside time namespace.
+I don't think there is any use-case for partial mremap() of vvar,
+but if there is any - this patch can be easily reverted.
 
 Co-developed-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/x86/entry/vdso/vdso2c.h | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/x86/entry/vdso/vma.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/x86/entry/vdso/vdso2c.h b/arch/x86/entry/vdso/vdso2c.h
-index a20b134de2a8..80be339ee93e 100644
---- a/arch/x86/entry/vdso/vdso2c.h
-+++ b/arch/x86/entry/vdso/vdso2c.h
-@@ -13,7 +13,7 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
- 	unsigned long load_size = -1;  /* Work around bogus warning */
- 	unsigned long mapping_size;
- 	ELF(Ehdr) *hdr = (ELF(Ehdr) *)raw_addr;
--	int i;
-+	unsigned int i, syms_nr;
- 	unsigned long j;
- 	ELF(Shdr) *symtab_hdr = NULL, *strtab_hdr, *secstrings_hdr,
- 		*alt_sec = NULL;
-@@ -86,11 +86,10 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
- 	strtab_hdr = raw_addr + GET_LE(&hdr->e_shoff) +
- 		GET_LE(&hdr->e_shentsize) * GET_LE(&symtab_hdr->sh_link);
+diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+index 349a61d8bf34..3f05418642a8 100644
+--- a/arch/x86/entry/vdso/vma.c
++++ b/arch/x86/entry/vdso/vma.c
+@@ -84,6 +84,18 @@ static int vdso_mremap(const struct vm_special_mapping *sm,
+ 	return 0;
+ }
  
-+	syms_nr = GET_LE(&symtab_hdr->sh_size) / GET_LE(&symtab_hdr->sh_entsize);
- 	/* Walk the symbol table */
--	for (i = 0;
--	     i < GET_LE(&symtab_hdr->sh_size) / GET_LE(&symtab_hdr->sh_entsize);
--	     i++) {
--		int k;
-+	for (i = 0; i < syms_nr; i++) {
-+		unsigned int k;
- 		ELF(Sym) *sym = raw_addr + GET_LE(&symtab_hdr->sh_offset) +
- 			GET_LE(&symtab_hdr->sh_entsize) * i;
- 		const char *sym_name = raw_addr +
++static int vvar_mremap(const struct vm_special_mapping *sm,
++		struct vm_area_struct *new_vma)
++{
++	unsigned long new_size = new_vma->vm_end - new_vma->vm_start;
++	const struct vdso_image *image = new_vma->vm_mm->context.vdso_image;
++
++	if (new_size != -image->sym_vvar_start)
++		return -EINVAL;
++
++	return 0;
++}
++
+ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+ 		      struct vm_area_struct *vma, struct vm_fault *vmf)
+ {
+@@ -136,6 +148,7 @@ static const struct vm_special_mapping vdso_mapping = {
+ static const struct vm_special_mapping vvar_mapping = {
+ 	.name = "[vvar]",
+ 	.fault = vvar_fault,
++	.mremap = vvar_mremap,
+ };
+ 
+ /*
 -- 
 2.22.0
 
