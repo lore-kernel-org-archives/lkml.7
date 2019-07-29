@@ -2,111 +2,184 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5C7C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FB2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C10206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31F1206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgSfchK7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KWJm69Cu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbfG2WH6 (ORCPT
+        id S2387632AbfG2WLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 18:07:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42013 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727562AbfG2WH6 (ORCPT
+        Mon, 29 Jul 2019 18:11:08 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:56185 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729694AbfG2WLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 18:07:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x1so13582180wrr.9;
-        Mon, 29 Jul 2019 15:07:56 -0700 (PDT)
+        Mon, 29 Jul 2019 18:11:07 -0400
+Received: by mail-vk1-f202.google.com with SMTP id b85so27034216vke.22
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:11:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ALxzhNopH+Mhn0yl7f2Aj425+SEQTfEqix8fAEcqb8g=;
-        b=bgSfchK7ozJssLuzSTL7NB2O+UhqdI4MFBKgb5ni0f8lJJyfimQQeWFcpn9xbO46pY
-         A/txAKODLhs6iwOYNrmj4z59MjzdNexCXXELfcNOAvl2lTAMBb49tPTMp9fZ3xrWRyAd
-         yXJp8VWoqDR2qM7kGtEMSgIJKKbrIsep3OnEC3cOcFIgERtCAyy5fgC1+QrjqsqFbsGf
-         WyULjV9tENtZLHWWuDPao//j5KeFRlg7/iB2FKUvA7aUuG2s8btzBR4HyhMozn5g1TsN
-         KnQH/4Lqkt0KVdDXBkRvwa/Yf7yg8Mr9z3LgrYGa0kVY1rwzxoP/z6XHlJ76FRhOfrOG
-         1fog==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=J/HMClv+Qs0qZrH9UG+BYxmogIYQGmmSIGEo1BZEiYc=;
+        b=KWJm69CueVQLRyf5hIJOJ/XbzHZbr9DgW2lgzu/UitcF10Bt8wV2n9G7RGNm0YBk2j
+         R2PcEYmPf6FybYk8NkKraE/JYMPPWJXUK1hizVgep8AvTqB89d2sfeTzRhsWQiq+CNIB
+         K1i+cGKmGlYzBYWuwNfUQspS3ZqjeNPX5+b85LTb8pvKEWvkc3ScwKMgiI7O/HoKn4WH
+         Ye3EH5Cu66G9d36ZftAv+w21d5zUS+CEon6Ttk1z/RQO1QNPl95/lFYx5HhrWwAO0GNS
+         1ldXPKJ35jztl6THPMExgFu7zqUIgm0dCzhw+o1GxNe4OHvFdx6voT6Bmk+AoHM+HCRo
+         Gz3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ALxzhNopH+Mhn0yl7f2Aj425+SEQTfEqix8fAEcqb8g=;
-        b=MZ7yWddAGe+B2Znpbb5JgZ2k47h6Uxl2yFsGZ8dNxL3C9dbk9QTO0cAuEDVnPh0f7d
-         YtGv/aXKkogx+6PY1C9xvut20ocVUuCqucgAf4/Rmr7kePx1JLbsmoYQqjwwH9xpL8z9
-         KTLODr2kMFLIiYVC7sLOuJLenDJKDXSoWk1taF/w3cBM5XRyoQwktPMYj/FeA92GwRep
-         iY45AbOgMgSte9PG6ev5YOj8Pbm44THaVOMFHZy+kmVQ9DPAW6Gna5vwt//9jnkyC4ps
-         OkAQK/LFBK186CHGQkpqb+f1hBl1H+yos6pgS0I0m2zjq8aRrgVWFH75944lJq6QFduz
-         t/YA==
-X-Gm-Message-State: APjAAAUnB+iZr2kecjPudmrIbXiStdlPZMFmPHIOkm8v3IpSrEud7Jcz
-        n2PYXc+R72A1cwHKkdatdeY=
-X-Google-Smtp-Source: APXvYqzjFNi2htEk9WhmVZ2PQgfkTnO69p8V49IH9yfhwiwCnyIdrrqgBDFCT6dU9ob4s5iMAQacbA==
-X-Received: by 2002:adf:f050:: with SMTP id t16mr115255555wro.99.1564438075998;
-        Mon, 29 Jul 2019 15:07:55 -0700 (PDT)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id 18sm52878888wmg.43.2019.07.29.15.07.53
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 15:07:54 -0700 (PDT)
-Subject: Re: [PATCHv5 00/37] kernel: Introduce Time Namespace
-To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
-Cc:     Adrian Reber <adrian@lisas.de>, Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org,
-        Andrei Vagin <avagin@gmail.com>
-References: <20190729215758.28405-1-dima@arista.com>
- <20190729215758.28405-39-dima@arista.com>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Message-ID: <4d53ebc7-d5b2-346e-c383-606401d19d3a@gmail.com>
-Date:   Mon, 29 Jul 2019 23:07:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190729215758.28405-39-dima@arista.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=J/HMClv+Qs0qZrH9UG+BYxmogIYQGmmSIGEo1BZEiYc=;
+        b=J8HqJ+P9EHE0ZmeU8FHKoObW72DIhJS0jkWDkeWQUrDxN1MsUxGkwaxWRLg8psfTLc
+         ehpDHJ0DAz8VieEklTfMt0WQTi0l52SezCSx9LoG/sjUKDntLk0idH2elg8qE4GtzrIo
+         QtY3aqv9uza2zCMPYXoxhb+F4wAEEJ5lNUeD6y9pgP+QZa8TR6dieVluR9BwT3U6XqUk
+         P4WruJc/YxgLkOZxrkiCJlL8DeFRMBlrUqO3CNt35ISmsQsjAAbkiyHzQiufn/S6KfYJ
+         4MPXFIFWrmAQwaczzvHuNVHvEqRdXRTaQtUdnbTxGnppao6jAwZJHAE+QeBfhrcJpUfU
+         EJFg==
+X-Gm-Message-State: APjAAAXu2+v6d3v3YCtHNyhVma520mYuLZLKFSqtmbJRRNbbGhHfToRM
+        /SuzR7zTZPcFy95E8byhQRjehvnQdaTpi/w=
+X-Google-Smtp-Source: APXvYqz1+OixMzZgXRLKjvjE7/CpPTIa6dEjtH4f1jMfEF7N/JxANYKuVQzddzc8XiVJgQ3n99c6Sf3KFoK+R7Q=
+X-Received: by 2002:ab0:4307:: with SMTP id k7mr3628736uak.45.1564438265657;
+ Mon, 29 Jul 2019 15:11:05 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 15:10:54 -0700
+Message-Id: <20190729221101.228240-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+Subject: [PATCH v8 0/7] Solve postboot supplier cleanup and optimize probe ordering
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        David Collins <collinsd@codeaurora.org>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for spamming this twice.
+Add device-links to track functional dependencies between devices
+after they are created (but before they are probed) by looking at
+their common DT bindings like clocks, interconnects, etc.
 
-I did `git send-email --to linux-kernel@vger.kernel.org /tmp/timens/
---cc 'Dmitry Safonov <0x7f454c46@gmail.com>' /tmp/timens/`
+Having functional dependencies automatically added before the devices
+are probed, provides the following benefits:
 
-And didn't notice that I've put the same folder ^^ twice :(
+- Optimizes device probe order and avoids the useless work of
+  attempting probes of devices that will not probe successfully
+  (because their suppliers aren't present or haven't probed yet).
 
-Pardon again.
+  For example, in a commonly available mobile SoC, registering just
+  one consumer device's driver at an initcall level earlier than the
+  supplier device's driver causes 11 failed probe attempts before the
+  consumer device probes successfully. This was with a kernel with all
+  the drivers statically compiled in. This problem gets a lot worse if
+  all the drivers are loaded as modules without direct symbol
+  dependencies.
 
-On 7/29/19 10:57 PM, Dmitry Safonov wrote:
-> Discussions around time namespace are there for a long time. The first
-> attempt to implement it was in 2006 by Jeff Dike. From that time, the
-> topic appears on and off in various discussions.
-> 
-[..]
+- Supplier devices like clock providers, interconnect providers, etc
+  need to keep the resources they provide active and at a particular
+  state(s) during boot up even if their current set of consumers don't
+  request the resource to be active. This is because the rest of the
+  consumers might not have probed yet and turning off the resource
+  before all the consumers have probed could lead to a hang or
+  undesired user experience.
 
-Thanks,
-          Dmitry
+  Some frameworks (Eg: regulator) handle this today by turning off
+  "unused" resources at late_initcall_sync and hoping all the devices
+  have probed by then. This is not a valid assumption for systems with
+  loadable modules. Other frameworks (Eg: clock) just don't handle
+  this due to the lack of a clear signal for when they can turn off
+  resources. This leads to downstream hacks to handle cases like this
+  that can easily be solved in the upstream kernel.
+
+  By linking devices before they are probed, we give suppliers a clear
+  count of the number of dependent consumers. Once all of the
+  consumers are active, the suppliers can turn off the unused
+  resources without making assumptions about the number of consumers.
+
+By default we just add device-links to track "driver presence" (probe
+succeeded) of the supplier device. If any other functionality provided
+by device-links are needed, it is left to the consumer/supplier
+devices to change the link when they probe.
+
+v1 -> v2:
+- Drop patch to speed up of_find_device_by_node()
+- Drop depends-on property and use existing bindings
+
+v2 -> v3:
+- Refactor the code to have driver core initiate the linking of devs
+- Have driver core link consumers to supplier before it's probed
+- Add support for drivers to edit the device links before probing
+
+v3 -> v4:
+- Tested edit_links() on system with cyclic dependency. Works.
+- Added some checks to make sure device link isn't attempted from
+  parent device node to child device node.
+- Added way to pause/resume sync_state callbacks across
+  of_platform_populate().
+- Recursively parse DT node to create device links from parent to
+  suppliers of parent and all child nodes.
+
+v4 -> v5:
+- Fixed copy-pasta bugs with linked list handling
+- Walk up the phandle reference till I find an actual device (needed
+  for regulators to work)
+- Added support for linking devices from regulator DT bindings
+- Tested the whole series again to make sure cyclic dependencies are
+  broken with edit_links() and regulator links are created properly.
+
+v5 -> v6:
+- Split, squashed and reordered some of the patches.
+- Refactored the device linking code to follow the same code pattern for
+  any property.
+
+v6 -> v7:
+- No functional changes.
+- Renamed i to index
+- Added comment to clarify not having to check property name for every
+  index
+- Added "matched" variable to clarify code. No functional change.
+- Added comments to include/linux/device.h for add_links()
+
+v7 -> v8:
+- Rebased on top of linux-next to handle device link changes in [1]
+
+[1] - https://lore.kernel.org/lkml/2305283.AStDPdUUnE@kreacher/
+
+-Saravana
+
+
+Saravana Kannan (7):
+  driver core: Add support for linking devices during device addition
+  driver core: Add edit_links() callback for drivers
+  of/platform: Add functional dependency link from DT bindings
+  driver core: Add sync_state driver/bus callback
+  of/platform: Pause/resume sync state during init and
+    of_platform_populate()
+  of/platform: Create device links for all child-supplier depencencies
+  of/platform: Don't create device links for default busses
+
+ .../admin-guide/kernel-parameters.txt         |   5 +
+ drivers/base/core.c                           | 168 ++++++++++++++++
+ drivers/base/dd.c                             |  29 +++
+ drivers/of/platform.c                         | 189 ++++++++++++++++++
+ include/linux/device.h                        |  55 +++++
+ 5 files changed, 446 insertions(+)
+
+-- 
+2.22.0.709.g102302147b-goog
+
