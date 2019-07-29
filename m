@@ -2,227 +2,265 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA782C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D28BC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BA62070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5826820659
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:52:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564379578;
+	bh=UiNBXbmf99+A8o4np2k48EixMun1+j7M93uj9CQm3L8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d9YzgB1uK+mTifn285QEVIQHlm+xRSI9o2r1UP+xkmKS04JiQ0hsmQ4ntKBjLxJ1m
+	 SOsvaR4PNFwPZ+y9k3wqrbUczuD4m3MhW4gIFuxLJAyo2sW/Q/Ghpk98nAopEL5Shi
+	 P6l0RVxkLjIrIdVlfEN+C/LM2BwvNkg75QIQ2HvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbfG2FwE (ORCPT
+        id S1726831AbfG2Fw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 01:52:04 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37228 "EHLO inva021.nxp.com"
+        Mon, 29 Jul 2019 01:52:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfG2FwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 01:52:03 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6307620141C;
-        Mon, 29 Jul 2019 07:52:01 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A8513201417;
-        Mon, 29 Jul 2019 07:51:57 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E5BF2402E8;
-        Mon, 29 Jul 2019 13:51:50 +0800 (SGT)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     jassisinghbrar@gmail.com, o.rempel@pengutronix.de,
-        aisheng.dong@nxp.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [v2] mailbox: imx: add support for imx v1 mu
-Date:   Mon, 29 Jul 2019 13:29:40 +0800
-Message-Id: <1564378180-27395-2-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564378180-27395-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1564378180-27395-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725988AbfG2Fw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 01:52:56 -0400
+Received: from localhost (unknown [77.137.115.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BEB920659;
+        Mon, 29 Jul 2019 05:52:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564379574;
+        bh=UiNBXbmf99+A8o4np2k48EixMun1+j7M93uj9CQm3L8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0+LuK+ZfLYUUwKvVLnCi9F/3wrH5QtwM4e91g8DZ/yNXIS7PxaNdv7Qqe8KhMvrK/
+         PSY/Af4JgP2C2nrbpPUtcOGTqtUCzaE1Y4YaB3rk0/RLLHaaVscd3xM9JhPiNyItsb
+         XhoqerhT2tee6svSxYvPrZm4qqxwAj2l62o/IEbI=
+Date:   Mon, 29 Jul 2019 08:52:50 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        "dledford@redhat.com" <dledford@redhat.com>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [BUG] infiniband: mlx5: a possible null-pointer dereference in
+ set_roce_addr()
+Message-ID: <20190729055250.GL4674@mtr-leonro.mtl.com>
+References: <f99031cc-795e-92bd-9310-29c669ada7dc@gmail.com>
+ <AM0PR05MB48664AE114EE357CC33EA945D1DD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <AM0PR05MB4866CE3362B36EB4257C858ED1DD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM0PR05MB4866CE3362B36EB4257C858ED1DD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a version1.0 MU on i.MX7ULP platform.
-One new version ID register is added, and it's offset is 0.
-TRn registers are defined at the offset 0x20 ~ 0x2C.
-RRn registers are defined at the offset 0x40 ~ 0x4C.
-SR/CR registers are defined at 0x60/0x64.
-Extend this driver to support it.
+On Mon, Jul 29, 2019 at 05:26:30AM +0000, Parav Pandit wrote:
+>
+>
+> > -----Original Message-----
+> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> > owner@vger.kernel.org> On Behalf Of Parav Pandit
+> > Sent: Monday, July 29, 2019 10:55 AM
+> > To: Jia-Ju Bai <baijiaju1990@gmail.com>; leon@kernel.org;
+> > dledford@redhat.com; jgg@ziepe.ca
+> > Cc: linux-rdma@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: RE: [BUG] infiniband: mlx5: a possible null-pointer dereference in
+> > set_roce_addr()
+> >
+> > Hi Jia,
+> >
+> > > -----Original Message-----
+> > > From: linux-rdma-owner@vger.kernel.org <linux-rdma-
+> > > owner@vger.kernel.org> On Behalf Of Jia-Ju Bai
+> > > Sent: Monday, July 29, 2019 7:47 AM
+> > > To: leon@kernel.org; dledford@redhat.com; jgg@ziepe.ca
+> > > Cc: linux-rdma@vger.kernel.org; linux-kernel@vger.kernel.org
+> > > Subject: [BUG] infiniband: mlx5: a possible null-pointer dereference
+> > > in
+> > > set_roce_addr()
+> > >
+> > > In set_roce_addr(), there is an if statement on line 589 to check
+> > > whether gid is
+> > > NULL:
+> > >      if (gid)
+> > >
+> > > When gid is NULL, it is used on line 613:
+> > >      return mlx5_core_roce_gid_set(..., gid->raw, ...);
+> > >
+> > > Thus, a possible null-pointer dereference may occur.
+> > >
+> > > This bug is found by a static analysis tool STCheck written by us.
+> > >
+> > While static checker is right, it is not a real bug, because gid->raw pointer
+> > points to GID entry itself so when GID is NULL, gid->raw is NULL too.
+> >
+> > One way to suppress the static checker warning/error is below patch.
+> > Will let Leon review it.
+> >
+> > > I do not know how to correctly fix this bug, so I only report it.
+> > >
+> > >
+> > > Best wishes,
+> > > Jia-Ju Bai
+> >
+> > From 30e055dba77e595bf88aebd3a9c75ed76bc9c65a Mon Sep 17 00:00:00
+> > 2001
+> > From: Parav Pandit <parav@mellanox.com>
+> > Date: Mon, 29 Jul 2019 00:13:21 -0500
+> > Subject: [PATCH] IB/mlx5: Avoid static checker warning for NULL access
+> >
+> > union ib_gid *gid and gid->raw pointers refers to the same address.
+> > However some static checker reports this as possible NULL access warning in
+> > call to mlx5_core_roce_gid_set().
+> >
+> > To suppress such warning, instead of working on raw GID element, expose API
+> > using union ib_gid*.
+> >
+> > Reported-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > ---
+> >  drivers/infiniband/hw/mlx5/main.c                   |  2 +-
+> >  drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c | 12 +++++++-----
+> >  drivers/net/ethernet/mellanox/mlx5/core/lib/gid.c   |  5 +++--
+> >  drivers/net/ethernet/mellanox/mlx5/core/rdma.c      |  2 +-
+> >  include/linux/mlx5/driver.h                         |  4 +++-
+> >  5 files changed, 15 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/infiniband/hw/mlx5/main.c
+> > b/drivers/infiniband/hw/mlx5/main.c
+> > index c2a5780cb394..e60785bad7ef 100644
+> > --- a/drivers/infiniband/hw/mlx5/main.c
+> > +++ b/drivers/infiniband/hw/mlx5/main.c
+> > @@ -610,7 +610,7 @@ static int set_roce_addr(struct mlx5_ib_dev *dev, u8
+> > port_num,
+> >  	}
+> >
+> >  	return mlx5_core_roce_gid_set(dev->mdev, index, roce_version,
+> > -				      roce_l3_type, gid->raw, mac,
+> > +				      roce_l3_type, &gid, mac,
+> >  				      vlan_id < VLAN_CFI_MASK, vlan_id,
+> >  				      port_num);
+> >  }
+> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+> > b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+> > index 4c50efe4e7f1..76b8236af9c7 100644
+> > --- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+> > @@ -850,6 +850,7 @@ struct mlx5_fpga_conn *mlx5_fpga_conn_create(struct
+> > mlx5_fpga_device *fdev,
+> >  					     enum mlx5_ifc_fpga_qp_type
+> > qp_type)  {
+> >  	struct mlx5_fpga_conn *ret, *conn;
+> > +	struct ib_gid remote_gid = {};
+> >  	u8 *remote_mac, *remote_ip;
+> >  	int err;
+> >
+> > @@ -876,11 +877,12 @@ struct mlx5_fpga_conn
+> > *mlx5_fpga_conn_create(struct mlx5_fpga_device *fdev,
+> >  		goto err;
+> >  	}
+> >
+> > -	/* Build Modified EUI-64 IPv6 address from the MAC address */
+> >  	remote_ip = MLX5_ADDR_OF(fpga_qpc, conn->fpga_qpc, remote_ip);
+> > -	remote_ip[0] = 0xfe;
+> > -	remote_ip[1] = 0x80;
+> > -	addrconf_addr_eui48(&remote_ip[8], remote_mac);
+> > +	memcpy(remote_gid.raw[0], remote_ip, sizeof(remote_gid.raw));
+> > +	/* Build Modified EUI-64 IPv6 address from the MAC address */
+> > +	remte_gid.raw[0] = 0xfe;
+> > +	remte_gid.raw[1] = 0x80;
+> > +	addrconf_addr_eui48(&remote_gid.raw[8], remote_mac);
+> >
+> >  	err = mlx5_core_reserved_gid_alloc(fdev->mdev, &conn-
+> > >qp.sgid_index);
+> >  	if (err) {
+> > @@ -892,7 +894,7 @@ struct mlx5_fpga_conn *mlx5_fpga_conn_create(struct
+> > mlx5_fpga_device *fdev,
+> >  	err = mlx5_core_roce_gid_set(fdev->mdev, conn->qp.sgid_index,
+> >  				     MLX5_ROCE_VERSION_2,
+> >  				     MLX5_ROCE_L3_TYPE_IPV6,
+> > -				     remote_ip, remote_mac, true, 0,
+> > +				     &remote_gid, remote_mac, true, 0,
+> >  				     MLX5_FPGA_PORT_NUM);
+> >  	if (err) {
+> >  		mlx5_fpga_err(fdev, "Failed to set SGID: %d\n", err); diff --git
+> > a/drivers/net/ethernet/mellanox/mlx5/core/lib/gid.c
+> > b/drivers/net/ethernet/mellanox/mlx5/core/lib/gid.c
+> > index 7722a3f9bb68..9b8563a2bd50 100644
+> > --- a/drivers/net/ethernet/mellanox/mlx5/core/lib/gid.c
+> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/gid.c
+> > @@ -120,7 +120,8 @@ unsigned int mlx5_core_reserved_gids_count(struct
+> > mlx5_core_dev *dev)
+> > EXPORT_SYMBOL_GPL(mlx5_core_reserved_gids_count);
+> >
+> >  int mlx5_core_roce_gid_set(struct mlx5_core_dev *dev, unsigned int index,
+> > -			   u8 roce_version, u8 roce_l3_type, const u8 *gid,
+> > +			   u8 roce_version, u8 roce_l3_type,
+> > +			   const union ib_gid *gid,
+> >  			   const u8 *mac, bool vlan, u16 vlan_id, u8 port_num)
+> > {  #define MLX5_SET_RA(p, f, v) MLX5_SET(roce_addr_layout, p, f, v) @@ -
+> > 145,7 +146,7 @@ int mlx5_core_roce_gid_set(struct mlx5_core_dev *dev,
+> > unsigned int index,
+> >  		ether_addr_copy(addr_mac, mac);
+> >  		MLX5_SET_RA(in_addr, roce_version, roce_version);
+> >  		MLX5_SET_RA(in_addr, roce_l3_type, roce_l3_type);
+> > -		memcpy(addr_l3_addr, gid, gidsz);
+> > +		memcpy(addr_l3_addr, &gid->raw[0], gidsz);
+> >  	}
+> >
+> >  	if (MLX5_CAP_GEN(dev, num_vhca_ports) > 0) diff --git
+> > a/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
+> > b/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
+> > index 17ce9dd56b13..2a4467346231 100644
+> > --- a/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
+> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
+> > @@ -139,7 +139,7 @@ static int mlx5_rdma_add_roce_addr(struct
+> > mlx5_core_dev *dev)
+> >  	mlx5_rdma_make_default_gid(dev, &gid);
+> >  	return mlx5_core_roce_gid_set(dev, 0,
+> >  				      MLX5_ROCE_VERSION_1,
+> > -				      0, gid.raw, mac,
+> > +				      0, &gid, mac,
+> >  				      false, 0, 1);
+> >  }
+> >
+> > diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h index
+> > 1e42c13819ae..691864e853be 100644
+> > --- a/include/linux/mlx5/driver.h
+> > +++ b/include/linux/mlx5/driver.h
+> > @@ -47,6 +47,7 @@
+> >  #include <linux/interrupt.h>
+> >  #include <linux/idr.h>
+> >  #include <linux/notifier.h>
+> > +#include <rdma/ib_verbs.h>
+> >
+> >  #include <linux/mlx5/device.h>
+> >  #include <linux/mlx5/doorbell.h>
+> > @@ -1002,7 +1003,8 @@ struct cpumask *
+> >  mlx5_comp_irq_get_affinity_mask(struct mlx5_core_dev *dev, int vector);
+> > unsigned int mlx5_core_reserved_gids_count(struct mlx5_core_dev *dev);  int
+> > mlx5_core_roce_gid_set(struct mlx5_core_dev *dev, unsigned int index,
+> > -			   u8 roce_version, u8 roce_l3_type, const u8 *gid,
+> > +			   u8 roce_version, u8 roce_l3_type,
+> > +			   const union ib_gid *gid,
+> >  			   const u8 *mac, bool vlan, u16 vlan_id, u8 port_num);
+> >
+> >  static inline int fw_initializing(struct mlx5_core_dev *dev)
+> > --
+> > 2.19.2
+>
+> Leon just replied. Thanks.
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Suggested-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
----
- drivers/mailbox/imx-mailbox.c | 67 ++++++++++++++++++++++++++++++++-----------
- 1 file changed, 50 insertions(+), 17 deletions(-)
+Just to be clear, NAK.
 
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index 25be8bb..8423a38 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -12,19 +12,11 @@
- #include <linux/of_device.h>
- #include <linux/slab.h>
- 
--/* Transmit Register */
--#define IMX_MU_xTRn(x)		(0x00 + 4 * (x))
--/* Receive Register */
--#define IMX_MU_xRRn(x)		(0x10 + 4 * (x))
--/* Status Register */
--#define IMX_MU_xSR		0x20
- #define IMX_MU_xSR_GIPn(x)	BIT(28 + (3 - (x)))
- #define IMX_MU_xSR_RFn(x)	BIT(24 + (3 - (x)))
- #define IMX_MU_xSR_TEn(x)	BIT(20 + (3 - (x)))
- #define IMX_MU_xSR_BRDIP	BIT(9)
- 
--/* Control Register */
--#define IMX_MU_xCR		0x24
- /* General Purpose Interrupt Enable */
- #define IMX_MU_xCR_GIEn(x)	BIT(28 + (3 - (x)))
- /* Receive Interrupt Enable */
-@@ -44,6 +36,13 @@ enum imx_mu_chan_type {
- 	IMX_MU_TYPE_RXDB,	/* Rx doorbell */
- };
- 
-+struct imx_mu_dcfg {
-+	u32	xTR[4];		/* Transmit Registers */
-+	u32	xRR[4];		/* Receive Registers */
-+	u32	xSR;		/* Status Register */
-+	u32	xCR;		/* Control Register */
-+};
-+
- struct imx_mu_con_priv {
- 	unsigned int		idx;
- 	char			irq_desc[IMX_MU_CHAN_NAME_SIZE];
-@@ -61,12 +60,39 @@ struct imx_mu_priv {
- 	struct mbox_chan	mbox_chans[IMX_MU_CHANS];
- 
- 	struct imx_mu_con_priv  con_priv[IMX_MU_CHANS];
-+	const struct imx_mu_dcfg	*dcfg;
- 	struct clk		*clk;
- 	int			irq;
- 
- 	bool			side_b;
- };
- 
-+static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
-+	.xTR[0]	= 0x0,
-+	.xTR[1]	= 0x4,
-+	.xTR[2]	= 0x8,
-+	.xTR[3]	= 0xC,
-+	.xRR[0]	= 0x10,
-+	.xRR[1]	= 0x14,
-+	.xRR[2]	= 0x18,
-+	.xRR[3]	= 0x1C,
-+	.xSR	= 0x20,
-+	.xCR	= 0x24,
-+};
-+
-+static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
-+	.xTR[0]	= 0x20,
-+	.xTR[1]	= 0x24,
-+	.xTR[2]	= 0x28,
-+	.xTR[3]	= 0x2C,
-+	.xRR[0]	= 0x40,
-+	.xRR[1]	= 0x44,
-+	.xRR[2]	= 0x48,
-+	.xRR[3]	= 0x4C,
-+	.xSR	= 0x60,
-+	.xCR	= 0x64,
-+};
-+
- static struct imx_mu_priv *to_imx_mu_priv(struct mbox_controller *mbox)
- {
- 	return container_of(mbox, struct imx_mu_priv, mbox);
-@@ -88,10 +114,10 @@ static u32 imx_mu_xcr_rmw(struct imx_mu_priv *priv, u32 set, u32 clr)
- 	u32 val;
- 
- 	spin_lock_irqsave(&priv->xcr_lock, flags);
--	val = imx_mu_read(priv, IMX_MU_xCR);
-+	val = imx_mu_read(priv, priv->dcfg->xCR);
- 	val &= ~clr;
- 	val |= set;
--	imx_mu_write(priv, val, IMX_MU_xCR);
-+	imx_mu_write(priv, val, priv->dcfg->xCR);
- 	spin_unlock_irqrestore(&priv->xcr_lock, flags);
- 
- 	return val;
-@@ -111,8 +137,8 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
- 	struct imx_mu_con_priv *cp = chan->con_priv;
- 	u32 val, ctrl, dat;
- 
--	ctrl = imx_mu_read(priv, IMX_MU_xCR);
--	val = imx_mu_read(priv, IMX_MU_xSR);
-+	ctrl = imx_mu_read(priv, priv->dcfg->xCR);
-+	val = imx_mu_read(priv, priv->dcfg->xSR);
- 
- 	switch (cp->type) {
- 	case IMX_MU_TYPE_TX:
-@@ -138,10 +164,10 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
- 		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
- 		mbox_chan_txdone(chan, 0);
- 	} else if (val == IMX_MU_xSR_RFn(cp->idx)) {
--		dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
-+		dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
- 		mbox_chan_received_data(chan, (void *)&dat);
- 	} else if (val == IMX_MU_xSR_GIPn(cp->idx)) {
--		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), IMX_MU_xSR);
-+		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), priv->dcfg->xSR);
- 		mbox_chan_received_data(chan, NULL);
- 	} else {
- 		dev_warn_ratelimited(priv->dev, "Not handled interrupt\n");
-@@ -159,7 +185,7 @@ static int imx_mu_send_data(struct mbox_chan *chan, void *data)
- 
- 	switch (cp->type) {
- 	case IMX_MU_TYPE_TX:
--		imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
-+		imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
- 		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
- 		break;
- 	case IMX_MU_TYPE_TXDB:
-@@ -257,7 +283,7 @@ static void imx_mu_init_generic(struct imx_mu_priv *priv)
- 		return;
- 
- 	/* Set default MU configuration */
--	imx_mu_write(priv, 0, IMX_MU_xCR);
-+	imx_mu_write(priv, 0, priv->dcfg->xCR);
- }
- 
- static int imx_mu_probe(struct platform_device *pdev)
-@@ -265,6 +291,7 @@ static int imx_mu_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct imx_mu_priv *priv;
-+	const struct imx_mu_dcfg *dcfg;
- 	unsigned int i;
- 	int ret;
- 
-@@ -282,6 +309,11 @@ static int imx_mu_probe(struct platform_device *pdev)
- 	if (priv->irq < 0)
- 		return priv->irq;
- 
-+	dcfg = of_device_get_match_data(dev);
-+	if (!dcfg)
-+		return -EINVAL;
-+	priv->dcfg = dcfg;
-+
- 	priv->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(priv->clk)) {
- 		if (PTR_ERR(priv->clk) != -ENOENT)
-@@ -335,7 +367,8 @@ static int imx_mu_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id imx_mu_dt_ids[] = {
--	{ .compatible = "fsl,imx6sx-mu" },
-+	{ .compatible = "fsl,imx7ulp-mu", .data = &imx_mu_cfg_imx7ulp },
-+	{ .compatible = "fsl,imx6sx-mu", .data = &imx_mu_cfg_imx6sx },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
--- 
-2.7.4
-
+Thanks
