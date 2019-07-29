@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADA7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ED0C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF97021655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C656205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429482;
-	bh=Yf2qTam8zLu9PWEOf5/AZhz52ovvkQIAeWVI3Uu/gME=;
+	s=default; t=1564429488;
+	bh=corQFp4clWMPuFalfLX5X9dp7Kx3GlivWNOEEpdPTJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jo30JxgzaoSdUMQMr3lPlGu6X6ukWQr2rnog3wJmhD9C4WV9FlxNLEy1/LwlAGn39
-	 EQSxfvQFdmNWUfHR9ZnwgKQfu00762JDMoqAUdXzp/BBgcRCIAn5MBnnNeq1xBhH12
-	 MLRAWilT/vpWEdmVNIOqHX56vSZOLe4YyCeENwL0=
+	b=UobA+5WCP9pHUOSW2QbDcOFTXprcfQhnnSUzQLV3DiTy8kUBieGWyn5PjNUDJqIZR
+	 BKDJyrQERmCUK1ob2SST7caAbrCCqufFPoRb7CgXb9TRJs/tMxzX8+md0+izG1lMJS
+	 vh+OOSIdT05/AKrlgQ2k/s+ZnbFuaKOXfa3vwxjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389816AbfG2Tol (ORCPT
+        id S2389835AbfG2Tor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:44:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:44:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389793AbfG2Toa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:44:30 -0400
+        id S2389808AbfG2Tog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:44:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46BF02054F;
-        Mon, 29 Jul 2019 19:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2818205F4;
+        Mon, 29 Jul 2019 19:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429469;
-        bh=Yf2qTam8zLu9PWEOf5/AZhz52ovvkQIAeWVI3Uu/gME=;
+        s=default; t=1564429476;
+        bh=corQFp4clWMPuFalfLX5X9dp7Kx3GlivWNOEEpdPTJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Alwqy12gEn08i29mm9hF+rNttZqIyD2ckWoyIYu0djNiN++G7c8InNPUI/lbxwjo1
-         TGs3iR/SQrtfQYIzMX2EJr8eEuZZXWnkpzX/Z+haiQ44i856NvMOu9F9BD95GsqNVl
-         UGa1Klm4M1TUboeB6cGeYvMxBp+Wrd1ReFAqX4BI=
+        b=YfwLHaDyepVlS2MkuCGvVc6wd8vnTvCj9uCGjJ+V4GInUJ2qn+11KM/W3SPSEafN8
+         8+0bhVLoCMBquOQrlczto98atJhlHxpCJq9CGyOsN8dhX3qPTe1b2qctHYmzKkjh4P
+         bBzchvbxDQYNCniqvgPh47HbAzEy3jTXEj4ECT9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 107/113] ALSA: ac97: Fix double free of ac97_codec_device
-Date:   Mon, 29 Jul 2019 21:23:14 +0200
-Message-Id: <20190729190720.814115267@linuxfoundation.org>
+Subject: [PATCH 4.19 109/113] ALSA: hda - Add a conexant codec entry to let mute led work
+Date:   Mon, 29 Jul 2019 21:23:16 +0200
+Message-Id: <20190729190721.107897071@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,47 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 607975b30db41aad6edc846ed567191aa6b7d893 upstream.
+commit 3f8809499bf02ef7874254c5e23fc764a47a21a0 upstream.
 
-put_device will call ac97_codec_release to free
-ac97_codec_device and other resources, so remove the kfree
-and other redundant code.
+This conexant codec isn't in the supported codec list yet, the hda
+generic driver can drive this codec well, but on a Lenovo machine
+with mute/mic-mute leds, we need to apply CXT_FIXUP_THINKPAD_ACPI
+to make the leds work. After adding this codec to the list, the
+driver patch_conexant.c will apply THINKPAD_ACPI to this machine.
 
-Fixes: 74426fbff66e ("ALSA: ac97: add an ac97 bus")
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-Cc: <stable@vger.kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/ac97/bus.c |   13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ sound/pci/hda/patch_conexant.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/ac97/bus.c
-+++ b/sound/ac97/bus.c
-@@ -125,17 +125,12 @@ static int ac97_codec_add(struct ac97_co
- 						      vendor_id);
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -1096,6 +1096,7 @@ static int patch_conexant_auto(struct hd
+  */
  
- 	ret = device_add(&codec->dev);
--	if (ret)
--		goto err_free_codec;
-+	if (ret) {
-+		put_device(&codec->dev);
-+		return ret;
-+	}
- 
- 	return 0;
--err_free_codec:
--	of_node_put(codec->dev.of_node);
--	put_device(&codec->dev);
--	kfree(codec);
--	ac97_ctrl->codecs[idx] = NULL;
--
--	return ret;
- }
- 
- unsigned int snd_ac97_bus_scan_one(struct ac97_controller *adrv,
+ static const struct hda_device_id snd_hda_id_conexant[] = {
++	HDA_CODEC_ENTRY(0x14f11f86, "CX8070", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f12008, "CX8200", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f15045, "CX20549 (Venice)", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f15047, "CX20551 (Waikiki)", patch_conexant_auto),
 
 
