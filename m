@@ -2,128 +2,156 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B5BC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EBDC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0F920C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C382070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:19:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TuKAFDEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387649AbfG2LSc (ORCPT
+        id S2387663AbfG2LTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:18:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:42192 "EHLO foss.arm.com"
+        Mon, 29 Jul 2019 07:19:44 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:45517 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387450AbfG2LSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:18:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0B2F28;
-        Mon, 29 Jul 2019 04:18:30 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3916F3F694;
-        Mon, 29 Jul 2019 04:18:30 -0700 (PDT)
-Subject: Re: build error
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <CAGnkfhySwXY7YwuQezyx6cEpemZW4Hox1_4fQJm3-5hvM3G6gw@mail.gmail.com>
- <20190729095047.k45isr7etq3xkyvr@willie-the-truck>
- <1cfad84e-5a98-99bd-07c2-9db0cf37292b@arm.com>
- <CAGnkfhxXHPfMZVMy4Wjmy39E3Oh2U8FjVU8p8PprCnj5QFLMEg@mail.gmail.com>
- <cc6f9c8f-a4a1-7c71-1f89-72e1e8dd0cc8@arm.com>
- <CAGnkfhx6St+MYQuR_Duguk4Q9ieuL7sLCTL=G76-eqUcCAbpoA@mail.gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <c8581164-168d-a4a0-46de-4bdd7f7dedbf@arm.com>
-Date:   Mon, 29 Jul 2019 12:18:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        id S2387554AbfG2LTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:19:44 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45xxzY2pwCz9txkm;
+        Mon, 29 Jul 2019 13:19:37 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=TuKAFDEk; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id GAawApQoOfH4; Mon, 29 Jul 2019 13:19:37 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45xxzY1jWwz9txkl;
+        Mon, 29 Jul 2019 13:19:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1564399177; bh=QYn92bFk6L4jrJrPT8nEs5INqQRWowzslhlMsgOiPSA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=TuKAFDEk1hkgNToNlN1eyQg4AAiN/y1nVzlhzB0UZjlCHyoJfk1bRt9tsfHx07rru
+         Ye3bk/tGrBW405QYUU/vw3jlDklTgk6hMg3OYxx4FDU1BAagcqk91VnBNBE4wkesOj
+         FIemEP+b6tkJ5Jx0o4UzuS769fA7CLCTTSDaerQM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1EDB98B7CE;
+        Mon, 29 Jul 2019 13:19:42 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id oGhuO4e1JRma; Mon, 29 Jul 2019 13:19:42 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D966D8B7B3;
+        Mon, 29 Jul 2019 13:19:41 +0200 (CEST)
+Subject: Re: [RFC PATCH 08/10] powerpc/fsl_booke/kaslr: clear the original
+ kernel if randomized
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com
+Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
+        yebin10@huawei.com, thunder.leizhen@huawei.com,
+        jingxiangfeng@huawei.com, fanchengyang@huawei.com
+References: <20190717080621.40424-1-yanaijie@huawei.com>
+ <20190717080621.40424-9-yanaijie@huawei.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a09b4f53-2ccd-e675-4385-b53fd91fbafc@c-s.fr>
+Date:   Mon, 29 Jul 2019 13:19:41 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAGnkfhx6St+MYQuR_Duguk4Q9ieuL7sLCTL=G76-eqUcCAbpoA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190717080621.40424-9-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2019 12:12, Matteo Croce wrote:
-> On Mon, Jul 29, 2019 at 1:08 PM Vincenzo Frascino
-> <vincenzo.frascino@arm.com> wrote:
->>
->> Hi Matteo,
->>
->> On 29/07/2019 11:25, Matteo Croce wrote:
->>> On Mon, Jul 29, 2019 at 12:16 PM Vincenzo Frascino
->>> <vincenzo.frascino@arm.com> wrote:
->>>>
->>>> Hi Matteo and Will,
->>>>
->>>>
->>>> If I try to build a fresh kernel on my machine with the standard "make mrproper
->>>> && make defconfig && make" I do not see the reported issue (Please see below
->>>> scissors).
->>>>
->>>> At this point would be interesting to know more about how Matteo is building the
->>>> kernel, and try to reproduce the issue here.
->>>>
->>>> @Matteo, could you please provide the full .config and the steps you used to
->>>> generate it? Is it an 'oldconfig'?
->>>>
->>>
->>> Hi,
->>>
->>> yes, this is an oldconfig from a vanilla 5.2, I attach it
->>> (the non gzipped config was dropped by the ML filter)
->>>
->>>
->>
->> I tried your config file and seems working correctly:
->>
->> # cp ~/config ../linux-out/.config
->> # make oldconfig
->> # make
->>
->> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the compat
->> vDSO will not be built
->>
->> ---
->>
->> Could you please send to me the config file that does not contain:
->> CONFIG_CROSS_COMPILE_COMPAT_VDSO=""
->>
->> The original one I mean, on which you did not run make oldconfig.
->> My suspect at this point is that the string passed to
->> CONFIG_CROSS_COMPILE_COMPAT_VDSO is not completely empty.
->>
->> In fact if I do CONFIG_CROSS_COMPILE_COMPAT_VDSO=" " (single space),
->> I do have a failure similar to the one you reported.
->>
+
+
+Le 17/07/2019 à 10:06, Jason Yan a écrit :
+> The original kernel still exists in the memory, clear it now.
 > 
-> That's what I initially thought, but the string is effectively empty:
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Cc: Diana Craciun <diana.craciun@nxp.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> ---
+>   arch/powerpc/kernel/kaslr_booke.c  | 11 +++++++++++
+>   arch/powerpc/mm/mmu_decl.h         |  2 ++
+>   arch/powerpc/mm/nohash/fsl_booke.c |  1 +
+>   3 files changed, 14 insertions(+)
 > 
-> # make
-> arch/arm64/Makefile:58: *** gcc not found, check CROSS_COMPILE_COMPAT.  Stop.
-> # grep CROSS_COMPILE_COMPAT_VDSO .config |hexdump -C
-> 00000000  43 4f 4e 46 49 47 5f 43  52 4f 53 53 5f 43 4f 4d  |CONFIG_CROSS_COM|
-> 00000010  50 49 4c 45 5f 43 4f 4d  50 41 54 5f 56 44 53 4f  |PILE_COMPAT_VDSO|
-> 00000020  3d 22 22 0a                                       |="".|
-> 00000024
-> 
+> diff --git a/arch/powerpc/kernel/kaslr_booke.c b/arch/powerpc/kernel/kaslr_booke.c
+> index 90357f4bd313..00339c05879f 100644
+> --- a/arch/powerpc/kernel/kaslr_booke.c
+> +++ b/arch/powerpc/kernel/kaslr_booke.c
+> @@ -412,3 +412,14 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
+>   
+>   	reloc_kernel_entry(dt_ptr, kimage_vaddr);
+>   }
+> +
+> +void __init kaslr_second_init(void)
+> +{
+> +	/* If randomized, clear the original kernel */
+> +	if (kimage_vaddr != KERNELBASE) {
+> +		unsigned long kernel_sz;
+> +
+> +		kernel_sz = (unsigned long)_end - kimage_vaddr;
+> +		memset((void *)KERNELBASE, 0, kernel_sz);
+
+Why are we clearing ? Is that just to tidy up or is it of security 
+importance ?
+
+If so, maybe memzero_explicit() should be used instead ?
+
+> +	}
+> +}
+> diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+> index 754ae1e69f92..9912ee598f9b 100644
+> --- a/arch/powerpc/mm/mmu_decl.h
+> +++ b/arch/powerpc/mm/mmu_decl.h
+> @@ -150,8 +150,10 @@ extern void loadcam_multi(int first_idx, int num, int tmp_idx);
+>   
+>   #ifdef CONFIG_RANDOMIZE_BASE
+>   extern void kaslr_early_init(void *dt_ptr, phys_addr_t size);
+> +extern void kaslr_second_init(void);
+
+No new 'extern' please.
+
+>   #else
+>   static inline void kaslr_early_init(void *dt_ptr, phys_addr_t size) {}
+> +static inline void kaslr_second_init(void) {}
+>   #endif
+>   
+>   struct tlbcam {
+> diff --git a/arch/powerpc/mm/nohash/fsl_booke.c b/arch/powerpc/mm/nohash/fsl_booke.c
+> index 8d25a8dc965f..fa5a87f5c08e 100644
+> --- a/arch/powerpc/mm/nohash/fsl_booke.c
+> +++ b/arch/powerpc/mm/nohash/fsl_booke.c
+> @@ -269,6 +269,7 @@ notrace void __init relocate_init(u64 dt_ptr, phys_addr_t start)
+>   	kernstart_addr = start;
+>   	if (is_second_reloc) {
+>   		virt_phys_offset = PAGE_OFFSET - memstart_addr;
+> +		kaslr_second_init();
+>   		return;
+>   	}
+>   
 > 
 
-Ok, it is strange though that your config file works in my environment. Could
-you please provide to me the starting .config file?
-
-Could you please confirm as well that "make mrproper && make defconfig && make"
-builds correctly for you?
-
-Last but not least, are you on any irc channel? Might help speeding up the
-debugging if we talk there.
-
--- 
-Regards,
-Vincenzo
+Christophe
