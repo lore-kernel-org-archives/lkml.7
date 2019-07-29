@@ -2,392 +2,126 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0900C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F9AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7511206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C3E214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:14:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfG2MOG (ORCPT
+        id S1727408AbfG2MOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:14:06 -0400
-Received: from mga14.intel.com ([192.55.52.115]:37319 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726557AbfG2MOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:14:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 05:14:05 -0700
-X-ExtLoop1: 1
+        Mon, 29 Jul 2019 08:14:12 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:12462 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfG2MOM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:14:12 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: aLZiBvBLONgzOEJZrm4T1FxjFfo9JWe95bD4mlbxe9tnN/sS2MwW6HVEVRXUfUP49oivvT+Kw9
+ SJ3JvYMAOwmmlbjjSAvfkvk6HAK2Q4ckKGVzqbH1K8krtLYLYCygF2UAqzGZKJP0G3R73oaXFK
+ 67C4MxDAh3LjW8UfpbrY5Pph7BIA3IVJ0XIexjhWV++1E8Y09z+0bNTHHP1txignmlRel8YagR
+ TbiN+EcfluhWIwMOn4cc76Z9WtM9ptl/Je9be8eWM/fBLNTHTvv2heZOz0zPa3RY8KkAJ9PuXT
+ ogU=
 X-IronPort-AV: E=Sophos;i="5.64,322,1559545200"; 
-   d="scan'208";a="176380914"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by orsmga006.jf.intel.com with ESMTP; 29 Jul 2019 05:14:03 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH V2 1/1] mmc: sdhci: Fix O2 Host data read/write DLL lock
- Phase shift issue
-To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
-        "Max Huang (SC)" <max.huang@bayhubtech.com>,
-        "Chevron Li (WH)" <chevron.li@bayhubtech.com>
-References: <1564166909-7437-1-git-send-email-shirley.her@bayhubtech.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <0ce0b72d-46f6-ee06-092b-abb0d656c083@intel.com>
-Date:   Mon, 29 Jul 2019 15:12:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+   d="scan'208";a="43090694"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Jul 2019 05:14:11 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 29 Jul 2019 05:14:11 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 29 Jul 2019 05:14:10 -0700
+Date:   Mon, 29 Jul 2019 14:14:10 +0200
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
+        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
+Message-ID: <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
+References: <1564055044-27593-1-git-send-email-horatiu.vultur@microchip.com>
+ <7e7a7015-6072-d884-b2ba-0a51177245ab@cumulusnetworks.com>
+ <eef063fe-fd3a-7e02-89c2-e40728a17578@cumulusnetworks.com>
+ <20190725142101.65tusauc6fzxb2yp@soft-dev3.microsemi.net>
+ <b9ce433a-3ef7-fe15-642a-659c5715d992@cumulusnetworks.com>
+ <e6ad982f-4706-46f9-b8f0-1337b09de350@cumulusnetworks.com>
+ <20190726120214.c26oj5vks7g5ntwu@soft-dev3.microsemi.net>
+ <b755f613-e6d8-a2e6-16cd-6f13ec0a6ddc@cumulusnetworks.com>
 MIME-Version: 1.0
-In-Reply-To: <1564166909-7437-1-git-send-email-shirley.her@bayhubtech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <b755f613-e6d8-a2e6-16cd-6f13ec0a6ddc@cumulusnetworks.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/07/19 9:48 PM, Shirley Her (SC) wrote:
-> Fix data read/write error in HS200 mode due to chip DLL lock phase shift
+Hi Nikolay,
 
-More explanation is needed.  See comment below where
-sdhci_o2_error_recovery() is called.
+First of all, as mentioned further down in this thread, I realized that our
+implementation of the multicast floodmasks does not align with the existing SW
+implementation. We will change this, such that all multicast packets goes to the
+SW bridge.
 
-> 
-> Signed-off-by:Shirley Her<shirley.her@bayhubtech.com>
-> ---
-> change in V2:
->   1. Use usleep_range instead of udelay
->   2. move dll_adjust_count to sdhci-pci-o2micro.c
-> 
-> change in V1:
->   1. Add error recovery function to relock the DLL with correct phase
->   2. Retuning HS200 after DLL locked
-> ---
-> ---
->  drivers/mmc/host/sdhci-pci-o2micro.c | 157 +++++++++++++++++++++++++++++------
->  1 file changed, 133 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-> index 9dc4548..c43b2ce 100644
-> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> @@ -51,13 +51,60 @@
->  #define O2_SD_VENDOR_SETTING2	0x1C8
->  #define O2_SD_HW_TUNING_DISABLE	BIT(4)
->  
-> -#define O2_PLL_WDT_CONTROL1	0x1CC
-> +#define O2_PLL_DLL_WDT_CONTROL1	0x1CC
+This changes things a bit, not that much.
 
-Renaming O2_PLL_WDT_CONTROL1 should be a separate patch.
+I actually think you summarized the issue we have (after changing to multicast
+flood-masks) right here:
 
->  #define  O2_PLL_FORCE_ACTIVE	BIT(18)
->  #define  O2_PLL_LOCK_STATUS	BIT(14)
->  #define  O2_PLL_SOFT_RESET	BIT(12)
-> +#define  O2_DLL_LOCK_STATUS	BIT(11)
->  
->  #define O2_SD_DETECT_SETTING 0x324
->  
-> +static const u32 dmdn_table[5] = {0x25100000, 0x2B1C0000,
-> +	0x2C1A0000, 0x371B0000, 0x35100000};
-> +static u8 dll_adjust_count;
+The 07/26/2019 12:26, Nikolay Aleksandrov wrote:
+> >> Actually you mentioned non-IP traffic, so the querier stuff is not a problem. This
+> >> traffic will always be flooded by the bridge (and also a copy will be locally sent up).
+> >> Thus only the flooding may need to be controlled.
 
-This should be in a struct:
+This seems to be exactly what we need.
 
-struct o2_host {
-	u8 dll_adjust_count;
-}
+Assuming we have a SW bridge (br0) with 4 slave interfaces (eth0-3). We use this
+on a network where we want to limit the flooding of frames with dmac
+01:21:6C:00:00:01 (which is non IP traffic) to eth0 and eth1.
 
+One way of doing this could potentially be to support the following command:
 
-> +static int sdhci_o2_get_cd(struct mmc_host *mmc);
+bridge fdb add    01:21:6C:00:00:01 port eth0
+bridge fdb append 01:21:6C:00:00:01 port eth1
 
-Please make a separate patch that reorders the functions so that forward
-declaration of sdhci_o2_get_cd() is not necessary.
+On 25/07/2019 16:06, Nikolay Aleksandrov wrote:
+> >>>>>>  In general NLM_F_APPEND is only used in vxlan, the bridge does not
+> >>>>>>  handle that flag at all.  FDB is only for *unicast*, nothing is joined
+> >>>>>>  and no multicast should be used with fdbs. MDB is used for multicast
+> >>>>>>  handling, but both of these are used for forwarding.
+This is true, and this should have been addressed in the patch, we were too
+focused on setting up the offload patch in the driver, and forgot to do the SW
+implementation.
 
-> +
-> +static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
-> +{
-> +	u32 scratch_32;
-> +
-> +	pci_read_config_dword(chip->pdev,
-> +			      O2_SD_PLL_SETTING, &scratch_32);
-> +
-> +	scratch_32 &= 0x0000FFFF;
-> +	scratch_32 |= value;
-> +
-> +	pci_write_config_dword(chip->pdev,
-> +			       O2_SD_PLL_SETTING, scratch_32);
-> +}
-> +
-> +static int sdhci_o2_wait_dll_detect_lock(struct sdhci_host *host)
-> +{
-> +	ktime_t timeout;
-> +	u32 scratch32;
-> +
-> +	usleep_range(5000, 6000);
-> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +	if (!(scratch32 & O2_DLL_LOCK_STATUS)) {
-> +		pr_warn("%s: DLL is still unlocked after wait 5ms\n",
-> +			mmc_hostname(host->mmc));
-> +	}
-> +
-> +	/* Detect 500 ms */
-> +	timeout = ktime_add_ms(ktime_get(), 500);
-> +	while (1) {
-> +		bool timedout = ktime_after(ktime_get(), timeout);
-> +
-> +		scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +		if (!(scratch32 & O2_DLL_LOCK_STATUS))
-> +			return 0;
-> +
-> +		if (timedout)
-> +			return 1;
-> +		usleep_range(10, 1000);
-> +	}
-> +}
-> +
->  static void sdhci_o2_set_tuning_mode(struct sdhci_host *host)
->  {
->  	u16 reg;
-> @@ -95,11 +142,85 @@ static void __sdhci_o2_execute_tuning(struct sdhci_host *host, u32 opcode)
->  	sdhci_reset_tuning(host);
->  }
->  
-> +static int sdhci_o2_error_recovery(struct sdhci_pci_chip *chip,
-> +				 struct sdhci_host *host)
-> +{
-> +	int ret = 0;
-> +	u8 scratch_8 = 0;
-> +	u32 scratch_32 = 0;
+Do you see any issues in supporting this flag, and updating the SW
+forwarding in br_handle_frame_finish such that it can support/allow a FDB entry
+to be a multicast?
 
-Please add a blank line after local variable declaration
+/Allan
 
-> +	/* Disable clock */
-> +	sdhci_writeb(host, 0, SDHCI_CLOCK_CONTROL);
-> +
-> +DLL_ADJUST:
-
-Please use a 'do', 'for' or 'while' loop.
-
-> +	if (dll_adjust_count >= 5) {
-> +		dll_adjust_count = 4;
-> +		pr_warn("%s: error recovery failed with the dll_adjust_count over max value.\n",
-> +			mmc_hostname(host->mmc));
-
-Isn't it necessary to exit the loop here?
-
-> +	}
-> +
-> +	/* UnLock WP */
-> +	ret = pci_read_config_byte(chip->pdev,
-> +			O2_SD_LOCK_WP, &scratch_8);
-> +	if (ret)
-> +		return ret;
-> +
-> +	scratch_8 &= 0x7f;
-> +	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
-> +
-> +	/* PLL software reset */
-> +	scratch_32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +	scratch_32 |= O2_PLL_SOFT_RESET;
-> +	sdhci_writel(host, scratch_32, O2_PLL_DLL_WDT_CONTROL1);
-> +
-> +	ret = pci_read_config_dword(chip->pdev,
-> +				    O2_SD_FUNC_REG4,
-> +				    &scratch_32);
-> +	/* Enable Base Clk setting change */
-> +	scratch_32 |= O2_SD_FREG4_ENABLE_CLK_SET;
-> +	pci_write_config_dword(chip->pdev, O2_SD_FUNC_REG4, scratch_32);
-> +	o2_pci_set_baseclk(chip, dmdn_table[dll_adjust_count]);
-> +
-> +
-
-Please don't use multiple blank lines
-
-> +	/* Enable internal clock */
-> +	scratch_8 = SDHCI_CLOCK_INT_EN;
-> +	sdhci_writeb(host, scratch_8, SDHCI_CLOCK_CONTROL);
-> +
-> +	if (sdhci_o2_get_cd(host->mmc)) {
-> +		if (sdhci_o2_wait_dll_detect_lock(host)) {
-> +			scratch_8 |= SDHCI_CLOCK_CARD_EN;
-> +			sdhci_writeb(host, scratch_8, SDHCI_CLOCK_CONTROL);
-> +			ret = 1;
-> +		} else {
-> +
-
-Blank lines aren't necessary after an open brace '{'
-
-> +			pr_warn("%s: DLL unlocked when dll_adjust_count is %d.\n",
-> +			mmc_hostname(host->mmc), dll_adjust_count);
-> +			dll_adjust_count++;
-> +			goto DLL_ADJUST;
-> +		}
-> +	} else
-> +		goto DLL_ADJUST;
-
-braces {} should be used on all arms of this statement
-
-> +
-> +		/* Lock WP */
-> +	ret = pci_read_config_byte(chip->pdev,
-> +				   O2_SD_LOCK_WP, &scratch_8);
-> +	if (ret)
-> +		return ret;
-> +	scratch_8 |= 0x80;
-> +	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
-> +	return ret;
-> +}
-> +
->  static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  {
->  	struct sdhci_host *host = mmc_priv(mmc);
-> +	struct sdhci_pci_slot *slot = sdhci_priv(host);
-
-This is how you get a reference to o2_host:
-
-	struct o2_host *o2_host = sdhci_pci_priv(slot);
-
->  	int current_bus_width = 0;
->  
-> +
-
-Please don't use multiple blank lines
-
-> +	if (dll_adjust_count)
-
-dll_adjust_count should be in struct o2_host
-
-	o2_host->dll_adjust_count
-
-> +		sdhci_o2_error_recovery(slot->chip, host);
-
-Tuning will be executed whenever the system resumes, which is not an error.
-Can you explain when error recovery is needed, and how this patch works.
-
-> +
-> +	dll_adjust_count++;
->  	/*
->  	 * This handler only implements the eMMC tuning that is specific to
->  	 * this controller.  Fall back to the standard method for other TIMING.
-> @@ -131,23 +252,11 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  		mmc->ios.bus_width = MMC_BUS_WIDTH_8;
->  		sdhci_set_bus_width(host, current_bus_width);
->  	}
-> -
-
-Please avoid unrelated white space changes.
-
->  	host->flags &= ~SDHCI_HS400_TUNING;
->  	return 0;
->  }
->  
-> -static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
-> -{
-> -	u32 scratch_32;
-> -	pci_read_config_dword(chip->pdev,
-> -			      O2_SD_PLL_SETTING, &scratch_32);
->  
-> -	scratch_32 &= 0x0000FFFF;
-> -	scratch_32 |= value;
-> -
-> -	pci_write_config_dword(chip->pdev,
-> -			       O2_SD_PLL_SETTING, scratch_32);
-> -}
->  
->  static void o2_pci_led_enable(struct sdhci_pci_chip *chip)
->  {
-> @@ -316,23 +425,23 @@ static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
->  	u32 scratch32;
->  
->  	/* PLL software reset */
-> -	scratch32 = sdhci_readl(host, O2_PLL_WDT_CONTROL1);
-> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
->  	scratch32 |= O2_PLL_SOFT_RESET;
-> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
->  	udelay(1);
->  	scratch32 &= ~(O2_PLL_SOFT_RESET);
-> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
->  
->  	/* PLL force active */
->  	scratch32 |= O2_PLL_FORCE_ACTIVE;
-> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
->  
->  	/* Wait max 20 ms */
->  	timeout = ktime_add_ms(ktime_get(), 20);
->  	while (1) {
->  		bool timedout = ktime_after(ktime_get(), timeout);
->  
-> -		scratch = sdhci_readw(host, O2_PLL_WDT_CONTROL1);
-> +		scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
->  		if (scratch & O2_PLL_LOCK_STATUS)
->  			break;
->  		if (timedout) {
-> @@ -350,16 +459,16 @@ static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
->  
->  out:
->  	/* Cancel PLL force active */
-> -	scratch32 = sdhci_readl(host, O2_PLL_WDT_CONTROL1);
-> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
->  	scratch32 &= ~O2_PLL_FORCE_ACTIVE;
-> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
->  }
->  
->  static int sdhci_o2_get_cd(struct mmc_host *mmc)
->  {
->  	struct sdhci_host *host = mmc_priv(mmc);
-> -
-
-Please keep the blank line after declarations.
-
-> -	sdhci_o2_enable_internal_clock(host);
-> +	if (!(sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1) & O2_PLL_LOCK_STATUS))
-> +		sdhci_o2_enable_internal_clock(host);
->  
->  	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
->  }
-> @@ -369,7 +478,7 @@ static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
->  	/* Enable internal clock */
->  	clk |= SDHCI_CLOCK_INT_EN;
->  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> -
-> +	sdhci_o2_enable_internal_clock(host);
->  	if (sdhci_o2_get_cd(host->mmc)) {
->  		clk |= SDHCI_CLOCK_CARD_EN;
->  		sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> @@ -400,7 +509,7 @@ int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
->  
->  	chip = slot->chip;
->  	host = slot->host;
-> -
-> +	dll_adjust_count = 0;
->  	caps = sdhci_readl(host, SDHCI_CAPABILITIES);
->  
->  	/*
-> 
-
-Set up o2_host like this:
-
-diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c
-b/drivers/mmc/host/sdhci-pci-o2micro.c
-index c43b2cecdf30..cfe57f23dcf1 100644
---- a/drivers/mmc/host/sdhci-pci-o2micro.c
-+++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-@@ -796,4 +796,5 @@ const struct sdhci_pci_fixes sdhci_o2 = {
- 	.resume = sdhci_pci_o2_resume,
- #endif
- 	.ops = &sdhci_pci_o2_ops,
-+	.priv_size = sizeof(struct o2_host),
- };
