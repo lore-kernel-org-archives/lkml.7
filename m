@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1790C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F46C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D91205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1BA205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430539;
-	bh=oECJ7UF9WFWlDfQ3kjKWWh6o07C5LWhV8cJjOLM7LJI=;
+	s=default; t=1564430546;
+	bh=Drb7JSB57DtMotOFpPRiaDsEWKfqyiq2kMzgnVjtx9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WkP/gulKvJBhe2p7TWxwLMboYAJyYOc2yX9dDTDa8qbCOW6CAuluG/3qqTIP6EfQj
-	 x4CXYIJlP0C8H0K3MVkecrUoHzTczdsfl1KsDZ+FvBxjXdqqNh9ixn/tNEEwxfv4M1
-	 Xm3HAvX4rUWxyWiJ+dqkc6ZpPQVGWh+6NzGt8sZI=
+	b=ZC+dntRF3aAGd4TwtV5sacqYsti6oVSRcrJ5nWuk/9LBrb/1qWzsadO2AW9f4cFsT
+	 AJZR+XkhdFyD7WrOkIxEnYXufywzO01EUO6x0tG+ZvMBu0Sw2DXC9KuSMgwOWqhE7D
+	 vNkVq63RBgh1TZv83M7Px38W4mRbzdijGJIcHcjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388561AbfG2UCS (ORCPT
+        id S2390425AbfG2Tsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:02:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39348 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:48:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390461AbfG2Ts7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:48:59 -0400
+        id S2390410AbfG2Tsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:48:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44A8A2054F;
-        Mon, 29 Jul 2019 19:48:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CA68205F4;
+        Mon, 29 Jul 2019 19:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429738;
-        bh=oECJ7UF9WFWlDfQ3kjKWWh6o07C5LWhV8cJjOLM7LJI=;
+        s=default; t=1564429719;
+        bh=Drb7JSB57DtMotOFpPRiaDsEWKfqyiq2kMzgnVjtx9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dWZ9I9IiOUz+FYo1yFKGNxZvNb255s9DFIt2HJIxSaYhFjvxpr9zhMA7FsYvf57W2
-         UZkRryGFuw7HPc/YYK2mm6M1N5bnq9twhBWN79PK987A7RSW8H/qeqgdXj2yBJ7WYA
-         Ip+Ku3L3FdJLpYDDHNWuYsoVk/Rc3gC2jJZgfgY0=
+        b=Jy313OOk5zUuXc4T8FfHA6LDIRq2x/u064DtiqKNzbpm3wWnAeyjodJfoEIH1yQPL
+         4cgw/hX2NQFcQl43794K2JMUFdH07pLijY2i4I+q7FzYptSVEk8bkNvwtV95mi74oo
+         cLhySnN8vtA5MHE95WdBVHxS1mDgPqkX5PFvpTXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oak Zeng <Oak.Zeng@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 030/215] drm/amdkfd: Fix sdma queue map issue
-Date:   Mon, 29 Jul 2019 21:20:26 +0200
-Message-Id: <20190729190745.366931434@linuxfoundation.org>
+Subject: [PATCH 5.2 071/215] usb: dwc3: Fix core validation in probe, move after clocks are enabled
+Date:   Mon, 29 Jul 2019 21:21:07 +0200
+Message-Id: <20190729190752.561773195@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -61,62 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 065e4bdfa1f3ab2884c110394d8b7e7ebe3b988c ]
+[ Upstream commit dc1b5d9aed1794b5a1c6b0da46e372cc09974cbc ]
 
-Previous codes assumes there are two sdma engines.
-This is not true e.g., Raven only has 1 SDMA engine.
-Fix the issue by using sdma engine number info in
-device_info.
+The required clocks needs to be enabled before the first register
+access. After commit fe8abf332b8f ("usb: dwc3: support clocks and resets
+for DWC3 core"), this happens when the dwc3_core_is_valid function is
+called, but the mentioned commit adds that call in the wrong place,
+before the clocks are enabled. So, move that call after the
+clk_bulk_enable() to ensure the clocks are enabled and the reset
+deasserted.
 
-Signed-off-by: Oak Zeng <Oak.Zeng@amd.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+I detected this while, as experiment, I tried to move the clocks and resets
+from the glue layer to the DWC3 core on a Samsung Chromebook Plus.
+
+That was not detected before because, in most cases, the glue layer
+initializes SoC-specific things and then populates the child "snps,dwc3"
+with those clocks already enabled.
+
+Fixes: b873e2d0ea1ef ("usb: dwc3: Do core validation early on probe")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/amdkfd/kfd_device_queue_manager.c | 21 +++++++++++--------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/usb/dwc3/core.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-index ae381450601c..afbaf6f5131e 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-@@ -1268,12 +1268,17 @@ int amdkfd_fence_wait_timeout(unsigned int *fence_addr,
- 	return 0;
- }
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 4aff1d8dbc4f..6e9e172010fc 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1423,11 +1423,6 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	dwc->regs	= regs;
+ 	dwc->regs_size	= resource_size(&dwc_res);
  
--static int unmap_sdma_queues(struct device_queue_manager *dqm,
--				unsigned int sdma_engine)
-+static int unmap_sdma_queues(struct device_queue_manager *dqm)
- {
--	return pm_send_unmap_queue(&dqm->packets, KFD_QUEUE_TYPE_SDMA,
--			KFD_UNMAP_QUEUES_FILTER_DYNAMIC_QUEUES, 0, false,
--			sdma_engine);
-+	int i, retval = 0;
-+
-+	for (i = 0; i < dqm->dev->device_info->num_sdma_engines; i++) {
-+		retval = pm_send_unmap_queue(&dqm->packets, KFD_QUEUE_TYPE_SDMA,
-+			KFD_UNMAP_QUEUES_FILTER_DYNAMIC_QUEUES, 0, false, i);
-+		if (retval)
-+			return retval;
-+	}
-+	return retval;
- }
- 
- /* dqm->lock mutex has to be locked before calling this function */
-@@ -1312,10 +1317,8 @@ static int unmap_queues_cpsch(struct device_queue_manager *dqm,
- 	pr_debug("Before destroying queues, sdma queue count is : %u\n",
- 		dqm->sdma_queue_count);
- 
--	if (dqm->sdma_queue_count > 0) {
--		unmap_sdma_queues(dqm, 0);
--		unmap_sdma_queues(dqm, 1);
+-	if (!dwc3_core_is_valid(dwc)) {
+-		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
+-		return -ENODEV;
 -	}
-+	if (dqm->sdma_queue_count > 0)
-+		unmap_sdma_queues(dqm);
+-
+ 	dwc3_get_properties(dwc);
  
- 	retval = pm_send_unmap_queue(&dqm->packets, KFD_QUEUE_TYPE_COMPUTE,
- 			filter, filter_param, false, 0);
+ 	dwc->reset = devm_reset_control_get_optional_shared(dev, NULL);
+@@ -1460,6 +1455,12 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto unprepare_clks;
+ 
++	if (!dwc3_core_is_valid(dwc)) {
++		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
++		ret = -ENODEV;
++		goto disable_clks;
++	}
++
+ 	platform_set_drvdata(pdev, dwc);
+ 	dwc3_cache_hwparams(dwc);
+ 
+@@ -1525,6 +1526,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 
++disable_clks:
+ 	clk_bulk_disable(dwc->num_clks, dwc->clks);
+ unprepare_clks:
+ 	clk_bulk_unprepare(dwc->num_clks, dwc->clks);
 -- 
 2.20.1
 
