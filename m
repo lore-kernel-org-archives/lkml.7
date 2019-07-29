@@ -2,111 +2,99 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CE3C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C71BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEFF521773
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:03:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564412593;
-	bh=UjF/AwvKhVxU6D/HTh8Hq1nLgczmyOG6CMrKwunrSbc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=dGliFSsGVrIvbupKQcXAaWpzVJY6EzBjt/yLVsOoxuLejBr7SMp9Yoz/zvtaT992G
-	 675ELQE1vjbIyFefnzuz6x5qGTtqXVEEplbecfNkSVbLizHqVk6/6c79TKyoKxGnTe
-	 Yh+L+Mqnm70PlHifcvOthZYzD0xouoP/7xpimsWY=
+	by mail.kernel.org (Postfix) with ESMTP id 5D1D12067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:03:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="XukWqnN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbfG2PDM (ORCPT
+        id S2387774AbfG2PDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:03:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728494AbfG2PDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:03:12 -0400
-Received: from localhost.localdomain (unknown [180.111.32.87])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D379216C8;
-        Mon, 29 Jul 2019 15:03:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564412591;
-        bh=UjF/AwvKhVxU6D/HTh8Hq1nLgczmyOG6CMrKwunrSbc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Yy1NJQiT9GgkQ0qR1k5P1ZVp85SrdeWvmz8xBGwi+4V8vyxUb96PRkJahlMm2sGx0
-         3j6PSU6phRDYOF76GM80X1+lAKWcwc6xbio1PfOJvJFNcLRHS9HRFE9zBk9BeMeaKP
-         SIkf7DP4jjkYcn5jiJqRP+hbvhegrn7m67o+vlJE=
-From:   Chao Yu <chao@kernel.org>
-To:     jaegeuk@kernel.org
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH RESEND] f2fs: fix to migrate blocks correctly during defragment
-Date:   Mon, 29 Jul 2019 23:02:29 +0800
-Message-Id: <20190729150229.12121-1-chao@kernel.org>
-X-Mailer: git-send-email 2.22.0
+        Mon, 29 Jul 2019 11:03:36 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37222 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728494AbfG2PDg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:03:36 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d15so44325432qkl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 08:03:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=GGm6OI70suTpFjV7qqNRDI5ovSLydBxQ6ymCIyOGOuM=;
+        b=XukWqnN+f7ASzP5xRS7xN7QmRS+fXyMi9aH+eIpObdFSFmM2Gwij6HW9xnCcGW2VFJ
+         0YVbOT+7tMf7rh/VIU4tRsqaFhkPC087YYO46peiQmEZm7rEYjEsOKMMguuBrnskL2zs
+         97Nu8ezE53m/foi6CrL4xGRPzJXyMEJvZD3aw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=GGm6OI70suTpFjV7qqNRDI5ovSLydBxQ6ymCIyOGOuM=;
+        b=ghIlV9ycyC32mLFPTVhtMCYnt5s9MVUMzPqSb6a46MH4dum3IjYXQb7EN0Kv4Sp9OZ
+         FMMsxQihwOfmwwP7n4pbqYwgD/PJd6TpAMkbGgBMXoEhYM/v1gvyWrTZSJDvaVtzDY8a
+         HZ3qxxns1JZjfh2CMK3fWm4C9kpTvohXNCuyHOiu0LGQX0I7AP0p6T4DB1kAMv1eZh0z
+         0i0xLpktg/kM1ywAc/I4YNFMKEL4b4YZcr7Y1D976eux3kezRSZerb7PoSdIEK9Kck5p
+         4fYMjH9aA+wxX7fb9zcMk8gxqplJ8e2KR53i+E+UXRUlMPm0sqy2Q8N05sjrW+iel2Wf
+         coQw==
+X-Gm-Message-State: APjAAAWyyZUJ3PLEGVsMZ6Iikk2qT2AT2Q6x1ZsXMW2MHcyVrlkRz4cj
+        Pj8brsGGFwimf456fEhqkUyPRseQfwc=
+X-Google-Smtp-Source: APXvYqzUFRaqL/T3JR8xJ5iKiBBlmGvkH1xB3cm3TfaXnPHjOK6x5UFBJP8eP/q4e8U2SNn6vsoWzw==
+X-Received: by 2002:a37:9d1:: with SMTP id 200mr71450094qkj.306.1564412615532;
+        Mon, 29 Jul 2019 08:03:35 -0700 (PDT)
+Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id u1sm34198651qth.21.2019.07.29.08.03.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 08:03:34 -0700 (PDT)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Mon, 29 Jul 2019 11:03:26 -0400 (EDT)
+X-X-Sender: vince@macbook-air
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: perf: perf report stuck in an infinite loop
+In-Reply-To: <20190726211415.GE24867@kernel.org>
+Message-ID: <alpine.DEB.2.21.1907291102500.31029@macbook-air>
+References: <alpine.DEB.2.21.1907261640590.27043@macbook-air> <20190726211415.GE24867@kernel.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+On Fri, 26 Jul 2019, Arnaldo Carvalho de Melo wrote:
 
-During defragment, we missed to trigger fragmented blocks migration
-for below condition:
+> Em Fri, Jul 26, 2019 at 04:46:51PM -0400, Vince Weaver escreveu:
+> > 
+> > Currently the perf_data_fuzzer causes perf report to get stuck in an 
+> > infinite loop.
+> > 
+> > >From what I can tell, the issue happens in reader__process_events()
+> > when an event is mapped using mmap(), but when it goes to process the
+> > event finds out the internal event header has the size (invalidly) set to 
+> > something much larger than the mmap buffer size.  This means 
+> > fetch_mmaped_event() fails, which gotos remap: which tries again with
+> > the exact same mmap size, and this will loop forever.
+> > 
+> > I haven't been able to puzzle out how to fix this, but maybe you have a 
+> > better feel for what's going on here.
+> 
+> Perhaps the patch below?
 
-In defragment region:
-- total number of valid blocks is smaller than 512;
-- the tail part of the region are all holes;
+yes, with the patch you provided I can no longer trigger the infinite 
+loop.
 
-In addtion, return zero to user via range->len if there is no
-fragmented blocks.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/file.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index ff93066ed515..ff2ffa850a6f 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2384,8 +2384,10 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
- 		map.m_lblk += map.m_len;
- 	}
- 
--	if (!fragmented)
-+	if (!fragmented) {
-+		total = 0;
- 		goto out;
-+	}
- 
- 	sec_num = DIV_ROUND_UP(total, BLKS_PER_SEC(sbi));
- 
-@@ -2415,7 +2417,7 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
- 
- 		if (!(map.m_flags & F2FS_MAP_FLAGS)) {
- 			map.m_lblk = next_pgofs;
--			continue;
-+			goto check;
- 		}
- 
- 		set_inode_flag(inode, FI_DO_DEFRAG);
-@@ -2439,8 +2441,8 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
- 		}
- 
- 		map.m_lblk = idx;
--
--		if (idx < pg_end && cnt < blk_per_seg)
-+check:
-+		if (map.m_lblk < pg_end && cnt < blk_per_seg)
- 			goto do_map;
- 
- 		clear_inode_flag(inode, FI_DO_DEFRAG);
--- 
-2.22.0
-
+Tested-by: Vince Weaver <vincent.weaver@maine.edu>
