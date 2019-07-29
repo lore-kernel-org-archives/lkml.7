@@ -2,116 +2,102 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145B4C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00714C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1102206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE526206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:42:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eg7LsPyD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbfG2Qlk (ORCPT
+        id S1728558AbfG2Qmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:41:40 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36977 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfG2Qlj (ORCPT
+        Mon, 29 Jul 2019 12:42:46 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42422 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbfG2Qmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:41:39 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t76so45769856oih.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:41:39 -0700 (PDT)
+        Mon, 29 Jul 2019 12:42:45 -0400
+Received: by mail-io1-f67.google.com with SMTP id e20so91056830iob.9;
+        Mon, 29 Jul 2019 09:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=bmQBBxHIt/eza4I+J3H3QVjWn12oGbnozJKzf9V+0Ig=;
+        b=eg7LsPyDXHvp4+juupUsF6DEW1xyfkm0S7KlgYBgIvTviXu5aaPxd2Ra64WBP1Hp19
+         LRvBFDEvdorvIFrVkf67rS7O0YL2ARodjMsu7RpaaV0i9mP+vvBMrLBvQv23AGwBFyy7
+         0LnuDifYQh8F/A3jUi6O5BiItpq3U8TZcdaovZA8U9UHoJXB1ZO0O6VpSwU/dfm5rVzH
+         7LNznnMqtliI6e+NCruUP/fiLNPqEipr39KpcpUV9L3yvf6fnvNbv5nmgbvnN4+2ofol
+         2xFPlOwsTjkytoJB3siD+JoT+bN9B66Wt94mOlbdxjAprgYUHvTeiG3HAFhXCCAs8/EJ
+         vmzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qEnidYZvMtI0djmi8U0ZEWcmJ8XfKi49GrC/Gx0OghM=;
-        b=LAUdTEN33lwGb3Dhe7Qy00N2LdOn3/Q2wyCkXxtLpdrrcyJMlbEwsDjDuFAShEc/Wz
-         dm/bZQ+2+qm+aXVYY+pzvgLYIFR/1x6JP80hN6AYirExAnpYme92KT1tkjo011V90Ab0
-         mvZPtuifzOlGuZjdtkmgyJ8LxmPFOrWRny2MlnJe2XdOGA9svRVAM4m3ZfDKaNs/NE4h
-         prUWlU61Jw1D3b2S3YkA4cnA7lkuLPkWcbZmELgvokQ63aflLRXUCcY9sRP3XojVysWB
-         p7Lf2RiXcixeL8WDDUQhZpERJXWpBYZoWxZwXznVKOSmlcnfNpJjvt1aK2N52SOOh6mK
-         Z/HA==
-X-Gm-Message-State: APjAAAVlhKqGQu0Fbt52nYuj2QU7R3izV/Ey0l1kzZqBrSX2o3SInIa2
-        5noZVl0CcB7ArqDqgQf80T336HhvgVIDpJC8Uq4WTA==
-X-Google-Smtp-Source: APXvYqwLmyK1E/4jrfGUT98xeH//0WmrilX5ZcE9+u6f94aZr6eu7bn4vAgIsx2aZWLhabtNB/WLd0Vdna3tzy2IXKU=
-X-Received: by 2002:aca:1803:: with SMTP id h3mr20756041oih.24.1564418498709;
- Mon, 29 Jul 2019 09:41:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190717113030.163499-1-sgarzare@redhat.com> <20190717113030.163499-2-sgarzare@redhat.com>
- <20190729095956-mutt-send-email-mst@kernel.org> <20190729153656.zk4q4rob5oi6iq7l@steredhat>
- <20190729115904-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190729115904-mutt-send-email-mst@kernel.org>
-From:   Stefano Garzarella <sgarzare@redhat.com>
-Date:   Mon, 29 Jul 2019 18:41:27 +0200
-Message-ID: <CAGxU2F5F1KcaFNJ6n7++ApZiYMGnoEWKVRgo3Vc4h5hpxSJEZg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bmQBBxHIt/eza4I+J3H3QVjWn12oGbnozJKzf9V+0Ig=;
+        b=YtneJs6n1b9/OQHhPwj0YiI4w83acq9W5M5QSOmqj74RhxfA1Mdw/bs4t1rOKGEK7J
+         yQuhnamENKMBcZwgIXmV/5H+kuzCDsmCae39tT2pQGVvia+j5JgM1F4mpRlpOKLeTmdd
+         FGxI2mIW5MsC9TszpgPiAJs6oXa+3rtlTl7KH9b+mEseAKb5WGesmOHyXHmewqvps5rS
+         UczKedinLOh8qj9qxAOKThFgulUngxYr/MsB82ZSBhNt4QxjdgTydyeRmkJ5PNBMqcbo
+         dq++CYTr4lhLlCe7De8J594US60Mmb8BgZ7myZPuh7jm3DAL6I6Vf1LkE1iDgEE913UN
+         ljCQ==
+X-Gm-Message-State: APjAAAU2VMR9Brvk3PMzBMTGP0JKCbQiK/xtEWR4/Hbu4xW62om4Iufa
+        Y2Blnkdlx7BrMnSGujK6Nzo=
+X-Google-Smtp-Source: APXvYqx9RAnoQcF1WuI32NPf46CQ9XRe79lNZjazF9WSw9v2zVi05F9kaIX9YjTFK/o1qyuwb1eP3g==
+X-Received: by 2002:a6b:f114:: with SMTP id e20mr102069896iog.169.1564418565034;
+        Mon, 29 Jul 2019 09:42:45 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id z17sm83662696iol.73.2019.07.29.09.42.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 09:42:44 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     josef@toxicpanda.com
+Cc:     kjlu@umn.edu, smccaman@umn.edu, secalert@redhat.com,
+        emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] nbd_genl_status: null check for nla_nest_start
+Date:   Mon, 29 Jul 2019 11:42:26 -0500
+Message-Id: <20190729164226.22632-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190729130912.7imtg3hfnvb4lt2y@MacBook-Pro-91.local>
+References: <20190729130912.7imtg3hfnvb4lt2y@MacBook-Pro-91.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 12:01:37PM -0400, Michael S. Tsirkin wrote:
-> On Mon, Jul 29, 2019 at 05:36:56PM +0200, Stefano Garzarella wrote:
-> > On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
-> > > On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
-> > > > Since virtio-vsock was introduced, the buffers filled by the host
-> > > > and pushed to the guest using the vring, are directly queued in
-> > > > a per-socket list. These buffers are preallocated by the guest
-> > > > with a fixed size (4 KB).
-> > > >
-> > > > The maximum amount of memory used by each socket should be
-> > > > controlled by the credit mechanism.
-> > > > The default credit available per-socket is 256 KB, but if we use
-> > > > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
-> > > > buffers, using up to 1 GB of memory per-socket. In addition, the
-> > > > guest will continue to fill the vring with new 4 KB free buffers
-> > > > to avoid starvation of other sockets.
-> > > >
-> > > > This patch mitigates this issue copying the payload of small
-> > > > packets (< 128 bytes) into the buffer of last packet queued, in
-> > > > order to avoid wasting memory.
-> > > >
-> > > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-> > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > >
-> > > This is good enough for net-next, but for net I think we
-> > > should figure out how to address the issue completely.
-> > > Can we make the accounting precise? What happens to
-> > > performance if we do?
-> > >
-> >
-> > In order to do more precise accounting maybe we can use the buffer size,
-> > instead of payload size when we update the credit available.
-> > In this way, the credit available for each socket will reflect the memory
-> > actually used.
-> >
-> > I should check better, because I'm not sure what happen if the peer sees
-> > 1KB of space available, then it sends 1KB of payload (using a 4KB
-> > buffer).
-> > The other option is to copy each packet in a new buffer like I did in
-> > the v2 [2], but this forces us to make a copy for each packet that does
-> > not fill the entire buffer, perhaps too expensive.
-> >
-> > [2] https://patchwork.kernel.org/patch/10938741/
-> >
->
-> So one thing we can easily do is to under-report the
-> available credit. E.g. if we copy up to 256bytes,
-> then report just 256bytes for every buffer in the queue.
->
+nla_nest_start may fail and return NULL. The check is inserted, and
+errno is selected based on other call sites within the same source code.
+Update: removed extra new line.
 
-Ehm sorry, I got lost :(
-Can you explain better?
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/block/nbd.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 9bcde2325893..2410812d1e82 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -2149,6 +2149,11 @@ static int nbd_genl_status(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 
+ 	dev_list = nla_nest_start_noflag(reply, NBD_ATTR_DEVICE_LIST);
++	if (!dev_list) {
++		ret = -EMSGSIZE;
++		goto out;
++	}
++
+ 	if (index == -1) {
+ 		ret = idr_for_each(&nbd_index_idr, &status_cb, reply);
+ 		if (ret) {
+-- 
+2.17.1
 
-Thanks,
-Stefano
