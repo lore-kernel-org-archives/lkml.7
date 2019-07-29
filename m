@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB67EC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D387AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E86217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E5E217D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430037;
-	bh=Tf9pv3jmi3sgVFMBLfygf4O+o/wGdfYJHtYUPKMetng=;
+	s=default; t=1564430041;
+	bh=g3Qa5pRkKnZVNZExxBrPTdWu2N5wP1p8syJV2zVv3rc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pcZJlH+8DnAey+T5Ietl2dSEE72EhHrgmyidSExmaGY4457QT9kjvxsVfrCrI6i68
-	 V7s7r/0sf8ZSNdaoi4gfFqlTE/F5n0XpN906gAlLtJIWWF03T7T+snkvqFLA5WbA5C
-	 iYDj65rbmwxkwq1KJlABjiUVnVT5ZPZGG0SQ7jPA=
+	b=arNb2XcwXTRZj0tD2S4+zB1NUufCDUOjUqrfzYe7bDoo77Fg2LUeneEevAwk6UPPh
+	 HAV50ACCkdiB3JkSe/71lNMtJrWjDT9ZIwKr5oZamJhM4XPQbgfMWWZYvVMno5rZnU
+	 zlbTnnd+fbvJNdXayDcDgqxJ9AUzgIRvpjaw1g30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390961AbfG2Tx4 (ORCPT
+        id S1729354AbfG2TyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:53:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45786 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:54:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390767AbfG2Tx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:53:26 -0400
+        id S2390679AbfG2Txd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:53:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EF2E2054F;
-        Mon, 29 Jul 2019 19:53:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5F5D2171F;
+        Mon, 29 Jul 2019 19:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430005;
-        bh=Tf9pv3jmi3sgVFMBLfygf4O+o/wGdfYJHtYUPKMetng=;
+        s=default; t=1564430012;
+        bh=g3Qa5pRkKnZVNZExxBrPTdWu2N5wP1p8syJV2zVv3rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i2KehgazyPQVWW/Z+KVYOsfhrKcMBoI8VvS+2/szHYw0x5z979CyC1Ext8fZO9zD9
-         V2NKP35YxI+Y18m9dpw2ug40Ed4TI2H1tPJyuKJIzeiCMuJlRDDRhKeEY6oZ5FSN93
-         hSdJzsm6FrEPFVH0mWOccIJNXBHY51reJEr0IUSo=
+        b=jGtXggJOnZiW5nynnQdPuGYzpymwjDuZv5331rYrtDNVHKLj3XJOJKxEWr3WTKHln
+         6GUJomXWWIgqP3WOb4VvJWBbK5g+E8hAw85bymE7jDrJSprzQVOnWAiiVz3Q4lryFu
+         2UGqRAz4kWCPvOMUcjwFHgfTT30+SjGx0j9p4EPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maik Stohn <maik.stohn@seal-one.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.2 167/215] xhci: Fix crash if scatter gather is used with Immediate Data Transfer (IDT).
-Date:   Mon, 29 Jul 2019 21:22:43 +0200
-Message-Id: <20190729190808.779029683@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+fd2bd7df88c606eea4ef@syzkaller.appspotmail.com,
+        Phong Tran <tranmanphong@gmail.com>
+Subject: [PATCH 5.2 169/215] usb: wusbcore: fix unbalanced get/put cluster_id
+Date:   Mon, 29 Jul 2019 21:22:45 +0200
+Message-Id: <20190729190809.186902009@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,49 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-commit d39b5bad8658d6d94cb2d98a44a7e159db4f5030 upstream.
+commit f90bf1ece48a736097ea224430578fe586a9544c upstream.
 
-A second regression was found in the immediate data transfer (IDT)
-support which was added to 5.2 kernel
+syzboot reported that
+https://syzkaller.appspot.com/bug?extid=fd2bd7df88c606eea4ef
 
-IDT is used to transfer small amounts of data (up to 8 bytes) in the
-field normally used for data dma address, thus avoiding dma mapping.
+There is not consitency parameter in cluste_id_get/put calling.
+In case of getting the id with result is failure, the wusbhc->cluster_id
+will not be updated and this can not be used for wusb_cluster_id_put().
 
-If the data was not already dma mapped, then IDT support assumed data was
-in urb->transfer_buffer, and did not take into accound that even
-small amounts of data (8 bytes) can be in a scatterlist instead.
+Tested report
+https://groups.google.com/d/msg/syzkaller-bugs/0znZopp3-9k/oxOrhLkLEgAJ
 
-This caused a NULL pointer dereference when sg_dma_len() was used
-with non-dma mapped data.
+Reproduce and gdb got the details:
 
-Solve this by not using IDT if scatter gather buffer list is used.
+139		addr = wusb_cluster_id_get();
+(gdb) n
+140		if (addr == 0)
+(gdb) print addr
+$1 = 254 '\376'
+(gdb) n
+142		result = __hwahc_set_cluster_id(hwahc, addr);
+(gdb) print result
+$2 = -71
+(gdb) break wusb_cluster_id_put
+Breakpoint 3 at 0xffffffff836e3f20: file drivers/usb/wusbcore/wusbhc.c, line 384.
+(gdb) s
+Thread 2 hit Breakpoint 3, wusb_cluster_id_put (id=0 '\000') at drivers/usb/wusbcore/wusbhc.c:384
+384		id = 0xff - id;
+(gdb) n
+385		BUG_ON(id >= CLUSTER_IDS);
+(gdb) print id
+$3 = 255 '\377'
 
-Fixes: 33e39350ebd2 ("usb: xhci: add Immediate Data Transfer support")
-Cc: <stable@vger.kernel.org> # v5.2
-Reported-by: Maik Stohn <maik.stohn@seal-one.com>
-Tested-by: Maik Stohn <maik.stohn@seal-one.com>
-CC: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1564044861-1445-1-git-send-email-mathias.nyman@linux.intel.com
+Reported-by: syzbot+fd2bd7df88c606eea4ef@syzkaller.appspotmail.com
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190724020601.15257-1-tranmanphong@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/host/hwa-hc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -2170,7 +2170,8 @@ static inline bool xhci_urb_suitable_for
- 	if (!usb_endpoint_xfer_isoc(&urb->ep->desc) && usb_urb_dir_out(urb) &&
- 	    usb_endpoint_maxp(&urb->ep->desc) >= TRB_IDT_MAX_SIZE &&
- 	    urb->transfer_buffer_length <= TRB_IDT_MAX_SIZE &&
--	    !(urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP))
-+	    !(urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP) &&
-+	    !urb->num_sgs)
- 		return true;
+--- a/drivers/usb/host/hwa-hc.c
++++ b/drivers/usb/host/hwa-hc.c
+@@ -159,7 +159,7 @@ out:
+ 	return result;
  
- 	return false;
+ error_set_cluster_id:
+-	wusb_cluster_id_put(wusbhc->cluster_id);
++	wusb_cluster_id_put(addr);
+ error_cluster_id_get:
+ 	goto out;
+ 
 
 
