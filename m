@@ -2,133 +2,124 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA28C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CBDC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50EDA2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564436655;
-	bh=xFVffMPuzVWewGk2CIxesrHebyRDvumYUACktm8P19E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LWMbZcyNHNB0d5TZ0iY6yNYwLfTlnnbzRSSzMEUxwYhcPTNiurU5kS1S78EgsaSzx
-	 YXU/hn/WFz/vPE0JxjZqp1mpj5LP3EWHZS1fcvA4EfQv8doy8qUbf4DFAxeZVRB7uL
-	 l5lRWpAjS9fxCOhokG3GSd3nuTwqXL9A6lZNmBLM=
+	by mail.kernel.org (Postfix) with ESMTP id 60A8E2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:46:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Sxm6JuVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388761AbfG2VoO (ORCPT
+        id S1730153AbfG2VqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:44:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728685AbfG2VoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:44:13 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7BD52067D;
-        Mon, 29 Jul 2019 21:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564436652;
-        bh=xFVffMPuzVWewGk2CIxesrHebyRDvumYUACktm8P19E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HLgG2ouhZw5043ZZXQje0IdhgzWcHgRz4rgee5YbBRV0J2o9U/Do0HRmyGjfXVxM7
-         ml2wJBJCqFBrb5UpquJI5OeKWVBzSA8a9sbl1DZxy70VRuVWf4HO8uY76UihEGQr2J
-         Nw++joScR295zEJeTPYFpLyJ8t3ZBFiXPfRVuIzY=
-Date:   Mon, 29 Jul 2019 16:44:05 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 01/11] PCI: Move #define
- PCI_PM_* lines to drivers/pci/pci.h
-Message-ID: <20190729214405.GG203187@google.com>
-References: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
- <20190724233848.73327-1-skunberg.kelsey@gmail.com>
- <20190724233848.73327-2-skunberg.kelsey@gmail.com>
+        Mon, 29 Jul 2019 17:46:04 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35711 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbfG2VqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 17:46:03 -0400
+Received: by mail-oi1-f193.google.com with SMTP id a127so46370739oii.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N3q7xJdwh8PFVLuqry097P3Xvdg3K97aXzT+h+VJXcs=;
+        b=Sxm6JuVIa/VBOyYU6R6afowaBbcZWBLQ8edTLaMy6eWWGnu2Do83jIjFSm89RTjzLQ
+         WNcZYaXlNOS1PN98f4DahJMh63AQ54FoFxJyE8SGfv08OEpnF+XHgHKz1NpvWKuurj3s
+         uRo6TgOuKm0klWbvezGd+QDPTLlLkmywlgospjfgk5xrWKas/gu25VksFkXytRpBjemG
+         8lEbYNCYq/Qw9xroqwUx9dGGV1OVktApy0a++h+hf9a11R2CrgkyyH7ZMRRPA+0F82m3
+         wepW205mRdVUF6qELog6dHXbdBJzGJFNDHBIIlBIXbow1EsTA8UFXLDw8fm2efcoMP04
+         7b5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N3q7xJdwh8PFVLuqry097P3Xvdg3K97aXzT+h+VJXcs=;
+        b=qZrSJpl4JkzaFojDfIyDeUWvZqmZkhhoo0W6Qb4UDDvej4592oD8lm2BfNvj7Z9mC9
+         NEpqP10FzsoSdsYNtAM1AVuazirnVo/Y0xqgaBYogQL+oLsps6totQii2IT83ITkjJ41
+         KNZwlB6l1qmzIMHuJs5qIqQGJ6SB1b7svQsqHOEyqUtYQEoCK2avMUcPtqsUrbCGRpaF
+         jfuS+jOTfXBcm2szfR4iofoYVhuiW6G+Bd5AkxpG3HvtQH/Ax/eC36aVf4Y1qAMb5cEM
+         y7v2lP10BYpe/VP/bD2UQD9DSI6Z9LBEA6m3xbjmwuEy/R6EXVCwDtJFB3KahjubJogs
+         7U8Q==
+X-Gm-Message-State: APjAAAWVn2OgpqsyzL4N/sTuvRJ2zyM9LCrbiE1qXuHF3wauXMs2xXv1
+        9jGdYnVog9wgHis+uRpBmzAdVfN0aixBF3SbUJ4=
+X-Google-Smtp-Source: APXvYqzH9o6vMPXW5m2jTBkNKSzRv8Plc0jl6T3q9UDoCcIxmNEvygjudEsgt5EPfe13VReOdigLLl5CWKltcKD27jY=
+X-Received: by 2002:a05:6808:8f0:: with SMTP id d16mr57350197oic.47.1564436762794;
+ Mon, 29 Jul 2019 14:46:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724233848.73327-2-skunberg.kelsey@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190727194647.15355-1-martin.blumenstingl@googlemail.com>
+ <20190727194647.15355-2-martin.blumenstingl@googlemail.com> <9814939f-8580-c8f6-5c2f-7e64db60e6ae@baylibre.com>
+In-Reply-To: <9814939f-8580-c8f6-5c2f-7e64db60e6ae@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 29 Jul 2019 23:45:51 +0200
+Message-ID: <CAFBinCC5Bz-Oe4G1dtABrU+RFWUmqpdgyuDdRPp=Mo_Cucz7Wg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: meson8b: add the nvmem cell with the
+ board's MAC address
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        hexdump0815@googlemail.com
+Cc:     linux-amlogic@lists.infradead.org, khilman@baylibre.com,
+        linux.amoon@gmail.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, ottuzzi@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+to Rafael, author of commits mentioned below]
+On Mon, Jul 29, 2019 at 9:11 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Hi Martin,
+>
+> On 27/07/2019 21:46, Martin Blumenstingl wrote:
+> > Amlogic's BSP kernel defines that all boards with a MAC address stored
+> > in the eFuse have it at offset 0x1b4. It is up to the board to
+> > decide whether to use this MAC address or not:
+> > - Odroid-C1 uses the MAC address from the eFuse
+> > - EC-100 seems to read the MAC address from eMMC
+> >
+> > Add the nvmem cell which describes the Ethernet MAC address. Don't
+> > assign it to the Ethernet controller, because depending on the board the
+> > actual MAC address may be read from somewhere else.
+> >
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  arch/arm/boot/dts/meson8b.dtsi | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+> > index 30fca9bb4bbe..c7de58b71d08 100644
+> > --- a/arch/arm/boot/dts/meson8b.dtsi
+> > +++ b/arch/arm/boot/dts/meson8b.dtsi
+> > @@ -402,6 +402,10 @@
+> >       clocks = <&clkc CLKID_EFUSE>;
+> >       clock-names = "core";
+> >
+> > +     ethernet_mac_address: mac@1b4 {
+> > +             reg = <0x1b4 0x6>;
+> > +     };
+>
+> Is this a fixed position for all boards ? if not, I'll suggest moving
+> it to the odroid-c1 dt until you have more users.
+the 0x1b4 offset is hardcoded in Amlogic's kernel sources
+if some board uses another offset then the manufacturer had to patch
+the kernel to make it work (like Endless did)
 
-On Wed, Jul 24, 2019 at 05:38:38PM -0600, Kelsey Skunberg wrote:
-> The #define PCI_PM_* lines are only used within drivers/pci/ and they do
-> not need to be seen by the rest of the kernel. Move #define PCI_* to
-> drivers/pci/pci.h
-> 
-> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> ---
->  drivers/pci/pci.h   | 5 +++++
->  include/linux/pci.h | 5 -----
->  2 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 1be03a97cb92..708413632429 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -39,6 +39,11 @@ int pci_probe_reset_function(struct pci_dev *dev);
->  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
->  int pci_bus_error_reset(struct pci_dev *dev);
->  
-> +#define PCI_PM_D2_DELAY         200
-> +#define PCI_PM_D3_WAIT          10
-> +#define PCI_PM_D3COLD_WAIT      100
-> +#define PCI_PM_BUS_WAIT         50
++Cc hexdump0815 - can you please run the following command on your
+Meson8b MXQ board:
+$ hexdump -C /sys/bus/nvmem/devices/meson8b-efuse0/nvmem | grep
+000001b0 | cut -d' ' -f7,8,9,10,12,13
 
-Unrelated to *this* patch, but while reviewing, I noticed this a few
-lines below:
+this should print the MAC address that is also used by the stock
+firmware and/or printed on the board
+if it is then I'm happy to provide a patch also for your MXQ board so
+it also uses the correct MAC address
 
-  static inline void pci_wakeup_event(struct pci_dev *dev)
-  {
-    /* Wait 100 ms before the system can be put into a sleep state. */
-    pm_wakeup_event(&dev->dev, 100);
-  }
 
-I'm curious about what this 100ms is and whether it's related to
-something in the PCIe spec.  E.g., is this another way of writing
-PCI_PM_D3COLD_WAIT?
-
-This constant was added to drivers/pci/pci.c as PCI_WAKEUP_COOLDOWN by
-c125e96f0444 ("PM: Make it possible to avoid races between wakeup and
-system sleep") and then moved to drivers/pci/pci.h and the name
-removed by b6e335aeeb11 ("PCI/PM: Use pm_wakeup_event() directly for
-reporting wakeup events").
-
->  /**
->   * struct pci_platform_pm_ops - Firmware PM callbacks
->   *
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 9e700d9f9f28..238449460210 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -145,11 +145,6 @@ static inline const char *pci_power_name(pci_power_t state)
->  	return pci_power_names[1 + (__force int) state];
->  }
->  
-> -#define PCI_PM_D2_DELAY		200
-> -#define PCI_PM_D3_WAIT		10
-> -#define PCI_PM_D3COLD_WAIT	100
-> -#define PCI_PM_BUS_WAIT		50
-> -
->  /**
->   * typedef pci_channel_state_t
->   *
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> Linux-kernel-mentees mailing list
-> Linux-kernel-mentees@lists.linuxfoundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
+Martin
