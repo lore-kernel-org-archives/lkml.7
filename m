@@ -5,50 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BB0C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66601C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC96217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342A92171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429081;
-	bh=6gK9q/3ixP2ypfFCq5avtOjd/FjOrw4fbcEoMIVTtc0=;
+	s=default; t=1564429085;
+	bh=KJf2K2UdkZTGt+0mCo4df6+uIaLto5eUYkcRQ8ZM+Rk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FRiRbGt+vUKCEs/h2Z+HWa+yLH9JQcOBhSb/CfCDXnIMy6xvFUl+tIxOpzR8Q09tZ
-	 8aWDNXj7EW57Dcx2UP4Qky7+oAaWW9lDrBoYYxOxNOq2rkx0aMzbCbI2BWvYk3C13t
-	 9CWMjODOGPsZBOzdK09Bc1JrxVASF2TgUVBLouDc=
+	b=Ch/B6iTn9O1sqm1xCKJWvutXsp4LxDuvCnC5FAV2gpSyWpPnCtrrt6a9hX9SclcFW
+	 soKLHI8Angv/BuS2Qd8s/h3+kq0Fhb/F4+1SVJGnVrBs3oz4CHwbrz8XzM9af7ZCE2
+	 dwzcTSIEcTqaq9OfCVriXmBZibGftF4CcdIFgDMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388818AbfG2TiA (ORCPT
+        id S2388828AbfG2TiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:38:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52918 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388795AbfG2Th6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:37:58 -0400
+        id S2388437AbfG2TiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:38:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51E082171F;
-        Mon, 29 Jul 2019 19:37:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E96DC2171F;
+        Mon, 29 Jul 2019 19:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429077;
-        bh=6gK9q/3ixP2ypfFCq5avtOjd/FjOrw4fbcEoMIVTtc0=;
+        s=default; t=1564429080;
+        bh=KJf2K2UdkZTGt+0mCo4df6+uIaLto5eUYkcRQ8ZM+Rk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zg+Zl8L+d/s9H7zBh7/cTQb2c+ITgHkwI3zdvvy22qDbZBP5T4iswy3NOe3x9BNCu
-         wGOaOC//3fcFTK4rAV8Rg6jE13JgSTJeGASaEG5V/fgILOsPMnC2rX9MeOqtQWzMzl
-         QmC/ol0xJLMCPaCGwgpNHKYYm9LnZGjRiu82D3Kc=
+        b=e/hPW1vwK1CB+RKtrY0TBiJNfHtnjkYKclF7WLLFS9zsy3Wez9h2MLcrxvSSzIyc9
+         M51B79wW3mx3d5BtMoZqzzO5IIN7hadk3DXJnzvrUEYERvb9jss6kpmkTXVctTEp8Y
+         xNdO6j/Ywxzd6UPvvKvhn0yT7ajf5TcX9u8gYs+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
         =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 278/293] drm/crc: Only report a single overflow when a CRC fd is opened
-Date:   Mon, 29 Jul 2019 21:22:49 +0200
-Message-Id: <20190729190845.576584535@linuxfoundation.org>
+        <ville.syrjala@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 279/293] drm/crc-debugfs: Also sprinkle irqrestore over early exits
+Date:   Mon, 29 Jul 2019 21:22:50 +0200
+Message-Id: <20190729190845.641798943@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,70 +66,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a012024571d98e2e4bf29a9168fb7ddc44b7ab86 ]
+[ Upstream commit d99004d7201aa653658ff2390d6e516567c96ebc ]
 
-This reduces the amount of spam when you debug a CRC reading
-program.
+I. was. blind.
 
-Signed-off-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-[mlankhorst: Change bool overflow to was_overflow (Ville)]
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20180418125121.72081-1-maarten.lankhorst@linux.intel.com
+Caught with vkms, which has some really slow crc computation function.
+
+Fixes: 1882018a70e0 ("drm/crc-debugfs: User irqsafe spinlock in drm_crtc_add_crc_entry")
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Emil Velikov <emil.velikov@collabora.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190606211544.5389-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_debugfs_crc.c | 9 ++++++++-
- include/drm/drm_debugfs_crc.h     | 3 ++-
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_debugfs_crc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
-index 021813b20e97..f689c75474e5 100644
+index f689c75474e5..2901b7944068 100644
 --- a/drivers/gpu/drm/drm_debugfs_crc.c
 +++ b/drivers/gpu/drm/drm_debugfs_crc.c
-@@ -139,6 +139,7 @@ static int crtc_crc_data_count(struct drm_crtc_crc *crc)
- static void crtc_crc_cleanup(struct drm_crtc_crc *crc)
- {
- 	kfree(crc->entries);
-+	crc->overflow = false;
- 	crc->entries = NULL;
- 	crc->head = 0;
- 	crc->tail = 0;
-@@ -373,8 +374,14 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
- 	tail = crc->tail;
+@@ -366,7 +366,7 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
  
- 	if (CIRC_SPACE(head, tail, DRM_CRC_ENTRIES_NR) < 1) {
-+		bool was_overflow = crc->overflow;
-+
-+		crc->overflow = true;
- 		spin_unlock(&crc->lock);
--		DRM_ERROR("Overflow of CRC buffer, userspace reads too slow.\n");
-+
-+		if (!was_overflow)
-+			DRM_ERROR("Overflow of CRC buffer, userspace reads too slow.\n");
-+
- 		return -ENOBUFS;
+ 	/* Caller may not have noticed yet that userspace has stopped reading */
+ 	if (!crc->entries) {
+-		spin_unlock(&crc->lock);
++		spin_unlock_irqrestore(&crc->lock, flags);
+ 		return -EINVAL;
  	}
  
-diff --git a/include/drm/drm_debugfs_crc.h b/include/drm/drm_debugfs_crc.h
-index 7d63b1d4adb9..b225eeb30d05 100644
---- a/include/drm/drm_debugfs_crc.h
-+++ b/include/drm/drm_debugfs_crc.h
-@@ -43,6 +43,7 @@ struct drm_crtc_crc_entry {
-  * @lock: protects the fields in this struct
-  * @source: name of the currently configured source of CRCs
-  * @opened: whether userspace has opened the data file for reading
-+ * @overflow: whether an overflow occured.
-  * @entries: array of entries, with size of %DRM_CRC_ENTRIES_NR
-  * @head: head of circular queue
-  * @tail: tail of circular queue
-@@ -52,7 +53,7 @@ struct drm_crtc_crc_entry {
- struct drm_crtc_crc {
- 	spinlock_t lock;
- 	const char *source;
--	bool opened;
-+	bool opened, overflow;
- 	struct drm_crtc_crc_entry *entries;
- 	int head, tail;
- 	size_t values_cnt;
+@@ -377,7 +377,7 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
+ 		bool was_overflow = crc->overflow;
+ 
+ 		crc->overflow = true;
+-		spin_unlock(&crc->lock);
++		spin_unlock_irqrestore(&crc->lock, flags);
+ 
+ 		if (!was_overflow)
+ 			DRM_ERROR("Overflow of CRC buffer, userspace reads too slow.\n");
 -- 
 2.20.1
 
