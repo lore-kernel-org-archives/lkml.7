@@ -2,52 +2,60 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDC7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA83C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41346205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF430205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430863;
-	bh=aoeShnV0MIzWhAgFVNAHStxRa1liCLThPH1T9JScSmU=;
+	s=default; t=1564430867;
+	bh=L/0UbfsQuSYVVoqqmZY9l7Kzvao87zU9df+ydNE1jbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kWu3s9mdYUEC9o5tCuCpILChwG79/djiZE/3HfNd60Je4wzBbKERAJIHDJou0fbIx
-	 4/nTErdy6CcCBQ9H+vg8DHRFJpViPC65UdkI51XePw7t3+cSCQCBJIenRxcACHgtdl
-	 aTZNilzxYhsfBSJex6G9lb8SI69tjlOCbYiOc1ts=
+	b=G4VwcsvYnzm18cKP3gKA45g1U9ToXvODRgd20xhZw2es/fsMQZ0lk4pjuBIP3TACs
+	 o8PIt8YISWe7M4RJnuNBLMF5tyrtg4HyjbuwhwN1ccxBWbW9qwTVqYHeXkC+67+OLs
+	 yfZrok/hEkUG8vqQhYO7mGaASRTWVzV3sN5yzf4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbfG2Tiz (ORCPT
+        id S1730158AbfG2UHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:38:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53706 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388908AbfG2Tiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:38:46 -0400
+        id S1727931AbfG2Tiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:38:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81D06206DD;
-        Mon, 29 Jul 2019 19:38:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8901020C01;
+        Mon, 29 Jul 2019 19:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429125;
-        bh=aoeShnV0MIzWhAgFVNAHStxRa1liCLThPH1T9JScSmU=;
+        s=default; t=1564429131;
+        bh=L/0UbfsQuSYVVoqqmZY9l7Kzvao87zU9df+ydNE1jbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KgHXeoeq3vpchqwo/9MxQivP3J4hpnArOUXINPxGG+l4VJBphSrc57LFfnz2O6M/T
-         uCmeNd4D1Qri04l60gW5LrygNhMVOa+VM5Gi3y9s6U/RiexXVZjbnzkzNZqNBEZGRe
-         Wnph+w1MiambNrool2C0QAkGdHHWXZ5jexb/08Yw=
+        b=KeKUmZTNvF4Bfl+g4aORmKpyczI/anBCquqXVBAmBBZByExfzX4wq++vjuqfQN6T2
+         77zmsFFQtxKgUZ3JQikTa/IeoDl1kDPI5rd1swK8SSdIKUdJB3cYvUs7zVPokIm9nc
+         ENUbPv+bLR14Rbz0/ddEfUr5lAQWODCg7R6jaI2U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Praveen Pandey <Praveen.Pandey@in.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 292/293] powerpc/tm: Fix oops on sigreturn on systems without TM
-Date:   Mon, 29 Jul 2019 21:23:03 +0200
-Message-Id: <20190729190846.605183441@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Inki Dae <inki.dae@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 270/293] sh: prevent warnings when using iounmap
+Date:   Mon, 29 Jul 2019 21:22:41 +0200
+Message-Id: <20190729190845.034969861@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,91 +68,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Neuling <mikey@neuling.org>
+[ Upstream commit 733f0025f0fb43e382b84db0930ae502099b7e62 ]
 
-commit f16d80b75a096c52354c6e0a574993f3b0dfbdfe upstream.
+When building drm/exynos for sh, as part of an allmodconfig build, the
+following warning triggered:
 
-On systems like P9 powernv where we have no TM (or P8 booted with
-ppc_tm=off), userspace can construct a signal context which still has
-the MSR TS bits set. The kernel tries to restore this context which
-results in the following crash:
+  exynos7_drm_decon.c: In function `decon_remove':
+  exynos7_drm_decon.c:769:24: warning: unused variable `ctx'
+    struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
 
-  Unexpected TM Bad Thing exception at c0000000000022fc (msr 0x8000000102a03031) tm_scratch=800000020280f033
-  Oops: Unrecoverable exception, sig: 6 [#1]
-  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-  Modules linked in:
-  CPU: 0 PID: 1636 Comm: sigfuz Not tainted 5.2.0-11043-g0a8ad0ffa4 #69
-  NIP:  c0000000000022fc LR: 00007fffb2d67e48 CTR: 0000000000000000
-  REGS: c00000003fffbd70 TRAP: 0700   Not tainted  (5.2.0-11045-g7142b497d8)
-  MSR:  8000000102a03031 <SF,VEC,VSX,FP,ME,IR,DR,LE,TM[E]>  CR: 42004242  XER: 00000000
-  CFAR: c0000000000022e0 IRQMASK: 0
-  GPR00: 0000000000000072 00007fffb2b6e560 00007fffb2d87f00 0000000000000669
-  GPR04: 00007fffb2b6e728 0000000000000000 0000000000000000 00007fffb2b6f2a8
-  GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-  GPR12: 0000000000000000 00007fffb2b76900 0000000000000000 0000000000000000
-  GPR16: 00007fffb2370000 00007fffb2d84390 00007fffea3a15ac 000001000a250420
-  GPR20: 00007fffb2b6f260 0000000010001770 0000000000000000 0000000000000000
-  GPR24: 00007fffb2d843a0 00007fffea3a14a0 0000000000010000 0000000000800000
-  GPR28: 00007fffea3a14d8 00000000003d0f00 0000000000000000 00007fffb2b6e728
-  NIP [c0000000000022fc] rfi_flush_fallback+0x7c/0x80
-  LR [00007fffb2d67e48] 0x7fffb2d67e48
-  Call Trace:
-  Instruction dump:
-  e96a0220 e96a02a8 e96a0330 e96a03b8 394a0400 4200ffdc 7d2903a6 e92d0c00
-  e94d0c08 e96d0c10 e82d0c18 7db242a6 <4c000024> 7db243a6 7db142a6 f82d0c18
+The ctx variable is only used as argument to iounmap().
 
-The problem is the signal code assumes TM is enabled when
-CONFIG_PPC_TRANSACTIONAL_MEM is enabled. This may not be the case as
-with P9 powernv or if `ppc_tm=off` is used on P8.
+In sh - allmodconfig CONFIG_MMU is not defined
+so it ended up in:
 
-This means any local user can crash the system.
+\#define __iounmap(addr)	do { } while (0)
+\#define iounmap		__iounmap
 
-Fix the problem by returning a bad stack frame to the user if they try
-to set the MSR TS bits with sigreturn() on systems where TM is not
-supported.
+Fix the warning by introducing a static inline function for iounmap.
 
-Found with sigfuz kernel selftest on P9.
+This is similar to several other architectures.
 
-This fixes CVE-2019-13648.
-
-Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
-Cc: stable@vger.kernel.org # v3.9
-Reported-by: Praveen Pandey <Praveen.Pandey@in.ibm.com>
-Signed-off-by: Michael Neuling <mikey@neuling.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190719050502.405-1-mikey@neuling.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/20190622114208.24427-1-sam@ravnborg.org
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Inki Dae <inki.dae@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/signal_32.c |    3 +++
- arch/powerpc/kernel/signal_64.c |    5 +++++
- 2 files changed, 8 insertions(+)
+ arch/sh/include/asm/io.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/signal_32.c
-+++ b/arch/powerpc/kernel/signal_32.c
-@@ -1279,6 +1279,9 @@ long sys_rt_sigreturn(int r3, int r4, in
- 			goto bad;
+diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
+index 98cb8c802b1a..0ae60d680000 100644
+--- a/arch/sh/include/asm/io.h
++++ b/arch/sh/include/asm/io.h
+@@ -371,7 +371,11 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
  
- 		if (MSR_TM_ACTIVE(msr_hi<<32)) {
-+			/* Trying to start TM on non TM system */
-+			if (!cpu_has_feature(CPU_FTR_TM))
-+				goto bad;
- 			/* We only recheckpoint on return if we're
- 			 * transaction.
- 			 */
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -741,6 +741,11 @@ int sys_rt_sigreturn(unsigned long r3, u
- 	if (MSR_TM_ACTIVE(msr)) {
- 		/* We recheckpoint on return. */
- 		struct ucontext __user *uc_transact;
+ #define ioremap_nocache	ioremap
+ #define ioremap_uc	ioremap
+-#define iounmap		__iounmap
 +
-+		/* Trying to start TM on non TM system */
-+		if (!cpu_has_feature(CPU_FTR_TM))
-+			goto badframe;
-+
- 		if (__get_user(uc_transact, &uc->uc_link))
- 			goto badframe;
- 		if (restore_tm_sigcontexts(current, &uc->uc_mcontext,
++static inline void iounmap(void __iomem *addr)
++{
++	__iounmap(addr);
++}
+ 
+ /*
+  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
+-- 
+2.20.1
+
 
 
