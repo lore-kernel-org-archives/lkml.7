@@ -2,107 +2,117 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1F7C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6724C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B06F20693
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC9720693
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iyNRZMou"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xy2kFbWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfG2JYb (ORCPT
+        id S1727819AbfG2JY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:24:31 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44155 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbfG2JYb (ORCPT
+        Mon, 29 Jul 2019 05:24:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35213 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727677AbfG2JY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:24:31 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t16so27683393pfe.11;
-        Mon, 29 Jul 2019 02:24:30 -0700 (PDT)
+        Mon, 29 Jul 2019 05:24:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u14so27735406pfn.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:24:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=iEPQWdk7UY38XyqCqFUl6jqb3HHws5WOlTzCj+DZ+3o=;
-        b=iyNRZMouqrwVQy8ikh4/UX/XkzexUdmL8Jh9freBH2MOw/uvaupzpUbqwY5V0BV6i9
-         OzpQjODV/WTWHxhAnrP1jgn1yrfsC5XXd/BpYkeN3ydCKzFbpPMjpNe0KgK0FnHsXMB1
-         Mao5Uhg2q6hAfzvjmcmRatMwOdf7AkvhLLkekAb2wZiQBdZIfFfrvqSD2x0uZszgY/Bv
-         VdWWl8iv0XX4tEiE8pI4BAyxQ/XwPXvOks58Yc0E0odU1YzVRWaI6zHAkTkELRq8K401
-         SkwI1U9esKkwuEBNAssWg9IznXJCbzvynfg++V4Kzx+YsxTpdFMCzA8ofylE2EXDTDpm
-         USWA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0NHaPbEIE3GnLl8EEhfWosdb00OPf2b+fWo8SdgJJxo=;
+        b=Xy2kFbWELNQCgQRQoASfnRppp4kufLgsSg0GLfeZ2QYeQqHU5mpLuekUESnWJ6W4au
+         cLKGPGdF7k7MGl2BbkbWfnGBvmSrjg18z9HjryerP+YE8FPFW8Vp938laWSMBwMBElOx
+         kyyCtoKg5txpKw0B0jCj1acEcdB5a91vD2r5wicbDw1sqElfH0LBlsirDz0zJ19dQnY2
+         OjpK4ItIOlxl/PUMzlt4Q37vSX42BMPQWJ4lNjSvE+9kofdH8gKLTwTyMplTmwQaHb56
+         Ch5ZcOhm5zTPnd+CrFwGsggzriGxMtbhx+erQvGfVQnkJhitKfOaaCp8TulgvSWufC7+
+         6h6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iEPQWdk7UY38XyqCqFUl6jqb3HHws5WOlTzCj+DZ+3o=;
-        b=B8pqSGlqBhebyDnmJBsiNO2XZ+jdk0Ti2hjFS9t8CXWb6JtJceWEunMQDLQbVOaiKD
-         6H0mHEizb0pTRbPYseQcQEpU2TjbixXIO0CmGBM6ZAkEwnCUYVN7GiUe7eJjspp8SEUn
-         LkUI1aOnvdY8/Vdbehs5AS8/kKp2eUcTKGhiSoMvHm3LxoetUcHQGaKXARN0Xmy6bgpR
-         A6gVxud9MiG3gNzfus/WKYslVFBpkc2mE8nI66H9vuRHKtoGnE4hgsRXWtCXlF7wtWri
-         aR3tvdOpT1ppYfFPs1YgHbDkhrtSXQPnLssjgLH/mr1wQt2n8e9LyH+MWfR++usCoLUK
-         7VYQ==
-X-Gm-Message-State: APjAAAXdfcLm+gjUJKPP++CgLK+hT9Xxp526o0TemRSx4cqEKZvX9K63
-        GaIRbT4wM9lsKjRXH5syCjk=
-X-Google-Smtp-Source: APXvYqyXgiorjzCh5evO4TizJOF1muHqKjYiGDPnEhyAkM/ScAN9VRBGAhZex+sRhUuh7tL+z+LZ8g==
-X-Received: by 2002:a17:90a:360b:: with SMTP id s11mr109650186pjb.51.1564392270649;
-        Mon, 29 Jul 2019 02:24:30 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id j1sm84343495pgl.12.2019.07.29.02.24.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0NHaPbEIE3GnLl8EEhfWosdb00OPf2b+fWo8SdgJJxo=;
+        b=AMS1BZRcaQPXZktS5/OlipkNmpDwIMKRxGauwVyo6zSQnDrI8RQL//Vv7OWjEATZ67
+         F0PiOID9v/60pE5OkSHHoNYiKOPhZXF6E4BtRvfrQcPKm9impFSKKJPg9A+gnJpdJpNg
+         wrpYw1Hg1BagLaVV7ANe2YR2hFN8s4q2ZByNlAVeEdjYYr7WU2JajoxiMviQ7Rg/2j6Q
+         4e6fbRJVS5LN7JxQdNDuMm8c+EFsEY5xBbndVI0BgDxb4QsKgoSWRoCXMfMv3AIKK5FJ
+         3T04A2VzIz4xRf3VnL7bbhEUKiNe1sB8s+MPy7tisAGvNnlwZYac48txWwFdQvWvctib
+         WKdA==
+X-Gm-Message-State: APjAAAVW4gk1WGz9zuWnOQgDIkx7nd5sPaHc0YR0IRBfX8iWi62K2BiL
+        jpib5K7/tjzJCynofHaqhx9qqVKObFY=
+X-Google-Smtp-Source: APXvYqyXnV7F+k6oUvgbf58oAVK1IH6CZXv9DBBx+BcsjmdeUAZr2vtTHZFtwqBx4mKuZrWjbNouhQ==
+X-Received: by 2002:a65:6406:: with SMTP id a6mr66039326pgv.393.1564392297055;
+        Mon, 29 Jul 2019 02:24:57 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id r12sm39768662pgb.73.2019.07.29.02.24.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 02:24:30 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] net: phy: phy_led_triggers: Fix a possible null-pointer dereference in phy_led_trigger_change_speed()
-Date:   Mon, 29 Jul 2019 17:24:24 +0800
-Message-Id: <20190729092424.30928-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Mon, 29 Jul 2019 02:24:56 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 14:54:54 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
+Message-ID: <20190729092454.6lfqzmhkvrhpimsp@vireshk-i7>
+References: <20190703011020.151615-1-saravanak@google.com>
+ <20190717103220.f7cys267hq23fbsb@vireshk-i7>
+ <CAGETcx-tbjVzRKW8D-564zgNOhrA_z-NC1q5U70bhoUDBhp6VA@mail.gmail.com>
+ <20190718053746.64drmonk72vwnt4s@vireshk-i7>
+ <CAGETcx_-=b3An9YdxLUnZap=0iaeczvWTEnw65FMLU8BwA3HfQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx_-=b3An9YdxLUnZap=0iaeczvWTEnw65FMLU8BwA3HfQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In phy_led_trigger_change_speed(), there is an if statement on line 48
-to check whether phy->last_triggered is NULL: 
-    if (!phy->last_triggered)
+On 18-07-19, 21:12, Saravana Kannan wrote:
+> On Wed, Jul 17, 2019 at 10:37 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > I would like
+> > to put this data in the GPU OPP table only. What about putting a
+> > range in the GPU OPP table for the Bandwidth if it can change so much
+> > for the same frequency.
+> 
+> I don't think the range is going to work.
 
-When phy->last_triggered is NULL, it is used on line 52:
-    led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
+Any specific reason for that ?
 
-Thus, a possible null-pointer dereference may occur.
+> If a GPU is doing purely
+> computational work, it's not unreasonable for it to vote for the
+> lowest bandwidth for any GPU frequency.
 
-To fix this bug, led_trigger_event(&phy->last_triggered->trigger,
-LED_OFF) is called when phy->last_triggered is not NULL.
+I think that is fine, but if the GPU is able to find how much
+bandwidth it needs why can't it just pass that value without needing
+to have another OPP table for the path ?
 
-This bug is found by a static analysis tool STCheck written by us.
+The interconnect can then take all the requests and have its own OPP
+table to get help on deciding what stable bandwidth to use.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/net/phy/phy_led_triggers.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/phy_led_triggers.c b/drivers/net/phy/phy_led_triggers.c
-index b86a4b2116f8..59a94e07e7c5 100644
---- a/drivers/net/phy/phy_led_triggers.c
-+++ b/drivers/net/phy/phy_led_triggers.c
-@@ -48,8 +48,9 @@ void phy_led_trigger_change_speed(struct phy_device *phy)
- 		if (!phy->last_triggered)
- 			led_trigger_event(&phy->led_link_trigger->trigger,
- 					  LED_FULL);
-+		else
-+			led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
- 
--		led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
- 		led_trigger_event(&plt->trigger, LED_FULL);
- 		phy->last_triggered = plt;
- 	}
 -- 
-2.17.0
-
+viresh
