@@ -2,39 +2,43 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85041C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06117C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659242070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D48FD2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfG2C4N (ORCPT
+        id S1726871AbfG2C4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 22:56:13 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45456 "EHLO huawei.com"
+        Sun, 28 Jul 2019 22:56:23 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45434 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726593AbfG2Czk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 22:55:40 -0400
+        id S1725681AbfG2Czj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 22:55:39 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2001A9242045EC7900AC;
+        by Forcepoint Email with ESMTP id 0DEF66D97336B61E6F8E;
         Mon, 29 Jul 2019 10:55:36 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 29 Jul 2019 10:55:27 +0800
+ 14.3.439.0; Mon, 29 Jul 2019 10:55:29 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <saeedm@mellanox.com>,
+        Yufeng Mo <moyufeng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V4 net-next 00/10] net: hns3: some code optimizations & bugfixes & features
-Date:   Mon, 29 Jul 2019 10:53:21 +0800
-Message-ID: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V4 net-next 05/10] net: hns3: modify firmware version display format
+Date:   Mon, 29 Jul 2019 10:53:26 +0800
+Message-ID: <1564368811-65492-6-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
+References: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.132]
@@ -44,71 +48,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set includes code optimizations, bugfixes and features for
-the HNS3 ethernet controller driver.
+From: Yufeng Mo <moyufeng@huawei.com>
 
-[patch 1/10] checks reset status before setting channel.
+This patch modifies firmware version display format in
+hclge(vf)_cmd_init() and hns3_get_drvinfo(). Also, adds
+some optimizations for firmware version display format.
 
-[patch 2/10] adds a NULL pointer checking.
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h              |  9 +++++++++
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c       | 15 +++++++++++++--
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c   | 10 +++++++++-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 10 +++++++++-
+ 4 files changed, 40 insertions(+), 4 deletions(-)
 
-[patch 3/10] removes reset level upgrading when current reset fails.
-
-[patch 4/10] fixes a GFP flags errors when holding spin_lock.
-
-[patch 5/10] modifies firmware version format.
-
-[patch 6/10] adds some print information which is off by default.
-
-[patch 7/10 - 8/10] adds two code optimizations about interrupt handler
-and work task.
-
-[patch 9/10] adds support for using order 1 pages with a 4K buffer.
-
-[patch 10/10] modifies messages prints with dev_info() instead of
-pr_info().
-
-Change log:
-V3->V4: replace netif_info with netif_dbg in [patch 6/10]
-V2->V3: fixes comments from Saeed Mahameed and Joe Perches.
-V1->V2: fixes comments from Saeed Mahameed and
-	removes previous [patch 4/11] and [patch 11/11]
-	which needs further discussion, and adds a new
-	patch [10/10] suggested by Saeed Mahameed.
-
-Guangbin Huang (1):
-  net: hns3: add a check for get_reset_level
-
-Huazhong Tan (2):
-  net: hns3: remove upgrade reset level when reset fail
-  net: hns3: use dev_info() instead of pr_info()
-
-Jian Shen (1):
-  net: hns3: add reset checking before set channels
-
-Yonglong Liu (1):
-  net: hns3: add debug messages to identify eth down cause
-
-Yufeng Mo (2):
-  net: hns3: change GFP flag during lock period
-  net: hns3: modify firmware version display format
-
-Yunsheng Lin (3):
-  net: hns3: make hclge_service use delayed workqueue
-  net: hns3: add interrupt affinity support for misc interrupt
-  net: hns3: Add support for using order 1 pages with a 4K buffer
-
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   9 ++
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  33 ++++-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |  15 ++-
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  34 +++++-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c |  10 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c |  11 ++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 135 ++++++++++++---------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   7 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c   |  10 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |   3 +-
- 10 files changed, 195 insertions(+), 72 deletions(-)
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index 48c7b70..a4624db 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -179,6 +179,15 @@ struct hnae3_vector_info {
+ #define HNAE3_RING_GL_RX 0
+ #define HNAE3_RING_GL_TX 1
+ 
++#define HNAE3_FW_VERSION_BYTE3_SHIFT	24
++#define HNAE3_FW_VERSION_BYTE3_MASK	GENMASK(31, 24)
++#define HNAE3_FW_VERSION_BYTE2_SHIFT	16
++#define HNAE3_FW_VERSION_BYTE2_MASK	GENMASK(23, 16)
++#define HNAE3_FW_VERSION_BYTE1_SHIFT	8
++#define HNAE3_FW_VERSION_BYTE1_MASK	GENMASK(15, 8)
++#define HNAE3_FW_VERSION_BYTE0_SHIFT	0
++#define HNAE3_FW_VERSION_BYTE0_MASK	GENMASK(7, 0)
++
+ struct hnae3_ring_chain_node {
+ 	struct hnae3_ring_chain_node *next;
+ 	u32 tqp_index;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index 5bff98a..e71c92b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -527,6 +527,7 @@ static void hns3_get_drvinfo(struct net_device *netdev,
+ {
+ 	struct hns3_nic_priv *priv = netdev_priv(netdev);
+ 	struct hnae3_handle *h = priv->ae_handle;
++	u32 fw_version;
+ 
+ 	if (!h->ae_algo->ops->get_fw_version) {
+ 		netdev_err(netdev, "could not get fw version!\n");
+@@ -545,8 +546,18 @@ static void hns3_get_drvinfo(struct net_device *netdev,
+ 		sizeof(drvinfo->bus_info));
+ 	drvinfo->bus_info[ETHTOOL_BUSINFO_LEN - 1] = '\0';
+ 
+-	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version), "0x%08x",
+-		 priv->ae_handle->ae_algo->ops->get_fw_version(h));
++	fw_version = priv->ae_handle->ae_algo->ops->get_fw_version(h);
++
++	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version),
++		 "%lu.%lu.%lu.%lu",
++		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE3_MASK,
++				 HNAE3_FW_VERSION_BYTE3_SHIFT),
++		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE2_MASK,
++				 HNAE3_FW_VERSION_BYTE2_SHIFT),
++		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE1_MASK,
++				 HNAE3_FW_VERSION_BYTE1_SHIFT),
++		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE0_MASK,
++				 HNAE3_FW_VERSION_BYTE0_SHIFT));
+ }
+ 
+ static u32 hns3_get_link(struct net_device *netdev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+index 22f6acd..d9858f2 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+@@ -419,7 +419,15 @@ int hclge_cmd_init(struct hclge_dev *hdev)
+ 	}
+ 	hdev->fw_version = version;
+ 
+-	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
++	dev_info(&hdev->pdev->dev, "The firmware version is %lu.%lu.%lu.%lu\n",
++		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE3_MASK,
++				 HNAE3_FW_VERSION_BYTE3_SHIFT),
++		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE2_MASK,
++				 HNAE3_FW_VERSION_BYTE2_SHIFT),
++		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE1_MASK,
++				 HNAE3_FW_VERSION_BYTE1_SHIFT),
++		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE0_MASK,
++				 HNAE3_FW_VERSION_BYTE0_SHIFT));
+ 
+ 	return 0;
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index 652b796..8f21eb3 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -405,7 +405,15 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	}
+ 	hdev->fw_version = version;
+ 
+-	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
++	dev_info(&hdev->pdev->dev, "The firmware version is %lu.%lu.%lu.%lu\n",
++		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE3_MASK,
++				 HNAE3_FW_VERSION_BYTE3_SHIFT),
++		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE2_MASK,
++				 HNAE3_FW_VERSION_BYTE2_SHIFT),
++		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE1_MASK,
++				 HNAE3_FW_VERSION_BYTE1_SHIFT),
++		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE0_MASK,
++				 HNAE3_FW_VERSION_BYTE0_SHIFT));
+ 
+ 	return 0;
+ 
 -- 
 2.7.4
 
