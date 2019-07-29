@@ -2,119 +2,188 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42231C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8A6C41514
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092FB206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:33:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="r6Umbo20"
+	by mail.kernel.org (Postfix) with ESMTP id 0FCD92070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbfG2Idz (ORCPT
+        id S1727747AbfG2Iep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:33:55 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43291 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfG2Idy (ORCPT
+        Mon, 29 Jul 2019 04:34:45 -0400
+Received: from outbound-smtp28.blacknight.com ([81.17.249.11]:56516 "EHLO
+        outbound-smtp28.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727109AbfG2Iep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:33:54 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so60783850wru.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 01:33:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linbit-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1oADSOD4kjZ1dqW/2Ui0ZnHxXiMQh/ptauFbEpo8Vo8=;
-        b=r6Umbo20Hap5YkpBHAoy7Vc3/ihU0piqjaCdPXTVL7nw+8vYKjAAzxohdcz9o/y51r
-         TyrDkzFAs1R6ZHZ06c7O2BZMT6j/S4MCfalfInn14cvf0WWAHPzih3ZYjvLga/XFZiR/
-         DvHsjlNNk1nD+JNTMGbENean0MjqOr/l1tK4708UbzMCUGm3b2PE3Q713mr+v3O1h9Kv
-         HAZZXRXSF5JcftNmdjQV88kx67XoklUDEPaFDWkHhU37MR9YlxL3CjUx/VdTIBPyx3sL
-         utvpItaXj0qSOAjdnZZIegVXlVhHo27Usofbwu/bsI4swva9jCg11XH9ViCVaFyozwR6
-         ox6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1oADSOD4kjZ1dqW/2Ui0ZnHxXiMQh/ptauFbEpo8Vo8=;
-        b=lJw48FVQQTo4LekgFNEVeAtDKzw/Z7zGENIkrXBFOQ+IPJ6Ys3gFbs9J6vc3Fd37bo
-         slNX9WMYqO6RA+H1kR5uImrMVg9bpuUFpGoVAq680HmDvcvrJPwmnJiWziUx/GbalStl
-         yvjU0Ax0Mc4eHcqoxbwLqKXybX8ZMIEfHT6rB2rqF/dXSyYqD1dZ/rWuCFEo9XwId9g1
-         2BM8wcbb/319EtEnPd6dw5hItC/YpMBkN/JKOI5l5wpOR0z21WeHjqMjwSMtkZPV13MB
-         aHTX1zLnZ2k4PvLOTKn2KLZdWC4H/upKM85WDpEqd2qTP2Gico0fjxq7AcfS0ApWjPR3
-         GCkw==
-X-Gm-Message-State: APjAAAUpTxvdWb5oHwoG1JQ2VMPvVOO0GmZV3Nx/0QPGbxHiAiC5vvxc
-        9LtRtTeJ9RkMuxeDwi6RRevVzzjE+XHLRw==
-X-Google-Smtp-Source: APXvYqxMGuL7m1YDC9Rc/HvOu4n6UhkpN7IQYCHtUlbxpWkT+Hyzhf2KVwI3s+e5tzMFeqXyaLcemA==
-X-Received: by 2002:adf:e40e:: with SMTP id g14mr35397526wrm.161.1564389232614;
-        Mon, 29 Jul 2019 01:33:52 -0700 (PDT)
-Received: from gintonic.linbit ([2001:858:107:1:6428:48d1:352:f871])
-        by smtp.gmail.com with ESMTPSA id b2sm77606191wrp.72.2019.07.29.01.33.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 01:33:52 -0700 (PDT)
-From:   =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Eric W . Biederman" <ebiederm@xmission.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] drbd: do not ignore signals in threads
-Date:   Mon, 29 Jul 2019 10:32:48 +0200
-Message-Id: <20190729083248.30362-1-christoph.boehmwalder@linbit.com>
-X-Mailer: git-send-email 2.22.0
+        Mon, 29 Jul 2019 04:34:45 -0400
+Received: from mail.blacknight.com (unknown [81.17.255.152])
+        by outbound-smtp28.blacknight.com (Postfix) with ESMTPS id 5CF23D01D8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:34:42 +0100 (IST)
+Received: (qmail 30865 invoked from network); 29 Jul 2019 08:34:42 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.19.7])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 29 Jul 2019 08:34:42 -0000
+Date:   Mon, 29 Jul 2019 09:34:40 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Pengfei Li <lpf.vector@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, mhocko@suse.com,
+        vbabka@suse.cz, Qian Cai <cai@lca.pw>, aryabinin@virtuozzo.com,
+        osalvador@suse.de, rostedt@goodmis.org, mingo@redhat.com,
+        pavel.tatashin@microsoft.com, rppt@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 00/10] make "order" unsigned int
+Message-ID: <20190729083440.GE2739@techsingularity.net>
+References: <20190725184253.21160-1-lpf.vector@gmail.com>
+ <20190726072637.GC2739@techsingularity.net>
+ <CAD7_sbHwjN3RY+ofgWvhQFJdxhCC4=gsMs194=wOH3tKV-qSUg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CAD7_sbHwjN3RY+ofgWvhQFJdxhCC4=gsMs194=wOH3tKV-qSUg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a regression introduced by upstream commit fee109901f39
-('signal/drbd: Use send_sig not force_sig').
+On Sun, Jul 28, 2019 at 12:44:36AM +0800, Pengfei Li wrote:
+> On Fri, Jul 26, 2019 at 3:26 PM Mel Gorman <mgorman@techsingularity.net> wrote:
+> >
+> 
+> Thank you for your comments.
+> 
+> > On Fri, Jul 26, 2019 at 02:42:43AM +0800, Pengfei Li wrote:
+> > > Objective
+> > > ----
+> > > The motivation for this series of patches is use unsigned int for
+> > > "order" in compaction.c, just like in other memory subsystems.
+> > >
+> >
+> > Why? The series is relatively subtle in parts, particularly patch 5.
+> 
+> Before I sent this series of patches, I took a close look at the
+> git log for compact.c.
+> 
+> Here is a short history, trouble you to look patiently.
+> 
+> 1) At first, "order" is _unsigned int_
+> 
+> The commit 56de7263fcf3 ("mm: compaction: direct compact when a
+> high-order allocation fails") introduced the "order" in
+> compact_control and its type is unsigned int.
+> 
+> Besides, you specify that order == -1 is the flag that triggers
+> compaction via proc.
+> 
 
-Currently, when a thread is initialized, all signals are set to be
-ignored by default. DRBD uses SIGHUP to end its threads, which means it
-is now no longer possible to bring down a DRBD resource because the
-signals do not make it through to the thread in question.
+Yes, specifying that compaction in that context is for the entire zone
+without any specific allocation context or request.
 
-This circumstance was previously hidden by the fact that DRBD used
-force_sig() to kill its threads. The aforementioned upstream commit
-changed this to send_sig(), which means the effects of the signals being
-ignored by default are now becoming visible.
+> 2) Next, because order equals -1 is special, it causes an error.
+> 
+> The commit 7be62de99adc ("vmscan: kswapd carefully call compaction")
+> determines if "order" is less than 0.
+> 
+> This condition is always true because the type of "order" is
+> _unsigned int_.
+> 
+> -               compact_zone(zone, &cc);
+> +               if (cc->order < 0 || !compaction_deferred(zone))
+> 
+> 3) Finally, in order to fix the above error, the type of the order
+> is modified to _int_
+> 
+> It is done by commit: aad6ec3777bf ("mm: compaction: make
+> compact_control order signed").
+> 
+> The reason I mention this is because I want to express that the
+> type of "order" is originally _unsigned int_. And "order" is
+> modified to _int_ because of the special value of -1.
+> 
 
-Thus, issue an allow_signal() at the start of the thread to explicitly
-allow the desired signals.
+And in itself, why does that matter?
 
-Signed-off-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
-Signed-off-by: Philipp Reisner <philipp.reisner@linbit.com>
-Fixes: fee109901f39 ("signal/drbd: Use send_sig not force_sig")
-Cc: stable@vger.kernel.org
----
- drivers/block/drbd/drbd_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+> If the special value of "order" is not a negative number (for
+> example, -1), but a number greater than MAX_ORDER - 1 (for example,
+> MAX_ORDER), then the "order" may still be _unsigned int_ now.
+> 
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index 9bd4ddd12b25..b8b986df6814 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -318,6 +318,9 @@ static int drbd_thread_setup(void *arg)
- 	unsigned long flags;
- 	int retval;
- 
-+	allow_signal(DRBD_SIGKILL);
-+	allow_signal(SIGXCPU);
-+
- 	snprintf(current->comm, sizeof(current->comm), "drbd_%c_%s",
- 		 thi->name[0],
- 		 resource->name);
+Sure, but then you have to check that every check on order understands
+the new special value.
+
+> > There have been places where by it was important for order to be able to
+> > go negative due to loop exit conditions.
+> 
+> I think that even if "cc->order" is _unsigned int_, it can be done
+> with a local temporary variable easily.
+> 
+> Like this,
+> 
+> function(...)
+> {
+>     for(int tmp_order = cc->order; tmp_order >= 0; tmp_order--) {
+>         ...
+>     }
+> }
+> 
+
+Yes, it can be expressed as unsigned but in itself why does that justify
+the review of a large series? There is limited to no performance gain
+and functionally it's equivalent.
+
+> > If there was a gain from this
+> > or it was a cleanup in the context of another major body of work, I
+> > could understand the justification but that does not appear to be the
+> > case here.
+> >
+> 
+> My final conclusion:
+> 
+> Why "order" is _int_ instead of unsigned int?
+>   => Because order == -1 is used as the flag.
+>     => So what about making "order" greater than MAX_ORDER - 1?
+>       => The "order" can be _unsigned int_ just like in most places.
+> 
+> (Can we only pick -1 as this special value?)
+> 
+
+No, but the existing code did make that choice and has been debugged
+with that decision.
+
+> This series of patches makes sense because,
+> 
+> 1) It guarantees that "order" remains the same type.
+> 
+
+And the advantage is?
+
+> No one likes to see this
+> 
+> __alloc_pages_slowpath(unsigned int order, ...)
+>  => should_compact_retry(int order, ...)            /* The type changed */
+>   => compaction_zonelist_suitable(int order, ...)
+>    => __compaction_suitable(int order, ...)
+>     => zone_watermark_ok(unsigned int order, ...)   /* The type
+> changed again! */
+> 
+> 2) It eliminates the evil "order == -1".
+> 
+> If "order" is specified as any positive number greater than
+> MAX_ORDER - 1 in commit 56de7263fcf3, perhaps no int order will
+> appear in compact.c until now.
+> 
+
+So, while it is possible, the point still holds. There is marginal to no
+performance advantage (some CPUs perform fractionally better when an
+index variable is unsigned rather than signed but it's difficult to
+measure even when you're looking for it). It'll take time to review and
+then debug the entire series. If this was in the context of a larger
+functional enablement or performance optimisation then it would be
+worthwhile but as it is, it looks more like churn for the sake of it.
+
 -- 
-2.22.0
-
+Mel Gorman
+SUSE Labs
