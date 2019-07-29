@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E198AC41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB75C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F53205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3278021655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429292;
-	bh=ZBJ79+KNPR3qfgggcd1jIRFTHX+Nclci3drFihOHSog=;
+	s=default; t=1564429296;
+	bh=v7sks2e6muLIM6cZO40Wu7vtz4iGZ6tb3NNZnvw9x8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BdPMcaVK4fxKcY9XB2JJXEtp9u894u0d+dIf3GVUjzqdVAdzWNgavDFN0kFZDz6F1
-	 BiJVwxZPxtyMImvsM1heGOSpEv4AMOMgTeNVgfz35+3iNWVZ4Kv9fDUayhEbCCJVuc
-	 cXfidqwm6tG91KAN5U0AmhgUYhYS0XHAMK4vBApI=
+	b=2wFoAK6de9XvX6eNc7Byxl/IWtBmHlB+DU0RxnxZXttqodfg+tjJHmgXYlSt2eKse
+	 hxyNAJW8oB54adiMVMe+MWlp4g13cK8gwGWGA+b1eH2DPDGAJDFu2vUDhPW/H/thxA
+	 vyJFtzlbWQm9G5II2Jb/kMQChWMDFM0I0gdnl17w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389366AbfG2Tlb (ORCPT
+        id S2389274AbfG2Tle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:41:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56944 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:41:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389329AbfG2Tl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:41:28 -0400
+        id S2389363AbfG2Tlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:41:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AF2D205F4;
-        Mon, 29 Jul 2019 19:41:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DD7221655;
+        Mon, 29 Jul 2019 19:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429287;
-        bh=ZBJ79+KNPR3qfgggcd1jIRFTHX+Nclci3drFihOHSog=;
+        s=default; t=1564429290;
+        bh=v7sks2e6muLIM6cZO40Wu7vtz4iGZ6tb3NNZnvw9x8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jy+LOLsMpmLsZYF3BT9MsaJJ4wafl33Sm+hjsLEzJtbEOiX22Ac0Dm0AjCSvL0ccP
-         bWq13itetPDqfp9Auo6SIo3dtD+laxkSSf1+2AHFj1ipcpdu/KUSyiXjNwBbblgh6v
-         hi6ppYgHRNZ5Ec0I7UoSr8zC/yIkho646L6KtmK4=
+        b=xrp0CFmBGOPQnE/Ve38nLrFxjC+KE+7kQKLMIYxwz/V+sfIXeWe9no+Qdn6l1tTKG
+         wJqy87lhH/N+75/ESa8Y/EwXHVRgasrwZ9dzMLb3z2IKDYfv2+QebuQn89Mx5947IR
+         ZwonZOGiOlgfxSrPh0s6GNhyf6FeG2CPIqbSMvgo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 033/113] tty: serial_core: Set port active bit in uart_port_activate
-Date:   Mon, 29 Jul 2019 21:22:00 +0200
-Message-Id: <20190729190703.738844723@linuxfoundation.org>
+Subject: [PATCH 4.19 051/113] mfd: hi655x-pmic: Fix missing return value check for devm_regmap_init_mmio_clk
+Date:   Mon, 29 Jul 2019 21:22:18 +0200
+Message-Id: <20190729190707.758914907@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -59,69 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 13b18d35909707571af9539f7731389fbf0feb31 ]
+[ Upstream commit 7efd105c27fd2323789b41b64763a0e33ed79c08 ]
 
-A bug was introduced by commit b3b576461864 ("tty: serial_core: convert
-uart_open to use tty_port_open"). It caused a constant warning printed
-into the system log regarding the tty and port counter mismatch:
+Since devm_regmap_init_mmio_clk can fail, add return value checking.
 
-[   21.644197] ttyS ttySx: tty_port_close_start: tty->count = 1 port count = 2
-
-in case if session hangup was detected so the warning is printed starting
-from the second open-close iteration.
-
-Particularly the problem was discovered in situation when there is a
-serial tty device without hardware back-end being setup. It is considered
-by the tty-serial subsystems as a hardware problem with session hang up.
-In this case uart_startup() will return a positive value with TTY_IO_ERROR
-flag set in corresponding tty_struct instance. The same value will get
-passed to be returned from the activate() callback and then being returned
-from tty_port_open(). But since in this case tty_port_block_til_ready()
-isn't called the TTY_PORT_ACTIVE flag isn't set (while the method had been
-called before tty_port_open conversion was introduced and the rest of the
-subsystem code expected the bit being set in this case), which prevents the
-uart_hangup() method to perform any cleanups including the tty port
-counter setting to zero. So the next attempt to open/close the tty device
-will discover the counters mismatch.
-
-In order to fix the problem we need to manually set the TTY_PORT_ACTIVE
-flag in case if uart_startup() returned a positive value. In this case
-the hang up procedure will perform a full set of cleanup actions including
-the port ref-counter resetting.
-
-Fixes: b3b576461864 "tty: serial_core: convert uart_open to use tty_port_open"
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Chen Feng <puck.chen@hisilicon.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/serial_core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/mfd/hi655x-pmic.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 8dbeb14a1e3a..fe9261ffe3db 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -1738,6 +1738,7 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
- {
- 	struct uart_state *state = container_of(port, struct uart_state, port);
- 	struct uart_port *uport;
-+	int ret;
+diff --git a/drivers/mfd/hi655x-pmic.c b/drivers/mfd/hi655x-pmic.c
+index 96c07fa1802a..6693f74aa6ab 100644
+--- a/drivers/mfd/hi655x-pmic.c
++++ b/drivers/mfd/hi655x-pmic.c
+@@ -112,6 +112,8 @@ static int hi655x_pmic_probe(struct platform_device *pdev)
  
- 	uport = uart_port_check(state);
- 	if (!uport || uport->flags & UPF_DEAD)
-@@ -1748,7 +1749,11 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
- 	/*
- 	 * Start up the serial port.
- 	 */
--	return uart_startup(tty, state, 0);
-+	ret = uart_startup(tty, state, 0);
-+	if (ret > 0)
-+		tty_port_set_active(port, 1);
-+
-+	return ret;
- }
+ 	pmic->regmap = devm_regmap_init_mmio_clk(dev, NULL, base,
+ 						 &hi655x_regmap_config);
++	if (IS_ERR(pmic->regmap))
++		return PTR_ERR(pmic->regmap);
  
- static const char *uart_type(struct uart_port *port)
+ 	regmap_read(pmic->regmap, HI655X_BUS_ADDR(HI655X_VER_REG), &pmic->ver);
+ 	if ((pmic->ver < PMU_VER_START) || (pmic->ver > PMU_VER_END)) {
 -- 
 2.20.1
 
