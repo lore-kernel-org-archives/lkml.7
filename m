@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA02C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B85CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A23C217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00A5520C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429015;
-	bh=OVOKJyv6QtcV37+WUdXfe4juPmtnXSGZ4gM307qlKR4=;
+	s=default; t=1564429020;
+	bh=5oj/X34q6B8ifWGZud+UKCY0jSzA/bqbBM7DcMY/XYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ca3cG4VcROFg7lgDKXxvXyFV+cswifbC75WahONQWrHlVH0uR390uobrGDe+S4K1W
-	 CjCYbuEj1m+3gbPRpHKp581V8mN1nGD0qzgIOJg6SklKTp8X+kjHF9q+CDyfjzHHPE
-	 n9+gUIL68PXCfOq4MAc/E5t9LqEg06vAj3FanJls=
+	b=AByNCw2pHGe1oPwVexO8mrpPTDh47al9QayEtsR3HSJzjzo8bI1EnOpx3IUOj9FfI
+	 nWnpGquEHILNt5+3RY66DXn4gyVGJdz+A6cF/nbXy1WUW4mLwWUj1D2I2H0FN5hDPN
+	 bAHE2/vT5jsPG0k1YfePL5TlbNWo5wrYZD+IGGHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388624AbfG2Tgy (ORCPT
+        id S2387811AbfG2Tg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51296 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:36:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387811AbfG2Tgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:36:50 -0400
+        id S2388620AbfG2Tgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:36:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9238821773;
-        Mon, 29 Jul 2019 19:36:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D4E42171F;
+        Mon, 29 Jul 2019 19:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429010;
-        bh=OVOKJyv6QtcV37+WUdXfe4juPmtnXSGZ4gM307qlKR4=;
+        s=default; t=1564429013;
+        bh=5oj/X34q6B8ifWGZud+UKCY0jSzA/bqbBM7DcMY/XYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YD5IWqkr1s4MVMXVy51M1CLAMeQopOmndK2BR2K+dGXlymFP2AXpcQ6462qWlPUAt
-         plTOoQhZ0enGzxAwCwul3Y3Gbpd0oSGUSA53VvFkFPKVUU/VdTubJyJT8XZibNPDIG
-         qDWtt6HabWZDXbX7A6L+hYdWhT1AD1PAw2qAlvjg=
+        b=wfsfuO5CwBTxu0lCsSENNIL1Uy9wDW7XtXl1llEblA4T8g8Eqk/KEKBLJpesCqvXt
+         A3Yf6kAOhoAPV7FGoYDd1bgESFWbaYNZJRBhOd37jv7im+djq9oYGfoqV+FGZ63rv+
+         OqhjEGncxitL8KVMOCzfv9c7VfFYV+hJGSgijXiM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
+        stable@vger.kernel.org, Changcheng Liu <changcheng.liu@aliyun.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 229/293] drm/bridge: tc358767: read display_props in get_modes()
-Date:   Mon, 29 Jul 2019 21:22:00 +0200
-Message-Id: <20190729190842.028671075@linuxfoundation.org>
+Subject: [PATCH 4.14 256/293] RDMA/i40iw: Set queue pair state when being queried
+Date:   Mon, 29 Jul 2019 21:22:27 +0200
+Message-Id: <20190729190844.045542631@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,42 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3231573065ad4f4ecc5c9147b24f29f846dc0c2f ]
+[ Upstream commit 2e67e775845373905d2c2aecb9062c2c4352a535 ]
 
-We need to know the link bandwidth to filter out modes we cannot
-support, so we need to have read the display props before doing the
-filtering.
+The API for ib_query_qp requires the driver to set qp_state and
+cur_qp_state on return, add the missing sets.
 
-To ensure we have up to date display props, call tc_get_display_props()
-in the beginning of tc_connector_get_modes().
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190528082747.3631-22-tomi.valkeinen@ti.com
+Fixes: d37498417947 ("i40iw: add files for iwarp interface")
+Signed-off-by: Changcheng Liu <changcheng.liu@aliyun.com>
+Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/tc358767.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/infiniband/hw/i40iw/i40iw_verbs.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index 6eebd8ad0c52..9705ca197b90 100644
---- a/drivers/gpu/drm/bridge/tc358767.c
-+++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -1147,6 +1147,13 @@ static int tc_connector_get_modes(struct drm_connector *connector)
- 	struct tc_data *tc = connector_to_tc(connector);
- 	struct edid *edid;
- 	unsigned int count;
-+	int ret;
-+
-+	ret = tc_get_display_props(tc);
-+	if (ret < 0) {
-+		dev_err(tc->dev, "failed to read display props: %d\n", ret);
-+		return 0;
-+	}
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_verbs.c b/drivers/infiniband/hw/i40iw/i40iw_verbs.c
+index c1021b4afb41..57bfe4808247 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_verbs.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_verbs.c
+@@ -821,6 +821,8 @@ static int i40iw_query_qp(struct ib_qp *ibqp,
+ 	struct i40iw_qp *iwqp = to_iwqp(ibqp);
+ 	struct i40iw_sc_qp *qp = &iwqp->sc_qp;
  
- 	if (tc->panel && tc->panel->funcs && tc->panel->funcs->get_modes) {
- 		count = tc->panel->funcs->get_modes(tc->panel);
++	attr->qp_state = iwqp->ibqp_state;
++	attr->cur_qp_state = attr->qp_state;
+ 	attr->qp_access_flags = 0;
+ 	attr->cap.max_send_wr = qp->qp_uk.sq_size;
+ 	attr->cap.max_recv_wr = qp->qp_uk.rq_size;
 -- 
 2.20.1
 
