@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4358DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8C8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1318E21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E4021773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428436;
-	bh=KSrQa5ZxQQspKGIAMLddBTsakG3q+15HKrrPZhyAXIM=;
+	s=default; t=1564428441;
+	bh=WNEwlZmblCDELfMHFO9HduNW/EQ4DWBXMScy77tVMug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WoMWimaoRt9YyQ7iqIrEPkvyHBKKheT+a9agJZRTTPLGjJtq+cfM92F4hIfZOkawa
-	 G5glhRDFqIwak5EFM8MGUOw2pHTRFiV3ooq6o3fGdQp05k4l/poWNKnAXoIgTJ/Z92
-	 RmPKToSlgxxJoQQMIn0O0C0kbi9zq2lPhWBsRAt8=
+	b=BoxwMcwFre01uEvSypEbEs3RwnUDAJyFgHAR7EJtDtjeGvoVj7llJPUW7LXKiOsLT
+	 icIb0wE0dMJxGpqqU+cZ2aCJeSxTfAi1eCbFWgVKegTasVz3CEjPx9t5K0W+aIj/NZ
+	 C9aw/mrn8+DvbrL2mxTttAElCr56Vb8bpxJIV08Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388324AbfG2T1P (ORCPT
+        id S2388353AbfG2T1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:27:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39762 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:27:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727899AbfG2T1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:27:12 -0400
+        id S1729886AbfG2T1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:27:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2F4A2171F;
-        Mon, 29 Jul 2019 19:27:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5A9F2171F;
+        Mon, 29 Jul 2019 19:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428431;
-        bh=KSrQa5ZxQQspKGIAMLddBTsakG3q+15HKrrPZhyAXIM=;
+        s=default; t=1564428437;
+        bh=WNEwlZmblCDELfMHFO9HduNW/EQ4DWBXMScy77tVMug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uduZuqpVm58lLRwLsRGgkaqxsjcfU69pCt0KZQnZaEuRQw/WY/16+rf1uYNUQVEI1
-         kz7wCBTSpnf2nUYkyqrHPXGAtJyWU979akWrYhbY5FrQPUWkYO8r87nDAAfeLAOwzp
-         MqGzo/E2GHrLLzSmPAVrMuQ3lI7Ev0n0XRaEPxs4=
+        b=xjyZQIsTvBSAD/RzUmU8a/S6Ho7dYKDS5hk07ej/oXK+ks1uJ6g10HCnt53ZyO7vT
+         zOPJDv+wbFVXZI9fyqmE8efuYGG9cVpg1z2HibnbQG0wER8AMD5EYJl9gIqXJYZAs5
+         RpibLLEWTW7dEy1MGB5tDMnu8RgcBv5lT31HrVCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kubakici@wp.pl>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Borislav Petkov <bp@suse.de>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 075/293] mt7601u: fix possible memory leak when the device is disconnected
-Date:   Mon, 29 Jul 2019 21:19:26 +0200
-Message-Id: <20190729190830.393171969@linuxfoundation.org>
+Subject: [PATCH 4.14 059/293] EDAC/sysfs: Fix memory leak when creating a csrow object
+Date:   Mon, 29 Jul 2019 21:19:10 +0200
+Message-Id: <20190729190828.825030264@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,123 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 23377c200b2eb48a60d0f228b2a2e75ed6ee6060 ]
+[ Upstream commit 585fb3d93d32dbe89e718b85009f9c322cc554cd ]
 
-When the device is disconnected while passing traffic it is possible
-to receive out of order urbs causing a memory leak since the skb linked
-to the current tx urb is not removed. Fix the issue deallocating the skb
-cleaning up the tx ring. Moreover this patch fixes the following kernel
-warning
+In edac_create_csrow_object(), the reference to the object is not
+released when adding the device to the device hierarchy fails
+(device_add()). This may result in a memory leak.
 
-[   57.480771] usb 1-1: USB disconnect, device number 2
-[   57.483451] ------------[ cut here ]------------
-[   57.483462] TX urb mismatch
-[   57.483481] WARNING: CPU: 1 PID: 32 at drivers/net/wireless/mediatek/mt7601u/dma.c:245 mt7601u_complete_tx+0x165/00
-[   57.483483] Modules linked in:
-[   57.483496] CPU: 1 PID: 32 Comm: kworker/1:1 Not tainted 5.2.0-rc1+ #72
-[   57.483498] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-2.fc30 04/01/2014
-[   57.483502] Workqueue: usb_hub_wq hub_event
-[   57.483507] RIP: 0010:mt7601u_complete_tx+0x165/0x1e0
-[   57.483510] Code: 8b b5 10 04 00 00 8b 8d 14 04 00 00 eb 8b 80 3d b1 cb e1 00 00 75 9e 48 c7 c7 a4 ea 05 82 c6 05 f
-[   57.483513] RSP: 0000:ffffc900000a0d28 EFLAGS: 00010092
-[   57.483516] RAX: 000000000000000f RBX: ffff88802c0a62c0 RCX: ffffc900000a0c2c
-[   57.483518] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff810a8371
-[   57.483520] RBP: ffff88803ced6858 R08: 0000000000000000 R09: 0000000000000001
-[   57.483540] R10: 0000000000000002 R11: 0000000000000000 R12: 0000000000000046
-[   57.483542] R13: ffff88802c0a6c88 R14: ffff88803baab540 R15: ffff88803a0cc078
-[   57.483548] FS:  0000000000000000(0000) GS:ffff88803eb00000(0000) knlGS:0000000000000000
-[   57.483550] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   57.483552] CR2: 000055e7f6780100 CR3: 0000000028c86000 CR4: 00000000000006a0
-[   57.483554] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   57.483556] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   57.483559] Call Trace:
-[   57.483561]  <IRQ>
-[   57.483565]  __usb_hcd_giveback_urb+0x77/0xe0
-[   57.483570]  xhci_giveback_urb_in_irq.isra.0+0x8b/0x140
-[   57.483574]  handle_cmd_completion+0xf5b/0x12c0
-[   57.483577]  xhci_irq+0x1f6/0x1810
-[   57.483581]  ? lockdep_hardirqs_on+0x9e/0x180
-[   57.483584]  ? _raw_spin_unlock_irq+0x24/0x30
-[   57.483588]  __handle_irq_event_percpu+0x3a/0x260
-[   57.483592]  handle_irq_event_percpu+0x1c/0x60
-[   57.483595]  handle_irq_event+0x2f/0x4c
-[   57.483599]  handle_edge_irq+0x7e/0x1a0
-[   57.483603]  handle_irq+0x17/0x20
-[   57.483607]  do_IRQ+0x54/0x110
-[   57.483610]  common_interrupt+0xf/0xf
-[   57.483612]  </IRQ>
-
-Acked-by: Jakub Kicinski <kubakici@wp.pl>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Link: https://lkml.kernel.org/r/1555554438-103953-1-git-send-email-bianpan2016@163.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt7601u/dma.c | 21 ++++++++++++++++-----
- drivers/net/wireless/mediatek/mt7601u/tx.c  |  4 ++--
- 2 files changed, 18 insertions(+), 7 deletions(-)
+ drivers/edac/edac_mc_sysfs.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt7601u/dma.c b/drivers/net/wireless/mediatek/mt7601u/dma.c
-index bc36712cfffc..47cebb2ec05c 100644
---- a/drivers/net/wireless/mediatek/mt7601u/dma.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/dma.c
-@@ -241,14 +241,25 @@ static void mt7601u_complete_tx(struct urb *urb)
- 	struct sk_buff *skb;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&dev->tx_lock, flags);
-+	switch (urb->status) {
-+	case -ECONNRESET:
-+	case -ESHUTDOWN:
-+	case -ENOENT:
-+		return;
-+	default:
-+		dev_err_ratelimited(dev->dev, "tx urb failed: %d\n",
-+				    urb->status);
-+		/* fall through */
-+	case 0:
-+		break;
-+	}
- 
--	if (mt7601u_urb_has_error(urb))
--		dev_err(dev->dev, "Error: TX urb failed:%d\n", urb->status);
-+	spin_lock_irqsave(&dev->tx_lock, flags);
- 	if (WARN_ONCE(q->e[q->start].urb != urb, "TX urb mismatch"))
- 		goto out;
- 
- 	skb = q->e[q->start].skb;
-+	q->e[q->start].skb = NULL;
- 	trace_mt_tx_dma_done(dev, skb);
- 
- 	__skb_queue_tail(&dev->tx_skb_done, skb);
-@@ -448,10 +459,10 @@ static void mt7601u_free_tx_queue(struct mt7601u_tx_queue *q)
+diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+index 79c13301bf41..148c4649b155 100644
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -426,6 +426,8 @@ static inline int nr_pages_per_csrow(struct csrow_info *csrow)
+ static int edac_create_csrow_object(struct mem_ctl_info *mci,
+ 				    struct csrow_info *csrow, int index)
  {
- 	int i;
++	int err;
++
+ 	csrow->dev.type = &csrow_attr_type;
+ 	csrow->dev.bus = mci->bus;
+ 	csrow->dev.groups = csrow_dev_groups;
+@@ -438,7 +440,11 @@ static int edac_create_csrow_object(struct mem_ctl_info *mci,
+ 	edac_dbg(0, "creating (virtual) csrow node %s\n",
+ 		 dev_name(&csrow->dev));
  
--	WARN_ON(q->used);
--
- 	for (i = 0; i < q->entries; i++)  {
- 		usb_poison_urb(q->e[i].urb);
-+		if (q->e[i].skb)
-+			mt7601u_tx_status(q->dev, q->e[i].skb);
- 		usb_free_urb(q->e[i].urb);
- 	}
- }
-diff --git a/drivers/net/wireless/mediatek/mt7601u/tx.c b/drivers/net/wireless/mediatek/mt7601u/tx.c
-index 3600e911a63e..4d81c45722fb 100644
---- a/drivers/net/wireless/mediatek/mt7601u/tx.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/tx.c
-@@ -117,9 +117,9 @@ void mt7601u_tx_status(struct mt7601u_dev *dev, struct sk_buff *skb)
- 	info->status.rates[0].idx = -1;
- 	info->flags |= IEEE80211_TX_STAT_ACK;
- 
--	spin_lock(&dev->mac_lock);
-+	spin_lock_bh(&dev->mac_lock);
- 	ieee80211_tx_status(dev->hw, skb);
--	spin_unlock(&dev->mac_lock);
-+	spin_unlock_bh(&dev->mac_lock);
+-	return device_add(&csrow->dev);
++	err = device_add(&csrow->dev);
++	if (err)
++		put_device(&csrow->dev);
++
++	return err;
  }
  
- static int mt7601u_skb_rooms(struct mt7601u_dev *dev, struct sk_buff *skb)
+ /* Create a CSROW object under specifed edac_mc_device */
 -- 
 2.20.1
 
