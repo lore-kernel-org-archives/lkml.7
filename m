@@ -5,54 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD143C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B9CC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC95205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC097205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431252;
-	bh=AQNp5ECe9sgyjFWOGgvv1e6tRkk2iwL30xwMF+qUeZU=;
+	s=default; t=1564431262;
+	bh=2o22tR3EhmUoGO81eu0w4DIxcCBKxG35WXyGeRSq6xM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B5YCZVZKDCRAX3fGOtF5FGqsAMEb4YeF1ph0JhuLQVqACyaeLfLnx94bGveOJTh14
-	 h0aI0uE3ikGaZOzwluSpoUi0gvoHOlCXb5BLRWK8jaX8vCrvXjdhIcxeArbcZDnNK0
-	 EaZVPWOvmwn+XeptV4HSljwVxeW947bIeAFMW9Bo=
+	b=XSJuMkWvRWoflfmlU2lsNPJrroQIepeZt2zb6wyiBHdqW95WowXMQ5G692fSBQTkn
+	 x3uSta2v7X/qytEQd9bbmCV3L211ylwjG39q++RoPZdnFBwY5lNkxljTIMilfmhUKk
+	 6zUODQDD2wL0XneRlzVKvKRusE2N1g2thC0EXHb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbfG2UOL (ORCPT
+        id S1730537AbfG2UOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:14:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41552 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730022AbfG2T2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:28:51 -0400
+        id S1728280AbfG2T2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:28:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79BE52171F;
-        Mon, 29 Jul 2019 19:28:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF3F421655;
+        Mon, 29 Jul 2019 19:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428530;
-        bh=AQNp5ECe9sgyjFWOGgvv1e6tRkk2iwL30xwMF+qUeZU=;
+        s=default; t=1564428494;
+        bh=2o22tR3EhmUoGO81eu0w4DIxcCBKxG35WXyGeRSq6xM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y9EnJhSZ3jwZdGyexIDK9WfXewr0s1Wr0UcVpjQMx0f5zUBg6G9JUyUX51xydxT/W
-         k/b06tnSa2j7QqRKd3va9gJCqC3SJxXjVnRmeFw5iREfFNnQppgyKdfKZuQLVt2mis
-         m+wFhEM5tBGlorXQR7pkYao4U4//Vmh9PJgaBEdU=
+        b=X4SQrCaogZ9ulT/8AjByxn4+Tdm0NYr+h6wi8mB95BZPoqx17FNiGkA+Ny3iClXgd
+         UnTZBpovxK+8178tT6+R8QiT67/Vv7r4RspUXRJRnJ27bsOisv/HaNEpdebrlFXvGl
+         dIf6VhSi3DQ7rMnnfGtc7vT19fbxL8Y/kQDtW2rk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Graeme Gregory <graeme.gregory@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 066/293] acpi/arm64: ignore 5.1 FADTs that are reported as 5.0
-Date:   Mon, 29 Jul 2019 21:19:17 +0200
-Message-Id: <20190729190829.714016734@linuxfoundation.org>
+Subject: [PATCH 4.14 093/293] perf stat: Make metric event lookup more robust
+Date:   Mon, 29 Jul 2019 21:19:44 +0200
+Message-Id: <20190729190831.731409775@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -65,50 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2af22f3ec3ca452f1e79b967f634708ff01ced8a ]
+[ Upstream commit 145c407c808352acd625be793396fd4f33c794f8 ]
 
-Some Qualcomm Snapdragon based laptops built to run Microsoft Windows
-are clearly ACPI 5.1 based, given that that is the first ACPI revision
-that supports ARM, and introduced the FADT 'arm_boot_flags' field,
-which has a non-zero field on those systems.
+After setting up metric groups through the event parser, the metricgroup
+code looks them up again in the event list.
 
-So in these cases, infer from the ARM boot flags that the FADT must be
-5.1 or later, and treat it as 5.1.
+Make sure we only look up events that haven't been used by some other
+metric. The data structures currently cannot handle more than one metric
+per event. This avoids problems with multiple events partially
+overlapping.
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Tested-by: Lee Jones <lee.jones@linaro.org>
-Reviewed-by: Graeme Gregory <graeme.gregory@linaro.org>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Hanjun Guo <guohanjun@huawei.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Link: http://lkml.kernel.org/r/20190624193711.35241-2-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/acpi.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ tools/perf/util/stat-shadow.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-index b3162715ed78..285f0b4851fc 100644
---- a/arch/arm64/kernel/acpi.c
-+++ b/arch/arm64/kernel/acpi.c
-@@ -157,10 +157,14 @@ static int __init acpi_fadt_sanity_check(void)
- 	 */
- 	if (table->revision < 5 ||
- 	   (table->revision == 5 && fadt->minor_revision < 1)) {
--		pr_err("Unsupported FADT revision %d.%d, should be 5.1+\n",
-+		pr_err(FW_BUG "Unsupported FADT revision %d.%d, should be 5.1+\n",
- 		       table->revision, fadt->minor_revision);
--		ret = -EINVAL;
--		goto out;
-+
-+		if (!fadt->arm_boot_flags) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+		pr_err("FADT has ARM boot flags set, assuming 5.1\n");
- 	}
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 37363869c9a1..eadc9a2aef16 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -271,7 +271,7 @@ static struct perf_evsel *perf_stat__find_event(struct perf_evlist *evsel_list,
+ 	struct perf_evsel *c2;
  
- 	if (!(fadt->flags & ACPI_FADT_HW_REDUCED)) {
+ 	evlist__for_each_entry (evsel_list, c2) {
+-		if (!strcasecmp(c2->name, name))
++		if (!strcasecmp(c2->name, name) && !c2->collect_stat)
+ 			return c2;
+ 	}
+ 	return NULL;
+@@ -310,7 +310,8 @@ void perf_stat__collect_metric_expr(struct perf_evlist *evsel_list)
+ 			if (leader) {
+ 				/* Search in group */
+ 				for_each_group_member (oc, leader) {
+-					if (!strcasecmp(oc->name, metric_names[i])) {
++					if (!strcasecmp(oc->name, metric_names[i]) &&
++						!oc->collect_stat) {
+ 						found = true;
+ 						break;
+ 					}
 -- 
 2.20.1
 
