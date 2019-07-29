@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B31C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F28C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D30216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CCB20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="XCeulL1H"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="lyIFFZOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389519AbfG2V7O (ORCPT
+        id S1730584AbfG2V7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:59:14 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40556 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730601AbfG2V7J (ORCPT
+        Mon, 29 Jul 2019 17:59:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41426 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389497AbfG2V7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:59:09 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v19so54830902wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:59:08 -0700 (PDT)
+        Mon, 29 Jul 2019 17:59:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so60263156wrm.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:59:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Ka7x1gX+cc0hv8MDuwO2Malh6j1ZrZUM3jDIBgobxjI=;
-        b=XCeulL1HqFo71FGgcdV/5qsSDWdEGSIBblaeaVZGBZUjTcko2yKOt8vaOVNS9Umo4x
-         BYK3fAoJ8NZLicm4kDYLSHzAk7dusf9h95YXBk4IKA/FDB4tFYfCdIOznpZSk7WTT+ze
-         gj0sOFP0LVlO6b45XQSbeoGr3ZD94Pj5LqPOjImqrrYvzx9mykAhdhw18TZF8RWlkujj
-         hMmNo7mXw7jF4SlHvV9Vnrq5ZNGA1MR1frTUyL/Ul51gAgwS3CHdjjX9h4zJcvhtmlc0
-         /zSI6gJ7eFXRY7kIqVjYY3CzIueKbZXgWPuJcuSQudYSrWXGM97tyMj8L8VD0Ijy0vHt
-         5nvg==
+        bh=aoCU6uPiHr0PzNNlgylsAXV9auaD7Fl9k+QB3VPTwmU=;
+        b=lyIFFZOD5gGnj2VKFbxI8Hxm8GCuaJLZOdM1TyAWTYxIPvJazlmaSBv32iCYrkk9A5
+         DfFEvqo6cOZTHKDRnFIdSlBt8YD/QZ8veboYXgj4rB+mpr//AYCUP4yKtAAzfbm+Nw14
+         mJ03K6t68W5ENcS05b+wwnmCMlkOaDoX6b03Qe8GTZOa9fy7qFMb3+H7oFCig63RkBEn
+         rlQ36OfCpIKR4G/fJWpg/Qs2MUcYqJTKypbbp4nl7UKrVyZwUDn559vkbLSVW6GIb2F9
+         jHRXiTd2wswHPS5WdJTjC2JHRc9AQmguOe9J1Xz+EfKWXT4WtQree65HPLVX3qjngW3I
+         o1MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ka7x1gX+cc0hv8MDuwO2Malh6j1ZrZUM3jDIBgobxjI=;
-        b=oAETKNTk5sZXU5RyOcbygWmWpREm4Cn8kBK3DfIsiqWH89+4wHT9QpDcSb1sn0I/yD
-         coVInYJh0xoSw6A0X/f8/U4FsXEUTK35dL9/jEh0xCzspqmtfT24f7MPj58WThE1DCHN
-         PBqPtJtPECL9+jr/5X27KdGcet/GINrDfZe/wpWP0ZF0iQGQMh8si6Jvb3JTppmWpA6l
-         N1h6TazMFX/ND8mhZ3buZ6d74SkObJWLSaV7P8fRPY7ItpXV0r1mer1yvokz7JrKLcQK
-         rJNEnV261de0qFLFQmWujlvhIxCiVzXkf3qF0NUU3qBWPovnwkLrWj7zCMRxc4jHcxMv
-         ZEwA==
-X-Gm-Message-State: APjAAAUrlQxwjVCVvRj4b227Y7Tj+T/09iPpZjJABozMRxMyVEBGxR0Z
-        Nvwj2I7KnnEly3it/Dq76/I7QCr59YuB7eOsdMz6QGSlNi3DPPt7kt70bcRBzbM41T5PAOQKZYP
-        IB/EzDo/s52ZfyT6kIm2+WqtpitfO0wx5IGjiSWcDd56JpXX1ZluQzaCyzw2ZFMbgpTHOH8cNjm
-        JQyhmrn97ih9MnAb8H6LTgnNaQE9+QJpbKIVpuxs0=
-X-Google-Smtp-Source: APXvYqy82N1/rS2k+0d9HP0mbqZT6+7XINBuI3UNSfy2RMfcEhMIKVXp/SDEcPsHnzMKYzmg/9wesg==
-X-Received: by 2002:a7b:c8d4:: with SMTP id f20mr104788522wml.90.1564437547221;
-        Mon, 29 Jul 2019 14:59:07 -0700 (PDT)
+        bh=aoCU6uPiHr0PzNNlgylsAXV9auaD7Fl9k+QB3VPTwmU=;
+        b=jyZkKftqAuwe4nHZufmQ2uwlzUSPJ7nnterZeuMVYvYCM1YLdMd8Yi/p+of6m0XHhA
+         1U8IqhKfP1IYjYR2bviy0S5Z2HgSZRgU/47RLxbKhxtX0yS6ZqwxKG1zbEO3NP1DQqam
+         +A0Xt2oV8rTIbLd1rSlG9JAipTFXDYAFWQgh4omLDXTNnzoaY8uVJlrK6modDuiLyyLq
+         ngyV7ADnrgsyAWosTjafVW1yvl2cIrGgV8V8MeWp9Bw7jcQWB4g6e9RAwiOFHRH/znnn
+         ActLB9tfAzWi6gV+1BQ0dk7xA3FdolNV9r+WsAhrGq17I7LjJVDovRcec1pPijXU7RDo
+         65Kg==
+X-Gm-Message-State: APjAAAVOoXCmh8HbqlvyDA9egUaxnklgch/ZuFXGmYVFV6ZKsg8zuXZg
+        DRUMjB278wPzR2XfiZXgvgIO5DcCsfJVbXzJahuFpJx3xMMrtGojkkn1a4NNbjs0xiI5H7hUkml
+        uDtuqyKQcFBcWAz6M2CG8HfxOQ2FU5JqkM5MPgbdJDucmOFPo1TG9jsNIrZ4NERdBgFKGWI+2QC
+        qZQrv2QrbXwTgF/YBtFBIwO/b+1mNwVk1zg1TCd2w=
+X-Google-Smtp-Source: APXvYqwo+T0JZn8gYaWYPlQ7YHb0W1CWyxIgG9rZ2SMtPY56m1Y6nTv2AwANMMtSkZjoHgHSB+0fqg==
+X-Received: by 2002:adf:aac8:: with SMTP id i8mr17425wrc.56.1564437551664;
+        Mon, 29 Jul 2019 14:59:11 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id x20sm49230728wmc.1.2019.07.29.14.59.05
+        by smtp.gmail.com with ESMTPSA id x20sm49230728wmc.1.2019.07.29.14.59.10
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 14:59:06 -0700 (PDT)
+        Mon, 29 Jul 2019 14:59:11 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -79,9 +79,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv5 10/37] posix-clocks: Introduce CLOCK_BOOTTIME time namespace offset
-Date:   Mon, 29 Jul 2019 22:57:30 +0100
-Message-Id: <20190729215758.28405-49-dima@arista.com>
+Subject: [PATCHv5 13/37] posix-timers: Make timer_settime() time namespace aware
+Date:   Mon, 29 Jul 2019 22:57:33 +0100
+Message-Id: <20190729215758.28405-52-dima@arista.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729215758.28405-1-dima@arista.com>
 References: <20190729215758.28405-1-dima@arista.com>
@@ -98,96 +98,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andrei Vagin <avagin@gmail.com>
 
-Adds boottime virtualisation for time namespace.
-Introduce timespec for boottime clock into timens offsets and wire
-clock_gettime() syscall.
+Wire timer_settime() syscall into time namespace virtualization.
 
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
+sys_timer_settime() calls the ktime->timer_set() callback. Right now,
+common_timer_set() is the only implementation for the callback.
+
+There user-supplied timer's value is converted from timespec64 to ktime
+and then timens_ktime_to_host() can be used to convert namespace's time
+to the host time.
+
+Inside a time namespace kernel's time differ on a fixed offset from
+a user-supplied, but only absolute values (TIMER_ABSTIME) must
+be converted.
+
+Signed-off-by: Andrei Vagin <avagin@openvz.org>
 Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- include/linux/time_namespace.h | 9 +++++++++
- include/linux/timens_offsets.h | 1 +
- kernel/time/alarmtimer.c       | 1 +
- kernel/time/posix-stubs.c      | 1 +
- kernel/time/posix-timers.c     | 1 +
- 5 files changed, 13 insertions(+)
+ kernel/time/posix-timers.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index 186c134fe222..334c1a1c6607 100644
---- a/include/linux/time_namespace.h
-+++ b/include/linux/time_namespace.h
-@@ -48,6 +48,14 @@ static inline void timens_add_monotonic(struct timespec64 *ts)
- 		*ts = timespec64_add(*ts, ns_offsets->monotonic);
- }
- 
-+static inline void timens_add_boottime(struct timespec64 *ts)
-+{
-+	struct timens_offsets *ns_offsets = current->nsproxy->time_ns->offsets;
-+
-+	if (ns_offsets)
-+		*ts = timespec64_add(*ts, ns_offsets->boottime);
-+}
-+
- #else
- static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
- {
-@@ -73,6 +81,7 @@ static inline int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *ts
- }
- 
- static inline void timens_add_monotonic(struct timespec64 *ts) {}
-+static inline void timens_add_boottime(struct timespec64 *ts) {}
- #endif
- 
- #endif /* _LINUX_TIMENS_H */
-diff --git a/include/linux/timens_offsets.h b/include/linux/timens_offsets.h
-index eaac2c82be5c..e93aabaa5e45 100644
---- a/include/linux/timens_offsets.h
-+++ b/include/linux/timens_offsets.h
-@@ -4,6 +4,7 @@
- 
- struct timens_offsets {
- 	struct timespec64 monotonic;
-+	struct timespec64 boottime;
- };
- 
- #endif
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 55cb6e78d082..b1e82bb6cc6b 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -26,6 +26,7 @@
- #include <linux/freezer.h>
- #include <linux/compat.h>
- #include <linux/module.h>
-+#include <linux/time_namespace.h>
- 
- #include "posix-timers.h"
- 
-diff --git a/kernel/time/posix-stubs.c b/kernel/time/posix-stubs.c
-index 17c67e0aecd8..edaf075d1ee4 100644
---- a/kernel/time/posix-stubs.c
-+++ b/kernel/time/posix-stubs.c
-@@ -82,6 +82,7 @@ int do_clock_gettime(clockid_t which_clock, struct timespec64 *tp)
- 		break;
- 	case CLOCK_BOOTTIME:
- 		ktime_get_boottime_ts64(tp);
-+		timens_add_boottime(tp);
- 		break;
- 	default:
- 		return -EINVAL;
 diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index cfeb0477d1f9..265fbc816520 100644
+index 265fbc816520..c979e720a5a1 100644
 --- a/kernel/time/posix-timers.c
 +++ b/kernel/time/posix-timers.c
-@@ -240,6 +240,7 @@ static int posix_get_coarse_res(const clockid_t which_clock, struct timespec64 *
- int posix_get_boottime_timespec(const clockid_t which_clock, struct timespec64 *tp)
- {
- 	ktime_get_boottime_ts64(tp);
-+	timens_add_boottime(tp);
- 	return 0;
- }
+@@ -857,6 +857,8 @@ int common_timer_set(struct k_itimer *timr, int flags,
  
+ 	timr->it_interval = timespec64_to_ktime(new_setting->it_interval);
+ 	expires = timespec64_to_ktime(new_setting->it_value);
++	if (flags & TIMER_ABSTIME)
++		expires = timens_ktime_to_host(timr->it_clock, expires);
+ 	sigev_none = timr->it_sigev_notify == SIGEV_NONE;
+ 
+ 	kc->timer_arm(timr, expires, flags & TIMER_ABSTIME, sigev_none);
 -- 
 2.22.0
 
