@@ -2,117 +2,111 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6724C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30487C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC9720693
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:24:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xy2kFbWE"
+	by mail.kernel.org (Postfix) with ESMTP id 0F9DB2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:25:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbfG2JY6 (ORCPT
+        id S1727854AbfG2JZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:24:58 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35213 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727677AbfG2JY6 (ORCPT
+        Mon, 29 Jul 2019 05:25:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41444 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfG2JZY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:24:58 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u14so27735406pfn.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:24:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0NHaPbEIE3GnLl8EEhfWosdb00OPf2b+fWo8SdgJJxo=;
-        b=Xy2kFbWELNQCgQRQoASfnRppp4kufLgsSg0GLfeZ2QYeQqHU5mpLuekUESnWJ6W4au
-         cLKGPGdF7k7MGl2BbkbWfnGBvmSrjg18z9HjryerP+YE8FPFW8Vp938laWSMBwMBElOx
-         kyyCtoKg5txpKw0B0jCj1acEcdB5a91vD2r5wicbDw1sqElfH0LBlsirDz0zJ19dQnY2
-         OjpK4ItIOlxl/PUMzlt4Q37vSX42BMPQWJ4lNjSvE+9kofdH8gKLTwTyMplTmwQaHb56
-         Ch5ZcOhm5zTPnd+CrFwGsggzriGxMtbhx+erQvGfVQnkJhitKfOaaCp8TulgvSWufC7+
-         6h6g==
+        Mon, 29 Jul 2019 05:25:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so57791929wrm.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:25:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0NHaPbEIE3GnLl8EEhfWosdb00OPf2b+fWo8SdgJJxo=;
-        b=AMS1BZRcaQPXZktS5/OlipkNmpDwIMKRxGauwVyo6zSQnDrI8RQL//Vv7OWjEATZ67
-         F0PiOID9v/60pE5OkSHHoNYiKOPhZXF6E4BtRvfrQcPKm9impFSKKJPg9A+gnJpdJpNg
-         wrpYw1Hg1BagLaVV7ANe2YR2hFN8s4q2ZByNlAVeEdjYYr7WU2JajoxiMviQ7Rg/2j6Q
-         4e6fbRJVS5LN7JxQdNDuMm8c+EFsEY5xBbndVI0BgDxb4QsKgoSWRoCXMfMv3AIKK5FJ
-         3T04A2VzIz4xRf3VnL7bbhEUKiNe1sB8s+MPy7tisAGvNnlwZYac48txWwFdQvWvctib
-         WKdA==
-X-Gm-Message-State: APjAAAVW4gk1WGz9zuWnOQgDIkx7nd5sPaHc0YR0IRBfX8iWi62K2BiL
-        jpib5K7/tjzJCynofHaqhx9qqVKObFY=
-X-Google-Smtp-Source: APXvYqyXnV7F+k6oUvgbf58oAVK1IH6CZXv9DBBx+BcsjmdeUAZr2vtTHZFtwqBx4mKuZrWjbNouhQ==
-X-Received: by 2002:a65:6406:: with SMTP id a6mr66039326pgv.393.1564392297055;
-        Mon, 29 Jul 2019 02:24:57 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id r12sm39768662pgb.73.2019.07.29.02.24.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 02:24:56 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 14:54:54 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
-Message-ID: <20190729092454.6lfqzmhkvrhpimsp@vireshk-i7>
-References: <20190703011020.151615-1-saravanak@google.com>
- <20190717103220.f7cys267hq23fbsb@vireshk-i7>
- <CAGETcx-tbjVzRKW8D-564zgNOhrA_z-NC1q5U70bhoUDBhp6VA@mail.gmail.com>
- <20190718053746.64drmonk72vwnt4s@vireshk-i7>
- <CAGETcx_-=b3An9YdxLUnZap=0iaeczvWTEnw65FMLU8BwA3HfQ@mail.gmail.com>
+        bh=t7Ljxs1sr+mBG3FK3SDP9+7VPp2LGRP4yoTIBN6DoFw=;
+        b=UgGmIZZd9vmohlyaMa0uRas6bzxJAWIEEcxnvY5FaG3LM4U1O0iFarGrhM1Er7Iwk8
+         3lQtTswQLzl6AOBftFXlTwS4sP1xPt8pq6T+7l8cj4sIzUWZd27g75tcehWXqNskhVF6
+         Jp+ndpLv3HrJajy3kJyPTPAHQnOUUxp9EFR/tu3jAA5LcEzBtpucejPGzP0qxP82ufaA
+         DY5xDLDrIjpkxNIUilKw+Ae0qogeQJY2oKxcu6iJ1gdSqRuieO4yxWcQ9d6tHHKfoPoY
+         q/cRoxqeGkDRrChhf5azr2w3lrFB91n3Dla82+pl9TjSVWG+4nZsFVK8+yRFfqMpzRFm
+         j7hg==
+X-Gm-Message-State: APjAAAX7hkTAN6kvZlJiSavsCr9h0Wfdldoapgj/G7VxVQb1N7LGFqWT
+        2+DQAcHrV5rtJ2tC70cAi9FPgQ==
+X-Google-Smtp-Source: APXvYqy7MkKr+ZTqwO7kFcE4Z3A/IxNvxUF25RWjb2Hhy7aqr0zOTJoixXZ2Q+VNrXADTsirAuIGMA==
+X-Received: by 2002:adf:e444:: with SMTP id t4mr19073195wrm.262.1564392322293;
+        Mon, 29 Jul 2019 02:25:22 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.237.107])
+        by smtp.gmail.com with ESMTPSA id j16sm1882024wrp.62.2019.07.29.02.25.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 02:25:21 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 11:25:19 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
+        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
+        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
+Subject: Re: [RFC][PATCH 04/13] sched/{rt,deadline}: Fix set_next_task vs
+ pick_next_task
+Message-ID: <20190729092519.GR25636@localhost.localdomain>
+References: <20190726145409.947503076@infradead.org>
+ <20190726161357.579899041@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGETcx_-=b3An9YdxLUnZap=0iaeczvWTEnw65FMLU8BwA3HfQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190726161357.579899041@infradead.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-07-19, 21:12, Saravana Kannan wrote:
-> On Wed, Jul 17, 2019 at 10:37 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > I would like
-> > to put this data in the GPU OPP table only. What about putting a
-> > range in the GPU OPP table for the Bandwidth if it can change so much
-> > for the same frequency.
+Hi,
+
+On 26/07/19 16:54, Peter Zijlstra wrote:
+> Because pick_next_task() implies set_curr_task() and some of the
+> details haven't matter too much, some of what _should_ be in
+> set_curr_task() ended up in pick_next_task, correct this.
 > 
-> I don't think the range is going to work.
+> This prepares the way for a pick_next_task() variant that does not
+> affect the current state; allowing remote picking.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/sched/deadline.c |   23 ++++++++++++-----------
+>  kernel/sched/rt.c       |   27 ++++++++++++++-------------
+>  2 files changed, 26 insertions(+), 24 deletions(-)
+> 
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -1694,12 +1694,21 @@ static void start_hrtick_dl(struct rq *r
+>  }
+>  #endif
+>  
+> -static inline void set_next_task(struct rq *rq, struct task_struct *p)
+> +static void set_next_task_dl(struct rq *rq, struct task_struct *p)
+>  {
+>  	p->se.exec_start = rq_clock_task(rq);
+>  
+>  	/* You can't push away the running task */
+>  	dequeue_pushable_dl_task(rq, p);
+> +
+> +	if (hrtick_enabled(rq))
+> +		start_hrtick_dl(rq, p);
+> +
+> +	if (rq->curr->sched_class != &dl_sched_class)
+> +		update_dl_rq_load_avg(rq_clock_pelt(rq), rq, 0);
+> +
+> +	if (rq->curr != p)
+> +		deadline_queue_push_tasks(rq);
 
-Any specific reason for that ?
+It's a minor thing, but I was wondering why you added the check on curr.
+deadline_queue_push_tasks() already checks if are there pushable tasks,
+plus curr can still be of a different class at this point?
 
-> If a GPU is doing purely
-> computational work, it's not unreasonable for it to vote for the
-> lowest bandwidth for any GPU frequency.
+Thanks,
 
-I think that is fine, but if the GPU is able to find how much
-bandwidth it needs why can't it just pass that value without needing
-to have another OPP table for the path ?
-
-The interconnect can then take all the requests and have its own OPP
-table to get help on deciding what stable bandwidth to use.
-
--- 
-viresh
+Juri
