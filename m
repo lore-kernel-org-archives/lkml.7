@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FC1C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F1DC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B2F2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E128621655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428785;
-	bh=C3mhXCl2ZWYBLwyb38j1K9FbAQ3C3952L957kgeENwA=;
+	s=default; t=1564428788;
+	bh=g44n4eyLeqegZrQ8j2ByDwsIPXCmoHLnxnLPMeE1QzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oXXQ0GV7Jko4Fv3eG+QsoVrHBZ2Bj7m0qLWNZpYynyjw/GIDzdHANdXrhyuB7jkFU
-	 47uTysTmnymWBxHHg31QQO/m9LqsI/EgjPbKj6xReSfUIBCrlzhhiQvspcFevGftqS
-	 BzFVoewn98d1Rc5qAh3hcr1P567TpQimS4dwHMZ0=
+	b=kbCgty6DWyiLfq8dw1Z0VLUfHKliN/2jfYzLNKPK9kSENlmKR+rZz1qbPI4C+y0f0
+	 0UzHUaoHeuY2IhjX62NUT2e4YMXPQE8x+OEF1/5rfON6DiFtTEWBvbAgHRF62tAhe2
+	 ShIzk9sSaVDvf+bOveuzewpHWoJetKweYv/Cgj98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbfG2TdD (ORCPT
+        id S1729496AbfG2TdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:33:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46812 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:33:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730290AbfG2Tc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:32:59 -0400
+        id S1730294AbfG2TdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:33:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10B2E21655;
-        Mon, 29 Jul 2019 19:32:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B401621655;
+        Mon, 29 Jul 2019 19:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428778;
-        bh=C3mhXCl2ZWYBLwyb38j1K9FbAQ3C3952L957kgeENwA=;
+        s=default; t=1564428781;
+        bh=g44n4eyLeqegZrQ8j2ByDwsIPXCmoHLnxnLPMeE1QzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oYEDWaOeGNXbfRZIjscG73c/vbjEayg1rFwlAh1IhAJq0WEm6VS0cuWVlcP8jjQx/
-         Yb0qlWJwa8sdg4p7Gs3PYnc34JGs/jYYQwDvv4mei94IH3VRKlebEtJkc9I/wg1KRY
-         /lT8cIbBPElmdhQqbY/edtK1UUAZsb3u7OhPJrhI=
+        b=zUsmDpo8jjBzHtGSwIqPPwGrrDULuuyqHCB/mfaZHWAfRIUjS/XmqSZITGM3tjHhY
+         Qwj1JAskdUdEhj0KEttyphAflYgn/MEp7CDEZHwbH7U8nU/nyLEbBygN0CkG1V5kbq
+         xZXwiam68H8OgS18D8/gJ1w3xouWZWv/Oq+PUN1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Marc Meledandri <m.meledandri@gmail.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Subject: [PATCH 4.14 146/293] drm/nouveau/i2c: Enable i2c pads & busses during preinit
-Date:   Mon, 29 Jul 2019 21:20:37 +0200
-Message-Id: <20190729190835.725603223@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Przemyslaw Hausman <przemyslaw.hausman@canonical.com>
+Subject: [PATCH 4.14 182/293] bnx2x: Prevent ptp_task to be rescheduled indefinitely
+Date:   Mon, 29 Jul 2019 21:21:13 +0200
+Message-Id: <20190729190838.448707483@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,78 +62,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: "Guilherme G. Piccoli" <gpiccoli@canonical.com>
 
-commit 7cb95eeea6706c790571042a06782e378b2561ea upstream.
+[ Upstream commit 3c91f25c2f72ba6001775a5932857c1d2131c531 ]
 
-It turns out that while disabling i2c bus access from software when the
-GPU is suspended was a step in the right direction with:
+Currently bnx2x ptp worker tries to read a register with timestamp
+information in case of TX packet timestamping and in case it fails,
+the routine reschedules itself indefinitely. This was reported as a
+kworker always at 100% of CPU usage, which was narrowed down to be
+bnx2x ptp_task.
 
-commit 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after
-->fini()")
+By following the ioctl handler, we could narrow down the problem to
+an NTP tool (chrony) requesting HW timestamping from bnx2x NIC with
+RX filter zeroed; this isn't reproducible for example with ptp4l
+(from linuxptp) since this tool requests a supported RX filter.
+It seems NIC FW timestamp mechanism cannot work well with
+RX_FILTER_NONE - driver's PTP filter init routine skips a register
+write to the adapter if there's not a supported filter request.
 
-We also ended up accidentally breaking the vbios init scripts on some
-older Tesla GPUs, as apparently said scripts can actually use the i2c
-bus. Since these scripts are executed before initializing any
-subdevices, we end up failing to acquire access to the i2c bus which has
-left a number of cards with their fan controllers uninitialized. Luckily
-this doesn't break hardware - it just means the fan gets stuck at 100%.
+This patch addresses the problem of bnx2x ptp thread's everlasting
+reschedule by retrying the register read 10 times; between the read
+attempts the thread sleeps for an increasing amount of time starting
+in 1ms to give FW some time to perform the timestamping. If it still
+fails after all retries, we bail out in order to prevent an unbound
+resource consumption from bnx2x.
 
-This also means that we've always been using our i2c busses before
-initializing them during the init scripts for older GPUs, we just didn't
-notice it until we started preventing them from being used until init.
-It's pretty impressive this never caused us any issues before!
+The patch also adds an ethtool statistic for accounting the skipped
+TX timestamp packets and it reduces the priority of timestamping
+error messages to prevent log flooding. The code was tested using
+both linuxptp and chrony.
 
-So, fix this by initializing our i2c pad and busses during subdev
-pre-init. We skip initializing aux busses during pre-init, as those are
-guaranteed to only ever be used by nouveau for DP aux transactions.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Tested-by: Marc Meledandri <m.meledandri@gmail.com>
-Fixes: 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after ->fini()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Reported-and-tested-by: Przemyslaw Hausman <przemyslaw.hausman@canonical.com>
+Suggested-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c     |    5 ++-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c |    4 +-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c    |   33 ++++++++++++++------
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h   |    3 +
+ 4 files changed, 34 insertions(+), 11 deletions(-)
 
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-@@ -185,6 +185,25 @@ nvkm_i2c_fini(struct nvkm_subdev *subdev
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+@@ -3859,9 +3859,12 @@ netdev_tx_t bnx2x_start_xmit(struct sk_b
+ 
+ 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP)) {
+ 		if (!(bp->flags & TX_TIMESTAMPING_EN)) {
++			bp->eth_stats.ptp_skip_tx_ts++;
+ 			BNX2X_ERR("Tx timestamping was not enabled, this packet will not be timestamped\n");
+ 		} else if (bp->ptp_tx_skb) {
+-			BNX2X_ERR("The device supports only a single outstanding packet to timestamp, this packet will not be timestamped\n");
++			bp->eth_stats.ptp_skip_tx_ts++;
++			dev_err_once(&bp->dev->dev,
++					"Device supports only a single outstanding packet to timestamp, this packet won't be timestamped\n");
+ 		} else {
+ 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+ 			/* schedule check for Tx timestamp */
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+@@ -182,7 +182,9 @@ static const struct {
+ 	{ STATS_OFFSET32(driver_filtered_tx_pkt),
+ 				4, false, "driver_filtered_tx_pkt" },
+ 	{ STATS_OFFSET32(eee_tx_lpi),
+-				4, true, "Tx LPI entry count"}
++				4, true, "Tx LPI entry count"},
++	{ STATS_OFFSET32(ptp_skip_tx_ts),
++				4, false, "ptp_skipped_tx_tstamp" },
+ };
+ 
+ #define BNX2X_NUM_STATS		ARRAY_SIZE(bnx2x_stats_arr)
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -15264,11 +15264,24 @@ static void bnx2x_ptp_task(struct work_s
+ 	u32 val_seq;
+ 	u64 timestamp, ns;
+ 	struct skb_shared_hwtstamps shhwtstamps;
++	bool bail = true;
++	int i;
+ 
+-	/* Read Tx timestamp registers */
+-	val_seq = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_SEQID :
+-			 NIG_REG_P0_TLLH_PTP_BUF_SEQID);
+-	if (val_seq & 0x10000) {
++	/* FW may take a while to complete timestamping; try a bit and if it's
++	 * still not complete, may indicate an error state - bail out then.
++	 */
++	for (i = 0; i < 10; i++) {
++		/* Read Tx timestamp registers */
++		val_seq = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_SEQID :
++				 NIG_REG_P0_TLLH_PTP_BUF_SEQID);
++		if (val_seq & 0x10000) {
++			bail = false;
++			break;
++		}
++		msleep(1 << i);
++	}
++
++	if (!bail) {
+ 		/* There is a valid timestamp value */
+ 		timestamp = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_TS_MSB :
+ 				   NIG_REG_P0_TLLH_PTP_BUF_TS_MSB);
+@@ -15283,16 +15296,18 @@ static void bnx2x_ptp_task(struct work_s
+ 		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
+ 		shhwtstamps.hwtstamp = ns_to_ktime(ns);
+ 		skb_tstamp_tx(bp->ptp_tx_skb, &shhwtstamps);
+-		dev_kfree_skb_any(bp->ptp_tx_skb);
+-		bp->ptp_tx_skb = NULL;
+ 
+ 		DP(BNX2X_MSG_PTP, "Tx timestamp, timestamp cycles = %llu, ns = %llu\n",
+ 		   timestamp, ns);
+ 	} else {
+-		DP(BNX2X_MSG_PTP, "There is no valid Tx timestamp yet\n");
+-		/* Reschedule to keep checking for a valid timestamp value */
+-		schedule_work(&bp->ptp_task);
++		DP(BNX2X_MSG_PTP,
++		   "Tx timestamp is not recorded (register read=%u)\n",
++		   val_seq);
++		bp->eth_stats.ptp_skip_tx_ts++;
+ 	}
++
++	dev_kfree_skb_any(bp->ptp_tx_skb);
++	bp->ptp_tx_skb = NULL;
  }
  
- static int
-+nvkm_i2c_preinit(struct nvkm_subdev *subdev)
-+{
-+	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
-+	struct nvkm_i2c_bus *bus;
-+	struct nvkm_i2c_pad *pad;
+ void bnx2x_set_rx_ts(struct bnx2x *bp, struct sk_buff *skb)
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
+@@ -207,6 +207,9 @@ struct bnx2x_eth_stats {
+ 	u32 driver_filtered_tx_pkt;
+ 	/* src: Clear-on-Read register; Will not survive PMF Migration */
+ 	u32 eee_tx_lpi;
 +
-+	/*
-+	 * We init our i2c busses as early as possible, since they may be
-+	 * needed by the vbios init scripts on some cards
-+	 */
-+	list_for_each_entry(pad, &i2c->pad, head)
-+		nvkm_i2c_pad_init(pad);
-+	list_for_each_entry(bus, &i2c->bus, head)
-+		nvkm_i2c_bus_init(bus);
-+
-+	return 0;
-+}
-+
-+static int
- nvkm_i2c_init(struct nvkm_subdev *subdev)
- {
- 	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
-@@ -238,6 +257,7 @@ nvkm_i2c_dtor(struct nvkm_subdev *subdev
- static const struct nvkm_subdev_func
- nvkm_i2c = {
- 	.dtor = nvkm_i2c_dtor,
-+	.preinit = nvkm_i2c_preinit,
- 	.init = nvkm_i2c_init,
- 	.fini = nvkm_i2c_fini,
- 	.intr = nvkm_i2c_intr,
++	/* PTP */
++	u32 ptp_skip_tx_ts;
+ };
+ 
+ struct bnx2x_eth_q_stats {
 
 
