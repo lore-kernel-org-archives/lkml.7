@@ -2,198 +2,194 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343E1C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D39C76193
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9BB206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:40:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="PeN3CR/R"
+	by mail.kernel.org (Postfix) with ESMTP id 9F9CA20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388229AbfG2Skw (ORCPT
+        id S2388211AbfG2Sku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:40:52 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40586 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388085AbfG2Sku (ORCPT
+        Mon, 29 Jul 2019 14:40:50 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40763 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387621AbfG2Sku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 14:40:50 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p184so28459388pfp.7
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 11:40:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=c9/8Rh/PmNBtDsfSlxlvjUW0TMBITRO0xXOaucnIy5U=;
-        b=PeN3CR/RrBeup8lLCBs5nka7WEvkCupyNAq3N8jkyLq/xAzLtJEHAp56OY0y5NVThD
-         g8NHwDxK43zbbZ2jQiPCAH0TENtoqQeBWG3xf0TI8ngZ/x4q4rPfDBDlubAxlz530z0g
-         DhUk1LjmjvbEDvqwpQiM1tr4T+IJHh+1PeBNWE5CGaWJTkT8lCYmiBYN2XHI53CruEWi
-         dXJYK2U45WlrwTbBEMP+SC0Kt94vP8vclG7HEMO4m2atI0Uv6iwv5M882dUpE7A1tWeX
-         X1RPCT57K1v9QLZBTB6kcfAT/b1NphSHID1IpaJJMf5PG48NU3jG5sGcTM9Q4wSHbINq
-         E0Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=c9/8Rh/PmNBtDsfSlxlvjUW0TMBITRO0xXOaucnIy5U=;
-        b=CHcg5srpTrDbH26Ew6plTBUClu0MQHslAlr5kvPzsf2anvwGG0pMDrOtP5rp93AYZ5
-         yPnDGfky0kuOVWUllQmdCItx/6Qh7tQz5A4iJqHXLhzDyPvQx7dj8eaHQZxOyX4xXOD+
-         TUNGAkrym35s9sV5TpM/EJ8qEeeRjzMmbV3BuOhP14ewv7056ypZbyL0F4QKMtL3GDoW
-         DXCDmdSYBuRtQ+a7FKEZPhAR6jC1iQQFn60H1M7Gx0cA81V9SDsF3ROMLBig5/okjcuD
-         V4Cqp80GhZqr7CV2UZ4NDrtbXFZqICpCWnZ/2XKjNOYXlOD4oho1PbGYUYicrctvADM5
-         4DXw==
-X-Gm-Message-State: APjAAAVmbBIir9XDd6usC85lwLsK+aGZbtf2OswLfPiHsIdH/Rfzsuql
-        zdvxClwIx+0cN46tSnCRCxM=
-X-Google-Smtp-Source: APXvYqxzI7UBorBe7dvBc479FfdDUU3sYfR2Td6Y2nUJ+ymPSy/TnW+y++V3ZtwnGFQIRRQesqjyxA==
-X-Received: by 2002:a17:90a:9a95:: with SMTP id e21mr12916257pjp.98.1564425649638;
-        Mon, 29 Jul 2019 11:40:49 -0700 (PDT)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id h16sm67151345pfo.34.2019.07.29.11.40.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 11:40:48 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <3D2360FA-AD48-48AE-B1CE-D1CF58C1B8AB@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_D99D7753-DBA9-49E5-A7C2-D04048D1DD65";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH] ext4: Fix deadlock on page reclaim
-Date:   Mon, 29 Jul 2019 12:40:44 -0600
-In-Reply-To: <BYAPR04MB58162929012135E47C68923AE7C30@BYAPR04MB5816.namprd04.prod.outlook.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>
-To:     Damien Le Moal <damien.lemoal@wdc.com>
-References: <20190725093358.30679-1-damien.lemoal@wdc.com>
- <20190725115442.GA15733@infradead.org>
- <20190726224423.GE7777@dread.disaster.area> <20190726225508.GA13729@mit.edu>
- <BYAPR04MB58162929012135E47C68923AE7C30@BYAPR04MB5816.namprd04.prod.outlook.com>
-X-Mailer: Apple Mail (2.3273)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hsAZg-0004z0-MR; Mon, 29 Jul 2019 20:40:44 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hsAZd-0001w2-Kr; Mon, 29 Jul 2019 20:40:41 +0200
+Date:   Mon, 29 Jul 2019 20:40:41 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Message-ID: <20190729184041.vlvfz3vz3ykhufdk@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <CAGb2v66C=ghjck6rxTg6Vt4xN2DcXntzVOa=KJWh98KRjkhnHQ@mail.gmail.com>
+ <20190729162428.bxuzgxg5sjqptlbp@pengutronix.de>
+ <2346193.MplWYqIveT@jernej-laptop>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2346193.MplWYqIveT@jernej-laptop>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej Škrabec wrote:
+> Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König 
+> napisal(a):
+> > Hello,
+> > 
+> > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
+> > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
+> > > 
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
+> > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König
+> > > > > 
+> > > > > napisal(a):
+> > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
+> > > > > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
+> > > > > > > sun4i_pwm_single_bypass = {>
+> > > > > > > 
+> > > > > > >   .npwm = 1,
+> > > > > > >  
+> > > > > > >  };
+> > > > > > > 
+> > > > > > > +static const struct sun4i_pwm_data sun50i_pwm_dual_bypass_clk_rst
+> > > > > > > = {
+> > > > > > > + .has_bus_clock = true,
+> > > > > > > + .has_prescaler_bypass = true,
+> > > > > > > + .has_reset = true,
+> > > > > > > + .npwm = 2,
+> > > > > > > +};
+> > > > > > > +
+> > > > > > > 
+> > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
+> > > > > > >  
+> > > > > > >   {
+> > > > > > >   
+> > > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
+> > > > > > > 
+> > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
+> > > > > > > sun4i_pwm_dt_ids[] =
+> > > > > > > {
+> > > > > > > 
+> > > > > > >   }, {
+> > > > > > >   
+> > > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
+> > > > > > >           .data = &sun4i_pwm_single_bypass,
+> > > > > > > 
+> > > > > > > + }, {
+> > > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
+> > > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
+> > > > > > 
+> > > > > > If you follow my suggestion for the two previous patches, you can
+> > > > > > just
+> > > > > > 
+> > > > > > use:
+> > > > > >     compatible = "allwinner,sun50i-h6-pwm",
+> > > > > >     "allwinner,sun5i-a10s-pwm";
+> > > > > > 
+> > > > > > and drop this patch.
+> > > > > 
+> > > > > Maxime found out that it's not compatible with A10s due to difference
+> > > > > in bypass bit, but yes, I know what you mean.
+> > > > > 
+> > > > > Since H6 requires reset line and bus clock to be specified, it's not
+> > > > > compatible from DT binding side. New yaml based binding must somehow
+> > > > > know that in order to be able to validate DT node, so it needs
+> > > > > standalone compatible. However, depending on conclusions of other
+> > > > > discussions, this new compatible can be associated with already
+> > > > > available quirks structure or have it's own.> > 
+> > > > I cannot follow. You should be able to specify in the binding that the
+> > > > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
+> > > > without a reset line and bus clock also verifies, but this doesn't
+> > > > really hurt (and who knows, maybe the next allwinner chip needs exactly
+> > > > this).
+> > > 
+> > > It is not optional. It will not work if either the clocks or reset
+> > > controls
+> > > are missing. How would these be optional anyway? Either it's connected and
+> > > thus required, or it's not and therefore should be omitted from the
+> > > description.
+> > 
+> > [Just arguing about the clock here, the argumentation is analogous for
+> > the reset control.]
+> > 
+> > From the driver's perspective it's optional: There are devices with and
+> > without a bus clock. This doesn't mean that you can just ignore this
+> > clock if it's specified. It's optional in the sense "If dt doesn't
+> > specify it, then assume this is a device that doesn't have it and so you
+> > don't need to handle it." but not in the sense "it doesn't matter if
+> > you handle it or not.".
+> > 
+> > Other than that I'm on your side. So for example I think it's not
+> > optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
+> > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
+> > because this hides exactly the kind of problem you point out here.
+> >
+> 
+> I think there's misunderstanding. I only argued that we can't use
+> 
+> compatible = "allwinner,sun50i-h6-pwm",
+> 	 "allwinner,sun5i-a10s-pwm";
+> 
+> as you suggested and only 
+> 
+> compatible = "allwinner,sun50i-h6-pwm"; 
+> 
+> will work. Not because of driver itself (it can still use _optional() 
+> variants), but because of DT binding, which should be able to validate H6 PWM 
+> node - reset and bus clock references are required in this case.
 
---Apple-Mail=_D99D7753-DBA9-49E5-A7C2-D04048D1DD65
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+I think I understood. In my eyes there is no need to let validation of
+the DT bindings catch a missing "optional" property that is needed on
+H6.
 
-On Jul 26, 2019, at 8:59 PM, Damien Le Moal <damien.lemoal@wdc.com> =
-wrote:
->=20
-> On 2019/07/27 7:55, Theodore Y. Ts'o wrote:
->> On Sat, Jul 27, 2019 at 08:44:23AM +1000, Dave Chinner wrote:
->>>>=20
->>>> This looks like something that could hit every file systems, so
->>>> shouldn't we fix this in common code?  We could also look into
->>>> just using memalloc_nofs_save for the page cache allocation path
->>>> instead of the per-mapping gfp_mask.
->>>=20
->>> I think it has to be the entire IO path - any allocation from the
->>> underlying filesystem could recurse into the top level filesystem
->>> and then deadlock if the memory reclaim submits IO or blocks on
->>> IO completion from the upper filesystem. That's a bloody big hammer
->>> for something that is only necessary when there are stacked
->>> filesystems like this....
->>=20
->> Yeah.... that's why using memalloc_nofs_save() probably makes the =
-most
->> sense, and dm_zoned should use that before it calls into ext4.
->=20
-> Unfortunately, with this particular setup, that will not solve the =
-problem.
-> dm-zoned submit BIOs to its backend drive in response to XFS activity. =
-The
-> requests for these BIOs are passed along to the kernel tcmu HBA and =
-end up in
-> that HBA command ring. The commands themselves are read from the ring =
-and
-> executed by the tcmu-runner user process which executes them doing
-> pread()/pwrite() to the ext4 file. The tcmu-runner process being a =
-different
-> context than the dm-zoned worker thread issuing the BIO,
-> memalloc_nofs_save/restore() calls in dm-zoned will have no effect.
+You have to draw the line somewhere which information the driver has
+hard-coded and what is only provided by the device tree and just assumed
+to be correct by the driver. You argue the driver should know that if it
+cares for a "allwinner,sun50i-h6-pwm" device it should know (and check)
+that there is a clock named "bus" and a resets property that links to a
+reset controller. How is that different from checking that the base
+address is 0x0300a000 or that the "pwm" clock is the osc24M clock
+running at 24 MHz? This isn't checked in the driver or the dt schema.
+Still if the device tree got one of them wrong this yields an
+non-working pwm device that isn't catched in the driver.
 
-One way to handle this is to pass on PF_MEMALLOC/memalloc_nofs_save =
-state
-in the BIO so that the worker thread will also get the correct behaviour
-when it is processing this IO submission.
+Best regards
+Uwe
 
-> We tried a simpler setup using loopback mount (XFS used directly in an =
-ext4
-> file) and running the same workload. We failed to recreate a similar =
-deadlock in
-> this case, but I am strongly suspecting that it can happen too. It is =
-simply
-> much harder to hit because the IO path from XFS to ext4 is all =
-in-kernel and
-> asynchronous, whereas tcmu-runner ZBC handler is a synchronous QD=3D1 =
-path for IOs
-> which makes it relatively easy to get inter-dependent writes or =
-read+write
-> queued back-to-back and create the deadlock.
->=20
-> So back to Dave's point, we may be needing the big-hammer solution in =
-the case
-> of stacked file systems, while a non-stack setups do not necessarily =
-need it
-> (that is for the FS to decide). But I do not see how to implement this =
-big
-> hammer conditionally. How can a file system tell if it is at the top =
-of the
-> stack (big hammer not needed) or lower than the top level (big hammer =
-needed) ?
->=20
-> One simple hack would be an fcntl() or mount option to tell the FS to =
-use
-> GFP_NOFS unconditionally, but avoiding the bug would mean making sure =
-that the
-> applications or system setup is correct. So not so safe.
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_D99D7753-DBA9-49E5-A7C2-D04048D1DD65
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl0/PawACgkQcqXauRfM
-H+B1KA//WBsbz6WuzLRUPgCl0u9LuehEbAVHADxQwJMap50KpEmWoLkqvGDyrvdi
-GhPRIq/RIYDZ6nPyy1w5I7EZBunEh4d/T5VdCEMgkcphxElvgjD2SJABQ5hRwonu
-C7lHXTW2sgjWRzbDS3xuM7AyqvYcsWgwtRIW+zdCSdV/nYjW40cZb33XxsEoi9iQ
-MQlE0iAjXIuDd7o3cU/XhxdpGVIJRqtrwchjZX4ThEkjzpo/mqh4oh1H9li8iWPy
-wYhbgMuCkZSOtDvthw3zhtjZ79/eQZ2FPiM67imBSxBDVbCkQtkUja2K3SG6Phnq
-rwuTIwytd4NaVssP5JU+3Opxym6ngGkEPSqQob75MssgcktQFyEhrzffMNl47Gxa
-eB+kfJ1rjQjNow+wTGbmkBm+HoB/T3ArL9il7XfrsR8l0KL0YJ5Kruen2LUPlSIG
-JR8tfziVfOhxP5bQyguOjtvXES9WbiCB+So86ed56YjBCsZf/+wmGaTxSYeTnXQQ
-i68JJLEYRnyMRl7PeQL3V303w1Yp3PSXHXUHDZ70FYS6SJ1Kv2NSJt2kn0lkMe0w
-Vw2KzWCehPM2qTC0WyQHdScds48QEUs6XVX9oTcV/1TH0ynUj9fneEWA3TybxYNR
-YUvWQL8gTeyfmxHabewi0lrxwFQ6zvcXbZ1Vp3sjkqcK4ZmuFwo=
-=PPZf
------END PGP SIGNATURE-----
-
---Apple-Mail=_D99D7753-DBA9-49E5-A7C2-D04048D1DD65--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
