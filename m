@@ -2,142 +2,194 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1353C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EE0C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88AC5206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:22:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="hi5kcFLu"
+	by mail.kernel.org (Postfix) with ESMTP id 1C90A206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387744AbfG2MWU (ORCPT
+        id S2387845AbfG2MWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:22:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39369 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfG2MWR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:22:17 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x4so8458935wrt.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 05:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4xJv/RlYVsMTmymZ03BVzmA0ujnyoY1BNvCxMH+Th3E=;
-        b=hi5kcFLu0H3JkoPCRLd7zTp242F4y+S14BmGOIe9p525GeRcqCgnjcxzKppG5fc8ov
-         hte8Q28w4gN9kCMwuHpMYKtCMYUoda/fqHCIPf4O2OfVhG9E75OChQgy2chDB0hNBM2B
-         47QLXJXShM2D62VqEQ8EwZGao4NeXn+Vh0E1U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4xJv/RlYVsMTmymZ03BVzmA0ujnyoY1BNvCxMH+Th3E=;
-        b=Fk/c2phWxKFa5JR3fziiQP71m2n34alWpjbYVM1eiypsdAMQOWR1s2jl9uI8T3Alrm
-         HgjBFw6BLxuI9rTK5jAg1dmFj1hzG4pf3cGxck6vtq2Ezf/1QrV8AEvJ/Thuvxu4nQhQ
-         w8CrNje9LJdmcZUWlAzXp9Ud8bmm80J/2D4aW8LUNfmtIJ8teMBX2P6qs+PoUcoZYGhh
-         gQoFDq+4Y70uRhoSxHK72ukZ3VCyirV6mG6u3vcJnygtHwuntAYiewOi1JQpWxxx0UgH
-         3+gwLRfLM7+xGs0TeRa5byI1JNFL2DFDCpVZc5FzROKg7ytewQ81KplQUR+Q8d8Ln9E1
-         GyHQ==
-X-Gm-Message-State: APjAAAVi/v0bI8yBoMZm2LDxKEa/PYxER5AbDVzFncFv/ID8o8hYsjRU
-        OWXiIATs6V8+6sLR/Wc7kGeekBl7qKU=
-X-Google-Smtp-Source: APXvYqzTZ04vcIAz68DOV0am57cKQrKsnk9DYFjABMfl84YSR8j+55zyVAF2bnm9jy4xrQ60nYf15A==
-X-Received: by 2002:a5d:5012:: with SMTP id e18mr18481650wrt.166.1564402934775;
-        Mon, 29 Jul 2019 05:22:14 -0700 (PDT)
-Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id z25sm64631411wmf.38.2019.07.29.05.22.13
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 05:22:14 -0700 (PDT)
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
-Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        roopa@cumulusnetworks.com, davem@davemloft.net,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1564055044-27593-1-git-send-email-horatiu.vultur@microchip.com>
- <7e7a7015-6072-d884-b2ba-0a51177245ab@cumulusnetworks.com>
- <eef063fe-fd3a-7e02-89c2-e40728a17578@cumulusnetworks.com>
- <20190725142101.65tusauc6fzxb2yp@soft-dev3.microsemi.net>
- <b9ce433a-3ef7-fe15-642a-659c5715d992@cumulusnetworks.com>
- <e6ad982f-4706-46f9-b8f0-1337b09de350@cumulusnetworks.com>
- <20190726120214.c26oj5vks7g5ntwu@soft-dev3.microsemi.net>
- <b755f613-e6d8-a2e6-16cd-6f13ec0a6ddc@cumulusnetworks.com>
- <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
-Date:   Mon, 29 Jul 2019 15:22:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 29 Jul 2019 08:22:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58478 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727942AbfG2MWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:22:42 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 69DD94E83E;
+        Mon, 29 Jul 2019 12:22:41 +0000 (UTC)
+Received: from rules.brq.redhat.com (unknown [10.43.2.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D39B4600F8;
+        Mon, 29 Jul 2019 12:22:37 +0000 (UTC)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     marcel@holtmann.org
+Cc:     bgodavar@codeaurora.org, frederic.danis@linux.intel.com,
+        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loic.poulain@intel.com,
+        suraj@atheros.com, syzkaller@googlegroups.com, vdronov@redhat.com
+Subject: [PATCH v3] Bluetooth: hci_uart: check for missing tty operations
+Date:   Mon, 29 Jul 2019 14:22:15 +0200
+Message-Id: <20190729122215.9948-1-vdronov@redhat.com>
+In-Reply-To: <62A82405-46E2-4921-BA52-D1660FC2DDDB@holtmann.org>
+References: <62A82405-46E2-4921-BA52-D1660FC2DDDB@holtmann.org>
 MIME-Version: 1.0
-In-Reply-To: <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 29 Jul 2019 12:22:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Allan,
-On 29/07/2019 15:14, Allan W. Nielsen wrote:
-> Hi Nikolay,
-> 
-> First of all, as mentioned further down in this thread, I realized that our
-> implementation of the multicast floodmasks does not align with the existing SW
-> implementation. We will change this, such that all multicast packets goes to the
-> SW bridge.
-> 
-> This changes things a bit, not that much.
-> 
-> I actually think you summarized the issue we have (after changing to multicast
-> flood-masks) right here:
-> 
-> The 07/26/2019 12:26, Nikolay Aleksandrov wrote:
->>>> Actually you mentioned non-IP traffic, so the querier stuff is not a problem. This
->>>> traffic will always be flooded by the bridge (and also a copy will be locally sent up).
->>>> Thus only the flooding may need to be controlled.
-> 
-> This seems to be exactly what we need.
-> 
-> Assuming we have a SW bridge (br0) with 4 slave interfaces (eth0-3). We use this
-> on a network where we want to limit the flooding of frames with dmac
-> 01:21:6C:00:00:01 (which is non IP traffic) to eth0 and eth1.
-> 
-> One way of doing this could potentially be to support the following command:
-> 
-> bridge fdb add    01:21:6C:00:00:01 port eth0
-> bridge fdb append 01:21:6C:00:00:01 port eth1
-> 
-> On 25/07/2019 16:06, Nikolay Aleksandrov wrote:
->>>>>>>>  In general NLM_F_APPEND is only used in vxlan, the bridge does not
->>>>>>>>  handle that flag at all.  FDB is only for *unicast*, nothing is joined
->>>>>>>>  and no multicast should be used with fdbs. MDB is used for multicast
->>>>>>>>  handling, but both of these are used for forwarding.
-> This is true, and this should have been addressed in the patch, we were too
-> focused on setting up the offload patch in the driver, and forgot to do the SW
-> implementation.
-> 
-> Do you see any issues in supporting this flag, and updating the SW
-> forwarding in br_handle_frame_finish such that it can support/allow a FDB entry
-> to be a multicast?
-> 
+Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
+functions which are called by the certain HCI UART protocols (hci_ath,
+hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
+or directly. This leads to an execution at NULL and can be triggered by
+an unprivileged user. Fix this by adding a helper function and a check
+for the missing tty operations in the protocols code.
 
-Yes, all of the multicast code is handled differently, it doesn't go through the fdb
-lookup or code at all. I don't see how you'll do a lookup in the fdb table with a
-multicast mac address, take a look at br_handle_frame_finish() and you'll notice
-that when a multicast dmac is detected then we use the bridge mcast code for lookups
-and forwarding. If you're trying to achieve Rx only on the bridge of these then
-why not just use Ido's tc suggestion or even the ip maddr add offload for each port ?
+This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
+tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
+protocols.
 
-If you add a multicast mac in the fdb (currently allowed, but has no effect) and you
-use dev_mc_add() as suggested that'd just be a hack to pass it down and it is already
-possible to achieve via other methods, no need to go through the bridge.
+Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
+Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org # v2.6.36+
+Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
+Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
+Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
+Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
+Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+---
 
-> /Allan
-> 
+out-of-commit-message-note:
 
+it is possible that a HCI UART protocol uses serial device's
+operations and not a tty ones. i made hci_uart_has_flow_control() to
+check this also, hence the name. serial device's code checks if
+the needed operations are present itself.
+
+i believe, hci_h5 does not need this check, as it uses serial device
+functions only (as of now):
+
+    serdev_device_set_flow_control(h5->hu->serdev, false);
+    serdev_device_set_baudrate(h5->hu->serdev, 115200);
+
+ drivers/bluetooth/hci_ath.c   | 3 +++
+ drivers/bluetooth/hci_bcm.c   | 3 +++
+ drivers/bluetooth/hci_intel.c | 3 +++
+ drivers/bluetooth/hci_ldisc.c | 7 +++++++
+ drivers/bluetooth/hci_mrvl.c  | 3 +++
+ drivers/bluetooth/hci_qca.c   | 3 +++
+ drivers/bluetooth/hci_uart.h  | 1 +
+ 7 files changed, 23 insertions(+)
+
+diff --git a/drivers/bluetooth/hci_ath.c b/drivers/bluetooth/hci_ath.c
+index a55be205b91a..dbfe34664633 100644
+--- a/drivers/bluetooth/hci_ath.c
++++ b/drivers/bluetooth/hci_ath.c
+@@ -98,6 +98,9 @@ static int ath_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
+ 	if (!ath)
+ 		return -ENOMEM;
+diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+index 8905ad2edde7..ae2624fce913 100644
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -406,6 +406,9 @@ static int bcm_open(struct hci_uart *hu)
+ 
+ 	bt_dev_dbg(hu->hdev, "hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	bcm = kzalloc(sizeof(*bcm), GFP_KERNEL);
+ 	if (!bcm)
+ 		return -ENOMEM;
+diff --git a/drivers/bluetooth/hci_intel.c b/drivers/bluetooth/hci_intel.c
+index 207bae5e0d46..31f25153087d 100644
+--- a/drivers/bluetooth/hci_intel.c
++++ b/drivers/bluetooth/hci_intel.c
+@@ -391,6 +391,9 @@ static int intel_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	intel = kzalloc(sizeof(*intel), GFP_KERNEL);
+ 	if (!intel)
+ 		return -ENOMEM;
+diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
+index 8950e07889fe..11049e2336f3 100644
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -292,6 +292,13 @@ static int hci_uart_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
+ 	return 0;
+ }
+ 
++/* Check the underlying device or tty has flow control support */
++bool hci_uart_has_flow_control(struct hci_uart *hu)
++{
++	return hu->serdev ||
++		(hu->tty->driver->ops->tiocmget && hu->tty->driver->ops->tiocmset);
++}
++
+ /* Flow control or un-flow control the device */
+ void hci_uart_set_flow_control(struct hci_uart *hu, bool enable)
+ {
+diff --git a/drivers/bluetooth/hci_mrvl.c b/drivers/bluetooth/hci_mrvl.c
+index f98e5cc343b2..fbc3f7c3a5c7 100644
+--- a/drivers/bluetooth/hci_mrvl.c
++++ b/drivers/bluetooth/hci_mrvl.c
+@@ -59,6 +59,9 @@ static int mrvl_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	mrvl = kzalloc(sizeof(*mrvl), GFP_KERNEL);
+ 	if (!mrvl)
+ 		return -ENOMEM;
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 9a5c9c1f9484..82a0a3691a63 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -473,6 +473,9 @@ static int qca_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p qca_open", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	qca = kzalloc(sizeof(struct qca_data), GFP_KERNEL);
+ 	if (!qca)
+ 		return -ENOMEM;
+diff --git a/drivers/bluetooth/hci_uart.h b/drivers/bluetooth/hci_uart.h
+index f11af3912ce6..6ab631101019 100644
+--- a/drivers/bluetooth/hci_uart.h
++++ b/drivers/bluetooth/hci_uart.h
+@@ -104,6 +104,7 @@ int hci_uart_wait_until_sent(struct hci_uart *hu);
+ int hci_uart_init_ready(struct hci_uart *hu);
+ void hci_uart_init_work(struct work_struct *work);
+ void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
++bool hci_uart_has_flow_control(struct hci_uart *hu);
+ void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
+ void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
+ 			 unsigned int oper_speed);
+-- 
+2.20.1
