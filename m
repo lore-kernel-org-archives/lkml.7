@@ -2,95 +2,114 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EF4C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382E2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C83D2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564439386;
-	bh=JNZa/y24wXNDv30tuaj6kC0kdXk/z7BCg8JawB3obts=;
-	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
-	b=eL3tIQyYXxu68PLJF2s/slhqFrJ20DCdFrMu930GO6FF4RGA4j/rjfZrhcqeXW1Mi
-	 yfkpEy65e+X1/o7cl0ozEnbKnHkVUFU2SgPmAaSx0Q9nM1n2hpb1Pbc1a0EBNresZf
-	 cxD4qcNWssqoQGjr3Dp1ZVEUuXdIbAMWWYaoRbPY=
+	by mail.kernel.org (Postfix) with ESMTP id 0A20A2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:32:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YXEHllLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbfG2W3p (ORCPT
+        id S1729199AbfG2WcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 18:29:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbfG2W3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 18:29:44 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 116DF2070D;
-        Mon, 29 Jul 2019 22:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564439384;
-        bh=JNZa/y24wXNDv30tuaj6kC0kdXk/z7BCg8JawB3obts=;
-        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
-        b=NxRV8PsJoRIZMOqn4xIbsmF2GL9TDcczIYDurDe3IMz/R+DKattIoWJbpF0FiXiYq
-         efBhSe5r6QPkFdQmLo4rGXOmq2NrUakQbDpwJ5+M6Fuv6rfNHmYY3AJYIt+T6TYfqD
-         6IEkE7SHbOp8MGy/bQESzADE7AowrIUrtnvHbSmo=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 29 Jul 2019 18:32:02 -0400
+Received: from gateway23.websitewelcome.com ([192.185.47.80]:41386 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726208AbfG2WcB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 18:32:01 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 6A9F78DE3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 17:10:19 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id sDqVhk5zH3Qi0sDqVhUrSg; Mon, 29 Jul 2019 17:10:19 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zI2BPF1rCx4kgmch41TwqXqWJbVYDCBh5wwiwteyPR8=; b=YXEHllLZgIABYTSio8T6iN4oRb
+        YKcqkGnD63KFpIqXhna4mlFN4xUcPesce8W6aZ0bEY3PREcK6BUCi34Gy1NMk3WtUXcXepodc68Kz
+        AylBe3Q+1DoC7WgTOFoVZIUu9BKwSuqxnMdNIN6Uv5sHzdkh9bh2M6VMvOqpPjHwG174NEDhDW1VY
+        /35+7pRPx+oZBeLjx6HgPJ85orMP2YoX0rGOOnLQxpTn1elEy7YQCOUCU0H8r5XWsynga8Y2QSYBA
+        +jUhMdMaFoHUGHj6TReeexX78aqxV1mF27qQ2Lr7ZNr5LbGweuVTVO2CVlW9d5kOaqwIntQNR42QC
+        Tnhb7U4Q==;
+Received: from [187.192.11.120] (port=60826 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hsDqU-001wfk-CO; Mon, 29 Jul 2019 17:10:18 -0500
+Date:   Mon, 29 Jul 2019 17:10:16 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] net: smc911x: Mark expected switch fall-through
+Message-ID: <20190729221016.GA17610@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190703122614.3579-3-jbrunet@baylibre.com>
-References: <20190703122614.3579-1-jbrunet@baylibre.com> <20190703122614.3579-3-jbrunet@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 2/2] clk: meson: axg-audio: add g12a reset support
-User-Agent: alot/0.8.1
-Date:   Mon, 29 Jul 2019 15:29:43 -0700
-Message-Id: <20190729222944.116DF2070D@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hsDqU-001wfk-CO
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:60826
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jerome Brunet (2019-07-03 05:26:14)
-> @@ -1005,8 +1087,27 @@ static int axg_audio_clkc_probe(struct platform_de=
-vice *pdev)
->                 }
->         }
-> =20
-> -       return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-> -                                          data->hw_onecell_data);
-> +       ret =3D devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-> +                                       data->hw_onecell_data);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Stop here if there is no reset */
-> +       if (!data->reset_num)
-> +               return 0;
-> +
-> +       rst =3D devm_kzalloc(dev, sizeof(*rst), GFP_KERNEL);
-> +       if (!rst)
-> +               return -ENOMEM;
-> +
-> +       rst->map =3D map;
-> +       rst->offset =3D data->reset_offset;
-> +       rst->rstc.nr_resets =3D data->reset_num;
-> +       rst->rstc.ops =3D &axg_audio_rstc_ops;
-> +       rst->rstc.of_node =3D dev->of_node;
-> +       rst->rstc.owner =3D THIS_MODULE;
-> +
-> +       return ret =3D devm_reset_controller_register(dev, &rst->rstc);
+Mark switch cases where we are expecting to fall through.
 
-IS this a typo? Just return devm instead?
+This patch fixes the following warning (Building: arm):
 
->  }
-> =20
->  static const struct audioclk_data axg_audioclk_data =3D {
+drivers/net/ethernet/smsc/smc911x.c: In function ‘smc911x_phy_detect’:
+drivers/net/ethernet/smsc/smc911x.c:677:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    if (cfg & HW_CFG_EXT_PHY_DET_) {
+       ^
+drivers/net/ethernet/smsc/smc911x.c:715:3: note: here
+   default:
+   ^~~~~~~
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/smsc/smc911x.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/smsc/smc911x.c b/drivers/net/ethernet/smsc/smc911x.c
+index bd14803545de..8d88e4083456 100644
+--- a/drivers/net/ethernet/smsc/smc911x.c
++++ b/drivers/net/ethernet/smsc/smc911x.c
+@@ -712,6 +712,7 @@ static void smc911x_phy_detect(struct net_device *dev)
+ 					/* Found an external PHY */
+ 					break;
+ 			}
++			/* Else, fall through */
+ 		default:
+ 			/* Internal media only */
+ 			SMC_GET_PHY_ID1(lp, 1, id1);
+-- 
+2.22.0
+
