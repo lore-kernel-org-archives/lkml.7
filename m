@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3691C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68350C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D972064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39528205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431351;
-	bh=Tu2SmrOsQqUe9ACAyBEFF/lSAeSN+5gPhxezGHmRkwY=;
+	s=default; t=1564431363;
+	bh=7WNEyGJ2ikqqjSTeU1QkTbXK3/MsiQHU9I9QZ+4RW98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SuMYDysqUvLV6CvV0V5v/Qnemqh6Bf/RxFEBURupdhQLw7WqT59zVJeXWmdYXOYTF
-	 w0q17igV4g3uz5H/2vi9cr57qwqBIpdIY8BdSpPAkGqwcG8u6nTtRzFBdVQS6DMx04
-	 8NSOy8W1EmTXwmJhfKO9JosQ3ja5KE6IF79BPo44=
+	b=fO3Mh9/zoP8SrxXtU7s4sF1/RxfrYhVG0Qw8Ul5bdtloSsnTWqg8zLLZIJd0hPJ+g
+	 qTyDkJvvwGtp5DNGfiOT9GvDKJ5hVM9ab9P3Bzl6uOW/jFXNvaqO87kC1NkR5vutlc
+	 jN66W18/BpA0F6aSg0ci/uk8MBmkXg8RPsywJioU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbfG2TZZ (ORCPT
+        id S1729576AbfG2TZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:25:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37636 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388281AbfG2TZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:25:21 -0400
+        id S1725818AbfG2TYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:24:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B1B920C01;
-        Mon, 29 Jul 2019 19:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 799952070B;
+        Mon, 29 Jul 2019 19:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428320;
-        bh=Tu2SmrOsQqUe9ACAyBEFF/lSAeSN+5gPhxezGHmRkwY=;
+        s=default; t=1564428295;
+        bh=7WNEyGJ2ikqqjSTeU1QkTbXK3/MsiQHU9I9QZ+4RW98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AlyfkWeStX+XCQuHAenWfRWAXcKIc9lltneRO5Ai8XGaWSD6byFIfarKqGGmYXkwH
-         P9wWTJ5n0gJwYqSp5mXpc7pc7cU4LhXXjfn4/44kwXxzxGpcNHw7BLQU8cpETtciV6
-         ufpiesH9HBj9PT8Whi/4zAngSG7chTganyeYIbUM=
+        b=XEMXrB9xkuFaiZNv/nwJBgQLI7jGJnd/iA8ydOPcLMnquWtdYcpZQQ6JRZ4W0t+7t
+         0VRKtWF5YhT5pUILcJWLtQ2OPgN50rGWmtdrn+imIt+nxrPaDg359hC3U31ZmmXZjG
+         Kt+127+Do9U/1jJHeJMLv+BzutJK4ZFK3vCQRN0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Tony Luck <tony.luck@intel.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 038/293] RAS/CEC: Fix pfn insertion
-Date:   Mon, 29 Jul 2019 21:18:49 +0200
-Message-Id: <20190729190825.269610232@linuxfoundation.org>
+        stable@vger.kernel.org, Imre Deak <imre.deak@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 031/293] locking/lockdep: Fix merging of hlocks with non-zero references
+Date:   Mon, 29 Jul 2019 21:18:42 +0200
+Message-Id: <20190729190824.223012577@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,54 +65,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6d8e294bf5f0e85c34e8b14b064e2965f53f38b0 ]
+[ Upstream commit d9349850e188b8b59e5322fda17ff389a1c0cd7d ]
 
-When inserting random PFNs for debugging the CEC through
-(debugfs)/ras/cec/pfn, depending on the return value of pfn_set(),
-multiple values get inserted per a single write.
+The sequence
 
-That is because simple_attr_write() interprets a retval of 0 as
-success and claims the whole input. However, pfn_set() returns the
-cec_add_elem() value, which, if > 0 and smaller than the whole input
-length, makes glibc continue issuing the write syscall until there's
-input left:
+	static DEFINE_WW_CLASS(test_ww_class);
 
-  pfn_set
-  simple_attr_write
-  debugfs_attr_write
-  full_proxy_write
-  vfs_write
-  ksys_write
-  do_syscall_64
-  entry_SYSCALL_64_after_hwframe
+	struct ww_acquire_ctx ww_ctx;
+	struct ww_mutex ww_lock_a;
+	struct ww_mutex ww_lock_b;
+	struct ww_mutex ww_lock_c;
+	struct mutex lock_c;
 
-leading to those repeated calls.
+	ww_acquire_init(&ww_ctx, &test_ww_class);
 
-Return 0 to fix that.
+	ww_mutex_init(&ww_lock_a, &test_ww_class);
+	ww_mutex_init(&ww_lock_b, &test_ww_class);
+	ww_mutex_init(&ww_lock_c, &test_ww_class);
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
+	mutex_init(&lock_c);
+
+	ww_mutex_lock(&ww_lock_a, &ww_ctx);
+
+	mutex_lock(&lock_c);
+
+	ww_mutex_lock(&ww_lock_b, &ww_ctx);
+	ww_mutex_lock(&ww_lock_c, &ww_ctx);
+
+	mutex_unlock(&lock_c);	(*)
+
+	ww_mutex_unlock(&ww_lock_c);
+	ww_mutex_unlock(&ww_lock_b);
+	ww_mutex_unlock(&ww_lock_a);
+
+	ww_acquire_fini(&ww_ctx); (**)
+
+will trigger the following error in __lock_release() when calling
+mutex_release() at **:
+
+	DEBUG_LOCKS_WARN_ON(depth <= 0)
+
+The problem is that the hlock merging happening at * updates the
+references for test_ww_class incorrectly to 3 whereas it should've
+updated it to 4 (representing all the instances for ww_ctx and
+ww_lock_[abc]).
+
+Fix this by updating the references during merging correctly taking into
+account that we can have non-zero references (both for the hlock that we
+merge into another hlock or for the hlock we are merging into).
+
+Signed-off-by: Imre Deak <imre.deak@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/20190524201509.9199-2-imre.deak@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ras/cec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/locking/lockdep.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index c7205cdcc11a..97cf40a522be 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -373,7 +373,9 @@ static int pfn_set(void *data, u64 val)
- {
- 	*(u64 *)data = val;
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index bf694c709b96..565005a3b8f0 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3402,17 +3402,17 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 	if (depth && !cross_lock(lock)) {
+ 		hlock = curr->held_locks + depth - 1;
+ 		if (hlock->class_idx == class_idx && nest_lock) {
+-			if (hlock->references) {
+-				/*
+-				 * Check: unsigned int references:12, overflow.
+-				 */
+-				if (DEBUG_LOCKS_WARN_ON(hlock->references == (1 << 12)-1))
+-					return 0;
++			if (!references)
++				references++;
  
--	return cec_add_elem(val);
-+	cec_add_elem(val);
++			if (!hlock->references)
+ 				hlock->references++;
+-			} else {
+-				hlock->references = 2;
+-			}
 +
-+	return 0;
- }
++			hlock->references += references;
++
++			/* Overflow */
++			if (DEBUG_LOCKS_WARN_ON(hlock->references < references))
++				return 0;
  
- DEFINE_DEBUGFS_ATTRIBUTE(pfn_ops, u64_get, pfn_set, "0x%llx\n");
+ 			return 1;
+ 		}
 -- 
 2.20.1
 
