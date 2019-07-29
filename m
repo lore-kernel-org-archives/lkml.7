@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8389C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408A3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF772054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08752205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429660;
-	bh=MqF8HHLqzYEMhjxa/Iw6PcCVntom90MdjouzgeIFzrk=;
+	s=default; t=1564429666;
+	bh=g8YcqszYMpLYIWE3wLbop+l6pI4EBd9uFiiQXkPq9l0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aCt/hIKWThDAO432sjT6Lred/Bg9BNLOY3Dt3yeIQnhXZH/vpYH1Zsj2aNZ/GQsi8
-	 0rLvLJPLfuZ8F7U4Z45vUb4brjoSQ5WftTbGxODSXQevo1Jrd8LtWRhnbq7c5DWcp5
-	 I6vY34FtgzF9RCP2yuFkDyXZMirLpCr9LwYafB+8=
+	b=eqctdO56bC9VA+vMtlx41VViiWh7mpUZx+kiNFrWRwsQv2WkIjA6w+DdHHs9wi4km
+	 CzY0axRR5WGt2EgFu1Anjb75ktdCboa+591s0AQuK6/mjddRMKew6NPicgxbPPgQoJ
+	 0epONty+TRT8SvOV4RdyXiilNQr3ckMgD006iuDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390365AbfG2Tri (ORCPT
+        id S2389726AbfG2Tro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37270 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:47:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390357AbfG2Trc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:47:32 -0400
+        id S2390361AbfG2Tri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:47:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E92420C01;
-        Mon, 29 Jul 2019 19:47:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD3B12054F;
+        Mon, 29 Jul 2019 19:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429651;
-        bh=MqF8HHLqzYEMhjxa/Iw6PcCVntom90MdjouzgeIFzrk=;
+        s=default; t=1564429658;
+        bh=g8YcqszYMpLYIWE3wLbop+l6pI4EBd9uFiiQXkPq9l0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rfcm+isbpG+Uzz/gE6CXrSNrO8B3pIEy/PneiZJUeBj/9aVoJOh8/yO3osJc1023H
-         Jfl0dLafByIoLbvBn4JDcr+a7iwCWdqcGVcxI/ByshiqTaLAOjJIJHPVknkWummbfB
-         xFUxUj1pqSri+gb6DCQmP2O6Q18fYWsy4M/zOcyA=
+        b=BRmTX7JSvcxyL6JIukt+ffWTMQ9rYdlgt91j69k9g9mRdgilBtAau3WiG1fHX35H9
+         R/k5r8LmLAJOVpgDeFiFOL6kyODjEutt1gyDeHTJtrECH9WckZnPp57qncT/c+usy2
+         NBOgtQpiCAo6EgriQ0aVwj9uhUxkEBiF9AFOf29c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        stable@vger.kernel.org, Alan Mikhak <alan.mikhak@sifive.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 051/215] tty: serial: msm_serial: avoid system lockup condition
-Date:   Mon, 29 Jul 2019 21:20:47 +0200
-Message-Id: <20190729190749.370988457@linuxfoundation.org>
+Subject: [PATCH 5.2 053/215] PCI: endpoint: Allocate enough space for fixed size BAR
+Date:   Mon, 29 Jul 2019 21:20:49 +0200
+Message-Id: <20190729190749.712274386@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,41 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ba3684f99f1b25d2a30b6956d02d339d7acb9799 ]
+[ Upstream commit f16fb16ed16c7f561e9c41c9ae4107c7f6aa553c ]
 
-The function msm_wait_for_xmitr can be taken with interrupts
-disabled. In order to avoid a potential system lockup - demonstrated
-under stress testing conditions on SoC QCS404/5 - make sure we wait
-for a bounded amount of time.
+PCI endpoint test function code should honor the .bar_fixed_size parameter
+from underlying endpoint controller drivers or results may be unexpected.
 
-Tested on SoC QCS404.
+In pci_epf_test_alloc_space(), check if BAR being used for test
+register space is a fixed size BAR. If so, allocate the required fixed
+size.
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/msm_serial.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 23833ad952ba..3657a24913fc 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -383,10 +383,14 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 27806987e93b..7d41e6684b87 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -434,10 +434,16 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+ 	int bar;
+ 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+ 	const struct pci_epc_features *epc_features;
++	size_t test_reg_size;
  
- static inline void msm_wait_for_xmitr(struct uart_port *port)
- {
-+	unsigned int timeout = 500000;
+ 	epc_features = epf_test->epc_features;
+ 
+-	base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
++	if (epc_features->bar_fixed_size[test_reg_bar])
++		test_reg_size = bar_size[test_reg_bar];
++	else
++		test_reg_size = sizeof(struct pci_epf_test_reg);
 +
- 	while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
- 		if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
- 			break;
- 		udelay(1);
-+		if (!timeout--)
-+			break;
- 	}
- 	msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
- }
++	base = pci_epf_alloc_space(epf, test_reg_size,
+ 				   test_reg_bar, epc_features->align);
+ 	if (!base) {
+ 		dev_err(dev, "Failed to allocated register space\n");
 -- 
 2.20.1
 
