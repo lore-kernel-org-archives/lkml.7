@@ -5,56 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA744C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0916C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46B02054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF0A2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429162;
-	bh=91tiYwS4y9/NUYIX4urBs3s97IX04GwoDVbuXLA2XgI=;
+	s=default; t=1564429166;
+	bh=N/uag7XfyCcol3HpB72xx8NfNWrc1Lx666eOgPtI1LY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mTHYXU5jv2md74lJBSPWsJvqeZrZBcoKK7VDUfX47uIGvHpn7B3SedAcgUorCDKZq
-	 cq2bLppT4Sbu5SPJcsTKYKY6a0yeIl9Oc/vBMpQFNk2//hK/DY+vqqytQbwtJM/a1W
-	 HhgAU5exoihmuO92VZKaJPImBr0wSvXDovfr2rrU=
+	b=ApBHfGzOhNlWPXA7Z/MXTahaEQwdUETZQt/6pRuCXAmxXKkCm8UZjWRVTuxQSc23w
+	 0a9QF9IHN1WmbIhvvePQb27Tw8/A6fMwJZlvqe+C74qPrmGL5ldR2JV2YwYimJ2UGX
+	 g4oQpfBEVp30IygPQ0Qab20dmHFAGjdlaQFhVPK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388980AbfG2TjS (ORCPT
+        id S2387595AbfG2TjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:39:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54310 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:39:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388966AbfG2TjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:39:16 -0400
+        id S2388677AbfG2TjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:39:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39E332054F;
-        Mon, 29 Jul 2019 19:39:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C91C2054F;
+        Mon, 29 Jul 2019 19:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429154;
-        bh=91tiYwS4y9/NUYIX4urBs3s97IX04GwoDVbuXLA2XgI=;
+        s=default; t=1564429160;
+        bh=N/uag7XfyCcol3HpB72xx8NfNWrc1Lx666eOgPtI1LY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ppq0IdsMZnznG1CMkJ3U/gRaq2I3mfPUzFb5LAjoFa27MpQm0CdCcZxaZwebLANJh
-         rOh3DkZ5LDzRXy0qaISzqnV/uJduFzF3neR8eMsONIlKrlT9yd2MwBWU2NwgFZ8r29
-         HsE9syhHOn5DXq7EKAyvjnLXeVp/uZMnADf5bDGU=
+        b=STqIH/uVnk1Q7nyDe/ExAfGIsbI2dBM1aYztucoRLmW4WjEz4qrV7cB/EN63Kwfs1
+         IF2blVak5pO+Htm8lbnPkpb6K0RcLdUTxaEor9sKUPLvj5pB4Qzjar1Ebfo7UY5Chm
+         RlxETNcFWGKMT4syLuqvPtLLHCHaq/llryE8AMdw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Emily Deng <Emily.Deng@amd.com>,
+        Tiecheng Zhou <Tiecheng.Zhou@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 001/113] hvsock: fix epollout hang from race condition
-Date:   Mon, 29 Jul 2019 21:21:28 +0200
-Message-Id: <20190729190655.965740325@linuxfoundation.org>
+Subject: [PATCH 4.19 011/113] drm/amdgpu/sriov: Need to initialize the HDP_NONSURFACE_BAStE
+Date:   Mon, 29 Jul 2019 21:21:38 +0200
+Message-Id: <20190729190658.478971867@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,146 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cb359b60416701c8bed82fec79de25a144beb893 ]
+[ Upstream commit fe2b5323d2c3cedaa3bf943dc7a0d233c853c914 ]
 
-Currently, hvsock can enter into a state where epoll_wait on EPOLLOUT will
-not return even when the hvsock socket is writable, under some race
-condition. This can happen under the following sequence:
-- fd = socket(hvsocket)
-- fd_out = dup(fd)
-- fd_in = dup(fd)
-- start a writer thread that writes data to fd_out with a combination of
-  epoll_wait(fd_out, EPOLLOUT) and
-- start a reader thread that reads data from fd_in with a combination of
-  epoll_wait(fd_in, EPOLLIN)
-- On the host, there are two threads that are reading/writing data to the
-  hvsocket
+it requires to initialize HDP_NONSURFACE_BASE, so as to avoid
+using the value left by a previous VM under sriov scenario.
 
-stack:
-hvs_stream_has_space
-hvs_notify_poll_out
-vsock_poll
-sock_poll
-ep_poll
+v2: it should not hurt baremetal, generalize it for both sriov
+and baremetal
 
-Race condition:
-check for epollout from ep_poll():
-	assume no writable space in the socket
-	hvs_stream_has_space() returns 0
-check for epollin from ep_poll():
-	assume socket has some free space < HVS_PKT_LEN(HVS_SEND_BUF_SIZE)
-	hvs_stream_has_space() will clear the channel pending send size
-	host will not notify the guest because the pending send size has
-		been cleared and so the hvsocket will never mark the
-		socket writable
-
-Now, the EPOLLOUT will never return even if the socket write buffer is
-empty.
-
-The fix is to set the pending size to the default size and never change it.
-This way the host will always notify the guest whenever the writable space
-is bigger than the pending size. The host is already optimized to *only*
-notify the guest when the pending size threshold boundary is crossed and
-not everytime.
-
-This change also reduces the cpu usage somewhat since hv_stream_has_space()
-is in the hotpath of send:
-vsock_stream_sendmsg()->hv_stream_has_space()
-Earlier hv_stream_has_space was setting/clearing the pending size on every
-call.
-
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Emily Deng <Emily.Deng@amd.com>
+Signed-off-by: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/vmw_vsock/hyperv_transport.c | 44 ++++++++------------------------
- 1 file changed, 11 insertions(+), 33 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-index a827547aa102..b131561a9469 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -217,18 +217,6 @@ static void hvs_set_channel_pending_send_size(struct vmbus_channel *chan)
- 	set_channel_pending_send_size(chan,
- 				      HVS_PKT_LEN(HVS_SEND_BUF_SIZE));
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+index 72f8018fa2a8..ede27dab675f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+@@ -1037,6 +1037,9 @@ static int gmc_v9_0_gart_enable(struct amdgpu_device *adev)
+ 	tmp = RREG32_SOC15(HDP, 0, mmHDP_HOST_PATH_CNTL);
+ 	WREG32_SOC15(HDP, 0, mmHDP_HOST_PATH_CNTL, tmp);
  
--	/* See hvs_stream_has_space(): we must make sure the host has seen
--	 * the new pending send size, before we can re-check the writable
--	 * bytes.
--	 */
--	virt_mb();
--}
--
--static void hvs_clear_channel_pending_send_size(struct vmbus_channel *chan)
--{
--	set_channel_pending_send_size(chan, 0);
--
--	/* Ditto */
- 	virt_mb();
- }
- 
-@@ -298,9 +286,6 @@ static void hvs_channel_cb(void *ctx)
- 	if (hvs_channel_readable(chan))
- 		sk->sk_data_ready(sk);
- 
--	/* See hvs_stream_has_space(): when we reach here, the writable bytes
--	 * may be already less than HVS_PKT_LEN(HVS_SEND_BUF_SIZE).
--	 */
- 	if (hv_get_bytes_to_write(&chan->outbound) > 0)
- 		sk->sk_write_space(sk);
- }
-@@ -328,8 +313,9 @@ static void hvs_open_connection(struct vmbus_channel *chan)
- 
- 	struct sockaddr_vm addr;
- 	struct sock *sk, *new = NULL;
--	struct vsock_sock *vnew;
--	struct hvsock *hvs, *hvs_new;
-+	struct vsock_sock *vnew = NULL;
-+	struct hvsock *hvs = NULL;
-+	struct hvsock *hvs_new = NULL;
- 	int ret;
- 
- 	if_type = &chan->offermsg.offer.if_type;
-@@ -388,6 +374,13 @@ static void hvs_open_connection(struct vmbus_channel *chan)
- 	set_per_channel_state(chan, conn_from_host ? new : sk);
- 	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
- 
-+	/* Set the pending send size to max packet size to always get
-+	 * notifications from the host when there is enough writable space.
-+	 * The host is optimized to send notifications only when the pending
-+	 * size boundary is crossed, and not always.
-+	 */
-+	hvs_set_channel_pending_send_size(chan);
++	WREG32_SOC15(HDP, 0, mmHDP_NONSURFACE_BASE, (adev->gmc.vram_start >> 8));
++	WREG32_SOC15(HDP, 0, mmHDP_NONSURFACE_BASE_HI, (adev->gmc.vram_start >> 40));
 +
- 	if (conn_from_host) {
- 		new->sk_state = TCP_ESTABLISHED;
- 		sk->sk_ack_backlog++;
-@@ -651,23 +644,8 @@ static s64 hvs_stream_has_data(struct vsock_sock *vsk)
- static s64 hvs_stream_has_space(struct vsock_sock *vsk)
- {
- 	struct hvsock *hvs = vsk->trans;
--	struct vmbus_channel *chan = hvs->chan;
--	s64 ret;
--
--	ret = hvs_channel_writable_bytes(chan);
--	if (ret > 0)  {
--		hvs_clear_channel_pending_send_size(chan);
--	} else {
--		/* See hvs_channel_cb() */
--		hvs_set_channel_pending_send_size(chan);
--
--		/* Re-check the writable bytes to avoid race */
--		ret = hvs_channel_writable_bytes(chan);
--		if (ret > 0)
--			hvs_clear_channel_pending_send_size(chan);
--	}
+ 	/* After HDP is initialized, flush HDP.*/
+ 	adev->nbio_funcs->hdp_flush(adev, NULL);
  
--	return ret;
-+	return hvs_channel_writable_bytes(hvs->chan);
- }
- 
- static u64 hvs_stream_rcvhiwat(struct vsock_sock *vsk)
 -- 
 2.20.1
 
