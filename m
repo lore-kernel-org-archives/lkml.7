@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A546CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8162FC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E1A217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5182420C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429640;
-	bh=U1MrTmgOBlQV6ONvXs/aoEgHVNbQwAm6RBeHlkKYph0=;
+	s=default; t=1564429644;
+	bh=x3F5MHr1q7jvsB8uY933ck27RJqdre2V7LjldOkB+Gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xO2J378yLEYXsNE5pmp2nzjGoKo3Zkgb0zn2DDtzBDAL4mWeQLfKJUXmE3k5Qp4vm
-	 bxn0JZ+BpX+3E6UxzLVCGZD8kJ4+oGho33k1pU1P0twuu9A9jNIqsnvBjK1FPwPLKK
-	 wPIJvN8LJamVDZSQP5AcUbAEpvsLfsdsyXJiU7UU=
+	b=WagWVPoFB3giwi3U4TNVaHZRs6cVMgkshctdHqkD/AOvrN6D626/KDk6lEXR2JK3w
+	 CLh8SPzqFlmb0urHaTuA8cL80LDkkM3qrWbRpRkyMt0vI8+wZAdNuoIB7b6t0awxCu
+	 yXr1PUhtyxSJ+BfYDInYhdLnMwgkzRjb69vqUuEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390319AbfG2TrT (ORCPT
+        id S2390328AbfG2TrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:47:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390301AbfG2TrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:47:16 -0400
+        id S2389655AbfG2TrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:47:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 154F520C01;
-        Mon, 29 Jul 2019 19:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D85A20C01;
+        Mon, 29 Jul 2019 19:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429635;
-        bh=U1MrTmgOBlQV6ONvXs/aoEgHVNbQwAm6RBeHlkKYph0=;
+        s=default; t=1564429632;
+        bh=x3F5MHr1q7jvsB8uY933ck27RJqdre2V7LjldOkB+Gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OENqb9+rGPmS/3nHkFH67dJvqUnkQHgC0qVGmzQwLk9qSvoplstHrGU9cXgRZDCfY
-         iAcSzhEpck28qx4NrLVO6IfQvw/f2og6UnyjeMZGFmXMW8ULPj3nPhar8VRl4XyE4i
-         2CnPTRie2/0+MJt1BDDsw6KG13fXwyQkKOEVS+Dw=
+        b=KNP53x/R3LmhCvJWMt2DQN3QHrj1dsE4sd1uw671ivKpzB/DFYSdLPPdiPnZsO8cq
+         QYYSb9nHYOZ1mxCWQqLwpWNrH3/b6xudXPcz7XR6SOgfjAaCZC6vtol5ayxIDyUkMG
+         PpObnNXtYzmuoGfxQDTj6h1i+3QkP2kcMZMvOsYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Philip Yang <Philip.Yang@amd.com>,
+        stable@vger.kernel.org, Ajay Gupta <ajayg@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 047/215] mm/hmm: fix use after free with struct hmm in the mmu notifiers
-Date:   Mon, 29 Jul 2019 21:20:43 +0200
-Message-Id: <20190729190748.653021982@linuxfoundation.org>
+Subject: [PATCH 5.2 046/215] i2c: nvidia-gpu: resume ccgx i2c client
+Date:   Mon, 29 Jul 2019 21:20:42 +0200
+Message-Id: <20190729190748.512268779@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -64,129 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6d7c3cde93c1d9ac0b37f78ec3f2ff052159a242 ]
+[ Upstream commit 9f2e244d0a39eb437f98324ac315e605e48636db ]
 
-mmu_notifier_unregister_no_release() is not a fence and the mmu_notifier
-system will continue to reference hmm->mn until the srcu grace period
-expires.
+Cypress USB Type-C CCGx controller firmware version 3.1.10
+(which is being used in many NVIDIA GPU cards) has known issue of
+not triggering interrupt when a USB device is hot plugged to runtime
+resume the controller. If any GPU card gets latest kernel with runtime
+pm support but does not get latest fixed firmware then also it should
+continue to work and therefore a workaround is required to check for
+any connector change event
 
-Resulting in use after free races like this:
+The workaround is to request runtime resume of i2c client
+which is UCSI Cypress CCGx driver. CCG driver will call the ISR
+for any connector change event only if NVIDIA GPU has old
+CCG firmware with the known issue.
 
-         CPU0                                     CPU1
-                                               __mmu_notifier_invalidate_range_start()
-                                                 srcu_read_lock
-                                                 hlist_for_each ()
-                                                   // mn == hmm->mn
-hmm_mirror_unregister()
-  hmm_put()
-    hmm_free()
-      mmu_notifier_unregister_no_release()
-         hlist_del_init_rcu(hmm-mn->list)
-			                           mn->ops->invalidate_range_start(mn, range);
-					             mm_get_hmm()
-      mm->hmm = NULL;
-      kfree(hmm)
-                                                     mutex_lock(&hmm->lock);
-
-Use SRCU to kfree the hmm memory so that the notifiers can rely on hmm
-existing. Get the now-safe hmm struct through container_of and directly
-check kref_get_unless_zero to lock it against free.
-
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Tested-by: Philip Yang <Philip.Yang@amd.com>
+Signed-off-by: Ajay Gupta <ajayg@nvidia.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/hmm.h |  1 +
- mm/hmm.c            | 23 +++++++++++++++++------
- 2 files changed, 18 insertions(+), 6 deletions(-)
+ drivers/i2c/busses/i2c-nvidia-gpu.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 044a36d7c3f8..89508dc0795f 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -93,6 +93,7 @@ struct hmm {
- 	struct mmu_notifier	mmu_notifier;
- 	struct rw_semaphore	mirrors_sem;
- 	wait_queue_head_t	wq;
-+	struct rcu_head		rcu;
- 	long			notifiers;
- 	bool			dead;
+diff --git a/drivers/i2c/busses/i2c-nvidia-gpu.c b/drivers/i2c/busses/i2c-nvidia-gpu.c
+index 1c8f708f212b..ee2412b7459c 100644
+--- a/drivers/i2c/busses/i2c-nvidia-gpu.c
++++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
+@@ -51,6 +51,7 @@ struct gpu_i2c_dev {
+ 	void __iomem *regs;
+ 	struct i2c_adapter adapter;
+ 	struct i2c_board_info *gpu_ccgx_ucsi;
++	struct i2c_client *ccgx_client;
  };
-diff --git a/mm/hmm.c b/mm/hmm.c
-index f702a3895d05..4c405dfbd2b3 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -104,6 +104,11 @@ static struct hmm *hmm_get_or_create(struct mm_struct *mm)
- 	return NULL;
+ 
+ static void gpu_enable_i2c_bus(struct gpu_i2c_dev *i2cd)
+@@ -261,8 +262,6 @@ static const struct property_entry ccgx_props[] = {
+ 
+ static int gpu_populate_client(struct gpu_i2c_dev *i2cd, int irq)
+ {
+-	struct i2c_client *ccgx_client;
+-
+ 	i2cd->gpu_ccgx_ucsi = devm_kzalloc(i2cd->dev,
+ 					   sizeof(*i2cd->gpu_ccgx_ucsi),
+ 					   GFP_KERNEL);
+@@ -274,8 +273,8 @@ static int gpu_populate_client(struct gpu_i2c_dev *i2cd, int irq)
+ 	i2cd->gpu_ccgx_ucsi->addr = 0x8;
+ 	i2cd->gpu_ccgx_ucsi->irq = irq;
+ 	i2cd->gpu_ccgx_ucsi->properties = ccgx_props;
+-	ccgx_client = i2c_new_device(&i2cd->adapter, i2cd->gpu_ccgx_ucsi);
+-	if (!ccgx_client)
++	i2cd->ccgx_client = i2c_new_device(&i2cd->adapter, i2cd->gpu_ccgx_ucsi);
++	if (!i2cd->ccgx_client)
+ 		return -ENODEV;
+ 
+ 	return 0;
+@@ -354,6 +353,13 @@ static __maybe_unused int gpu_i2c_resume(struct device *dev)
+ 	struct gpu_i2c_dev *i2cd = dev_get_drvdata(dev);
+ 
+ 	gpu_enable_i2c_bus(i2cd);
++	/*
++	 * Runtime resume ccgx client so that it can see for any
++	 * connector change event. Old ccg firmware has known
++	 * issue of not triggering interrupt when a device is
++	 * connected to runtime resume the controller.
++	 */
++	pm_request_resume(&i2cd->ccgx_client->dev);
+ 	return 0;
  }
  
-+static void hmm_free_rcu(struct rcu_head *rcu)
-+{
-+	kfree(container_of(rcu, struct hmm, rcu));
-+}
-+
- static void hmm_free(struct kref *kref)
- {
- 	struct hmm *hmm = container_of(kref, struct hmm, kref);
-@@ -116,7 +121,7 @@ static void hmm_free(struct kref *kref)
- 		mm->hmm = NULL;
- 	spin_unlock(&mm->page_table_lock);
- 
--	kfree(hmm);
-+	mmu_notifier_call_srcu(&hmm->rcu, hmm_free_rcu);
- }
- 
- static inline void hmm_put(struct hmm *hmm)
-@@ -144,10 +149,14 @@ void hmm_mm_destroy(struct mm_struct *mm)
- 
- static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- {
--	struct hmm *hmm = mm_get_hmm(mm);
-+	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
- 	struct hmm_mirror *mirror;
- 	struct hmm_range *range;
- 
-+	/* Bail out if hmm is in the process of being freed */
-+	if (!kref_get_unless_zero(&hmm->kref))
-+		return;
-+
- 	/* Report this HMM as dying. */
- 	hmm->dead = true;
- 
-@@ -185,13 +194,14 @@ static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- static int hmm_invalidate_range_start(struct mmu_notifier *mn,
- 			const struct mmu_notifier_range *nrange)
- {
--	struct hmm *hmm = mm_get_hmm(nrange->mm);
-+	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
- 	struct hmm_mirror *mirror;
- 	struct hmm_update update;
- 	struct hmm_range *range;
- 	int ret = 0;
- 
--	VM_BUG_ON(!hmm);
-+	if (!kref_get_unless_zero(&hmm->kref))
-+		return 0;
- 
- 	update.start = nrange->start;
- 	update.end = nrange->end;
-@@ -239,9 +249,10 @@ static int hmm_invalidate_range_start(struct mmu_notifier *mn,
- static void hmm_invalidate_range_end(struct mmu_notifier *mn,
- 			const struct mmu_notifier_range *nrange)
- {
--	struct hmm *hmm = mm_get_hmm(nrange->mm);
-+	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
- 
--	VM_BUG_ON(!hmm);
-+	if (!kref_get_unless_zero(&hmm->kref))
-+		return;
- 
- 	mutex_lock(&hmm->lock);
- 	hmm->notifiers--;
 -- 
 2.20.1
 
