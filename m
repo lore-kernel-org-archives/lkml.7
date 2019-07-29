@@ -3,115 +3,228 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2D6C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD13CC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA2F21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9440B216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbfG2Qe2 (ORCPT
+        id S1729172AbfG2Qec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:34:28 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45910 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727450AbfG2Qe1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:34:27 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m23so59152062lje.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:34:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UG3D/SqCJj11xnk2S6pE/fAYr6pWtAvwmUTxug894eQ=;
-        b=CYZL5Yth2mCbIS0Ce/2FGCmgoeOEqbEgX6Iy9SEALcR962gz9599OFbnmQuQeCS1O/
-         YrxhJS+djrVGT4J8VD6EgL4GdaIjY7qe5c8wGyltD+7oqeA146xHoO0tJlE4BHN1xPom
-         vzPusjs8CuOieJU80TJwl2hY4EoasWNAW460yVZ+Gt/t7boqbxYgZnkc3My2j2OkiWj6
-         akyPmBrqzdZqQEhpHFMb21Lhz0029AeKmB+qZ1XjYW99Gpy1lKgs2BSwhfeBzBrB6A4+
-         1wy3VcXAlGngQZgb4ttOHJ6EQxbGfP4KXmRATiPmlXfVMYhNVY42Nw0l+//bDqHnV64z
-         xW1w==
-X-Gm-Message-State: APjAAAUe+iZjuGXUKMeRwTI3SPU40iYAh4Wqn00KagUZ5LeheMAyo8um
-        ELIinaD6uMFCSctObISA7iPS1P2TAlBDKtvdG6/ufA==
-X-Google-Smtp-Source: APXvYqwaWzM1hn/JYuWG8xIWCCoQc0juPndzV2AWEI2sZ0zbeHQbhgIVf3GM5tGdjfmKdC05eoQItiSu7YXZ4SX7s6Q=
-X-Received: by 2002:a2e:2b01:: with SMTP id q1mr57284489lje.27.1564418064609;
- Mon, 29 Jul 2019 09:34:24 -0700 (PDT)
+        Mon, 29 Jul 2019 12:34:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39498 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727450AbfG2Qea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:34:30 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 09C98307D9D1;
+        Mon, 29 Jul 2019 16:34:30 +0000 (UTC)
+Received: from dcbz.redhat.com (ovpn-116-74.ams2.redhat.com [10.36.116.74])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C7A9A5D6A7;
+        Mon, 29 Jul 2019 16:34:25 +0000 (UTC)
+From:   Adrian Reber <areber@redhat.com>
+To:     Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelianov <xemul@virtuozzo.com>,
+        Jann Horn <jannh@google.com>
+Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Adrian Reber <areber@redhat.com>
+Subject: [PATCH 1/2] fork: extend clone3() to support CLONE_SET_TID
+Date:   Mon, 29 Jul 2019 18:33:54 +0200
+Message-Id: <20190729163355.4530-1-areber@redhat.com>
 MIME-Version: 1.0
-References: <CAGnkfhyT=2kPsiUy-V=aCA_s-C4BXgD++hAZ9ii1h0p94mMVQA@mail.gmail.com>
- <20190729125421.32482-1-vincenzo.frascino@arm.com>
-In-Reply-To: <20190729125421.32482-1-vincenzo.frascino@arm.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Mon, 29 Jul 2019 18:33:48 +0200
-Message-ID: <CAGnkfhw+=+50P=uaWsjZrtt_BuwJjXKZ_DSTjuJ8mzW4_kbu-w@mail.gmail.com>
-Subject: Re: [PATCH] arm64: vdso: Fix Makefile regression
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>, salyzyn@android.com,
-        pcc@google.com, 0x7f454c46@gmail.com, linux@rasmusvillemoes.dk,
-        sthotton@marvell.com, andre.przywara@arm.com,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 29 Jul 2019 16:34:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 2:54 PM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> Using an old .config in combination with "make oldconfig" can cause
-> an incorrect detection of the compat compiler:
->
-> $ grep CROSS_COMPILE_COMPAT .config
-> CONFIG_CROSS_COMPILE_COMPAT_VDSO=""
->
-> $ make oldconfig && make
-> arch/arm64/Makefile:58: gcc not found, check CROSS_COMPILE_COMPAT.
-> Stop.
->
-> Accordingly to the section 7.2 of the GNU Make manual "Syntax of
-> Conditionals", "When the value results from complex expansions of
-> variables and functions, expansions you would consider empty may
-> actually contain whitespace characters and thus are not seen as
-> empty. However, you can use the strip function to avoid interpreting
-> whitespace as a non-empty value."
->
-> Fix the issue adding strip to the CROSS_COMPILE_COMPAT string
-> evaluation.
->
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Reported-by: Matteo Croce <mcroce@redhat.com>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> ---
->  arch/arm64/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-> index bb1f1dbb34e8..61de992bbea3 100644
-> --- a/arch/arm64/Makefile
-> +++ b/arch/arm64/Makefile
-> @@ -52,7 +52,7 @@ ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
->
->    ifeq ($(CONFIG_CC_IS_CLANG), y)
->      $(warning CROSS_COMPILE_COMPAT is clang, the compat vDSO will not be built)
-> -  else ifeq ($(CROSS_COMPILE_COMPAT),)
-> +  else ifeq ($(strip $(CROSS_COMPILE_COMPAT)),)
->      $(warning CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built)
->    else ifeq ($(shell which $(CROSS_COMPILE_COMPAT)gcc 2> /dev/null),)
->      $(error $(CROSS_COMPILE_COMPAT)gcc not found, check CROSS_COMPILE_COMPAT)
-> --
-> 2.22.0
->
+The main motivation to add CLONE_SET_TID to clone3() is CRIU.
 
-Tested-by: Matteo Croce <mcroce@redhat.com>
+To restore a process with the same PID/TID CRIU currently uses
+/proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
+ns_last_pid and then (quickly) does a clone(). This works most of the
+time, but it is racy. It is also slow as it requires multiple syscalls.
 
+Extending clone3() to support CLONE_SET_TID makes it possible restore a
+process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
+race free (as long as the desired PID/TID is available).
+
+This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
+on clone3() with set_tid as they are currently in place for ns_last_pid.
+
+Signed-off-by: Adrian Reber <areber@redhat.com>
+---
+ include/linux/pid.h        |  2 +-
+ include/linux/sched/task.h |  1 +
+ include/uapi/linux/sched.h |  2 ++
+ kernel/fork.c              | 22 ++++++++++++++++------
+ kernel/pid.c               | 21 ++++++++++++++++++---
+ 5 files changed, 38 insertions(+), 10 deletions(-)
+
+diff --git a/include/linux/pid.h b/include/linux/pid.h
+index 2a83e434db9d..052000db0ced 100644
+--- a/include/linux/pid.h
++++ b/include/linux/pid.h
+@@ -116,7 +116,7 @@ extern struct pid *find_vpid(int nr);
+ extern struct pid *find_get_pid(int nr);
+ extern struct pid *find_ge_pid(int nr, struct pid_namespace *);
+ 
+-extern struct pid *alloc_pid(struct pid_namespace *ns);
++extern struct pid *alloc_pid(struct pid_namespace *ns, pid_t set_tid);
+ extern void free_pid(struct pid *pid);
+ extern void disable_pid_allocation(struct pid_namespace *ns);
+ 
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 0497091e40c1..4f2a80564332 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -26,6 +26,7 @@ struct kernel_clone_args {
+ 	unsigned long stack;
+ 	unsigned long stack_size;
+ 	unsigned long tls;
++	pid_t set_tid;
+ };
+ 
+ /*
+diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+index b3105ac1381a..8c4e803e8147 100644
+--- a/include/uapi/linux/sched.h
++++ b/include/uapi/linux/sched.h
+@@ -32,6 +32,7 @@
+ #define CLONE_NEWPID		0x20000000	/* New pid namespace */
+ #define CLONE_NEWNET		0x40000000	/* New network namespace */
+ #define CLONE_IO		0x80000000	/* Clone io context */
++#define CLONE_SET_TID		0x100000000ULL	/* set if the desired TID is set in set_tid */
+ 
+ /*
+  * Arguments for the clone3 syscall
+@@ -45,6 +46,7 @@ struct clone_args {
+ 	__aligned_u64 stack;
+ 	__aligned_u64 stack_size;
+ 	__aligned_u64 tls;
++	__aligned_u64 set_tid;
+ };
+ 
+ /*
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 2852d0e76ea3..8c59441ac153 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2031,7 +2031,7 @@ static __latent_entropy struct task_struct *copy_process(
+ 	stackleak_task_init(p);
+ 
+ 	if (pid != &init_struct_pid) {
+-		pid = alloc_pid(p->nsproxy->pid_ns_for_children);
++		pid = alloc_pid(p->nsproxy->pid_ns_for_children, args->set_tid);
+ 		if (IS_ERR(pid)) {
+ 			retval = PTR_ERR(pid);
+ 			goto bad_fork_cleanup_thread;
+@@ -2530,6 +2530,7 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 					      struct clone_args __user *uargs,
+ 					      size_t size)
+ {
++	struct pid_namespace *pid_ns = task_active_pid_ns(current);
+ 	struct clone_args args;
+ 
+ 	if (unlikely(size > PAGE_SIZE))
+@@ -2562,6 +2563,9 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 	if (copy_from_user(&args, uargs, size))
+ 		return -EFAULT;
+ 
++	if ((args.flags & CLONE_SET_TID) && !ns_capable(pid_ns->user_ns, CAP_SYS_ADMIN))
++		return -EPERM;
++
+ 	*kargs = (struct kernel_clone_args){
+ 		.flags		= args.flags,
+ 		.pidfd		= u64_to_user_ptr(args.pidfd),
+@@ -2571,6 +2575,7 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 		.stack		= args.stack,
+ 		.stack_size	= args.stack_size,
+ 		.tls		= args.tls,
++		.set_tid	= args.set_tid,
+ 	};
+ 
+ 	return 0;
+@@ -2578,11 +2583,16 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 
+ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
+ {
+-	/*
+-	 * All lower bits of the flag word are taken.
+-	 * Verify that no other unknown flags are passed along.
+-	 */
+-	if (kargs->flags & ~CLONE_LEGACY_FLAGS)
++	/* Verify that no other unknown flags are passed along. */
++	if (kargs->flags & ~(CLONE_LEGACY_FLAGS | CLONE_SET_TID))
++		return false;
++
++	/* Fail if set_tid is set without CLONE_SET_TID */
++	if (kargs->set_tid && !(kargs->flags & CLONE_SET_TID))
++		return false;
++
++	/* Also fail if set_tid is invalid */
++	if ((kargs->set_tid <= 0) && (kargs->flags & CLONE_SET_TID))
+ 		return false;
+ 
+ 	/*
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 0a9f2e437217..d3db8090bb10 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -157,11 +157,12 @@ void free_pid(struct pid *pid)
+ 	call_rcu(&pid->rcu, delayed_put_pid);
+ }
+ 
+-struct pid *alloc_pid(struct pid_namespace *ns)
++struct pid *alloc_pid(struct pid_namespace *ns, int set_tid)
+ {
+ 	struct pid *pid;
+ 	enum pid_type type;
+ 	int i, nr;
++	int max_p, min_p;
+ 	struct pid_namespace *tmp;
+ 	struct upid *upid;
+ 	int retval = -ENOMEM;
+@@ -186,12 +187,26 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+ 		if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
+ 			pid_min = RESERVED_PIDS;
+ 
++		if (set_tid) {
++			if ((set_tid >= pid_max) || ((set_tid != 1) &&
++				(idr_get_cursor(&tmp->idr) <= 1))) {
++				spin_unlock_irq(&pidmap_lock);
++				retval = -EINVAL;
++				goto out_free;
++			}
++			min_p = set_tid;
++			max_p = set_tid + 1;
++			set_tid = 0;
++		} else {
++			min_p = pid_min;
++			max_p = pid_max;
++		}
+ 		/*
+ 		 * Store a null pointer so find_pid_ns does not find
+ 		 * a partially initialized PID (see below).
+ 		 */
+-		nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+-				      pid_max, GFP_ATOMIC);
++		nr = idr_alloc_cyclic(&tmp->idr, NULL, min_p,
++				      max_p, GFP_ATOMIC);
+ 		spin_unlock_irq(&pidmap_lock);
+ 		idr_preload_end();
+ 
 -- 
-Matteo Croce
-per aspera ad upstream
+2.21.0
+
