@@ -2,118 +2,92 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CEEC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F1DC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56272070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96317206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfG2JFl (ORCPT
+        id S1727297AbfG2JHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:05:41 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33726 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfG2JFl (ORCPT
+        Mon, 29 Jul 2019 05:07:01 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:58648 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfG2JHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:05:41 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so61030954wru.0;
-        Mon, 29 Jul 2019 02:05:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qxGXy8FtO6vZfwLC9EabJrzvuG/ZhokgOoU0Ki4Dhbw=;
-        b=jDc4wGfMkBV7POTrZPf6hRcIPHyA7llZULoVLQ31Q6ZHqzBEgwKjDFFDLyTaxKMnik
-         Bqo3nTdgPdbCnPJonIrLmo6JswTmmtPdpPSQ99rys4/zCosjaH/LdEOr1a0BPhA5yLS7
-         4H+SVPuieUkzpflESR16ZAVGLfk74r3QckmTp7UBqpfcCoCnYZ3Muk/THo+TT4xPvfS5
-         vFfcjf6AeVJnJE8Y0qnxmY4iHOHgZ03geQnfNKBmJ3kME2EDPfKfV43aa+qfcwZQJ5rJ
-         /riV80osvB47VCHoGjS95d8aapqli9K8u7Fy41vKHdybTYHiptP2LmGfUNXlp3Owk0G3
-         qAFA==
-X-Gm-Message-State: APjAAAWKwpeNfQ4c3qJqv9WRq81Ke+2poT4A1W47PrW/fFJwb6JdLpuL
-        h7LCdXqnjCDIoiDpUryTVp+D7WhViZE/ce9b33g=
-X-Google-Smtp-Source: APXvYqz6uojkUazaZHHYCxUOpwqlKfsC3vg/+iiUOP1b3dFA5D9/TZrHUuJeGqZvqozJ1+Et2HptvgBmlSS7h66vIBY=
-X-Received: by 2002:adf:cd81:: with SMTP id q1mr117369836wrj.16.1564391138795;
- Mon, 29 Jul 2019 02:05:38 -0700 (PDT)
+        Mon, 29 Jul 2019 05:07:01 -0400
+Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id a3ba5d91a3f87a99; Mon, 29 Jul 2019 11:06:58 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Tri Vo <trong@android.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Subject: Re: [PATCH] PM / wakeup: Avoid dev_name collisions in wakeup class
+Date:   Mon, 29 Jul 2019 11:06:58 +0200
+Message-ID: <1771170.ZfA44AmTq3@kreacher>
+In-Reply-To: <CANA+-vDNkSG39SLd0_B_L8gkDkfQ2uJLcuvCaRgHkU8DiBzMTw@mail.gmail.com>
+References: <20190727011040.89582-1-swboyd@chromium.org> <CAJZ5v0hroRuGQ5N42Z8=yFVXiJPdid3wJrHoKqr2BZVx=sfnBQ@mail.gmail.com> <CANA+-vDNkSG39SLd0_B_L8gkDkfQ2uJLcuvCaRgHkU8DiBzMTw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190725180825.31508-1-max@enpas.org>
-In-Reply-To: <20190725180825.31508-1-max@enpas.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 29 Jul 2019 11:05:27 +0200
-Message-ID: <CAMuHMdURm-9nazOBTL8uRH8WMt7gi=QUYy0qr9kaxzczCr+ujg@mail.gmail.com>
-Subject: Re: [PATCH v3] ata/pata_buddha: Probe via modalias instead of initcall
-To:     Max Staudt <max@enpas.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-ide@vger.kernel.org,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Max,
+On Saturday, July 27, 2019 7:37:07 PM CEST Tri Vo wrote:
+> On Sat, Jul 27, 2019 at 6:10 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Sat, Jul 27, 2019 at 3:11 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > If a device is wakeup capable and the driver calls device_wakeup_init()
+> > > on it during probe and then userspace writes 'enabled' to that device's
+> > > power/wakeup file in sysfs we'll try to create the same named wakeup
+> > > device in sysfs. The kernel will complain about duplicate file names.
+> 
+> Thanks for reporting the issue, Stephen!
+> > >
+> > > sysfs: cannot create duplicate filename '/devices/virtual/wakeup/1-1.1'
+> > > kobject_add_internal failed for 1-1.1 with -EEXIST, don't try to register things with the same name in the same directory.
+> > >
+> > > It may be advantageous to not write 'enabled' to the wakeup file (see
+> > > wakeup_store()) from userspace for these devices because we allocate
+> > > devices and register them and then throw them all away later on if the
+> > > device driver has already initialized the wakeup attribute. The
+> > > implementation currently tries to avoid taking locks here so it seems
+> > > best to optimize that path in a separate patch.
+> > >
+> > > Let's rename the wakeup class devices as 'wakeupN' with an IDA that's
+> > > simple enough to just return some sort of number. In addition, let's
+> > > make the device registering the wakeup the parent and include a 'name'
+> > > attribute in case userspace wants to figure out the type of wakeup it is
+> > > (in the case of virtual wakeups) or the device associated with the
+> > > wakeup. This makes it easier for userspace to go from /sys/class/wakeup
+> > > to a place in the device hierarchy where the wakeup is generated from
+> > > like an input device.
+> > >
+> > > Cc: Tri Vo <trong@android.com>
+> > > Cc: Kalesh Singh <kaleshsingh@google.com>
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
+> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> >
+> > I'd rather change the commit that introduced this issue which is only
+> > in linux-next for now.
+> 
+> Raphael, could you roll back my patch? I'll work with Stephen to fix it.
 
-On Thu, Jul 25, 2019 at 8:08 PM Max Staudt <max@enpas.org> wrote:
-> Up until now, the pata_buddha driver would only check for cards on
-> initcall time. Now, the kernel will call its probe function as soon
-> as a compatible card is detected.
->
-> v3: Clean up devm_*, implement device removal.
->
-> v2: Rename 'zdev' to 'z' to make the patch easy to analyse with
->     git diff --ignore-space-change
->
-> Tested-by: Max Staudt <max@enpas.org>
-> Signed-off-by: Max Staudt <max@enpas.org>
+I'll drop it, thanks!
 
-Sorry, I only noticed v3 after I replied to v2.
-My comments are still valid, though.
 
-> --- a/drivers/ata/pata_buddha.c
-> +++ b/drivers/ata/pata_buddha.c
 
-> +static const struct zorro_device_id pata_buddha_zorro_tbl[] = {
-> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA, },
-> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL, },
-> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, },
-
-drivers/net/ethernet/8390/zorro8390.c also matches against
-ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, while only
-a single zorro_driver can bind to it.  Hence you can no longer use both
-IDE and Ethernet on X-Surf :-(
-Before, this worked, as the IDE driver just walked the list of devices.
-
-I think the proper solution is to create MFD devices for Zorro boards
-with multiple functions, and bind against the individual MFD cells.
-That would also get rid of the nr_ports loop in the IDE driver, as each
-instance would have its own cell.
-
-I played with this a long time ago, but never finished it.
-It worked fine for my Ariadne Ethernet card.
-Last state at
-https://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git/log/?h=zorro-mfd
-
-Oh, seems I wrote up most of this before in
-https://lore.kernel.org/lkml/CAMuHMdVe1KgQWYZ_BfBkSo3zr0c+TenLMEw3T=BLEQNoZ6ex7A@mail.gmail.com/
-
-> +       { 0 }
-> +};
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
