@@ -2,213 +2,149 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81A1C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CC1C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D11A21773
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VDIZSjBO"
+	by mail.kernel.org (Postfix) with ESMTP id B5698216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfG2OZF (ORCPT
+        id S1727775AbfG2OZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:25:05 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46904 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbfG2OZE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:25:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=r2R3bvPPA7z+Zk5Z5T/eRlqnLR0fPm6kMZLrDw0T1mM=; b=VDIZSjBOQQ5VujuzGXLUd8ztg
-        s9lZP8iQA6DasO0eCjfCdN66UHKmyiRi268O6wWJUP/0aANp/x59QPcYqoSJh4IQgpSRF/DL6KxWH
-        0kgwwmK2eRnOAE0i+uA7PqX2cxYVQVHKzmsRWBOClTrWQfNY4Q8lOsTlLHBoT0MAKh23KApH1NXDP
-        9wewptlleUm83XE3JiybClJJZMT0obX31Swo2M25QwiC+YOSR2hf83+aWTCGjpQYy0EgbryP7TBgU
-        cSenMrQzb/jwtG5VGK6iivMyfYv4imx8GubCaG31CtFlipADI9USL2jpugr46Sz83fOplbiTV39Ir
-        /bWQ4t3xA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs6a4-0002qo-N7; Mon, 29 Jul 2019 14:24:53 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 130FF20AFFEAD; Mon, 29 Jul 2019 16:24:50 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 16:24:50 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>, riel@surriel.com,
-        luto@kernel.org, mathieu.desnoyers@efficios.com
-Subject: [PATCH] sched: Clean up active_mm reference counting
-Message-ID: <20190729142450.GE31425@hirez.programming.kicks-ass.net>
-References: <20190727171047.31610-1-longman@redhat.com>
- <20190729085235.GT31381@hirez.programming.kicks-ass.net>
+        Mon, 29 Jul 2019 10:25:09 -0400
+Received: from mga14.intel.com ([192.55.52.115]:45406 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726780AbfG2OZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 10:25:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 07:25:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,323,1559545200"; 
+   d="scan'208";a="190601545"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 29 Jul 2019 07:25:01 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 29 Jul 2019 17:25:00 +0300
+Date:   Mon, 29 Jul 2019 17:25:00 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v8 08/11] usb: roles: get usb-role-switch from parent
+Message-ID: <20190729142500.GE28600@kuha.fi.intel.com>
+References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1563958245-6321-9-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190729085235.GT31381@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1563958245-6321-9-git-send-email-chunfeng.yun@mediatek.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:52:35AM +0200, Peter Zijlstra wrote:
-> On Sat, Jul 27, 2019 at 01:10:47PM -0400, Waiman Long wrote:
-
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 2b037f195473..923a63262dfd 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -3233,13 +3233,22 @@ context_switch(struct rq *rq, struct task_struct *prev,
-> >  	 * Both of these contain the full memory barrier required by
-> >  	 * membarrier after storing to rq->curr, before returning to
-> >  	 * user-space.
-> > +	 *
-> > +	 * If mm is NULL and oldmm is dying (!owner), we switch to
-> > +	 * init_mm instead to make sure that oldmm can be freed ASAP.
-> >  	 */
-> > -	if (!mm) {
-> > +	if (!mm && !mm_dying(oldmm)) {
-> >  		next->active_mm = oldmm;
-> >  		mmgrab(oldmm);
-> >  		enter_lazy_tlb(oldmm, next);
-> > -	} else
-> > +	} else {
-> > +		if (!mm) {
-> > +			mm = &init_mm;
-> > +			next->active_mm = mm;
-> > +			mmgrab(mm);
-> > +		}
-> >  		switch_mm_irqs_off(oldmm, mm, next);
-> > +	}
-> >  
-> >  	if (!prev->mm) {
-> >  		prev->active_mm = NULL;
+On Wed, Jul 24, 2019 at 04:50:42PM +0800, Chunfeng Yun wrote:
+> when the USB host controller is the parent of the connector,
+> usually type-B, sometimes don't need the graph, so we should
+> check whether it's parent registers usb-role-switch or not
+> firstly, and get it if exists.
 > 
-> Bah, I see we _still_ haven't 'fixed' that code. And you're making an
-> even bigger mess of it.
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+I don't think I actually wrote the patch. I may have proposed the code
+for you, but I never prepared a patch out out that. Please drop the
+above Signed-off-by line if that is the case. I case I really did
+write the patch, then you are missing the "From: Heikki..." first
+line, but I really don't remember preparing the patch.
+
+If the idea came from me, you can use for example the suggested-by
+tag: "Suggested-by: Heikki Krogerus <heikki.krogerus...".
+
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v8: no changes
+> v7:
+>   add signed-off-by Chunfeng
 > 
-> Let me go find where that cleanup went.
+> v6:
+>   new patch
+> ---
+>  drivers/usb/roles/class.c | 25 +++++++++++++++++++++----
+>  1 file changed, 21 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> index 5b637aaf311f..87439a84c983 100644
+> --- a/drivers/usb/roles/class.c
+> +++ b/drivers/usb/roles/class.c
+> @@ -114,6 +114,19 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
+>  	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+>  }
+>  
+> +static struct usb_role_switch *
+> +usb_role_switch_is_parent(struct fwnode_handle *fwnode)
+> +{
+> +	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
+> +	struct device *dev;
+> +
+> +	if (!parent || !fwnode_property_present(parent, "usb-role-switch"))
+> +		return NULL;
+> +
+> +	dev = class_find_device(role_class, NULL, parent, switch_fwnode_match);
+> +	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+> +}
+> +
+>  /**
+>   * usb_role_switch_get - Find USB role switch linked with the caller
+>   * @dev: The caller device
+> @@ -125,8 +138,10 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+>  {
+>  	struct usb_role_switch *sw;
+>  
+> -	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
+> -					  usb_role_switch_match);
+> +	sw = usb_role_switch_is_parent(dev_fwnode(dev));
+> +	if (!sw)
+> +		sw = device_connection_find_match(dev, "usb-role-switch", NULL,
+> +						  usb_role_switch_match);
+>  
+>  	if (!IS_ERR_OR_NULL(sw))
+>  		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+> @@ -146,8 +161,10 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+>  {
+>  	struct usb_role_switch *sw;
+>  
+> -	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
+> -					  usb_role_switch_match);
+> +	sw = usb_role_switch_is_parent(fwnode);
+> +	if (!sw)
+> +		sw = fwnode_connection_find_match(fwnode, "usb-role-switch",
+> +						  NULL, usb_role_switch_match);
+>  	if (!IS_ERR_OR_NULL(sw))
+>  		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+>  
+> -- 
+> 2.21.0
 
----
-Subject: sched: Clean up active_mm reference counting
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Mon Jul 29 16:05:15 CEST 2019
+thanks,
 
-The current active_mm reference counting is confusing and sub-optimal.
-
-Rewrite the code to explicitly consider the 4 separate cases:
-
-    user -> user
-
-	When switching between two user tasks, all we need to consider
-	is switch_mm().
-
-    user -> kernel
-
-	When switching from a user task to a kernel task (which
-	doesn't have an associated mm) we retain the last mm in our
-	active_mm. Increment a reference count on active_mm.
-
-  kernel -> kernel
-
-	When switching between kernel threads, all we need to do is
-	pass along the active_mm reference.
-
-  kernel -> user
-
-	When switching between a kernel and user task, we must switch
-	from the last active_mm to the next mm, hoping of course that
-	these are the same. Decrement a reference on the active_mm.
-
-The code keeps a different order, because as you'll note, both 'to
-user' cases require switch_mm().
-
-And where the old code would increment/decrement for the 'kernel ->
-kernel' case, the new code observes this is a neutral operation and
-avoids touching the reference count.
-
-Cc: riel@surriel.com
-Cc: luto@kernel.org
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/sched/core.c |   49 ++++++++++++++++++++++++++++++-------------------
- 1 file changed, 30 insertions(+), 19 deletions(-)
-
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3214,12 +3214,8 @@ static __always_inline struct rq *
- context_switch(struct rq *rq, struct task_struct *prev,
- 	       struct task_struct *next, struct rq_flags *rf)
- {
--	struct mm_struct *mm, *oldmm;
--
- 	prepare_task_switch(rq, prev, next);
- 
--	mm = next->mm;
--	oldmm = prev->active_mm;
- 	/*
- 	 * For paravirt, this is coupled with an exit in switch_to to
- 	 * combine the page table reload and the switch backend into
-@@ -3228,22 +3224,37 @@ context_switch(struct rq *rq, struct tas
- 	arch_start_context_switch(prev);
- 
- 	/*
--	 * If mm is non-NULL, we pass through switch_mm(). If mm is
--	 * NULL, we will pass through mmdrop() in finish_task_switch().
--	 * Both of these contain the full memory barrier required by
--	 * membarrier after storing to rq->curr, before returning to
--	 * user-space.
-+	 * kernel -> kernel   lazy + transfer active
-+	 *   user -> kernel   lazy + mmgrab() active
-+	 *
-+	 * kernel ->   user   switch + mmdrop() active
-+	 *   user ->   user   switch
- 	 */
--	if (!mm) {
--		next->active_mm = oldmm;
--		mmgrab(oldmm);
--		enter_lazy_tlb(oldmm, next);
--	} else
--		switch_mm_irqs_off(oldmm, mm, next);
--
--	if (!prev->mm) {
--		prev->active_mm = NULL;
--		rq->prev_mm = oldmm;
-+	if (!next->mm) {                                // to kernel
-+		enter_lazy_tlb(prev->active_mm, next);
-+
-+		next->active_mm = prev->active_mm;
-+		if (prev->mm)                           // from user
-+			mmgrab(prev->active_mm);
-+		else
-+			prev->active_mm = NULL;
-+	} else {                                        // to user
-+		/*
-+		 * sys_membarrier() requires an smp_mb() between setting
-+		 * rq->curr and returning to userspace.
-+		 *
-+		 * The below provides this either through switch_mm(), or in
-+		 * case 'prev->active_mm == next->mm' through
-+		 * finish_task_switch()'s mmdrop().
-+		 */
-+
-+		switch_mm_irqs_off(prev->active_mm, next->mm, next);
-+
-+		if (!prev->mm) {                        // from kernel
-+			/* will mmdrop() in finish_task_switch(). */
-+			rq->prev_mm = prev->active_mm;
-+			prev->active_mm = NULL;
-+		}
- 	}
- 
- 	rq->clock_update_flags &= ~(RQCF_ACT_SKIP|RQCF_REQ_SKIP);
+-- 
+heikki
