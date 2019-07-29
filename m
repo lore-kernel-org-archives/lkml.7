@@ -4,36 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74225C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AEBC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4798E2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD5E2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfG2Czo (ORCPT
+        id S1726767AbfG2Cz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 22:55:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45450 "EHLO huawei.com"
+        Sun, 28 Jul 2019 22:55:59 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45566 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726594AbfG2Czk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 22:55:40 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 12DA313580EBC2B4898C;
-        Mon, 29 Jul 2019 10:55:36 +0800 (CST)
+        id S1726659AbfG2Czn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 22:55:43 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0943BB5BF6615C996009;
+        Mon, 29 Jul 2019 10:55:41 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 29 Jul 2019 10:55:28 +0800
+ 14.3.439.0; Mon, 29 Jul 2019 10:55:30 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <saeedm@mellanox.com>,
+        Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V4 net-next 03/10] net: hns3: remove upgrade reset level when reset fail
-Date:   Mon, 29 Jul 2019 10:53:24 +0800
-Message-ID: <1564368811-65492-4-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V4 net-next 09/10] net: hns3: Add support for using order 1 pages with a 4K buffer
+Date:   Mon, 29 Jul 2019 10:53:30 +0800
+Message-ID: <1564368811-65492-10-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,87 +47,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, hclge_reset_err_handle() will assert a global reset
-when the failing count is smaller than MAX_RESET_FAIL_CNT, which
-will affect other running functions.
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-So this patch removes this upgrading, and uses re-scheduling reset
-task to do it.
+Hardware supports 0.5K, 1K, 2K, 4K RX buffer size, the
+RX buffer can not be reused because the hns3_page_order
+return 0 when page size and RX buffer size are both 4096.
 
+So this patch changes the hns3_page_order to return 1 when
+RX buffer is greater than half of the page size and page size
+is less the 8192, and dev_alloc_pages has already been used
+to allocate the compound page for RX buffer.
+
+This patch also changes hnae3_* to hns3_* for page order
+and RX buffer size calculation because they are used in
+hns3 module.
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Reviewed-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 28 +++++++---------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 +++++-----
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h | 15 ++++++++++++---
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 3fde5471..3c64d70 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -3305,7 +3305,7 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
- 	return ret;
- }
- 
--static bool hclge_reset_err_handle(struct hclge_dev *hdev, bool is_timeout)
-+static bool hclge_reset_err_handle(struct hclge_dev *hdev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 0cf9301..d2df42d 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -2081,7 +2081,7 @@ static void hns3_set_default_feature(struct net_device *netdev)
+ static int hns3_alloc_buffer(struct hns3_enet_ring *ring,
+ 			     struct hns3_desc_cb *cb)
  {
- #define MAX_RESET_FAIL_CNT 5
+-	unsigned int order = hnae3_page_order(ring);
++	unsigned int order = hns3_page_order(ring);
+ 	struct page *p;
  
-@@ -3322,20 +3322,11 @@ static bool hclge_reset_err_handle(struct hclge_dev *hdev, bool is_timeout)
- 		return false;
- 	} else if (hdev->reset_fail_cnt < MAX_RESET_FAIL_CNT) {
- 		hdev->reset_fail_cnt++;
--		if (is_timeout) {
--			set_bit(hdev->reset_type, &hdev->reset_pending);
--			dev_info(&hdev->pdev->dev,
--				 "re-schedule to wait for hw reset done\n");
--			return true;
--		}
--
--		dev_info(&hdev->pdev->dev, "Upgrade reset level\n");
--		hclge_clear_reset_cause(hdev);
--		set_bit(HNAE3_GLOBAL_RESET, &hdev->default_reset_request);
--		mod_timer(&hdev->reset_timer,
--			  jiffies + HCLGE_RESET_INTERVAL);
--
--		return false;
-+		set_bit(hdev->reset_type, &hdev->reset_pending);
-+		dev_info(&hdev->pdev->dev,
-+			 "re-schedule reset task(%d)\n",
-+			 hdev->reset_fail_cnt);
-+		return true;
- 	}
+ 	p = dev_alloc_pages(order);
+@@ -2092,7 +2092,7 @@ static int hns3_alloc_buffer(struct hns3_enet_ring *ring,
+ 	cb->page_offset = 0;
+ 	cb->reuse_flag = 0;
+ 	cb->buf  = page_address(p);
+-	cb->length = hnae3_page_size(ring);
++	cb->length = hns3_page_size(ring);
+ 	cb->type = DESC_TYPE_PAGE;
  
- 	hclge_clear_reset_cause(hdev);
-@@ -3382,7 +3373,6 @@ static int hclge_reset_stack(struct hclge_dev *hdev)
- static void hclge_reset(struct hclge_dev *hdev)
+ 	return 0;
+@@ -2395,7 +2395,7 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
  {
- 	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(hdev->pdev);
--	bool is_timeout = false;
- 	int ret;
+ 	struct hns3_desc *desc = &ring->desc[ring->next_to_clean];
+ 	int size = le16_to_cpu(desc->rx.size);
+-	u32 truesize = hnae3_buf_size(ring);
++	u32 truesize = hns3_buf_size(ring);
  
- 	/* Initialize ae_dev reset status as well, in case enet layer wants to
-@@ -3410,10 +3400,8 @@ static void hclge_reset(struct hclge_dev *hdev)
- 	if (ret)
- 		goto err_reset;
+ 	skb_add_rx_frag(skb, i, desc_cb->priv, desc_cb->page_offset + pull_len,
+ 			size - pull_len, truesize);
+@@ -2410,7 +2410,7 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
+ 	/* Move offset up to the next cache line */
+ 	desc_cb->page_offset += truesize;
  
--	if (hclge_reset_wait(hdev)) {
--		is_timeout = true;
-+	if (hclge_reset_wait(hdev))
- 		goto err_reset;
--	}
+-	if (desc_cb->page_offset + truesize <= hnae3_page_size(ring)) {
++	if (desc_cb->page_offset + truesize <= hns3_page_size(ring)) {
+ 		desc_cb->reuse_flag = 1;
+ 		/* Bump ref count on page before it is given */
+ 		get_page(desc_cb->priv);
+@@ -2692,7 +2692,7 @@ static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
+ 		}
  
- 	hdev->rst_stats.hw_reset_done_cnt++;
+ 		if (ring->tail_skb) {
+-			head_skb->truesize += hnae3_buf_size(ring);
++			head_skb->truesize += hns3_buf_size(ring);
+ 			head_skb->data_len += le16_to_cpu(desc->rx.size);
+ 			head_skb->len += le16_to_cpu(desc->rx.size);
+ 			skb = ring->tail_skb;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+index 848b866..1a17856 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+@@ -608,9 +608,18 @@ static inline bool hns3_nic_resetting(struct net_device *netdev)
  
-@@ -3465,7 +3453,7 @@ static void hclge_reset(struct hclge_dev *hdev)
- err_reset_lock:
- 	rtnl_unlock();
- err_reset:
--	if (hclge_reset_err_handle(hdev, is_timeout))
-+	if (hclge_reset_err_handle(hdev))
- 		hclge_reset_task_schedule(hdev);
- }
+ #define tx_ring_data(priv, idx) ((priv)->ring_data[idx])
  
+-#define hnae3_buf_size(_ring) ((_ring)->buf_size)
+-#define hnae3_page_order(_ring) (get_order(hnae3_buf_size(_ring)))
+-#define hnae3_page_size(_ring) (PAGE_SIZE << (u32)hnae3_page_order(_ring))
++#define hns3_buf_size(_ring) ((_ring)->buf_size)
++
++static inline unsigned int hns3_page_order(struct hns3_enet_ring *ring)
++{
++#if (PAGE_SIZE < 8192)
++	if (ring->buf_size > (PAGE_SIZE / 2))
++		return 1;
++#endif
++	return 0;
++}
++
++#define hns3_page_size(_ring) (PAGE_SIZE << hns3_page_order(_ring))
+ 
+ /* iterator for handling rings in ring group */
+ #define hns3_for_each_ring(pos, head) \
 -- 
 2.7.4
 
