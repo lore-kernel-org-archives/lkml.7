@@ -2,124 +2,207 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09A7C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905C0C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7906E206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E94206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbfG2KEP (ORCPT
+        id S1728305AbfG2KEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:04:15 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:48310 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728176AbfG2KDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:03:52 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AE8461A1473;
-        Mon, 29 Jul 2019 12:03:50 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A17241A147E;
-        Mon, 29 Jul 2019 12:03:50 +0200 (CEST)
-Received: from fsr-ub1664-016.ea.freescale.net (fsr-ub1664-016.ea.freescale.net [10.171.71.216])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3B633205F3;
-        Mon, 29 Jul 2019 12:03:50 +0200 (CEST)
-From:   Claudiu Manoil <claudiu.manoil@nxp.com>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>,
-        Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 3/4] dt-bindings: net: fsl: enetc: Add bindings for the central MDIO PCIe endpoint
-Date:   Mon, 29 Jul 2019 13:03:46 +0300
-Message-Id: <1564394627-3810-4-git-send-email-claudiu.manoil@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564394627-3810-1-git-send-email-claudiu.manoil@nxp.com>
-References: <1564394627-3810-1-git-send-email-claudiu.manoil@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 29 Jul 2019 06:04:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48288 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726358AbfG2KEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:04:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 74108AE86;
+        Mon, 29 Jul 2019 10:04:52 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 7E6DC1E4379; Mon, 29 Jul 2019 12:04:49 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 12:04:49 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Qian Cai <cai@lca.pw>, mingo@redhat.com, tj@kernel.org,
+        dchinner@redhat.com, fengguang.wu@intel.com, jack@suse.cz,
+        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] trace/writeback: fix Wstringop-truncation warnings
+Message-ID: <20190729100449.GA17833@quack2.suse.cz>
+References: <1562948087-5374-1-git-send-email-cai@lca.pw>
+ <20190716170339.1c44719d@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716170339.1c44719d@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The on-chip PCIe root complex that integrates the ENETC ethernet
-controllers also integrates a PCIe endpoint for the MDIO controller
-providing for centralized control of the ENETC mdio bus.
-Add bindings for this "central" MDIO Integrated PCIe Endpoint.
+On Tue 16-07-19 17:03:39, Steven Rostedt wrote:
+> On Fri, 12 Jul 2019 12:14:47 -0400
+> Qian Cai <cai@lca.pw> wrote:
+> 
+> > There are many of those warnings.
+> > 
+> > In file included from ./arch/powerpc/include/asm/paca.h:15,
+> >                  from ./arch/powerpc/include/asm/current.h:13,
+> >                  from ./include/linux/thread_info.h:21,
+> >                  from ./include/asm-generic/preempt.h:5,
+> >                  from ./arch/powerpc/include/generated/asm/preempt.h:1,
+> >                  from ./include/linux/preempt.h:78,
+> >                  from ./include/linux/spinlock.h:51,
+> >                  from fs/fs-writeback.c:19:
+> > In function 'strncpy',
+> >     inlined from 'perf_trace_writeback_page_template' at
+> > ./include/trace/events/writeback.h:56:1:
+> > ./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified
+> > bound 32 equals destination size [-Wstringop-truncation]
+> >   return __builtin_strncpy(p, q, size);
+> >          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > 
+> > Fix it by using strlcpy() which will always be NUL-terminated instead of
+> > strncpy(). strlcpy() has already been used at some places in this file.
+> > 
+> > Fixes: 455b2864686d ("writeback: Initial tracing support")
+> > Fixes: 028c2dd184c0 ("writeback: Add tracing to balance_dirty_pages")
+> > Fixes: e84d0a4f8e39 ("writeback: trace event writeback_queue_io")
+> > Fixes: b48c104d2211 ("writeback: trace event bdi_dirty_ratelimit")
+> > Fixes: cc1676d917f3 ("writeback: Move requeueing when I_SYNC set to writeback_sb_inodes()")
+> > Fixes: 9fb0a7da0c52 ("writeback: add more tracepoints")
+> > 
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > ---
+> >  include/trace/events/writeback.h | 20 ++++++++++----------
+> >  1 file changed, 10 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+> > index aa7f3aeac740..8e3b3c4fd964 100644
+> > --- a/include/trace/events/writeback.h
+> > +++ b/include/trace/events/writeback.h
+> > @@ -66,7 +66,7 @@
+> >  	),
+> >  
+> >  	TP_fast_assign(
+> > -		strncpy(__entry->name,
+> > +		strlcpy(__entry->name,
+> >  			mapping ? dev_name(inode_to_bdi(mapping->host)->dev) : "(unknown)", 32);
+> 
+> 
+> Not sure this is an issue or not, but although the fix looks legit (in
+> case a string is more that 31 bytes), strlcpy() does not pad the rest
+> of the string like strncpy() does. This means we can possibly leak data
+> through the ring buffer.
+> 
+> This may not be an issue as ftrace can only be used by a super user
+> account, but this code can also be used by perf. If it is possible for
+> a non admin account to enable these events through perf, then there is
+> a case of data leak.
+> 
+> Again, it may not be a big issue, but I'm just letting people know.
+> 
+> Note, this needs to go through the maintainer of the writeback.h, who
+> are those that created it, not the tracing maintainers.
 
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
----
-v1 - none
-v2 - none
-v3 - fixed spelling (commit message mostly)
+Yeah, I'd prefer to use strscpy_pad() for the copying as I'd be calmer if
+we don't leak uninitialized memory to userspace. Thanks!
 
- .../devicetree/bindings/net/fsl-enetc.txt     | 42 +++++++++++++++++--
- 1 file changed, 39 insertions(+), 3 deletions(-)
+								Honza
 
-diff --git a/Documentation/devicetree/bindings/net/fsl-enetc.txt b/Documentation/devicetree/bindings/net/fsl-enetc.txt
-index 25fc687419db..b7034ccbc1bd 100644
---- a/Documentation/devicetree/bindings/net/fsl-enetc.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-enetc.txt
-@@ -11,7 +11,9 @@ Required properties:
- 		  to parent node bindings.
- - compatible	: Should be "fsl,enetc".
- 
--1) The ENETC external port is connected to a MDIO configurable phy:
-+1. The ENETC external port is connected to a MDIO configurable phy
-+
-+1.1. Using the local ENETC Port MDIO interface
- 
- In this case, the ENETC node should include a "mdio" sub-node
- that in turn should contain the "ethernet-phy" node describing the
-@@ -47,8 +49,42 @@ Example:
- 		};
- 	};
- 
--2) The ENETC port is an internal port or has a fixed-link external
--connection:
-+1.2. Using the central MDIO PCIe endpoint device
-+
-+In this case, the mdio node should be defined as another PCIe
-+endpoint node, at the same level with the ENETC port nodes.
-+
-+Required properties:
-+
-+- reg		: Specifies PCIe Device Number and Function
-+		  Number of the ENETC endpoint device, according
-+		  to parent node bindings.
-+- compatible	: Should be "fsl,enetc-mdio".
-+
-+The remaining required mdio bus properties are standard, their bindings
-+already defined in Documentation/devicetree/bindings/net/mdio.txt.
-+
-+Example:
-+
-+	ethernet@0,0 {
-+		compatible = "fsl,enetc";
-+		reg = <0x000000 0 0 0 0>;
-+		phy-handle = <&sgmii_phy0>;
-+		phy-connection-type = "sgmii";
-+	};
-+
-+	mdio@0,3 {
-+		compatible = "fsl,enetc-mdio";
-+		reg = <0x000300 0 0 0 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		sgmii_phy0: ethernet-phy@2 {
-+			reg = <0x2>;
-+		};
-+	};
-+
-+2. The ENETC port is an internal port or has a fixed-link external
-+connection
- 
- In this case, the ENETC port node defines a fixed link connection,
- as specified by Documentation/devicetree/bindings/net/fixed-link.txt.
+> 
+> -- Steve
+> 
+> 
+> >  		__entry->ino = mapping ? mapping->host->i_ino : 0;
+> >  		__entry->index = page->index;
+> > @@ -110,7 +110,7 @@
+> >  		struct backing_dev_info *bdi = inode_to_bdi(inode);
+> >  
+> >  		/* may be called for files on pseudo FSes w/ unregistered bdi */
+> > -		strncpy(__entry->name,
+> > +		strlcpy(__entry->name,
+> >  			bdi->dev ? dev_name(bdi->dev) : "(unknown)", 32);
+> >  		__entry->ino		= inode->i_ino;
+> >  		__entry->state		= inode->i_state;
+> > @@ -190,7 +190,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
+> >  	),
+> >  
+> >  	TP_fast_assign(
+> > -		strncpy(__entry->name,
+> > +		strlcpy(__entry->name,
+> >  			dev_name(inode_to_bdi(inode)->dev), 32);
+> >  		__entry->ino		= inode->i_ino;
+> >  		__entry->sync_mode	= wbc->sync_mode;
+> > @@ -234,7 +234,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
+> >  		__field(unsigned int, cgroup_ino)
+> >  	),
+> >  	TP_fast_assign(
+> > -		strncpy(__entry->name,
+> > +		strlcpy(__entry->name,
+> >  			wb->bdi->dev ? dev_name(wb->bdi->dev) : "(unknown)", 32);
+> >  		__entry->nr_pages = work->nr_pages;
+> >  		__entry->sb_dev = work->sb ? work->sb->s_dev : 0;
+> > @@ -288,7 +288,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
+> >  		__field(unsigned int, cgroup_ino)
+> >  	),
+> >  	TP_fast_assign(
+> > -		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
+> > +		strlcpy(__entry->name, dev_name(wb->bdi->dev), 32);
+> >  		__entry->cgroup_ino = __trace_wb_assign_cgroup(wb);
+> >  	),
+> >  	TP_printk("bdi %s: cgroup_ino=%u",
+> > @@ -310,7 +310,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
+> >  		__array(char, name, 32)
+> >  	),
+> >  	TP_fast_assign(
+> > -		strncpy(__entry->name, dev_name(bdi->dev), 32);
+> > +		strlcpy(__entry->name, dev_name(bdi->dev), 32);
+> >  	),
+> >  	TP_printk("bdi %s",
+> >  		__entry->name
+> > @@ -335,7 +335,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
+> >  	),
+> >  
+> >  	TP_fast_assign(
+> > -		strncpy(__entry->name, dev_name(bdi->dev), 32);
+> > +		strlcpy(__entry->name, dev_name(bdi->dev), 32);
+> >  		__entry->nr_to_write	= wbc->nr_to_write;
+> >  		__entry->pages_skipped	= wbc->pages_skipped;
+> >  		__entry->sync_mode	= wbc->sync_mode;
+> > @@ -386,7 +386,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
+> >  	),
+> >  	TP_fast_assign(
+> >  		unsigned long *older_than_this = work->older_than_this;
+> > -		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
+> > +		strlcpy(__entry->name, dev_name(wb->bdi->dev), 32);
+> >  		__entry->older	= older_than_this ?  *older_than_this : 0;
+> >  		__entry->age	= older_than_this ?
+> >  				  (jiffies - *older_than_this) * 1000 / HZ : -1;
+> > @@ -597,7 +597,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
+> >  	),
+> >  
+> >  	TP_fast_assign(
+> > -		strncpy(__entry->name,
+> > +		strlcpy(__entry->name,
+> >  		        dev_name(inode_to_bdi(inode)->dev), 32);
+> >  		__entry->ino		= inode->i_ino;
+> >  		__entry->state		= inode->i_state;
+> > @@ -671,7 +671,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
+> >  	),
+> >  
+> >  	TP_fast_assign(
+> > -		strncpy(__entry->name,
+> > +		strlcpy(__entry->name,
+> >  			dev_name(inode_to_bdi(inode)->dev), 32);
+> >  		__entry->ino		= inode->i_ino;
+> >  		__entry->state		= inode->i_state;
+> 
 -- 
-2.17.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
