@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A999C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 889F1C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7CF2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59DCF20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429816;
-	bh=YT0Kd2W3fZQBfMb/+keZDlejzkDQF5rC1uaRgJMDZnc=;
+	s=default; t=1564429818;
+	bh=xwKZZt9RPsUw9lityUO2BIO1UFepdsEzObO9gq9lH30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wdbvbpy4Nkov7J6466t9XKwWtJvMMQyMuQkjvGNxAbu44oeglP4Kc8YNux6x+Lqtf
-	 PbgyMYfrJQeErrhaDiTZD8J1MbcA75AaLj7YOs0xbCqdZVb1bKVBXpbmhM6nC6ZUas
-	 9dpo8DeN5I2ZqeYAXl0I63Y34jd7WxbZ4dELQpCI=
+	b=ZhB1kCdj/PbSXrXh0K2F/ai0d+SxGCuYPLsIis172CbhFomZx+HvBG2RPXe4qrJfv
+	 BUq1Gf4R5JgGTaeGdJOXbL5ZmNJDHUD0kf6MGBRWrQ5CgsvrhJatcRWxL6zlqfA8j0
+	 6EK4ao0v4CqbmIy9AyruZW6bhrEuBclrfTmQGf5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbfG2TuP (ORCPT
+        id S2390383AbfG2TuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:50:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41060 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389880AbfG2TuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:50:13 -0400
+        id S1726516AbfG2TuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:50:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BEE92054F;
-        Mon, 29 Jul 2019 19:50:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45D21205F4;
+        Mon, 29 Jul 2019 19:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429812;
-        bh=YT0Kd2W3fZQBfMb/+keZDlejzkDQF5rC1uaRgJMDZnc=;
+        s=default; t=1564429814;
+        bh=xwKZZt9RPsUw9lityUO2BIO1UFepdsEzObO9gq9lH30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fy9u3dYT5jwhtfUutmNxIanG/csVgkgXFbATn1hHWLCDJIW4qq3jmtsHXgBpI9R6P
-         LVqJXy2ja92Slm5lQ9LMp47JXMGkluLR2K8ph8kAmR4vQwyp3x4QJkTXwltE1P9/4r
-         ntlUN0NQZbsHQ+7C7SBtBujfx86GVXxk8Y6U3nr8=
+        b=FJOWWj8Hle7zicwWaMVYJiNVpGW/22BtU71lXtkLA/QrKTLLQjg2l6o/LyERpDTvh
+         XlLaDcdzzXXvBEoaxrV42LiXzqY2cbkEKb46s2x0A2OpoCOPMjS/PokBJbf47jRbEv
+         accOeyegBFNSl9c+y0dxumZlaVHPSrX7EcVNL5fE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 102/215] f2fs: fix is_idle() check for discard type
-Date:   Mon, 29 Jul 2019 21:21:38 +0200
-Message-Id: <20190729190756.728874297@linuxfoundation.org>
+Subject: [PATCH 5.2 103/215] powerpc: silence a -Wcast-function-type warning in dawr_write_file_bool
+Date:   Mon, 29 Jul 2019 21:21:39 +0200
+Message-Id: <20190729190756.898918407@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,57 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 56659ce838456c6f2315ce8a4bd686ac4b23e9d1 ]
+[ Upstream commit 548c54acba5bd1388d50727a9a126a42d0cd4ad0 ]
 
-The discard thread should issue upto dpolicy->max_requests at once
-and wait for all those discard requests at once it reaches
-dpolicy->max_requests. It should then sleep for dpolicy->min_interval
-timeout before issuing the next batch of discard requests. But in the
-current code of is_idle(), it checks for dcc_info->queued_discard and
-aborts issuing the discard batch of max_requests. This
-dcc_info->queued_discard will be true always once one discard command
-is issued.
+In commit c1fe190c0672 ("powerpc: Add force enable of DAWR on P9
+option") the following piece of code was added:
 
-It is thus resulting into this type of discard request pattern -
+   smp_call_function((smp_call_func_t)set_dawr, &null_brk, 0);
 
-- Issue discard request#1
-- is_idle() returns false, discard thread waits for request#1 and then
-  sleeps for min_interval 50ms.
-- Issue discard request#2
-- is_idle() returns false, discard thread waits for request#2 and then
-  sleeps for min_interval 50ms.
-- and so on for all other discard requests, assuming f2fs is idle w.r.t
-  other conditions.
+Since GCC 8 this triggers the following warning about incompatible
+function types:
 
-With this fix, the pattern will look like this -
+  arch/powerpc/kernel/hw_breakpoint.c:408:21: error: cast between incompatible function types from 'int (*)(struct arch_hw_breakpoint *)' to 'void (*)(void *)' [-Werror=cast-function-type]
 
-- Issue discard request#1
-- Issue discard request#2
-  and so on upto max_requests of 8
-- Issue discard request#8
-- wait for min_interval 50ms.
+Since the warning is there for a reason, and should not be hidden behind
+a cast, provide an intermediate callback function to avoid the warning.
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: c1fe190c0672 ("powerpc: Add force enable of DAWR on P9 option")
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/hw_breakpoint.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 9e6721e15b24..cbdc2f88a98c 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2204,7 +2204,7 @@ static inline bool is_idle(struct f2fs_sb_info *sbi, int type)
- 		get_pages(sbi, F2FS_DIO_WRITE))
- 		return false;
+diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+index a293a53b4365..50262597c222 100644
+--- a/arch/powerpc/kernel/hw_breakpoint.c
++++ b/arch/powerpc/kernel/hw_breakpoint.c
+@@ -370,6 +370,11 @@ void hw_breakpoint_pmu_read(struct perf_event *bp)
+ bool dawr_force_enable;
+ EXPORT_SYMBOL_GPL(dawr_force_enable);
  
--	if (SM_I(sbi) && SM_I(sbi)->dcc_info &&
-+	if (type != DISCARD_TIME && SM_I(sbi) && SM_I(sbi)->dcc_info &&
- 			atomic_read(&SM_I(sbi)->dcc_info->queued_discard))
- 		return false;
++static void set_dawr_cb(void *info)
++{
++	set_dawr(info);
++}
++
+ static ssize_t dawr_write_file_bool(struct file *file,
+ 				    const char __user *user_buf,
+ 				    size_t count, loff_t *ppos)
+@@ -389,7 +394,7 @@ static ssize_t dawr_write_file_bool(struct file *file,
  
+ 	/* If we are clearing, make sure all CPUs have the DAWR cleared */
+ 	if (!dawr_force_enable)
+-		smp_call_function((smp_call_func_t)set_dawr, &null_brk, 0);
++		smp_call_function(set_dawr_cb, &null_brk, 0);
+ 
+ 	return rc;
+ }
 -- 
 2.20.1
 
