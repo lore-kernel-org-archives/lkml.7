@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DDFC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B3CC7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE01120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33F72070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431214;
-	bh=jMcefBxLFaoYMKd4VwmvofWNMZWR6VtwFsw+KOPPfxY=;
+	s=default; t=1564431221;
+	bh=HMENl/L5+knTn/Fjjyg+GxPo4hsqznlJ+G8e9eT390w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpO1tqT9BlALopIvXfexxUS6aAXC6Tgx9RP4BEhF+j6PryYJfv4wmDz1X5baWmbNg
-	 UiIC6Q/d7dg5iWc6eRw3xN9GHeDOxbydH8zkGZ1PhVhRrMwjanBzgj9QS0UjUz4oMb
-	 O9XtB8x62dk3mbgs06oWNa0pN8LhFH58mO9yrhvw=
+	b=SDbYkWRoS8UUnOQHTyoaebgA8wobq+3DwpkVRn49b8sYE6rfFWCVkwAEDY5pOdDjU
+	 QfBBMYeDhmOQtvLLI64VUpIPH2ANzN5VzZFidb6tZZNG43VCwVXQRXSj4h0fsuaJB4
+	 xBbpl7XUJy5W9KTKCHAoiJ75GnVyAWXRoyZzi0mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbfG2UNd (ORCPT
+        id S1730559AbfG2UNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:13:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42464 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:13:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728525AbfG2T3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:29:48 -0400
+        id S1728345AbfG2T3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:29:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B299D2070B;
-        Mon, 29 Jul 2019 19:29:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12D1A2070B;
+        Mon, 29 Jul 2019 19:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428587;
-        bh=jMcefBxLFaoYMKd4VwmvofWNMZWR6VtwFsw+KOPPfxY=;
+        s=default; t=1564428574;
+        bh=HMENl/L5+knTn/Fjjyg+GxPo4hsqznlJ+G8e9eT390w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eO6GGmuQgl5g8Zhx6YGrRDgxZPYovm2mEfdXGR+rbIJAycAmC9K3nUBp4EuOv7hsH
-         IaqICwHdBWlH2Pd0o4q1Mq6zt2HvxbGfkRUO5vdIYrUUoEpsbBzHQYlEy6bKHMjaSm
-         aE9iQ0F5kEKI5St3+1BYmW9XG7crdW3gxPFibS3M=
+        b=bsBVMb1oNqZ+dfEsE3oR03L0QB15oAL43iio4a4qwoq/CKusE3EdRtbbOCHRleEp5
+         /PEP/SiSgCepPgTdNS71U41TBw19fjCOfdmhuQRjssneXpKagVXE/gmywuvMTdU+08
+         95tz2qESeYo7t6hKvo9CRaOEfu/j+q7p5WK4am1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
+        stable@vger.kernel.org, Peter Robinson <pbrobinson@gmail.com>,
         Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 123/293] crypto: chacha20poly1305 - fix atomic sleep when using async algorithm
-Date:   Mon, 29 Jul 2019 21:20:14 +0200
-Message-Id: <20190729190834.013516728@linuxfoundation.org>
+Subject: [PATCH 4.14 119/293] crypto: ghash - fix unaligned memory access in ghash_setkey()
+Date:   Mon, 29 Jul 2019 21:20:10 +0200
+Message-Id: <20190729190833.700397051@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -62,193 +62,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit 7545b6c2087f4ef0287c8c9b7eba6a728c67ff8e upstream.
+commit 5c6bc4dfa515738149998bb0db2481a4fdead979 upstream.
 
-Clear the CRYPTO_TFM_REQ_MAY_SLEEP flag when the chacha20poly1305
-operation is being continued from an async completion callback, since
-sleeping may not be allowed in that context.
+Changing ghash_mod_init() to be subsys_initcall made it start running
+before the alignment fault handler has been installed on ARM.  In kernel
+builds where the keys in the ghash test vectors happened to be
+misaligned in the kernel image, this exposed the longstanding bug that
+ghash_setkey() is incorrectly casting the key buffer (which can have any
+alignment) to be128 for passing to gf128mul_init_4k_lle().
 
-This is basically the same bug that was recently fixed in the xts and
-lrw templates.  But, it's always been broken in chacha20poly1305 too.
-This was found using syzkaller in combination with the updated crypto
-self-tests which actually test the MAY_SLEEP flag now.
+Fix this by memcpy()ing the key to a temporary buffer.
 
-Reproducer:
+Don't fix it by setting an alignmask on the algorithm instead because
+that would unnecessarily force alignment of the data too.
 
-    python -c 'import socket; socket.socket(socket.AF_ALG, 5, 0).bind(
-    	       ("aead", "rfc7539(cryptd(chacha20-generic),poly1305-generic)"))'
-
-Kernel output:
-
-    BUG: sleeping function called from invalid context at include/crypto/algapi.h:426
-    in_atomic(): 1, irqs_disabled(): 0, pid: 1001, name: kworker/2:2
-    [...]
-    CPU: 2 PID: 1001 Comm: kworker/2:2 Not tainted 5.2.0-rc2 #5
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
-    Workqueue: crypto cryptd_queue_worker
-    Call Trace:
-     __dump_stack lib/dump_stack.c:77 [inline]
-     dump_stack+0x4d/0x6a lib/dump_stack.c:113
-     ___might_sleep kernel/sched/core.c:6138 [inline]
-     ___might_sleep.cold.19+0x8e/0x9f kernel/sched/core.c:6095
-     crypto_yield include/crypto/algapi.h:426 [inline]
-     crypto_hash_walk_done+0xd6/0x100 crypto/ahash.c:113
-     shash_ahash_update+0x41/0x60 crypto/shash.c:251
-     shash_async_update+0xd/0x10 crypto/shash.c:260
-     crypto_ahash_update include/crypto/hash.h:539 [inline]
-     poly_setkey+0xf6/0x130 crypto/chacha20poly1305.c:337
-     poly_init+0x51/0x60 crypto/chacha20poly1305.c:364
-     async_done_continue crypto/chacha20poly1305.c:78 [inline]
-     poly_genkey_done+0x15/0x30 crypto/chacha20poly1305.c:369
-     cryptd_skcipher_complete+0x29/0x70 crypto/cryptd.c:279
-     cryptd_skcipher_decrypt+0xcd/0x110 crypto/cryptd.c:339
-     cryptd_queue_worker+0x70/0xa0 crypto/cryptd.c:184
-     process_one_work+0x1ed/0x420 kernel/workqueue.c:2269
-     worker_thread+0x3e/0x3a0 kernel/workqueue.c:2415
-     kthread+0x11f/0x140 kernel/kthread.c:255
-     ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-Fixes: 71ebc4d1b27d ("crypto: chacha20poly1305 - Add a ChaCha20-Poly1305 AEAD construction, RFC7539")
-Cc: <stable@vger.kernel.org> # v4.2+
-Cc: Martin Willi <martin@strongswan.org>
+Fixes: 2cdc6899a88e ("crypto: ghash - Add GHASH digest algorithm for GCM")
+Reported-by: Peter Robinson <pbrobinson@gmail.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Eric Biggers <ebiggers@google.com>
+Tested-by: Peter Robinson <pbrobinson@gmail.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/chacha20poly1305.c |   30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ crypto/ghash-generic.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/crypto/chacha20poly1305.c
-+++ b/crypto/chacha20poly1305.c
-@@ -67,6 +67,8 @@ struct chachapoly_req_ctx {
- 	unsigned int cryptlen;
- 	/* Actual AD, excluding IV */
- 	unsigned int assoclen;
-+	/* request flags, with MAY_SLEEP cleared if needed */
-+	u32 flags;
- 	union {
- 		struct poly_req poly;
- 		struct chacha_req chacha;
-@@ -76,8 +78,12 @@ struct chachapoly_req_ctx {
- static inline void async_done_continue(struct aead_request *req, int err,
- 				       int (*cont)(struct aead_request *))
+--- a/crypto/ghash-generic.c
++++ b/crypto/ghash-generic.c
+@@ -34,6 +34,7 @@ static int ghash_setkey(struct crypto_sh
+ 			const u8 *key, unsigned int keylen)
  {
--	if (!err)
-+	if (!err) {
-+		struct chachapoly_req_ctx *rctx = aead_request_ctx(req);
+ 	struct ghash_ctx *ctx = crypto_shash_ctx(tfm);
++	be128 k;
+ 
+ 	if (keylen != GHASH_BLOCK_SIZE) {
+ 		crypto_shash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+@@ -42,7 +43,12 @@ static int ghash_setkey(struct crypto_sh
+ 
+ 	if (ctx->gf128)
+ 		gf128mul_free_4k(ctx->gf128);
+-	ctx->gf128 = gf128mul_init_4k_lle((be128 *)key);
 +
-+		rctx->flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
- 		err = cont(req);
-+	}
++	BUILD_BUG_ON(sizeof(k) != GHASH_BLOCK_SIZE);
++	memcpy(&k, key, GHASH_BLOCK_SIZE); /* avoid violating alignment rules */
++	ctx->gf128 = gf128mul_init_4k_lle(&k);
++	memzero_explicit(&k, GHASH_BLOCK_SIZE);
++
+ 	if (!ctx->gf128)
+ 		return -ENOMEM;
  
- 	if (err != -EINPROGRESS && err != -EBUSY)
- 		aead_request_complete(req, err);
-@@ -144,7 +150,7 @@ static int chacha_decrypt(struct aead_re
- 		dst = scatterwalk_ffwd(rctx->dst, req->dst, req->assoclen);
- 	}
- 
--	skcipher_request_set_callback(&creq->req, aead_request_flags(req),
-+	skcipher_request_set_callback(&creq->req, rctx->flags,
- 				      chacha_decrypt_done, req);
- 	skcipher_request_set_tfm(&creq->req, ctx->chacha);
- 	skcipher_request_set_crypt(&creq->req, src, dst,
-@@ -188,7 +194,7 @@ static int poly_tail(struct aead_request
- 	memcpy(&preq->tail.cryptlen, &len, sizeof(len));
- 	sg_set_buf(preq->src, &preq->tail, sizeof(preq->tail));
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_tail_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, preq->src,
-@@ -219,7 +225,7 @@ static int poly_cipherpad(struct aead_re
- 	sg_init_table(preq->src, 1);
- 	sg_set_buf(preq->src, &preq->pad, padlen);
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_cipherpad_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, preq->src, NULL, padlen);
-@@ -250,7 +256,7 @@ static int poly_cipher(struct aead_reque
- 	sg_init_table(rctx->src, 2);
- 	crypt = scatterwalk_ffwd(rctx->src, crypt, req->assoclen);
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_cipher_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, crypt, NULL, rctx->cryptlen);
-@@ -280,7 +286,7 @@ static int poly_adpad(struct aead_reques
- 	sg_init_table(preq->src, 1);
- 	sg_set_buf(preq->src, preq->pad, padlen);
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_adpad_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, preq->src, NULL, padlen);
-@@ -304,7 +310,7 @@ static int poly_ad(struct aead_request *
- 	struct poly_req *preq = &rctx->u.poly;
- 	int err;
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_ad_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, req->src, NULL, rctx->assoclen);
-@@ -331,7 +337,7 @@ static int poly_setkey(struct aead_reque
- 	sg_init_table(preq->src, 1);
- 	sg_set_buf(preq->src, rctx->key, sizeof(rctx->key));
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_setkey_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, preq->src, NULL, sizeof(rctx->key));
-@@ -355,7 +361,7 @@ static int poly_init(struct aead_request
- 	struct poly_req *preq = &rctx->u.poly;
- 	int err;
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_init_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 
-@@ -393,7 +399,7 @@ static int poly_genkey(struct aead_reque
- 
- 	chacha_iv(creq->iv, req, 0);
- 
--	skcipher_request_set_callback(&creq->req, aead_request_flags(req),
-+	skcipher_request_set_callback(&creq->req, rctx->flags,
- 				      poly_genkey_done, req);
- 	skcipher_request_set_tfm(&creq->req, ctx->chacha);
- 	skcipher_request_set_crypt(&creq->req, creq->src, creq->src,
-@@ -433,7 +439,7 @@ static int chacha_encrypt(struct aead_re
- 		dst = scatterwalk_ffwd(rctx->dst, req->dst, req->assoclen);
- 	}
- 
--	skcipher_request_set_callback(&creq->req, aead_request_flags(req),
-+	skcipher_request_set_callback(&creq->req, rctx->flags,
- 				      chacha_encrypt_done, req);
- 	skcipher_request_set_tfm(&creq->req, ctx->chacha);
- 	skcipher_request_set_crypt(&creq->req, src, dst,
-@@ -451,6 +457,7 @@ static int chachapoly_encrypt(struct aea
- 	struct chachapoly_req_ctx *rctx = aead_request_ctx(req);
- 
- 	rctx->cryptlen = req->cryptlen;
-+	rctx->flags = aead_request_flags(req);
- 
- 	/* encrypt call chain:
- 	 * - chacha_encrypt/done()
-@@ -472,6 +479,7 @@ static int chachapoly_decrypt(struct aea
- 	struct chachapoly_req_ctx *rctx = aead_request_ctx(req);
- 
- 	rctx->cryptlen = req->cryptlen - POLY1305_DIGEST_SIZE;
-+	rctx->flags = aead_request_flags(req);
- 
- 	/* decrypt call chain:
- 	 * - poly_genkey/done()
 
 
