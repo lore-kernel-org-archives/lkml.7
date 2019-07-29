@@ -2,109 +2,120 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E7DC7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8974C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A7D2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MfyclBA4"
+	by mail.kernel.org (Postfix) with ESMTP id 87D4E216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388110AbfG2PdB (ORCPT
+        id S2388112AbfG2PdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:33:01 -0400
-Received: from mail-eopbgr10083.outbound.protection.outlook.com ([40.107.1.83]:6420
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387925AbfG2PdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:33:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R6+COZ9gmuo7gEdvMYM2c5sM7uBI/rqq34T8DuIWZxZ78M1gHwAyeb8Rn0m8b2qJqbO7BntRvWEn69NGmo3wZt30XP8PvRXchBnJv3oPJYToNcCTM6bLN6B+bVyUrQAaKGDw3dprpulqpNZGW0zcSRqgAAtfkCUgfhMGRIu0ND+MLcDmrWO4H+PQQS4TTUPSEeFN/x8xohAhcYR3sVu18ru3RkTDsLeRyDYN9NaUHLFW/aczAqB9/g88AuX1OJv75vLoyxZhmUOzGs4QT+73IfXA8huVTQJekoY3WPHa2iz0Aj8S69nZThcrZGOcT/dyBMXvcF9VfUcTYGNIQmnrsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ue8RTdPdSLbwKJ+qvvCSHaeB9OyDARc8Ok36XeQfWhQ=;
- b=ngz4qEsLmneZTdUFFzyLyqMDSQU/ZqunulwOobu6M4myeNV6eMT65ofX+z4Z3hUfaD4Ga/9yrrj+cb3yGjtzyoHW/3m0ANeWX/D0PNjsmi4rpkY2PFnIvIOuy1W5e9wgivaZA5QP6+LNWDvs2IzLpJmecJi7/QfId3wNvm14poeJm1su/oickF4ypia8+zUkQIGe1ylu1utyVf4/P+VQ7FjyK0MWpgIEPakHXw6vjWq9qfsdp3XJBNMykuRP4ld1Mlo55ALYezxDdtO9EIKRMWtwah8uY9Q9s5dFt47kDeyEZiRWFR/6UBwrrn45nP2rUxVuwdV6jcqgt2JjPO8oPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ue8RTdPdSLbwKJ+qvvCSHaeB9OyDARc8Ok36XeQfWhQ=;
- b=MfyclBA4FC+RYBMFryTzQMjyXNpGgzHL5JzNoifBPMV2GYLyYzTp05EXtOPMA2zS0//FUCyPkCLTcYL6iqi4RB8fkfkQiY50IBkmwMH/k7HHoJKdXcrkwTYaEyEahUDoKts/96JqojGuvwRoN1e4i78k/59etyQaMjQ342tx4Lg=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3920.eurprd04.prod.outlook.com (52.134.17.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Mon, 29 Jul 2019 15:32:57 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::7c64:5296:4607:e10]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::7c64:5296:4607:e10%5]) with mapi id 15.20.2094.017; Mon, 29 Jul 2019
- 15:32:57 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     Chris Spencer <christopher.spencer@sea.co.uk>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 07/14] crypto: caam - drop 64-bit only wr/rd_reg64()
-Thread-Topic: [PATCH v6 07/14] crypto: caam - drop 64-bit only wr/rd_reg64()
-Thread-Index: AQHVPLPbJqU/tciNO0+eJySSQ03gsQ==
-Date:   Mon, 29 Jul 2019 15:32:57 +0000
-Message-ID: <VI1PR0402MB34856CBB1DEB39A6716B6CE498DD0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190717152458.22337-1-andrew.smirnov@gmail.com>
- <20190717152458.22337-8-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4deb7ea3-7c6f-4afe-eff9-08d7143a0845
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3920;
-x-ms-traffictypediagnostic: VI1PR0402MB3920:
-x-microsoft-antispam-prvs: <VI1PR0402MB39206F30DD825693E67EE82D98DD0@VI1PR0402MB3920.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:854;
-x-forefront-prvs: 01136D2D90
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(346002)(366004)(136003)(199004)(189003)(71200400001)(2501003)(229853002)(76176011)(102836004)(71190400001)(4326008)(74316002)(99286004)(256004)(53546011)(7696005)(446003)(86362001)(186003)(5660300002)(55016002)(26005)(2906002)(53936002)(478600001)(6436002)(6246003)(8936002)(476003)(110136005)(66066001)(66556008)(68736007)(54906003)(3846002)(6116002)(66946007)(66446008)(52536014)(486006)(7736002)(305945005)(14454004)(25786009)(9686003)(33656002)(44832011)(558084003)(8676002)(66476007)(76116006)(91956017)(316002)(64756008)(81166006)(6506007)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3920;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: isTcHUdicfFIaLeY/9U9u43fQSISZUTgOaZHSOZ6OZdRRgm85eDe8WBE8Z+KXubeKLeixItnJY+S9czxUpQvBJJRurxtk8mBbIDlKoWw2j0475xngTgzV88OWj17ow/axfz+1MYK6tKt83LrPNX+agfM9P9xBNbkxFpT4ZTHubtq0nfHuxLOycvbvq3F9jH2NeST0ibMLBA4dK6jwRfzxnzlLBdZgfPMmm6HaPqG870npwlkNJ+6eyQ9dXD/h5ApfeSJgyERrWNnv+TVqZq4qlJdWutjMe4X8iqXRw97QeqoT5vYKIeDd2F6rzgWfjuMW8xYgvvOzW20oos7LM66mzoyjHzCGUF/7RvCt5PHzCN0RHw9YjTZRRiUhM7El97WmqrmDeBqEHeNGyZn32eydfB6hUv8hfm+VEwWI7faZko=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 29 Jul 2019 11:33:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:45808 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387887AbfG2PdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:33:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15FDA337;
+        Mon, 29 Jul 2019 08:33:23 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 132313F694;
+        Mon, 29 Jul 2019 08:33:21 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 16:33:19 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Nikolay Borisov <nborisov@suse.com>, linux-btrfs@vger.kernel.org,
+        paulmck@linux.ibm.com, andrea.parri@amarulasolutions.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] Refactor snapshot vs nocow writers locking
+Message-ID: <20190729153319.GH2368@arrakis.emea.arm.com>
+References: <20190719083949.5351-1-nborisov@suse.com>
+ <ed015bb1-490e-7102-d172-73c1d069476c@arm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4deb7ea3-7c6f-4afe-eff9-08d7143a0845
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 15:32:57.3775
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3920
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed015bb1-490e-7102-d172-73c1d069476c@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/2019 6:25 PM, Andrey Smirnov wrote:=0A=
-> Since 32-bit of both wr_reg64 and rd_reg64 now use 64-bit IO helpers,=0A=
-> these functions should no longer be necessary. No functional change inten=
-ded.=0A=
-> =0A=
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+Some nitpicking below:
+
+On Mon, Jul 29, 2019 at 03:13:42PM +0100, Valentin Schneider wrote:
+> specs.tla:
+> 
+> ---- MODULE specs ----
+> EXTENDS Integers, Sequences, TLC
+> 
+> CONSTANTS
+>     NR_WRITERS,
+>     NR_READERS,
+>     WRITER_TASK,
+>     READER_TASK
+> 
+> WRITERS == {WRITER_TASK} \X (1..NR_WRITERS)
+> READERS == {READER_TASK} \X (1..NR_READERS)
+> THREADS == WRITERS \union READERS
+
+Recommendation: use symbolic values for WRITERS and READERS (defined in
+.cfg: e.g. r1, r2, r3, w1, w2, w2). It allows you do to symmetry
+optimisations. We've also hit a TLC bug in the past with process values
+made up of a Cartesian product (though it may have been fixed since).
+
+> macro ReadLock(tid)
+> {
+>     if (lock_state = "idle" \/ lock_state = "read_locked") {
+>         lock_state := "read_locked";
+>         threads[tid] := "read_locked";
+>     } else {
+>         assert lock_state = "write_locked";
+>         \* waiting for writers to finish
+>         threads[tid] := "write_waiting";
+>         await lock_state = "" \/ lock_state = "read_locked";
+
+lock_state = "idle"?
+
+> macro WriteLock(tid)
+> {
+>     if (lock_state = "idle" \/ lock_state = "write_locked") {
+>         lock_state := "write_locked";
+>         threads[tid] := "write_locked";
+>     } else {
+>         assert lock_state = "read_locked";
+>         \* waiting for readers to finish
+>         threads[tid] := "read_waiting";
+>         await lock_state = "idle" \/ lock_state = "write_locked";
+>     };
+> }
+
+I'd say that's one of the pitfalls of PlusCal. The above is executed
+atomically, so you'd have the lock_state read and updated in the same
+action. Looking at the C patches, there is an
+atomic_read(&lock->readers) followed by a
+percpu_counter_inc(&lock->writers). Between these two, you can have
+"readers" becoming non-zero via a different CPU.
+
+My suggestion would be to use procedures with labels to express the
+non-atomicity of such sequences.
+
+> macro ReadUnlock(tid) {
+>     if (threads[tid] = "read_locked") {
+>         threads[tid] := "idle";
+>         if (\A thread \in THREADS: threads[thread] # "read_locked") {
+>             \* we were the last read holder, everyone else should be waiting, unlock the lock
+>             lock_state := "idle";
+>         };
+>     };
+> }
+
+I'd make this close to the proposed C code with atomic counters. You'd
+not be able to check each thread atomically in practice anyway.
+
+-- 
+Catalin
