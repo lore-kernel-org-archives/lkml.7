@@ -2,158 +2,172 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1003C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764F1C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80112070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3ED206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="ko2iqzL4";
-	dkim=pass (1024-bit key) header.d=cisco.onmicrosoft.com header.i=@cisco.onmicrosoft.com header.b="ecWDMY/3"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="C3J51/ko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfG2RdT (ORCPT
+        id S2387630AbfG2RdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 13:33:19 -0400
-Received: from rcdn-iport-8.cisco.com ([173.37.86.79]:1752 "EHLO
-        rcdn-iport-8.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727438AbfG2RdT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:33:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=462; q=dns/txt; s=iport;
-  t=1564421598; x=1565631198;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=DnzRDcKw8LCr6kwuLsFsSDdA5JtrsMkypm5zzHhVE3Y=;
-  b=ko2iqzL4llDCHDw3CMt3XE1QdZ6aY8V5lb3FyKun2eaBxWvqatU6pZeL
-   +8fQkVEqnI7PZr/wYm1HIBztT4igkZls24mPrZGaM/YIb4EdH/j7Y7lry
-   pj/0IepOFNujhfFNN8HpcekqhBxTP86qs8s+8U6dn7WEgtmmJr/MdJUPp
-   8=;
-IronPort-PHdr: =?us-ascii?q?9a23=3A/+6wqxAGfVJBZFDZA7RrUyQJPHJ1sqjoPgMT9p?=
- =?us-ascii?q?ssgq5PdaLm5Zn5IUjD/qs03kTRU9Dd7PRJw6rNvqbsVHZIwK7JsWtKMfkuHw?=
- =?us-ascii?q?QAld1QmgUhBMCfDkiuN+XhbyU3F8dqX15+9Hb9Ok9QS47z?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0ATAAAWKz9d/5ldJa1mGgEBAQEBAgE?=
- =?us-ascii?q?BAQEHAgEBAQGBVQMBAQEBCwGBQ1ADgUIgBAsqh2UDjQOCW5dTgS6BJANUCQE?=
- =?us-ascii?q?BAQwBAS0CAQGEQAKCbCM2Bw4BAwEBBAEBAgEGbYUeDIVLAQEBAgESLgEBNwE?=
- =?us-ascii?q?ECwIBCEYyJQIEAQ0FIoMAgWsDDg8BoUUCgTiIYIIjgnoBAQWFCxiCEwmBNAG?=
- =?us-ascii?q?LXxeBQD+BEScfgkw+iAGCJo5Nhi6WAAkCghqUFBuCHpVwjTuXVgIEAgQFAg4?=
- =?us-ascii?q?BAQWBVwongVhwFWUBgkGCQoNxilNygSmNQwEB?=
-X-IronPort-AV: E=Sophos;i="5.64,323,1559520000"; 
-   d="scan'208";a="605095987"
-Received: from rcdn-core-2.cisco.com ([173.37.93.153])
-  by rcdn-iport-8.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 29 Jul 2019 17:26:12 +0000
-Received: from XCH-ALN-001.cisco.com (xch-aln-001.cisco.com [173.36.7.11])
-        by rcdn-core-2.cisco.com (8.15.2/8.15.2) with ESMTPS id x6THQCvM032638
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
-        Mon, 29 Jul 2019 17:26:12 GMT
-Received: from xhs-aln-003.cisco.com (173.37.135.120) by XCH-ALN-001.cisco.com
- (173.36.7.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Jul
- 2019 12:26:11 -0500
-Received: from xhs-aln-002.cisco.com (173.37.135.119) by xhs-aln-003.cisco.com
- (173.37.135.120) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Jul
- 2019 12:26:11 -0500
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (173.37.151.57)
- by xhs-aln-002.cisco.com (173.37.135.119) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 29 Jul 2019 12:26:11 -0500
+        Mon, 29 Jul 2019 13:33:25 -0400
+Received: from mail-eopbgr810130.outbound.protection.outlook.com ([40.107.81.130]:30795
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726709AbfG2RdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 13:33:24 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GNIK0bXNlOwzjjNqhAzELU9kNrgF51BsmEsRyJblrPubY9jj7vN81JPz6V2s1YQVVnffEJsQC0P0Q4r5RO6eF4QHHu+feLRTT2BzKh9auSx9Fa2pHjtU3RwKWQxRcXZn60dndUoZEE5HfxnlL4te4dwRy9705GTf7xbz1vOIH3Wb+isrKixms5MhBTF28xPVTDsI5ZAsTOO83TYRIuW/CIQZraSXWXF2wW/HjPAr1J3C/7EsZtPUxbJWTQkbRqov/NEgt8xYl/5p/bh+OF85G8uH8YC7pC2Zy+FJcfyyyipVHs7I4jfzYf7mxj3ANN0fbqZ2HiOwvKrQFMOjZb2ZBA==
+ b=YHswST6a360En6gjh1ZsbN/1jq7s73zqk/NGoWd2PH1lSR9cXxHuzPCgOX5+W+kbdTGmNdTa3WICH7syrdhtjrKe3mkuMIkG1yMgBL7J2i4Li+bop4Mbz+w0YxiBuW8kJkZRGBYyGS/lzt2cNMOKGmxDTJkVPwQ0xcCgWqcP4otMh/Ho/EeujGumO30bpoLD31ForcaY5zTPdCR9fclJ23sg//2HEDTuhhWDJlGZugLkKVE+c/xL3mL65o9oDaqeAvI9nyRY0CLcszEmcihxTBkn3BFUSelUZRx+48596VAYri9cNq4oNMcIU2nG/uzTzMx6mlWuHYOmQSqlXfjhXg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sTchYUz6py+HpzKadvTZ38+nJ+pBLombCgxcw/5c0h8=;
- b=fFY+de+tIVCX4LfJGIeLv/0dZ10t+kyfQNNWrRIIa92035or5gzE7kJUUHjarCQGshARRPtnq9VdLFV47Cm/0/02H2V+ezV4PEVQpNnbALVRU7tfBzB4JHEwTyNU6sVllbIXa2yFRUXsp32eq0txhIfxMVALpGcQd2FU8meJHH7Z+gIUD/6EikTtVVPDn6dn4fxrA0OhmE8HO6zcSfqdebuPb4wdOBbUC5cu24P8/ugAZ6IRAAq8EDcr4aS5XsW3hGYOO2Mu0iA/sbLCaJj2FxHA3FKFN3HBlAe3FkvddPgNz466l+CQzQ1/MdKBHZ1WXVK01NVV15rqRWPL08ZBKA==
+ bh=cFu0qygaFKWH4Ao14C/g0B+eJfnQFCMH4W8ZiqEBU0Q=;
+ b=Vm7oC90diOSqxI9YpQi6PIrERYvQKYuyYpSyP9Br1iZafx9DKc5p7bC9OEOL4Zw4R841Sx0gb8l6ude6nY271dlxO6xxGO8qcJVLzNL6ukVEPqACcglmN7H102crR+F30u/wKZEKEOBVklnPA16dyLgKd728sjZt4Mh/ICPs1b6ouFDQ6/PJiE39xJ8xTXeUzXHRjC5Dtpq7rHLM3aZRPg2hzxzJwPwDmLADsclKlzkpj5bK+wvHON6Oz10DHtQMwUR3ZQzUvbfw+AQw18U33bR9VrtLCPR3Ps02L5VLH2RlLjeRzKwVu7DhU0zyrSkDgjt1+oBCn5qiW+kh2srcxg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=cisco.com;dmarc=pass action=none
- header.from=cisco.com;dkim=pass header.d=cisco.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
- s=selector2-cisco-onmicrosoft-com;
+ smtp.mailfrom=wavecomp.com;dmarc=pass action=none
+ header.from=mips.com;dkim=pass header.d=mips.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sTchYUz6py+HpzKadvTZ38+nJ+pBLombCgxcw/5c0h8=;
- b=ecWDMY/3seZbW62Uiz5hqKFxoJcLuMjF02qBCjpTpfOnuNd6hwz5mi7dqFrpVmE9r9Zlw+oqAk862leSnWi/vt0RDfc43dMSHxrjMave1IN4ekajjfG+AnpDPtzWYIgUHiVZcqAWa2iWoCypB7UovQLWnFM4GITY7EJk+ryER/Y=
-Received: from BY5PR11MB4007.namprd11.prod.outlook.com (10.255.161.92) by
- BY5PR11MB3928.namprd11.prod.outlook.com (10.255.161.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Mon, 29 Jul 2019 17:26:10 +0000
-Received: from BY5PR11MB4007.namprd11.prod.outlook.com
- ([fe80::a9a1:897e:f584:9d6f]) by BY5PR11MB4007.namprd11.prod.outlook.com
- ([fe80::a9a1:897e:f584:9d6f%6]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
- 17:26:10 +0000
-From:   "Stefan Schaeckeler (sschaeck)" <sschaeck@cisco.com>
-To:     Andrew Jeffery <andrew@aj.id.au>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/17] ARM: dts: aspeed-g5: Move EDAC node to APB
-Thread-Topic: [PATCH 01/17] ARM: dts: aspeed-g5: Move EDAC node to APB
-Thread-Index: AQHVQ3SkzIRhhRUUW0+FMgPuy4Chg6bhaSoA
-Date:   Mon, 29 Jul 2019 17:26:10 +0000
-Message-ID: <8F0B09F9-A2EA-4A88-BE8A-A8869FCE178A@cisco.com>
-References: <20190726053959.2003-1-andrew@aj.id.au>
- <20190726053959.2003-2-andrew@aj.id.au>
-In-Reply-To: <20190726053959.2003-2-andrew@aj.id.au>
+ bh=cFu0qygaFKWH4Ao14C/g0B+eJfnQFCMH4W8ZiqEBU0Q=;
+ b=C3J51/koLeztasxwNgB3BFWJW90NB8C8fYPERjUPvLdLjYtd0xC/SMZFLcay3k0leNpoBIOv1RADgDzYDm0H93pkFyRLLJ2Pv1tS/GkCa0y4/YhCyZb8I5un5FzucJV/PnteYTosXE4irE7rx3yOXVDWk9Moum5/MU6h3UxG5Yk=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1437.namprd22.prod.outlook.com (10.174.169.164) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.14; Mon, 29 Jul 2019 17:33:09 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::105a:1595:b6ef:cbdf]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::105a:1595:b6ef:cbdf%4]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
+ 17:33:09 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Chuanhong Guo <gch981213@gmail.com>
+CC:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>
+Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding
+ documentation
+Thread-Topic: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding
+ documentation
+Thread-Index: AQHVRjOw3AW/i5aXnkGo9okZQ3kHgA==
+Date:   Mon, 29 Jul 2019 17:33:09 +0000
+Message-ID: <20190729173307.ex2mf5hikzxl534v@pburton-laptop>
+References: <20190724022310.28010-1-gch981213@gmail.com>
+ <20190724022310.28010-5-gch981213@gmail.com>
+In-Reply-To: <20190724022310.28010-5-gch981213@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/10.1b.0.190715
+x-clientproxiedby: BYAPR05CA0035.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::48) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+user-agent: NeoMutt/20180716
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sschaeck@cisco.com; 
-x-originating-ip: [2001:420:30d:1254:1000:5c0c:8a0d:62f5]
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 290499c3-57b7-4bc6-d03c-08d71449d931
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BY5PR11MB3928;
-x-ms-traffictypediagnostic: BY5PR11MB3928:
-x-microsoft-antispam-prvs: <BY5PR11MB39288983C7EAAF8EDC1BF363C7DD0@BY5PR11MB3928.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-ms-office365-filtering-correlation-id: b7b67f9f-7868-4a47-9969-08d7144ad2a2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1437;
+x-ms-traffictypediagnostic: MWHPR2201MB1437:
+x-microsoft-antispam-prvs: <MWHPR2201MB143757B72ADE3B76B7D0DFB4C1DD0@MWHPR2201MB1437.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1284;
 x-forefront-prvs: 01136D2D90
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(376002)(346002)(39860400002)(189003)(199004)(66556008)(102836004)(6116002)(66476007)(71190400001)(76116006)(53546011)(5660300002)(6506007)(66446008)(36756003)(64756008)(71200400001)(99286004)(486006)(66946007)(76176011)(6246003)(14454004)(186003)(53936002)(305945005)(6512007)(54906003)(110136005)(229853002)(5024004)(256004)(6436002)(81166006)(81156014)(11346002)(4326008)(68736007)(4744005)(316002)(2906002)(8676002)(33656002)(2616005)(8936002)(478600001)(6486002)(2501003)(446003)(7736002)(476003)(58126008)(86362001)(46003)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB3928;H:BY5PR11MB4007.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: cisco.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(39840400004)(366004)(396003)(136003)(346002)(376002)(189003)(199004)(33716001)(6436002)(52116002)(76176011)(7416002)(25786009)(229853002)(6916009)(26005)(53936002)(3846002)(71190400001)(71200400001)(446003)(476003)(6486002)(58126008)(68736007)(8676002)(486006)(256004)(11346002)(186003)(6116002)(316002)(44832011)(1411001)(6246003)(4326008)(478600001)(14454004)(81156014)(66556008)(64756008)(66066001)(54906003)(81166006)(5660300002)(386003)(42882007)(1076003)(6512007)(2906002)(9686003)(6506007)(305945005)(7736002)(99286004)(66476007)(8936002)(66446008)(66946007)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1437;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UFo7tZdMmSrDEQWmUTk7cNubH0pmCcmG3xLyZvW66PbdiCMzXst7Abok7MIqoZXtpvb6WEnE6rbwfNO0jIrVM4LwYQ7yHrUo1A2j32Ukt8Jf3Vw3qwZHqj7KxhN1VO+1XVEIJNxvCsrX0uK87ZJVPL3aG9z69/pmKuv4liFElmJfqKz71m3uB8bhT0HpoZDAnLd57jockQB4NM+KevP5WtTgZiiutqrpZ0huYunxtYeybIZOpVosCLm7l3n6PD324OVoqDSOodaaNIO95j8i36OmJM7bx3IqUfaKM+G7cvivS1B6gvywCp8G0CEtl0U+0zwhNpPdTUw4+3f5OtRadkVWKhROwKiqRrP7NnQozYVPouC/4XluvOydeBZTpX9CV5//OIVOqY9aHhq7qMoOUw00FxDkP2LZSPzrC36jevY=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <756A23CAC08DC448858086B25C1F218A@namprd11.prod.outlook.com>
+x-microsoft-antispam-message-info: qQDvbC9kCq/C6uU7fZ7/hjODgg4uf5t6DyDcQT7D5pZhd0MWXc/LJNYVnrXVdWRQ1gHrD91ILe3QQy+pjhLEQmHTe/q1rvwgK1/eW+rzrbVI2QO4K4qUZ6DfnClAcBIffd35Jwx5DiIegx9ks3lDYaonBAQzgDpUvuzFaxIcSgqRzwz5GNlXv6SE8wSw++b9nr6/ijZU/GNrCuXJGP2ps28Zg1Q2lYZSyGnQzrtLnmtLdDszs6Nexmaf1MAu54Oquhke3hQDgBjjyonf03fFjND+f1dJYfQGQSkE+L9br6pYx3K+3T3WxBrkUPRdnnTJT7T0zyfgzN527CGaYfSVpZoQBlDikSqZEOwKa/PBekPe0nU6k+0Adjzm5Bh1HsAmzKpwSJjWndAZjvEI59PQJmokcSZodcujZBZv998VsPs=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C26CC762CCD7CF42A8FC0CCA4047FDE4@namprd22.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 290499c3-57b7-4bc6-d03c-08d71449d931
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 17:26:10.2564
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7b67f9f-7868-4a47-9969-08d7144ad2a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 17:33:09.2423
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sschaeck@cisco.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3928
-X-OriginatorOrg: cisco.com
-X-Outbound-SMTP-Client: 173.36.7.11, xch-aln-001.cisco.com
-X-Outbound-Node: rcdn-core-2.cisco.com
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1437
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, July 25, 2019 at 10:40 PM, Andrew Jeffery wrote:
+Hi Chuanhong,
 
-> Previously the register interface was not attached to any internal bus,
-> which is not correct - it lives on the APB.
->
-> Cc: Stefan M Schaeckeler <sschaeck@cisco.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+On Wed, Jul 24, 2019 at 10:23:08AM +0800, Chuanhong Guo wrote:
+> This commit adds device tree binding documentation for MT7621
+> PLL controller.
+>=20
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
 > ---
->  arch/arm/boot/dts/aspeed-g5.dtsi | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+>=20
+> Change since v1:
+> drop useless syscon in compatible string
+>=20
+>  .../bindings/clock/mediatek,mt7621-pll.txt     | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt76=
+21-pll.txt
 
-Reviewed-by: Stefan Schaeckeler <sschaeck@cisco.com>
+This binding needs review from DT maintainers before I apply it, but as
+a general note it's typical to add the binding *before* its use in the
+series. That is, this patch should come before patch 3.
 
+Personally I'd squash it with patch 1 so the binding & the header file
+needed to use the binding are added in one patch, then a later patch
+actually makes use of them.
 
+Thanks,
+    Paul
+
+> diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.=
+txt b/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
+> new file mode 100644
+> index 000000000000..7dcfbd5283e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
+> @@ -0,0 +1,18 @@
+> +Binding for Mediatek MT7621 PLL controller
+> +
+> +The PLL controller provides the 2 main clocks of the SoC: CPU and BUS.
+> +
+> +Required Properties:
+> +- compatible: has to be "mediatek,mt7621-pll"
+> +- #clock-cells: has to be one
+> +
+> +Optional properties:
+> +- clock-output-names: should be "cpu", "bus"
+> +
+> +Example:
+> +	pll {
+> +		compatible =3D "mediatek,mt7621-pll";
+> +
+> +		#clock-cells =3D <1>;
+> +		clock-output-names =3D "cpu", "bus";
+> +	};
+> --=20
+> 2.21.0
+>=20
