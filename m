@@ -2,185 +2,114 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B1EC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF282C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF379206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A50206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:49:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfrN/y03"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GaCue3oj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbfG2Wq7 (ORCPT
+        id S1729127AbfG2Wtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 18:46:59 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44637 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728762AbfG2Wq6 (ORCPT
+        Mon, 29 Jul 2019 18:49:36 -0400
+Received: from gateway20.websitewelcome.com ([192.185.64.36]:46524 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727576AbfG2Wtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 18:46:58 -0400
-Received: by mail-qk1-f195.google.com with SMTP id d79so45181968qke.11;
-        Mon, 29 Jul 2019 15:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=h67qCGvm0vTXKgIvUnIlBDCvJ9/QVn68KTO/eo/1zmM=;
-        b=WfrN/y03AxOglG1Z1TeJp9DyYJ1UTFmyZYGgaLxQjj7b5aT0LtiFaOBq93emjg/fwQ
-         /HC8E818HDinvaSEcih5b952yDsA07fT9mcVTu/edVD1BXqIAiuuDOtjyw7/NBXLb91i
-         Vx7jryKE6n2PfFk5Y06NjdqOrhgn8AvGQg+CyUrMpCCq3QOZKYoNFrp2/wbkft/CpJhL
-         8pr41isaou1xYR+pCDOH1JDZCl2AjhocYK7lVdLGT510oHd7AoxnPUVDPE8OAGWtR7TK
-         2MvPXjVe0a3+duMW9GQXIRQdg+BkHxXtWyqQGmuH1ku9ibIkQYBmoYIqECutPtPPdZ2H
-         f/Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=h67qCGvm0vTXKgIvUnIlBDCvJ9/QVn68KTO/eo/1zmM=;
-        b=dnBxhrQEoJ+ebj77bvHZEyyVWTMbwsMwGcM0MLcQczz/4gC2p2ZaERefbT+iDVilQi
-         QOzxRZm21jPDnguje+DaWyfo3TXw9/pYS2UeJqYks8V1uqfOcbxpL5TdD+rAdQJIUuSM
-         vUlCUC0K4Dl+81fGp66CTxtPCDTD/CTTFEOPHbZM6ElfDDYnNRV2Y4BQvPPvyiO+xqwZ
-         BvzwGO0qLTU3j3noDzAqqL71QwbmJeMXG9xQ5QSQqK8wEL03ovWWCpo9a/q7CWrTUwuY
-         ZXpIwRuBtL4V8rsG/aM26Ed02JwAnlqzHCbPgnJmsWEfv1IacnxZXwJRMIN5znLSuVNy
-         DdQw==
-X-Gm-Message-State: APjAAAU4pTTEVNf7blcokUT1N0ydNEkKfe91kQOKighiuK5z9sG11xpe
-        opZJV/dyVcFMh9fi3qCtIQg=
-X-Google-Smtp-Source: APXvYqxGN/PrqrLwxa0ubP16VJN6Tc9atCYrusn+WPQ9FgY1lJKZQKlZ4iTMyWcdEaH3tcgIGJ0TvA==
-X-Received: by 2002:a37:c45:: with SMTP id 66mr73264687qkm.31.1564440416719;
-        Mon, 29 Jul 2019 15:46:56 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id t6sm27871081qkh.129.2019.07.29.15.46.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 15:46:55 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 18:46:54 -0400
-Message-ID: <20190729184654.GC25249@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: dsa: mv88e6xxx: avoid some redundant vtu
- load/purge operations
-In-Reply-To: <20190722233713.31396-1-rasmus.villemoes@prevas.dk>
-References: <20190722233713.31396-1-rasmus.villemoes@prevas.dk>
+        Mon, 29 Jul 2019 18:49:36 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id B4E2D400C81CF
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 16:46:06 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id sESVh1uJZ2qH7sESVh4GOK; Mon, 29 Jul 2019 17:49:35 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=RsCF2vuzTm3iwzaX6PiskbgBBNm8IovFMRJ8CCI/Gmg=; b=GaCue3ojx2KA5yk8vKLnHWpkW2
+        7DexMxtvyZkfRcB/kCwqzsGtBSXxqfmdiVHfceSNJXIJnnG3zEyI1RCxltTrS4Zmc/27ICiwT45XX
+        ojrNiRulP3299WA31HPphgswkUBxkg9pbhIJzbGAr8hHxepn+xbS942SAUq8Wkfo8OSsyhwtXe911
+        Xg3Rkk0Sp5Ue4s/vvgQdlb0GFdL2IHrbxr5OfTfwHc/NIDMsQrYYFHDY/2wJiOsOf6FDJpC6XnZRa
+        raoymwXO6PMiGYSKmo7n0pCIndftZNEtASHi/bmch+Wov8gzCVlvIKPKpWutNrTznz1PSKJkHlzyH
+        rJoEih4g==;
+Received: from [187.192.11.120] (port=60902 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hsESU-002FpJ-FR; Mon, 29 Jul 2019 17:49:34 -0500
+Date:   Mon, 29 Jul 2019 17:49:33 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] cpufreq: ti-cpufreq: Mark expected switch fall-through
+Message-ID: <20190729224933.GA23686@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hsESU-002FpJ-FR
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:60902
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 43
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus,
+Mark switch cases where we are expecting to fall through.
 
-On Mon, 22 Jul 2019 23:37:26 +0000, Rasmus Villemoes <rasmus.villemoes@prevas.dk> wrote:
-> We have an ERPS (Ethernet Ring Protection Switching) setup involving
-> mv88e6250 switches which we're in the process of switching to a BSP
-> based on the mainline driver. Breaking any link in the ring works as
-> expected, with the ring reconfiguring itself quickly and traffic
-> continuing with almost no noticable drops. However, when plugging back
-> the cable, we see 5+ second stalls.
-> 
-> This has been tracked down to the userspace application in charge of
-> the protocol missing a few CCM messages on the good link (the one that
-> was not unplugged), causing it to broadcast a "signal fail". That
-> message eventually reaches its link partner, which responds by
-> blocking the port. Meanwhile, the first node has continued to block
-> the port with the just plugged-in cable, breaking the network. And the
-> reason for those missing CCM messages has in turn been tracked down to
-> the VTU apparently being too busy servicing load/purge operations that
-> the normal lookups are delayed.
-> 
-> Initial state, the link between C and D is blocked in software.
-> 
->      _____________________
->     /                     \
->    |                       |
->    A ----- B ----- C *---- D
-> 
-> Unplug the cable between C and D.
-> 
->      _____________________
->     /                     \
->    |                       |
->    A ----- B ----- C *   * D
-> 
-> Reestablish the link between C and D.
->      _____________________
->     /                     \
->    |                       |
->    A ----- B ----- C *---- D
-> 
-> Somehow, enough VTU/ATU operations happen inside C that prevents
-> the application from receving the CCM messages from B in a timely
-> manner, so a Signal Fail message is sent by C. When B receives
-> that, it responds by blocking its port.
-> 
->      _____________________
->     /                     \
->    |                       |
->    A ----- B *---* C *---- D
-> 
-> Very shortly after this, the signal fail condition clears on the
-> BC link (some CCM messages finally make it through), so C
-> unblocks the port. However, a guard timer inside B prevents it
-> from removing the blocking before 5 seconds have elapsed.
-> 
-> It is not unlikely that our userspace ERPS implementation could be
-> smarter and/or is simply buggy. However, this patch fixes the symptoms
-> we see, and is a small optimization that should not break anything
-> (knock wood). The idea is simply to avoid doing an VTU load of an
-> entry identical to the one already present. To do that, we need to
-> know whether mv88e6xxx_vtu_get() actually found an existing entry, or
-> has just prepared a struct mv88e6xxx_vtu_entry for us to load. To that
-> end, let vlan->valid be an output parameter. The other two callers of
-> mv88e6xxx_vtu_get() are not affected by this patch since they pass
-> new=false.
-> 
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> ---
->  drivers/net/dsa/mv88e6xxx/chip.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-> index 6b17cd961d06..2e500428670c 100644
-> --- a/drivers/net/dsa/mv88e6xxx/chip.c
-> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
-> @@ -1423,7 +1423,6 @@ static int mv88e6xxx_vtu_get(struct mv88e6xxx_chip *chip, u16 vid,
->  
->  		/* Initialize a fresh VLAN entry */
->  		memset(entry, 0, sizeof(*entry));
-> -		entry->valid = true;
->  		entry->vid = vid;
->  
->  		/* Exclude all ports */
-> @@ -1618,6 +1617,9 @@ static int _mv88e6xxx_port_vlan_add(struct mv88e6xxx_chip *chip, int port,
->  	if (err)
->  		return err;
->  
-> +	if (vlan.valid && vlan.member[port] == member)
-> +		return 0;
-> +	vlan.valid = true;
->  	vlan.member[port] = member;
->  
->  	err = mv88e6xxx_vtu_loadpurge(chip, &vlan);
+This patch fixes the following warning (Building: arm):
 
-I'd prefer not to use the mv88e6xxx_vtu_entry structure for output
-parameters, this can be confusing. As you correctly mentioned, this
-initialization is only done for _mv88e6xxx_port_vlan_add, so I'll
-prepare a patch which gets rid of the boolean parameter and move that
-logic up.
+drivers/cpufreq/ti-cpufreq.c: In function ‘dra7_efuse_xlate’:
+drivers/cpufreq/ti-cpufreq.c:79:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
+drivers/cpufreq/ti-cpufreq.c:80:2: note: here
+  case DRA7_EFUSE_HAS_OD_MPU_OPP:
+  ^~~~
 
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/cpufreq/ti-cpufreq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-Vivien
+diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+index 2ad1ae17932d..aeaa883a8c9d 100644
+--- a/drivers/cpufreq/ti-cpufreq.c
++++ b/drivers/cpufreq/ti-cpufreq.c
+@@ -77,6 +77,7 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
+ 	case DRA7_EFUSE_HAS_ALL_MPU_OPP:
+ 	case DRA7_EFUSE_HAS_HIGH_MPU_OPP:
+ 		calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
++		/* Fall through */
+ 	case DRA7_EFUSE_HAS_OD_MPU_OPP:
+ 		calculated_efuse |= DRA7_EFUSE_OD_MPU_OPP;
+ 	}
+-- 
+2.22.0
+
