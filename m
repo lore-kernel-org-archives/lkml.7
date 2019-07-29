@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F71C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C33C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5834206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660FD21773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429223;
-	bh=H5VIOUyEePA3e7YILjunOmQC973IRxnSoT1mO4GezMc=;
+	s=default; t=1564429227;
+	bh=fz3oG+MIkOSlceaFC6ct5RIz5EJWnIue6pM3kyVI7+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P3NFhT78czTj4sXmms8Z/yDScHODfga/jUqpw+tLw/Yjs1sm6U3F149Iz3BH3lWiA
-	 U04h88d8HQzZO/xWX/40E3X1FFf1IsayMKEx4VHSt8dHgE8bx85PRiCCvYeQZTWycD
-	 0J361mEWTnPk3+IVuzUzYQB/USZ4+I96pJLkz2cU=
+	b=bZWs66pYu2otMVlZuPbpqda2p/R1OCrjV5xxjor+4h54oqw3dVXUrYKF93ZlWi4OQ
+	 HAbYy/ly08Esvce77LhQNWTcwWcACf5bK3lDSWImMBUdaJ7nGknpY8qsR/9GVn0hm7
+	 KCAW1FJApZ2BftfdZEBjTB9Eus6EKeHnmdbz07kI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389153AbfG2TkW (ORCPT
+        id S2389158AbfG2Tk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:40:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389133AbfG2TkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:40:19 -0400
+        id S2389145AbfG2TkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:40:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A621F21773;
-        Mon, 29 Jul 2019 19:40:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FA25217D4;
+        Mon, 29 Jul 2019 19:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429218;
-        bh=H5VIOUyEePA3e7YILjunOmQC973IRxnSoT1mO4GezMc=;
+        s=default; t=1564429220;
+        bh=fz3oG+MIkOSlceaFC6ct5RIz5EJWnIue6pM3kyVI7+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=os29/b+1DlTp0uhJxn8q325B1bemEUbye6BuWHPwxZfLKLtnAQBMDHOY/kfjopKVA
-         1e+xFaqfETviaPnAM/BzS6QACpvRkEUHvQBRVFWIIcFFdhEAinOVgruay6//pMMHXz
-         E4JaDjgYjaU2ev7a2PW2KO7RsInVKtmeg8ujWF94=
+        b=JGvsO8H7yj3DbEi54cA0LSLqqa+chnK4S6mvC3JQSdm66PHcBlQuJ412RZbLuQ0jF
+         80uXa302TAYZRsPqwWmb1L2mWNVZEZu7YchzmU8GeQZQ2IRyw1Wl4hhLmJbolm6nMP
+         GVSeGOGdEQp1Dip7xL2t9E6uNTUrMjvkyjRc8zXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 028/113] phy: renesas: rcar-gen2: Fix memory leak at error paths
-Date:   Mon, 29 Jul 2019 21:21:55 +0200
-Message-Id: <20190729190702.607476799@linuxfoundation.org>
+Subject: [PATCH 4.19 029/113] drm/amd/display: fix compilation error
+Date:   Mon, 29 Jul 2019 21:21:56 +0200
+Message-Id: <20190729190702.842161237@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -62,42 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4a36e82924d3305a17ac987a510f3902df5a4b2 ]
+[ Upstream commit 88099f53cc3717437f5fc9cf84205c5b65118377 ]
 
-This patch fixes memory leak at error paths of the probe function.
-In for_each_child_of_node, if the loop returns, the driver should
-call of_put_node() before returns.
+this patch fixes below compilation error
 
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-Fixes: 1233f59f745b237 ("phy: Renesas R-Car Gen2 PHY driver")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c: In
+function ‘dcn10_apply_ctx_for_surface’:
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:2378:3:
+error: implicit declaration of function ‘udelay’
+[-Werror=implicit-function-declaration]
+   udelay(underflow_check_delay_us);
+
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/renesas/phy-rcar-gen2.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen2.c b/drivers/phy/renesas/phy-rcar-gen2.c
-index 97d4dd6ea924..aa02b19b7e0e 100644
---- a/drivers/phy/renesas/phy-rcar-gen2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen2.c
-@@ -288,6 +288,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
- 		error = of_property_read_u32(np, "reg", &channel_num);
- 		if (error || channel_num > 2) {
- 			dev_err(dev, "Invalid \"reg\" property\n");
-+			of_node_put(np);
- 			return error;
- 		}
- 		channel->select_mask = select_mask[channel_num];
-@@ -303,6 +304,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
- 						   &rcar_gen2_phy_ops);
- 			if (IS_ERR(phy->phy)) {
- 				dev_err(dev, "Failed to create PHY\n");
-+				of_node_put(np);
- 				return PTR_ERR(phy->phy);
- 			}
- 			phy_set_drvdata(phy->phy, phy);
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 7736ef123e9b..ead221ccb93e 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -23,6 +23,7 @@
+  *
+  */
+ 
++#include <linux/delay.h>
+ #include "dm_services.h"
+ #include "core_types.h"
+ #include "resource.h"
 -- 
 2.20.1
 
