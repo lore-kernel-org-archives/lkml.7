@@ -2,94 +2,108 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D676C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D036C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D868820659
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E8A206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:42:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d4SLeKg/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbfG2Ulf (ORCPT
+        id S1729423AbfG2Umt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:41:35 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:60357 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729125AbfG2Ulf (ORCPT
+        Mon, 29 Jul 2019 16:42:49 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33082 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728915AbfG2Umt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:41:35 -0400
-Received: (qmail 2507 invoked by uid 500); 29 Jul 2019 16:41:34 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 29 Jul 2019 16:41:34 -0400
-Date:   Mon, 29 Jul 2019 16:41:34 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-cc:     linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        <linux-arch@vger.kernel.org>, Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] Use term cumul-fence instead of fence in ->prop ordering
- example
-In-Reply-To: <20190729123605.150423-1-joel@joelfernandes.org>
-Message-ID: <Pine.LNX.4.44L0.1907291641220.760-100000@netrider.rowland.org>
+        Mon, 29 Jul 2019 16:42:49 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f20so19600860pgj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 13:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=4IbBEME7exZuIIcITVOJ5zO3Z5Z1Hrse/4bQ5Tx6U+4=;
+        b=d4SLeKg//BxgFqj7SlUfgmPEMOo3fxt1QqKVXfdwLe5tz1aUDjPrAJHhc6EijrtVfI
+         TxKpH9fzR79EjAsHa55/1dRc5Lw2LyjbC2uJNoibzGKRPvsPRvOdXhFSFmXMoTRbTXN6
+         dIBVAUZ4sGoM0wcW6tr1BVkbOfjj82o4NTXPg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=4IbBEME7exZuIIcITVOJ5zO3Z5Z1Hrse/4bQ5Tx6U+4=;
+        b=oEtkV2s1qzURKIb3v+qeyVmWii3cfa1Fca7i/vODk43qpCdpZDiy4JCQuwQvhQSF7P
+         S5Z9jLK/gJH9cUN7rCDp9EyMJYJuz40AfXLnfb+pXE3KTP2XAuQJK/rWaAqaNuQ0RS61
+         gTxxJp/1TP76GnVUxKBCocpEy4kwk7qJEnQNxMTS+Vp0ZsbHI8DRqlA2PjgX83ez6B7z
+         F97kmCLLlnk8eLSGsHjfobIjDJT4T5nW3UTTaZxpvOFw48zRveI2BN4EzRowqCaEB/oL
+         n+IPwUe2wJZ2tboXNnats3WVQObBxT1lzTKzsGD+yGW4BZhPFBJCHy7xpTE+eAsgGCKo
+         AbQA==
+X-Gm-Message-State: APjAAAXKqArEx1su+D8SL7XbF35/1iWVq+czmmtjCIIebJHgmpIlBOK2
+        jqj9N8OaZITOZKTO/4c6RdoNQw==
+X-Google-Smtp-Source: APXvYqz73uoB6vT4B44y2rcFB3vxiCRIJaVenmtKpJoufizwlbNp35AwfnWY1R651Mk9fugrEp/h2g==
+X-Received: by 2002:a62:2c8e:: with SMTP id s136mr38877905pfs.3.1564432968701;
+        Mon, 29 Jul 2019 13:42:48 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id y11sm65242995pfb.119.2019.07.29.13.42.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 13:42:48 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 13:42:42 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Toralf =?utf-8?Q?F=C3=B6rster?= <toralf.foerster@gmx.de>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Nathan Huckleberry <nhuck@google.com>
+Subject: Re: Kernel patch commit message and content do differ
+Message-ID: <20190729204242.GG250418@google.com>
+References: <ca2abaa5-c478-0b9f-cd51-c60aa032835f@gmx.de>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ca2abaa5-c478-0b9f-cd51-c60aa032835f@gmx.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jul 2019, Joel Fernandes (Google) wrote:
+Hi,
 
-> To reduce ambiguity in the more exotic ->prop ordering example, let us
-> use the term cumul-fence instead fence for the 2 fences, so that the
-> implict ->rfe on loads/stores to Y are covered by the description.
-> 
-> Link: https://lore.kernel.org/lkml/20190729121745.GA140682@google.com
-> 
-> Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  tools/memory-model/Documentation/explanation.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-> index 68caa9a976d0..634dc6db26c4 100644
-> --- a/tools/memory-model/Documentation/explanation.txt
-> +++ b/tools/memory-model/Documentation/explanation.txt
-> @@ -1302,7 +1302,7 @@ followed by an arbitrary number of cumul-fence links, ending with an
->  rfe link.  You can concoct more exotic examples, containing more than
->  one fence, although this quickly leads to diminishing returns in terms
->  of complexity.  For instance, here's an example containing a coe link
-> -followed by two fences and an rfe link, utilizing the fact that
-> +followed by two cumul-fences and an rfe link, utilizing the fact that
->  release fences are A-cumulative:
->  
->  	int x, y, z;
-> @@ -1334,10 +1334,10 @@ If x = 2, r0 = 1, and r2 = 1 after this code runs then there is a prop
->  link from P0's store to its load.  This is because P0's store gets
->  overwritten by P1's store since x = 2 at the end (a coe link), the
->  smp_wmb() ensures that P1's store to x propagates to P2 before the
-> -store to y does (the first fence), the store to y propagates to P2
-> +store to y does (the first cumul-fence), the store to y propagates to P2
->  before P2's load and store execute, P2's smp_store_release()
->  guarantees that the stores to x and y both propagate to P0 before the
-> -store to z does (the second fence), and P0's load executes after the
-> +store to z does (the second cumul-fence), and P0's load executes after the
->  store to z has propagated to P0 (an rfe link).
->  
->  In summary, the fact that the hb relation links memory access events
+On Mon, Jul 29, 2019 at 10:20:25PM +0200, Toralf Förster wrote:
+> May I ask you to clarify why
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/diff/queue-5.2/net-ipv4-fib_trie-avoid-cryptic-ternary-expressions.patch?id=e1b76013997246a0d14b7443acbb393577d2a1e8
+> speaks about a ternary operator, whereas the diff shows a changed
+> #define?
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+This is a good question, apparently the content of the queued patch is:
 
+commit 4df607cc6fe8e46b258ff2a53d0a60ca3008ffc7
+Author: Nathan Huckleberry <nhuck@google.com>
+Date:   Mon Jun 17 10:28:29 2019 -0700
+
+    kbuild: Remove unnecessary -Wno-unused-value
+
+
+however the commit message is from:
+
+commit 25cec756891e8733433efea63b2254ddc93aa5cc
+Author: Matthias Kaehlcke <mka@chromium.org>
+Date:   Tue Jun 18 14:14:40 2019 -0700
+
+    net/ipv4: fib_trie: Avoid cryptic ternary expressions
+
+
+Other than that the stable port also is missing a Signed-off-by tag
+from Nathan.
+
+Looks like the patch didn't actually make it into -stable yet? If that
+is correct we should be in time to fix it up before it becomes part of
+the git history.
