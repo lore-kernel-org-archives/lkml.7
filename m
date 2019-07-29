@@ -2,139 +2,53 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0623DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62698C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D54BE2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:07:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m6J4d8ML"
+	by mail.kernel.org (Postfix) with ESMTP id 42D222070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728491AbfG2OHV (ORCPT
+        id S1728526AbfG2OHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:07:21 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34803 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfG2OHV (ORCPT
+        Mon, 29 Jul 2019 10:07:35 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:22396 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727569AbfG2OHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:07:21 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b13so28104920pfo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 07:07:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:subject:cc:user-agent:date;
-        bh=9Nybox5Ems434Y8f3uqSl08wrdR2vXIjQfpnAfsknyE=;
-        b=m6J4d8MLpDyS0VX2HOOIiddbS2yNdkHuPM8c0SDZ1G48A3hCxTPHNGwFSpl629Rh0S
-         Mx7Ji294l7tBty6/kP3U0Q9wuVavXqhq7w3cFZB5ZwBbSKuaLlIaF+Nq1xDfAtYGUYVF
-         zJkWY/NjMrKnQgzpDXc0BlOgWU7R5e5kpNBXE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:subject:cc
-         :user-agent:date;
-        bh=9Nybox5Ems434Y8f3uqSl08wrdR2vXIjQfpnAfsknyE=;
-        b=tmlSHmj1npAqPiQ9fO1FHBpByyzdNP8T+OzuudlgMS2bFyrGC9dXWAce5+ieH2N9S9
-         4POGRPncDZ7GVviVgXzlwIZ6PPFujfI/7kKZm68TkUn3f8lvUnHG5qSbV2bRGkIFWmS4
-         PR/tUAVoyo6efgkQcZNj13f7qJHfSwkySxiIAZgBTa5tZtj7TFmM/Bu3bodk5gOR/H7F
-         chVws+M7uktLSXHYuLzkeNx6WO9fWRnn9Ghs7DvYGZzCB/kFZhMaGMWPSjLnTX2WkMA+
-         DwMg2g4cS5LRKWD5egLxoB8HMBmrmYeNFLjXPl/nt5R5bfWFOBRahJv6OpDG7fbDccAd
-         Ve5Q==
-X-Gm-Message-State: APjAAAVPYFkhZpBiXuO0yQ35LXqIAwSPUdymP1AOPaRKLIN8N8CPiAlT
-        DBwPazwpaUbh2vNRjpt/ztFAObRaG5o=
-X-Google-Smtp-Source: APXvYqwa80ZrMiQQWSZwZ3dtH8/0siPpnsrbdnWv4yQ+VOXFFERc9PmbfcA/ZdJfwPd71fBJTxgB2w==
-X-Received: by 2002:a63:dd4e:: with SMTP id g14mr32640178pgj.227.1564409240743;
-        Mon, 29 Jul 2019 07:07:20 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id m31sm69058880pjb.6.2019.07.29.07.07.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 07:07:20 -0700 (PDT)
-Message-ID: <5d3efd98.1c69fb81.5f60d.059a@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 29 Jul 2019 10:07:33 -0400
+X-IronPort-AV: E=Sophos;i="5.64,322,1559512800"; 
+   d="scan'208";a="393742892"
+Received: from 71-219-88-14.chvl.qwest.net (HELO hadrien.PK5001Z) ([71.219.88.14])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 16:07:30 +0200
+Date:   Mon, 29 Jul 2019 10:07:29 -0400 (EDT)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Joe Perches <joe@perches.com>
+cc:     David Laight <David.Laight@ACULAB.COM>,
+        cocci <cocci@systeme.lip6.fr>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [Fwd: [PATCH 1/2] string: Add stracpy and stracpy_pad
+ mechanisms]
+In-Reply-To: <eaef283741c0a6a718040f99a17bdb9882bde665.camel@perches.com>
+Message-ID: <alpine.DEB.2.21.1907291004220.2686@hadrien>
+References: <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>    <66fcdbf607d7d0bea41edb39e5579d63b62b7d84.camel@perches.com>    <alpine.DEB.2.21.1907231546090.2551@hadrien>    <0f3ba090dfc956f5651e6c7c430abdba94ddcb8b.camel@perches.com>
+  <alpine.DEB.2.21.1907232252260.2539@hadrien>    <d5993902fd44ce89915fab94f4db03f5081c3c8e.camel@perches.com>    <alpine.DEB.2.21.1907232326360.2539@hadrien>    <f909b4b31f123c7d88535db397a04421077ed0ab.camel@perches.com>    <563222fbfdbb44daa98078db9d404972@AcuMS.aculab.com>
+  <d2b2b528b9f296dfeb1d92554be024245abd678e.camel@perches.com>   <alpine.DEB.2.21.1907242040490.10108@hadrien>  <a0e892c3522f4df2991119a2a30cd62ec14c76cc.camel@perches.com>  <alpine.DEB.2.21.1907250856450.2555@hadrien>
+ <eaef283741c0a6a718040f99a17bdb9882bde665.camel@perches.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJZ5v0hroRuGQ5N42Z8=yFVXiJPdid3wJrHoKqr2BZVx=sfnBQ@mail.gmail.com>
-References: <20190727011040.89582-1-swboyd@chromium.org> <CAJZ5v0hroRuGQ5N42Z8=yFVXiJPdid3wJrHoKqr2BZVx=sfnBQ@mail.gmail.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] PM / wakeup: Avoid dev_name collisions in wakeup class
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Tri Vo <trong@android.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 29 Jul 2019 07:07:19 -0700
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rafael J. Wysocki (2019-07-27 06:10:00)
-> On Sat, Jul 27, 2019 at 3:11 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > If a device is wakeup capable and the driver calls device_wakeup_init()
-> > on it during probe and then userspace writes 'enabled' to that device's
-> > power/wakeup file in sysfs we'll try to create the same named wakeup
-> > device in sysfs. The kernel will complain about duplicate file names.
-> >
-> > sysfs: cannot create duplicate filename '/devices/virtual/wakeup/1-1.1'
-> > kobject_add_internal failed for 1-1.1 with -EEXIST, don't try to regist=
-er things with the same name in the same directory.
-> >
-> > It may be advantageous to not write 'enabled' to the wakeup file (see
-> > wakeup_store()) from userspace for these devices because we allocate
-> > devices and register them and then throw them all away later on if the
-> > device driver has already initialized the wakeup attribute. The
-> > implementation currently tries to avoid taking locks here so it seems
-> > best to optimize that path in a separate patch.
-> >
-> > Let's rename the wakeup class devices as 'wakeupN' with an IDA that's
-> > simple enough to just return some sort of number. In addition, let's
-> > make the device registering the wakeup the parent and include a 'name'
-> > attribute in case userspace wants to figure out the type of wakeup it is
-> > (in the case of virtual wakeups) or the device associated with the
-> > wakeup. This makes it easier for userspace to go from /sys/class/wakeup
-> > to a place in the device hierarchy where the wakeup is generated from
-> > like an input device.
-> >
-> > Cc: Tri Vo <trong@android.com>
-> > Cc: Kalesh Singh <kaleshsingh@google.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
->=20
-> I'd rather change the commit that introduced this issue which is only
-> in linux-next for now.
+I see that stracpy is now in linux-next.  Would it be reasonable to send
+patches adding uses now?  Are there any rules for adding calls to
+stracpy_pad?
 
-Feel free to squash the two patches together and throw my signed-off-by
-on it. I forgot to add 'name' to the Documentation directory. Here's
-something to that effect.
-
------8<-----
-diff --git a/Documentation/ABI/testing/sysfs-class-wakeup b/Documentation/A=
-BI/testing/sysfs-class-wakeup
-index 30fb23eb9112..b83a87380d2c 100644
---- a/Documentation/ABI/testing/sysfs-class-wakeup
-+++ b/Documentation/ABI/testing/sysfs-class-wakeup
-@@ -5,6 +5,13 @@ Description:
- 		The /sys/class/wakeup/ directory contains pointers to all
- 		wakeup sources in the kernel at that moment in time.
-=20
-+What:		/sys/class/wakeup/.../name
-+Date:		June 2019
-+Contact:	Tri Vo <trong@android.com>
-+Description:
-+		This file contains the name of the wakeup source when
-+		it was created.
-+
- What:		/sys/class/wakeup/.../active_count
- Date:		June 2019
- Contact:	Tri Vo <trong@android.com>
+julia
