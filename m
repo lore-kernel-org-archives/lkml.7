@@ -2,112 +2,144 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C54C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DA9C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CCE2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4C92067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVgt5oMZ"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="nByOcS25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387673AbfG2LXZ (ORCPT
+        id S2387675AbfG2LYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:23:25 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44567 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387450AbfG2LXY (ORCPT
+        Mon, 29 Jul 2019 07:24:39 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:38100 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387450AbfG2LYj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:23:24 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p17so61392212wrf.11;
-        Mon, 29 Jul 2019 04:23:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7FSTYRCDuN8ugCkUACc2sS4c/sxO9MPaWoEgh7iEEsE=;
-        b=bVgt5oMZu9vka1vXyxfezj5eUPF8tafHtuB8RDF5PL5XefOI5mn84bdcGgEYFQWdBD
-         v3/RzVElyj8HrIjajPHz9JfYqtYa1a1yA8hfjYuu81uuZW+L4M6UDlbC+97IeFIaW79S
-         VyfhVHIyNKEDN8aDRs1lSXylanKCL5tamDdd0LGZFSuGIdZhIA5YtQMSnnlPGOXYI+uB
-         otASFE6nLMIXfBJnLYqx5jtskcjMG1v7YFrGQrTtLxogh4D9ruZUok7QnLA9zT0nF3y9
-         Mad/lcbjmcAfGQ+6KgMGFjkt1CTbHPYd7gc6HCKZGD+kgkTJ+bsGFjbvG/audBf5AYAL
-         O2cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7FSTYRCDuN8ugCkUACc2sS4c/sxO9MPaWoEgh7iEEsE=;
-        b=dMkc5k2gWxxoAQgaJU6mKcEv6bVxVspczfTKRuDOZ2NfcHG2MF4EsNUgmfIXE0XYw0
-         GLcr1SqxK+e8X0sDbobOIZ+z3aW+R7oiR7CAj30B04oMy6Qpw1SmOd3H/C/+Wcyj86ZW
-         ytXaMyoxqgYiEQ4AXmzBJ/cmtkKmlWGoFKgFJcXM1exRFaFI5J5niFkFDnMYji2+KOkJ
-         OX9PJ+D4oghLAOChwV+HiM/kc9MTHBLlnWnUXqWd08J06xloCZswIHcAaGRyTHFx5v6u
-         U44tQlgXG4+UY0ZkVbPpyy195BSP1G7YMF7534LCOm5Y2nPJrDg5HOa51dQLlZ0p8j7s
-         wC8Q==
-X-Gm-Message-State: APjAAAUETAvd7ZCTC+tqyM9seHLNOmA2xniwhgJq6rrqr7VZifwnd8IS
-        aslE1QdHMzRZhvcJQjU23W2k18oL5yHLJpIEPGY=
-X-Google-Smtp-Source: APXvYqyKS6i0fcHmOYx363DJnPTuu/xw0bA5xIlQXAB08qPtFUJYujyOTv9lxMWA//8NpJVOebpAE1xkHqBFV70jCHw=
-X-Received: by 2002:a5d:514f:: with SMTP id u15mr21122702wrt.183.1564399401730;
- Mon, 29 Jul 2019 04:23:21 -0700 (PDT)
+        Mon, 29 Jul 2019 07:24:39 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 058D02E12DD;
+        Mon, 29 Jul 2019 14:24:36 +0300 (MSK)
+Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
+        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id TcQGodNMlR-OZNmerOf;
+        Mon, 29 Jul 2019 14:24:35 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1564399475; bh=0rOY1hf/vJwvLzCfaIpmU6fmgpWmli7XV2Wh26/reCw=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=nByOcS2558rwwbSDAEFX2ECRH9cbBKFJaqHwq5HMsvxsD7/jzng5DQod4BtWEnb02
+         nZJtRjZ8Zv2vy73Awdgp0hBWRsof8qOxZYo+VXuBmFOCl89Fox23CMoLSgOX4cRU6Z
+         yHZqAu8Cmmg5ZnLDYFt0xwqNaLD3D6ptE3l9l5p4=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:6454:ac35:2758:ad6a])
+        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id QfhZn5Pecb-OZAml5J4;
+        Mon, 29 Jul 2019 14:24:35 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
+ in get_user_pages loop
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+References: <156431697805.3170.6377599347542228221.stgit@buzz>
+ <20190729091738.GF9330@dhcp22.suse.cz>
+ <3d6fc779-2081-ba4b-22cf-be701d617bb4@yandex-team.ru>
+ <20190729103307.GG9330@dhcp22.suse.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <5002e67b-b87f-d753-0f9c-6e732b8e7a80@yandex-team.ru>
+Date:   Mon, 29 Jul 2019 14:24:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190725220215.460-1-paul@crapouillou.net>
-In-Reply-To: <20190725220215.460-1-paul@crapouillou.net>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Mon, 29 Jul 2019 13:23:10 +0200
-Message-ID: <CAFLxGvyi0+0E3M12A7cRoHfEKd8-7Yr8EMG9J=2XcjCxPWY5pA@mail.gmail.com>
-Subject: Re: [PATCH 00/11] JZ4740 SoC cleanup
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        alsa-devel <alsa-devel@alsa-project.org>,
-        linux-pm@vger.kernel.org, linux-mips@vger.kernel.org,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, od@zcrc.me,
-        linux-mtd@lists.infradead.org, dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190729103307.GG9330@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 12:02 AM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Hi,
->
-> This patchset converts the Qi LB60 MIPS board to devicetree and makes it
-> use all the shiny new drivers that have been developed or updated
-> recently.
->
-> All the crappy old drivers and custom code can be dropped since they
-> have been replaced by better alternatives.
->
-> Some of these alternatives are not yet in 5.3-rc1 but have already been
-> accepted by their respective maintainer for inclusion in 5.4-rc1.
->
-> To upstream this patchset, I think that as soon as MIPS maintainers
-> agree to take patches 01-03/11 and 11/11, the other patches can go
-> through their respective maintainer's tree.
+On 29.07.2019 13:33, Michal Hocko wrote:
+> On Mon 29-07-19 12:40:29, Konstantin Khlebnikov wrote:
+>> On 29.07.2019 12:17, Michal Hocko wrote:
+>>> On Sun 28-07-19 15:29:38, Konstantin Khlebnikov wrote:
+>>>> High memory limit in memory cgroup allows to batch memory reclaiming and
+>>>> defer it until returning into userland. This moves it out of any locks.
+>>>>
+>>>> Fixed gap between high and max limit works pretty well (we are using
+>>>> 64 * NR_CPUS pages) except cases when one syscall allocates tons of
+>>>> memory. This affects all other tasks in cgroup because they might hit
+>>>> max memory limit in unhandy places and\or under hot locks.
+>>>>
+>>>> For example mmap with MAP_POPULATE or MAP_LOCKED might allocate a lot
+>>>> of pages and push memory cgroup usage far ahead high memory limit.
+>>>>
+>>>> This patch uses halfway between high and max limits as threshold and
+>>>> in this case starts memory reclaiming if mem_cgroup_handle_over_high()
+>>>> called with argument only_severe = true, otherwise reclaim is deferred
+>>>> till returning into userland. If high limits isn't set nothing changes.
+>>>>
+>>>> Now long running get_user_pages will periodically reclaim cgroup memory.
+>>>> Other possible targets are generic file read/write iter loops.
+>>>
+>>> I do see how gup can lead to a large high limit excess, but could you be
+>>> more specific why is that a problem? We should be reclaiming the similar
+>>> number of pages cumulatively.
+>>>
+>>
+>> Large gup might push usage close to limit and keep it here for a some time.
+>> As a result concurrent allocations will enter direct reclaim right at
+>> charging much more frequently.
+> 
+> Yes, this is indeed prossible. On the other hand even the reclaim from
+> the charge path doesn't really prevent from that happening because the
+> context might get preempted or blocked on locks. So I guess we need a
+> more detailed information of an actual world visible problem here.
+>   
+>> Right now deferred recalaim after passing high limit works like distributed
+>> memcg kswapd which reclaims memory in "background" and prevents completely
+>> synchronous direct reclaim.
+>>
+>> Maybe somebody have any plans for real kswapd for memcg?
+> 
+> I am not aware of that. The primary problem back then was that we simply
+> cannot have a kernel thread per each memcg because that doesn't scale.
+> Using kthreads and a dynamic pool of threads tends to be quite tricky -
+> e.g. a proper accounting, scaling again.
 
-Was this series tested with the Ben Nanonote device?
-I have one of these and from time to time I upgrade the kernel on it.
+Yep, for containers proper accounting is important, especially cpu usage.
 
--- 
-Thanks,
-//richard
+We're using manual kwapd-style reclaim in userspace by MADV_STOCKPILE
+within container where memory allocation latency is critical.
+
+This patch is about less extreme cases which would be nice to handle
+automatically, without custom tuning.
+
+>   
+>> I've put mem_cgroup_handle_over_high in gup next to cond_resched() and
+>> later that gave me idea that this is good place for running any
+>> deferred works, like bottom half for tasks. Right now this happens
+>> only at switching into userspace.
+> 
+> I am not against pushing high memory reclaim into the charge path in
+> principle. I just want to hear how big of a problem this really is in
+> practice. If this is mostly a theoretical problem that might hit then I
+> would rather stick with the existing code though.
+> 
+
+Besides latency which might be not so important for everybody I see these:
+
+First problem is a fairness within cgroup - task that generates allocation
+flow isn't throttled after passing high limits as documentation states.
+It will feel memory pressure only after hitting max limit while other
+tasks with smaller allocations will go into direct reclaim right away.
+
+Second is an accumulating too much deferred reclaim - after large gup task
+might call direct reclaim with target amount much larger than gap between
+high and max limits, or even larger than max limit itself.
