@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88865C41514
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE24C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C9C216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84260217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428395;
-	bh=8d90N1f6X6r12t1S7fD+JCOclmrbvumpbXPSk48yZ04=;
+	s=default; t=1564428398;
+	bh=5zrgH3212XZxlRA9/bHkdArtyD4muCdJKVSnbNKioVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rewlxvuZflZHhFeSI/5AgFmtmVuJgMPRkvgLJFxaKH5d0QfL6P/cX9Kk24GnkL787
-	 BN9+2OMVtOGbCnoMW8XHJK58eY5nQ5Ewg05JZjU2RBjHx1BxD7mBbcDuxIRIbZ0oYJ
-	 WknIhbWQSsOfmcNCvQrLfkwUyyul68b83/hROcGY=
+	b=xG0KwPj3foXHB76U55RXYQ+kJ0raX5PTIl71tNGfpid/76x9GrjfK3WB+uTqaI3zP
+	 uZs0EwmCTS/W9SE+Ldh5jTEDQbTxzH6XBs6IW9Jujyco8vMw4snCzHLlYVRsYnr0cP
+	 0Ez1BGwPEMfKrn/Yrh+mzZmYA4bVDOZTfjgrG3OM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfG2T0e (ORCPT
+        id S1729189AbfG2T0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:26:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38940 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:26:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729762AbfG2T0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:26:31 -0400
+        id S1728513AbfG2T0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:26:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8202217D6;
-        Mon, 29 Jul 2019 19:26:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D68021655;
+        Mon, 29 Jul 2019 19:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428390;
-        bh=8d90N1f6X6r12t1S7fD+JCOclmrbvumpbXPSk48yZ04=;
+        s=default; t=1564428393;
+        bh=5zrgH3212XZxlRA9/bHkdArtyD4muCdJKVSnbNKioVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NDZu2ReAq47GXKFi9C916JP6naKWrNp5Dj1VeZ/n71ryYqAsAHnAy8KkE1xYoHX3Y
-         liY6uTX05lqax2EjdGrtNVEG4oprw7G+PgTP0hd6Hq1xAZRpz1OREiZbHhtClZYFE4
-         YVTIgPFuUhrjo5XfLd89K9XH79jzB8m9AqIMG8OY=
+        b=E+2kQ7TEP7deOIEtNMZUd354z44dQFaxYNpTJCWNYsYdsmimjgf4+swO7pDKar/jj
+         Uuik4KdXzX8/6hR/F3w9rnzcDE9+a5dbvJmclW3Kdf6+irswtCki7X9khYL+rAfBFM
+         Ihvca84Bh80fJEsZkx53VDv+tBzaSE3zHmqKsefo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com,
-        Jeremy Sowden <jeremy@azazel.net>,
+        stable@vger.kernel.org, Anirudh Gupta <anirudh.gupta@sophos.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 022/293] af_key: fix leaks in key_pol_get_resp and dump_sp.
-Date:   Mon, 29 Jul 2019 21:18:33 +0200
-Message-Id: <20190729190822.702269515@linuxfoundation.org>
+Subject: [PATCH 4.14 023/293] xfrm: Fix xfrm sel prefix length validation
+Date:   Mon, 29 Jul 2019 21:18:34 +0200
+Message-Id: <20190729190822.916090014@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -62,48 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c80eb1c7e2b8420477fbc998971d62a648035d9 ]
+[ Upstream commit b38ff4075a80b4da5cb2202d7965332ca0efb213 ]
 
-In both functions, if pfkey_xfrm_policy2msg failed we leaked the newly
-allocated sk_buff.  Free it on error.
+Family of src/dst can be different from family of selector src/dst.
+Use xfrm selector family to validate address prefix length,
+while verifying new sa from userspace.
 
-Fixes: 55569ce256ce ("Fix conversion between IPSEC_MODE_xxx and XFRM_MODE_xxx.")
-Reported-by: syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Validated patch with this command:
+ip xfrm state add src 1.1.6.1 dst 1.1.6.2 proto esp spi 4260196 \
+reqid 20004 mode tunnel aead "rfc4106(gcm(aes))" \
+0x1111016400000000000000000000000044440001 128 \
+sel src 1011:1:4::2/128 sel dst 1021:1:4::2/128 dev Port5
+
+Fixes: 07bf7908950a ("xfrm: Validate address prefix lengths in the xfrm selector.")
+Signed-off-by: Anirudh Gupta <anirudh.gupta@sophos.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/key/af_key.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/xfrm/xfrm_user.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/net/key/af_key.c b/net/key/af_key.c
-index b095551a5773..ac38b47e9f86 100644
---- a/net/key/af_key.c
-+++ b/net/key/af_key.c
-@@ -2438,8 +2438,10 @@ static int key_pol_get_resp(struct sock *sk, struct xfrm_policy *xp, const struc
- 		goto out;
- 	}
- 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
--	if (err < 0)
-+	if (err < 0) {
-+		kfree_skb(out_skb);
- 		goto out;
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index 919b8406028c..b25b68ae7c74 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -150,6 +150,22 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
+ 
+ 	err = -EINVAL;
+ 	switch (p->family) {
++	case AF_INET:
++		break;
++
++	case AF_INET6:
++#if IS_ENABLED(CONFIG_IPV6)
++		break;
++#else
++		err = -EAFNOSUPPORT;
++		goto out;
++#endif
++
++	default:
++		goto out;
 +	}
- 
- 	out_hdr = (struct sadb_msg *) out_skb->data;
- 	out_hdr->sadb_msg_version = hdr->sadb_msg_version;
-@@ -2690,8 +2692,10 @@ static int dump_sp(struct xfrm_policy *xp, int dir, int count, void *ptr)
- 		return PTR_ERR(out_skb);
- 
- 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
--	if (err < 0)
-+	if (err < 0) {
-+		kfree_skb(out_skb);
- 		return err;
-+	}
- 
- 	out_hdr = (struct sadb_msg *) out_skb->data;
- 	out_hdr->sadb_msg_version = pfk->dump.msg_version;
++
++	switch (p->sel.family) {
+ 	case AF_INET:
+ 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
+ 			goto out;
 -- 
 2.20.1
 
