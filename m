@@ -2,94 +2,95 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F8BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C186C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5376206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564435509;
-	bh=KJFm+29xdmh4eMN4D0nGSnJhY+tLmcYbySYne7TR5rk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dt+hK+ZguVDRrEq+uEV7QI9p+VQeADQX8eE99LoHNQ0SvGAgwwjTKUwXTJqZgUbsJ
-	 jGbfJmaw93ltBGugML1oLnyTmOxUkp1b72zhetAxnm43+gpcqM59DLgMAwqy4EE0e2
-	 vnTVPQwUhKQ8m+9jhR03LjkQTMEh0S90lWYpHHug=
+	by mail.kernel.org (Postfix) with ESMTP id 20D0D206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:25:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Aa2vh5RM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbfG2VZI (ORCPT
+        id S1729792AbfG2VZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:25:08 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34722 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfG2VZI (ORCPT
+        Mon, 29 Jul 2019 17:25:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41480 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfG2VZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:25:08 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n5so64145254otk.1;
-        Mon, 29 Jul 2019 14:25:07 -0700 (PDT)
+        Mon, 29 Jul 2019 17:25:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x15so18535419pgg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:25:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=e4UROmkEn8ifoxqunHEl1ezq48oKFVyKfsWKm4P+BWo=;
+        b=Aa2vh5RMfizdjhMmmlTmKp4+1DiKR0n/vsDn7XRoWN+XIEsK2lWOXPXD9TqUT9Ce56
+         J+ps7d7S86zJwqFA4r7B5aGKoEgoCzbCjLSqZdF4tBr8OLA6T4gD1PJTaawV+fd+axPm
+         2w6TagTMAIV5M9JhuF+Bl1k2AucZnS2szKD/5lACq/3/AV5UPtU5aNp89gt/e5m0delk
+         15FPKi3gj5jLPKMXaKdGj9KKPBBnc5Xge0tEfYVmh6MkoClXLjfh2cR+3IA64DK218wr
+         6Js5bDB2IZpJYonONMlhAFJt0KRNHmTOw+B/EwRRgteqRgARG4jKrfa93fU6l0Et77DM
+         OlYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KJFm+29xdmh4eMN4D0nGSnJhY+tLmcYbySYne7TR5rk=;
-        b=e46aDFveK7zG4xYYs0IECKEtaCORx0QzVb1zgQIKbIyChyNJX+s1ihxDVtTARc9SeO
-         n74BbPaT4n/xjKFS4TTfpCVnP4ZnqfPCbSlnqR5/V5DTn1z1bwLk/VegxEcOwAeBYPn4
-         R0NiP2wC85C8jlWXlBb4P1Tx4AKyMiHc0Lyp8qpiqmNSR2Er5C9eGGnwSGdfxhpZo80d
-         x+pKrkQ79wjKEHyAfju28iN1RWNQXomxtOfHljtf9ocr0azLpgzlEQndDS8rQBoBaAC+
-         rClZFLIrPnsmea6N6To34jU3HCEruDXWf5MmuTRlO6BLRBvmman4WblxmSmI8GXPZRxs
-         0fyw==
-X-Gm-Message-State: APjAAAWw6wE4eXS+Y3bx5EIOKOlycTONZVHUw0N2GbNaemjy0Amwuzi4
-        ulDegCjaNYTyNAzkYQ3Gf3JKYfg3HwX2qjYktos=
-X-Google-Smtp-Source: APXvYqwZKJSEHahFNopVUM0XNCLRgSdZ263ULw6EoirQNLdhBkJnGI89d2oNHu1aN8Et/1+cJZJbadg/yjCLAQjxwxI=
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr77695493otp.189.1564435507068;
- Mon, 29 Jul 2019 14:25:07 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=e4UROmkEn8ifoxqunHEl1ezq48oKFVyKfsWKm4P+BWo=;
+        b=ZFNwt8kHLIynRqVwFGh38/4nMYyAsBesHcXHJrnLFJBjxB9y9c9v4Oe6XfXvH78ylw
+         VkNoPuNrIpuPHgSiNebEjiUrEiTUf4HLNX1pmz5/yqN+GWQ0Oq+JhlQ0Rx7KVYhWcJ78
+         at0EiGd1NAvj5mO4NXVqBdF3JeCf+8jT+qmb6K5h5B5kMCmBVw07oWJo44CBF8BN/7X+
+         J/OEa3iRz8MyQYjQv9kH1itHT811OU4O8WcV9ogryyXLaCbb0+gB/mk44bjIcMbzLV6Y
+         rjDYe6kg7CY2SkeCt2OKQlyftpw/SGq40ihniAEfvC2WGcU95J2fWF3QoHIr46IDyr2c
+         ca+g==
+X-Gm-Message-State: APjAAAV+pOW6rosBeTRO5nPhdnZ+a/96jaVEgFZAi4hdEtQkXSvsPJJy
+        8UxSUE5UoKtuN3oG0bTTDx6us8b1VVM=
+X-Google-Smtp-Source: APXvYqzv3Q0CqVHgm2hXgvaa1Jz0BmulxQb73Hbija/wpgeNdtCDipnA5j1gttMeRogJ0XRd/SpPtA==
+X-Received: by 2002:a63:6fc9:: with SMTP id k192mr104672369pgc.20.1564435519803;
+        Mon, 29 Jul 2019 14:25:19 -0700 (PDT)
+Received: from [192.168.1.188] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id t9sm64032388pji.18.2019.07.29.14.25.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 14:25:18 -0700 (PDT)
+Subject: Re: [PATCH] ataflop: Mark expected switch fall-through
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <20190729211053.GA6735@embeddedor>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <80ad9bf9-4d50-a436-586c-dd9775e3e186@kernel.dk>
+Date:   Mon, 29 Jul 2019 15:25:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <2305283.AStDPdUUnE@kreacher> <c8960d91-4446-9acf-5575-e442a652bd05@gmail.com>
- <CAGETcx_+i6_0Q2rf-UdzZ3bCPUos9Tu4JmvvO0zUoy5gB8_ESQ@mail.gmail.com>
-In-Reply-To: <CAGETcx_+i6_0Q2rf-UdzZ3bCPUos9Tu4JmvvO0zUoy5gB8_ESQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 29 Jul 2019 23:24:56 +0200
-Message-ID: <CAJZ5v0h5U60yCyaHeHVbWmwWDa4NBnuhgsV022nZm5HuGgV7ow@mail.gmail.com>
-Subject: Re: [PATCH v2] driver core: Remove device link creation limitation
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190729211053.GA6735@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:47 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Rafael,
->
-> This is the fix you need. Or something link this.
->
-> I had asked you to reject DL_FLAG_MANAGED as an input flag if you are
-> marking it as internal (in the comments). But looks like you were also
-> trying to check for "undefined" bit positions. However, the check
-> isn't correct because DL_MANAGED_FLAGS doesn't include (rightfully so)
-> DL_FLAG_PM_RUNTIME and DL_FLAG_RPM_ACTIVE .
->
-> I tried to write a DL_FLAG_EXTERNAL to include all the external flags,
-> but that felt like a maintenance headache that's not worth carrying. I
-> think it's simpler to just error out when internal flags being passed
-> in and ignore any undefined bit positions.
+On 7/29/19 3:10 PM, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following warning (Building: m68k):
+> 
+> drivers/block/ataflop.c: In function ‘fd_locked_ioctl’:
+> drivers/block/ataflop.c:1728:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     set_capacity(floppy->disk, MAX_DISK_SIZE * 2);
+>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/block/ataflop.c:1729:2: note: here
+>    case FDFMTEND:
+>    ^~~~
 
-Well, IMO it is better to prevent people from passing unrecognized
-flags to device_link_add() at all, even if that means some extra
-effort when adding new flags.
+Applied, thanks.
 
-I'll post an alternative fix shortly.
+-- 
+Jens Axboe
+
