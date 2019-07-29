@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FC3C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B2FC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91FC217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A927204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430443;
-	bh=gTOeOC5VmGuItE7SqR1J06FTqVJudN8LyY0SgeGDW4A=;
+	s=default; t=1564430449;
+	bh=TFHEh57DC7xyPOl+8kUcu3/BHPOuWL6154cPQrf6WZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dMhr0XXVHtWe5c8lBIMa/hnYM+fIm2oQXlQdHSJod8zJhb7WKHeXDcApQPfBBZCOS
-	 h0RiRS5tneW+HmzHddQ+5TOlTcHp/LOz2rzgJIL/4vrnV3NBAHzdmSSZKSMNCeFLvm
-	 pMfXcluX20NDeoR2U7WI15mxBRQFmG5d+OfX9+Z4=
+	b=K7bOmxvRroVG68eUnAm/d71x53x/5JTq+i5jex9FsUyZhDbC07aaJpvSnMdITwu/D
+	 VLcpsb8xwFyVuGjRFtryVJC2Ln0roogt5oDToYEnCPUcKefwk5ifVjXZ8M4+7ykIrs
+	 9izLAlAh1oW+nVRw6Brj3CaTgElePJLiQVQfsUyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390286AbfG2TwN (ORCPT
+        id S2391128AbfG2UAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:52:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42398 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:00:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390791AbfG2TvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:51:12 -0400
+        id S2390845AbfG2TwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:52:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97975205F4;
-        Mon, 29 Jul 2019 19:51:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE9BF2064A;
+        Mon, 29 Jul 2019 19:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429872;
-        bh=gTOeOC5VmGuItE7SqR1J06FTqVJudN8LyY0SgeGDW4A=;
+        s=default; t=1564429929;
+        bh=TFHEh57DC7xyPOl+8kUcu3/BHPOuWL6154cPQrf6WZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=teIp+lS14h/FbBs/iRm/Qt+Sttr6VZT6Y8ztTJpeCnR83phSUNUNSRbnN0hXMcLgM
-         2wzL4DkXD9iWXAY7CSFqmpr+d+KB6CAdQ2g+FlrFnm+yWVZ1EnDe3ElKGc+jcNrbWb
-         3WE+pZob7cYoFtt4D+lJ0SsmY1wtlUX9tQB6bH6I=
+        b=FYBoqNeA9Ei47q63zefd/OBBDipNp6IFDF30KGt5mrjxob/boyDQf5Y39g6jA9+rg
+         VlLvC7/Tkphw8Q/vrSEWF3y7mTWPhN4xAOBmIZVeoDmJnRMr10Bgato8/yV/ILdWGJ
+         G/lhT6V36KbDAH7NLqzgoIz3Q20w7cRzJK0vd4eA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Minghuan Lian <Minghuan.Lian@nxp.com>,
-        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+        stable@vger.kernel.org, Heng Xiao <heng.xiao@unisoc.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 115/215] PCI: mobiveil: Fix the Class Code field
-Date:   Mon, 29 Jul 2019 21:21:51 +0200
-Message-Id: <20190729190758.970953197@linuxfoundation.org>
+Subject: [PATCH 5.2 141/215] f2fs: fix to avoid long latency during umount
+Date:   Mon, 29 Jul 2019 21:22:17 +0200
+Message-Id: <20190729190804.025561321@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -62,51 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0122af0a08243f344a438f924e5c2486486555b3 ]
+[ Upstream commit 6e0cd4a9dd4df1a0afcb454f1e654b5c80685913 ]
 
-Fix up the Class Code field in PCI configuration space and set it to
-PCI_CLASS_BRIDGE_PCI.
+In umount, we give an constand time to handle pending discard, previously,
+in __issue_discard_cmd() we missed to check timeout condition in loop,
+result in delaying long time, fix it.
 
-Move the Class Code fixup to function mobiveil_host_init() where
-it belongs.
-
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Signed-off-by: Heng Xiao <heng.xiao@unisoc.com>
+[Chao Yu: add commit message]
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-mobiveil.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ fs/f2fs/segment.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index 03d697b63e2a..88e9b70081fc 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -558,6 +558,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 		}
- 	}
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 8903b61457e7..291f7106537c 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -1486,6 +1486,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 		list_for_each_entry_safe(dc, tmp, pend_list, list) {
+ 			f2fs_bug_on(sbi, dc->state != D_PREP);
  
-+	/* fixup for PCIe class register */
-+	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
-+	value &= 0xff;
-+	value |= (PCI_CLASS_BRIDGE_PCI << 16);
-+	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
++			if (dpolicy->timeout != 0 &&
++				f2fs_time_over(sbi, dpolicy->timeout))
++				break;
 +
- 	/* setup MSI hardware registers */
- 	mobiveil_pcie_enable_msi(pcie);
- 
-@@ -798,9 +804,6 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
- 		goto error;
- 	}
- 
--	/* fixup for PCIe class register */
--	csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
--
- 	/* initialize the IRQ domains */
- 	ret = mobiveil_pcie_init_irq_domain(pcie);
- 	if (ret) {
+ 			if (dpolicy->io_aware && i < dpolicy->io_aware_gran &&
+ 						!is_idle(sbi, DISCARD_TIME)) {
+ 				io_interrupted = true;
 -- 
 2.20.1
 
