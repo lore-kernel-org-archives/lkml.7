@@ -2,138 +2,112 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0B7C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C54C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B252067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CCE2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:23:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVgt5oMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387629AbfG2LXF (ORCPT
+        id S2387673AbfG2LXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:23:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:42244 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387450AbfG2LXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:23:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A15F28;
-        Mon, 29 Jul 2019 04:23:05 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2726E3F694;
-        Mon, 29 Jul 2019 04:23:04 -0700 (PDT)
-Subject: Re: [patch 4/5] x86/vdso/32: Use 32bit syscall fallback
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Bolle <pebolle@tiscali.nl>, Will Deacon <will@kernel.org>
-References: <20190728131251.622415456@linutronix.de>
- <20190728131648.879156507@linutronix.de>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <3baf0efb-dcae-4953-66aa-06c5ee9fbdf7@arm.com>
-Date:   Mon, 29 Jul 2019 12:23:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 07:23:25 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44567 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387450AbfG2LXY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:23:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p17so61392212wrf.11;
+        Mon, 29 Jul 2019 04:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7FSTYRCDuN8ugCkUACc2sS4c/sxO9MPaWoEgh7iEEsE=;
+        b=bVgt5oMZu9vka1vXyxfezj5eUPF8tafHtuB8RDF5PL5XefOI5mn84bdcGgEYFQWdBD
+         v3/RzVElyj8HrIjajPHz9JfYqtYa1a1yA8hfjYuu81uuZW+L4M6UDlbC+97IeFIaW79S
+         VyfhVHIyNKEDN8aDRs1lSXylanKCL5tamDdd0LGZFSuGIdZhIA5YtQMSnnlPGOXYI+uB
+         otASFE6nLMIXfBJnLYqx5jtskcjMG1v7YFrGQrTtLxogh4D9ruZUok7QnLA9zT0nF3y9
+         Mad/lcbjmcAfGQ+6KgMGFjkt1CTbHPYd7gc6HCKZGD+kgkTJ+bsGFjbvG/audBf5AYAL
+         O2cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7FSTYRCDuN8ugCkUACc2sS4c/sxO9MPaWoEgh7iEEsE=;
+        b=dMkc5k2gWxxoAQgaJU6mKcEv6bVxVspczfTKRuDOZ2NfcHG2MF4EsNUgmfIXE0XYw0
+         GLcr1SqxK+e8X0sDbobOIZ+z3aW+R7oiR7CAj30B04oMy6Qpw1SmOd3H/C/+Wcyj86ZW
+         ytXaMyoxqgYiEQ4AXmzBJ/cmtkKmlWGoFKgFJcXM1exRFaFI5J5niFkFDnMYji2+KOkJ
+         OX9PJ+D4oghLAOChwV+HiM/kc9MTHBLlnWnUXqWd08J06xloCZswIHcAaGRyTHFx5v6u
+         U44tQlgXG4+UY0ZkVbPpyy195BSP1G7YMF7534LCOm5Y2nPJrDg5HOa51dQLlZ0p8j7s
+         wC8Q==
+X-Gm-Message-State: APjAAAUETAvd7ZCTC+tqyM9seHLNOmA2xniwhgJq6rrqr7VZifwnd8IS
+        aslE1QdHMzRZhvcJQjU23W2k18oL5yHLJpIEPGY=
+X-Google-Smtp-Source: APXvYqyKS6i0fcHmOYx363DJnPTuu/xw0bA5xIlQXAB08qPtFUJYujyOTv9lxMWA//8NpJVOebpAE1xkHqBFV70jCHw=
+X-Received: by 2002:a5d:514f:: with SMTP id u15mr21122702wrt.183.1564399401730;
+ Mon, 29 Jul 2019 04:23:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190728131648.879156507@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190725220215.460-1-paul@crapouillou.net>
+In-Reply-To: <20190725220215.460-1-paul@crapouillou.net>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Mon, 29 Jul 2019 13:23:10 +0200
+Message-ID: <CAFLxGvyi0+0E3M12A7cRoHfEKd8-7Yr8EMG9J=2XcjCxPWY5pA@mail.gmail.com>
+Subject: Re: [PATCH 00/11] JZ4740 SoC cleanup
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        linux-pm@vger.kernel.org, linux-mips@vger.kernel.org,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, od@zcrc.me,
+        linux-mtd@lists.infradead.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/07/2019 14:12, Thomas Gleixner wrote:
-> The generic VDSO implementation uses the Y2038 safe clock_gettime64() and
-> clock_getres_time64() syscalls as fallback for 32bit VDSO. This breaks
-> seccomp setups because these syscalls might be not (yet) allowed.
-> 
-> Implement the 32bit variants which use the legacy syscalls and select the
-> variant in the core library.
-> 
-> The 64bit time variants are not removed because they are required for the
-> time64 based vdso accessors.
+On Fri, Jul 26, 2019 at 12:02 AM Paul Cercueil <paul@crapouillou.net> wrote:
 >
+> Hi,
+>
+> This patchset converts the Qi LB60 MIPS board to devicetree and makes it
+> use all the shiny new drivers that have been developed or updated
+> recently.
+>
+> All the crappy old drivers and custom code can be dropped since they
+> have been replaced by better alternatives.
+>
+> Some of these alternatives are not yet in 5.3-rc1 but have already been
+> accepted by their respective maintainer for inclusion in 5.4-rc1.
+>
+> To upstream this patchset, I think that as soon as MIPS maintainers
+> agree to take patches 01-03/11 and 11/11, the other patches can go
+> through their respective maintainer's tree.
 
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-
-> Reported-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Reported-by: Paul Bolle <pebolle@tiscali.nl>
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Fixes: 7ac870747988 ("x86/vdso: Switch to generic vDSO implementation")
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  arch/x86/include/asm/vdso/gettimeofday.h |   36 +++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> --- a/arch/x86/include/asm/vdso/gettimeofday.h
-> +++ b/arch/x86/include/asm/vdso/gettimeofday.h
-> @@ -96,6 +96,8 @@ long clock_getres_fallback(clockid_t _cl
->  
->  #else
->  
-> +#define VDSO_HAS_32BIT_FALLBACK	1
-> +
->  static __always_inline
->  long clock_gettime_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
->  {
-> @@ -114,6 +116,23 @@ long clock_gettime_fallback(clockid_t _c
->  }
->  
->  static __always_inline
-> +long clock_gettime32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-> +{
-> +	long ret;
-> +
-> +	asm (
-> +		"mov %%ebx, %%edx \n"
-> +		"mov %[clock], %%ebx \n"
-> +		"call __kernel_vsyscall \n"
-> +		"mov %%edx, %%ebx \n"
-> +		: "=a" (ret), "=m" (*_ts)
-> +		: "0" (__NR_clock_gettime), [clock] "g" (_clkid), "c" (_ts)
-> +		: "edx");
-> +
-> +	return ret;
-> +}
-> +
-> +static __always_inline
->  long gettimeofday_fallback(struct __kernel_old_timeval *_tv,
->  			   struct timezone *_tz)
->  {
-> @@ -146,6 +165,23 @@ clock_getres_fallback(clockid_t _clkid,
->  		: "edx");
->  
->  	return ret;
-> +}
-> +
-> +static __always_inline
-> +long clock_getres32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-> +{
-> +	long ret;
-> +
-> +	asm (
-> +		"mov %%ebx, %%edx \n"
-> +		"mov %[clock], %%ebx \n"
-> +		"call __kernel_vsyscall \n"
-> +		"mov %%edx, %%ebx \n"
-> +		: "=a" (ret), "=m" (*_ts)
-> +		: "0" (__NR_clock_getres), [clock] "g" (_clkid), "c" (_ts)
-> +		: "edx");
-> +
-> +	return ret;
->  }
->  
->  #endif
-> 
-> 
+Was this series tested with the Ben Nanonote device?
+I have one of these and from time to time I upgrade the kernel on it.
 
 -- 
-Regards,
-Vincenzo
+Thanks,
+//richard
