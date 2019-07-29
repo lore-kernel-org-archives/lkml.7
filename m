@@ -2,118 +2,106 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76436C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1477C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4623D2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7183F2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:00:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="E6/bkMrk"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tK0GBhPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfG2B7m (ORCPT
+        id S1726508AbfG2CAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 21:59:42 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46961 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfG2B7l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 21:59:41 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k189so8340277pgk.13
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 18:59:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lg3UqXF6q2ogG0aws2NzF1jHYSyhZVe/vA7oA+neKFA=;
-        b=E6/bkMrkPKDrDhcmXH2s3oDHTlyow2A+S6Eo/ZAYntqGDtmLdprQl7L6igoOiQ8HaV
-         aVNLr7mjK3fi/Xh87ZwuozIOVc62pW9TZp0DpwyMJCo51ZL0sk0b8znOuZhFzmE7ksgG
-         qESYqoGpHc8H7SlT1HoWzBGGnR5ilqgDvlGII=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lg3UqXF6q2ogG0aws2NzF1jHYSyhZVe/vA7oA+neKFA=;
-        b=cBBJn+hdlKGuR7xm1j+5qa7HSaOJR4YIWo1/TJp7lB0rbBOoWiO3kpZMjJQs6/DpaS
-         Qi1S2lMrjtjjBZgAisK9FeCeR9csyKt5Y6fz3s8jk7e4acOFm1eeoi8R0Yv7hoXuIIwO
-         okNI8EU14mYtKYNmdrNCxLmHZAj4loAGIAhzLd6rqcf3JGw6HwCcv3MzbcgBouPn6Sjh
-         rV6eLjWk0pmehUw7HfvhfQxRJ8WhDtaF1wrsMd2u/p6d0xG7YTAAZK9jKkniAvUB9aia
-         frqb6z8siV91oJDm6MpJEg/w2q5P87OPOL8+xATsKkwkXWtpOiorF68Xi9BbGXgKlfMU
-         RJcQ==
-X-Gm-Message-State: APjAAAW+TVFMccgI+hNBqsvi8ck8EWKem9MqjLG74I9wDwi/f3XxTleP
-        OYGbP+xgHPLCWVrUXbTHsV8=
-X-Google-Smtp-Source: APXvYqz0yOUtkTmn9MkcOM02Oohy9zHEE8h3X0JJqqeFB1c4XJQqek5kkBolceHk7MK8oL/DMNpKsA==
-X-Received: by 2002:a63:4041:: with SMTP id n62mr30789182pga.312.1564365580822;
-        Sun, 28 Jul 2019 18:59:40 -0700 (PDT)
-Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
-        by smtp.gmail.com with ESMTPSA id q1sm81000964pfn.178.2019.07.28.18.59.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 18:59:39 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     kasan-dev@googlegroups.com, x86@kernel.org,
-        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Daniel Axtens <dja@axtens.net>, Marco Elver <elver@google.com>
-Subject: [PATCH] x86: panic when a kernel stack overflow is detected
-Date:   Mon, 29 Jul 2019 11:59:33 +1000
-Message-Id: <20190729015933.18049-1-dja@axtens.net>
-X-Mailer: git-send-email 2.20.1
+        Sun, 28 Jul 2019 22:00:08 -0400
+Received: from ozlabs.org ([203.11.71.1]:50033 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbfG2CAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 22:00:07 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45xjYv0j4Lz9sMQ;
+        Mon, 29 Jul 2019 12:00:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564365605;
+        bh=1pCp8KqHZ/WmNAFaNxpUyKcAQ0lgMCiZ+XkYHe8FaqA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tK0GBhPN/VGBdJDOufxs+98rT//vHQiOH5MYz92S+Pftw7aW9a/5kwJksYG0WQl+j
+         Ra3ovx5B8icKJf+RVZHWpkKsg8ZMHo88HRu5lHOXNqs+u7z85GsSJhj7p0YLU6D2vK
+         bL4RIWL3kIeXcgp3tHHJxfLZvWT7Jg1CrPvr+iCeigksl4omaBg4UrX0O1B0+11LxY
+         bGpeucflqz4HNTpEOKHzY0Hpso0EMgUBRaGX5pnqXNjwRe070BlYV9hSjaJEnW4jmH
+         xjCb05hVPTTsDzvJIDvElqYx7jGqdKeom9hjjVHSM1Kv5f9FjnOFso1or4mkRBTJCX
+         gwpRaQ96VdSwQ==
+Date:   Mon, 29 Jul 2019 12:00:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: linux-next: manual merge of the tip tree with Linus' tree
+Message-ID: <20190729120002.79714b83@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_//bYjR_P7ZP6u6bU/09cltSs";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, when a kernel stack overflow is detected via VMAP_STACK,
-the task is killed with die().
+--Sig_//bYjR_P7ZP6u6bU/09cltSs
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This isn't safe, because we don't know how that process has affected
-kernel state. In particular, we don't know what locks have been taken.
-For example, we can hit a case with lkdtm where a thread takes a
-stack overflow in printk() after taking the logbuf_lock. In that case,
-we deadlock when the kernel next does a printk.
+Hi all,
 
-Do not attempt to kill the process when a kernel stack overflow is
-detected. The system state is unknown, the only safe thing to do is
-panic(). (panic() also prints without taking locks so a useful debug
-splat is printed even when logbuf_lock is held.)
+Today's linux-next merge of the tip tree got a conflict in:
 
-Reported-by: Marco Elver <elver@google.com>
-Signed-off-by: Daniel Axtens <dja@axtens.net>
----
- arch/x86/kernel/traps.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+  arch/x86/include/uapi/asm/types.h
 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 4bb0f8447112..bfb0ec667c09 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -301,13 +301,14 @@ __visible void __noreturn handle_stack_overflow(const char *message,
- 						struct pt_regs *regs,
- 						unsigned long fault_address)
- {
--	printk(KERN_EMERG "BUG: stack guard page was hit at %p (stack is %p..%p)\n",
--		 (void *)fault_address, current->stack,
--		 (char *)current->stack + THREAD_SIZE - 1);
--	die(message, regs, 0);
-+	/*
-+	 * It's not safe to kill the task, as it's in kernel space and
-+	 * might be holding important locks. Just panic.
-+	 */
- 
--	/* Be absolutely certain we don't return. */
--	panic("%s", message);
-+	panic("%s - stack guard page was hit at %p (stack is %p..%p)",
-+	      message, (void *)fault_address, current->stack,
-+	      (char *)current->stack + THREAD_SIZE - 1);
- }
- #endif
- 
--- 
-2.20.1
+between commit:
 
+  d9c525229521 ("treewide: add "WITH Linux-syscall-note" to SPDX tag of uap=
+i headers")
+
+from Linus' tree and commit:
+
+  701010532164 ("x86/build: Remove unneeded uapi asm-generic wrappers")
+
+from the tip tree.
+
+I fixed it up (I removed the file) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_//bYjR_P7ZP6u6bU/09cltSs
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0+UyIACgkQAVBC80lX
+0GxMXQgAmmFqa+4w27VbxICOUHIP6GTJXTW8xCw4NVlBu67+k+t7xtPvKAm0EMCt
+9fLiPMIt6IDWybwLPQwd7ck3gNBzL5jyfV3bhgtEVsqEc9pUL8u9UsY+Xkne4DXI
+7y+pjoO7T53E1PLZM4q67DeKfSZkYKS6Wv3PXhShyabiCpcECZv7PmG4/w0CVyx3
+oLVx+fUlk11qbg4xUJxYWwW5GCADhZE0Uhfix4XRaNUhYd2LsUjOgCdF83O/YX3t
+WtnwEp8/5xINz5IglWRYwJozvuUIqC5wQmnwx206uAVK3UUH9w0LqFOHJcbBrvaZ
+Qaulkkm9LN5bEr3q6+ltYi4CQD2STA==
+=e2VR
+-----END PGP SIGNATURE-----
+
+--Sig_//bYjR_P7ZP6u6bU/09cltSs--
