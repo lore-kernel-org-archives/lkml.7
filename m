@@ -2,120 +2,147 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8974C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01E8C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D4E216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3225216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388112AbfG2PdY (ORCPT
+        id S2388096AbfG2Pdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:33:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:45808 "EHLO foss.arm.com"
+        Mon, 29 Jul 2019 11:33:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:45822 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387887AbfG2PdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:33:23 -0400
+        id S2387887AbfG2Pdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:33:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15FDA337;
-        Mon, 29 Jul 2019 08:33:23 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 132313F694;
-        Mon, 29 Jul 2019 08:33:21 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 16:33:19 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Nikolay Borisov <nborisov@suse.com>, linux-btrfs@vger.kernel.org,
-        paulmck@linux.ibm.com, andrea.parri@amarulasolutions.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] Refactor snapshot vs nocow writers locking
-Message-ID: <20190729153319.GH2368@arrakis.emea.arm.com>
-References: <20190719083949.5351-1-nborisov@suse.com>
- <ed015bb1-490e-7102-d172-73c1d069476c@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEAE3337;
+        Mon, 29 Jul 2019 08:33:48 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D6103F694;
+        Mon, 29 Jul 2019 08:33:46 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 16:33:41 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, youlin.pei@mediatek.com
+Subject: Re: [v2,2/2] PCI: mediatek: Add controller support for MT7629
+Message-ID: <20190729153341.GA23266@e121166-lin.cambridge.arm.com>
+References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+ <20190628073425.25165-3-jianjun.wang@mediatek.com>
+ <1564385918.17211.6.camel@mhfsdcap03>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ed015bb1-490e-7102-d172-73c1d069476c@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1564385918.17211.6.camel@mhfsdcap03>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some nitpicking below:
-
-On Mon, Jul 29, 2019 at 03:13:42PM +0100, Valentin Schneider wrote:
-> specs.tla:
+On Mon, Jul 29, 2019 at 03:38:38PM +0800, Jianjun Wang wrote:
+> On Fri, 2019-06-28 at 15:34 +0800, Jianjun Wang wrote:
+> > MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
+> > 
+> > The HW default value of its Device ID is invalid, fix its Device ID to
+> > match the hardware implementation.
+> > 
+> > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> > ---
+> >  drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
+> >  include/linux/pci_ids.h                |  1 +
+> >  2 files changed, 19 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> > index 80601e1b939e..e5e6740b635d 100644
+> > --- a/drivers/pci/controller/pcie-mediatek.c
+> > +++ b/drivers/pci/controller/pcie-mediatek.c
+> > @@ -73,6 +73,7 @@
+> >  #define PCIE_MSI_VECTOR		0x0c0
+> >  
+> >  #define PCIE_CONF_VEND_ID	0x100
+> > +#define PCIE_CONF_DEVICE_ID	0x102
+> >  #define PCIE_CONF_CLASS_ID	0x106
+> >  
+> >  #define PCIE_INT_MASK		0x420
+> > @@ -141,12 +142,16 @@ struct mtk_pcie_port;
+> >  /**
+> >   * struct mtk_pcie_soc - differentiate between host generations
+> >   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
+> > + * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
+> > + * @device_id: Device ID which this host need to be fixed
+> >   * @ops: pointer to configuration access functions
+> >   * @startup: pointer to controller setting functions
+> >   * @setup_irq: pointer to initialize IRQ functions
+> >   */
+> >  struct mtk_pcie_soc {
+> >  	bool need_fix_class_id;
+> > +	bool need_fix_device_id;
+> > +	unsigned int device_id;
+> >  	struct pci_ops *ops;
+> >  	int (*startup)(struct mtk_pcie_port *port);
+> >  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+> > @@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+> >  		writew(val, port->base + PCIE_CONF_CLASS_ID);
+> >  	}
+> >  
+> > +	if (soc->need_fix_device_id)
+> > +		writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
+> > +
+> >  	/* 100ms timeout value should be enough for Gen1/2 training */
+> >  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+> >  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+> > @@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
+> >  	.setup_irq = mtk_pcie_setup_irq,
+> >  };
+> >  
+> > +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
+> > +	.need_fix_class_id = true,
+> > +	.need_fix_device_id = true,
+> > +	.device_id = PCI_DEVICE_ID_MEDIATEK_7629,
+> > +	.ops = &mtk_pcie_ops_v2,
+> > +	.startup = mtk_pcie_startup_port_v2,
+> > +	.setup_irq = mtk_pcie_setup_irq,
+> > +};
+> > +
+> >  static const struct of_device_id mtk_pcie_ids[] = {
+> >  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
+> >  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
+> >  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
+> >  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
+> > +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
+> >  	{},
+> >  };
+> >  
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 70e86148cb1e..aa32962759b2 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -2131,6 +2131,7 @@
+> >  #define PCI_VENDOR_ID_MYRICOM		0x14c1
+> >  
+> >  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
+> > +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
+> >  
+> >  #define PCI_VENDOR_ID_TITAN		0x14D2
+> >  #define PCI_DEVICE_ID_TITAN_010L	0x8001
 > 
-> ---- MODULE specs ----
-> EXTENDS Integers, Sequences, TLC
+> Hi Bjorn & Lorenzo,
 > 
-> CONSTANTS
->     NR_WRITERS,
->     NR_READERS,
->     WRITER_TASK,
->     READER_TASK
-> 
-> WRITERS == {WRITER_TASK} \X (1..NR_WRITERS)
-> READERS == {READER_TASK} \X (1..NR_READERS)
-> THREADS == WRITERS \union READERS
+> Is this patch ok or is there anything I need to fixed?
 
-Recommendation: use symbolic values for WRITERS and READERS (defined in
-.cfg: e.g. r1, r2, r3, w1, w2, w2). It allows you do to symmetry
-optimisations. We've also hit a TLC bug in the past with process values
-made up of a Cartesian product (though it may have been fixed since).
+We are getting to it shortly, thanks for your patience.
 
-> macro ReadLock(tid)
-> {
->     if (lock_state = "idle" \/ lock_state = "read_locked") {
->         lock_state := "read_locked";
->         threads[tid] := "read_locked";
->     } else {
->         assert lock_state = "write_locked";
->         \* waiting for writers to finish
->         threads[tid] := "write_waiting";
->         await lock_state = "" \/ lock_state = "read_locked";
-
-lock_state = "idle"?
-
-> macro WriteLock(tid)
-> {
->     if (lock_state = "idle" \/ lock_state = "write_locked") {
->         lock_state := "write_locked";
->         threads[tid] := "write_locked";
->     } else {
->         assert lock_state = "read_locked";
->         \* waiting for readers to finish
->         threads[tid] := "read_waiting";
->         await lock_state = "idle" \/ lock_state = "write_locked";
->     };
-> }
-
-I'd say that's one of the pitfalls of PlusCal. The above is executed
-atomically, so you'd have the lock_state read and updated in the same
-action. Looking at the C patches, there is an
-atomic_read(&lock->readers) followed by a
-percpu_counter_inc(&lock->writers). Between these two, you can have
-"readers" becoming non-zero via a different CPU.
-
-My suggestion would be to use procedures with labels to express the
-non-atomicity of such sequences.
-
-> macro ReadUnlock(tid) {
->     if (threads[tid] = "read_locked") {
->         threads[tid] := "idle";
->         if (\A thread \in THREADS: threads[thread] # "read_locked") {
->             \* we were the last read holder, everyone else should be waiting, unlock the lock
->             lock_state := "idle";
->         };
->     };
-> }
-
-I'd make this close to the proposed C code with atomic counters. You'd
-not be able to check each thread atomically in practice anyway.
-
--- 
-Catalin
+Lorenzo
