@@ -2,123 +2,142 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29629C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AECAC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E79E9205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="duEiWJqA"
+	by mail.kernel.org (Postfix) with ESMTP id 0B7F7205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564430384;
+	bh=Ozxi2XtjT78D7Uj5XdELHqHEiY8/3tGIhhgn9AW5HS8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SoW5Tbs5Zbz/2yxijkJBpl5kUya7yEW0y7qacp1Wcx8V/rwSHUDP10dEAf49xmbgi
+	 4NqmMx05gofhoRJqEklYHj6xm7jlWWE03/xuhWXUs3DlMvV6F1vIZpGizLShR39ecT
+	 sRWDp5jQlD74MsvbVNqdhscR8p94fz7IzpkkeCGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404362AbfG2T7k (ORCPT
+        id S1729389AbfG2T7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:59:40 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46463 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728882AbfG2TxB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:59:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728680AbfG2TxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 15:53:01 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k189so9730240pgk.13;
-        Mon, 29 Jul 2019 12:53:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=txBFEA0p0mencL2FMZffTtTBfxW3XrDp/4JH32LKLg4=;
-        b=duEiWJqAE4UPSZq/9tzAYpc+uL61VBt4tJ1ePuEtIn+sKgLJgKuO88g+UOLkEHty+a
-         H+e80AqYmT2zulzRH3YmpyzB+wiNa9wpbKqzcU/tm5VK11dTgzYRwSZLFE3gXkQ0kstB
-         81ikjiImNRIF09o2tFebG6wcs0h5InIqWz+5hN5L31xlSn0dljW0q99WMOYwnMrJOtSQ
-         8ZzSjwZVNE4TJjD1SXynbxEY6YEeL5PbsHqC3/z9ZZOQn2Mlvvoj2yb0yjNbdQbzWQAY
-         UHdmjKEEzvmq1Pq2/1K5dc31I/Ubt1fjDBsZcDMWpEt+LNHz1MRiScHBwLT5n6sH/Q/Q
-         45Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=txBFEA0p0mencL2FMZffTtTBfxW3XrDp/4JH32LKLg4=;
-        b=XQicbLnfMCDjlXO5kQgt6iQIJo+jNJ+RCQHqpHp/n2ApeUfrkbCTRL0/hEb8SGoFPO
-         aK077GXl4YHjgAqr9GMxvsdCq74+1IvFHrjt/KkVk4w5YQBabXCpNiTMN+Ufi5ABYbHY
-         xE/apzkSztTHWxAZJkylGuh/sZwFwjktgEbTvZHyO5J+QPwj6hyR82D7hjYRS/0fFZfH
-         tdxLER1Ae7jhwUC6j9M6JqSE7OFDTS0id0b5va14s6pIMkQtTBzd6MISaSlmkbcRKhAN
-         vrvRhy7Ae3C9u96AV5+JC/6DIslVNv5vBoJnSrPFTC/VwkCE493Xmom425QfwatTdM/h
-         avIw==
-X-Gm-Message-State: APjAAAVbGxT+UiX9iFQituVilmw5Fqo5h7mtzL+FB9uGA5tt0vqZnPx5
-        S2B2yggV1pqY/TsLiVnoBEQ7Oq4o
-X-Google-Smtp-Source: APXvYqyZA64AdyyRDDWjGksnRFKzgAF1EPZGhkMHmGHI/TUqw1qcy2bpBGj83iyyUVhQS7SaG9cWFQ==
-X-Received: by 2002:a17:90a:360c:: with SMTP id s12mr115325049pjb.30.1564429979746;
-        Mon, 29 Jul 2019 12:52:59 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.52.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 12:52:59 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-serial@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 10/24] tty: serial: fsl_lpuart: Drop no-op bit opearation
-Date:   Mon, 29 Jul 2019 12:52:12 -0700
-Message-Id: <20190729195226.8862-11-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190729195226.8862-1-andrew.smirnov@gmail.com>
-References: <20190729195226.8862-1-andrew.smirnov@gmail.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EBEA217D6;
+        Mon, 29 Jul 2019 19:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564429979;
+        bh=Ozxi2XtjT78D7Uj5XdELHqHEiY8/3tGIhhgn9AW5HS8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cuQrj0w9HhbvDlsD+gkpaYU0WYLEdIscZ0X1A9rLbPvLTM8QM/6/q2JhPeM1RrAtz
+         0M9YxlgOAIy3yYt17p0YOK1OdmjQ9Xdc9mpDAukiwOEn0NTTU6+zjuwfYJ0NeOwypg
+         NYsbTzsAszedlKfRSzCi+K101kEyQ+mloHEXXWkc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-arm-kernel@lists.infradead.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Song Liu <songliubraving@fb.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 120/215] perf stat: Fix use-after-freed pointer detected by the smatch tool
+Date:   Mon, 29 Jul 2019 21:21:56 +0200
+Message-Id: <20190729190759.928908021@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
+References: <20190729190739.971253303@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The check for termios->c_cflag & CRTSCTS ensure that if we reach else
-branch, CRTSCTS in termios->c_cflag is already going to be
-cleard. Doing so explicitly there is not necessary. Drop it.
+[ Upstream commit c74b05030edb3b52f4208d8415b8c933bc509a29 ]
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-imx@nxp.com
-Cc: linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Based on the following report from Smatch, fix the use-after-freed
+pointer.
+
+  tools/perf/builtin-stat.c:1353
+  add_default_attributes() warn: passing freed memory 'str'.
+
+The pointer 'str' has been freed but later it is still passed into the
+function parse_events_print_error().  This patch fixes this
+use-after-freed issue.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Alexios Zavras <alexios.zavras@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Changbin Du <changbin.du@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
+Link: http://lkml.kernel.org/r/20190702103420.27540-3-leo.yan@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/fsl_lpuart.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ tools/perf/builtin-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index f87ea889ff86..5181ba5d8f71 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -1651,12 +1651,10 @@ lpuart_set_termios(struct uart_port *port, struct ktermios *termios,
- 	if (sport->port.rs485.flags & SER_RS485_ENABLED)
- 		termios->c_cflag &= ~CRTSCTS;
- 
--	if (termios->c_cflag & CRTSCTS) {
-+	if (termios->c_cflag & CRTSCTS)
- 		modem |= (UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
--	} else {
--		termios->c_cflag &= ~CRTSCTS;
-+	else
- 		modem &= ~(UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
--	}
- 
- 	if (termios->c_cflag & CSTOPB)
- 		termios->c_cflag &= ~CSTOPB;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 1ae66f09dc7d..e28002d90573 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1276,8 +1276,8 @@ static int add_default_attributes(void)
+ 				fprintf(stderr,
+ 					"Cannot set up top down events %s: %d\n",
+ 					str, err);
+-				free(str);
+ 				parse_events_print_error(&errinfo, str);
++				free(str);
+ 				return -1;
+ 			}
+ 		} else {
 -- 
-2.21.0
+2.20.1
+
+
 
