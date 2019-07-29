@@ -2,101 +2,106 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43871C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986DEC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1964620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF0920679
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:40:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="A4v2BH/x"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="LUvQwL/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfG2Jjm (ORCPT
+        id S1726281AbfG2Jkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:39:42 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:20905 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfG2Jjl (ORCPT
+        Mon, 29 Jul 2019 05:40:36 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:42694 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725818AbfG2Jkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:39:41 -0400
-X-Greylist: delayed 1392 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 05:39:40 EDT
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x6T9dZk6032431;
-        Mon, 29 Jul 2019 18:39:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x6T9dZk6032431
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564393176;
-        bh=OvGgGY+dgwLXgEKVa2h6PzusTMe05KI1PVF/woNjrhk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=A4v2BH/xAeLIhnO42BZ/x9uQ4+WEMdBV9dB+rYLnglOykUhWDFOFWVa73Emf8Gycm
-         rghWwoz3WN5dzBdIp+egO6z/MByjpw7VgupiEElTwzj4/5ERT1yacLPzSwCQ5xfjT7
-         26ZmIRLiXg+3kcrg+nLwRPYYRckZtTzmM6gL79HUOpF+MnmVdS3GsnxiCCd0wu1jgb
-         UrDFvjM67jKDTQul/vH5poRqoEa9PAUAKLrAVOcj+SDUHRLtP1KsBczN/VZnJTvNjO
-         fhb/VAXCWN/wJPbT2tYMXwlrGE7TNp0GeqJk7Qr5xZnIVkZpLYFAjIqczxgY5Afg2B
-         c4UVJAagV9O9g==
-X-Nifty-SrcIP: [209.85.221.176]
-Received: by mail-vk1-f176.google.com with SMTP id b69so11866731vkb.3;
-        Mon, 29 Jul 2019 02:39:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAUt8NlOEj2859aPHppiGIZrFxsI0RJNJQgk4BJ0XRLSbM2km92j
-        4FYeZn77Kmw1Dws0XlDR87rR84F/CK4l9mbxcC0=
-X-Google-Smtp-Source: APXvYqwEX+Lp8XpvfBa4PcWqJpgOlLEg0Aba3p7+WL/zHArfuap+JR6G0C4CvAMZW3uB2c3HEIKDtFji+TvuRuE8UyM=
-X-Received: by 2002:a1f:a34c:: with SMTP id m73mr27418063vke.74.1564393175172;
- Mon, 29 Jul 2019 02:39:35 -0700 (PDT)
+        Mon, 29 Jul 2019 05:40:35 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 8E7312E095E;
+        Mon, 29 Jul 2019 12:40:31 +0300 (MSK)
+Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
+        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id U8DF8V3uZd-eVNCsmIB;
+        Mon, 29 Jul 2019 12:40:31 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1564393231; bh=7/tBJ4/qqqj7+TYSG8WJ1dkQnz6GbGSbSQMPTnlbeZw=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=LUvQwL/QlD6Pg9qp202MGi9db0D1vc9D2+yRRANkR7RNSkFzvu6mMu9rnOq3s/Z7g
+         9LobH066Mj6J048YjrUosIn/5LmhCs5N3ausLHyF+VaQpKLpjS4ngZ1UJ3lPHqZRbl
+         MkWJ2c9sBwf1N7xBB6VRESXglZ55Hw81Vcb+43Zo=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:6454:ac35:2758:ad6a])
+        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 9QqUdtKSm2-eUAaJpRd;
+        Mon, 29 Jul 2019 12:40:31 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
+ in get_user_pages loop
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+References: <156431697805.3170.6377599347542228221.stgit@buzz>
+ <20190729091738.GF9330@dhcp22.suse.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <3d6fc779-2081-ba4b-22cf-be701d617bb4@yandex-team.ru>
+Date:   Mon, 29 Jul 2019 12:40:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190729091517.5334-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190729091517.5334-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 29 Jul 2019 18:38:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASjXdMJG5OVz4qhyGHHLGd0uZO9ifH_iqkUqYxKD+Xn2g@mail.gmail.com>
-Message-ID: <CAK7LNASjXdMJG5OVz4qhyGHHLGd0uZO9ifH_iqkUqYxKD+Xn2g@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: initialize CLANG_FLAGS correctly in the top Makefile
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190729091738.GF9330@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 6:16 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> CLANG_FLAGS is initialized by the following line:
->
->   CLANG_FLAGS     := --target=$(notdir $(CROSS_COMPILE:%-=%))
->
-> ..., which is run only when CROSS_COMPILE is set.
->
-> Some build targets (bindeb-pkg etc.) recurse to the top Makefile.
->
-> When you build the kernel with Clang but without CROSS_COMPILE,
-> the same compiler flags such as -no-integrated-as are accumulated
-> into CLANG_FLAGS.
->
-> If you run 'make CC=clang' and then 'make CC=clang bindeb-pkg',
-> Kbuild will recompile everything needlessly due to the build command
-> change.
->
-> Fix this by correctly initializing CLANG_FLAGS.
->
-> Fixes: 238bcbc4e07f ("kbuild: consolidate Clang compiler flags")
-> Cc: <stable@vger.kernel.org> # v4.20+
+On 29.07.2019 12:17, Michal Hocko wrote:
+> On Sun 28-07-19 15:29:38, Konstantin Khlebnikov wrote:
+>> High memory limit in memory cgroup allows to batch memory reclaiming and
+>> defer it until returning into userland. This moves it out of any locks.
+>>
+>> Fixed gap between high and max limit works pretty well (we are using
+>> 64 * NR_CPUS pages) except cases when one syscall allocates tons of
+>> memory. This affects all other tasks in cgroup because they might hit
+>> max memory limit in unhandy places and\or under hot locks.
+>>
+>> For example mmap with MAP_POPULATE or MAP_LOCKED might allocate a lot
+>> of pages and push memory cgroup usage far ahead high memory limit.
+>>
+>> This patch uses halfway between high and max limits as threshold and
+>> in this case starts memory reclaiming if mem_cgroup_handle_over_high()
+>> called with argument only_severe = true, otherwise reclaim is deferred
+>> till returning into userland. If high limits isn't set nothing changes.
+>>
+>> Now long running get_user_pages will periodically reclaim cgroup memory.
+>> Other possible targets are generic file read/write iter loops.
+> 
+> I do see how gup can lead to a large high limit excess, but could you be
+> more specific why is that a problem? We should be reclaiming the similar
+> number of pages cumulatively.
+> 
 
-This should be v5.0+
+Large gup might push usage close to limit and keep it here for a some time.
+As a result concurrent allocations will enter direct reclaim right at
+charging much more frequently.
 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+
+Right now deferred recalaim after passing high limit works like distributed
+memcg kswapd which reclaims memory in "background" and prevents completely
+synchronous direct reclaim.
+
+Maybe somebody have any plans for real kswapd for memcg?
 
 
--- 
-Best Regards
-Masahiro Yamada
+I've put mem_cgroup_handle_over_high in gup next to cond_resched() and
+later that gave me idea that this is good place for running any
+deferred works, like bottom half for tasks. Right now this happens
+only at switching into userspace.
