@@ -2,149 +2,70 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F0DC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE84C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA5B206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31342070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387721AbfG2Nfg (ORCPT
+        id S2387769AbfG2NgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 09:35:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3233 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387638AbfG2Nff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 09:35:35 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 55120CB76ABAB4BC196D;
-        Mon, 29 Jul 2019 21:35:30 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
- 21:35:19 +0800
-Subject: Re: [RFC PATCH 05/10] powerpc/fsl_booke/32: introduce
- reloc_kernel_entry() helper
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>
-References: <20190717080621.40424-1-yanaijie@huawei.com>
- <20190717080621.40424-6-yanaijie@huawei.com>
- <e4ccd015-a9c4-b0a6-e3ca-d37a04e29ec6@c-s.fr>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <60238fe3-a6ec-3537-d56d-29ebeb38f5fd@huawei.com>
-Date:   Mon, 29 Jul 2019 21:35:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Mon, 29 Jul 2019 09:36:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:44430 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387722AbfG2NgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 09:36:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2C5328;
+        Mon, 29 Jul 2019 06:36:21 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFB1E3F71F;
+        Mon, 29 Jul 2019 06:36:20 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 14:36:18 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzkaller <syzkaller@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Eric Biggers <ebiggers@google.com>,
+        Eric Dumazet <edumazet@google.com>
+Subject: Re: syzbot bisection analysis
+Message-ID: <20190729133618.GG2368@arrakis.emea.arm.com>
+References: <CACT4Y+Y3nN=nLEkHXLFcX7vxp_vs1JrD=8auJ3cX9we6TQHO+w@mail.gmail.com>
+ <CACT4Y+YXQBF1QQwEPEkR3b3-RoeZw_We5B-o_71xxc9HMSyTdw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e4ccd015-a9c4-b0a6-e3ca-d37a04e29ec6@c-s.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+YXQBF1QQwEPEkR3b3-RoeZw_We5B-o_71xxc9HMSyTdw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dmitry,
 
-On 2019/7/29 19:08, Christophe Leroy wrote:
-> 
-> 
-> Le 17/07/2019 à 10:06, Jason Yan a écrit :
->> Add a new helper reloc_kernel_entry() to jump back to the start of the
->> new kernel. After we put the new kernel in a randomized place we can use
->> this new helper to enter the kernel and begin to relocate again.
->>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> Cc: Diana Craciun <diana.craciun@nxp.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Kees Cook <keescook@chromium.org>
->> ---
->>   arch/powerpc/kernel/head_fsl_booke.S | 16 ++++++++++++++++
->>   arch/powerpc/mm/mmu_decl.h           |  1 +
->>   2 files changed, 17 insertions(+)
->>
->> diff --git a/arch/powerpc/kernel/head_fsl_booke.S 
->> b/arch/powerpc/kernel/head_fsl_booke.S
->> index a57d44638031..ce40f96dae20 100644
->> --- a/arch/powerpc/kernel/head_fsl_booke.S
->> +++ b/arch/powerpc/kernel/head_fsl_booke.S
->> @@ -1144,6 +1144,22 @@ _GLOBAL(create_tlb_entry)
->>       sync
->>       blr
->> +/*
->> + * Return to the start of the relocated kernel and run again
->> + * r3 - virtual address of fdt
->> + * r4 - entry of the kernel
->> + */
->> +_GLOBAL(reloc_kernel_entry)
->> +    mfmsr    r7
->> +    li    r8,(MSR_IS | MSR_DS)
->> +    andc    r7,r7,r8
-> 
-> Instead of the li/andc, what about the following:
-> 
-> rlwinm r7, r7, 0, ~(MSR_IS | MSR_DS)
-> 
+On Mon, Jul 29, 2019 at 01:08:16PM +0200, Dmitry Vyukov wrote:
+> The remaining 10 were all diverged due to other unrelated memory leaks
+> and other non-leak bugs. It seems the main 2 reasons for this:
+> 1. Lots of leaks are old (kernel is under-tested with KMEMLEAK).
+> 2. Lots of unrelated bugs.
+> It's unclear how much KMEMLEAK potential for false positives is in
+> play. For example, lots of bisections are diverged by "memory leak in
+> batadv_tvlv_handler_register", but this is a true bug reported at:
+> https://syzkaller.appspot.com/bug?id=0654529ad3cc1d67a6d9812d8b75489c03dfb983
+> However, some are diverged by e.g. "memory leak in __neigh_create" and
+> "memory leak in copy_process" and these were not reported as separate
+> leaks, so either false positives or true leaks fixed in previous
+> releases.
 
-Good idea.
+Out of curiosity, when the tool tries to bisect a memory leak, does it
+check for precisely that leak (e.g. by function name, object size) or
+any other unrelated leak can confuse the bisection?
 
->> +
->> +    mtspr    SPRN_SRR0,r4
->> +    mtspr    SPRN_SRR1,r7
->> +    isync
->> +    sync
->> +    rfi
-> 
-> Are the isync/sync really necessary ? AFAIK, rfi is context synchronising.
-> 
-
-I see some code with sync before rfi so I'm not sure. I will check this
-and drop the isync/sync if it's true.
-
-Thanks.
-
->> +
->>   /*
->>    * Create a tlb entry with the same effective and physical address as
->>    * the tlb entry used by the current running code. But set the TS to 1.
->> diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
->> index d7737cf97cee..dae8e9177574 100644
->> --- a/arch/powerpc/mm/mmu_decl.h
->> +++ b/arch/powerpc/mm/mmu_decl.h
->> @@ -143,6 +143,7 @@ extern void adjust_total_lowmem(void);
->>   extern int switch_to_as1(void);
->>   extern void restore_to_as0(int esel, int offset, void *dt_ptr, int 
->> bootcpu);
->>   extern void create_tlb_entry(phys_addr_t phys, unsigned long virt, 
->> int entry);
->> +extern void reloc_kernel_entry(void *fdt, int addr);
-> 
-> No new 'extern' please, see 
-> https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/8125//artifact/linux/checkpatch.log 
-> 
-> 
-> 
->>   #endif
->>   extern void loadcam_entry(unsigned int index);
->>   extern void loadcam_multi(int first_idx, int num, int tmp_idx);
->>
-> 
-> Christophe
-> 
-> .
-> 
-
+-- 
+Catalin
