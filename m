@@ -2,142 +2,141 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E6AC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177BCC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42CF21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564418244;
-	bh=VKA8DIso9CdNJ8gOxAJ7MGKl1tbtr3ng9ZYI2lKQkaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S8KThu7YX1Tg3NOHIZ9U+gOFw/wSAMzPgjAnUF7uXimxSWwoRjiaLKQAAy/9x/CX0
-	 rBE0TXhjh5m1VRbmApcki85dOmM1gXcxWfecdxOcY/T5/bUcYJeLK7cwj1wx5X5q0w
-	 Jn1LW67DRvxExV0KMT44g/Y1S3AkTpx1AEGxHiCs=
+	by mail.kernel.org (Postfix) with ESMTP id DA9CF206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbfG2QhW (ORCPT
+        id S1729263AbfG2QiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:37:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfG2QhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:37:22 -0400
-Received: from localhost (lpr83-1-88-168-111-231.fbx.proxad.net [88.168.111.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10133206A2;
-        Mon, 29 Jul 2019 16:37:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564418240;
-        bh=VKA8DIso9CdNJ8gOxAJ7MGKl1tbtr3ng9ZYI2lKQkaE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XHE1r3AAw6dpQSdpj+Gj50Cqp4CxCDPjTo4pyFJ+rAHvdh1j0Y8l/ineFW/+H+KFS
-         3LEI6GdMNIHewUWnsaBja7LdXvUsNb8+DYqLcIJX/UYEt9To4C70JnCvtvxDQtESSJ
-         KuQXm8q1R0zhoWkDoreCM2927q1TC08Om9PlUp1Y=
-Date:   Mon, 29 Jul 2019 18:37:15 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 2/6] pwm: sun4i: Add a quirk for reset line
-Message-ID: <20190729163715.vtv7lkrywewomxga@flea.home>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-3-jernej.skrabec@siol.net>
- <20190729063630.rn325whatfnc3m7n@pengutronix.de>
- <CAGb2v65KOpivHQNkg+R2=D=ejCJYnPdVcyHJZW-GJCR8j0Yk0g@mail.gmail.com>
- <20190729071218.bukw7vxilqy523k3@pengutronix.de>
+        Mon, 29 Jul 2019 12:38:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:54625 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728778AbfG2QiH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:38:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id n8so68052043ioo.21
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=wGtsh4LHVqfKGzY145InjKGz5bNHgbf3FLGwAMZ6gLQ=;
+        b=A+8Ba3xdXEkIKQ1q56T+xh8bmvctXY4uVz0YmBZBZTrvRgWJxD2BXMOrUoyeJaQ51S
+         uWFOimUpKv7xyPZEsWQoRgEmSlJoOTjJ40kKkzAGbmGXejAwLZ2R/7cYpZiDWGhgJ7m5
+         981ZC9qESLka+YLDAQzJgZfM8ib3wQM6vB+yBufm9BwI9U7+5DM8UdexXo68PiUT2KHX
+         EVvOc9XN+vVMZi/hf5efS+11GK4ip65lNj8A/o1pA35YsoV2RHSk7zDHnR/5nvVG0qnU
+         doH2L1wRZutcEYRQ4Q0yovl4Yz+kQOBuUNCAqKGpFTwNYSD796KwerDtbKWdPLeE3Sv8
+         teVw==
+X-Gm-Message-State: APjAAAVJHWKv4dJpLHHXsvr8oAooCbU5LKTsp7ezPG5jhxomaLWyevZK
+        0G03S/JLavLP22EXTky/xv0qldizCet6fT0o+EpvsUi0Ej24
+X-Google-Smtp-Source: APXvYqwxx3vJ6RmdfNcXCsQ3loSDEEjsGDpw2kG0TqsxPvnMbEdFJV4h/UsG+b1nZf4yl9FpYvgEEbT/7CHEw2g3WQRYJ6bxEeEl
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="c27mc7zieuu4am73"
-Content-Disposition: inline
-In-Reply-To: <20190729071218.bukw7vxilqy523k3@pengutronix.de>
-User-Agent: NeoMutt/20180716
+X-Received: by 2002:a5d:87c6:: with SMTP id q6mr32794880ios.115.1564418286108;
+ Mon, 29 Jul 2019 09:38:06 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:38:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000394df0058ed48487@google.com>
+Subject: WARNING in usbtouch_open
+From:   syzbot <syzbot+199ea16c7f26418b4365@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, andreyknvl@google.com,
+        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+        kstewart@linuxfoundation.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        mpe@ellerman.id.au, rydberg@bitmath.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---c27mc7zieuu4am73
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+syzbot found the following crash on:
 
-On Mon, Jul 29, 2019 at 09:12:18AM +0200, Uwe Kleine-K=F6nig wrote:
-> Hello,
->
-> On Mon, Jul 29, 2019 at 02:43:23PM +0800, Chen-Yu Tsai wrote:
-> > On Mon, Jul 29, 2019 at 2:36 PM Uwe Kleine-K=F6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Fri, Jul 26, 2019 at 08:40:41PM +0200, Jernej Skrabec wrote:
-> > > > @@ -371,6 +374,14 @@ static int sun4i_pwm_probe(struct platform_dev=
-ice *pdev)
-> > > >       if (IS_ERR(pwm->clk))
-> > > >               return PTR_ERR(pwm->clk);
-> > > >
-> > > > +     if (pwm->data->has_reset) {
-> > > > +             pwm->rst =3D devm_reset_control_get(&pdev->dev, NULL);
-> > > > +             if (IS_ERR(pwm->rst))
-> > > > +                     return PTR_ERR(pwm->rst);
-> > > > +
-> > > > +             reset_control_deassert(pwm->rst);
-> > > > +     }
-> > > > +
-> > >
-> > > I wonder why there is a need to track if a given chip needs a reset
-> > > line. I'd just use devm_reset_control_get_optional() and drop the
-> > > .has_reset member in struct sun4i_pwm_data.
-> >
-> > Because it's not optional for this platform, i.e. it won't work if
-> > the reset control (or clk, in the next patch) is somehow missing from
-> > the device tree.
->
-> If the device tree is wrong it is considered ok that the driver doesn't
-> behave correctly. So this is not a problem you need (or should) care
-> about.
+HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=1503f4ec600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
+dashboard link: https://syzkaller.appspot.com/bug?extid=199ea16c7f26418b4365
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=173e4442600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=115482b2600000
 
-To some extent that's true, but if we can make the life easier for
-everyone by reporting an error and bailing out instead of silently
-ignoring that, continuing to probe and just ending up with a
-completely broken system for no apparent reason, then why not just do
-that?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+199ea16c7f26418b4365@syzkaller.appspotmail.com
 
-I mean, all it takes is three lines of code.
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(lock->magic != lock)
+WARNING: CPU: 0 PID: 1724 at kernel/locking/mutex.c:912 __mutex_lock_common  
+kernel/locking/mutex.c:912 [inline]
+WARNING: CPU: 0 PID: 1724 at kernel/locking/mutex.c:912  
+__mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 1724 Comm: syz-executor025 Not tainted 5.3.0-rc2+ #23
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x2a3/0x6da kernel/panic.c:219
+  __warn.cold+0x20/0x4a kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
+RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:912 [inline]
+RIP: 0010:__mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
+Code: d2 0f 85 f6 05 00 00 44 8b 05 bb 99 0a 02 45 85 c0 0f 85 0a f4 ff ff  
+48 c7 c6 00 87 a6 85 48 c7 c7 a0 84 a6 85 e8 f4 24 b8 fb <0f> 0b e9 f0 f3  
+ff ff 65 48 8b 1c 25 00 ef 01 00 be 08 00 00 00 48
+RSP: 0018:ffff8881d29cf740 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff812830fd RDI: ffffed103a539eda
+RBP: ffff8881d29cf8b0 R08: ffff8881d3e84800 R09: fffffbfff0d5eb25
+R10: fffffbfff0d5eb24 R11: ffffffff86af5923 R12: 0000000000000000
+R13: dffffc0000000000 R14: ffff8881d33cdbc8 R15: ffff8881d3e97140
+  usbtouch_open+0x101/0x310 drivers/input/touchscreen/usbtouchscreen.c:1537
+  input_open_device+0x170/0x280 drivers/input/input.c:607
+  evdev_open_device drivers/input/evdev.c:433 [inline]
+  evdev_open+0x3fe/0x510 drivers/input/evdev.c:518
+  chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+  do_dentry_open+0x494/0x1120 fs/open.c:797
+  do_last fs/namei.c:3416 [inline]
+  path_openat+0x1430/0x3f50 fs/namei.c:3533
+  do_filp_open+0x1a1/0x280 fs/namei.c:3563
+  do_sys_open+0x3c0/0x580 fs/open.c:1089
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4011f0
+Code: 01 f0 ff ff 0f 83 00 0b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
+44 00 00 83 3d 9d 4b 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 d4 0a 00 00 c3 48 83 ec 08 e8 3a 00 00 00
+RSP: 002b:00007ffc88d90d38 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 0000000000000124 RCX: 00000000004011f0
+RDX: 0000000000000000 RSI: 0000000000020000 RDI: 00007ffc88d90d40
+RBP: 6666666666666667 R08: 000000000000000f R09: 0000000000000023
+R10: 0000000000000075 R11: 0000000000000246 R12: 0000000000402150
+R13: 00000000004021e0 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-It's no different than just calling clk_get, and testing the return
-code to see if it's there or not. I wouldn't call that check when you
-depend on a clock "validating the DT". It's just making sure that all
-the resources needed for you to operate properly are there, which is a
-pretty common thing to do.
 
-Maxime
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---c27mc7zieuu4am73
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXT8guwAKCRDj7w1vZxhR
-xUcMAP48/d4gHWLB2ieD8luRNO7UdNKhBxkKVaYQSUwwNhdNhgEA6GotfwgqiOLI
-FehMWvNcDSv607KLMFEsu5CWk9sxRwQ=
-=W5NU
------END PGP SIGNATURE-----
-
---c27mc7zieuu4am73--
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
