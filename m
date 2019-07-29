@@ -2,124 +2,106 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8DDC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B17C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E6D2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:09:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tU5hGH3M"
+	by mail.kernel.org (Postfix) with ESMTP id D1042204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:11:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564380686;
+	bh=nMKUNWZ9yoS62/Zd9AxV9+IUb4TvSPx7bEbfZkPkxOA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=adLRQaY13R0jVBKrnM3DMPQ7y39FThy7/epJQPWz7sTVdW2xFg0cGOvdkmV2P6u5x
+	 4y9vKNKFVcz4eLW/hfJ9RiDt/BT0mznO3wobTTVWqgJG2sqiA90PBA1pga39GiaauW
+	 mDWFxzmw5y4gvqzVPSYsQHhVtBOfSWq6XAx6Z0PM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfG2GJ3 (ORCPT
+        id S1726765AbfG2GLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 02:09:29 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:33007 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725934AbfG2GJ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 02:09:29 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id B022721BA9;
-        Mon, 29 Jul 2019 02:09:27 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 29 Jul 2019 02:09:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=/SBTOk
-        cbxtFVR/CQbarJXCkuOQOjrMyBPaPW6M0UaOY=; b=tU5hGH3MbArrHjbFBCxnyN
-        sLwoXsz5UlH8fSkija53SDNKpwKyPmwLL7Q77iRj6oep4VVras9IhIY7B1Lh2Q9v
-        Xlxr19rUz3fWZxt2yb+gj9YAib0kv06C6KrIDKQmwkCJTO39eMNIUGMJ+O1yHjFX
-        TKFan5XnAtpVvarDGVGGLYjS3SDbe45WOPY0UFaIDVMT+cIClG3XbqqpFYgivyvR
-        3wI90SEMVIWAD9WcWtzmYmGXhHTlOy0cAamegbz7XLhK29Epy0o4mjayLrSMIFvD
-        AwhdDJkiGyAGCK46262UZXarz/0kS3EBU+ls0ITFWz5mkajFWbGKd6GYrG9FRBrg
-        ==
-X-ME-Sender: <xms:lY0-XeRFLxc_89Ovi38c5c_4U18LY6x5fm8VPMYK5X3eHaL9qagLzg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledtgddutdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepkfguohcu
-    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecukfhppedule
-    efrdegjedrudeihedrvdehudenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghh
-    sehiughoshgthhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:lY0-Xd2kBRcEYGfdOM8_THMJW0L6ZW9vqSdM5B44LGtdTnWIN37btw>
-    <xmx:lY0-XQwM7I5k4jx9ZTP45nbw-0EhJq7RqtoOOiPtEo7yvX75kVceGQ>
-    <xmx:lY0-XRzMUeoucuNzVH_GhHIT6y8K0XE7AkeCd_uf7V3MVCZtJySAMg>
-    <xmx:l40-XQI3KeEhB6FjU7hI4CPYZNNBhBX9ZcxHhLknPV5foPv5GHOioQ>
-Received: from localhost (unknown [193.47.165.251])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 63E4D80061;
-        Mon, 29 Jul 2019 02:09:25 -0400 (EDT)
-Date:   Mon, 29 Jul 2019 09:09:23 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        roopa@cumulusnetworks.com, davem@davemloft.net,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-Message-ID: <20190729060923.GA16938@splinter>
-References: <7e7a7015-6072-d884-b2ba-0a51177245ab@cumulusnetworks.com>
- <eef063fe-fd3a-7e02-89c2-e40728a17578@cumulusnetworks.com>
- <20190725142101.65tusauc6fzxb2yp@soft-dev3.microsemi.net>
- <b9ce433a-3ef7-fe15-642a-659c5715d992@cumulusnetworks.com>
- <e6ad982f-4706-46f9-b8f0-1337b09de350@cumulusnetworks.com>
- <20190726120214.c26oj5vks7g5ntwu@soft-dev3.microsemi.net>
- <20190726134613.GD18223@lunn.ch>
- <20190726195010.7x75rr74v7ph3m6m@lx-anielsen.microsemi.net>
- <20190727030223.GA29731@lunn.ch>
- <20190728191558.zuopgfqza2iz5d5b@lx-anielsen.microsemi.net>
+        Mon, 29 Jul 2019 02:11:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbfG2GLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 02:11:25 -0400
+Received: from localhost (unknown [122.178.221.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEBB8204FD;
+        Mon, 29 Jul 2019 06:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564380684;
+        bh=nMKUNWZ9yoS62/Zd9AxV9+IUb4TvSPx7bEbfZkPkxOA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gpfJbMluyoxSsI8ETGPCvW/rNJLyFllQggJeLqu9lmBhW+0TuiqxwIjFjWj5P6Ugz
+         GXdIrfZUyIRbjCXABBbeztbRQToVhI7Mi162rijjxYuSqYzlhmGvjQuSfJmvcHerCJ
+         MZZnAO/EG7QMJNzBSHpF9a2wQCLWkHM/gstRhCn0=
+Date:   Mon, 29 Jul 2019 11:40:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dan.j.williams@intel.com,
+        tiwai@suse.com, jonathanh@nvidia.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        rlokhande@nvidia.com, dramesh@nvidia.com, mkumard@nvidia.com
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+Message-ID: <20190729061010.GC12733@vkoul-mobl.Dlink>
+References: <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <20190613044352.GC9160@vkoul-mobl.Dlink>
+ <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
+ <20190618043308.GJ2962@vkoul-mobl>
+ <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
+ <20190624062609.GV2962@vkoul-mobl>
+ <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
+ <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
+ <20190719050459.GM12733@vkoul-mobl.Dlink>
+ <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190728191558.zuopgfqza2iz5d5b@lx-anielsen.microsemi.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 09:15:59PM +0200, Allan W. Nielsen wrote:
-> If we assume that the SwitchDev driver implemented such that all multicast
-> traffic goes to the CPU, then we should really have a way to install a HW
-> offload path in the silicon, such that these packets does not go to the CPU (as
-> they are known not to be use full, and a frame every 3 us is a significant load
-> on small DMA connections and CPU resources).
+On 23-07-19, 11:24, Sameer Pujar wrote:
 > 
-> If we assume that the SwitchDev driver implemented such that only "needed"
-> multicast packets goes to the CPU, then we need a way to get these packets in
-> case we want to implement the DLR protocol.
+> On 7/19/2019 10:34 AM, Vinod Koul wrote:
+> > On 05-07-19, 11:45, Sameer Pujar wrote:
+> > > Hi Vinod,
+> > > 
+> > > What are your final thoughts regarding this?
+> > Hi sameer,
+> > 
+> > Sorry for the delay in replying
+> > 
+> > On this, I am inclined to think that dma driver should not be involved.
+> > The ADMAIF needs this configuration and we should take the path of
+> > dma_router for this piece and add features like this to it
+> 
+> Hi Vinod,
+> 
+> The configuration is needed by both ADMA and ADMAIF. The size is
+> configurable
+> on ADMAIF side. ADMA needs to know this info and program accordingly.
 
-I'm not familiar with the HW you're working with, so the below might not
-be relevant.
+Well I would say client decides the settings for both DMA, DMAIF and
+sets the peripheral accordingly as well, so client communicates the two
+sets of info to two set of drivers
 
-In case you don't want to send all multicast traffic to the CPU (I'll
-refer to it later), you can install an ingress tc filter that traps to
-the CPU the packets you do want to receive. Something like:
+> Not sure if dma_router can help to achieve this.
+> 
+> I checked on dma_router. It would have been useful when a configuration
+> exported
+> via ADMA, had to be applied to ADMAIF. Please correct me if I am wrong here.
 
-# tc qdisc add dev swp1 clsact
-# tc filter add dev swp1 pref 1 ingress flower skip_sw dst_mac \
-	01:21:6C:00:00:01 action trap
+router was added for such a senario, if you feel that it doesn't serve
+your purpose, feel free to send up update for it, if that is the case.
 
-If your HW supports sharing the same filter among multiple ports, then
-you can install your filter in a tc shared block and bind multiple ports
-to it.
+Thanks
 
-Another option is to always send a *copy* of multicast packets to the
-CPU, but make sure the HW uses a policer that prevents the CPU from
-being overwhelmed. To avoid packets being forwarded twice (by HW and
-SW), you will need to mark such packets in your driver with
-'skb->offload_fwd_mark = 1'.
-
-Now, in case user wants to allow the CPU to receive certain packets at a
-higher rate, a tc filter can be used. It will be identical to the filter
-I mentioned earlier, but with a 'police' action chained before 'trap'.
-
-I don't think this is currently supported by any driver, but I believe
-it's the right way to go: By default the CPU receives all the traffic it
-should receive and user can fine-tune it using ACLs.
+-- 
+~Vinod
