@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E2AC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC2FC7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18598217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF14D2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429786;
-	bh=rycWlM73bk/G8i6/qEfXoOpl3dhfEKYLIyS02+s6Yoc=;
+	s=default; t=1564429789;
+	bh=jimd+J+7ciZKpnau6npdhpH0c9hsi6H1gm/vd/Sec/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DRDl1INf2X3THRTvIPqOZ7RAHqDYP6xWORtqbki5XtitrhQlSOMbIjD7jyTBbBUgn
-	 Wxtin6LhyA6yi5kaz5FSD3lsN3U0uQm5umoPLaUgB4tzXeoZfYCbgR5J8JXppD3ZNN
-	 bScz9VEWZcXuaHHyWLHIt8iZs9bZ/drYFeXAhFzU=
+	b=LHhDo2MDeIN/x2FC2vQai8TDrcmhh0pyczlVDH1iieozbdpgfYCYK727QzPEU2w1t
+	 qzEqAtWlsJ5gGvHQs5iBaCBGDOMgMZSThtKtqWNJNZ+1+GiJZnts+RFaJPiD6kkNUF
+	 Xiee6e749w4IcDCEpH1lKYkIxHlVYr+3i7R2+Ttg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390593AbfG2Ttp (ORCPT
+        id S2390600AbfG2Tts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:49:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40368 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:49:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390582AbfG2Ttn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:49:43 -0400
+        id S2389840AbfG2Ttr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:49:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3A5F2054F;
-        Mon, 29 Jul 2019 19:49:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0B5721655;
+        Mon, 29 Jul 2019 19:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429782;
-        bh=rycWlM73bk/G8i6/qEfXoOpl3dhfEKYLIyS02+s6Yoc=;
+        s=default; t=1564429786;
+        bh=jimd+J+7ciZKpnau6npdhpH0c9hsi6H1gm/vd/Sec/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QLtna8cmfuSc6TKCmINdqx2Lm5SbWcHTjas8gD9F11//DshFcfoH5niNQJZo/TrOk
-         YzNMbRV3r+96V9vN2V5mDD9Q46ps6osUpzkdrN5SgzRTaeRhN7xPlnid8+OT3aZvk/
-         qhtd14jHsv+IR81MomiYE05ESx5R4oRVjqSXV8JY=
+        b=iV3j+S2l6b9AhrFsIio7PtLalxikm9IE+9LVsIpx0lf4KweRwBwqQ6hg/zLydw8EC
+         FBlXJmlotr+GzQH55yo05n2vp+5/6C/Vef4u5GzkWMvpHAowSD30k9XouwcW8ngOhs
+         ZVmHjul1b2dNQuRYLqX3Kolb/Dp8Oe1G6hp712QE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 094/215] recordmcount: Fix spurious mcount entries on powerpc
-Date:   Mon, 29 Jul 2019 21:21:30 +0200
-Message-Id: <20190729190755.590558216@linuxfoundation.org>
+Subject: [PATCH 5.2 095/215] mfd: cros_ec: Register cros_ec_lid_angle driver when presented
+Date:   Mon, 29 Jul 2019 21:21:31 +0200
+Message-Id: <20190729190755.698209247@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -63,92 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 80e5302e4bc85a6b685b7668c36c6487b5f90e9a ]
+[ Upstream commit 1bb407f17c5316888c3c446e26cb2bb78943f236 ]
 
-An impending change to enable HAVE_C_RECORDMCOUNT on powerpc leads to
-warnings such as the following:
+Register driver when EC indicates has precise lid angle calculation code
+running.
+Fix incorrect extra resource allocation in cros_ec_sensors_register().
 
-  # modprobe kprobe_example
-  ftrace-powerpc: Not expected bl: opcode is 3c4c0001
-  WARNING: CPU: 0 PID: 227 at kernel/trace/ftrace.c:2001 ftrace_bug+0x90/0x318
-  Modules linked in:
-  CPU: 0 PID: 227 Comm: modprobe Not tainted 5.2.0-rc6-00678-g1c329100b942 #2
-  NIP:  c000000000264318 LR: c00000000025d694 CTR: c000000000f5cd30
-  REGS: c000000001f2b7b0 TRAP: 0700   Not tainted  (5.2.0-rc6-00678-g1c329100b942)
-  MSR:  900000010282b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 28228222  XER: 00000000
-  CFAR: c0000000002642fc IRQMASK: 0
-  <snip>
-  NIP [c000000000264318] ftrace_bug+0x90/0x318
-  LR [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
-  Call Trace:
-  [c000000001f2ba40] [0000000000000004] 0x4 (unreliable)
-  [c000000001f2bad0] [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
-  [c000000001f2bb90] [c00000000020ff10] load_module+0x25b0/0x30c0
-  [c000000001f2bd00] [c000000000210cb0] sys_finit_module+0xc0/0x130
-  [c000000001f2be20] [c00000000000bda4] system_call+0x5c/0x70
-  Instruction dump:
-  419e0018 2f83ffff 419e00bc 2f83ffea 409e00cc 4800001c 0fe00000 3c62ff96
-  39000001 39400000 386386d0 480000c4 <0fe00000> 3ce20003 39000001 3c62ff96
-  ---[ end trace 4c438d5cebf78381 ]---
-  ftrace failed to modify
-  [<c0080000012a0008>] 0xc0080000012a0008
-   actual:   01:00:4c:3c
-  Initializing ftrace call sites
-  ftrace record flags: 2000000
-   (0)
-   expected tramp: c00000000006af4c
-
-Looking at the relocation records in __mcount_loc shows a few spurious
-entries:
-
-  RELOCATION RECORDS FOR [__mcount_loc]:
-  OFFSET           TYPE              VALUE
-  0000000000000000 R_PPC64_ADDR64    .text.unlikely+0x0000000000000008
-  0000000000000008 R_PPC64_ADDR64    .text.unlikely+0x0000000000000014
-  0000000000000010 R_PPC64_ADDR64    .text.unlikely+0x0000000000000060
-  0000000000000018 R_PPC64_ADDR64    .text.unlikely+0x00000000000000b4
-  0000000000000020 R_PPC64_ADDR64    .init.text+0x0000000000000008
-  0000000000000028 R_PPC64_ADDR64    .init.text+0x0000000000000014
-
-The first entry in each section is incorrect. Looking at the
-relocation records, the spurious entries correspond to the
-R_PPC64_ENTRY records:
-
-  RELOCATION RECORDS FOR [.text.unlikely]:
-  OFFSET           TYPE              VALUE
-  0000000000000000 R_PPC64_REL64     .TOC.-0x0000000000000008
-  0000000000000008 R_PPC64_ENTRY     *ABS*
-  0000000000000014 R_PPC64_REL24     _mcount
-  <snip>
-
-The problem is that we are not validating the return value from
-get_mcountsym() in sift_rel_mcount(). With this entry, mcountsym is 0,
-but Elf_r_sym(relp) also ends up being 0. Fix this by ensuring
-mcountsym is valid before processing the entry.
-
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Tested-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/recordmcount.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mfd/cros_ec_dev.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index 13c5e6c8829c..47fca2c69a73 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -325,7 +325,8 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
- 		if (!mcountsym)
- 			mcountsym = get_mcountsym(sym0, relp, str0);
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index a5391f96eafd..607383b67cf1 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -285,13 +285,15 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
  
--		if (mcountsym == Elf_r_sym(relp) && !is_fake_mcount(relp)) {
-+		if (mcountsym && mcountsym == Elf_r_sym(relp) &&
-+				!is_fake_mcount(relp)) {
- 			uint_t const addend =
- 				_w(_w(relp->r_offset) - recval + mcount_adjust);
- 			mrelp->r_offset = _w(offbase
+ 	resp = (struct ec_response_motion_sense *)msg->data;
+ 	sensor_num = resp->dump.sensor_count;
+-	/* Allocate 1 extra sensors in FIFO are needed */
+-	sensor_cells = kcalloc(sensor_num + 1, sizeof(struct mfd_cell),
++	/*
++	 * Allocate 2 extra sensors if lid angle sensor and/or FIFO are needed.
++	 */
++	sensor_cells = kcalloc(sensor_num + 2, sizeof(struct mfd_cell),
+ 			       GFP_KERNEL);
+ 	if (sensor_cells == NULL)
+ 		goto error;
+ 
+-	sensor_platforms = kcalloc(sensor_num + 1,
++	sensor_platforms = kcalloc(sensor_num,
+ 				   sizeof(struct cros_ec_sensor_platform),
+ 				   GFP_KERNEL);
+ 	if (sensor_platforms == NULL)
+@@ -351,6 +353,11 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
+ 		sensor_cells[id].name = "cros-ec-ring";
+ 		id++;
+ 	}
++	if (cros_ec_check_features(ec,
++				EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS)) {
++		sensor_cells[id].name = "cros-ec-lid-angle";
++		id++;
++	}
+ 
+ 	ret = mfd_add_devices(ec->dev, 0, sensor_cells, id,
+ 			      NULL, 0, NULL);
 -- 
 2.20.1
 
