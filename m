@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89480C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADA7C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B66B2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF97021655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429477;
-	bh=HRmdymFz9CoKWHbTLjLYlSb8GYeHY4UE37+eJqbgQPE=;
+	s=default; t=1564429482;
+	bh=Yf2qTam8zLu9PWEOf5/AZhz52ovvkQIAeWVI3Uu/gME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WjzR9zADDJpsOVNfWEZ9dwcW521EsT69LGyPZPZALGWY1dDW6QgHArUNZX3fu8htT
-	 QxqAlwe5gSK15kURllYCb09YqlUKH2OiT1IdEoBoABVN0RrF2oePG4f/oNqaCmAyx7
-	 cATC1q8hQfzUwi6GSheV/u67k+5Bt+OP6FgdQFxw=
+	b=Jo30JxgzaoSdUMQMr3lPlGu6X6ukWQr2rnog3wJmhD9C4WV9FlxNLEy1/LwlAGn39
+	 EQSxfvQFdmNWUfHR9ZnwgKQfu00762JDMoqAUdXzp/BBgcRCIAn5MBnnNeq1xBhH12
+	 MLRAWilT/vpWEdmVNIOqHX56vSZOLe4YyCeENwL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389810AbfG2Tog (ORCPT
+        id S2389816AbfG2Tol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:44:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33048 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:44:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389513AbfG2To2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:44:28 -0400
+        id S2389793AbfG2Toa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:44:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96AC3205F4;
-        Mon, 29 Jul 2019 19:44:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46BF02054F;
+        Mon, 29 Jul 2019 19:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429467;
-        bh=HRmdymFz9CoKWHbTLjLYlSb8GYeHY4UE37+eJqbgQPE=;
+        s=default; t=1564429469;
+        bh=Yf2qTam8zLu9PWEOf5/AZhz52ovvkQIAeWVI3Uu/gME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ql3Lp4ia9nrohhcXgN/tibefFEdTnfu/xHqNl3xayH0Z78CkMR1Bw2R5hHkJGONSQ
-         2wAl8esjAmPeXEXSmpZKXainpRvQ3l+Ip2nh9uYja05tPtRRSG3GtpmZtS1p8F08d0
-         3HxCHalkAN+evzruVwx1uhvDb+0MhQclLAK2AY6U=
+        b=Alwqy12gEn08i29mm9hF+rNttZqIyD2ckWoyIYu0djNiN++G7c8InNPUI/lbxwjo1
+         TGs3iR/SQrtfQYIzMX2EJr8eEuZZXWnkpzX/Z+haiQ44i856NvMOu9F9BD95GsqNVl
+         UGa1Klm4M1TUboeB6cGeYvMxBp+Wrd1ReFAqX4BI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Zhang HongJun <zhanghongjun2@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.19 106/113] hpet: Fix division by zero in hpet_time_div()
-Date:   Mon, 29 Jul 2019 21:23:13 +0200
-Message-Id: <20190729190720.652873366@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 107/113] ALSA: ac97: Fix double free of ac97_codec_device
+Date:   Mon, 29 Jul 2019 21:23:14 +0200
+Message-Id: <20190729190720.814115267@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,67 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-commit 0c7d37f4d9b8446956e97b7c5e61173cdb7c8522 upstream.
+commit 607975b30db41aad6edc846ed567191aa6b7d893 upstream.
 
-The base value in do_div() called by hpet_time_div() is truncated from
-unsigned long to uint32_t, resulting in a divide-by-zero exception.
+put_device will call ac97_codec_release to free
+ac97_codec_device and other resources, so remove the kfree
+and other redundant code.
 
-UBSAN: Undefined behaviour in ../drivers/char/hpet.c:572:2
-division by zero
-CPU: 1 PID: 23682 Comm: syz-executor.3 Not tainted 4.4.184.x86_64+ #4
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
- 0000000000000000 b573382df1853d00 ffff8800a3287b98 ffffffff81ad7561
- ffff8800a3287c00 ffffffff838b35b0 ffffffff838b3860 ffff8800a3287c20
- 0000000000000000 ffff8800a3287bb0 ffffffff81b8f25e ffffffff838b35a0
-Call Trace:
- [<ffffffff81ad7561>] __dump_stack lib/dump_stack.c:15 [inline]
- [<ffffffff81ad7561>] dump_stack+0xc1/0x120 lib/dump_stack.c:51
- [<ffffffff81b8f25e>] ubsan_epilogue+0x12/0x8d lib/ubsan.c:166
- [<ffffffff81b900cb>] __ubsan_handle_divrem_overflow+0x282/0x2c8 lib/ubsan.c:262
- [<ffffffff823560dd>] hpet_time_div drivers/char/hpet.c:572 [inline]
- [<ffffffff823560dd>] hpet_ioctl_common drivers/char/hpet.c:663 [inline]
- [<ffffffff823560dd>] hpet_ioctl_common.cold+0xa8/0xad drivers/char/hpet.c:577
- [<ffffffff81e63d56>] hpet_ioctl+0xc6/0x180 drivers/char/hpet.c:676
- [<ffffffff81711590>] vfs_ioctl fs/ioctl.c:43 [inline]
- [<ffffffff81711590>] file_ioctl fs/ioctl.c:470 [inline]
- [<ffffffff81711590>] do_vfs_ioctl+0x6e0/0xf70 fs/ioctl.c:605
- [<ffffffff81711eb4>] SYSC_ioctl fs/ioctl.c:622 [inline]
- [<ffffffff81711eb4>] SyS_ioctl+0x94/0xc0 fs/ioctl.c:613
- [<ffffffff82846003>] tracesys_phase2+0x90/0x95
-
-The main C reproducer autogenerated by syzkaller,
-
-  syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
-  memcpy((void*)0x20000100, "/dev/hpet\000", 10);
-  syscall(__NR_openat, 0xffffffffffffff9c, 0x20000100, 0, 0);
-  syscall(__NR_ioctl, r[0], 0x40086806, 0x40000000000000);
-
-Fix it by using div64_ul().
-
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Zhang HongJun <zhanghongjun2@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20190711132757.130092-1-wangkefeng.wang@huawei.com
+Fixes: 74426fbff66e ("ALSA: ac97: add an ac97 bus")
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/hpet.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/ac97/bus.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -570,8 +570,7 @@ static inline unsigned long hpet_time_di
- 	unsigned long long m;
+--- a/sound/ac97/bus.c
++++ b/sound/ac97/bus.c
+@@ -125,17 +125,12 @@ static int ac97_codec_add(struct ac97_co
+ 						      vendor_id);
  
- 	m = hpets->hp_tick_freq + (dis >> 1);
--	do_div(m, dis);
--	return (unsigned long)m;
-+	return div64_ul(m, dis);
+ 	ret = device_add(&codec->dev);
+-	if (ret)
+-		goto err_free_codec;
++	if (ret) {
++		put_device(&codec->dev);
++		return ret;
++	}
+ 
+ 	return 0;
+-err_free_codec:
+-	of_node_put(codec->dev.of_node);
+-	put_device(&codec->dev);
+-	kfree(codec);
+-	ac97_ctrl->codecs[idx] = NULL;
+-
+-	return ret;
  }
  
- static int
+ unsigned int snd_ac97_bus_scan_one(struct ac97_controller *adrv,
 
 
