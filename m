@@ -7,133 +7,112 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA45C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54511C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E185020644
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2654720644
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:19:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="xQbnXKF8"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="UExwS/mu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfG2IS6 (ORCPT
+        id S1727545AbfG2ITb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:18:58 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52248 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfG2IS6 (ORCPT
+        Mon, 29 Jul 2019 04:19:31 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:42774 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726305AbfG2ITa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:18:58 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s3so52930545wms.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 01:18:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vHj9NXahSs6iR8Pg+ItC8iS4CBlK8AvLVaxPXNIpuUE=;
-        b=xQbnXKF8Y7E+t8j+NkUBwqn2H5QphW/cVaobSbrgpsuHm+4EWO6RX6IzN8M9D2M0RQ
-         vYwnuc6bMkTf84yGvMP1JgFPoid5mCkowMdZ0MyW+RKWpJK+zwB5LDHuqYVYyanjhzeG
-         3I6WqlRd/fPf8gz1MbhF0/UTB8oYe5Sl/8a2HSb7zJCPnHHzaQD9dQ6Z4oTAh5T6dO9+
-         TlIom4yR5AXhYb0+X3LgWDYmbq6JXjeHA7Wh4WugIU+K4wQA2ZnvlBHKa9Eb1K/d1Xn6
-         eOl5U8Bia8RTUj8iYkhItoD7RiAgYAJF8pT45eS4sWxouG63GTqtIRrWxJswCz0h91o0
-         R5DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vHj9NXahSs6iR8Pg+ItC8iS4CBlK8AvLVaxPXNIpuUE=;
-        b=BiT8wFhovQHMjwzIgMeerM6h/jn9HRMN766wlQY2IesmZsht4Q8Heun0L6EONJf3Gu
-         8Ynu4liz7FTq1XOP2vZuus8DuNT/0KfQLkZOIidoIu8AepVA4cJKz36J1JW660ygvf1Q
-         UQmrXtW9rqaCngeHh4DY78uAwl1lgqsDG3w/0YYsPNF1TtgaiZge3ans4gxSxnS4l3qN
-         yFT6J0MRrzqNWcWmlU6cyfmhuDmY3/b91AGj5fEw4cW4GzEG4/0sdZF1bFilA2AlSaOg
-         1faLLDqTK8VhoCFH5miGL2NNPurz12nveKuCuD8S8pjlCAe1sy71omRf3B1Qt7px/6oE
-         yNaA==
-X-Gm-Message-State: APjAAAWhDUDsnc2OAdy43qfDnXSMez69ogMcYJk/KKRvYAGa44Pt8rgp
-        1IdcBiY5dHZX1MavqUGpBac=
-X-Google-Smtp-Source: APXvYqwmY7Gie5+Musllq20iA/vpGOeb+HpfY7d6X5o963I1/ONCZZ3wYid5aigxUN7L3tNQhUWdSA==
-X-Received: by 2002:a1c:1bd7:: with SMTP id b206mr95120334wmb.85.1564388336079;
-        Mon, 29 Jul 2019 01:18:56 -0700 (PDT)
-Received: from localhost (mail.chocen-mesto.cz. [85.163.43.2])
-        by smtp.gmail.com with ESMTPSA id f12sm66058989wrg.5.2019.07.29.01.18.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 01:18:55 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 10:18:54 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: sched: Fix a possible null-pointer dereference
- in dequeue_func()
-Message-ID: <20190729081854.GC2211@nanopsycho>
-References: <20190729080018.28678-1-baijiaju1990@gmail.com>
+        Mon, 29 Jul 2019 04:19:30 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x6T8EAvi014828;
+        Mon, 29 Jul 2019 03:18:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=WRFRbbdfaf0Y2ROtu21La93Edhg0Qj+U7zL+OJ4cOJo=;
+ b=UExwS/mu1oC8AJJIO+I3MLnokg1b4ditpCvaNSLlHge7MQ5JZLyRa22nZ19JYdzqKZwn
+ j7TgIew0AuMbfCF3yWZAJoFE86kpOdPQaoM1rQ1BZAfKce4Ulaq8m2jbMmzcQb1Tg1/f
+ xQdS9+lyOrBZbDBubz0KMVXDBiESrbEHjvySeiYOBnrGMPEJI/312L+Q/0PESJQshGuW
+ 04tEWJo3db01NMlfHiX0hjE8mBoopot479VdCgWt9nWtHhXYT2E2f7gIj14lISnDDsa5
+ UB1OPcRXbaaPrcEL7hRXaPUW6CMMxJtqp/IV0vU3vE8OVur5s2OWOpCIZWIDsQa76jlK qA== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2u0k1qthc8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 29 Jul 2019 03:18:37 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 29 Jul
+ 2019 09:18:35 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Mon, 29 Jul 2019 09:18:35 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id AB50F2A1;
+        Mon, 29 Jul 2019 09:18:35 +0100 (BST)
+Date:   Mon, 29 Jul 2019 09:18:35 +0100
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Satendra Singh Thakur <thakursatendra2003@yahoo.co.in>
+CC:     <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH] [ASoC][soc-dapm] : memory leak in the func
+ snd_soc_dapm_new_dai
+Message-ID: <20190729081835.GE54126@ediswmail.ad.cirrus.com>
+References: <20190725161335.4162-1-thakursatendra2003@yahoo.co.in>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190729080018.28678-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190725161335.4162-1-thakursatendra2003@yahoo.co.in>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ mlxlogscore=830 lowpriorityscore=0 priorityscore=1501 impostorscore=0
+ clxscore=1011 phishscore=0 adultscore=0 mlxscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
+ definitions=main-1907290098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Jul 29, 2019 at 10:00:18AM CEST, baijiaju1990@gmail.com wrote:
->In dequeue_func(), there is an if statement on line 74 to check whether
->skb is NULL:
->    if (skb)
->
->When skb is NULL, it is used on line 77:
->    prefetch(&skb->end);
->
->Thus, a possible null-pointer dereference may occur.
->
->To fix this bug, skb->end is used when skb is not NULL.
->
->This bug is found by a static analysis tool STCheck written by us.
->
->Fixes: 79bdc4c862af ("codel: generalize the implementation")
-
-Looks like this is something being there since the beginning:
-commit 76e3cc126bb223013a6b9a0e2a51238d1ef2e409
-Author: Eric Dumazet <edumazet@google.com>
-Date:   Thu May 10 07:51:25 2012 +0000
-
-    codel: Controlled Delay AQM
-
-
-Please adjust "Fixes:".
-
-The fix itself looks fine to me.
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-
-
-
->Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
->---
->v2:
->* Add a fix tag.
->  Thank Jiri Pirko for helpful advice.
->
->---
-> net/sched/sch_codel.c | 6 +++---
-> 1 file changed, 3 insertions(+), 3 deletions(-)
->
->diff --git a/net/sched/sch_codel.c b/net/sched/sch_codel.c
->index 25ef172c23df..30169b3adbbb 100644
->--- a/net/sched/sch_codel.c
->+++ b/net/sched/sch_codel.c
->@@ -71,10 +71,10 @@ static struct sk_buff *dequeue_func(struct codel_vars *vars, void *ctx)
-> 	struct Qdisc *sch = ctx;
-> 	struct sk_buff *skb = __qdisc_dequeue_head(&sch->q);
+On Thu, Jul 25, 2019 at 09:43:35PM +0530, Satendra Singh Thakur wrote:
+> In the func snd_soc_dapm_new_dai, if the inner func
+> snd_soc_dapm_alloc_kcontrol fails, there will be memory leak.
+> The label param_fail wont free memory which is allocated by
+> the func devm_kcalloc. Hence new label is created for this purpose.
 > 
->-	if (skb)
->+	if (skb) {
-> 		sch->qstats.backlog -= qdisc_pkt_len(skb);
->-
->-	prefetch(&skb->end); /* we'll need skb_shinfo() */
->+		prefetch(&skb->end); /* we'll need skb_shinfo() */
->+	}
-> 	return skb;
-> }
+> Signed-off-by: Satendra Singh Thakur <thakursatendra2003@yahoo.co.in>
+> ---
+>  sound/soc/soc-dapm.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
->-- 
->2.17.0
->
+> diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+> index f013b24c050a..f62d41ee6d68 100644
+> --- a/sound/soc/soc-dapm.c
+> +++ b/sound/soc/soc-dapm.c
+> @@ -4095,7 +4095,7 @@ snd_soc_dapm_new_dai(struct snd_soc_card *card, struct snd_soc_pcm_runtime *rtd,
+>  						w_param_text, &private_value);
+>  		if (!template.kcontrol_news) {
+>  			ret = -ENOMEM;
+> -			goto param_fail;
+> +			goto outfree_w_param;
+>  		}
+>  	} else {
+>  		w_param_text = NULL;
+> @@ -4114,6 +4114,7 @@ snd_soc_dapm_new_dai(struct snd_soc_card *card, struct snd_soc_pcm_runtime *rtd,
+>  
+>  outfree_kcontrol_news:
+>  	devm_kfree(card->dev, (void *)template.kcontrol_news);
+> +outfree_w_param:
+>  	snd_soc_dapm_free_kcontrol(card, &private_value,
+>  				   rtd->dai_link->num_params, w_param_text);
+
+This is not necessary snd_soc_dapm_alloc_kcontrol calls
+snd_soc_dapm_free_kcontrol on its internal error path.
+
+Thanks,
+Charles
