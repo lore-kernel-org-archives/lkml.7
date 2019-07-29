@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD5DC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA47C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05EF21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0432171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429793;
-	bh=1Np7r3LAsxti73689pvspT3FnyQs5zyBYCe9YqO5YqI=;
+	s=default; t=1564429796;
+	bh=iGLTYcg7MHp54Z214a/0pOg/Ych1HsdY6+VgfTAb9ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o/F3DFJysZRQACi/2aGdsZIqE73MmLaYQGCL6+qa90uwrqztnSDFV8dGjYuwUdNCY
-	 rp60zwmYz2zBSbMhTLYpgrccGjR46j42nl8XOqhVM97UsAZemaiYVeMvhpUb4XnZmV
-	 eP7i2iiL/pW9ckJoETYEQ3LSI53nOHmh395GxmIQ=
+	b=Wi4CrVTEi3hyv096d+a4AHRIcGFRDWf+dM2LXBRHJU2dDqSKaIIj4MxhCwmkO4vfV
+	 Pj0JTrpkxPeYar9KqPWCNWlWN8Zy3/oMquMDzXDI6uVSUT4ECH3PctMFFsiV32vVpV
+	 TiQEfuvlhIwWZSwryQAz1xGgbXYsv3fW0m3P/4Ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390603AbfG2Ttw (ORCPT
+        id S2390393AbfG2Ttz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:49:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:49:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389840AbfG2Ttu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:49:50 -0400
+        id S2389663AbfG2Ttx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:49:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71BD221655;
-        Mon, 29 Jul 2019 19:49:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95C1F20C01;
+        Mon, 29 Jul 2019 19:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429788;
-        bh=1Np7r3LAsxti73689pvspT3FnyQs5zyBYCe9YqO5YqI=;
+        s=default; t=1564429793;
+        bh=iGLTYcg7MHp54Z214a/0pOg/Ych1HsdY6+VgfTAb9ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=elDc/BnBuLKQ47e//BXXnO5wfThU3U65rt8LvPDc2XvNxS2UArP7IfDZpMLwaLRlZ
-         44jHJx2xslkLzunPDKCAsBxfiEDIoC7+WsUG2wdt8fsn3j0giP8xstIb23cdu7ro3+
-         grLU5Cg0rjehDbyHTE98FcaNcBojELgd5tst5qPo=
+        b=iUUUTcw4nHgEZndWdJ0Qrc74XyqCT5SKM+LAEyoS+aoF1oh2DiiIeodHhugPPap8H
+         cXVsQqfWy6R5e3tFedjev+Pil1ghz2/H03ax3Nx5N3y1WSWFuKYklguu7d1u51e1/v
+         K9EZvGCQrooMCXb42TKNZIdaZwtM2jmhFDs29PSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Daniel Gomez <dagmcr@gmail.com>,
+        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 096/215] mfd: madera: Add missing of table registration
-Date:   Mon, 29 Jul 2019 21:21:32 +0200
-Message-Id: <20190729190755.827160052@linuxfoundation.org>
+Subject: [PATCH 5.2 097/215] mfd: core: Set fwnode for created devices
+Date:   Mon, 29 Jul 2019 21:21:33 +0200
+Message-Id: <20190729190755.972598216@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -62,47 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5aa3709c0a5c026735b0ddd4ec80810a23d65f5b ]
+[ Upstream commit c176c6d7e932662668bcaec2d763657096589d85 ]
 
-MODULE_DEVICE_TABLE(of, <of_match_table>) should be called to complete DT
-OF mathing mechanism and register it.
+The logic for setting the of_node on devices created by mfd did not set
+the fwnode pointer to match, which caused fwnode-based APIs to
+malfunction on these devices since the fwnode pointer was null. Fix
+this.
 
-Before this patch:
-modinfo ./drivers/mfd/madera.ko | grep alias
-
-After this patch:
-modinfo ./drivers/mfd/madera.ko | grep alias
-alias:          of:N*T*Ccirrus,wm1840C*
-alias:          of:N*T*Ccirrus,wm1840
-alias:          of:N*T*Ccirrus,cs47l91C*
-alias:          of:N*T*Ccirrus,cs47l91
-alias:          of:N*T*Ccirrus,cs47l90C*
-alias:          of:N*T*Ccirrus,cs47l90
-alias:          of:N*T*Ccirrus,cs47l85C*
-alias:          of:N*T*Ccirrus,cs47l85
-alias:          of:N*T*Ccirrus,cs47l35C*
-alias:          of:N*T*Ccirrus,cs47l35
-
-Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/madera-core.c | 1 +
+ drivers/mfd/mfd-core.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-index 2a77988d0462..826b971ccb86 100644
---- a/drivers/mfd/madera-core.c
-+++ b/drivers/mfd/madera-core.c
-@@ -286,6 +286,7 @@ const struct of_device_id madera_of_match[] = {
- 	{ .compatible = "cirrus,wm1840", .data = (void *)WM1840 },
- 	{}
- };
-+MODULE_DEVICE_TABLE(of, madera_of_match);
- EXPORT_SYMBOL_GPL(madera_of_match);
- 
- static int madera_get_reset_gpio(struct madera *madera)
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index dbf684c4ebfb..23276a80e3b4 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -175,6 +175,7 @@ static int mfd_add_device(struct device *parent, int id,
+ 		for_each_child_of_node(parent->of_node, np) {
+ 			if (of_device_is_compatible(np, cell->of_compatible)) {
+ 				pdev->dev.of_node = np;
++				pdev->dev.fwnode = &np->fwnode;
+ 				break;
+ 			}
+ 		}
 -- 
 2.20.1
 
