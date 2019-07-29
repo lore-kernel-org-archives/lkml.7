@@ -2,106 +2,71 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23EFC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C39C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B226D2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:30:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yWdcwTjF"
+	by mail.kernel.org (Postfix) with ESMTP id 3D2CE206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbfG2KaG (ORCPT
+        id S1728271AbfG2KbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:30:06 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:45162 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbfG2KaG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:30:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gjj4owKXS61+aOLcK4Kpf98oFWq8xT7RivisxYBZ5eE=; b=yWdcwTjFmfouyg41jH87v9pQg
-        IctmrGHLJJw3D9Z3kKe4hUw299hYfgiWUmyqhAuJ9rqQwYaRfpZPOdSV8LofaIfrPTHa5Fd9+wzue
-        +wzccYlNHT2xaP2HTCOWBY4w56DwZktDofxkSrE2A5E2LRcUE9VuMBIypjQHrk+3JJSI+AUBg62k4
-        C+j6W+phAOPG+gpQJghzzmomdqSzmIxJI7eMpNEVHTAzz3xVrp/iU6ugBE4NBMafuGnzT5AdQvABq
-        NmZ3egFiflgBB7P+pxU0O5W51W8bCR6EKbKMMVfZ/uoi6WHUF5azuQStAvXM+TZtFEz+NddYNV4AI
-        LRmkaTSCg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs2uc-0000eV-0C; Mon, 29 Jul 2019 10:29:50 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 52ACB20AF2C34; Mon, 29 Jul 2019 12:29:48 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 12:29:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Eiichi Tsukata <devel@etsukata.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing: Prevent RCU EQS breakage in preemptirq events
-Message-ID: <20190729102948.GY31381@hirez.programming.kicks-ass.net>
-References: <20190729010734.3352-1-devel@etsukata.com>
- <CALCETrVavLdQ8Rp+6fmTd7kJJwvRKdaEnudaiMAu8g9ZXuNfWA@mail.gmail.com>
+        Mon, 29 Jul 2019 06:31:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56960 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbfG2KbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:31:00 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 015CAC049E10;
+        Mon, 29 Jul 2019 10:31:00 +0000 (UTC)
+Received: from localhost (unknown [10.40.205.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9D3E860623;
+        Mon, 29 Jul 2019 10:30:57 +0000 (UTC)
+Date:   Mon, 29 Jul 2019 12:30:55 +0200
+From:   Jiri Benc <jbenc@redhat.com>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     davem@davemloft.net, sbrivio@redhat.com, sd@queasysnail.net,
+        liuhangbin@gmail.com, dsahern@gmail.com, natechancellor@gmail.com,
+        tglx@linutronix.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: geneve: Fix a possible null-pointer dereference in
+ geneve_link_config()
+Message-ID: <20190729123055.5a7ba416@redhat.com>
+In-Reply-To: <20190729102611.2338-1-baijiaju1990@gmail.com>
+References: <20190729102611.2338-1-baijiaju1990@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrVavLdQ8Rp+6fmTd7kJJwvRKdaEnudaiMAu8g9ZXuNfWA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 29 Jul 2019 10:31:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 09:25:58PM -0700, Andy Lutomirski wrote:
-> On Sun, Jul 28, 2019 at 6:08 PM Eiichi Tsukata <devel@etsukata.com> wrote:
+On Mon, 29 Jul 2019 18:26:11 +0800, Jia-Ju Bai wrote:
+> --- a/drivers/net/geneve.c
+> +++ b/drivers/net/geneve.c
+> @@ -1521,9 +1521,10 @@ static void geneve_link_config(struct net_device *dev,
+>  		rt = rt6_lookup(geneve->net, &info->key.u.ipv6.dst, NULL, 0,
+>  				NULL, 0);
+>  
+> -		if (rt && rt->dst.dev)
+> +		if (rt && rt->dst.dev) {
+>  			ldev_mtu = rt->dst.dev->mtu - GENEVE_IPV6_HLEN;
+> -		ip6_rt_put(rt);
+> +			ip6_rt_put(rt);
+> +		}
+>  		break;
+>  	}
+>  #endif
 
-> > diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
-> > index 4d8e99fdbbbe..031b51cb94d0 100644
-> > --- a/kernel/trace/trace_preemptirq.c
-> > +++ b/kernel/trace/trace_preemptirq.c
-> > @@ -10,6 +10,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/ftrace.h>
-> >  #include <linux/kprobes.h>
-> > +#include <linux/context_tracking.h>
-> >  #include "trace.h"
-> >
-> >  #define CREATE_TRACE_POINTS
-> > @@ -49,9 +50,14 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
-> >
-> >  __visible void trace_hardirqs_on_caller(unsigned long caller_addr)
-> >  {
-> > +       enum ctx_state prev_state;
-> > +
-> >         if (this_cpu_read(tracing_irq_cpu)) {
-> > -               if (!in_nmi())
-> > +               if (!in_nmi()) {
-> > +                       prev_state = exception_enter();
-> >                         trace_irq_enable_rcuidle(CALLER_ADDR0, caller_addr);
-> > +                       exception_exit(prev_state);
-> > +               }
-> >                 tracer_hardirqs_on(CALLER_ADDR0, caller_addr);
-> >                 this_cpu_write(tracing_irq_cpu, 0);
-> >         }
-> 
-> This seems a bit distressing.  Now we're going to do a whole bunch of
-> context tracking transitions for each kernel entry.  Would a better
-> fix me to change trace_hardirqs_on_caller to skip the trace event if
-> the previous state was already IRQs on and, more importantly, to skip
-> tracing IRQs off if IRQs were already off?  The x86 code is very
-> careful to avoid ever having IRQs on and CONTEXT_USER at the same
-> time.
+Are you sure rt6_lookup can never return a non-NULL rt with rt->dst.dev
+being NULL? You'd leak the reference in such case.
 
-I think they already (try to) do that; see 'tracing_irq_cpu'.
+ Jiri
