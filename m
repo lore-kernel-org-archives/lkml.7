@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2FBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B42C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C79BD2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0C221655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428771;
-	bh=yil9+l6j76IKsza5SzZwEPu+xQ6omTD0jl61lKC4i5A=;
+	s=default; t=1564428777;
+	bh=mlkORtITjZxHISIqZaxJ4GJmJwbK0kDZ++DsPoE+vRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cZRvXfNQz6Y27gwDHCvsIhKriBtBS2pp7HEI9lwJN0XicGIR+Z2Wb3uePP0CC38XT
-	 XVlbS3z/AFwVwv7pSn+zd4WzTcuxH+RdaZxQhyXrd+GmjNFHcnX9uTi8lpGLf1UFAU
-	 vXtRFvFM2bN37Y8XJC3xENz2V2BpcJC/mpRXbWSA=
+	b=sthfQxm9i4OFHfU3LX6NYy+FWZOGmkPg64XxCCt9DYAf+jA2mqyn/Xos+0lm/D5E7
+	 V3G7GxxF7+Comvkz0yoqKCbztEmlMInaUzy5yv549V25uosZ0gpZIfVohk4/5QeooM
+	 ySv99i5wYILx1w6v5j4KXbVKTj+n2YX9FM4uaRGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbfG2Tcu (ORCPT
+        id S1730291AbfG2Tc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:32:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46434 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:32:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729378AbfG2Tcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:32:46 -0400
+        id S1729378AbfG2Tcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:32:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEA9321773;
-        Mon, 29 Jul 2019 19:32:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDE0C21655;
+        Mon, 29 Jul 2019 19:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428765;
-        bh=yil9+l6j76IKsza5SzZwEPu+xQ6omTD0jl61lKC4i5A=;
+        s=default; t=1564428772;
+        bh=mlkORtITjZxHISIqZaxJ4GJmJwbK0kDZ++DsPoE+vRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f7Z8fYDpqxskIK8UtUljP5fwmFdVENuuoIgqmhOyfDF6iq6DtBuAaAQ96OKbhgFge
-         GPaEIseC8P3IwcJU1pauZru4Ut0cLqfQhY/y7sDQ24oeGfNKHxnDX8g1nvhH1f2uWj
-         RM9MwXyVG8gV5JvC4J0utmxZsDiPnwyeVbZAU4oY=
+        b=MPH+yUZYzXCwyeMWjL2OqGxrdIxhdN/KB82Hww3ZmfMzLNt69Oitln5Gek+1JIMj7
+         UKAEYLT/MV4Q7KBDbbFiIiCCeJr6dRhI7aeCyuUjAgtrPz3jwysN4cflN/SSlZ+T+d
+         mxBho6p/7APGdwxwvVCiF0d0f1aGJls3XPYKY+x8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 178/293] compiler.h, kasan: Avoid duplicating __read_once_size_nocheck()
-Date:   Mon, 29 Jul 2019 21:21:09 +0200
-Message-Id: <20190729190838.145729782@linuxfoundation.org>
+Subject: [PATCH 4.14 180/293] lib/strscpy: Shut up KASAN false-positives in strscpy()
+Date:   Mon, 29 Jul 2019 21:21:11 +0200
+Message-Id: <20190729190838.294287303@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,53 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bdb5ac801af3d81d36732c2f640d6a1d3df83826 ]
+[ Upstream commit 1a3241ff10d038ecd096d03380327f2a0b5840a6 ]
 
-Instead of having two identical __read_once_size_nocheck() functions
-with different attributes, consolidate all the difference in new macro
-__no_kasan_or_inline and use it. No functional changes.
+strscpy() performs the word-at-a-time optimistic reads.  So it may may
+access the memory past the end of the object, which is perfectly fine
+since strscpy() doesn't use that (past-the-end) data and makes sure the
+optimistic read won't cross a page boundary.
+
+Use new read_word_at_a_time() to shut up the KASAN.
+
+Note that this potentially could hide some bugs.  In example bellow,
+stscpy() will copy more than we should (1-3 extra uninitialized bytes):
+
+        char dst[8];
+        char *src;
+
+        src = kmalloc(5, GFP_KERNEL);
+        memset(src, 0xff, 5);
+        strscpy(dst, src, 8);
 
 Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/compiler.h | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ lib/string.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index a704d032713b..f490d8d93ec3 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -185,23 +185,21 @@ void __read_once_size(const volatile void *p, void *res, int size)
+diff --git a/lib/string.c b/lib/string.c
+index 1530643edf00..33befc6ba3fa 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -203,7 +203,7 @@ ssize_t strscpy(char *dest, const char *src, size_t count)
+ 	while (max >= sizeof(unsigned long)) {
+ 		unsigned long c, data;
  
- #ifdef CONFIG_KASAN
- /*
-- * This function is not 'inline' because __no_sanitize_address confilcts
-+ * We can't declare function 'inline' because __no_sanitize_address confilcts
-  * with inlining. Attempt to inline it may cause a build failure.
-  * 	https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
-  * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
-  */
--static __no_sanitize_address __maybe_unused
--void __read_once_size_nocheck(const volatile void *p, void *res, int size)
--{
--	__READ_ONCE_SIZE;
--}
-+# define __no_kasan_or_inline __no_sanitize_address __maybe_unused
- #else
--static __always_inline
-+# define __no_kasan_or_inline __always_inline
-+#endif
-+
-+static __no_kasan_or_inline
- void __read_once_size_nocheck(const volatile void *p, void *res, int size)
- {
- 	__READ_ONCE_SIZE;
- }
--#endif
- 
- static __always_inline void __write_once_size(volatile void *p, void *res, int size)
- {
+-		c = *(unsigned long *)(src+res);
++		c = read_word_at_a_time(src+res);
+ 		if (has_zero(c, &data, &constants)) {
+ 			data = prep_zero_mask(c, data, &constants);
+ 			data = create_zero_mask(data);
 -- 
 2.20.1
 
