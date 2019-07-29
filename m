@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD67C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE959C7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3EA204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE7202054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430257;
-	bh=+HbxcW2LTONTYqsfB4l18CKET5zvsNbmTcxRty83vN4=;
+	s=default; t=1564430260;
+	bh=E45bOxYEs1GCke5wwWSaD5o7gMTEOtOqrjfmOPnbj38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BTxFUn6WEUUMJAMhD4mbYDytRu5uXIH1M96wzNZn0WkEbCZiuymeRlKt0yfKatiJc
-	 oHw+Wx1Qmo6UKi5MYRHgJ87Eq8151FlhBNa5WFa82HEhytc9u3JKHalClTQ9X8kTRs
-	 bFbeaq15NdEcFl1nG+GaXKTTeCZ7cTviJ+CVh4Mw=
+	b=A6s70G73Zif9fo+R7vgH4r/YW9N3gGZhW8sRT6DFCCQjQBNyNRdI3I7feXbyGjZCT
+	 UzUIOKZQf7Pb3stlAcSAa+pYn/N6GUN0Usr5VRQ8qhoM3CwZbHBlwzpB0CnxegHB7w
+	 F1KmCWm+lALGx6dpsFO+PSPcdzKXbkgEbWrBl0vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404058AbfG2T5f (ORCPT
+        id S2390306AbfG2TyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:57:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:54:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404020AbfG2Ty0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:54:26 -0400
+        id S2390821AbfG2TyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:54:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 134C82054F;
-        Mon, 29 Jul 2019 19:54:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16CD021655;
+        Mon, 29 Jul 2019 19:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430065;
-        bh=+HbxcW2LTONTYqsfB4l18CKET5zvsNbmTcxRty83vN4=;
+        s=default; t=1564430047;
+        bh=E45bOxYEs1GCke5wwWSaD5o7gMTEOtOqrjfmOPnbj38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3+IHtLKj9Fj0u7ibIUkqDPfldybPKIvD5iqSrVMSxRGboktH0t8o1RP0bmVwaR9o
-         rCo/ksZWxtLGQ8HcWKURXpiqloOITrXHWlgS+wILWjglYoXaJ8NdDV5pnWkpk8a/St
-         3q/0VILvjfOfG5jPF6yjt90PmAmK5gAPQH5R8pZE=
+        b=J5gydGPDegwRDmFnr83S49GvO7oRbsRCjXhXj1SC6NhzYS7JuHGo8nGGMLekdT1Fh
+         im6SRu0x2Ifs06HGtMb5WndNSjPuKJN0SjWbzNEPE/uJmKF284sWgvidInkO9F4JAx
+         wC6QFgAYtfSm8S8J/1CyCYof/yPZktikxrYpe3QA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>,
-        Martijn Coenen <maco@android.com>
-Subject: [PATCH 5.2 184/215] binder: Set end of SG buffer area properly.
-Date:   Mon, 29 Jul 2019 21:23:00 +0200
-Message-Id: <20190729190812.095573430@linuxfoundation.org>
+        stable@vger.kernel.org, James Harvey <jamespharvey20@gmail.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.2 179/215] btrfs: inode: Dont compress if NODATASUM or NODATACOW set
+Date:   Mon, 29 Jul 2019 21:22:55 +0200
+Message-Id: <20190729190811.031475083@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -59,37 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martijn Coenen <maco@android.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit a56587065094fd96eb4c2b5ad65571daad32156d upstream.
+commit 42c16da6d684391db83788eb680accd84f6c2083 upstream.
 
-In case the target node requests a security context, the
-extra_buffers_size is increased with the size of the security context.
-But, that size is not available for use by regular scatter-gather
-buffers; make sure the ending of that buffer is marked correctly.
+As btrfs(5) specified:
 
-Acked-by: Todd Kjos <tkjos@google.com>
-Fixes: ec74136ded79 ("binder: create node flag to request sender's security context")
-Signed-off-by: Martijn Coenen <maco@android.com>
-Cc: stable@vger.kernel.org # 5.1+
-Link: https://lore.kernel.org/r/20190709110923.220736-1-maco@android.com
+	Note
+	If nodatacow or nodatasum are enabled, compression is disabled.
+
+If NODATASUM or NODATACOW set, we should not compress the extent.
+
+Normally NODATACOW is detected properly in run_delalloc_range() so
+compression won't happen for NODATACOW.
+
+However for NODATASUM we don't have any check, and it can cause
+compressed extent without csum pretty easily, just by:
+  mkfs.btrfs -f $dev
+  mount $dev $mnt -o nodatasum
+  touch $mnt/foobar
+  mount -o remount,datasum,compress $mnt
+  xfs_io -f -c "pwrite 0 128K" $mnt/foobar
+
+And in fact, we have a bug report about corrupted compressed extent
+without proper data checksum so even RAID1 can't recover the corruption.
+(https://bugzilla.kernel.org/show_bug.cgi?id=199707)
+
+Running compression without proper checksum could cause more damage when
+corruption happens, as compressed data could make the whole extent
+unreadable, so there is no need to allow compression for
+NODATACSUM.
+
+The fix will refactor the inode compression check into two parts:
+
+- inode_can_compress()
+  As the hard requirement, checked at btrfs_run_delalloc_range(), so no
+  compression will happen for NODATASUM inode at all.
+
+- inode_need_compress()
+  As the soft requirement, checked at btrfs_run_delalloc_range() and
+  compress_file_range().
+
+Reported-by: James Harvey <jamespharvey20@gmail.com>
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/btrfs/inode.c |   24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -3239,7 +3239,8 @@ static void binder_transaction(struct bi
- 	buffer_offset = off_start_offset;
- 	off_end_offset = off_start_offset + tr->offsets_size;
- 	sg_buf_offset = ALIGN(off_end_offset, sizeof(void *));
--	sg_buf_end_offset = sg_buf_offset + extra_buffers_size;
-+	sg_buf_end_offset = sg_buf_offset + extra_buffers_size -
-+		ALIGN(secctx_sz, sizeof(u64));
- 	off_min = 0;
- 	for (buffer_offset = off_start_offset; buffer_offset < off_end_offset;
- 	     buffer_offset += sizeof(binder_size_t)) {
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -394,10 +394,31 @@ static noinline int add_async_extent(str
+ 	return 0;
+ }
+ 
++/*
++ * Check if the inode has flags compatible with compression
++ */
++static inline bool inode_can_compress(struct inode *inode)
++{
++	if (BTRFS_I(inode)->flags & BTRFS_INODE_NODATACOW ||
++	    BTRFS_I(inode)->flags & BTRFS_INODE_NODATASUM)
++		return false;
++	return true;
++}
++
++/*
++ * Check if the inode needs to be submitted to compression, based on mount
++ * options, defragmentation, properties or heuristics.
++ */
+ static inline int inode_need_compress(struct inode *inode, u64 start, u64 end)
+ {
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 
++	if (!inode_can_compress(inode)) {
++		WARN(IS_ENABLED(CONFIG_BTRFS_DEBUG),
++			KERN_ERR "BTRFS: unexpected compression for ino %llu\n",
++			btrfs_ino(BTRFS_I(inode)));
++		return 0;
++	}
+ 	/* force compress */
+ 	if (btrfs_test_opt(fs_info, FORCE_COMPRESS))
+ 		return 1;
+@@ -1630,7 +1651,8 @@ int btrfs_run_delalloc_range(struct inod
+ 	} else if (BTRFS_I(inode)->flags & BTRFS_INODE_PREALLOC && !force_cow) {
+ 		ret = run_delalloc_nocow(inode, locked_page, start, end,
+ 					 page_started, 0, nr_written);
+-	} else if (!inode_need_compress(inode, start, end)) {
++	} else if (!inode_can_compress(inode) ||
++		   !inode_need_compress(inode, start, end)) {
+ 		ret = cow_file_range(inode, locked_page, start, end, end,
+ 				      page_started, nr_written, 1, NULL);
+ 	} else {
 
 
