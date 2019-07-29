@@ -2,122 +2,114 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B855AC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0B0C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DEA12054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FC5206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:40:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="KzkI7bYi"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FMdTb7NC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387899AbfG2MgQ (ORCPT
+        id S1728370AbfG2MkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:36:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:32880 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727513AbfG2MgP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:36:15 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g2so27981487pfq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 05:36:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TSzV7RC0yVMqLiuA9qX0NlSf34xDJD+fWOSh5tvbLJM=;
-        b=KzkI7bYi9uaBjj+hagxShH/J9WGeYAAicHOHaZx2+ybUxAfQbLY4B1F49h66Fj9eiy
-         5wTxkGxKfBGj2AdJWYTtZc5Z3qBbVFc3wTTrsSufQ6y4KX5LmvnDMis3oatVIishAYpo
-         w5WBR2nE9S8W6m771/uw4SRnXlG3pZ4qeTSqM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TSzV7RC0yVMqLiuA9qX0NlSf34xDJD+fWOSh5tvbLJM=;
-        b=rV8UgtyUvw6OlL1S0W3ioW53qwNHwnDHhBKS7ZbdrSXX7LAuORI2kFcX3zgVeyhSdh
-         uddQQh655BmXKDBLJj2+3VATrH2leVhT1xMxhWyh8WJp4Qo5unshpW+IDB43p/a5phGK
-         l75GR5zNIkwJJuYlCwzKgGnXum9p/SXkAdJdOTo9X1IntLe+xdrELlKtCVzOt2jGgDRq
-         xvUfSrGA3II2Df0Lxghdfu+TXV5zZl+c9TN202qvHI5eVRrLDbTyqMzvVI5RXWo7XvAW
-         2gvzt3yVfuD68LA0L/sAwiPsZT0Gc2ifoBObRGHfe/Pi7Z+/zyFTotBJ4god2XhB4TVr
-         jHZQ==
-X-Gm-Message-State: APjAAAWvUDdu0BCf9uzDEocYzlQ7B+VIdid7ji4s+no7XNMlepg8xg5H
-        99zy6aW6UJboSBZmpHgwd6XVRahb
-X-Google-Smtp-Source: APXvYqwrluq6n6ipVhMOqpsRgfnzyV9l1pZ68HYGe0lLVMzOGWl8WDb5T8Z0DRVYOYGYVh2pNcUe0w==
-X-Received: by 2002:a63:66c5:: with SMTP id a188mr103667702pgc.127.1564403774374;
-        Mon, 29 Jul 2019 05:36:14 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id q8sm121732096pjq.20.2019.07.29.05.36.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 05:36:13 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jade Alglave <j.alglave@ucl.ac.uk>, linux-arch@vger.kernel.org,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH] Use term cumul-fence instead of fence in ->prop ordering example
-Date:   Mon, 29 Jul 2019 08:36:05 -0400
-Message-Id: <20190729123605.150423-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+        Mon, 29 Jul 2019 08:40:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58383 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726986AbfG2MkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:40:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45xzmT2FFpz9s7T;
+        Mon, 29 Jul 2019 22:40:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564404009;
+        bh=4dbux8Y2IDJ4EDhwD0REmwTgzoEb9eQxcpaRGFuIzmM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FMdTb7NCf+Lf6WP2/YPUZrqnlJlghpg1I156bYWPP43qkXO7a2EgOTl3JGK8Fl6n5
+         uyqOn4Q7Czkw++Fvbo5epE/6LKXNYY73dwg0C23tSm4sTALah3+jROYd+BdDUWoFLz
+         YdH8/Tny3UB1IOjlretfoo74we7pkmVLvua/QCFGN21i5ZSKg3sUNwcPnWre4lco+2
+         DKO9bjKV545W928GJD+rVtFN+B3rpHHHCTxXw89JAYxMzWwZFADU1ysve13RiyILLv
+         Quqqy/lHeiKhWou0q9E+e0erRkA6tOKBD4v57v/h0bo01TeS4EfE3VXU7TujyKKOAP
+         oQFzKE/EEbUvw==
+Date:   Mon, 29 Jul 2019 22:40:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] modpost: check for static EXPORT_SYMBOL* functions
+Message-ID: <20190729224007.2f7fdcb4@canb.auug.org.au>
+In-Reply-To: <e2b5607f-0f74-41c6-a83d-5a22d6828778@linux.com>
+References: <20190714152817.24693-1-efremov@linux.com>
+        <20190728100906.18847-1-efremov@linux.com>
+        <20190729151351.24f9eeb9@canb.auug.org.au>
+        <e2b5607f-0f74-41c6-a83d-5a22d6828778@linux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/5dSy6MPx/cOnKQYrF6_o2JA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To reduce ambiguity in the more exotic ->prop ordering example, let us
-use the term cumul-fence instead fence for the 2 fences, so that the
-implict ->rfe on loads/stores to Y are covered by the description.
+--Sig_/5dSy6MPx/cOnKQYrF6_o2JA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Link: https://lore.kernel.org/lkml/20190729121745.GA140682@google.com
+Hi Denis,
 
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- tools/memory-model/Documentation/explanation.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Mon, 29 Jul 2019 12:16:29 +0300 Denis Efremov <efremov@linux.com> wrote:
+>
+> > Just a reminder that some of us (just me?) do well over 100+ builds per
+> > day ...  if this can be optimised some what that would be good. =20
+>=20
+> These measurements for the worst case (allmodconfig). Is it possible to=20
+> measure the slowdown in your case? How it will perform on your typical=20
+> workflow?
 
-diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-index 68caa9a976d0..634dc6db26c4 100644
---- a/tools/memory-model/Documentation/explanation.txt
-+++ b/tools/memory-model/Documentation/explanation.txt
-@@ -1302,7 +1302,7 @@ followed by an arbitrary number of cumul-fence links, ending with an
- rfe link.  You can concoct more exotic examples, containing more than
- one fence, although this quickly leads to diminishing returns in terms
- of complexity.  For instance, here's an example containing a coe link
--followed by two fences and an rfe link, utilizing the fact that
-+followed by two cumul-fences and an rfe link, utilizing the fact that
- release fences are A-cumulative:
- 
- 	int x, y, z;
-@@ -1334,10 +1334,10 @@ If x = 2, r0 = 1, and r2 = 1 after this code runs then there is a prop
- link from P0's store to its load.  This is because P0's store gets
- overwritten by P1's store since x = 2 at the end (a coe link), the
- smp_wmb() ensures that P1's store to x propagates to P2 before the
--store to y does (the first fence), the store to y propagates to P2
-+store to y does (the first cumul-fence), the store to y propagates to P2
- before P2's load and store execute, P2's smp_store_release()
- guarantees that the stores to x and y both propagate to P0 before the
--store to z does (the second fence), and P0's load executes after the
-+store to z does (the second cumul-fence), and P0's load executes after the
- store to z has propagated to P0 (an rfe link).
- 
- In summary, the fact that the hb relation links memory access events
--- 
-2.22.0.709.g102302147b-goog
+I did 3 x86_64 allmodconfig builds without and with the patch (I do
+-j 80 powerpc64 le hosted cross builds) and it doesn't look like the
+patch has much impact at all.
 
+Without the patch:
+
+real	8m41.390s user	587m25.249s sys	22m0.411s
+real	8m40.100s user	587m32.148s sys	21m58.419s
+real	8m40.084s user	587m25.311s sys	22m2.794s
+
+With the patch:
+
+real	8m40.351s user	587m21.819s sys	21m57.389s
+real	8m40.868s user	587m23.730s sys	21m58.737s
+real	8m40.970s user	587m22.525s sys	22m2.467s
+
+I do other builds as well, but that is the biggest, so actually looks
+ok.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/5dSy6MPx/cOnKQYrF6_o2JA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0+6ScACgkQAVBC80lX
+0GxtVwf+MXedKDg7Tc/3WCsRA44hxudZyWbH10T4khIcptSuioPqoBgz9abNYI3K
+IKyTryqu6lXAgyQvY+bYs/qqdZp9FuDcIJPVOdPmCBlRvslVom4GtJecR+DXa6Rb
+6NxWWglkWJf4iJl8izJKdQTyWRI4utWrW8iERkgK3GyNubvtS8p0ZJPtOox4LhJL
+sL4sqBrgoZcNyUiK5LLAAt/iYZQ+IeMFDWJ5C+T4kv1JpTM1FlpqRVrIJcHLrG2N
+kV3DK59Si0OFGq+4FajbI72YEw+0B3qEVCBZQjYEc6gr1Gxpm8XN/9EIqJqJ2AN+
+/thOOrhvw7v3oh/ZEHdSRtKGdHt1Qw==
+=tynr
+-----END PGP SIGNATURE-----
+
+--Sig_/5dSy6MPx/cOnKQYrF6_o2JA--
