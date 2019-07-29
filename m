@@ -2,167 +2,201 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89920C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4B3C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBDC2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA262070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="tqEB3bTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbfG2MRt (ORCPT
+        id S1727750AbfG2MRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jul 2019 08:17:52 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37933 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfG2MRt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 08:17:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:43132 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726635AbfG2MRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:17:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F232528;
-        Mon, 29 Jul 2019 05:17:45 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EFF93F575;
-        Mon, 29 Jul 2019 05:17:43 -0700 (PDT)
-Subject: Re: [PATCH v9 11/21] mm: pagewalk: Add p4d_entry() and pgd_entry()
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+Received: by mail-pf1-f196.google.com with SMTP id y15so27955414pfn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 05:17:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=e1piTx10aEJP+ZI+r0n8JUDegiNyJ7yZ6BkYGQZQSIs=;
+        b=tqEB3bTeUovzCMZVnoBL0VJTUh86W8/2VgLHc6/ZQjLA9hgiLeKrYkqwQE/GD6IqBE
+         FKd9huGHW2KkeSAnKZfAwq29pFLq1B+is2K+sC1ElnpnPQcKrmKBiWjMiZZb4hvMsTo3
+         cN+REtfsEboRgwIYOmaphzdrUjjxw/imZu0oQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e1piTx10aEJP+ZI+r0n8JUDegiNyJ7yZ6BkYGQZQSIs=;
+        b=Q7TwDMx00jJwNpDkh1Tf47U6brtMf4xGOcay4Nts7Cw+Nq+7PvoZBLVDi5lv3V3MvT
+         rgMNsCoRD6Y+9x54nuBEr3QMAw6f8vpRd/Gdos/y4Aa0irQa1Vz9TfEHvL6vkTKBoWzF
+         PDyoLmefYiOpcDCzb4u6HdmwwzyamV4SHFrJ60qq1/4QHat6FNSTsBBcrH1e9IWwWsjW
+         /ydKZb8xUnLPdfk6XYIxkGYdAq1JrCHjiYayJNnFb8nt5GyWNIOQ4wt55ZMpDl2Lg5zo
+         OVION7GgzybN61mAi4HjBHoQK7PJ4aDp3EyYaIP0GXYmQR7i3wo6AYGhIzBVpkXSNTbK
+         c07w==
+X-Gm-Message-State: APjAAAXPSxm3f9eaSHzYuZGdtc3TmPHx52m4D8rlGT7iYLFbsijT4laH
+        snrke6KdvISKPKzvtVltbmQ=
+X-Google-Smtp-Source: APXvYqynz1Nxden8tOcN+CpArgJ+RHKDrVg/RZJzN6ThDymD1kOvhHPEaxfWXfDpwK/bYkua4T+EkQ==
+X-Received: by 2002:a17:90a:9bca:: with SMTP id b10mr111463058pjw.90.1564402668284;
+        Mon, 29 Jul 2019 05:17:48 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id g2sm77410208pfb.95.2019.07.29.05.17.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 05:17:47 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 08:17:45 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jade Alglave <j.alglave@ucl.ac.uk>, linux-arch@vger.kernel.org,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190722154210.42799-1-steven.price@arm.com>
- <20190722154210.42799-12-steven.price@arm.com>
- <b61435a3-0da0-de57-0993-b1fffeca3ca9@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <63a86424-9a8e-4528-5880-138f0009e462@arm.com>
-Date:   Mon, 29 Jul 2019 13:17:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2] lkmm/docs: Correct ->prop example with additional rfe
+ link
+Message-ID: <20190729121745.GA140682@google.com>
+References: <20190728031303.164545-1-joel@joelfernandes.org>
+ <Pine.LNX.4.44L0.1907281027160.6532-100000@netrider.rowland.org>
+ <20190728151959.GA82871@google.com>
+ <20190728152806.GB26905@tardis>
+ <20190728153544.GA87531@google.com>
+ <20190729055044.GC26905@tardis>
 MIME-Version: 1.0
-In-Reply-To: <b61435a3-0da0-de57-0993-b1fffeca3ca9@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729055044.GC26905@tardis>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/07/2019 13:33, Anshuman Khandual wrote:
+On Mon, Jul 29, 2019 at 01:50:44PM +0800, Boqun Feng wrote:
+> On Sun, Jul 28, 2019 at 11:35:44AM -0400, Joel Fernandes wrote:
+> [...]
+> > > > > > +load of y (rfe link), P2's smp_store_release() ensures that P2's load
+> > > > > > +of y executes before P2's store to z (second fence), which implies that
+> > > > > > +that stores to x and y propagate to P2 before the smp_store_release(), which
+> > > > > > +means that P2's smp_store_release() will propagate stores to x and y to all
+> > > > > > +CPUs before the store to z propagates (A-cumulative property of this fence).
+> > > > > > +Finally P0's load of z executes after P2's store to z has propagated to
+> > > > > > +P0 (rfe link).
+> > > > > 
+> > > > > Again, a better change would be simply to replace the two instances of
+> > > > > "fence" in the original text with "cumul-fence".
+> > > > 
+> > > > Ok that's fine. But I still feel the rfe is not a part of the cumul-fence.
+> > > > The fences have nothing to do with the rfe. Or, I am missing something quite
+> > > > badly.
+> > > > 
+> > > > Boqun, did you understand what Alan is saying?
+> > > > 
+> > > 
+> > > I think 'cumul-fence' that Alan mentioned is not a fence, but a
+> > > relation, which could be the result of combining a rfe relation and a
+> > > A-cumulative fence relation. Please see the section "PROPAGATION ORDER
+> > > RELATION: cumul-fence" or the definition of cumul-fence in
+> > > linux-kernel.cat.
+> > > 
+> > > Did I get you right, Alan? If so, your suggestion is indeed a better
+> > > change.
+> > 
+> > To be frank, I don't think it is better if that's what Alan meant. It is
+> > better to be explicit about the ->rfe so that the reader walking through the
+> > example can clearly see the ordering and make sense of it.
+> > 
+> > Just saying 'cumul-fence' and then hoping the reader sees the light is quite
+> > a big assumption and makes the document less readable.
+> > 
 > 
+> After a bit more rereading of the document, I still think Alan's way is
+> better ;-)
+
+I think I finally understood. What I was missing was this definition of
+cumul-fence involves an rf relation (with writes being possibly on different
+CPUs).
+
+E ->cumul-fence F
+	F is a release fence and some X comes before F in program order,
+	where either X = E or else E ->rf X; or
+
+So I think what Alan meant is there is a cumul-fence between y=1 and z=1
+because fo the ->rfe of y. Thus making it not necessary to mention the rfe.
+
+Labeling E and F in the example...
+
+	P1()
+	{
+		WRITE_ONCE(x, 2);
+		smp_wmb();
+		WRITE_ONCE(y, 1);		// This is E
+	}
+
+	P2()
+	{
+		int r2;
+
+		r2 = READ_ONCE(y);		// This is X
+		smp_store_release(&z, 1);	// This is F
+	}
+
+Here, E ->rf X ->release-fence -> F
+implies,
+      E ->cumul-fence F
+
+Considering that, I agree with Alan's suggestion.
+
 > 
-> On 07/22/2019 09:12 PM, Steven Price wrote:
->> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
->> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
->> no users. We're about to add users so reintroduce them, along with
->> p4d_entry() as we now have 5 levels of tables.
->>
->> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
->> PUD-sized transparent hugepages") already re-added pud_entry() but with
->> different semantics to the other callbacks. Since there have never
->> been upstream users of this, revert the semantics back to match the
->> other callbacks. This means pud_entry() is called for all entries, not
->> just transparent huge pages.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  include/linux/mm.h | 15 +++++++++------
->>  mm/pagewalk.c      | 27 ++++++++++++++++-----------
->>  2 files changed, 25 insertions(+), 17 deletions(-)
->>
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index 0334ca97c584..b22799129128 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -1432,15 +1432,14 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
->>  
->>  /**
->>   * mm_walk - callbacks for walk_page_range
->> - * @pud_entry: if set, called for each non-empty PUD (2nd-level) entry
->> - *	       this handler should only handle pud_trans_huge() puds.
->> - *	       the pmd_entry or pte_entry callbacks will be used for
->> - *	       regular PUDs.
->> - * @pmd_entry: if set, called for each non-empty PMD (3rd-level) entry
->> + * @pgd_entry: if set, called for each non-empty PGD (top-level) entry
->> + * @p4d_entry: if set, called for each non-empty P4D entry
->> + * @pud_entry: if set, called for each non-empty PUD entry
->> + * @pmd_entry: if set, called for each non-empty PMD entry
->>   *	       this handler is required to be able to handle
->>   *	       pmd_trans_huge() pmds.  They may simply choose to
->>   *	       split_huge_page() instead of handling it explicitly.
->> - * @pte_entry: if set, called for each non-empty PTE (4th-level) entry
->> + * @pte_entry: if set, called for each non-empty PTE (lowest-level) entry
->>   * @pte_hole: if set, called for each hole at all levels
->>   * @hugetlb_entry: if set, called for each hugetlb entry
->>   * @test_walk: caller specific callback function to determine whether
->> @@ -1455,6 +1454,10 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
->>   * (see the comment on walk_page_range() for more details)
->>   */
->>  struct mm_walk {
->> +	int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
->> +			 unsigned long next, struct mm_walk *walk);
->> +	int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
->> +			 unsigned long next, struct mm_walk *walk);
->>  	int (*pud_entry)(pud_t *pud, unsigned long addr,
->>  			 unsigned long next, struct mm_walk *walk);
->>  	int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
->> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
->> index c3084ff2569d..98373a9f88b8 100644
->> --- a/mm/pagewalk.c
->> +++ b/mm/pagewalk.c
->> @@ -90,15 +90,9 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
->>  		}
->>  
->>  		if (walk->pud_entry) {
->> -			spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
->> -
->> -			if (ptl) {
->> -				err = walk->pud_entry(pud, addr, next, walk);
->> -				spin_unlock(ptl);
->> -				if (err)
->> -					break;
->> -				continue;
->> -			}
->> +			err = walk->pud_entry(pud, addr, next, walk);
->> +			if (err)
->> +				break;
+> 	The formal definition of the prop relation involves a coe or
+> 	fre link, followed by an arbitrary number of cumul-fence links,
+> 	ending with an rfe link.
 > 
-> But will not this still encounter possible THP entries when walking user
-> page tables (valid walk->vma) in which case still needs to get a lock.
-> OR will the callback take care of it ?
+> , so using "cumul-fence" actually matches the definition of ->prop.
+> 
+> For the ease of readers, I can think of two ways:
+> 
+> 1.	Add a backwards reference to cumul-fence section here, right
+> 	before using its name.
 
-This is what I mean in the commit message by:
-> Since there have never
-> been upstream users of this, revert the semantics back to match the
-> other callbacks. This means pud_entry() is called for all entries, not
-> just transparent huge pages.
+Instead of that, a reference to the fact that the rfe causes a cumul-fence
+between y=1 and z=1 may be helpful. No need backward reference IMO.
 
-So the expectation is that the caller takes care of it.
+> 2.	Use "->cumul-fence" notation rather than "cumul-fence" here,
+> 	i.e. add an arrow "->" before the name to call it out that name
+> 	"cumul-fence" here stands for links/relations rather than a
+> 	fence/barrier. Maybe it's better to convert all references to 
+> 	links/relations to the "->" notations in the whole doc.
 
-However, having checked again, it appears that mm/hmm.c now does use
-this callback (merged in v5.2-rc1).
+No, it is a fence that causes the relation in this example.
 
-Jérôme - are you happy with this change in semantics? It looks like
-hmm_vma_walk_pud() should deal gracefully with both normal and large
-pages - although I'm unsure whether you are relying on the lock from
-pud_trans_huge_lock()?
+I don't think there is a distinction between ->cumul-fence and cumul-fence at
+least for this example. The smp_store_release() is a FENCE which in this
+example is really a cumul-fence between y=1 and z=1 because the release fence
+affects propogation order of y and z on all CPUs. For any given CPU, y
+propagates to that CPU before z does, even though y and z executed on
+different CPUs.
 
-Thanks,
+I think what you're talking about is some other definition of cumul-fence
+that is not mentioned in the formal definitions. May be you can update the
+document with such definition then? AFAIU, cumul-fence is always a fence.
 
-Steve
+thanks,
+
+ - Joel
+
