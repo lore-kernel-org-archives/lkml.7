@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DD1C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA804C7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE1121655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9959C2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429369;
-	bh=9L8P5U0304dYmr6o0cyAIx4LvCOF5cTG8q90nXbvfkc=;
+	s=default; t=1564429378;
+	bh=gpiiQZlXUYtOGkRSrmzD+T6ZIQbkvf4niq4jsiw+rX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tmBJjTpto/GIr7IlJBBQrwpvqr0YjgCS6CxojDJSZvisFC6KFrPUSRfE3IExwcltZ
-	 3bpmDNds+4UNL2ei+o1kD+TAGamN8XTW0feiKz57V3wwY0xUIvOPjlMLXeHAhFsatG
-	 BD2PERJGK5IzyhMgGsAF/41k1h0l2+gBY0mDYKCs=
+	b=pEyFUu90KJV3+s8XbfB4mIqWmlgEPzdYQvcD5dcR8qj+dwgx0/q01hYLLkvJlfOVe
+	 sfDPTJb5JamXEDdR+rgNMwrxOL06jR0IkyfKVFA1zAxquwlxNGV/A0sJ/QO1Czjstv
+	 YF4A0Y+aJSravL+J7KYc4V3qJq9FxtYd6k2jzHoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389558AbfG2Tmr (ORCPT
+        id S2389177AbfG2Tm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:42:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58726 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:42:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389199AbfG2Tmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:42:45 -0400
+        id S2389125AbfG2Tmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:42:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31DA3205F4;
-        Mon, 29 Jul 2019 19:42:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC242205F4;
+        Mon, 29 Jul 2019 19:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429364;
-        bh=9L8P5U0304dYmr6o0cyAIx4LvCOF5cTG8q90nXbvfkc=;
+        s=default; t=1564429371;
+        bh=gpiiQZlXUYtOGkRSrmzD+T6ZIQbkvf4niq4jsiw+rX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lLgAkOtU/iujk5cyC/Ud64xPd0HrgneVWXGG5G6kYL4bzJXZ0Bm3H78V4CLfAbOjD
-         aFr2EvtdB4h9MHfDEBOoEqkaXLFtgCIfkDRyCztxpbbjHEnLu4QflcZW5wYk8PFyaR
-         9eriUyQMOG8xH0G5/05NxZhIDvFfTwhNIx1rZHkk=
+        b=gAe3rn3fgB0sMi+ihtiX+3Qz9bMfuuETwcB67EfwrYRPKTAyyYhZa2mdoAUTxDJR3
+         kDAh3tbbZCHnyRZiJVhmRR6vWwKU42SuceK/5HVQzOEmgwT+bn6vZPBvSSfTw8Yx3/
+         xhOgzI53ApD/9sKPDCOYBEb376KoGSxxytLc1ozk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Shawn Anastasio <shawn@anastas.io>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Stefan Roese <sr@denx.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/113] powerpc/pci/of: Fix OF flags parsing for 64bit BARs
-Date:   Mon, 29 Jul 2019 21:22:03 +0200
-Message-Id: <20190729190704.397050441@linuxfoundation.org>
+Subject: [PATCH 4.19 038/113] serial: mctrl_gpio: Check if GPIO property exisits before requesting it
+Date:   Mon, 29 Jul 2019 21:22:05 +0200
+Message-Id: <20190729190704.872773204@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -63,63 +63,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit df5be5be8735ef2ae80d5ae1f2453cd81a035c4b ]
+[ Upstream commit d99482673f950817b30caf3fcdfb31179b050ce1 ]
 
-When the firmware does PCI BAR resource allocation, it passes the assigned
-addresses and flags (prefetch/64bit/...) via the "reg" property of
-a PCI device device tree node so the kernel does not need to do
-resource allocation.
+This patch adds a check for the GPIOs property existence, before the
+GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
+support is added (2nd patch in this patch series) on x86 platforms using
+ACPI.
 
-The flags are stored in resource::flags - the lower byte stores
-PCI_BASE_ADDRESS_SPACE/etc bits and the other bytes are IORESOURCE_IO/etc.
-Some flags from PCI_BASE_ADDRESS_xxx and IORESOURCE_xxx are duplicated,
-such as PCI_BASE_ADDRESS_MEM_PREFETCH/PCI_BASE_ADDRESS_MEM_TYPE_64/etc.
-When parsing the "reg" property, we copy the prefetch flag but we skip
-on PCI_BASE_ADDRESS_MEM_TYPE_64 which leaves the flags out of sync.
+Here Mika's comments from 2016-08-09:
 
-The missing IORESOURCE_MEM_64 flag comes into play under 2 conditions:
-1. we remove PCI_PROBE_ONLY for pseries (by hacking pSeries_setup_arch()
-or by passing "/chosen/linux,pci-probe-only");
-2. we request resource alignment (by passing pci=resource_alignment=
-via the kernel cmd line to request PAGE_SIZE alignment or defining
-ppc_md.pcibios_default_alignment which returns anything but 0). Note that
-the alignment requests are ignored if PCI_PROBE_ONLY is enabled.
+"
+I noticed that with v4.8-rc1 serial console of some of our Broxton
+systems does not work properly anymore. I'm able to see output but input
+does not work.
 
-With 1) and 2), the generic PCI code in the kernel unconditionally
-decides to:
-- reassign the BARs in pci_specified_resource_alignment() (works fine)
-- write new BARs to the device - this fails for 64bit BARs as the generic
-code looks at IORESOURCE_MEM_64 (not set) and writes only lower 32bits
-of the BAR and leaves the upper 32bit unmodified which breaks BAR mapping
-in the hypervisor.
+I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
+("tty/serial/8250: use mctrl_gpio helpers").
 
-This fixes the issue by copying the flag. This is useful if we want to
-enforce certain BAR alignment per platform as handling subpage sized BARs
-is proven to cause problems with hotplug (SLOF already aligns BARs to 64k).
+The reason why it fails is that in ACPI we do not have names for GPIOs
+(except when _DSD is used) so we use the "idx" to index into _CRS GPIO
+resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
+calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
+UART device in Broxton has following (simplified) ACPI description:
 
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
-Reviewed-by: Shawn Anastasio <shawn@anastas.io>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+    Device (URT4)
+    {
+        ...
+        Name (_CRS, ResourceTemplate () {
+            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+                    "\\_SB.GPO0", 0x00, ResourceConsumer)
+            {
+                0x003A
+            }
+            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+                    "\\_SB.GPO0", 0x00, ResourceConsumer)
+            {
+                0x003D
+            }
+        })
+
+In this case it finds the first GPIO (0x003A which happens to be RX pin
+for that UART), turns it into GPIO which then breaks input for the UART
+device. This also breaks systems with bluetooth connected to UART (those
+typically have some GPIOs in their _CRS).
+
+Any ideas how to fix this?
+
+We cannot just drop the _CRS index lookup fallback because that would
+break many existing machines out there so maybe we can limit this to
+only DT enabled machines. Or alternatively probe if the property first
+exists before trying to acquire the GPIOs (using
+device_property_present()).
+"
+
+This patch implements the fix suggested by Mika in his statement above.
+
+Signed-off-by: Stefan Roese <sr@denx.de>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Yegor Yefremov <yegorslists@googlemail.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Yegor Yefremov <yegorslists@googlemail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/pci_of_scan.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/tty/serial/serial_mctrl_gpio.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
-index 98f04725def7..c101b321dece 100644
---- a/arch/powerpc/kernel/pci_of_scan.c
-+++ b/arch/powerpc/kernel/pci_of_scan.c
-@@ -45,6 +45,8 @@ unsigned int pci_parse_of_flags(u32 addr0, int bridge)
- 	if (addr0 & 0x02000000) {
- 		flags = IORESOURCE_MEM | PCI_BASE_ADDRESS_SPACE_MEMORY;
- 		flags |= (addr0 >> 22) & PCI_BASE_ADDRESS_MEM_TYPE_64;
-+		if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
-+			flags |= IORESOURCE_MEM_64;
- 		flags |= (addr0 >> 28) & PCI_BASE_ADDRESS_MEM_TYPE_1M;
- 		if (addr0 & 0x40000000)
- 			flags |= IORESOURCE_PREFETCH
+diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+index 1c06325beaca..07f318603e74 100644
+--- a/drivers/tty/serial/serial_mctrl_gpio.c
++++ b/drivers/tty/serial/serial_mctrl_gpio.c
+@@ -12,6 +12,7 @@
+ #include <linux/termios.h>
+ #include <linux/serial_core.h>
+ #include <linux/module.h>
++#include <linux/property.h>
+ 
+ #include "serial_mctrl_gpio.h"
+ 
+@@ -115,6 +116,19 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
+ 
+ 	for (i = 0; i < UART_GPIO_MAX; i++) {
+ 		enum gpiod_flags flags;
++		char *gpio_str;
++		bool present;
++
++		/* Check if GPIO property exists and continue if not */
++		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
++				     mctrl_gpios_desc[i].name);
++		if (!gpio_str)
++			continue;
++
++		present = device_property_present(dev, gpio_str);
++		kfree(gpio_str);
++		if (!present)
++			continue;
+ 
+ 		if (mctrl_gpios_desc[i].dir_out)
+ 			flags = GPIOD_OUT_LOW;
 -- 
 2.20.1
 
