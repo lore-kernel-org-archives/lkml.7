@@ -2,120 +2,129 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1064C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4DCC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832D1206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lw+XYkhV"
+	by mail.kernel.org (Postfix) with ESMTP id 283DB206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfG2JNr (ORCPT
+        id S1727342AbfG2JPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:13:47 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41492 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfG2JNq (ORCPT
+        Mon, 29 Jul 2019 05:15:55 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46573 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfG2JPz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:13:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x15so17579591pgg.8;
-        Mon, 29 Jul 2019 02:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=FGIwEmsmTeBKX3uv2HVGT5VBixZ3R6wVRQMK4paWxpY=;
-        b=lw+XYkhVr+PEZB+phyk0I6km3bOOaGbdtNO/kXkC12rrILqw+YRwECQZVi8/o/ch/d
-         FwYRsi1Kvse+W+A4JRicaZyeia6dTsFLnXRMP0eAoAePV3RQUPmXo9sqPTSWGYwk3jiX
-         vXNoWev4TtgmW2u/9Xfljd3zqVwBHPl991rZAuc+fempjV7OS86C723iUiLdw6Yni/VY
-         Tw7koGZ6fzFCVgbaZTiYr+TtrWmy4JeQlUPVkqd0S2Y89pTNoHCXOfaiCjhCembiVM8x
-         xd9s9Ejlw3OfsZ1kzYTCJnvRivlWItn16oEpuNA3S8SIF4TdlejwUsCdvyyOcKtyN/I6
-         /NRQ==
+        Mon, 29 Jul 2019 05:15:55 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z1so60942688wru.13;
+        Mon, 29 Jul 2019 02:15:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FGIwEmsmTeBKX3uv2HVGT5VBixZ3R6wVRQMK4paWxpY=;
-        b=nakSdvdrLfX0h96OFOefH5YmBpKkjrk/0OtMcvoWxD3+yR2vrG7PEOR/42wckvs5hN
-         8fqJQYj5S9Kin2dOxiEdwH9uWnM2Cto1lMqxxcgpq+NFq0FaD1DrbMP7KPLjsYFZq3KB
-         ub0sOle/jILzC2k1zQgEuexRh/krZz2BFVrB37jytlLbG0RRltF8+8xY9jtoYsAlGOSJ
-         TzMc9zWBHjYUfV0JpoHY/PYIeCJ9jjkrBEbNwxk5I0VMqSvfZu6Lipgc2rNT74466II6
-         Tcx9yR44Rothp5vu5POmEqlDh49SpDepWAezCMAJFFu/CswThwTS8pxFb85UhYUWVSZs
-         IeTw==
-X-Gm-Message-State: APjAAAVivEHOWiBYLoD25kpLKcgfdmaPnCPvgxXV3K9cmltwyjYie9im
-        mY81lQScTN+Xi2tB2eVhZ1/lEuVxkhI=
-X-Google-Smtp-Source: APXvYqxAfAb1vND3S11uFh91InBJQZ/lXjcy2xGtpgE+ZVcN6esyoWcuH92OZSd+pEPH3Hi1n+B0JA==
-X-Received: by 2002:a63:494d:: with SMTP id y13mr105020405pgk.109.1564391626074;
-        Mon, 29 Jul 2019 02:13:46 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id g2sm64643446pfi.26.2019.07.29.02.13.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 02:13:45 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     lduncan@suse.com, cleech@redhat.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     open-iscsi@googlegroups.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] scsi: libiscsi: Fix possible null-pointer dereferences in iscsi_conn_get_addr_param()
-Date:   Mon, 29 Jul 2019 17:13:39 +0800
-Message-Id: <20190729091339.30815-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lX+8f/ul557VUvmKfQ5/rLyi40udmS9GdSHCWxQEpMY=;
+        b=Ytr4b5inOd6rHWzdTBUm+jO64HpHkm9J6gtxtJiO0HuUOqtHqyuDJmJICItykEpa6K
+         BgHwfKnnm87fYOKc4MlyOmu4AUW0xjODEQgkLp5WjmGbCK++ZtofKmdXLfaLcfc2gvhJ
+         W+XrYXo/P47eSeeZYkx7AoiLsQ0vK5yCwRoiVgcIJjmwxTKXgRM3w+A6NASYHpSKH90K
+         Qzgb5HHO9w+Vab0Ezs29ERQDt9ywqzn9580cWaTAljbo2f9srMFBky59DbU7si+UKBi0
+         LVFJMx8pSf4tYtP735sZoCgSPG2rwZlwbfLKrhFnRMbKrvEHQDW+UZPEs7up1gB7XoFV
+         Tu0w==
+X-Gm-Message-State: APjAAAWq7vWYZ4sSB4uyZvUM57ObVsD02+lkUyZlT+W85SxVcV+WHcPA
+        EpDQw7hpVcsPbFKSmJvdw7zD2r5iRemqLgk8a2A=
+X-Google-Smtp-Source: APXvYqxGx0Im9VeJH1b6YeB64dzXITkccBaAUZ+m0f2WtWbs7Fi1L9DQElT8KAMMrGxdtE1jg7uiYwM1yPygWtq4cjE=
+X-Received: by 2002:adf:cd81:: with SMTP id q1mr117458151wrj.16.1564391752564;
+ Mon, 29 Jul 2019 02:15:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <1564108975-27423-1-git-send-email-masonccyang@mxic.com.tw> <1564108975-27423-3-git-send-email-masonccyang@mxic.com.tw>
+In-Reply-To: <1564108975-27423-3-git-send-email-masonccyang@mxic.com.tw>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 29 Jul 2019 11:15:40 +0200
+Message-ID: <CAMuHMdWVuQa1LLXPqrdSw6wdRzwQapAkk6Est=XrjESPF9zQwg@mail.gmail.com>
+Subject: Re: [PATCH v15 2/2] dt-bindings: spi: Document Renesas R-Car Gen3
+ RPC-IF controller bindings
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, juliensu@mxic.com.tw,
+        Simon Horman <horms@verge.net.au>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In iscsi_conn_get_addr_param(), sin6 may be NULL when reaching lines
-3479 and 3487:
-    len = sprintf(buf, "%pI6\n", &sin6->sin6_addr);
-    len = sprintf(buf, "%hu\n", be16_to_cpu(sin6->sin6_port));
+Hi Mason,
 
-Thus, possible null-pointer dereferences may occur.
+Thanks for the update!
 
-To fix these bugs, sin6 is checked before being used, and len is
-initialized to -EINVAL.
+On Fri, Jul 26, 2019 at 4:19 AM Mason Yang <masonccyang@mxic.com.tw> wrote:
+> Dcument the bindings used by the Renesas R-Car Gen3 RPC-IF controller.
 
-These bugs are found by a static analysis tool STCheck written by us.
+Document
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/scsi/libiscsi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/scsi/libiscsi.c b/drivers/scsi/libiscsi.c
-index ebd47c0cf9e9..58f072d5c43f 100644
---- a/drivers/scsi/libiscsi.c
-+++ b/drivers/scsi/libiscsi.c
-@@ -3457,7 +3457,7 @@ int iscsi_conn_get_addr_param(struct sockaddr_storage *addr,
- {
- 	struct sockaddr_in6 *sin6 = NULL;
- 	struct sockaddr_in *sin = NULL;
--	int len;
-+	int len = -EINVAL;
- 
- 	switch (addr->ss_family) {
- 	case AF_INET:
-@@ -3475,14 +3475,14 @@ int iscsi_conn_get_addr_param(struct sockaddr_storage *addr,
- 	case ISCSI_HOST_PARAM_IPADDRESS:
- 		if (sin)
- 			len = sprintf(buf, "%pI4\n", &sin->sin_addr.s_addr);
--		else
-+		else if (sin6)
- 			len = sprintf(buf, "%pI6\n", &sin6->sin6_addr);
- 		break;
- 	case ISCSI_PARAM_CONN_PORT:
- 	case ISCSI_PARAM_LOCAL_PORT:
- 		if (sin)
- 			len = sprintf(buf, "%hu\n", be16_to_cpu(sin->sin_port));
--		else
-+		else if (sin6)
- 			len = sprintf(buf, "%hu\n",
- 				      be16_to_cpu(sin6->sin6_port));
- 		break;
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+> @@ -0,0 +1,46 @@
+
+[...]
+
+> +- flash: should be represented by a subnode of the RPC-IF node,
+> +        which "compatible" property contains "jedec,spi-nor", it presents
+> +        SPI is used.
+
+Sorry, I failed to parse the last subsentence.
+
+> +
+> +Example:
+> +
+> +       rpc: spi@ee200000 {
+> +               compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
+> +               reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
+> +                     <0 0xee208000 0 0x100>;
+> +               reg-names = "regs", "dirmap", "wbuf";
+> +               clocks = <&cpg CPG_MOD 917>;
+> +               clock-names = "rpc";
+> +               power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> +               resets = <&cpg 917>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               flash@0 {
+> +                       compatible = "jedec,spi-nor";
+> +                       reg = <0>;
+> +                       spi-max-frequency = <40000000>;
+> +                       spi-tx-bus-width = <1>;
+> +                       spi-rx-bus-width = <1>;
+
+Shouldn't those <1> be <4>, as this is QSPI?
+
+> +               };
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
