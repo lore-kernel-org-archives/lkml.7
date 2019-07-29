@@ -2,116 +2,67 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DCBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648F3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B8220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:46:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JFYCrWKe";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BqLagmE8"
+	by mail.kernel.org (Postfix) with ESMTP id 41B48206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbfG2QqX (ORCPT
+        id S1728487AbfG2Qro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:46:23 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:40868 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727488AbfG2QqW (ORCPT
+        Mon, 29 Jul 2019 12:47:44 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35768 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfG2Qrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:46:22 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0B38560A42; Mon, 29 Jul 2019 16:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564418781;
-        bh=oEfTz25DMg3N/lplcYB6CKqNnvmYEuMZiG4+Z5D/Jbg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JFYCrWKe6VxTbTEq1Ep+CSBeFqYI7brEg08NWsGq1ouacAERDYeXJMGHO1Nh8ll3Y
-         LWQhz3hXAknsXmQaGAsiSIYpymUqzES6cbXQu9sneuRWRl6vQy2MAejPlpvqshWVS+
-         gxZ071f0xNlAzVD6pr/k+JAhrIbg1lF7Jsw6ifTQ=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id F386C6037C;
-        Mon, 29 Jul 2019 16:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564418777;
-        bh=oEfTz25DMg3N/lplcYB6CKqNnvmYEuMZiG4+Z5D/Jbg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BqLagmE8UVjFVdV8t7Wzzgv1RFDv2uY9OMKSFJIx05Xz7j2sJMUggph4bFA8pBLnm
-         sNDHd0RRcu5DIhPz10MAWVUb8HPuW/RpstE74l+zfUn+xp+fyknG8FUxe5Rq813s81
-         7QdtCZ4fzY0FiVszPcHOJo+ScpTEbWSDSsmoqEvk=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        Mon, 29 Jul 2019 12:47:43 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D72281266535A;
+        Mon, 29 Jul 2019 09:47:42 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:47:42 -0700 (PDT)
+Message-Id: <20190729.094742.1840605528000035808.davem@davemloft.net>
+To:     baijiaju1990@gmail.com
+Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] net: sched: Fix a possible null-pointer dereference
+ in dequeue_func()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190729082433.28981-1-baijiaju1990@gmail.com>
+References: <20190729082433.28981-1-baijiaju1990@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 29 Jul 2019 22:16:16 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     robh+dt@kernel.org, vkoul@kernel.org, aneela@codeaurora.org,
-        mark.rutland@arm.com, agross@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
-        clew@codeaurora.org
-Subject: Re: [PATCH 0/6] Add support for Qualcomm SM8150 and SC7180 SoCs
-In-Reply-To: <20190729153826.GT7234@tuxbook-pro>
-References: <20190729120633.20451-1-sibis@codeaurora.org>
- <20190729153826.GT7234@tuxbook-pro>
-Message-ID: <e7a6a873c47f96a1ca326a50f544d35a@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 09:47:43 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Bjorn,
-Thanks for the review!
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
+Date: Mon, 29 Jul 2019 16:24:33 +0800
 
-On 2019-07-29 21:08, Bjorn Andersson wrote:
-> On Mon 29 Jul 05:06 PDT 2019, Sibi Sankar wrote:
+> In dequeue_func(), there is an if statement on line 74 to check whether
+> skb is NULL:
+>     if (skb)
 > 
->> This patch series adds SCM, APSS shared mailbox and QMP AOSS PD/clock
->> support on SM8150 and SC7180 SoCs.
->> 
+> When skb is NULL, it is used on line 77:
+>     prefetch(&skb->end);
 > 
-> Thanks Sibi, this looks good.
+> Thus, a possible null-pointer dereference may occur.
 > 
-> Could you please update the last 5 patches to ensure/maintain sort 
-> order
-> of the lists they affect.
+> To fix this bug, skb->end is used when skb is not NULL.
+> 
+> This bug is found by a static analysis tool STCheck written by us.
+> 
+> Fixes: 76e3cc126bb2 ("codel: Controlled Delay AQM")
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-yes I'll do that
-
-> 
-> Regards,
-> Bjorn
-> 
->> Sibi Sankar (6):
->>   soc: qcom: smem: Update max processor count
->>   dt-bindings: firmware: scm: Add SM8150 and SC7180 support
->>   dt-bindings: mailbox: Add APSS shared for SM8150 and SC7180 SoCs
->>   mailbox: qcom: Add support for Qualcomm SM8150 and SC7180 SoCs
->>   dt-bindings: soc: qcom: aoss: Add SM8150 and SC7180 support
->>   soc: qcom: aoss: Add AOSS QMP support
->> 
->>  Documentation/devicetree/bindings/firmware/qcom,scm.txt      | 2 ++
->>  .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt    | 2 ++
->>  Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt | 5 
->> ++++-
->>  drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 2 ++
->>  drivers/soc/qcom/qcom_aoss.c                                 | 2 ++
->>  drivers/soc/qcom/smem.c                                      | 2 +-
->>  6 files changed, 13 insertions(+), 2 deletions(-)
->> 
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
-
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Applied and queued up for -stable.
