@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771B1C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D56C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B47D217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D6B20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429502;
-	bh=y14D6dLa6fiGZGwns2WfE1OLGZlOsrlPNniRzRvoRGY=;
+	s=default; t=1564429506;
+	bh=oMVB5LUCxLBc4d04rJgABbGj+3wyZ+J3zsf37SFGpH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P5BLk8LiFM5jk79UwoZ14kvITmb/0h2iKfhNQR1O3gLSBAPcW8OVlX/vjPREm5DOh
-	 nP6Ls+SdtGD5QMC25abnmO8TOrkLTueL/vNe/Spzq25R5ORX13CSeR5UbfMkDuy2ba
-	 yWPlB5NvfxVsQbEDGa6t0lPqb3UUbVuyFlpP24J0=
+	b=I5NqA1w05xfZcCzVI4Imvl55x0p8g1QeB6d6snCaaj227KdiptmvfqyeIfz4P5VOg
+	 aSM5vUmcurpyI0StOac5IaDkKO5HfKQyeQbsL3fMKE87/ib2u9ByiU2njjg+KvyMDM
+	 qKZtbIw2m80vQxq8vu/6zgmvkBtaRkbNPUXpSs9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389887AbfG2TpA (ORCPT
+        id S2389897AbfG2TpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:45:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33610 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:45:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389862AbfG2Toz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:44:55 -0400
+        id S2389851AbfG2To7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:44:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E7D920C01;
-        Mon, 29 Jul 2019 19:44:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A69720C01;
+        Mon, 29 Jul 2019 19:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429495;
-        bh=y14D6dLa6fiGZGwns2WfE1OLGZlOsrlPNniRzRvoRGY=;
+        s=default; t=1564429498;
+        bh=oMVB5LUCxLBc4d04rJgABbGj+3wyZ+J3zsf37SFGpH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WWjF5m0WJG7s2XWTJmWf2DXqdA8uTo/X/o3WH2YlHuEzy6K5Vg/+bwv7UfULBRmb+
-         wsh8WGYv6BlrEzwMOcx4JADOVaSKgHUPcvxSI95Ao65TUF2FwB8IhrrZTaiaZ9lS/X
-         thr7HwIuzDINly+xIXjWZy/ExF7x2UuZQBFAkNe4=
+        b=RBj3hhteEjANR893qEXecaxw23ofKrgbtBpzQcSdK9OSff54fP8CjAoPqGvA2ifcq
+         lRX/OX2LKCOm1uHUQtoyn3AtzC03AXOb7RccPIZeWRpzu5vjadPNnxzOl07m7hYp+M
+         EaZrROWpvmrRn8B33QAT/22mu0pYRz376ox0J6cY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ocean Chen <oceanchen@google.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Morten Borup Petersen <morten_bp@live.dk>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 077/113] f2fs: avoid out-of-range memory access
-Date:   Mon, 29 Jul 2019 21:22:44 +0200
-Message-Id: <20190729190714.022413119@linuxfoundation.org>
+Subject: [PATCH 4.19 078/113] mailbox: handle failed named mailbox channel request
+Date:   Mon, 29 Jul 2019 21:22:45 +0200
+Message-Id: <20190729190714.296045350@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,37 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a ]
+[ Upstream commit 25777e5784a7b417967460d4fcf9660d05a0c320 ]
 
-blkoff_off might over 512 due to fs corrupt or security
-vulnerability. That should be checked before being using.
+Previously, if mbox_request_channel_byname was used with a name
+which did not exist in the "mbox-names" property of a mailbox
+client, the mailbox corresponding to the last entry in the
+"mbox-names" list would be incorrectly selected.
+With this patch, -EINVAL is returned if the named mailbox is
+not found.
 
-Use ENTRIES_IN_SUM to protect invalid value in cur_data_blkoff.
-
-Signed-off-by: Ocean Chen <oceanchen@google.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Morten Borup Petersen <morten_bp@live.dk>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/mailbox/mailbox.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 8fc3edb6760c..92f72bb5aff4 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3261,6 +3261,11 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
- 		seg_i = CURSEG_I(sbi, i);
- 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
- 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
-+		if (blk_off > ENTRIES_IN_SUM) {
-+			f2fs_bug_on(sbi, 1);
-+			f2fs_put_page(page, 1);
-+			return -EFAULT;
-+		}
- 		seg_i->next_segno = segno;
- 		reset_curseg(sbi, i, 0);
- 		seg_i->alloc_type = ckpt->alloc_type[i];
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index 674b35f402f5..055c90b8253c 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -391,11 +391,13 @@ struct mbox_chan *mbox_request_channel_byname(struct mbox_client *cl,
+ 
+ 	of_property_for_each_string(np, "mbox-names", prop, mbox_name) {
+ 		if (!strncmp(name, mbox_name, strlen(name)))
+-			break;
++			return mbox_request_channel(cl, index);
+ 		index++;
+ 	}
+ 
+-	return mbox_request_channel(cl, index);
++	dev_err(cl->dev, "%s() could not locate channel named \"%s\"\n",
++		__func__, name);
++	return ERR_PTR(-EINVAL);
+ }
+ EXPORT_SYMBOL_GPL(mbox_request_channel_byname);
+ 
 -- 
 2.20.1
 
