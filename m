@@ -2,56 +2,52 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC77FC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C863EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AED0204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970F52054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430051;
-	bh=4DZFibPYCuNcp0FO2IO2qNHEk2svupAztvwR1Xf2t7s=;
+	s=default; t=1564430054;
+	bh=QVggB+xuFtwkbmgGs1TmoIKKalViLPWMe7q2bke1mag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ExgMFB83ew8E9XAmVrMI69G9IHEHYRErTFf9V3QQ8oRafp0Zgcp7BqrCWi8c4aTVO
-	 ry6c/E4EG3S3b7kpbGovTMBVC+Js12WyM64KTUjG3lrd4bMDcZ+gf3AGklVNIP0qJ9
-	 pKf2y4tavq3NHsV0a193f1kCNtHno6rCwh1CYmdM=
+	b=G7jpWhojtvmjss1c+yRc7nU75NF4Mp5+/huE7Qe9KwpW0tgP2pJjfOgrPCoysgNLp
+	 lmrNKBnj1afKE9DOW84SnH3jaK+LppPqM2TH2gqQP0vOCNYuM0RfKw8NjN9X9aqSh3
+	 6wUjD+gsl/3P1Fsv54zOOqyzDR+bnwIJuT9RU9L4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390990AbfG2TyK (ORCPT
+        id S2391012AbfG2TyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:54:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46312 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:54:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390915AbfG2Txs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:53:48 -0400
+        id S2390954AbfG2Txz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:53:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 114702171F;
-        Mon, 29 Jul 2019 19:53:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB115204EC;
+        Mon, 29 Jul 2019 19:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430028;
-        bh=4DZFibPYCuNcp0FO2IO2qNHEk2svupAztvwR1Xf2t7s=;
+        s=default; t=1564430035;
+        bh=QVggB+xuFtwkbmgGs1TmoIKKalViLPWMe7q2bke1mag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S/GDSAMwvO6Ez0XWhizTmPRYy7uki1OBv0LT6n3bQzIcZGsl+9GsgAFLTvM2lv7t+
-         8Wo4nNEfiDKBxO8Y/lBX0t+0+Nt4jwamu89xGEH75DdWbjOPDZCXawbVRz8Oiatb0X
-         urTQ5h9h5UOnBsazhOLrIOypK7Gee0h9CVihYQN4=
+        b=ylt0dSHXAeEIrdNgjIkoOoA4BX+01fxgCc4YcTMCAdJ7JX6/siHA+j31Q67LGSa/9
+         EYYX0L8lY05quhwmMhsPRSiS5qoLo+tQW+pZKqeCfkDVQtLLOwc+5yDFyuq8UVI1g1
+         J1zOOA9TCOMmTvT5Wiphi8xjBUUhNsAVlmiKoSpk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 156/215] mm/mmu_notifier: use hlist_add_head_rcu()
-Date:   Mon, 29 Jul 2019 21:22:32 +0200
-Message-Id: <20190729190806.816560456@linuxfoundation.org>
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.2 175/215] KVM: PPC: Book3S HV: Always save guest pmu for guest capable of nesting
+Date:   Mon, 29 Jul 2019 21:22:51 +0200
+Message-Id: <20190729190810.318937160@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -64,66 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 543bdb2d825fe2400d6e951f1786d92139a16931 ]
+From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
 
-Make mmu_notifier_register() safer by issuing a memory barrier before
-registering a new notifier.  This fixes a theoretical bug on weakly
-ordered CPUs.  For example, take this simplified use of notifiers by a
-driver:
+commit 63279eeb7f93abb1692573c26f1e038e1a87358b upstream.
 
-	my_struct->mn.ops = &my_ops; /* (1) */
-	mmu_notifier_register(&my_struct->mn, mm)
-		...
-		hlist_add_head(&mn->hlist, &mm->mmu_notifiers); /* (2) */
-		...
+The performance monitoring unit (PMU) registers are saved on guest
+exit when the guest has set the pmcregs_in_use flag in its lppaca, if
+it exists, or unconditionally if it doesn't. If a nested guest is
+being run then the hypervisor doesn't, and in most cases can't, know
+if the PMU registers are in use since it doesn't know the location of
+the lppaca for the nested guest, although it may have one for its
+immediate guest. This results in the values of these registers being
+lost across nested guest entry and exit in the case where the nested
+guest was making use of the performance monitoring facility while it's
+nested guest hypervisor wasn't.
 
-Once mmu_notifier_register() releases the mm locks, another thread can
-invalidate a range:
+Further more the hypervisor could interrupt a guest hypervisor between
+when it has loaded up the PMU registers and it calling H_ENTER_NESTED
+or between returning from the nested guest to the guest hypervisor and
+the guest hypervisor reading the PMU registers, in
+kvmhv_p9_guest_entry(). This means that it isn't sufficient to just
+save the PMU registers when entering or exiting a nested guest, but
+that it is necessary to always save the PMU registers whenever a guest
+is capable of running nested guests to ensure the register values
+aren't lost in the context switch.
 
-	mmu_notifier_invalidate_range()
-		...
-		hlist_for_each_entry_rcu(mn, &mm->mmu_notifiers, hlist) {
-			if (mn->ops->invalidate_range)
+Ensure the PMU register values are preserved by always saving their
+value into the vcpu struct when a guest is capable of running nested
+guests.
 
-The read side relies on the data dependency between mn and ops to ensure
-that the pointer is properly initialized.  But the write side doesn't have
-any dependency between (1) and (2), so they could be reordered and the
-readers could dereference an invalid mn->ops.  mmu_notifier_register()
-does take all the mm locks before adding to the hlist, but those have
-acquire semantics which isn't sufficient.
+This should have minimal performance impact however any impact can be
+avoided by booting a guest with "-machine pseries,cap-nested-hv=false"
+on the qemu commandline.
 
-By calling hlist_add_head_rcu() instead of hlist_add_head() we update the
-hlist using a store-release, ensuring that readers see prior
-initialization of my_struct.  This situation is better illustated by
-litmus test MP+onceassign+derefonce.
+Fixes: 95a6432ce903 ("KVM: PPC: Book3S HV: Streamlined guest entry/exit path on P9 for radix guests")
+Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190703012022.15644-1-sjitindarsingh@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Link: http://lkml.kernel.org/r/20190502133532.24981-1-jean-philippe.brucker@arm.com
-Fixes: cddb8a5c14aa ("mmu-notifiers: core")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mmu_notifier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kvm/book3s_hv.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index 513b9607409d..b5670620aea0 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -274,7 +274,7 @@ static int do_mmu_notifier_register(struct mmu_notifier *mn,
- 	 * thanks to mm_take_all_locks().
- 	 */
- 	spin_lock(&mm->mmu_notifier_mm->lock);
--	hlist_add_head(&mn->hlist, &mm->mmu_notifier_mm->list);
-+	hlist_add_head_rcu(&mn->hlist, &mm->mmu_notifier_mm->list);
- 	spin_unlock(&mm->mmu_notifier_mm->lock);
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -3654,6 +3654,8 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu
+ 		vcpu->arch.vpa.dirty = 1;
+ 		save_pmu = lp->pmcregs_in_use;
+ 	}
++	/* Must save pmu if this guest is capable of running nested guests */
++	save_pmu |= nesting_enabled(vcpu->kvm);
  
- 	mm_drop_all_locks(mm);
--- 
-2.20.1
-
+ 	kvmhv_save_guest_pmu(vcpu, save_pmu);
+ 
 
 
