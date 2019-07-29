@@ -2,82 +2,202 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CD5C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52A7C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8BBB206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A45420657
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfG2Q2i (ORCPT
+        id S1728964AbfG2Q33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:28:38 -0400
-Received: from smtprelay0046.hostedemail.com ([216.40.44.46]:32781 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727814AbfG2Q2i (ORCPT
+        Mon, 29 Jul 2019 12:29:29 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58197 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727814AbfG2Q32 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:28:38 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id B58A818224D97;
-        Mon, 29 Jul 2019 16:28:36 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: stove18_681e57aab8a60
-X-Filterd-Recvd-Size: 2302
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 29 Jul 2019 16:28:35 +0000 (UTC)
-Message-ID: <0b6936cb34ca0dcd76b155b9b38366e82b1376f0.camel@perches.com>
-Subject: Re: [Fwd: [PATCH 1/2] string: Add stracpy and stracpy_pad
- mechanisms]
-From:   Joe Perches <joe@perches.com>
-To:     Julia Lawall <julia.lawall@lip6.fr>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        cocci <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Mon, 29 Jul 2019 09:28:34 -0700
-In-Reply-To: <alpine.DEB.2.21.1907291004220.2686@hadrien>
-References: <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>
-            <66fcdbf607d7d0bea41edb39e5579d63b62b7d84.camel@perches.com>
-            <alpine.DEB.2.21.1907231546090.2551@hadrien>
-            <0f3ba090dfc956f5651e6c7c430abdba94ddcb8b.camel@perches.com>
-         <alpine.DEB.2.21.1907232252260.2539@hadrien>
-            <d5993902fd44ce89915fab94f4db03f5081c3c8e.camel@perches.com>
-            <alpine.DEB.2.21.1907232326360.2539@hadrien>
-            <f909b4b31f123c7d88535db397a04421077ed0ab.camel@perches.com>
-            <563222fbfdbb44daa98078db9d404972@AcuMS.aculab.com>
-         <d2b2b528b9f296dfeb1d92554be024245abd678e.camel@perches.com>
-           <alpine.DEB.2.21.1907242040490.10108@hadrien>
-          <a0e892c3522f4df2991119a2a30cd62ec14c76cc.camel@perches.com>
-          <alpine.DEB.2.21.1907250856450.2555@hadrien>
-         <eaef283741c0a6a718040f99a17bdb9882bde665.camel@perches.com>
-         <alpine.DEB.2.21.1907291004220.2686@hadrien>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Mon, 29 Jul 2019 12:29:28 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hs8WW-0000VG-G7; Mon, 29 Jul 2019 18:29:20 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hs8WW-00069u-3Y; Mon, 29 Jul 2019 18:29:20 +0200
+Date:   Mon, 29 Jul 2019 18:29:20 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     thierry.reding@gmail.com, mripard@kernel.org, wens@csie.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 5/6] pwm: sun4i: Add support to output source clock
+ directly
+Message-ID: <20190729162920.orx3rhkrfmp7stzh@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <20190726184045.14669-6-jernej.skrabec@siol.net>
+ <20190729070605.vlu7kgzn362ph2q3@pengutronix.de>
+ <2499807.IN78SsLMYo@jernej-laptop>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2499807.IN78SsLMYo@jernej-laptop>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-29 at 10:07 -0400, Julia Lawall wrote:
-> I see that stracpy is now in linux-next.  Would it be reasonable to send
-> patches adding uses now?
+Hello,
 
-My preference would be to have:
+On Mon, Jul 29, 2019 at 06:16:55PM +0200, Jernej Škrabec wrote:
+> Dne ponedeljek, 29. julij 2019 ob 09:06:05 CEST je Uwe Kleine-König 
+> napisal(a):
+> > On Fri, Jul 26, 2019 at 08:40:44PM +0200, Jernej Skrabec wrote:
+> > > PWM core has an option to bypass whole logic and output unchanged source
+> > > clock as PWM output. This is achieved by enabling bypass bit.
+> > > 
+> > > Note that when bypass is enabled, no other setting has any meaning, not
+> > > even enable bit.
+> > > 
+> > > This mode of operation is needed to achieve high enough frequency to
+> > > serve as clock source for AC200 chip, which is integrated into same
+> > > package as H6 SoC.
+> > > 
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > > 
+> > >  drivers/pwm/pwm-sun4i.c | 31 ++++++++++++++++++++++++++++++-
+> > >  1 file changed, 30 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > > index 9e0eca79ff88..848cff26f385 100644
+> > > --- a/drivers/pwm/pwm-sun4i.c
+> > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > @@ -120,6 +120,19 @@ static void sun4i_pwm_get_state(struct pwm_chip
+> > > *chip,
+> > > 
+> > >  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> > > 
+> > > +	/*
+> > > +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
+> > > +	 * bit is set, no other setting has any meaning. Even more, experiment
+> > > +	 * proved that also enable bit is ignored in this case.
+> > > +	 */
+> > > +	if (val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) {
+> > > +		state->period = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, clk_rate);
+> > > +		state->duty_cycle = state->period / 2;
+> > > +		state->polarity = PWM_POLARITY_NORMAL;
+> > > +		state->enabled = true;
+> > > +		return;
+> > > +	}
+> > > +
+> > > 
+> > >  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
+> > >  	
+> > >  	    sun4i_pwm->data->has_prescaler_bypass)
+> > >  		
+> > >  		prescaler = 1;
+> > > 
+> > > @@ -211,7 +224,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
+> > > struct pwm_device *pwm,> 
+> > >  {
+> > >  
+> > >  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
+> > >  	struct pwm_state cstate;
+> > > 
+> > > -	u32 ctrl;
+> > > +	u32 ctrl, clk_rate;
+> > > +	bool bypass;
+> > > 
+> > >  	int ret;
+> > >  	unsigned int delay_us;
+> > >  	unsigned long now;
+> > > 
+> > > @@ -226,6 +240,16 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
+> > > struct pwm_device *pwm,> 
+> > >  		}
+> > >  	
+> > >  	}
+> > > 
+> > > +	/*
+> > > +	 * Although it would make much more sense to check for bypass in
+> > > +	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
+> > > +	 * Period is allowed to be rounded up or down.
+> > > +	 */
+> > 
+> > Every driver seems to implement rounding the way its driver considers it
+> > sensible. @Thierry: This is another patch where it would be good to have
+> > a global directive about how rounding is supposed to work to provide the
+> > users an reliable and uniform way to work with PWMs.
+> > 
+> > > +	clk_rate = clk_get_rate(sun4i_pwm->clk);
+> > > +	bypass = (state->period == NSEC_PER_SEC / clk_rate ||
+> > > +		 state->period == DIV_ROUND_UP(NSEC_PER_SEC, clk_rate)) &&
+> > > +		 state->enabled;
+> > 
+> > Not sure if the compiler is clever enough to notice the obvious
+> > optimisation with this code construct, but you can write this test in a
+> > more clever way which has zero instead of up to two divisions. Something
+> > like:
+> > 
+> > bypass = ((state->period * clk_rate >= NSEC_PER_SEC &&
+> > 	   state->period * clk_rate < NSEC_PER_SEC + clk_rate) &&
+> > 	  state->enabled);
+> > 
+> > In the commit log you write the motivation for using bypass is that it
+> > allows to implement higher frequency then with the "normal" operation.
+> > As you don't skip calculating the normal parameters requesting such a
+> > high-frequency setting either errors out or doesn't catch the impossible
+> > request. In both cases there is something to fix.
+> 
+> It's the latter, otherwise it wouldn't work for my case. I'll fix the check and 
+> skip additional logic.
 
-o A provably correct script  If a small subset of
-  possible conversions are skipped, that's fine.
-o As piecemeal patches cause a lot of churn, work
-  for individual maintainers, and also are not
-  universally applied, have that script run
-  kernel-wide after an rc1 and applied all-at-once.
+Great.
 
+> > > +
+> > > 
+> > >  	spin_lock(&sun4i_pwm->ctrl_lock);
+> > >  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> > > 
+> > > @@ -273,6 +297,11 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
+> > > struct pwm_device *pwm,> 
+> > >  		ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+> > >  	
+> > >  	}
+> > > 
+> > > +	if (bypass)
+> > > +		ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > > +	else
+> > > +		ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > > +
+> > 
+> > Does switching on (or off) the bypass bit complete the currently running
+> > period?
+> 
+> I don't really know. If I understand correctly, it just bypasses PWM logic 
+> completely, so I would say it doesn't complete the currently running period.
 
+This is a bug. It's part of the promise of the PWM API that started
+periods are completed. Please at least document this limitation at the
+top of the driver. drivers/pwm/pwm-sifive.c has an example you might
+want to use as a template.
 
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
