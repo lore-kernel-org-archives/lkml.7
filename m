@@ -2,133 +2,285 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BA8C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545C5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA6221773
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B96420679
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ksFZrQt2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="z5f1wjJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbfG2Xb2 (ORCPT
+        id S1729776AbfG2XcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 19:31:28 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11275 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbfG2Xb2 (ORCPT
+        Mon, 29 Jul 2019 19:32:14 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.170]:31361 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726748AbfG2XcN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 19:31:28 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3f81d70000>; Mon, 29 Jul 2019 16:31:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 29 Jul 2019 16:31:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 29 Jul 2019 16:31:27 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Jul
- 2019 23:31:21 +0000
-Subject: Re: [PATCH 8/9] mm: remove the unused MIGRATE_PFN_DEVICE flag
-To:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-CC:     Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20190729142843.22320-1-hch@lst.de>
- <20190729142843.22320-9-hch@lst.de>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <ef44f3bf-0f99-c76b-bf4b-6770545b5e38@nvidia.com>
-Date:   Mon, 29 Jul 2019 16:31:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 29 Jul 2019 19:32:13 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 91DBB4A5C5E
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 18:32:12 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id sF7khWSDpiQersF7khvWhj; Mon, 29 Jul 2019 18:32:12 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=KpUpOxxdU+KhG7Hocsjej/GA+sI7fVcCM88qfdZm4Nk=; b=z5f1wjJKlzs0jlKdEdS03CIAiU
+        asTWm2FuWtrMWHm4TAL1uQg5hBgvO6HgRa04/BfwxMrtF6R5jI2Dldkl8uKPBcmF/vTyQL6rLQG3P
+        p0VCBi5NJMns6GaJzkMrpu5o2wVHhDfML87lbncx5Ae2225YbDpu9Ul/Je47cwZ+6G/Tj1eVbjRcP
+        qkTBzpYM6Z7+/Kqih/W7Haf0RjaVjF0Zuev8UCBMtaY8rEIu3g5Ggzhef2ywZbyilOJO261rHFaMV
+        OpYDDGfFCIb1eqLmyksnaMGGn7wJIiNL1+ZauI9nS4YWdeopFgzxUpSDWMpzTKFJawByzwZiQRcAY
+        7+ugJ65Q==;
+Received: from [187.192.11.120] (port=33296 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hsF7j-002agT-EA; Mon, 29 Jul 2019 18:32:11 -0500
+Date:   Mon, 29 Jul 2019 18:32:10 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Robert Richter <rric@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>
+Cc:     oprofile-list@lists.sf.net, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] MIPS: OProfile: Mark expected switch fall-throughs
+Message-ID: <20190729233209.GA28779@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20190729142843.22320-9-hch@lst.de>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564443095; bh=O8zN+ilqdowg6XJWOKGWaqeRnGFJG/18lWzHA9AhwWg=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ksFZrQt2v45qX2vcjwJOYMc2IYWSZCkT/o6FR2ewt0B28A8Pwta4vodqAlIT7qjJ9
-         zqGQu+CeunJs69LRMBaqQpcPotQy5akTZlYOxF8zf4tZ8NOYJ3kFXTJallM2SgRtki
-         OjfEHbYJ0N+6ddvwlV642w+rlUwTQJ5ngnGzTgj51qvcxlg9bPNwz5KN7gch3/y9wY
-         iKWVWCvXxV8WHLpLQUMgKR+iDgLBdEkyUwwunjFL3LfUHbMCmOhwdSeXZT/NMGHcYm
-         zT4LqGYJMVqQKdyWKkoJt2M0YVcRGLOqrwkAr5+KyToFtSthkJ2Uvd7vW5Cci8rLNL
-         bU4mBP2GsvKFg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hsF7j-002agT-EA
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:33296
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Mark switch cases where we are expecting to fall through.
 
-On 7/29/19 7:28 AM, Christoph Hellwig wrote:
-> No one ever checks this flag, and we could easily get that information
-> from the page if needed.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+This patch fixes the following warning (Building: mips):
 
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+arch/mips/oprofile/op_model_mipsxx.c: In function ‘mipsxx_cpu_stop’:
+arch/mips/oprofile/op_model_mipsxx.c:217:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfctrl3(0);
+   ^~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:218:2: note: here
+  case 3:
+  ^~~~
+arch/mips/oprofile/op_model_mipsxx.c:219:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfctrl2(0);
+   ^~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:220:2: note: here
+  case 2:
+  ^~~~
+arch/mips/oprofile/op_model_mipsxx.c:221:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfctrl1(0);
+   ^~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:222:2: note: here
+  case 1:
+  ^~~~
+arch/mips/oprofile/op_model_mipsxx.c: In function ‘mipsxx_cpu_start’:
+arch/mips/oprofile/op_model_mipsxx.c:197:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfctrl3(WHAT | reg.control[3]);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:198:2: note: here
+  case 3:
+  ^~~~
+arch/mips/oprofile/op_model_mipsxx.c:199:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfctrl2(WHAT | reg.control[2]);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:200:2: note: here
+  case 2:
+  ^~~~
+arch/mips/oprofile/op_model_mipsxx.c:201:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfctrl1(WHAT | reg.control[1]);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:202:2: note: here
+  case 1:
+  ^~~~
+arch/mips/oprofile/op_model_mipsxx.c: In function ‘reset_counters’:
+arch/mips/oprofile/op_model_mipsxx.c:299:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfcntr3(0);
+   ^~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:300:2: note: here
+  case 3:
+  ^~~~
+arch/mips/oprofile/op_model_mipsxx.c:302:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfcntr2(0);
+   ^~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:303:2: note: here
+  case 2:
+  ^~~~
+arch/mips/oprofile/op_model_mipsxx.c:305:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfcntr1(0);
+   ^~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:306:2: note: here
+  case 1:
+  ^~~~
+arch/mips/oprofile/op_model_mipsxx.c: In function ‘mipsxx_perfcount_handler’:
+arch/mips/oprofile/op_model_mipsxx.c:242:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if ((control & MIPS_PERFCTRL_IE) &&   \
+      ^
+arch/mips/oprofile/op_model_mipsxx.c:248:2: note: in expansion of macro ‘HANDLE_COUNTER’
+  HANDLE_COUNTER(3)
+  ^~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:239:2: note: here
+  case n + 1:       \
+  ^
+arch/mips/oprofile/op_model_mipsxx.c:249:2: note: in expansion of macro ‘HANDLE_COUNTER’
+  HANDLE_COUNTER(2)
+  ^~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:242:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if ((control & MIPS_PERFCTRL_IE) &&   \
+      ^
+arch/mips/oprofile/op_model_mipsxx.c:249:2: note: in expansion of macro ‘HANDLE_COUNTER’
+  HANDLE_COUNTER(2)
+  ^~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:239:2: note: here
+  case n + 1:       \
+  ^
+arch/mips/oprofile/op_model_mipsxx.c:250:2: note: in expansion of macro ‘HANDLE_COUNTER’
+  HANDLE_COUNTER(1)
+  ^~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:242:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if ((control & MIPS_PERFCTRL_IE) &&   \
+      ^
+arch/mips/oprofile/op_model_mipsxx.c:250:2: note: in expansion of macro ‘HANDLE_COUNTER’
+  HANDLE_COUNTER(1)
+  ^~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:239:2: note: here
+  case n + 1:       \
+  ^
+arch/mips/oprofile/op_model_mipsxx.c:251:2: note: in expansion of macro ‘HANDLE_COUNTER’
+  HANDLE_COUNTER(0)
+  ^~~~~~~~~~~~~~
+  CC      usr/include/linux/pmu.h.s
+arch/mips/oprofile/op_model_mipsxx.c: In function ‘mipsxx_cpu_setup’:
+arch/mips/oprofile/op_model_mipsxx.c:174:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfcntr3(reg.counter[3]);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:175:2: note: here
+  case 3:
+  ^~~~
+arch/mips/oprofile/op_model_mipsxx.c:177:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfcntr2(reg.counter[2]);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:178:2: note: here
+  case 2:
+  ^~~~
+arch/mips/oprofile/op_model_mipsxx.c:180:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   w_c0_perfcntr1(reg.counter[1]);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/mips/oprofile/op_model_mipsxx.c:181:2: note: here
+  case 1:
+  ^~~~
 
-> ---
->   drivers/gpu/drm/nouveau/nouveau_dmem.c | 3 +--
->   include/linux/migrate.h                | 1 -
->   mm/migrate.c                           | 4 ++--
->   3 files changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> index 6cb930755970..f04686a2c21f 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> @@ -582,8 +582,7 @@ static unsigned long nouveau_dmem_migrate_copy_one(struct nouveau_drm *drm,
->   			*dma_addr))
->   		goto out_dma_unmap;
->   
-> -	return migrate_pfn(page_to_pfn(dpage)) |
-> -		MIGRATE_PFN_LOCKED | MIGRATE_PFN_DEVICE;
-> +	return migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
->   
->   out_dma_unmap:
->   	dma_unmap_page(dev, *dma_addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
-> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-> index 229153c2c496..8b46cfdb1a0e 100644
-> --- a/include/linux/migrate.h
-> +++ b/include/linux/migrate.h
-> @@ -166,7 +166,6 @@ static inline int migrate_misplaced_transhuge_page(struct mm_struct *mm,
->   #define MIGRATE_PFN_MIGRATE	(1UL << 1)
->   #define MIGRATE_PFN_LOCKED	(1UL << 2)
->   #define MIGRATE_PFN_WRITE	(1UL << 3)
-> -#define MIGRATE_PFN_DEVICE	(1UL << 4)
->   #define MIGRATE_PFN_SHIFT	6
->   
->   static inline struct page *migrate_pfn_to_page(unsigned long mpfn)
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index dc4e60a496f2..74735256e260 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -2237,8 +2237,8 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
->   				goto next;
->   
->   			page = device_private_entry_to_page(entry);
-> -			mpfn = migrate_pfn(page_to_pfn(page))|
-> -				MIGRATE_PFN_DEVICE | MIGRATE_PFN_MIGRATE;
-> +			mpfn = migrate_pfn(page_to_pfn(page)) |
-> +					MIGRATE_PFN_MIGRATE;
->   			if (is_write_device_private_entry(entry))
->   				mpfn |= MIGRATE_PFN_WRITE;
->   		} else {
-> 
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ arch/mips/oprofile/op_model_mipsxx.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/mips/oprofile/op_model_mipsxx.c b/arch/mips/oprofile/op_model_mipsxx.c
+index 7c04b17f4a48..96c13a0ab078 100644
+--- a/arch/mips/oprofile/op_model_mipsxx.c
++++ b/arch/mips/oprofile/op_model_mipsxx.c
+@@ -172,12 +172,15 @@ static void mipsxx_cpu_setup(void *args)
+ 	case 4:
+ 		w_c0_perfctrl3(0);
+ 		w_c0_perfcntr3(reg.counter[3]);
++		/* fall through */
+ 	case 3:
+ 		w_c0_perfctrl2(0);
+ 		w_c0_perfcntr2(reg.counter[2]);
++		/* fall through */
+ 	case 2:
+ 		w_c0_perfctrl1(0);
+ 		w_c0_perfcntr1(reg.counter[1]);
++		/* fall through */
+ 	case 1:
+ 		w_c0_perfctrl0(0);
+ 		w_c0_perfcntr0(reg.counter[0]);
+@@ -195,10 +198,13 @@ static void mipsxx_cpu_start(void *args)
+ 	switch (counters) {
+ 	case 4:
+ 		w_c0_perfctrl3(WHAT | reg.control[3]);
++		/* fall through */
+ 	case 3:
+ 		w_c0_perfctrl2(WHAT | reg.control[2]);
++		/* fall through */
+ 	case 2:
+ 		w_c0_perfctrl1(WHAT | reg.control[1]);
++		/* fall through */
+ 	case 1:
+ 		w_c0_perfctrl0(WHAT | reg.control[0]);
+ 	}
+@@ -215,10 +221,13 @@ static void mipsxx_cpu_stop(void *args)
+ 	switch (counters) {
+ 	case 4:
+ 		w_c0_perfctrl3(0);
++		/* fall through */
+ 	case 3:
+ 		w_c0_perfctrl2(0);
++		/* fall through */
+ 	case 2:
+ 		w_c0_perfctrl1(0);
++		/* fall through */
+ 	case 1:
+ 		w_c0_perfctrl0(0);
+ 	}
+@@ -236,6 +245,7 @@ static int mipsxx_perfcount_handler(void)
+ 
+ 	switch (counters) {
+ #define HANDLE_COUNTER(n)						\
++	/* fall through */						\
+ 	case n + 1:							\
+ 		control = r_c0_perfctrl ## n();				\
+ 		counter = r_c0_perfcntr ## n();				\
+@@ -297,12 +307,15 @@ static void reset_counters(void *arg)
+ 	case 4:
+ 		w_c0_perfctrl3(0);
+ 		w_c0_perfcntr3(0);
++		/* fall through */
+ 	case 3:
+ 		w_c0_perfctrl2(0);
+ 		w_c0_perfcntr2(0);
++		/* fall through */
+ 	case 2:
+ 		w_c0_perfctrl1(0);
+ 		w_c0_perfcntr1(0);
++		/* fall through */
+ 	case 1:
+ 		w_c0_perfctrl0(0);
+ 		w_c0_perfcntr0(0);
+-- 
+2.22.0
+
