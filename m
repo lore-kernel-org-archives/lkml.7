@@ -4,38 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314D5C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CE4C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12EB92067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6E9216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbfG2QM2 (ORCPT
+        id S1728916AbfG2QMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:12:28 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40818 "EHLO inva021.nxp.com"
+        Mon, 29 Jul 2019 12:12:23 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:37792 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728912AbfG2QMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:12:24 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4106720035B;
-        Mon, 29 Jul 2019 18:12:22 +0200 (CEST)
+        id S1728871AbfG2QMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:12:20 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 10EAB1A0375;
+        Mon, 29 Jul 2019 18:12:18 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 33A41200344;
-        Mon, 29 Jul 2019 18:12:22 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 01DE91A0374;
+        Mon, 29 Jul 2019 18:12:18 +0200 (CEST)
 Received: from fsr-ub1464-137.ea.freescale.net (fsr-ub1464-137.ea.freescale.net [10.171.82.114])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C0DB0205F3;
-        Mon, 29 Jul 2019 18:12:21 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9A1F2205F3;
+        Mon, 29 Jul 2019 18:12:17 +0200 (CEST)
 From:   Ioana Ciornei <ioana.ciornei@nxp.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     netdev@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
         f.fainelli@gmail.com, jiri@mellanox.com,
         Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 5/5] staging: fsl-dpaa2/ethsw: add .ndo_fdb[add|del] callbacks
-Date:   Mon, 29 Jul 2019 19:11:52 +0300
-Message-Id: <1564416712-16946-6-git-send-email-ioana.ciornei@nxp.com>
+Subject: [PATCH 2/5] staging: fsl-dpaa2/ethsw: notify switchdev of offloaded entry
+Date:   Mon, 29 Jul 2019 19:11:49 +0300
+Message-Id: <1564416712-16946-3-git-send-email-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1564416712-16946-1-git-send-email-ioana.ciornei@nxp.com>
 References: <1564416712-16946-1-git-send-email-ioana.ciornei@nxp.com>
@@ -46,59 +47,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the .ndo_fdb_[add|del] callbacks so that FDB entries not associated
-with a master device still end up offloaded.
+Notify switchdev in case the FDB entry was successfully offloaded.
+This will help users to make the distinction between entries known to
+the HW switch and those that are held only on the software bridge.
 
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-index 2d3179c6bad8..4b94a01513a7 100644
+index 341c36b3a76d..d6953ac427b1 100644
 --- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
 +++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-@@ -316,6 +316,31 @@ static int ethsw_port_fdb_del_mc(struct ethsw_port_priv *port_priv,
- 	return err;
- }
+@@ -1039,6 +1039,7 @@ static void ethsw_switchdev_event_work(struct work_struct *work)
+ 		container_of(work, struct ethsw_switchdev_event_work, work);
+ 	struct net_device *dev = switchdev_work->dev;
+ 	struct switchdev_notifier_fdb_info *fdb_info;
++	int err;
  
-+static int port_fdb_add(struct ndmsg *ndm, struct nlattr *tb[],
-+			struct net_device *dev, const unsigned char *addr,
-+			u16 vid, u16 flags,
-+			struct netlink_ext_ack *extack)
-+{
-+	if (is_unicast_ether_addr(addr))
-+		return ethsw_port_fdb_add_uc(netdev_priv(dev),
-+					     addr);
-+	else
-+		return ethsw_port_fdb_add_mc(netdev_priv(dev),
-+					     addr);
-+}
-+
-+static int port_fdb_del(struct ndmsg *ndm, struct nlattr *tb[],
-+			struct net_device *dev,
-+			const unsigned char *addr, u16 vid)
-+{
-+	if (is_unicast_ether_addr(addr))
-+		return ethsw_port_fdb_del_uc(netdev_priv(dev),
-+					     addr);
-+	else
-+		return ethsw_port_fdb_del_mc(netdev_priv(dev),
-+					     addr);
-+}
-+
- static void port_get_stats(struct net_device *netdev,
- 			   struct rtnl_link_stats64 *stats)
- {
-@@ -670,6 +695,8 @@ static int port_fdb_dump(struct sk_buff *skb, struct netlink_callback *cb,
- 	.ndo_change_mtu		= port_change_mtu,
- 	.ndo_has_offload_stats	= port_has_offload_stats,
- 	.ndo_get_offload_stats	= port_get_offload_stats,
-+	.ndo_fdb_add		= port_fdb_add,
-+	.ndo_fdb_del		= port_fdb_del,
- 	.ndo_fdb_dump		= port_fdb_dump,
- 
- 	.ndo_start_xmit		= port_dropframe,
+ 	rtnl_lock();
+ 	fdb_info = &switchdev_work->fdb_info;
+@@ -1046,9 +1047,16 @@ static void ethsw_switchdev_event_work(struct work_struct *work)
+ 	switch (switchdev_work->event) {
+ 	case SWITCHDEV_FDB_ADD_TO_DEVICE:
+ 		if (is_unicast_ether_addr(fdb_info->addr))
+-			ethsw_port_fdb_add_uc(netdev_priv(dev), fdb_info->addr);
++			err = ethsw_port_fdb_add_uc(netdev_priv(dev),
++						    fdb_info->addr);
+ 		else
+-			ethsw_port_fdb_add_mc(netdev_priv(dev), fdb_info->addr);
++			err = ethsw_port_fdb_add_mc(netdev_priv(dev),
++						    fdb_info->addr);
++		if (err)
++			break;
++		fdb_info->offloaded = true;
++		call_switchdev_notifiers(SWITCHDEV_FDB_OFFLOADED, dev,
++					 &fdb_info->info, NULL);
+ 		break;
+ 	case SWITCHDEV_FDB_DEL_TO_DEVICE:
+ 		if (is_unicast_ether_addr(fdb_info->addr))
 -- 
 1.9.1
 
