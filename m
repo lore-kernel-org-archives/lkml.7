@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E92C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D60C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFC621842
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B39205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429358;
-	bh=3UEydif8h+lKxicNWgQImmEghmKUxXP1kN5j02nXTBk=;
+	s=default; t=1564429361;
+	bh=3dBqoLX1MdZnGh9qolzsC9YWNOT/TRcQp7It1oiIhRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZHQeEq1aGDtn92yRXFEYt7mVP/mRvCaPI/CC66HLbYwAnevojocH1FE7pfrV3wL2
-	 ulHLKdsOOKdCtNO2i89pw6ENFhLu+NsDVWRgnp0CLZkM4H/WmEphHiYqjBm/CjFCRW
-	 HNOliYfIKzSr/k2QWc0v6KQ/jQCSOdQIOpArRMEc=
+	b=ppiYerML6hwmL1N0JMUCo7e8w0rC8F1BUfHsNMeXAV+KGh+6zTYqZWoMBtJTmM7n2
+	 l+QOv/G+0rVN9pvyqOpZbn0pairsWOsU1LPMS0pM1MMxcSkIQuFpkp9Z2hYZXUMG7a
+	 CVexwdf5WnIihfmcUWYzFFx8Joo8J7e/R//NM2Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389520AbfG2Tmh (ORCPT
+        id S2389531AbfG2Tmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:42:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58362 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389501AbfG2Tmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:42:32 -0400
+        id S2389509AbfG2Tmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:42:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC5AF20C01;
-        Mon, 29 Jul 2019 19:42:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60DAB217D6;
+        Mon, 29 Jul 2019 19:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429352;
-        bh=3UEydif8h+lKxicNWgQImmEghmKUxXP1kN5j02nXTBk=;
+        s=default; t=1564429354;
+        bh=3dBqoLX1MdZnGh9qolzsC9YWNOT/TRcQp7It1oiIhRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v0HAlwpjZDoel1ZIJ+NHAxIL2Fx629X3xdfarXjR3cG/GsS90nzYBdeiGaWCG/Vqz
-         JM4KE9A0jzdhY98QwPjhyZ0tQtJLxzYM6iCuuPboDu1ifhBygXgDCO6Xc2nI1/kS+4
-         VCqMIPJFIUfvWipd7ikuQprGZM8HKOSpT4OfJFTo=
+        b=Yn6qj5pDUquT+gUYpqAnTvzJELHD4wIk4xzXNeEADcUiLA+lwbUia9vJhIzEPeRRV
+         frAbAajWdLgdHRDObS8TykZy/sUwqxdq0KafMBqb/6DKSGBod/vd6X0FGwqx0BBpTv
+         2krGZql9B0UrYaCuLp6vH1SOEx1TcR8igkB3ZLmw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -66,9 +66,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/113] perf top: Fix potential NULL pointer dereference detected by the smatch tool
-Date:   Mon, 29 Jul 2019 21:22:36 +0200
-Message-Id: <20190729190711.996881254@linuxfoundation.org>
+Subject: [PATCH 4.19 070/113] perf session: Fix potential NULL pointer dereference found by the smatch tool
+Date:   Mon, 29 Jul 2019 21:22:37 +0200
+Message-Id: <20190729190712.209366309@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -81,33 +81,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 111442cfc8abdeaa7ec1407f07ef7b3e5f76654e ]
+[ Upstream commit f3c8d90757724982e5f07cd77d315eb64ca145ac ]
 
-Based on the following report from Smatch, fix the potential NULL
-pointer dereference check.
+Based on the following report from Smatch, fix the potential
+NULL pointer dereference check.
 
-  tools/perf/builtin-top.c:109
-  perf_top__parse_source() warn: variable dereferenced before check 'he'
-  (see line 103)
+  tools/perf/util/session.c:1252
+  dump_read() error: we previously assumed 'evsel' could be null
+  (see line 1249)
 
-  tools/perf/builtin-top.c:233
-  perf_top__show_details() warn: variable dereferenced before check 'he'
-  (see line 228)
+  tools/perf/util/session.c
+  1240 static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+  1241 {
+  1242         struct read_event *read_event = &event->read;
+  1243         u64 read_format;
+  1244
+  1245         if (!dump_trace)
+  1246                 return;
+  1247
+  1248         printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
+  1249                evsel ? perf_evsel__name(evsel) : "FAIL",
+  1250                event->read.value);
+  1251
+  1252         read_format = evsel->attr.read_format;
+                             ^^^^^^^
 
-  tools/perf/builtin-top.c
-  101 static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
-  102 {
-  103         struct perf_evsel *evsel = hists_to_evsel(he->hists);
-                                                        ^^^^
-  104         struct symbol *sym;
-  105         struct annotation *notes;
-  106         struct map *map;
-  107         int err = -1;
-  108
-  109         if (!he || !he->ms.sym)
-  110                 return -1;
-
-This patch moves the values assignment after validating pointer 'he'.
+'evsel' could be NULL pointer, for this case this patch directly bails
+out without dumping read_event.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -131,53 +131,27 @@ Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190702103420.27540-4-leo.yan@linaro.org
+Link: http://lkml.kernel.org/r/20190702103420.27540-9-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-top.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/perf/util/session.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 33eefc33e0ea..d0733251a386 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -99,7 +99,7 @@ static void perf_top__resize(struct perf_top *top)
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 11086097fc9f..f016d1b330e5 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1141,6 +1141,9 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+ 	       evsel ? perf_evsel__name(evsel) : "FAIL",
+ 	       event->read.value);
  
- static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- {
--	struct perf_evsel *evsel = hists_to_evsel(he->hists);
-+	struct perf_evsel *evsel;
- 	struct symbol *sym;
- 	struct annotation *notes;
- 	struct map *map;
-@@ -108,6 +108,8 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- 	if (!he || !he->ms.sym)
- 		return -1;
- 
-+	evsel = hists_to_evsel(he->hists);
++	if (!evsel)
++		return;
 +
- 	sym = he->ms.sym;
- 	map = he->ms.map;
+ 	read_format = evsel->attr.read_format;
  
-@@ -224,7 +226,7 @@ static void perf_top__record_precise_ip(struct perf_top *top,
- static void perf_top__show_details(struct perf_top *top)
- {
- 	struct hist_entry *he = top->sym_filter_entry;
--	struct perf_evsel *evsel = hists_to_evsel(he->hists);
-+	struct perf_evsel *evsel;
- 	struct annotation *notes;
- 	struct symbol *symbol;
- 	int more;
-@@ -232,6 +234,8 @@ static void perf_top__show_details(struct perf_top *top)
- 	if (!he)
- 		return;
- 
-+	evsel = hists_to_evsel(he->hists);
-+
- 	symbol = he->ms.sym;
- 	notes = symbol__annotation(symbol);
- 
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
 -- 
 2.20.1
 
