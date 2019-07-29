@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B03C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F9BC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265212171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C56062070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428527;
-	bh=QZgE5vkXhftBKTob9HNATHqbyzaacXCAFu0qhLBvlsY=;
+	s=default; t=1564428530;
+	bh=S4svMKdHuAGeN67O6kmLtk+ZNOQ7EGTIYKVayCpUo8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ksIvMry9+DoUNV6aQztFYYIKGVDstm9jzpwGLZKnI2GoPCf3Rfx80+8XvLwrTtwYN
-	 EmgQ7LmBN08v3WfHH2DkMZtj03/esEw/YXm1rdp+rwzBUamNfXLXks4KdXErwZbSKK
-	 kbBII5sjImLlgW7zuvPEy6Y0KfVr4muiHoydhjvE=
+	b=OxXt+1VkOfM3PmXh86FLFl5qD31eyp9XJAMr/302/LJF5/prcBVSSlLfctp3MaRuc
+	 IXGkNRIkBmZcbptzBpwityvbhHoKzYh02ZojnvutxsZuXvyM9TnaSmwXHYOfzSQTrc
+	 7NCvpQDzTwF67zGiiXjOrQZjUkX2tKo2xkAoA1WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbfG2T2q (ORCPT
+        id S1730021AbfG2T2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:28:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41406 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:28:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730008AbfG2T2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:28:40 -0400
+        id S1726738AbfG2T2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:28:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E1632171F;
-        Mon, 29 Jul 2019 19:28:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE6E42070B;
+        Mon, 29 Jul 2019 19:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428519;
-        bh=QZgE5vkXhftBKTob9HNATHqbyzaacXCAFu0qhLBvlsY=;
+        s=default; t=1564428517;
+        bh=S4svMKdHuAGeN67O6kmLtk+ZNOQ7EGTIYKVayCpUo8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H8nlaEh+D54+88Keelet4CMbRt7+DxbTJpTcXk37OvsHc9U4JJCYfKvVZp0jhQn4q
-         zUe9woBXfvt78I5SFwcTnCc6IcAyyo6u7juTlqrcJaSIgNseF5MpgYtd6V2aDVFQpf
-         81XQbGXjDqaFjPUe/YrBZ5VFd+Z1hQ+kL+67Pfi8=
+        b=nddZKNxj+h5VIs0IFXQVdsrgoWnPjcxcgeeNehuqhAhgtQOVERHMYLKZkNf9qZdJL
+         daA0IkJwzqkkVSWtHDWtAr2zsRAE58gGTAbymenuXLsRS3sqRXrwqqtuxrnDIrk4jU
+         ozY4+vwD6zCGy57izWEEljpxCoRz8h6Ndp46X3iA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 063/293] media: i2c: fix warning same module names
-Date:   Mon, 29 Jul 2019 21:19:14 +0200
-Message-Id: <20190729190829.386726510@linuxfoundation.org>
+Subject: [PATCH 4.14 062/293] media: s5p-mfc: Make additional clocks optional
+Date:   Mon, 29 Jul 2019 21:19:13 +0200
+Message-Id: <20190729190829.262713031@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,58 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b2ce5617dad254230551feda3599f2cc68e53ad8 ]
+[ Upstream commit e08efef8fe7db87206314c19b341612c719f891a ]
 
-When building with CONFIG_VIDEO_ADV7511 and CONFIG_DRM_I2C_ADV7511
-enabled as loadable modules, we see the following warning:
+Since the beginning the second clock ('special', 'sclk') was optional and
+it is not available on some variants of Exynos SoCs (i.e. Exynos5420 with
+v7 of MFC hardware).
 
-  drivers/gpu/drm/bridge/adv7511/adv7511.ko
-  drivers/media/i2c/adv7511.ko
+However commit 1bce6fb3edf1 ("[media] s5p-mfc: Rework clock handling")
+made handling of all specified clocks mandatory. This patch restores
+original behavior of the driver and fixes its operation on
+Exynos5420 SoCs.
 
-Rework so that the file is named adv7511-v4l2.c.
-
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Fixes: 1bce6fb3edf1 ("[media] s5p-mfc: Rework clock handling")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/Makefile                      | 2 +-
- drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
- rename drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} (99%)
+ drivers/media/platform/s5p-mfc/s5p_mfc_pm.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index f104650d6000..0f5c5a3cdca3 100644
---- a/drivers/media/i2c/Makefile
-+++ b/drivers/media/i2c/Makefile
-@@ -33,7 +33,7 @@ obj-$(CONFIG_VIDEO_ADV748X) += adv748x/
- obj-$(CONFIG_VIDEO_ADV7604) += adv7604.o
- obj-$(CONFIG_VIDEO_ADV7842) += adv7842.o
- obj-$(CONFIG_VIDEO_AD9389B) += ad9389b.o
--obj-$(CONFIG_VIDEO_ADV7511) += adv7511.o
-+obj-$(CONFIG_VIDEO_ADV7511) += adv7511-v4l2.o
- obj-$(CONFIG_VIDEO_VPX3220) += vpx3220.o
- obj-$(CONFIG_VIDEO_VS6624)  += vs6624.o
- obj-$(CONFIG_VIDEO_BT819) += bt819.o
-diff --git a/drivers/media/i2c/adv7511.c b/drivers/media/i2c/adv7511-v4l2.c
-similarity index 99%
-rename from drivers/media/i2c/adv7511.c
-rename to drivers/media/i2c/adv7511-v4l2.c
-index 80c20404334a..ef1144668809 100644
---- a/drivers/media/i2c/adv7511.c
-+++ b/drivers/media/i2c/adv7511-v4l2.c
-@@ -17,6 +17,11 @@
-  * SOFTWARE.
-  */
- 
-+/*
-+ * This file is named adv7511-v4l2.c so it doesn't conflict with the Analog
-+ * Device ADV7511 (config fragment CONFIG_DRM_I2C_ADV7511).
-+ */
-+
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c b/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
+index eb85cedc5ef3..5e080f32b0e8 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
+@@ -38,6 +38,11 @@ int s5p_mfc_init_pm(struct s5p_mfc_dev *dev)
+ 	for (i = 0; i < pm->num_clocks; i++) {
+ 		pm->clocks[i] = devm_clk_get(pm->device, pm->clk_names[i]);
+ 		if (IS_ERR(pm->clocks[i])) {
++			/* additional clocks are optional */
++			if (i && PTR_ERR(pm->clocks[i]) == -ENOENT) {
++				pm->clocks[i] = NULL;
++				continue;
++			}
+ 			mfc_err("Failed to get clock: %s\n",
+ 				pm->clk_names[i]);
+ 			return PTR_ERR(pm->clocks[i]);
 -- 
 2.20.1
 
