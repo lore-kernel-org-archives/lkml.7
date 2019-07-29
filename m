@@ -2,52 +2,51 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E0FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780D7C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672402064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41CC6205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430993;
-	bh=ZGWD3sUV9uHaEwmTx4a0VLY6cZXDAmvPWcFM/D4w6YY=;
+	s=default; t=1564430999;
+	bh=NZBYPz9/upGof+pf+7aPQwh2oUQ15oTbaqLDqA5xc1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jpBHlAWqUvEUwMcOvLRvTPLcqRkInRlbwF88XvjnxDdmVJUWmLIIUUBDngeE3vx27
-	 IoV01JsEYQZbHsHkLd8235SQSU04f69P/Zt1UwBVghomX9pg2cgmvMdaYIdYTrxlcy
-	 nyBJLghrYXjs2nkhIrgk06iESwX+xa9bdQm1X83E=
+	b=v6nXPMz8/cURaxX7lGgE1CKm6YIWMZmuVLWHoGPzJjjl1YSv0bYYUWNKTb+7XWEl2
+	 3BBFPR0Z7xvAAoVh6EBKz4J/idxGE/0tZBMJ+9vfxtH25PzcVB09AfFWoX7gsV/uCu
+	 xsa3D8oY1pMkBP+LSJ64hB/E/v5G7rRGHbSHB6Oc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730405AbfG2UJw (ORCPT
+        id S1729678AbfG2Tf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:09:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50064 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:35:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729794AbfG2Tfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:35:43 -0400
+        id S2388522AbfG2TfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:35:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCA3A217D4;
-        Mon, 29 Jul 2019 19:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3084D2070B;
+        Mon, 29 Jul 2019 19:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428943;
-        bh=ZGWD3sUV9uHaEwmTx4a0VLY6cZXDAmvPWcFM/D4w6YY=;
+        s=default; t=1564428924;
+        bh=NZBYPz9/upGof+pf+7aPQwh2oUQ15oTbaqLDqA5xc1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V5i5i2i0fEWv/G/6K3NhQdsdlqW7iUTehHXyDkQAEUN7mlDEp4vQ/3WX31LTae1rd
-         GBWOlwDt9TgpKIRA0+OHiAeU/wHfBxMWx8bTqxncsGpmrTM2iDs3DZJ5Wfg8i5+Brq
-         5GRuUdybzOft9wInMXPWSKZY6Sza/QLrNaHpfSbM=
+        b=d40CFrdhmvYe5bbr++SM/BhAHinpULqKVz5Hk8ss1HsHr3VbHnSjJQLdqzlRBREt3
+         bRTTM7TOK/on8XXEoBBrowasy3UY/WdaB0kIRwZIddk1BklHtNQynzJNXAw/quZ2ac
+         bE1N4W9ChPtj5lmdjTNBx9kvIhnYXlxUJs1cMDi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Riley <davidriley@chromium.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 236/293] drm/virtio: Add memory barriers for capset cache.
-Date:   Mon, 29 Jul 2019 21:22:07 +0200
-Message-Id: <20190729190842.535102914@linuxfoundation.org>
+        stable@vger.kernel.org, Yang Wei <albin_yang@163.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 190/293] nfc: fix potential illegal memory access
+Date:   Mon, 29 Jul 2019 21:21:21 +0200
+Message-Id: <20190729190839.038041809@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,50 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9ff3a5c88e1f1ab17a31402b96d45abe14aab9d7 ]
+From: Yang Wei <albin_yang@163.com>
 
-After data is copied to the cache entry, atomic_set is used indicate
-that the data is the entry is valid without appropriate memory barriers.
-Similarly the read side was missing the corresponding memory barriers.
+[ Upstream commit dd006fc434e107ef90f7de0db9907cbc1c521645 ]
 
-Signed-off-by: David Riley <davidriley@chromium.org>
-Link: http://patchwork.freedesktop.org/patch/msgid/20190610211810.253227-5-davidriley@chromium.org
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The frags_q is not properly initialized, it may result in illegal memory
+access when conn_info is NULL.
+The "goto free_exit" should be replaced by "goto exit".
+
+Signed-off-by: Yang Wei <albin_yang@163.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 3 +++
- drivers/gpu/drm/virtio/virtgpu_vq.c    | 2 ++
- 2 files changed, 5 insertions(+)
+ net/nfc/nci/data.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index ed9c443bb8a1..40cc2f6707cf 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -523,6 +523,9 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
- 	ret = wait_event_timeout(vgdev->resp_wq,
- 				 atomic_read(&cache_ent->is_valid), 5 * HZ);
+--- a/net/nfc/nci/data.c
++++ b/net/nfc/nci/data.c
+@@ -119,7 +119,7 @@ static int nci_queue_tx_data_frags(struc
+ 	conn_info = nci_get_conn_info_by_conn_id(ndev, conn_id);
+ 	if (!conn_info) {
+ 		rc = -EPROTO;
+-		goto free_exit;
++		goto exit;
+ 	}
  
-+	/* is_valid check must proceed before copy of the cache entry. */
-+	smp_rmb();
-+
- 	ptr = cache_ent->caps_cache;
- 
- copy_exit:
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 26a2da1f712d..21c2de81f3e3 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -585,6 +585,8 @@ static void virtio_gpu_cmd_capset_cb(struct virtio_gpu_device *vgdev,
- 		    cache_ent->id == le32_to_cpu(cmd->capset_id)) {
- 			memcpy(cache_ent->caps_cache, resp->capset_data,
- 			       cache_ent->size);
-+			/* Copy must occur before is_valid is signalled. */
-+			smp_wmb();
- 			atomic_set(&cache_ent->is_valid, 1);
- 			break;
- 		}
--- 
-2.20.1
-
+ 	__skb_queue_head_init(&frags_q);
 
 
