@@ -2,101 +2,68 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4064FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF5AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF03206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5F2206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfG2R5I (ORCPT
+        id S1729060AbfG2R5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 13:57:08 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:50838 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728593AbfG2R5H (ORCPT
+        Mon, 29 Jul 2019 13:57:33 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:36792 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbfG2R5d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:57:07 -0400
-Received: from ramsan ([84.194.98.4])
-        by baptiste.telenet-ops.be with bizsmtp
-        id ihx02000S05gfCL01hx0yn; Mon, 29 Jul 2019 19:57:05 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hs9tM-00023k-R0; Mon, 29 Jul 2019 19:57:00 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hs9tM-0003ZM-Os; Mon, 29 Jul 2019 19:57:00 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        linux-renesas-soc@vger.kernel.org,
+        Mon, 29 Jul 2019 13:57:33 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6124B14015B10;
+        Mon, 29 Jul 2019 10:57:32 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 10:57:31 -0700 (PDT)
+Message-Id: <20190729.105731.2008954478313187190.davem@davemloft.net>
+To:     martin.blumenstingl@googlemail.com
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, netdev@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] MAINTAINERS: Add Geert as Renesas SoC Co-Maintainer
-Date:   Mon, 29 Jul 2019 19:56:58 +0200
-Message-Id: <20190729175658.13672-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH] net: stmmac: manage errors returned by
+ of_get_mac_address()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190727192137.27881-1-martin.blumenstingl@googlemail.com>
+References: <20190727192137.27881-1-martin.blumenstingl@googlemail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 10:57:32 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the end of the v5.3 upstream kernel development cycle, Simon will be
-stepping down from his role as Renesas SoC maintainer.  Starting with
-the v5.4 development cycle, Geert is taking over this role.
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Sat, 27 Jul 2019 21:21:37 +0200
 
-Add Geert as a co-maintainer, and add his git repository and branch.
+> Commit d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
+> added support for reading the MAC address from an nvmem-cell. This
+> required changing the logic to return an error pointer upon failure.
+> 
+> If stmmac is loaded before the nvmem provider driver then
+> of_get_mac_address() return an error pointer with -EPROBE_DEFER.
+> 
+> Propagate this error so the stmmac driver will be probed again after the
+> nvmem provider driver is loaded.
+> Default to a random generated MAC address in case of any other error,
+> instead of using the error pointer as MAC address.
+> 
+> Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Stephen: Can you please add my branch to linux-next, after Simon's
-	 branch, which may still receive fixes for v5.3?
-
-	 Thanks!
----
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6426db5198f05377..6de667021591fb52 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2155,10 +2155,12 @@ F:	Documentation/devicetree/bindings/arm/realtek.txt
- 
- ARM/RENESAS ARM64 ARCHITECTURE
- M:	Simon Horman <horms@verge.net.au>
-+M:	Geert Uytterhoeven <geert+renesas@glider.be>
- M:	Magnus Damm <magnus.damm@gmail.com>
- L:	linux-renesas-soc@vger.kernel.org
- Q:	http://patchwork.kernel.org/project/linux-renesas-soc/list/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git next
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git next
- S:	Supported
- F:	arch/arm64/boot/dts/renesas/
- F:	Documentation/devicetree/bindings/arm/renesas.yaml
-@@ -2269,10 +2271,12 @@ F:	drivers/media/platform/s5p-mfc/
- 
- ARM/SHMOBILE ARM ARCHITECTURE
- M:	Simon Horman <horms@verge.net.au>
-+M:	Geert Uytterhoeven <geert+renesas@glider.be>
- M:	Magnus Damm <magnus.damm@gmail.com>
- L:	linux-renesas-soc@vger.kernel.org
- Q:	http://patchwork.kernel.org/project/linux-renesas-soc/list/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git next
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git next
- S:	Supported
- F:	arch/arm/boot/dts/emev2*
- F:	arch/arm/boot/dts/gr-peach*
--- 
-2.17.1
-
+Applied, thanks.
