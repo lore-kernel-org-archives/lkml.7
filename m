@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE959C7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD410C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7202054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA672054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430260;
-	bh=E45bOxYEs1GCke5wwWSaD5o7gMTEOtOqrjfmOPnbj38=;
+	s=default; t=1564430269;
+	bh=7oNkVGkCARzG3ouaad00+6R83JA69aiApiOofGoMXcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A6s70G73Zif9fo+R7vgH4r/YW9N3gGZhW8sRT6DFCCQjQBNyNRdI3I7feXbyGjZCT
-	 UzUIOKZQf7Pb3stlAcSAa+pYn/N6GUN0Usr5VRQ8qhoM3CwZbHBlwzpB0CnxegHB7w
-	 F1KmCWm+lALGx6dpsFO+PSPcdzKXbkgEbWrBl0vY=
+	b=JHCxae/4D8+MdGdtejWtxoFnQWG0PmH5rhA1HQfirRd9Uu41eKlU157FVlKwpqoSn
+	 39Hy0U+X3rNeCzJUVdGbMcgJnbTJg97YQmDpTRq+XqYqc7NkL8y/fJwQxhFro2mG0g
+	 lJP4eQQk5dQiCVWHa50uFCPd4Qwd0a4CC52QsXnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390306AbfG2TyY (ORCPT
+        id S2391002AbfG2TyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:54:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46734 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:54:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390821AbfG2TyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:54:08 -0400
+        id S2390935AbfG2Txw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:53:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16CD021655;
-        Mon, 29 Jul 2019 19:54:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6112217D7;
+        Mon, 29 Jul 2019 19:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430047;
-        bh=E45bOxYEs1GCke5wwWSaD5o7gMTEOtOqrjfmOPnbj38=;
+        s=default; t=1564430031;
+        bh=7oNkVGkCARzG3ouaad00+6R83JA69aiApiOofGoMXcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J5gydGPDegwRDmFnr83S49GvO7oRbsRCjXhXj1SC6NhzYS7JuHGo8nGGMLekdT1Fh
-         im6SRu0x2Ifs06HGtMb5WndNSjPuKJN0SjWbzNEPE/uJmKF284sWgvidInkO9F4JAx
-         wC6QFgAYtfSm8S8J/1CyCYof/yPZktikxrYpe3QA=
+        b=k7r0wJDMUyOUeM+YAxSH2u8P883Csv/BuK6MbXytvsYzC+kotmfR20vip8g268I+l
+         sLR7r7qsrWb4097ZqO+NChPbPaibHtis7IxnFFu2XjouQV3i+W7GZdlulCQdttUC7J
+         ypQ+uZnfveknkaUw9wX/IeHPavxSX+lvLXvXObRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Harvey <jamespharvey20@gmail.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.2 179/215] btrfs: inode: Dont compress if NODATASUM or NODATACOW set
-Date:   Mon, 29 Jul 2019 21:22:55 +0200
-Message-Id: <20190729190811.031475083@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Lambertz <mail@thomaslambertz.de>,
+        anthony <antdev66@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>
+Subject: [PATCH 5.2 174/215] KVM: X86: Fix fpu state crash in kvm guest
+Date:   Mon, 29 Jul 2019 21:22:50 +0200
+Message-Id: <20190729190810.125640760@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -59,101 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-commit 42c16da6d684391db83788eb680accd84f6c2083 upstream.
+commit e751732486eb3f159089a64d1901992b1357e7cc upstream.
 
-As btrfs(5) specified:
+The idea before commit 240c35a37 (which has just been reverted)
+was that we have the following FPU states:
 
-	Note
-	If nodatacow or nodatasum are enabled, compression is disabled.
+               userspace (QEMU)             guest
+---------------------------------------------------------------------------
+               processor                    vcpu->arch.guest_fpu
+>>> KVM_RUN: kvm_load_guest_fpu
+               vcpu->arch.user_fpu          processor
+>>> preempt out
+               vcpu->arch.user_fpu          current->thread.fpu
+>>> preempt in
+               vcpu->arch.user_fpu          processor
+>>> back to userspace
+>>> kvm_put_guest_fpu
+               processor                    vcpu->arch.guest_fpu
+---------------------------------------------------------------------------
 
-If NODATASUM or NODATACOW set, we should not compress the extent.
+With the new lazy model we want to get the state back to the processor
+when schedule in from current->thread.fpu.
 
-Normally NODATACOW is detected properly in run_delalloc_range() so
-compression won't happen for NODATACOW.
-
-However for NODATASUM we don't have any check, and it can cause
-compressed extent without csum pretty easily, just by:
-  mkfs.btrfs -f $dev
-  mount $dev $mnt -o nodatasum
-  touch $mnt/foobar
-  mount -o remount,datasum,compress $mnt
-  xfs_io -f -c "pwrite 0 128K" $mnt/foobar
-
-And in fact, we have a bug report about corrupted compressed extent
-without proper data checksum so even RAID1 can't recover the corruption.
-(https://bugzilla.kernel.org/show_bug.cgi?id=199707)
-
-Running compression without proper checksum could cause more damage when
-corruption happens, as compressed data could make the whole extent
-unreadable, so there is no need to allow compression for
-NODATACSUM.
-
-The fix will refactor the inode compression check into two parts:
-
-- inode_can_compress()
-  As the hard requirement, checked at btrfs_run_delalloc_range(), so no
-  compression will happen for NODATASUM inode at all.
-
-- inode_need_compress()
-  As the soft requirement, checked at btrfs_run_delalloc_range() and
-  compress_file_range().
-
-Reported-by: James Harvey <jamespharvey20@gmail.com>
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: Thomas Lambertz <mail@thomaslambertz.de>
+Reported-by: anthony <antdev66@gmail.com>
+Tested-by: anthony <antdev66@gmail.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Thomas Lambertz <mail@thomaslambertz.de>
+Cc: anthony <antdev66@gmail.com>
+Cc: stable@vger.kernel.org
+Fixes: 5f409e20b (x86/fpu: Defer FPU state load until return to userspace)
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+[Add a comment in front of the warning. - Paolo]
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |   24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ arch/x86/kvm/x86.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -394,10 +394,31 @@ static noinline int add_async_extent(str
- 	return 0;
- }
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3264,6 +3264,10 @@ void kvm_arch_vcpu_load(struct kvm_vcpu
  
-+/*
-+ * Check if the inode has flags compatible with compression
-+ */
-+static inline bool inode_can_compress(struct inode *inode)
-+{
-+	if (BTRFS_I(inode)->flags & BTRFS_INODE_NODATACOW ||
-+	    BTRFS_I(inode)->flags & BTRFS_INODE_NODATASUM)
-+		return false;
-+	return true;
-+}
+ 	kvm_x86_ops->vcpu_load(vcpu, cpu);
+ 
++	fpregs_assert_state_consistent();
++	if (test_thread_flag(TIF_NEED_FPU_LOAD))
++		switch_fpu_return();
 +
-+/*
-+ * Check if the inode needs to be submitted to compression, based on mount
-+ * options, defragmentation, properties or heuristics.
-+ */
- static inline int inode_need_compress(struct inode *inode, u64 start, u64 end)
- {
- 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	/* Apply any externally detected TSC adjustments (due to suspend) */
+ 	if (unlikely(vcpu->arch.tsc_offset_adjustment)) {
+ 		adjust_tsc_offset_host(vcpu, vcpu->arch.tsc_offset_adjustment);
+@@ -7955,9 +7959,8 @@ static int vcpu_enter_guest(struct kvm_v
+ 		wait_lapic_expire(vcpu);
+ 	guest_enter_irqoff();
  
-+	if (!inode_can_compress(inode)) {
-+		WARN(IS_ENABLED(CONFIG_BTRFS_DEBUG),
-+			KERN_ERR "BTRFS: unexpected compression for ino %llu\n",
-+			btrfs_ino(BTRFS_I(inode)));
-+		return 0;
-+	}
- 	/* force compress */
- 	if (btrfs_test_opt(fs_info, FORCE_COMPRESS))
- 		return 1;
-@@ -1630,7 +1651,8 @@ int btrfs_run_delalloc_range(struct inod
- 	} else if (BTRFS_I(inode)->flags & BTRFS_INODE_PREALLOC && !force_cow) {
- 		ret = run_delalloc_nocow(inode, locked_page, start, end,
- 					 page_started, 0, nr_written);
--	} else if (!inode_need_compress(inode, start, end)) {
-+	} else if (!inode_can_compress(inode) ||
-+		   !inode_need_compress(inode, start, end)) {
- 		ret = cow_file_range(inode, locked_page, start, end, end,
- 				      page_started, nr_written, 1, NULL);
- 	} else {
+-	fpregs_assert_state_consistent();
+-	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+-		switch_fpu_return();
++	/* The preempt notifier should have taken care of the FPU already.  */
++	WARN_ON_ONCE(test_thread_flag(TIF_NEED_FPU_LOAD));
+ 
+ 	if (unlikely(vcpu->arch.switch_db_regs)) {
+ 		set_debugreg(0, 7);
 
 
