@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94267C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E47BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6913321655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A0921655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430161;
-	bh=wh1zoquakyM/0TPKZ8B93mtc776SuJUVqVduk7mbb1c=;
+	s=default; t=1564430163;
+	bh=Xbef9eg/NegU3DXpV5H/CftFTdouDQLuOGQM0s+asFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gvyiesyGdOssWknk6TPIEZIIastcZ9vCN+5VLB2UGQfBE/GlXKw5t80GvlZRtpX1K
-	 v9bk+UaOW2UVqYdADcaxSt/+JTOonzPG8c6D8FDjdg9YgyA98d5CN+E6daFwgzHJAW
-	 YPctxgAIhsXU8nTPUfUiHcOk/wfkfcwSRYQUUK4M=
+	b=cLdR0ZHFCh0OA+ItB0EElt0fkrOdNlHCDJ+cOrFoho0HhGi9KErRhEx8RaNinYuZf
+	 EaPpbMi1dwqTJ2Uy5Y1pGv3xP0JUHKzFcrQZHC+TvO7FlmzWPFzh4G0oA91XxO5w88
+	 8eMrO9S1l9S5TRDS08uKsilUTOmBpJMnBvoqYal8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404296AbfG2T4A (ORCPT
+        id S2404307AbfG2T4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:56:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48826 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:56:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404250AbfG2Tz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:55:57 -0400
+        id S2404265AbfG2Tz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:55:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2A02204EC;
-        Mon, 29 Jul 2019 19:55:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95912204EC;
+        Mon, 29 Jul 2019 19:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430156;
-        bh=wh1zoquakyM/0TPKZ8B93mtc776SuJUVqVduk7mbb1c=;
+        s=default; t=1564430159;
+        bh=Xbef9eg/NegU3DXpV5H/CftFTdouDQLuOGQM0s+asFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3tuxRCYanLZzQp/zqBPSh71Iix5KaghalvfjpR7lHpWjc+L+t2Ddss9VRBz/z4h/
-         LYS2TT9P7F7gJ/kvZ6TtZt8ocy2e7GPkK7ohWQQvqz5xHPgZV5J+rMem+t/vaMw+VA
-         NnFUy4vcMYXqdtcHWbnHXHUpIYfuQ6wAGJW+EM2Q=
+        b=XVphI82MIW5NN9ZvjQnA2XGKVQHkdgLbZqITThN9UwHg/x4J+epmjheImr4supJsu
+         KWPpyDkxTOqYyAERV51Dne24JSLrlQ2U9pfOY224+dUSYdh6iZaHs9at2sNTzThxX2
+         vBq8MhstHI0So6m5JZhn2fTsVu5zViabTWLtH54E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hrvoje Zeba <zeba.hrvoje@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.2 215/215] io_uring: dont use iov_iter_advance() for fixed buffers
-Date:   Mon, 29 Jul 2019 21:23:31 +0200
-Message-Id: <20190729190817.178599978@linuxfoundation.org>
+        stable@vger.kernel.org, Praveen Pandey <Praveen.Pandey@in.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.2 199/215] powerpc/tm: Fix oops on sigreturn on systems without TM
+Date:   Mon, 29 Jul 2019 21:23:15 +0200
+Message-Id: <20190729190814.397437847@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -59,92 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Michael Neuling <mikey@neuling.org>
 
-commit bd11b3a391e3df6fa958facbe4b3f9f4cca9bd49 upstream.
+commit f16d80b75a096c52354c6e0a574993f3b0dfbdfe upstream.
 
-Hrvoje reports that when a large fixed buffer is registered and IO is
-being done to the latter pages of said buffer, the IO submission time
-is much worse:
+On systems like P9 powernv where we have no TM (or P8 booted with
+ppc_tm=off), userspace can construct a signal context which still has
+the MSR TS bits set. The kernel tries to restore this context which
+results in the following crash:
 
-reading to the start of the buffer: 11238 ns
-reading to the end of the buffer:   1039879 ns
+  Unexpected TM Bad Thing exception at c0000000000022fc (msr 0x8000000102a03031) tm_scratch=800000020280f033
+  Oops: Unrecoverable exception, sig: 6 [#1]
+  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+  Modules linked in:
+  CPU: 0 PID: 1636 Comm: sigfuz Not tainted 5.2.0-11043-g0a8ad0ffa4 #69
+  NIP:  c0000000000022fc LR: 00007fffb2d67e48 CTR: 0000000000000000
+  REGS: c00000003fffbd70 TRAP: 0700   Not tainted  (5.2.0-11045-g7142b497d8)
+  MSR:  8000000102a03031 <SF,VEC,VSX,FP,ME,IR,DR,LE,TM[E]>  CR: 42004242  XER: 00000000
+  CFAR: c0000000000022e0 IRQMASK: 0
+  GPR00: 0000000000000072 00007fffb2b6e560 00007fffb2d87f00 0000000000000669
+  GPR04: 00007fffb2b6e728 0000000000000000 0000000000000000 00007fffb2b6f2a8
+  GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+  GPR12: 0000000000000000 00007fffb2b76900 0000000000000000 0000000000000000
+  GPR16: 00007fffb2370000 00007fffb2d84390 00007fffea3a15ac 000001000a250420
+  GPR20: 00007fffb2b6f260 0000000010001770 0000000000000000 0000000000000000
+  GPR24: 00007fffb2d843a0 00007fffea3a14a0 0000000000010000 0000000000800000
+  GPR28: 00007fffea3a14d8 00000000003d0f00 0000000000000000 00007fffb2b6e728
+  NIP [c0000000000022fc] rfi_flush_fallback+0x7c/0x80
+  LR [00007fffb2d67e48] 0x7fffb2d67e48
+  Call Trace:
+  Instruction dump:
+  e96a0220 e96a02a8 e96a0330 e96a03b8 394a0400 4200ffdc 7d2903a6 e92d0c00
+  e94d0c08 e96d0c10 e82d0c18 7db242a6 <4c000024> 7db243a6 7db142a6 f82d0c18
 
-In fact, it's worse by two orders of magnitude. The reason for that is
-how io_uring figures out how to setup the iov_iter. We point the iter
-at the first bvec, and then use iov_iter_advance() to fast-forward to
-the offset within that buffer we need.
+The problem is the signal code assumes TM is enabled when
+CONFIG_PPC_TRANSACTIONAL_MEM is enabled. This may not be the case as
+with P9 powernv or if `ppc_tm=off` is used on P8.
 
-However, that is abysmally slow, as it entails iterating the bvecs
-that we setup as part of buffer registration. There's really no need
-to use this generic helper, as we know it's a BVEC type iterator, and
-we also know that each bvec is PAGE_SIZE in size, apart from possibly
-the first and last. Hence we can just use a shift on the offset to
-find the right index, and then adjust the iov_iter appropriately.
-After this fix, the timings are:
+This means any local user can crash the system.
 
-reading to the start of the buffer: 10135 ns
-reading to the end of the buffer:   1377 ns
+Fix the problem by returning a bad stack frame to the user if they try
+to set the MSR TS bits with sigreturn() on systems where TM is not
+supported.
 
-Or about an 755x improvement for the tail page.
+Found with sigfuz kernel selftest on P9.
 
-Reported-by: Hrvoje Zeba <zeba.hrvoje@gmail.com>
-Tested-by: Hrvoje Zeba <zeba.hrvoje@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This fixes CVE-2019-13648.
+
+Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
+Cc: stable@vger.kernel.org # v3.9
+Reported-by: Praveen Pandey <Praveen.Pandey@in.ibm.com>
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190719050502.405-1-mikey@neuling.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- fs/io_uring.c |   39 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/signal_32.c |    3 +++
+ arch/powerpc/kernel/signal_64.c |    5 +++++
+ 2 files changed, 8 insertions(+)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1001,8 +1001,43 @@ static int io_import_fixed(struct io_rin
- 	 */
- 	offset = buf_addr - imu->ubuf;
- 	iov_iter_bvec(iter, rw, imu->bvec, imu->nr_bvecs, offset + len);
--	if (offset)
--		iov_iter_advance(iter, offset);
-+
-+	if (offset) {
-+		/*
-+		 * Don't use iov_iter_advance() here, as it's really slow for
-+		 * using the latter parts of a big fixed buffer - it iterates
-+		 * over each segment manually. We can cheat a bit here, because
-+		 * we know that:
-+		 *
-+		 * 1) it's a BVEC iter, we set it up
-+		 * 2) all bvecs are PAGE_SIZE in size, except potentially the
-+		 *    first and last bvec
-+		 *
-+		 * So just find our index, and adjust the iterator afterwards.
-+		 * If the offset is within the first bvec (or the whole first
-+		 * bvec, just use iov_iter_advance(). This makes it easier
-+		 * since we can just skip the first segment, which may not
-+		 * be PAGE_SIZE aligned.
-+		 */
-+		const struct bio_vec *bvec = imu->bvec;
-+
-+		if (offset <= bvec->bv_len) {
-+			iov_iter_advance(iter, offset);
-+		} else {
-+			unsigned long seg_skip;
-+
-+			/* skip first vec */
-+			offset -= bvec->bv_len;
-+			seg_skip = 1 + (offset >> PAGE_SHIFT);
-+
-+			iter->bvec = bvec + seg_skip;
-+			iter->nr_segs -= seg_skip;
-+			iter->count -= (seg_skip << PAGE_SHIFT);
-+			iter->iov_offset = offset & ~PAGE_MASK;
-+			if (iter->iov_offset)
-+				iter->count -= iter->iov_offset;
-+		}
-+	}
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -1198,6 +1198,9 @@ SYSCALL_DEFINE0(rt_sigreturn)
+ 			goto bad;
  
- 	/* don't drop a reference to these pages */
- 	iter->type |= ITER_BVEC_FLAG_NO_REF;
+ 		if (MSR_TM_ACTIVE(msr_hi<<32)) {
++			/* Trying to start TM on non TM system */
++			if (!cpu_has_feature(CPU_FTR_TM))
++				goto bad;
+ 			/* We only recheckpoint on return if we're
+ 			 * transaction.
+ 			 */
+--- a/arch/powerpc/kernel/signal_64.c
++++ b/arch/powerpc/kernel/signal_64.c
+@@ -771,6 +771,11 @@ SYSCALL_DEFINE0(rt_sigreturn)
+ 	if (MSR_TM_ACTIVE(msr)) {
+ 		/* We recheckpoint on return. */
+ 		struct ucontext __user *uc_transact;
++
++		/* Trying to start TM on non TM system */
++		if (!cpu_has_feature(CPU_FTR_TM))
++			goto badframe;
++
+ 		if (__get_user(uc_transact, &uc->uc_link))
+ 			goto badframe;
+ 		if (restore_tm_sigcontexts(current, &uc->uc_mcontext,
 
 
