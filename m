@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3277C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA62C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F90206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250152171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429241;
-	bh=f7tBDxzUivvdbQFNLAvWicQS27YxUC57cCcTbYDlg+Q=;
+	s=default; t=1564429247;
+	bh=lCZ5oIwP5bwvvV48Eg1OMEB3VgrGPYIoZutGWqKmJkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KwB7JYKcPxzaXhsmtDyb4LGXT8S4bwNvnyoc1NyUNa9SmRcqPuqSTcFq2NUfec4to
-	 1k9euvQOP4d2loJ1iyn/2Hmjvz9xDHlirVxOIjCi75NneLLH/H3mdDRBlah8o+vzSS
-	 u/+55fDSAuMMnXY/RXamvouD9fJiBrEgAdBIWXTQ=
+	b=vCpeiqRmZXpCreyVc7OzqoZ/maV7oOChcxhZeSqNHCbu5dVJwgouKwv9iBg/XxJio
+	 xYGCtf4od3mAnCg/9nUe4/BM08yb+/TLrUfbk8cekS3edoSPyD2poFhxES69Cg263T
+	 iCPZ1H1LMqrV6t5aBguIdrjA0uX/d7Op+KPU/IGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389192AbfG2Tkk (ORCPT
+        id S2389213AbfG2Tkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55898 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:40:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389176AbfG2Tke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:40:34 -0400
+        id S2389184AbfG2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:40:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19E9A206DD;
-        Mon, 29 Jul 2019 19:40:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6FB6206DD;
+        Mon, 29 Jul 2019 19:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429233;
-        bh=f7tBDxzUivvdbQFNLAvWicQS27YxUC57cCcTbYDlg+Q=;
+        s=default; t=1564429237;
+        bh=lCZ5oIwP5bwvvV48Eg1OMEB3VgrGPYIoZutGWqKmJkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V2kg0wbW9UKG6rSj/lRePlmFAs6QDGigw7SK1yTAliqLPLX0c+zG7ZbihwGaIJciH
-         J3Ryk56HZ7jrIdu5D26zsJgSmg4Jc3CAAD+nU1dT4AKIL2KBQjpFggppTLT8wQ1KHE
-         efwNUmJY93OQPu0wocHxmCAVj9C5n6p8lT2BL7ro=
+        b=ZITAI7vAYXh5eHOPp554ua2odXcnYfZSYPwDI0V9fA8jBr+BDVi3+mCsJWT+6S3xv
+         xVaEuTlTd2yeqE+6g1GGCMXfuOUqqn8FF8+u6wyLbnTFKI7Xz57fVwtbKubAQs/ZyS
+         mZqs50ZX+Tqp+4FnFwsQce0INVKZBmJigHlj3uoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 005/113] staging: vt6656: use meaningful error code during buffer allocation
-Date:   Mon, 29 Jul 2019 21:21:32 +0200
-Message-Id: <20190729190656.986288140@linuxfoundation.org>
+Subject: [PATCH 4.19 006/113] usb: core: hub: Disable hub-initiated U1/U2
+Date:   Mon, 29 Jul 2019 21:21:33 +0200
+Message-Id: <20190729190657.217754958@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,124 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d8c2869300ab5f7a19bf6f5a04fe473c5c9887e3 ]
+[ Upstream commit 561759292774707b71ee61aecc07724905bb7ef1 ]
 
-Check on called function's returned value for error and return 0 on
-success or a negative errno value on error instead of a boolean value.
+If the device rejects the control transfer to enable device-initiated
+U1/U2 entry, then the device will not initiate U1/U2 transition. To
+improve the performance, the downstream port should not initate
+transition to U1/U2 to avoid the delay from the device link command
+response (no packet can be transmitted while waiting for a response from
+the device). If the device has some quirks and does not implement U1/U2,
+it may reject all the link state change requests, and the downstream
+port may resend and flood the bus with more requests. This will affect
+the device performance even further. This patch disables the
+hub-initated U1/U2 if the device-initiated U1/U2 entry fails.
 
-Signed-off-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+Reference: USB 3.2 spec 7.2.4.2.3
+
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/vt6656/main_usb.c | 42 ++++++++++++++++++++-----------
- 1 file changed, 28 insertions(+), 14 deletions(-)
+ drivers/usb/core/hub.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
-index ccafcc2c87ac..70433f756d8e 100644
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -402,16 +402,19 @@ static void vnt_free_int_bufs(struct vnt_private *priv)
- 	kfree(priv->int_buf.data_buf);
- }
- 
--static bool vnt_alloc_bufs(struct vnt_private *priv)
-+static int vnt_alloc_bufs(struct vnt_private *priv)
- {
-+	int ret = 0;
- 	struct vnt_usb_send_context *tx_context;
- 	struct vnt_rcb *rcb;
- 	int ii;
- 
- 	for (ii = 0; ii < priv->num_tx_context; ii++) {
- 		tx_context = kmalloc(sizeof(*tx_context), GFP_KERNEL);
--		if (!tx_context)
-+		if (!tx_context) {
-+			ret = -ENOMEM;
- 			goto free_tx;
-+		}
- 
- 		priv->tx_context[ii] = tx_context;
- 		tx_context->priv = priv;
-@@ -419,16 +422,20 @@ static bool vnt_alloc_bufs(struct vnt_private *priv)
- 
- 		/* allocate URBs */
- 		tx_context->urb = usb_alloc_urb(0, GFP_KERNEL);
--		if (!tx_context->urb)
-+		if (!tx_context->urb) {
-+			ret = -ENOMEM;
- 			goto free_tx;
-+		}
- 
- 		tx_context->in_use = false;
- 	}
- 
- 	for (ii = 0; ii < priv->num_rcb; ii++) {
- 		priv->rcb[ii] = kzalloc(sizeof(*priv->rcb[ii]), GFP_KERNEL);
--		if (!priv->rcb[ii])
-+		if (!priv->rcb[ii]) {
-+			ret = -ENOMEM;
- 			goto free_rx_tx;
-+		}
- 
- 		rcb = priv->rcb[ii];
- 
-@@ -436,39 +443,46 @@ static bool vnt_alloc_bufs(struct vnt_private *priv)
- 
- 		/* allocate URBs */
- 		rcb->urb = usb_alloc_urb(0, GFP_KERNEL);
--		if (!rcb->urb)
-+		if (!rcb->urb) {
-+			ret = -ENOMEM;
- 			goto free_rx_tx;
-+		}
- 
- 		rcb->skb = dev_alloc_skb(priv->rx_buf_sz);
--		if (!rcb->skb)
-+		if (!rcb->skb) {
-+			ret = -ENOMEM;
- 			goto free_rx_tx;
-+		}
- 
- 		rcb->in_use = false;
- 
- 		/* submit rx urb */
--		if (vnt_submit_rx_urb(priv, rcb))
-+		ret = vnt_submit_rx_urb(priv, rcb);
-+		if (ret)
- 			goto free_rx_tx;
- 	}
- 
- 	priv->interrupt_urb = usb_alloc_urb(0, GFP_KERNEL);
--	if (!priv->interrupt_urb)
-+	if (!priv->interrupt_urb) {
-+		ret = -ENOMEM;
- 		goto free_rx_tx;
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index f4e8e869649a..8018f813972e 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3961,6 +3961,9 @@ static int usb_set_lpm_timeout(struct usb_device *udev,
+  * control transfers to set the hub timeout or enable device-initiated U1/U2
+  * will be successful.
+  *
++ * If the control transfer to enable device-initiated U1/U2 entry fails, then
++ * hub-initiated U1/U2 will be disabled.
++ *
+  * If we cannot set the parent hub U1/U2 timeout, we attempt to let the xHCI
+  * driver know about it.  If that call fails, it should be harmless, and just
+  * take up more slightly more bus bandwidth for unnecessary U1/U2 exit latency.
+@@ -4015,23 +4018,24 @@ static void usb_enable_link_state(struct usb_hcd *hcd, struct usb_device *udev,
+ 		 * host know that this link state won't be enabled.
+ 		 */
+ 		hcd->driver->disable_usb3_lpm_timeout(hcd, udev, state);
+-	} else {
+-		/* Only a configured device will accept the Set Feature
+-		 * U1/U2_ENABLE
+-		 */
+-		if (udev->actconfig)
+-			usb_set_device_initiated_lpm(udev, state, true);
++		return;
 +	}
  
- 	priv->int_buf.data_buf = kmalloc(MAX_INTERRUPT_SIZE, GFP_KERNEL);
- 	if (!priv->int_buf.data_buf) {
--		usb_free_urb(priv->interrupt_urb);
--		goto free_rx_tx;
-+		ret = -ENOMEM;
-+		goto free_rx_tx_urb;
+-		/* As soon as usb_set_lpm_timeout(timeout) returns 0, the
+-		 * hub-initiated LPM is enabled. Thus, LPM is enabled no
+-		 * matter the result of usb_set_device_initiated_lpm().
+-		 * The only difference is whether device is able to initiate
+-		 * LPM.
+-		 */
++	/* Only a configured device will accept the Set Feature
++	 * U1/U2_ENABLE
++	 */
++	if (udev->actconfig &&
++	    usb_set_device_initiated_lpm(udev, state, true) == 0) {
+ 		if (state == USB3_LPM_U1)
+ 			udev->usb3_lpm_u1_enabled = 1;
+ 		else if (state == USB3_LPM_U2)
+ 			udev->usb3_lpm_u2_enabled = 1;
++	} else {
++		/* Don't request U1/U2 entry if the device
++		 * cannot transition to U1/U2.
++		 */
++		usb_set_lpm_timeout(udev, state, 0);
++		hcd->driver->disable_usb3_lpm_timeout(hcd, udev, state);
  	}
- 
--	return true;
-+	return 0;
- 
-+free_rx_tx_urb:
-+	usb_free_urb(priv->interrupt_urb);
- free_rx_tx:
- 	vnt_free_rx_bufs(priv);
--
- free_tx:
- 	vnt_free_tx_bufs(priv);
--
--	return false;
-+	return ret;
  }
  
- static void vnt_tx_80211(struct ieee80211_hw *hw,
 -- 
 2.20.1
 
