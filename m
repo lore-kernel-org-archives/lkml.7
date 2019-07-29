@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8012C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A47C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA81F21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A694D21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428446;
-	bh=/ApC7WM3ufv7cj76sw2mx9VGB3VkdUPDImiuF2fr6S4=;
+	s=default; t=1564428453;
+	bh=GYw9Cov781phGaWT9Snw8uozHLMNnxrt/GbHn2PmxZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ABKdS7IpOISXm/G3BlMHqfOWPBydFYj07BeYUsmJkxrPIieV9wTny4+fTrkGj39mA
-	 cAQZiVqwuybfyFHLJhxTKgT6NniGh4CBglo3S/32I+5A8yvTdOpQ9wCK9yz6DWLpmK
-	 2+4PQqX/aoMngQ12MIzVqsek1cFCXk8J2a7COG+8=
+	b=APsRGhS4z4ynziqDe5yXQiNnaYFSc0pLeesnF5aoDGvfU+KkgFyqOFU3/NQoRdae8
+	 GgL87EVay/ogR3BUMOlCdAFWUsf9sfAaNSVZErhEQa18LUY4WY8djBBy/SlLx2PVHS
+	 WsfEK3BDDWZqOhY6A0ShgoKUC8VOaJSfKcsDfTT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbfG2T1Z (ORCPT
+        id S1729920AbfG2T1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:27:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39964 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:27:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388352AbfG2T1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:27:21 -0400
+        id S1728994AbfG2T12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:27:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ECC721655;
-        Mon, 29 Jul 2019 19:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA4A52070B;
+        Mon, 29 Jul 2019 19:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428440;
-        bh=/ApC7WM3ufv7cj76sw2mx9VGB3VkdUPDImiuF2fr6S4=;
+        s=default; t=1564428447;
+        bh=GYw9Cov781phGaWT9Snw8uozHLMNnxrt/GbHn2PmxZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pUh8Ibggn3bCj/Hfg+zwvsvnSMLv5NvhpdAmQs7/6NKtZBaTejS/CcnZkWGZYfVTH
-         3X2SxIMA4aV0H7Hj3ZF2gfvfQC5Szk8MyZW95UlESHdVjg40se4ylFCYhPT8Lxj29e
-         DdIm8kHMe1AUERLELauiJS7WQTgBVpnbN1eTXvjs=
+        b=CF9YD4eUaQ5BcSOWz3His8wXU52d7Cc5OGhnSAXJ6mem7m9tL+sYxJhWnvtYbePOz
+         GCv+RaOmf1RSkWJj2eKVUZN3nmKfRtW8BrxR9iqIwjC8vGNltTji7YCIdXtFhFQszn
+         cuNeQObGidj40QcMMP+dJFZrNHHg/CYhhAZrz+WQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Claire Chang <tientzu@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Kyle Meyer <kyle.meyer@hpe.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 077/293] ath10k: add missing error handling
-Date:   Mon, 29 Jul 2019 21:19:28 +0200
-Message-Id: <20190729190830.536417774@linuxfoundation.org>
+Subject: [PATCH 4.14 079/293] perf tools: Increase MAX_NR_CPUS and MAX_CACHES
+Date:   Mon, 29 Jul 2019 21:19:30 +0200
+Message-Id: <20190729190830.667960254@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,44 +64,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4b553f3ca4cbde67399aa3a756c37eb92145b8a1 ]
+[ Upstream commit 9f94c7f947e919c343b30f080285af53d0fa9902 ]
 
-In function ath10k_sdio_mbox_rx_alloc() [sdio.c],
-ath10k_sdio_mbox_alloc_rx_pkt() is called without handling the error cases.
-This will make the driver think the allocation for skb is successful and
-try to access the skb. If we enable failslab, system will easily crash with
-NULL pointer dereferencing.
+Attempting to profile 1024 or more CPUs with perf causes two errors:
 
-Call trace of CONFIG_FAILSLAB:
-ath10k_sdio_irq_handler+0x570/0xa88 [ath10k_sdio]
-process_sdio_pending_irqs+0x4c/0x174
-sdio_run_irqs+0x3c/0x64
-sdio_irq_work+0x1c/0x28
+  perf record -a
+  [ perf record: Woken up X times to write data ]
+  way too many cpu caches..
+  [ perf record: Captured and wrote X MB perf.data (X samples) ]
 
-Fixes: d96db25d2025 ("ath10k: add initial SDIO support")
-Signed-off-by: Claire Chang <tientzu@chromium.org>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+  perf report -C 1024
+  Error: failed to set  cpu bitmap
+  Requested CPU 1024 too large. Consider raising MAX_NR_CPUS
+
+  Increasing MAX_NR_CPUS from 1024 to 2048 and redefining MAX_CACHES as
+  MAX_NR_CPUS * 4 returns normal functionality to perf:
+
+  perf record -a
+  [ perf record: Woken up X times to write data ]
+  [ perf record: Captured and wrote X MB perf.data (X samples) ]
+
+  perf report -C 1024
+  ...
+
+Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190620193630.154025-1-meyerk@stormcage.eag.rdlabs.hpecorp.net
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/sdio.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/perf.h        | 2 +-
+ tools/perf/util/header.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
-index da9dbf3ddaa5..c6440d28ab48 100644
---- a/drivers/net/wireless/ath/ath10k/sdio.c
-+++ b/drivers/net/wireless/ath/ath10k/sdio.c
-@@ -610,6 +610,10 @@ static int ath10k_sdio_mbox_rx_alloc(struct ath10k *ar,
- 						    full_len,
- 						    last_in_bundle,
- 						    last_in_bundle);
-+		if (ret) {
-+			ath10k_warn(ar, "alloc_rx_pkt error %d\n", ret);
-+			goto err;
-+		}
- 	}
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index 96f62dd7e3ed..d4ebd0956114 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -25,7 +25,7 @@ static inline unsigned long long rdclock(void)
+ }
  
- 	ar_sdio->n_rx_pkts = i;
+ #ifndef MAX_NR_CPUS
+-#define MAX_NR_CPUS			1024
++#define MAX_NR_CPUS			2048
+ #endif
+ 
+ extern const char *input_name;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index f11cead6a151..26437143c940 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1122,7 +1122,7 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
+ 	return 0;
+ }
+ 
+-#define MAX_CACHES 2000
++#define MAX_CACHES (MAX_NR_CPUS * 4)
+ 
+ static int write_cache(struct feat_fd *ff,
+ 		       struct perf_evlist *evlist __maybe_unused)
 -- 
 2.20.1
 
