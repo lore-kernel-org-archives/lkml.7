@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5A2C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350DBC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3758205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F201B205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431007;
-	bh=CeUhq4u7hoiRDwWUD7AM1Gg4yNUO7s/cPGRFzV5zmOA=;
+	s=default; t=1564431010;
+	bh=xApx2e9Rfs8hpC4tOmZeB08FEqONQj7OKuSUdgAIHwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ybf0SIl3h5jXbyuHPKDf2GMVl+T1LPR6xUyh8fUCDyfBIxq1B/EUDWwmzITpCznpe
-	 wshzwDbrLeLKg0VuzlJ4+V1qLclS0ZZJ0Ixm9BwosbyHhMJ9n2LgJ7V84TXJTC8Jbe
-	 y3guJTqQOjlmRS8+V3OtACoAWAwFbQmFwRQNeqHs=
+	b=fo2Q/WoY+8cov4Vl0pdzfkxtgHrOU8XJfTQ7RQMjulaProe84cWfEA+sneMjGG2fc
+	 S3eJ2nD+D+SYbekuBe6yuRZHueb1MA+2GVuf6PLX8vM8KMjjec7Kbsw5N2qiTo/eqf
+	 M0TUpW+c1RW1xfkKo7rzSw4IumUCfz1920wZ7NCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbfG2TfJ (ORCPT
+        id S1730406AbfG2UKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:35:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49366 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388477AbfG2Te7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:34:59 -0400
+        id S2388127AbfG2TfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:35:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70D3721773;
-        Mon, 29 Jul 2019 19:34:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D04F2070B;
+        Mon, 29 Jul 2019 19:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428898;
-        bh=CeUhq4u7hoiRDwWUD7AM1Gg4yNUO7s/cPGRFzV5zmOA=;
+        s=default; t=1564428908;
+        bh=xApx2e9Rfs8hpC4tOmZeB08FEqONQj7OKuSUdgAIHwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVXhqoOn5EiPcn3k0N2ssaGWhcRATOO8UEMMY/9KQNcCWbSAqqEueWE96SeSsipfE
-         +kSJW3r1tMf0tp7/WHdv/FNIYhpTyASUe6tZqRjxpRyEQ9b2HAfFwc5I/wH7+r+Jt2
-         5BbbaaoDoa9PnJo7HNJiQ05pnNKwK4EvOQVjkQCo=
+        b=YAgthj80U6IOYy3rmBceDyosTRFaAIzmgxSpbuTNhGHJO+262wdcut3kbBHIIyfKe
+         Kd0qgTplHSWhevuRo9BDz3Uq4JKfH8Ll4UsG+FHVBlQZOEdgUcLDGxzXZBddqTI2wm
+         I2m94BG3ivrXpXCCr8nNMr4zYAYKS5lh9NFfnE34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 220/293] nfsd: Fix overflow causing non-working mounts on 1 TB machines
-Date:   Mon, 29 Jul 2019 21:21:51 +0200
-Message-Id: <20190729190841.368516511@linuxfoundation.org>
+Subject: [PATCH 4.14 223/293] usb: core: hub: Disable hub-initiated U1/U2
+Date:   Mon, 29 Jul 2019 21:21:54 +0200
+Message-Id: <20190729190841.581256187@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,65 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b2d4dcf71c4a91b420f835e52ddea8192300a3b ]
+[ Upstream commit 561759292774707b71ee61aecc07724905bb7ef1 ]
 
-Since commit 10a68cdf10 (nfsd: fix performance-limiting session
-calculation) (Linux 5.1-rc1 and 4.19.31), shares from NFS servers with
-1 TB of memory cannot be mounted anymore. The mount just hangs on the
-client.
+If the device rejects the control transfer to enable device-initiated
+U1/U2 entry, then the device will not initiate U1/U2 transition. To
+improve the performance, the downstream port should not initate
+transition to U1/U2 to avoid the delay from the device link command
+response (no packet can be transmitted while waiting for a response from
+the device). If the device has some quirks and does not implement U1/U2,
+it may reject all the link state change requests, and the downstream
+port may resend and flood the bus with more requests. This will affect
+the device performance even further. This patch disables the
+hub-initated U1/U2 if the device-initiated U1/U2 entry fails.
 
-The gist of commit 10a68cdf10 is the change below.
+Reference: USB 3.2 spec 7.2.4.2.3
 
-    -avail = clamp_t(int, avail, slotsize, avail/3);
-    +avail = clamp_t(int, avail, slotsize, total_avail/3);
-
-Here are the macros.
-
-    #define min_t(type, x, y)       __careful_cmp((type)(x), (type)(y), <)
-    #define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
-
-`total_avail` is 8,434,659,328 on the 1 TB machine. `clamp_t()` casts
-the values to `int`, which for 32-bit integers can only hold values
-−2,147,483,648 (−2^31) through 2,147,483,647 (2^31 − 1).
-
-`avail` (in the function signature) is just 65536, so that no overflow
-was happening. Before the commit the assignment would result in 21845,
-and `num = 4`.
-
-When using `total_avail`, it is causing the assignment to be
-18446744072226137429 (printed as %lu), and `num` is then 4164608182.
-
-My next guess is, that `nfsd_drc_mem_used` is then exceeded, and the
-server thinks there is no memory available any more for this client.
-
-Updating the arguments of `clamp_t()` and `min_t()` to `unsigned long`
-fixes the issue.
-
-Now, `avail = 65536` (before commit 10a68cdf10 `avail = 21845`), but
-`num = 4` remains the same.
-
-Fixes: c54f24e338ed (nfsd: fix performance-limiting session calculation)
-Cc: stable@vger.kernel.org
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/hub.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 0bf88876c889..87ee9cbf7dcb 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1511,7 +1511,7 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
- 	 * Never use more than a third of the remaining memory,
- 	 * unless it's the only way to give this client a slot:
- 	 */
--	avail = clamp_t(int, avail, slotsize, total_avail/3);
-+	avail = clamp_t(unsigned long, avail, slotsize, total_avail/3);
- 	num = min_t(int, num, avail / slotsize);
- 	nfsd_drc_mem_used += num * slotsize;
- 	spin_unlock(&nfsd_drc_lock);
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 2e1e7399596e..b543a4730ef2 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3876,6 +3876,9 @@ static int usb_set_lpm_timeout(struct usb_device *udev,
+  * control transfers to set the hub timeout or enable device-initiated U1/U2
+  * will be successful.
+  *
++ * If the control transfer to enable device-initiated U1/U2 entry fails, then
++ * hub-initiated U1/U2 will be disabled.
++ *
+  * If we cannot set the parent hub U1/U2 timeout, we attempt to let the xHCI
+  * driver know about it.  If that call fails, it should be harmless, and just
+  * take up more slightly more bus bandwidth for unnecessary U1/U2 exit latency.
+@@ -3930,23 +3933,24 @@ static void usb_enable_link_state(struct usb_hcd *hcd, struct usb_device *udev,
+ 		 * host know that this link state won't be enabled.
+ 		 */
+ 		hcd->driver->disable_usb3_lpm_timeout(hcd, udev, state);
+-	} else {
+-		/* Only a configured device will accept the Set Feature
+-		 * U1/U2_ENABLE
+-		 */
+-		if (udev->actconfig)
+-			usb_set_device_initiated_lpm(udev, state, true);
++		return;
++	}
+ 
+-		/* As soon as usb_set_lpm_timeout(timeout) returns 0, the
+-		 * hub-initiated LPM is enabled. Thus, LPM is enabled no
+-		 * matter the result of usb_set_device_initiated_lpm().
+-		 * The only difference is whether device is able to initiate
+-		 * LPM.
+-		 */
++	/* Only a configured device will accept the Set Feature
++	 * U1/U2_ENABLE
++	 */
++	if (udev->actconfig &&
++	    usb_set_device_initiated_lpm(udev, state, true) == 0) {
+ 		if (state == USB3_LPM_U1)
+ 			udev->usb3_lpm_u1_enabled = 1;
+ 		else if (state == USB3_LPM_U2)
+ 			udev->usb3_lpm_u2_enabled = 1;
++	} else {
++		/* Don't request U1/U2 entry if the device
++		 * cannot transition to U1/U2.
++		 */
++		usb_set_lpm_timeout(udev, state, 0);
++		hcd->driver->disable_usb3_lpm_timeout(hcd, udev, state);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
