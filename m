@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8162FC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759FEC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5182420C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486A720C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429644;
-	bh=x3F5MHr1q7jvsB8uY933ck27RJqdre2V7LjldOkB+Gc=;
+	s=default; t=1564429648;
+	bh=DwiTYpHToriGmCvggj76p9zkk9aM82mDOnrbNXFfG/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WagWVPoFB3giwi3U4TNVaHZRs6cVMgkshctdHqkD/AOvrN6D626/KDk6lEXR2JK3w
-	 CLh8SPzqFlmb0urHaTuA8cL80LDkkM3qrWbRpRkyMt0vI8+wZAdNuoIB7b6t0awxCu
-	 yXr1PUhtyxSJ+BfYDInYhdLnMwgkzRjb69vqUuEM=
+	b=z9dp8N9OiTuSN3+fQt++PAdB9fR0JUXCIgoLTKaX4jKIvF+mrfCTYZMh0Gqoa7+v5
+	 IJT+1uu1MMZ7w+tsjTU/n88LEcseqk+tJUQgrKZWTyjNJ0pSZfamjmP1VSC3oQqOPy
+	 8niFKKlaHg+lpEFBIVeBKrfMldambzYcvtpdlRvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390328AbfG2TrX (ORCPT
+        id S2390339AbfG2Tr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:47:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36864 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:47:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389655AbfG2TrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:47:13 -0400
+        id S2389476AbfG2TrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:47:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D85A20C01;
-        Mon, 29 Jul 2019 19:47:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49FD21655;
+        Mon, 29 Jul 2019 19:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429632;
-        bh=x3F5MHr1q7jvsB8uY933ck27RJqdre2V7LjldOkB+Gc=;
+        s=default; t=1564429642;
+        bh=DwiTYpHToriGmCvggj76p9zkk9aM82mDOnrbNXFfG/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KNP53x/R3LmhCvJWMt2DQN3QHrj1dsE4sd1uw671ivKpzB/DFYSdLPPdiPnZsO8cq
-         QYYSb9nHYOZ1mxCWQqLwpWNrH3/b6xudXPcz7XR6SOgfjAaCZC6vtol5ayxIDyUkMG
-         PpObnNXtYzmuoGfxQDTj6h1i+3QkP2kcMZMvOsYI=
+        b=jLmPTUBSWUMguK02F5t50BUucVg3/MPmE91RoBNUDBpJ9Na6xXUR9jzihKG8rjma0
+         1UX7Y7O1i+W/RMv/8+EjzCGJEm6jlMe3AYZPMup8K7+gvkpDa2SfNDFZecDLpRM3qS
+         rO3QCSJuaXWH4di7TQK7J7sw6TMNmtf86792f4pg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ajay Gupta <ajayg@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai26@huawei.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 046/215] i2c: nvidia-gpu: resume ccgx i2c client
-Date:   Mon, 29 Jul 2019 21:20:42 +0200
-Message-Id: <20190729190748.512268779@linuxfoundation.org>
+Subject: [PATCH 5.2 049/215] memstick: Fix error cleanup path of memstick_init
+Date:   Mon, 29 Jul 2019 21:20:45 +0200
+Message-Id: <20190729190749.009083340@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,74 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9f2e244d0a39eb437f98324ac315e605e48636db ]
+[ Upstream commit 65f1a0d39c289bb6fc85635528cd36c4b07f560e ]
 
-Cypress USB Type-C CCGx controller firmware version 3.1.10
-(which is being used in many NVIDIA GPU cards) has known issue of
-not triggering interrupt when a USB device is hot plugged to runtime
-resume the controller. If any GPU card gets latest kernel with runtime
-pm support but does not get latest fixed firmware then also it should
-continue to work and therefore a workaround is required to check for
-any connector change event
+If bus_register fails. On its error handling path, it has cleaned up
+what it has done. There is no need to call bus_unregister again.
+Otherwise, if bus_unregister is called, issues such as null-ptr-deref
+will arise.
 
-The workaround is to request runtime resume of i2c client
-which is UCSI Cypress CCGx driver. CCG driver will call the ISR
-for any connector change event only if NVIDIA GPU has old
-CCG firmware with the known issue.
+Syzkaller report this:
 
-Signed-off-by: Ajay Gupta <ajayg@nvidia.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+kobject_add_internal failed for memstick (error: -12 parent: bus)
+BUG: KASAN: null-ptr-deref in sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
+Read of size 8 at addr 0000000000000078 by task syz-executor.0/4460
+
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xa9/0x10e lib/dump_stack.c:113
+ __kasan_report+0x171/0x18d mm/kasan/report.c:321
+ kasan_report+0xe/0x20 mm/kasan/common.c:614
+ sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
+ sysfs_remove_file include/linux/sysfs.h:519 [inline]
+ bus_remove_file+0x6c/0x90 drivers/base/bus.c:145
+ remove_probe_files drivers/base/bus.c:599 [inline]
+ bus_unregister+0x6e/0x100 drivers/base/bus.c:916 ? 0xffffffffc1590000
+ memstick_init+0x7a/0x1000 [memstick]
+ do_one_initcall+0xb9/0x3b5 init/main.c:914
+ do_init_module+0xe0/0x330 kernel/module.c:3468
+ load_module+0x38eb/0x4270 kernel/module.c:3819
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
+ do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: baf8532a147d ("memstick: initial commit for Sony MemoryStick support")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai26@huawei.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-nvidia-gpu.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/memstick/core/memstick.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-nvidia-gpu.c b/drivers/i2c/busses/i2c-nvidia-gpu.c
-index 1c8f708f212b..ee2412b7459c 100644
---- a/drivers/i2c/busses/i2c-nvidia-gpu.c
-+++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
-@@ -51,6 +51,7 @@ struct gpu_i2c_dev {
- 	void __iomem *regs;
- 	struct i2c_adapter adapter;
- 	struct i2c_board_info *gpu_ccgx_ucsi;
-+	struct i2c_client *ccgx_client;
- };
+diff --git a/drivers/memstick/core/memstick.c b/drivers/memstick/core/memstick.c
+index 6cfb293396f2..693ee73eb291 100644
+--- a/drivers/memstick/core/memstick.c
++++ b/drivers/memstick/core/memstick.c
+@@ -625,13 +625,18 @@ static int __init memstick_init(void)
+ 		return -ENOMEM;
  
- static void gpu_enable_i2c_bus(struct gpu_i2c_dev *i2cd)
-@@ -261,8 +262,6 @@ static const struct property_entry ccgx_props[] = {
+ 	rc = bus_register(&memstick_bus_type);
+-	if (!rc)
+-		rc = class_register(&memstick_host_class);
++	if (rc)
++		goto error_destroy_workqueue;
  
- static int gpu_populate_client(struct gpu_i2c_dev *i2cd, int irq)
- {
--	struct i2c_client *ccgx_client;
--
- 	i2cd->gpu_ccgx_ucsi = devm_kzalloc(i2cd->dev,
- 					   sizeof(*i2cd->gpu_ccgx_ucsi),
- 					   GFP_KERNEL);
-@@ -274,8 +273,8 @@ static int gpu_populate_client(struct gpu_i2c_dev *i2cd, int irq)
- 	i2cd->gpu_ccgx_ucsi->addr = 0x8;
- 	i2cd->gpu_ccgx_ucsi->irq = irq;
- 	i2cd->gpu_ccgx_ucsi->properties = ccgx_props;
--	ccgx_client = i2c_new_device(&i2cd->adapter, i2cd->gpu_ccgx_ucsi);
--	if (!ccgx_client)
-+	i2cd->ccgx_client = i2c_new_device(&i2cd->adapter, i2cd->gpu_ccgx_ucsi);
-+	if (!i2cd->ccgx_client)
- 		return -ENODEV;
+-	if (!rc)
+-		return 0;
++	rc = class_register(&memstick_host_class);
++	if (rc)
++		goto error_bus_unregister;
++
++	return 0;
  
- 	return 0;
-@@ -354,6 +353,13 @@ static __maybe_unused int gpu_i2c_resume(struct device *dev)
- 	struct gpu_i2c_dev *i2cd = dev_get_drvdata(dev);
++error_bus_unregister:
+ 	bus_unregister(&memstick_bus_type);
++error_destroy_workqueue:
+ 	destroy_workqueue(workqueue);
  
- 	gpu_enable_i2c_bus(i2cd);
-+	/*
-+	 * Runtime resume ccgx client so that it can see for any
-+	 * connector change event. Old ccg firmware has known
-+	 * issue of not triggering interrupt when a device is
-+	 * connected to runtime resume the controller.
-+	 */
-+	pm_request_resume(&i2cd->ccgx_client->dev);
- 	return 0;
- }
- 
+ 	return rc;
 -- 
 2.20.1
 
