@@ -2,117 +2,82 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A55AC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CD5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21BBB20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="gUuXkOS0"
+	by mail.kernel.org (Postfix) with ESMTP id D8BBB206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387655AbfG2Q2a (ORCPT
+        id S1728795AbfG2Q2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:28:30 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42535 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387559AbfG2Q23 (ORCPT
+        Mon, 29 Jul 2019 12:28:38 -0400
+Received: from smtprelay0046.hostedemail.com ([216.40.44.46]:32781 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727814AbfG2Q2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:28:29 -0400
-Received: by mail-io1-f66.google.com with SMTP id e20so90951474iob.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:28:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DHVMtSjxHblhx8srqB8OuNrRbChIr9eVS1c++J6kqsE=;
-        b=gUuXkOS07DLB8rjER8sOfxYBZ+PMPgw7mBd1QVP1d65kxP/UIs2709LyQoUtAXNzNv
-         J3MmeaV+fCaVKcet3Un0AFU2HUO+1a2cTxpyEIAX2Enpo3OBBsFYJEU/VV3UeUo1gtNY
-         PoWQUb1d/KjvGocN+bLnYjfV2U3TO9FNzIMJFCwo0FWCLHBa0HuON7k/Akw/dNzZDh7v
-         ZgbjHEAuwJoLqBk1/bezqbp3ewiO8MeMfsuVX2KGfBjzvhLA7X2pDloMS0tRzXJDzZ2B
-         d4wmWv9q46Ypwxs/o5sD+gGYQrbjfeyf0Y84jBWa1dW8MabeWz13NApFWdqFValIBtVl
-         +zJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DHVMtSjxHblhx8srqB8OuNrRbChIr9eVS1c++J6kqsE=;
-        b=HsAFCCLOSjtuTme+fzliIZwW6ANBci4h2liYfAK79DGgfcsxssVE/zL5P6gOdh1MCX
-         03EKw5B4pYeKyJsg29ZOhfmrqmCexczRYfSCSxT7n4JXRhaGGrrwDvchNyo3BdHQ0SxD
-         yWQ9kc+HSx2YSgQURKZneCk4R8BttEEM5UyNKm5dkx2uY9rVgEIiOtW3n3xR3ICwsJOM
-         QLBirBr2h6UXIsexggAU0IwCez2kgvvpAT9IFL8VEDzH6z0Nl7DkwpBTw4f3iQZ3hkuA
-         HH2z/0oGXhS7tgXR3BnLf5YbdwAdGSci74BcPfIU6w7CNCiKN7zEcsJeXdrwKebYQDka
-         l1uQ==
-X-Gm-Message-State: APjAAAVb9O/ULq+uDwvAQ9Chk6o234f0FeISiesKXWPWztMme6gDRjV+
-        SxwBzluPjezKNOpQLsWab7s=
-X-Google-Smtp-Source: APXvYqyskFjQclHZ6gnHk7M17Uzais67Lqu10XVHEYQYCYjkRKzKm2IR24VvJaPj4kAUd4cuQvh/Pg==
-X-Received: by 2002:a02:8814:: with SMTP id r20mr17712166jai.115.1564417708655;
-        Mon, 29 Jul 2019 09:28:28 -0700 (PDT)
-Received: from localhost.localdomain ([162.223.5.124])
-        by smtp.gmail.com with ESMTPSA id l11sm45420026ioj.32.2019.07.29.09.28.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 09:28:27 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     oleg@redhat.com, linux-kernel@vger.kernel.org
-Cc:     akpm@linux-foundation.org, tj@kernel.org, tglx@linutronix.de,
-        prsood@codeaurora.org, avagin@gmail.com,
-        Christian Brauner <christian@brauner.io>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH] exit: make setting exit_state consistent
-Date:   Mon, 29 Jul 2019 18:27:57 +0200
-Message-Id: <20190729162757.22694-1-christian@brauner.io>
-X-Mailer: git-send-email 2.22.0
+        Mon, 29 Jul 2019 12:28:38 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id B58A818224D97;
+        Mon, 29 Jul 2019 16:28:36 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: stove18_681e57aab8a60
+X-Filterd-Recvd-Size: 2302
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 29 Jul 2019 16:28:35 +0000 (UTC)
+Message-ID: <0b6936cb34ca0dcd76b155b9b38366e82b1376f0.camel@perches.com>
+Subject: Re: [Fwd: [PATCH 1/2] string: Add stracpy and stracpy_pad
+ mechanisms]
+From:   Joe Perches <joe@perches.com>
+To:     Julia Lawall <julia.lawall@lip6.fr>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        cocci <cocci@systeme.lip6.fr>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Mon, 29 Jul 2019 09:28:34 -0700
+In-Reply-To: <alpine.DEB.2.21.1907291004220.2686@hadrien>
+References: <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>
+            <66fcdbf607d7d0bea41edb39e5579d63b62b7d84.camel@perches.com>
+            <alpine.DEB.2.21.1907231546090.2551@hadrien>
+            <0f3ba090dfc956f5651e6c7c430abdba94ddcb8b.camel@perches.com>
+         <alpine.DEB.2.21.1907232252260.2539@hadrien>
+            <d5993902fd44ce89915fab94f4db03f5081c3c8e.camel@perches.com>
+            <alpine.DEB.2.21.1907232326360.2539@hadrien>
+            <f909b4b31f123c7d88535db397a04421077ed0ab.camel@perches.com>
+            <563222fbfdbb44daa98078db9d404972@AcuMS.aculab.com>
+         <d2b2b528b9f296dfeb1d92554be024245abd678e.camel@perches.com>
+           <alpine.DEB.2.21.1907242040490.10108@hadrien>
+          <a0e892c3522f4df2991119a2a30cd62ec14c76cc.camel@perches.com>
+          <alpine.DEB.2.21.1907250856450.2555@hadrien>
+         <eaef283741c0a6a718040f99a17bdb9882bde665.camel@perches.com>
+         <alpine.DEB.2.21.1907291004220.2686@hadrien>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit [1] we unconditionally set exit_state to EXIT_ZOMBIE before
-calling into do_notify_parent(). This was done to eliminate a race when
-querying exit_state in do_notify_pidfd().
-Back then we decided to do the absolute minimal thing to fix this and
-not touch the rest of the exit_notify() function where exit_state is
-set.
-Since this fix has not caused any issues change the setting of
-exit_state to EXIT_DEAD in the autoreap case to account for the fact hat
-exit_state is set to EXIT_ZOMBIE unconditionally. This fix was planned
-but also explicitly requested in [2] and makes the whole code more
-consistent.
+On Mon, 2019-07-29 at 10:07 -0400, Julia Lawall wrote:
+> I see that stracpy is now in linux-next.  Would it be reasonable to send
+> patches adding uses now?
 
-/* References */
-[1]: b191d6491be6 ("pidfd: fix a poll race when setting exit_state")
-[2]: https://lore.kernel.org/lkml/CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com
+My preference would be to have:
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
----
- kernel/exit.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+o A provably correct script  If a small subset of
+  possible conversions are skipped, that's fine.
+o As piecemeal patches cause a lot of churn, work
+  for individual maintainers, and also are not
+  universally applied, have that script run
+  kernel-wide after an rc1 and applied all-at-once.
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 4436158a6d30..5b4a5dcce8f8 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -734,9 +734,10 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
- 		autoreap = true;
- 	}
- 
--	tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
--	if (tsk->exit_state == EXIT_DEAD)
-+	if (autoreap) {
-+		tsk->exit_state = EXIT_DEAD;
- 		list_add(&tsk->ptrace_entry, &dead);
-+	}
- 
- 	/* mt-exec, de_thread() is waiting for group leader */
- 	if (unlikely(tsk->signal->notify_count < 0))
--- 
-2.22.0
+
 
