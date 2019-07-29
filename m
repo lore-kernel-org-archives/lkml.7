@@ -2,110 +2,76 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C027C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D82C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D33206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:26:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ig1uEQG2"
+	by mail.kernel.org (Postfix) with ESMTP id 7A666206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387436AbfG2K0Z (ORCPT
+        id S1728204AbfG2K3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:26:25 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35920 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfG2K0Z (ORCPT
+        Mon, 29 Jul 2019 06:29:35 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53678 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728030AbfG2K3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:26:25 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r7so27803597pfl.3;
-        Mon, 29 Jul 2019 03:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=VcI5Q2ZpLHcc17k5AiEkcskGfcvmAnlW8nbveIAcfMs=;
-        b=Ig1uEQG2w/0mpeZQe+ESmJRXBhegqQnZD4UxuXyDRkCKi7daWitBiMoDqMoHExcmXd
-         mTC/ub8DvvLIz2UCTl16BApIZXWPSnXcCMm4+TRdyHgGj1ZNZ3DukfhHNajVO1r7XAeg
-         pGmN4M+7XB6liHUnSIRyI83yFWKRKWP0SghzBSnt3euDTs0J+8X5IBUM2uTB32xD7Lpe
-         LfFvEbo0SgJRSPc54XEhFkF0g0Wy1MK8Wxh9AQ5LJzVszsgpNz2lteYsYSGypedVQvx4
-         S2+K5NanZToi+1T/if4wpF8eGftCvZsTgjvxX3EvcnUIqeiAxia/uWbCzeQ/ZD79KCHA
-         w4+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=VcI5Q2ZpLHcc17k5AiEkcskGfcvmAnlW8nbveIAcfMs=;
-        b=LcO+2p+uAU7OTofTer4MN10BcNByJWWA9LOpXuEdQ7YK3iqcz6R2IoF54jcMa+Lncg
-         7d0BUTyd5GYf8Ru1X1kvDK+V6oIKibhMOTrbv3zV8VOoNsHpFCMl+Su9N4MozL6PUPWi
-         CwHIt/PYCNnSbXzKAWGy+wBmvHMYIfWG1/d+uLGUqCxMIeO8eLKdoV8zfN/EYMBr9yJf
-         HRR4REXWlJ61TwrArZDDWzSqFYUMCEBW3pXbxSnK7xGXhSkMJIskufnbouFNWb8nkuwV
-         FqYGb6X6h4Inw/u2RI8dsZZjREIR/+oEvzFP/V+nbi8zHyb3zDGSKBt4aswzzYoEjaeF
-         kaQQ==
-X-Gm-Message-State: APjAAAW3dwl+p4ZdeULJOTjYln7qakb3JlewLlDrAOTvFOq7Hwc0zRug
-        3XDpaNHl7FcaJ2UG0AsXjDM=
-X-Google-Smtp-Source: APXvYqz3xs6nPpq/kgFOfr3gnJ6RaJd9dm9GfIi8867z/pWOsGB+ekawfPGdjAES1m7qYTHTjVMebw==
-X-Received: by 2002:a63:c1c:: with SMTP id b28mr71431117pgl.354.1564395984612;
-        Mon, 29 Jul 2019 03:26:24 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id i137sm60421203pgc.4.2019.07.29.03.26.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 03:26:24 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     davem@davemloft.net, sbrivio@redhat.com, sd@queasysnail.net,
-        liuhangbin@gmail.com, jbenc@redhat.com, dsahern@gmail.com,
-        natechancellor@gmail.com, tglx@linutronix.de
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] net: geneve: Fix a possible null-pointer dereference in geneve_link_config()
-Date:   Mon, 29 Jul 2019 18:26:11 +0800
-Message-Id: <20190729102611.2338-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Mon, 29 Jul 2019 06:29:35 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hs2uI-0005Fo-C9; Mon, 29 Jul 2019 10:29:30 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drivers: thermal: processor_thermal_device: fix missing bitwise-or operator
+Date:   Mon, 29 Jul 2019 11:29:30 +0100
+Message-Id: <20190729102930.2956-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In geneve_link_config(), there is an if statement on line 1524 to check
-whether rt is NULL:
-    if (rt && rt->dst.dev)
+From: Colin Ian King <colin.king@canonical.com>
 
-When rt is NULL, it is used on line 1526:
-    ip6_rt_put(rt)
-        dst_release(&rt->dst);
+The variable val is having the top 8 bits cleared and then the variable
+is being re-assinged and setting just the top 8 bits.  I believe the
+intention was bitwise-or in the top 8 bits.  Fix this by replacing
+the = operator with |= instead.
 
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, ip6_rt_put(rt) is called when rt is not NULL.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Addresses-Coverity: ("Unused value")
+Fixes: b0c74b08517e ("drivers: thermal: processor_thermal_device: Export sysfs inteface for TCC offset")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/net/geneve.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../thermal/intel/int340x_thermal/processor_thermal_device.c    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
-index cb2ea8facd8d..a47a1b31b166 100644
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -1521,9 +1521,10 @@ static void geneve_link_config(struct net_device *dev,
- 		rt = rt6_lookup(geneve->net, &info->key.u.ipv6.dst, NULL, 0,
- 				NULL, 0);
+diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+index 6f6ac6a8e82d..cb22317911ef 100644
+--- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
++++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+@@ -164,7 +164,7 @@ static int tcc_offset_update(int tcc)
+ 		return err;
  
--		if (rt && rt->dst.dev)
-+		if (rt && rt->dst.dev) {
- 			ldev_mtu = rt->dst.dev->mtu - GENEVE_IPV6_HLEN;
--		ip6_rt_put(rt);
-+			ip6_rt_put(rt);
-+		}
- 		break;
- 	}
- #endif
+ 	val = ~GENMASK_ULL(31, 24);
+-	val = (tcc & 0xff) << 24;
++	val |= (tcc & 0xff) << 24;
+ 
+ 	err = wrmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, val);
+ 	if (err)
 -- 
-2.17.0
+2.20.1
 
