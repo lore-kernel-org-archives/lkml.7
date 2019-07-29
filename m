@@ -7,60 +7,58 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3F2C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81254C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D168E217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4888C206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="4E/5Z2cC"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="1JKAY8QT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbfG2Vfe (ORCPT
+        id S2388668AbfG2VgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:35:34 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41539 "EHLO
+        Mon, 29 Jul 2019 17:36:10 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:46997 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729128AbfG2Vfe (ORCPT
+        with ESMTP id S1729352AbfG2VgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:35:34 -0400
+        Mon, 29 Jul 2019 17:36:09 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6TLZFGx2941488
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6TLZwQd2941528
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 29 Jul 2019 14:35:15 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6TLZFGx2941488
+        Mon, 29 Jul 2019 14:35:58 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6TLZwQd2941528
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564436116;
-        bh=54aFg4SiSUr3cc4BaVDb+2vesbuQTVJoXvqS2ayhL+o=;
+        s=2019071901; t=1564436159;
+        bh=ERBr+GSF9F1z/TN81ajdqUdzxhemesxLDDpDw3y5L5Y=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=4E/5Z2cC6HlnCpD61ggMQQUjeNcIwy7FItBNz2koTIubh95MM7q9rd8ifJkA/oC0l
-         XiS1hu32QkgkDOBilBQ06nb5r/YoCn4K6oXYcGm7DM6C8VsphLUEA4ccMRc/ZY3vmu
-         YydjskD/kDek0xJcwO2+2592KNVs3LqkMQnNTYmia//AdNxxWByCEFTMdmL1cG7AoI
-         9Lp1Fdz5sADjLPVs4RcI6VFs3kpSxBc6kBKRaROQTU8CsEt9oom0s6kDF+K2Tg6HNX
-         PB7ffbxeXAXBXFN3WZduR/5O6yeT7OTVBblGhYH5zs5dfwsmWgiK8KYLVoUdgUTKXI
-         vygBFw1fBH4pg==
+        b=1JKAY8QT+UHeRXnWeLJug4uCOEwdkBr8Jub+WSkRj/OuRsznvrmZVPxenwKgVDOkN
+         CC3sAiDPU4cAhH9ojvZ6iZqystyTuTASJSoJthdp0EduK0/heLrYZdArn79UjOyLQr
+         EMYyon/MslHuYLxQc7r4mPF/UedTu4IvJ1WN147ZT8/L/Nj6F3hjV6GJL64wr3Fstv
+         nTtlN4HkbMxm0gFWEJil5bcd63tCoGvIh6fGx/tcVYYH2GD7v8U6lQeWxybKfO+dbc
+         AgyO+2Uk3Lt6fDhi2GD5Btr90dSQP1AslgaY5PdVcp4d8NJTCt260H1oBWoaQGfjcD
+         q+RibbOGg0kuA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6TLZFau2941483;
-        Mon, 29 Jul 2019 14:35:15 -0700
-Date:   Mon, 29 Jul 2019 14:35:15 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6TLZwAX2941525;
+        Mon, 29 Jul 2019 14:35:58 -0700
+Date:   Mon, 29 Jul 2019 14:35:58 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Numfor Mbiziwo-Tiapo <tipbot@zytor.com>
-Message-ID: <tip-20f9781f491360e7459c589705a2e4b1f136bee9@git.kernel.org>
-Cc:     tglx@linutronix.de, acme@redhat.com, jolsa@redhat.com,
-        linux-kernel@vger.kernel.org, eranian@google.com,
+From:   tip-bot for Vince Weaver <tipbot@zytor.com>
+Message-ID: <tip-2e9a06dda10aea81a17c623f08534dac6735434a@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
         alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        irogers@google.com, nums@google.com, namhyung@kernel.org,
-        songliubraving@fb.com, hpa@zytor.com, mbd@fb.com,
-        peterz@infradead.org
-Reply-To: irogers@google.com, mingo@kernel.org, nums@google.com,
-          songliubraving@fb.com, namhyung@kernel.org, peterz@infradead.org,
-          mbd@fb.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
-          alexander.shishkin@linux.intel.com, eranian@google.com,
-          tglx@linutronix.de, jolsa@redhat.com, acme@redhat.com
-In-Reply-To: <20190724234500.253358-2-nums@google.com>
-References: <20190724234500.253358-2-nums@google.com>
+        jolsa@redhat.com, namhyung@kernel.org, acme@redhat.com,
+        hpa@zytor.com, vincent.weaver@maine.edu, peterz@infradead.org
+Reply-To: hpa@zytor.com, peterz@infradead.org, vincent.weaver@maine.edu,
+          acme@redhat.com, namhyung@kernel.org, jolsa@redhat.com,
+          mingo@kernel.org, alexander.shishkin@linux.intel.com,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de
+In-Reply-To: <alpine.DEB.2.21.1907251155500.22624@macbook-air>
+References: <alpine.DEB.2.21.1907251155500.22624@macbook-air>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf header: Fix use of unitialized value warning
-Git-Commit-ID: 20f9781f491360e7459c589705a2e4b1f136bee9
+Subject: [tip:perf/urgent] perf tools: Fix perf.data documentation units for
+ memory size
+Git-Commit-ID: 2e9a06dda10aea81a17c623f08534dac6735434a
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,69 +72,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  20f9781f491360e7459c589705a2e4b1f136bee9
-Gitweb:     https://git.kernel.org/tip/20f9781f491360e7459c589705a2e4b1f136bee9
-Author:     Numfor Mbiziwo-Tiapo <nums@google.com>
-AuthorDate: Wed, 24 Jul 2019 16:44:58 -0700
+Commit-ID:  2e9a06dda10aea81a17c623f08534dac6735434a
+Gitweb:     https://git.kernel.org/tip/2e9a06dda10aea81a17c623f08534dac6735434a
+Author:     Vince Weaver <vincent.weaver@maine.edu>
+AuthorDate: Thu, 25 Jul 2019 11:57:43 -0400
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 29 Jul 2019 09:03:43 -0300
 
-perf header: Fix use of unitialized value warning
+perf tools: Fix perf.data documentation units for memory size
 
-When building our local version of perf with MSAN (Memory Sanitizer) and
-running the perf record command, MSAN throws a use of uninitialized
-value warning in "tools/perf/util/util.c:333:6".
+The perf.data-file-format documentation incorrectly says the
+HEADER_TOTAL_MEM results are in bytes.  The results are in kilobytes
+(perf reads the value from /proc/meminfo)
 
-This warning stems from the "buf" variable being passed into "write".
-It originated as the variable "ev" with the type union perf_event*
-defined in the "perf_event__synthesize_attr" function in
-"tools/perf/util/header.c".
-
-In the "perf_event__synthesize_attr" function they allocate space with a malloc
-call using ev, then go on to only assign some of the member variables before
-passing "ev" on as a parameter to the "process" function therefore "ev"
-contains uninitialized memory. Changing the malloc call to zalloc to initialize
-all the members of "ev" which gets rid of the warning.
-
-To reproduce this warning, build perf by running:
-make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
- -fsanitize-memory-track-origins"
-
-(Additionally, llvm might have to be installed and clang might have to
-be specified as the compiler - export CC=/usr/bin/clang)
-
-then running:
-tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
- -i - --stdio
-
-Please see the cover letter for why false positive warnings may be
-generated.
-
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Drayton <mbd@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190724234500.253358-2-nums@google.com
+Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907251155500.22624@macbook-air
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 2 +-
+ tools/perf/Documentation/perf.data-file-format.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 47877f0f6667..1903d7ec9797 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3646,7 +3646,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
- 	size += sizeof(struct perf_event_header);
- 	size += ids * sizeof(u64);
+diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+index 5f54feb19977..d030c87ed9f5 100644
+--- a/tools/perf/Documentation/perf.data-file-format.txt
++++ b/tools/perf/Documentation/perf.data-file-format.txt
+@@ -126,7 +126,7 @@ vendor,family,model,stepping. For example: GenuineIntel,6,69,1
  
--	ev = malloc(size);
-+	ev = zalloc(size);
+ 	HEADER_TOTAL_MEM = 10,
  
- 	if (ev == NULL)
- 		return -ENOMEM;
+-An uint64_t with the total memory in bytes.
++An uint64_t with the total memory in kilobytes.
+ 
+ 	HEADER_CMDLINE = 11,
+ 
