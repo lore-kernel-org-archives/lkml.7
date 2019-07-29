@@ -2,496 +2,136 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771CEC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32097C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D72206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0751820651
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:38:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Qeveaz3/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UnnTckmq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387764AbfG2Ldc (ORCPT
+        id S2387739AbfG2Lid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:33:32 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:56161 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387686AbfG2Ldb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:33:31 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45xyHS503Vz9v9Ll;
-        Mon, 29 Jul 2019 13:33:24 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Qeveaz3/; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id jBdoXI_yZ954; Mon, 29 Jul 2019 13:33:24 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45xyHS3nwxz9v9Lb;
-        Mon, 29 Jul 2019 13:33:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1564400004; bh=GOe31H0JRZYq2wwx0qAP/lMZPlBteBpC3GotggPqLCw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Qeveaz3/970AqdqLg+8759K0nHmiPyELo1UPhHrwIiAVpdP9nvqQ0jPSjFLLQVa+R
-         ePP5ew4fhwDe5OJa6f/hF+r9euioKUHSy7vRuFYyPGYyMDw2MCdu05Qmt3vLhZGBBZ
-         E58TqvE3iPp/tkP/1HTJrahBDTCu+xfszAD2gfmg=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 61F6A8B7CE;
-        Mon, 29 Jul 2019 13:33:29 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 8LuengYKVOJa; Mon, 29 Jul 2019 13:33:29 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 17F078B7B3;
-        Mon, 29 Jul 2019 13:33:29 +0200 (CEST)
-Subject: Re: [RFC PATCH 07/10] powerpc/fsl_booke/32: randomize the kernel
- image offset
-To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
-        keescook@chromium.org, kernel-hardening@lists.openwall.com
-Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
-        yebin10@huawei.com, thunder.leizhen@huawei.com,
-        jingxiangfeng@huawei.com, fanchengyang@huawei.com
-References: <20190717080621.40424-1-yanaijie@huawei.com>
- <20190717080621.40424-8-yanaijie@huawei.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <d2ed1821-96a2-d7eb-4c1e-4787c7dd467a@c-s.fr>
-Date:   Mon, 29 Jul 2019 13:33:29 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 07:38:33 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36894 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387626AbfG2Lib (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:38:31 -0400
+Received: by mail-lj1-f196.google.com with SMTP id z28so3998007ljn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 04:38:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Xk5sDImFAW53ku5zPrNSNKzA4D6EyzpMXW4in0cztWM=;
+        b=UnnTckmqXi6dtRJI9TtME6/cOTOcSTuagOIEvn4oN/YeXXjr5tMv5ApU90sSRCjsqx
+         g5/P0yo7sMTWflAbYRhLb7bjzwJskohzcBQdkL82fHU/R1UKJrfOjyn0P1K0qqB9ECdk
+         8IwoGlQyAc80cZy4Z7FZIy9MWsJNwPxOswu/lfTO4iep56sONTC0VlTL6yUAprVJL/xh
+         TB5m9+Rh/larF/cef6tPOz8IzzsSuOvTkYMiBGqMWJzZQV3EGXlN3rz40NtxYVVjFNwI
+         QS42vLzUOOqg1gz/qivvEXjngOePSIfS7ac9GWJ7di18Vu299bueL05K5EQu2IPkeYaO
+         pAnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Xk5sDImFAW53ku5zPrNSNKzA4D6EyzpMXW4in0cztWM=;
+        b=f625m2V9MKbzxebEKf/KasCy02DD5+4c6ar/h6C3tBOjudNUIm0ZXyQ4VkH6u48uzP
+         f3HmcL5inA5Pkvkhkhsf2D7JPx60UfolaHfEYj5QBljVKeOJazrM5GU0dZNCNzwE/qei
+         3XVj9CW7neTXlY3+J1e3+5WHfS33FaDHeJ2YGvmdZhjdGW/E3X+6I41N/BfuXDhdbXwg
+         tvt70d8wS7DDoHO/TEEF8XVrCuCnjZFJGFOn8z0WRIJetnp50xfsZ0IrM40LI32/JLLP
+         zps3M451eLISqfTM1bzaUcwl1kWPrpHrcYa011ykMzJPm8rEvpoFJAeQhi6bIFSBPZ18
+         5fAQ==
+X-Gm-Message-State: APjAAAXwJrGF5TrazWwXRvUaQbFGwq5CJBcJUfqFnzwFDT9O/esTfCCt
+        MBKne9Xp0MKS9ekQdg7i6nA2pg==
+X-Google-Smtp-Source: APXvYqxNUBeruTZFEiy3HdGgth8M3XFHuGw1Wi0lvd8yms4gJBEi00iudCF1A+C/YpnaL5sgIlzSSw==
+X-Received: by 2002:a2e:9e81:: with SMTP id f1mr58208530ljk.29.1564400308785;
+        Mon, 29 Jul 2019 04:38:28 -0700 (PDT)
+Received: from [192.168.28.50] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id v14sm12759730ljh.51.2019.07.29.04.38.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 04:38:28 -0700 (PDT)
+Subject: Re: [PATCH v6 3/4] media: venus: Update to bitrate based clock
+ scaling
+To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org
+References: <1563786452-22188-1-git-send-email-amasule@codeaurora.org>
+ <1563786452-22188-3-git-send-email-amasule@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <cdfde490-8d02-c9a1-5fbd-9ae001692f55@linaro.org>
+Date:   Mon, 29 Jul 2019 14:38:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190717080621.40424-8-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1563786452-22188-3-git-send-email-amasule@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-Le 17/07/2019 à 10:06, Jason Yan a écrit :
-> After we have the basic support of relocate the kernel in some
-> appropriate place, we can start to randomize the offset now.
+On 7/22/19 12:07 PM, Aniket Masule wrote:
+> Introduced clock scaling using bitrate, preavious
+> calculations consider only the cycles per mb.
+> Also, clock scaling is now triggered before every
+> buffer being queued to the device. This helps in
+> deciding precise clock cycles required.
 > 
-> Entropy is derived from the banner and timer, which will change every
-> build and boot. This not so much safe so additionally the bootloader may
-> pass entropy via the /chosen/kaslr-seed node in device tree.
-> 
-> We will use the first 512M of the low memory to randomize the kernel
-> image. The memory will be split in 64M zones. We will use the lower 8
-> bit of the entropy to decide the index of the 64M zone. Then we chose a
-> 16K aligned offset inside the 64M zone to put the kernel in.
-> 
->      KERNELBASE
-> 
->          |-->   64M   <--|
->          |               |
->          +---------------+    +----------------+---------------+
->          |               |....|    |kernel|    |               |
->          +---------------+    +----------------+---------------+
->          |                         |
->          |----->   offset    <-----|
-> 
->                                kimage_vaddr
-> 
-> We also check if we will overlap with some areas like the dtb area, the
-> initrd area or the crashkernel area. If we cannot find a proper area,
-> kaslr will be disabled and boot from the original kernel.
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> Cc: Diana Craciun <diana.craciun@nxp.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
 > ---
->   arch/powerpc/kernel/kaslr_booke.c | 335 +++++++++++++++++++++++++++++-
->   1 file changed, 333 insertions(+), 2 deletions(-)
+>  drivers/media/platform/qcom/venus/helpers.c | 33 +++++++++++++++++++++++++----
+>  1 file changed, 29 insertions(+), 4 deletions(-)
 > 
-> diff --git a/arch/powerpc/kernel/kaslr_booke.c b/arch/powerpc/kernel/kaslr_booke.c
-> index 72d8e9432048..90357f4bd313 100644
-> --- a/arch/powerpc/kernel/kaslr_booke.c
-> +++ b/arch/powerpc/kernel/kaslr_booke.c
-> @@ -22,6 +22,8 @@
->   #include <linux/delay.h>
->   #include <linux/highmem.h>
->   #include <linux/memblock.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/crash_core.h>
->   #include <asm/pgalloc.h>
->   #include <asm/prom.h>
->   #include <asm/io.h>
-> @@ -33,15 +35,342 @@
->   #include <asm/machdep.h>
->   #include <asm/setup.h>
->   #include <asm/paca.h>
-> +#include <asm/kdump.h>
->   #include <mm/mmu_decl.h>
-> +#include <generated/compile.h>
-> +#include <generated/utsrelease.h>
-> +
-> +#ifdef DEBUG
-> +#define DBG(fmt...) printk(KERN_ERR fmt)
-> +#else
-> +#define DBG(fmt...)
-> +#endif
-> +
-> +struct regions {
-> +	unsigned long pa_start;
-> +	unsigned long pa_end;
-> +	unsigned long kernel_size;
-> +	unsigned long dtb_start;
-> +	unsigned long dtb_end;
-> +	unsigned long initrd_start;
-> +	unsigned long initrd_end;
-> +	unsigned long crash_start;
-> +	unsigned long crash_end;
-> +	int reserved_mem;
-> +	int reserved_mem_addr_cells;
-> +	int reserved_mem_size_cells;
-> +};
->   
->   extern int is_second_reloc;
->   
-> +/* Simplified build-specific string for starting entropy. */
-> +static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
-> +		LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
-> +static char __initdata early_command_line[COMMAND_LINE_SIZE];
-> +
-> +static __init void kaslr_get_cmdline(void *fdt)
-> +{
-> +	const char *cmdline = CONFIG_CMDLINE;
-> +	if (!IS_ENABLED(CONFIG_CMDLINE_FORCE)) {
-> +		int node;
-> +		const u8 *prop;
-> +		node = fdt_path_offset(fdt, "/chosen");
-> +		if (node < 0)
-> +			goto out;
-> +
-> +		prop = fdt_getprop(fdt, node, "bootargs", NULL);
-> +		if (!prop)
-> +			goto out;
-> +		cmdline = prop;
-> +	}
-> +out:
-> +	strscpy(early_command_line, cmdline, COMMAND_LINE_SIZE);
-> +}
-> +
+> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+> index 2c976e4..edf403d 100644
+> --- a/drivers/media/platform/qcom/venus/helpers.c
+> +++ b/drivers/media/platform/qcom/venus/helpers.c
+> @@ -399,17 +399,26 @@ static int scale_clocks(struct venus_inst *inst)
+>  	return ret;
+>  }
+>  
+> -static unsigned long calculate_vpp_freq(struct venus_inst *inst)
+> +static unsigned long calculate_inst_freq(struct venus_inst *inst,
+> +					 unsigned long filled_len)
+>  {
+> -	unsigned long vpp_freq = 0;
+> +	unsigned long vpp_freq = 0, vsp_freq = 0;
+> +	u64 fps = inst->fps;
+>  	u32 mbs_per_sec;
+>  
+>  	mbs_per_sec = load_per_instance(inst);
+>  	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
+>  	/* 21 / 20 is overhead factor */
+>  	vpp_freq += vpp_freq / 20;
+> +	vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vsp_freq;
+>  
+> -	return vpp_freq;
+> +	/* 10 / 7 is overhead factor */
+> +	if (inst->session_type == VIDC_SESSION_TYPE_ENC)
+> +		vsp_freq += (inst->controls.enc.bitrate * 10) / 7;
+> +	else
+> +		vsp_freq += ((fps * filled_len * 8) * 10) / 7;
 
-Can you explain why we need that and can't use the already existing 
-cmdline stuff ?
+load_per_instance() already taken into account fps, thus I think fps
+should be excluded from calculation.
 
-Christophe
+> +
+> +	return max(vpp_freq, vsp_freq);
+>  }
+>  
 
-> +static unsigned long __init rotate_xor(unsigned long hash, const void *area,
-> +				size_t size)
-> +{
-> +	size_t i;
-> +	unsigned long *ptr = (unsigned long *)area;
-> +
-> +	for (i = 0; i < size / sizeof(hash); i++) {
-> +		/* Rotate by odd number of bits and XOR. */
-> +		hash = (hash << ((sizeof(hash) * 8) - 7)) | (hash >> 7);
-> +		hash ^= ptr[i];
-> +	}
-> +
-> +	return hash;
-> +}
-> +
-> +/* Attempt to create a simple but unpredictable starting entropy. */
-> +static unsigned long __init get_boot_seed(void *fdt)
-> +{
-> +	unsigned long hash = 0;
-> +
-> +	hash = rotate_xor(hash, build_str, sizeof(build_str));
-> +	hash = rotate_xor(hash, fdt, fdt_totalsize(fdt));
-> +
-> +	return hash;
-> +}
-> +
-> +static __init u64 get_kaslr_seed(void *fdt)
-> +{
-> +	int node, len;
-> +	fdt64_t *prop;
-> +	u64 ret;
-> +
-> +	node = fdt_path_offset(fdt, "/chosen");
-> +	if (node < 0)
-> +		return 0;
-> +
-> +	prop = fdt_getprop_w(fdt, node, "kaslr-seed", &len);
-> +	if (!prop || len != sizeof(u64))
-> +		return 0;
-> +
-> +	ret = fdt64_to_cpu(*prop);
-> +	*prop = 0;
-> +	return ret;
-> +}
-> +
-> +static __init bool regions_overlap(u32 s1, u32 e1, u32 s2, u32 e2)
-> +{
-> +	return e1 >= s2 && e2 >= s1;
-> +}
-> +
-> +static __init bool overlaps_reserved_region(const void *fdt, u32 start,
-> +				       u32 end, struct regions *regions)
-> +{
-> +	int subnode, len, i;
-> +	u64 base, size;
-> +
-> +	/* check for overlap with /memreserve/ entries */
-> +	for (i = 0; i < fdt_num_mem_rsv(fdt); i++) {
-> +		if (fdt_get_mem_rsv(fdt, i, &base, &size) < 0)
-> +			continue;
-> +		if (regions_overlap(start, end, base, base + size))
-> +			return true;
-> +	}
-> +
-> +	if (regions->reserved_mem < 0)
-> +		return false;
-> +
-> +	/* check for overlap with static reservations in /reserved-memory */
-> +	for (subnode = fdt_first_subnode(fdt, regions->reserved_mem);
-> +	     subnode >= 0;
-> +	     subnode = fdt_next_subnode(fdt, subnode)) {
-> +		const fdt32_t *reg;
-> +		u64 rsv_end;
-> +
-> +		len = 0;
-> +		reg = fdt_getprop(fdt, subnode, "reg", &len);
-> +		while (len >= (regions->reserved_mem_addr_cells +
-> +			       regions->reserved_mem_size_cells)) {
-> +			base = fdt32_to_cpu(reg[0]);
-> +			if (regions->reserved_mem_addr_cells == 2)
-> +				base = (base << 32) | fdt32_to_cpu(reg[1]);
-> +
-> +			reg += regions->reserved_mem_addr_cells;
-> +			len -= 4 * regions->reserved_mem_addr_cells;
-> +
-> +			size = fdt32_to_cpu(reg[0]);
-> +			if (regions->reserved_mem_size_cells == 2)
-> +				size = (size << 32) | fdt32_to_cpu(reg[1]);
-> +
-> +			reg += regions->reserved_mem_size_cells;
-> +			len -= 4 * regions->reserved_mem_size_cells;
-> +
-> +			if (base >= regions->pa_end)
-> +				continue;
-> +
-> +			rsv_end = min(base + size, (u64)U32_MAX);
-> +
-> +			if (regions_overlap(start, end, base, rsv_end))
-> +				return true;
-> +		}
-> +	}
-> +	return false;
-> +}
-> +
-> +static __init bool overlaps_region(const void *fdt, u32 start,
-> +				       u32 end, struct regions *regions)
-> +{
-> +	if (regions_overlap(start, end, regions->dtb_start,
-> +			      regions->dtb_end))
-> +		return true;
-> +
-> +	if (regions_overlap(start, end, regions->initrd_start,
-> +			      regions->initrd_end))
-> +		return true;
-> +
-> +	if (regions_overlap(start, end, regions->crash_start,
-> +			      regions->crash_end))
-> +		return true;
-> +
-> +	return overlaps_reserved_region(fdt, start, end, regions);
-> +}
-> +
-> +static void __init get_crash_kernel(void *fdt, unsigned long size,
-> +				struct regions *regions)
-> +{
-> +#ifdef CONFIG_KEXEC_CORE
-> +	unsigned long long crash_size, crash_base;
-> +	int ret;
-> +
-> +	ret = parse_crashkernel(early_command_line, size, &crash_size,
-> +			&crash_base);
-> +	if (ret != 0 || crash_size == 0)
-> +		return;
-> +	if (crash_base == 0)
-> +		crash_base = KDUMP_KERNELBASE;
-> +
-> +	regions->crash_start = (unsigned long)crash_base;
-> +	regions->crash_end = (unsigned long)(crash_base + crash_size);
-> +
-> +	DBG("crash_base=0x%llx crash_size=0x%llx\n", crash_base, crash_size);
-> +#endif
-> +}
-> +
-> +static void __init get_initrd_range(void *fdt, struct regions *regions)
-> +{
-> +	u64 start, end;
-> +	int node, len;
-> +	const __be32 *prop;
-> +
-> +	node = fdt_path_offset(fdt, "/chosen");
-> +	if (node < 0)
-> +		return;
-> +
-> +	prop = fdt_getprop(fdt, node, "linux,initrd-start", &len);
-> +	if (!prop)
-> +		return;
-> +	start = of_read_number(prop, len / 4);
-> +
-> +	prop = fdt_getprop(fdt, node, "linux,initrd-end", &len);
-> +	if (!prop)
-> +		return;
-> +	end = of_read_number(prop, len / 4);
-> +
-> +	regions->initrd_start = (unsigned long)start;
-> +	regions->initrd_end = (unsigned long)end;
-> +
-> +	DBG("initrd_start=0x%llx  initrd_end=0x%llx\n", start, end);
-> +}
-> +
-> +static __init unsigned long get_usable_offset(const void *fdt, struct regions *regions,
-> +				unsigned long start)
-> +{
-> +	unsigned long pa;
-> +	unsigned long pa_end;
-> +
-> +	for (pa = start; pa > regions->pa_start; pa -= SZ_16K) {
-> +		pa_end = pa + regions->kernel_size;
-> +		if (overlaps_region(fdt, pa, pa_end, regions))
-> +			continue;
-> +
-> +		return pa;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static __init void get_cell_sizes(const void *fdt, int node, int *addr_cells,
-> +			   int *size_cells)
-> +{
-> +	const int *prop;
-> +	int len;
-> +
-> +	/*
-> +	 * Retrieve the #address-cells and #size-cells properties
-> +	 * from the 'node', or use the default if not provided.
-> +	 */
-> +	*addr_cells = *size_cells = 1;
-> +
-> +	prop = fdt_getprop(fdt, node, "#address-cells", &len);
-> +	if (len == 4)
-> +		*addr_cells = fdt32_to_cpu(*prop);
-> +	prop = fdt_getprop(fdt, node, "#size-cells", &len);
-> +	if (len == 4)
-> +		*size_cells = fdt32_to_cpu(*prop);
-> +}
-> +
->   static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size,
->   					unsigned long kernel_sz)
->   {
-> -	/* return a fixed offset of 64M for now */
-> -	return 0x4000000;
-> +	unsigned long offset, random;
-> +	unsigned long ram, linear_sz;
-> +	unsigned long kaslr_offset;
-> +	u64 seed;
-> +	struct regions regions;
-> +	unsigned long index;
-> +
-> +	random = get_boot_seed(dt_ptr);
-> +
-> +	seed = get_tb() << 32;
-> +	seed ^= get_tb();
-> +	random = rotate_xor(random, &seed, sizeof(seed));
-> +
-> +	/*
-> +	 * Retrieve (and wipe) the seed from the FDT
-> +	 */
-> +	seed = get_kaslr_seed(dt_ptr);
-> +	if (seed)
-> +		random = rotate_xor(random, &seed, sizeof(seed));
-> +
-> +	ram = min((phys_addr_t)__max_low_memory, size);
-> +	ram = map_mem_in_cams(ram, CONFIG_LOWMEM_CAM_NUM, true);
-> +	linear_sz = min(ram, (unsigned long)SZ_512M);
-> +
-> +	/* If the linear size is smaller than 64M, do not randmize */
-> +	if (linear_sz < SZ_64M)
-> +		return 0;
-> +
-> +	memset(&regions, 0, sizeof(regions));
-> +
-> +	/* check for a reserved-memory node and record its cell sizes */
-> +	regions.reserved_mem = fdt_path_offset(dt_ptr, "/reserved-memory");
-> +	if (regions.reserved_mem >= 0)
-> +		get_cell_sizes(dt_ptr, regions.reserved_mem,
-> +			       &regions.reserved_mem_addr_cells,
-> +			       &regions.reserved_mem_size_cells);
-> +
-> +	regions.pa_start = 0;
-> +	regions.pa_end = linear_sz;
-> +	regions.dtb_start = __pa(dt_ptr);
-> +	regions.dtb_end = __pa(dt_ptr) + fdt_totalsize(dt_ptr);
-> +	regions.kernel_size = kernel_sz;
-> +
-> +	get_initrd_range(dt_ptr, &regions);
-> +	get_crash_kernel(dt_ptr, ram, &regions);
-> +
-> +	/*
-> +	 * Decide which 64M we want to start
-> +	 * Only use the low 8 bits of the random seed
-> +	 */
-> +	index = random & 0xFF;
-> +	index %= linear_sz / SZ_64M;
-> +
-> +	/* Decide offset inside 64M */
-> +	if (index == 0) {
-> +		offset = random % (SZ_64M - round_up(kernel_sz, SZ_16K) * 2);
-> +		offset += round_up(kernel_sz, SZ_16K);
-> +		offset = round_up(offset, SZ_16K);
-> +	} else {
-> +		offset = random % (SZ_64M - kernel_sz);
-> +		offset = round_down(offset, SZ_16K);
-> +	}
-> +
-> +	while (index >= 0) {
-> +		offset = offset + index * SZ_64M;
-> +		kaslr_offset = get_usable_offset(dt_ptr, &regions, offset);
-> +		if (kaslr_offset)
-> +			break;
-> +		index--;
-> +	}
-> +
-> +	/* Did not find any usable region? Give up randomize */
-> +	if (index < 0)
-> +		kaslr_offset = 0;
-> +
-> +	return kaslr_offset;
->   }
->   
->   /*
-> @@ -58,6 +387,8 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
->   
->   	kernel_sz = (unsigned long)_end - KERNELBASE;
->   
-> +	kaslr_get_cmdline(dt_ptr);
-> +
->   	offset = kaslr_choose_location(dt_ptr, size, kernel_sz);
->   
->   	if (offset == 0)
-> 
+
+-- 
+regards,
+Stan
