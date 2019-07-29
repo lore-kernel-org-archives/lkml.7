@@ -2,112 +2,86 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC312C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9741FC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9050320578
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D836216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ofkFLjPo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e9qnk018"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfG2Oju (ORCPT
+        id S1728589AbfG2Okj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:39:50 -0400
-Received: from mail-yb1-f201.google.com ([209.85.219.201]:49328 "EHLO
-        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfG2Oju (ORCPT
+        Mon, 29 Jul 2019 10:40:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51746 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfG2Oki (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:39:50 -0400
-Received: by mail-yb1-f201.google.com with SMTP id f126so46463098ybg.16
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 07:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=5wtApmPqdujWjA9F4SYVODjwHiZTI/wDFkD9zKi6pFM=;
-        b=ofkFLjPoP7nFpdRGV+qW9OhBErrvHHRYeOVQr58xxhBgStMW+scR3huS5gAZiPa2hJ
-         r6EaqtALeWg3VLm81AskV8f/pmFYO7fygpsIiMNN53D0mASwh9u6Od+D2lJTMzvplQp8
-         iMvLZofnEoY5RoHrBUhp9fD0SdOXBDO8kX6CLc0TccsWkpqFuhDznKmB9rWgDYV5gsrb
-         YPY01Fw9ml9MAaYDVTeGfe9cQTRzHiG6ADo9fDDq/pttzoBCmf3bsqNHBoiFslw9C8Oc
-         DwCSDVcoulNkXbQyTsGzL8f01aBF13L+m4K84+HzjAzNqaXaMw7Ww1sL8oO2uCJSIfqf
-         4udg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=5wtApmPqdujWjA9F4SYVODjwHiZTI/wDFkD9zKi6pFM=;
-        b=IX0EpKjtXUZzjWjWPm3OH4nl7izniO42mLXWW5UiM2l9cXQMBfM+d1iT0kwdrNo9go
-         Jw0aANPxsMi8ckC9kB2D/cfxz1oj4UZOM5/sn8/s1TaJ5jzG9YTyT/YGLJbNjk6QN8Yf
-         QsiSkkRxgWnEsgDU/4aiRvwF39R4pv+tRkKGsjRFOPfjae83KCG5F7p9DYyQMepeuFtS
-         5DVLQOAAIGbrhL6O2lLzuPMve9qUknpx8qmU0IM+3QKixOwEVpX0SpW8fabtCB2DcBe6
-         +L9RMHdtpWQjTtrHWzm3nCELxs4s60xR1gItQTdjWmy+KsmrLbMw6zy0VCQ+UabcYbnN
-         UB7g==
-X-Gm-Message-State: APjAAAUNNOTFyBjRp7biAU83UjTpaZOIudzT4qyAlsrwKSnhsi14BIf1
-        euEm+O6w+xyhDQVYe2n1Q0fFu7lxroBE
-X-Google-Smtp-Source: APXvYqx+5ObrcXnvgSADglQTDx7O8U1bocpyXSBm3dER6/s6Lklsk5z5tObeYTICuQqdH82AeBE6Fumyzbtc
-X-Received: by 2002:a25:9305:: with SMTP id f5mr59313976ybo.520.1564411189075;
- Mon, 29 Jul 2019 07:39:49 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 22:39:32 +0800
-Message-Id: <20190729143932.167915-1-tzungbi@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v3] platform/chrome: cros_ec_trace: update generating script
-From:   Tzung-Bi Shih <tzungbi@google.com>
-To:     bleung@chromium.org, enric.balletbo@collabora.com,
-        groeck@chromium.org
-Cc:     linux-kernel@vger.kernel.org, cychiang@google.com,
-        dgreid@google.com, tzungbi@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 29 Jul 2019 10:40:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FYNwer5O4SIKv9en8AjVTkT4U2QOeVJ1BOl6QlGXUIw=; b=e9qnk018gQZbcpCtHTD/UzOlI
+        UgHjs7V5dJQqfd650YEyLfq0RphEwCrZDJ0szt/NiNGUlLPzq+bfNoFCkkiOaDHp32w1kSnUEZ0Mr
+        S3gPHjwv5PCnLRRBicTOg8kfobIYYq/ENXnUpzJMlIS4n85tWkT0UotMQjM6udXYU3Skr7C9QmSCV
+        hYPJQzGZ9pFXoq2F6yQ33GdADAerY898aBxWI1kd+rS3xoupPd9bT9x3OxCa8uKGK9fpBoCT5ThWA
+        LXbLDP+CfLyMeuvTsxlwW+eHXqxi76eQP/mPNmv9SfvtTNaAg52YyD4wa8qehVKLq6VqiYZq8ihp1
+        oO5slJG9A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hs6p9-0002sm-4f; Mon, 29 Jul 2019 14:40:27 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 43D3F20AF2C00; Mon, 29 Jul 2019 16:40:25 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 16:40:25 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
+        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
+        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
+Subject: Re: [RFC][PATCH 04/13] sched/{rt,deadline}: Fix set_next_task vs
+ pick_next_task
+Message-ID: <20190729144025.GD31381@hirez.programming.kicks-ass.net>
+References: <20190726145409.947503076@infradead.org>
+ <20190726161357.579899041@infradead.org>
+ <20190729092519.GR25636@localhost.localdomain>
+ <20190729111510.GD31398@hirez.programming.kicks-ass.net>
+ <20190729112702.GA8927@localhost.localdomain>
+ <20190729130438.GE31398@hirez.programming.kicks-ass.net>
+ <20190729131701.GB8927@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729131701.GB8927@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To remove ", \" from the last line.
+On Mon, Jul 29, 2019 at 03:17:01PM +0200, Juri Lelli wrote:
+> On 29/07/19 15:04, Peter Zijlstra wrote:
 
-Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
----
-Changes from v1:
-- simpler awk code
-Changes from v2:
-- use c style comments instead of c++ style
-- use '@' delimiter in sed instead of '/' to avoid unintentional end of
-  comment "*/"
+> > Now, looking at it, this also doesn't do push balancing when we
+> > re-select the same task, even though we really should be doing it. So I
+> > suppose not adding the condition, and always doing the push balance,
+> > while wasteful, is not wrong.
+> 
+> Right, also because deadline_queue_push_tasks() already checks if there
+> are tasks to potentially push around before queuing the balance
+> callback.
 
- drivers/platform/chrome/cros_ec_trace.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+Yes, but in the overloaded case, where there is always a task to push,
+but nowhere to push it to, we can waste a 'lot' of time looking for
+naught in case of extra pushes.
 
-diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/chrome/cros_ec_trace.c
-index 0a76412095a9..f6034b774f9a 100644
---- a/drivers/platform/chrome/cros_ec_trace.c
-+++ b/drivers/platform/chrome/cros_ec_trace.c
-@@ -5,8 +5,21 @@
- 
- #define TRACE_SYMBOL(a) {a, #a}
- 
--// Generate the list using the following script:
--// sed -n 's/^#define \(EC_CMD_[[:alnum:]_]*\)\s.*/\tTRACE_SYMBOL(\1), \\/p' include/linux/mfd/cros_ec_commands.h
-+/*
-+ * Generate the list using the following script:
-+ * sed -n 's@^#define \(EC_CMD_[[:alnum:]_]*\)\s.*@\tTRACE_SYMBOL(\1), \\@p' \
-+ * include/linux/mfd/cros_ec_commands.h | awk '
-+ * {
-+ *   if (NR != 1)
-+ *     print buf;
-+ *   buf = $0;
-+ * }
-+ * END {
-+ *   gsub(/, \\/, "", buf);
-+ *   print buf;
-+ * }
-+ * '
-+ */
- #define EC_CMDS \
- 	TRACE_SYMBOL(EC_CMD_PROTO_VERSION), \
- 	TRACE_SYMBOL(EC_CMD_HELLO), \
--- 
-2.22.0.709.g102302147b-goog
+So in that regard the check you reference is not sufficient.
 
+Anyway, let me change this for now.
