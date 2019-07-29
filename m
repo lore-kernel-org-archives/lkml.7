@@ -2,165 +2,109 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D35C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281C1C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919F32070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04F22070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:08:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DHLEfAhP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbfG2OIp (ORCPT
+        id S1728585AbfG2OIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jul 2019 10:08:48 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:51348 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728391AbfG2OIp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 10:08:45 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3235 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727569AbfG2OIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:08:45 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 708E9D28CD4E0EF9094B;
-        Mon, 29 Jul 2019 22:08:41 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
- 22:08:32 +0800
-Subject: Re: [RFC PATCH 10/10] powerpc/fsl_booke/kaslr: dump out kernel offset
- information on panic
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>
-References: <20190717080621.40424-1-yanaijie@huawei.com>
- <20190717080621.40424-11-yanaijie@huawei.com>
- <d10db1e3-6bc4-eaa4-d68e-b7343e35b55f@c-s.fr>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <599f9ff9-9799-b57e-4c88-cf9c60b94a46@huawei.com>
-Date:   Mon, 29 Jul 2019 22:08:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x6TE8XuF013627;
+        Mon, 29 Jul 2019 23:08:33 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6TE8XuF013627
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564409314;
+        bh=uSPQx/lOeIWy3VSnjzeRdBwGgXuOHDLD+EQgSpgUB+Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DHLEfAhPo6fyvFS/z/p2S642b0+jDXKEd//M2loX+Hjh9ZIkssKftTmqCQzzpEb1v
+         V+0gKA9uAW+2Fo3GQ7vJaV3hMNwKki9SFpvZRrsOwvguJt+7M7slgVFQR1E+t3aqrJ
+         3fJgS33rRwcnA/amwMcbbDS6hcibUcBDTqViHt1BraEKmC00yHqKSYiG0nmikqjP8o
+         O9GrmyIvuRUmlmofCjbHkBsugKBiDsf8H32gpbvbuZTsbiXWV+rfszZR7HdpOonbhE
+         BkdlYNxH2TY9Crr5xZvwuJnSpV9F9kYG9Ssy5P3RH0Fes+6vd7Z7pCklCbtiS7Mve6
+         ayU0f4Zv7H/Nw==
+X-Nifty-SrcIP: [209.85.221.177]
+Received: by mail-vk1-f177.google.com with SMTP id b64so11976993vke.13;
+        Mon, 29 Jul 2019 07:08:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAWcqPWChJKILf5dv4D7fbh115EHMIPWeKdbo+xRxlfy7n/R9AeI
+        b/JEZpkL5E5DykZaKrMonvz/MCLXr7tq2nlCHR8=
+X-Google-Smtp-Source: APXvYqwczpnrvR30MjqU1/slK/sm/xbhh0ihUQ9ff7momkusfqIbyZmm2cVmkjBbhhbW9HmVE//A01oYj0B+5GpQ9q4=
+X-Received: by 2002:a1f:b0b:: with SMTP id 11mr40548573vkl.64.1564409312295;
+ Mon, 29 Jul 2019 07:08:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d10db1e3-6bc4-eaa4-d68e-b7343e35b55f@c-s.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+References: <20190728155138.29803-1-yamada.masahiro@socionext.com> <20190729131528.4vl6zpyyoyqd7np6@salvia>
+In-Reply-To: <20190729131528.4vl6zpyyoyqd7np6@salvia>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 29 Jul 2019 23:07:56 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS4zC0=Ptf2_ux6d=kXhWELeaV_tp6+ZBaD-oDKdCEfrA@mail.gmail.com>
+Message-ID: <CAK7LNAS4zC0=Ptf2_ux6d=kXhWELeaV_tp6+ZBaD-oDKdCEfrA@mail.gmail.com>
+Subject: Re: [PATCH] netfilter: add include guard to xt_connlabel.h
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Netfilter Development Mailing list 
+        <netfilter-devel@vger.kernel.org>, coreteam@netfilter.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 29, 2019 at 10:15 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+>
+> On Mon, Jul 29, 2019 at 12:51:38AM +0900, Masahiro Yamada wrote:
+> > Add a header include guard just in case.
+>
+> Applied to nf.git, thanks.
+>
+> BTW, is the _UAPI_ prefix really needed? I can see netfilter headers
+> under include/uapi/ sometimes are prefixed by UAPI and sometimes not.
 
-On 2019/7/29 19:43, Christophe Leroy wrote:
-> 
-> 
-> Le 17/07/2019 à 10:06, Jason Yan a écrit :
->> When kaslr is enabled, the kernel offset is different for every boot.
->> This brings some difficult to debug the kernel. Dump out the kernel
->> offset when panic so that we can easily debug the kernel.
->>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> Cc: Diana Craciun <diana.craciun@nxp.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Kees Cook <keescook@chromium.org>
->> ---
->>   arch/powerpc/include/asm/page.h     |  5 +++++
->>   arch/powerpc/kernel/machine_kexec.c |  1 +
->>   arch/powerpc/kernel/setup-common.c  | 23 +++++++++++++++++++++++
->>   3 files changed, 29 insertions(+)
->>
->> diff --git a/arch/powerpc/include/asm/page.h 
->> b/arch/powerpc/include/asm/page.h
->> index 60a68d3a54b1..cd3ac530e58d 100644
->> --- a/arch/powerpc/include/asm/page.h
->> +++ b/arch/powerpc/include/asm/page.h
->> @@ -317,6 +317,11 @@ struct vm_area_struct;
->>   extern unsigned long kimage_vaddr;
->> +static inline unsigned long kaslr_offset(void)
->> +{
->> +    return kimage_vaddr - KERNELBASE;
->> +}
->> +
->>   #include <asm-generic/memory_model.h>
->>   #endif /* __ASSEMBLY__ */
->>   #include <asm/slice.h>
->> diff --git a/arch/powerpc/kernel/machine_kexec.c 
->> b/arch/powerpc/kernel/machine_kexec.c
->> index c4ed328a7b96..078fe3d76feb 100644
->> --- a/arch/powerpc/kernel/machine_kexec.c
->> +++ b/arch/powerpc/kernel/machine_kexec.c
->> @@ -86,6 +86,7 @@ void arch_crash_save_vmcoreinfo(void)
->>       VMCOREINFO_STRUCT_SIZE(mmu_psize_def);
->>       VMCOREINFO_OFFSET(mmu_psize_def, shift);
->>   #endif
->> +    vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
->>   }
->>   /*
->> diff --git a/arch/powerpc/kernel/setup-common.c 
->> b/arch/powerpc/kernel/setup-common.c
->> index 1f8db666468d..49e540c0adeb 100644
->> --- a/arch/powerpc/kernel/setup-common.c
->> +++ b/arch/powerpc/kernel/setup-common.c
->> @@ -715,12 +715,35 @@ static struct notifier_block ppc_panic_block = {
->>       .priority = INT_MIN /* may not return; must be done last */
->>   };
->> +/*
->> + * Dump out kernel offset information on panic.
->> + */
->> +static int dump_kernel_offset(struct notifier_block *self, unsigned 
->> long v,
->> +                  void *p)
->> +{
->> +    const unsigned long offset = kaslr_offset();
->> +
->> +    if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && offset > 0)
->> +        pr_emerg("Kernel Offset: 0x%lx from 0x%lx\n",
->> +             offset, KERNELBASE);
->> +    else
->> +        pr_emerg("Kernel Offset: disabled\n");
-> 
-> Do we really need that else branch ?
-> 
-> Why not just make the below atomic_notifier_chain_register() 
-> conditionnal to IS_ENABLED(CONFIG_RANDOMIZE_BASE) && offset > 0
-> and not print anything otherwise ?
-> 
 
-I'm trying to keep the same fashion as x86/arm64 do. But I agree
-with you that it's simpler to not print anything else if not randomized.
+The _UAPI prefix will be useful when you happen to
+add the corresponding kernel-space header
+since it is often the case to have the same name headers
+for kernel-space and uapi.
 
-> Christophe
-> 
->> +
->> +    return 0;
->> +}
->> +
->> +static struct notifier_block kernel_offset_notifier = {
->> +    .notifier_call = dump_kernel_offset
->> +};
->> +
->>   void __init setup_panic(void)
->>   {
->>       /* PPC64 always does a hard irq disable in its panic handler */
->>       if (!IS_ENABLED(CONFIG_PPC64) && !ppc_md.panic)
->>           return;
->>       atomic_notifier_chain_register(&panic_notifier_list, 
->> &ppc_panic_block);
->> +    atomic_notifier_chain_register(&panic_notifier_list,
->> +                       &kernel_offset_notifier);
->>   }
->>   #ifdef CONFIG_CHECK_CACHE_COHERENCY
->>
-> 
-> .
-> 
 
+
+For example, compare the include guards of the following.
+
+include/linux/kernel.h
+include/uapi/linux/kernel.h
+
+
+Or, if you want to see an example for netfilter,
+
+include/linux/netfilter/xt_hashlimit.h
+include/uapi/linux/netfilter/xt_hashlimit.h
+
+
+
+I recommend to add _UAPI prefix to headers
+under include/uapi/
+to avoid include guard conflict.
+
+The _UAPI prefix is ripped off by
+scripts/headers_install.sh
+when exported to user-space.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
