@@ -2,158 +2,129 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C47DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A069AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C30C2064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430953;
-	bh=LCyK2eokxpU5MSXIvt5PbkB4klob3f7E14ACJLAaUuE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u3tRmwBNPfIKtIEjCAMcFHNqh6csBrvLMC7Ur97XRr+TxkNwmvD29wSy2ZGgRmt/5
-	 +XWXXfUeItRogACmWRzdOYQ0AOQK2TwFsgz4Hw/T87fPuezo+JRRBgYF91ASw5xsAL
-	 FuoPMYcSEh3GRsOts/6bgNW55lC7Re5bPTpW2m/Q=
+	by mail.kernel.org (Postfix) with ESMTP id 6ECBE2064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:09:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itX+Ylve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbfG2UJM (ORCPT
+        id S1730381AbfG2UJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388246AbfG2ThK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:37:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33FF320C01;
-        Mon, 29 Jul 2019 19:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429029;
-        bh=LCyK2eokxpU5MSXIvt5PbkB4klob3f7E14ACJLAaUuE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r1JaKua3Kf0fsAgBed6/hLcAzXxAuwSNvwFOSu6FZU6wB9iWf4NJ6b+h/Em24dqlp
-         7AB+LZ3htZBP7GZytdut8mN3VjsJoia4UbTNlETVH7MHEAOWT7Zwf5TkctQmIHbr+A
-         CE+8h/fJNy2r487YbLX+88VumpfiGuWpXdIv8LZU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Song Liu <songliubraving@fb.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 261/293] perf session: Fix potential NULL pointer dereference found by the smatch tool
-Date:   Mon, 29 Jul 2019 21:22:32 +0200
-Message-Id: <20190729190844.400943737@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
-References: <20190729190820.321094988@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 29 Jul 2019 16:09:16 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44242 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730188AbfG2UJP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 16:09:15 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i18so28790764pgl.11;
+        Mon, 29 Jul 2019 13:09:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:user-agent:mime-version;
+        bh=fBfBw2wkhiVUlzKRrybQChsuOJLRt+8izpDdk9CY/Nw=;
+        b=itX+YlvedKY4fzRJQgV8KR91wHxBTELBREIy6gRJ1SnVaGf8KOzDxp/Mo1UCKVNbYn
+         YmeEEpb++7Xb2MmG4WBZv35xHPGgtC954vfVzAkjAnJsDyVbGwKlx4TaA7lsaGEIVU7t
+         mJzeA9NIXmlBC3Nhndc4sqUhCFAxDU/ZNCrLnXRJM334siKWj9Z/gJmCNP/kgKmteM6v
+         9fqrTApA0o/HsMAVxEngZ5+FEWG2EGEc0hxGKq8mIlV2CYCdY0moT0dPJgvX5uPBFa2c
+         g9tllaQTKnK/uJMj1bZbI9CN0sypo/DOoeduDUXnsA1X1rru6bo1lLIGBHlkHJYrR7yz
+         6nyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=fBfBw2wkhiVUlzKRrybQChsuOJLRt+8izpDdk9CY/Nw=;
+        b=gA/6KCOZlk/luGsmhEcbtJ0hCmTOKyY8M25oKIxNCunRHR/HZhVMxnuUMymCFyqb4D
+         Q2tks60iOWTtoGpyEA2fPKjDWZrWalRsDfPAYy7E2eBx1bObiOVnqosS7vRaBMBtgrt+
+         nbyA1IWFbp/8zhT6+Tf/EsUK0zi/LlI1tfwDHEcUEv/ohsB1mGFah6/UOa7XzqBa08dN
+         Po0HtIWk9WBfX1luUyGupuEU99tQp5SOL6Nw4U/VkqN45JQzqpCcO8DGGyCgl421skOJ
+         iliVaUKJwVdP3dqIs8kszm64V+ZFcuZeYrWp+J5kOUQ/IjdZfNmyjyFazGjYKaUqNwVc
+         MwZQ==
+X-Gm-Message-State: APjAAAWXipAkaRJaBukiNTCjE/OcTjx6E45OdiZLR7yZ1AWxlO0qfYoS
+        AmvzenmZ7e3NFQRQVp6Enq/lIzR4skY=
+X-Google-Smtp-Source: APXvYqw64sHT7u8AAtryI2j1MfjOmW9ev5iXn+VhM8gdPdBzitofVG1Wz8aoXhGzm/hkiCwz6d96zQ==
+X-Received: by 2002:a63:8a43:: with SMTP id y64mr104911456pgd.104.1564430954506;
+        Mon, 29 Jul 2019 13:09:14 -0700 (PDT)
+Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id m20sm65250324pff.79.2019.07.29.13.09.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 13:09:14 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
+Date:   Mon, 29 Jul 2019 13:09:09 -0700 (PDT)
+To:     ezequiel@vanguardiasur.com.ar
+cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media input infrastructure:tw686x: Fix of possibleinconsistent
+ memory deallocation and/or race condition by implementation of custom
+ video_device_release function in tw686x driver
+Message-ID: <alpine.DEB.2.21.1907291256080.16959@mbalantz-desktop>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f3c8d90757724982e5f07cd77d315eb64ca145ac ]
 
-Based on the following report from Smatch, fix the potential
-NULL pointer dereference check.
+Possible inconsistent memory deallocation and/or race conditions were 
+detected specifically with respect to remaining open handles to the video 
+device handled by the tw686x driver. This patch addresses this by 
+implementing a revised independent instance of the video_device_release 
+function to free the remaining resources and memory where the last open 
+handle(s) is/were closed.
 
-  tools/perf/util/session.c:1252
-  dump_read() error: we previously assumed 'evsel' could be null
-  (see line 1249)
+Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
 
-  tools/perf/util/session.c
-  1240 static void dump_read(struct perf_evsel *evsel, union perf_event *event)
-  1241 {
-  1242         struct read_event *read_event = &event->read;
-  1243         u64 read_format;
-  1244
-  1245         if (!dump_trace)
-  1246                 return;
-  1247
-  1248         printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
-  1249                evsel ? perf_evsel__name(evsel) : "FAIL",
-  1250                event->read.value);
-  1251
-  1252         read_format = evsel->attr.read_format;
-                             ^^^^^^^
-
-'evsel' could be NULL pointer, for this case this patch directly bails
-out without dumping read_event.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190702103420.27540-9-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/session.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index da55081aefc6..c49e8ea1a42c 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1145,6 +1145,9 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
- 	       evsel ? perf_evsel__name(evsel) : "FAIL",
- 	       event->read.value);
- 
-+	if (!evsel)
-+		return;
+  drivers/media/pci/tw686x/tw686x-video.c | 15 +++++++++++----
+  1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/pci/tw686x/tw686x-video.c 
+b/drivers/media/pci/tw686x/tw686x-video.c
+index 3a06c000..29e10c85 100644
+--- a/drivers/media/pci/tw686x/tw686x-video.c
++++ b/drivers/media/pci/tw686x/tw686x-video.c
+@@ -1151,18 +1151,25 @@ void tw686x_video_irq(struct tw686x_dev *dev, 
+unsigned long requests,
+  	}
+  }
+
++void video_device_release(tw686x_dev *dev) {
++	for (int pb = 0; pb < 2; pb++) {
++		dev->dma_ops->free(dev->video_channels,pb);
++	}
++	kfree(dev);
++}
 +
- 	read_format = evsel->attr.read_format;
- 
- 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+  void tw686x_video_free(struct tw686x_dev *dev)
+  {
+-	unsigned int ch, pb;
++	unsigned int ch;
+
+  	for (ch = 0; ch < max_channels(dev); ch++) {
+  		struct tw686x_video_channel *vc = 
+&dev->video_channels[ch];
+
+  		video_unregister_device(vc->device);
+
+-		if (dev->dma_ops->free)
+-			for (pb = 0; pb < 2; pb++)
+-				dev->dma_ops->free(vc, pb);
++		if (dev->dma_ops->free) {
++			video_device_release(dev);
++		}
+  	}
+  }
+
 -- 
-2.20.1
-
-
+2.17.1
 
