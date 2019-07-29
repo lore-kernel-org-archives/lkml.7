@@ -2,63 +2,64 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D25C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFDBC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7E76216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5931220C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:00:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="evgg/NUa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L8guUWxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387618AbfG2WAP (ORCPT
+        id S2389367AbfG2V6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 18:00:15 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37537 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbfG2WAM (ORCPT
+        Mon, 29 Jul 2019 17:58:52 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44466 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389282AbfG2V6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 18:00:12 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i70so18178796pgd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:00:11 -0700 (PDT)
+        Mon, 29 Jul 2019 17:58:48 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i18so28916867pgl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:58:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4Z4e7eX8RQPe9vUaooI5ICKzcwt4GloFa186owymu9w=;
-        b=evgg/NUaECZfWMgoopuUjqMgL3RIQnKnY+v1LdbrQnAp16/Qsiv9tYEU6iBOpd2igT
-         sa8z84mWybDVIyTTmlTr+ziJJNla6OGi5MfVYcsmZzV4BAvm85G9AWfrNZXQsx5PEetg
-         tCCjUuXVSeG6hdK4ltLvaG17c49KdMWWjKMYUEKngKgbNh6wUXkUuZ1Mj1mp0cwzoerj
-         ae4rW1ihC7pOyWywGxGiS9SXAs41HjV4faGX8uKJ1w6GBG0GPKk7RcCwacWGwKYR9KLG
-         2vF5KLTQ/E4thllFpeExE15i8fwI38jDkV8IReYs4T1gWG9L4C/Zm4Pr2Dk08on58wWK
-         7IcQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZGX4E0zL337coMpGxL1XEgxTmtLdDc56kYr2P6tXetM=;
+        b=L8guUWxOYjK6XiCshtZZcKoxR/54Vz5NjX2WheEEHk63qf19d87Faxvv5kgSZfMxFc
+         jOOMWrMPyinWN0CrAYeiKy7ktsraRmF80lRehlRtDEXhOcO+YWw4WpvZEy7Trgi8ed4N
+         V7yHbdKDGfCFZArRwTdbTz0F4d5ZRgndfjc97JKYE6PwuAaKIWQz1nK23nmf2W6ULnbv
+         +maT59ZjSl9MxEFz2OHzVE1tO+deOpoiRFovw3VweVn2WCrEZGNn5AItcw4DxmxTkO7u
+         Pb1ZjgHR0yzNeEKO8oIdWV7X3V5GUvCj2Y+JIDNnOStLn0aG5+rdCdB5SgbETi4nL91W
+         KoCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4Z4e7eX8RQPe9vUaooI5ICKzcwt4GloFa186owymu9w=;
-        b=jOUCWmrnUGN8Zc6Q/2VtyhIOv5oXWLTquswV0huyYHp71kC6S417ijs3A3bLyJIjl6
-         00y3F9nwJfkwIHHF/clDwD4TVVJMUSWJZV2ZBsnW4VFwCND0gwTUHRCA0EKDYY2q6XGx
-         ztp4APCGRLuFkzsp+Q/WbMWo+pH6dV4Bz80M4XdiD/j0v1ufOa8DkRwgeq0gtmAGCPbu
-         e9HY/Q0Foh+gbpiUcuvCc1lBVxLiAMsExC+Xhn4r9/kgvhhPpYgqIasIGC4q7vla44YF
-         YZOXyqWrIlqR8Il/6x5OITfMNtoxUN0VQ+RI1KzzFhiEFkCOOSv7HKO+1HqZ6DanGK9x
-         4YWQ==
-X-Gm-Message-State: APjAAAUaWvEZOftYuqTh5ETBrki5OWnCrhMTX14AAeYxBMVOQPhMaxZG
-        vhWZzRCdCi1JfVj8Y+iG1P0=
-X-Google-Smtp-Source: APXvYqyfNcRSjrWVsZSzB3NBDcnt7QuGn/RJ0+xa66W4NnRQyERt4aBYwvHv0KEK3s30PtEkXU6xuQ==
-X-Received: by 2002:a17:90a:fa12:: with SMTP id cm18mr113838295pjb.137.1564437611499;
-        Mon, 29 Jul 2019 15:00:11 -0700 (PDT)
-Received: from [192.168.1.188] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id v138sm71349403pfc.15.2019.07.29.15.00.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 15:00:10 -0700 (PDT)
-Subject: Re: [PATCH v2] libata: zpodd: Fix small read overflow in
- zpodd_get_mech_type()
-To:     Nick Desaulniers <ndesaulniers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZGX4E0zL337coMpGxL1XEgxTmtLdDc56kYr2P6tXetM=;
+        b=e7bdTmwA3m3PCJt1H09VQnp7NXK//14HWw3KWXtK1tLcmS5leFt9FEKbQcEkI2hTbt
+         u+yUUjd6AmCtcrZuqKn7A/kP4dVVDmE84jouVLDGldiAhZ67MF43s2s0GfTO3mm7esVw
+         AiV1f0iFv+QRWpkFQMHK9UZzYLv8NvmzA/begiUA/ssVZu20bGJ/ku7AdRYyvIemxhMg
+         P69jt6qwQ1QtFAbHKPx+nlBoyQrXMkTvRk2O/oc12gbOIkpih2Im+n/hnqk9dn75J5B3
+         hMtV1wRAmvQZhZhm3zW/+yjjMPaS2z3+aIviSZ7avy9JAa8Up8CGRTtFiXX6JW3HTj+V
+         1xXA==
+X-Gm-Message-State: APjAAAWqJ6KfVjXUMofmYV+JZMM1o9uBBNABcC/BrdHt1JfSSw1tFWGT
+        glGs5wPc2DaUr5LR5AX7zL/N8eLJ0tSr3WOf+WP02LmQOcSZDQ==
+X-Google-Smtp-Source: APXvYqwkmUwldi+ySYyBzJGzi0pYkpahJyKEqbVx57yA9DvkEPW3DJukefD/8uJY2Yiev/nqvJakt6MjXBFzNaT83og=
+X-Received: by 2002:a63:2cd1:: with SMTP id s200mr101643560pgs.10.1564437527160;
+ Mon, 29 Jul 2019 14:58:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <201907291442.B9953EBED@keescook> <3e515b31-0779-4f65-debf-49e462f9cd25@kernel.dk>
+In-Reply-To: <3e515b31-0779-4f65-debf-49e462f9cd25@kernel.dk>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 29 Jul 2019 14:58:35 -0700
+Message-ID: <CAKwvOdkRxJ6Vtm8CX1ZgDgzzAywSyx7Y-nNFn+tVPf35YQc2YQ@mail.gmail.com>
+Subject: Re: [PATCH v2] libata: zpodd: Fix small read overflow in zpodd_get_mech_type()
+To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Kees Cook <keescook@chromium.org>,
         Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -69,50 +70,34 @@ Cc:     Kees Cook <keescook@chromium.org>,
         tobin@kernel.org, Dmitry Vyukov <dvyukov@google.com>,
         Alexander Potapenko <glider@google.com>,
         Tejun Heo <tj@kernel.org>
-References: <201907291442.B9953EBED@keescook>
- <3e515b31-0779-4f65-debf-49e462f9cd25@kernel.dk>
- <CAKwvOdkRxJ6Vtm8CX1ZgDgzzAywSyx7Y-nNFn+tVPf35YQc2YQ@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6c270cac-e946-bba8-03e7-633a7c9006e6@kernel.dk>
-Date:   Mon, 29 Jul 2019 16:00:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAKwvOdkRxJ6Vtm8CX1ZgDgzzAywSyx7Y-nNFn+tVPf35YQc2YQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/19 3:58 PM, Nick Desaulniers wrote:
-> On Mon, Jul 29, 2019 at 2:55 PM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 7/29/19 3:47 PM, Kees Cook wrote:
->>> Jeffrin reported a KASAN issue:
->>>
->>>     BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
->>>     Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
->>>     ...
->>>     The buggy address belongs to the variable:
->>>       cdb.48319+0x0/0x40
->>>
->>> Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
->>> eject_tray()"), this fixes a cdb[] buffer length, this time in
->>> zpodd_get_mech_type():
->>>
->>> We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
->>> ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
->>
->> Applied, thanks.
-> 
-> Dropped my reviewed by tag. :(
-> https://lkml.org/lkml/2019/7/22/865
+On Mon, Jul 29, 2019 at 2:55 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 7/29/19 3:47 PM, Kees Cook wrote:
+> > Jeffrin reported a KASAN issue:
+> >
+> >    BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
+> >    Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
+> >    ...
+> >    The buggy address belongs to the variable:
+> >      cdb.48319+0x0/0x40
+> >
+> > Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
+> > eject_tray()"), this fixes a cdb[] buffer length, this time in
+> > zpodd_get_mech_type():
+> >
+> > We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
+> > ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
+>
+> Applied, thanks.
 
-I'll add it.
-
+Dropped my reviewed by tag. :(
+https://lkml.org/lkml/2019/7/22/865
 -- 
-Jens Axboe
-
+Thanks,
+~Nick Desaulniers
