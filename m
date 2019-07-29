@@ -2,103 +2,101 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92099C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D9AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6681B21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429333;
-	bh=rWYz9xo/WKu8NOvHjnTN4kXmB1g94dKxuNB+LbsP418=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Au4vzChoM6sMZdsgvfWNyludiRlxvCNCUMeizLZeWKSP/5eKeW6PESIr/zBb1wCbo
-	 gAvcQJMQiJiZFXz5yW7NamuMSLSN27OtOhMSMCSECWGSCn/yLP/gr1/I4QpcMlC4/6
-	 Va53tVjMzx8rxp0vtJ58Ws7I6p+o+v/PVO2W1Sbs=
+	by mail.kernel.org (Postfix) with ESMTP id 4EE35205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NaqhEn+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389475AbfG2TmM (ORCPT
+        id S2389317AbfG2TmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:42:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389458AbfG2TmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:42:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6834A2054F;
-        Mon, 29 Jul 2019 19:42:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429328;
-        bh=rWYz9xo/WKu8NOvHjnTN4kXmB1g94dKxuNB+LbsP418=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1KE82p25n4v6t66ORLfIJd+baxdno4ip9yyXUitlUJMWvSHb0buq8IkpuLVjyoKzE
-         8VUGHeNO8+8lPZQbHiazn0l5OAvf6B4tKgWuPTdirWI+2KkrcSyuTjdtILBUIFtaU7
-         O9cgkUmcZX4knpJDD/UOnnl/sXCVjqFuW59DHKDQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Minghuan Lian <Minghuan.Lian@nxp.com>,
-        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 062/113] PCI: mobiveil: Fix PCI base address in MEM/IO outbound windows
-Date:   Mon, 29 Jul 2019 21:22:29 +0200
-Message-Id: <20190729190710.299999798@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
-References: <20190729190655.455345569@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jul 2019 15:42:19 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:39827 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389468AbfG2TmL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:42:11 -0400
+Received: by mail-pf1-f201.google.com with SMTP id 6so39152639pfi.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 12:42:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Frj/SS/W3AFZFbyzaOV4LWLnrMlPxcryoFLQjik2HTI=;
+        b=NaqhEn+nWpsDdrbEejnjDaEBQITcPwt2PLGQeCcKpF/xtDBEPcIWyPuF7ZuPOpu8Pa
+         jNyFsHX1Aqgj2NKuQj4deoctFI5yaGYWN+NwWkczUhWZtYXHWdQy6rGievfB0HcQR0CW
+         80yz6PRH5wMlDl4QoAi3RlT1thGhUpyMhG5q208bELKjzUdINBEQDQSXotmYt7YzzewJ
+         3VhbznDQsUgjfVPiFM2RR34iJmx2dpisKe6LolVq3LOjZu0Xr1BHMc0iHTyYRxMEQRiz
+         JU4LhMPMcSrMTOwqhzoTY2rVjhoJaTHuS6CjxExljGBNKHF+98phmihBxTwGrkZSlXB/
+         Guvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Frj/SS/W3AFZFbyzaOV4LWLnrMlPxcryoFLQjik2HTI=;
+        b=JnDx0T6fhUq4a0LF+PrvWj86DEpfXIasHrQNTfe+vZbiTcqi+D5tqyQQViqmL1Tz4D
+         Bh0QarKKMJG06CK3Y2dZzP6FcBof0rjsF3yfNiba2Qe6jsSgDkRsmYg9K5d/O3VzSMFH
+         s8HfIYqFtcL1UcvISei++FbPWM0OKSWD9U0OGPaaMD9jHRhEOYkgfFfBDYrJqtjOS5HG
+         XtqoF1m1251QwJxj86e1gIixOb4IkOmfR1HRhv6bCRTI6lre/Q35pCTEoyP+2C4zFrnR
+         CGcHQ3s7uJQ9aHQL4CqiVFQjC0FXyBv0fiDTVxVTBueCjR4n1EWSe50I2Poy9gk6AcXm
+         52NA==
+X-Gm-Message-State: APjAAAX7I2fWkCSSWQMOu9rOXLJh5d7WXbPs9BnsAu9IJfF0cHPqS1D+
+        t0ZeSm+iI757gU0BjLY+MiU5wp1VNHU=
+X-Google-Smtp-Source: APXvYqyf9K52n5I7/pZqfWtKK1UU5XmY8cIscUIXJkk8Ba5+O7oBV/xVhhZfFLdsElYAqR6YpFcVrndVWFg=
+X-Received: by 2002:a63:a346:: with SMTP id v6mr59564547pgn.57.1564429329902;
+ Mon, 29 Jul 2019 12:42:09 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 12:42:05 -0700
+Message-Id: <20190729194205.212846-1-surenb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+Subject: [PATCH 1/1] psi: do not require setsched permission from the trigger creator
+From:   Suren Baghdasaryan <surenb@google.com>
+To:     gregkh@linuxfoundation.org
+Cc:     lizefan@huawei.com, hannes@cmpxchg.org, axboe@kernel.dk,
+        dennis@kernel.org, dennisszhou@gmail.com, mingo@redhat.com,
+        peterz@infradead.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Nick Kralevich <nnk@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f99536e9d2f55996038158a6559d4254a7cc1693 ]
+When a process creates a new trigger by writing into /proc/pressure/*
+files, permissions to write such a file should be used to determine whether
+the process is allowed to do so or not. Current implementation would also
+require such a process to have setsched capability. Setting of psi trigger
+thread's scheduling policy is an implementation detail and should not be
+exposed to the user level. Remove the permission check by using _nocheck
+version of the function.
 
-The outbound memory windows PCI base addresses should be taken
-from the 'ranges' property of DT node to setup MEM/IO outbound
-windows decoding correctly instead of being hardcoded to zero.
-
-Update the code to retrieve the PCI base address for each range
-and use it to program the outbound windows address decoders
-
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Suggested-by: Nick Kralevich <nnk@google.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 ---
- drivers/pci/controller/pcie-mobiveil.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/sched/psi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index a939e8d31735..d9f2d0f2d602 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -559,8 +559,9 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 		if (type) {
- 			/* configure outbound translation window */
- 			program_ob_windows(pcie, pcie->ob_wins_configured,
--				win->res->start, 0, type,
--				resource_size(win->res));
-+					   win->res->start,
-+					   win->res->start - win->offset,
-+					   type, resource_size(win->res));
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 7acc632c3b82..ed9a1d573cb1 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1061,7 +1061,7 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
+ 			mutex_unlock(&group->trigger_lock);
+ 			return ERR_CAST(kworker);
  		}
- 	}
- 
+-		sched_setscheduler(kworker->task, SCHED_FIFO, &param);
++		sched_setscheduler_nocheck(kworker->task, SCHED_FIFO, &param);
+ 		kthread_init_delayed_work(&group->poll_work,
+ 				psi_poll_work);
+ 		rcu_assign_pointer(group->poll_kworker, kworker);
 -- 
-2.20.1
-
-
+2.22.0.709.g102302147b-goog
 
