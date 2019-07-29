@@ -2,95 +2,77 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3DEC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48BBC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B295206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6DC21842
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NEamSqOt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388008AbfG2PYi (ORCPT
+        id S2388023AbfG2PYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:24:38 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:52433 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387693AbfG2PYi (ORCPT
+        Mon, 29 Jul 2019 11:24:42 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47632 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387693AbfG2PYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:24:38 -0400
-Received: from orion.localdomain ([77.4.29.213]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MKKhF-1i5eBx0MWt-00Lnd4; Mon, 29 Jul 2019 17:24:34 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     amitkarwar@gmail.com, siva8118@gmail.com, kvalo@codeaurora.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] drivers: net: wireless: rsi: return explicit error values
-Date:   Mon, 29 Jul 2019 17:24:32 +0200
-Message-Id: <1564413872-10720-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:ksVHMps503+LcqYL67PSCCKtCJFaPbytVqqBbTkepts7c9sg6Jr
- FSBjEO9XnujHOF+0IOR3PLdTvQLM1S/FDtYxvh+jS1ljbsyUHKJEnOCuC80uSTkD/Mn6oDp
- TTfFQadmLc6OQ/AUx2JHcPSLpovSY+csUzVHLwOw7lcW25fYgzYIO2Tf3KSKhBPMeTmylPR
- 8nyJx0p1f/ZkA+irHDWbw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AmsVlK1Vod8=:ecBNmD13mZxnUDmtu8Mxlb
- dG3t2s+KCPddyIAVbG4Z1Pl3/QBWLdnIbviBejI8dnVXeBd3WF5CCuyAMI8wq28O+tk7CDnxx
- T/SLiqAs59yqw9uUoD4Km7Khg3lFsdMZzl90Kr4T56jHJCmBRrQCOh8JO5Obha5BnZ84nnE5C
- lFsJjBgDuO/JB3/yZwRMZ+/U+M392JpYL0ss82J378hjnkd0eRdFu+1QakOAjjO5YwqqfXKMp
- d/i3FmQ9jxlxn7N4C0uPunHuMny89paYbrIr8nrn0kM5RX+ECW8kRJ+r5UiQb3EzOCFXsgtKK
- vfWqVD5zCzhKmdu5iqFTDqPisDK2BPbkgaHUZrb7MVkjose5lQ/uCplCqkinBLJQ0WLoP+fL2
- FfAVkrwvdfEAL9i4glS+n11t4lDyP7iuW9iiYIHGc/1Z5zyp/WMJ1sBnYpHYc16kM6KEZ52ay
- bnOx6IAC2qQddI2fbxX0B8TvBCti0ZINVWaroXgowikCjgcIz1JbFG2W8HEMSpbTQlrTI7I7p
- 9qac/U5tRoNI+hppFB6/DHvZDpBrYFQp99BvTDgmm55h8G+/ceiZq5pCXaH7ZuuZUIdaH+NGT
- 7n0fiA1Of0cVrWq7Gw3zXbdZ+rnZlPu5tFVFejw+hfvIIwLMno60xNzqlokjxA1baTUHDUlfT
- 5rKB+9kU+g9XLnYkbEtXVz6Wg8XJlBWHjTTG6cfmRyOHcaRBJ04w5miECOecXuI8SBcLkFpyv
- ERtPExwhoXjW9Xo4mAvyLV2nvD9UVdiv9LjSwA==
+        Mon, 29 Jul 2019 11:24:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FZx89eZZ1cBDWZtSjJDEcEp5nFP6/pPHiWDDeTBCfTQ=; b=NEamSqOt48WRoVpCxOh3/8dAG
+        WK6u8E+U0XGi+29bUCas9/PJV88ERYN99TwdcLcCpKfjLzLqrDM8FdSx/dTIlB2Ing2wOMyoLFjWn
+        O6mAt5DIepAlznjW+8hEOqoiEaeK6PhXdb2HCHz4pfVSTEs6FMylJTYdzxnkV/Sukg+Av5Qro6FYq
+        o0id/pAs8wRem/+ipiqiWLAjB+dw/52cXSb22+/uY53njU52OY/4QW3Ioe02/p1UWOpaOu1Ya/XfG
+        50sBtZKx+vHul9PmG3i6d9GVwwgmX9Jeskujp+zNWUanH30zVG23FpIT4fovM+0+D2nOZ+HlrSlUw
+        GMs4YIWkw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hs7Vl-0003Ua-SO; Mon, 29 Jul 2019 15:24:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A15AB20B00021; Mon, 29 Jul 2019 17:24:28 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 17:24:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        Jan Stancek <jstancek@redhat.com>,
+        Waiman Long <longman@redhat.com>, dbueso@suse.de,
+        mingo@redhat.com, jade.alglave@arm.com, paulmck@linux.vnet.ibm.com
+Subject: Re: [PATCH 1/4] locking/rwsem: Add missing ACQUIRE to read_slowpath
+ exit when queue is empty
+Message-ID: <20190729152428.GH31398@hirez.programming.kicks-ass.net>
+References: <20190718134954.496297975@infradead.org>
+ <20190718135205.916241783@infradead.org>
+ <20190719084956.GA6750@andrea>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719084956.GA6750@andrea>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+On Fri, Jul 19, 2019 at 10:49:56AM +0200, Andrea Parri wrote:
+> > @@ -1032,6 +1032,8 @@ rwsem_down_read_slowpath(struct rw_semap
+> >  		 */
+> >  		if (adjustment && !(atomic_long_read(&sem->count) &
+> >  		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
+> > +			/* Provide lock ACQUIRE */
+> > +			smp_acquire__after_ctrl_dep();
+> 
+> Does this also make the lock RCtso?  Or maybe RCtso was already
+> guaranteed (and I'm failing to see why)?
 
-Explicitly return constants instead of variable (and rely on
-it to be explicitly initialized), if the value is supposed
-to be fixed anyways. Align it with the rest of the driver,
-which does it the same way.
-
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/net/wireless/rsi/rsi_91x_sdio.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-index b42cd50..2a3577d 100644
---- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-@@ -844,11 +844,11 @@ static int rsi_init_sdio_interface(struct rsi_hw *adapter,
- 				   struct sdio_func *pfunction)
- {
- 	struct rsi_91x_sdiodev *rsi_91x_dev;
--	int status = -ENOMEM;
-+	int status;
- 
- 	rsi_91x_dev = kzalloc(sizeof(*rsi_91x_dev), GFP_KERNEL);
- 	if (!rsi_91x_dev)
--		return status;
-+		return -ENOMEM;
- 
- 	adapter->rsi_dev = rsi_91x_dev;
- 
-@@ -890,7 +890,7 @@ static int rsi_init_sdio_interface(struct rsi_hw *adapter,
- #ifdef CONFIG_RSI_DEBUGFS
- 	adapter->num_debugfs_entries = MAX_DEBUGFS_ENTRIES;
- #endif
--	return status;
-+	return 0;
- fail:
- 	sdio_disable_func(pfunction);
- 	sdio_release_host(pfunction);
--- 
-1.9.1
+I didn't specifically look for that, but I suspect not, esp given the
+next patch.
 
