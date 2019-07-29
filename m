@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B72C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD09C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D74B52070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC362070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428599;
-	bh=ANVUNEMAe1jn6TZ1TL+1KmUas0lezeRrXvXkB9h6ki8=;
+	s=default; t=1564428604;
+	bh=OgzOyEycRsQ5tZXTbgiVPzNADZxiQiXmkuy7t8sX45E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JGXvPF0kfiMqdmihtu+lQbDNTdq36eO1aR/7uIlGfHnpmDLdQUOCUWypX7zurbaa/
-	 j3KC3yDzTLzllVWlyuFhYevrHjjkQMF+v6m+O/1tBYF7Y1iHDYskg9nrbZsYzaPP6z
-	 08HyKTrkNgprPasviTvmy+BlcNhnU40oAc1EfAfs=
+	b=AakWrvc3Qg2wBTjtUd0KrTsgEjI0Hrn5axzToieGc0UBY6BkUduFdOpfr0SKjpqum
+	 8YldIAQVyed3ucFtqf9dI/MGHMozXg0Iiiez692Rm5d6HYGgrxxPRpPDJaWXhGtzWn
+	 km1ZjULnCXnJmijAbMa5vUnRRFOmQ/+ZLKfFjq+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387661AbfG2T36 (ORCPT
+        id S2387906AbfG2TaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:29:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42646 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:30:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727856AbfG2T35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:29:57 -0400
+        id S2387396AbfG2TaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:30:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC07C217D9;
-        Mon, 29 Jul 2019 19:29:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E822070B;
+        Mon, 29 Jul 2019 19:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428596;
-        bh=ANVUNEMAe1jn6TZ1TL+1KmUas0lezeRrXvXkB9h6ki8=;
+        s=default; t=1564428601;
+        bh=OgzOyEycRsQ5tZXTbgiVPzNADZxiQiXmkuy7t8sX45E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SKdwU0z/HEPifcr5ZVeoW6vdo4l3I7uisLZFntJjSRmSN0vix/ejRmt/w+mUZ/k6G
-         3v3yBOFQLy8jVyQsZzM7S6bh1eyZ5DuCELyX0fBaQeZBZp5XSZszqTxNYfX1GaUZxR
-         ZWtVk1NWtgBZ39iX6qgYUo/F2RmFhUdRyWE6UD6E=
+        b=yB1sy4SUOYjATmcD9KmdLvxBfd5ngRW39P5lFa7AS2fn9OM26W5/m/jmxFETNiFdq
+         ckp0UV/5vJeO5z5NPRsoRr04rWYlLLiJAWVfM32dNd8I3xn857DxKd9kWJomgEUivg
+         vwLDK9B49I+Arw8NOuRH93czJuoABDIxVizJnl3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        linux-crypto@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 126/293] crypto: crypto4xx - fix a potential double free in ppc4xx_trng_probe
-Date:   Mon, 29 Jul 2019 21:20:17 +0200
-Message-Id: <20190729190834.239585244@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grant Hernandez <granthernandez@google.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 127/293] Input: gtco - bounds check collection indent level
+Date:   Mon, 29 Jul 2019 21:20:18 +0200
+Message-Id: <20190729190834.317657678@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -65,52 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Grant Hernandez <granthernandez@google.com>
 
-commit 95566aa75cd6b3b404502c06f66956b5481194b3 upstream.
+commit 2a017fd82c5402b3c8df5e3d6e5165d9e6147dc1 upstream.
 
-There is a possible double free issue in ppc4xx_trng_probe():
+The GTCO tablet input driver configures itself from an HID report sent
+via USB during the initial enumeration process. Some debugging messages
+are generated during the parsing. A debugging message indentation
+counter is not bounds checked, leading to the ability for a specially
+crafted HID report to cause '-' and null bytes be written past the end
+of the indentation array. As long as the kernel has CONFIG_DYNAMIC_DEBUG
+enabled, this code will not be optimized out.  This was discovered
+during code review after a previous syzkaller bug was found in this
+driver.
 
-85:	dev->trng_base = of_iomap(trng, 0);
-86:	of_node_put(trng);          ---> released here
-87:	if (!dev->trng_base)
-88:		goto err_out;
-...
-110:	ierr_out:
-111:		of_node_put(trng);  ---> double released here
-...
-
-This issue was detected by using the Coccinelle software.
-We fix it by removing the unnecessary of_node_put().
-
-Fixes: 5343e674f32f ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: <stable@vger.kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Armijn Hemel <armijn@tjaldur.nl>
-Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Julia Lawall <julia.lawall@lip6.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Grant Hernandez <granthernandez@google.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/amcc/crypto4xx_trng.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/input/tablet/gtco.c |   20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
---- a/drivers/crypto/amcc/crypto4xx_trng.c
-+++ b/drivers/crypto/amcc/crypto4xx_trng.c
-@@ -111,7 +111,6 @@ void ppc4xx_trng_probe(struct crypto4xx_
- 	return;
+--- a/drivers/input/tablet/gtco.c
++++ b/drivers/input/tablet/gtco.c
+@@ -78,6 +78,7 @@ Scott Hill shill@gtcocalcomp.com
  
- err_out:
--	of_node_put(trng);
- 	iounmap(dev->trng_base);
- 	kfree(rng);
- 	dev->trng_base = NULL;
+ /* Max size of a single report */
+ #define REPORT_MAX_SIZE       10
++#define MAX_COLLECTION_LEVELS  10
+ 
+ 
+ /* Bitmask whether pen is in range */
+@@ -223,8 +224,7 @@ static void parse_hid_report_descriptor(
+ 	char  maintype = 'x';
+ 	char  globtype[12];
+ 	int   indent = 0;
+-	char  indentstr[10] = "";
+-
++	char  indentstr[MAX_COLLECTION_LEVELS + 1] = { 0 };
+ 
+ 	dev_dbg(ddev, "======>>>>>>PARSE<<<<<<======\n");
+ 
+@@ -350,6 +350,13 @@ static void parse_hid_report_descriptor(
+ 			case TAG_MAIN_COL_START:
+ 				maintype = 'S';
+ 
++				if (indent == MAX_COLLECTION_LEVELS) {
++					dev_err(ddev, "Collection level %d would exceed limit of %d\n",
++						indent + 1,
++						MAX_COLLECTION_LEVELS);
++					break;
++				}
++
+ 				if (data == 0) {
+ 					dev_dbg(ddev, "======>>>>>> Physical\n");
+ 					strcpy(globtype, "Physical");
+@@ -369,8 +376,15 @@ static void parse_hid_report_descriptor(
+ 				break;
+ 
+ 			case TAG_MAIN_COL_END:
+-				dev_dbg(ddev, "<<<<<<======\n");
+ 				maintype = 'E';
++
++				if (indent == 0) {
++					dev_err(ddev, "Collection level already at zero\n");
++					break;
++				}
++
++				dev_dbg(ddev, "<<<<<<======\n");
++
+ 				indent--;
+ 				for (x = 0; x < indent; x++)
+ 					indentstr[x] = '-';
 
 
