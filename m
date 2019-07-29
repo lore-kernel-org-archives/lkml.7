@@ -2,121 +2,140 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBD0C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD20C7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B6C2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB58206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="L0uv2X3i"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="GqaV6USw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbfG2Svn (ORCPT
+        id S1728458AbfG2Syh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:51:43 -0400
-Received: from mail-eopbgr80077.outbound.protection.outlook.com ([40.107.8.77]:8134
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        Mon, 29 Jul 2019 14:54:37 -0400
+Received: from mail-eopbgr770091.outbound.protection.outlook.com ([40.107.77.91]:43333
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728342AbfG2Svm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 14:51:42 -0400
+        id S1726716AbfG2Syh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 14:54:37 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XCc0S8/zZ++O1Ol6BlO3lZA+NlLWnBs8GmGoNEYq8lQNm5/ytCx9TZcKK7pGxsfJcjdROPMrDHUxiFiuyfb/1UgQmu/ilA9IfgEVHPsBExPiElDh37NSZ2xEpRvqsjNdNXNnT/UDKPR5pa6goOppJ/RKluGLBxeKzIgEGPPQ+ZbdLkiT8+jmiQX/PbEP/2o6/56B+VRmf1bxduJgPE1FC1ybmQwC9SrAOmb6fRx1w0szJqE/K8q48SoNMtiqswzqMfVGpf0/8VOjhWXmb1CGWO/UZ1WIFAbPfYV5OAr8VYmGhXe1e9ze47b0Z4B1ADHTt3HfGl8f9NhtWQ6DOvOI7w==
+ b=RO8c6ilg8bNSNOz6v1csDVhupiIOP0/txyDP1GGD8V8fu8PgyrkgaJuC6TxZjbIY75zLKnx5kwb1IeWDCCJcwl+kMyIeCDGnjJY+dUTf88m1NqmEYfQyzJx8CR+IN87CLAohv+7YS9jvnUqjfbguZO02RlYSiZkHdtbbMi4cmsb+JDVHPMPUIf6Fc2NdUI0kEEp+lGdrqq34uYVCsemxdiB8mHEZ2M66Gxu9CuAiXE2UE0TiEyU6AWE0TyHsLI8Qz0qGHC/r85eOtKtwOR/W43DhyiuXVOBE0SPDw/fHYsE7xfBfrRnQyRlFIdkFwgaSMlCM6x1yeQb6qW0sGgwAPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XS6ZyFGklzjUe8E9Wn/DzGAD6vBh1IX1sjSOdWdzqQQ=;
- b=JIaSMCGORev+vrtTCCc5iAejVNh9mQixoidSAcG+RzsB3M7J0eTmk8rk1rF+ErcJKO2VGHgumb6xdFHUSuwIfe5dvSZu3EOFoP6Omn1m1JSU3jw7pSqx7P7CmI2muhO63PLYdfFNMXbAIXwSk/Q6oSm0uZzn/lGWMGcrQ25caYupX3aUXrUqRAnVKIeB/zqFNfaPTlqvhTWC97SbfPk26kKgoUBFQXKU5ssuG0qHFZN/05XWHj5kJZqExLrMfjlLOOsXKj8B5SsTSrBoVcbk4xqR1SGcdlKgYOuxD/jtU+YzqvnETU3aY6FZNMj7S7EHtpvkWf1X8YaIPNWblwLHIQ==
+ bh=9sXfKELTri+1mkeudoYRVryh82yXK9dKsepaYugaOR0=;
+ b=ESmmrAjQlXObUn5uMlOi6lxPISwcrB/UavBXo6JSfbfjo2fyryA1v0tegCcwT+6fter+igdDbH7T8yWwK4OQiHFqJc2Kanwj5rAwPWy4GRFem3wHHp3V4gq4FY1YP8CeiyJ0QEhbQUzqVWTni6VTNwmOlsrVDxI8fVikI5sSFeD5RBviI/RWKHGQwOTLGPXDUjOX5juIx9lwHDvMAoW671pJJLgIXjaS0UlOWThF4II2KT91qPc03HoTIZ5rff9a21Th/ZYaw8y54u/aaKMeO1V94kWc4x6IFk7VZ96BmQy/zXzWtnKos8NNUXWv1dqxx9KeK5NRBI+B8AY5oDhBmg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
+ smtp.mailfrom=wavecomp.com;dmarc=pass action=none
+ header.from=mips.com;dkim=pass header.d=mips.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XS6ZyFGklzjUe8E9Wn/DzGAD6vBh1IX1sjSOdWdzqQQ=;
- b=L0uv2X3io+XeiRCBvKPuVLKnHU3yntux1+NaKj1n93k7ZPITbtW9Bk8vl1bglGrYqSOo+F9DWQIIrRyP8VdimGhBrILZbofJCQq4WhhvqOrl6o1I39DzPGnNdaYI8qYB1CNUiJnF0wWaVVpp/F81aLoayLK7VSrfwQ2+3sssykE=
-Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
- DB6PR0501MB2822.eurprd05.prod.outlook.com (10.172.227.146) with Microsoft
+ bh=9sXfKELTri+1mkeudoYRVryh82yXK9dKsepaYugaOR0=;
+ b=GqaV6USw1LTvs1vMcj1XeZODlCjaz1X+K1yZ473vyXObHEjbIvemYKtCl3EvTm1Nxegyac54HYt/bFC8kshWKUGuLeXv3j74CYfYQDiHQ2cEYFgh+u3lxqYBxFxBwB5j+WR4M18CrPypcHFYU1bgC9T1fCMVrgxs3EOxZnCs2TA=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1101.namprd22.prod.outlook.com (10.174.169.151) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.14; Mon, 29 Jul 2019 18:51:38 +0000
-Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
- ([fe80::3c28:c77d:55b0:15b2]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
- ([fe80::3c28:c77d:55b0:15b2%5]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
- 18:51:38 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "cai@lca.pw" <cai@lca.pw>, Leon Romanovsky <leonro@mellanox.com>
-CC:     Yishai Hadas <yishaih@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+ 15.20.2115.15; Mon, 29 Jul 2019 18:54:33 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::105a:1595:b6ef:cbdf]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::105a:1595:b6ef:cbdf%4]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
+ 18:54:33 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Denis Efremov <efremov@linux.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net/mlx5: fix -Wtype-limits compilation warnings
-Thread-Topic: [PATCH] net/mlx5: fix -Wtype-limits compilation warnings
-Thread-Index: AQHVQLxlv3OY64S2zEK8JohEEQAAcabh+9IA
-Date:   Mon, 29 Jul 2019 18:51:38 +0000
-Message-ID: <dc0c3064e253c4fdf2a2a8351995ff061d722588.camel@mellanox.com>
-References: <1563820482-10302-1-git-send-email-cai@lca.pw>
-In-Reply-To: <1563820482-10302-1-git-send-email-cai@lca.pw>
+Subject: Re: [PATCH v2 3/5] mips/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+Thread-Topic: [PATCH v2 3/5] mips/PCI: Remove HAVE_ARCH_PCI_RESOURCE_TO_USER
+Thread-Index: AQHVRj8PoH/jSXBO80Gm27CoRgrYsw==
+Date:   Mon, 29 Jul 2019 18:54:33 +0000
+Message-ID: <20190729185432.q73kptotpe5ku24z@pburton-laptop>
+References: <20190729101401.28068-1-efremov@linux.com>
+ <20190729101401.28068-4-efremov@linux.com>
+In-Reply-To: <20190729101401.28068-4-efremov@linux.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+x-clientproxiedby: BYAPR06CA0063.namprd06.prod.outlook.com
+ (2603:10b6:a03:14b::40) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+user-agent: NeoMutt/20180716
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [209.116.155.178]
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f5e70aa5-de7b-4ef1-0860-08d71455c9da
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2822;
-x-ms-traffictypediagnostic: DB6PR0501MB2822:
-x-microsoft-antispam-prvs: <DB6PR0501MB2822036012FB5F6928080FC7BEDD0@DB6PR0501MB2822.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:257;
+x-ms-office365-filtering-correlation-id: 3c9ead6c-533d-4b39-5630-08d714563200
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1101;
+x-ms-traffictypediagnostic: MWHPR2201MB1101:
+x-microsoft-antispam-prvs: <MWHPR2201MB11012B3D55F5CF95AB4AB18BC1DD0@MWHPR2201MB1101.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
 x-forefront-prvs: 01136D2D90
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(346002)(136003)(396003)(189003)(199004)(6436002)(229853002)(7736002)(3846002)(305945005)(6116002)(58126008)(110136005)(54906003)(4326008)(316002)(478600001)(6636002)(26005)(2906002)(14444005)(71190400001)(71200400001)(6506007)(14454004)(11346002)(446003)(102836004)(76176011)(2616005)(6486002)(36756003)(6512007)(25786009)(256004)(6246003)(53936002)(186003)(66556008)(64756008)(66446008)(81166006)(81156014)(8936002)(8676002)(66946007)(118296001)(476003)(486006)(2501003)(66066001)(91956017)(86362001)(99286004)(68736007)(66476007)(5660300002)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2822;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(346002)(376002)(366004)(39840400004)(396003)(136003)(199004)(189003)(76176011)(26005)(6506007)(386003)(8936002)(44832011)(66066001)(33716001)(14444005)(256004)(2906002)(71200400001)(71190400001)(478600001)(476003)(3846002)(99286004)(446003)(186003)(68736007)(4744005)(6916009)(102836004)(486006)(81166006)(81156014)(14454004)(8676002)(6116002)(52116002)(11346002)(7736002)(6436002)(6512007)(9686003)(53936002)(66556008)(66446008)(66946007)(66476007)(64756008)(4326008)(54906003)(6486002)(6246003)(305945005)(5660300002)(58126008)(229853002)(25786009)(42882007)(316002)(1076003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1101;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6GPZEPXx3FXdbDfPmcrE7Mxthqv/Ry70jYpWAoG87f/+oTK2eUDdIyj0azirWUKHMcbLuqixTYdz5rS5sQeaoLznD6sXuJZLzj1JVdDKG/V4tEWTCIgrO07A8fbM2OBrNPp0VwbmX1U0nhrftSlNV8+wJ5xkhto3yGC2SQlVQeUUmLb0qnIghTm5CGziuKZ8ad98hRTc6QWPffGiPOnFQxj3oEkV/VUkuSXtm1A6FHk0oXsy/y60IREtd8e1nrakk4RW4QlivRk0O84WkT63KRq1PRVawGZsF+HrYycdqL3c2J0IknI58tixH70w2fvbYkB59SPm4qLtFoUMH9N5CGsnRx/ucStQNtNtAN/+fc+Ld/wnDGVPh7M11BYJiU6SJb4siw5US6Sw+XRScpTV0XvG7vgu+ssQjPSfsUUr9uc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AE9B7DCC1A0B634F8A84CB41021A4424@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: DQtND6T5RRV2q+xKYmUVcnOWritMjW82FUOFn7TRr67/m16FGY6J2ICyGrDnrl1Db5nwSSOmKchCW8zsCsReVrUGu+UHP7glVEnT13Zawtj8UMbOm3daYCSkfywsivNfnQyYmnFrWQUJcsb1ts/KjjqQGBhkXMnOBpHjspmZZ8pQ5y6J46eRLKojvTCt+HVz1LTo3ozLbfVip/fGzaFXUSJP+Yx12wvEsvXwPeLtJmowtfdcW8bxofk42J32gHoN73O0cLQqBiKd/56kAS6GBg4BhwkiKqrg+ZEpG1sdVmmf38FYh8yv48CX/EdtOTW0Mtpz1ViEij334UQSDKgmIQBBmn2DMrmjqsCc8fKSmZKT0dYY1NjIKPe+zhViUpa1gBONQUs7O53tjlpZYi46f/FyT4VyX7VsI7TxGqSRxfU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7F65EFE02558FA4A93E58013D0F50ADD@namprd22.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5e70aa5-de7b-4ef1-0860-08d71455c9da
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 18:51:38.6280
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c9ead6c-533d-4b39-5630-08d714563200
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 18:54:33.8333
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2822
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA3LTIyIGF0IDE0OjM0IC0wNDAwLCBRaWFuIENhaSB3cm90ZToNCj4gVGhl
-IGNvbW1pdCBiOWE3YmE1NTYyMDcgKCJuZXQvbWx4NTogVXNlIGV2ZW50IG1hc2sgYmFzZWQgb24g
-ZGV2aWNlDQo+IGNhcGFiaWxpdGllcyIpIGludHJvZHVjZWQgYSBmZXcgY29tcGlsYXRpb24gd2Fy
-bmluZ3MgZHVlIHRvIGl0IGJ1bXBzDQo+IE1MWDVfRVZFTlRfVFlQRV9NQVggZnJvbSAweDI3IHRv
-IDB4MTAwIHdoaWNoIGlzIGFsd2F5cyBncmVhdGVyIHRoYW4NCj4gYW4gInN0cnVjdCB7bWx4NV9l
-cWV8bWx4NV9uYn0udHlwZSIgdGhhdCBpcyBhbiAidTgiLg0KPiANCj4gZHJpdmVycy9uZXQvZXRo
-ZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2VxLmM6IEluIGZ1bmN0aW9uDQo+ICdtbHg1X2VxX25v
-dGlmaWVyX3JlZ2lzdGVyJzoNCj4gZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9j
-b3JlL2VxLmM6OTQ4OjIxOiB3YXJuaW5nOg0KPiBjb21wYXJpc29uDQo+IGlzIGFsd2F5cyBmYWxz
-ZSBkdWUgdG8gbGltaXRlZCByYW5nZSBvZiBkYXRhIHR5cGUgWy1XdHlwZS1saW1pdHNdDQo+ICAg
-aWYgKG5iLT5ldmVudF90eXBlID49IE1MWDVfRVZFTlRfVFlQRV9NQVgpDQo+ICAgICAgICAgICAg
-ICAgICAgICAgIF5+DQo+IGRyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9l
-cS5jOiBJbiBmdW5jdGlvbg0KPiAnbWx4NV9lcV9ub3RpZmllcl91bnJlZ2lzdGVyJzoNCj4gZHJp
-dmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2VxLmM6OTU5OjIxOiB3YXJuaW5n
-Og0KPiBjb21wYXJpc29uDQo+IGlzIGFsd2F5cyBmYWxzZSBkdWUgdG8gbGltaXRlZCByYW5nZSBv
-ZiBkYXRhIHR5cGUgWy1XdHlwZS1saW1pdHNdDQo+ICAgaWYgKG5iLT5ldmVudF90eXBlID49IE1M
-WDVfRVZFTlRfVFlQRV9NQVgpDQo+IA0KPiBGaXggdGhlbSBieSByZW1vdmluZyB1bm5lY2Vzc2Fy
-eSBjaGVja2luZ3MuDQo+IA0KPiBGaXhlczogYjlhN2JhNTU2MjA3ICgibmV0L21seDU6IFVzZSBl
-dmVudCBtYXNrIGJhc2VkIG9uIGRldmljZQ0KPiBjYXBhYmlsaXRpZXMiKQ0KPiBTaWduZWQtb2Zm
-LWJ5OiBRaWFuIENhaSA8Y2FpQGxjYS5wdz4NCj4gDQoNCkFwcGxpZWQgdG8gbWx4NS1uZXh0Lg0K
-DQpUaGFua3MsDQpTYWVlZC4NCg0K
+Hi Denis,
+
+On Mon, Jul 29, 2019 at 01:13:59PM +0300, Denis Efremov wrote:
+> The function pci_resource_to_user() was turned to a weak one. Thus,
+> mips-specific version will automatically override the generic one
+> and the HAVE_ARCH_PCI_RESOURCE_TO_USER macro should be removed.
+>=20
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+
+Assuming this is the way Bjorn wants to go:
+
+    Acked-by: Paul Burton <paul.burton@mips.com>
+
+Thanks,
+    Paul
+
+> ---
+>  arch/mips/include/asm/pci.h | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/arch/mips/include/asm/pci.h b/arch/mips/include/asm/pci.h
+> index 436099883022..6f48649201c5 100644
+> --- a/arch/mips/include/asm/pci.h
+> +++ b/arch/mips/include/asm/pci.h
+> @@ -108,7 +108,6 @@ extern unsigned long PCIBIOS_MIN_MEM;
+> =20
+>  #define HAVE_PCI_MMAP
+>  #define ARCH_GENERIC_PCI_MMAP_RESOURCE
+> -#define HAVE_ARCH_PCI_RESOURCE_TO_USER
+> =20
+>  /*
+>   * Dynamic DMA mapping stuff.
+> --=20
+> 2.21.0
+>=20
