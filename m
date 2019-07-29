@@ -2,120 +2,115 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D157AC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A222FC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CF7216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795B7206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:22:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V344DF0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387910AbfG2PWS (ORCPT
+        id S2387964AbfG2PWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:22:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34034 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728023AbfG2PWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:22:17 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9F24B882EA;
-        Mon, 29 Jul 2019 15:22:17 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 017A85D6A0;
-        Mon, 29 Jul 2019 15:22:16 +0000 (UTC)
-Subject: Re: [PATCH v2] sched/core: Don't use dying mm as active_mm of
- kthreads
-To:     Peter Zijlstra <peterz@infradead.org>
+        Mon, 29 Jul 2019 11:22:39 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47608 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387925AbfG2PWi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:22:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=734mJqtkBi3LN0zhuGIgMjFn+GEEE5inKPVe1QAy5/0=; b=V344DF0eHmejI1+FylehubPRA
+        ki3FVPGVRK4c/zroRMso6w37G0qm8Y+zZ9UJJBUtFOMokqSPLXbHoa7dj9r3zWLSivRHkAQnG6mqW
+        N4tKvuQHPvsTfbFUvPP3p6xK/T27xWtuZqqyzN05fhXF8KkQQJLDYa6/N5xbttr3c8Fyk2ENSvZhJ
+        5LrP5A3h2tBLfvI8Bbkx5H2O4JrgWMSdo5pLynuIX5qbctDFCdnDn+Eo5djn0Hz4Juhiq3b8/vg1A
+        fOErOByXK0YtMiRXfBZrUu48fv3RPePiHs3zCC4lOifSsZpphxwCieqmvaNuzL5tSdeKRwjw1p8++
+        g/NjbWxMQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hs7Tq-0003Tk-M4; Mon, 29 Jul 2019 15:22:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 22B6320AFFE9E; Mon, 29 Jul 2019 17:22:29 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 17:22:29 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
 Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>
+        Phil Auld <pauld@redhat.com>, riel@surriel.com,
+        luto@kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH] sched: Clean up active_mm reference counting
+Message-ID: <20190729152229.GG31398@hirez.programming.kicks-ass.net>
 References: <20190727171047.31610-1-longman@redhat.com>
  <20190729085235.GT31381@hirez.programming.kicks-ass.net>
- <20190729142756.GF31425@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <2bc722b9-3eff-6d99-4ee7-1f4cab8b6c21@redhat.com>
-Date:   Mon, 29 Jul 2019 11:22:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ <20190729142450.GE31425@hirez.programming.kicks-ass.net>
+ <45546d31-4efb-c303-deae-7c866b0071a9@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190729142756.GF31425@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 29 Jul 2019 15:22:17 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <45546d31-4efb-c303-deae-7c866b0071a9@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/19 10:27 AM, Peter Zijlstra wrote:
-> On Mon, Jul 29, 2019 at 10:52:35AM +0200, Peter Zijlstra wrote:
->> On Sat, Jul 27, 2019 at 01:10:47PM -0400, Waiman Long wrote:
->>> It was found that a dying mm_struct where the owning task has exited
->>> can stay on as active_mm of kernel threads as long as no other user
->>> tasks run on those CPUs that use it as active_mm. This prolongs the
->>> life time of dying mm holding up memory and other resources like swap
->>> space that cannot be freed.
->> Sure, but this has been so 'forever', why is it a problem now?
->>
->>> Fix that by forcing the kernel threads to use init_mm as the active_mm
->>> if the previous active_mm is dying.
->>>
->>> The determination of a dying mm is based on the absence of an owning
->>> task. The selection of the owning task only happens with the CONFIG_MEMCG
->>> option. Without that, there is no simple way to determine the life span
->>> of a given mm. So it falls back to the old behavior.
->>>
->>> Signed-off-by: Waiman Long <longman@redhat.com>
->>> ---
->>>  include/linux/mm_types.h | 15 +++++++++++++++
->>>  kernel/sched/core.c      | 13 +++++++++++--
->>>  mm/init-mm.c             |  4 ++++
->>>  3 files changed, 30 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
->>> index 3a37a89eb7a7..32712e78763c 100644
->>> --- a/include/linux/mm_types.h
->>> +++ b/include/linux/mm_types.h
->>> @@ -623,6 +623,21 @@ static inline bool mm_tlb_flush_nested(struct mm_struct *mm)
->>>  	return atomic_read(&mm->tlb_flush_pending) > 1;
->>>  }
->>>  
->>> +#ifdef CONFIG_MEMCG
->>> +/*
->>> + * A mm is considered dying if there is no owning task.
->>> + */
->>> +static inline bool mm_dying(struct mm_struct *mm)
->>> +{
->>> +	return !mm->owner;
->>> +}
->>> +#else
->>> +static inline bool mm_dying(struct mm_struct *mm)
->>> +{
->>> +	return false;
->>> +}
->>> +#endif
->>> +
->>>  struct vm_fault;
->> Yuck. So people without memcg will still suffer the terrible 'whatever
->> it is this patch fixes'.
-> Also; why then not key off that owner tracking to free the resources
-> (and leave the struct mm around) and avoid touching this scheduling
-> hot-path ?
+On Mon, Jul 29, 2019 at 11:16:55AM -0400, Waiman Long wrote:
+> On 7/29/19 10:24 AM, Peter Zijlstra wrote:
+> > On Mon, Jul 29, 2019 at 10:52:35AM +0200, Peter Zijlstra wrote:
+> >
+> > ---
+> > Subject: sched: Clean up active_mm reference counting
+> > From: Peter Zijlstra <peterz@infradead.org>
+> > Date: Mon Jul 29 16:05:15 CEST 2019
+> >
+> > The current active_mm reference counting is confusing and sub-optimal.
+> >
+> > Rewrite the code to explicitly consider the 4 separate cases:
+> >
+> >     user -> user
+> >
+> > 	When switching between two user tasks, all we need to consider
+> > 	is switch_mm().
+> >
+> >     user -> kernel
+> >
+> > 	When switching from a user task to a kernel task (which
+> > 	doesn't have an associated mm) we retain the last mm in our
+> > 	active_mm. Increment a reference count on active_mm.
+> >
+> >   kernel -> kernel
+> >
+> > 	When switching between kernel threads, all we need to do is
+> > 	pass along the active_mm reference.
+> >
+> >   kernel -> user
+> >
+> > 	When switching between a kernel and user task, we must switch
+> > 	from the last active_mm to the next mm, hoping of course that
+> > 	these are the same. Decrement a reference on the active_mm.
+> >
+> > The code keeps a different order, because as you'll note, both 'to
+> > user' cases require switch_mm().
+> >
+> > And where the old code would increment/decrement for the 'kernel ->
+> > kernel' case, the new code observes this is a neutral operation and
+> > avoids touching the reference count.
+> 
+> I am aware of that behavior which is indeed redundant, but it is not
+> what I am trying to fix and so I kind of leave it alone in my patch.
 
-The resources are pinned by the reference count. Making a special case
-will certainly mess up the existing code.
+Oh sure; and it's not all that important either. It is jst that every
+time I look at that code I get confused.
 
-It is actually a problem for systems that are mostly idle. Only the
-kernel->kernel case needs to be updated. If the CPUs isn't busy running
-user tasks, a little bit more overhead shouldn't really hurt IMHO.
+On top of that, the new is easier to rip the active_mm stuff out of,
+which is where it came from.
 
-Cheers,
-Longman
 
