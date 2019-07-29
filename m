@@ -2,69 +2,145 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC1AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332A1C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2910206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7FE214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387526AbfG2NXm (ORCPT
+        id S2388019AbfG2NXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 09:23:42 -0400
-Received: from mga11.intel.com ([192.55.52.93]:11886 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387413AbfG2NXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 09:23:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 06:23:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,322,1559545200"; 
-   d="scan'208";a="182744433"
-Received: from mylly.fi.intel.com (HELO [10.237.72.159]) ([10.237.72.159])
-  by orsmga002.jf.intel.com with ESMTP; 29 Jul 2019 06:23:39 -0700
-Subject: Re: [PATCH] i2c: busses: Use dev_get_drvdata where possible
-To:     Jean Delvare <jdelvare@suse.de>,
-        Chuhong Yuan <hslester96@gmail.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190723111110.11121-1-hslester96@gmail.com>
- <20190723203452.5714f142@endymion>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <c58ef749-fae3-8df5-2d20-59d766256409@linux.intel.com>
-Date:   Mon, 29 Jul 2019 16:23:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 09:23:55 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:58787 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S2387413AbfG2NXy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 09:23:54 -0400
+Received: (qmail 21810 invoked by uid 500); 29 Jul 2019 09:23:53 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 29 Jul 2019 09:23:53 -0400
+Date:   Mon, 29 Jul 2019 09:23:53 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+cc:     linux-man@vger.kernel.org,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Error (?) in man page for ppoll(2)
+In-Reply-To: <4ce02b01-f174-99a1-ac34-21a2c6414df2@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1907290921180.20498-100000@netrider.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20190723203452.5714f142@endymion>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/19 9:34 PM, Jean Delvare wrote:
-> On Tue, 23 Jul 2019 19:11:10 +0800, Chuhong Yuan wrote:
->> Instead of using to_pci_dev + pci_get_drvdata,
->> use dev_get_drvdata to make code simpler.
->>
->> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
->> ---
->>   drivers/i2c/busses/i2c-designware-pcidrv.c | 6 ++----
->>   drivers/i2c/busses/i2c-i801.c              | 3 +--
->>   2 files changed, 3 insertions(+), 6 deletions(-)
->> (...)
-> 
-> Looks good to me, thanks.
-> 
-> Reviewed-by: Jean Delvare <jdelvare@suse.de>
-> 
-For the i2c-designware-pcidrv.c
+On Mon, 29 Jul 2019, Michael Kerrisk (man-pages) wrote:
 
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> Hello Alan,
+> 
+> On 7/21/19 5:32 PM, Alan Stern wrote:
+> > Here are two extracts from the man page for ppoll(2) (from the
+> > man-pages 4.16 package; the 5.01 version is the same):
+> > 
+> >        Specifying a negative value in timeout means an infinite timeout.
+> > 
+> > 
+> >        Other than the difference in the precision of the timeout argument, the
+> >        following ppoll() call:
+> > 
+> >            ready = ppoll(&fds, nfds, tmo_p, &sigmask);
+> > 
+> >        is equivalent to atomically executing the following calls:
+> > 
+> >            sigset_t origmask;
+> >            int timeout;
+> > 
+> >            timeout = (tmo_p == NULL) ? -1 :
+> >                      (tmo_p->tv_sec * 1000 + tmo_p->tv_nsec / 1000000);
+> >            pthread_sigmask(SIG_SETMASK, &sigmask, &origmask);
+> >            ready = poll(&fds, nfds, timeout);
+> >            pthread_sigmask(SIG_SETMASK, &origmask, NULL);
+> > 
+> > But if tmo_p->tv_sec is negative, the ppoll() call is not equivalent to 
+> > the corresponding poll() call.  The kernel rejects negative values of 
+> > tv_sec with an EINVAL error; it does not interpret the value as meaning 
+> > an infinite timeout.
+> > 
+> > (Yes, the kernel interprets tmo_p == NULL as an infinite timeout, but 
+> > the man page is still wrong for the case tmo_p->tv_sec < 0.)
+> > 
+> > Suggested fix: Following the end of the second extract above, add:
+> > 
+> > 	except that negative time values in tmo_p are not interpreted
+> > 	as an infinite timeout.
+> > 
+> > Also, in the ERRORS section, change the text for EINVAL to:
+> > 
+> > 	EINVAL The nfds value exceeds the RLIMIT_NOFILE value or
+> > 	*tmo_p contains an invalid (negative) time value.
+> 
+> Thanks for the report, and the text change suggestions.
+> I've applied the patch below.
+> 
+> Thanks,
+> 
+> Michael
+> 
+> diff --git a/man2/poll.2 b/man2/poll.2
+> index 0b023e0a5..3eacb88b7 100644
+> --- a/man2/poll.2
+> +++ b/man2/poll.2
+> @@ -271,7 +271,7 @@ ready = ppoll(&fds, nfds, tmo_p, &sigmask);
+>  .EE
+>  .in
+>  .PP
+> -is equivalent to
+> +is nearly equivalent to
+>  .I atomically
+>  executing the following calls:
+>  .PP
+> @@ -288,6 +288,17 @@ pthread_sigmask(SIG_SETMASK, &origmask, NULL);
+>  .EE
+>  .in
+>  .PP
+> +The above code segment is described as
+> +.I nearly
+> +equivalent because whereas a negative
+> +.I timeout
+> +value for
+> +.BR poll ()
+> +is interpreted as an infinite timeout, a negative value expressed in
+> +.IR *tmo_p
+> +results in an error from
+> +.BR ppoll ().
+> +.PP
+>  See the description of
+>  .BR pselect (2)
+>  for an explanation of why
+> @@ -354,6 +365,12 @@ value exceeds the
+>  .B RLIMIT_NOFILE
+>  value.
+>  .TP
+> +.B EINVAL
+> +.RB ( ppoll ())
+> +The timeout value expressed in
+> +.IR *ip
+> +is invalid (nragtive).
+----------------^^^
+
+Typo.  Otherwise, I approve of the patch.
+
+Thank you,
+
+Alan
+
+> +.TP
+>  .B ENOMEM
+>  There was no space to allocate file descriptor tables.
+>  .SH VERSIONS
+
