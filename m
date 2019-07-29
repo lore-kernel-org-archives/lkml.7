@@ -2,125 +2,253 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6F1C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF5FC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF3820651
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 522ED20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387750AbfG2Lp5 (ORCPT
+        id S2387790AbfG2LqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:45:57 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43736 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387638AbfG2Lp4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:45:56 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p13so61457329wru.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 04:45:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wswpQoJgwyGyzPq8XXsD+wjeWZTbEbjja41h5xGOJVQ=;
-        b=ddz4Wor4yo8TmxH/uvHUEtv/+ZD88N5kD3iXKJe55xA17xsP3AWWW9F3z8Ta4be6kA
-         XuXKQM+XxegdmkctCTzC4e5UiG+MySlTUFrl0HlGqApGgNgfJF9uXeDIUDQtYDpczjp3
-         7Jp2Yh8/bpZEa4MqbaTXIRDUpYouXZ+iFGAfSOur2UmD97540jocfdJ+ec7pG2/Tbai3
-         ZwuKb5e9DU/soMxrPdmuNpQGh6ni63Eg0mBMRArNTKBb7J/Ep2oV/HtbwZiYG+krtpSK
-         LvKE5JuQGFO65vm7y6cQVnHcgjawFDJVwF0TK35sHBqk2wvwzSFlOLt06+63ELO7KHZr
-         tnKQ==
-X-Gm-Message-State: APjAAAUI3RiyYpoPkyoCVeU4B1VcCTCKc+fU783jlQDcOszmbWBHfT/N
-        YACvh/w+MZWwQXMNjzQvMq/PvQ==
-X-Google-Smtp-Source: APXvYqxe+aP64hAMwZCKl2r96RQuNJ8QO4qV5Nz/0wIXQvSs0/a1KeBhexRENJdUdvzJDmVJ3Lt07Q==
-X-Received: by 2002:a5d:498f:: with SMTP id r15mr113353676wrq.353.1564400754574;
-        Mon, 29 Jul 2019 04:45:54 -0700 (PDT)
-Received: from t460s.bristot.redhat.com (nat-cataldo.sssup.it. [193.205.81.5])
-        by smtp.gmail.com with ESMTPSA id k17sm78744410wrq.83.2019.07.29.04.45.53
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 04:45:53 -0700 (PDT)
-Subject: Re: [RFC][PATCH 01/13] sched/deadline: Impose global limits on
- sched_attr::sched_period
-To:     Juri Lelli <juri.lelli@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
-        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
-        balsini@android.com, dvyukov@google.com, tglx@linutronix.de,
-        vpillai@digitalocean.com, rostedt@goodmis.org
-References: <20190726145409.947503076@infradead.org>
- <20190726161357.397880775@infradead.org>
- <20190729085711.GQ25636@localhost.localdomain>
-From:   Daniel Bristot de Oliveira <bristot@redhat.com>
-Message-ID: <a7928ec6-b198-015e-edfb-7272de05a953@redhat.com>
-Date:   Mon, 29 Jul 2019 13:45:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190729085711.GQ25636@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 29 Jul 2019 07:46:21 -0400
+Received: from viti.kaiser.cx ([85.214.81.225]:58246 "EHLO viti.kaiser.cx"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387638AbfG2LqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:46:21 -0400
+Received: from [46.114.3.104] (helo=martin-debian-1.paytec.ch)
+        by viti.kaiser.cx with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <martin@kaiser.cx>)
+        id 1hs46Z-0004HW-GF; Mon, 29 Jul 2019 13:46:15 +0200
+From:   Martin Kaiser <martin@kaiser.cx>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH v3 1/2] iio: potentiometer: add a driver for Maxim 5432-5435
+Date:   Mon, 29 Jul 2019 13:45:30 +0200
+Message-Id: <20190729114531.12386-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190721175915.27192-1-martin@kaiser.cx>
+References: <20190721175915.27192-1-martin@kaiser.cx>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2019 10:57, Juri Lelli wrote:
-> Hi,
-> 
-> On 26/07/19 16:54, Peter Zijlstra wrote:
->> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
->> Cc: Luca Abeni <luca.abeni@santannapisa.it>
->> Cc: Juri Lelli <juri.lelli@redhat.com>
->> Cc: Dmitry Vyukov <dvyukov@google.com>
->> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> ---
->>  include/linux/sched/sysctl.h |    3 +++
->>  kernel/sched/deadline.c      |   23 +++++++++++++++++++++--
->>  kernel/sysctl.c              |   14 ++++++++++++++
->>  3 files changed, 38 insertions(+), 2 deletions(-)
->>
->> --- a/include/linux/sched/sysctl.h
->> +++ b/include/linux/sched/sysctl.h
->> @@ -56,6 +56,9 @@ int sched_proc_update_handler(struct ctl
->>  extern unsigned int sysctl_sched_rt_period;
->>  extern int sysctl_sched_rt_runtime;
->>  
->> +extern unsigned int sysctl_sched_dl_period_max;
->> +extern unsigned int sysctl_sched_dl_period_min;
->> +
->>  #ifdef CONFIG_UCLAMP_TASK
->>  extern unsigned int sysctl_sched_uclamp_util_min;
->>  extern unsigned int sysctl_sched_uclamp_util_max;
->> --- a/kernel/sched/deadline.c
->> +++ b/kernel/sched/deadline.c
->> @@ -2597,6 +2597,14 @@ void __getparam_dl(struct task_struct *p
->>  }
->>  
->>  /*
->> + * Default limits for DL period; on the top end we guard against small util
->> + * tasks still getting rediculous long effective runtimes, on the bottom end we
-> s/rediculous/ridiculous/
-> 
->> + * guard against timer DoS.
->> + */
->> +unsigned int sysctl_sched_dl_period_max = 1 << 22; /* ~4 seconds */
->> +unsigned int sysctl_sched_dl_period_min = 100;     /* 100 us */
-> These limits look sane to me. I've actually been experimenting with 10us
-> period tasks and throttling seemed to behave fine, but I guess 100us is
-> a saner default.
-> 
-> So, (with a few lines of changelog :)
-> 
-> Acked-by: Juri Lelli <juri.lelli@redhat.com>
+Add a driver for the Maxim Integrated MAX5432-MAX5435 family of digital
+potentiometers.
 
+These potentiometers are connected via I2C and have 32 wiper
+positions.
 
-Looks sane to me too!
+Supported functionality
+- set the volatile wiper position
+- read the potentiometer scale
 
-Acked-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Datasheet:
+https://datasheets.maximintegrated.com/en/ds/MAX5432-MAX5435.pdf
 
--- Daniel
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+---
+changes in v3
+ - split dt bindings and driver code into separate patches
+ - use yaml format for dt bindings
+ - fix formatting of parameter lists
+
+changes in v2
+ - use MAX5432_ prefix for all defines
+ - fix indentation
+ - convert void * to unsigned long, not to u32
+   (warning from kbuild test robot)
+
+ drivers/iio/potentiometer/Kconfig   |  11 +++
+ drivers/iio/potentiometer/Makefile  |   1 +
+ drivers/iio/potentiometer/max5432.c | 135 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 147 insertions(+)
+ create mode 100644 drivers/iio/potentiometer/max5432.c
+
+diff --git a/drivers/iio/potentiometer/Kconfig b/drivers/iio/potentiometer/Kconfig
+index ebc7c72a5e36..4cac0173db8b 100644
+--- a/drivers/iio/potentiometer/Kconfig
++++ b/drivers/iio/potentiometer/Kconfig
+@@ -26,6 +26,17 @@ config DS1803
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called ds1803.
+ 
++config MAX5432
++	tristate "Maxim MAX5432-MAX5435 Digital Potentiometer driver"
++	depends on I2C
++	help
++	  Say yes here to build support for the Maxim
++	  MAX5432, MAX5433, MAX5434 and MAX5435 digital
++	  potentiometer chips.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called max5432.
++
+ config MAX5481
+ 	tristate "Maxim MAX5481-MAX5484 Digital Potentiometer driver"
+ 	depends on SPI
+diff --git a/drivers/iio/potentiometer/Makefile b/drivers/iio/potentiometer/Makefile
+index 8ff55138cf12..091adf3cdd0b 100644
+--- a/drivers/iio/potentiometer/Makefile
++++ b/drivers/iio/potentiometer/Makefile
+@@ -6,6 +6,7 @@
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_AD5272) += ad5272.o
+ obj-$(CONFIG_DS1803) += ds1803.o
++obj-$(CONFIG_MAX5432) += max5432.o
+ obj-$(CONFIG_MAX5481) += max5481.o
+ obj-$(CONFIG_MAX5487) += max5487.o
+ obj-$(CONFIG_MCP4018) += mcp4018.o
+diff --git a/drivers/iio/potentiometer/max5432.c b/drivers/iio/potentiometer/max5432.c
+new file mode 100644
+index 000000000000..641b1821fdf6
+--- /dev/null
++++ b/drivers/iio/potentiometer/max5432.c
+@@ -0,0 +1,135 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Maxim Integrated MAX5432-MAX5435 digital potentiometer driver
++ * Copyright (C) 2019 Martin Kaiser <martin@kaiser.cx>
++ *
++ * Datasheet:
++ * https://datasheets.maximintegrated.com/en/ds/MAX5432-MAX5435.pdf
++ */
++
++#include <linux/i2c.h>
++#include <linux/iio/iio.h>
++#include <linux/limits.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++
++/* All chip variants have 32 wiper positions. */
++#define MAX5432_MAX_POS 31
++
++#define MAX5432_OHM_50K   (50  * 1000)
++#define MAX5432_OHM_100K  (100 * 1000)
++
++/* Update the volatile (currently active) setting. */
++#define MAX5432_CMD_VREG  0x11
++
++struct max5432_data {
++	struct i2c_client *client;
++	unsigned long ohm;
++};
++
++static const struct iio_chan_spec max5432_channels[] = {
++	{
++		.type = IIO_RESISTANCE,
++		.indexed = 1,
++		.output = 1,
++		.channel = 0,
++		.address = MAX5432_CMD_VREG,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
++		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
++	}
++};
++
++static int max5432_read_raw(struct iio_dev *indio_dev,
++			struct iio_chan_spec const *chan,
++			int *val, int *val2, long mask)
++{
++	struct max5432_data *data = iio_priv(indio_dev);
++
++	if (mask != IIO_CHAN_INFO_SCALE)
++		return -EINVAL;
++
++	if (unlikely(data->ohm > INT_MAX))
++		return -ERANGE;
++
++	*val = data->ohm;
++	*val2 = MAX5432_MAX_POS;
++
++	return IIO_VAL_FRACTIONAL;
++}
++
++static int max5432_write_raw(struct iio_dev *indio_dev,
++			struct iio_chan_spec const *chan,
++			int val, int val2, long mask)
++{
++	struct max5432_data *data = iio_priv(indio_dev);
++	u8 data_byte;
++
++	if (mask != IIO_CHAN_INFO_RAW)
++		return -EINVAL;
++
++	if (val < 0 || val > MAX5432_MAX_POS)
++		return -EINVAL;
++
++	if (val2 != 0)
++		return -EINVAL;
++
++	/* Wiper position is in bits D7-D3. (D2-D0 are don't care bits.) */
++	data_byte = val << 3;
++	return i2c_smbus_write_byte_data(data->client, chan->address,
++			data_byte);
++}
++
++static const struct iio_info max5432_info = {
++	.read_raw = max5432_read_raw,
++	.write_raw = max5432_write_raw,
++};
++
++static int max5432_probe(struct i2c_client *client,
++		const struct i2c_device_id *id)
++{
++	struct device *dev = &client->dev;
++	struct iio_dev *indio_dev;
++	struct max5432_data *data;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof(struct max5432_data));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	i2c_set_clientdata(client, indio_dev);
++
++	data = iio_priv(indio_dev);
++	data->client = client;
++	data->ohm = (unsigned long)of_device_get_match_data(dev);
++
++	indio_dev->dev.parent = dev;
++	indio_dev->info = &max5432_info;
++	indio_dev->channels = max5432_channels;
++	indio_dev->num_channels = ARRAY_SIZE(max5432_channels);
++	indio_dev->name = client->name;
++
++	return devm_iio_device_register(dev, indio_dev);
++}
++
++static const struct of_device_id max5432_dt_ids[] = {
++	{ .compatible = "maxim,max5432", .data = (void *)MAX5432_OHM_50K  },
++	{ .compatible = "maxim,max5433", .data = (void *)MAX5432_OHM_100K },
++	{ .compatible = "maxim,max5434", .data = (void *)MAX5432_OHM_50K  },
++	{ .compatible = "maxim,max5435", .data = (void *)MAX5432_OHM_100K },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, max5432_dt_ids);
++
++static struct i2c_driver max5432_driver = {
++	.driver = {
++		.name = "max5432",
++		.of_match_table = of_match_ptr(max5432_dt_ids),
++	},
++	.probe = max5432_probe,
++};
++
++module_i2c_driver(max5432_driver);
++
++MODULE_AUTHOR("Martin Kaiser <martin@kaiser.cx>");
++MODULE_DESCRIPTION("max5432-max5435 digital potentiometers");
++MODULE_LICENSE("GPL v2");
+-- 
+2.11.0
+
