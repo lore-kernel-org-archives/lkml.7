@@ -2,81 +2,79 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EA2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F44C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C282073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BDE92073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:25:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cTa6HUut"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r7MOAnrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfG2HYY (ORCPT
+        id S1726962AbfG2HZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 03:24:24 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:22458 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725917AbfG2HYY (ORCPT
+        Mon, 29 Jul 2019 03:25:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36552 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfG2HZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 03:24:24 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6T7Lfvg024841;
-        Mon, 29 Jul 2019 09:24:10 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
- : from : message-id : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=ag3607f4rZRHcp8HUBaVypYdYUkemynvgAUvHb2YYs0=;
- b=cTa6HUutdsFxJUHgsniQS2DcXuwLLWJsFjrVZtH8En5C2JGiJZ2b/TGEgzSPi0kJRVQe
- ejdE0EP46/cWqytEhxJasHdNELl3Tty51MdQxdAdKkjBHBsnmDg6ibXRh/jicctJCY1S
- qjVPxUSYrYpx1uct2CopUHWbLjevIw9utzejE0aexuXIky5ooOCUO3YKesuC12yucoPT
- FEKdY8MrsoVBnzRDxtSnyWlmyYUmgVN6MMhRNyOGKDPYCMEnqlqGFKhLIE0bsKYePFzI
- 1CAWdNkAHFnNrSHfezPxkIDy1V2pssTGHMOJrYnk385lHt1AcipeBrX+zTd9KetUwU+z 2g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2u0ccwanxs-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 29 Jul 2019 09:24:10 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5051342;
-        Mon, 29 Jul 2019 07:24:01 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 332AC56D1;
-        Mon, 29 Jul 2019 07:24:01 +0000 (GMT)
-Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 29 Jul
- 2019 09:24:00 +0200
-Subject: Re: [PATCH] ARM: dts: stm32: add audio codec support on
- stm32mp157a-dk1 board
-To:     Olivier MOYSAN <olivier.moysan@st.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1562327580-19647-1-git-send-email-olivier.moysan@st.com>
- <27476214-07fe-886b-1cab-20902837f29c@st.com>
- <f43b8af7-e2c0-6193-d666-9fa60050e07d@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <f87aaed6-1aa4-fd52-9476-b22f9b122aeb@st.com>
-Date:   Mon, 29 Jul 2019 09:23:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Mon, 29 Jul 2019 03:25:05 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so27550374pfl.3;
+        Mon, 29 Jul 2019 00:25:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=tSNkzIFA9QcwY64fazHYxcwNOWyRt8r05dSdyETBN2g=;
+        b=r7MOAnrxL4083dNnRememb+aEfo+XDr7AnfSYFbsPAOygajjN+a0ArhBrK9AsNkEo9
+         BWHwU0WTb9bRidG4q5URfIqaZTcHXE0DldZYUSQ+Oj0uuRyK4bBWiTTPmeBbEe+Cfm1h
+         YcwHt25bDyC95u4f+xZrti5jK0L/QMMqOcC91OkdtRRTcvFmQ5eO5/9XcNCj3Z/tFxQZ
+         8UEqYDBbzhu4Wwunn+kgLWMrLlfy6QIpYv7kBQbgWiA8YxJjvAmkEWLyy3zu6T08aFAf
+         kV0yot4GUTUgs/VWzc8IwGs1gqHLkxMpHWFqIzbOo2JppUH5rhRCGKBaMS1YTUxXGZ2J
+         PNbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=tSNkzIFA9QcwY64fazHYxcwNOWyRt8r05dSdyETBN2g=;
+        b=jesLxCu3Gew4uebrEAT99b6g6rehIueYKXCMyYAh/ysRUJn87HzVhJ9rTepq9Bn+ab
+         swI6N8EqphkyfG7nTtZqaqE7K2YtI9wWYtqZxIyLrqkgG/kKH/VJvbwLsB+l0p436HAy
+         Rf65nUI0s5kb2sgPNyLRVMa6Sn5ke8ZuncpJipAXhU2g5VI1bPR4W94hL7uqKWf9Msiq
+         VALcgeznBXugVPz9aPswNrXqADmxvA2oXytKFyUVqonCjeq4ar1O/nB4YjeTOoRVHRuS
+         A9lnQXKq6xqZg5NcC8VMGsCxxGbLuoABklY77NKKHoATYtft8Es91gYeEyot0s6EljC8
+         ASTw==
+X-Gm-Message-State: APjAAAXRijNwSaSdfoPmuAWrp7om1oXKaRFnO8TTil5I74gGWEPZTWMW
+        YNrvm1IoLWO0yKcWPuXcq3N+xr4u
+X-Google-Smtp-Source: APXvYqxgp5FTnNyJ/mIccgHSB4hhYCvcG013jpDvTSf7iz+qKgnLGGMUu83ceLtv9ZQD/5EsD9J5KA==
+X-Received: by 2002:aa7:9531:: with SMTP id c17mr36301099pfp.130.1564385104775;
+        Mon, 29 Jul 2019 00:25:04 -0700 (PDT)
+Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
+        by smtp.gmail.com with ESMTPSA id i14sm93125571pfk.0.2019.07.29.00.25.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 00:25:04 -0700 (PDT)
+Subject: Re: [PATCH] fs: xfs: Fix possible null-pointer dereferences in
+ xchk_da_btree_block_check_sibling()
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     bfoster@redhat.com, sandeen@sandeen.net, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190729032401.28081-1-baijiaju1990@gmail.com>
+ <20190729042034.GM1561054@magnolia>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <efa37544-0402-af92-c94e-cec49701dca2@gmail.com>
+Date:   Mon, 29 Jul 2019 15:25:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <f43b8af7-e2c0-6193-d666-9fa60050e07d@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190729042034.GM1561054@magnolia>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-29_04:,,
- signatures=0
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -84,71 +82,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 7/25/19 11:41 AM, Olivier MOYSAN wrote:
-> 
-> 
-> On 7/24/19 6:40 PM, Alexandre Torgue wrote:
->> Hi Olivier
->> 
->> On 7/5/19 1:53 PM, Olivier Moysan wrote:
->>> Add support of Cirrus cs42l51 audio codec on stm32mp157a-dk1 board.
->>> Configuration overview:
->>> - SAI2A is the CPU interface used for the codec audio playback
->>> - SAI2B is the CPU interface used for the codec audio record
->>> - SAI2A is configured as a clock provider for the audio codec
->>> - SAI2A&B are configured as slave of the audio codec
->>> - SAI2A&B share the same interface of the audio codec
->>>
->>> Note:
->>> In master mode, cs42l51 audio codec provides a bitclock
->>> at 64 x FS, regardless of data width. This means that
->>> slot width is always 32 bits.
->>> Set slot width to 32 bits and slot number to 2
->>> in SAI2A&B endpoint nodes, to match this constraint.
->>> dai-tdm-slot-num and dai-tdm-slot-width properties are used here,
->>> assuming that i2s is a special case of tdm, where slot number is 2.
->>>
->>> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
->>> ---
->>>    arch/arm/boot/dts/stm32mp157a-dk1.dts | 89 +++++++++++++++++++++++++++++++++++
->>>    1 file changed, 89 insertions(+)
->>>
->> 
->> ...
->> 
->>>    
->>> +&sai2 {
->>> +    clocks = <&rcc SAI2>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
->>> +    clock-names = "pclk", "x8k", "x11k";
->>> +    pinctrl-names = "default", "sleep";
->>> +    pinctrl-0 = <&sai2a_pins_a>, <&sai2b_pins_b>;
->>> +    pinctrl-1 = <&sai2a_sleep_pins_a>, <&sai2b_sleep_pins_b>;
->>> +    status = "okay";
->>> +
->>> +    sai2a: audio-controller@4400b004 {
->>> +            #clock-cells = <0>;
->>> +            dma-names = "tx";
->>> +            clocks = <&rcc SAI2_K>;
->>> +            clock-names = "sai_ck";
->>> +            status = "okay";
->>> +
->>> +            sai2a_port: port {
->>> +                    sai2a_endpoint: endpoint {
->>> +                            remote-endpoint = <&cs42l51_tx_endpoint>;
->>> +                            format = "i2s";
->>> +                            mclk-fs = <256>;
->>> +                            dai-tdm-slot-num = <2>;
->>> +                            dai-tdm-slot-width = <32>;
->>> +                    };
->>> +            };
->>> +    };
->>> +
->> You could use label to overload sai2a and sai2b. no ?
-> I propose to keep it unchanged for better readability
->> 
+On 2019/7/29 12:20, Darrick J. Wong wrote:
+> On Mon, Jul 29, 2019 at 11:24:01AM +0800, Jia-Ju Bai wrote:
+>> In xchk_da_btree_block_check_sibling(), there is an if statement on
+>> line 274 to check whether ds->state->altpath.blk[level].bp is NULL:
+>>      if (ds->state->altpath.blk[level].bp)
+>>
+>> When ds->state->altpath.blk[level].bp is NULL, it is used on line 281:
+>>      xfs_trans_brelse(..., ds->state->altpath.blk[level].bp);
+>>          struct xfs_buf_log_item	*bip = bp->b_log_item;
+>>          ASSERT(bp->b_transp == tp);
+>>
+>> Thus, possible null-pointer dereferences may occur.
+>>
+>> To fix these bugs, ds->state->altpath.blk[level].bp is checked before
+>> being used.
+>>
+>> These bugs are found by a static analysis tool STCheck written by us.
+>>
+>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+>> ---
+>>   fs/xfs/scrub/dabtree.c | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/xfs/scrub/dabtree.c b/fs/xfs/scrub/dabtree.c
+>> index 94c4f1de1922..33ff90c0dd70 100644
+>> --- a/fs/xfs/scrub/dabtree.c
+>> +++ b/fs/xfs/scrub/dabtree.c
+>> @@ -278,7 +278,9 @@ xchk_da_btree_block_check_sibling(
+>>   	/* Compare upper level pointer to sibling pointer. */
+>>   	if (ds->state->altpath.blk[level].blkno != sibling)
+>>   		xchk_da_set_corrupt(ds, level);
+>> -	xfs_trans_brelse(ds->dargs.trans, ds->state->altpath.blk[level].bp);
+>> +	if (ds->state->altpath.blk[level].bp)
+>> +		xfs_trans_brelse(ds->dargs.trans,
+>> +						ds->state->altpath.blk[level].bp);
+> Indentation here (in xfs we use two spaces)
 
-Ok. Applied on stm32-next.
+Okay, I will fix this.
 
-Regards
-Alex
+>
+> Also, uh, shouldn't we set ds->state->altpath.blk[level].bp to NULL
+> since we've released the buffer?
 
+So I should set ds->state->altpath.blk[level].bp to NULL at the end of 
+the function xchk_da_btree_block_check_sibling()?
+Like:
+     if (ds->state->altpath.blk[level].bp)
+         xfs_trans_brelse(ds->dargs.trans,
+                 ds->state->altpath.blk[level].bp);
+     ds->state->altpath.blk[level].bp = NULL;
+
+
+Best wishes,
+Jia-Ju Bai
