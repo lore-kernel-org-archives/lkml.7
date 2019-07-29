@@ -5,58 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47E2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538EDC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 751E9216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E58C217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428365;
-	bh=+sI7MiA78Xynau4wxY7rl427YDpjWCmjVg0wXCpSfkU=;
+	s=default; t=1564428371;
+	bh=LXsBI1nP7aC1KOGbkxAHfjXu8m/BrtXHKl3pF47vSZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oiFt0uo6z35iAtNsEwnBVvvV/x4dYEc32pwzc2KDnGH3dsZVp6a9V8kyKUldFHkim
-	 JgssDKRutTSzrBIEtr9Kxsa4UXge0qh+a3IjC0zVKzPv9oKM2n7kX+oUf8AqWiqaX9
-	 GPBRLZzty73BihcOllrwFjLgW8oTIgl/wRDlGF58=
+	b=L+BGBcj/jFV2uQRta/CdIZ7uqNYYFTGoT0uUKqxbnwpvk8X9id8BN8solwrz1go+k
+	 4H+zoHYgyxlhKEzdwztXwnYhMCNCmH0SF6EslWfdG7pn2ctnRsA3tOxLsEOejYxkgS
+	 wRNT+vjxc3bieXd0CwnsDshFYizvh1e8nB9o8VQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388340AbfG2T0E (ORCPT
+        id S1729102AbfG2T0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:26:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38390 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388324AbfG2T0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:26:02 -0400
+        id S2388324AbfG2T0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:26:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4C7C20C01;
-        Mon, 29 Jul 2019 19:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F5B421655;
+        Mon, 29 Jul 2019 19:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428361;
-        bh=+sI7MiA78Xynau4wxY7rl427YDpjWCmjVg0wXCpSfkU=;
+        s=default; t=1564428364;
+        bh=LXsBI1nP7aC1KOGbkxAHfjXu8m/BrtXHKl3pF47vSZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ClUpkKMKGW1aDTn77/k447wgfCpdB712H2aqlR5BlbaMwwlSiaxa5aZfoIpirW3xl
-         WZyCWRBv5xpbv9KyFygbNvsdA1P1rfSwoitJy5FUncVadLkwrdiDLT8EB/nf9WB4DT
-         iq++k0s02XIz3o3pgGoswxU6PquHbVfTQfISWPm0=
+        b=TRGnuTwS2M2tLFXk3JcbGPcFXygIK3pieEH/CoteqpHGyfHGKj+dgwOJRGxqpM0mt
+         ukCaoezLwPQdEHxpzJqsVF0/DW/X/HGfh5H6fPSLfH8rl0W9dicOwGby2OyH9izA9Z
+         3NlVWEBXTOq6/+QaHtu3DZwQ0jRt/swvQEOmULDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaron Lewis <aaronlewis@google.com>,
-        Borislav Petkov <bp@suse.de>,
-        Jim Mattson <jmattson@google.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        marcorr@google.com, Peter Feiner <pfeiner@google.com>,
-        pshier@google.com, Robert Hoo <robert.hu@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 050/293] x86/cpufeatures: Add FDP_EXCPTN_ONLY and ZERO_FCS_FDS
-Date:   Mon, 29 Jul 2019 21:19:01 +0200
-Message-Id: <20190729190827.345614425@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 051/293] blkcg, writeback: dead memcgs shouldnt contribute to writeback ownership arbitration
+Date:   Mon, 29 Jul 2019 21:19:02 +0200
+Message-Id: <20190729190827.527765441@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -69,58 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cbb99c0f588737ec98c333558922ce47e9a95827 ]
+[ Upstream commit 6631142229005e1b1c311a09efe9fb3cfdac8559 ]
 
-Add the CPUID enumeration for Intel's de-feature bits to accommodate
-passing these de-features through to kvm guests.
+wbc_account_io() collects information on cgroup ownership of writeback
+pages to determine which cgroup should own the inode.  Pages can stay
+associated with dead memcgs but we want to avoid attributing IOs to
+dead blkcgs as much as possible as the association is likely to be
+stale.  However, currently, pages associated with dead memcgs
+contribute to the accounting delaying and/or confusing the
+arbitration.
 
-These de-features are (from SDM vol 1, section 8.1.8):
- - X86_FEATURE_FDP_EXCPTN_ONLY: If CPUID.(EAX=07H,ECX=0H):EBX[bit 6] = 1, the
-   data pointer (FDP) is updated only for the x87 non-control instructions that
-   incur unmasked x87 exceptions.
- - X86_FEATURE_ZERO_FCS_FDS: If CPUID.(EAX=07H,ECX=0H):EBX[bit 13] = 1, the
-   processor deprecates FCS and FDS; it saves each as 0000H.
+Fix it by ignoring pages associated with dead memcgs.
 
-Signed-off-by: Aaron Lewis <aaronlewis@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: marcorr@google.com
-Cc: Peter Feiner <pfeiner@google.com>
-Cc: pshier@google.com
-Cc: Robert Hoo <robert.hu@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190605220252.103406-1-aaronlewis@google.com
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/cpufeatures.h | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/fs-writeback.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 48ef9ed8226d..4cb8315c521f 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -239,12 +239,14 @@
- #define X86_FEATURE_BMI1		( 9*32+ 3) /* 1st group bit manipulation extensions */
- #define X86_FEATURE_HLE			( 9*32+ 4) /* Hardware Lock Elision */
- #define X86_FEATURE_AVX2		( 9*32+ 5) /* AVX2 instructions */
-+#define X86_FEATURE_FDP_EXCPTN_ONLY	( 9*32+ 6) /* "" FPU data pointer updated only on x87 exceptions */
- #define X86_FEATURE_SMEP		( 9*32+ 7) /* Supervisor Mode Execution Protection */
- #define X86_FEATURE_BMI2		( 9*32+ 8) /* 2nd group bit manipulation extensions */
- #define X86_FEATURE_ERMS		( 9*32+ 9) /* Enhanced REP MOVSB/STOSB instructions */
- #define X86_FEATURE_INVPCID		( 9*32+10) /* Invalidate Processor Context ID */
- #define X86_FEATURE_RTM			( 9*32+11) /* Restricted Transactional Memory */
- #define X86_FEATURE_CQM			( 9*32+12) /* Cache QoS Monitoring */
-+#define X86_FEATURE_ZERO_FCS_FDS	( 9*32+13) /* "" Zero out FPU CS and FPU DS */
- #define X86_FEATURE_MPX			( 9*32+14) /* Memory Protection Extension */
- #define X86_FEATURE_RDT_A		( 9*32+15) /* Resource Director Technology Allocation */
- #define X86_FEATURE_AVX512F		( 9*32+16) /* AVX-512 Foundation */
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index 4d561ee08d05..9e8fde348d61 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -721,6 +721,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
+ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 		    size_t bytes)
+ {
++	struct cgroup_subsys_state *css;
+ 	int id;
+ 
+ 	/*
+@@ -732,7 +733,12 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 	if (!wbc->wb)
+ 		return;
+ 
+-	id = mem_cgroup_css_from_page(page)->id;
++	css = mem_cgroup_css_from_page(page);
++	/* dead cgroups shouldn't contribute to inode ownership arbitration */
++	if (!(css->flags & CSS_ONLINE))
++		return;
++
++	id = css->id;
+ 
+ 	if (id == wbc->wb_id) {
+ 		wbc->wb_bytes += bytes;
 -- 
 2.20.1
 
