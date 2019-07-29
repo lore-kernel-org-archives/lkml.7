@@ -5,48 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AA9C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF28BC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9630217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9992171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429193;
-	bh=Ijq/RrJhOYMATffRpKJrqlDoTW/FBNxrPbI+PrEPD3I=;
+	s=default; t=1564429197;
+	bh=H8AJYrVZIfb1kv/D0H3pFJb2xDfdmkq/qkgb0ea7t68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bfTcx2W7jlh1mXd2hkv1lr4J4sUGifIwteDQX2gQwJmDQevRgWeXEJ5IJtj+f5pX2
-	 qN3MAiRB6w79Jnwt4ptDL7qALykHid+l0HSzxzxLTF8pOsyQcYzZlvfXPoHVHQM6dV
-	 +9qDeaEO1OHgFvBQqYCF8rDrJLWNgGvreuayI3HE=
+	b=Fj7qeGbKPdRVXmqaRn3bkc0S22A9+hqf2mnjTlelm1WjeVbbrWAXr+6fPRNBR608e
+	 tQqtOMTQ51iFc8rQopq2JLARKYsNxD8mg2pmlUp11k5y/ua276KNsoxY+/m2ladaYM
+	 em084zNcZClIouX2AhzA9UerTob9wxrPCA/CpPNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388778AbfG2Tjw (ORCPT
+        id S2389069AbfG2Tj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:39:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54960 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:39:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389039AbfG2Tjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:39:47 -0400
+        id S2389039AbfG2Tjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:39:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF22820C01;
-        Mon, 29 Jul 2019 19:39:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FCC1217D4;
+        Mon, 29 Jul 2019 19:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429186;
-        bh=Ijq/RrJhOYMATffRpKJrqlDoTW/FBNxrPbI+PrEPD3I=;
+        s=default; t=1564429193;
+        bh=H8AJYrVZIfb1kv/D0H3pFJb2xDfdmkq/qkgb0ea7t68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oMt4x5TMt6rDbFeE+dHgip1rXEY/ACDSxfPcbHt67tAPU9deFhTrSe/7UFdF+wZWJ
-         FfIv+hmwC7sga1YccroUTAFl36OzYKklPJVSuptlbz9rlGLnMnL2HuGfQ/6yXgLall
-         fpE3FgVtNWhaIawIn/894urpTcNFshXcK5B7ppPE=
+        b=hcySuAW8wzfwi+SK1HBJEgWFjwbdxaqUht3oJI48Y7p0R2vySMEpF2scFeEgWGYY6
+         +90RrKJRBQ6NcPdVgVpYu8US/YXBN0EFjQ3i+5AEiyI50h/3aApjgMiLBcm4BtviEs
+         ZKxVEftyvXwGQHRbh1eIFZOJcMcizRNDJuasW1OY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 019/113] gpu: host1x: Increase maximum DMA segment size
-Date:   Mon, 29 Jul 2019 21:21:46 +0200
-Message-Id: <20190729190700.432802400@linuxfoundation.org>
+Subject: [PATCH 4.19 020/113] drm/crc-debugfs: User irqsafe spinlock in drm_crtc_add_crc_entry
+Date:   Mon, 29 Jul 2019 21:21:47 +0200
+Message-Id: <20190729190700.633359978@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -59,54 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1e390478cfb527e34c9ab89ba57212cb05c33c51 ]
+[ Upstream commit 1882018a70e06376234133e69ede9dd743b4dbd9 ]
 
-Recent versions of the DMA API debug code have started to warn about
-violations of the maximum DMA segment size. This is because the segment
-size defaults to 64 KiB, which can easily be exceeded in large buffer
-allocations such as used in DRM/KMS for framebuffers.
+We can be called from any context, we need to be prepared.
 
-Technically the Tegra SMMU and ARM SMMU don't have a maximum segment
-size (they map individual pages irrespective of whether they are
-contiguous or not), so the choice of 4 MiB is a bit arbitrary here. The
-maximum segment size is a 32-bit unsigned integer, though, so we can't
-set it to the correct maximum size, which would be the size of the
-aperture.
+Noticed this while hacking on vkms, which calls this function from a
+normal worker. Which really upsets lockdep.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Emil Velikov <emil.velikov@collabora.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190605194556.16744-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/host1x/bus.c | 3 +++
- include/linux/host1x.h   | 2 ++
- 2 files changed, 5 insertions(+)
+ drivers/gpu/drm/drm_debugfs_crc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
-index 815bdb42e3f0..0121fe7a4548 100644
---- a/drivers/gpu/host1x/bus.c
-+++ b/drivers/gpu/host1x/bus.c
-@@ -423,6 +423,9 @@ static int host1x_device_add(struct host1x *host1x,
+diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
+index 99961192bf03..a334a82fcb36 100644
+--- a/drivers/gpu/drm/drm_debugfs_crc.c
++++ b/drivers/gpu/drm/drm_debugfs_crc.c
+@@ -379,8 +379,9 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
+ 	struct drm_crtc_crc *crc = &crtc->crc;
+ 	struct drm_crtc_crc_entry *entry;
+ 	int head, tail;
++	unsigned long flags;
  
- 	of_dma_configure(&device->dev, host1x->dev->of_node, true);
+-	spin_lock(&crc->lock);
++	spin_lock_irqsave(&crc->lock, flags);
  
-+	device->dev.dma_parms = &device->dma_parms;
-+	dma_set_max_seg_size(&device->dev, SZ_4M);
-+
- 	err = host1x_device_parse_dt(device, driver);
- 	if (err < 0) {
- 		kfree(device);
-diff --git a/include/linux/host1x.h b/include/linux/host1x.h
-index 89110d896d72..aef6e2f73802 100644
---- a/include/linux/host1x.h
-+++ b/include/linux/host1x.h
-@@ -310,6 +310,8 @@ struct host1x_device {
- 	struct list_head clients;
+ 	/* Caller may not have noticed yet that userspace has stopped reading */
+ 	if (!crc->entries) {
+@@ -411,7 +412,7 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
+ 	head = (head + 1) & (DRM_CRC_ENTRIES_NR - 1);
+ 	crc->head = head;
  
- 	bool registered;
-+
-+	struct device_dma_parameters dma_parms;
- };
+-	spin_unlock(&crc->lock);
++	spin_unlock_irqrestore(&crc->lock, flags);
  
- static inline struct host1x_device *to_host1x_device(struct device *dev)
+ 	wake_up_interruptible(&crc->wq);
+ 
 -- 
 2.20.1
 
