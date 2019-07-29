@@ -2,52 +2,51 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25246C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F64C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E09EB20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31CF20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430683;
-	bh=s1YB5W5ELtm5BS5QaBGi/Ak7p8J1w2oYhu7OyzwYbjI=;
+	s=default; t=1564430684;
+	bh=7u/+GiX78diQlZSnpnqu2l4eIo9WSrQyRAj9zKhIdHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LUHqJHl2CJ7yH+O3QglNqefyqxy/EjND9qHnpwUIw9kbhw/clOIrwBm6i8UKrYuoD
-	 rX9/rDfbKdIJucjaklp5xck5+2FDkP8jwjQj+zsaHYoVW2mWWeoFUSozFzQFD/sNk1
-	 wB+zLvZZNoFKVg06Guq2EmZp0EM9XCkU4U0a5+Ys=
+	b=LtKog9QWdbusO/eur1bopyOmYFw0fnMi87Z67q4UBOOFHX7ZWfTCUhp5aOCdLdkDK
+	 hr9shmStnu7Ij81E44fqcrn0sQ1U0/ONNvXsVnOCUfed+xHhcohpNUMlGr5oNUBih2
+	 +8Z64iKOrk1iEgKX6KmpsNGl8rtCzMihYqc6Xmhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389585AbfG2To5 (ORCPT
+        id S2389857AbfG2Toy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:44:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33468 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:44:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389845AbfG2Tov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:44:51 -0400
+        id S2389834AbfG2Tor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:44:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D746820C01;
-        Mon, 29 Jul 2019 19:44:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33CC9205F4;
+        Mon, 29 Jul 2019 19:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429489;
-        bh=s1YB5W5ELtm5BS5QaBGi/Ak7p8J1w2oYhu7OyzwYbjI=;
+        s=default; t=1564429486;
+        bh=7u/+GiX78diQlZSnpnqu2l4eIo9WSrQyRAj9zKhIdHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oCsiT5SIrk2hxZl5onanHCgtZZDtpU0A+ojOqnKuRdAXEfjMWGIvLkW7lvMMDZqc2
-         yF0CWhFI2JWzi+960sX14zCAi00GhiX7cgi1mUnG9WJRfZTDqNhHsdETv504cUl01A
-         qWiY0Fx8NtJ1Fl66qRNDiKGYIaomtonFzmYh4820=
+        b=SeKB2/yFnql9PaOl0mnQI4OND7DqE6/OJcojsjny+oh+lZrlaG1mlNQRQw+fHsKD9
+         9igqOcC3kZWjqyGM6QcDiu+WVlNfTiXrIkaeWoJhc5DvnRDTz5p8JXi4O49lB/3CSx
+         6oJnq+m7Idqvu+FGP+3qZD7gsFwexRvNuD9BARPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Jane Chu <jane.chu@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 4.19 112/113] libnvdimm/bus: Stop holding nvdimm_bus_list_mutex over __nd_ioctl()
-Date:   Mon, 29 Jul 2019 21:23:19 +0200
-Message-Id: <20190729190721.610390670@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 076/113] block: init flush rq ref count to 1
+Date:   Mon, 29 Jul 2019 21:22:43 +0200
+Message-Id: <20190729190713.719362728@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,208 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+[ Upstream commit b554db147feea39617b533ab6bca247c91c6198a ]
 
-commit b70d31d054ee3a6fc1034b9d7fc0ae1e481aa018 upstream.
+We discovered a problem in newer kernels where a disconnect of a NBD
+device while the flush request was pending would result in a hang.  This
+is because the blk mq timeout handler does
 
-In preparation for fixing a deadlock between wait_for_bus_probe_idle()
-and the nvdimm_bus_list_mutex arrange for __nd_ioctl() without
-nvdimm_bus_list_mutex held. This also unifies the 'dimm' and 'bus' level
-ioctls into a common nd_ioctl() preamble implementation.
+        if (!refcount_inc_not_zero(&rq->ref))
+                return true;
 
-Marked for -stable as it is a pre-requisite for a follow-on fix.
+to determine if it's ok to run the timeout handler for the request.
+Flush_rq's don't have a ref count set, so we'd skip running the timeout
+handler for this request and it would just sit there in limbo forever.
 
-Cc: <stable@vger.kernel.org>
-Fixes: bf9bccc14c05 ("libnvdimm: pmem label sets and namespace instantiation")
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Tested-by: Jane Chu <jane.chu@oracle.com>
-Link: https://lore.kernel.org/r/156341209518.292348.7183897251740665198.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by always setting the refcount of any request going through
+blk_init_rq() to 1.  I tested this with a nbd-server that dropped flush
+requests to verify that it hung, and then tested with this patch to
+verify I got the timeout as expected and the error handling kicked in.
+Thanks,
 
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/bus.c     |   94 ++++++++++++++++++++++++++++-------------------
- drivers/nvdimm/nd-core.h |    3 +
- 2 files changed, 59 insertions(+), 38 deletions(-)
+ block/blk-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -86,7 +86,7 @@ static void nvdimm_bus_probe_end(struct
- {
- 	nvdimm_bus_lock(&nvdimm_bus->dev);
- 	if (--nvdimm_bus->probe_active == 0)
--		wake_up(&nvdimm_bus->probe_wait);
-+		wake_up(&nvdimm_bus->wait);
- 	nvdimm_bus_unlock(&nvdimm_bus->dev);
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 682bc561b77b..9ca703bcfe3b 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -198,6 +198,7 @@ void blk_rq_init(struct request_queue *q, struct request *rq)
+ 	rq->internal_tag = -1;
+ 	rq->start_time_ns = ktime_get_ns();
+ 	rq->part = NULL;
++	refcount_set(&rq->ref, 1);
  }
+ EXPORT_SYMBOL(blk_rq_init);
  
-@@ -348,7 +348,7 @@ struct nvdimm_bus *nvdimm_bus_register(s
- 		return NULL;
- 	INIT_LIST_HEAD(&nvdimm_bus->list);
- 	INIT_LIST_HEAD(&nvdimm_bus->mapping_list);
--	init_waitqueue_head(&nvdimm_bus->probe_wait);
-+	init_waitqueue_head(&nvdimm_bus->wait);
- 	nvdimm_bus->id = ida_simple_get(&nd_ida, 0, 0, GFP_KERNEL);
- 	mutex_init(&nvdimm_bus->reconfig_mutex);
- 	badrange_init(&nvdimm_bus->badrange);
-@@ -418,6 +418,9 @@ static int nd_bus_remove(struct device *
- 	list_del_init(&nvdimm_bus->list);
- 	mutex_unlock(&nvdimm_bus_list_mutex);
- 
-+	wait_event(nvdimm_bus->wait,
-+			atomic_read(&nvdimm_bus->ioctl_active) == 0);
-+
- 	nd_synchronize();
- 	device_for_each_child(&nvdimm_bus->dev, NULL, child_unregister);
- 
-@@ -838,7 +841,7 @@ void wait_nvdimm_bus_probe_idle(struct d
- 		if (nvdimm_bus->probe_active == 0)
- 			break;
- 		nvdimm_bus_unlock(&nvdimm_bus->dev);
--		wait_event(nvdimm_bus->probe_wait,
-+		wait_event(nvdimm_bus->wait,
- 				nvdimm_bus->probe_active == 0);
- 		nvdimm_bus_lock(&nvdimm_bus->dev);
- 	} while (true);
-@@ -1068,24 +1071,10 @@ static int __nd_ioctl(struct nvdimm_bus
- 	return rc;
- }
- 
--static long nd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
--{
--	long id = (long) file->private_data;
--	int rc = -ENXIO, ro;
--	struct nvdimm_bus *nvdimm_bus;
--
--	ro = ((file->f_flags & O_ACCMODE) == O_RDONLY);
--	mutex_lock(&nvdimm_bus_list_mutex);
--	list_for_each_entry(nvdimm_bus, &nvdimm_bus_list, list) {
--		if (nvdimm_bus->id == id) {
--			rc = __nd_ioctl(nvdimm_bus, NULL, ro, cmd, arg);
--			break;
--		}
--	}
--	mutex_unlock(&nvdimm_bus_list_mutex);
--
--	return rc;
--}
-+enum nd_ioctl_mode {
-+	BUS_IOCTL,
-+	DIMM_IOCTL,
-+};
- 
- static int match_dimm(struct device *dev, void *data)
- {
-@@ -1100,31 +1089,62 @@ static int match_dimm(struct device *dev
- 	return 0;
- }
- 
--static long nvdimm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+static long nd_ioctl(struct file *file, unsigned int cmd, unsigned long arg,
-+		enum nd_ioctl_mode mode)
-+
- {
--	int rc = -ENXIO, ro;
--	struct nvdimm_bus *nvdimm_bus;
-+	struct nvdimm_bus *nvdimm_bus, *found = NULL;
-+	long id = (long) file->private_data;
-+	struct nvdimm *nvdimm = NULL;
-+	int rc, ro;
- 
- 	ro = ((file->f_flags & O_ACCMODE) == O_RDONLY);
- 	mutex_lock(&nvdimm_bus_list_mutex);
- 	list_for_each_entry(nvdimm_bus, &nvdimm_bus_list, list) {
--		struct device *dev = device_find_child(&nvdimm_bus->dev,
--				file->private_data, match_dimm);
--		struct nvdimm *nvdimm;
-+		if (mode == DIMM_IOCTL) {
-+			struct device *dev;
- 
--		if (!dev)
--			continue;
-+			dev = device_find_child(&nvdimm_bus->dev,
-+					file->private_data, match_dimm);
-+			if (!dev)
-+				continue;
-+			nvdimm = to_nvdimm(dev);
-+			found = nvdimm_bus;
-+		} else if (nvdimm_bus->id == id) {
-+			found = nvdimm_bus;
-+		}
- 
--		nvdimm = to_nvdimm(dev);
--		rc = __nd_ioctl(nvdimm_bus, nvdimm, ro, cmd, arg);
--		put_device(dev);
--		break;
-+		if (found) {
-+			atomic_inc(&nvdimm_bus->ioctl_active);
-+			break;
-+		}
- 	}
- 	mutex_unlock(&nvdimm_bus_list_mutex);
- 
-+	if (!found)
-+		return -ENXIO;
-+
-+	nvdimm_bus = found;
-+	rc = __nd_ioctl(nvdimm_bus, nvdimm, ro, cmd, arg);
-+
-+	if (nvdimm)
-+		put_device(&nvdimm->dev);
-+	if (atomic_dec_and_test(&nvdimm_bus->ioctl_active))
-+		wake_up(&nvdimm_bus->wait);
-+
- 	return rc;
- }
- 
-+static long bus_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	return nd_ioctl(file, cmd, arg, BUS_IOCTL);
-+}
-+
-+static long dimm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	return nd_ioctl(file, cmd, arg, DIMM_IOCTL);
-+}
-+
- static int nd_open(struct inode *inode, struct file *file)
- {
- 	long minor = iminor(inode);
-@@ -1136,16 +1156,16 @@ static int nd_open(struct inode *inode,
- static const struct file_operations nvdimm_bus_fops = {
- 	.owner = THIS_MODULE,
- 	.open = nd_open,
--	.unlocked_ioctl = nd_ioctl,
--	.compat_ioctl = nd_ioctl,
-+	.unlocked_ioctl = bus_ioctl,
-+	.compat_ioctl = bus_ioctl,
- 	.llseek = noop_llseek,
- };
- 
- static const struct file_operations nvdimm_fops = {
- 	.owner = THIS_MODULE,
- 	.open = nd_open,
--	.unlocked_ioctl = nvdimm_ioctl,
--	.compat_ioctl = nvdimm_ioctl,
-+	.unlocked_ioctl = dimm_ioctl,
-+	.compat_ioctl = dimm_ioctl,
- 	.llseek = noop_llseek,
- };
- 
---- a/drivers/nvdimm/nd-core.h
-+++ b/drivers/nvdimm/nd-core.h
-@@ -25,10 +25,11 @@ extern int nvdimm_major;
- 
- struct nvdimm_bus {
- 	struct nvdimm_bus_descriptor *nd_desc;
--	wait_queue_head_t probe_wait;
-+	wait_queue_head_t wait;
- 	struct list_head list;
- 	struct device dev;
- 	int id, probe_active;
-+	atomic_t ioctl_active;
- 	struct list_head mapping_list;
- 	struct mutex reconfig_mutex;
- 	struct badrange badrange;
+-- 
+2.20.1
+
 
 
