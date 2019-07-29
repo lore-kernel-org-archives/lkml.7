@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B385C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DF0C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D30B2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745F2205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429811;
-	bh=FfBSftjkxA4VBM6W0bbDtLYMoU+8RUCpM3t+Nkg30sg=;
+	s=default; t=1564429813;
+	bh=Cr4KOxtfi18KMBE2YdTdbktPIVeaM+SaISX20fWfnrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kBf3K0JMoP0cNxAnrF+qW9KXCjsDWYAi6FZnTYEOM/ZVpd1bf1cDCEUQ2MMxAVX4l
-	 qUjFWmKIXqw6befH8ZSHzeEtFlCc8b/fPYvAhX0SFVrFLuBZ6VOYVuPIZpp9VaTRZt
-	 CjBf/0gK//BnrYuOHBhj8yA4/rzkpWgxvP6tiz7I=
+	b=UH+68xZksDebcBY+ddLMXg82JYgkYJlIZrLW6dVbE8UhkCAqMLPM2zesDdKo8hvjD
+	 xKmgN2eChBYpzZjJjLwMo46Y6rpANZKvIHIQl6fgoKtnp/JchFfkVJeDBhuLbQbAr2
+	 eCKBBnVqQ3f06qSpJvYc5DfTlJhnW7bxz0YTMgy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390650AbfG2TuJ (ORCPT
+        id S2390653AbfG2TuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:50:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40922 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:50:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389663AbfG2TuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:50:07 -0400
+        id S2390640AbfG2TuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:50:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A7452171F;
-        Mon, 29 Jul 2019 19:50:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C8C6205F4;
+        Mon, 29 Jul 2019 19:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429805;
-        bh=FfBSftjkxA4VBM6W0bbDtLYMoU+8RUCpM3t+Nkg30sg=;
+        s=default; t=1564429808;
+        bh=Cr4KOxtfi18KMBE2YdTdbktPIVeaM+SaISX20fWfnrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vdyaECKvL9grGwGAScU//wnQM3sAISpAq2X/wFvyfGkCkls1oNI+UeVsN39v7z1Dv
-         Hl1BvTQuJAXGXMp0uccTcuWVkqzWMF8xKRKn7Vy3KCm9ttkejo6EFjOL+FixQcQ6W6
-         vf2pBSrUhyA0PDR7idPNa5Q9p7iXf7BisPF6tJL0=
+        b=NMB36SMBx3fO044H4FiV0BP2SeULqX1LObPcieznjhCd0PQw0GkTm5xIzYXAlsdUy
+         x3cIYgbnEoJZMVksBNM1X3BUjYP7mXq7ZBzkBtuThJLEOVhlunhPiyKjZ5t24R7SsP
+         QRY0GiayKAhHXjH0bcUrrEjY8EFBBf7Z/Fx5juVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Eugene Korenevsky <ekorenevsky@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 101/215] um: Silence lockdep complaint about mmap_sem
-Date:   Mon, 29 Jul 2019 21:21:37 +0200
-Message-Id: <20190729190756.571000194@linuxfoundation.org>
+Subject: [PATCH 5.2 075/215] kvm: vmx: segment limit check: use access length
+Date:   Mon, 29 Jul 2019 21:21:11 +0200
+Message-Id: <20190729190753.051105082@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,109 +60,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 80bf6ceaf9310b3f61934c69b382d4912deee049 ]
+[ Upstream commit fdb28619a8f033c13f5d9b9e8b5536bb6e68a2c3 ]
 
-When we get into activate_mm(), lockdep complains that we're doing
-something strange:
+There is an imperfection in get_vmx_mem_address(): access length is ignored
+when checking the limit. To fix this, pass access length as a function argument.
+The access length is usually obvious since it is used by callers after
+get_vmx_mem_address() call, but for vmread/vmwrite it depends on the
+state of 64-bit mode.
 
-    WARNING: possible circular locking dependency detected
-    5.1.0-10252-gb00152307319-dirty #121 Not tainted
-    ------------------------------------------------------
-    inside.sh/366 is trying to acquire lock:
-    (____ptrval____) (&(&p->alloc_lock)->rlock){+.+.}, at: flush_old_exec+0x703/0x8d7
-
-    but task is already holding lock:
-    (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
-
-    which lock already depends on the new lock.
-
-    the existing dependency chain (in reverse order) is:
-
-    -> #1 (&mm->mmap_sem){++++}:
-           [...]
-           __lock_acquire+0x12ab/0x139f
-           lock_acquire+0x155/0x18e
-           down_write+0x3f/0x98
-           flush_old_exec+0x748/0x8d7
-           load_elf_binary+0x2ca/0xddb
-           [...]
-
-    -> #0 (&(&p->alloc_lock)->rlock){+.+.}:
-           [...]
-           __lock_acquire+0x12ab/0x139f
-           lock_acquire+0x155/0x18e
-           _raw_spin_lock+0x30/0x83
-           flush_old_exec+0x703/0x8d7
-           load_elf_binary+0x2ca/0xddb
-           [...]
-
-    other info that might help us debug this:
-
-     Possible unsafe locking scenario:
-
-           CPU0                    CPU1
-           ----                    ----
-      lock(&mm->mmap_sem);
-                                   lock(&(&p->alloc_lock)->rlock);
-                                   lock(&mm->mmap_sem);
-      lock(&(&p->alloc_lock)->rlock);
-
-     *** DEADLOCK ***
-
-    2 locks held by inside.sh/366:
-     #0: (____ptrval____) (&sig->cred_guard_mutex){+.+.}, at: __do_execve_file+0x12d/0x869
-     #1: (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
-
-    stack backtrace:
-    CPU: 0 PID: 366 Comm: inside.sh Not tainted 5.1.0-10252-gb00152307319-dirty #121
-    Stack:
-     [...]
-    Call Trace:
-     [<600420de>] show_stack+0x13b/0x155
-     [<6048906b>] dump_stack+0x2a/0x2c
-     [<6009ae64>] print_circular_bug+0x332/0x343
-     [<6009c5c6>] check_prev_add+0x669/0xdad
-     [<600a06b4>] __lock_acquire+0x12ab/0x139f
-     [<6009f3d0>] lock_acquire+0x155/0x18e
-     [<604a07e0>] _raw_spin_lock+0x30/0x83
-     [<60151e6a>] flush_old_exec+0x703/0x8d7
-     [<601a8eb8>] load_elf_binary+0x2ca/0xddb
-     [...]
-
-I think it's because in exec_mmap() we have
-
-	down_read(&old_mm->mmap_sem);
-...
-        task_lock(tsk);
-...
-	activate_mm(active_mm, mm);
-	(which does down_write(&mm->mmap_sem))
-
-I'm not really sure why lockdep throws in the whole knowledge
-about the task lock, but it seems that old_mm and mm shouldn't
-ever be the same (and it doesn't deadlock) so tell lockdep that
-they're different.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Eugene Korenevsky <ekorenevsky@gmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/include/asm/mmu_context.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx/nested.c | 28 ++++++++++++++++------------
+ arch/x86/kvm/vmx/nested.h |  2 +-
+ arch/x86/kvm/vmx/vmx.c    |  3 ++-
+ 3 files changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
-index 9f4b4bb78120..00cefd33afdd 100644
---- a/arch/um/include/asm/mmu_context.h
-+++ b/arch/um/include/asm/mmu_context.h
-@@ -52,7 +52,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
- 	 * when the new ->mm is used for the first time.
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index ac98b1328124..c1d118f4dc72 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4017,7 +4017,7 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+  * #UD or #GP.
+  */
+ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+-			u32 vmx_instruction_info, bool wr, gva_t *ret)
++			u32 vmx_instruction_info, bool wr, int len, gva_t *ret)
+ {
+ 	gva_t off;
+ 	bool exn;
+@@ -4124,7 +4124,7 @@ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+ 		 */
+ 		if (!(s.base == 0 && s.limit == 0xffffffff &&
+ 		     ((s.type & 8) || !(s.type & 4))))
+-			exn = exn || ((u64)off + sizeof(u64) - 1 > s.limit);
++			exn = exn || ((u64)off + len - 1 > s.limit);
+ 	}
+ 	if (exn) {
+ 		kvm_queue_exception_e(vcpu,
+@@ -4143,7 +4143,8 @@ static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
+ 	struct x86_exception e;
+ 
+ 	if (get_vmx_mem_address(vcpu, vmcs_readl(EXIT_QUALIFICATION),
+-			vmcs_read32(VMX_INSTRUCTION_INFO), false, &gva))
++				vmcs_read32(VMX_INSTRUCTION_INFO), false,
++				sizeof(*vmpointer), &gva))
+ 		return 1;
+ 
+ 	if (kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e)) {
+@@ -4394,6 +4395,7 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
+ 	u64 field_value;
+ 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+ 	u32 vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
++	int len;
+ 	gva_t gva = 0;
+ 	struct vmcs12 *vmcs12;
+ 
+@@ -4431,12 +4433,12 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
+ 		kvm_register_writel(vcpu, (((vmx_instruction_info) >> 3) & 0xf),
+ 			field_value);
+ 	} else {
++		len = is_64_bit_mode(vcpu) ? 8 : 4;
+ 		if (get_vmx_mem_address(vcpu, exit_qualification,
+-				vmx_instruction_info, true, &gva))
++				vmx_instruction_info, true, len, &gva))
+ 			return 1;
+ 		/* _system ok, nested_vmx_check_permission has verified cpl=0 */
+-		kvm_write_guest_virt_system(vcpu, gva, &field_value,
+-					    (is_long_mode(vcpu) ? 8 : 4), NULL);
++		kvm_write_guest_virt_system(vcpu, gva, &field_value, len, NULL);
+ 	}
+ 
+ 	return nested_vmx_succeed(vcpu);
+@@ -4446,6 +4448,7 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
+ static int handle_vmwrite(struct kvm_vcpu *vcpu)
+ {
+ 	unsigned long field;
++	int len;
+ 	gva_t gva;
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+@@ -4471,11 +4474,11 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
+ 		field_value = kvm_register_readl(vcpu,
+ 			(((vmx_instruction_info) >> 3) & 0xf));
+ 	else {
++		len = is_64_bit_mode(vcpu) ? 8 : 4;
+ 		if (get_vmx_mem_address(vcpu, exit_qualification,
+-				vmx_instruction_info, false, &gva))
++				vmx_instruction_info, false, len, &gva))
+ 			return 1;
+-		if (kvm_read_guest_virt(vcpu, gva, &field_value,
+-					(is_64_bit_mode(vcpu) ? 8 : 4), &e)) {
++		if (kvm_read_guest_virt(vcpu, gva, &field_value, len, &e)) {
+ 			kvm_inject_page_fault(vcpu, &e);
+ 			return 1;
+ 		}
+@@ -4634,7 +4637,8 @@ static int handle_vmptrst(struct kvm_vcpu *vcpu)
+ 	if (unlikely(to_vmx(vcpu)->nested.hv_evmcs))
+ 		return 1;
+ 
+-	if (get_vmx_mem_address(vcpu, exit_qual, instr_info, true, &gva))
++	if (get_vmx_mem_address(vcpu, exit_qual, instr_info,
++				true, sizeof(gpa_t), &gva))
+ 		return 1;
+ 	/* *_system ok, nested_vmx_check_permission has verified cpl=0 */
+ 	if (kvm_write_guest_virt_system(vcpu, gva, (void *)&current_vmptr,
+@@ -4680,7 +4684,7 @@ static int handle_invept(struct kvm_vcpu *vcpu)
+ 	 * operand is read even if it isn't needed (e.g., for type==global)
  	 */
- 	__switch_mm(&new->context.id);
--	down_write(&new->mmap_sem);
-+	down_write_nested(&new->mmap_sem, 1);
- 	uml_setup_stubs(new);
- 	up_write(&new->mmap_sem);
- }
+ 	if (get_vmx_mem_address(vcpu, vmcs_readl(EXIT_QUALIFICATION),
+-			vmx_instruction_info, false, &gva))
++			vmx_instruction_info, false, sizeof(operand), &gva))
+ 		return 1;
+ 	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
+ 		kvm_inject_page_fault(vcpu, &e);
+@@ -4742,7 +4746,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
+ 	 * operand is read even if it isn't needed (e.g., for type==global)
+ 	 */
+ 	if (get_vmx_mem_address(vcpu, vmcs_readl(EXIT_QUALIFICATION),
+-			vmx_instruction_info, false, &gva))
++			vmx_instruction_info, false, sizeof(operand), &gva))
+ 		return 1;
+ 	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
+ 		kvm_inject_page_fault(vcpu, &e);
+diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+index e847ff1019a2..29d205bb4e4f 100644
+--- a/arch/x86/kvm/vmx/nested.h
++++ b/arch/x86/kvm/vmx/nested.h
+@@ -21,7 +21,7 @@ void nested_sync_from_vmcs12(struct kvm_vcpu *vcpu);
+ int vmx_set_vmx_msr(struct kvm_vcpu *vcpu, u32 msr_index, u64 data);
+ int vmx_get_vmx_msr(struct nested_vmx_msrs *msrs, u32 msr_index, u64 *pdata);
+ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+-			u32 vmx_instruction_info, bool wr, gva_t *ret);
++			u32 vmx_instruction_info, bool wr, int len, gva_t *ret);
+ 
+ static inline struct vmcs12 *get_vmcs12(struct kvm_vcpu *vcpu)
+ {
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 306ed28569c0..924c2a79e4a9 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -5349,7 +5349,8 @@ static int handle_invpcid(struct kvm_vcpu *vcpu)
+ 	 * is read even if it isn't needed (e.g., for type==all)
+ 	 */
+ 	if (get_vmx_mem_address(vcpu, vmcs_readl(EXIT_QUALIFICATION),
+-				vmx_instruction_info, false, &gva))
++				vmx_instruction_info, false,
++				sizeof(operand), &gva))
+ 		return 1;
+ 
+ 	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
 -- 
 2.20.1
 
