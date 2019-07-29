@@ -2,120 +2,103 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4BEC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78970C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDEA217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4283D205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:14:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oAW3tFK8"
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="JtAVStV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbfG2UOY (ORCPT
+        id S1730414AbfG2UOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:14:24 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41282 "EHLO
+        Mon, 29 Jul 2019 16:14:34 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33379 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730525AbfG2UOW (ORCPT
+        with ESMTP id S1730044AbfG2UOd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:14:22 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x15so18452937pgg.8;
-        Mon, 29 Jul 2019 13:14:21 -0700 (PDT)
+        Mon, 29 Jul 2019 16:14:33 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f20so19568087pgj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 13:14:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a80YhmstvkFSvpLxuuKLo03NoSn39TaxaZX6joqs8MA=;
-        b=oAW3tFK8X61jpoyXLcaKMiOnJ9TYUngRguXPgieCBQvf7vbjz8n4B8AGc7Yhk1Spov
-         jfeQDaW7HSUgWSQJmGbemqCvojoYvAv060EXEN4coAflTTTFW0sx6k1g9dG+HbyQ+kqe
-         qUQU0/i18Ci/UKnzWdJlUXx8+Ut03VJliGO3Ol7bvYUETBeW1y1xDi04lBy/SZvgDpl6
-         zl+NaAyW5bW5WdKekXOjlSfdQ9oDmyL0jqEAmq32QjWeml/Tl0I1Yc31Je+9sTMrqGj4
-         rjTSOmm/45LqyYqzmWonKjfTI0DCeWT4+80sPZ5FHFaQmYxVJ+gyW3Xw3n7TxC2z+RHd
-         TgfA==
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4keJAShqq2q/IDLzL2p7jjpoZMeQRV3FU23AJeNycVA=;
+        b=JtAVStV+qYUB/ArkMRlEhkdK6ZnJDpeNjtT5z/JG5u9vUvaM01WO2YcLvVQHikjip2
+         yXyEXrEWBIC/JnvrJGvWDf/+oxhnP2VEshm127BxsGbwVqqEhJbK9dW/muTeETtXui1W
+         ozqImJGewtf163mLx/QF8Gmm7cpinTpKd/k4gD+j8PMiYx1LBAmbE8SgRYnVpvXWc6pX
+         kvPoL0Xe9jFiH4tRZNk97oF6ubPo/GAMlK1oSjwIhjgQgjXQL4VPyOgFXgaVNbKwnTaV
+         Q81p8VC26BE5lME7nv62flGyWCXwwYRxSONbcyLIwdiQ+Y0QbQkFQqTtSyADMpVZFNLg
+         OODA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a80YhmstvkFSvpLxuuKLo03NoSn39TaxaZX6joqs8MA=;
-        b=KI8aa0jgjSkK3Z5dBBMRdyHeYGw3E8+qhepVFpQud6JNPH9PGSdRWT9/DzbhZXvR1K
-         CsGnIEjjEXllFPvk4HusQLsx9aQgl8qx0vaXYUwvVp3Nk5P7Nq+jybRTBFpuBOxXpsOW
-         ai+2A7bBJ53wH097BNaRPAT8WJJEwPii54nWe9ky8WEodndIh+TZOaIbYUb4GyHC5agt
-         x60UBCUf/cxA3r9NVfDgTG+YVq4ddZ5OZ2xO4klIuWOGAG1a8m/drYcK5T252HvlzeSf
-         h6C0wo19A+Nx+YXV2XDgozOk+wYbM1lhmfiSG6/C785G3C5AgF8Bm+ov5kru4+sy0zFH
-         Wi0w==
-X-Gm-Message-State: APjAAAUsIxOxKSWUu52mJp9TYqmHs9yT0msxZWODMLJJwxd46wR6NQ4W
-        dZpd16329kwbsAT2ReyJHhA=
-X-Google-Smtp-Source: APXvYqzHimbts6Pzs9sE75ZW5J3eKE7GTyz7Rq8GUSY5Q6dToWV+ZKL5WQAvZY7dibUphM2oY0krmA==
-X-Received: by 2002:a17:90a:9a83:: with SMTP id e3mr111562668pjp.105.1564431261030;
-        Mon, 29 Jul 2019 13:14:21 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id i74sm122243034pje.16.2019.07.29.13.14.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 13:14:20 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 13:15:09 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     broonie@kernel.org, l.stach@pengutronix.de, mihai.serban@gmail.com,
-        alsa-devel@alsa-project.org, viorel.suman@nxp.com,
-        timur@kernel.org, shengjiu.wang@nxp.com, angus@akkea.ca,
-        tiwai@suse.com, linux-imx@nxp.com, kernel@pengutronix.de,
-        festevam@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org
-Subject: Re: [PATCH v2 4/7] ASoC: dt-bindings: Document dl-mask property
-Message-ID: <20190729201508.GB20594@Asurada-Nvidia.nvidia.com>
-References: <20190728192429.1514-1-daniel.baluta@nxp.com>
- <20190728192429.1514-5-daniel.baluta@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4keJAShqq2q/IDLzL2p7jjpoZMeQRV3FU23AJeNycVA=;
+        b=Vi6L7tE3ZephtMkK2gAesHdhUNdeUi9LpjYrH5k8980gLbzv36iBtyfn5e3P0k2aBd
+         fl44pZ3zIZj/4H5XLafm2jpKhYPgEeHoopAPNckF/RjXC88G6fwGimDobbTMV6uVzxs1
+         Y0sFQFz0d7O0N94QP8hZqZ9reqPxgUc2+u77eYpvj6ATFrvpflZKC5w3wyDI370fuGb6
+         bs8K+zzi39A6VXJVvLYs9v6A4LCh7SGI5182a9IfG+nNnzGnvn6+pc2mqRM2sQSKQmQY
+         1GoEMt48LXNCOQG9vpxnVrsYpPfRzCex8+/6B1wbUvW5R4kx/wL7poTejjCqoukEJy94
+         XvEg==
+X-Gm-Message-State: APjAAAVy5MMVpRXW1l8jYfBxMqDI9RHQU1smiXX8ceHMEyhUWGoUQaUe
+        565InoC/ygmINx4zjsBNFIEhg0ry0ynDlyBJT9U=
+X-Google-Smtp-Source: APXvYqy/5Bg/DGakidcOCN+mJroP8j11+A23pRgyE6m5fhgP67ISRmMTRVQId0R3vgBCuylnPSD8+jIMNZ1bBhJswSM=
+X-Received: by 2002:a17:90a:28e4:: with SMTP id f91mr110090286pjd.99.1564431272178;
+ Mon, 29 Jul 2019 13:14:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190728192429.1514-5-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAG=yYw=S197+2TzdPaiEaz-9MRuVtd+Q_L9W8GOf4jKwyppNjQ@mail.gmail.com>
+ <CAKwvOdmg2b2PMzuzNmutacFArBNagjtwG=_VZvKhb4okzSkdiA@mail.gmail.com>
+ <201907181423.E808958@keescook> <CAG=yYwmTdW0THoVGJc-Le+TyGMaHKZD-NHTRfXczNes65T8qWA@mail.gmail.com>
+ <ec210573-dada-bb6e-b0ee-f54bea62e2ce@kernel.dk>
+In-Reply-To: <ec210573-dada-bb6e-b0ee-f54bea62e2ce@kernel.dk>
+From:   Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Date:   Tue, 30 Jul 2019 01:43:55 +0530
+Message-ID: <CAG=yYw=w-Y2zJG-hfUdC7eZ+c7CykB82gBnHpgZMcpHquWzRXw@mail.gmail.com>
+Subject: Re: BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        tobin@kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 10:24:26PM +0300, Daniel Baluta wrote:
-> SAI supports up to 8 data lines. This property let the user
-> configure how many data lines should be used per transfer
-> direction (Tx/Rx).
+hello Kees,
 
-This sounds a bit less persuasive to me as we are adding a
-DT property that's used to describe a hardware connections
-and it would be probably better to mention that the mapping
-between the mask and the data lines could be more flexible
-than consecutive active data lines as you said previously.
+please mention  me ...
+Reported-by:  Jeffrin Jose T  <jeffrin@rajagiritech.edu.in>
+Tested-by: Jeffrin Jose T  <jeffrin@rajagiritech.edu.in>
 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  Documentation/devicetree/bindings/sound/fsl-sai.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> index 2e726b983845..2b38036a4883 100644
-> --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> @@ -49,6 +49,13 @@ Optional properties:
->  
->    - big-endian		: Boolean property, required if all the SAI
->  			  registers are big-endian rather than little-endian.
-> +  - fsl,dl-mask		: list of two integers (bitmask, first for RX, second
+On Tue, Jul 30, 2019 at 1:25 AM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 7/29/19 1:34 PM, Jeffrin Thalakkottoor wrote:
+> > hello Kees Cook,
+> >
+> > i tested your fix and i think it worked like a charm !
+> > kasan message related disappeared during boot time and it does not
+> > show in the output of "sudo dmesg -l err"
+> > anyway thanks a lot !
+>
+> Kees, could you send that out as a proper patch?
+>
+> --
+> Jens Axboe
+>
 
-I am leaving this naming to DT maintainer.
 
-> +			  for TX) representing enabled datalines. Bit 0
-> +			  represents first data line, bit 1 represents second
-> +			  data line and so on. Data line is enabled if
-> +			  corresponding bit is set to 1. By default, if property
-> +			  not present, only dataline 0 is enabled for both
-> +			  directions.
-
-To make this patch more convincing, could we add an example
-as well in the Example section of this binding file? Like:
-	/* RX data lines 0/1 and TX data lines 0/2 are connected */
-	fsl,dl-mask = <0x3 0x5>;
+-- 
+software engineer
+rajagiri school of engineering and technology
