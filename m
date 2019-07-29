@@ -2,112 +2,130 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2356DC7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB547C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03DB72067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848EA2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:46:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gn5Oz/xb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388192AbfG2PqM (ORCPT
+        id S2388210AbfG2PqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:46:12 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38076 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387476AbfG2PqL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:46:11 -0400
-Received: by mail-qt1-f195.google.com with SMTP id n11so60070790qtl.5;
-        Mon, 29 Jul 2019 08:46:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MdHXLZwaqbOv7T3Hj3y1o9Z8ZEiEvQ/Zlrs0AB1LjQo=;
-        b=sSeFAiX1pgVg9+ZwXyykpBaxJp7ObRvjXWvh6ma3Cec/RY3epQUq7APGuZ3EP9PIhB
-         Tk9H+9Ptyo3SbmpRPII/mtUQz4I90Nm6BqtLtimsLq+3Sv2RoY+TaSpu/tEjcrSjn8zW
-         I5CLPiOTU5Eb1UzyqvSooFdIuv1LlKNp47/na0Wi8kP/Uqb8iWk89A8hAzAQ6W+mqVxh
-         d1O6s051fsr8OA0hwwmQj7YyogEhd9Sz1ET7M9sBLqLBfoxkVId/LDmHG9hde7i/MGx2
-         pyI2yVKvtP3Ezo6c1+MJEcI6JvCXzY+JKPoT3ivFSoCQPu/lO22dPPrFEx08G7ohZcqD
-         6m2w==
-X-Gm-Message-State: APjAAAXYTvCpabrl4ZhqACqNs70WdNoFWQ8pRkGy64AzEVJ0SkC4RNob
-        DK17gcEzLLoappAZGLRBpfbm6b+sFBlC7BmEhOI=
-X-Google-Smtp-Source: APXvYqw/cgcq+yELqIxSSobC3ksc1GJZ0AXgiz/NIbvMz4AkwGr0gHwZI//W5CKPZAtnvTrcbOFyZ+FH8T2J6P7vEGY=
-X-Received: by 2002:a0c:b88e:: with SMTP id y14mr77156754qvf.93.1564415170331;
- Mon, 29 Jul 2019 08:46:10 -0700 (PDT)
+        Mon, 29 Jul 2019 11:46:23 -0400
+Received: from mail-eopbgr80044.outbound.protection.outlook.com ([40.107.8.44]:41536
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387476AbfG2PqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:46:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lFOM5b3PuZIze1j0hfEp75t/O1lR0cw8tqjNW6JPH6xKoCHTY1BL0X9U2wYTftyFAeJaNvNtMnmvBaWEv9kY9und1LJPTSPxAScCslI70L/8jF1yp+GlazoavJ8RPq4yYRnpFaPtm9pGTelm101mGbM4mK9QGwZqEq3An0NzkGdn8kzLZa13tapdRr6wGGP3v5ZQ8bJVujh5+Lm+qE0vRLWjWVEIC31++16a/5WMVR/XgUEqrqVa48e3e9ilF8bXJ3B7SSFOk8Ol2z/XjwU3EPE4Mu/vBJdHpyj8W3j6iYYGMDA72S1CGJ3/EHkLb7WzVX7B22vs2sgmNkgabh95Pw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+MCk19dj4kFiqFVu8xCOoiZ4iH13iHgiIguTbpYhfHU=;
+ b=ADVc1IrRZxjtnmEHYehZAQm8nJsrWv2WZp7Fo6MNKaP5LBUDnBQFW1lVFF9cGC9LeYVDq1ZPvywkMhzQSQzTiWlvyzr7s7rHT5dEbat7jSVP9kzIadE+nLeLu648uasCMwF8fLf4mXuKNfvPu7nuGk1qpfiSbGZrh5247Muymrnk61nKBEePNRvhq8nghAlrg/HEbhXsSY2G/oTInaOzaGgmBWitkRpjlV+NaysETJ1ZmynHOUPIOKszWwuNFcwDEEA3NuZHS/fGrUf2RN9YjplhIOHgk5dUkyBGEyNqtXsFrYNwXTqdB57DFMz2eGCjxIaAgvF4kPJDALFLOZrH4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+MCk19dj4kFiqFVu8xCOoiZ4iH13iHgiIguTbpYhfHU=;
+ b=gn5Oz/xbc23YVXOra9ntxuCqgV/xWRlAfKigZVcnrEnEwsIszD5hS3PIZPCOfBBLKSFYNu0Yw8Kke3mvTh942kXyDylQSI9X/Pl0EnYfpuo0Dptr4E6NUof24Y3i9bKYnG60/NUpZycXbsw1E7Tkcpj+KuutE+X2YqWhtzLm7ZQ=
+Received: from VI1PR04MB4880.eurprd04.prod.outlook.com (20.177.49.153) by
+ VI1PR04MB6256.eurprd04.prod.outlook.com (20.179.25.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.15; Mon, 29 Jul 2019 15:46:17 +0000
+Received: from VI1PR04MB4880.eurprd04.prod.outlook.com
+ ([fe80::e401:6546:3729:47c0]) by VI1PR04MB4880.eurprd04.prod.outlook.com
+ ([fe80::e401:6546:3729:47c0%6]) with mapi id 15.20.2115.005; Mon, 29 Jul 2019
+ 15:46:17 +0000
+From:   Claudiu Manoil <claudiu.manoil@nxp.com>
+To:     Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>
+CC:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next v3 2/4] enetc: Add mdio bus driver for the PCIe
+ MDIO endpoint
+Thread-Topic: [PATCH net-next v3 2/4] enetc: Add mdio bus driver for the PCIe
+ MDIO endpoint
+Thread-Index: AQHVRfTzIlSQL21yzUKJl+LDCQ5gdabhupAA////0TCAAAKmEA==
+Date:   Mon, 29 Jul 2019 15:46:17 +0000
+Message-ID: <VI1PR04MB488060D95CFD31CB904CDF6796DD0@VI1PR04MB4880.eurprd04.prod.outlook.com>
+References: <1564394627-3810-1-git-send-email-claudiu.manoil@nxp.com>
+ <1564394627-3810-3-git-send-email-claudiu.manoil@nxp.com>
+ <20190729153524.GG4110@lunn.ch>
+ <VI1PR04MB48806AF2F6CEDE105B78086696DD0@VI1PR04MB4880.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB48806AF2F6CEDE105B78086696DD0@VI1PR04MB4880.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=claudiu.manoil@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6309c20e-fc0b-4189-986f-08d7143be555
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB6256;
+x-ms-traffictypediagnostic: VI1PR04MB6256:
+x-microsoft-antispam-prvs: <VI1PR04MB62566ADED7CA1B01E881D50896DD0@VI1PR04MB6256.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 01136D2D90
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(396003)(39860400002)(366004)(199004)(189003)(51914003)(13464003)(8936002)(6506007)(229853002)(446003)(52536014)(2906002)(86362001)(26005)(25786009)(14454004)(44832011)(186003)(11346002)(256004)(486006)(55016002)(6436002)(5660300002)(66066001)(53936002)(476003)(4326008)(6246003)(81166006)(81156014)(66946007)(66476007)(9686003)(71200400001)(54906003)(110136005)(3846002)(7736002)(76176011)(8676002)(33656002)(68736007)(7696005)(74316002)(99286004)(305945005)(2940100002)(71190400001)(478600001)(76116006)(316002)(6116002)(64756008)(66556008)(66446008)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6256;H:VI1PR04MB4880.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sgxnSPcJIqDCE7Z7osQaujug7lzwbXKfQlBghguwTy0JucgXtOGjN7yOfZ7LOlwLjXzhElaz1EtlP9/esg6ViLrZQUx/+ldR4WCqI5F6gEtLCx237w8YnB+vw72zKkr4AcAYTMh/xb+0WCTaxg3myMIOzqdFjFelu3cO2GysZS59x8Xa/JlfhNdRIthOaqgG+vcQ2uK2W9YSBsk03DNHqwjcEiQM8rhXKXAbg7DnAv1Rcw7wJXjZZJksJV6JRuwaPAFAuX20/lx9Mu7QApUHEBu0ldQ/qjnDmetUo4/MU7yTqJayMctiJ57OuE6QJKUtSoDSVKq0bGPhxHY59D2K5pyXfNyQuyROFthpedoH3qcFRNXjf5WqvX1NWf09Gc0W/ilf9mnEbfTleTnECn8DZPG7ndAQ180rcxrEclV2vq4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190415202501.941196-1-arnd@arndb.de> <2424c672-e3fb-4c32-4c24-fafc59d03a96@uclinux.org>
- <CACRpkdaJ+2bub_nDp9=5b4kyKjWDnOGKscWg3KsEVixDpk8rzA@mail.gmail.com>
- <20190503170613.GA1783@roeck-us.net> <d8d81aca-722d-8b5f-cd5f-30cc3e4e407b@kernel.org>
- <CAK8P3a0StV==jMq1L9k91qEsvRD1Cw2FB1V25wr1AQqzmjsTVw@mail.gmail.com> <2bc41895-d4f9-896c-0726-0b2862fcbf25@kernel.org>
-In-Reply-To: <2bc41895-d4f9-896c-0726-0b2862fcbf25@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Jul 2019 17:45:53 +0200
-Message-ID: <CAK8P3a19W73-NSdrTbG4NcVw1nYPV+K78kRbeZ8CwMUjnXhTzQ@mail.gmail.com>
-Subject: Re: [PATCH 1/6] ARM: ks8695: watchdog: stop using mach/*.h
-To:     Greg Ungerer <gerg@kernel.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        arm-soc <arm@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6309c20e-fc0b-4189-986f-08d7143be555
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2019 15:46:17.7833
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: claudiu.manoil@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 2:53 PM Greg Ungerer <gerg@kernel.org> wrote:
-> On 23/7/19 12:44 am, Arnd Bergmann wrote:
-> > On Sat, May 4, 2019 at 4:27 PM Greg Ungerer <gerg@kernel.org> wrote:
-> >> On 4/5/19 3:06 am, Guenter Roeck wrote:
-> >>> On Fri, May 03, 2019 at 08:16:05AM +0100, Linus Walleij wrote:
-> >>>> With IXP4xx, Gemini and EP93xx we have found active users and
-> >>>> companies selling the chips and reference designs and even
-> >>>> recommending it for new products (!) at times.  If this is not the
-> >>>> case with KS8695 and no hobbyists are willing to submit it
-> >>>> to OpenWrt and modernize it to use device tree I think it should be
-> >>>> deleted from the kernel.
-> >>>>
-> >>>
-> >>> That may be the best approach if indeed no one is using it,
-> >>> much less maintaining it.
-> >>
-> >> Well, I for one don't really use it any more. So I don't have a lot
-> >> of motivation to maintain it any longer.
-> >
-> > I came across my patches while rebasing my backlog to 5.3-rc1.
-> >
-> > Should I save the (very small) trouble of sending them out again
-> > and just remove the platform then?
->
-> At this time I have no issue with removing it.
-
-Ok, let's do that then.
-
-For reference, this is what I think we should do for the
-remaining ARM9 based platforms that never gained multiplatform
-support, as time permits:
-
-netx: is now removed
-ks8695: remove next
-w90x900: probably remove, need to confirm with last known users
-davinci: almost multiplatform now, should be done in 5.4
-ep93xx: convert to common-clk, generic-irq, then enable multiplatform
- (linusw is on it)
-omap1: convert to common-clk, change pcmcia driver to common
-  I/O space method, use dma_pfn_offset for virt_to_bus, add ugly
-  hacks for cpu_is_omap*() and omap_readl(), then enable multiplatform
-  (arnd has started this)
-lpc32xx: clean up header files so we can build last 6 drivers
-  independently, then move to multiplatform, probably after 5.4
-  I have patches for this somewhere.
-s3c24xx: change 18 drivers that still use mach/* headers, get
-  creative about mach-bast ISA I/O space
-
-        Arnd
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogbmV0ZGV2LW93bmVyQHZnZXIua2Vy
+bmVsLm9yZyA8bmV0ZGV2LW93bmVyQHZnZXIua2VybmVsLm9yZz4gT24NCj5CZWhhbGYgT2YgQ2xh
+dWRpdSBNYW5vaWwNCj5TZW50OiBNb25kYXksIEp1bHkgMjksIDIwMTkgNjo0MCBQTQ0KPlRvOiBB
+bmRyZXcgTHVubiA8YW5kcmV3QGx1bm4uY2g+DQo+Q2M6IERhdmlkIFMgLiBNaWxsZXIgPGRhdmVt
+QGRhdmVtbG9mdC5uZXQ+OyBSb2IgSGVycmluZw0KPjxyb2JoK2R0QGtlcm5lbC5vcmc+OyBMZW8g
+TGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IEFsZXhhbmRydSBNYXJnaW5lYW4NCj48YWxleGFuZHJ1
+Lm1hcmdpbmVhbkBueHAuY29tPjsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsNCj5kZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
+aW51eC0NCj5rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+U3ViamVjdDogUkU6IFtQQVRDSCBuZXQt
+bmV4dCB2MyAyLzRdIGVuZXRjOiBBZGQgbWRpbyBidXMgZHJpdmVyIGZvciB0aGUgUENJZQ0KPk1E
+SU8gZW5kcG9pbnQNCj4NCj4+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4+RnJvbTogQW5k
+cmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPg0KPj5TZW50OiBNb25kYXksIEp1bHkgMjksIDIwMTkg
+NjozNSBQTQ0KPj5UbzogQ2xhdWRpdSBNYW5vaWwgPGNsYXVkaXUubWFub2lsQG54cC5jb20+DQo+
+PkNjOiBEYXZpZCBTIC4gTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0PjsgUm9iIEhlcnJpbmcN
+Cj4+PHJvYmgrZHRAa2VybmVsLm9yZz47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgQWxl
+eGFuZHJ1IE1hcmdpbmVhbg0KPj48YWxleGFuZHJ1Lm1hcmdpbmVhbkBueHAuY29tPjsgbmV0ZGV2
+QHZnZXIua2VybmVsLm9yZzsNCj4+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4+bGludXgtIGtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmcNCj4+U3ViamVjdDogUmU6IFtQQVRDSCBuZXQtbmV4dCB2MyAyLzRdIGVuZXRjOiBBZGQg
+bWRpbyBidXMgZHJpdmVyIGZvciB0aGUNCj4+UENJZSBNRElPIGVuZHBvaW50DQo+Pg0KPj4+ICsJ
+aHctPnBvcnQgPSBwY2lfaW9tYXAocGRldiwgMCwgMCk7DQo+Pj4gKwlpZiAoIWJ1cy0+cHJpdikg
+ew0KPj4NCj4+aHctPnBvcnQgPz8NCj4+DQo+DQo+WWVhaCwgYmV0dGVyIGlnbm9yZSB0aGlzIGZv
+ciBub3cg8J+Yig0KPkl0J3MgZm9yIHRoZSBlbmV0YyBhY2Nlc3NvcnMsIGVuZXRjX3BvcnRfLi4o
+KS4NCg0KT2ggSSBzZWUsIGl0J3MgYSBtaXN0YWtlLiAgSSdtIGNoZWNraW5nIHRoZSB3cm9uZyB0
+aGluZy4NClNvcnJ5LiAgVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0K
