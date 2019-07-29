@@ -2,218 +2,287 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C80FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1E4C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 116F22070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8AF21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:17:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="gBQww/xk"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NSti5Mub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfG2BId (ORCPT
+        id S1726332AbfG2BRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 21:08:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41908 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfG2BId (ORCPT
+        Sun, 28 Jul 2019 21:17:34 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:58440 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfG2BRd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 21:08:33 -0400
-Received: by mail-pf1-f194.google.com with SMTP id m30so27106891pff.8
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 18:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qbL3ZNd6Yfl9XGwRwZu8P8EkNcIfnBlQKqpKi3KACD8=;
-        b=gBQww/xkoLK4gbu3lkp1VXuPMw9oRLmCcF52ne8vCYRNMs9IR0XPXDySOT3gRssI5M
-         h+TAgGnrgApeXOLmz6sREDeBI9SSysdMrMADGyI1mgLNJtv8r2o1PaxdMZq+YJBSrljk
-         FX34Heav4w+saNV2KxFdmeUAh+SorNTvY5JbJUi/zGSl+pzjr064dpi6mQ3+ZJvdyldC
-         OfPlglYP1wXrJyKK0UAJ9sIltUvc3IWLm6SZU0wv+Dzpz1IlVM2oYXKLBRB8vdqO9Jct
-         rg+91u3HHoWcEHKYWXnBUkzq9clWyVZ1gvnnD12h8Sm5nmexvFPxNwmUFs2Bl42jy5dw
-         oY8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qbL3ZNd6Yfl9XGwRwZu8P8EkNcIfnBlQKqpKi3KACD8=;
-        b=sO8Nj1QXwsuqHOVJ54MjvCPmRgvbqRMAWeCh7M7IqWl0/6coIq5o9qx+Fv1fKGXeLA
-         XJ/QW+u7wdNFtx/5orXFbDcJyyTpBsACsEcVOhwk1C0bwigf5ZxsUBJKPq6rmDxZllx1
-         FiwQ8ycZKq0vyv8mD0Wp+HGPlNfjs7drS6lHxJnN4odN3ZIT6UcOn8uoKMjjV57UeS5l
-         b9FA1r4EGKNjh8R4Ab6epEFN+zYCQjDXhqWvZ8AB8Tc9RMvfz79/0seLkHVMpqYhmnBI
-         yOGO1AjkjqniSuhqWuEkqY+gX+kaW+gxZ02z3l6DgFjQmKd1Yc3d9wsp30EJhGqUYu7E
-         5T4A==
-X-Gm-Message-State: APjAAAUOnLiA5bYrtxohupmYctVsuxvZ4zQM5UZrn8BOHCHKYn/UQAoE
-        gRZpYc03LAGK+z7fiuvsFFk=
-X-Google-Smtp-Source: APXvYqzvwMexYFJFD8qJvuvgSGbcmtY9AgfvLNXs/7DCCXuFfYlAMPT5t0xpmOLpraGIVU0fDcgKmQ==
-X-Received: by 2002:aa7:9514:: with SMTP id b20mr34727150pfp.223.1564362512313;
-        Sun, 28 Jul 2019 18:08:32 -0700 (PDT)
-Received: from localhost.localdomain (p2517222-ipngn21701marunouchi.tokyo.ocn.ne.jp. [118.7.246.222])
-        by smtp.gmail.com with ESMTPSA id a3sm68620300pje.3.2019.07.28.18.08.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 18:08:31 -0700 (PDT)
-From:   Eiichi Tsukata <devel@etsukata.com>
-To:     joel@joelfernandes.org, paulmck@linux.vnet.ibm.com,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        mingo@redhat.com, fweisbec@gmail.com, luto@amacapital.net,
-        linux-kernel@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>
-Subject: [PATCH] tracing: Prevent RCU EQS breakage in preemptirq events
-Date:   Mon, 29 Jul 2019 10:07:34 +0900
-Message-Id: <20190729010734.3352-1-devel@etsukata.com>
-X-Mailer: git-send-email 2.21.0
+        Sun, 28 Jul 2019 21:17:33 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190729011729epoutp012788881420f2be2810150439c35f850a~1u_efYJml0420004200epoutp01Y
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 01:17:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190729011729epoutp012788881420f2be2810150439c35f850a~1u_efYJml0420004200epoutp01Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1564363049;
+        bh=S6WvFuHyC3NX9s6k4IjzrHq6hRq/ZQFcaSzn6Sw1BmA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=NSti5Mub5ui1d98vSVw4ffDwBRw+AQx/tqrjpIAcZjo+xQtayFTDxecgfakGfQQ1b
+         A2LOztQfIhR7usqT9IKXNmN8Bb3pfZpW0kaaJZfnG0ncjZpsdAN9xiunZrRO5XYA5k
+         8ehCzR7DMLc+I/B4i47WLhhqsC2qIky5igSDdo/U=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190729011728epcas1p32a387721ae32336480c6ab141ef236a1~1u_d7Wn3a2966729667epcas1p3q;
+        Mon, 29 Jul 2019 01:17:28 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 45xhch635NzMqYls; Mon, 29 Jul
+        2019 01:17:24 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2D.7E.04088.F194E3D5; Mon, 29 Jul 2019 10:17:19 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190729011718epcas1p27e2688e814efde7913e27a4050c3ace3~1u_VAXdu72470324703epcas1p2R;
+        Mon, 29 Jul 2019 01:17:18 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190729011718epsmtrp1de5659750d6cffc81b1eb1afb6647a7e~1u_U-jPy-2021620216epsmtrp1R;
+        Mon, 29 Jul 2019 01:17:18 +0000 (GMT)
+X-AuditID: b6c32a35-85dff70000000ff8-69-5d3e491fb4b4
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DE.90.03706.E194E3D5; Mon, 29 Jul 2019 10:17:18 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190729011718epsmtip2eebd1c41819dae9d269918a295727d26~1u_Uwk3X61549815498epsmtip2b;
+        Mon, 29 Jul 2019 01:17:18 +0000 (GMT)
+Subject: Re: [RFC PATCH 08/11] arm: dts: exynos: Add parents and
+ #interconnect-cells to Exynos4412
+To:     Marek Szyprowski <m.szyprowski@samsung.com>, cwchoi00@gmail.com,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        georgi.djakov@linaro.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <64416ab4-855e-2bb6-199c-64086663a29f@samsung.com>
+Date:   Mon, 29 Jul 2019 10:20:44 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <cc4c48c3-06a5-c58f-20de-0aa18ae8667e@samsung.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOJsWRmVeSWpSXmKPExsWy7bCmga68p12swdGD0haHjm1lt3h2VNti
+        /pFzrBZXvr5ns5i+dxObxaT7E1gszp/fwG6x6fE1VovLu+awWXzuPcJoMeP8PiaLtUfuslvc
+        blzBZjFj8ks2Bz6PnbPusntsWtXJ5nHn2h42j/vdx5k8Ni+p9zj4bg+TR9+WVYwenzfJBXBE
+        ZdtkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynkJeam2iq5+AToumXmAJ2tpFCW
+        mFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySmwLNArTswtLs1L10vOz7UyNDAwMgUqTMjO
+        WNR0nqXgs2HFjw0HGRsYHyh0MXJwSAiYSGx4btrFyMUhJLCDUaJvx0U2COcTkHPwKzuE841R
+        4s6bI4xdjJxgHT/PPoJK7GWU2HNrHiuE855RYsruaWBVwgIpEi/2nWUESYgItDFK7P3dCjaY
+        WeAqs0TvpEMsIFVsAloS+1/cYAOx+QUUJa7+eAzWzStgJ/FoZycriM0ioCqx8c5HsLioQITE
+        pweHWSFqBCVOznwCNodTwF7i9IoNYHFmAXGJW0/mM0HY8hLNW2czgyyWENjHLjHjxBRmiCdc
+        JDo/HmKDsIUlXh3fwg5hS0m87G+DsqslVp48wgbR3MEosWX/BVaIhLHE/qWTmUDhxyygKbF+
+        lz5EWFFi5++5jBCL+STefe1hhQQxr0RHmxBEibLE5Qd3mSBsSYnF7Z1sExiVZiF5ZxaSF2Yh
+        eWEWwrIFjCyrGMVSC4pz01OLDQsMkeN7EyM4UWuZ7mCccs7nEKMAB6MSD++La7axQqyJZcWV
+        uYcYJTiYlUR4tyhZxwrxpiRWVqUW5ccXleakFh9iNAWG9kRmKdHkfGAWySuJNzQ1MjY2tjAx
+        NDM1NFQS5134wyJWSCA9sSQ1OzW1ILUIpo+Jg1OqgVFUTvrSp8pJTaxTXQ/6GdtluYdZyjtV
+        pf0t9ve89mV7w4oP8e8vbU79ZrHYV3nqQ5OLr+dOSyte+2HePP+50jnFAk8y3+rMf6UqG8cr
+        YnhpW0HRCleZ1hl7rMUmnE542Ph+99IZa8IVoyRfltavt3ZQvnviVXPT9SeHwrN+ZzqtXKfR
+        nlqwr0mJpTgj0VCLuag4EQAlOg4c6gMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsWy7bCSvK6cp12swbxOfYtDx7ayWzw7qm0x
+        /8g5VosrX9+zWUzfu4nNYtL9CSwW589vYLfY9Pgaq8XlXXPYLD73HmG0mHF+H5PF2iN32S1u
+        N65gs5gx+SWbA5/Hzll32T02repk87hzbQ+bx/3u40wem5fUexx8t4fJo2/LKkaPz5vkAjii
+        uGxSUnMyy1KL9O0SuDIWNZ1nKfhsWPFjw0HGBsYHCl2MnBwSAiYSP88+Yu9i5OIQEtjNKPFh
+        +ilWiISkxLSLR5m7GDmAbGGJw4eLIWreMkrsWL6KGaRGWCBF4sW+s4wgCRGBNkaJbeuamEAc
+        ZoHrzBKvL3xkhGg5ySQxY/8NNpAWNgEtif0vIGx+AUWJqz8eM4LYvAJ2Eo92doKtZhFQldh4
+        5yNYXFQgQuLwjllQNYISJ2c+YQGxOQXsJU6v2ABWzyygLvFn3iVmCFtc4taT+UwQtrxE89bZ
+        zBMYhWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIjlkt
+        zR2Ml5fEH2IU4GBU4uF1uGkbK8SaWFZcmXuIUYKDWUmEd4uSdawQb0piZVVqUX58UWlOavEh
+        RmkOFiVx3qd5xyKFBNITS1KzU1MLUotgskwcnFINjOkGp2/z5fBZLU+flvvygm+kx2xB38cd
+        Xx5tzQ/LthWN6OLiSjP6/X365uUTd856cUn29mnJ29/SuZdXyu+bn7+e8WyM/kv2vzfOnCs4
+        c5ZR65KGuOsloavaflPmnL7jHfrDbMfdVqPzLf9Wyk6fumqf2K2kRZvMpzJMz1Gu0f5f2rTk
+        cdGZl9uUWIozEg21mIuKEwFGwdtI1QIAAA==
+X-CMS-MailID: 20190729011718epcas1p27e2688e814efde7913e27a4050c3ace3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190723122027eucas1p24b1d76e3139f7cc52614d7613ff9ba98
+References: <CGME20190723122027eucas1p24b1d76e3139f7cc52614d7613ff9ba98@eucas1p2.samsung.com>
+        <20190723122016.30279-1-a.swigon@partner.samsung.com>
+        <20190723122016.30279-9-a.swigon@partner.samsung.com>
+        <CAGTfZH1_Qk+vNa_AJW_8OA8MJbnZa3yCTLLRs2w23bNTm72gyQ@mail.gmail.com>
+        <cc4c48c3-06a5-c58f-20de-0aa18ae8667e@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If context tracking is enabled, causing page fault in preemptirq
-irq_enable or irq_disable events triggers the following RCU EQS warning.
+Hi,
 
-Reproducer:
+On 19. 7. 26. 오후 9:02, Marek Szyprowski wrote:
+> Hi
+> 
+> On 2019-07-25 15:13, Chanwoo Choi wrote:
+>> 2019년 7월 24일 (수) 오전 8:07, Artur Świgoń <a.swigon@partner.samsung.com>님이 작성:
+>>> This patch adds two fields tp the Exynos4412 DTS:
+>>>    - parent: to declare connections between nodes that are not in a
+>>>      parent-child relation in devfreq;
+>>>    - #interconnect-cells: required by the interconnect framework.
+>>>
+>>> Please note that #interconnect-cells is always zero and node IDs are not
+>>> hardcoded anywhere.
+>>>
+>>> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+>>> ---
+>>>   arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
+>>>   arch/arm/boot/dts/exynos4412.dtsi               | 9 +++++++++
+>>>   2 files changed, 10 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>>> index ea55f377d17c..bdd61ae86103 100644
+>>> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>>> @@ -106,6 +106,7 @@
+>>>   &bus_leftbus {
+>>>          devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
+>>>          vdd-supply = <&buck3_reg>;
+>>> +       parent = <&bus_dmc>;
+>> It is wrong. 'bus_leftbus' has not any h/w dependency of 'bus_dmc'
+>> and 'bus_leftbus' is not child of 'bus_dmc'.
+>>
+>> Even it there are some PMQoS requirement between them,
+>> it it not proper to tie both 'bus_leftbus' and 'bus_dmc'.
+> 
+> There is strict dependency between them. DMC bus running at frequency 
+> lower than left (or right) bus really doesn't make much sense, because 
+> it will limit the left bus performance. This dependency should be 
+> modeled somehow.
 
-  // CONFIG_PREEMPTIRQ_EVENTS=y
-  // CONFIG_CONTEXT_TRACKING=y
-  // CONFIG_RCU_EQS_DEBUG=y
-  # echo 1 > events/preemptirq/irq_disable/enable
-  # echo 1 > options/userstacktrace
+I misunderstood new 'parent' prototype as the existing 'devfreq' property.
+I didn't understand why use the 'devfreq' property because 'bus_dmc' and
+'bus_leftbus' don't share the power line. Please ignore my previous comment.
 
-  WARNING: CPU: 0 PID: 2574 at kernel/rcu/tree.c:262 rcu_dynticks_eqs_exit+0x48/0x50
-  CPU: 0 PID: 2574 Comm: sh Not tainted 5.3.0-rc1+ #105
-  RIP: 0010:rcu_dynticks_eqs_exit+0x48/0x50
-  Call Trace:
-   rcu_eqs_exit+0x4e/0xd0
-   rcu_user_exit+0x13/0x20
-   __context_tracking_exit.part.0+0x74/0x120
-   context_tracking_exit.part.0+0x28/0x50
-   context_tracking_exit+0x1d/0x20
-   do_page_fault+0xab/0x1b0
-   do_async_page_fault+0x35/0xb0
-   async_page_fault+0x3e/0x50
-  RIP: 0010:arch_stack_walk_user+0x8e/0x100
-   stack_trace_save_user+0x7d/0xa9
-   trace_buffer_unlock_commit_regs+0x178/0x220
-   trace_event_buffer_commit+0x6b/0x200
-   trace_event_raw_event_preemptirq_template+0x7b/0xc0
-   trace_hardirqs_off_caller+0xb3/0xf0
-   trace_hardirqs_off_thunk+0x1a/0x20
-   entry_SYSCALL_64_after_hwframe+0x3e/0xbe
+Basically, I agree that it is necessary to support the QoS requirement
+between buses or if possible, between bus and gpu.
 
-Details of call trace and RCU EQS/Context:
+To support the interconnect between bus_dmc, bus_leftbus and bus_display,
+it used the either 'devfreq' or 'parent' properties to connect them.
 
-  entry_SYSCALL_64_after_hwframe() EQS: IN, CTX: USER
-    trace_irq_disable_rcuidle()
-      rcu_irq_enter_irqson()
-        rcu_dynticks_eqs_exit() EQS: IN => OUT
-      stack_trace_save_user() EQS: OUT, CTX: USER
-        page_fault()
-          do_page_fault()
-            exception_enter() EQS: OUT, CTX: USER
-              context_tracking_exit()
-                rcu_eqs_exit()
-		  rcu_dynticks_eqs_exit() EQS: OUT => OUT? (warning)
+In order to catch the meaning of 'devfreq' and 'parent' properties,
+If possible, it would be separate the usage role of between 'devfreq'
+or 'parent' properties. Because it is possible to connect the 'buses'
+with only using 'parent' property if all buses in the path uses
+the devfreq governors except for 'passive' governor.
 
-trace_irq_disable/enable_rcuidle() are called from user mode in entry
-code, and calls rcu_irq_enter_irqson() in __DO_TRACE(). This can cause
-the state "RCU ESQ: OUT but CTX: USER", then stack_trace_save_user() can
-cause page fault which calls rcu_dynticks_eqs_exit() again leads to hit
-the EQS validation warning if CONFIG_RCU_EQS_DEBUG is enabled.
+- If 'devfreq' property is used between buses,
+  it indicates that there are requirement of shading of power line.
+- If 'parent' property is used between buses,
+  it indicates that there are requirement of interconnect connection.
 
-Fix it by calling exception_enter/exit() around
-trace_irq_disable/enable_rcuidle() to enter CONTEXT_KERNEL before
-tracing code causes page fault. Also makes the timing of state change to
-CONTEXT_KERNL earlier to prevent tracing codes from calling
-context_tracking_exit() recursively.
+> 
+>>>          status = "okay";
+>>>   };
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+>>> index d20db2dfe8e2..a70a671acacd 100644
+>>> --- a/arch/arm/boot/dts/exynos4412.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos4412.dtsi
+>>> @@ -390,6 +390,7 @@
+>>>                          clocks = <&clock CLK_DIV_DMC>;
+>>>                          clock-names = "bus";
+>>>                          operating-points-v2 = <&bus_dmc_opp_table>;
+>>> +                       #interconnect-cells = <0>;
+>>>                          status = "disabled";
+>>>                  };
+>>>
+>>> @@ -398,6 +399,7 @@
+>>>                          clocks = <&clock CLK_DIV_ACP>;
+>>>                          clock-names = "bus";
+>>>                          operating-points-v2 = <&bus_acp_opp_table>;
+>>> +                       #interconnect-cells = <0>;
+>>>                          status = "disabled";
+>>>                  };
+>>>
+>>> @@ -406,6 +408,7 @@
+>>>                          clocks = <&clock CLK_DIV_C2C>;
+>>>                          clock-names = "bus";
+>>>                          operating-points-v2 = <&bus_dmc_opp_table>;
+>>> +                       #interconnect-cells = <0>;
+>>>                          status = "disabled";
+>>>                  };
+>>>
+>>> @@ -459,6 +462,7 @@
+>>>                          clocks = <&clock CLK_DIV_GDL>;
+>>>                          clock-names = "bus";
+>>>                          operating-points-v2 = <&bus_leftbus_opp_table>;
+>>> +                       #interconnect-cells = <0>;
+>>>                          status = "disabled";
+>>>                  };
+>>>
+>>> @@ -467,6 +471,7 @@
+>>>                          clocks = <&clock CLK_DIV_GDR>;
+>>>                          clock-names = "bus";
+>>>                          operating-points-v2 = <&bus_leftbus_opp_table>;
+>>> +                       #interconnect-cells = <0>;
+>>>                          status = "disabled";
+>>>                  };
+>>>
+>>> @@ -475,6 +480,7 @@
+>>>                          clocks = <&clock CLK_ACLK160>;
+>>>                          clock-names = "bus";
+>>>                          operating-points-v2 = <&bus_display_opp_table>;
+>>> +                       #interconnect-cells = <0>;
+>>>                          status = "disabled";
+>>>                  };
+>>>
+>>> @@ -483,6 +489,7 @@
+>>>                          clocks = <&clock CLK_ACLK133>;
+>>>                          clock-names = "bus";
+>>>                          operating-points-v2 = <&bus_fsys_opp_table>;
+>>> +                       #interconnect-cells = <0>;
+>>>                          status = "disabled";
+>>>                  };
+>>>
+>>> @@ -491,6 +498,7 @@
+>>>                          clocks = <&clock CLK_ACLK100>;
+>>>                          clock-names = "bus";
+>>>                          operating-points-v2 = <&bus_peri_opp_table>;
+>>> +                       #interconnect-cells = <0>;
+>>>                          status = "disabled";
+>>>                  };
+>>>
+>>> @@ -499,6 +507,7 @@
+>>>                          clocks = <&clock CLK_SCLK_MFC>;
+>>>                          clock-names = "bus";
+>>>                          operating-points-v2 = <&bus_leftbus_opp_table>;
+>>> +                       #interconnect-cells = <0>;
+>>>                          status = "disabled";
+>>>                  };
+>>>
+>>> --
+>>> 2.17.1
+>>>
+>>
+> Best regards
+> 
 
-Ideally, the problem can be fixed by calling enter_from_user_mode() before
-TRACE_IRQS_OFF in entry codes (then we need to tell lockdep that IRQs are
-off eariler) and calling prepare_exit_to_usermode() after TRACE_IRQS_ON.
-But this patch will be much simpler and limit the most change to tracing
-codes.
 
-Fixes: 865e63b04e9b ("tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle tracepoints")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
----
- kernel/context_tracking.c       |  6 +++++-
- kernel/trace/trace_preemptirq.c | 15 +++++++++++++--
- 2 files changed, 18 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
-index be01a4d627c9..860eaf9780e5 100644
---- a/kernel/context_tracking.c
-+++ b/kernel/context_tracking.c
-@@ -148,6 +148,11 @@ void __context_tracking_exit(enum ctx_state state)
- 		return;
- 
- 	if (__this_cpu_read(context_tracking.state) == state) {
-+		/*
-+		 * Change state before executing codes which can trigger
-+		 * page fault leading unnecessary re-entrance.
-+		 */
-+		__this_cpu_write(context_tracking.state, CONTEXT_KERNEL);
- 		if (__this_cpu_read(context_tracking.active)) {
- 			/*
- 			 * We are going to run code that may use RCU. Inform
-@@ -159,7 +164,6 @@ void __context_tracking_exit(enum ctx_state state)
- 				trace_user_exit(0);
- 			}
- 		}
--		__this_cpu_write(context_tracking.state, CONTEXT_KERNEL);
- 	}
- 	context_tracking_recursion_exit();
- }
-diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
-index 4d8e99fdbbbe..031b51cb94d0 100644
---- a/kernel/trace/trace_preemptirq.c
-+++ b/kernel/trace/trace_preemptirq.c
-@@ -10,6 +10,7 @@
- #include <linux/module.h>
- #include <linux/ftrace.h>
- #include <linux/kprobes.h>
-+#include <linux/context_tracking.h>
- #include "trace.h"
- 
- #define CREATE_TRACE_POINTS
-@@ -49,9 +50,14 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
- 
- __visible void trace_hardirqs_on_caller(unsigned long caller_addr)
- {
-+	enum ctx_state prev_state;
-+
- 	if (this_cpu_read(tracing_irq_cpu)) {
--		if (!in_nmi())
-+		if (!in_nmi()) {
-+			prev_state = exception_enter();
- 			trace_irq_enable_rcuidle(CALLER_ADDR0, caller_addr);
-+			exception_exit(prev_state);
-+		}
- 		tracer_hardirqs_on(CALLER_ADDR0, caller_addr);
- 		this_cpu_write(tracing_irq_cpu, 0);
- 	}
-@@ -63,11 +69,16 @@ NOKPROBE_SYMBOL(trace_hardirqs_on_caller);
- 
- __visible void trace_hardirqs_off_caller(unsigned long caller_addr)
- {
-+	enum ctx_state prev_state;
-+
- 	if (!this_cpu_read(tracing_irq_cpu)) {
- 		this_cpu_write(tracing_irq_cpu, 1);
- 		tracer_hardirqs_off(CALLER_ADDR0, caller_addr);
--		if (!in_nmi())
-+		if (!in_nmi()) {
-+			prev_state = exception_enter();
- 			trace_irq_disable_rcuidle(CALLER_ADDR0, caller_addr);
-+			exception_exit(prev_state);
-+		}
- 	}
- 
- 	lockdep_hardirqs_off(CALLER_ADDR0);
 -- 
-2.21.0
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
