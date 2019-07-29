@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676A9C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3548C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3530B217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DC8217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429001;
-	bh=bnNHVAa7cAU1dHs9mWMLdFPLJdL5nPw/dd6t3e9ifqs=;
+	s=default; t=1564429004;
+	bh=04jNJTUnxhY6tAhzQlVsvBcjeNpy9XKRWG+kmZ+tne8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lqQmad5uSHSMGoNrr0FJxLAyy4XR1yoSqmEo2qCyh31Yv9N5DfC6aJuITrS6giKP6
-	 2WNGRKJ6UqJadpjWWtdGtNRUDlf6DrCiP4+mwrnFNfR/OtFtTqZ7JiEKQVhWev8oX0
-	 BX7fC8S0B8vYTM/PLIStlhkNzSDCysHJvcTARLnA=
+	b=QpDR2v3t6xMyxJ60ja7MFbAX4CxOe8fp7FpGvpnJXqeJQvDddY6KfxkQ0jh8EMnN2
+	 CU17co3jir9qfwNS5j2BmM8bZ+4nMbduNTikxBEZue04FepC6plLKqS25vv54Cjdwt
+	 SD5KKOxBE6vmyv8se8Yfnigfh+103rPxfx2a4YCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388239AbfG2Tgj (ORCPT
+        id S1730067AbfG2Tgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51000 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:36:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727993AbfG2Tgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:36:36 -0400
+        id S1729979AbfG2Tgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:36:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 182D3217D9;
-        Mon, 29 Jul 2019 19:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B23EF2171F;
+        Mon, 29 Jul 2019 19:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428995;
-        bh=bnNHVAa7cAU1dHs9mWMLdFPLJdL5nPw/dd6t3e9ifqs=;
+        s=default; t=1564428998;
+        bh=04jNJTUnxhY6tAhzQlVsvBcjeNpy9XKRWG+kmZ+tne8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gskMl46cvMCLuDukA5g3SNsywHb+/RXDhUfRWigtbg3tAs1Y8slESdm0gTklqGo7D
-         Ua86g/Ny+8aFmxPBeEZ+6fM2h6FIOlAilEdKck4UvOWtkWSMDC+MQOhL/J8tb8d0iv
-         8W2RLYKsMCLtpq+vOTID9xvF2YLxaJqsyAne/hC8=
+        b=FrUMcvaE0Q28K2ROQtz6AmQ+jOLJHldU0StWdnhRBKNB26c0mpX5/AfFb0kIJwWa6
+         5Q1u0pr4vMapQcr0R8ETZRTs+lSmDFN25WFez2BDgHJxinOc44EA8LxElAQhUVRvx7
+         1wU17qNMv5kfFtJbJzadpz5bJoVSm5Idu83ZbacY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 251/293] mfd: core: Set fwnode for created devices
-Date:   Mon, 29 Jul 2019 21:22:22 +0200
-Message-Id: <20190729190843.674050931@linuxfoundation.org>
+Subject: [PATCH 4.14 252/293] mfd: arizona: Fix undefined behavior
+Date:   Mon, 29 Jul 2019 21:22:23 +0200
+Message-Id: <20190729190843.749583106@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,32 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c176c6d7e932662668bcaec2d763657096589d85 ]
+[ Upstream commit 5da6cbcd2f395981aa9bfc571ace99f1c786c985 ]
 
-The logic for setting the of_node on devices created by mfd did not set
-the fwnode pointer to match, which caused fwnode-based APIs to
-malfunction on these devices since the fwnode pointer was null. Fix
-this.
+When the driver is used with a subdevice that is disabled in the
+kernel configuration, clang gets a little confused about the
+control flow and fails to notice that n_subdevs is only
+uninitialized when subdevs is NULL, and we check for that,
+leading to a false-positive warning:
 
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+drivers/mfd/arizona-core.c:1423:19: error: variable 'n_subdevs' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                              subdevs, n_subdevs, NULL, 0, NULL);
+                                       ^~~~~~~~~
+drivers/mfd/arizona-core.c:999:15: note: initialize the variable 'n_subdevs' to silence this warning
+        int n_subdevs, ret, i;
+                     ^
+                      = 0
+
+Ideally, we would rearrange the code to avoid all those early
+initializations and have an explicit exit in each disabled case,
+but it's much easier to chicken out and add one more initialization
+here to shut up the warning.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/mfd-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/arizona-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index c57e407020f1..5c8ed2150c8b 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -179,6 +179,7 @@ static int mfd_add_device(struct device *parent, int id,
- 		for_each_child_of_node(parent->of_node, np) {
- 			if (of_device_is_compatible(np, cell->of_compatible)) {
- 				pdev->dev.of_node = np;
-+				pdev->dev.fwnode = &np->fwnode;
- 				break;
- 			}
- 		}
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 8d46e3ad9529..d8e3184bd27c 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -1029,7 +1029,7 @@ int arizona_dev_init(struct arizona *arizona)
+ 	unsigned int reg, val, mask;
+ 	int (*apply_patch)(struct arizona *) = NULL;
+ 	const struct mfd_cell *subdevs = NULL;
+-	int n_subdevs, ret, i;
++	int n_subdevs = 0, ret, i;
+ 
+ 	dev_set_drvdata(arizona->dev, arizona);
+ 	mutex_init(&arizona->clk_lock);
 -- 
 2.20.1
 
