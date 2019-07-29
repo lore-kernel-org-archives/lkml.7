@@ -2,85 +2,127 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E139C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FD9C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87BE2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:10:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NCotWPN/"
+	by mail.kernel.org (Postfix) with ESMTP id 6F45321842
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfG2QK2 (ORCPT
+        id S1728844AbfG2QKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:10:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43406 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727714AbfG2QK2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:10:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HSyRm8Kmm8l8JMI1hY/zT50xKLMEAchWqs4a2VQweLg=; b=NCotWPN/8B+g7XsmW9W7qsWAs
-        lymhAfOfY6DBBAa+g3VaynKq2A8l/3wC8aT3mic3pVD7DWggQjxL9lrv6v5OtybxU0ECZ4/POo1XN
-        CQ+QKkUgHi6kE9z91R/xvivjaI0MxeAPlomThdTi80nTDy1h5dzH7UeEJWKcZInheuC5geRQbBZiV
-        +3aAJ6z7uOlE4kW9sbNBVlpLD6C063WDFBuplPlZk6wGyx978LydtUu2Ct6208pUNNnO+Wg16dutF
-        tBjXW8UxlgDoaCrATWSZb/fLkgaxt40jCBiaYzWYPlf537m+cuxWvrO5PBT28J66l5g2V5/YlMw76
-        N6srPsqUA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs8ED-0000Xh-Fk; Mon, 29 Jul 2019 16:10:25 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9B8F220AFFEAD; Mon, 29 Jul 2019 18:10:23 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 18:10:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     luca abeni <luca.abeni@santannapisa.it>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <Valentin.Schneider@arm.com>,
-        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] sched/deadline: Fix double accounting of rq/running
- bw in push_dl_task()
-Message-ID: <20190729161023.GK31398@hirez.programming.kicks-ass.net>
-References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
- <20190726082756.5525-2-dietmar.eggemann@arm.com>
- <20190726121159.10fd1138@sweethome>
- <531f753a-57ba-408f-42e0-15252d7b1c32@arm.com>
+        Mon, 29 Jul 2019 12:10:33 -0400
+Received: from mga02.intel.com ([134.134.136.20]:23364 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727038AbfG2QKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:10:32 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 08:38:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,323,1559545200"; 
+   d="scan'208";a="179417951"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by FMSMGA003.fm.intel.com with ESMTP; 29 Jul 2019 08:38:17 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hs7j5-0000EB-Kh; Mon, 29 Jul 2019 18:38:15 +0300
+Date:   Mon, 29 Jul 2019 18:38:15 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: [GIT PULL] platform-drivers-x86 for 5.3-3
+Message-ID: <20190729153815.GA853@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <531f753a-57ba-408f-42e0-15252d7b1c32@arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 09:59:28AM +0100, Dietmar Eggemann wrote:
-> On 7/26/19 11:11 AM, luca abeni wrote:
-> > Hi Dietmar,
-> > 
-> > On Fri, 26 Jul 2019 09:27:52 +0100
-> > Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> > 
-> >> push_dl_task() always calls deactivate_task() with flags=0 which sets
-> >> p->on_rq=TASK_ON_RQ_MIGRATING.
-> > 
-> > Uhm... This is a recent change in the deactivate_task() behaviour,
-> > right? Because I tested SCHED_DEADLINE a lot, but I've never seen this
-> > issue :)
-> 
-> Looks like it was v5.2 commit 7dd778841164 ("sched/core: Unify p->on_rq
-> updates").
+Hi Linus,
 
-Argh, that wasn't intentional (obviously); please post v2 with that as
-Fixes and I'll get it in sched/urgent and stable.
+Business as usual for PDx86, few fixes and new ID
+(missed merge window due to dependency).
+
+Thanks,
+
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.3-3
+
+for you to fetch changes up to f14312a93b34b9350dc33ff0b4215c24f4c82617:
+
+  platform/x86: pcengines-apuv2: use KEY_RESTART for front button (2019-07-29 18:24:59 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.3-3
+
+PC Engines APU got one fix for software dependencies to automatically load them
+and another fix for mapping of key button in the front to issue restart event.
+
+OLPC driver is now can be probed automatically based on module device table.
+
+Intel PMC core driver supports Intel Ice Lake NNPI processor.
+
+WMI driver missed description of new field in the structure that has been added.
+
+The following is an automated git shortlog grouped by driver:
+
+intel_pmc_core:
+ -  Add ICL-NNPI support to PMC Core
+
+pcengines-apuv2:
+ -  use KEY_RESTART for front button
+ -  Fix softdep statement
+
+OLPC:
+ -  add SPI MODULE_DEVICE_TABLE
+
+wmi:
+ -  add missing struct parameter description
+
+----------------------------------------------------------------
+Enrico Weigelt (1):
+      platform/x86: pcengines-apuv2: use KEY_RESTART for front button
+
+Jean Delvare (1):
+      platform/x86: pcengines-apuv2: Fix softdep statement
+
+Lubomir Rintel (1):
+      Platform: OLPC: add SPI MODULE_DEVICE_TABLE
+
+Mattias Jacobsson (1):
+      platform/x86: wmi: add missing struct parameter description
+
+Rajneesh Bhardwaj (1):
+      platform/x86: intel_pmc_core: Add ICL-NNPI support to PMC Core
+
+ drivers/platform/olpc/olpc-xo175-ec.c  | 6 ++++++
+ drivers/platform/x86/intel_pmc_core.c  | 1 +
+ drivers/platform/x86/pcengines-apuv2.c | 6 ++----
+ include/linux/mod_devicetable.h        | 1 +
+ 4 files changed, 10 insertions(+), 4 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
