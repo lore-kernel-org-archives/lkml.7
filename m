@@ -2,115 +2,95 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A222FC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3DEC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795B7206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:22:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V344DF0e"
+	by mail.kernel.org (Postfix) with ESMTP id 2B295206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387964AbfG2PWj (ORCPT
+        id S2388008AbfG2PYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:22:39 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47608 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387925AbfG2PWi (ORCPT
+        Mon, 29 Jul 2019 11:24:38 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:52433 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387693AbfG2PYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:22:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=734mJqtkBi3LN0zhuGIgMjFn+GEEE5inKPVe1QAy5/0=; b=V344DF0eHmejI1+FylehubPRA
-        ki3FVPGVRK4c/zroRMso6w37G0qm8Y+zZ9UJJBUtFOMokqSPLXbHoa7dj9r3zWLSivRHkAQnG6mqW
-        N4tKvuQHPvsTfbFUvPP3p6xK/T27xWtuZqqyzN05fhXF8KkQQJLDYa6/N5xbttr3c8Fyk2ENSvZhJ
-        5LrP5A3h2tBLfvI8Bbkx5H2O4JrgWMSdo5pLynuIX5qbctDFCdnDn+Eo5djn0Hz4Juhiq3b8/vg1A
-        fOErOByXK0YtMiRXfBZrUu48fv3RPePiHs3zCC4lOifSsZpphxwCieqmvaNuzL5tSdeKRwjw1p8++
-        g/NjbWxMQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs7Tq-0003Tk-M4; Mon, 29 Jul 2019 15:22:30 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 22B6320AFFE9E; Mon, 29 Jul 2019 17:22:29 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 17:22:29 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>, riel@surriel.com,
-        luto@kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH] sched: Clean up active_mm reference counting
-Message-ID: <20190729152229.GG31398@hirez.programming.kicks-ass.net>
-References: <20190727171047.31610-1-longman@redhat.com>
- <20190729085235.GT31381@hirez.programming.kicks-ass.net>
- <20190729142450.GE31425@hirez.programming.kicks-ass.net>
- <45546d31-4efb-c303-deae-7c866b0071a9@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45546d31-4efb-c303-deae-7c866b0071a9@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 29 Jul 2019 11:24:38 -0400
+Received: from orion.localdomain ([77.4.29.213]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MKKhF-1i5eBx0MWt-00Lnd4; Mon, 29 Jul 2019 17:24:34 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     amitkarwar@gmail.com, siva8118@gmail.com, kvalo@codeaurora.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH] drivers: net: wireless: rsi: return explicit error values
+Date:   Mon, 29 Jul 2019 17:24:32 +0200
+Message-Id: <1564413872-10720-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:ksVHMps503+LcqYL67PSCCKtCJFaPbytVqqBbTkepts7c9sg6Jr
+ FSBjEO9XnujHOF+0IOR3PLdTvQLM1S/FDtYxvh+jS1ljbsyUHKJEnOCuC80uSTkD/Mn6oDp
+ TTfFQadmLc6OQ/AUx2JHcPSLpovSY+csUzVHLwOw7lcW25fYgzYIO2Tf3KSKhBPMeTmylPR
+ 8nyJx0p1f/ZkA+irHDWbw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AmsVlK1Vod8=:ecBNmD13mZxnUDmtu8Mxlb
+ dG3t2s+KCPddyIAVbG4Z1Pl3/QBWLdnIbviBejI8dnVXeBd3WF5CCuyAMI8wq28O+tk7CDnxx
+ T/SLiqAs59yqw9uUoD4Km7Khg3lFsdMZzl90Kr4T56jHJCmBRrQCOh8JO5Obha5BnZ84nnE5C
+ lFsJjBgDuO/JB3/yZwRMZ+/U+M392JpYL0ss82J378hjnkd0eRdFu+1QakOAjjO5YwqqfXKMp
+ d/i3FmQ9jxlxn7N4C0uPunHuMny89paYbrIr8nrn0kM5RX+ECW8kRJ+r5UiQb3EzOCFXsgtKK
+ vfWqVD5zCzhKmdu5iqFTDqPisDK2BPbkgaHUZrb7MVkjose5lQ/uCplCqkinBLJQ0WLoP+fL2
+ FfAVkrwvdfEAL9i4glS+n11t4lDyP7iuW9iiYIHGc/1Z5zyp/WMJ1sBnYpHYc16kM6KEZ52ay
+ bnOx6IAC2qQddI2fbxX0B8TvBCti0ZINVWaroXgowikCjgcIz1JbFG2W8HEMSpbTQlrTI7I7p
+ 9qac/U5tRoNI+hppFB6/DHvZDpBrYFQp99BvTDgmm55h8G+/ceiZq5pCXaH7ZuuZUIdaH+NGT
+ 7n0fiA1Of0cVrWq7Gw3zXbdZ+rnZlPu5tFVFejw+hfvIIwLMno60xNzqlokjxA1baTUHDUlfT
+ 5rKB+9kU+g9XLnYkbEtXVz6Wg8XJlBWHjTTG6cfmRyOHcaRBJ04w5miECOecXuI8SBcLkFpyv
+ ERtPExwhoXjW9Xo4mAvyLV2nvD9UVdiv9LjSwA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 11:16:55AM -0400, Waiman Long wrote:
-> On 7/29/19 10:24 AM, Peter Zijlstra wrote:
-> > On Mon, Jul 29, 2019 at 10:52:35AM +0200, Peter Zijlstra wrote:
-> >
-> > ---
-> > Subject: sched: Clean up active_mm reference counting
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > Date: Mon Jul 29 16:05:15 CEST 2019
-> >
-> > The current active_mm reference counting is confusing and sub-optimal.
-> >
-> > Rewrite the code to explicitly consider the 4 separate cases:
-> >
-> >     user -> user
-> >
-> > 	When switching between two user tasks, all we need to consider
-> > 	is switch_mm().
-> >
-> >     user -> kernel
-> >
-> > 	When switching from a user task to a kernel task (which
-> > 	doesn't have an associated mm) we retain the last mm in our
-> > 	active_mm. Increment a reference count on active_mm.
-> >
-> >   kernel -> kernel
-> >
-> > 	When switching between kernel threads, all we need to do is
-> > 	pass along the active_mm reference.
-> >
-> >   kernel -> user
-> >
-> > 	When switching between a kernel and user task, we must switch
-> > 	from the last active_mm to the next mm, hoping of course that
-> > 	these are the same. Decrement a reference on the active_mm.
-> >
-> > The code keeps a different order, because as you'll note, both 'to
-> > user' cases require switch_mm().
-> >
-> > And where the old code would increment/decrement for the 'kernel ->
-> > kernel' case, the new code observes this is a neutral operation and
-> > avoids touching the reference count.
-> 
-> I am aware of that behavior which is indeed redundant, but it is not
-> what I am trying to fix and so I kind of leave it alone in my patch.
+From: Enrico Weigelt <info@metux.net>
 
-Oh sure; and it's not all that important either. It is jst that every
-time I look at that code I get confused.
+Explicitly return constants instead of variable (and rely on
+it to be explicitly initialized), if the value is supposed
+to be fixed anyways. Align it with the rest of the driver,
+which does it the same way.
 
-On top of that, the new is easier to rip the active_mm stuff out of,
-which is where it came from.
+Signed-off-by: Enrico Weigelt <info@metux.net>
+---
+ drivers/net/wireless/rsi/rsi_91x_sdio.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+index b42cd50..2a3577d 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
++++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+@@ -844,11 +844,11 @@ static int rsi_init_sdio_interface(struct rsi_hw *adapter,
+ 				   struct sdio_func *pfunction)
+ {
+ 	struct rsi_91x_sdiodev *rsi_91x_dev;
+-	int status = -ENOMEM;
++	int status;
+ 
+ 	rsi_91x_dev = kzalloc(sizeof(*rsi_91x_dev), GFP_KERNEL);
+ 	if (!rsi_91x_dev)
+-		return status;
++		return -ENOMEM;
+ 
+ 	adapter->rsi_dev = rsi_91x_dev;
+ 
+@@ -890,7 +890,7 @@ static int rsi_init_sdio_interface(struct rsi_hw *adapter,
+ #ifdef CONFIG_RSI_DEBUGFS
+ 	adapter->num_debugfs_entries = MAX_DEBUGFS_ENTRIES;
+ #endif
+-	return status;
++	return 0;
+ fail:
+ 	sdio_disable_func(pfunction);
+ 	sdio_release_host(pfunction);
+-- 
+1.9.1
 
