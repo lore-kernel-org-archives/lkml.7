@@ -2,149 +2,202 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88DAC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8676AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B953820578
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5924B20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 13:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfG2N71 (ORCPT
+        id S1728195AbfG2N7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 09:59:27 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33868 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726767AbfG2N71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 09:59:27 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AC2E8B87C8480C7DA8F3;
-        Mon, 29 Jul 2019 21:43:42 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
- 21:43:36 +0800
-Subject: Re: [RFC PATCH 08/10] powerpc/fsl_booke/kaslr: clear the original
- kernel if randomized
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>
-References: <20190717080621.40424-1-yanaijie@huawei.com>
- <20190717080621.40424-9-yanaijie@huawei.com>
- <a09b4f53-2ccd-e675-4385-b53fd91fbafc@c-s.fr>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <704624a1-36b7-50d7-cf8d-2923b2a97367@huawei.com>
-Date:   Mon, 29 Jul 2019 21:43:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Mon, 29 Jul 2019 09:59:31 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34086 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727996AbfG2N73 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 09:59:29 -0400
+Received: by mail-qt1-f195.google.com with SMTP id k10so59806517qtq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 06:59:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iqFgSDsOdyZCFRczb00bD/dVjGAIIMTPIpBxn7IXBR4=;
+        b=OeCesEKpFbKV3Mq0xD1rjKwh7/mZIIKEWfoLuuTVlivRENgWc5WZ94dnRgG2pmbUO+
+         7K4mK4PMm9YsKvun6Ub+HXmkKOMcWoGs4KXNah/PHm05PmC77UUgehLYs7wIp/NbXe4X
+         7m8SvOL+ODRyB8Rbs9E2hIVdtLOAK3pxcX5memn2ghFS/Q/Lt05DjG9fV0Z2WPfi7U2L
+         Sds1ZYcyhV+Cr9rZAme/cVjObDRUFSPcRIndwq6PkGTm3wfPLT8bC7AMaFA1yhOwl/PT
+         W+28VtqWtGqz0p8XVDYu/cTEvNw20BGFE9RJKPfHUwn2IdIrNycNB9ej0k3yITrQ2SLz
+         iElA==
+X-Gm-Message-State: APjAAAVX/euOHqMeY/2dyn5A9u4L6OBcRXK/csKP4ZNgpLLHTqFobnqc
+        AK0LCezEv/96+LyljJBhghdZrA==
+X-Google-Smtp-Source: APXvYqya7f0Cp0s/l2MQ/mBXMxHiOdLythBkvJhRckPI6meenN0uORbzR3pHkvKsOkp2VTMZfUkXKg==
+X-Received: by 2002:a0c:c96a:: with SMTP id v39mr78289762qvj.121.1564408768811;
+        Mon, 29 Jul 2019 06:59:28 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id n27sm20786389qkk.35.2019.07.29.06.59.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 06:59:28 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:59:23 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] vsock/virtio: optimizations to increase the
+ throughput
+Message-ID: <20190729095743-mutt-send-email-mst@kernel.org>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <a09b4f53-2ccd-e675-4385-b53fd91fbafc@c-s.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717113030.163499-1-sgarzare@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 17, 2019 at 01:30:25PM +0200, Stefano Garzarella wrote:
+> This series tries to increase the throughput of virtio-vsock with slight
+> changes.
+> While I was testing the v2 of this series I discovered an huge use of memory,
+> so I added patch 1 to mitigate this issue. I put it in this series in order
+> to better track the performance trends.
 
-On 2019/7/29 19:19, Christophe Leroy wrote:
-> 
-> 
-> Le 17/07/2019 à 10:06, Jason Yan a écrit :
->> The original kernel still exists in the memory, clear it now.
->>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> Cc: Diana Craciun <diana.craciun@nxp.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Kees Cook <keescook@chromium.org>
->> ---
->>   arch/powerpc/kernel/kaslr_booke.c  | 11 +++++++++++
->>   arch/powerpc/mm/mmu_decl.h         |  2 ++
->>   arch/powerpc/mm/nohash/fsl_booke.c |  1 +
->>   3 files changed, 14 insertions(+)
->>
->> diff --git a/arch/powerpc/kernel/kaslr_booke.c 
->> b/arch/powerpc/kernel/kaslr_booke.c
->> index 90357f4bd313..00339c05879f 100644
->> --- a/arch/powerpc/kernel/kaslr_booke.c
->> +++ b/arch/powerpc/kernel/kaslr_booke.c
->> @@ -412,3 +412,14 @@ notrace void __init kaslr_early_init(void 
->> *dt_ptr, phys_addr_t size)
->>       reloc_kernel_entry(dt_ptr, kimage_vaddr);
->>   }
->> +
->> +void __init kaslr_second_init(void)
->> +{
->> +    /* If randomized, clear the original kernel */
->> +    if (kimage_vaddr != KERNELBASE) {
->> +        unsigned long kernel_sz;
->> +
->> +        kernel_sz = (unsigned long)_end - kimage_vaddr;
->> +        memset((void *)KERNELBASE, 0, kernel_sz);
-> 
-> Why are we clearing ? Is that just to tidy up or is it of security 
-> importance ?
-> 
+Series:
 
-If we leave it there, attackers can still find the kernel object very
-easy, it's still dangerous especially if without 
-CONFIG_STRICT_KERNEL_RWX enabled.
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-> If so, maybe memzero_explicit() should be used instead ?
-> 
+Can this go into net-next?
 
-OK
 
->> +    }
->> +}
->> diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
->> index 754ae1e69f92..9912ee598f9b 100644
->> --- a/arch/powerpc/mm/mmu_decl.h
->> +++ b/arch/powerpc/mm/mmu_decl.h
->> @@ -150,8 +150,10 @@ extern void loadcam_multi(int first_idx, int num, 
->> int tmp_idx);
->>   #ifdef CONFIG_RANDOMIZE_BASE
->>   extern void kaslr_early_init(void *dt_ptr, phys_addr_t size);
->> +extern void kaslr_second_init(void);
+> v4:
+> - rebased all patches on current master (conflicts is Patch 4)
+> - Patch 1: added Stefan's R-b
+> - Patch 3: removed lock when buf_alloc is written [David];
+>            moved this patch after "vsock/virtio: reduce credit update messages"
+>            to make it clearer
+> - Patch 4: vhost_exceeds_weight() is recently introduced, so I've solved some
+>            conflicts
 > 
-> No new 'extern' please.
+> v3: https://patchwork.kernel.org/cover/10970145
 > 
->>   #else
->>   static inline void kaslr_early_init(void *dt_ptr, phys_addr_t size) {}
->> +static inline void kaslr_second_init(void) {}
->>   #endif
->>   struct tlbcam {
->> diff --git a/arch/powerpc/mm/nohash/fsl_booke.c 
->> b/arch/powerpc/mm/nohash/fsl_booke.c
->> index 8d25a8dc965f..fa5a87f5c08e 100644
->> --- a/arch/powerpc/mm/nohash/fsl_booke.c
->> +++ b/arch/powerpc/mm/nohash/fsl_booke.c
->> @@ -269,6 +269,7 @@ notrace void __init relocate_init(u64 dt_ptr, 
->> phys_addr_t start)
->>       kernstart_addr = start;
->>       if (is_second_reloc) {
->>           virt_phys_offset = PAGE_OFFSET - memstart_addr;
->> +        kaslr_second_init();
->>           return;
->>       }
->>
+> v2: https://patchwork.kernel.org/cover/10938743
 > 
-> Christophe
+> v1: https://patchwork.kernel.org/cover/10885431
 > 
-> .
+> Below are the benchmarks step by step. I used iperf3 [1] modified with VSOCK
+> support. As Micheal suggested in the v1, I booted host and guest with 'nosmap'.
 > 
-
+> A brief description of patches:
+> - Patches 1:   limit the memory usage with an extra copy for small packets
+> - Patches 2+3: reduce the number of credit update messages sent to the
+>                transmitter
+> - Patches 4+5: allow the host to split packets on multiple buffers and use
+>                VIRTIO_VSOCK_MAX_PKT_BUF_SIZE as the max packet size allowed
+> 
+>                     host -> guest [Gbps]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.032     0.030    0.048    0.051
+> 64         0.061     0.059    0.108    0.117
+> 128        0.122     0.112    0.227    0.234
+> 256        0.244     0.241    0.418    0.415
+> 512        0.459     0.466    0.847    0.865
+> 1K         0.927     0.919    1.657    1.641
+> 2K         1.884     1.813    3.262    3.269
+> 4K         3.378     3.326    6.044    6.195
+> 8K         5.637     5.676   10.141   11.287
+> 16K        8.250     8.402   15.976   16.736
+> 32K       13.327    13.204   19.013   20.515
+> 64K       21.241    21.341   20.973   21.879
+> 128K      21.851    22.354   21.816   23.203
+> 256K      21.408    21.693   21.846   24.088
+> 512K      21.600    21.899   21.921   24.106
+> 
+>                     guest -> host [Gbps]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.045     0.046    0.057    0.057
+> 64         0.089     0.091    0.103    0.104
+> 128        0.170     0.179    0.192    0.200
+> 256        0.364     0.351    0.361    0.379
+> 512        0.709     0.699    0.731    0.790
+> 1K         1.399     1.407    1.395    1.427
+> 2K         2.670     2.684    2.745    2.835
+> 4K         5.171     5.199    5.305    5.451
+> 8K         8.442     8.500   10.083    9.941
+> 16K       12.305    12.259   13.519   15.385
+> 32K       11.418    11.150   11.988   24.680
+> 64K       10.778    10.659   11.589   35.273
+> 128K      10.421    10.339   10.939   40.338
+> 256K      10.300     9.719   10.508   36.562
+> 512K       9.833     9.808   10.612   35.979
+> 
+> As Stefan suggested in the v1, I measured also the efficiency in this way:
+>     efficiency = Mbps / (%CPU_Host + %CPU_Guest)
+> 
+> The '%CPU_Guest' is taken inside the VM. I know that it is not the best way,
+> but it's provided for free from iperf3 and could be an indication.
+> 
+>         host -> guest efficiency [Mbps / (%CPU_Host + %CPU_Guest)]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.35      0.45     0.79     1.02
+> 64         0.56      0.80     1.41     1.54
+> 128        1.11      1.52     3.03     3.12
+> 256        2.20      2.16     5.44     5.58
+> 512        4.17      4.18    10.96    11.46
+> 1K         8.30      8.26    20.99    20.89
+> 2K        16.82     16.31    39.76    39.73
+> 4K        30.89     30.79    74.07    75.73
+> 8K        53.74     54.49   124.24   148.91
+> 16K       80.68     83.63   200.21   232.79
+> 32K      132.27    132.52   260.81   357.07
+> 64K      229.82    230.40   300.19   444.18
+> 128K     332.60    329.78   331.51   492.28
+> 256K     331.06    337.22   339.59   511.59
+> 512K     335.58    328.50   331.56   504.56
+> 
+>         guest -> host efficiency [Mbps / (%CPU_Host + %CPU_Guest)]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.43      0.43     0.53     0.56
+> 64         0.85      0.86     1.04     1.10
+> 128        1.63      1.71     2.07     2.13
+> 256        3.48      3.35     4.02     4.22
+> 512        6.80      6.67     7.97     8.63
+> 1K        13.32     13.31    15.72    15.94
+> 2K        25.79     25.92    30.84    30.98
+> 4K        50.37     50.48    58.79    59.69
+> 8K        95.90     96.15   107.04   110.33
+> 16K      145.80    145.43   143.97   174.70
+> 32K      147.06    144.74   146.02   282.48
+> 64K      145.25    143.99   141.62   406.40
+> 128K     149.34    146.96   147.49   489.34
+> 256K     156.35    149.81   152.21   536.37
+> 512K     151.65    150.74   151.52   519.93
+> 
+> [1] https://github.com/stefano-garzarella/iperf/
+> 
+> Stefano Garzarella (5):
+>   vsock/virtio: limit the memory used per-socket
+>   vsock/virtio: reduce credit update messages
+>   vsock/virtio: fix locking in virtio_transport_inc_tx_pkt()
+>   vhost/vsock: split packets to send using multiple buffers
+>   vsock/virtio: change the maximum packet size allowed
+> 
+>  drivers/vhost/vsock.c                   | 68 ++++++++++++-----
+>  include/linux/virtio_vsock.h            |  4 +-
+>  net/vmw_vsock/virtio_transport.c        |  1 +
+>  net/vmw_vsock/virtio_transport_common.c | 99 ++++++++++++++++++++-----
+>  4 files changed, 134 insertions(+), 38 deletions(-)
+> 
+> -- 
+> 2.20.1
