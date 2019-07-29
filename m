@@ -2,76 +2,157 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E303BC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65668C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF34F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4058A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfG2GgO (ORCPT
+        id S1726862AbfG2Ggn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 02:36:14 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3191 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725934AbfG2GgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 02:36:14 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A20888BD6424470D0156;
-        Mon, 29 Jul 2019 14:36:02 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
- 14:35:53 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
-        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@siol.net>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <eric@anholt.net>
-CC:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] drm/bridge: lvds-encoder: Fix build error
-Date:   Mon, 29 Jul 2019 14:35:39 +0800
-Message-ID: <20190729063539.19328-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 29 Jul 2019 02:36:43 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57143 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfG2Ggm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 02:36:42 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hrzGq-0006RE-Jk; Mon, 29 Jul 2019 08:36:32 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hrzGo-0003FU-Dg; Mon, 29 Jul 2019 08:36:30 +0200
+Date:   Mon, 29 Jul 2019 08:36:30 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     thierry.reding@gmail.com, mripard@kernel.org, wens@csie.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 2/6] pwm: sun4i: Add a quirk for reset line
+Message-ID: <20190729063630.rn325whatfnc3m7n@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <20190726184045.14669-3-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190726184045.14669-3-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_DRM_LVDS_ENCODER=y but CONFIG_DRM_KMS_HELPER=m,
-build fails:
+Cc += reset framework maintainer
 
-drivers/gpu/drm/bridge/lvds-encoder.o: In function `lvds_encoder_probe':
-lvds-encoder.c:(.text+0x155): undefined reference to `devm_drm_panel_bridge_add'
+Hello Jernej,
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: dbb58bfd9ae6 drm/bridge: ("Fix lvds-encoder since the panel_bridge rework.")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpu/drm/bridge/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Jul 26, 2019 at 08:40:41PM +0200, Jernej Skrabec wrote:
+> H6 PWM core needs deasserted reset line in order to work.
+> 
+> Add a quirk for it.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/pwm/pwm-sun4i.c | 27 +++++++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index de78c824bbfd..1b7be8fbde86 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+> +#include <linux/reset.h>
+>  #include <linux/slab.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/time.h>
+> @@ -72,12 +73,14 @@ static const u32 prescaler_table[] = {
+>  
+>  struct sun4i_pwm_data {
+>  	bool has_prescaler_bypass;
+> +	bool has_reset;
+>  	unsigned int npwm;
+>  };
+>  
+>  struct sun4i_pwm_chip {
+>  	struct pwm_chip chip;
+>  	struct clk *clk;
+> +	struct reset_control *rst;
+>  	void __iomem *base;
+>  	spinlock_t ctrl_lock;
+>  	const struct sun4i_pwm_data *data;
+> @@ -371,6 +374,14 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+>  	if (IS_ERR(pwm->clk))
+>  		return PTR_ERR(pwm->clk);
+>  
+> +	if (pwm->data->has_reset) {
+> +		pwm->rst = devm_reset_control_get(&pdev->dev, NULL);
+> +		if (IS_ERR(pwm->rst))
+> +			return PTR_ERR(pwm->rst);
+> +
+> +		reset_control_deassert(pwm->rst);
+> +	}
+> +
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index a6eec90..2926750 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -8,7 +8,7 @@ config DRM_BRIDGE
- config DRM_PANEL_BRIDGE
- 	def_bool y
- 	depends on DRM_BRIDGE
--	depends on DRM_KMS_HELPER
-+	select DRM_KMS_HELPER
- 	select DRM_PANEL
- 	help
- 	  DRM bridge wrapper of DRM panels
+I wonder why there is a need to track if a given chip needs a reset
+line. I'd just use devm_reset_control_get_optional() and drop the
+.has_reset member in struct sun4i_pwm_data.
+
+>  	pwm->chip.dev = &pdev->dev;
+>  	pwm->chip.ops = &sun4i_pwm_ops;
+>  	pwm->chip.base = -1;
+> @@ -383,19 +394,31 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+>  	ret = pwmchip_add(&pwm->chip);
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
+> -		return ret;
+> +		goto err_pwm_add;
+>  	}
+>  
+>  	platform_set_drvdata(pdev, pwm);
+>  
+>  	return 0;
+> +
+> +err_pwm_add:
+> +	reset_control_assert(pwm->rst);
+> +
+> +	return ret;
+>  }
+>  
+>  static int sun4i_pwm_remove(struct platform_device *pdev)
+>  {
+>  	struct sun4i_pwm_chip *pwm = platform_get_drvdata(pdev);
+> +	int ret;
+> +
+> +	ret = pwmchip_remove(&pwm->chip);
+> +	if (ret)
+> +		return ret;
+>  
+> -	return pwmchip_remove(&pwm->chip);
+> +	reset_control_assert(pwm->rst);
+> +
+> +	return 0;
+>  }
+>  
+>  static struct platform_driver sun4i_pwm_driver = {
+
 -- 
-2.7.4
-
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
