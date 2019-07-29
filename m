@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1983C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4B2C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBF5205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09070205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430519;
-	bh=BB3i0a7WNVHRMHYQq60v4UZ2dAiAnHvjY8Jd6CqZtOo=;
+	s=default; t=1564430527;
+	bh=KPPBZK6p8Y6ZUCrK3RWkKednYxSPHn12Xv31/wi0bvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bv3xtEpd3rRqZQ3XYeYn64M+0C56IdgWQ3KbMtZuNtQPw1BJrORs9UUx8EYZUM9EJ
-	 6Tfj+xcnHhKLS8gJTbiEygShRmpmPNhgQ4b6nKMDvm+uC8JDmbCr+WLIMTAQpKIuyj
-	 rWkq15GAjO702gnsJKyn/9aDdbtBNfW7dlGhP9YU=
+	b=QYwO6nGE2kE55bWpC4J5KhcnsvQg3gw3zqaF8phxTlSQTunDeNIUB8Z27Nh32HjMo
+	 pH8K4SZv1z6DYWfyMaWiYyJZ3DD29kQWtR4xkwZqnPVHW4gCKUq7NZNSuOHRmowgri
+	 mIpyi4DYp2kANe+sgDH+8gFlWfCMU+rMPBXpwRg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390563AbfG2Tti (ORCPT
+        id S2390503AbfG2TtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:49:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40138 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:49:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389987AbfG2Tte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:49:34 -0400
+        id S2389931AbfG2TtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:49:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 372FE21655;
-        Mon, 29 Jul 2019 19:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17A3C21655;
+        Mon, 29 Jul 2019 19:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429773;
-        bh=BB3i0a7WNVHRMHYQq60v4UZ2dAiAnHvjY8Jd6CqZtOo=;
+        s=default; t=1564429756;
+        bh=KPPBZK6p8Y6ZUCrK3RWkKednYxSPHn12Xv31/wi0bvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Elawo3wlr0GnbOdajg/zAc68UPBksIH262DDzYnpu2aQbHjwxhbuVMCVu6fxuefP
-         k3qMnULx08OSYseDh5eA5Q16CLmYzUkmwcGtRVV6BS4U3THXKDXpgWLt8DDjq5XeKD
-         8xJsHWIKYnVdWpnv4f+I2f9YM+nrJHQGbCl9uZqk=
+        b=fd1K7AZKlCxSj6l9DIKXyLU8PLIWhUn2F4zWWqBD1693z4Wcvc+xoJ7YApofcamxT
+         XHoNzoBXKDBrVJKyVUQGYr5dvrsBSxr8DqrFzjKJFRB8kVEfCcOezz2fZvykXzv4Sc
+         8fmkG1aLeMSI/ATQIYL7JXmK66GSm7mi4+mvZBbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 074/215] KVM: nVMX: Intercept VMWRITEs to GUEST_{CS,SS}_AR_BYTES
-Date:   Mon, 29 Jul 2019 21:21:10 +0200
-Message-Id: <20190729190752.935522010@linuxfoundation.org>
+Subject: [PATCH 5.2 086/215] phy: meson-g12a-usb3-pcie: disable locking for cr_regmap
+Date:   Mon, 29 Jul 2019 21:21:22 +0200
+Message-Id: <20190729190754.386740892@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -62,104 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b643780562af5378ef7fe731c65b8f93e49c59c6 ]
+[ Upstream commit 5fc2aa3ec9efad97dd7c316f3c8e4c6268bbed9b ]
 
-VMMs frequently read the guest's CS and SS AR bytes to detect 64-bit
-mode and CPL respectively, but effectively never write said fields once
-the VM is initialized.  Intercepting VMWRITEs for the two fields saves
-~55 cycles in copy_shadow_to_vmcs12().
+Locking is not needed for the phy_g12a_usb3_pcie_cr_bus_read/write() and
+currently it causes the following BUG because of the usage of the
+regmap_read_poll_timeout() running in spinlock_irq, configured by regmap fast_io.
 
-Because some Intel CPUs, e.g. Haswell, drop the reserved bits of the
-guest access rights fields on VMWRITE, exposing the fields to L1 for
-VMREAD but not VMWRITE leads to inconsistent behavior between L1 and L2.
-On hardware that drops the bits, L1 will see the stripped down value due
-to reading the value from hardware, while L2 will see the full original
-value as stored by KVM.  To avoid such an inconsistency, emulate the
-behavior on all CPUS, but only for intercepted VMWRITEs so as to avoid
-introducing pointless latency into copy_shadow_to_vmcs12(), e.g. if the
-emulation were added to vmcs12_write_any().
+Simply disable locking in the cr_regmap config since it's only used from the
+PHY init callback function.
 
-Since the AR_BYTES emulation is done only for intercepted VMWRITE, if a
-future patch (re)exposed AR_BYTES for both VMWRITE and VMREAD, then KVM
-would end up with incosistent behavior on pre-Haswell hardware, e.g. KVM
-would drop the reserved bits on intercepted VMWRITE, but direct VMWRITE
-to the shadow VMCS would not drop the bits.  Add a WARN in the shadow
-field initialization to detect any attempt to expose an AR_BYTES field
-without updating vmcs12_write_any().
+BUG: sleeping function called from invalid context at drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c:85
+in_atomic(): 1, irqs_disabled(): 128, pid: 60, name: kworker/3:1
+[snip]
+Workqueue: events deferred_probe_work_func
+Call trace:
+ dump_backtrace+0x0/0x190
+ show_stack+0x14/0x20
+ dump_stack+0x90/0xb4
+ ___might_sleep+0xec/0x110
+ __might_sleep+0x50/0x88
+ phy_g12a_usb3_pcie_cr_bus_addr.isra.0+0x80/0x1a8
+ phy_g12a_usb3_pcie_cr_bus_read+0x34/0x1d8
+ _regmap_read+0x60/0xe0
+ _regmap_update_bits+0xc4/0x110
+ regmap_update_bits_base+0x60/0x90
+ phy_g12a_usb3_pcie_init+0xdc/0x210
+ phy_init+0x74/0xd0
+ dwc3_meson_g12a_probe+0x2cc/0x4d0
+ platform_drv_probe+0x50/0xa0
+ really_probe+0x20c/0x3b8
+ driver_probe_device+0x68/0x150
+ __device_attach_driver+0xa8/0x170
+ bus_for_each_drv+0x64/0xc8
+ __device_attach+0xd8/0x158
+ device_initial_probe+0x10/0x18
+ bus_probe_device+0x90/0x98
+ deferred_probe_work_func+0x94/0xe8
+ process_one_work+0x1e0/0x338
+ worker_thread+0x230/0x458
+ kthread+0x134/0x138
+ ret_from_fork+0x10/0x1c
 
-Note, emulation of the AR_BYTES reserved bit behavior is based on a
-patch[1] from Jim Mattson that applied the emulation to all writes to
-vmcs12 so that live migration across different generations of hardware
-would not introduce divergent behavior.  But given that live migration
-of nested state has already been enabled, that ship has sailed (not to
-mention that no sane VMM will be affected by this behavior).
-
-[1] https://patchwork.kernel.org/patch/10483321/
-
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 36077e16c050 ("phy: amlogic: Add Amlogic G12A USB3 + PCIE Combo PHY Driver")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx/nested.c             | 15 +++++++++++++++
- arch/x86/kvm/vmx/vmcs_shadow_fields.h |  4 ++--
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 543d7d82479b..ac98b1328124 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -91,6 +91,10 @@ static void init_vmcs_shadow_fields(void)
- 			pr_err("Missing field from shadow_read_write_field %x\n",
- 			       field + 1);
+diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+index 6233a7979a93..ac322d643c7a 100644
+--- a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
++++ b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
+@@ -188,7 +188,7 @@ static const struct regmap_config phy_g12a_usb3_pcie_cr_regmap_conf = {
+ 	.reg_read = phy_g12a_usb3_pcie_cr_bus_read,
+ 	.reg_write = phy_g12a_usb3_pcie_cr_bus_write,
+ 	.max_register = 0xffff,
+-	.fast_io = true,
++	.disable_locking = true,
+ };
  
-+		WARN_ONCE(field >= GUEST_ES_AR_BYTES &&
-+			  field <= GUEST_TR_AR_BYTES,
-+			  "Update vmcs12_write_any() to expose AR_BYTES RW");
-+
- 		/*
- 		 * PML and the preemption timer can be emulated, but the
- 		 * processor cannot vmwrite to fields that don't exist
-@@ -4500,6 +4504,17 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
- 		vmcs12 = get_shadow_vmcs12(vcpu);
- 	}
- 
-+	/*
-+	 * Some Intel CPUs intentionally drop the reserved bits of the AR byte
-+	 * fields on VMWRITE.  Emulate this behavior to ensure consistent KVM
-+	 * behavior regardless of the underlying hardware, e.g. if an AR_BYTE
-+	 * field is intercepted for VMWRITE but not VMREAD (in L1), then VMREAD
-+	 * from L1 will return a different value than VMREAD from L2 (L1 sees
-+	 * the stripped down value, L2 sees the full value as stored by KVM).
-+	 */
-+	if (field >= GUEST_ES_AR_BYTES && field <= GUEST_TR_AR_BYTES)
-+		field_value &= 0x1f0ff;
-+
- 	if (vmcs12_write_any(vmcs12, field, field_value) < 0)
- 		return nested_vmx_failValid(vcpu,
- 			VMXERR_UNSUPPORTED_VMCS_COMPONENT);
-diff --git a/arch/x86/kvm/vmx/vmcs_shadow_fields.h b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-index 132432f375c2..97dd5295be31 100644
---- a/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-+++ b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-@@ -40,14 +40,14 @@ SHADOW_FIELD_RO(VM_EXIT_INSTRUCTION_LEN)
- SHADOW_FIELD_RO(IDT_VECTORING_INFO_FIELD)
- SHADOW_FIELD_RO(IDT_VECTORING_ERROR_CODE)
- SHADOW_FIELD_RO(VM_EXIT_INTR_ERROR_CODE)
-+SHADOW_FIELD_RO(GUEST_CS_AR_BYTES)
-+SHADOW_FIELD_RO(GUEST_SS_AR_BYTES)
- SHADOW_FIELD_RW(CPU_BASED_VM_EXEC_CONTROL)
- SHADOW_FIELD_RW(EXCEPTION_BITMAP)
- SHADOW_FIELD_RW(VM_ENTRY_EXCEPTION_ERROR_CODE)
- SHADOW_FIELD_RW(VM_ENTRY_INTR_INFO_FIELD)
- SHADOW_FIELD_RW(VM_ENTRY_INSTRUCTION_LEN)
- SHADOW_FIELD_RW(TPR_THRESHOLD)
--SHADOW_FIELD_RW(GUEST_CS_AR_BYTES)
--SHADOW_FIELD_RW(GUEST_SS_AR_BYTES)
- SHADOW_FIELD_RW(GUEST_INTERRUPTIBILITY_INFO)
- SHADOW_FIELD_RW(VMX_PREEMPTION_TIMER_VALUE)
- 
+ static int phy_g12a_usb3_init(struct phy *phy)
 -- 
 2.20.1
 
