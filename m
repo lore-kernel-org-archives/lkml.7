@@ -2,95 +2,163 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459F8C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33699C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B025214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:35:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ij+8aVx1"
+	by mail.kernel.org (Postfix) with ESMTP id 0F418206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbfG2KfC (ORCPT
+        id S1728286AbfG2Kh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:35:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37498 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbfG2KfC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:35:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OLcOQ/n8nsV1J24avjiNzRxgd0bDdez3laTxyYU6tyw=; b=Ij+8aVx1OaAiW+7gIo9Sqv9mL
-        +948ak6QIqgdP+T0hilmrAtpFHhXYXle8u8fIKX8L5A0Cr+yEHYfhHNjFB1PWVJGTqTwKPzZTBnhw
-        kj4csS3ft1vaC0DA5pOao6h8i/i6rY9s0leXq+J0J19SlviQKorsoBBT7PR6bxi1NZ99AkUV3ZGG8
-        EXm7p9h8LYk1fF+egZoyGgGlxdijsR8hCp35auLiOxJTgiYC/C6yKIikpfBon4gaefSLyBl32ugz6
-        HTkoL3FwgVjf3An9fASPiZUl7tZOEwk8HZg8PQLmslRDm2on70VbgMXYDM+zUUAeYe2Z0H/25whhe
-        EdxCfk74Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs2zb-0001V0-Ob; Mon, 29 Jul 2019 10:34:59 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2AABE20AF2C34; Mon, 29 Jul 2019 12:34:58 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 12:34:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Daniel Axtens <dja@axtens.net>,
-        kasan-dev <kasan-dev@googlegroups.com>, X86 ML <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marco Elver <elver@google.com>
-Subject: Re: [PATCH] x86: panic when a kernel stack overflow is detected
-Message-ID: <20190729103458.GZ31381@hirez.programming.kicks-ass.net>
-References: <20190729015933.18049-1-dja@axtens.net>
- <CALCETrX_+_zT8iKp9QMpaN0+NPS9_rmhZvPgG=ejN-5KkBbfdQ@mail.gmail.com>
+        Mon, 29 Jul 2019 06:37:28 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3197 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728151AbfG2Kh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:37:28 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id AEA81E6113E8A0C205BC;
+        Mon, 29 Jul 2019 18:37:25 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
+ 18:37:19 +0800
+Subject: Re: [PATCH net-next 08/11] net: hns3: add interrupt affinity support
+ for misc interrupt
+To:     Salil Mehta <salil.mehta@huawei.com>,
+        tanhuazhong <tanhuazhong@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "lipeng (Y)" <lipeng321@huawei.com>
+References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
+ <1563938327-9865-9-git-send-email-tanhuazhong@huawei.com>
+ <fa3dbcce9e22453fb1ef111fd107d20f@huawei.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <f6e02338-b545-61a9-17de-222543dfef75@huawei.com>
+Date:   Mon, 29 Jul 2019 18:37:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrX_+_zT8iKp9QMpaN0+NPS9_rmhZvPgG=ejN-5KkBbfdQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fa3dbcce9e22453fb1ef111fd107d20f@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 08:53:58PM -0700, Andy Lutomirski wrote:
-> On Sun, Jul 28, 2019 at 6:59 PM Daniel Axtens <dja@axtens.net> wrote:
-> >
-> > Currently, when a kernel stack overflow is detected via VMAP_STACK,
-> > the task is killed with die().
-> >
-> > This isn't safe, because we don't know how that process has affected
-> > kernel state. In particular, we don't know what locks have been taken.
-> > For example, we can hit a case with lkdtm where a thread takes a
-> > stack overflow in printk() after taking the logbuf_lock. In that case,
-> > we deadlock when the kernel next does a printk.
-> >
-> > Do not attempt to kill the process when a kernel stack overflow is
-> > detected. The system state is unknown, the only safe thing to do is
-> > panic(). (panic() also prints without taking locks so a useful debug
-> > splat is printed even when logbuf_lock is held.)
+On 2019/7/29 17:18, Salil Mehta wrote:
+>> From: tanhuazhong
+>> Sent: Wednesday, July 24, 2019 4:19 AM
+>> To: davem@davemloft.net
+>> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Salil Mehta
+>> <salil.mehta@huawei.com>; Zhuangyuzeng (Yisen) <yisen.zhuang@huawei.com>;
+>> Linuxarm <linuxarm@huawei.com>; linyunsheng <linyunsheng@huawei.com>; lipeng
+>> (Y) <lipeng321@huawei.com>; tanhuazhong <tanhuazhong@huawei.com>
+>> Subject: [PATCH net-next 08/11] net: hns3: add interrupt affinity support for
+>> misc interrupt
+>>
+>> From: Yunsheng Lin <linyunsheng@huawei.com>
+>>
+>> The misc interrupt is used to schedule the reset and mailbox
+>> subtask, and a 1 sec timer is used to schedule the service
+>> subtask, which does periodic work.
+>>
+>> This patch sets the above three subtask's affinity using the
+>> misc interrupt' affinity.
+>>
+>> Also this patch setups a affinity notify for misc interrupt to
+>> allow user to change the above three subtask's affinity.
+>>
+>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>> Signed-off-by: Peng Li <lipeng321@huawei.com>
+>> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+>> ---
+>>  .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 59
+>> ++++++++++++++++++++--
+>>  .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  4 ++
+>>  2 files changed, 59 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+>> b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+>> index f345095..fe45986 100644
+>> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+>> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+>> @@ -1270,6 +1270,12 @@ static int hclge_configure(struct hclge_dev *hdev)
+>>
+>>  	hclge_init_kdump_kernel_config(hdev);
+>>
+>> +	/* Set the init affinity based on pci func number */
+>> +	i = cpumask_weight(cpumask_of_node(dev_to_node(&hdev->pdev->dev)));
+>> +	i = i ? PCI_FUNC(hdev->pdev->devfn) % i : 0;
+>> +	cpumask_set_cpu(cpumask_local_spread(i, dev_to_node(&hdev->pdev->dev)),
+>> +			&hdev->affinity_mask);
+>> +
+>>  	return ret;
+>>  }
+>>
+>> @@ -2502,14 +2508,16 @@ static void hclge_mbx_task_schedule(struct hclge_dev
+>> *hdev)
+>>  {
+>>  	if (!test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state) &&
+>>  	    !test_and_set_bit(HCLGE_STATE_MBX_SERVICE_SCHED, &hdev->state))
+>> -		schedule_work(&hdev->mbx_service_task);
+>> +		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
 > 
-> The thing I don't like about this is that it reduces the chance that
-> we successfully log anything to disk.
 > 
-> PeterZ, do you have any useful input here?  I wonder if we could do
-> something like printk_oh_crap() that is just printk() except that it
-> panics if it fails to return after a few seconds.
+> Why we have to use system Work Queue here? This could adversely affect
+> other work scheduled not related to the HNS3 driver. Mailbox is internal
+> to the driver and depending upon utilization of the mbx channel(which could
+> be heavy if many VMs are running), this might stress other system tasks
+> as well. Have we thought of this?
 
-People are already had at work rewriting printk. The current thing is
-unfixable.  Then again, I don't know if there's any sane options aside
-of early serial.
+If I understand the CMWQ correctly, it is better to reuse the system Work
+Queue when the work queue needed by HNS3 driver shares the same property of
+system Work Queue, because Concurrency Managed Workqueue mechnism has ensured
+they have the same worker pool if they share the same property.
 
-Still, mucking with printk won't help you at all if the task is holding
-some other/filesystem lock required to do that writeback.
+Some driver(i40e) allocates a work queue with WQ_MEM_RECLAIM, I am not sure
+what is the usecase which requires the WQ_MEM_RECLAIM.
 
+Anyway, If the HNS3 need to allocate a new work queue, we need to
+figure out the usecase first.
+
+> 
+> 
+> 
+>> +			      &hdev->mbx_service_task);
+>>  }
+>>
+>>  static void hclge_reset_task_schedule(struct hclge_dev *hdev)
+>>  {
+>>  	if (!test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
+>>  	    !test_and_set_bit(HCLGE_STATE_RST_SERVICE_SCHED, &hdev->state))
+>> -		schedule_work(&hdev->rst_service_task);
+>> +		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
+>> +			      &hdev->rst_service_task);
+>>  }
+>>
+>>  static void hclge_task_schedule(struct hclge_dev *hdev)
+>> @@ -2517,7 +2525,8 @@ static void hclge_task_schedule(struct hclge_dev *hdev)
+>>  	if (!test_bit(HCLGE_STATE_DOWN, &hdev->state) &&
+>>  	    !test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
+>>  	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state))
+>> -		(void)schedule_work(&hdev->service_task);
+>> +		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
+> 
+> Same here.
+> 
+> 
+> Salil.
+> 
+> .
+> 
 
