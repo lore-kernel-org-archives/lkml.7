@@ -2,232 +2,174 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A8FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D9BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59DE20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5F620679
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:54:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJl6AC3b"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L8sOkg7A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbfG2HxF (ORCPT
+        id S1727223AbfG2Hyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 03:53:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40053 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfG2HxF (ORCPT
+        Mon, 29 Jul 2019 03:54:36 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:32865 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfG2Hyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 03:53:05 -0400
-Received: by mail-pf1-f196.google.com with SMTP id p184so27578855pfp.7;
-        Mon, 29 Jul 2019 00:53:04 -0700 (PDT)
+        Mon, 29 Jul 2019 03:54:35 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h10so57634857ljg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 00:54:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nV30ax2owcZ8dYmlfx3Sd29gsgHWTdEK1plVWhERPGw=;
-        b=EJl6AC3btOoOLqQq1jQTx0PS4G+WvvWWsvqvqdHUpYmR01n+i8mnV45itQPuSIUgoo
-         zcIWAXEGdC7baoI3FNHNNnquTZWD3vfefDFFNi/njS8gBs82EZ4sY8IJvlFQHWM61qZP
-         Olcl3zqABYVqJSmoWUmE9VWxAFw6exlisTiw13bTQ3qBT0Fbw6YRXTutPgQF2lxuzl1m
-         b756BeMDOz2g0U/+hK1FDOe3HgfKuH0L94naHddA0E0E+Nf51eQ2BOjf4W9lTZuQh8sn
-         kR8FjmI3rz1c/nEp7A267k8ovQrsPtcfivV/fNhDC260ga3sDAtELJdD3tC+Zb+3dGPE
-         NJOA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8547tTieJTlVcp1ebRnVxi/sn+gdsxGXf1dlpzxnCUw=;
+        b=L8sOkg7Ax87vy+96EbbXXe/57YWfMfL5VN12MJf0jWV2nZrspx9wgCZekwqwSafd+U
+         ZRyGHhnULDy68f7hnWZPmk7IKc+tNUGqcMJRpeyjY78EgutxWvTEr4fq/8sfr87zj/vH
+         GZAvXJswddC6YrbIKnEbsOHxrwqAF0t8pW7jyTBFPuxMiiQCoEIdEWWQNWzt2Vy+ruNF
+         EeXQiBZGrIN/lw84IuwycszDODdxj5/tTnNzSKWgQzwc4m/8tA5/JitSBkOp3WPyFW+l
+         D9cUX7ZgMX+vsw7kKdMQaE78AQyO+sTBk6vnQ25VQKkj+pWK3VGjFkA8POTzzxpygod0
+         7FgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=nV30ax2owcZ8dYmlfx3Sd29gsgHWTdEK1plVWhERPGw=;
-        b=pB+6t2qV8ecSNV7O/MxJIXWjYRMLkM1osCcQGgkEcCkt1BkmX2Eck7w5C8gBCanflK
-         B4yOR48aGZdGLBCqA+pA75COO0ggK3/7uZYuux56dxy9I7T89JFqtyDCTZ1dgIuvWMHy
-         p0OtYcC5Xy6/AWmvhmrrzf+XC8AO5KVLT6zDlllfTE1+VLYEt1OI1Lg8uQ5iLQVw9nRF
-         Ox3ZZhHUPGY+cZG6F5NANO8wLh+ZuGtighQgHqAIy7AWEmJas2cEJqsEJltnrwleCA74
-         XiSh6xOHSvtXX4Vu694aTAK7jSEpzUvlJUCdzqF2La67EOrOpp8M57gS2OfUO7az5zNC
-         5nqQ==
-X-Gm-Message-State: APjAAAUDgadRjqPy13/duY1aQePxb9a8WISKDeeunM/yaplVLGaQ7DPc
-        bkxes8trPdLDcFxhHp/BZb4=
-X-Google-Smtp-Source: APXvYqw8youGAIY7O2MsetpRD8NwnPrzV035+W6h4D6GTapJmZvoo5eUP/YmTBB/jzUGqeO8fUmKLw==
-X-Received: by 2002:aa7:92cb:: with SMTP id k11mr35569997pfa.126.1564386784413;
-        Mon, 29 Jul 2019 00:53:04 -0700 (PDT)
-Received: from SAW-L7607608QSA.guest.corp.microsoft.com ([167.220.255.91])
-        by smtp.googlemail.com with ESMTPSA id s5sm40878033pfm.97.2019.07.29.00.52.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 00:53:03 -0700 (PDT)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        daniel.lezcano@linaro.org, arnd@arndb.de,
-        michael.h.kelley@microsoft.com, ashal@kernel.org
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH 2/2] clocksource/Hyper-V:  Add Hyper-V specific sched clock function
-Date:   Mon, 29 Jul 2019 15:52:43 +0800
-Message-Id: <20190729075243.22745-3-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
-In-Reply-To: <20190729075243.22745-1-Tianyu.Lan@microsoft.com>
-References: <20190729075243.22745-1-Tianyu.Lan@microsoft.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8547tTieJTlVcp1ebRnVxi/sn+gdsxGXf1dlpzxnCUw=;
+        b=rZ0ZEQYOvajtk4LkzpS5gmtzKCzmB6cCuoIpMRw2xrr+A8YwcQi388nU1K95rqurUI
+         Uj3dmrY3Hw+BvXhdKKldAjff3q43dK3LpuyS7NFjSml+znWw1Vk4KEoRMazCu5VB/WS8
+         7eY0AE7R84YxZg04uNDoJWY8TXQaX0e9zcBuDSyU9+N3sSIOB/Txb1b++d5fSBaiyttH
+         FdQBX+T1OCuMP9PmP1ULp0lw8DGlo81TordethP4MYA9bUl3f/uA1H8ziY2+7fBR9rjc
+         XKnUEMbw81Tfs+UNgoOiDRLWBgejTfUyVFZv+H/icbhvKS8u6OfRNPzVhjKtCjZChTje
+         cTBg==
+X-Gm-Message-State: APjAAAVK6TufbHbzzfGIIgB5U3WXEeLTvv8RnpO1YoGvPwQ92QM55Gtw
+        vxwqy59/W3n7nNbQUDfETMz0dw==
+X-Google-Smtp-Source: APXvYqz7DCW+GeWXbJrTMfzV+L8GHnWeJgYI0K9b3blm41IrHJaUWwJy69BQehoTrVZg+fDehswliQ==
+X-Received: by 2002:a2e:b0e6:: with SMTP id h6mr5315235ljl.18.1564386872598;
+        Mon, 29 Jul 2019 00:54:32 -0700 (PDT)
+Received: from [192.168.28.50] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id t1sm12678137lji.52.2019.07.29.00.54.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 00:54:31 -0700 (PDT)
+Subject: Re: [PATCH v6 3/4] media: venus: Update to bitrate based clock
+ scaling
+To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org
+References: <1563786452-22188-1-git-send-email-amasule@codeaurora.org>
+ <1563786452-22188-3-git-send-email-amasule@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <dd436fa8-085b-1c97-26bd-4c1d54a5d612@linaro.org>
+Date:   Mon, 29 Jul 2019 10:54:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <1563786452-22188-3-git-send-email-amasule@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Hyper-V guests use the default native_sched_clock() in pv_ops.time.sched_clock
-on x86.  But native_sched_clock() directly uses the raw TSC value, which
-can be discontinuous in a Hyper-V VM. Add the generic hv_setup_sched_clock()
-to set the sched clock function appropriately. On x86, this sets pv_ops.time.
-sched_clock to read the Hyper-V reference TSC value that is scaled and adjusted
-to be continuous.
 
-Also move the Hyper-V reference TSC initialization much earlier in the boot
-process so no discontinuity is observed when pv_ops.time.sched_clock
-calculates its offset.
+On 7/22/19 12:07 PM, Aniket Masule wrote:
+> Introduced clock scaling using bitrate, preavious
+> calculations consider only the cycles per mb.
+> Also, clock scaling is now triggered before every
+> buffer being queued to the device. This helps in
+> deciding precise clock cycles required.
+> 
+> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/helpers.c | 33 +++++++++++++++++++++++++----
+>  1 file changed, 29 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+> index 2c976e4..edf403d 100644
+> --- a/drivers/media/platform/qcom/venus/helpers.c
+> +++ b/drivers/media/platform/qcom/venus/helpers.c
+> @@ -399,17 +399,26 @@ static int scale_clocks(struct venus_inst *inst)
+>  	return ret;
+>  }
+>  
+> -static unsigned long calculate_vpp_freq(struct venus_inst *inst)
+> +static unsigned long calculate_inst_freq(struct venus_inst *inst,
+> +					 unsigned long filled_len)
+>  {
+> -	unsigned long vpp_freq = 0;
+> +	unsigned long vpp_freq = 0, vsp_freq = 0;
+> +	u64 fps = inst->fps;
+>  	u32 mbs_per_sec;
+>  
+>  	mbs_per_sec = load_per_instance(inst);
+>  	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
+>  	/* 21 / 20 is overhead factor */
+>  	vpp_freq += vpp_freq / 20;
+> +	vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vsp_freq;
+>  
+> -	return vpp_freq;
+> +	/* 10 / 7 is overhead factor */
+> +	if (inst->session_type == VIDC_SESSION_TYPE_ENC)
+> +		vsp_freq += (inst->controls.enc.bitrate * 10) / 7;
+> +	else
+> +		vsp_freq += ((fps * filled_len * 8) * 10) / 7;
+> +
+> +	return max(vpp_freq, vsp_freq);
+>  }
+>  
+>  static int scale_clocks_v4(struct venus_inst *inst)
+> @@ -417,13 +426,27 @@ static int scale_clocks_v4(struct venus_inst *inst)
+>  	struct venus_core *core = inst->core;
+>  	const struct freq_tbl *table = core->res->freq_tbl;
+>  	unsigned int num_rows = core->res->freq_tbl_size;
+> +	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
+>  	struct clk *clk = core->clks[0];
+>  	struct device *dev = core->dev;
+>  	unsigned int i;
+>  	unsigned long freq = 0, freq_core1 = 0, freq_core2 = 0;
+> +	unsigned long filled_len = 0;
+> +	struct venus_buffer *buf, *n;
+> +	struct vb2_buffer *vb;
+>  	int ret;
+>  
+> -	freq = calculate_vpp_freq(inst);
+> +	mutex_lock(&inst->lock);
 
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
- arch/x86/hyperv/hv_init.c          |  2 --
- arch/x86/kernel/cpu/mshyperv.c     |  8 ++++++++
- drivers/clocksource/hyperv_timer.c | 22 ++++++++++++----------
- include/asm-generic/mshyperv.h     |  1 +
- 4 files changed, 21 insertions(+), 12 deletions(-)
+the lock is not needed and having it will produce a deadlock.
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 0d258688c8cf..866dfb3dca48 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -301,8 +301,6 @@ void __init hyperv_init(void)
- 
- 	x86_init.pci.arch_init = hv_pci_init;
- 
--	/* Register Hyper-V specific clocksource */
--	hv_init_clocksource();
- 	return;
- 
- remove_cpuhp_state:
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 062f77279ce3..53afd33990eb 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -29,6 +29,7 @@
- #include <asm/timer.h>
- #include <asm/reboot.h>
- #include <asm/nmi.h>
-+#include <clocksource/hyperv_timer.h>
- 
- struct ms_hyperv_info ms_hyperv;
- EXPORT_SYMBOL_GPL(ms_hyperv);
-@@ -338,9 +339,16 @@ static void __init ms_hyperv_init_platform(void)
- 		x2apic_phys = 1;
- # endif
- 
-+	/* Register Hyper-V specific clocksource */
-+	hv_init_clocksource();
- #endif
- }
- 
-+void hv_setup_sched_clock(void *sched_clock)
-+{
-+	pv_ops.time.sched_clock = sched_clock;
-+}
-+
- const __initconst struct hypervisor_x86 x86_hyper_ms_hyperv = {
- 	.name			= "Microsoft Hyper-V",
- 	.detect			= ms_hyperv_platform,
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 86764ec9a854..eafca89b44d7 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -215,6 +215,7 @@ EXPORT_SYMBOL_GPL(hyperv_cs);
- #ifdef CONFIG_HYPERV_TSCPAGE
- 
- static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
-+static u64 hv_sched_clock_offset __ro_after_init;
- 
- struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
- {
-@@ -222,7 +223,7 @@ struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
- }
- EXPORT_SYMBOL_GPL(hv_get_tsc_page);
- 
--static u64 notrace read_hv_sched_clock_tsc(void)
-+static u64 notrace read_hv_clock_tsc(struct clocksource *arg)
- {
- 	u64 current_tick = hv_read_tsc_page(&tsc_pg);
- 
-@@ -232,9 +233,9 @@ static u64 notrace read_hv_sched_clock_tsc(void)
- 	return current_tick;
- }
- 
--static u64 read_hv_clock_tsc(struct clocksource *arg)
-+static u64 read_hv_sched_clock_tsc(void)
- {
--	return read_hv_sched_clock_tsc();
-+	return read_hv_clock_tsc(NULL) - hv_sched_clock_offset;
- }
- 
- static struct clocksource hyperv_cs_tsc = {
-@@ -246,7 +247,7 @@ static struct clocksource hyperv_cs_tsc = {
- };
- #endif
- 
--static u64 notrace read_hv_sched_clock_msr(void)
-+static u64 notrace read_hv_clock_msr(struct clocksource *arg)
- {
- 	u64 current_tick;
- 	/*
-@@ -258,9 +259,9 @@ static u64 notrace read_hv_sched_clock_msr(void)
- 	return current_tick;
- }
- 
--static u64 read_hv_clock_msr(struct clocksource *arg)
-+static u64 read_hv_sched_clock_msr(void)
- {
--	return read_hv_sched_clock_msr();
-+	return read_hv_clock_msr(NULL) - hv_sched_clock_offset;
- }
- 
- static struct clocksource hyperv_cs_msr = {
-@@ -298,8 +299,9 @@ static bool __init hv_init_tsc_clocksource(void)
- 	hv_set_clocksource_vdso(hyperv_cs_tsc);
- 	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
- 
--	/* sched_clock_register is needed on ARM64 but is a no-op on x86 */
--	sched_clock_register(read_hv_sched_clock_tsc, 64, HV_CLOCK_HZ);
-+	hv_sched_clock_offset = hyperv_cs->read(hyperv_cs);
-+	hv_setup_sched_clock(read_hv_sched_clock_tsc);
-+
- 	return true;
- }
- #else
-@@ -329,7 +331,7 @@ void __init hv_init_clocksource(void)
- 	hyperv_cs = &hyperv_cs_msr;
- 	clocksource_register_hz(&hyperv_cs_msr, NSEC_PER_SEC/100);
- 
--	/* sched_clock_register is needed on ARM64 but is a no-op on x86 */
--	sched_clock_register(read_hv_sched_clock_msr, 64, HV_CLOCK_HZ);
-+	hv_sched_clock_offset = hyperv_cs->read(hyperv_cs);
-+	hv_setup_sched_clock(read_hv_sched_clock_msr);
- }
- EXPORT_SYMBOL_GPL(hv_init_clocksource);
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index 0becb7d9704d..18d8e2d8210f 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -167,6 +167,7 @@ void hyperv_report_panic(struct pt_regs *regs, long err);
- void hyperv_report_panic_msg(phys_addr_t pa, size_t size);
- bool hv_is_hyperv_initialized(void);
- void hyperv_cleanup(void);
-+void hv_setup_sched_clock(void *sched_clock);
- #else /* CONFIG_HYPERV */
- static inline bool hv_is_hyperv_initialized(void) { return false; }
- static inline void hyperv_cleanup(void) {}
+> +	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
+> +		vb = &buf->vb.vb2_buf;
+> +		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
+> +	}
+> +	mutex_unlock(&inst->lock);
+> +
+> +	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len)
+> +		return 0;
+> +
+> +	freq = calculate_inst_freq(inst, filled_len);
+>  
+>  	if (freq > table[0].freq)
+>  		dev_warn(dev, "HW is overloaded, needed: %lu max: %lu\n",
+> @@ -1093,6 +1116,8 @@ void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
+>  	if (ret)
+>  		goto unlock;
+>  
+> +	load_scale_clocks(inst);
+> +
+>  	ret = session_process_buf(inst, vbuf);
+>  	if (ret)
+>  		return_buf_error(inst, vbuf);
+> 
+
 -- 
-2.14.5
-
+regards,
+Stan
