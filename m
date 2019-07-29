@@ -2,177 +2,120 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B53BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBF7C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44892070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564443456;
-	bh=1qfSx+UsNMVlps6cSiR+Fnt7FDGRR1/iLTnDFyMcZUA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LnWKNOAwteJLIPpivAgx1EJ9tzCuqNhWEesd8cqGNTXXvImcEURVTYk4j3JAhsZO+
-	 dT+O2Bt4Q/IvyPl+CfIgsQo3r1/3/B1PKCkdyGYAXk1C3CKR63XU2/MjjtL8qwYSxq
-	 QuVQQ6hFIRdoqZnvHTQUXnzpGPKCCXke6EWNvg4g=
+	by mail.kernel.org (Postfix) with ESMTP id D07912070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 23:37:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbfG2Xhd (ORCPT
+        id S1729815AbfG2Xhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 19:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32920 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 19:37:55 -0400
+Received: from mga14.intel.com ([192.55.52.115]:18711 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727533AbfG2Xhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 19:37:33 -0400
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C10DF217F4;
-        Mon, 29 Jul 2019 23:37:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564443451;
-        bh=1qfSx+UsNMVlps6cSiR+Fnt7FDGRR1/iLTnDFyMcZUA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jY/kR7aYsvzGjePWSBWU1HZSgQVZSTJVa4kURbXxRC1hxgI3BhwGrz3TiOP7HyC02
-         S3ZHlRUVebzVtesX/QoafRNxvkEDsc1dM5fWhNKSHAuy5nWFYqawNMUJgp6u15rAK3
-         xl+4fDVdmCoNFixRMYwVv3JNUm+KgH/DHzxkzG+A=
-Received: by mail-qk1-f171.google.com with SMTP id m14so19613501qka.10;
-        Mon, 29 Jul 2019 16:37:31 -0700 (PDT)
-X-Gm-Message-State: APjAAAWlBs+ClWyWxPqwiAJH8OZi1186lplF8nLh0SbWZ/LMKl9AjGgp
-        tUYzUxmnXAPEJSdbXNf59k7kemtWKJtMvjkJXg==
-X-Google-Smtp-Source: APXvYqx10EVolBe1nZc74TUTVuzkzQVea8UaThML/DaB+Laxs522U+FPo5bibjFkeIeUlaR3zWKjRDi9Ct5/EhcD1OM=
-X-Received: by 2002:a37:6944:: with SMTP id e65mr68650213qkc.119.1564443450862;
- Mon, 29 Jul 2019 16:37:30 -0700 (PDT)
+        id S1727533AbfG2Xhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 19:37:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 16:37:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,324,1559545200"; 
+   d="scan'208";a="165650561"
+Received: from ahanamuk-mobl.amr.corp.intel.com (HELO [10.251.134.69]) ([10.251.134.69])
+  by orsmga008.jf.intel.com with ESMTP; 29 Jul 2019 16:37:51 -0700
+Subject: Re: [alsa-devel] [RFC PATCH 17/40] soundwire: bus: use
+ runtime_pm_get_sync/pm when enabled
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-18-pierre-louis.bossart@linux.intel.com>
+ <45a912c5-134b-8642-70ef-8c1060389300@linux.intel.com>
+ <20190726190823.GD9224@smile.fi.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <5a16d9e6-0a9c-a0a8-3b11-d046247f3879@linux.intel.com>
+Date:   Mon, 29 Jul 2019 17:07:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190729043926.32679-1-andrew@aj.id.au> <20190729043926.32679-2-andrew@aj.id.au>
-In-Reply-To: <20190729043926.32679-2-andrew@aj.id.au>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 29 Jul 2019 17:37:19 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLytwfsoyS6TSnpPgTjRTOR0TeQwroX21AHqj3A1mPJ5Q@mail.gmail.com>
-Message-ID: <CAL_JsqLytwfsoyS6TSnpPgTjRTOR0TeQwroX21AHqj3A1mPJ5Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: net: Add aspeed,ast2600-mdio binding
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     netdev <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190726190823.GD9224@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 10:39 PM Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> The AST2600 splits out the MDIO bus controller from the MAC into its own
-> IP block and rearranges the register layout. Add a new binding to
-> describe the new hardware.
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  .../bindings/net/aspeed,ast2600-mdio.yaml     | 61 +++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
->
-> diff --git a/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml b/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
-> new file mode 100644
-> index 000000000000..fa86f6438473
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/aspeed,ast2600-mdio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ASPEED AST2600 MDIO Controller
-> +
-> +maintainers:
-> +  - Andrew Jeffery <andrew@aj.id.au>
-> +
-> +description: |+
-> +  The ASPEED AST2600 MDIO controller is the third iteration of ASPEED's MDIO
-> +  bus register interface, this time also separating out the controller from the
-> +  MAC.
-> +
 
-Should have a:
 
-allOf:
-  - $ref: "mdio.yaml#"
+On 7/26/19 2:08 PM, Andy Shevchenko wrote:
+> On Fri, Jul 26, 2019 at 01:08:57PM -0500, Pierre-Louis Bossart wrote:
+>> This thread became unreadable with interleaved top-posting, allow me restate
+>> the options and ask PM folks what they think
+>>
+>> On 7/25/19 6:40 PM, Pierre-Louis Bossart wrote:
+>>> Not all platforms support runtime_pm for now, let's use runtime_pm
+>>> only when enabled.
+> 
+> Just a side note below...
+> 
+>>> -	ret = pm_runtime_get_sync(slave->bus->dev);
+>>> -	if (ret < 0)
+> 
+> Here...
+> 
+>>> -		return ret;
+>>> +	if (pm_runtime_enabled(slave->bus->dev)) {
+>>> +		ret = pm_runtime_get_sync(slave->bus->dev);
+>>> +		if (ret < 0)
+> 
+> ...and thus here...
+> 
+>>> +			return ret;
+>>> +	}
+>>>    	ret = sdw_transfer(slave->bus, &msg);
+>>> -	pm_runtime_put(slave->bus->dev);
+>>> +
+>>> +	if (pm_runtime_enabled(slave->bus->dev))
+>>> +		pm_runtime_put(slave->bus->dev);
+>>
+>> This is option1: we explicitly test if pm_runtime is enabled before calling
+>> _get_sync() and _put()
+>>
+>> option2 (suggested by Jan Kotas): catch the -EACCESS error code
+>>
+>>   	ret = pm_runtime_get_sync(slave->bus->dev);
+>> -	if (ret < 0)
+>> +	if (ret < 0 && ret != -EACCES)
+> 
+> ...and here, the pm_runtime_put_noidle() call is missed.
 
-> +properties:
-> +  compatible:
-> +    const: aspeed,ast2600-mdio
-> +  reg:
-> +    maxItems: 1
-> +    description: The register range of the MDIO controller instance
+yes but in the example you provided, they actually do more work than 
+just decrement the device usage counter:
 
-> +  "#address-cells":
-> +    const: 1
-> +  "#size-cells":
-> +    const: 0
+static int
+radeonfb_open(struct fb_info *info, int user)
+{
+	struct radeon_fbdev *rfbdev = info->par;
+	struct radeon_device *rdev = rfbdev->rdev;
+	int ret = pm_runtime_get_sync(rdev->ddev->dev);
+	if (ret < 0 && ret != -EACCES) {
+		pm_runtime_mark_last_busy(rdev->ddev->dev);
+		pm_runtime_put_autosuspend(rdev->ddev->dev);
+		return ret;
+	}
+	return 0;
+}
 
-Then you can drop these 2.
-
-> +
-> +patternProperties:
-> +  "^ethernet-phy@[a-f0-9]$":
-> +    properties:
-> +      reg:
-> +        description:
-> +          The MDIO bus index of the PHY
-
-And this.
-
-> +      compatible:
-> +        enum:
-> +          - ethernet-phy-ieee802.3-c22
-> +          - ethernet-phy-ieee802.3-c45
-
-This isn't specific to ASpeed either and is already covered by
-ethernet-phy.yaml.
-
-So that means none of the child node schema is needed here.
-
-> +    required:
-> +      - reg
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    mdio0: mdio@1e650000 {
-> +            compatible = "aspeed,ast2600-mdio";
-> +            reg = <0x1e650000 0x8>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            status = "okay";
-
-Don't show status in examples.
-
-> +
-> +            ethphy0: ethernet-phy@0 {
-> +                    compatible = "ethernet-phy-ieee802.3-c22";
-> +                    reg = <0>;
-> +            };
-> +    };
-> --
-> 2.20.1
->
+unless I am missing something pm_runtime_put_noidle() and 
+_put_autosuspend() are not equivalent, are they?
