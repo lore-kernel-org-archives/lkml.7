@@ -2,131 +2,149 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D54C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6573AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D494C21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365972073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:51:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="grga5bl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbfG2Ruq (ORCPT
+        id S1728393AbfG2Rvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 13:50:46 -0400
-Received: from mga18.intel.com ([134.134.136.126]:29243 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbfG2Ruq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:50:46 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 10:50:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,323,1559545200"; 
-   d="scan'208";a="173324183"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Jul 2019 10:50:45 -0700
-Date:   Mon, 29 Jul 2019 10:50:45 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nadav Amit <namit@vmware.com>
-Subject: Re: [PATCH RESEND] KVM: X86: Use IPI shorthands in kvm guest when
- support
-Message-ID: <20190729175044.GI21120@linux.intel.com>
-References: <1564121727-30020-1-git-send-email-wanpengli@tencent.com>
+        Mon, 29 Jul 2019 13:51:41 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:52133 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726973AbfG2Rvk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 13:51:40 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 984B721F4C;
+        Mon, 29 Jul 2019 13:51:39 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 29 Jul 2019 13:51:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Vpmx8x
+        fcs9+OL5FkaK+/UEwKsySo7yiF3ecK8DXDOSg=; b=grga5bl+eOQHaywMoChyiC
+        ztI4BSrPCjEChRuC/fOz8w9tdiHjIO/2BN8Siw4Wd8Ssgk73YBGdkTFRiOXORHnq
+        1ixaCVz80BvG7qmjfcYd+Pq/tFBvK+Ar2rKCU2m5J1niugkNAPcylN3NO9TvaRUr
+        gD0I3frsL19ErIscBrj8Ujuj3GO3OLO5rylSDocWrpMtbaRVO31InrLB4mxzUaTE
+        RoS8OQ7K0G01inyKaLpNfaYTMEfkDUmyub7gIAL5hryNZPz4P7ItRdLZOojk08m+
+        TYDI3QBSPDDIzK0rTeQuL1Ujf50Y55GWsUri7aaCk38fLqEpzB/9kb7DqZDHtWWg
+        ==
+X-ME-Sender: <xms:KzI_XWdCnabs6lZOlxQbAAvuiQbx80MlLGwwM-VXeBoVT7-hlqPyDQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledugdduudekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepkfguohcu
+    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecukfhppedule
+    efrdegjedrudeihedrvdehudenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghh
+    sehiughoshgthhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:KzI_XdXlBs49ugvzZza8H6XeRA5IEtMCBss9b6945oWVd3T5MVMU0A>
+    <xmx:KzI_XX8hOiBa7dseYn0xAEeadx715Tc158nwU3EwZ1kcMWtZ7TBvAg>
+    <xmx:KzI_XU_exZEZWnorcwuYN5v4J8EqYZWAaIu7N20pH5QNn1QTOiqidQ>
+    <xmx:KzI_Xa8Xn2gLFLpqsNVZMyIVqqUYTFZloJP4mf3O2qNSj8Kt4qy1oA>
+Received: from localhost (unknown [193.47.165.251])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8BA5D380074;
+        Mon, 29 Jul 2019 13:51:38 -0400 (EDT)
+Date:   Mon, 29 Jul 2019 20:51:36 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, davem@davemloft.net,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
+Message-ID: <20190729175136.GA28572@splinter>
+References: <e6ad982f-4706-46f9-b8f0-1337b09de350@cumulusnetworks.com>
+ <20190726120214.c26oj5vks7g5ntwu@soft-dev3.microsemi.net>
+ <b755f613-e6d8-a2e6-16cd-6f13ec0a6ddc@cumulusnetworks.com>
+ <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
+ <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
+ <20190729131420.tqukz55tz26jkg73@lx-anielsen.microsemi.net>
+ <3cc69103-d194-2eca-e7dd-e2fa6a730223@cumulusnetworks.com>
+ <20190729135205.oiuthcyesal4b4ct@lx-anielsen.microsemi.net>
+ <e4cd0db9-695a-82a7-7dc0-623ded66a4e5@cumulusnetworks.com>
+ <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1564121727-30020-1-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 02:15:27PM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> IPI shorthand is supported now by linux apic/x2apic driver, switch to 
-> IPI shorthand for all excluding self and all including self destination 
-> shorthand in kvm guest, to avoid splitting the target mask into serveral 
-> PV IPI hypercalls.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Nadav Amit <namit@vmware.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
-> Note: rebase against tip tree's x86/apic branch
-> 
->  arch/x86/kernel/kvm.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index b7f34fe..87b73b8 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -34,7 +34,9 @@
->  #include <asm/hypervisor.h>
->  #include <asm/tlb.h>
->  
-> +static struct apic orig_apic;
+On Mon, Jul 29, 2019 at 04:35:09PM +0200, Allan W. Nielsen wrote:
+> The 07/29/2019 17:21, Nikolay Aleksandrov wrote:
+> > On 29/07/2019 16:52, Allan W. Nielsen wrote:
+> > > The 07/29/2019 15:50, Nikolay Aleksandrov wrote:
+> > >> On 29/07/2019 15:22, Nikolay Aleksandrov wrote:
+> > >>> Hi Allan,
+> > >>> On 29/07/2019 15:14, Allan W. Nielsen wrote:
+> > >>>> First of all, as mentioned further down in this thread, I realized that our
+> > >>>> implementation of the multicast floodmasks does not align with the existing SW
+> > >>>> implementation. We will change this, such that all multicast packets goes to the
+> > >>>> SW bridge.
+> > >>>>
+> > >>>> This changes things a bit, not that much.
+> > >>>>
+> > >>>> I actually think you summarized the issue we have (after changing to multicast
+> > >>>> flood-masks) right here:
+> > >>>>
+> > >>>> The 07/26/2019 12:26, Nikolay Aleksandrov wrote:
+> > >>>>>>> Actually you mentioned non-IP traffic, so the querier stuff is not a problem. This
+> > >>>>>>> traffic will always be flooded by the bridge (and also a copy will be locally sent up).
+> > >>>>>>> Thus only the flooding may need to be controlled.
+> > >>>>
+> > >>>> This seems to be exactly what we need.
+> > >>>>
+> > >>>> Assuming we have a SW bridge (br0) with 4 slave interfaces (eth0-3). We use this
+> > >>>> on a network where we want to limit the flooding of frames with dmac
+> > >>>> 01:21:6C:00:00:01 (which is non IP traffic) to eth0 and eth1.
+> > >>>>
+> > >>>> One way of doing this could potentially be to support the following command:
+> > >>>>
+> > >>>> bridge fdb add    01:21:6C:00:00:01 port eth0
+> > >>>> bridge fdb append 01:21:6C:00:00:01 port eth1
+> > >> And the fdbs become linked lists?
+> > > Yes, it will most likely become a linked list
+> > > 
+> > >> So we'll increase the complexity for something that is already supported by
+> > >> ACLs (e.g. tc) and also bridge per-port multicast flood flag ?
+> > > I do not think it can be supported with the facilities we have today in tc.
+> > > 
+> > > We can do half of it (copy more fraems to the CPU) with tc, but we can not limit
+> > > the floodmask of a frame with tc (say we want it to flood to 2 out of 4 slave
+> > > ports).
+> > Why not ? You attach an egress filter for the ports and allow that dmac on only
+> > 2 of the ports.
+> Because we want a solution which we eventually can offload in HW. And the HW
+> facilities we have is doing ingress processing (we have no egress ACLs in this
+> design), and if we try to offload an egress rule, with an ingress HW facility,
+> then we will run into other issues.
 
-Copying the entire struct apic to snapshot two functions is funky,
-explicitly capturing the two functions would be more intuitive.
+Can you please clarify what you're trying to achieve? I just read the
+thread again and my impression is that you're trying to locally receive
+packets with a certain link layer multicast address. Nik suggested
+SIOCADDMULTI and I suggested a tc filter to get the packet to the CPU.
 
-Tangentially related, kvm_setup_pv_ipi() can be annotated __init,
-which means the function snapshots can be __ro_after_init.
+If you now want to limit the ports to which this packet is flooded, then
+you can use tc filters in *software*:
 
-That being said, can't we just remove kvm_send_ipi_all() and
-kvm_send_ipi_allbutself()?  AFAICT, the variations that lead to shorthand
-are only used when apic_use_ipi_shorthand is true.  If that isn't the
-case, fixing the callers in the APIC code seems like the correct thing to
-do.
+# tc qdisc add dev eth2 clsact
+# tc filter add dev eth2 egress pref 1 flower skip_hw \
+	dst_mac 01:21:6C:00:00:01 action drop
 
->  static int kvmapf = 1;
-> +DECLARE_STATIC_KEY_FALSE(apic_use_ipi_shorthand);
->  static int __init parse_no_kvmapf(char *arg)
->  {
-> @@ -507,12 +509,18 @@ static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
->  
->  static void kvm_send_ipi_allbutself(int vector)
->  {
-> -	kvm_send_ipi_mask_allbutself(cpu_online_mask, vector);
-> +	if (static_branch_likely(&apic_use_ipi_shorthand))
-> +		orig_apic.send_IPI_allbutself(vector);
-> +	else
-> +		kvm_send_ipi_mask_allbutself(cpu_online_mask, vector);
->  }
->  
->  static void kvm_send_ipi_all(int vector)
->  {
-> -	__send_ipi_mask(cpu_online_mask, vector);
-> +	if (static_branch_likely(&apic_use_ipi_shorthand))
-> +		orig_apic.send_IPI_all(vector);
-> +	else
-> +		__send_ipi_mask(cpu_online_mask, vector);
->  }
->  
->  /*
-> @@ -520,6 +528,8 @@ static void kvm_send_ipi_all(int vector)
->   */
->  static void kvm_setup_pv_ipi(void)
->  {
-> +	orig_apic = *apic;
-> +
->  	apic->send_IPI_mask = kvm_send_ipi_mask;
->  	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
->  	apic->send_IPI_allbutself = kvm_send_ipi_allbutself;
-> -- 
-> 2.7.4
-> 
+If you want to forward the packet in hardware and locally receive it,
+you can chain several mirred action and then a trap action.
+
+Both options avoid HW egress ACLs which your design does not support.
