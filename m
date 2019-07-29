@@ -2,116 +2,127 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2494C7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB52C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2FA62064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB4720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:21:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VjRurpAs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V2bEtTKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbfG2UUj (ORCPT
+        id S1729506AbfG2UVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:20:39 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41685 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728915AbfG2UUj (ORCPT
+        Mon, 29 Jul 2019 16:21:07 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46595 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbfG2UVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:20:39 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x15so18460208pgg.8;
-        Mon, 29 Jul 2019 13:20:38 -0700 (PDT)
+        Mon, 29 Jul 2019 16:21:06 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c3so5446564pfa.13;
+        Mon, 29 Jul 2019 13:21:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=PWm3A+XATen1N/7FPolvwWJxlL26QMTEguhryVQhPuI=;
-        b=VjRurpAsHCDE5NXUiuJSYOxZdiKBv4PWD9C6S2bajkziBpFDkaZRMkLftU/Z86M03e
-         r8Z9HP0OErQtyov6PDhO4AzNHOi7tod6ZGXiA5gW8/Mm7YM8mFRsXWFFx2iMvEVAqP5C
-         yjL18bJQUP/QRtbNSrUZu/asr/tD+tBGzuSrqb84CxR24KwYQUQfbTM/tdlggwLrkxBs
-         IhjwbueTmzw/lcZyoVsRu3GSwyTjkPpAYDJWS4VsZdzZewAGygjTz3OY3I38ffYMrT+q
-         O5yt7R8Vv5SecoNrXdolOA//7LU6UlnaArmQCHE6d+KQ8qDdMV/kz2u/Wr2IKIdZtWTA
-         AB8A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6re2IOy9UuGPutWHpeGmXvl/6Yqi6FxHUujTvDV/BjQ=;
+        b=V2bEtTKvIsIZP7A1vJKuVqPpf7homhWyKeJgc0gsY5Z3kXNvZlP58HtatQ2APTHTQL
+         w/yt1hQJSg5pQ8g7O8I+F5FjAHS+wqDRDwU9COzkhvC72JlHa8fTfT+GuFGPm4JCenk+
+         YIA6hQJykR5s4FxUuMqNlbBI6QxKAhY93l2iHCHqYlXQwUn6IrYjlmFNWIF1bw/g6Pwc
+         15OsgbiVs+8hC61RgeXG5KfunptQicwUnYVKZKQ1iSdD8P6X7MMT+r5xyGhnkvZjE60I
+         gFFkwH4Lmojxh4FbeDcEL3/ZaumoV+Ue1iQmfQObzj4OGWcwlNY5c8w3ZNdOABpWWPwf
+         4L2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=PWm3A+XATen1N/7FPolvwWJxlL26QMTEguhryVQhPuI=;
-        b=Nz+SxOpJ4S2lW/lj4zhfNHkQ3gWrZU6wsKWyio4n7IeSvJc+rnzYptPEVCt6D3/DMU
-         kbgzRY/89Z1KPY4C6u/AgYRNODOs8TrWRO84erEPzJ/+KCIJs5pzqhi4XZf46Uj+qVLw
-         CdPev3KB33jE1txXsL0BXvDMS9ISqk5iAhc9pcyyahRR0TO0SpDVXqcCxlnvkK0z/yUg
-         swaBKE0nDxSX9At9v7nEtJs1X0Z5EbFswRvul1UXCcIMW5y0Ig0WYOkt0LTWbHTmYluU
-         vyUUhNKgLvhPf2Dd01Yzk3tW9UL3zAB45cwn7fMVqBywr+umWUe1u2rYWIQ2jXF4VfB9
-         z7bg==
-X-Gm-Message-State: APjAAAXMDTS8j7R4yF5Q8Me4qchChxRYOFNuzMLcXVGfc61SojkELXBI
-        osSs9hQZBzaPE9hDn9Vl20d+5QMO
-X-Google-Smtp-Source: APXvYqxTyxzwpklfOv/L6SZWr47ce7Ix96k5jNaaPPpvUYY7ExbD6737RmCU5PhxUlrIFNj2NMtRmQ==
-X-Received: by 2002:a63:2ec9:: with SMTP id u192mr103509615pgu.16.1564431638563;
-        Mon, 29 Jul 2019 13:20:38 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r2sm80705716pfl.67.2019.07.29.13.20.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 13:20:37 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 13:20:36 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jim Cromie <jim.cromie@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] watchdog: scx200_wdt: Mark expected switch fall-through
-Message-ID: <20190729202036.GA31986@roeck-us.net>
-References: <20190729200602.GA6854@embeddedor>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6re2IOy9UuGPutWHpeGmXvl/6Yqi6FxHUujTvDV/BjQ=;
+        b=AX7X0OD+ElxjMiweQO3Fu8gFJBeoMzcK+BxEShOSj7bzOE4T/GlcvM4gbIDQ0QtQEo
+         mf8NuhqU+4bvEYpa913EDc2+on6vH/zrWgFuxrni5BimxyAs+Gob/jjUYCD1JNQ8Eyk0
+         3VAWtzc+zVuAbKaXPdzefSvEyXhAqREKu86ub2xtV/QsrBKBerXoSPwUBxcNmxK9Mvh2
+         g7M0dPubZWuL31puvzZa7V+2OhDLlsT6Z6xF80ZkuVTfM0Hq2WNMfQO2HsJOWtDBHcBu
+         wuZ+qhYZAGhAeU607go51bwwJ8j1et4CGZdx6+6yiQtf9/PPNY0Db24NYYoZC6WbtdB0
+         lcGw==
+X-Gm-Message-State: APjAAAV8kRDdEfKWcYKKEIPKh7KUQyvLjmf0/dP3C+Db7XFj8mT0GFXi
+        HJug3yFy1aJbwVLchEtk7rM=
+X-Google-Smtp-Source: APXvYqyWLQm4Cgt5unABdbXidAVUUD4LbAvUUcL7RPKc8STUBXVR75FNm4vHlTcuIbVnqszh/IXkPg==
+X-Received: by 2002:a65:6846:: with SMTP id q6mr67264436pgt.150.1564431666039;
+        Mon, 29 Jul 2019 13:21:06 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id d129sm67610834pfc.168.2019.07.29.13.21.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 13:21:05 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 13:21:54 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     broonie@kernel.org, l.stach@pengutronix.de, mihai.serban@gmail.com,
+        alsa-devel@alsa-project.org, viorel.suman@nxp.com,
+        timur@kernel.org, shengjiu.wang@nxp.com, angus@akkea.ca,
+        tiwai@suse.com, linux-imx@nxp.com, kernel@pengutronix.de,
+        festevam@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org
+Subject: Re: [PATCH v2 3/7] ASoC: fsl_sai: Add support to enable multiple
+ data lines
+Message-ID: <20190729202154.GC20594@Asurada-Nvidia.nvidia.com>
+References: <20190728192429.1514-1-daniel.baluta@nxp.com>
+ <20190728192429.1514-4-daniel.baluta@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190729200602.GA6854@embeddedor>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190728192429.1514-4-daniel.baluta@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 03:06:02PM -0500, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
+On Sun, Jul 28, 2019 at 10:24:25PM +0300, Daniel Baluta wrote:
+> SAI supports up to 8 Rx/Tx data lines which can be enabled
+> using TCE/RCE bits of TCR3/RCR3 registers.
 > 
-> This patch fixes the following warning (Building: i386):
+> Data lines to be enabled are read from DT fsl,dl-mask property.
+> By default (if no DT entry is provided) only data line 0 is enabled.
 > 
-> drivers/watchdog/scx200_wdt.c: In function ‘scx200_wdt_ioctl’:
-> drivers/watchdog/scx200_wdt.c:188:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    scx200_wdt_ping();
->    ^~~~~~~~~~~~~~~~~
-> drivers/watchdog/scx200_wdt.c:189:2: note: here
->   case WDIOC_GETTIMEOUT:
->   ^~~~
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 > ---
->  drivers/watchdog/scx200_wdt.c | 1 +
->  1 file changed, 1 insertion(+)
+>  sound/soc/fsl/fsl_sai.c | 11 ++++++++++-
+>  sound/soc/fsl/fsl_sai.h |  4 +++-
+>  2 files changed, 13 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/watchdog/scx200_wdt.c b/drivers/watchdog/scx200_wdt.c
-> index efd7996694de..46268309ee9b 100644
-> --- a/drivers/watchdog/scx200_wdt.c
-> +++ b/drivers/watchdog/scx200_wdt.c
-> @@ -186,6 +186,7 @@ static long scx200_wdt_ioctl(struct file *file, unsigned int cmd,
->  		margin = new_margin;
->  		scx200_wdt_update_margin();
->  		scx200_wdt_ping();
-> +		/* Fall through */
->  	case WDIOC_GETTIMEOUT:
->  		if (put_user(margin, p))
->  			return -EFAULT;
-> -- 
-> 2.22.0
-> 
+> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+> index 637b1d12a575..5e7cb7fd29f5 100644
+> --- a/sound/soc/fsl/fsl_sai.c
+> +++ b/sound/soc/fsl/fsl_sai.c
+> @@ -601,7 +601,7 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
+>  
+>  	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
+>  			   FSL_SAI_CR3_TRCE_MASK,
+> -			   FSL_SAI_CR3_TRCE);
+> +			   FSL_SAI_CR3_TRCE(sai->soc_data->dl_mask[tx]);
+>  
+>  	ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
+>  			SNDRV_PCM_HW_PARAM_RATE, &fsl_sai_rate_constraints);
+> @@ -888,6 +888,15 @@ static int fsl_sai_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * active data lines mask for TX/RX, defaults to 1 (only the first
+> +	 * data line is enabled
+> +	 */
+> +	sai->dl_mask[RX] = 1;
+> +	sai->dl_mask[TX] = 1;
+> +	of_property_read_u32_index(np, "fsl,dl-mask", RX, &sai->dl_mask[RX]);
+> +	of_property_read_u32_index(np, "fsl,dl-mask", TX, &sai->dl_mask[TX]);
+
+Just curious what if we enable 8 data lines through DT bindings
+while an audio file only has 1 or 2 channels. Will TRCE bits be
+okay to stay with 8 data channels configurations? Btw, how does
+DMA work for the data registers? ESAI has one entry at a fixed
+address for all data channels while SAI seems to have different
+data registers.
