@@ -2,53 +2,52 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660E0C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A13C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3740E20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67ECB217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428986;
-	bh=42ha1NLs1/dCDgblZDpy2Her42zYp7n9rF0DQ7f9RAE=;
+	s=default; t=1564428988;
+	bh=5QHtL0XNAjyJtuF2bZOQbdAb4gdb/YztsPUiD+UjgXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0qlB95F3no6SZ0XHXyvkHTdOOaIIcnp8vXTEQ9P2nA4zNtrYzhS05R0MFEEjuVM9t
-	 zja9vLP7k0JZr5h+9//Y133HVP3WnhBLKgB1gyJ49Y8X1wt5vbpT6Ld5aiRyX8cP5A
-	 GNTgAQAtihHUAm61lcmQVIHppJT8hQi3VAVwkHD8=
+	b=LFeSgJGmxdisRVf+c9OOOdkQM+VQfcu29NeYblOC5CyWKoxvnYSeAfpGGuCgjE5Ou
+	 gfzBZPd0Hloym2M+d+h+/ZW+vC1mCO6Km9hwi4Tycz2G8T2cRIZDueSTEFgnnTlpU1
+	 XQi17v4TTtQuBIEm5bOA4GfvpvN5UxEINw3wemoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388603AbfG2TgZ (ORCPT
+        id S2388614AbfG2Tg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:36:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50720 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:36:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388589AbfG2TgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:36:22 -0400
+        id S2388602AbfG2TgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:36:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EE972171F;
-        Mon, 29 Jul 2019 19:36:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07C212054F;
+        Mon, 29 Jul 2019 19:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428981;
-        bh=42ha1NLs1/dCDgblZDpy2Her42zYp7n9rF0DQ7f9RAE=;
+        s=default; t=1564428984;
+        bh=5QHtL0XNAjyJtuF2bZOQbdAb4gdb/YztsPUiD+UjgXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F8VM1fhZCavf288FryAhd7DUj5pUJAxwepmkgeSIEVRjZGiw+oXtqUdGF87aNhC0A
-         wezYCAOvgkkgRTfOQAijkTgtsawK/Q19vs/CJ4RRPehuVW89wTM9D4mHEDu2oPrQrZ
-         HVYGVvSmHvsoeOHKZm4Z94Y+HtPEeiYc4oR9ub5g=
+        b=xDIC9QD/9KOtC9DkVXMm8jJPuS40BDL1AKOKWwSeZmnmqHCY+XbkEQlz4v0jwEpxz
+         a8oJj9P/2AoSL9WoWgkoQNKn1SgK/d5K9f8q1R7sqwizYIDzeTKfjnx5+u9lPc/jqJ
+         spts2RDQLpwCJ9PAGH3on1jizyy2rSO3ctuz67MU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org, Bastien Nocera <hadess@hadess.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 247/293] PCI: xilinx-nwl: Fix Multi MSI data programming
-Date:   Mon, 29 Jul 2019 21:22:18 +0200
-Message-Id: <20190729190843.377966063@linuxfoundation.org>
+Subject: [PATCH 4.14 248/293] iio: iio-utils: Fix possible incorrect mask calculation
+Date:   Mon, 29 Jul 2019 21:22:19 +0200
+Message-Id: <20190729190843.448215224@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,95 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 181fa434d0514e40ebf6e9721f2b72700287b6e2 ]
+[ Upstream commit 208a68c8393d6041a90862992222f3d7943d44d6 ]
 
-According to the PCI Local Bus specification Revision 3.0,
-section 6.8.1.3 (Message Control for MSI), endpoints that
-are Multiple Message Capable as defined by bits [3:1] in
-the Message Control for MSI can request a number of vectors
-that is power of two aligned.
+On some machines, iio-sensor-proxy was returning all 0's for IIO sensor
+values. It turns out that the bits_used for this sensor is 32, which makes
+the mask calculation:
 
-As specified in section 6.8.1.6 "Message data for MSI", the Multiple
-Message Enable field (bits [6:4] of the Message Control register)
-defines the number of low order message data bits the function is
-permitted to modify to generate its system software allocated
-vectors.
+*mask = (1 << 32) - 1;
 
-The MSI controller in the Xilinx NWL PCIe controller supports a number
-of MSI vectors specified through a bitmap and the hwirq number for an
-MSI, that is the value written in the MSI data TLP is determined by
-the bitmap allocation.
+If the compiler interprets the 1 literals as 32-bit ints, it generates
+undefined behavior depending on compiler version and optimization level.
+On my system, it optimizes out the shift, so the mask value becomes
 
-For instance, in a situation where two endpoints sitting on
-the PCI bus request the following MSI configuration, with
-the current PCI Xilinx bitmap allocation code (that does not
-align MSI vector allocation on a power of two boundary):
+*mask = (1) - 1;
 
-Endpoint #1: Requesting 1 MSI vector - allocated bitmap bits 0
-Endpoint #2: Requesting 2 MSI vectors - allocated bitmap bits [1,2]
+With a mask value of 0, iio-sensor-proxy will always return 0 for every axis.
 
-The bitmap value(s) corresponds to the hwirq number that is programmed
-into the Message Data for MSI field in the endpoint MSI capability
-and is detected by the root complex to fire the corresponding
-MSI irqs. The value written in Message Data for MSI field corresponds
-to the first bit allocated in the bitmap for Multi MSI vectors.
+Avoid incorrect 0 values caused by compiler optimization.
 
-The current Xilinx NWL MSI allocation code allows a bitmap allocation
-that is not a power of two boundaries, so endpoint #2, is allowed to
-toggle Message Data bit[0] to differentiate between its two vectors
-(meaning that the MSI data will be respectively 0x0 and 0x1 for the two
-vectors allocated to endpoint #2).
+See original fix by Brett Dutro <brett.dutro@gmail.com> in
+iio-sensor-proxy:
+https://github.com/hadess/iio-sensor-proxy/commit/9615ceac7c134d838660e209726cd86aa2064fd3
 
-This clearly aliases with the Endpoint #1 vector allocation, resulting
-in a broken Multi MSI implementation.
-
-Update the code to allocate MSI bitmap ranges with a power of two
-alignment, fixing the bug.
-
-Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe Host Controller")
-Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-[lorenzo.pieralisi@arm.com: updated commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Bastien Nocera <hadess@hadess.net>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pcie-xilinx-nwl.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ tools/iio/iio_utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/host/pcie-xilinx-nwl.c b/drivers/pci/host/pcie-xilinx-nwl.c
-index dd527ea558d7..981a5195686f 100644
---- a/drivers/pci/host/pcie-xilinx-nwl.c
-+++ b/drivers/pci/host/pcie-xilinx-nwl.c
-@@ -485,15 +485,13 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	int i;
+diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
+index 7a6d61c6c012..55272fef3b50 100644
+--- a/tools/iio/iio_utils.c
++++ b/tools/iio/iio_utils.c
+@@ -159,9 +159,9 @@ int iioutils_get_type(unsigned *is_signed, unsigned *bytes, unsigned *bits_used,
+ 			*be = (endianchar == 'b');
+ 			*bytes = padint / 8;
+ 			if (*bits_used == 64)
+-				*mask = ~0;
++				*mask = ~(0ULL);
+ 			else
+-				*mask = (1ULL << *bits_used) - 1;
++				*mask = (1ULL << *bits_used) - 1ULL;
  
- 	mutex_lock(&msi->lock);
--	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
--					 nr_irqs, 0);
--	if (bit >= INT_PCI_MSI_NR) {
-+	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
-+				      get_count_order(nr_irqs));
-+	if (bit < 0) {
- 		mutex_unlock(&msi->lock);
- 		return -ENOSPC;
- 	}
- 
--	bitmap_set(msi->bitmap, bit, nr_irqs);
--
- 	for (i = 0; i < nr_irqs; i++) {
- 		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
- 				domain->host_data, handle_simple_irq,
-@@ -511,7 +509,8 @@ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct nwl_msi *msi = &pcie->msi;
- 
- 	mutex_lock(&msi->lock);
--	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
-+	bitmap_release_region(msi->bitmap, data->hwirq,
-+			      get_count_order(nr_irqs));
- 	mutex_unlock(&msi->lock);
- }
- 
+ 			*is_signed = (signchar == 's');
+ 			if (fclose(sysfsfp)) {
 -- 
 2.20.1
 
