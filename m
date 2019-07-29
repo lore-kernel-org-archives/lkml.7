@@ -2,154 +2,154 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E51C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED001C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1E52067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C024C2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:59:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="smEJVfdX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YPfJRKWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbfG2O6t (ORCPT
+        id S1728683AbfG2O7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:58:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49548 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfG2O6s (ORCPT
+        Mon, 29 Jul 2019 10:59:50 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.182]:37881 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726197AbfG2O7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:58:48 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6TEwei2085698;
-        Mon, 29 Jul 2019 14:58:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=S44Lyz0/tsObu/mpUDwWwxLgtc4ypQE+97AdgkhVadw=;
- b=smEJVfdXyJDHAIWMIQygDaOXub9D8R4YnvDwDNYrk7UOFEW3cpFANX8BYAJQbjVAStrc
- 8hHXehi577Z27FasijOQCWi1m/u2w+B1B1dnBlMo9oGDrLEdnSpU+XUd16JAC0mBDk4B
- YEj2cm9Xwkdoxiq5anY3ssbU+jdSg3D3AyMoxYcfg+aPXgvG+239VIY6JAh7Ew0rjwju
- 5Gl3md3jYvyWUcBFrkcFCZWlJqfJjZS/tJoBoPVkXpY/3EtQP1RHEH/gyjG0vtWpTK30
- +oUVKpc5eCqXQMULBvtd6Hu02iqqGuUQbEH7Li1xSzRMBQdflCJfEAsKK7UTmsPENqix vg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2u0e1tg4f9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jul 2019 14:58:40 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6TEw029030865;
-        Mon, 29 Jul 2019 14:58:37 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2u0bqth2t9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jul 2019 14:58:37 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6TEwZsv006331;
-        Mon, 29 Jul 2019 14:58:35 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 29 Jul 2019 07:58:35 -0700
-Date:   Mon, 29 Jul 2019 07:58:38 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     bfoster@redhat.com, sandeen@sandeen.net, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: xfs: Fix possible null-pointer dereferences in
- xchk_da_btree_block_check_sibling()
-Message-ID: <20190729145838.GN1561054@magnolia>
-References: <20190729032401.28081-1-baijiaju1990@gmail.com>
- <20190729042034.GM1561054@magnolia>
- <efa37544-0402-af92-c94e-cec49701dca2@gmail.com>
+        Mon, 29 Jul 2019 10:59:50 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id E1EE62F20C
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:59:49 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id s77thNxYsiQers77thn6JY; Mon, 29 Jul 2019 09:59:49 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=XmpL5my71AoWQs+D7f6gDo6C6zjPh/VxE9FhrUoDW+k=; b=YPfJRKWVkoa9XYZRrUKQgiiCxX
+        J3prPSSfYQzABPIC6B6QcsrlM04EbFP+jAIIgkFw48U8jXrGiVI/52jKJv4Rp7+S/CC6Kx7T0Vsf6
+        yV5M6bQElyRVSa4WNwiERV336bJ5QVJOhU0MhMb+RCdmimiMLItg/GWW8fKhpRxhW8ts864U67Ku2
+        NCx3UDswU5OOgTXNgVMogNu7tyfQzjUdEfH0sg9SbiNm0+pXFFpRwSfAxVkSZRvFHLgSbEqfr+sBP
+        DAmAgaKjwOMv2HGC09OJ8p7lAq/XReMmZ3y80wkjHNREuqYAFY/4jU5uf1dQhPRju2BalFtFNkC7H
+        KXfx+Qpw==;
+Received: from [187.192.11.120] (port=51566 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hs77s-002aSP-HK; Mon, 29 Jul 2019 09:59:48 -0500
+Date:   Mon, 29 Jul 2019 09:59:47 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] net/af_iucv: mark expected switch fall-throughs
+Message-ID: <20190729145947.GA9494@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <efa37544-0402-af92-c94e-cec49701dca2@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9333 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907290170
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9333 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907290170
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hs77s-002aSP-HK
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:51566
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 31
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 03:25:04PM +0800, Jia-Ju Bai wrote:
-> 
-> 
-> On 2019/7/29 12:20, Darrick J. Wong wrote:
-> > On Mon, Jul 29, 2019 at 11:24:01AM +0800, Jia-Ju Bai wrote:
-> > > In xchk_da_btree_block_check_sibling(), there is an if statement on
-> > > line 274 to check whether ds->state->altpath.blk[level].bp is NULL:
-> > >      if (ds->state->altpath.blk[level].bp)
-> > > 
-> > > When ds->state->altpath.blk[level].bp is NULL, it is used on line 281:
-> > >      xfs_trans_brelse(..., ds->state->altpath.blk[level].bp);
-> > >          struct xfs_buf_log_item	*bip = bp->b_log_item;
-> > >          ASSERT(bp->b_transp == tp);
-> > > 
-> > > Thus, possible null-pointer dereferences may occur.
-> > > 
-> > > To fix these bugs, ds->state->altpath.blk[level].bp is checked before
-> > > being used.
-> > > 
-> > > These bugs are found by a static analysis tool STCheck written by us.
-> > > 
-> > > Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> > > ---
-> > >   fs/xfs/scrub/dabtree.c | 4 +++-
-> > >   1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/fs/xfs/scrub/dabtree.c b/fs/xfs/scrub/dabtree.c
-> > > index 94c4f1de1922..33ff90c0dd70 100644
-> > > --- a/fs/xfs/scrub/dabtree.c
-> > > +++ b/fs/xfs/scrub/dabtree.c
-> > > @@ -278,7 +278,9 @@ xchk_da_btree_block_check_sibling(
-> > >   	/* Compare upper level pointer to sibling pointer. */
-> > >   	if (ds->state->altpath.blk[level].blkno != sibling)
-> > >   		xchk_da_set_corrupt(ds, level);
-> > > -	xfs_trans_brelse(ds->dargs.trans, ds->state->altpath.blk[level].bp);
-> > > +	if (ds->state->altpath.blk[level].bp)
-> > > +		xfs_trans_brelse(ds->dargs.trans,
-> > > +						ds->state->altpath.blk[level].bp);
-> > Indentation here (in xfs we use two spaces)
-> 
-> Okay, I will fix this.
-> 
-> > 
-> > Also, uh, shouldn't we set ds->state->altpath.blk[level].bp to NULL
-> > since we've released the buffer?
-> 
-> So I should set ds->state->altpath.blk[level].bp to NULL at the end of the
-> function xchk_da_btree_block_check_sibling()?
-> Like:
->     if (ds->state->altpath.blk[level].bp)
->         xfs_trans_brelse(ds->dargs.trans,
->                 ds->state->altpath.blk[level].bp);
->     ds->state->altpath.blk[level].bp = NULL;
+Mark switch cases where we are expecting to fall through.
 
-You could put the whole thing in a single if clause, e.g.
+This patch fixes the following warnings:
 
-	if (ds->state->altpath.blk[level].bp) {
-		xfs_trans_brelse(ds->dargs.trans,
-				 ds->state->altpath.blk[level].bp);
-		ds->state->altpath.blk[level].bp = NULL;
-	}
+net/iucv/af_iucv.c: warning: this statement may fall
+through [-Wimplicit-fallthrough=]:  => 537:3, 519:6, 2246:6, 510:6
 
---D
+Notice that, in this particular case, the code comment is
+modified in accordance with what GCC is expecting to find.
 
-> 
-> 
-> Best wishes,
-> Jia-Ju Bai
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ net/iucv/af_iucv.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
+index 09e1694b6d34..ebb62a4ebe30 100644
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -512,7 +512,9 @@ static void iucv_sock_close(struct sock *sk)
+ 			sk->sk_state = IUCV_DISCONN;
+ 			sk->sk_state_change(sk);
+ 		}
+-	case IUCV_DISCONN:   /* fall through */
++		/* fall through */
++
++	case IUCV_DISCONN:
+ 		sk->sk_state = IUCV_CLOSING;
+ 		sk->sk_state_change(sk);
+ 
+@@ -525,8 +527,9 @@ static void iucv_sock_close(struct sock *sk)
+ 					iucv_sock_in_state(sk, IUCV_CLOSED, 0),
+ 					timeo);
+ 		}
++		/* fall through */
+ 
+-	case IUCV_CLOSING:   /* fall through */
++	case IUCV_CLOSING:
+ 		sk->sk_state = IUCV_CLOSED;
+ 		sk->sk_state_change(sk);
+ 
+@@ -535,8 +538,9 @@ static void iucv_sock_close(struct sock *sk)
+ 
+ 		skb_queue_purge(&iucv->send_skb_q);
+ 		skb_queue_purge(&iucv->backlog_skb_q);
++		/* fall through */
+ 
+-	default:   /* fall through */
++	default:
+ 		iucv_sever_path(sk, 1);
+ 	}
+ 
+@@ -2247,10 +2251,10 @@ static int afiucv_hs_rcv(struct sk_buff *skb, struct net_device *dev,
+ 			kfree_skb(skb);
+ 			break;
+ 		}
+-		/* fall through and receive non-zero length data */
++		/* fall through - and receive non-zero length data */
+ 	case (AF_IUCV_FLAG_SHT):
+ 		/* shutdown request */
+-		/* fall through and receive zero length data */
++		/* fall through - and receive zero length data */
+ 	case 0:
+ 		/* plain data frame */
+ 		IUCV_SKB_CB(skb)->class = trans_hdr->iucv_hdr.class;
+-- 
+2.22.0
+
