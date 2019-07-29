@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6D7C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452F0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C033921655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1363A21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428323;
-	bh=r0jPVWdP2h3eaXNjoHKlq5SroAKe5morQsPOLgWPTyU=;
+	s=default; t=1564428328;
+	bh=OUn9xTpSoelEjjstaQwdtzxYPwUI7JFY53i+XxSV/4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xj0e2drYYYqIrtpYxd6ECgaLg9iubqhMArgmG7lXZMz2KBjpv4ebdREyBHW4JzIvu
-	 PBeGQVaHiwj06U0DTxdYVQ16AleodKBVTLAGxeSviYgDliU244JwdSOS5oPaFRJcml
-	 7HJPTurrKpoH+vgOCT7tc0OnMk5AMJhM77EUV/r4=
+	b=TpE2TMqLexD6ah5b7JQpc3fxQu5+8ZCkfhlM7eGlaQF4pz2e/CmTh0XGB0tFQm6tb
+	 OWC5UbwY0ohgk1TUa7Co3mzReNma0EtxIX1Y8Mk9oJGYVi1ZyTVJ+nEsJZoIfWSJA9
+	 zC91j4OZdg+nYsb3VxIgTHQIfeyhGm297md+vvuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388287AbfG2TZW (ORCPT
+        id S1729644AbfG2TZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:25:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37576 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387496AbfG2TZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:25:17 -0400
+        id S1728746AbfG2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:25:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 554A920C01;
-        Mon, 29 Jul 2019 19:25:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2EE320C01;
+        Mon, 29 Jul 2019 19:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428316;
-        bh=r0jPVWdP2h3eaXNjoHKlq5SroAKe5morQsPOLgWPTyU=;
+        s=default; t=1564428323;
+        bh=OUn9xTpSoelEjjstaQwdtzxYPwUI7JFY53i+XxSV/4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ltB3OEGUf+ugLUa/bTTGKWvJBjRBj+JFt4iB17rDpZHIJU8GkVfP67OL2nGWjyvdx
-         OyRSs8ltwKfBIPf0JNL20YNI8k9ME56sqKqeuETdA0+/l8TR7Hhh1d3/Xwi6R1m6Q8
-         /NclKg36Sy4MbayjiKqn4eX6hP9lDMdPx5tZbtqg=
+        b=XUXa9r07/tixa8KhaRAQ9lpbESSFXDTiP6tC5/azjQXYVephFRemMSqvxFwnyqGmi
+         UWmv0wz4fndQUB9Ze+aHM6Jcs//RaW/YHMXunvz92Wlprffxn7t8RZKY8ICYSav2vI
+         xCsqInlDxYj2I8kFzSI0WdRaqQe8ZvrX07AFRhvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Robert Hancock <hancock@sedsystems.ca>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 037/293] s390/qdio: handle PENDING state for QEBSM devices
-Date:   Mon, 29 Jul 2019 21:18:48 +0200
-Message-Id: <20190729190825.142115457@linuxfoundation.org>
+Subject: [PATCH 4.14 039/293] net: sfp: add mutex to prevent concurrent state checks
+Date:   Mon, 29 Jul 2019 21:18:50 +0200
+Message-Id: <20190729190825.439396977@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,37 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 04310324c6f482921c071444833e70fe861b73d9 ]
+[ Upstream commit 2158e856f56bb762ef90f3ec244d41a519826f75 ]
 
-When a CQ-enabled device uses QEBSM for SBAL state inspection,
-get_buf_states() can return the PENDING state for an Output Queue.
-get_outbound_buffer_frontier() isn't prepared for this, and any PENDING
-buffer will permanently stall all further completion processing on this
-Queue.
+sfp_check_state can potentially be called by both a threaded IRQ handler
+and delayed work. If it is concurrently called, it could result in
+incorrect state management. Add a st_mutex to protect the state - this
+lock gets taken outside of code that checks and handle state changes, and
+the existing sm_mutex nests inside of it.
 
-This isn't a concern for non-QEBSM devices, as get_buf_states() for such
-devices will manually turn PENDING buffers into EMPTY ones.
-
-Fixes: 104ea556ee7f ("qdio: support asynchronous delivery of storage blocks")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/phy/sfp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
-index c7afdbded26b..ab8dd81fbc2b 100644
---- a/drivers/s390/cio/qdio_main.c
-+++ b/drivers/s390/cio/qdio_main.c
-@@ -759,6 +759,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q)
+diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+index 2dcb25aa0452..9cef89fe410d 100644
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -115,10 +115,11 @@ struct sfp {
+ 	struct gpio_desc *gpio[GPIO_MAX];
  
- 	switch (state) {
- 	case SLSB_P_OUTPUT_EMPTY:
-+	case SLSB_P_OUTPUT_PENDING:
- 		/* the adapter got it */
- 		DBF_DEV_EVENT(DBF_INFO, q->irq_ptr,
- 			"out empty:%1d %02x", q->nr, count);
+ 	bool attached;
++	struct mutex st_mutex;			/* Protects state */
+ 	unsigned int state;
+ 	struct delayed_work poll;
+ 	struct delayed_work timeout;
+-	struct mutex sm_mutex;
++	struct mutex sm_mutex;			/* Protects state machine */
+ 	unsigned char sm_mod_state;
+ 	unsigned char sm_dev_state;
+ 	unsigned short sm_state;
+@@ -738,6 +739,7 @@ static void sfp_check_state(struct sfp *sfp)
+ {
+ 	unsigned int state, i, changed;
+ 
++	mutex_lock(&sfp->st_mutex);
+ 	state = sfp_get_state(sfp);
+ 	changed = state ^ sfp->state;
+ 	changed &= SFP_F_PRESENT | SFP_F_LOS | SFP_F_TX_FAULT;
+@@ -763,6 +765,7 @@ static void sfp_check_state(struct sfp *sfp)
+ 		sfp_sm_event(sfp, state & SFP_F_LOS ?
+ 				SFP_E_LOS_HIGH : SFP_E_LOS_LOW);
+ 	rtnl_unlock();
++	mutex_unlock(&sfp->st_mutex);
+ }
+ 
+ static irqreturn_t sfp_irq(int irq, void *data)
+@@ -793,6 +796,7 @@ static struct sfp *sfp_alloc(struct device *dev)
+ 	sfp->dev = dev;
+ 
+ 	mutex_init(&sfp->sm_mutex);
++	mutex_init(&sfp->st_mutex);
+ 	INIT_DELAYED_WORK(&sfp->poll, sfp_poll);
+ 	INIT_DELAYED_WORK(&sfp->timeout, sfp_timeout);
+ 
 -- 
 2.20.1
 
