@@ -2,155 +2,118 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13058C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E71C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF779206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A02206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:36:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="psnZBQy5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p4MttR64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfG2Jfv (ORCPT
+        id S1728052AbfG2Jf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:35:51 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33966 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387418AbfG2Jfs (ORCPT
+        Mon, 29 Jul 2019 05:35:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58048 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727981AbfG2Jfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:35:48 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so21736691pgc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:35:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9x4q40YNu8PZPNIMOeH6iHYV/NmKq4shqC8DBZn6n2U=;
-        b=psnZBQy5CgQsotR4fjYCVbWm7lutJhGnn3FiudticeJjy8OTsBbRe5kJQF/0SLksPF
-         +DCS0kbRS1PtOXIM06h4Zun8Hs0X42Sa4GCi7iNowPoK5X4BtcDqMC/JjTmrCvt+/d8v
-         5kS9pj9ElrVzNRiPBNUeML71Zhfp9QytXreocsBrrUfMNMhfR6KdH33Jm6eLW8O+8o3m
-         4Ic1xMZw30pKqBBm9StqhcPddXoBnkvCXoIJ9FnqFWYJdnKQ7BKVoXrj1R9erq/zualR
-         S5U1dBfR4Ylz10h8cUeXHA23eZ3zRCpfPly0Ii96aXm58AFxqsU4gJhLVDpnm2TceAMx
-         R6Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9x4q40YNu8PZPNIMOeH6iHYV/NmKq4shqC8DBZn6n2U=;
-        b=c1gIiVtTJRtSpsBAE3R8O/5y5DbNs3TRZrDyNVKNF9xtaFitpV2KwcjngcVh1V5EUw
-         ZT8FqEe3xBY4iCduiT57L0bCntpyH7mcdgH2AkZPVC5/WFZH2M0611cVkCzYyUVyx0A3
-         uc9kUeCYV3lBjmZoC0XjtLQwEyCOtBXbXwI9vJVHjaC/908EXQS3UY8tI14MEgiosIGx
-         PR2mMTtRBlakPoGQIqt9GUJI+vTi6ZHsEdilZSSOYAhrOFSadeikKYOWukKtAY3vGE/R
-         ejK2IlepO/wKm/RqbtJ2jgOCF++1+ynMbeTOSCXeQnT0ACuQ3YqTWnVBTwQrTJ61Y/iy
-         pEwg==
-X-Gm-Message-State: APjAAAVwbLSYKgzKQHuvoY/j8mFNSQjdE70MhCA92a2XgbiPvMMyzzfp
-        5nFqd0RmEOqvevfudDvoY4IzWA==
-X-Google-Smtp-Source: APXvYqwqE1NvATylQ7IseTvLry6NpXjoeNxFl451clxTeXz3oSDy1YnxOVHkLgnx4/YzllHFERrdoQ==
-X-Received: by 2002:aa7:8b10:: with SMTP id f16mr36090070pfd.44.1564392948016;
-        Mon, 29 Jul 2019 02:35:48 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id c70sm6172721pfb.36.2019.07.29.02.35.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 02:35:47 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 15:05:45 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        kernel-team@android.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] Introduce Bandwidth OPPs for interconnects
-Message-ID: <20190729093545.kvnqxjkyx4nogddk@vireshk-i7>
-References: <20190726231558.175130-1-saravanak@google.com>
+        Mon, 29 Jul 2019 05:35:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=holG7IqjUcljSxxM2S+TjFVhu9NMDj7OJSD6E50qkBw=; b=p4MttR64uYFYXHxpz9W79sCUF
+        qnikm0he/3QDFLQXnTsQV83E5+fyf4+okJkFCz/8gDPTJfSZ9Xz5JJVafoKp5epLnXIgEF0kfThQq
+        z0WzQ0IfYyOEV54kONRU7IiEHHAeImPDMqaj4+PBjUZFET8FSv2psE7ijM/n1cnopDWZkmwGjsVtE
+        xeUG+VpuDQgwZLzQy+GLDf6SdBFRa7a/cWAefHnxRMC8/XHA/KlEykbBf/hHCpa1rEyRhySR7VLa8
+        S91u7xAyPONTnFsuXX+T4WMVf/KnhcIuBqtkOyZzJR3Xc6ZqvHbb/rTogfMzPbJGGQUDinu9fg6gE
+        0kyXRipCg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hs24J-0006kt-BL; Mon, 29 Jul 2019 09:35:47 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9943C20227071; Mon, 29 Jul 2019 11:35:45 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 11:35:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     x86@kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>
+Subject: Re: sched: Unexpected reschedule of offline CPU#2!
+Message-ID: <20190729093545.GV31381@hirez.programming.kicks-ass.net>
+References: <20190727164450.GA11726@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190726231558.175130-1-saravanak@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190727164450.GA11726@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-07-19, 16:15, Saravana Kannan wrote:
-> Interconnects and interconnect paths quantify their performance levels in
-> terms of bandwidth and not in terms of frequency. So similar to how we have
-> frequency based OPP tables in DT and in the OPP framework, we need
-> bandwidth OPP table support in DT and in the OPP framework.
+On Sat, Jul 27, 2019 at 09:44:50AM -0700, Guenter Roeck wrote:
+> Hi,
 > 
-> So with the DT bindings added in this patch series, the DT for a GPU
-> that does bandwidth voting from GPU to Cache and GPU to DDR would look
-> something like this:
+> I see the following traceback (or similar tracebacks) once in a while
+> during my boot tests. In this specific case it is with mainline
+> (v5.3-rc1-195-g3ea54d9b0d65), but I have seen it with other branches
+> as well. This isn't a new problem; I have seen it for quite some time.
+> There is no specific action required to make it appear; just running
+> reboot loops is sufficient. The problem doesn't happen a lot;
+> non-scientifically I would say I see it maybe once every few hundred
+> boots.
 > 
-> gpu_cache_opp_table: gpu_cache_opp_table {
-> 	compatible = "operating-points-v2";
+> No specific action requested or asked for; this is just informational.
 > 
-> 	gpu_cache_3000: opp-3000 {
-> 		opp-peak-KBps = <3000000>;
-> 		opp-avg-KBps = <1000000>;
-> 	};
-> 	gpu_cache_6000: opp-6000 {
-> 		opp-peak-KBps = <6000000>;
-> 		opp-avg-KBps = <2000000>;
-> 	};
-> 	gpu_cache_9000: opp-9000 {
-> 		opp-peak-KBps = <9000000>;
-> 		opp-avg-KBps = <9000000>;
-> 	};
-> };
+> A complete log is at:
+> https://kerneltests.org/builders/qemu-x86-master/builds/1285/steps/qemubuildcommand/logs/stdio
 > 
-> gpu_ddr_opp_table: gpu_ddr_opp_table {
-> 	compatible = "operating-points-v2";
+> Guenter
 > 
-> 	gpu_ddr_1525: opp-1525 {
-> 		opp-peak-KBps = <1525000>;
-> 		opp-avg-KBps = <452000>;
-> 	};
-> 	gpu_ddr_3051: opp-3051 {
-> 		opp-peak-KBps = <3051000>;
-> 		opp-avg-KBps = <915000>;
-> 	};
-> 	gpu_ddr_7500: opp-7500 {
-> 		opp-peak-KBps = <7500000>;
-> 		opp-avg-KBps = <3000000>;
-> 	};
-> };
-> 
-> gpu_opp_table: gpu_opp_table {
-> 	compatible = "operating-points-v2";
-> 	opp-shared;
-> 
-> 	opp-200000000 {
-> 		opp-hz = /bits/ 64 <200000000>;
-> 	};
-> 	opp-400000000 {
-> 		opp-hz = /bits/ 64 <400000000>;
-> 	};
-> };
-> 
-> gpu@7864000 {
-> 	...
-> 	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
-> 	...
-> };
+> ---
+> [   61.248329] sd 0:0:0:0: [sda] Synchronizing SCSI cache
+> [   61.268277] e1000e: EEE TX LPI TIMER: 00000000
+> [   61.311435] reboot: Restarting system
+> [   61.312321] reboot: machine restart
+> [   61.342193] ------------[ cut here ]------------
+> [   61.342660] sched: Unexpected reschedule of offline CPU#2!
+> ILLOPC: ce241f83: 0f 0b
+> [   61.344323] WARNING: CPU: 1 PID: 15 at arch/x86/kernel/smp.c:126 native_smp_send_reschedule+0x33/0x40
+> [   61.344836] Modules linked in:
+> [   61.345694] CPU: 1 PID: 15 Comm: ksoftirqd/1 Not tainted 5.3.0-rc1+ #1
+> [   61.345998] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+> [   61.346569] EIP: native_smp_send_reschedule+0x33/0x40
+> [   61.347099] Code: cf 73 1c 8b 15 60 54 2b cf 8b 4a 18 ba fd 00 00 00 e8 05 65 c7 00 c9 c3 8d b4 26 00 00 00 00 50 68 04 ca 1a cf e8 fe e3 01 00 <0f> 0b 58 5a c9 c3 8d b4 26 00 00 00 00 55 89 e5 56 53 83 ec 0c 65
+> [   61.347726] EAX: 0000002e EBX: 00000002 ECX: 00000000 EDX: cdd64140
+> [   61.347977] ESI: 00000002 EDI: 00000000 EBP: cdd73c88 ESP: cdd73c80
+> [   61.348234] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00000096
+> [   61.348514] CR0: 80050033 CR2: b7ee7048 CR3: 0c28f000 CR4: 000006d0
+> [   61.348866] Call Trace:
+> [   61.349392]  kick_ilb+0x90/0xa0
+> [   61.349629]  trigger_load_balance+0xf0/0x5c0
+> [   61.349859]  ? check_preempt_wakeup+0x1b0/0x1b0
+> [   61.350057]  scheduler_tick+0xa7/0xd0
 
-One feedback I missed giving earlier. Will it be possible to get some
-user code merged along with this ? I want to make sure anything we add
-ends up getting used.
+kick_ilb() iterates nohz.idle_cpus_mask to find itself an idle_cpu().
 
-That also helps understanding the problems you are facing in a better
-way, i.e. with real examples.
+idle_cpus_mask() is set from nohz_balance_enter_idle() and cleared from
+nohz_balance_exit_idle(). nohz_balance_enter_idle() is called from
+__tick_nohz_idle_stop_tick() when entering nohz idle, this includes the
+cpu_is_offline() clause of the idle loop.
 
--- 
-viresh
+However, when offline, cpu_active() should also be false, and this
+function should no-op.
+
+Then we have nohz_balance_exit_idle() from sched_cpu_dying(), which
+should explicitly clear the CPU from the mask when going offline.
+
+So I'm not immediately seeing how we can select an offline CPU to kick.
+
+
