@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9427C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABC2C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 765E22064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7A52064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430664;
-	bh=nsfP82QPrsH9+pwdLvCOq51KQy4SE8oz+B42GGwG1Go=;
+	s=default; t=1564430669;
+	bh=f7tBDxzUivvdbQFNLAvWicQS27YxUC57cCcTbYDlg+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YchdpL0CvPsiod7AjllOlc3eQXlIDctSWXgG2DPgJCAXaGV23l1qbsad+7tM0r4Xa
-	 FYL/5oA4h1TzdiV+g0IXrLXu/0zcevRnWpjPOelQtNhcQZJsyTJRpTsI/ig8hzb9+8
-	 dTcjFe3mtJ3mmNKf4RBXvQyMZ2xHVJhEROtfE11g=
+	b=jbGBHp25rrGzFy0kyplHhIQVb8frpnnXz+NqlBNPijP81rS5Ufc8M7JFnMx9HDZNO
+	 Pu8SMhubRFSO+HjWPd3zIgXVG/aurWn8QW+LViQxKY/zrv0y6F+z/QtcMqXocSzSky
+	 2FqBhmSMDQZHIkmeK6EojojRmu176jLcFbB2NcVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390017AbfG2UEX (ORCPT
+        id S2389958AbfG2Tp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:04:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34684 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:45:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389981AbfG2Tpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:45:40 -0400
+        id S2389292AbfG2TpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:45:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D98020C01;
-        Mon, 29 Jul 2019 19:45:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54FDA2171F;
+        Mon, 29 Jul 2019 19:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429539;
-        bh=nsfP82QPrsH9+pwdLvCOq51KQy4SE8oz+B42GGwG1Go=;
+        s=default; t=1564429520;
+        bh=f7tBDxzUivvdbQFNLAvWicQS27YxUC57cCcTbYDlg+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smNvxCz8QkqNjMvfzirnrL+3NqEwuUxy/i/pL12jAylDbKe0N6ksTw77zwusMDMnc
-         EBPLJxA+OdCxOSYVsFp1SpqU25lF1JbU5UShZKtT9jAoda02QrvtwaULkZk3RTWSD+
-         A9Y0FvJ93/ajco/8Cl5nWKt7ILm+AzSu5+Qs+/l0=
+        b=lrUCE8p76KDszrfRbWrsEGMIc7SHPbkmJLJ8PHUtTzy+zpdDrm1yqleAOXSjvVvyK
+         ga5WRraf4weCUiy2FY7Uh+Fr/2qG5DT9BrSU0+bnH5aqFQN8GuRDHthhsWQuQgJDQE
+         53CmGOblAQ8OyPaKe7mX/HD6p5JuYrCkzNg0ExBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Park Ju Hyung <qkrwngud825@gmail.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 017/215] f2fs: fix to check layout on last valid checkpoint park
-Date:   Mon, 29 Jul 2019 21:20:13 +0200
-Message-Id: <20190729190742.519767411@linuxfoundation.org>
+Subject: [PATCH 5.2 011/215] staging: vt6656: use meaningful error code during buffer allocation
+Date:   Mon, 29 Jul 2019 21:20:07 +0200
+Message-Id: <20190729190741.507584655@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,107 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5dae2d39074dde941cc3150dcbb7840d88179743 ]
+[ Upstream commit d8c2869300ab5f7a19bf6f5a04fe473c5c9887e3 ]
 
-As Ju Hyung reported:
+Check on called function's returned value for error and return 0 on
+success or a negative errno value on error instead of a boolean value.
 
-"
-I was semi-forced today to use the new kernel and test f2fs.
-
-My Ubuntu initramfs got a bit wonky and I had to boot into live CD and
-fix some stuffs. The live CD was using 4.15 kernel, and just mounting
-the f2fs partition there corrupted f2fs and my 4.19(with 5.1-rc1-4.19
-f2fs-stable merged) refused to mount with "SIT is corrupted node"
-message.
-
-I used the latest f2fs-tools sent by Chao including "fsck.f2fs: fix to
-repair cp_loads blocks at correct position"
-
-It spit out 140M worth of output, but at least I didn't have to run it
-twice. Everything returned "Ok" in the 2nd run.
-The new log is at
-http://arter97.com/f2fs/final
-
-After fixing the image, I used my 4.19 kernel with 5.2-rc1-4.19
-f2fs-stable merged and it mounted.
-
-But, I got this:
-[    1.047791] F2FS-fs (nvme0n1p3): layout of large_nat_bitmap is
-deprecated, run fsck to repair, chksum_offset: 4092
-[    1.081307] F2FS-fs (nvme0n1p3): Found nat_bits in checkpoint
-[    1.161520] F2FS-fs (nvme0n1p3): recover fsync data on readonly fs
-[    1.162418] F2FS-fs (nvme0n1p3): Mounted with checkpoint version = 761c7e00
-
-But after doing a reboot, the message is gone:
-[    1.098423] F2FS-fs (nvme0n1p3): Found nat_bits in checkpoint
-[    1.177771] F2FS-fs (nvme0n1p3): recover fsync data on readonly fs
-[    1.178365] F2FS-fs (nvme0n1p3): Mounted with checkpoint version = 761c7eda
-
-I'm not exactly sure why the kernel detected that I'm still using the
-old layout on the first boot. Maybe fsck didn't fix it properly, or
-the check from the kernel is improper.
-"
-
-Although we have rebuild the old deprecated checkpoint with new layout
-during repair, we only repair last checkpoint park, the other old one is
-remained.
-
-Once the image was mounted, we will 1) sanity check layout and 2) decide
-which checkpoint park to use according to cp_ver. So that we will print
-reported message unnecessarily at step 1), to avoid it, we simply move
-layout check into f2fs_sanity_check_ckpt() after step 2).
-
-Reported-by: Park Ju Hyung <qkrwngud825@gmail.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/checkpoint.c | 11 -----------
- fs/f2fs/super.c      |  9 +++++++++
- 2 files changed, 9 insertions(+), 11 deletions(-)
+ drivers/staging/vt6656/main_usb.c | 42 ++++++++++++++++++++-----------
+ 1 file changed, 28 insertions(+), 14 deletions(-)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index ed70b68b2b38..d0539ddad6e2 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -832,17 +832,6 @@ static int get_checkpoint_version(struct f2fs_sb_info *sbi, block_t cp_addr,
- 		return -EINVAL;
+diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
+index ccafcc2c87ac..70433f756d8e 100644
+--- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -402,16 +402,19 @@ static void vnt_free_int_bufs(struct vnt_private *priv)
+ 	kfree(priv->int_buf.data_buf);
+ }
+ 
+-static bool vnt_alloc_bufs(struct vnt_private *priv)
++static int vnt_alloc_bufs(struct vnt_private *priv)
+ {
++	int ret = 0;
+ 	struct vnt_usb_send_context *tx_context;
+ 	struct vnt_rcb *rcb;
+ 	int ii;
+ 
+ 	for (ii = 0; ii < priv->num_tx_context; ii++) {
+ 		tx_context = kmalloc(sizeof(*tx_context), GFP_KERNEL);
+-		if (!tx_context)
++		if (!tx_context) {
++			ret = -ENOMEM;
+ 			goto free_tx;
++		}
+ 
+ 		priv->tx_context[ii] = tx_context;
+ 		tx_context->priv = priv;
+@@ -419,16 +422,20 @@ static bool vnt_alloc_bufs(struct vnt_private *priv)
+ 
+ 		/* allocate URBs */
+ 		tx_context->urb = usb_alloc_urb(0, GFP_KERNEL);
+-		if (!tx_context->urb)
++		if (!tx_context->urb) {
++			ret = -ENOMEM;
+ 			goto free_tx;
++		}
+ 
+ 		tx_context->in_use = false;
  	}
  
--	if (__is_set_ckpt_flags(*cp_block, CP_LARGE_NAT_BITMAP_FLAG)) {
--		if (crc_offset != CP_MIN_CHKSUM_OFFSET) {
--			f2fs_put_page(*cp_page, 1);
--			f2fs_msg(sbi->sb, KERN_WARNING,
--				"layout of large_nat_bitmap is deprecated, "
--				"run fsck to repair, chksum_offset: %zu",
--				crc_offset);
--			return -EINVAL;
--		}
--	}
--
- 	crc = f2fs_checkpoint_chksum(sbi, *cp_block);
- 	if (crc != cur_cp_crc(*cp_block)) {
- 		f2fs_put_page(*cp_page, 1);
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 6b959bbb336a..856f9081c599 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2718,6 +2718,15 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
- 		return 1;
+ 	for (ii = 0; ii < priv->num_rcb; ii++) {
+ 		priv->rcb[ii] = kzalloc(sizeof(*priv->rcb[ii]), GFP_KERNEL);
+-		if (!priv->rcb[ii])
++		if (!priv->rcb[ii]) {
++			ret = -ENOMEM;
+ 			goto free_rx_tx;
++		}
+ 
+ 		rcb = priv->rcb[ii];
+ 
+@@ -436,39 +443,46 @@ static bool vnt_alloc_bufs(struct vnt_private *priv)
+ 
+ 		/* allocate URBs */
+ 		rcb->urb = usb_alloc_urb(0, GFP_KERNEL);
+-		if (!rcb->urb)
++		if (!rcb->urb) {
++			ret = -ENOMEM;
+ 			goto free_rx_tx;
++		}
+ 
+ 		rcb->skb = dev_alloc_skb(priv->rx_buf_sz);
+-		if (!rcb->skb)
++		if (!rcb->skb) {
++			ret = -ENOMEM;
+ 			goto free_rx_tx;
++		}
+ 
+ 		rcb->in_use = false;
+ 
+ 		/* submit rx urb */
+-		if (vnt_submit_rx_urb(priv, rcb))
++		ret = vnt_submit_rx_urb(priv, rcb);
++		if (ret)
+ 			goto free_rx_tx;
  	}
  
-+	if (__is_set_ckpt_flags(ckpt, CP_LARGE_NAT_BITMAP_FLAG) &&
-+		le32_to_cpu(ckpt->checksum_offset) != CP_MIN_CHKSUM_OFFSET) {
-+		f2fs_msg(sbi->sb, KERN_WARNING,
-+			"layout of large_nat_bitmap is deprecated, "
-+			"run fsck to repair, chksum_offset: %u",
-+			le32_to_cpu(ckpt->checksum_offset));
-+		return 1;
+ 	priv->interrupt_urb = usb_alloc_urb(0, GFP_KERNEL);
+-	if (!priv->interrupt_urb)
++	if (!priv->interrupt_urb) {
++		ret = -ENOMEM;
+ 		goto free_rx_tx;
 +	}
-+
- 	if (unlikely(f2fs_cp_error(sbi))) {
- 		f2fs_msg(sbi->sb, KERN_ERR, "A bug case: need to run fsck");
- 		return 1;
+ 
+ 	priv->int_buf.data_buf = kmalloc(MAX_INTERRUPT_SIZE, GFP_KERNEL);
+ 	if (!priv->int_buf.data_buf) {
+-		usb_free_urb(priv->interrupt_urb);
+-		goto free_rx_tx;
++		ret = -ENOMEM;
++		goto free_rx_tx_urb;
+ 	}
+ 
+-	return true;
++	return 0;
+ 
++free_rx_tx_urb:
++	usb_free_urb(priv->interrupt_urb);
+ free_rx_tx:
+ 	vnt_free_rx_bufs(priv);
+-
+ free_tx:
+ 	vnt_free_tx_bufs(priv);
+-
+-	return false;
++	return ret;
+ }
+ 
+ static void vnt_tx_80211(struct ieee80211_hw *hw,
 -- 
 2.20.1
 
