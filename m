@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE5FC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBCEC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E63A21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C162217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429919;
-	bh=kWYMEl2mcLtwN/DWe0hT2YGnrHiImohYSWe2qTLe4J8=;
+	s=default; t=1564429922;
+	bh=D3Un3YhUUOKploS/ndUKvUAHVmkDxg0BX7hk5R9sXrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NqCjVT/xCVlOFMZ/TeNwgEG9aXOOrCqiBisEeD+tRGuyhJOZavN/1iqYHM6qwiOhF
-	 4Sz9sqDeCL23m/KXkVatCAXm8ljvGkh2M96yjUuVGnGperi2Wajq5qsnREFX3wzryM
-	 z3Z4n6sK5rLgB0uSlOVlIbhO2L6HbasuFuZ6GAw0=
+	b=Osdh8w60uLsElP+nQoX60ActTvm/BVas7UvKkTZahlCjaZVmzAFZnW9cSLrDEA/6p
+	 45p/qChrTLRTivj3evS0pBK7gRoi+2stwShrmupqeXyqUtWLZWLWb6KnO97TwZ0Vmo
+	 MoTH96QiW7OFAvQvRjzopbiUI/1iIQr8KM/RreTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403907AbfG2Tv5 (ORCPT
+        id S2390808AbfG2TwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:51:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43570 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:52:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390222AbfG2Tvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:51:54 -0400
+        id S2403902AbfG2Tv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:51:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 682F3217D4;
-        Mon, 29 Jul 2019 19:51:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AC9C21655;
+        Mon, 29 Jul 2019 19:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429913;
-        bh=kWYMEl2mcLtwN/DWe0hT2YGnrHiImohYSWe2qTLe4J8=;
+        s=default; t=1564429916;
+        bh=D3Un3YhUUOKploS/ndUKvUAHVmkDxg0BX7hk5R9sXrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+YPzzJeeyUKqVMCCfQkGJNKWFbwnN4ooN6+D7Sqgk59QEjg5EFaJ1z/eFaH+nY9X
-         ULqZphlk0SG4G+8qIR0nrVsV0VZHLo6/CdI5U7txpRXevE8m5ejTbNiW5MUjnMSpO+
-         4r8/hgFIIWcPt76ySBiXypPm42lzurlgmU300lyw=
+        b=VUAq4nZa5NZe2YmNRAp2T4NgvXqZ5fAguAaU9ZbOqF7s5D256sUs6nDyBq4ZB2koE
+         N6qx5CtwoTD+4fiI2f8zxVhNdBAVb3bgiVI002qjvrx3JtDzMk4x1/Zc647QINm0XF
+         AFdghZXTXyW2k3e0zFOAJNOg7WkDD2dv7sG6SUSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
-        Mike Playle <mplayle@solarflare.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 136/215] nvme-tcp: set the STABLE_WRITES flag when data digests are enabled
-Date:   Mon, 29 Jul 2019 21:22:12 +0200
-Message-Id: <20190729190803.152828213@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 137/215] powerpc/irq: Dont WARN continuously in arch_local_irq_restore()
+Date:   Mon, 29 Jul 2019 21:22:13 +0200
+Message-Id: <20190729190803.318867604@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -62,53 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 958f2a0f8121ae36a5cbff383ab94fadf1fba5eb ]
+[ Upstream commit 0fc12c022ad25532b66bf6f6c818ee1c1d63e702 ]
 
-There was a few false alarms sighted on target side about wrong data
-digest while performing high throughput load to XFS filesystem shared
-through NVMoF TCP.
+When CONFIG_PPC_IRQ_SOFT_MASK_DEBUG is enabled (uncommon), we have a
+series of WARN_ON's in arch_local_irq_restore().
 
-This flag tells the rest of the kernel to ensure that the data buffer
-does not change while the write is in flight.  It incurs a performance
-penalty, so only enable it when it is actually needed, i.e. when we are
-calculating data digests.
+These are "should never happen" conditions, but if they do happen they
+can flood the console and render the system unusable. So switch them
+to WARN_ON_ONCE().
 
-Although even with this change in place, ext2 users can steel experience
-false positives, as ext2 is not respecting this flag. This may be apply
-to vfat as well.
-
-Signed-off-by: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
-Signed-off-by: Mike Playle <mplayle@solarflare.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: e2b36d591720 ("powerpc/64: Don't trace code that runs with the soft irq mask unreconciled")
+Fixes: 9b81c0211c24 ("powerpc/64s: make PACA_IRQ_HARD_DIS track MSR[EE] closely")
+Fixes: 7c0482e3d055 ("powerpc/irq: Fix another case of lazy IRQ state getting out of sync")
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190708061046.7075-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/powerpc/kernel/irq.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 22c68e3b71d5..215bef904b7b 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -11,6 +11,7 @@
- #include <linux/hdreg.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/backing-dev.h>
- #include <linux/list_sort.h>
- #include <linux/slab.h>
- #include <linux/types.h>
-@@ -3256,6 +3257,10 @@ static int nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
- 		goto out_free_ns;
+diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
+index bc68c53af67c..5645bc9cbc09 100644
+--- a/arch/powerpc/kernel/irq.c
++++ b/arch/powerpc/kernel/irq.c
+@@ -255,7 +255,7 @@ notrace void arch_local_irq_restore(unsigned long mask)
+ 	irq_happened = get_irq_happened();
+ 	if (!irq_happened) {
+ #ifdef CONFIG_PPC_IRQ_SOFT_MASK_DEBUG
+-		WARN_ON(!(mfmsr() & MSR_EE));
++		WARN_ON_ONCE(!(mfmsr() & MSR_EE));
+ #endif
+ 		return;
  	}
- 
-+	if (ctrl->opts->data_digest)
-+		ns->queue->backing_dev_info->capabilities
-+			|= BDI_CAP_STABLE_WRITES;
-+
- 	blk_queue_flag_set(QUEUE_FLAG_NONROT, ns->queue);
- 	if (ctrl->ops->flags & NVME_F_PCI_P2PDMA)
- 		blk_queue_flag_set(QUEUE_FLAG_PCI_P2PDMA, ns->queue);
+@@ -268,7 +268,7 @@ notrace void arch_local_irq_restore(unsigned long mask)
+ 	 */
+ 	if (!(irq_happened & PACA_IRQ_HARD_DIS)) {
+ #ifdef CONFIG_PPC_IRQ_SOFT_MASK_DEBUG
+-		WARN_ON(!(mfmsr() & MSR_EE));
++		WARN_ON_ONCE(!(mfmsr() & MSR_EE));
+ #endif
+ 		__hard_irq_disable();
+ #ifdef CONFIG_PPC_IRQ_SOFT_MASK_DEBUG
+@@ -279,7 +279,7 @@ notrace void arch_local_irq_restore(unsigned long mask)
+ 		 * warn if we are wrong. Only do that when IRQ tracing
+ 		 * is enabled as mfmsr() can be costly.
+ 		 */
+-		if (WARN_ON(mfmsr() & MSR_EE))
++		if (WARN_ON_ONCE(mfmsr() & MSR_EE))
+ 			__hard_irq_disable();
+ #endif
+ 	}
 -- 
 2.20.1
 
