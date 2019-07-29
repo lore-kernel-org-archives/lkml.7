@@ -2,68 +2,68 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,UPPERCASE_50_75,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_75_100,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88E3C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A862DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A65F20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B962147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 05:56:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="pkQdl1XW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YcUnzsJ2"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ilImDcVT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L79cJMb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbfG2F4a (ORCPT
+        id S1727004AbfG2F41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 01:56:30 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:56511 "EHLO
+        Mon, 29 Jul 2019 01:56:27 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:43433 "EHLO
         new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726871AbfG2F43 (ORCPT
+        by vger.kernel.org with ESMTP id S1725988AbfG2F41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 01:56:29 -0400
+        Mon, 29 Jul 2019 01:56:27 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A45ED2223;
-        Mon, 29 Jul 2019 01:56:25 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id A9116FCB;
+        Mon, 29 Jul 2019 01:56:17 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 29 Jul 2019 01:56:25 -0400
+  by compute4.internal (MEProxy); Mon, 29 Jul 2019 01:56:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=5tbyolGu6ph79
-        GbHVLwUkbgB3GeleWcnpLV8vOpVA54=; b=pkQdl1XWh2EacHQhaj7J0XUnWWNJd
-        ICR8JI45p8vfbZ57mO9LYRxe6QDCRAUkP+vf8mSf76lHkx0C9EzO78wLqV3hhCgz
-        7sVp58YOAelavuQ6nyljGddQqVDb/px20WukSBVURgf5VeNWvMIkpMtljXlYTlhj
-        dW+W0IjYM96xsluDHfAil1wiK/i6qUjd8dH4E4G1uKLOwbfeZTOC38yIhSi0uxBp
-        /dTEx9r7QRCIVKrqoOcbBSNjkLq+hOdc4LS+XKdqF/Uh774qZUPH7n6zJdjc4eOr
-        CCzsxy1SBpWIVkj22ZXwZB1qFLmGHK1DbA/LadWD8VvPh1GDTwHq4efdg==
+        :mime-version:content-transfer-encoding; s=fm3; bh=xEbLDtI//rHsw
+        OsNfyLF1ARlTvpG+JKRyZkjODNCl4M=; b=ilImDcVTNvUEghIyxEp4sKb5W8Nuk
+        2XVqmDBkOMWz6mHon1UAknRx2eJK/8oZWIno9423VISBJkFFy5oEkakKG29hRmTP
+        CEtwf7sEVwQ/oyS5qNsWwN0oJkHQKIj2FwhsDHLgE2G6VD5tlxLmPbkDPCoDCwAs
+        g4nvfNUDi+GxfpyQmKxwsR8Bz/lFcC06dscjhT6D/HFLPNvz1cUNBCD/Z35w2Zzo
+        Kx9eKqBYWRJUaSY2uOBuQ7k7SIHP4WfpMbsC7sLMkO4g2uhDlMN45jTEUsy98Wlo
+        EFNjjDeAkttpjuVlOA1jQibyZYZUN68L+0FdEu/y4PWd/bSYS9j0/NHBw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=5tbyolGu6ph79GbHVLwUkbgB3GeleWcnpLV8vOpVA54=; b=YcUnzsJ2
-        DoAjuyJu2NZUv+YL/XaoxmMvOhYYMxOYpNIeL2iWoHjtaHkS7K99i/XMsIbC4Bwu
-        OWWKYhG9fmh6W3B4lecd6huxCnIyd3cu2ljQJJ6fOSn33HUsnki/M4Zvd5+pchAh
-        tF2JmC8TeWI+3mDx7JX4pltkS37XpP+uAdZv1ajhNU0cFjh7NbZryGqgGKB9bG7e
-        QnQQTI5of0HoVmLaRwa+vzaziDp3uPglBMpyooRedaIff9ADC+0tcJJzTmJv2aaf
-        T9PjifGiDC9tpDRLmzk1I7+WLXlgneLuqOP7+ihEG56RTJEKMHOdYlQSdsQdvFfM
-        LzcYpKDJP8/8/Q==
-X-ME-Sender: <xms:iYo-XZHAJDec_EFYXT0Gs_PntIoyneDc1A8oBUJRS5wJLCCfbiC9Qw>
+        fm3; bh=xEbLDtI//rHswOsNfyLF1ARlTvpG+JKRyZkjODNCl4M=; b=L79cJMb/
+        NfLDSoIvyQWDXYlWxhx/eXp61ERrd352Q15rpgO+JusF6TDW6VWX1roW2dnibnI0
+        h8QSBowhzYHqdWksLR9hV92l85x9Cg7P4E+oktAA7DuscfojN5TXNBg/W7zGN5nH
+        u+tk/aVUkXNkTRt7mA34fYYeoamDcnzbNvlifWTsqTB5RbccRvrPL7tUBJ1u8fmT
+        t0ZbH9/GVL/ivu0infYghWpJNieWaP/yiC1c1xVH0UtSVCDTbrPQe0JSYaQmlMnr
+        hNDl5lax462uzQVC7ZCBWv/xCaUAaCbZ4H1+oKxynVbQK70f9B16vJqEQGKtJpEm
+        XkRM9EdbslmaFg==
+X-ME-Sender: <xms:gIo-XUz_LDXMIytPYkhlkygVUYtWWmbVd3dl3yekcyxYMpcHz-NJ1Q>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledtgddutddtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
     dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
     jhdrihgurdgruheqnecukfhppedvtddvrdekuddrudekrdeftdenucfrrghrrghmpehmrg
     hilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigv
-    peef
-X-ME-Proxy: <xmx:iYo-XfTBjP-Tb_F63ldldqFs7C-ainCnB0B-ycvgyjSLctmtQg9Snw>
-    <xmx:iYo-XbfSzIh4OsM_AkaDLP5n00PvmClihxlFJ3mcb841gxrQwrw3Eg>
-    <xmx:iYo-Xdjru-QvCj-XRZ9n2784_h89M1Ow89GsirSX1yLyHZA0q67KEg>
-    <xmx:iYo-Xe2MALX9t5wn8b2CKDSCMOAZrq-wERj7qk98BQCioklVzbLgOg>
+    pedv
+X-ME-Proxy: <xmx:gYo-XZ4CYGnl8sGnLpOS-IeEkUALILSVzS89_v5BBJPzWgQBF96YGw>
+    <xmx:gYo-Xab2pPQMvJ9y3VqiNEZZR1wOUV-hpxNhzVmtHzzXwh1MyAOUUA>
+    <xmx:gYo-XY_P73ohUi4jdQXRlpeRXieNCeMsQx6M_yF-jdsy-JLAc5IDjA>
+    <xmx:gYo-XVMtw8SprMUaoc1Pj23zlFa6WM-73e74w17Wom9_78id6-yNAw>
 Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 97C9380061;
-        Mon, 29 Jul 2019 01:56:21 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 069E98005B;
+        Mon, 29 Jul 2019 01:56:12 -0400 (EDT)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-gpio@vger.kernel.org
 Cc:     Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org,
@@ -71,9 +71,9 @@ Cc:     Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org,
         ryanchen.aspeed@gmail.com, johnny_huang@aspeedtech.com,
         linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] pinctrl: aspeed: Add AST2600 pinmux support
-Date:   Mon, 29 Jul 2019 15:26:04 +0930
-Message-Id: <20190729055604.13239-7-andrew@aj.id.au>
+Subject: [PATCH v2 4/6] pinctrl: aspeed: Add multiple pin group support for functions
+Date:   Mon, 29 Jul 2019 15:26:02 +0930
+Message-Id: <20190729055604.13239-5-andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190729055604.13239-1-andrew@aj.id.au>
 References: <20190729055604.13239-1-andrew@aj.id.au>
@@ -84,2419 +84,5199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AST2600 pinmux is fairly similar to the previous generations of
-ASPEED BMC SoCs in terms of architecture, though differ in some of the
-design details. The complexity of the pin expressions is largely reduced
-(e.g. there are no-longer signals with multiple expressions muxing them
-to the associated pin), and there are now signals and buses with
-multiple pin groups.
+The AST2400 and AST2500 SoCs only exposed one pin group per function.
+Lone pin groups drove some implementation simplifications in the ASPEED
+pinmux infrastructure that is now invalid for the AST2600, which
+supports multiple groups per function for some functions on the chip
+(SMBus Alert pins and UARTs among others).
 
-The driver implements pinmux support for all 244 GPIO-capable pins plus
-a further four pins that are not GPIO capable but which expose multiple
-signals. pinconf will be implemented in a follow-up patch.
+This patch reworks the macro jungle to enable support for multiple pin
+groups. In the process we inflict some collateral damage on the existing
+AST2400 and AST2500 drivers, but the rework is mostly a relatively
+straight-forward, automated transform of adding the pin name as an
+argument to some macro calls and implementing wrappers to paper over
+groups in the cases where there aren't multiple.
 
-The implementation has been smoke-tested under qemu, and run on hardware
-by ASPEED.
+As previously documented, the macro infrastructure exposes mux
+configuration as symbols in the source file which are used to detect
+accidental duplication. Previously these symbols were named in terms of
+the signal for a given expression. As the AST2600 supports multiple pin
+groups for a function, the signal name on its own is no-longer unique,
+and we must switch to the (signal, group) tuple. However, this means
+that we can no-longer derive the signal expression symbol name from the
+signal name alone, which among other cases, impacts the operation of the
+PIN_DECL_x() macros.
 
-Debugged-by: Johnny Huang <johnny_huang@aspeedtech.com>
+To fix that and avoid requiring we awkwardly provide the associated
+group name for every signal for every PIN_DECL_x() invocation, instead
+opportunistically alias the name of the signal expression symbol from
+the unique (signal, group) tuple to the also unique (pin, signal) tuple,
+then reference the alias symbol in the tables generated by PIN_DECL_x().
+This way we do not require extra group parameters for PIN_DECL_x() as
+the pin name was already provided as an argument, and instead simply
+require that the pin name be provided to the expression declaration
+macros in order to generate the alias symbol.
+
+The patch implements the alias strategy and fixes up all the expression
+definition macro calls in the AST2400 and AST2500 drivers to account for
+pin groups. Given the implementation strategy has the property that
+compilation either fails or loudly warns for bad pin descriptions, this
+patch is theoretically tested by successfully compiling both affected
+drivers. For a more practical test I've inspected the diff of the
+content of the pinctrl debugfs entries before and after the patch under
+qemu; all pins, functions and groups match.
+
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-
 ---
-v2:
-* Remove some redundant SIG_DESC_CLEAR()s from descriptors
----
- drivers/pinctrl/aspeed/Kconfig             |    8 +
- drivers/pinctrl/aspeed/Makefile            |    1 +
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 2355 ++++++++++++++++++++
- 3 files changed, 2364 insertions(+)
- create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c | 1545 ++++++++++---------
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 1559 +++++++++++---------
+ drivers/pinctrl/aspeed/pinmux-aspeed.h     |  174 ++-
+ 3 files changed, 1789 insertions(+), 1489 deletions(-)
 
-diff --git a/drivers/pinctrl/aspeed/Kconfig b/drivers/pinctrl/aspeed/Kconfig
-index 4cf54172f8fb..de8b185c4fee 100644
---- a/drivers/pinctrl/aspeed/Kconfig
-+++ b/drivers/pinctrl/aspeed/Kconfig
-@@ -23,3 +23,11 @@ config PINCTRL_ASPEED_G5
- 	help
- 	  Say Y here to enable pin controller support for Aspeed's 5th
- 	  generation SoCs. GPIO is provided by a separate GPIO driver.
-+
-+config PINCTRL_ASPEED_G6
-+	bool "Aspeed G6 SoC pin control"
-+	depends on (MACH_ASPEED_G6 || COMPILE_TEST) && OF
-+	select PINCTRL_ASPEED
-+	help
-+	  Say Y here to enable pin controller support for Aspeed's 6th
-+	  generation SoCs. GPIO is provided by a separate GPIO driver.
-diff --git a/drivers/pinctrl/aspeed/Makefile b/drivers/pinctrl/aspeed/Makefile
-index ea8962645e49..489ea1778353 100644
---- a/drivers/pinctrl/aspeed/Makefile
-+++ b/drivers/pinctrl/aspeed/Makefile
-@@ -5,3 +5,4 @@ ccflags-y += $(call cc-option,-Woverride-init)
- obj-$(CONFIG_PINCTRL_ASPEED)	+= pinctrl-aspeed.o pinmux-aspeed.o
- obj-$(CONFIG_PINCTRL_ASPEED_G4)	+= pinctrl-aspeed-g4.o
- obj-$(CONFIG_PINCTRL_ASPEED_G5)	+= pinctrl-aspeed-g5.o
-+obj-$(CONFIG_PINCTRL_ASPEED_G6)	+= pinctrl-aspeed-g6.o
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-new file mode 100644
-index 000000000000..b835c9bf3081
---- /dev/null
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -0,0 +1,2355 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Copyright (C) 2019 IBM Corp. */
-+#include <linux/bitops.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+
-+#include "../core.h"
-+#include "../pinctrl-utils.h"
-+#include "pinctrl-aspeed.h"
-+
-+#define SCU400		0x400 /* Multi-function Pin Control #1  */
-+#define SCU404		0x404 /* Multi-function Pin Control #2  */
-+#define SCU410		0x410 /* Multi-function Pin Control #4  */
-+#define SCU414		0x414 /* Multi-function Pin Control #5  */
-+#define SCU418		0x418 /* Multi-function Pin Control #6  */
-+#define SCU41C		0x41C /* Multi-function Pin Control #7  */
-+#define SCU430		0x430 /* Multi-function Pin Control #8  */
-+#define SCU434		0x434 /* Multi-function Pin Control #9  */
-+#define SCU438		0x438 /* Multi-function Pin Control #10 */
-+#define SCU450		0x450 /* Multi-function Pin Control #14 */
-+#define SCU4B0		0x4B0 /* Multi-function Pin Control #17 */
-+#define SCU4B4		0x4B4 /* Multi-function Pin Control #18 */
-+#define SCU4B8		0x4B8 /* Multi-function Pin Control #19 */
-+#define SCU4BC		0x4BC /* Multi-function Pin Control #20 */
-+#define SCU4D4		0x4D4 /* Multi-function Pin Control #22 */
-+#define SCU4D8		0x4D8 /* Multi-function Pin Control #23 */
-+#define SCU500		0x500 /* Hardware Strap 1 */
-+#define SCU510		0x510 /* Hardware Strap 2 */
-+#define SCU694		0x694 /* Multi-function Pin Control #25 */
-+
-+#define ASPEED_G6_NR_PINS 248
-+
-+#define M24 0
-+SIG_EXPR_LIST_DECL_SESG(M24, MDC3, MDIO3, SIG_DESC_SET(SCU410, 0));
-+SIG_EXPR_LIST_DECL_SESG(M24, SCL11, I2C11, SIG_DESC_SET(SCU4B0, 0));
-+PIN_DECL_2(M24, GPIOA0, MDC3, SCL11);
-+
-+#define M25 1
-+SIG_EXPR_LIST_DECL_SESG(M25, MDIO3, MDIO3, SIG_DESC_SET(SCU410, 1));
-+SIG_EXPR_LIST_DECL_SESG(M25, SDA11, I2C11, SIG_DESC_SET(SCU4B0, 1));
-+PIN_DECL_2(M25, GPIOA1, MDIO3, SDA11);
-+
-+FUNC_GROUP_DECL(MDIO3, M24, M25);
-+FUNC_GROUP_DECL(I2C11, M24, M25);
-+
-+#define L26 2
-+SIG_EXPR_LIST_DECL_SESG(L26, MDC4, MDIO4, SIG_DESC_SET(SCU410, 2));
-+SIG_EXPR_LIST_DECL_SESG(L26, SCL12, I2C12, SIG_DESC_SET(SCU4B0, 2));
-+PIN_DECL_2(L26, GPIOA2, MDC4, SCL12);
-+
-+#define K24 3
-+SIG_EXPR_LIST_DECL_SESG(K24, MDIO4, MDIO4, SIG_DESC_SET(SCU410, 3));
-+SIG_EXPR_LIST_DECL_SESG(K24, SDA12, I2C12, SIG_DESC_SET(SCU4B0, 3));
-+PIN_DECL_2(K24, GPIOA3, MDIO4, SDA12);
-+
-+FUNC_GROUP_DECL(MDIO4, L26, K24);
-+FUNC_GROUP_DECL(I2C12, L26, K24);
-+
-+#define K26 4
-+SIG_EXPR_LIST_DECL_SESG(K26, MACLINK1, MACLINK1, SIG_DESC_SET(SCU410, 4));
-+SIG_EXPR_LIST_DECL_SESG(K26, SCL13, I2C13, SIG_DESC_SET(SCU4B0, 4));
-+PIN_DECL_2(K26, GPIOA4, MACLINK1, SCL13);
-+FUNC_GROUP_DECL(MACLINK1, K26);
-+
-+#define L24 5
-+SIG_EXPR_LIST_DECL_SESG(L24, MACLINK2, MACLINK2, SIG_DESC_SET(SCU410, 5));
-+SIG_EXPR_LIST_DECL_SESG(L24, SDA13, I2C13, SIG_DESC_SET(SCU4B0, 5));
-+PIN_DECL_2(L24, GPIOA5, MACLINK2, SDA13);
-+FUNC_GROUP_DECL(MACLINK2, L24);
-+
-+FUNC_GROUP_DECL(I2C13, K26, L24);
-+
-+#define L23 6
-+SIG_EXPR_LIST_DECL_SESG(L23, MACLINK3, MACLINK3, SIG_DESC_SET(SCU410, 6));
-+SIG_EXPR_LIST_DECL_SESG(L23, SCL14, I2C14, SIG_DESC_SET(SCU4B0, 6));
-+PIN_DECL_2(L23, GPIOA6, MACLINK3, SCL14);
-+FUNC_GROUP_DECL(MACLINK3, L23);
-+
-+#define K25 7
-+SIG_EXPR_LIST_DECL_SESG(K25, MACLINK4, MACLINK4, SIG_DESC_SET(SCU410, 7));
-+SIG_EXPR_LIST_DECL_SESG(K25, SDA14, SDA14, SIG_DESC_SET(SCU4B0, 7));
-+PIN_DECL_2(K25, GPIOA7, MACLINK4, SDA14);
-+FUNC_GROUP_DECL(MACLINK4, K25);
-+
-+FUNC_GROUP_DECL(I2C14, L23, K25);
-+
-+#define J26 8
-+SIG_EXPR_LIST_DECL_SESG(J26, SALT1, SALT1, SIG_DESC_SET(SCU410, 8));
-+SIG_EXPR_LIST_DECL_SESG(J26, LHAD0, LPCHC, SIG_DESC_SET(SCU4B0, 8));
-+PIN_DECL_2(J26, GPIOB0, SALT1, LHAD0);
-+FUNC_GROUP_DECL(SALT1, J26);
-+
-+#define K23 9
-+SIG_EXPR_LIST_DECL_SESG(K23, SALT2, SALT2, SIG_DESC_SET(SCU410, 9));
-+SIG_EXPR_LIST_DECL_SESG(K23, LHAD1, LPCHC, SIG_DESC_SET(SCU4B0, 9));
-+PIN_DECL_2(K23, GPIOB1, SALT2, LHAD1);
-+FUNC_GROUP_DECL(SALT2, K23);
-+
-+#define H26 10
-+SIG_EXPR_LIST_DECL_SESG(H26, SALT3, SALT3, SIG_DESC_SET(SCU410, 10));
-+SIG_EXPR_LIST_DECL_SESG(H26, LHAD2, LPCHC, SIG_DESC_SET(SCU4B0, 10));
-+PIN_DECL_2(H26, GPIOB2, SALT3, LHAD2);
-+FUNC_GROUP_DECL(SALT3, H26);
-+
-+#define J25 11
-+SIG_EXPR_LIST_DECL_SESG(J25, SALT4, SALT4, SIG_DESC_SET(SCU410, 11));
-+SIG_EXPR_LIST_DECL_SESG(J25, LHAD3, LPCHC, SIG_DESC_SET(SCU4B0, 11));
-+PIN_DECL_2(J25, GPIOB3, SALT4, LHAD3);
-+FUNC_GROUP_DECL(SALT4, J25);
-+
-+#define J23 12
-+SIG_EXPR_LIST_DECL_SESG(J23, MDC2, MDIO2, SIG_DESC_SET(SCU410, 12));
-+SIG_EXPR_LIST_DECL_SESG(J23, LHCLK, LPCHC, SIG_DESC_SET(SCU4B0, 12));
-+PIN_DECL_2(J23, GPIOB4, MDC2, LHCLK);
-+
-+#define G26 13
-+SIG_EXPR_LIST_DECL_SESG(G26, MDIO2, MDIO2, SIG_DESC_SET(SCU410, 13));
-+SIG_EXPR_LIST_DECL_SESG(G26, LHFRAME, LPCHC, SIG_DESC_SET(SCU4B0, 13));
-+PIN_DECL_2(G26, GPIOB5, MDIO2, LHFRAME);
-+
-+FUNC_GROUP_DECL(MDIO2, J23, G26);
-+
-+#define H25 14
-+SIG_EXPR_LIST_DECL_SESG(H25, TXD4, TXD4, SIG_DESC_SET(SCU410, 14));
-+SIG_EXPR_LIST_DECL_SESG(H25, LHSIRQ, LHSIRQ, SIG_DESC_SET(SCU4B0, 14));
-+PIN_DECL_2(H25, GPIOB6, TXD4, LHSIRQ);
-+FUNC_GROUP_DECL(TXD4, H25);
-+FUNC_GROUP_DECL(LHSIRQ, H25);
-+
-+#define J24 15
-+SIG_EXPR_LIST_DECL_SESG(J24, RXD4, RXD4, SIG_DESC_SET(SCU410, 15));
-+SIG_EXPR_LIST_DECL_SESG(J24, LHRST, LPCHC, SIG_DESC_SET(SCU4B0, 15));
-+PIN_DECL_2(J24, GPIOB7, RXD4, LHRST);
-+FUNC_GROUP_DECL(RXD4, J24);
-+
-+FUNC_GROUP_DECL(LPCHC, J26, K23, H26, J25, J23, G26, H25, J24);
-+
-+#define H24 16
-+SIG_EXPR_LIST_DECL_SESG(H24, RGMII3TXCK, RGMII3, SIG_DESC_SET(SCU410, 16),
-+			  SIG_DESC_SET(SCU510, 0));
-+SIG_EXPR_LIST_DECL_SESG(H24, RMII3RCLKO, RMII3, SIG_DESC_SET(SCU410, 16));
-+PIN_DECL_2(H24, GPIOC0, RGMII3TXCK, RMII3RCLKO);
-+
-+#define J22 17
-+SIG_EXPR_LIST_DECL_SESG(J22, RGMII3TXCTL, RGMII3, SIG_DESC_SET(SCU410, 17),
-+			  SIG_DESC_SET(SCU510, 0));
-+SIG_EXPR_LIST_DECL_SESG(J22, RMII3TXEN, RMII3, SIG_DESC_SET(SCU410, 17));
-+PIN_DECL_2(J22, GPIOC1, RGMII3TXCTL, RMII3TXEN);
-+
-+#define H22 18
-+SIG_EXPR_LIST_DECL_SESG(H22, RGMII3TXD0, RGMII3, SIG_DESC_SET(SCU410, 18),
-+			  SIG_DESC_SET(SCU510, 0));
-+SIG_EXPR_LIST_DECL_SESG(H22, RMII3TXD0, RMII3, SIG_DESC_SET(SCU410, 18));
-+PIN_DECL_2(H22, GPIOC2, RGMII3TXD0, RMII3TXD0);
-+
-+#define H23 19
-+SIG_EXPR_LIST_DECL_SESG(H23, RGMII3TXD1, RGMII3, SIG_DESC_SET(SCU410, 19),
-+			  SIG_DESC_SET(SCU510, 0));
-+SIG_EXPR_LIST_DECL_SESG(H23, RMII3TXD1, RMII3, SIG_DESC_SET(SCU410, 19));
-+PIN_DECL_2(H23, GPIOC3, RGMII3TXD1, RMII3TXD1);
-+
-+#define G22 20
-+SIG_EXPR_LIST_DECL_SESG(G22, RGMII3TXD2, RGMII3, SIG_DESC_SET(SCU410, 20),
-+			  SIG_DESC_SET(SCU510, 0));
-+PIN_DECL_1(G22, GPIOC4, RGMII3TXD2);
-+
-+#define F22 21
-+SIG_EXPR_LIST_DECL_SESG(F22, RGMII3TXD3, RGMII3, SIG_DESC_SET(SCU410, 21),
-+			  SIG_DESC_SET(SCU510, 0));
-+PIN_DECL_1(F22, GPIOC5, RGMII3TXD3);
-+
-+#define G23 22
-+SIG_EXPR_LIST_DECL_SESG(G23, RGMII3RXCK, RGMII3, SIG_DESC_SET(SCU410, 22),
-+			  SIG_DESC_SET(SCU510, 0));
-+SIG_EXPR_LIST_DECL_SESG(G23, RMII3RCLKI, RMII3, SIG_DESC_SET(SCU410, 22));
-+PIN_DECL_2(G23, GPIOC6, RGMII3RXCK, RMII3RCLKI);
-+
-+#define G24 23
-+SIG_EXPR_LIST_DECL_SESG(G24, RGMII3RXCTL, RGMII3, SIG_DESC_SET(SCU410, 23),
-+			  SIG_DESC_SET(SCU510, 0));
-+PIN_DECL_1(G24, GPIOC7, RGMII3RXCTL);
-+
-+#define F23 24
-+SIG_EXPR_LIST_DECL_SESG(F23, RGMII3RXD0, RGMII3, SIG_DESC_SET(SCU410, 24),
-+			  SIG_DESC_SET(SCU510, 0));
-+SIG_EXPR_LIST_DECL_SESG(F23, RMII3RXD0, RMII3, SIG_DESC_SET(SCU410, 24));
-+PIN_DECL_2(F23, GPIOD0, RGMII3RXD0, RMII3RXD0);
-+
-+#define F26 25
-+SIG_EXPR_LIST_DECL_SESG(F26, RGMII3RXD1, RGMII3, SIG_DESC_SET(SCU410, 25),
-+			  SIG_DESC_SET(SCU510, 0));
-+SIG_EXPR_LIST_DECL_SESG(F26, RMII3RXD1, RMII3, SIG_DESC_SET(SCU410, 25));
-+PIN_DECL_2(F26, GPIOD1, RGMII3RXD1, RMII3RXD1);
-+
-+#define F25 26
-+SIG_EXPR_LIST_DECL_SESG(F25, RGMII3RXD2, RGMII3, SIG_DESC_SET(SCU410, 26),
-+			  SIG_DESC_SET(SCU510, 0));
-+SIG_EXPR_LIST_DECL_SESG(F25, RMII3CRSDV, RMII3, SIG_DESC_SET(SCU410, 26));
-+PIN_DECL_2(F25, GPIOD2, RGMII3RXD2, RMII3CRSDV);
-+
-+#define E26 27
-+SIG_EXPR_LIST_DECL_SESG(E26, RGMII3RXD3, RGMII3, SIG_DESC_SET(SCU410, 27),
-+			  SIG_DESC_SET(SCU510, 0));
-+SIG_EXPR_LIST_DECL_SESG(E26, RMII3RXER, RMII3, SIG_DESC_SET(SCU410, 27));
-+PIN_DECL_2(E26, GPIOD3, RGMII3RXD3, RMII3RXER);
-+
-+FUNC_GROUP_DECL(RGMII3, H24, J22, H22, H23, G22, F22, G23, G24, F23, F26, F25,
-+		E26);
-+FUNC_GROUP_DECL(RMII3, H24, J22, H22, H23, G23, F23, F26, F25, E26);
-+
-+#define F24 28
-+SIG_EXPR_LIST_DECL_SESG(F24, NCTS3, NCTS3, SIG_DESC_SET(SCU410, 28));
-+SIG_EXPR_LIST_DECL_SESG(F24, RGMII4TXCK, RGMII4, SIG_DESC_SET(SCU4B0, 28),
-+			  SIG_DESC_SET(SCU510, 1));
-+SIG_EXPR_LIST_DECL_SESG(F24, RMII4RCLKO, RMII4, SIG_DESC_SET(SCU4B0, 28));
-+PIN_DECL_3(F24, GPIOD4, NCTS3, RGMII4TXCK, RMII4RCLKO);
-+FUNC_GROUP_DECL(NCTS3, F24);
-+
-+#define E23 29
-+SIG_EXPR_LIST_DECL_SESG(E23, NDCD3, NDCD3, SIG_DESC_SET(SCU410, 29));
-+SIG_EXPR_LIST_DECL_SESG(E23, RGMII4TXCTL, RGMII4, SIG_DESC_SET(SCU4B0, 29),
-+			  SIG_DESC_SET(SCU510, 1));
-+SIG_EXPR_LIST_DECL_SESG(E23, RMII4TXEN, RMII4, SIG_DESC_SET(SCU4B0, 29));
-+PIN_DECL_3(E23, GPIOD5, NDCD3, RGMII4TXCTL, RMII4TXEN);
-+FUNC_GROUP_DECL(NDCD3, E23);
-+
-+#define E24 30
-+SIG_EXPR_LIST_DECL_SESG(E24, NDSR3, NDSR3, SIG_DESC_SET(SCU410, 30));
-+SIG_EXPR_LIST_DECL_SESG(E24, RGMII4TXD0, RGMII4, SIG_DESC_SET(SCU4B0, 30),
-+			  SIG_DESC_SET(SCU510, 1));
-+SIG_EXPR_LIST_DECL_SESG(E24, RMII4TXD0, RMII4, SIG_DESC_SET(SCU4B0, 30));
-+PIN_DECL_3(E24, GPIOD6, NDSR3, RGMII4TXD0, RMII4TXD0);
-+FUNC_GROUP_DECL(NDSR3, E24);
-+
-+#define E25 31
-+SIG_EXPR_LIST_DECL_SESG(E25, NRI3, NRI3, SIG_DESC_SET(SCU410, 31));
-+SIG_EXPR_LIST_DECL_SESG(E25, RGMII4TXD1, RGMII4, SIG_DESC_SET(SCU4B0, 31),
-+			  SIG_DESC_SET(SCU510, 1));
-+SIG_EXPR_LIST_DECL_SESG(E25, RMII4TXD1, RMII4, SIG_DESC_SET(SCU4B0, 31));
-+PIN_DECL_3(E25, GPIOD7, NRI3, RGMII4TXD1, RMII4TXD1);
-+FUNC_GROUP_DECL(NRI3, E25);
-+
-+#define D26 32
-+SIG_EXPR_LIST_DECL_SESG(D26, NDTR3, NDTR3, SIG_DESC_SET(SCU414, 0));
-+SIG_EXPR_LIST_DECL_SESG(D26, RGMII4TXD2, RGMII4, SIG_DESC_SET(SCU4B4, 0),
-+			  SIG_DESC_SET(SCU510, 1));
-+PIN_DECL_2(D26, GPIOE0, NDTR3, RGMII4TXD2);
-+FUNC_GROUP_DECL(NDTR3, D26);
-+
-+#define D24 33
-+SIG_EXPR_LIST_DECL_SESG(D24, NRTS3, NRTS3, SIG_DESC_SET(SCU414, 1));
-+SIG_EXPR_LIST_DECL_SESG(D24, RGMII4TXD3, RGMII4, SIG_DESC_SET(SCU4B4, 1),
-+			  SIG_DESC_SET(SCU510, 1));
-+PIN_DECL_2(D24, GPIOE1, NRTS3, RGMII4TXD3);
-+FUNC_GROUP_DECL(NRTS3, D24);
-+
-+#define C25 34
-+SIG_EXPR_LIST_DECL_SESG(C25, NCTS4, NCTS4, SIG_DESC_SET(SCU414, 2));
-+SIG_EXPR_LIST_DECL_SESG(C25, RGMII4RXCK, RGMII4, SIG_DESC_SET(SCU4B4, 2),
-+			  SIG_DESC_SET(SCU510, 1));
-+SIG_EXPR_LIST_DECL_SESG(C25, RMII4RCLKI, RMII4, SIG_DESC_SET(SCU4B4, 2));
-+PIN_DECL_3(C25, GPIOE2, NCTS4, RGMII4RXCK, RMII4RCLKI);
-+FUNC_GROUP_DECL(NCTS4, C25);
-+
-+#define C26 35
-+SIG_EXPR_LIST_DECL_SESG(C26, NDCD4, NDCD4, SIG_DESC_SET(SCU414, 3));
-+SIG_EXPR_LIST_DECL_SESG(C26, RGMII4RXCTL, RGMII4, SIG_DESC_SET(SCU4B4, 3),
-+			  SIG_DESC_SET(SCU510, 1));
-+PIN_DECL_2(C26, GPIOE3, NDCD4, RGMII4RXCTL);
-+FUNC_GROUP_DECL(NDCD4, C26);
-+
-+#define C24 36
-+SIG_EXPR_LIST_DECL_SESG(C24, NDSR4, NDSR4, SIG_DESC_SET(SCU414, 4));
-+SIG_EXPR_LIST_DECL_SESG(C24, RGMII4RXD0, RGMII4, SIG_DESC_SET(SCU4B4, 4),
-+			  SIG_DESC_SET(SCU510, 1));
-+SIG_EXPR_LIST_DECL_SESG(C24, RMII4RXD0, RMII4, SIG_DESC_SET(SCU4B4, 4));
-+PIN_DECL_3(C24, GPIOE4, NDSR4, RGMII4RXD0, RMII4RXD0);
-+FUNC_GROUP_DECL(NDSR4, C24);
-+
-+#define B26 37
-+SIG_EXPR_LIST_DECL_SESG(B26, NRI4, NRI4, SIG_DESC_SET(SCU414, 5));
-+SIG_EXPR_LIST_DECL_SESG(B26, RGMII4RXD1, RGMII4, SIG_DESC_SET(SCU4B4, 5),
-+			  SIG_DESC_SET(SCU510, 1));
-+SIG_EXPR_LIST_DECL_SESG(B26, RMII4RXD1, RMII4, SIG_DESC_SET(SCU4B4, 5));
-+PIN_DECL_3(B26, GPIOE5, NRI4, RGMII4RXD1, RMII4RXD1);
-+FUNC_GROUP_DECL(NRI4, B26);
-+
-+#define B25 38
-+SIG_EXPR_LIST_DECL_SESG(B25, NDTR4, NDTR4, SIG_DESC_SET(SCU414, 6));
-+SIG_EXPR_LIST_DECL_SESG(B25, RGMII4RXD2, RGMII4, SIG_DESC_SET(SCU4B4, 6),
-+			  SIG_DESC_SET(SCU510, 1));
-+SIG_EXPR_LIST_DECL_SESG(B25, RMII4CRSDV, RMII4, SIG_DESC_SET(SCU4B4, 6));
-+PIN_DECL_3(B25, GPIOE6, NDTR4, RGMII4RXD2, RMII4CRSDV);
-+FUNC_GROUP_DECL(NDTR4, B25);
-+
-+#define B24 39
-+SIG_EXPR_LIST_DECL_SESG(B24, NRTS4, NRTS4, SIG_DESC_SET(SCU414, 7));
-+SIG_EXPR_LIST_DECL_SESG(B24, RGMII4RXD3, RGMII4, SIG_DESC_SET(SCU4B4, 7),
-+			  SIG_DESC_SET(SCU510, 1));
-+SIG_EXPR_LIST_DECL_SESG(B24, RMII4RXER, RMII4, SIG_DESC_SET(SCU4B4, 7));
-+PIN_DECL_3(B24, GPIOE7, NRTS4, RGMII4RXD3, RMII4RXER);
-+FUNC_GROUP_DECL(NRTS4, B24);
-+
-+FUNC_GROUP_DECL(RGMII4, F24, E23, E24, E25, D26, D24, C25, C26, C24, B26, B25,
-+		B24);
-+FUNC_GROUP_DECL(RMII4, F24, E23, E24, E25, C25, C24, B26, B25, B24);
-+
-+#define D22 40
-+SIG_EXPR_LIST_DECL_SESG(D22, SD1CLK, SD1, SIG_DESC_SET(SCU414, 8));
-+SIG_EXPR_LIST_DECL_SEMG(D22, PWM8, PWM8G0, PWM8, SIG_DESC_SET(SCU414, 8));
-+PIN_DECL_2(D22, GPIOF0, SD1CLK, PWM8);
-+GROUP_DECL(PWM8G0, D22);
-+
-+#define E22 41
-+SIG_EXPR_LIST_DECL_SESG(E22, SD1CMD, SD1, SIG_DESC_SET(SCU414, 9));
-+SIG_EXPR_LIST_DECL_SEMG(E22, PWM9, PWM9G0, PWM9, SIG_DESC_SET(SCU4B4, 9));
-+PIN_DECL_2(E22, GPIOF1, SD1CMD, PWM9);
-+GROUP_DECL(PWM9G0, E22);
-+
-+#define D23 42
-+SIG_EXPR_LIST_DECL_SESG(D23, SD1DAT0, SD1, SIG_DESC_SET(SCU414, 10));
-+SIG_EXPR_LIST_DECL_SEMG(D23, PWM10, PWM10G0, PWM10, SIG_DESC_SET(SCU4B4, 10));
-+PIN_DECL_2(D23, GPIOF2, SD1DAT0, PWM10);
-+GROUP_DECL(PWM10G0, D23);
-+
-+#define C23 43
-+SIG_EXPR_LIST_DECL_SESG(C23, SD1DAT1, SD1, SIG_DESC_SET(SCU414, 11));
-+SIG_EXPR_LIST_DECL_SEMG(C23, PWM11, PWM11G0, PWM11, SIG_DESC_SET(SCU4B4, 11));
-+PIN_DECL_2(C23, GPIOF3, SD1DAT1, PWM11);
-+GROUP_DECL(PWM11G0, C23);
-+
-+#define C22 44
-+SIG_EXPR_LIST_DECL_SESG(C22, SD1DAT2, SD1, SIG_DESC_SET(SCU414, 12));
-+SIG_EXPR_LIST_DECL_SEMG(C22, PWM12, PWM12G0, PWM12, SIG_DESC_SET(SCU4B4, 12));
-+PIN_DECL_2(C22, GPIOF4, SD1DAT2, PWM12);
-+GROUP_DECL(PWM12G0, C22);
-+
-+#define A25 45
-+SIG_EXPR_LIST_DECL_SESG(A25, SD1DAT3, SD1, SIG_DESC_SET(SCU414, 13));
-+SIG_EXPR_LIST_DECL_SEMG(A25, PWM13, PWM13G0, PWM13, SIG_DESC_SET(SCU4B4, 13));
-+PIN_DECL_2(A25, GPIOF5, SD1DAT3, PWM13);
-+GROUP_DECL(PWM13G0, A25);
-+
-+#define A24 46
-+SIG_EXPR_LIST_DECL_SESG(A24, SD1CD, SD1, SIG_DESC_SET(SCU414, 14));
-+SIG_EXPR_LIST_DECL_SEMG(A24, PWM14, PWM14G0, PWM14, SIG_DESC_SET(SCU4B4, 14));
-+PIN_DECL_2(A24, GPIOF6, SD1CD, PWM14);
-+GROUP_DECL(PWM14G0, A24);
-+
-+#define A23 47
-+SIG_EXPR_LIST_DECL_SESG(A23, SD1WP, SD1, SIG_DESC_SET(SCU414, 15));
-+SIG_EXPR_LIST_DECL_SEMG(A23, PWM15, PWM15G0, PWM15, SIG_DESC_SET(SCU4B4, 15));
-+PIN_DECL_2(A23, GPIOF7, SD1WP, PWM15);
-+GROUP_DECL(PWM15G0, A23);
-+
-+FUNC_GROUP_DECL(SD1, D22, E22, D23, C23, C22, A25, A24, A23);
-+
-+#define E21 48
-+SIG_EXPR_LIST_DECL_SESG(E21, TXD6, UART6, SIG_DESC_SET(SCU414, 16));
-+SIG_EXPR_LIST_DECL_SESG(E21, SD2CLK, SD2, SIG_DESC_SET(SCU4B4, 16),
-+			  SIG_DESC_SET(SCU450, 1));
-+SIG_EXPR_LIST_DECL_SEMG(E21, SALT9, SALT9G0, SALT9, SIG_DESC_SET(SCU694, 16));
-+PIN_DECL_3(E21, GPIOG0, TXD6, SD2CLK, SALT9);
-+GROUP_DECL(SALT9G0, E21);
-+
-+#define B22 49
-+SIG_EXPR_LIST_DECL_SESG(B22, RXD6, UART6, SIG_DESC_SET(SCU414, 17));
-+SIG_EXPR_LIST_DECL_SESG(B22, SD2CMD, SD2, SIG_DESC_SET(SCU4B4, 17),
-+			  SIG_DESC_SET(SCU450, 1));
-+SIG_EXPR_LIST_DECL_SEMG(B22, SALT10, SALT10G0, SALT10,
-+			SIG_DESC_SET(SCU694, 17));
-+PIN_DECL_3(B22, GPIOG1, RXD6, SD2CMD, SALT10);
-+GROUP_DECL(SALT10G0, B22);
-+
-+FUNC_GROUP_DECL(UART6, E21, B22);
-+
-+#define C21 50
-+SIG_EXPR_LIST_DECL_SESG(C21, TXD7, UART7, SIG_DESC_SET(SCU414, 18));
-+SIG_EXPR_LIST_DECL_SESG(C21, SD2DAT0, SD2, SIG_DESC_SET(SCU4B4, 18),
-+			  SIG_DESC_SET(SCU450, 1));
-+SIG_EXPR_LIST_DECL_SEMG(C21, SALT11, SALT11G0, SALT11,
-+			SIG_DESC_SET(SCU694, 18));
-+PIN_DECL_3(C21, GPIOG2, TXD7, SD2DAT0, SALT11);
-+GROUP_DECL(SALT11G0, C21);
-+
-+#define A22 51
-+SIG_EXPR_LIST_DECL_SESG(A22, RXD7, UART7, SIG_DESC_SET(SCU414, 19));
-+SIG_EXPR_LIST_DECL_SESG(A22, SD2DAT1, SD2, SIG_DESC_SET(SCU4B4, 19),
-+			  SIG_DESC_SET(SCU450, 1));
-+SIG_EXPR_LIST_DECL_SEMG(A22, SALT12, SALT12G0, SALT12,
-+			SIG_DESC_SET(SCU694, 19));
-+PIN_DECL_3(A22, GPIOG3, RXD7, SD2DAT1, SALT12);
-+GROUP_DECL(SALT12G0, A22);
-+
-+FUNC_GROUP_DECL(UART7, C21, A22);
-+
-+#define A21 52
-+SIG_EXPR_LIST_DECL_SESG(A21, TXD8, UART8, SIG_DESC_SET(SCU414, 20));
-+SIG_EXPR_LIST_DECL_SESG(A21, SD2DAT2, SD2, SIG_DESC_SET(SCU4B4, 20),
-+			  SIG_DESC_SET(SCU450, 1));
-+SIG_EXPR_LIST_DECL_SEMG(A21, SALT13, SALT13G0, SALT13,
-+			SIG_DESC_SET(SCU694, 20));
-+PIN_DECL_3(A21, GPIOG4, TXD8, SD2DAT2, SALT13);
-+GROUP_DECL(SALT13G0, A21);
-+
-+#define E20 53
-+SIG_EXPR_LIST_DECL_SESG(E20, RXD8, UART8, SIG_DESC_SET(SCU414, 21));
-+SIG_EXPR_LIST_DECL_SESG(E20, SD2DAT3, SD2, SIG_DESC_SET(SCU4B4, 21),
-+			  SIG_DESC_SET(SCU450, 1));
-+SIG_EXPR_LIST_DECL_SEMG(E20, SALT14, SALT14G0, SALT14,
-+			SIG_DESC_SET(SCU694, 21));
-+PIN_DECL_3(E20, GPIOG5, RXD8, SD2DAT3, SALT14);
-+GROUP_DECL(SALT14G0, E20);
-+
-+FUNC_GROUP_DECL(UART8, A21, E20);
-+
-+#define D21 54
-+SIG_EXPR_LIST_DECL_SESG(D21, TXD9, UART9, SIG_DESC_SET(SCU414, 22));
-+SIG_EXPR_LIST_DECL_SESG(D21, SD2CD, SD2, SIG_DESC_SET(SCU4B4, 22),
-+			  SIG_DESC_SET(SCU450, 1));
-+SIG_EXPR_LIST_DECL_SEMG(D21, SALT15, SALT15G0, SALT15,
-+			SIG_DESC_SET(SCU694, 22));
-+PIN_DECL_3(D21, GPIOG6, TXD9, SD2CD, SALT15);
-+GROUP_DECL(SALT15G0, D21);
-+
-+#define B21 55
-+SIG_EXPR_LIST_DECL_SESG(B21, RXD9, UART9, SIG_DESC_SET(SCU414, 23));
-+SIG_EXPR_LIST_DECL_SESG(B21, SD2WP, SD2, SIG_DESC_SET(SCU4B4, 23),
-+			SIG_DESC_SET(SCU450, 1));
-+SIG_EXPR_LIST_DECL_SEMG(B21, SALT16, SALT16G0, SALT16,
-+			SIG_DESC_SET(SCU694, 23));
-+PIN_DECL_3(B21, GPIOG7, RXD9, SD2WP, SALT16);
-+GROUP_DECL(SALT16G0, B21);
-+
-+FUNC_GROUP_DECL(UART9, D21, B21);
-+
-+FUNC_GROUP_DECL(SD2, E21, B22, C21, A22, A21, E20, D21, B21);
-+
-+#define A18 56
-+SIG_EXPR_LIST_DECL_SESG(A18, SGPM1CLK, SGPM1, SIG_DESC_SET(SCU414, 24));
-+PIN_DECL_1(A18, GPIOH0, SGPM1CLK);
-+
-+#define B18 57
-+SIG_EXPR_LIST_DECL_SESG(B18, SGPM1LD, SGPM1, SIG_DESC_SET(SCU414, 25));
-+PIN_DECL_1(B18, GPIOH1, SGPM1LD);
-+
-+#define C18 58
-+SIG_EXPR_LIST_DECL_SESG(C18, SGPM1O, SGPM1, SIG_DESC_SET(SCU414, 26));
-+PIN_DECL_1(C18, GPIOH2, SGPM1O);
-+
-+#define A17 59
-+SIG_EXPR_LIST_DECL_SESG(A17, SGPM1I, SGPM1, SIG_DESC_SET(SCU414, 27));
-+PIN_DECL_1(A17, GPIOH3, SGPM1I);
-+
-+FUNC_GROUP_DECL(SGPM1, A18, B18, C18, A17);
-+
-+#define D18 60
-+SIG_EXPR_LIST_DECL_SESG(D18, SGPS1CK, SGPS1, SIG_DESC_SET(SCU414, 28));
-+SIG_EXPR_LIST_DECL_SESG(D18, SCL15, I2C15, SIG_DESC_SET(SCU4B4, 28));
-+PIN_DECL_2(D18, GPIOH4, SGPS1CK, SCL15);
-+
-+#define B17 61
-+SIG_EXPR_LIST_DECL_SESG(B17, SGPS1LD, SGPS1, SIG_DESC_SET(SCU414, 29));
-+SIG_EXPR_LIST_DECL_SESG(B17, SDA15, I2C15, SIG_DESC_SET(SCU4B4, 29));
-+PIN_DECL_2(B17, GPIOH5, SGPS1LD, SDA15);
-+
-+FUNC_GROUP_DECL(I2C15, D18, B17);
-+
-+#define C17 62
-+SIG_EXPR_LIST_DECL_SESG(C17, SGPS1O, SGPS1, SIG_DESC_SET(SCU414, 30));
-+SIG_EXPR_LIST_DECL_SESG(C17, SCL16, I2C16, SIG_DESC_SET(SCU4B4, 30));
-+PIN_DECL_2(C17, GPIOH6, SGPS1O, SCL16);
-+
-+#define E18 63
-+SIG_EXPR_LIST_DECL_SESG(E18, SGPS1I, SGPS1, SIG_DESC_SET(SCU414, 31));
-+SIG_EXPR_LIST_DECL_SESG(E18, SDA16, I2C16, SIG_DESC_SET(SCU4B4, 31));
-+PIN_DECL_2(E18, GPIOH7, SGPS1I, SDA16);
-+
-+FUNC_GROUP_DECL(I2C16, C17, E18);
-+FUNC_GROUP_DECL(SGPS1, D18, B17, C17, E18);
-+
-+#define D17 64
-+SIG_EXPR_LIST_DECL_SESG(D17, MTRSTN, JTAGM, SIG_DESC_SET(SCU418, 0));
-+SIG_EXPR_LIST_DECL_SEMG(D17, TXD12, UART12G0, UART12, SIG_DESC_SET(SCU4B8, 0));
-+PIN_DECL_2(D17, GPIOI0, MTRSTN, TXD12);
-+
-+#define A16 65
-+SIG_EXPR_LIST_DECL_SESG(A16, MTDI, JTAGM, SIG_DESC_SET(SCU418, 1));
-+SIG_EXPR_LIST_DECL_SEMG(A16, RXD12, UART12G0, UART12, SIG_DESC_SET(SCU4B8, 1));
-+PIN_DECL_2(A16, GPIOI1, MTDI, RXD12);
-+
-+GROUP_DECL(UART12G0, D17, A16);
-+
-+#define E17 66
-+SIG_EXPR_LIST_DECL_SESG(E17, MTCK, JTAGM, SIG_DESC_SET(SCU418, 2));
-+SIG_EXPR_LIST_DECL_SEMG(E17, TXD13, UART13G0, UART13, SIG_DESC_SET(SCU4B8, 2));
-+PIN_DECL_2(E17, GPIOI2, MTCK, TXD13);
-+
-+#define D16 67
-+SIG_EXPR_LIST_DECL_SESG(D16, MTMS, JTAGM, SIG_DESC_SET(SCU418, 3));
-+SIG_EXPR_LIST_DECL_SEMG(D16, RXD13, UART13G0, UART13, SIG_DESC_SET(SCU4B8, 3));
-+PIN_DECL_2(D16, GPIOI3, MTMS, RXD13);
-+
-+GROUP_DECL(UART13G0, E17, D16);
-+
-+#define C16 68
-+SIG_EXPR_LIST_DECL_SESG(C16, MTDO, JTAGM, SIG_DESC_SET(SCU418, 4));
-+PIN_DECL_1(C16, GPIOI4, MTDO);
-+
-+FUNC_GROUP_DECL(JTAGM, D17, A16, E17, D16, C16);
-+
-+#define E16 69
-+SIG_EXPR_LIST_DECL_SESG(E16, SIOPBO, SIOPBO, SIG_DESC_SET(SCU418, 5));
-+PIN_DECL_1(E16, GPIOI5, SIOPBO);
-+FUNC_GROUP_DECL(SIOPBO, E16);
-+
-+#define B16 70
-+SIG_EXPR_LIST_DECL_SESG(B16, SIOPBI, SIOPBI, SIG_DESC_SET(SCU418, 6));
-+PIN_DECL_1(B16, GPIOI6, SIOPBI);
-+FUNC_GROUP_DECL(SIOPBI, B16);
-+
-+#define A15 71
-+SIG_EXPR_LIST_DECL_SESG(A15, BMCINT, BMCINT, SIG_DESC_SET(SCU418, 7));
-+SIG_EXPR_LIST_DECL_SESG(A15, SIOSCI, SIOSCI, SIG_DESC_SET(SCU4B8, 7));
-+PIN_DECL_2(A15, GPIOI7, BMCINT, SIOSCI);
-+FUNC_GROUP_DECL(BMCINT, A15);
-+FUNC_GROUP_DECL(SIOSCI, A15);
-+
-+#define B20 72
-+SIG_EXPR_LIST_DECL_SEMG(B20, I3C3SCL, HVI3C3, I3C3, SIG_DESC_SET(SCU418, 8));
-+SIG_EXPR_LIST_DECL_SESG(B20, SCL1, I2C1, SIG_DESC_SET(SCU4B8, 8));
-+PIN_DECL_2(B20, GPIOJ0, I3C3SCL, SCL1);
-+
-+#define A20 73
-+SIG_EXPR_LIST_DECL_SEMG(A20, I3C3SDA, HVI3C3, I3C3, SIG_DESC_SET(SCU418, 9));
-+SIG_EXPR_LIST_DECL_SESG(A20, SDA1, I2C1, SIG_DESC_SET(SCU4B8, 9));
-+PIN_DECL_2(A20, GPIOJ1, I3C3SDA, SDA1);
-+
-+GROUP_DECL(HVI3C3, B20, A20);
-+FUNC_GROUP_DECL(I2C1, B20, A20);
-+
-+#define E19 74
-+SIG_EXPR_LIST_DECL_SEMG(E19, I3C4SCL, HVI3C4, I3C4, SIG_DESC_SET(SCU418, 10));
-+SIG_EXPR_LIST_DECL_SESG(E19, SCL2, I2C2, SIG_DESC_SET(SCU4B8, 10));
-+PIN_DECL_2(E19, GPIOJ2, I3C4SCL, SCL2);
-+
-+#define D20 75
-+SIG_EXPR_LIST_DECL_SEMG(D20, I3C4SDA, HVI3C4, I3C4, SIG_DESC_SET(SCU418, 11));
-+SIG_EXPR_LIST_DECL_SESG(D20, SDA2, I2C2, SIG_DESC_SET(SCU4B8, 11));
-+PIN_DECL_2(D20, GPIOJ3, I3C4SDA, SDA2);
-+
-+GROUP_DECL(HVI3C4, E19, D20);
-+FUNC_GROUP_DECL(I2C2, E19, D20);
-+
-+#define C19 76
-+SIG_EXPR_LIST_DECL_SESG(C19, I3C5SCL, I3C5, SIG_DESC_SET(SCU418, 12));
-+SIG_EXPR_LIST_DECL_SESG(C19, SCL3, I2C3, SIG_DESC_SET(SCU4B8, 12));
-+PIN_DECL_2(C19, GPIOJ4, I3C5SCL, SCL3);
-+
-+#define A19 77
-+SIG_EXPR_LIST_DECL_SESG(A19, I3C5SDA, I3C5, SIG_DESC_SET(SCU418, 13));
-+SIG_EXPR_LIST_DECL_SESG(A19, SDA3, I2C3, SIG_DESC_SET(SCU4B8, 13));
-+PIN_DECL_2(A19, GPIOJ5, I3C5SDA, SDA3);
-+
-+FUNC_GROUP_DECL(I3C5, C19, A19);
-+FUNC_GROUP_DECL(I2C3, C19, A19);
-+
-+#define C20 78
-+SIG_EXPR_LIST_DECL_SESG(C20, I3C6SCL, I3C6, SIG_DESC_SET(SCU418, 14));
-+SIG_EXPR_LIST_DECL_SESG(C20, SCL4, I2C4, SIG_DESC_SET(SCU4B8, 14));
-+PIN_DECL_2(C20, GPIOJ6, I3C6SCL, SCL4);
-+
-+#define D19 79
-+SIG_EXPR_LIST_DECL_SESG(D19, I3C6SDA, I3C6, SIG_DESC_SET(SCU418, 15));
-+SIG_EXPR_LIST_DECL_SESG(D19, SDA4, I2C4, SIG_DESC_SET(SCU4B8, 15));
-+PIN_DECL_2(D19, GPIOJ7, I3C6SDA, SDA4);
-+
-+FUNC_GROUP_DECL(I3C6, C20, D19);
-+FUNC_GROUP_DECL(I2C4, C20, D19);
-+
-+#define A11 80
-+SIG_EXPR_LIST_DECL_SESG(A11, SCL5, I2C5, SIG_DESC_SET(SCU418, 16));
-+PIN_DECL_1(A11, GPIOK0, SCL5);
-+
-+#define C11 81
-+SIG_EXPR_LIST_DECL_SESG(C11, SDA5, I2C5, SIG_DESC_SET(SCU418, 17));
-+PIN_DECL_1(C11, GPIOK1, SDA5);
-+
-+FUNC_GROUP_DECL(I2C5, A11, C11);
-+
-+#define D12 82
-+SIG_EXPR_LIST_DECL_SESG(D12, SCL6, I2C6, SIG_DESC_SET(SCU418, 18));
-+PIN_DECL_1(D12, GPIOK2, SCL6);
-+
-+#define E13 83
-+SIG_EXPR_LIST_DECL_SESG(E13, SDA6, I2C6, SIG_DESC_SET(SCU418, 19));
-+PIN_DECL_1(E13, GPIOK3, SDA6);
-+
-+FUNC_GROUP_DECL(I2C6, D12, E13);
-+
-+#define D11 84
-+SIG_EXPR_LIST_DECL_SESG(D11, SCL7, I2C7, SIG_DESC_SET(SCU418, 20));
-+PIN_DECL_1(D11, GPIOK4, SCL7);
-+
-+#define E11 85
-+SIG_EXPR_LIST_DECL_SESG(E11, SDA7, I2C7, SIG_DESC_SET(SCU418, 21));
-+PIN_DECL_1(E11, GPIOK5, SDA7);
-+
-+FUNC_GROUP_DECL(I2C7, D11, E11);
-+
-+#define F13 86
-+SIG_EXPR_LIST_DECL_SESG(F13, SCL8, I2C8, SIG_DESC_SET(SCU418, 22));
-+PIN_DECL_1(F13, GPIOK6, SCL8);
-+
-+#define E12 87
-+SIG_EXPR_LIST_DECL_SESG(E12, SDA8, I2C8, SIG_DESC_SET(SCU418, 23));
-+PIN_DECL_1(E12, GPIOK7, SDA8);
-+
-+FUNC_GROUP_DECL(I2C8, F13, E12);
-+
-+#define D15 88
-+SIG_EXPR_LIST_DECL_SESG(D15, SCL9, I2C9, SIG_DESC_SET(SCU418, 24));
-+PIN_DECL_1(D15, GPIOL0, SCL9);
-+
-+#define A14 89
-+SIG_EXPR_LIST_DECL_SESG(A14, SDA9, I2C9, SIG_DESC_SET(SCU418, 25));
-+PIN_DECL_1(A14, GPIOL1, SDA9);
-+
-+FUNC_GROUP_DECL(I2C9, D15, A14);
-+
-+#define E15 90
-+SIG_EXPR_LIST_DECL_SESG(E15, SCL10, I2C10, SIG_DESC_SET(SCU418, 26));
-+PIN_DECL_1(E15, GPIOL2, SCL10);
-+
-+#define A13 91
-+SIG_EXPR_LIST_DECL_SESG(A13, SDA10, I2C10, SIG_DESC_SET(SCU418, 27));
-+PIN_DECL_1(A13, GPIOL3, SDA10);
-+
-+FUNC_GROUP_DECL(I2C10, E15, A13);
-+
-+#define C15 92
-+SSSF_PIN_DECL(C15, GPIOL4, TXD3, SIG_DESC_SET(SCU418, 28));
-+
-+#define F15 93
-+SSSF_PIN_DECL(F15, GPIOL5, RXD3, SIG_DESC_SET(SCU418, 29));
-+
-+#define B14 94
-+SSSF_PIN_DECL(B14, GPIOL6, VGAHS, SIG_DESC_SET(SCU418, 30));
-+
-+#define C14 95
-+SSSF_PIN_DECL(C14, GPIOL7, VGAVS, SIG_DESC_SET(SCU418, 31));
-+
-+#define D14 96
-+SSSF_PIN_DECL(D14, GPIOM0, NCTS1, SIG_DESC_SET(SCU41C, 0));
-+
-+#define B13 97
-+SSSF_PIN_DECL(B13, GPIOM1, NDCD1, SIG_DESC_SET(SCU41C, 1));
-+
-+#define A12 98
-+SSSF_PIN_DECL(A12, GPIOM2, NDSR1, SIG_DESC_SET(SCU41C, 2));
-+
-+#define E14 99
-+SSSF_PIN_DECL(E14, GPIOM3, NRI1, SIG_DESC_SET(SCU41C, 3));
-+
-+#define B12 100
-+SSSF_PIN_DECL(B12, GPIOM4, NDTR1, SIG_DESC_SET(SCU41C, 4));
-+
-+#define C12 101
-+SSSF_PIN_DECL(C12, GPIOM5, NRTS1, SIG_DESC_SET(SCU41C, 5));
-+
-+#define C13 102
-+SSSF_PIN_DECL(C13, GPIOM6, TXD1, SIG_DESC_SET(SCU41C, 6));
-+
-+#define D13 103
-+SSSF_PIN_DECL(D13, GPIOM7, RXD1, SIG_DESC_SET(SCU41C, 7));
-+
-+#define P25 104
-+SSSF_PIN_DECL(P25, GPION0, NCTS2, SIG_DESC_SET(SCU41C, 8));
-+
-+#define N23 105
-+SSSF_PIN_DECL(N23, GPION1, NDCD2, SIG_DESC_SET(SCU41C, 9));
-+
-+#define N25 106
-+SSSF_PIN_DECL(N25, GPION2, NDSR2, SIG_DESC_SET(SCU41C, 10));
-+
-+#define N24 107
-+SSSF_PIN_DECL(N24, GPION3, NRI2, SIG_DESC_SET(SCU41C, 11));
-+
-+#define P26 108
-+SSSF_PIN_DECL(P26, GPION4, NDTR2, SIG_DESC_SET(SCU41C, 12));
-+
-+#define M23 109
-+SSSF_PIN_DECL(M23, GPION5, NRTS2, SIG_DESC_SET(SCU41C, 13));
-+
-+#define N26 110
-+SSSF_PIN_DECL(N26, GPION6, TXD2, SIG_DESC_SET(SCU41C, 14));
-+
-+#define M26 111
-+SSSF_PIN_DECL(M26, GPION7, RXD2, SIG_DESC_SET(SCU41C, 15));
-+
-+#define AD26 112
-+SSSF_PIN_DECL(AD26, GPIOO0, PWM0, SIG_DESC_SET(SCU41C, 16));
-+
-+#define AD22 113
-+SSSF_PIN_DECL(AD22, GPIOO1, PWM1, SIG_DESC_SET(SCU41C, 17));
-+
-+#define AD23 114
-+SSSF_PIN_DECL(AD23, GPIOO2, PWM2, SIG_DESC_SET(SCU41C, 18));
-+
-+#define AD24 115
-+SSSF_PIN_DECL(AD24, GPIOO3, PWM3, SIG_DESC_SET(SCU41C, 19));
-+
-+#define AD25 116
-+SSSF_PIN_DECL(AD25, GPIOO4, PWM4, SIG_DESC_SET(SCU41C, 20));
-+
-+#define AC22 117
-+SSSF_PIN_DECL(AC22, GPIOO5, PWM5, SIG_DESC_SET(SCU41C, 21));
-+
-+#define AC24 118
-+SSSF_PIN_DECL(AC24, GPIOO6, PWM6, SIG_DESC_SET(SCU41C, 22));
-+
-+#define AC23 119
-+SSSF_PIN_DECL(AC23, GPIOO7, PWM7, SIG_DESC_SET(SCU41C, 23));
-+
-+#define AB22 120
-+SIG_EXPR_LIST_DECL_SEMG(AB22, PWM8, PWM8G1, PWM8, SIG_DESC_SET(SCU41C, 24));
-+SIG_EXPR_LIST_DECL_SESG(AB22, THRUIN0, THRU0, SIG_DESC_SET(SCU4BC, 24));
-+PIN_DECL_2(AB22, GPIOP0, PWM8, THRUIN0);
-+GROUP_DECL(PWM8G1, AB22);
-+FUNC_DECL_2(PWM8, PWM8G0, PWM8G1);
-+
-+#define W24 121
-+SIG_EXPR_LIST_DECL_SEMG(W24, PWM9, PWM9G1, PWM9, SIG_DESC_SET(SCU41C, 25));
-+SIG_EXPR_LIST_DECL_SESG(W24, THRUOUT0, THRU0, SIG_DESC_SET(SCU4BC, 25));
-+PIN_DECL_2(W24, GPIOP1, PWM9, THRUOUT0);
-+
-+FUNC_GROUP_DECL(THRU0, AB22, W24);
-+
-+GROUP_DECL(PWM9G1, W24);
-+FUNC_DECL_2(PWM9, PWM9G0, PWM9G1);
-+
-+#define AA23 122
-+SIG_EXPR_LIST_DECL_SEMG(AA23, PWM10, PWM10G1, PWM10, SIG_DESC_SET(SCU41C, 26));
-+SIG_EXPR_LIST_DECL_SESG(AA23, THRUIN1, THRU1, SIG_DESC_SET(SCU4BC, 26));
-+PIN_DECL_2(AA23, GPIOP2, PWM10, THRUIN1);
-+GROUP_DECL(PWM10G1, AA23);
-+FUNC_DECL_2(PWM10, PWM10G0, PWM10G1);
-+
-+#define AA24 123
-+SIG_EXPR_LIST_DECL_SEMG(AA24, PWM11, PWM11G1, PWM11, SIG_DESC_SET(SCU41C, 27));
-+SIG_EXPR_LIST_DECL_SESG(AA24, THRUOUT1, THRU1, SIG_DESC_SET(SCU4BC, 27));
-+PIN_DECL_2(AA24, GPIOP3, PWM11, THRUOUT1);
-+GROUP_DECL(PWM11G1, AA24);
-+FUNC_DECL_2(PWM11, PWM11G0, PWM11G1);
-+
-+FUNC_GROUP_DECL(THRU1, AA23, AA24);
-+
-+#define W23 124
-+SIG_EXPR_LIST_DECL_SEMG(W23, PWM12, PWM12G1, PWM12, SIG_DESC_SET(SCU41C, 28));
-+SIG_EXPR_LIST_DECL_SESG(W23, THRUIN2, THRU2, SIG_DESC_SET(SCU4BC, 28));
-+PIN_DECL_2(W23, GPIOP4, PWM12, THRUIN2);
-+GROUP_DECL(PWM12G1, W23);
-+FUNC_DECL_2(PWM12, PWM12G0, PWM12G1);
-+
-+#define AB23 125
-+SIG_EXPR_LIST_DECL_SEMG(AB23, PWM13, PWM13G1, PWM13, SIG_DESC_SET(SCU41C, 29));
-+SIG_EXPR_LIST_DECL_SESG(AB23, THRUOUT2, THRU2, SIG_DESC_SET(SCU4BC, 29));
-+PIN_DECL_2(AB23, GPIOP5, PWM13, THRUOUT2);
-+GROUP_DECL(PWM13G1, AB23);
-+FUNC_DECL_2(PWM13, PWM13G0, PWM13G1);
-+
-+FUNC_GROUP_DECL(THRU2, W23, AB23);
-+
-+#define AB24 126
-+SIG_EXPR_LIST_DECL_SEMG(AB24, PWM14, PWM14G1, PWM14, SIG_DESC_SET(SCU41C, 30));
-+SIG_EXPR_LIST_DECL_SESG(AB24, THRUIN3, THRU3, SIG_DESC_SET(SCU4BC, 30));
-+PIN_DECL_2(AB24, GPIOP6, PWM14, THRUIN3);
-+GROUP_DECL(PWM14G1, AB24);
-+FUNC_DECL_2(PWM14, PWM14G0, PWM14G1);
-+
-+#define Y23 127
-+SIG_EXPR_LIST_DECL_SEMG(Y23, PWM15, PWM15G1, PWM15, SIG_DESC_SET(SCU41C, 31));
-+SIG_EXPR_LIST_DECL_SESG(Y23, THRUOUT3, THRU3, SIG_DESC_SET(SCU4BC, 31));
-+PIN_DECL_2(Y23, GPIOP7, PWM15, THRUOUT3);
-+GROUP_DECL(PWM15G1, Y23);
-+FUNC_DECL_2(PWM15, PWM15G0, PWM15G1);
-+
-+FUNC_GROUP_DECL(THRU3, AB24, Y23);
-+
-+#define AA25 128
-+SSSF_PIN_DECL(AA25, GPIOQ0, TACH0, SIG_DESC_SET(SCU430, 0));
-+
-+#define AB25 129
-+SSSF_PIN_DECL(AB25, GPIOQ1, TACH1, SIG_DESC_SET(SCU430, 1));
-+
-+#define Y24 130
-+SSSF_PIN_DECL(Y24, GPIOQ2, TACH2, SIG_DESC_SET(SCU430, 2));
-+
-+#define AB26 131
-+SSSF_PIN_DECL(AB26, GPIOQ3, TACH3, SIG_DESC_SET(SCU430, 3));
-+
-+#define Y26 132
-+SSSF_PIN_DECL(Y26, GPIOQ4, TACH4, SIG_DESC_SET(SCU430, 4));
-+
-+#define AC26 133
-+SSSF_PIN_DECL(AC26, GPIOQ5, TACH5, SIG_DESC_SET(SCU430, 5));
-+
-+#define Y25 134
-+SSSF_PIN_DECL(Y25, GPIOQ6, TACH6, SIG_DESC_SET(SCU430, 6));
-+
-+#define AA26 135
-+SSSF_PIN_DECL(AA26, GPIOQ7, TACH7, SIG_DESC_SET(SCU430, 7));
-+
-+#define V25 136
-+SSSF_PIN_DECL(V25, GPIOR0, TACH8, SIG_DESC_SET(SCU430, 8));
-+
-+#define U24 137
-+SSSF_PIN_DECL(U24, GPIOR1, TACH9, SIG_DESC_SET(SCU430, 9));
-+
-+#define V24 138
-+SSSF_PIN_DECL(V24, GPIOR2, TACH10, SIG_DESC_SET(SCU430, 10));
-+
-+#define V26 139
-+SSSF_PIN_DECL(V26, GPIOR3, TACH11, SIG_DESC_SET(SCU430, 11));
-+
-+#define U25 140
-+SSSF_PIN_DECL(U25, GPIOR4, TACH12, SIG_DESC_SET(SCU430, 12));
-+
-+#define T23 141
-+SSSF_PIN_DECL(T23, GPIOR5, TACH13, SIG_DESC_SET(SCU430, 13));
-+
-+#define W26 142
-+SSSF_PIN_DECL(W26, GPIOR6, TACH14, SIG_DESC_SET(SCU430, 14));
-+
-+#define U26 143
-+SSSF_PIN_DECL(U26, GPIOR7, TACH15, SIG_DESC_SET(SCU430, 15));
-+
-+#define R23 144
-+SIG_EXPR_LIST_DECL_SESG(R23, MDC1, MDIO1, SIG_DESC_SET(SCU430, 16));
-+PIN_DECL_1(R23, GPIOS0, MDC1);
-+
-+#define T25 145
-+SIG_EXPR_LIST_DECL_SESG(T25, MDIO1, MDIO1, SIG_DESC_SET(SCU430, 17));
-+PIN_DECL_1(T25, GPIOS1, MDIO1);
-+
-+FUNC_GROUP_DECL(MDIO1, R23, T25);
-+
-+#define T26 146
-+SSSF_PIN_DECL(T26, GPIOS2, PEWAKE, SIG_DESC_SET(SCU430, 18));
-+
-+#define R24 147
-+SSSF_PIN_DECL(R24, GPIOS3, OSCCLK, SIG_DESC_SET(SCU430, 19));
-+
-+#define R26 148
-+SIG_EXPR_LIST_DECL_SESG(R26, TXD10, UART10, SIG_DESC_SET(SCU430, 20));
-+PIN_DECL_1(R26, GPIOS4, TXD10);
-+
-+#define P24 149
-+SIG_EXPR_LIST_DECL_SESG(P24, RXD10, UART10, SIG_DESC_SET(SCU430, 21));
-+PIN_DECL_1(P24, GPIOS5, RXD10);
-+
-+FUNC_GROUP_DECL(UART10, R26, P24);
-+
-+#define P23 150
-+SIG_EXPR_LIST_DECL_SESG(P23, TXD11, UART11, SIG_DESC_SET(SCU430, 22));
-+PIN_DECL_1(P23, GPIOS6, TXD11);
-+
-+#define T24 151
-+SIG_EXPR_LIST_DECL_SESG(T24, RXD11, UART11, SIG_DESC_SET(SCU430, 23));
-+PIN_DECL_1(T24, GPIOS7, RXD11);
-+
-+FUNC_GROUP_DECL(UART11, P23, T24);
-+
-+#define AD20 152
-+SIG_EXPR_LIST_DECL_SESG(AD20, GPIT0, GPIT0, SIG_DESC_SET(SCU430, 24));
-+SIG_EXPR_LIST_DECL_SESG(AD20, ADC0, ADC0);
-+PIN_DECL_(AD20, SIG_EXPR_LIST_PTR(AD20, GPIT0), SIG_EXPR_LIST_PTR(AD20, ADC0));
-+FUNC_GROUP_DECL(GPIT0, AD20);
-+FUNC_GROUP_DECL(ADC0, AD20);
-+
-+#define AC18 153
-+SIG_EXPR_LIST_DECL_SESG(AC18, GPIT1, GPIT1, SIG_DESC_SET(SCU430, 25));
-+SIG_EXPR_LIST_DECL_SESG(AC18, ADC1, ADC1);
-+PIN_DECL_(AC18, SIG_EXPR_LIST_PTR(AC18, GPIT1), SIG_EXPR_LIST_PTR(AC18, ADC1));
-+FUNC_GROUP_DECL(GPIT1, AC18);
-+FUNC_GROUP_DECL(ADC1, AC18);
-+
-+#define AE19 154
-+SIG_EXPR_LIST_DECL_SESG(AE19, GPIT2, GPIT2, SIG_DESC_SET(SCU430, 26));
-+SIG_EXPR_LIST_DECL_SESG(AE19, ADC2, ADC2);
-+PIN_DECL_(AE19, SIG_EXPR_LIST_PTR(AE19, GPIT2), SIG_EXPR_LIST_PTR(AE19, ADC2));
-+FUNC_GROUP_DECL(GPIT2, AE19);
-+FUNC_GROUP_DECL(ADC2, AE19);
-+
-+#define AD19 155
-+SIG_EXPR_LIST_DECL_SESG(AD19, GPIT3, GPIT3, SIG_DESC_SET(SCU430, 27));
-+SIG_EXPR_LIST_DECL_SESG(AD19, ADC3, ADC3);
-+PIN_DECL_(AD19, SIG_EXPR_LIST_PTR(AD19, GPIT3), SIG_EXPR_LIST_PTR(AD19, ADC3));
-+FUNC_GROUP_DECL(GPIT3, AD19);
-+FUNC_GROUP_DECL(ADC3, AD19);
-+
-+#define AC19 156
-+SIG_EXPR_LIST_DECL_SESG(AC19, GPIT4, GPIT4, SIG_DESC_SET(SCU430, 28));
-+SIG_EXPR_LIST_DECL_SESG(AC19, ADC4, ADC4);
-+PIN_DECL_(AC19, SIG_EXPR_LIST_PTR(AC19, GPIT4), SIG_EXPR_LIST_PTR(AC19, ADC4));
-+FUNC_GROUP_DECL(GPIT4, AC19);
-+FUNC_GROUP_DECL(ADC4, AC19);
-+
-+#define AB19 157
-+SIG_EXPR_LIST_DECL_SESG(AB19, GPIT5, GPIT5, SIG_DESC_SET(SCU430, 29));
-+SIG_EXPR_LIST_DECL_SESG(AB19, ADC5, ADC5);
-+PIN_DECL_(AB19, SIG_EXPR_LIST_PTR(AB19, GPIT5), SIG_EXPR_LIST_PTR(AB19, ADC5));
-+FUNC_GROUP_DECL(GPIT5, AB19);
-+FUNC_GROUP_DECL(ADC5, AB19);
-+
-+#define AB18 158
-+SIG_EXPR_LIST_DECL_SESG(AB18, GPIT6, GPIT6, SIG_DESC_SET(SCU430, 30));
-+SIG_EXPR_LIST_DECL_SESG(AB18, ADC6, ADC6);
-+PIN_DECL_(AB18, SIG_EXPR_LIST_PTR(AB18, GPIT6), SIG_EXPR_LIST_PTR(AB18, ADC6));
-+FUNC_GROUP_DECL(GPIT6, AB18);
-+FUNC_GROUP_DECL(ADC6, AB18);
-+
-+#define AE18 159
-+SIG_EXPR_LIST_DECL_SESG(AE18, GPIT7, GPIT7, SIG_DESC_SET(SCU430, 31));
-+SIG_EXPR_LIST_DECL_SESG(AE18, ADC7, ADC7);
-+PIN_DECL_(AE18, SIG_EXPR_LIST_PTR(AE18, GPIT7), SIG_EXPR_LIST_PTR(AE18, ADC7));
-+FUNC_GROUP_DECL(GPIT7, AE18);
-+FUNC_GROUP_DECL(ADC7, AE18);
-+
-+#define AB16 160
-+SIG_EXPR_LIST_DECL_SEMG(AB16, SALT9, SALT9G1, SALT9, SIG_DESC_SET(SCU434, 0),
-+			SIG_DESC_CLEAR(SCU694, 16));
-+SIG_EXPR_LIST_DECL_SESG(AB16, GPIU0, GPIU0, SIG_DESC_SET(SCU434, 0),
-+			SIG_DESC_SET(SCU694, 16));
-+SIG_EXPR_LIST_DECL_SESG(AB16, ADC8, ADC8);
-+PIN_DECL_(AB16, SIG_EXPR_LIST_PTR(AB16, SALT9), SIG_EXPR_LIST_PTR(AB16, GPIU0),
-+	  SIG_EXPR_LIST_PTR(AB16, ADC8));
-+GROUP_DECL(SALT9G1, AB16);
-+FUNC_DECL_2(SALT9, SALT9G0, SALT9G1);
-+FUNC_GROUP_DECL(GPIU0, AB16);
-+FUNC_GROUP_DECL(ADC8, AB16);
-+
-+#define AA17 161
-+SIG_EXPR_LIST_DECL_SEMG(AA17, SALT10, SALT10G1, SALT10, SIG_DESC_SET(SCU434, 1),
-+			SIG_DESC_CLEAR(SCU694, 17));
-+SIG_EXPR_LIST_DECL_SESG(AA17, GPIU1, GPIU1, SIG_DESC_SET(SCU434, 1),
-+			SIG_DESC_SET(SCU694, 17));
-+SIG_EXPR_LIST_DECL_SESG(AA17, ADC9, ADC9);
-+PIN_DECL_(AA17, SIG_EXPR_LIST_PTR(AA17, SALT10), SIG_EXPR_LIST_PTR(AA17, GPIU1),
-+	  SIG_EXPR_LIST_PTR(AA17, ADC9));
-+GROUP_DECL(SALT10G1, AA17);
-+FUNC_DECL_2(SALT10, SALT10G0, SALT10G1);
-+FUNC_GROUP_DECL(GPIU1, AA17);
-+FUNC_GROUP_DECL(ADC9, AA17);
-+
-+#define AB17 162
-+SIG_EXPR_LIST_DECL_SEMG(AB17, SALT11, SALT11G1, SALT11, SIG_DESC_SET(SCU434, 2),
-+			SIG_DESC_CLEAR(SCU694, 18));
-+SIG_EXPR_LIST_DECL_SESG(AB17, GPIU2, GPIU2, SIG_DESC_SET(SCU434, 2),
-+			SIG_DESC_SET(SCU694, 18));
-+SIG_EXPR_LIST_DECL_SESG(AB17, ADC10, ADC10);
-+PIN_DECL_(AB17, SIG_EXPR_LIST_PTR(AB17, SALT11), SIG_EXPR_LIST_PTR(AB17, GPIU2),
-+	  SIG_EXPR_LIST_PTR(AB17, ADC10));
-+GROUP_DECL(SALT11G1, AB17);
-+FUNC_DECL_2(SALT11, SALT11G0, SALT11G1);
-+FUNC_GROUP_DECL(GPIU2, AB17);
-+FUNC_GROUP_DECL(ADC10, AB17);
-+
-+#define AE16 163
-+SIG_EXPR_LIST_DECL_SEMG(AE16, SALT12, SALT12G1, SALT12, SIG_DESC_SET(SCU434, 3),
-+			SIG_DESC_CLEAR(SCU694, 19));
-+SIG_EXPR_LIST_DECL_SESG(AE16, GPIU3, GPIU3, SIG_DESC_SET(SCU434, 3),
-+			SIG_DESC_SET(SCU694, 19));
-+SIG_EXPR_LIST_DECL_SESG(AE16, ADC11, ADC11);
-+PIN_DECL_(AE16, SIG_EXPR_LIST_PTR(AE16, SALT12), SIG_EXPR_LIST_PTR(AE16, GPIU3),
-+	  SIG_EXPR_LIST_PTR(AE16, ADC11));
-+GROUP_DECL(SALT12G1, AE16);
-+FUNC_DECL_2(SALT12, SALT12G0, SALT12G1);
-+FUNC_GROUP_DECL(GPIU3, AE16);
-+FUNC_GROUP_DECL(ADC11, AE16);
-+
-+#define AC16 164
-+SIG_EXPR_LIST_DECL_SEMG(AC16, SALT13, SALT13G1, SALT13, SIG_DESC_SET(SCU434, 4),
-+			SIG_DESC_CLEAR(SCU694, 20));
-+SIG_EXPR_LIST_DECL_SESG(AC16, GPIU4, GPIU4, SIG_DESC_SET(SCU434, 4),
-+			SIG_DESC_SET(SCU694, 20));
-+SIG_EXPR_LIST_DECL_SESG(AC16, ADC12, ADC12);
-+PIN_DECL_(AC16, SIG_EXPR_LIST_PTR(AC16, SALT13), SIG_EXPR_LIST_PTR(AC16, GPIU4),
-+	  SIG_EXPR_LIST_PTR(AC16, ADC12));
-+GROUP_DECL(SALT13G1, AC16);
-+FUNC_DECL_2(SALT13, SALT13G0, SALT13G1);
-+FUNC_GROUP_DECL(GPIU4, AC16);
-+FUNC_GROUP_DECL(ADC12, AC16);
-+
-+#define AA16 165
-+SIG_EXPR_LIST_DECL_SEMG(AA16, SALT14, SALT14G1, SALT14, SIG_DESC_SET(SCU434, 5),
-+			SIG_DESC_CLEAR(SCU694, 21));
-+SIG_EXPR_LIST_DECL_SESG(AA16, GPIU5, GPIU5, SIG_DESC_SET(SCU434, 5),
-+			SIG_DESC_SET(SCU694, 21));
-+SIG_EXPR_LIST_DECL_SESG(AA16, ADC13, ADC13);
-+PIN_DECL_(AA16, SIG_EXPR_LIST_PTR(AA16, SALT14), SIG_EXPR_LIST_PTR(AA16, GPIU5),
-+	  SIG_EXPR_LIST_PTR(AA16, ADC13));
-+GROUP_DECL(SALT14G1, AA16);
-+FUNC_DECL_2(SALT14, SALT14G0, SALT14G1);
-+FUNC_GROUP_DECL(GPIU5, AA16);
-+FUNC_GROUP_DECL(ADC13, AA16);
-+
-+#define AD16 166
-+SIG_EXPR_LIST_DECL_SEMG(AD16, SALT15, SALT15G1, SALT15, SIG_DESC_SET(SCU434, 6),
-+			SIG_DESC_CLEAR(SCU694, 22));
-+SIG_EXPR_LIST_DECL_SESG(AD16, GPIU6, GPIU6, SIG_DESC_SET(SCU434, 6),
-+			SIG_DESC_SET(SCU694, 22));
-+SIG_EXPR_LIST_DECL_SESG(AD16, ADC14, ADC14);
-+PIN_DECL_(AD16, SIG_EXPR_LIST_PTR(AD16, SALT15), SIG_EXPR_LIST_PTR(AD16, GPIU6),
-+	  SIG_EXPR_LIST_PTR(AD16, ADC14));
-+GROUP_DECL(SALT15G1, AD16);
-+FUNC_DECL_2(SALT15, SALT15G0, SALT15G1);
-+FUNC_GROUP_DECL(GPIU6, AD16);
-+FUNC_GROUP_DECL(ADC14, AD16);
-+
-+#define AC17 167
-+SIG_EXPR_LIST_DECL_SEMG(AC17, SALT16, SALT16G1, SALT16, SIG_DESC_SET(SCU434, 7),
-+			SIG_DESC_CLEAR(SCU694, 23));
-+SIG_EXPR_LIST_DECL_SESG(AC17, GPIU7, GPIU7, SIG_DESC_SET(SCU434, 7),
-+			SIG_DESC_SET(SCU694, 23));
-+SIG_EXPR_LIST_DECL_SESG(AC17, ADC15, ADC15);
-+PIN_DECL_(AC17, SIG_EXPR_LIST_PTR(AC17, SALT16), SIG_EXPR_LIST_PTR(AC17, GPIU7),
-+	  SIG_EXPR_LIST_PTR(AC17, ADC15));
-+GROUP_DECL(SALT16G1, AC17);
-+FUNC_DECL_2(SALT16, SALT16G0, SALT16G1);
-+FUNC_GROUP_DECL(GPIU7, AC17);
-+FUNC_GROUP_DECL(ADC15, AC17);
-+
-+#define AB15 168
-+SSSF_PIN_DECL(AB15, GPIOV0, SIOS3, SIG_DESC_SET(SCU434, 8));
-+
-+#define AF14 169
-+SSSF_PIN_DECL(AF14, GPIOV1, SIOS5, SIG_DESC_SET(SCU434, 9));
-+
-+#define AD14 170
-+SSSF_PIN_DECL(AD14, GPIOV2, SIOPWREQ, SIG_DESC_SET(SCU434, 10));
-+
-+#define AC15 171
-+SSSF_PIN_DECL(AC15, GPIOV3, SIOONCTRL, SIG_DESC_SET(SCU434, 11));
-+
-+#define AE15 172
-+SSSF_PIN_DECL(AE15, GPIOV4, SIOPWRGD, SIG_DESC_SET(SCU434, 12));
-+
-+#define AE14 173
-+SIG_EXPR_LIST_DECL_SESG(AE14, LPCPD, LPCPD, SIG_DESC_SET(SCU434, 13));
-+SIG_EXPR_LIST_DECL_SESG(AE14, LHPD, LHPD, SIG_DESC_SET(SCU4D4, 13));
-+PIN_DECL_2(AE14, GPIOV5, LPCPD, LHPD);
-+FUNC_GROUP_DECL(LPCPD, AE14);
-+FUNC_GROUP_DECL(LHPD, AE14);
-+
-+#define AD15 174
-+SSSF_PIN_DECL(AD15, GPIOV6, LPCPME, SIG_DESC_SET(SCU434, 14));
-+
-+#define AF15 175
-+SSSF_PIN_DECL(AF15, GPIOV7, LPCSMI, SIG_DESC_SET(SCU434, 15));
-+
-+#define AB7 176
-+SIG_EXPR_LIST_DECL_SESG(AB7, LAD0, LPC, SIG_DESC_SET(SCU434, 16),
-+			  SIG_DESC_CLEAR(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AB7, ESPID0, ESPI, SIG_DESC_SET(SCU434, 16),
-+			  SIG_DESC_SET(SCU510, 6));
-+PIN_DECL_2(AB7, GPIOW0, LAD0, ESPID0);
-+
-+#define AB8 177
-+SIG_EXPR_LIST_DECL_SESG(AB8, LAD1, LPC, SIG_DESC_SET(SCU434, 17),
-+			  SIG_DESC_CLEAR(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AB8, ESPID1, ESPI, SIG_DESC_SET(SCU434, 17),
-+			  SIG_DESC_SET(SCU510, 6));
-+PIN_DECL_2(AB8, GPIOW1, LAD1, ESPID1);
-+
-+#define AC8 178
-+SIG_EXPR_LIST_DECL_SESG(AC8, LAD2, LPC, SIG_DESC_SET(SCU434, 18),
-+			  SIG_DESC_CLEAR(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AC8, ESPID2, ESPI, SIG_DESC_SET(SCU434, 18),
-+			  SIG_DESC_SET(SCU510, 6));
-+PIN_DECL_2(AC8, GPIOW2, LAD2, ESPID2);
-+
-+#define AC7 179
-+SIG_EXPR_LIST_DECL_SESG(AC7, LAD3, LPC, SIG_DESC_SET(SCU434, 19),
-+			  SIG_DESC_CLEAR(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AC7, ESPID3, ESPI, SIG_DESC_SET(SCU434, 19),
-+			  SIG_DESC_SET(SCU510, 6));
-+PIN_DECL_2(AC7, GPIOW3, LAD3, ESPID3);
-+
-+#define AE7 180
-+SIG_EXPR_LIST_DECL_SESG(AE7, LCLK, LPC, SIG_DESC_SET(SCU434, 20),
-+			  SIG_DESC_CLEAR(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AE7, ESPICK, ESPI, SIG_DESC_SET(SCU434, 20),
-+			  SIG_DESC_SET(SCU510, 6));
-+PIN_DECL_2(AE7, GPIOW4, LCLK, ESPICK);
-+
-+#define AF7 181
-+SIG_EXPR_LIST_DECL_SESG(AF7, LFRAME, LPC, SIG_DESC_SET(SCU434, 21),
-+			  SIG_DESC_CLEAR(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AF7, ESPICS, ESPI, SIG_DESC_SET(SCU434, 21),
-+			  SIG_DESC_SET(SCU510, 6));
-+PIN_DECL_2(AF7, GPIOW5, LFRAME, ESPICS);
-+
-+#define AD7 182
-+SIG_EXPR_LIST_DECL_SESG(AD7, LSIRQ, LSIRQ, SIG_DESC_SET(SCU434, 22),
-+			  SIG_DESC_CLEAR(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AD7, ESPIALT, ESPIALT, SIG_DESC_SET(SCU434, 22),
-+			  SIG_DESC_SET(SCU510, 6));
-+PIN_DECL_2(AD7, GPIOW6, LSIRQ, ESPIALT);
-+FUNC_GROUP_DECL(LSIRQ, AD7);
-+FUNC_GROUP_DECL(ESPIALT, AD7);
-+
-+#define AD8 183
-+SIG_EXPR_LIST_DECL_SESG(AD8, LPCRST, LPC, SIG_DESC_SET(SCU434, 23),
-+			  SIG_DESC_CLEAR(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AD8, ESPIRST, ESPI, SIG_DESC_SET(SCU434, 23),
-+			  SIG_DESC_SET(SCU510, 6));
-+PIN_DECL_2(AD8, GPIOW7, LPCRST, ESPIRST);
-+
-+FUNC_GROUP_DECL(LPC, AB7, AB8, AC8, AC7, AE7, AF7, AD8);
-+FUNC_GROUP_DECL(ESPI, AB7, AB8, AC8, AC7, AE7, AF7, AD8);
-+
-+#define AE8 184
-+SIG_EXPR_LIST_DECL_SEMG(AE8, SPI2CS0, SPI2, SPI2, SIG_DESC_SET(SCU434, 24));
-+PIN_DECL_1(AE8, GPIOX0, SPI2CS0);
-+
-+#define AA9 185
-+SSSF_PIN_DECL(AA9, GPIOX1, SPI2CS1, SIG_DESC_SET(SCU434, 25));
-+
-+#define AC9 186
-+SSSF_PIN_DECL(AC9, GPIOX2, SPI2CS2, SIG_DESC_SET(SCU434, 26));
-+
-+#define AF8 187
-+SIG_EXPR_LIST_DECL_SEMG(AF8, SPI2CK, SPI2, SPI2, SIG_DESC_SET(SCU434, 27));
-+PIN_DECL_1(AF8, GPIOX3, SPI2CK);
-+
-+#define AB9 188
-+SIG_EXPR_LIST_DECL_SEMG(AB9, SPI2MOSI, SPI2, SPI2, SIG_DESC_SET(SCU434, 28));
-+PIN_DECL_1(AB9, GPIOX4, SPI2MOSI);
-+
-+#define AD9 189
-+SIG_EXPR_LIST_DECL_SEMG(AD9, SPI2MISO, SPI2, SPI2, SIG_DESC_SET(SCU434, 29));
-+PIN_DECL_1(AD9, GPIOX5, SPI2MISO);
-+
-+GROUP_DECL(SPI2, AE8, AF8, AB9, AD9);
-+
-+#define AF9 190
-+SIG_EXPR_LIST_DECL_SEMG(AF9, SPI2DQ2, QSPI2, SPI2, SIG_DESC_SET(SCU434, 30));
-+SIG_EXPR_LIST_DECL_SEMG(AF9, TXD12, UART12G1, UART12, SIG_DESC_SET(SCU4D4, 30));
-+PIN_DECL_2(AF9, GPIOX6, SPI2DQ2, TXD12);
-+
-+#define AB10 191
-+SIG_EXPR_LIST_DECL_SEMG(AB10, SPI2DQ3, QSPI2, SPI2, SIG_DESC_SET(SCU434, 31));
-+SIG_EXPR_LIST_DECL_SEMG(AB10, RXD12, UART12G1, UART12,
-+			SIG_DESC_SET(SCU4D4, 31));
-+PIN_DECL_2(AB10, GPIOX7, SPI2DQ3, RXD12);
-+
-+GROUP_DECL(QSPI2, AE8, AF8, AB9, AD9, AF9, AB10);
-+FUNC_DECL_2(SPI2, SPI2, QSPI2);
-+
-+GROUP_DECL(UART12G1, AF9, AB10);
-+FUNC_DECL_2(UART12, UART12G0, UART12G1);
-+
-+#define AF11 192
-+SIG_EXPR_LIST_DECL_SESG(AF11, SALT5, SALT5, SIG_DESC_SET(SCU438, 0));
-+SIG_EXPR_LIST_DECL_SESG(AF11, WDTRST1, WDTRST1, SIG_DESC_SET(SCU4D8, 0));
-+PIN_DECL_2(AF11, GPIOY0, SALT5, WDTRST1);
-+FUNC_GROUP_DECL(SALT5, AF11);
-+FUNC_GROUP_DECL(WDTRST1, AF11);
-+
-+#define AD12 193
-+SIG_EXPR_LIST_DECL_SESG(AD12, SALT6, SALT6, SIG_DESC_SET(SCU438, 1));
-+SIG_EXPR_LIST_DECL_SESG(AD12, WDTRST2, WDTRST2, SIG_DESC_SET(SCU4D8, 1));
-+PIN_DECL_2(AD12, GPIOY1, SALT6, WDTRST2);
-+FUNC_GROUP_DECL(SALT6, AD12);
-+FUNC_GROUP_DECL(WDTRST2, AD12);
-+
-+#define AE11 194
-+SIG_EXPR_LIST_DECL_SESG(AE11, SALT7, SALT7, SIG_DESC_SET(SCU438, 2));
-+SIG_EXPR_LIST_DECL_SESG(AE11, WDTRST3, WDTRST3, SIG_DESC_SET(SCU4D8, 2));
-+PIN_DECL_2(AE11, GPIOY2, SALT7, WDTRST3);
-+FUNC_GROUP_DECL(SALT7, AE11);
-+FUNC_GROUP_DECL(WDTRST3, AE11);
-+
-+#define AA12 195
-+SIG_EXPR_LIST_DECL_SESG(AA12, SALT8, SALT8, SIG_DESC_SET(SCU438, 3));
-+SIG_EXPR_LIST_DECL_SESG(AA12, WDTRST4, WDTRST4, SIG_DESC_SET(SCU4D8, 3));
-+PIN_DECL_2(AA12, GPIOY3, SALT8, WDTRST4);
-+FUNC_GROUP_DECL(SALT8, AA12);
-+FUNC_GROUP_DECL(WDTRST4, AA12);
-+
-+#define AE12 196
-+SIG_EXPR_LIST_DECL_SEMG(AE12, FWSPIDQ2, FWQSPID, FWSPID,
-+			SIG_DESC_SET(SCU438, 4));
-+SIG_EXPR_LIST_DECL_SESG(AE12, GPIOY4, GPIOY4);
-+PIN_DECL_(AE12, SIG_EXPR_LIST_PTR(AE12, FWSPIDQ2),
-+	  SIG_EXPR_LIST_PTR(AE12, GPIOY4));
-+
-+#define AF12 197
-+SIG_EXPR_LIST_DECL_SEMG(AF12, FWSPIDQ3, FWQSPID, FWSPID,
-+			SIG_DESC_SET(SCU438, 5));
-+SIG_EXPR_LIST_DECL_SESG(AF12, GPIOY5, GPIOY5);
-+PIN_DECL_(AF12, SIG_EXPR_LIST_PTR(AF12, FWSPIDQ3),
-+	  SIG_EXPR_LIST_PTR(AF12, GPIOY5));
-+
-+#define AC12 198
-+SSSF_PIN_DECL(AC12, GPIOY6, FWSPIABR, SIG_DESC_SET(SCU438, 6));
-+
-+#define AB12 199
-+SSSF_PIN_DECL(AB12, GPIOY7, FWSPIWP, SIG_DESC_SET(SCU438, 7));
-+
-+#define AC10 200
-+SSSF_PIN_DECL(AC10, GPIOZ0, SPI1CS1, SIG_DESC_SET(SCU438, 8));
-+
-+#define AD10 201
-+SSSF_PIN_DECL(AD10, GPIOZ1, SPI1ABR, SIG_DESC_SET(SCU438, 9));
-+
-+#define AE10 202
-+SSSF_PIN_DECL(AE10, GPIOZ2, SPI1WP, SIG_DESC_SET(SCU438, 10));
-+
-+#define AB11 203
-+SIG_EXPR_LIST_DECL_SEMG(AB11, SPI1CK, SPI1, SPI1, SIG_DESC_SET(SCU438, 11));
-+PIN_DECL_1(AB11, GPIOZ3, SPI1CK);
-+
-+#define AC11 204
-+SIG_EXPR_LIST_DECL_SEMG(AC11, SPI1MOSI, SPI1, SPI1, SIG_DESC_SET(SCU438, 12));
-+PIN_DECL_1(AC11, GPIOZ4, SPI1MOSI);
-+
-+#define AA11 205
-+SIG_EXPR_LIST_DECL_SEMG(AA11, SPI1MISO, SPI1, SPI1, SIG_DESC_SET(SCU438, 13));
-+PIN_DECL_1(AA11, GPIOZ5, SPI1MISO);
-+
-+GROUP_DECL(SPI1, AB11, AC11, AA11);
-+
-+#define AD11 206
-+SIG_EXPR_LIST_DECL_SEMG(AD11, SPI1DQ2, QSPI1, SPI1, SIG_DESC_SET(SCU438, 14));
-+SIG_EXPR_LIST_DECL_SEMG(AD11, TXD13, UART13G1, UART13,
-+			SIG_DESC_SET(SCU438, 14));
-+PIN_DECL_2(AD11, GPIOZ6, SPI1DQ2, TXD13);
-+
-+#define AF10 207
-+SIG_EXPR_LIST_DECL_SEMG(AF10, SPI1DQ3, QSPI1, SPI1, SIG_DESC_SET(SCU438, 15));
-+SIG_EXPR_LIST_DECL_SEMG(AF10, RXD13, UART13G1, UART13,
-+			SIG_DESC_SET(SCU438, 15));
-+PIN_DECL_2(AF10, GPIOZ7, SPI1DQ3, RXD13);
-+
-+GROUP_DECL(QSPI1, AB11, AC11, AA11, AD11, AF10);
-+FUNC_DECL_2(SPI1, SPI1, QSPI1);
-+
-+GROUP_DECL(UART13G1, AD11, AF10);
-+FUNC_DECL_2(UART13, UART13G0, UART13G1);
-+
-+#define C6 208
-+SIG_EXPR_LIST_DECL_SESG(C6, RGMII1TXCK, RGMII1, SIG_DESC_SET(SCU400, 0),
-+			  SIG_DESC_SET(SCU500, 6));
-+SIG_EXPR_LIST_DECL_SESG(C6, RMII1RCLKO, RMII1, SIG_DESC_SET(SCU400, 0));
-+PIN_DECL_2(C6, GPIO18A0, RGMII1TXCK, RMII1RCLKO);
-+
-+#define D6 209
-+SIG_EXPR_LIST_DECL_SESG(D6, RGMII1TXCTL, RGMII1, SIG_DESC_SET(SCU400, 1),
-+			  SIG_DESC_SET(SCU500, 6));
-+SIG_EXPR_LIST_DECL_SESG(D6, RMII1TXEN, RMII1, SIG_DESC_SET(SCU400, 1));
-+PIN_DECL_2(D6, GPIO18A1, RGMII1TXCTL, RMII1TXEN);
-+
-+#define D5 210
-+SIG_EXPR_LIST_DECL_SESG(D5, RGMII1TXD0, RGMII1, SIG_DESC_SET(SCU400, 2),
-+			  SIG_DESC_SET(SCU500, 6));
-+SIG_EXPR_LIST_DECL_SESG(D5, RMII1TXD0, RMII1, SIG_DESC_SET(SCU400, 2));
-+PIN_DECL_2(D5, GPIO18A2, RGMII1TXD0, RMII1TXD0);
-+
-+#define A3 211
-+SIG_EXPR_LIST_DECL_SESG(A3, RGMII1TXD1, RGMII1, SIG_DESC_SET(SCU400, 3),
-+			  SIG_DESC_SET(SCU500, 6));
-+SIG_EXPR_LIST_DECL_SESG(A3, RMII1TXD1, RMII1, SIG_DESC_SET(SCU400, 3));
-+PIN_DECL_2(A3, GPIO18A3, RGMII1TXD1, RMII1TXD1);
-+
-+#define C5 212
-+SIG_EXPR_LIST_DECL_SESG(C5, RGMII1TXD2, RGMII1, SIG_DESC_SET(SCU400, 4),
-+			  SIG_DESC_SET(SCU500, 6));
-+PIN_DECL_1(C5, GPIO18A4, RGMII1TXD2);
-+
-+#define E6 213
-+SIG_EXPR_LIST_DECL_SESG(E6, RGMII1TXD3, RGMII1, SIG_DESC_SET(SCU400, 5),
-+			  SIG_DESC_SET(SCU500, 6));
-+PIN_DECL_1(E6, GPIO18A5, RGMII1TXD3);
-+
-+#define B3 214
-+SIG_EXPR_LIST_DECL_SESG(B3, RGMII1RXCK, RGMII1, SIG_DESC_SET(SCU400, 6),
-+			  SIG_DESC_SET(SCU500, 6));
-+SIG_EXPR_LIST_DECL_SESG(B3, RMII1RCLKI, RMII1, SIG_DESC_SET(SCU400, 6));
-+PIN_DECL_2(B3, GPIO18A6, RGMII1RXCK, RMII1RCLKI);
-+
-+#define A2 215
-+SIG_EXPR_LIST_DECL_SESG(A2, RGMII1RXCTL, RGMII1, SIG_DESC_SET(SCU400, 7),
-+			  SIG_DESC_SET(SCU500, 6));
-+PIN_DECL_1(A2, GPIO18A7, RGMII1RXCTL);
-+
-+#define B2 216
-+SIG_EXPR_LIST_DECL_SESG(B2, RGMII1RXD0, RGMII1, SIG_DESC_SET(SCU400, 8),
-+			  SIG_DESC_SET(SCU500, 6));
-+SIG_EXPR_LIST_DECL_SESG(B2, RMII1RXD0, RMII1, SIG_DESC_SET(SCU400, 8));
-+PIN_DECL_2(B2, GPIO18B0, RGMII1RXD0, RMII1RXD0);
-+
-+#define B1 217
-+SIG_EXPR_LIST_DECL_SESG(B1, RGMII1RXD1, RGMII1, SIG_DESC_SET(SCU400, 9),
-+			  SIG_DESC_SET(SCU500, 6));
-+SIG_EXPR_LIST_DECL_SESG(B1, RMII1RXD1, RMII1, SIG_DESC_SET(SCU400, 9));
-+PIN_DECL_2(B1, GPIO18B1, RGMII1RXD1, RMII1RXD1);
-+
-+#define C4 218
-+SIG_EXPR_LIST_DECL_SESG(C4, RGMII1RXD2, RGMII1, SIG_DESC_SET(SCU400, 10),
-+			  SIG_DESC_SET(SCU500, 6));
-+SIG_EXPR_LIST_DECL_SESG(C4, RMII1CRSDV, RMII1, SIG_DESC_SET(SCU400, 10));
-+PIN_DECL_2(C4, GPIO18B2, RGMII1RXD2, RMII1CRSDV);
-+
-+#define E5 219
-+SIG_EXPR_LIST_DECL_SESG(E5, RGMII1RXD3, RGMII1, SIG_DESC_SET(SCU400, 11),
-+			  SIG_DESC_SET(SCU500, 6));
-+SIG_EXPR_LIST_DECL_SESG(E5, RMII1RXER, RMII1, SIG_DESC_SET(SCU400, 11));
-+PIN_DECL_2(E5, GPIO18B3, RGMII1RXD3, RMII1RXER);
-+
-+FUNC_GROUP_DECL(RGMII1, C6, D6, D5, A3, C5, E6, B3, A2, B2, B1, C4, E5);
-+FUNC_GROUP_DECL(RMII1, C6, D6, D5, A3, B3, B2, B1, C4, E5);
-+
-+#define D4 220
-+SIG_EXPR_LIST_DECL_SESG(D4, RGMII2TXCK, RGMII2, SIG_DESC_SET(SCU400, 12),
-+			  SIG_DESC_SET(SCU500, 7));
-+SIG_EXPR_LIST_DECL_SESG(D4, RMII2RCLKO, RMII2, SIG_DESC_SET(SCU400, 12));
-+PIN_DECL_2(D4, GPIO18B4, RGMII2TXCK, RMII2RCLKO);
-+
-+#define C2 221
-+SIG_EXPR_LIST_DECL_SESG(C2, RGMII2TXCTL, RGMII2, SIG_DESC_SET(SCU400, 13),
-+			  SIG_DESC_SET(SCU500, 7));
-+SIG_EXPR_LIST_DECL_SESG(C2, RMII2TXEN, RMII2, SIG_DESC_SET(SCU400, 13));
-+PIN_DECL_2(C2, GPIO18B5, RGMII2TXCTL, RMII2TXEN);
-+
-+#define C1 222
-+SIG_EXPR_LIST_DECL_SESG(C1, RGMII2TXD0, RGMII2, SIG_DESC_SET(SCU400, 14),
-+			  SIG_DESC_SET(SCU500, 7));
-+SIG_EXPR_LIST_DECL_SESG(C1, RMII2TXD0, RMII2, SIG_DESC_SET(SCU400, 14));
-+PIN_DECL_2(C1, GPIO18B6, RGMII2TXD0, RMII2TXD0);
-+
-+#define D3 223
-+SIG_EXPR_LIST_DECL_SESG(D3, RGMII2TXD1, RGMII2, SIG_DESC_SET(SCU400, 15),
-+			  SIG_DESC_SET(SCU500, 7));
-+SIG_EXPR_LIST_DECL_SESG(D3, RMII2TXD1, RMII2, SIG_DESC_SET(SCU400, 15));
-+PIN_DECL_2(D3, GPIO18B7, RGMII2TXD1, RMII2TXD1);
-+
-+#define E4 224
-+SIG_EXPR_LIST_DECL_SESG(E4, RGMII2TXD2, RGMII2, SIG_DESC_SET(SCU400, 16),
-+			  SIG_DESC_SET(SCU500, 7));
-+PIN_DECL_1(E4, GPIO18C0, RGMII2TXD2);
-+
-+#define F5 225
-+SIG_EXPR_LIST_DECL_SESG(F5, RGMII2TXD3, RGMII2, SIG_DESC_SET(SCU400, 17),
-+			  SIG_DESC_SET(SCU500, 7));
-+PIN_DECL_1(F5, GPIO18C1, RGMII2TXD3);
-+
-+#define D2 226
-+SIG_EXPR_LIST_DECL_SESG(D2, RGMII2RXCK, RGMII2, SIG_DESC_SET(SCU400, 18),
-+			  SIG_DESC_SET(SCU500, 7));
-+SIG_EXPR_LIST_DECL_SESG(D2, RMII2RCLKI, RMII2, SIG_DESC_SET(SCU400, 18));
-+PIN_DECL_2(D2, GPIO18C2, RGMII2RXCK, RMII2RCLKI);
-+
-+#define E3 227
-+SIG_EXPR_LIST_DECL_SESG(E3, RGMII2RXCTL, RGMII2, SIG_DESC_SET(SCU400, 19),
-+			  SIG_DESC_SET(SCU500, 7));
-+PIN_DECL_1(E3, GPIO18C3, RGMII2RXCTL);
-+
-+#define D1 228
-+SIG_EXPR_LIST_DECL_SESG(D1, RGMII2RXD0, RGMII2, SIG_DESC_SET(SCU400, 20),
-+			  SIG_DESC_SET(SCU500, 7));
-+SIG_EXPR_LIST_DECL_SESG(D1, RMII2RXD0, RMII2, SIG_DESC_SET(SCU400, 20));
-+PIN_DECL_2(D1, GPIO18C4, RGMII2RXD0, RMII2RXD0);
-+
-+#define F4 229
-+SIG_EXPR_LIST_DECL_SESG(F4, RGMII2RXD1, RGMII2, SIG_DESC_SET(SCU400, 21),
-+			  SIG_DESC_SET(SCU500, 7));
-+SIG_EXPR_LIST_DECL_SESG(F4, RMII2RXD1, RMII2, SIG_DESC_SET(SCU400, 21));
-+PIN_DECL_2(F4, GPIO18C5, RGMII2RXD1, RMII2RXD1);
-+
-+#define E2 230
-+SIG_EXPR_LIST_DECL_SESG(E2, RGMII2RXD2, RGMII2, SIG_DESC_SET(SCU400, 22),
-+			  SIG_DESC_SET(SCU500, 7));
-+SIG_EXPR_LIST_DECL_SESG(E2, RMII2CRSDV, RMII2, SIG_DESC_SET(SCU400, 22));
-+PIN_DECL_2(E2, GPIO18C6, RGMII2RXD2, RMII2CRSDV);
-+
-+#define E1 231
-+SIG_EXPR_LIST_DECL_SESG(E1, RGMII2RXD3, RGMII2, SIG_DESC_SET(SCU400, 23),
-+			  SIG_DESC_SET(SCU500, 7));
-+SIG_EXPR_LIST_DECL_SESG(E1, RMII2RXER, RMII2, SIG_DESC_SET(SCU400, 23));
-+PIN_DECL_2(E1, GPIO18C7, RGMII2RXD3, RMII2RXER);
-+
-+FUNC_GROUP_DECL(RGMII2, D4, C2, C1, D3, E4, F5, D2, E3, D1, F4, E2, E1);
-+FUNC_GROUP_DECL(RMII2, D4, C2, C1, D3, D2, D1, F4, E2, E1);
-+
-+#define AB4 232
-+SIG_EXPR_LIST_DECL_SESG(AB4, SD3CLK, SD3, SIG_DESC_SET(SCU400, 24));
-+PIN_DECL_1(AB4, GPIO18D0, SD3CLK);
-+
-+#define AA4 233
-+SIG_EXPR_LIST_DECL_SESG(AA4, SD3CMD, SD3, SIG_DESC_SET(SCU400, 25));
-+PIN_DECL_1(AA4, GPIO18D1, SD3CMD);
-+
-+#define AC4 234
-+SIG_EXPR_LIST_DECL_SESG(AC4, SD3DAT0, SD3, SIG_DESC_SET(SCU400, 26));
-+PIN_DECL_1(AC4, GPIO18D2, SD3DAT0);
-+
-+#define AA5 235
-+SIG_EXPR_LIST_DECL_SESG(AA5, SD3DAT1, SD3, SIG_DESC_SET(SCU400, 27));
-+PIN_DECL_1(AA5, GPIO18D3, SD3DAT1);
-+
-+#define Y5 236
-+SIG_EXPR_LIST_DECL_SESG(Y5, SD3DAT2, SD3, SIG_DESC_SET(SCU400, 28));
-+PIN_DECL_1(Y5, GPIO18D4, SD3DAT2);
-+
-+#define AB5 237
-+SIG_EXPR_LIST_DECL_SESG(AB5, SD3DAT3, SD3, SIG_DESC_SET(SCU400, 29));
-+PIN_DECL_1(AB5, GPIO18D5, SD3DAT3);
-+
-+#define AB6 238
-+SIG_EXPR_LIST_DECL_SESG(AB6, SD3CD, SD3, SIG_DESC_SET(SCU400, 30));
-+PIN_DECL_1(AB6, GPIO18D6, SD3CD);
-+
-+#define AC5 239
-+SIG_EXPR_LIST_DECL_SESG(AC5, SD3WP, SD3, SIG_DESC_SET(SCU400, 31));
-+PIN_DECL_1(AC5, GPIO18D7, SD3WP);
-+
-+FUNC_GROUP_DECL(SD3, AB4, AA4, AC4, AA5, Y5, AB5, AB6, AC5);
-+
-+#define Y1 240
-+SIG_EXPR_LIST_DECL_SEMG(Y1, FWSPIDCS, FWSPID, FWSPID, SIG_DESC_SET(SCU500, 3));
-+SIG_EXPR_LIST_DECL_SESG(Y1, VBCS, VB, SIG_DESC_SET(SCU500, 5));
-+SIG_EXPR_LIST_DECL_SESG(Y1, SD3DAT4, SD3DAT4, SIG_DESC_SET(SCU404, 0));
-+PIN_DECL_3(Y1, GPIO18E0, FWSPIDCS, VBCS, SD3DAT4);
-+FUNC_GROUP_DECL(SD3DAT4, Y1);
-+
-+#define Y2 241
-+SIG_EXPR_LIST_DECL_SEMG(Y2, FWSPIDCK, FWSPID, FWSPID, SIG_DESC_SET(SCU500, 3));
-+SIG_EXPR_LIST_DECL_SESG(Y2, VBCK, VB, SIG_DESC_SET(SCU500, 5));
-+SIG_EXPR_LIST_DECL_SESG(Y2, SD3DAT5, SD3DAT5, SIG_DESC_SET(SCU404, 1));
-+PIN_DECL_3(Y2, GPIO18E1, FWSPIDCK, VBCK, SD3DAT5);
-+FUNC_GROUP_DECL(SD3DAT5, Y2);
-+
-+#define Y3 242
-+SIG_EXPR_LIST_DECL_SEMG(Y3, FWSPIDMOSI, FWSPID, FWSPID,
-+			SIG_DESC_SET(SCU500, 3));
-+SIG_EXPR_LIST_DECL_SESG(Y3, VBMOSI, VB, SIG_DESC_SET(SCU500, 5));
-+SIG_EXPR_LIST_DECL_SESG(Y3, SD3DAT6, SD3DAT6, SIG_DESC_SET(SCU404, 2));
-+PIN_DECL_3(Y3, GPIO18E2, FWSPIDMOSI, VBMOSI, SD3DAT6);
-+FUNC_GROUP_DECL(SD3DAT6, Y3);
-+
-+#define Y4 243
-+SIG_EXPR_LIST_DECL_SEMG(Y4, FWSPIDMISO, FWSPID, FWSPID,
-+			SIG_DESC_SET(SCU500, 3));
-+SIG_EXPR_LIST_DECL_SESG(Y4, VBMISO, VB, SIG_DESC_SET(SCU500, 5));
-+SIG_EXPR_LIST_DECL_SESG(Y4, SD3DAT7, SD3DAT7, SIG_DESC_SET(SCU404, 3));
-+PIN_DECL_3(Y4, GPIO18E3, FWSPIDMISO, VBMISO, SD3DAT7);
-+FUNC_GROUP_DECL(SD3DAT7, Y4);
-+
-+GROUP_DECL(FWSPID, Y1, Y2, Y3, Y4);
-+GROUP_DECL(FWQSPID, Y1, Y2, Y3, Y4, AE12, AF12);
-+FUNC_DECL_2(FWSPID, FWSPID, FWQSPID);
-+FUNC_GROUP_DECL(VB, Y1, Y2, Y3, Y4);
-+
-+/*
-+ * FIXME: Confirm bits and priorities are the right way around for the
-+ * following 4 pins
-+ */
-+#define AF25 244
-+SIG_EXPR_LIST_DECL_SEMG(AF25, I3C3SCL, I3C3, I3C3, SIG_DESC_SET(SCU438, 20),
-+			SIG_DESC_SET(SCU4D8, 20));
-+SIG_EXPR_LIST_DECL_SESG(AF25, FSI1CLK, FSI1, SIG_DESC_SET(SCU4D8, 20));
-+PIN_DECL_(AF25, SIG_EXPR_LIST_PTR(AF25, I3C3SCL),
-+	  SIG_EXPR_LIST_PTR(AF25, FSI1CLK));
-+
-+#define AE26 245
-+SIG_EXPR_LIST_DECL_SEMG(AE26, I3C3SDA, I3C3, I3C3, SIG_DESC_SET(SCU438, 21),
-+			SIG_DESC_SET(SCU4D8, 21));
-+SIG_EXPR_LIST_DECL_SESG(AE26, FSI1DATA, FSI1, SIG_DESC_SET(SCU4D8, 21));
-+PIN_DECL_(AE26, SIG_EXPR_LIST_PTR(AE26, I3C3SDA),
-+	  SIG_EXPR_LIST_PTR(AE26, FSI1DATA));
-+
-+GROUP_DECL(I3C3, AF25, AE26);
-+FUNC_DECL_2(I3C3, HVI3C3, I3C3);
-+FUNC_GROUP_DECL(FSI1, AF25, AE26);
-+
-+#define AE25 246
-+SIG_EXPR_LIST_DECL_SEMG(AE25, I3C4SCL, I3C4, I3C4, SIG_DESC_SET(SCU438, 22),
-+			SIG_DESC_SET(SCU4D8, 22));
-+SIG_EXPR_LIST_DECL_SESG(AE25, FSI2CLK, FSI2, SIG_DESC_SET(SCU4D8, 22));
-+PIN_DECL_(AE25, SIG_EXPR_LIST_PTR(AE25, I3C4SCL),
-+	  SIG_EXPR_LIST_PTR(AE25, FSI2CLK));
-+
-+#define AF24 247
-+SIG_EXPR_LIST_DECL_SEMG(AF24, I3C4SDA, I3C4, I3C4, SIG_DESC_SET(SCU438, 23),
-+			SIG_DESC_SET(SCU4D8, 23));
-+SIG_EXPR_LIST_DECL_SESG(AF24, FSI2DATA, FSI2, SIG_DESC_SET(SCU4D8, 23));
-+PIN_DECL_(AF24, SIG_EXPR_LIST_PTR(AF24, I3C4SDA),
-+	  SIG_EXPR_LIST_PTR(AF24, FSI2DATA));
-+
-+GROUP_DECL(I3C4, AE25, AF24);
-+FUNC_DECL_2(I3C4, HVI3C4, I3C4);
-+FUNC_GROUP_DECL(FSI2, AE25, AF24);
-+
-+/* Pins, groups and functions are sort(1):ed alphabetically for sanity */
-+
-+static struct pinctrl_pin_desc aspeed_g6_pins[ASPEED_G6_NR_PINS] = {
-+	ASPEED_PINCTRL_PIN(A11),
-+	ASPEED_PINCTRL_PIN(A12),
-+	ASPEED_PINCTRL_PIN(A13),
-+	ASPEED_PINCTRL_PIN(A14),
-+	ASPEED_PINCTRL_PIN(A15),
-+	ASPEED_PINCTRL_PIN(A16),
-+	ASPEED_PINCTRL_PIN(A17),
-+	ASPEED_PINCTRL_PIN(A18),
-+	ASPEED_PINCTRL_PIN(A19),
-+	ASPEED_PINCTRL_PIN(A2),
-+	ASPEED_PINCTRL_PIN(A20),
-+	ASPEED_PINCTRL_PIN(A21),
-+	ASPEED_PINCTRL_PIN(A22),
-+	ASPEED_PINCTRL_PIN(A23),
-+	ASPEED_PINCTRL_PIN(A24),
-+	ASPEED_PINCTRL_PIN(A25),
-+	ASPEED_PINCTRL_PIN(A3),
-+	ASPEED_PINCTRL_PIN(AA11),
-+	ASPEED_PINCTRL_PIN(AA12),
-+	ASPEED_PINCTRL_PIN(AA23),
-+	ASPEED_PINCTRL_PIN(AA24),
-+	ASPEED_PINCTRL_PIN(AA25),
-+	ASPEED_PINCTRL_PIN(AA26),
-+	ASPEED_PINCTRL_PIN(AA4),
-+	ASPEED_PINCTRL_PIN(AA5),
-+	ASPEED_PINCTRL_PIN(AA9),
-+	ASPEED_PINCTRL_PIN(AB10),
-+	ASPEED_PINCTRL_PIN(AB11),
-+	ASPEED_PINCTRL_PIN(AB12),
-+	ASPEED_PINCTRL_PIN(AB15),
-+	ASPEED_PINCTRL_PIN(AB18),
-+	ASPEED_PINCTRL_PIN(AB19),
-+	ASPEED_PINCTRL_PIN(AB22),
-+	ASPEED_PINCTRL_PIN(AB23),
-+	ASPEED_PINCTRL_PIN(AB24),
-+	ASPEED_PINCTRL_PIN(AB25),
-+	ASPEED_PINCTRL_PIN(AB26),
-+	ASPEED_PINCTRL_PIN(AB4),
-+	ASPEED_PINCTRL_PIN(AB5),
-+	ASPEED_PINCTRL_PIN(AB6),
-+	ASPEED_PINCTRL_PIN(AB7),
-+	ASPEED_PINCTRL_PIN(AB8),
-+	ASPEED_PINCTRL_PIN(AB9),
-+	ASPEED_PINCTRL_PIN(AC10),
-+	ASPEED_PINCTRL_PIN(AC11),
-+	ASPEED_PINCTRL_PIN(AC12),
-+	ASPEED_PINCTRL_PIN(AC15),
-+	ASPEED_PINCTRL_PIN(AC17),
-+	ASPEED_PINCTRL_PIN(AC18),
-+	ASPEED_PINCTRL_PIN(AC19),
-+	ASPEED_PINCTRL_PIN(AC22),
-+	ASPEED_PINCTRL_PIN(AC23),
-+	ASPEED_PINCTRL_PIN(AC24),
-+	ASPEED_PINCTRL_PIN(AC26),
-+	ASPEED_PINCTRL_PIN(AC4),
-+	ASPEED_PINCTRL_PIN(AC5),
-+	ASPEED_PINCTRL_PIN(AC7),
-+	ASPEED_PINCTRL_PIN(AC8),
-+	ASPEED_PINCTRL_PIN(AC9),
-+	ASPEED_PINCTRL_PIN(AD10),
-+	ASPEED_PINCTRL_PIN(AD11),
-+	ASPEED_PINCTRL_PIN(AD12),
-+	ASPEED_PINCTRL_PIN(AD14),
-+	ASPEED_PINCTRL_PIN(AD15),
-+	ASPEED_PINCTRL_PIN(AD19),
-+	ASPEED_PINCTRL_PIN(AD20),
-+	ASPEED_PINCTRL_PIN(AD22),
-+	ASPEED_PINCTRL_PIN(AD23),
-+	ASPEED_PINCTRL_PIN(AD24),
-+	ASPEED_PINCTRL_PIN(AD25),
-+	ASPEED_PINCTRL_PIN(AD26),
-+	ASPEED_PINCTRL_PIN(AD7),
-+	ASPEED_PINCTRL_PIN(AD8),
-+	ASPEED_PINCTRL_PIN(AD9),
-+	ASPEED_PINCTRL_PIN(AE10),
-+	ASPEED_PINCTRL_PIN(AE11),
-+	ASPEED_PINCTRL_PIN(AE12),
-+	ASPEED_PINCTRL_PIN(AE14),
-+	ASPEED_PINCTRL_PIN(AE15),
-+	ASPEED_PINCTRL_PIN(AE18),
-+	ASPEED_PINCTRL_PIN(AE19),
-+	ASPEED_PINCTRL_PIN(AE7),
-+	ASPEED_PINCTRL_PIN(AE8),
-+	ASPEED_PINCTRL_PIN(AF10),
-+	ASPEED_PINCTRL_PIN(AF11),
-+	ASPEED_PINCTRL_PIN(AF12),
-+	ASPEED_PINCTRL_PIN(AF14),
-+	ASPEED_PINCTRL_PIN(AF15),
-+	ASPEED_PINCTRL_PIN(AF7),
-+	ASPEED_PINCTRL_PIN(AF8),
-+	ASPEED_PINCTRL_PIN(AF9),
-+	ASPEED_PINCTRL_PIN(B1),
-+	ASPEED_PINCTRL_PIN(B12),
-+	ASPEED_PINCTRL_PIN(B13),
-+	ASPEED_PINCTRL_PIN(B14),
-+	ASPEED_PINCTRL_PIN(B16),
-+	ASPEED_PINCTRL_PIN(B17),
-+	ASPEED_PINCTRL_PIN(B18),
-+	ASPEED_PINCTRL_PIN(B2),
-+	ASPEED_PINCTRL_PIN(B20),
-+	ASPEED_PINCTRL_PIN(B21),
-+	ASPEED_PINCTRL_PIN(B22),
-+	ASPEED_PINCTRL_PIN(B24),
-+	ASPEED_PINCTRL_PIN(B25),
-+	ASPEED_PINCTRL_PIN(B26),
-+	ASPEED_PINCTRL_PIN(B3),
-+	ASPEED_PINCTRL_PIN(C1),
-+	ASPEED_PINCTRL_PIN(C11),
-+	ASPEED_PINCTRL_PIN(C12),
-+	ASPEED_PINCTRL_PIN(C13),
-+	ASPEED_PINCTRL_PIN(C14),
-+	ASPEED_PINCTRL_PIN(C15),
-+	ASPEED_PINCTRL_PIN(C16),
-+	ASPEED_PINCTRL_PIN(C17),
-+	ASPEED_PINCTRL_PIN(C18),
-+	ASPEED_PINCTRL_PIN(C19),
-+	ASPEED_PINCTRL_PIN(C2),
-+	ASPEED_PINCTRL_PIN(C20),
-+	ASPEED_PINCTRL_PIN(C21),
-+	ASPEED_PINCTRL_PIN(C22),
-+	ASPEED_PINCTRL_PIN(C23),
-+	ASPEED_PINCTRL_PIN(C24),
-+	ASPEED_PINCTRL_PIN(C25),
-+	ASPEED_PINCTRL_PIN(C26),
-+	ASPEED_PINCTRL_PIN(C4),
-+	ASPEED_PINCTRL_PIN(C5),
-+	ASPEED_PINCTRL_PIN(C6),
-+	ASPEED_PINCTRL_PIN(D1),
-+	ASPEED_PINCTRL_PIN(D11),
-+	ASPEED_PINCTRL_PIN(D12),
-+	ASPEED_PINCTRL_PIN(D13),
-+	ASPEED_PINCTRL_PIN(D14),
-+	ASPEED_PINCTRL_PIN(D15),
-+	ASPEED_PINCTRL_PIN(D16),
-+	ASPEED_PINCTRL_PIN(D17),
-+	ASPEED_PINCTRL_PIN(D18),
-+	ASPEED_PINCTRL_PIN(D19),
-+	ASPEED_PINCTRL_PIN(D2),
-+	ASPEED_PINCTRL_PIN(D20),
-+	ASPEED_PINCTRL_PIN(D21),
-+	ASPEED_PINCTRL_PIN(D22),
-+	ASPEED_PINCTRL_PIN(D23),
-+	ASPEED_PINCTRL_PIN(D24),
-+	ASPEED_PINCTRL_PIN(D26),
-+	ASPEED_PINCTRL_PIN(D3),
-+	ASPEED_PINCTRL_PIN(D4),
-+	ASPEED_PINCTRL_PIN(D5),
-+	ASPEED_PINCTRL_PIN(D6),
-+	ASPEED_PINCTRL_PIN(E1),
-+	ASPEED_PINCTRL_PIN(E11),
-+	ASPEED_PINCTRL_PIN(E12),
-+	ASPEED_PINCTRL_PIN(E13),
-+	ASPEED_PINCTRL_PIN(E14),
-+	ASPEED_PINCTRL_PIN(E15),
-+	ASPEED_PINCTRL_PIN(E16),
-+	ASPEED_PINCTRL_PIN(E17),
-+	ASPEED_PINCTRL_PIN(E18),
-+	ASPEED_PINCTRL_PIN(E19),
-+	ASPEED_PINCTRL_PIN(E2),
-+	ASPEED_PINCTRL_PIN(E20),
-+	ASPEED_PINCTRL_PIN(E21),
-+	ASPEED_PINCTRL_PIN(E22),
-+	ASPEED_PINCTRL_PIN(E23),
-+	ASPEED_PINCTRL_PIN(E24),
-+	ASPEED_PINCTRL_PIN(E25),
-+	ASPEED_PINCTRL_PIN(E26),
-+	ASPEED_PINCTRL_PIN(E3),
-+	ASPEED_PINCTRL_PIN(E4),
-+	ASPEED_PINCTRL_PIN(E5),
-+	ASPEED_PINCTRL_PIN(E6),
-+	ASPEED_PINCTRL_PIN(F13),
-+	ASPEED_PINCTRL_PIN(F15),
-+	ASPEED_PINCTRL_PIN(F22),
-+	ASPEED_PINCTRL_PIN(F23),
-+	ASPEED_PINCTRL_PIN(F24),
-+	ASPEED_PINCTRL_PIN(F25),
-+	ASPEED_PINCTRL_PIN(F26),
-+	ASPEED_PINCTRL_PIN(F4),
-+	ASPEED_PINCTRL_PIN(F5),
-+	ASPEED_PINCTRL_PIN(G22),
-+	ASPEED_PINCTRL_PIN(G23),
-+	ASPEED_PINCTRL_PIN(G24),
-+	ASPEED_PINCTRL_PIN(G26),
-+	ASPEED_PINCTRL_PIN(H22),
-+	ASPEED_PINCTRL_PIN(H23),
-+	ASPEED_PINCTRL_PIN(H24),
-+	ASPEED_PINCTRL_PIN(H25),
-+	ASPEED_PINCTRL_PIN(H26),
-+	ASPEED_PINCTRL_PIN(J22),
-+	ASPEED_PINCTRL_PIN(J23),
-+	ASPEED_PINCTRL_PIN(J24),
-+	ASPEED_PINCTRL_PIN(J25),
-+	ASPEED_PINCTRL_PIN(J26),
-+	ASPEED_PINCTRL_PIN(K23),
-+	ASPEED_PINCTRL_PIN(K24),
-+	ASPEED_PINCTRL_PIN(K25),
-+	ASPEED_PINCTRL_PIN(K26),
-+	ASPEED_PINCTRL_PIN(L23),
-+	ASPEED_PINCTRL_PIN(L24),
-+	ASPEED_PINCTRL_PIN(L26),
-+	ASPEED_PINCTRL_PIN(M23),
-+	ASPEED_PINCTRL_PIN(M24),
-+	ASPEED_PINCTRL_PIN(M25),
-+	ASPEED_PINCTRL_PIN(M26),
-+	ASPEED_PINCTRL_PIN(N23),
-+	ASPEED_PINCTRL_PIN(N24),
-+	ASPEED_PINCTRL_PIN(N25),
-+	ASPEED_PINCTRL_PIN(N26),
-+	ASPEED_PINCTRL_PIN(P23),
-+	ASPEED_PINCTRL_PIN(P24),
-+	ASPEED_PINCTRL_PIN(P25),
-+	ASPEED_PINCTRL_PIN(P26),
-+	ASPEED_PINCTRL_PIN(R23),
-+	ASPEED_PINCTRL_PIN(R24),
-+	ASPEED_PINCTRL_PIN(R26),
-+	ASPEED_PINCTRL_PIN(T23),
-+	ASPEED_PINCTRL_PIN(T24),
-+	ASPEED_PINCTRL_PIN(T25),
-+	ASPEED_PINCTRL_PIN(T26),
-+	ASPEED_PINCTRL_PIN(U24),
-+	ASPEED_PINCTRL_PIN(U25),
-+	ASPEED_PINCTRL_PIN(U26),
-+	ASPEED_PINCTRL_PIN(V24),
-+	ASPEED_PINCTRL_PIN(V25),
-+	ASPEED_PINCTRL_PIN(V26),
-+	ASPEED_PINCTRL_PIN(W23),
-+	ASPEED_PINCTRL_PIN(W24),
-+	ASPEED_PINCTRL_PIN(W26),
-+	ASPEED_PINCTRL_PIN(Y1),
-+	ASPEED_PINCTRL_PIN(Y2),
-+	ASPEED_PINCTRL_PIN(Y23),
-+	ASPEED_PINCTRL_PIN(Y24),
-+	ASPEED_PINCTRL_PIN(Y25),
-+	ASPEED_PINCTRL_PIN(Y26),
-+	ASPEED_PINCTRL_PIN(Y3),
-+	ASPEED_PINCTRL_PIN(Y4),
-+	ASPEED_PINCTRL_PIN(Y5),
-+	ASPEED_PINCTRL_PIN(AB16),
-+	ASPEED_PINCTRL_PIN(AA17),
-+	ASPEED_PINCTRL_PIN(AB17),
-+	ASPEED_PINCTRL_PIN(AE16),
-+	ASPEED_PINCTRL_PIN(AC16),
-+	ASPEED_PINCTRL_PIN(AA16),
-+	ASPEED_PINCTRL_PIN(AD16),
-+	ASPEED_PINCTRL_PIN(AF25),
-+	ASPEED_PINCTRL_PIN(AE26),
-+	ASPEED_PINCTRL_PIN(AE25),
-+	ASPEED_PINCTRL_PIN(AF24),
-+};
-+
-+static const struct aspeed_pin_group aspeed_g6_groups[] = {
-+	ASPEED_PINCTRL_GROUP(ADC0),
-+	ASPEED_PINCTRL_GROUP(ADC1),
-+	ASPEED_PINCTRL_GROUP(ADC10),
-+	ASPEED_PINCTRL_GROUP(ADC11),
-+	ASPEED_PINCTRL_GROUP(ADC12),
-+	ASPEED_PINCTRL_GROUP(ADC13),
-+	ASPEED_PINCTRL_GROUP(ADC14),
-+	ASPEED_PINCTRL_GROUP(ADC15),
-+	ASPEED_PINCTRL_GROUP(ADC2),
-+	ASPEED_PINCTRL_GROUP(ADC3),
-+	ASPEED_PINCTRL_GROUP(ADC4),
-+	ASPEED_PINCTRL_GROUP(ADC5),
-+	ASPEED_PINCTRL_GROUP(ADC6),
-+	ASPEED_PINCTRL_GROUP(ADC7),
-+	ASPEED_PINCTRL_GROUP(ADC8),
-+	ASPEED_PINCTRL_GROUP(ADC9),
-+	ASPEED_PINCTRL_GROUP(BMCINT),
-+	ASPEED_PINCTRL_GROUP(ESPI),
-+	ASPEED_PINCTRL_GROUP(ESPIALT),
-+	ASPEED_PINCTRL_GROUP(FSI1),
-+	ASPEED_PINCTRL_GROUP(FSI2),
-+	ASPEED_PINCTRL_GROUP(FWSPIABR),
-+	ASPEED_PINCTRL_GROUP(FWSPID),
-+	ASPEED_PINCTRL_GROUP(FWQSPID),
-+	ASPEED_PINCTRL_GROUP(FWSPIWP),
-+	ASPEED_PINCTRL_GROUP(GPIT0),
-+	ASPEED_PINCTRL_GROUP(GPIT1),
-+	ASPEED_PINCTRL_GROUP(GPIT2),
-+	ASPEED_PINCTRL_GROUP(GPIT3),
-+	ASPEED_PINCTRL_GROUP(GPIT4),
-+	ASPEED_PINCTRL_GROUP(GPIT5),
-+	ASPEED_PINCTRL_GROUP(GPIT6),
-+	ASPEED_PINCTRL_GROUP(GPIT7),
-+	ASPEED_PINCTRL_GROUP(GPIU0),
-+	ASPEED_PINCTRL_GROUP(GPIU1),
-+	ASPEED_PINCTRL_GROUP(GPIU2),
-+	ASPEED_PINCTRL_GROUP(GPIU3),
-+	ASPEED_PINCTRL_GROUP(GPIU4),
-+	ASPEED_PINCTRL_GROUP(GPIU5),
-+	ASPEED_PINCTRL_GROUP(GPIU6),
-+	ASPEED_PINCTRL_GROUP(GPIU7),
-+	ASPEED_PINCTRL_GROUP(HVI3C3),
-+	ASPEED_PINCTRL_GROUP(HVI3C4),
-+	ASPEED_PINCTRL_GROUP(I2C1),
-+	ASPEED_PINCTRL_GROUP(I2C10),
-+	ASPEED_PINCTRL_GROUP(I2C11),
-+	ASPEED_PINCTRL_GROUP(I2C12),
-+	ASPEED_PINCTRL_GROUP(I2C13),
-+	ASPEED_PINCTRL_GROUP(I2C14),
-+	ASPEED_PINCTRL_GROUP(I2C15),
-+	ASPEED_PINCTRL_GROUP(I2C16),
-+	ASPEED_PINCTRL_GROUP(I2C2),
-+	ASPEED_PINCTRL_GROUP(I2C3),
-+	ASPEED_PINCTRL_GROUP(I2C4),
-+	ASPEED_PINCTRL_GROUP(I2C5),
-+	ASPEED_PINCTRL_GROUP(I2C6),
-+	ASPEED_PINCTRL_GROUP(I2C7),
-+	ASPEED_PINCTRL_GROUP(I2C8),
-+	ASPEED_PINCTRL_GROUP(I2C9),
-+	ASPEED_PINCTRL_GROUP(I3C3),
-+	ASPEED_PINCTRL_GROUP(I3C4),
-+	ASPEED_PINCTRL_GROUP(I3C5),
-+	ASPEED_PINCTRL_GROUP(I3C6),
-+	ASPEED_PINCTRL_GROUP(JTAGM),
-+	ASPEED_PINCTRL_GROUP(LHPD),
-+	ASPEED_PINCTRL_GROUP(LHSIRQ),
-+	ASPEED_PINCTRL_GROUP(LPC),
-+	ASPEED_PINCTRL_GROUP(LPCHC),
-+	ASPEED_PINCTRL_GROUP(LPCPD),
-+	ASPEED_PINCTRL_GROUP(LPCPME),
-+	ASPEED_PINCTRL_GROUP(LPCSMI),
-+	ASPEED_PINCTRL_GROUP(LSIRQ),
-+	ASPEED_PINCTRL_GROUP(MACLINK1),
-+	ASPEED_PINCTRL_GROUP(MACLINK2),
-+	ASPEED_PINCTRL_GROUP(MACLINK3),
-+	ASPEED_PINCTRL_GROUP(MACLINK4),
-+	ASPEED_PINCTRL_GROUP(MDIO1),
-+	ASPEED_PINCTRL_GROUP(MDIO2),
-+	ASPEED_PINCTRL_GROUP(MDIO3),
-+	ASPEED_PINCTRL_GROUP(MDIO4),
-+	ASPEED_PINCTRL_GROUP(NCTS1),
-+	ASPEED_PINCTRL_GROUP(NCTS2),
-+	ASPEED_PINCTRL_GROUP(NCTS3),
-+	ASPEED_PINCTRL_GROUP(NCTS4),
-+	ASPEED_PINCTRL_GROUP(NDCD1),
-+	ASPEED_PINCTRL_GROUP(NDCD2),
-+	ASPEED_PINCTRL_GROUP(NDCD3),
-+	ASPEED_PINCTRL_GROUP(NDCD4),
-+	ASPEED_PINCTRL_GROUP(NDSR1),
-+	ASPEED_PINCTRL_GROUP(NDSR2),
-+	ASPEED_PINCTRL_GROUP(NDSR3),
-+	ASPEED_PINCTRL_GROUP(NDSR4),
-+	ASPEED_PINCTRL_GROUP(NDTR1),
-+	ASPEED_PINCTRL_GROUP(NDTR2),
-+	ASPEED_PINCTRL_GROUP(NDTR3),
-+	ASPEED_PINCTRL_GROUP(NDTR4),
-+	ASPEED_PINCTRL_GROUP(NRI1),
-+	ASPEED_PINCTRL_GROUP(NRI2),
-+	ASPEED_PINCTRL_GROUP(NRI3),
-+	ASPEED_PINCTRL_GROUP(NRI4),
-+	ASPEED_PINCTRL_GROUP(NRTS1),
-+	ASPEED_PINCTRL_GROUP(NRTS2),
-+	ASPEED_PINCTRL_GROUP(NRTS3),
-+	ASPEED_PINCTRL_GROUP(NRTS4),
-+	ASPEED_PINCTRL_GROUP(OSCCLK),
-+	ASPEED_PINCTRL_GROUP(PEWAKE),
-+	ASPEED_PINCTRL_GROUP(PWM0),
-+	ASPEED_PINCTRL_GROUP(PWM1),
-+	ASPEED_PINCTRL_GROUP(PWM10G0),
-+	ASPEED_PINCTRL_GROUP(PWM10G1),
-+	ASPEED_PINCTRL_GROUP(PWM11G0),
-+	ASPEED_PINCTRL_GROUP(PWM11G1),
-+	ASPEED_PINCTRL_GROUP(PWM12G0),
-+	ASPEED_PINCTRL_GROUP(PWM12G1),
-+	ASPEED_PINCTRL_GROUP(PWM13G0),
-+	ASPEED_PINCTRL_GROUP(PWM13G1),
-+	ASPEED_PINCTRL_GROUP(PWM14G0),
-+	ASPEED_PINCTRL_GROUP(PWM14G1),
-+	ASPEED_PINCTRL_GROUP(PWM15G0),
-+	ASPEED_PINCTRL_GROUP(PWM15G1),
-+	ASPEED_PINCTRL_GROUP(PWM2),
-+	ASPEED_PINCTRL_GROUP(PWM3),
-+	ASPEED_PINCTRL_GROUP(PWM4),
-+	ASPEED_PINCTRL_GROUP(PWM5),
-+	ASPEED_PINCTRL_GROUP(PWM6),
-+	ASPEED_PINCTRL_GROUP(PWM7),
-+	ASPEED_PINCTRL_GROUP(PWM8G0),
-+	ASPEED_PINCTRL_GROUP(PWM8G1),
-+	ASPEED_PINCTRL_GROUP(PWM9G0),
-+	ASPEED_PINCTRL_GROUP(PWM9G1),
-+	ASPEED_PINCTRL_GROUP(QSPI1),
-+	ASPEED_PINCTRL_GROUP(QSPI2),
-+	ASPEED_PINCTRL_GROUP(RGMII1),
-+	ASPEED_PINCTRL_GROUP(RGMII2),
-+	ASPEED_PINCTRL_GROUP(RGMII3),
-+	ASPEED_PINCTRL_GROUP(RGMII4),
-+	ASPEED_PINCTRL_GROUP(RMII1),
-+	ASPEED_PINCTRL_GROUP(RMII2),
-+	ASPEED_PINCTRL_GROUP(RMII3),
-+	ASPEED_PINCTRL_GROUP(RMII4),
-+	ASPEED_PINCTRL_GROUP(RXD1),
-+	ASPEED_PINCTRL_GROUP(RXD2),
-+	ASPEED_PINCTRL_GROUP(RXD3),
-+	ASPEED_PINCTRL_GROUP(RXD4),
-+	ASPEED_PINCTRL_GROUP(SALT1),
-+	ASPEED_PINCTRL_GROUP(SALT10G0),
-+	ASPEED_PINCTRL_GROUP(SALT10G1),
-+	ASPEED_PINCTRL_GROUP(SALT11G0),
-+	ASPEED_PINCTRL_GROUP(SALT11G1),
-+	ASPEED_PINCTRL_GROUP(SALT12G0),
-+	ASPEED_PINCTRL_GROUP(SALT12G1),
-+	ASPEED_PINCTRL_GROUP(SALT13G0),
-+	ASPEED_PINCTRL_GROUP(SALT13G1),
-+	ASPEED_PINCTRL_GROUP(SALT14G0),
-+	ASPEED_PINCTRL_GROUP(SALT14G1),
-+	ASPEED_PINCTRL_GROUP(SALT15G0),
-+	ASPEED_PINCTRL_GROUP(SALT15G1),
-+	ASPEED_PINCTRL_GROUP(SALT16G0),
-+	ASPEED_PINCTRL_GROUP(SALT16G1),
-+	ASPEED_PINCTRL_GROUP(SALT2),
-+	ASPEED_PINCTRL_GROUP(SALT3),
-+	ASPEED_PINCTRL_GROUP(SALT4),
-+	ASPEED_PINCTRL_GROUP(SALT5),
-+	ASPEED_PINCTRL_GROUP(SALT6),
-+	ASPEED_PINCTRL_GROUP(SALT7),
-+	ASPEED_PINCTRL_GROUP(SALT8),
-+	ASPEED_PINCTRL_GROUP(SALT9G0),
-+	ASPEED_PINCTRL_GROUP(SALT9G1),
-+	ASPEED_PINCTRL_GROUP(SD1),
-+	ASPEED_PINCTRL_GROUP(SD2),
-+	ASPEED_PINCTRL_GROUP(SD3),
-+	ASPEED_PINCTRL_GROUP(SD3DAT4),
-+	ASPEED_PINCTRL_GROUP(SD3DAT5),
-+	ASPEED_PINCTRL_GROUP(SD3DAT6),
-+	ASPEED_PINCTRL_GROUP(SD3DAT7),
-+	ASPEED_PINCTRL_GROUP(SGPM1),
-+	ASPEED_PINCTRL_GROUP(SGPS1),
-+	ASPEED_PINCTRL_GROUP(SIOONCTRL),
-+	ASPEED_PINCTRL_GROUP(SIOPBI),
-+	ASPEED_PINCTRL_GROUP(SIOPBO),
-+	ASPEED_PINCTRL_GROUP(SIOPWREQ),
-+	ASPEED_PINCTRL_GROUP(SIOPWRGD),
-+	ASPEED_PINCTRL_GROUP(SIOS3),
-+	ASPEED_PINCTRL_GROUP(SIOS5),
-+	ASPEED_PINCTRL_GROUP(SIOSCI),
-+	ASPEED_PINCTRL_GROUP(SPI1),
-+	ASPEED_PINCTRL_GROUP(SPI1ABR),
-+	ASPEED_PINCTRL_GROUP(SPI1CS1),
-+	ASPEED_PINCTRL_GROUP(SPI1WP),
-+	ASPEED_PINCTRL_GROUP(SPI2),
-+	ASPEED_PINCTRL_GROUP(SPI2CS1),
-+	ASPEED_PINCTRL_GROUP(SPI2CS2),
-+	ASPEED_PINCTRL_GROUP(TACH0),
-+	ASPEED_PINCTRL_GROUP(TACH1),
-+	ASPEED_PINCTRL_GROUP(TACH10),
-+	ASPEED_PINCTRL_GROUP(TACH11),
-+	ASPEED_PINCTRL_GROUP(TACH12),
-+	ASPEED_PINCTRL_GROUP(TACH13),
-+	ASPEED_PINCTRL_GROUP(TACH14),
-+	ASPEED_PINCTRL_GROUP(TACH15),
-+	ASPEED_PINCTRL_GROUP(TACH2),
-+	ASPEED_PINCTRL_GROUP(TACH3),
-+	ASPEED_PINCTRL_GROUP(TACH4),
-+	ASPEED_PINCTRL_GROUP(TACH5),
-+	ASPEED_PINCTRL_GROUP(TACH6),
-+	ASPEED_PINCTRL_GROUP(TACH7),
-+	ASPEED_PINCTRL_GROUP(TACH8),
-+	ASPEED_PINCTRL_GROUP(TACH9),
-+	ASPEED_PINCTRL_GROUP(THRU0),
-+	ASPEED_PINCTRL_GROUP(THRU1),
-+	ASPEED_PINCTRL_GROUP(THRU2),
-+	ASPEED_PINCTRL_GROUP(THRU3),
-+	ASPEED_PINCTRL_GROUP(TXD1),
-+	ASPEED_PINCTRL_GROUP(TXD2),
-+	ASPEED_PINCTRL_GROUP(TXD3),
-+	ASPEED_PINCTRL_GROUP(TXD4),
-+	ASPEED_PINCTRL_GROUP(UART10),
-+	ASPEED_PINCTRL_GROUP(UART11),
-+	ASPEED_PINCTRL_GROUP(UART12G0),
-+	ASPEED_PINCTRL_GROUP(UART12G1),
-+	ASPEED_PINCTRL_GROUP(UART13G0),
-+	ASPEED_PINCTRL_GROUP(UART13G1),
-+	ASPEED_PINCTRL_GROUP(UART6),
-+	ASPEED_PINCTRL_GROUP(UART7),
-+	ASPEED_PINCTRL_GROUP(UART8),
-+	ASPEED_PINCTRL_GROUP(UART9),
-+	ASPEED_PINCTRL_GROUP(VB),
-+	ASPEED_PINCTRL_GROUP(VGAHS),
-+	ASPEED_PINCTRL_GROUP(VGAVS),
-+	ASPEED_PINCTRL_GROUP(WDTRST1),
-+	ASPEED_PINCTRL_GROUP(WDTRST2),
-+	ASPEED_PINCTRL_GROUP(WDTRST3),
-+	ASPEED_PINCTRL_GROUP(WDTRST4),
-+};
-+
-+static const struct aspeed_pin_function aspeed_g6_functions[] = {
-+	ASPEED_PINCTRL_FUNC(ADC0),
-+	ASPEED_PINCTRL_FUNC(ADC1),
-+	ASPEED_PINCTRL_FUNC(ADC10),
-+	ASPEED_PINCTRL_FUNC(ADC11),
-+	ASPEED_PINCTRL_FUNC(ADC12),
-+	ASPEED_PINCTRL_FUNC(ADC13),
-+	ASPEED_PINCTRL_FUNC(ADC14),
-+	ASPEED_PINCTRL_FUNC(ADC15),
-+	ASPEED_PINCTRL_FUNC(ADC2),
-+	ASPEED_PINCTRL_FUNC(ADC3),
-+	ASPEED_PINCTRL_FUNC(ADC4),
-+	ASPEED_PINCTRL_FUNC(ADC5),
-+	ASPEED_PINCTRL_FUNC(ADC6),
-+	ASPEED_PINCTRL_FUNC(ADC7),
-+	ASPEED_PINCTRL_FUNC(ADC8),
-+	ASPEED_PINCTRL_FUNC(ADC9),
-+	ASPEED_PINCTRL_FUNC(BMCINT),
-+	ASPEED_PINCTRL_FUNC(ESPI),
-+	ASPEED_PINCTRL_FUNC(ESPIALT),
-+	ASPEED_PINCTRL_FUNC(FSI1),
-+	ASPEED_PINCTRL_FUNC(FSI2),
-+	ASPEED_PINCTRL_FUNC(FWSPIABR),
-+	ASPEED_PINCTRL_FUNC(FWSPID),
-+	ASPEED_PINCTRL_FUNC(FWSPIWP),
-+	ASPEED_PINCTRL_FUNC(GPIT0),
-+	ASPEED_PINCTRL_FUNC(GPIT1),
-+	ASPEED_PINCTRL_FUNC(GPIT2),
-+	ASPEED_PINCTRL_FUNC(GPIT3),
-+	ASPEED_PINCTRL_FUNC(GPIT4),
-+	ASPEED_PINCTRL_FUNC(GPIT5),
-+	ASPEED_PINCTRL_FUNC(GPIT6),
-+	ASPEED_PINCTRL_FUNC(GPIT7),
-+	ASPEED_PINCTRL_FUNC(GPIU0),
-+	ASPEED_PINCTRL_FUNC(GPIU1),
-+	ASPEED_PINCTRL_FUNC(GPIU2),
-+	ASPEED_PINCTRL_FUNC(GPIU3),
-+	ASPEED_PINCTRL_FUNC(GPIU4),
-+	ASPEED_PINCTRL_FUNC(GPIU5),
-+	ASPEED_PINCTRL_FUNC(GPIU6),
-+	ASPEED_PINCTRL_FUNC(GPIU7),
-+	ASPEED_PINCTRL_FUNC(I2C1),
-+	ASPEED_PINCTRL_FUNC(I2C10),
-+	ASPEED_PINCTRL_FUNC(I2C11),
-+	ASPEED_PINCTRL_FUNC(I2C12),
-+	ASPEED_PINCTRL_FUNC(I2C13),
-+	ASPEED_PINCTRL_FUNC(I2C14),
-+	ASPEED_PINCTRL_FUNC(I2C15),
-+	ASPEED_PINCTRL_FUNC(I2C16),
-+	ASPEED_PINCTRL_FUNC(I2C2),
-+	ASPEED_PINCTRL_FUNC(I2C3),
-+	ASPEED_PINCTRL_FUNC(I2C4),
-+	ASPEED_PINCTRL_FUNC(I2C5),
-+	ASPEED_PINCTRL_FUNC(I2C6),
-+	ASPEED_PINCTRL_FUNC(I2C7),
-+	ASPEED_PINCTRL_FUNC(I2C8),
-+	ASPEED_PINCTRL_FUNC(I2C9),
-+	ASPEED_PINCTRL_FUNC(I3C3),
-+	ASPEED_PINCTRL_FUNC(I3C4),
-+	ASPEED_PINCTRL_FUNC(I3C5),
-+	ASPEED_PINCTRL_FUNC(I3C6),
-+	ASPEED_PINCTRL_FUNC(JTAGM),
-+	ASPEED_PINCTRL_FUNC(LHPD),
-+	ASPEED_PINCTRL_FUNC(LHSIRQ),
-+	ASPEED_PINCTRL_FUNC(LPC),
-+	ASPEED_PINCTRL_FUNC(LPCHC),
-+	ASPEED_PINCTRL_FUNC(LPCPD),
-+	ASPEED_PINCTRL_FUNC(LPCPME),
-+	ASPEED_PINCTRL_FUNC(LPCSMI),
-+	ASPEED_PINCTRL_FUNC(LSIRQ),
-+	ASPEED_PINCTRL_FUNC(MACLINK1),
-+	ASPEED_PINCTRL_FUNC(MACLINK2),
-+	ASPEED_PINCTRL_FUNC(MACLINK3),
-+	ASPEED_PINCTRL_FUNC(MACLINK4),
-+	ASPEED_PINCTRL_FUNC(MDIO1),
-+	ASPEED_PINCTRL_FUNC(MDIO2),
-+	ASPEED_PINCTRL_FUNC(MDIO3),
-+	ASPEED_PINCTRL_FUNC(MDIO4),
-+	ASPEED_PINCTRL_FUNC(NCTS1),
-+	ASPEED_PINCTRL_FUNC(NCTS2),
-+	ASPEED_PINCTRL_FUNC(NCTS3),
-+	ASPEED_PINCTRL_FUNC(NCTS4),
-+	ASPEED_PINCTRL_FUNC(NDCD1),
-+	ASPEED_PINCTRL_FUNC(NDCD2),
-+	ASPEED_PINCTRL_FUNC(NDCD3),
-+	ASPEED_PINCTRL_FUNC(NDCD4),
-+	ASPEED_PINCTRL_FUNC(NDSR1),
-+	ASPEED_PINCTRL_FUNC(NDSR2),
-+	ASPEED_PINCTRL_FUNC(NDSR3),
-+	ASPEED_PINCTRL_FUNC(NDSR4),
-+	ASPEED_PINCTRL_FUNC(NDTR1),
-+	ASPEED_PINCTRL_FUNC(NDTR2),
-+	ASPEED_PINCTRL_FUNC(NDTR3),
-+	ASPEED_PINCTRL_FUNC(NDTR4),
-+	ASPEED_PINCTRL_FUNC(NRI1),
-+	ASPEED_PINCTRL_FUNC(NRI2),
-+	ASPEED_PINCTRL_FUNC(NRI3),
-+	ASPEED_PINCTRL_FUNC(NRI4),
-+	ASPEED_PINCTRL_FUNC(NRTS1),
-+	ASPEED_PINCTRL_FUNC(NRTS2),
-+	ASPEED_PINCTRL_FUNC(NRTS3),
-+	ASPEED_PINCTRL_FUNC(NRTS4),
-+	ASPEED_PINCTRL_FUNC(OSCCLK),
-+	ASPEED_PINCTRL_FUNC(PEWAKE),
-+	ASPEED_PINCTRL_FUNC(PWM0),
-+	ASPEED_PINCTRL_FUNC(PWM1),
-+	ASPEED_PINCTRL_FUNC(PWM10),
-+	ASPEED_PINCTRL_FUNC(PWM11),
-+	ASPEED_PINCTRL_FUNC(PWM12),
-+	ASPEED_PINCTRL_FUNC(PWM13),
-+	ASPEED_PINCTRL_FUNC(PWM14),
-+	ASPEED_PINCTRL_FUNC(PWM15),
-+	ASPEED_PINCTRL_FUNC(PWM2),
-+	ASPEED_PINCTRL_FUNC(PWM3),
-+	ASPEED_PINCTRL_FUNC(PWM4),
-+	ASPEED_PINCTRL_FUNC(PWM5),
-+	ASPEED_PINCTRL_FUNC(PWM6),
-+	ASPEED_PINCTRL_FUNC(PWM7),
-+	ASPEED_PINCTRL_FUNC(PWM8),
-+	ASPEED_PINCTRL_FUNC(PWM9),
-+	ASPEED_PINCTRL_FUNC(RGMII1),
-+	ASPEED_PINCTRL_FUNC(RGMII2),
-+	ASPEED_PINCTRL_FUNC(RGMII3),
-+	ASPEED_PINCTRL_FUNC(RGMII4),
-+	ASPEED_PINCTRL_FUNC(RMII1),
-+	ASPEED_PINCTRL_FUNC(RMII2),
-+	ASPEED_PINCTRL_FUNC(RMII3),
-+	ASPEED_PINCTRL_FUNC(RMII4),
-+	ASPEED_PINCTRL_FUNC(RXD1),
-+	ASPEED_PINCTRL_FUNC(RXD2),
-+	ASPEED_PINCTRL_FUNC(RXD3),
-+	ASPEED_PINCTRL_FUNC(RXD4),
-+	ASPEED_PINCTRL_FUNC(SALT1),
-+	ASPEED_PINCTRL_FUNC(SALT10),
-+	ASPEED_PINCTRL_FUNC(SALT11),
-+	ASPEED_PINCTRL_FUNC(SALT12),
-+	ASPEED_PINCTRL_FUNC(SALT13),
-+	ASPEED_PINCTRL_FUNC(SALT14),
-+	ASPEED_PINCTRL_FUNC(SALT15),
-+	ASPEED_PINCTRL_FUNC(SALT16),
-+	ASPEED_PINCTRL_FUNC(SALT2),
-+	ASPEED_PINCTRL_FUNC(SALT3),
-+	ASPEED_PINCTRL_FUNC(SALT4),
-+	ASPEED_PINCTRL_FUNC(SALT5),
-+	ASPEED_PINCTRL_FUNC(SALT6),
-+	ASPEED_PINCTRL_FUNC(SALT7),
-+	ASPEED_PINCTRL_FUNC(SALT8),
-+	ASPEED_PINCTRL_FUNC(SALT9),
-+	ASPEED_PINCTRL_FUNC(SD1),
-+	ASPEED_PINCTRL_FUNC(SD2),
-+	ASPEED_PINCTRL_FUNC(SD3),
-+	ASPEED_PINCTRL_FUNC(SD3DAT4),
-+	ASPEED_PINCTRL_FUNC(SD3DAT5),
-+	ASPEED_PINCTRL_FUNC(SD3DAT6),
-+	ASPEED_PINCTRL_FUNC(SD3DAT7),
-+	ASPEED_PINCTRL_FUNC(SGPM1),
-+	ASPEED_PINCTRL_FUNC(SGPS1),
-+	ASPEED_PINCTRL_FUNC(SIOONCTRL),
-+	ASPEED_PINCTRL_FUNC(SIOPBI),
-+	ASPEED_PINCTRL_FUNC(SIOPBO),
-+	ASPEED_PINCTRL_FUNC(SIOPWREQ),
-+	ASPEED_PINCTRL_FUNC(SIOPWRGD),
-+	ASPEED_PINCTRL_FUNC(SIOS3),
-+	ASPEED_PINCTRL_FUNC(SIOS5),
-+	ASPEED_PINCTRL_FUNC(SIOSCI),
-+	ASPEED_PINCTRL_FUNC(SPI1),
-+	ASPEED_PINCTRL_FUNC(SPI1ABR),
-+	ASPEED_PINCTRL_FUNC(SPI1CS1),
-+	ASPEED_PINCTRL_FUNC(SPI1WP),
-+	ASPEED_PINCTRL_FUNC(SPI2),
-+	ASPEED_PINCTRL_FUNC(SPI2CS1),
-+	ASPEED_PINCTRL_FUNC(SPI2CS2),
-+	ASPEED_PINCTRL_FUNC(TACH0),
-+	ASPEED_PINCTRL_FUNC(TACH1),
-+	ASPEED_PINCTRL_FUNC(TACH10),
-+	ASPEED_PINCTRL_FUNC(TACH11),
-+	ASPEED_PINCTRL_FUNC(TACH12),
-+	ASPEED_PINCTRL_FUNC(TACH13),
-+	ASPEED_PINCTRL_FUNC(TACH14),
-+	ASPEED_PINCTRL_FUNC(TACH15),
-+	ASPEED_PINCTRL_FUNC(TACH2),
-+	ASPEED_PINCTRL_FUNC(TACH3),
-+	ASPEED_PINCTRL_FUNC(TACH4),
-+	ASPEED_PINCTRL_FUNC(TACH5),
-+	ASPEED_PINCTRL_FUNC(TACH6),
-+	ASPEED_PINCTRL_FUNC(TACH7),
-+	ASPEED_PINCTRL_FUNC(TACH8),
-+	ASPEED_PINCTRL_FUNC(TACH9),
-+	ASPEED_PINCTRL_FUNC(THRU0),
-+	ASPEED_PINCTRL_FUNC(THRU1),
-+	ASPEED_PINCTRL_FUNC(THRU2),
-+	ASPEED_PINCTRL_FUNC(THRU3),
-+	ASPEED_PINCTRL_FUNC(TXD1),
-+	ASPEED_PINCTRL_FUNC(TXD2),
-+	ASPEED_PINCTRL_FUNC(TXD3),
-+	ASPEED_PINCTRL_FUNC(TXD4),
-+	ASPEED_PINCTRL_FUNC(UART10),
-+	ASPEED_PINCTRL_FUNC(UART11),
-+	ASPEED_PINCTRL_FUNC(UART12),
-+	ASPEED_PINCTRL_FUNC(UART13),
-+	ASPEED_PINCTRL_FUNC(UART6),
-+	ASPEED_PINCTRL_FUNC(UART7),
-+	ASPEED_PINCTRL_FUNC(UART8),
-+	ASPEED_PINCTRL_FUNC(UART9),
-+	ASPEED_PINCTRL_FUNC(VB),
-+	ASPEED_PINCTRL_FUNC(VGAHS),
-+	ASPEED_PINCTRL_FUNC(VGAVS),
-+	ASPEED_PINCTRL_FUNC(WDTRST1),
-+	ASPEED_PINCTRL_FUNC(WDTRST2),
-+	ASPEED_PINCTRL_FUNC(WDTRST3),
-+	ASPEED_PINCTRL_FUNC(WDTRST4),
-+};
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
+index 49ce5d62e442..0d1cb78b9bf9 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
+@@ -21,6 +21,13 @@
+ #include "pinmux-aspeed.h"
+ #include "pinctrl-aspeed.h"
+ 
++/* Wrap some of the common macros for clarity */
++#define SIG_EXPR_DECL_SINGLE(sig, func, ...) \
++	SIG_EXPR_DECL(sig, func, func, __VA_ARGS__)
++
++#define SIG_EXPR_LIST_DECL_SINGLE SIG_EXPR_LIST_DECL_SESG
++#define SIG_EXPR_LIST_DECL_DUAL SIG_EXPR_LIST_DECL_DESG
++
+ /*
+  * The "Multi-function Pins Mapping and Control" table in the SoC datasheet
+  * references registers by the device/offset mnemonic. The register macros
+@@ -80,15 +87,15 @@ SSSF_PIN_DECL(E6, GPIOA3, TIMER4, SIG_DESC_SET(SCU80, 3));
+ #define I2C9_DESC	SIG_DESC_SET(SCU90, 22)
+ 
+ #define C5 4
+-SIG_EXPR_LIST_DECL_SINGLE(SCL9, I2C9, I2C9_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(TIMER5, TIMER5, SIG_DESC_SET(SCU80, 4));
++SIG_EXPR_LIST_DECL_SINGLE(C5, SCL9, I2C9, I2C9_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C5, TIMER5, TIMER5, SIG_DESC_SET(SCU80, 4));
+ PIN_DECL_2(C5, GPIOA4, SCL9, TIMER5);
+ 
+ FUNC_GROUP_DECL(TIMER5, C5);
+ 
+ #define B4 5
+-SIG_EXPR_LIST_DECL_SINGLE(SDA9, I2C9, I2C9_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(TIMER6, TIMER6, SIG_DESC_SET(SCU80, 5));
++SIG_EXPR_LIST_DECL_SINGLE(B4, SDA9, I2C9, I2C9_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B4, TIMER6, TIMER6, SIG_DESC_SET(SCU80, 5));
+ PIN_DECL_2(B4, GPIOA5, SDA9, TIMER6);
+ 
+ FUNC_GROUP_DECL(TIMER6, B4);
+@@ -97,15 +104,15 @@ FUNC_GROUP_DECL(I2C9, C5, B4);
+ #define MDIO2_DESC	SIG_DESC_SET(SCU90, 2)
+ 
+ #define A3 6
+-SIG_EXPR_LIST_DECL_SINGLE(MDC2, MDIO2, MDIO2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(TIMER7, TIMER7, SIG_DESC_SET(SCU80, 6));
++SIG_EXPR_LIST_DECL_SINGLE(A3, MDC2, MDIO2, MDIO2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A3, TIMER7, TIMER7, SIG_DESC_SET(SCU80, 6));
+ PIN_DECL_2(A3, GPIOA6, MDC2, TIMER7);
+ 
+ FUNC_GROUP_DECL(TIMER7, A3);
+ 
+ #define D5 7
+-SIG_EXPR_LIST_DECL_SINGLE(MDIO2, MDIO2, MDIO2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(TIMER8, TIMER8, SIG_DESC_SET(SCU80, 7));
++SIG_EXPR_LIST_DECL_SINGLE(D5, MDIO2, MDIO2, MDIO2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D5, TIMER8, TIMER8, SIG_DESC_SET(SCU80, 7));
+ PIN_DECL_2(D5, GPIOA7, MDIO2, TIMER8);
+ 
+ FUNC_GROUP_DECL(TIMER8, D5);
+@@ -124,17 +131,17 @@ SSSF_PIN_DECL(H18, GPIOB2, SALT3, SIG_DESC_SET(SCU80, 10));
+ SSSF_PIN_DECL(F18, GPIOB3, SALT4, SIG_DESC_SET(SCU80, 11));
+ 
+ #define E19 12
+-SIG_EXPR_DECL(LPCRST, LPCRST, SIG_DESC_SET(SCU80, 12));
+-SIG_EXPR_DECL(LPCRST, LPCRSTS, SIG_DESC_SET(HW_STRAP1, 14));
+-SIG_EXPR_LIST_DECL_DUAL(LPCRST, LPCRST, LPCRSTS);
++SIG_EXPR_DECL_SINGLE(LPCRST, LPCRST, SIG_DESC_SET(SCU80, 12));
++SIG_EXPR_DECL_SINGLE(LPCRST, LPCRSTS, SIG_DESC_SET(HW_STRAP1, 14));
++SIG_EXPR_LIST_DECL_DUAL(E19, LPCRST, LPCRST, LPCRSTS);
+ PIN_DECL_1(E19, GPIOB4, LPCRST);
+ 
+ FUNC_GROUP_DECL(LPCRST, E19);
+ 
+ #define H19 13
+ #define H19_DESC        SIG_DESC_SET(SCU80, 13)
+-SIG_EXPR_LIST_DECL_SINGLE(LPCPD, LPCPD, H19_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(LPCSMI, LPCSMI, H19_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(H19, LPCPD, LPCPD, H19_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(H19, LPCSMI, LPCSMI, H19_DESC);
+ PIN_DECL_2(H19, GPIOB5, LPCPD, LPCSMI);
+ 
+ FUNC_GROUP_DECL(LPCPD, H19);
+@@ -144,11 +151,11 @@ FUNC_GROUP_DECL(LPCSMI, H19);
+ SSSF_PIN_DECL(H20, GPIOB6, LPCPME, SIG_DESC_SET(SCU80, 14));
+ 
+ #define E18 15
+-SIG_EXPR_LIST_DECL_SINGLE(EXTRST, EXTRST,
++SIG_EXPR_LIST_DECL_SINGLE(E18, EXTRST, EXTRST,
+ 		SIG_DESC_SET(SCU80, 15),
+ 		SIG_DESC_BIT(SCU90, 31, 0),
+ 		SIG_DESC_SET(SCU3C, 3));
+-SIG_EXPR_LIST_DECL_SINGLE(SPICS1, SPICS1,
++SIG_EXPR_LIST_DECL_SINGLE(E18, SPICS1, SPICS1,
+ 		SIG_DESC_SET(SCU80, 15),
+ 		SIG_DESC_SET(SCU90, 31));
+ PIN_DECL_2(E18, GPIOB7, EXTRST, SPICS1);
+@@ -160,13 +167,13 @@ FUNC_GROUP_DECL(SPICS1, E18);
+ #define I2C10_DESC	SIG_DESC_SET(SCU90, 23)
+ 
+ #define C4 16
+-SIG_EXPR_LIST_DECL_SINGLE(SD1CLK, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SCL10, I2C10, I2C10_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C4, SD1CLK, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C4, SCL10, I2C10, I2C10_DESC);
+ PIN_DECL_2(C4, GPIOC0, SD1CLK, SCL10);
+ 
+ #define B3 17
+-SIG_EXPR_LIST_DECL_SINGLE(SD1CMD, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SDA10, I2C10, I2C10_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B3, SD1CMD, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B3, SDA10, I2C10, I2C10_DESC);
+ PIN_DECL_2(B3, GPIOC1, SD1CMD, SDA10);
+ 
+ FUNC_GROUP_DECL(I2C10, C4, B3);
+@@ -174,13 +181,13 @@ FUNC_GROUP_DECL(I2C10, C4, B3);
+ #define I2C11_DESC	SIG_DESC_SET(SCU90, 24)
+ 
+ #define A2 18
+-SIG_EXPR_LIST_DECL_SINGLE(SD1DAT0, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SCL11, I2C11, I2C11_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A2, SD1DAT0, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A2, SCL11, I2C11, I2C11_DESC);
+ PIN_DECL_2(A2, GPIOC2, SD1DAT0, SCL11);
+ 
+ #define E5 19
+-SIG_EXPR_LIST_DECL_SINGLE(SD1DAT1, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SDA11, I2C11, I2C11_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E5, SD1DAT1, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E5, SDA11, I2C11, I2C11_DESC);
+ PIN_DECL_2(E5, GPIOC3, SD1DAT1, SDA11);
+ 
+ FUNC_GROUP_DECL(I2C11, A2, E5);
+@@ -188,13 +195,13 @@ FUNC_GROUP_DECL(I2C11, A2, E5);
+ #define I2C12_DESC	SIG_DESC_SET(SCU90, 25)
+ 
+ #define D4 20
+-SIG_EXPR_LIST_DECL_SINGLE(SD1DAT2, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SCL12, I2C12, I2C12_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D4, SD1DAT2, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D4, SCL12, I2C12, I2C12_DESC);
+ PIN_DECL_2(D4, GPIOC4, SD1DAT2, SCL12);
+ 
+ #define C3 21
+-SIG_EXPR_LIST_DECL_SINGLE(SD1DAT3, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SDA12, I2C12, I2C12_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C3, SD1DAT3, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C3, SDA12, I2C12, I2C12_DESC);
+ PIN_DECL_2(C3, GPIOC5, SD1DAT3, SDA12);
+ 
+ FUNC_GROUP_DECL(I2C12, D4, C3);
+@@ -202,13 +209,13 @@ FUNC_GROUP_DECL(I2C12, D4, C3);
+ #define I2C13_DESC	SIG_DESC_SET(SCU90, 26)
+ 
+ #define B2 22
+-SIG_EXPR_LIST_DECL_SINGLE(SD1CD, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SCL13, I2C13, I2C13_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B2, SD1CD, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B2, SCL13, I2C13, I2C13_DESC);
+ PIN_DECL_2(B2, GPIOC6, SD1CD, SCL13);
+ 
+ #define A1 23
+-SIG_EXPR_LIST_DECL_SINGLE(SD1WP, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SDA13, I2C13, I2C13_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A1, SD1WP, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A1, SDA13, I2C13, I2C13_DESC);
+ PIN_DECL_2(A1, GPIOC7, SD1WP, SDA13);
+ 
+ FUNC_GROUP_DECL(I2C13, B2, A1);
+@@ -219,17 +226,17 @@ FUNC_GROUP_DECL(SD1, C4, B3, A2, E5, D4, C3, B2, A1);
+ #define GPID0_DESC	SIG_DESC_SET(SCU8C, 8)
+ 
+ #define A18 24
+-SIG_EXPR_LIST_DECL_SINGLE(SD2CLK, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID0IN, GPID0, GPID0_DESC);
+-SIG_EXPR_DECL(GPID0IN, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID0IN, GPID0, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(A18, SD2CLK, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID0IN, GPID0, GPID0_DESC);
++SIG_EXPR_DECL_SINGLE(GPID0IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(A18, GPID0IN, GPID0, GPID);
+ PIN_DECL_2(A18, GPIOD0, SD2CLK, GPID0IN);
+ 
+ #define D16 25
+-SIG_EXPR_LIST_DECL_SINGLE(SD2CMD, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID0OUT, GPID0, GPID0_DESC);
+-SIG_EXPR_DECL(GPID0OUT, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID0OUT, GPID0, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(D16, SD2CMD, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID0OUT, GPID0, GPID0_DESC);
++SIG_EXPR_DECL_SINGLE(GPID0OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(D16, GPID0OUT, GPID0, GPID);
+ PIN_DECL_2(D16, GPIOD1, SD2CMD, GPID0OUT);
+ 
+ FUNC_GROUP_DECL(GPID0, A18, D16);
+@@ -237,17 +244,17 @@ FUNC_GROUP_DECL(GPID0, A18, D16);
+ #define GPID2_DESC	SIG_DESC_SET(SCU8C, 9)
+ 
+ #define B17 26
+-SIG_EXPR_LIST_DECL_SINGLE(SD2DAT0, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID2IN, GPID2, GPID2_DESC);
+-SIG_EXPR_DECL(GPID2IN, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID2IN, GPID2, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(B17, SD2DAT0, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID2IN, GPID2, GPID2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID2IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(B17, GPID2IN, GPID2, GPID);
+ PIN_DECL_2(B17, GPIOD2, SD2DAT0, GPID2IN);
+ 
+ #define A17 27
+-SIG_EXPR_LIST_DECL_SINGLE(SD2DAT1, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID2OUT, GPID2, GPID2_DESC);
+-SIG_EXPR_DECL(GPID2OUT, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID2OUT, GPID2, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(A17, SD2DAT1, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID2OUT, GPID2, GPID2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID2OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(A17, GPID2OUT, GPID2, GPID);
+ PIN_DECL_2(A17, GPIOD3, SD2DAT1, GPID2OUT);
+ 
+ FUNC_GROUP_DECL(GPID2, B17, A17);
+@@ -255,17 +262,17 @@ FUNC_GROUP_DECL(GPID2, B17, A17);
+ #define GPID4_DESC	SIG_DESC_SET(SCU8C, 10)
+ 
+ #define C16 28
+-SIG_EXPR_LIST_DECL_SINGLE(SD2DAT2, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID4IN, GPID4, GPID4_DESC);
+-SIG_EXPR_DECL(GPID4IN, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID4IN, GPID4, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(C16, SD2DAT2, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID4IN, GPID4, GPID4_DESC);
++SIG_EXPR_DECL_SINGLE(GPID4IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(C16, GPID4IN, GPID4, GPID);
+ PIN_DECL_2(C16, GPIOD4, SD2DAT2, GPID4IN);
+ 
+ #define B16 29
+-SIG_EXPR_LIST_DECL_SINGLE(SD2DAT3, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID4OUT, GPID4, GPID4_DESC);
+-SIG_EXPR_DECL(GPID4OUT, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID4OUT, GPID4, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(B16, SD2DAT3, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID4OUT, GPID4, GPID4_DESC);
++SIG_EXPR_DECL_SINGLE(GPID4OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(B16, GPID4OUT, GPID4, GPID);
+ PIN_DECL_2(B16, GPIOD5, SD2DAT3, GPID4OUT);
+ 
+ FUNC_GROUP_DECL(GPID4, C16, B16);
+@@ -273,17 +280,17 @@ FUNC_GROUP_DECL(GPID4, C16, B16);
+ #define GPID6_DESC	SIG_DESC_SET(SCU8C, 11)
+ 
+ #define A16 30
+-SIG_EXPR_LIST_DECL_SINGLE(SD2CD, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID6IN, GPID6, GPID6_DESC);
+-SIG_EXPR_DECL(GPID6IN, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID6IN, GPID6, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(A16, SD2CD, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID6IN, GPID6, GPID6_DESC);
++SIG_EXPR_DECL_SINGLE(GPID6IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(A16, GPID6IN, GPID6, GPID);
+ PIN_DECL_2(A16, GPIOD6, SD2CD, GPID6IN);
+ 
+ #define E15 31
+-SIG_EXPR_LIST_DECL_SINGLE(SD2WP, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID6OUT, GPID6, GPID6_DESC);
+-SIG_EXPR_DECL(GPID6OUT, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID6OUT, GPID6, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(E15, SD2WP, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID6OUT, GPID6, GPID6_DESC);
++SIG_EXPR_DECL_SINGLE(GPID6OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(E15, GPID6OUT, GPID6, GPID);
+ PIN_DECL_2(E15, GPIOD7, SD2WP, GPID6OUT);
+ 
+ FUNC_GROUP_DECL(GPID6, A16, E15);
+@@ -297,76 +304,76 @@ FUNC_GROUP_DECL(GPID, A18, D16, B17, A17, C16, B16, A16, E15);
+ #define GPIE6_DESC      SIG_DESC_SET(SCU8C, 15)
+ 
+ #define D15 32
+-SIG_EXPR_LIST_DECL_SINGLE(NCTS3, NCTS3, SIG_DESC_SET(SCU80, 16));
+-SIG_EXPR_DECL(GPIE0IN, GPIE0, GPIE0_DESC);
+-SIG_EXPR_DECL(GPIE0IN, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE0IN, GPIE0, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(D15, NCTS3, NCTS3, SIG_DESC_SET(SCU80, 16));
++SIG_EXPR_DECL_SINGLE(GPIE0IN, GPIE0, GPIE0_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE0IN, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(D15, GPIE0IN, GPIE0, GPIE);
+ PIN_DECL_2(D15, GPIOE0, NCTS3, GPIE0IN);
+ 
+ FUNC_GROUP_DECL(NCTS3, D15);
+ 
+ #define C15 33
+-SIG_EXPR_LIST_DECL_SINGLE(NDCD3, NDCD3, SIG_DESC_SET(SCU80, 17));
+-SIG_EXPR_DECL(GPIE0OUT, GPIE0, GPIE0_DESC);
+-SIG_EXPR_DECL(GPIE0OUT, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE0OUT, GPIE0, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(C15, NDCD3, NDCD3, SIG_DESC_SET(SCU80, 17));
++SIG_EXPR_DECL_SINGLE(GPIE0OUT, GPIE0, GPIE0_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE0OUT, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(C15, GPIE0OUT, GPIE0, GPIE);
+ PIN_DECL_2(C15, GPIOE1, NDCD3, GPIE0OUT);
+ 
+ FUNC_GROUP_DECL(NDCD3, C15);
+ FUNC_GROUP_DECL(GPIE0, D15, C15);
+ 
+ #define B15 34
+-SIG_EXPR_LIST_DECL_SINGLE(NDSR3, NDSR3, SIG_DESC_SET(SCU80, 18));
+-SIG_EXPR_DECL(GPIE2IN, GPIE2, GPIE2_DESC);
+-SIG_EXPR_DECL(GPIE2IN, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE2IN, GPIE2, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(B15, NDSR3, NDSR3, SIG_DESC_SET(SCU80, 18));
++SIG_EXPR_DECL_SINGLE(GPIE2IN, GPIE2, GPIE2_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE2IN, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(B15, GPIE2IN, GPIE2, GPIE);
+ PIN_DECL_2(B15, GPIOE2, NDSR3, GPIE2IN);
+ 
+ FUNC_GROUP_DECL(NDSR3, B15);
+ 
+ #define A15 35
+-SIG_EXPR_LIST_DECL_SINGLE(NRI3, NRI3, SIG_DESC_SET(SCU80, 19));
+-SIG_EXPR_DECL(GPIE2OUT, GPIE2, GPIE2_DESC);
+-SIG_EXPR_DECL(GPIE2OUT, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE2OUT, GPIE2, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(A15, NRI3, NRI3, SIG_DESC_SET(SCU80, 19));
++SIG_EXPR_DECL_SINGLE(GPIE2OUT, GPIE2, GPIE2_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE2OUT, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(A15, GPIE2OUT, GPIE2, GPIE);
+ PIN_DECL_2(A15, GPIOE3, NRI3, GPIE2OUT);
+ 
+ FUNC_GROUP_DECL(NRI3, A15);
+ FUNC_GROUP_DECL(GPIE2, B15, A15);
+ 
+ #define E14 36
+-SIG_EXPR_LIST_DECL_SINGLE(NDTR3, NDTR3, SIG_DESC_SET(SCU80, 20));
+-SIG_EXPR_DECL(GPIE4IN, GPIE4, GPIE4_DESC);
+-SIG_EXPR_DECL(GPIE4IN, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE4IN, GPIE4, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(E14, NDTR3, NDTR3, SIG_DESC_SET(SCU80, 20));
++SIG_EXPR_DECL_SINGLE(GPIE4IN, GPIE4, GPIE4_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE4IN, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(E14, GPIE4IN, GPIE4, GPIE);
+ PIN_DECL_2(E14, GPIOE4, NDTR3, GPIE4IN);
+ 
+ FUNC_GROUP_DECL(NDTR3, E14);
+ 
+ #define D14 37
+-SIG_EXPR_LIST_DECL_SINGLE(NRTS3, NRTS3, SIG_DESC_SET(SCU80, 21));
+-SIG_EXPR_DECL(GPIE4OUT, GPIE4, GPIE4_DESC);
+-SIG_EXPR_DECL(GPIE4OUT, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE4OUT, GPIE4, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(D14, NRTS3, NRTS3, SIG_DESC_SET(SCU80, 21));
++SIG_EXPR_DECL_SINGLE(GPIE4OUT, GPIE4, GPIE4_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE4OUT, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(D14, GPIE4OUT, GPIE4, GPIE);
+ PIN_DECL_2(D14, GPIOE5, NRTS3, GPIE4OUT);
+ 
+ FUNC_GROUP_DECL(NRTS3, D14);
+ FUNC_GROUP_DECL(GPIE4, E14, D14);
+ 
+ #define C14 38
+-SIG_EXPR_LIST_DECL_SINGLE(TXD3, TXD3, SIG_DESC_SET(SCU80, 22));
+-SIG_EXPR_DECL(GPIE6IN, GPIE6, GPIE6_DESC);
+-SIG_EXPR_DECL(GPIE6IN, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE6IN, GPIE6, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(C14, TXD3, TXD3, SIG_DESC_SET(SCU80, 22));
++SIG_EXPR_DECL_SINGLE(GPIE6IN, GPIE6, GPIE6_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE6IN, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(C14, GPIE6IN, GPIE6, GPIE);
+ PIN_DECL_2(C14, GPIOE6, TXD3, GPIE6IN);
+ 
+ FUNC_GROUP_DECL(TXD3, C14);
+ 
+ #define B14 39
+-SIG_EXPR_LIST_DECL_SINGLE(RXD3, RXD3, SIG_DESC_SET(SCU80, 23));
+-SIG_EXPR_DECL(GPIE6OUT, GPIE6, GPIE6_DESC);
+-SIG_EXPR_DECL(GPIE6OUT, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE6OUT, GPIE6, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(B14, RXD3, RXD3, SIG_DESC_SET(SCU80, 23));
++SIG_EXPR_DECL_SINGLE(GPIE6OUT, GPIE6, GPIE6_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE6OUT, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(B14, GPIE6OUT, GPIE6, GPIE);
+ PIN_DECL_2(B14, GPIOE7, RXD3, GPIE6OUT);
+ 
+ FUNC_GROUP_DECL(RXD3, B14);
+@@ -378,28 +385,28 @@ SSSF_PIN_DECL(D18, GPIOF0, NCTS4, SIG_DESC_SET(SCU80, 24));
+ #define ACPI_DESC       SIG_DESC_BIT(HW_STRAP1, 19, 0)
+ 
+ #define B19 41
+-SIG_EXPR_LIST_DECL_SINGLE(NDCD4, NDCD4, SIG_DESC_SET(SCU80, 25));
+-SIG_EXPR_DECL(SIOPBI, SIOPBI, SIG_DESC_SET(SCUA4, 12));
+-SIG_EXPR_DECL(SIOPBI, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOPBI, SIOPBI, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(B19, NDCD4, NDCD4, SIG_DESC_SET(SCU80, 25));
++SIG_EXPR_DECL_SINGLE(SIOPBI, SIOPBI, SIG_DESC_SET(SCUA4, 12));
++SIG_EXPR_DECL_SINGLE(SIOPBI, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(B19, SIOPBI, SIOPBI, ACPI);
+ PIN_DECL_2(B19, GPIOF1, NDCD4, SIOPBI);
+ FUNC_GROUP_DECL(NDCD4, B19);
+ FUNC_GROUP_DECL(SIOPBI, B19);
+ 
+ #define A20 42
+-SIG_EXPR_LIST_DECL_SINGLE(NDSR4, NDSR4, SIG_DESC_SET(SCU80, 26));
+-SIG_EXPR_DECL(SIOPWRGD, SIOPWRGD, SIG_DESC_SET(SCUA4, 12));
+-SIG_EXPR_DECL(SIOPWRGD, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOPWRGD, SIOPWRGD, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(A20, NDSR4, NDSR4, SIG_DESC_SET(SCU80, 26));
++SIG_EXPR_DECL_SINGLE(SIOPWRGD, SIOPWRGD, SIG_DESC_SET(SCUA4, 12));
++SIG_EXPR_DECL_SINGLE(SIOPWRGD, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(A20, SIOPWRGD, SIOPWRGD, ACPI);
+ PIN_DECL_2(A20, GPIOF2, NDSR4, SIOPWRGD);
+ FUNC_GROUP_DECL(NDSR4, A20);
+ FUNC_GROUP_DECL(SIOPWRGD, A20);
+ 
+ #define D17 43
+-SIG_EXPR_LIST_DECL_SINGLE(NRI4, NRI4, SIG_DESC_SET(SCU80, 27));
+-SIG_EXPR_DECL(SIOPBO, SIOPBO, SIG_DESC_SET(SCUA4, 14));
+-SIG_EXPR_DECL(SIOPBO, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOPBO, SIOPBO, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(D17, NRI4, NRI4, SIG_DESC_SET(SCU80, 27));
++SIG_EXPR_DECL_SINGLE(SIOPBO, SIOPBO, SIG_DESC_SET(SCUA4, 14));
++SIG_EXPR_DECL_SINGLE(SIOPBO, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(D17, SIOPBO, SIOPBO, ACPI);
+ PIN_DECL_2(D17, GPIOF3, NRI4, SIOPBO);
+ FUNC_GROUP_DECL(NRI4, D17);
+ FUNC_GROUP_DECL(SIOPBO, D17);
+@@ -408,10 +415,10 @@ FUNC_GROUP_DECL(SIOPBO, D17);
+ SSSF_PIN_DECL(B18, GPIOF4, NDTR4, SIG_DESC_SET(SCU80, 28));
+ 
+ #define A19 45
+-SIG_EXPR_LIST_DECL_SINGLE(NDTS4, NDTS4, SIG_DESC_SET(SCU80, 29));
+-SIG_EXPR_DECL(SIOSCI, SIOSCI, SIG_DESC_SET(SCUA4, 15));
+-SIG_EXPR_DECL(SIOSCI, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOSCI, SIOSCI, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(A19, NDTS4, NDTS4, SIG_DESC_SET(SCU80, 29));
++SIG_EXPR_DECL_SINGLE(SIOSCI, SIOSCI, SIG_DESC_SET(SCUA4, 15));
++SIG_EXPR_DECL_SINGLE(SIOSCI, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(A19, SIOSCI, SIOSCI, ACPI);
+ PIN_DECL_2(A19, GPIOF5, NDTS4, SIOSCI);
+ FUNC_GROUP_DECL(NDTS4, A19);
+ FUNC_GROUP_DECL(SIOSCI, A19);
+@@ -435,16 +442,16 @@ SSSF_PIN_DECL(D13, GPIOG2, SGPSI0, SIG_DESC_SET(SCU84, 2));
+ SSSF_PIN_DECL(C13, GPIOG3, SGPSI1, SIG_DESC_SET(SCU84, 3));
+ 
+ #define B13 52
+-SIG_EXPR_LIST_DECL_SINGLE(OSCCLK, OSCCLK, SIG_DESC_SET(SCU2C, 1));
+-SIG_EXPR_LIST_DECL_SINGLE(WDTRST1, WDTRST1, SIG_DESC_SET(SCU84, 4));
++SIG_EXPR_LIST_DECL_SINGLE(B13, OSCCLK, OSCCLK, SIG_DESC_SET(SCU2C, 1));
++SIG_EXPR_LIST_DECL_SINGLE(B13, WDTRST1, WDTRST1, SIG_DESC_SET(SCU84, 4));
+ PIN_DECL_2(B13, GPIOG4, OSCCLK, WDTRST1);
+ 
+ FUNC_GROUP_DECL(OSCCLK, B13);
+ FUNC_GROUP_DECL(WDTRST1, B13);
+ 
+ #define Y21 53
+-SIG_EXPR_LIST_DECL_SINGLE(USBCKI, USBCKI, SIG_DESC_SET(HW_STRAP1, 23));
+-SIG_EXPR_LIST_DECL_SINGLE(WDTRST2, WDTRST2, SIG_DESC_SET(SCU84, 5));
++SIG_EXPR_LIST_DECL_SINGLE(Y21, USBCKI, USBCKI, SIG_DESC_SET(HW_STRAP1, 23));
++SIG_EXPR_LIST_DECL_SINGLE(Y21, WDTRST2, WDTRST2, SIG_DESC_SET(SCU84, 5));
+ PIN_DECL_2(Y21, GPIOG5, USBCKI, WDTRST2);
+ 
+ FUNC_GROUP_DECL(USBCKI, Y21);
+@@ -462,59 +469,59 @@ SSSF_PIN_DECL(U18, GPIOG7, FLWP, SIG_DESC_SET(SCU84, 7));
+ #define BOOT_SRC_NOR	{ ASPEED_IP_SCU, HW_STRAP1, GENMASK(1, 0), 0, 0 }
+ 
+ #define A8 56
+-SIG_EXPR_DECL(ROMD8, ROM16, ROM16_DESC);
+-SIG_EXPR_DECL(ROMD8, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
+-SIG_EXPR_LIST_DECL_DUAL(ROMD8, ROM16, ROM16S);
+-SIG_EXPR_LIST_DECL_SINGLE(NCTS6, NCTS6, UART6_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD8, ROM16, ROM16_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD8, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
++SIG_EXPR_LIST_DECL_DUAL(A8, ROMD8, ROM16, ROM16S);
++SIG_EXPR_LIST_DECL_SINGLE(A8, NCTS6, NCTS6, UART6_DESC);
+ PIN_DECL_2(A8, GPIOH0, ROMD8, NCTS6);
+ 
+ #define C7 57
+-SIG_EXPR_DECL(ROMD9, ROM16, ROM16_DESC);
+-SIG_EXPR_DECL(ROMD9, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
+-SIG_EXPR_LIST_DECL_DUAL(ROMD9, ROM16, ROM16S);
+-SIG_EXPR_LIST_DECL_SINGLE(NDCD6, NDCD6, UART6_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD9, ROM16, ROM16_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD9, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
++SIG_EXPR_LIST_DECL_DUAL(C7, ROMD9, ROM16, ROM16S);
++SIG_EXPR_LIST_DECL_SINGLE(C7, NDCD6, NDCD6, UART6_DESC);
+ PIN_DECL_2(C7, GPIOH1, ROMD9, NDCD6);
+ 
+ #define B7 58
+-SIG_EXPR_DECL(ROMD10, ROM16, ROM16_DESC);
+-SIG_EXPR_DECL(ROMD10, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
+-SIG_EXPR_LIST_DECL_DUAL(ROMD10, ROM16, ROM16S);
+-SIG_EXPR_LIST_DECL_SINGLE(NDSR6, NDSR6, UART6_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD10, ROM16, ROM16_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD10, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
++SIG_EXPR_LIST_DECL_DUAL(B7, ROMD10, ROM16, ROM16S);
++SIG_EXPR_LIST_DECL_SINGLE(B7, NDSR6, NDSR6, UART6_DESC);
+ PIN_DECL_2(B7, GPIOH2, ROMD10, NDSR6);
+ 
+ #define A7 59
+-SIG_EXPR_DECL(ROMD11, ROM16, ROM16_DESC);
+-SIG_EXPR_DECL(ROMD11, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
+-SIG_EXPR_LIST_DECL_DUAL(ROMD11, ROM16, ROM16S);
+-SIG_EXPR_LIST_DECL_SINGLE(NRI6, NRI6, UART6_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD11, ROM16, ROM16_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD11, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
++SIG_EXPR_LIST_DECL_DUAL(A7, ROMD11, ROM16, ROM16S);
++SIG_EXPR_LIST_DECL_SINGLE(A7, NRI6, NRI6, UART6_DESC);
+ PIN_DECL_2(A7, GPIOH3, ROMD11, NRI6);
+ 
+ #define D7 60
+-SIG_EXPR_DECL(ROMD12, ROM16, ROM16_DESC);
+-SIG_EXPR_DECL(ROMD12, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
+-SIG_EXPR_LIST_DECL_DUAL(ROMD12, ROM16, ROM16S);
+-SIG_EXPR_LIST_DECL_SINGLE(NDTR6, NDTR6, UART6_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD12, ROM16, ROM16_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD12, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
++SIG_EXPR_LIST_DECL_DUAL(D7, ROMD12, ROM16, ROM16S);
++SIG_EXPR_LIST_DECL_SINGLE(D7, NDTR6, NDTR6, UART6_DESC);
+ PIN_DECL_2(D7, GPIOH4, ROMD12, NDTR6);
+ 
+ #define B6 61
+-SIG_EXPR_DECL(ROMD13, ROM16, ROM16_DESC);
+-SIG_EXPR_DECL(ROMD13, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
+-SIG_EXPR_LIST_DECL_DUAL(ROMD13, ROM16, ROM16S);
+-SIG_EXPR_LIST_DECL_SINGLE(NRTS6, NRTS6, UART6_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD13, ROM16, ROM16_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD13, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
++SIG_EXPR_LIST_DECL_DUAL(B6, ROMD13, ROM16, ROM16S);
++SIG_EXPR_LIST_DECL_SINGLE(B6, NRTS6, NRTS6, UART6_DESC);
+ PIN_DECL_2(B6, GPIOH5, ROMD13, NRTS6);
+ 
+ #define A6 62
+-SIG_EXPR_DECL(ROMD14, ROM16, ROM16_DESC);
+-SIG_EXPR_DECL(ROMD14, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
+-SIG_EXPR_LIST_DECL_DUAL(ROMD14, ROM16, ROM16S);
+-SIG_EXPR_LIST_DECL_SINGLE(TXD6, TXD6, UART6_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD14, ROM16, ROM16_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD14, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
++SIG_EXPR_LIST_DECL_DUAL(A6, ROMD14, ROM16, ROM16S);
++SIG_EXPR_LIST_DECL_SINGLE(A6, TXD6, TXD6, UART6_DESC);
+ PIN_DECL_2(A6, GPIOH6, ROMD14, TXD6);
+ 
+ #define E7 63
+-SIG_EXPR_DECL(ROMD15, ROM16, ROM16_DESC);
+-SIG_EXPR_DECL(ROMD15, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
+-SIG_EXPR_LIST_DECL_DUAL(ROMD15, ROM16, ROM16S);
+-SIG_EXPR_LIST_DECL_SINGLE(RXD6, RXD6, UART6_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD15, ROM16, ROM16_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD15, ROM16S, FLASH_WIDE, BOOT_SRC_NOR);
++SIG_EXPR_LIST_DECL_DUAL(E7, ROMD15, ROM16, ROM16S);
++SIG_EXPR_LIST_DECL_SINGLE(E7, RXD6, RXD6, UART6_DESC);
+ PIN_DECL_2(E7, GPIOH7, ROMD15, RXD6);
+ 
+ FUNC_GROUP_DECL(UART6, A8, C7, B7, A7, D7, B6, A6, E7);
+@@ -527,69 +534,77 @@ FUNC_GROUP_DECL(UART6, A8, C7, B7, A7, D7, B6, A6, E7);
+ 	{ ASPEED_IP_SCU, HW_STRAP1, GENMASK(13, 12), 3, 0 }
+ 
+ #define C22 64
+-SIG_EXPR_DECL(SYSCS, SPI1DEBUG, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SYSCS, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SYSCS, SPI1DEBUG, SPI1PASSTHRU);
++SIG_EXPR_DECL_SINGLE(SYSCS, SPI1DEBUG, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SYSCS, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(C22, SYSCS, SPI1DEBUG, SPI1PASSTHRU);
+ PIN_DECL_1(C22, GPIOI0, SYSCS);
+ 
+ #define G18 65
+-SIG_EXPR_DECL(SYSCK, SPI1DEBUG, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SYSCK, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SYSCK, SPI1DEBUG, SPI1PASSTHRU);
++SIG_EXPR_DECL_SINGLE(SYSCK, SPI1DEBUG, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SYSCK, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(G18, SYSCK, SPI1DEBUG, SPI1PASSTHRU);
+ PIN_DECL_1(G18, GPIOI1, SYSCK);
+ 
+ #define D19 66
+-SIG_EXPR_DECL(SYSDO, SPI1DEBUG, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SYSDO, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SYSDO, SPI1DEBUG, SPI1PASSTHRU);
++SIG_EXPR_DECL_SINGLE(SYSDO, SPI1DEBUG, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SYSDO, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(D19, SYSDO, SPI1DEBUG, SPI1PASSTHRU);
+ PIN_DECL_1(D19, GPIOI2, SYSDO);
+ 
+ #define C20 67
+-SIG_EXPR_DECL(SYSDI, SPI1DEBUG, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SYSDI, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SYSDI, SPI1DEBUG, SPI1PASSTHRU);
++SIG_EXPR_DECL_SINGLE(SYSDI, SPI1DEBUG, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SYSDI, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(C20, SYSDI, SPI1DEBUG, SPI1PASSTHRU);
+ PIN_DECL_1(C20, GPIOI3, SYSDI);
+ 
+ #define VB_DESC	SIG_DESC_SET(HW_STRAP1, 5)
+ 
+ #define B22 68
+-SIG_EXPR_DECL(SPI1CS0, SPI1, SPI1_DESC);
+-SIG_EXPR_DECL(SPI1CS0, SPI1DEBUG, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SPI1CS0, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL(SPI1CS0, SIG_EXPR_PTR(SPI1CS0, SPI1),
++SIG_EXPR_DECL_SINGLE(SPI1CS0, SPI1, SPI1_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1CS0, SPI1DEBUG, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1CS0, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1CS0, SPI1,
++			    SIG_EXPR_PTR(SPI1CS0, SPI1),
+ 			    SIG_EXPR_PTR(SPI1CS0, SPI1DEBUG),
+ 			    SIG_EXPR_PTR(SPI1CS0, SPI1PASSTHRU));
+-SIG_EXPR_LIST_DECL_SINGLE(VBCS, VGABIOS_ROM, VB_DESC);
++SIG_EXPR_LIST_ALIAS(B22, SPI1CS0, SPI1);
++SIG_EXPR_LIST_DECL_SINGLE(B22, VBCS, VGABIOS_ROM, VB_DESC);
+ PIN_DECL_2(B22, GPIOI4, SPI1CS0, VBCS);
+ 
+ #define G19 69
+-SIG_EXPR_DECL(SPI1CK, SPI1, SPI1_DESC);
+-SIG_EXPR_DECL(SPI1CK, SPI1DEBUG, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SPI1CK, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL(SPI1CK, SIG_EXPR_PTR(SPI1CK, SPI1),
++SIG_EXPR_DECL_SINGLE(SPI1CK, SPI1, SPI1_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1CK, SPI1DEBUG, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1CK, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1CK, SPI1,
++			    SIG_EXPR_PTR(SPI1CK, SPI1),
+ 			    SIG_EXPR_PTR(SPI1CK, SPI1DEBUG),
+ 			    SIG_EXPR_PTR(SPI1CK, SPI1PASSTHRU));
+-SIG_EXPR_LIST_DECL_SINGLE(VBCK, VGABIOS_ROM, VB_DESC);
++SIG_EXPR_LIST_ALIAS(G19, SPI1CK, SPI1);
++SIG_EXPR_LIST_DECL_SINGLE(G19, VBCK, VGABIOS_ROM, VB_DESC);
+ PIN_DECL_2(G19, GPIOI5, SPI1CK, VBCK);
+ 
+ #define C18 70
+-SIG_EXPR_DECL(SPI1DO, SPI1, SPI1_DESC);
+-SIG_EXPR_DECL(SPI1DO, SPI1DEBUG, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SPI1DO, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL(SPI1DO, SIG_EXPR_PTR(SPI1DO, SPI1),
++SIG_EXPR_DECL_SINGLE(SPI1DO, SPI1, SPI1_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1DO, SPI1DEBUG, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1DO, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1DO, SPI1,
++			    SIG_EXPR_PTR(SPI1DO, SPI1),
+ 			    SIG_EXPR_PTR(SPI1DO, SPI1DEBUG),
+ 			    SIG_EXPR_PTR(SPI1DO, SPI1PASSTHRU));
+-SIG_EXPR_LIST_DECL_SINGLE(VBDO, VGABIOS_ROM, VB_DESC);
++SIG_EXPR_LIST_ALIAS(C18, SPI1DO, SPI1);
++SIG_EXPR_LIST_DECL_SINGLE(C18, VBDO, VGABIOS_ROM, VB_DESC);
+ PIN_DECL_2(C18, GPIOI6, SPI1DO, VBDO);
+ 
+ #define E20 71
+-SIG_EXPR_DECL(SPI1DI, SPI1, SPI1_DESC);
+-SIG_EXPR_DECL(SPI1DI, SPI1DEBUG, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SPI1DI, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL(SPI1DI, SIG_EXPR_PTR(SPI1DI, SPI1),
++SIG_EXPR_DECL_SINGLE(SPI1DI, SPI1, SPI1_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1DI, SPI1DEBUG, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1DI, SPI1PASSTHRU, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1DI, SPI1,
++			    SIG_EXPR_PTR(SPI1DI, SPI1),
+ 			    SIG_EXPR_PTR(SPI1DI, SPI1DEBUG),
+ 			    SIG_EXPR_PTR(SPI1DI, SPI1PASSTHRU));
+-SIG_EXPR_LIST_DECL_SINGLE(VBDI, VGABIOS_ROM, VB_DESC);
++SIG_EXPR_LIST_ALIAS(E20, SPI1DI, SPI1);
++SIG_EXPR_LIST_DECL_SINGLE(E20, VBDI, VGABIOS_ROM, VB_DESC);
+ PIN_DECL_2(E20, GPIOI7, SPI1DI, VBDI);
+ 
+ FUNC_GROUP_DECL(SPI1, B22, G19, C18, E20);
+@@ -624,11 +639,11 @@ SSSF_PIN_DECL(T1, GPIOJ7, DDCDAT, SIG_DESC_SET(SCU84, 15));
+ #define I2C5_DESC	SIG_DESC_SET(SCU90, 18)
+ 
+ #define E3 80
+-SIG_EXPR_LIST_DECL_SINGLE(SCL5, I2C5, I2C5_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E3, SCL5, I2C5, I2C5_DESC);
+ PIN_DECL_1(E3, GPIOK0, SCL5);
+ 
+ #define D2 81
+-SIG_EXPR_LIST_DECL_SINGLE(SDA5, I2C5, I2C5_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D2, SDA5, I2C5, I2C5_DESC);
+ PIN_DECL_1(D2, GPIOK1, SDA5);
+ 
+ FUNC_GROUP_DECL(I2C5, E3, D2);
+@@ -636,11 +651,11 @@ FUNC_GROUP_DECL(I2C5, E3, D2);
+ #define I2C6_DESC	SIG_DESC_SET(SCU90, 19)
+ 
+ #define C1 82
+-SIG_EXPR_LIST_DECL_SINGLE(SCL6, I2C6, I2C6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C1, SCL6, I2C6, I2C6_DESC);
+ PIN_DECL_1(C1, GPIOK2, SCL6);
+ 
+ #define F4 83
+-SIG_EXPR_LIST_DECL_SINGLE(SDA6, I2C6, I2C6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(F4, SDA6, I2C6, I2C6_DESC);
+ PIN_DECL_1(F4, GPIOK3, SDA6);
+ 
+ FUNC_GROUP_DECL(I2C6, C1, F4);
+@@ -648,11 +663,11 @@ FUNC_GROUP_DECL(I2C6, C1, F4);
+ #define I2C7_DESC	SIG_DESC_SET(SCU90, 20)
+ 
+ #define E2 84
+-SIG_EXPR_LIST_DECL_SINGLE(SCL7, I2C7, I2C7_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E2, SCL7, I2C7, I2C7_DESC);
+ PIN_DECL_1(E2, GPIOK4, SCL7);
+ 
+ #define D1 85
+-SIG_EXPR_LIST_DECL_SINGLE(SDA7, I2C7, I2C7_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D1, SDA7, I2C7, I2C7_DESC);
+ PIN_DECL_1(D1, GPIOK5, SDA7);
+ 
+ FUNC_GROUP_DECL(I2C7, E2, D1);
+@@ -660,11 +675,11 @@ FUNC_GROUP_DECL(I2C7, E2, D1);
+ #define I2C8_DESC	SIG_DESC_SET(SCU90, 21)
+ 
+ #define G5 86
+-SIG_EXPR_LIST_DECL_SINGLE(SCL8, I2C8, I2C8_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(G5, SCL8, I2C8, I2C8_DESC);
+ PIN_DECL_1(G5, GPIOK6, SCL8);
+ 
+ #define F3 87
+-SIG_EXPR_LIST_DECL_SINGLE(SDA8, I2C8, I2C8_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(F3, SDA8, I2C8, I2C8_DESC);
+ PIN_DECL_1(F3, GPIOK7, SDA8);
+ 
+ FUNC_GROUP_DECL(I2C8, G5, F3);
+@@ -678,296 +693,340 @@ SSSF_PIN_DECL(U1, GPIOL0, NCTS1, SIG_DESC_SET(SCU84, 16));
+ 
+ #define T5 89
+ #define T5_DESC         SIG_DESC_SET(SCU84, 17)
+-SIG_EXPR_DECL(VPIDE, VPI18, VPI18_DESC, T5_DESC);
+-SIG_EXPR_DECL(VPIDE, VPI24, VPI24_DESC, T5_DESC);
+-SIG_EXPR_DECL(VPIDE, VPI30, VPI30_DESC, T5_DESC);
+-SIG_EXPR_LIST_DECL(VPIDE, SIG_EXPR_PTR(VPIDE, VPI18),
+-		SIG_EXPR_PTR(VPIDE, VPI24),
+-		SIG_EXPR_PTR(VPIDE, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(NDCD1, NDCD1, T5_DESC);
++SIG_EXPR_DECL_SINGLE(VPIDE, VPI18, VPI18_DESC, T5_DESC);
++SIG_EXPR_DECL_SINGLE(VPIDE, VPI24, VPI24_DESC, T5_DESC);
++SIG_EXPR_DECL_SINGLE(VPIDE, VPI30, VPI30_DESC, T5_DESC);
++SIG_EXPR_LIST_DECL(VPIDE, VPI,
++		   SIG_EXPR_PTR(VPIDE, VPI18),
++		   SIG_EXPR_PTR(VPIDE, VPI24),
++		   SIG_EXPR_PTR(VPIDE, VPI30));
++SIG_EXPR_LIST_ALIAS(T5, VPIDE, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(T5, NDCD1, NDCD1, T5_DESC);
+ PIN_DECL_2(T5, GPIOL1, VPIDE, NDCD1);
+ FUNC_GROUP_DECL(NDCD1, T5);
+ 
+ #define U3 90
+ #define U3_DESC         SIG_DESC_SET(SCU84, 18)
+-SIG_EXPR_DECL(VPIODD, VPI18, VPI18_DESC, U3_DESC);
+-SIG_EXPR_DECL(VPIODD, VPI24, VPI24_DESC, U3_DESC);
+-SIG_EXPR_DECL(VPIODD, VPI30, VPI30_DESC, U3_DESC);
+-SIG_EXPR_LIST_DECL(VPIODD, SIG_EXPR_PTR(VPIODD, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIODD, VPI18, VPI18_DESC, U3_DESC);
++SIG_EXPR_DECL_SINGLE(VPIODD, VPI24, VPI24_DESC, U3_DESC);
++SIG_EXPR_DECL_SINGLE(VPIODD, VPI30, VPI30_DESC, U3_DESC);
++SIG_EXPR_LIST_DECL(VPIODD, VPI,
++		SIG_EXPR_PTR(VPIODD, VPI18),
+ 		SIG_EXPR_PTR(VPIODD, VPI24),
+ 		SIG_EXPR_PTR(VPIODD, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(NDSR1, NDSR1, U3_DESC);
++SIG_EXPR_LIST_ALIAS(U3, VPIODD, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(U3, NDSR1, NDSR1, U3_DESC);
+ PIN_DECL_2(U3, GPIOL2, VPIODD, NDSR1);
+ FUNC_GROUP_DECL(NDSR1, U3);
+ 
+ #define V1 91
+ #define V1_DESC         SIG_DESC_SET(SCU84, 19)
+-SIG_EXPR_DECL(VPIHS, VPI18, VPI18_DESC, V1_DESC);
+-SIG_EXPR_DECL(VPIHS, VPI24, VPI24_DESC, V1_DESC);
+-SIG_EXPR_DECL(VPIHS, VPI30, VPI30_DESC, V1_DESC);
+-SIG_EXPR_LIST_DECL(VPIHS, SIG_EXPR_PTR(VPIHS, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIHS, VPI18, VPI18_DESC, V1_DESC);
++SIG_EXPR_DECL_SINGLE(VPIHS, VPI24, VPI24_DESC, V1_DESC);
++SIG_EXPR_DECL_SINGLE(VPIHS, VPI30, VPI30_DESC, V1_DESC);
++SIG_EXPR_LIST_DECL(VPIHS, VPI,
++		SIG_EXPR_PTR(VPIHS, VPI18),
+ 		SIG_EXPR_PTR(VPIHS, VPI24),
+ 		SIG_EXPR_PTR(VPIHS, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(NRI1, NRI1, V1_DESC);
++SIG_EXPR_LIST_ALIAS(V1, VPIHS, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(V1, NRI1, NRI1, V1_DESC);
+ PIN_DECL_2(V1, GPIOL3, VPIHS, NRI1);
+ FUNC_GROUP_DECL(NRI1, V1);
+ 
+ #define U4 92
+ #define U4_DESC         SIG_DESC_SET(SCU84, 20)
+-SIG_EXPR_DECL(VPIVS, VPI18, VPI18_DESC, U4_DESC);
+-SIG_EXPR_DECL(VPIVS, VPI24, VPI24_DESC, U4_DESC);
+-SIG_EXPR_DECL(VPIVS, VPI30, VPI30_DESC, U4_DESC);
+-SIG_EXPR_LIST_DECL(VPIVS, SIG_EXPR_PTR(VPIVS, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIVS, VPI18, VPI18_DESC, U4_DESC);
++SIG_EXPR_DECL_SINGLE(VPIVS, VPI24, VPI24_DESC, U4_DESC);
++SIG_EXPR_DECL_SINGLE(VPIVS, VPI30, VPI30_DESC, U4_DESC);
++SIG_EXPR_LIST_DECL(VPIVS, VPI,
++		SIG_EXPR_PTR(VPIVS, VPI18),
+ 		SIG_EXPR_PTR(VPIVS, VPI24),
+ 		SIG_EXPR_PTR(VPIVS, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(NDTR1, NDTR1, U4_DESC);
++SIG_EXPR_LIST_ALIAS(U4, VPIVS, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(U4, NDTR1, NDTR1, U4_DESC);
+ PIN_DECL_2(U4, GPIOL4, VPIVS, NDTR1);
+ FUNC_GROUP_DECL(NDTR1, U4);
+ 
+ #define V2 93
+ #define V2_DESC         SIG_DESC_SET(SCU84, 21)
+-SIG_EXPR_DECL(VPICLK, VPI18, VPI18_DESC, V2_DESC);
+-SIG_EXPR_DECL(VPICLK, VPI24, VPI24_DESC, V2_DESC);
+-SIG_EXPR_DECL(VPICLK, VPI30, VPI30_DESC, V2_DESC);
+-SIG_EXPR_LIST_DECL(VPICLK, SIG_EXPR_PTR(VPICLK, VPI18),
++SIG_EXPR_DECL_SINGLE(VPICLK, VPI18, VPI18_DESC, V2_DESC);
++SIG_EXPR_DECL_SINGLE(VPICLK, VPI24, VPI24_DESC, V2_DESC);
++SIG_EXPR_DECL_SINGLE(VPICLK, VPI30, VPI30_DESC, V2_DESC);
++SIG_EXPR_LIST_DECL(VPICLK, VPI,
++		SIG_EXPR_PTR(VPICLK, VPI18),
+ 		SIG_EXPR_PTR(VPICLK, VPI24),
+ 		SIG_EXPR_PTR(VPICLK, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(NRTS1, NRTS1, V2_DESC);
++SIG_EXPR_LIST_ALIAS(V2, VPICLK, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(V2, NRTS1, NRTS1, V2_DESC);
+ PIN_DECL_2(V2, GPIOL5, VPICLK, NRTS1);
+ FUNC_GROUP_DECL(NRTS1, V2);
+ 
+ #define W1 94
+ #define W1_DESC         SIG_DESC_SET(SCU84, 22)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIB0, VPI30, VPI30_DESC, W1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(TXD1, TXD1, W1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(W1, VPIB0, VPI30, VPI30_DESC, W1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(W1, TXD1, TXD1, W1_DESC);
+ PIN_DECL_2(W1, GPIOL6, VPIB0, TXD1);
+ FUNC_GROUP_DECL(TXD1, W1);
+ 
+ #define U5 95
+ #define U5_DESC         SIG_DESC_SET(SCU84, 23)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIB1, VPI30, VPI30_DESC, U5_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RXD1, RXD1, U5_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(U5, VPIB1, VPI30, VPI30_DESC, U5_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(U5, RXD1, RXD1, U5_DESC);
+ PIN_DECL_2(U5, GPIOL7, VPIB1, RXD1);
+ FUNC_GROUP_DECL(RXD1, U5);
+ 
+ #define V3 96
+ #define V3_DESC		SIG_DESC_SET(SCU84, 24)
+-SIG_EXPR_DECL(VPIOB2, VPI18, VPI18_DESC, V3_DESC);
+-SIG_EXPR_DECL(VPIOB2, VPI24, VPI24_DESC, V3_DESC);
+-SIG_EXPR_DECL(VPIOB2, VPI30, VPI30_DESC, V3_DESC);
+-SIG_EXPR_LIST_DECL(VPIOB2, SIG_EXPR_PTR(VPIOB2, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIOB2, VPI18, VPI18_DESC, V3_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB2, VPI24, VPI24_DESC, V3_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB2, VPI30, VPI30_DESC, V3_DESC);
++SIG_EXPR_LIST_DECL(VPIOB2, VPI,
++		SIG_EXPR_PTR(VPIOB2, VPI18),
+ 		SIG_EXPR_PTR(VPIOB2, VPI24),
+ 		SIG_EXPR_PTR(VPIOB2, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(NCTS2, NCTS2, V3_DESC);
++SIG_EXPR_LIST_ALIAS(V3, VPIOB2, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(V3, NCTS2, NCTS2, V3_DESC);
+ PIN_DECL_2(V3, GPIOM0, VPIOB2, NCTS2);
+ FUNC_GROUP_DECL(NCTS2, V3);
+ 
+ #define W2 97
+ #define W2_DESC		SIG_DESC_SET(SCU84, 25)
+-SIG_EXPR_DECL(VPIOB3, VPI18, VPI18_DESC, W2_DESC);
+-SIG_EXPR_DECL(VPIOB3, VPI24, VPI24_DESC, W2_DESC);
+-SIG_EXPR_DECL(VPIOB3, VPI30, VPI30_DESC, W2_DESC);
+-SIG_EXPR_LIST_DECL(VPIOB3, SIG_EXPR_PTR(VPIOB3, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIOB3, VPI18, VPI18_DESC, W2_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB3, VPI24, VPI24_DESC, W2_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB3, VPI30, VPI30_DESC, W2_DESC);
++SIG_EXPR_LIST_DECL(VPIOB3, VPI,
++		SIG_EXPR_PTR(VPIOB3, VPI18),
+ 		SIG_EXPR_PTR(VPIOB3, VPI24),
+ 		SIG_EXPR_PTR(VPIOB3, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(NDCD2, NDCD2, W2_DESC);
++SIG_EXPR_LIST_ALIAS(W2, VPIOB3, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(W2, NDCD2, NDCD2, W2_DESC);
+ PIN_DECL_2(W2, GPIOM1, VPIOB3, NDCD2);
+ FUNC_GROUP_DECL(NDCD2, W2);
+ 
+ #define Y1 98
+ #define Y1_DESC		SIG_DESC_SET(SCU84, 26)
+-SIG_EXPR_DECL(VPIOB4, VPI18, VPI18_DESC, Y1_DESC);
+-SIG_EXPR_DECL(VPIOB4, VPI24, VPI24_DESC, Y1_DESC);
+-SIG_EXPR_DECL(VPIOB4, VPI30, VPI30_DESC, Y1_DESC);
+-SIG_EXPR_LIST_DECL(VPIOB4, SIG_EXPR_PTR(VPIOB4, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIOB4, VPI18, VPI18_DESC, Y1_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB4, VPI24, VPI24_DESC, Y1_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB4, VPI30, VPI30_DESC, Y1_DESC);
++SIG_EXPR_LIST_DECL(VPIOB4, VPI,
++		SIG_EXPR_PTR(VPIOB4, VPI18),
+ 		SIG_EXPR_PTR(VPIOB4, VPI24),
+ 		SIG_EXPR_PTR(VPIOB4, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(NDSR2, NDSR2, Y1_DESC);
++SIG_EXPR_LIST_ALIAS(Y1, VPIOB4, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(Y1, NDSR2, NDSR2, Y1_DESC);
+ PIN_DECL_2(Y1, GPIOM2, VPIOB4, NDSR2);
+ FUNC_GROUP_DECL(NDSR2, Y1);
+ 
+ #define V4 99
+ #define V4_DESC		SIG_DESC_SET(SCU84, 27)
+-SIG_EXPR_DECL(VPIOB5, VPI18, VPI18_DESC, V4_DESC);
+-SIG_EXPR_DECL(VPIOB5, VPI24, VPI24_DESC, V4_DESC);
+-SIG_EXPR_DECL(VPIOB5, VPI30, VPI30_DESC, V4_DESC);
+-SIG_EXPR_LIST_DECL(VPIOB5, SIG_EXPR_PTR(VPIOB5, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIOB5, VPI18, VPI18_DESC, V4_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB5, VPI24, VPI24_DESC, V4_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB5, VPI30, VPI30_DESC, V4_DESC);
++SIG_EXPR_LIST_DECL(VPIOB5, VPI,
++		SIG_EXPR_PTR(VPIOB5, VPI18),
+ 		SIG_EXPR_PTR(VPIOB5, VPI24),
+ 		SIG_EXPR_PTR(VPIOB5, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(NRI2, NRI2, V4_DESC);
++SIG_EXPR_LIST_ALIAS(V4, VPIOB5, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(V4, NRI2, NRI2, V4_DESC);
+ PIN_DECL_2(V4, GPIOM3, VPIOB5, NRI2);
+ FUNC_GROUP_DECL(NRI2, V4);
+ 
+ #define W3 100
+ #define W3_DESC		SIG_DESC_SET(SCU84, 28)
+-SIG_EXPR_DECL(VPIOB6, VPI18, VPI18_DESC, W3_DESC);
+-SIG_EXPR_DECL(VPIOB6, VPI24, VPI24_DESC, W3_DESC);
+-SIG_EXPR_DECL(VPIOB6, VPI30, VPI30_DESC, W3_DESC);
+-SIG_EXPR_LIST_DECL(VPIOB6, SIG_EXPR_PTR(VPIOB6, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIOB6, VPI18, VPI18_DESC, W3_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB6, VPI24, VPI24_DESC, W3_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB6, VPI30, VPI30_DESC, W3_DESC);
++SIG_EXPR_LIST_DECL(VPIOB6, VPI,
++		SIG_EXPR_PTR(VPIOB6, VPI18),
+ 		SIG_EXPR_PTR(VPIOB6, VPI24),
+ 		SIG_EXPR_PTR(VPIOB6, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(NDTR2, NDTR2, W3_DESC);
++SIG_EXPR_LIST_ALIAS(W3, VPIOB6, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(W3, NDTR2, NDTR2, W3_DESC);
+ PIN_DECL_2(W3, GPIOM4, VPIOB6, NDTR2);
+ FUNC_GROUP_DECL(NDTR2, W3);
+ 
+ #define Y2 101
+ #define Y2_DESC		SIG_DESC_SET(SCU84, 29)
+-SIG_EXPR_DECL(VPIOB7, VPI18, VPI18_DESC, Y2_DESC);
+-SIG_EXPR_DECL(VPIOB7, VPI24, VPI24_DESC, Y2_DESC);
+-SIG_EXPR_DECL(VPIOB7, VPI30, VPI30_DESC, Y2_DESC);
+-SIG_EXPR_LIST_DECL(VPIOB7, SIG_EXPR_PTR(VPIOB7, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIOB7, VPI18, VPI18_DESC, Y2_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB7, VPI24, VPI24_DESC, Y2_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB7, VPI30, VPI30_DESC, Y2_DESC);
++SIG_EXPR_LIST_DECL(VPIOB7, VPI,
++		SIG_EXPR_PTR(VPIOB7, VPI18),
+ 		SIG_EXPR_PTR(VPIOB7, VPI24),
+ 		SIG_EXPR_PTR(VPIOB7, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(NRTS2, NRTS2, Y2_DESC);
++SIG_EXPR_LIST_ALIAS(Y2, VPIOB7, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(Y2, NRTS2, NRTS2, Y2_DESC);
+ PIN_DECL_2(Y2, GPIOM5, VPIOB7, NRTS2);
+ FUNC_GROUP_DECL(NRTS2, Y2);
+ 
+ #define AA1 102
+ #define AA1_DESC	SIG_DESC_SET(SCU84, 30)
+-SIG_EXPR_DECL(VPIOB8, VPI18, VPI18_DESC, AA1_DESC);
+-SIG_EXPR_DECL(VPIOB8, VPI24, VPI24_DESC, AA1_DESC);
+-SIG_EXPR_DECL(VPIOB8, VPI30, VPI30_DESC, AA1_DESC);
+-SIG_EXPR_LIST_DECL(VPIOB8, SIG_EXPR_PTR(VPIOB8, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIOB8, VPI18, VPI18_DESC, AA1_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB8, VPI24, VPI24_DESC, AA1_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB8, VPI30, VPI30_DESC, AA1_DESC);
++SIG_EXPR_LIST_DECL(VPIOB8, VPI,
++		SIG_EXPR_PTR(VPIOB8, VPI18),
+ 		SIG_EXPR_PTR(VPIOB8, VPI24),
+ 		SIG_EXPR_PTR(VPIOB8, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(TXD2, TXD2, AA1_DESC);
++SIG_EXPR_LIST_ALIAS(AA1, VPIOB8, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(AA1, TXD2, TXD2, AA1_DESC);
+ PIN_DECL_2(AA1, GPIOM6, VPIOB8, TXD2);
+ FUNC_GROUP_DECL(TXD2, AA1);
+ 
+ #define V5 103
+ #define V5_DESC		SIG_DESC_SET(SCU84, 31)
+-SIG_EXPR_DECL(VPIOB9, VPI18, VPI18_DESC, V5_DESC);
+-SIG_EXPR_DECL(VPIOB9, VPI24, VPI24_DESC, V5_DESC);
+-SIG_EXPR_DECL(VPIOB9, VPI30, VPI30_DESC, V5_DESC);
+-SIG_EXPR_LIST_DECL(VPIOB9, SIG_EXPR_PTR(VPIOB9, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIOB9, VPI18, VPI18_DESC, V5_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB9, VPI24, VPI24_DESC, V5_DESC);
++SIG_EXPR_DECL_SINGLE(VPIOB9, VPI30, VPI30_DESC, V5_DESC);
++SIG_EXPR_LIST_DECL(VPIOB9, VPI,
++		SIG_EXPR_PTR(VPIOB9, VPI18),
+ 		SIG_EXPR_PTR(VPIOB9, VPI24),
+ 		SIG_EXPR_PTR(VPIOB9, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(RXD2, RXD2, V5_DESC);
++SIG_EXPR_LIST_ALIAS(V5, VPIOB9, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(V5, RXD2, RXD2, V5_DESC);
+ PIN_DECL_2(V5, GPIOM7, VPIOB9, RXD2);
+ FUNC_GROUP_DECL(RXD2, V5);
+ 
+ #define W4 104
+ #define W4_DESC         SIG_DESC_SET(SCU88, 0)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIG0, VPI30, VPI30_DESC, W4_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM0, PWM0, W4_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(W4, VPIG0, VPI30, VPI30_DESC, W4_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(W4, PWM0, PWM0, W4_DESC);
+ PIN_DECL_2(W4, GPION0, VPIG0, PWM0);
+ FUNC_GROUP_DECL(PWM0, W4);
+ 
+ #define Y3 105
+ #define Y3_DESC         SIG_DESC_SET(SCU88, 1)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIG1, VPI30, VPI30_DESC, Y3_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM1, PWM1, Y3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(Y3, VPIG1, VPI30, VPI30_DESC, Y3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(Y3, PWM1, PWM1, Y3_DESC);
+ PIN_DECL_2(Y3, GPION1, VPIG1, PWM1);
+ FUNC_GROUP_DECL(PWM1, Y3);
+ 
+ #define AA2 106
+ #define AA2_DESC        SIG_DESC_SET(SCU88, 2)
+-SIG_EXPR_DECL(VPIG2, VPI18, VPI18_DESC, AA2_DESC);
+-SIG_EXPR_DECL(VPIG2, VPI24, VPI24_DESC, AA2_DESC);
+-SIG_EXPR_DECL(VPIG2, VPI30, VPI30_DESC, AA2_DESC);
+-SIG_EXPR_LIST_DECL(VPIG2, SIG_EXPR_PTR(VPIG2, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIG2, VPI18, VPI18_DESC, AA2_DESC);
++SIG_EXPR_DECL_SINGLE(VPIG2, VPI24, VPI24_DESC, AA2_DESC);
++SIG_EXPR_DECL_SINGLE(VPIG2, VPI30, VPI30_DESC, AA2_DESC);
++SIG_EXPR_LIST_DECL(VPIG2, VPI,
++		SIG_EXPR_PTR(VPIG2, VPI18),
+ 		SIG_EXPR_PTR(VPIG2, VPI24),
+ 		SIG_EXPR_PTR(VPIG2, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(PWM2, PWM2, AA2_DESC);
++SIG_EXPR_LIST_ALIAS(AA2, VPIG2, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(AA2, PWM2, PWM2, AA2_DESC);
+ PIN_DECL_2(AA2, GPION2, VPIG2, PWM2);
+ FUNC_GROUP_DECL(PWM2, AA2);
+ 
+ #define AB1 107
+ #define AB1_DESC        SIG_DESC_SET(SCU88, 3)
+-SIG_EXPR_DECL(VPIG3, VPI18, VPI18_DESC, AB1_DESC);
+-SIG_EXPR_DECL(VPIG3, VPI24, VPI24_DESC, AB1_DESC);
+-SIG_EXPR_DECL(VPIG3, VPI30, VPI30_DESC, AB1_DESC);
+-SIG_EXPR_LIST_DECL(VPIG3, SIG_EXPR_PTR(VPIG3, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIG3, VPI18, VPI18_DESC, AB1_DESC);
++SIG_EXPR_DECL_SINGLE(VPIG3, VPI24, VPI24_DESC, AB1_DESC);
++SIG_EXPR_DECL_SINGLE(VPIG3, VPI30, VPI30_DESC, AB1_DESC);
++SIG_EXPR_LIST_DECL(VPIG3, VPI,
++		SIG_EXPR_PTR(VPIG3, VPI18),
+ 		SIG_EXPR_PTR(VPIG3, VPI24),
+ 		SIG_EXPR_PTR(VPIG3, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(PWM3, PWM3, AB1_DESC);
++SIG_EXPR_LIST_ALIAS(AB1, VPIG3, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(AB1, PWM3, PWM3, AB1_DESC);
+ PIN_DECL_2(AB1, GPION3, VPIG3, PWM3);
+ FUNC_GROUP_DECL(PWM3, AB1);
+ 
+ #define W5 108
+ #define W5_DESC         SIG_DESC_SET(SCU88, 4)
+-SIG_EXPR_DECL(VPIG4, VPI18, VPI18_DESC, W5_DESC);
+-SIG_EXPR_DECL(VPIG4, VPI24, VPI24_DESC, W5_DESC);
+-SIG_EXPR_DECL(VPIG4, VPI30, VPI30_DESC, W5_DESC);
+-SIG_EXPR_LIST_DECL(VPIG4, SIG_EXPR_PTR(VPIG4, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIG4, VPI18, VPI18_DESC, W5_DESC);
++SIG_EXPR_DECL_SINGLE(VPIG4, VPI24, VPI24_DESC, W5_DESC);
++SIG_EXPR_DECL_SINGLE(VPIG4, VPI30, VPI30_DESC, W5_DESC);
++SIG_EXPR_LIST_DECL(VPIG4, VPI,
++		SIG_EXPR_PTR(VPIG4, VPI18),
+ 		SIG_EXPR_PTR(VPIG4, VPI24),
+ 		SIG_EXPR_PTR(VPIG4, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(PWM4, PWM4, W5_DESC);
++SIG_EXPR_LIST_ALIAS(W5, VPIG4, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(W5, PWM4, PWM4, W5_DESC);
+ PIN_DECL_2(W5, GPION4, VPIG4, PWM4);
+ FUNC_GROUP_DECL(PWM4, W5);
+ 
+ #define Y4 109
+ #define Y4_DESC         SIG_DESC_SET(SCU88, 5)
+-SIG_EXPR_DECL(VPIG5, VPI18, VPI18_DESC, Y4_DESC);
+-SIG_EXPR_DECL(VPIG5, VPI24, VPI24_DESC, Y4_DESC);
+-SIG_EXPR_DECL(VPIG5, VPI30, VPI30_DESC, Y4_DESC);
+-SIG_EXPR_LIST_DECL(VPIG5, SIG_EXPR_PTR(VPIG5, VPI18),
++SIG_EXPR_DECL_SINGLE(VPIG5, VPI18, VPI18_DESC, Y4_DESC);
++SIG_EXPR_DECL_SINGLE(VPIG5, VPI24, VPI24_DESC, Y4_DESC);
++SIG_EXPR_DECL_SINGLE(VPIG5, VPI30, VPI30_DESC, Y4_DESC);
++SIG_EXPR_LIST_DECL(VPIG5, VPI,
++		SIG_EXPR_PTR(VPIG5, VPI18),
+ 		SIG_EXPR_PTR(VPIG5, VPI24),
+ 		SIG_EXPR_PTR(VPIG5, VPI30));
+-SIG_EXPR_LIST_DECL_SINGLE(PWM5, PWM5, Y4_DESC);
++SIG_EXPR_LIST_ALIAS(Y4, VPIG5, VPI);
++SIG_EXPR_LIST_DECL_SINGLE(Y4, PWM5, PWM5, Y4_DESC);
+ PIN_DECL_2(Y4, GPION5, VPIG5, PWM5);
+ FUNC_GROUP_DECL(PWM5, Y4);
+ 
+ #define AA3 110
+ #define AA3_DESC        SIG_DESC_SET(SCU88, 6)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIG6, VPI30, VPI30_DESC, AA3_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM6, PWM6, AA3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(AA3, VPIG6, VPI30, VPI30_DESC, AA3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(AA3, PWM6, PWM6, AA3_DESC);
+ PIN_DECL_2(AA3, GPION6, VPIG6, PWM6);
+ FUNC_GROUP_DECL(PWM6, AA3);
+ 
+ #define AB2 111
+ #define AB2_DESC        SIG_DESC_SET(SCU88, 7)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIG7, VPI30, VPI30_DESC, AB2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM7, PWM7, AB2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(AB2, VPIG7, VPI30, VPI30_DESC, AB2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(AB2, PWM7, PWM7, AB2_DESC);
+ PIN_DECL_2(AB2, GPION7, VPIG7, PWM7);
+ FUNC_GROUP_DECL(PWM7, AB2);
+ 
+ #define V6 112
+-SIG_EXPR_LIST_DECL_SINGLE(VPIG8, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 8));
++SIG_EXPR_LIST_DECL_SINGLE(V6, VPIG8, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 8));
+ PIN_DECL_1(V6, GPIOO0, VPIG8);
+ 
+ #define Y5 113
+-SIG_EXPR_LIST_DECL_SINGLE(VPIG9, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 9));
++SIG_EXPR_LIST_DECL_SINGLE(Y5, VPIG9, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 9));
+ PIN_DECL_1(Y5, GPIOO1, VPIG9);
+ 
+ #define AA4 114
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR0, VPI30, VPI30_DESC, SIG_DESC_SET(SCU88, 10));
++SIG_EXPR_LIST_DECL_SINGLE(AA4, VPIR0, VPI30, VPI30_DESC,
++			  SIG_DESC_SET(SCU88, 10));
+ PIN_DECL_1(AA4, GPIOO2, VPIR0);
+ 
+ #define AB3 115
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR1, VPI30, VPI30_DESC, SIG_DESC_SET(SCU88, 11));
++SIG_EXPR_LIST_DECL_SINGLE(AB3, VPIR1, VPI30, VPI30_DESC,
++			  SIG_DESC_SET(SCU88, 11));
+ PIN_DECL_1(AB3, GPIOO3, VPIR1);
+ 
+ #define W6 116
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR2, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 12));
++SIG_EXPR_LIST_DECL_SINGLE(W6, VPIR2, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 12));
+ PIN_DECL_1(W6, GPIOO4, VPIR2);
+ 
+ #define AA5 117
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR3, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 13));
++SIG_EXPR_LIST_DECL_SINGLE(AA5, VPIR3, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 13));
+ PIN_DECL_1(AA5, GPIOO5, VPIR3);
+ 
+ #define AB4 118
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR4, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 14));
++SIG_EXPR_LIST_DECL_SINGLE(AB4, VPIR4, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 14));
+ PIN_DECL_1(AB4, GPIOO6, VPIR4);
+ 
+ #define V7 119
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR5, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 15));
++SIG_EXPR_LIST_DECL_SINGLE(V7, VPIR5, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 15));
+ PIN_DECL_1(V7, GPIOO7, VPIR5);
+ 
+ #define Y6 120
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR6, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 16));
++SIG_EXPR_LIST_DECL_SINGLE(Y6, VPIR6, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 16));
+ PIN_DECL_1(Y6, GPIOP0, VPIR6);
+ 
+ #define AB5 121
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR7, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 17));
++SIG_EXPR_LIST_DECL_SINGLE(AB5, VPIR7, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 17));
+ PIN_DECL_1(AB5, GPIOP1, VPIR7);
+ 
+ #define W7 122
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR8, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 18));
++SIG_EXPR_LIST_DECL_SINGLE(W7, VPIR8, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 18));
+ PIN_DECL_1(W7, GPIOP2, VPIR8);
+ 
+ #define AA6 123
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR9, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 19));
++SIG_EXPR_LIST_DECL_SINGLE(AA6, VPIR9, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 19));
+ PIN_DECL_1(AA6, GPIOP3, VPIR9);
+ 
+ FUNC_GROUP_DECL(VPI18, T5, U3, V1, U4, V2, V3, W2, Y1, V4, W3, Y2, AA1, V5,
+@@ -979,12 +1038,12 @@ FUNC_GROUP_DECL(VPI30, T5, U3, V1, U4, V2, W1, U5, V3, W2, Y1, V4, W3, Y2, AA1,
+ 		V5, W4, Y3, AA22, W5, Y4, AA3, AB2, AA4, AB3);
+ 
+ #define AB6 124
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOP4, GPIOP4);
+-PIN_DECL_(AB6, SIG_EXPR_LIST_PTR(GPIOP4));
++SIG_EXPR_LIST_DECL_SINGLE(AB6, GPIOP4, GPIOP4);
++PIN_DECL_(AB6, SIG_EXPR_LIST_PTR(AB6, GPIOP4));
+ 
+ #define Y7 125
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOP5, GPIOP5);
+-PIN_DECL_(Y7, SIG_EXPR_LIST_PTR(GPIOP5));
++SIG_EXPR_LIST_DECL_SINGLE(Y7, GPIOP5, GPIOP5);
++PIN_DECL_(Y7, SIG_EXPR_LIST_PTR(Y7, GPIOP5));
+ 
+ #define AA7 126
+ SSSF_PIN_DECL(AA7, GPIOP6, BMCINT, SIG_DESC_SET(SCU88, 22));
+@@ -995,11 +1054,11 @@ SSSF_PIN_DECL(AB7, GPIOP7, FLACK, SIG_DESC_SET(SCU88, 23));
+ #define I2C3_DESC	SIG_DESC_SET(SCU90, 16)
+ 
+ #define D3 128
+-SIG_EXPR_LIST_DECL_SINGLE(SCL3, I2C3, I2C3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D3, SCL3, I2C3, I2C3_DESC);
+ PIN_DECL_1(D3, GPIOQ0, SCL3);
+ 
+ #define C2 129
+-SIG_EXPR_LIST_DECL_SINGLE(SDA3, I2C3, I2C3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C2, SDA3, I2C3, I2C3_DESC);
+ PIN_DECL_1(C2, GPIOQ1, SDA3);
+ 
+ FUNC_GROUP_DECL(I2C3, D3, C2);
+@@ -1007,11 +1066,11 @@ FUNC_GROUP_DECL(I2C3, D3, C2);
+ #define I2C4_DESC	SIG_DESC_SET(SCU90, 17)
+ 
+ #define B1 130
+-SIG_EXPR_LIST_DECL_SINGLE(SCL4, I2C4, I2C4_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B1, SCL4, I2C4, I2C4_DESC);
+ PIN_DECL_1(B1, GPIOQ2, SCL4);
+ 
+ #define F5 131
+-SIG_EXPR_LIST_DECL_SINGLE(SDA4, I2C4, I2C4_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(F5, SDA4, I2C4, I2C4_DESC);
+ PIN_DECL_1(F5, GPIOQ3, SDA4);
+ 
+ FUNC_GROUP_DECL(I2C4, B1, F5);
+@@ -1019,11 +1078,11 @@ FUNC_GROUP_DECL(I2C4, B1, F5);
+ #define I2C14_DESC	SIG_DESC_SET(SCU90, 27)
+ 
+ #define H4 132
+-SIG_EXPR_LIST_DECL_SINGLE(SCL14, I2C14, I2C14_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(H4, SCL14, I2C14, I2C14_DESC);
+ PIN_DECL_1(H4, GPIOQ4, SCL14);
+ 
+ #define H3 133
+-SIG_EXPR_LIST_DECL_SINGLE(SDA14, I2C14, I2C14_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(H3, SDA14, I2C14, I2C14_DESC);
+ PIN_DECL_1(H3, GPIOQ5, SDA14);
+ 
+ FUNC_GROUP_DECL(I2C14, H4, H3);
+@@ -1039,11 +1098,11 @@ FUNC_GROUP_DECL(I2C14, H4, H3);
+ #define USB11H3_DESC	SIG_DESC_SET(SCU90, 28)
+ 
+ #define H2 134
+-SIG_EXPR_LIST_DECL_SINGLE(USB11HDP3, USB11H3, USB11H3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(H2, USB11HDP3, USB11H3, USB11H3_DESC);
+ PIN_DECL_1(H2, GPIOQ6, USB11HDP3);
+ 
+ #define H1 135
+-SIG_EXPR_LIST_DECL_SINGLE(USB11HDN3, USB11H3, USB11H3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(H1, USB11HDN3, USB11H3, USB11H3_DESC);
+ PIN_DECL_1(H1, GPIOQ7, USB11HDN3);
+ 
+ #define V20 136
+@@ -1067,303 +1126,333 @@ SSSF_PIN_DECL(U19, GPIOR3, ROMCS4, SIG_DESC_SET(SCU88, 27));
+ 
+ #define V21 140
+ #define V21_DESC	SIG_DESC_SET(SCU88, 28)
+-SIG_EXPR_DECL(ROMA24, ROM8, V21_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA24, ROM16, V21_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA24, ROM16S, V21_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL(ROMA24, SIG_EXPR_PTR(ROMA24, ROM8),
++SIG_EXPR_DECL_SINGLE(ROMA24, ROM8, V21_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA24, ROM16, V21_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA24, ROM16S, V21_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL(ROMA24, ROM,
++		SIG_EXPR_PTR(ROMA24, ROM8),
+ 		SIG_EXPR_PTR(ROMA24, ROM16),
+ 		SIG_EXPR_PTR(ROMA24, ROM16S));
+-SIG_EXPR_LIST_DECL_SINGLE(VPOR6, VPO24, V21_DESC, VPO_24_OFF);
++SIG_EXPR_LIST_ALIAS(V21, ROMA24, ROM);
++SIG_EXPR_LIST_DECL_SINGLE(V21, VPOR6, VPO24, V21_DESC, VPO_24_OFF);
+ PIN_DECL_2(V21, GPIOR4, ROMA24, VPOR6);
+ 
+ #define W22 141
+ #define W22_DESC	SIG_DESC_SET(SCU88, 29)
+-SIG_EXPR_DECL(ROMA25, ROM8, W22_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA25, ROM16, W22_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA25, ROM16S, W22_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL(ROMA25, SIG_EXPR_PTR(ROMA25, ROM8),
++SIG_EXPR_DECL_SINGLE(ROMA25, ROM8, W22_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA25, ROM16, W22_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA25, ROM16S, W22_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL(ROMA25, ROM,
++		SIG_EXPR_PTR(ROMA25, ROM8),
+ 		SIG_EXPR_PTR(ROMA25, ROM16),
+ 		SIG_EXPR_PTR(ROMA25, ROM16S));
+-SIG_EXPR_LIST_DECL_SINGLE(VPOR7, VPO24, W22_DESC, VPO_24_OFF);
++SIG_EXPR_LIST_ALIAS(W22, ROMA25, ROM);
++SIG_EXPR_LIST_DECL_SINGLE(W22, VPOR7, VPO24, W22_DESC, VPO_24_OFF);
+ PIN_DECL_2(W22, GPIOR5, ROMA25, VPOR7);
+ 
+ #define C6 142
+-SIG_EXPR_LIST_DECL_SINGLE(MDC1, MDIO1, SIG_DESC_SET(SCU88, 30));
++SIG_EXPR_LIST_DECL_SINGLE(C6, MDC1, MDIO1, SIG_DESC_SET(SCU88, 30));
+ PIN_DECL_1(C6, GPIOR6, MDC1);
+ 
+ #define A5 143
+-SIG_EXPR_LIST_DECL_SINGLE(MDIO1, MDIO1, SIG_DESC_SET(SCU88, 31));
++SIG_EXPR_LIST_DECL_SINGLE(A5, MDIO1, MDIO1, SIG_DESC_SET(SCU88, 31));
+ PIN_DECL_1(A5, GPIOR7, MDIO1);
+ 
+ FUNC_GROUP_DECL(MDIO1, C6, A5);
+ 
+ #define U21 144
+ #define U21_DESC        SIG_DESC_SET(SCU8C, 0)
+-SIG_EXPR_DECL(ROMD4, ROM8, U21_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMD4, ROM16, U21_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMD4, ROM16S, U21_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL(ROMD4, SIG_EXPR_PTR(ROMD4, ROM8),
++SIG_EXPR_DECL_SINGLE(ROMD4, ROM8, U21_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD4, ROM16, U21_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD4, ROM16S, U21_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL(ROMD4, ROM,
++		SIG_EXPR_PTR(ROMD4, ROM8),
+ 		SIG_EXPR_PTR(ROMD4, ROM16),
+ 		SIG_EXPR_PTR(ROMD4, ROM16S));
+-SIG_EXPR_DECL(VPODE, VPO12, U21_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPODE, VPO24, U21_DESC, VPO12_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPODE, VPO12, VPO24);
++SIG_EXPR_LIST_ALIAS(U21, ROMD4, ROM);
++SIG_EXPR_DECL_SINGLE(VPODE, VPO12, U21_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPODE, VPO24, U21_DESC, VPO12_DESC);
++SIG_EXPR_LIST_DECL_DUAL(U21, VPODE, VPO12, VPO24);
+ PIN_DECL_2(U21, GPIOS0, ROMD4, VPODE);
+ 
+ #define T19 145
+ #define T19_DESC        SIG_DESC_SET(SCU8C, 1)
+-SIG_EXPR_DECL(ROMD5, ROM8, T19_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMD5, ROM16, T19_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMD5, ROM16S, T19_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL(ROMD5, SIG_EXPR_PTR(ROMD5, ROM8),
++SIG_EXPR_DECL_SINGLE(ROMD5, ROM8, T19_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD5, ROM16, T19_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD5, ROM16S, T19_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL(ROMD5, ROM,
++		SIG_EXPR_PTR(ROMD5, ROM8),
+ 		SIG_EXPR_PTR(ROMD5, ROM16),
+ 		SIG_EXPR_PTR(ROMD5, ROM16S));
+-SIG_EXPR_DECL(VPOHS, VPO12, T19_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOHS, VPO24, T19_DESC, VPO24_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPOHS, VPO12, VPO24);
++SIG_EXPR_LIST_ALIAS(T19, ROMD5, ROM);
++SIG_EXPR_DECL_SINGLE(VPOHS, VPO12, T19_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOHS, VPO24, T19_DESC, VPO24_DESC);
++SIG_EXPR_LIST_DECL_DUAL(T19, VPOHS, VPO12, VPO24);
+ PIN_DECL_2(T19, GPIOS1, ROMD5, VPOHS);
+ 
+ #define V22 146
+ #define V22_DESC        SIG_DESC_SET(SCU8C, 2)
+-SIG_EXPR_DECL(ROMD6, ROM8, V22_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMD6, ROM16, V22_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMD6, ROM16S, V22_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL(ROMD6, SIG_EXPR_PTR(ROMD6, ROM8),
++SIG_EXPR_DECL_SINGLE(ROMD6, ROM8, V22_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD6, ROM16, V22_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD6, ROM16S, V22_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL(ROMD6, ROM,
++		SIG_EXPR_PTR(ROMD6, ROM8),
+ 		SIG_EXPR_PTR(ROMD6, ROM16),
+ 		SIG_EXPR_PTR(ROMD6, ROM16S));
+-SIG_EXPR_DECL(VPOVS, VPO12, V22_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOVS, VPO24, V22_DESC, VPO24_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPOVS, VPO12, VPO24);
++SIG_EXPR_LIST_ALIAS(V22, ROMD6, ROM);
++SIG_EXPR_DECL_SINGLE(VPOVS, VPO12, V22_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOVS, VPO24, V22_DESC, VPO24_DESC);
++SIG_EXPR_LIST_DECL_DUAL(V22, VPOVS, VPO12, VPO24);
+ PIN_DECL_2(V22, GPIOS2, ROMD6, VPOVS);
+ 
+ #define U20 147
+ #define U20_DESC        SIG_DESC_SET(SCU8C, 3)
+-SIG_EXPR_DECL(ROMD7, ROM8, U20_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMD7, ROM16, U20_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMD7, ROM16S, U20_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL(ROMD7, SIG_EXPR_PTR(ROMD7, ROM8),
++SIG_EXPR_DECL_SINGLE(ROMD7, ROM8, U20_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD7, ROM16, U20_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMD7, ROM16S, U20_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL(ROMD7, ROM,
++		SIG_EXPR_PTR(ROMD7, ROM8),
+ 		SIG_EXPR_PTR(ROMD7, ROM16),
+ 		SIG_EXPR_PTR(ROMD7, ROM16S));
+-SIG_EXPR_DECL(VPOCLK, VPO12, U20_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOCLK, VPO24, U20_DESC, VPO24_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPOCLK, VPO12, VPO24);
++SIG_EXPR_LIST_ALIAS(U20, ROMD7, ROM);
++SIG_EXPR_DECL_SINGLE(VPOCLK, VPO12, U20_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOCLK, VPO24, U20_DESC, VPO24_DESC);
++SIG_EXPR_LIST_DECL_DUAL(U20, VPOCLK, VPO12, VPO24);
+ PIN_DECL_2(U20, GPIOS3, ROMD7, VPOCLK);
+ 
+ #define R18 148
+ #define ROMOE_DESC      SIG_DESC_SET(SCU8C, 4)
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOS4, GPIOS4);
+-SIG_EXPR_DECL(ROMOE, ROM8, ROMOE_DESC);
+-SIG_EXPR_DECL(ROMOE, ROM16, ROMOE_DESC);
+-SIG_EXPR_DECL(ROMOE, ROM16S, ROMOE_DESC);
+-SIG_EXPR_LIST_DECL(ROMOE, SIG_EXPR_PTR(ROMOE, ROM8),
++SIG_EXPR_LIST_DECL_SINGLE(R18, GPIOS4, GPIOS4);
++SIG_EXPR_DECL_SINGLE(ROMOE, ROM8, ROMOE_DESC);
++SIG_EXPR_DECL_SINGLE(ROMOE, ROM16, ROMOE_DESC);
++SIG_EXPR_DECL_SINGLE(ROMOE, ROM16S, ROMOE_DESC);
++SIG_EXPR_LIST_DECL(ROMOE, ROM,
++		SIG_EXPR_PTR(ROMOE, ROM8),
+ 		SIG_EXPR_PTR(ROMOE, ROM16),
+ 		SIG_EXPR_PTR(ROMOE, ROM16S));
+-PIN_DECL_(R18, SIG_EXPR_LIST_PTR(ROMOE), SIG_EXPR_LIST_PTR(GPIOS4));
++SIG_EXPR_LIST_ALIAS(R18, ROMOE, ROM);
++PIN_DECL_(R18, SIG_EXPR_LIST_PTR(R18, ROMOE), SIG_EXPR_LIST_PTR(R18, GPIOS4));
+ 
+ #define N21 149
+ #define ROMWE_DESC      SIG_DESC_SET(SCU8C, 5)
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOS5, GPIOS5);
+-SIG_EXPR_DECL(ROMWE, ROM8, ROMWE_DESC);
+-SIG_EXPR_DECL(ROMWE, ROM16, ROMWE_DESC);
+-SIG_EXPR_DECL(ROMWE, ROM16S, ROMWE_DESC);
+-SIG_EXPR_LIST_DECL(ROMWE, SIG_EXPR_PTR(ROMWE, ROM8),
++SIG_EXPR_LIST_DECL_SINGLE(N21, GPIOS5, GPIOS5);
++SIG_EXPR_DECL_SINGLE(ROMWE, ROM8, ROMWE_DESC);
++SIG_EXPR_DECL_SINGLE(ROMWE, ROM16, ROMWE_DESC);
++SIG_EXPR_DECL_SINGLE(ROMWE, ROM16S, ROMWE_DESC);
++SIG_EXPR_LIST_DECL(ROMWE, ROM,
++		SIG_EXPR_PTR(ROMWE, ROM8),
+ 		SIG_EXPR_PTR(ROMWE, ROM16),
+ 		SIG_EXPR_PTR(ROMWE, ROM16S));
+-PIN_DECL_(N21, SIG_EXPR_LIST_PTR(ROMWE), SIG_EXPR_LIST_PTR(GPIOS5));
++SIG_EXPR_LIST_ALIAS(N21, ROMWE, ROM);
++PIN_DECL_(N21, SIG_EXPR_LIST_PTR(N21, ROMWE), SIG_EXPR_LIST_PTR(N21, GPIOS5));
+ 
+ #define L22 150
+ #define L22_DESC        SIG_DESC_SET(SCU8C, 6)
+-SIG_EXPR_DECL(ROMA22, ROM8, L22_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA22, ROM16, L22_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA22, ROM16S, L22_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL(ROMA22, SIG_EXPR_PTR(ROMA22, ROM8),
++SIG_EXPR_DECL_SINGLE(ROMA22, ROM8, L22_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA22, ROM16, L22_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA22, ROM16S, L22_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL(ROMA22, ROM,
++		SIG_EXPR_PTR(ROMA22, ROM8),
+ 		SIG_EXPR_PTR(ROMA22, ROM16),
+ 		SIG_EXPR_PTR(ROMA22, ROM16S));
+-SIG_EXPR_LIST_DECL_SINGLE(VPOR4, VPO24, L22_DESC, VPO_24_OFF);
++SIG_EXPR_LIST_ALIAS(L22, ROMA22, ROM);
++SIG_EXPR_LIST_DECL_SINGLE(L22, VPOR4, VPO24, L22_DESC, VPO_24_OFF);
+ PIN_DECL_2(L22, GPIOS6, ROMA22, VPOR4);
+ 
+ #define K18 151
+ #define K18_DESC	SIG_DESC_SET(SCU8C, 7)
+-SIG_EXPR_DECL(ROMA23, ROM8, K18_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA23, ROM16, K18_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA23, ROM16S, K18_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL(ROMA23, SIG_EXPR_PTR(ROMA23, ROM8),
++SIG_EXPR_DECL_SINGLE(ROMA23, ROM8, K18_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA23, ROM16, K18_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA23, ROM16S, K18_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL(ROMA23, ROM,
++		SIG_EXPR_PTR(ROMA23, ROM8),
+ 		SIG_EXPR_PTR(ROMA23, ROM16),
+ 		SIG_EXPR_PTR(ROMA23, ROM16S));
+-SIG_EXPR_LIST_DECL_SINGLE(VPOR5, VPO24, K18_DESC, VPO_24_OFF);
++SIG_EXPR_LIST_ALIAS(K18, ROMA23, ROM);
++SIG_EXPR_LIST_DECL_SINGLE(K18, VPOR5, VPO24, K18_DESC, VPO_24_OFF);
+ PIN_DECL_2(K18, GPIOS7, ROMA23, VPOR5);
+ 
+ #define RMII1_DESC      SIG_DESC_BIT(HW_STRAP1, 6, 0)
+ 
+ #define A12 152
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT0, GPIOT0, SIG_DESC_SET(SCUA0, 0));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1TXEN, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXCK, RGMII1);
+-PIN_DECL_(A12, SIG_EXPR_LIST_PTR(GPIOT0), SIG_EXPR_LIST_PTR(RMII1TXEN),
+-		SIG_EXPR_LIST_PTR(RGMII1TXCK));
++SIG_EXPR_LIST_DECL_SINGLE(A12, GPIOT0, GPIOT0, SIG_DESC_SET(SCUA0, 0));
++SIG_EXPR_LIST_DECL_SINGLE(A12, RMII1TXEN, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A12, RGMII1TXCK, RGMII1);
++PIN_DECL_(A12, SIG_EXPR_LIST_PTR(A12, GPIOT0),
++	  SIG_EXPR_LIST_PTR(A12, RMII1TXEN),
++	  SIG_EXPR_LIST_PTR(A12, RGMII1TXCK));
+ 
+ #define B12 153
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT1, GPIOT1, SIG_DESC_SET(SCUA0, 1));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHB12, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXCTL, RGMII1);
+-PIN_DECL_(B12, SIG_EXPR_LIST_PTR(GPIOT1), SIG_EXPR_LIST_PTR(DASHB12),
+-		SIG_EXPR_LIST_PTR(RGMII1TXCTL));
++SIG_EXPR_LIST_DECL_SINGLE(B12, GPIOT1, GPIOT1, SIG_DESC_SET(SCUA0, 1));
++SIG_EXPR_LIST_DECL_SINGLE(B12, DASHB12, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B12, RGMII1TXCTL, RGMII1);
++PIN_DECL_(B12, SIG_EXPR_LIST_PTR(B12, GPIOT1), SIG_EXPR_LIST_PTR(B12, DASHB12),
++		SIG_EXPR_LIST_PTR(B12, RGMII1TXCTL));
+ 
+ #define C12 154
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT2, GPIOT2, SIG_DESC_SET(SCUA0, 2));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1TXD0, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD0, RGMII1);
+-PIN_DECL_(C12, SIG_EXPR_LIST_PTR(GPIOT2), SIG_EXPR_LIST_PTR(RMII1TXD0),
+-		SIG_EXPR_LIST_PTR(RGMII1TXD0));
++SIG_EXPR_LIST_DECL_SINGLE(C12, GPIOT2, GPIOT2, SIG_DESC_SET(SCUA0, 2));
++SIG_EXPR_LIST_DECL_SINGLE(C12, RMII1TXD0, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C12, RGMII1TXD0, RGMII1);
++PIN_DECL_(C12, SIG_EXPR_LIST_PTR(C12, GPIOT2),
++	  SIG_EXPR_LIST_PTR(C12, RMII1TXD0),
++	  SIG_EXPR_LIST_PTR(C12, RGMII1TXD0));
+ 
+ #define D12 155
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT3, GPIOT3, SIG_DESC_SET(SCUA0, 3));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1TXD1, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD1, RGMII1);
+-PIN_DECL_(D12, SIG_EXPR_LIST_PTR(GPIOT3), SIG_EXPR_LIST_PTR(RMII1TXD1),
+-		SIG_EXPR_LIST_PTR(RGMII1TXD1));
++SIG_EXPR_LIST_DECL_SINGLE(D12, GPIOT3, GPIOT3, SIG_DESC_SET(SCUA0, 3));
++SIG_EXPR_LIST_DECL_SINGLE(D12, RMII1TXD1, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D12, RGMII1TXD1, RGMII1);
++PIN_DECL_(D12, SIG_EXPR_LIST_PTR(D12, GPIOT3),
++	  SIG_EXPR_LIST_PTR(D12, RMII1TXD1),
++	  SIG_EXPR_LIST_PTR(D12, RGMII1TXD1));
+ 
+ #define E12 156
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT4, GPIOT4, SIG_DESC_SET(SCUA0, 4));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHE12, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD2, RGMII1);
+-PIN_DECL_(E12, SIG_EXPR_LIST_PTR(GPIOT4), SIG_EXPR_LIST_PTR(DASHE12),
+-		SIG_EXPR_LIST_PTR(RGMII1TXD2));
++SIG_EXPR_LIST_DECL_SINGLE(E12, GPIOT4, GPIOT4, SIG_DESC_SET(SCUA0, 4));
++SIG_EXPR_LIST_DECL_SINGLE(E12, DASHE12, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E12, RGMII1TXD2, RGMII1);
++PIN_DECL_(E12, SIG_EXPR_LIST_PTR(E12, GPIOT4), SIG_EXPR_LIST_PTR(E12, DASHE12),
++		SIG_EXPR_LIST_PTR(E12, RGMII1TXD2));
+ 
+ #define A13 157
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT5, GPIOT5, SIG_DESC_SET(SCUA0, 5));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHA13, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD3, RGMII1);
+-PIN_DECL_(A13, SIG_EXPR_LIST_PTR(GPIOT5), SIG_EXPR_LIST_PTR(DASHA13),
+-		SIG_EXPR_LIST_PTR(RGMII1TXD3));
++SIG_EXPR_LIST_DECL_SINGLE(A13, GPIOT5, GPIOT5, SIG_DESC_SET(SCUA0, 5));
++SIG_EXPR_LIST_DECL_SINGLE(A13, DASHA13, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A13, RGMII1TXD3, RGMII1);
++PIN_DECL_(A13, SIG_EXPR_LIST_PTR(A13, GPIOT5), SIG_EXPR_LIST_PTR(A13, DASHA13),
++		SIG_EXPR_LIST_PTR(A13, RGMII1TXD3));
+ 
+ #define RMII2_DESC      SIG_DESC_BIT(HW_STRAP1, 7, 0)
+ 
+ #define D9 158
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT6, GPIOT6, SIG_DESC_SET(SCUA0, 6));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2TXEN, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXCK, RGMII2);
+-PIN_DECL_(D9, SIG_EXPR_LIST_PTR(GPIOT6), SIG_EXPR_LIST_PTR(RMII2TXEN),
+-		SIG_EXPR_LIST_PTR(RGMII2TXCK));
++SIG_EXPR_LIST_DECL_SINGLE(D9, GPIOT6, GPIOT6, SIG_DESC_SET(SCUA0, 6));
++SIG_EXPR_LIST_DECL_SINGLE(D9, RMII2TXEN, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D9, RGMII2TXCK, RGMII2);
++PIN_DECL_(D9, SIG_EXPR_LIST_PTR(D9, GPIOT6), SIG_EXPR_LIST_PTR(D9, RMII2TXEN),
++		SIG_EXPR_LIST_PTR(D9, RGMII2TXCK));
+ 
+ #define E9 159
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT7, GPIOT7, SIG_DESC_SET(SCUA0, 7));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHE9, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXCTL, RGMII2);
+-PIN_DECL_(E9, SIG_EXPR_LIST_PTR(GPIOT7), SIG_EXPR_LIST_PTR(DASHE9),
+-		SIG_EXPR_LIST_PTR(RGMII2TXCTL));
++SIG_EXPR_LIST_DECL_SINGLE(E9, GPIOT7, GPIOT7, SIG_DESC_SET(SCUA0, 7));
++SIG_EXPR_LIST_DECL_SINGLE(E9, DASHE9, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E9, RGMII2TXCTL, RGMII2);
++PIN_DECL_(E9, SIG_EXPR_LIST_PTR(E9, GPIOT7), SIG_EXPR_LIST_PTR(E9, DASHE9),
++		SIG_EXPR_LIST_PTR(E9, RGMII2TXCTL));
+ 
+ #define A10 160
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU0, GPIOU0, SIG_DESC_SET(SCUA0, 8));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2TXD0, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD0, RGMII2);
+-PIN_DECL_(A10, SIG_EXPR_LIST_PTR(GPIOU0), SIG_EXPR_LIST_PTR(RMII2TXD0),
+-		SIG_EXPR_LIST_PTR(RGMII2TXD0));
++SIG_EXPR_LIST_DECL_SINGLE(A10, GPIOU0, GPIOU0, SIG_DESC_SET(SCUA0, 8));
++SIG_EXPR_LIST_DECL_SINGLE(A10, RMII2TXD0, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A10, RGMII2TXD0, RGMII2);
++PIN_DECL_(A10, SIG_EXPR_LIST_PTR(A10, GPIOU0),
++	  SIG_EXPR_LIST_PTR(A10, RMII2TXD0),
++	  SIG_EXPR_LIST_PTR(A10, RGMII2TXD0));
+ 
+ #define B10 161
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU1, GPIOU1, SIG_DESC_SET(SCUA0, 9));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2TXD1, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD1, RGMII2);
+-PIN_DECL_(B10, SIG_EXPR_LIST_PTR(GPIOU1), SIG_EXPR_LIST_PTR(RMII2TXD1),
+-		SIG_EXPR_LIST_PTR(RGMII2TXD1));
++SIG_EXPR_LIST_DECL_SINGLE(B10, GPIOU1, GPIOU1, SIG_DESC_SET(SCUA0, 9));
++SIG_EXPR_LIST_DECL_SINGLE(B10, RMII2TXD1, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B10, RGMII2TXD1, RGMII2);
++PIN_DECL_(B10, SIG_EXPR_LIST_PTR(B10, GPIOU1),
++	  SIG_EXPR_LIST_PTR(B10, RMII2TXD1),
++	  SIG_EXPR_LIST_PTR(B10, RGMII2TXD1));
+ 
+ #define C10 162
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU2, GPIOU2, SIG_DESC_SET(SCUA0, 10));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHC10, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD2, RGMII2);
+-PIN_DECL_(C10, SIG_EXPR_LIST_PTR(GPIOU2), SIG_EXPR_LIST_PTR(DASHC10),
+-		SIG_EXPR_LIST_PTR(RGMII2TXD2));
++SIG_EXPR_LIST_DECL_SINGLE(C10, GPIOU2, GPIOU2, SIG_DESC_SET(SCUA0, 10));
++SIG_EXPR_LIST_DECL_SINGLE(C10, DASHC10, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C10, RGMII2TXD2, RGMII2);
++PIN_DECL_(C10, SIG_EXPR_LIST_PTR(C10, GPIOU2), SIG_EXPR_LIST_PTR(C10, DASHC10),
++		SIG_EXPR_LIST_PTR(C10, RGMII2TXD2));
+ 
+ #define D10 163
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU3, GPIOU3, SIG_DESC_SET(SCUA0, 11));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHD10, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD3, RGMII2);
+-PIN_DECL_(D10, SIG_EXPR_LIST_PTR(GPIOU3), SIG_EXPR_LIST_PTR(DASHD10),
+-		SIG_EXPR_LIST_PTR(RGMII2TXD3));
++SIG_EXPR_LIST_DECL_SINGLE(D10, GPIOU3, GPIOU3, SIG_DESC_SET(SCUA0, 11));
++SIG_EXPR_LIST_DECL_SINGLE(D10, DASHD10, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D10, RGMII2TXD3, RGMII2);
++PIN_DECL_(D10, SIG_EXPR_LIST_PTR(D10, GPIOU3), SIG_EXPR_LIST_PTR(D10, DASHD10),
++		SIG_EXPR_LIST_PTR(D10, RGMII2TXD3));
+ 
+ #define E11 164
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU4, GPIOU4, SIG_DESC_SET(SCUA0, 12));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1RCLK, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXCK, RGMII1);
+-PIN_DECL_(E11, SIG_EXPR_LIST_PTR(GPIOU4), SIG_EXPR_LIST_PTR(RMII1RCLK),
+-		SIG_EXPR_LIST_PTR(RGMII1RXCK));
++SIG_EXPR_LIST_DECL_SINGLE(E11, GPIOU4, GPIOU4, SIG_DESC_SET(SCUA0, 12));
++SIG_EXPR_LIST_DECL_SINGLE(E11, RMII1RCLK, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E11, RGMII1RXCK, RGMII1);
++PIN_DECL_(E11, SIG_EXPR_LIST_PTR(E11, GPIOU4),
++	  SIG_EXPR_LIST_PTR(E11, RMII1RCLK),
++	  SIG_EXPR_LIST_PTR(E11, RGMII1RXCK));
+ 
+ #define D11 165
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU5, GPIOU5, SIG_DESC_SET(SCUA0, 13));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHD11, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXCTL, RGMII1);
+-PIN_DECL_(D11, SIG_EXPR_LIST_PTR(GPIOU5), SIG_EXPR_LIST_PTR(DASHD11),
+-		SIG_EXPR_LIST_PTR(RGMII1RXCTL));
++SIG_EXPR_LIST_DECL_SINGLE(D11, GPIOU5, GPIOU5, SIG_DESC_SET(SCUA0, 13));
++SIG_EXPR_LIST_DECL_SINGLE(D11, DASHD11, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D11, RGMII1RXCTL, RGMII1);
++PIN_DECL_(D11, SIG_EXPR_LIST_PTR(D11, GPIOU5), SIG_EXPR_LIST_PTR(D11, DASHD11),
++		SIG_EXPR_LIST_PTR(D11, RGMII1RXCTL));
+ 
+ #define C11 166
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU6, GPIOU6, SIG_DESC_SET(SCUA0, 14));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1RXD0, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD0, RGMII1);
+-PIN_DECL_(C11, SIG_EXPR_LIST_PTR(GPIOU6), SIG_EXPR_LIST_PTR(RMII1RXD0),
+-		SIG_EXPR_LIST_PTR(RGMII1RXD0));
++SIG_EXPR_LIST_DECL_SINGLE(C11, GPIOU6, GPIOU6, SIG_DESC_SET(SCUA0, 14));
++SIG_EXPR_LIST_DECL_SINGLE(C11, RMII1RXD0, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C11, RGMII1RXD0, RGMII1);
++PIN_DECL_(C11, SIG_EXPR_LIST_PTR(C11, GPIOU6),
++	  SIG_EXPR_LIST_PTR(C11, RMII1RXD0),
++	  SIG_EXPR_LIST_PTR(C11, RGMII1RXD0));
+ 
+ #define B11 167
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU7, GPIOU7, SIG_DESC_SET(SCUA0, 15));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1RXD1, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD1, RGMII1);
+-PIN_DECL_(B11, SIG_EXPR_LIST_PTR(GPIOU7), SIG_EXPR_LIST_PTR(RMII1RXD1),
+-		SIG_EXPR_LIST_PTR(RGMII1RXD1));
++SIG_EXPR_LIST_DECL_SINGLE(B11, GPIOU7, GPIOU7, SIG_DESC_SET(SCUA0, 15));
++SIG_EXPR_LIST_DECL_SINGLE(B11, RMII1RXD1, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B11, RGMII1RXD1, RGMII1);
++PIN_DECL_(B11, SIG_EXPR_LIST_PTR(B11, GPIOU7),
++	  SIG_EXPR_LIST_PTR(B11, RMII1RXD1),
++	  SIG_EXPR_LIST_PTR(B11, RGMII1RXD1));
+ 
+ #define A11 168
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV0, GPIOV0, SIG_DESC_SET(SCUA0, 16));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1CRSDV, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD2, RGMII1);
+-PIN_DECL_(A11, SIG_EXPR_LIST_PTR(GPIOV0), SIG_EXPR_LIST_PTR(RMII1CRSDV),
+-		SIG_EXPR_LIST_PTR(RGMII1RXD2));
++SIG_EXPR_LIST_DECL_SINGLE(A11, GPIOV0, GPIOV0, SIG_DESC_SET(SCUA0, 16));
++SIG_EXPR_LIST_DECL_SINGLE(A11, RMII1CRSDV, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A11, RGMII1RXD2, RGMII1);
++PIN_DECL_(A11, SIG_EXPR_LIST_PTR(A11, GPIOV0),
++	  SIG_EXPR_LIST_PTR(A11, RMII1CRSDV),
++	  SIG_EXPR_LIST_PTR(A11, RGMII1RXD2));
+ 
+ #define E10 169
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV1, GPIOV1, SIG_DESC_SET(SCUA0, 17));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1RXER, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD3, RGMII1);
+-PIN_DECL_(E10, SIG_EXPR_LIST_PTR(GPIOV1), SIG_EXPR_LIST_PTR(RMII1RXER),
+-		SIG_EXPR_LIST_PTR(RGMII1RXD3));
++SIG_EXPR_LIST_DECL_SINGLE(E10, GPIOV1, GPIOV1, SIG_DESC_SET(SCUA0, 17));
++SIG_EXPR_LIST_DECL_SINGLE(E10, RMII1RXER, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E10, RGMII1RXD3, RGMII1);
++PIN_DECL_(E10, SIG_EXPR_LIST_PTR(E10, GPIOV1),
++	  SIG_EXPR_LIST_PTR(E10, RMII1RXER),
++	  SIG_EXPR_LIST_PTR(E10, RGMII1RXD3));
+ 
+ #define C9 170
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV2, GPIOV2, SIG_DESC_SET(SCUA0, 18));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2RCLK, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXCK, RGMII2);
+-PIN_DECL_(C9, SIG_EXPR_LIST_PTR(GPIOV2), SIG_EXPR_LIST_PTR(RMII2RCLK),
+-		SIG_EXPR_LIST_PTR(RGMII2RXCK));
++SIG_EXPR_LIST_DECL_SINGLE(C9, GPIOV2, GPIOV2, SIG_DESC_SET(SCUA0, 18));
++SIG_EXPR_LIST_DECL_SINGLE(C9, RMII2RCLK, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C9, RGMII2RXCK, RGMII2);
++PIN_DECL_(C9, SIG_EXPR_LIST_PTR(C9, GPIOV2), SIG_EXPR_LIST_PTR(C9, RMII2RCLK),
++		SIG_EXPR_LIST_PTR(C9, RGMII2RXCK));
+ 
+ #define B9 171
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV3, GPIOV3, SIG_DESC_SET(SCUA0, 19));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHB9, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXCTL, RGMII2);
+-PIN_DECL_(B9, SIG_EXPR_LIST_PTR(GPIOV3), SIG_EXPR_LIST_PTR(DASHB9),
+-		SIG_EXPR_LIST_PTR(RGMII2RXCTL));
++SIG_EXPR_LIST_DECL_SINGLE(B9, GPIOV3, GPIOV3, SIG_DESC_SET(SCUA0, 19));
++SIG_EXPR_LIST_DECL_SINGLE(B9, DASHB9, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B9, RGMII2RXCTL, RGMII2);
++PIN_DECL_(B9, SIG_EXPR_LIST_PTR(B9, GPIOV3), SIG_EXPR_LIST_PTR(B9, DASHB9),
++		SIG_EXPR_LIST_PTR(B9, RGMII2RXCTL));
+ 
+ #define A9 172
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV4, GPIOV4, SIG_DESC_SET(SCUA0, 20));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2RXD0, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD0, RGMII2);
+-PIN_DECL_(A9, SIG_EXPR_LIST_PTR(GPIOV4), SIG_EXPR_LIST_PTR(RMII2RXD0),
+-		SIG_EXPR_LIST_PTR(RGMII2RXD0));
++SIG_EXPR_LIST_DECL_SINGLE(A9, GPIOV4, GPIOV4, SIG_DESC_SET(SCUA0, 20));
++SIG_EXPR_LIST_DECL_SINGLE(A9, RMII2RXD0, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A9, RGMII2RXD0, RGMII2);
++PIN_DECL_(A9, SIG_EXPR_LIST_PTR(A9, GPIOV4), SIG_EXPR_LIST_PTR(A9, RMII2RXD0),
++		SIG_EXPR_LIST_PTR(A9, RGMII2RXD0));
+ 
+ #define E8 173
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV5, GPIOV5, SIG_DESC_SET(SCUA0, 21));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2RXD1, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD1, RGMII2);
+-PIN_DECL_(E8, SIG_EXPR_LIST_PTR(GPIOV5), SIG_EXPR_LIST_PTR(RMII2RXD1),
+-		SIG_EXPR_LIST_PTR(RGMII2RXD1));
++SIG_EXPR_LIST_DECL_SINGLE(E8, GPIOV5, GPIOV5, SIG_DESC_SET(SCUA0, 21));
++SIG_EXPR_LIST_DECL_SINGLE(E8, RMII2RXD1, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E8, RGMII2RXD1, RGMII2);
++PIN_DECL_(E8, SIG_EXPR_LIST_PTR(E8, GPIOV5), SIG_EXPR_LIST_PTR(E8, RMII2RXD1),
++		SIG_EXPR_LIST_PTR(E8, RGMII2RXD1));
+ 
+ #define D8 174
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV6, GPIOV6, SIG_DESC_SET(SCUA0, 22));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2CRSDV, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD2, RGMII2);
+-PIN_DECL_(D8, SIG_EXPR_LIST_PTR(GPIOV6), SIG_EXPR_LIST_PTR(RMII2CRSDV),
+-		SIG_EXPR_LIST_PTR(RGMII2RXD2));
++SIG_EXPR_LIST_DECL_SINGLE(D8, GPIOV6, GPIOV6, SIG_DESC_SET(SCUA0, 22));
++SIG_EXPR_LIST_DECL_SINGLE(D8, RMII2CRSDV, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D8, RGMII2RXD2, RGMII2);
++PIN_DECL_(D8, SIG_EXPR_LIST_PTR(D8, GPIOV6), SIG_EXPR_LIST_PTR(D8, RMII2CRSDV),
++		SIG_EXPR_LIST_PTR(D8, RGMII2RXD2));
+ 
+ #define C8 175
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV7, GPIOV7, SIG_DESC_SET(SCUA0, 23));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2RXER, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD3, RGMII2);
+-PIN_DECL_(C8, SIG_EXPR_LIST_PTR(GPIOV7), SIG_EXPR_LIST_PTR(RMII2RXER),
+-		SIG_EXPR_LIST_PTR(RGMII2RXD3));
++SIG_EXPR_LIST_DECL_SINGLE(C8, GPIOV7, GPIOV7, SIG_DESC_SET(SCUA0, 23));
++SIG_EXPR_LIST_DECL_SINGLE(C8, RMII2RXER, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C8, RGMII2RXD3, RGMII2);
++PIN_DECL_(C8, SIG_EXPR_LIST_PTR(C8, GPIOV7), SIG_EXPR_LIST_PTR(C8, RMII2RXER),
++		SIG_EXPR_LIST_PTR(C8, RGMII2RXD3));
+ 
+ FUNC_GROUP_DECL(RMII1, A12, B12, C12, D12, E12, A13, E11, D11, C11, B11, A11,
+ 		E10);
+@@ -1374,126 +1463,126 @@ FUNC_GROUP_DECL(RMII2, D9, E9, A10, B10, C10, D10, C9, B9, A9, E8, D8, C8);
+ FUNC_GROUP_DECL(RGMII2, D9, E9, A10, B10, C10, D10, C9, B9, A9, E8, D8, C8);
+ 
+ #define L5 176
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW0, GPIOW0, SIG_DESC_SET(SCUA0, 24));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC0, ADC0);
+-PIN_DECL_(L5, SIG_EXPR_LIST_PTR(GPIOW0), SIG_EXPR_LIST_PTR(ADC0));
++SIG_EXPR_LIST_DECL_SINGLE(L5, GPIOW0, GPIOW0, SIG_DESC_SET(SCUA0, 24));
++SIG_EXPR_LIST_DECL_SINGLE(L5, ADC0, ADC0);
++PIN_DECL_(L5, SIG_EXPR_LIST_PTR(L5, GPIOW0), SIG_EXPR_LIST_PTR(L5, ADC0));
+ FUNC_GROUP_DECL(ADC0, L5);
+ 
+ #define L4 177
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW1, GPIOW1, SIG_DESC_SET(SCUA0, 25));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC1, ADC1);
+-PIN_DECL_(L4, SIG_EXPR_LIST_PTR(GPIOW1), SIG_EXPR_LIST_PTR(ADC1));
++SIG_EXPR_LIST_DECL_SINGLE(L4, GPIOW1, GPIOW1, SIG_DESC_SET(SCUA0, 25));
++SIG_EXPR_LIST_DECL_SINGLE(L4, ADC1, ADC1);
++PIN_DECL_(L4, SIG_EXPR_LIST_PTR(L4, GPIOW1), SIG_EXPR_LIST_PTR(L4, ADC1));
+ FUNC_GROUP_DECL(ADC1, L4);
+ 
+ #define L3 178
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW2, GPIOW2, SIG_DESC_SET(SCUA0, 26));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC2, ADC2);
+-PIN_DECL_(L3, SIG_EXPR_LIST_PTR(GPIOW2), SIG_EXPR_LIST_PTR(ADC2));
++SIG_EXPR_LIST_DECL_SINGLE(L3, GPIOW2, GPIOW2, SIG_DESC_SET(SCUA0, 26));
++SIG_EXPR_LIST_DECL_SINGLE(L3, ADC2, ADC2);
++PIN_DECL_(L3, SIG_EXPR_LIST_PTR(L3, GPIOW2), SIG_EXPR_LIST_PTR(L3, ADC2));
+ FUNC_GROUP_DECL(ADC2, L3);
+ 
+ #define L2 179
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW3, GPIOW3, SIG_DESC_SET(SCUA0, 27));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC3, ADC3);
+-PIN_DECL_(L2, SIG_EXPR_LIST_PTR(GPIOW3), SIG_EXPR_LIST_PTR(ADC3));
++SIG_EXPR_LIST_DECL_SINGLE(L2, GPIOW3, GPIOW3, SIG_DESC_SET(SCUA0, 27));
++SIG_EXPR_LIST_DECL_SINGLE(L2, ADC3, ADC3);
++PIN_DECL_(L2, SIG_EXPR_LIST_PTR(L2, GPIOW3), SIG_EXPR_LIST_PTR(L2, ADC3));
+ FUNC_GROUP_DECL(ADC3, L2);
+ 
+ #define L1 180
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW4, GPIOW4, SIG_DESC_SET(SCUA0, 28));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC4, ADC4);
+-PIN_DECL_(L1, SIG_EXPR_LIST_PTR(GPIOW4), SIG_EXPR_LIST_PTR(ADC4));
++SIG_EXPR_LIST_DECL_SINGLE(L1, GPIOW4, GPIOW4, SIG_DESC_SET(SCUA0, 28));
++SIG_EXPR_LIST_DECL_SINGLE(L1, ADC4, ADC4);
++PIN_DECL_(L1, SIG_EXPR_LIST_PTR(L1, GPIOW4), SIG_EXPR_LIST_PTR(L1, ADC4));
+ FUNC_GROUP_DECL(ADC4, L1);
+ 
+ #define M5 181
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW5, GPIOW5, SIG_DESC_SET(SCUA0, 29));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC5, ADC5);
+-PIN_DECL_(M5, SIG_EXPR_LIST_PTR(GPIOW5), SIG_EXPR_LIST_PTR(ADC5));
++SIG_EXPR_LIST_DECL_SINGLE(M5, GPIOW5, GPIOW5, SIG_DESC_SET(SCUA0, 29));
++SIG_EXPR_LIST_DECL_SINGLE(M5, ADC5, ADC5);
++PIN_DECL_(M5, SIG_EXPR_LIST_PTR(M5, GPIOW5), SIG_EXPR_LIST_PTR(M5, ADC5));
+ FUNC_GROUP_DECL(ADC5, M5);
+ 
+ #define M4 182
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW6, GPIOW6, SIG_DESC_SET(SCUA0, 30));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC6, ADC6);
+-PIN_DECL_(M4, SIG_EXPR_LIST_PTR(GPIOW6), SIG_EXPR_LIST_PTR(ADC6));
++SIG_EXPR_LIST_DECL_SINGLE(M4, GPIOW6, GPIOW6, SIG_DESC_SET(SCUA0, 30));
++SIG_EXPR_LIST_DECL_SINGLE(M4, ADC6, ADC6);
++PIN_DECL_(M4, SIG_EXPR_LIST_PTR(M4, GPIOW6), SIG_EXPR_LIST_PTR(M4, ADC6));
+ FUNC_GROUP_DECL(ADC6, M4);
+ 
+ #define M3 183
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW7, GPIOW7, SIG_DESC_SET(SCUA0, 31));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC7, ADC7);
+-PIN_DECL_(M3, SIG_EXPR_LIST_PTR(GPIOW7), SIG_EXPR_LIST_PTR(ADC7));
++SIG_EXPR_LIST_DECL_SINGLE(M3, GPIOW7, GPIOW7, SIG_DESC_SET(SCUA0, 31));
++SIG_EXPR_LIST_DECL_SINGLE(M3, ADC7, ADC7);
++PIN_DECL_(M3, SIG_EXPR_LIST_PTR(M3, GPIOW7), SIG_EXPR_LIST_PTR(M3, ADC7));
+ FUNC_GROUP_DECL(ADC7, M3);
+ 
+ #define M2 184
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX0, GPIOX0, SIG_DESC_SET(SCUA4, 0));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC8, ADC8);
+-PIN_DECL_(M2, SIG_EXPR_LIST_PTR(GPIOX0), SIG_EXPR_LIST_PTR(ADC8));
++SIG_EXPR_LIST_DECL_SINGLE(M2, GPIOX0, GPIOX0, SIG_DESC_SET(SCUA4, 0));
++SIG_EXPR_LIST_DECL_SINGLE(M2, ADC8, ADC8);
++PIN_DECL_(M2, SIG_EXPR_LIST_PTR(M2, GPIOX0), SIG_EXPR_LIST_PTR(M2, ADC8));
+ FUNC_GROUP_DECL(ADC8, M2);
+ 
+ #define M1 185
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX1, GPIOX1, SIG_DESC_SET(SCUA4, 1));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC9, ADC9);
+-PIN_DECL_(M1, SIG_EXPR_LIST_PTR(GPIOX1), SIG_EXPR_LIST_PTR(ADC9));
++SIG_EXPR_LIST_DECL_SINGLE(M1, GPIOX1, GPIOX1, SIG_DESC_SET(SCUA4, 1));
++SIG_EXPR_LIST_DECL_SINGLE(M1, ADC9, ADC9);
++PIN_DECL_(M1, SIG_EXPR_LIST_PTR(M1, GPIOX1), SIG_EXPR_LIST_PTR(M1, ADC9));
+ FUNC_GROUP_DECL(ADC9, M1);
+ 
+ #define N5 186
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX2, GPIOX2, SIG_DESC_SET(SCUA4, 2));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC10, ADC10);
+-PIN_DECL_(N5, SIG_EXPR_LIST_PTR(GPIOX2), SIG_EXPR_LIST_PTR(ADC10));
++SIG_EXPR_LIST_DECL_SINGLE(N5, GPIOX2, GPIOX2, SIG_DESC_SET(SCUA4, 2));
++SIG_EXPR_LIST_DECL_SINGLE(N5, ADC10, ADC10);
++PIN_DECL_(N5, SIG_EXPR_LIST_PTR(N5, GPIOX2), SIG_EXPR_LIST_PTR(N5, ADC10));
+ FUNC_GROUP_DECL(ADC10, N5);
+ 
+ #define N4 187
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX3, GPIOX3, SIG_DESC_SET(SCUA4, 3));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC11, ADC11);
+-PIN_DECL_(N4, SIG_EXPR_LIST_PTR(GPIOX3), SIG_EXPR_LIST_PTR(ADC11));
++SIG_EXPR_LIST_DECL_SINGLE(N4, GPIOX3, GPIOX3, SIG_DESC_SET(SCUA4, 3));
++SIG_EXPR_LIST_DECL_SINGLE(N4, ADC11, ADC11);
++PIN_DECL_(N4, SIG_EXPR_LIST_PTR(N4, GPIOX3), SIG_EXPR_LIST_PTR(N4, ADC11));
+ FUNC_GROUP_DECL(ADC11, N4);
+ 
+ #define N3 188
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX4, GPIOX4, SIG_DESC_SET(SCUA4, 4));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC12, ADC12);
+-PIN_DECL_(N3, SIG_EXPR_LIST_PTR(GPIOX4), SIG_EXPR_LIST_PTR(ADC12));
++SIG_EXPR_LIST_DECL_SINGLE(N3, GPIOX4, GPIOX4, SIG_DESC_SET(SCUA4, 4));
++SIG_EXPR_LIST_DECL_SINGLE(N3, ADC12, ADC12);
++PIN_DECL_(N3, SIG_EXPR_LIST_PTR(N3, GPIOX4), SIG_EXPR_LIST_PTR(N3, ADC12));
+ FUNC_GROUP_DECL(ADC12, N3);
+ 
+ #define N2 189
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX5, GPIOX5, SIG_DESC_SET(SCUA4, 5));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC13, ADC13);
+-PIN_DECL_(N2, SIG_EXPR_LIST_PTR(GPIOX5), SIG_EXPR_LIST_PTR(ADC13));
++SIG_EXPR_LIST_DECL_SINGLE(N2, GPIOX5, GPIOX5, SIG_DESC_SET(SCUA4, 5));
++SIG_EXPR_LIST_DECL_SINGLE(N2, ADC13, ADC13);
++PIN_DECL_(N2, SIG_EXPR_LIST_PTR(N2, GPIOX5), SIG_EXPR_LIST_PTR(N2, ADC13));
+ FUNC_GROUP_DECL(ADC13, N2);
+ 
+ #define N1 190
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX6, GPIOX6, SIG_DESC_SET(SCUA4, 6));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC14, ADC14);
+-PIN_DECL_(N1, SIG_EXPR_LIST_PTR(GPIOX6), SIG_EXPR_LIST_PTR(ADC14));
++SIG_EXPR_LIST_DECL_SINGLE(N1, GPIOX6, GPIOX6, SIG_DESC_SET(SCUA4, 6));
++SIG_EXPR_LIST_DECL_SINGLE(N1, ADC14, ADC14);
++PIN_DECL_(N1, SIG_EXPR_LIST_PTR(N1, GPIOX6), SIG_EXPR_LIST_PTR(N1, ADC14));
+ FUNC_GROUP_DECL(ADC14, N1);
+ 
+ #define P5 191
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX7, GPIOX7, SIG_DESC_SET(SCUA4, 7));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC15, ADC15);
+-PIN_DECL_(P5, SIG_EXPR_LIST_PTR(GPIOX7), SIG_EXPR_LIST_PTR(ADC15));
++SIG_EXPR_LIST_DECL_SINGLE(P5, GPIOX7, GPIOX7, SIG_DESC_SET(SCUA4, 7));
++SIG_EXPR_LIST_DECL_SINGLE(P5, ADC15, ADC15);
++PIN_DECL_(P5, SIG_EXPR_LIST_PTR(P5, GPIOX7), SIG_EXPR_LIST_PTR(P5, ADC15));
+ FUNC_GROUP_DECL(ADC15, P5);
+ 
+ #define C21 192
+-SIG_EXPR_DECL(SIOS3, SIOS3, SIG_DESC_SET(SCUA4, 8));
+-SIG_EXPR_DECL(SIOS3, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOS3, SIOS3, ACPI);
++SIG_EXPR_DECL_SINGLE(SIOS3, SIOS3, SIG_DESC_SET(SCUA4, 8));
++SIG_EXPR_DECL_SINGLE(SIOS3, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(C21, SIOS3, SIOS3, ACPI);
+ PIN_DECL_1(C21, GPIOY0, SIOS3);
+ FUNC_GROUP_DECL(SIOS3, C21);
+ 
+ #define F20 193
+-SIG_EXPR_DECL(SIOS5, SIOS5, SIG_DESC_SET(SCUA4, 9));
+-SIG_EXPR_DECL(SIOS5, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOS5, SIOS5, ACPI);
++SIG_EXPR_DECL_SINGLE(SIOS5, SIOS5, SIG_DESC_SET(SCUA4, 9));
++SIG_EXPR_DECL_SINGLE(SIOS5, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(F20, SIOS5, SIOS5, ACPI);
+ PIN_DECL_1(F20, GPIOY1, SIOS5);
+ FUNC_GROUP_DECL(SIOS5, F20);
+ 
+ #define G20 194
+-SIG_EXPR_DECL(SIOPWREQ, SIOPWREQ, SIG_DESC_SET(SCUA4, 10));
+-SIG_EXPR_DECL(SIOPWREQ, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOPWREQ, SIOPWREQ, ACPI);
++SIG_EXPR_DECL_SINGLE(SIOPWREQ, SIOPWREQ, SIG_DESC_SET(SCUA4, 10));
++SIG_EXPR_DECL_SINGLE(SIOPWREQ, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(G20, SIOPWREQ, SIOPWREQ, ACPI);
+ PIN_DECL_1(G20, GPIOY2, SIOPWREQ);
+ FUNC_GROUP_DECL(SIOPWREQ, G20);
+ 
+ #define K20 195
+-SIG_EXPR_DECL(SIOONCTRL, SIOONCTRL, SIG_DESC_SET(SCUA4, 11));
+-SIG_EXPR_DECL(SIOONCTRL, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOONCTRL, SIOONCTRL, ACPI);
++SIG_EXPR_DECL_SINGLE(SIOONCTRL, SIOONCTRL, SIG_DESC_SET(SCUA4, 11));
++SIG_EXPR_DECL_SINGLE(SIOONCTRL, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(K20, SIOONCTRL, SIOONCTRL, ACPI);
+ PIN_DECL_1(K20, GPIOY3, SIOONCTRL);
+ FUNC_GROUP_DECL(SIOONCTRL, K20);
+ 
+@@ -1501,226 +1590,262 @@ FUNC_GROUP_DECL(ACPI, B19, A20, D17, A19, C21, F20, G20, K20);
+ 
+ #define R22 200
+ #define R22_DESC	SIG_DESC_SET(SCUA4, 16)
+-SIG_EXPR_DECL(ROMA2, ROM8, R22_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA2, ROM16, R22_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA2, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOB0, VPO12, R22_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOB0, VPO24, R22_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOB0, VPOOFF1, R22_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOB0, SIG_EXPR_PTR(VPOB0, VPO12),
+-		SIG_EXPR_PTR(VPOB0, VPO24), SIG_EXPR_PTR(VPOB0, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA2, ROM8, R22_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA2, ROM16, R22_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(R22, ROMA2, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOB0, VPO12, R22_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB0, VPO24, R22_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB0, VPOOFF1, R22_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOB0, VPO,
++		SIG_EXPR_PTR(VPOB0, VPO12),
++		SIG_EXPR_PTR(VPOB0, VPO24),
++		SIG_EXPR_PTR(VPOB0, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(R22, VPOB0, VPO);
+ PIN_DECL_2(R22, GPIOZ0, ROMA2, VPOB0);
+ 
+ #define P18 201
+ #define P18_DESC	SIG_DESC_SET(SCUA4, 17)
+-SIG_EXPR_DECL(ROMA3, ROM8, P18_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA3, ROM16, P18_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA3, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOB1, VPO12, P18_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOB1, VPO24, P18_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOB1, VPOOFF1, P18_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOB1, SIG_EXPR_PTR(VPOB1, VPO12),
+-		SIG_EXPR_PTR(VPOB1, VPO24), SIG_EXPR_PTR(VPOB1, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA3, ROM8, P18_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA3, ROM16, P18_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(P18, ROMA3, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOB1, VPO12, P18_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB1, VPO24, P18_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB1, VPOOFF1, P18_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOB1, VPO,
++		SIG_EXPR_PTR(VPOB1, VPO12),
++		SIG_EXPR_PTR(VPOB1, VPO24),
++		SIG_EXPR_PTR(VPOB1, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(P18, VPOB1, VPO);
+ PIN_DECL_2(P18, GPIOZ1, ROMA3, VPOB1);
+ 
+ #define P19 202
+ #define P19_DESC	SIG_DESC_SET(SCUA4, 18)
+-SIG_EXPR_DECL(ROMA4, ROM8, P19_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA4, ROM16, P19_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA4, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOB2, VPO12, P19_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOB2, VPO24, P19_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOB2, VPOOFF1, P19_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOB2, SIG_EXPR_PTR(VPOB2, VPO12),
+-		SIG_EXPR_PTR(VPOB2, VPO24), SIG_EXPR_PTR(VPOB2, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA4, ROM8, P19_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA4, ROM16, P19_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(P19, ROMA4, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOB2, VPO12, P19_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB2, VPO24, P19_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB2, VPOOFF1, P19_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOB2, VPO,
++		SIG_EXPR_PTR(VPOB2, VPO12),
++		SIG_EXPR_PTR(VPOB2, VPO24),
++		SIG_EXPR_PTR(VPOB2, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(P19, VPOB2, VPO);
+ PIN_DECL_2(P19, GPIOZ2, ROMA4, VPOB2);
+ 
+ #define P20 203
+ #define P20_DESC	SIG_DESC_SET(SCUA4, 19)
+-SIG_EXPR_DECL(ROMA5, ROM8, P20_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA5, ROM16, P20_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA5, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOB3, VPO12, P20_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOB3, VPO24, P20_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOB3, VPOOFF1, P20_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOB3, SIG_EXPR_PTR(VPOB3, VPO12),
+-		SIG_EXPR_PTR(VPOB3, VPO24), SIG_EXPR_PTR(VPOB3, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA5, ROM8, P20_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA5, ROM16, P20_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(P20, ROMA5, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOB3, VPO12, P20_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB3, VPO24, P20_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB3, VPOOFF1, P20_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOB3, VPO,
++		SIG_EXPR_PTR(VPOB3, VPO12),
++		SIG_EXPR_PTR(VPOB3, VPO24),
++		SIG_EXPR_PTR(VPOB3, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(P20, VPOB3, VPO);
+ PIN_DECL_2(P20, GPIOZ3, ROMA5, VPOB3);
+ 
+ #define P21 204
+ #define P21_DESC	SIG_DESC_SET(SCUA4, 20)
+-SIG_EXPR_DECL(ROMA6, ROM8, P21_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA6, ROM16, P21_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA6, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOB4, VPO12, P21_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOB4, VPO24, P21_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOB4, VPOOFF1, P21_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOB4, SIG_EXPR_PTR(VPOB4, VPO12),
+-		SIG_EXPR_PTR(VPOB4, VPO24), SIG_EXPR_PTR(VPOB4, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA6, ROM8, P21_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA6, ROM16, P21_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(P21, ROMA6, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOB4, VPO12, P21_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB4, VPO24, P21_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB4, VPOOFF1, P21_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOB4, VPO,
++		SIG_EXPR_PTR(VPOB4, VPO12),
++		SIG_EXPR_PTR(VPOB4, VPO24),
++		SIG_EXPR_PTR(VPOB4, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(P21, VPOB4, VPO);
+ PIN_DECL_2(P21, GPIOZ4, ROMA6, VPOB4);
+ 
+ #define P22 205
+ #define P22_DESC	SIG_DESC_SET(SCUA4, 21)
+-SIG_EXPR_DECL(ROMA7, ROM8, P22_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA7, ROM16, P22_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA7, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOB5, VPO12, P22_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOB5, VPO24, P22_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOB5, VPOOFF1, P22_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOB5, SIG_EXPR_PTR(VPOB5, VPO12),
+-		SIG_EXPR_PTR(VPOB5, VPO24), SIG_EXPR_PTR(VPOB5, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA7, ROM8, P22_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA7, ROM16, P22_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(P22, ROMA7, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOB5, VPO12, P22_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB5, VPO24, P22_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB5, VPOOFF1, P22_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOB5, VPO,
++		SIG_EXPR_PTR(VPOB5, VPO12),
++		SIG_EXPR_PTR(VPOB5, VPO24),
++		SIG_EXPR_PTR(VPOB5, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(P22, VPOB5, VPO);
+ PIN_DECL_2(P22, GPIOZ5, ROMA7, VPOB5);
+ 
+ #define M19 206
+ #define M19_DESC	SIG_DESC_SET(SCUA4, 22)
+-SIG_EXPR_DECL(ROMA8, ROM8, M19_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA8, ROM16, M19_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA8, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOB6, VPO12, M19_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOB6, VPO24, M19_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOB6, VPOOFF1, M19_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOB6, SIG_EXPR_PTR(VPOB6, VPO12),
+-		SIG_EXPR_PTR(VPOB6, VPO24), SIG_EXPR_PTR(VPOB6, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA8, ROM8, M19_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA8, ROM16, M19_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(M19, ROMA8, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOB6, VPO12, M19_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB6, VPO24, M19_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB6, VPOOFF1, M19_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOB6, VPO,
++		SIG_EXPR_PTR(VPOB6, VPO12),
++		SIG_EXPR_PTR(VPOB6, VPO24),
++		SIG_EXPR_PTR(VPOB6, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(M19, VPOB6, VPO);
+ PIN_DECL_2(M19, GPIOZ6, ROMA8, VPOB6);
+ 
+ #define M20 207
+ #define M20_DESC	SIG_DESC_SET(SCUA4, 23)
+-SIG_EXPR_DECL(ROMA9, ROM8, M20_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA9, ROM16, M20_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA9, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOB7, VPO12, M20_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOB7, VPO24, M20_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOB7, VPOOFF1, M20_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOB7, SIG_EXPR_PTR(VPOB7, VPO12),
+-		SIG_EXPR_PTR(VPOB7, VPO24), SIG_EXPR_PTR(VPOB7, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA9, ROM8, M20_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA9, ROM16, M20_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(M20, ROMA9, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOB7, VPO12, M20_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB7, VPO24, M20_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB7, VPOOFF1, M20_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOB7, VPO,
++		SIG_EXPR_PTR(VPOB7, VPO12),
++		SIG_EXPR_PTR(VPOB7, VPO24),
++		SIG_EXPR_PTR(VPOB7, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(M20, VPOB7, VPO);
+ PIN_DECL_2(M20, GPIOZ7, ROMA9, VPOB7);
+ 
+ #define M21 208
+ #define M21_DESC	SIG_DESC_SET(SCUA4, 24)
+-SIG_EXPR_DECL(ROMA10, ROM8, M21_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA10, ROM16, M21_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA10, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOG0, VPO12, M21_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOG0, VPO24, M21_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOG0, VPOOFF1, M21_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOG0, SIG_EXPR_PTR(VPOG0, VPO12),
+-		SIG_EXPR_PTR(VPOG0, VPO24), SIG_EXPR_PTR(VPOG0, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA10, ROM8, M21_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA10, ROM16, M21_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(M21, ROMA10, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOG0, VPO12, M21_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG0, VPO24, M21_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG0, VPOOFF1, M21_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOG0, VPO,
++		SIG_EXPR_PTR(VPOG0, VPO12),
++		SIG_EXPR_PTR(VPOG0, VPO24),
++		SIG_EXPR_PTR(VPOG0, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(M21, VPOG0, VPO);
+ PIN_DECL_2(M21, GPIOAA0, ROMA10, VPOG0);
+ 
+ #define M22 209
+ #define M22_DESC	SIG_DESC_SET(SCUA4, 25)
+-SIG_EXPR_DECL(ROMA11, ROM8, M22_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA11, ROM16, M22_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA11, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOG1, VPO12, M22_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOG1, VPO24, M22_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOG1, VPOOFF1, M22_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOG1, SIG_EXPR_PTR(VPOG1, VPO12),
+-		SIG_EXPR_PTR(VPOG1, VPO24), SIG_EXPR_PTR(VPOG1, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA11, ROM8, M22_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA11, ROM16, M22_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(M22, ROMA11, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOG1, VPO12, M22_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG1, VPO24, M22_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG1, VPOOFF1, M22_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOG1, VPO,
++		SIG_EXPR_PTR(VPOG1, VPO12),
++		SIG_EXPR_PTR(VPOG1, VPO24),
++		SIG_EXPR_PTR(VPOG1, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(M22, VPOG1, VPO);
+ PIN_DECL_2(M22, GPIOAA1, ROMA11, VPOG1);
+ 
+ #define L18 210
+ #define L18_DESC	SIG_DESC_SET(SCUA4, 26)
+-SIG_EXPR_DECL(ROMA12, ROM8, L18_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA12, ROM16, L18_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA12, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOG2, VPO12, L18_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOG2, VPO24, L18_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOG2, VPOOFF1, L18_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOG2, SIG_EXPR_PTR(VPOG2, VPO12),
+-		SIG_EXPR_PTR(VPOG2, VPO24), SIG_EXPR_PTR(VPOG2, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA12, ROM8, L18_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA12, ROM16, L18_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(L18, ROMA12, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOG2, VPO12, L18_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG2, VPO24, L18_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG2, VPOOFF1, L18_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOG2, VPO,
++		SIG_EXPR_PTR(VPOG2, VPO12),
++		SIG_EXPR_PTR(VPOG2, VPO24),
++		SIG_EXPR_PTR(VPOG2, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(L18, VPOG2, VPO);
+ PIN_DECL_2(L18, GPIOAA2, ROMA12, VPOG2);
+ 
+ #define L19 211
+ #define L19_DESC	SIG_DESC_SET(SCUA4, 27)
+-SIG_EXPR_DECL(ROMA13, ROM8, L19_DESC, VPOOFF0_DESC);
+-SIG_EXPR_DECL(ROMA13, ROM16, L19_DESC, VPOOFF0_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA13, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOG3, VPO12, L19_DESC, VPO12_DESC);
+-SIG_EXPR_DECL(VPOG3, VPO24, L19_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOG3, VPOOFF1, L19_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL(VPOG3, SIG_EXPR_PTR(VPOG3, VPO12),
+-		SIG_EXPR_PTR(VPOG3, VPO24), SIG_EXPR_PTR(VPOG3, VPOOFF1));
++SIG_EXPR_DECL_SINGLE(ROMA13, ROM8, L19_DESC, VPOOFF0_DESC);
++SIG_EXPR_DECL_SINGLE(ROMA13, ROM16, L19_DESC, VPOOFF0_DESC);
++SIG_EXPR_LIST_DECL_DUAL(L19, ROMA13, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOG3, VPO12, L19_DESC, VPO12_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG3, VPO24, L19_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG3, VPOOFF1, L19_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL(VPOG3, VPO,
++		SIG_EXPR_PTR(VPOG3, VPO12),
++		SIG_EXPR_PTR(VPOG3, VPO24),
++		SIG_EXPR_PTR(VPOG3, VPOOFF1));
++SIG_EXPR_LIST_ALIAS(L19, VPOG3, VPO);
+ PIN_DECL_2(L19, GPIOAA3, ROMA13, VPOG3);
+ 
+ #define L20 212
+ #define L20_DESC	SIG_DESC_SET(SCUA4, 28)
+-SIG_EXPR_DECL(ROMA14, ROM8, L20_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA14, ROM16, L20_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA14, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOG4, VPO24, L20_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOG4, VPOOFF1, L20_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPOG4, VPO24, VPOOFF1);
++SIG_EXPR_DECL_SINGLE(ROMA14, ROM8, L20_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA14, ROM16, L20_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL_DUAL(L20, ROMA14, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOG4, VPO24, L20_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG4, VPOOFF1, L20_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL_DUAL(L20, VPOG4, VPO24, VPOOFF1);
+ PIN_DECL_2(L20, GPIOAA4, ROMA14, VPOG4);
+ 
+ #define L21 213
+ #define L21_DESC	SIG_DESC_SET(SCUA4, 29)
+-SIG_EXPR_DECL(ROMA15, ROM8, L21_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA15, ROM16, L21_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA15, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOG5, VPO24, L21_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOG5, VPOOFF1, L21_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPOG5, VPO24, VPOOFF1);
++SIG_EXPR_DECL_SINGLE(ROMA15, ROM8, L21_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA15, ROM16, L21_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL_DUAL(L21, ROMA15, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOG5, VPO24, L21_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG5, VPOOFF1, L21_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL_DUAL(L21, VPOG5, VPO24, VPOOFF1);
+ PIN_DECL_2(L21, GPIOAA5, ROMA15, VPOG5);
+ 
+ #define T18 214
+ #define T18_DESC	SIG_DESC_SET(SCUA4, 30)
+-SIG_EXPR_DECL(ROMA16, ROM8, T18_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA16, ROM16, T18_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA16, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOG6, VPO24, T18_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOG6, VPOOFF1, T18_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPOG6, VPO24, VPOOFF1);
++SIG_EXPR_DECL_SINGLE(ROMA16, ROM8, T18_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA16, ROM16, T18_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL_DUAL(T18, ROMA16, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOG6, VPO24, T18_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG6, VPOOFF1, T18_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL_DUAL(T18, VPOG6, VPO24, VPOOFF1);
+ PIN_DECL_2(T18, GPIOAA6, ROMA16, VPOG6);
+ 
+ #define N18 215
+ #define N18_DESC	SIG_DESC_SET(SCUA4, 31)
+-SIG_EXPR_DECL(ROMA17, ROM8, N18_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA17, ROM16, N18_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA17, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOG7, VPO24, N18_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOG7, VPOOFF1, N18_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPOG7, VPO24, VPOOFF1);
++SIG_EXPR_DECL_SINGLE(ROMA17, ROM8, N18_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA17, ROM16, N18_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL_DUAL(N18, ROMA17, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOG7, VPO24, N18_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG7, VPOOFF1, N18_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL_DUAL(N18, VPOG7, VPO24, VPOOFF1);
+ PIN_DECL_2(N18, GPIOAA7, ROMA17, VPOG7);
+ 
+ #define N19 216
+ #define N19_DESC	SIG_DESC_SET(SCUA8, 0)
+-SIG_EXPR_DECL(ROMA18, ROM8, N19_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA18, ROM16, N19_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA18, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOR0, VPO24, N19_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOR0, VPOOFF1, N19_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPOR0, VPO24, VPOOFF1);
++SIG_EXPR_DECL_SINGLE(ROMA18, ROM8, N19_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA18, ROM16, N19_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL_DUAL(N19, ROMA18, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOR0, VPO24, N19_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR0, VPOOFF1, N19_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL_DUAL(N19, VPOR0, VPO24, VPOOFF1);
+ PIN_DECL_2(N19, GPIOAB0, ROMA18, VPOR0);
+ 
+ #define M18 217
+ #define M18_DESC	SIG_DESC_SET(SCUA8, 1)
+-SIG_EXPR_DECL(ROMA19, ROM8, M18_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA19, ROM16, M18_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA19, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOR1, VPO24, M18_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOR1, VPOOFF1, M18_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPOR1, VPO24, VPOOFF1);
++SIG_EXPR_DECL_SINGLE(ROMA19, ROM8, M18_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA19, ROM16, M18_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL_DUAL(M18, ROMA19, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOR1, VPO24, M18_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR1, VPOOFF1, M18_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL_DUAL(M18, VPOR1, VPO24, VPOOFF1);
+ PIN_DECL_2(M18, GPIOAB1, ROMA19, VPOR1);
+ 
+ #define N22 218
+ #define N22_DESC	SIG_DESC_SET(SCUA8, 2)
+-SIG_EXPR_DECL(ROMA20, ROM8, N22_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA20, ROM16, N22_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA20, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOR2, VPO24, N22_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOR2, VPOOFF1, N22_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPOR2, VPO24, VPOOFF1);
++SIG_EXPR_DECL_SINGLE(ROMA20, ROM8, N22_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA20, ROM16, N22_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL_DUAL(N22, ROMA20, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOR2, VPO24, N22_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR2, VPOOFF1, N22_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL_DUAL(N22, VPOR2, VPO24, VPOOFF1);
+ PIN_DECL_2(N22, GPIOAB2, ROMA20, VPOR2);
+ 
+ #define N20 219
+ #define N20_DESC	SIG_DESC_SET(SCUA8, 3)
+-SIG_EXPR_DECL(ROMA21, ROM8, N20_DESC, VPO_OFF_12);
+-SIG_EXPR_DECL(ROMA21, ROM16, N20_DESC, VPO_OFF_12);
+-SIG_EXPR_LIST_DECL_DUAL(ROMA21, ROM8, ROM16);
+-SIG_EXPR_DECL(VPOR3, VPO24, N20_DESC, VPO24_DESC);
+-SIG_EXPR_DECL(VPOR3, VPOOFF1, N20_DESC, VPOOFF1_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(VPOR3, VPO24, VPOOFF1);
++SIG_EXPR_DECL_SINGLE(ROMA21, ROM8, N20_DESC, VPO_OFF_12);
++SIG_EXPR_DECL_SINGLE(ROMA21, ROM16, N20_DESC, VPO_OFF_12);
++SIG_EXPR_LIST_DECL_DUAL(N20, ROMA21, ROM8, ROM16);
++SIG_EXPR_DECL_SINGLE(VPOR3, VPO24, N20_DESC, VPO24_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR3, VPOOFF1, N20_DESC, VPOOFF1_DESC);
++SIG_EXPR_LIST_DECL_DUAL(N20, VPOR3, VPO24, VPOOFF1);
+ PIN_DECL_2(N20, GPIOAB3, ROMA21, VPOR3);
+ 
+ FUNC_GROUP_DECL(ROM8, V20, U21, T19, V22, U20, R18, N21, L22, K18, W21, Y22,
+@@ -1740,14 +1865,16 @@ FUNC_GROUP_DECL(VPO24, U21, T19, V22, U20, L22, K18, V21, W22, R22, P18, P19,
+ #define USB11D1_DESC	SIG_DESC_BIT(SCU90, 3, 0)
+ 
+ #define K4 220
+-SIG_EXPR_LIST_DECL_SINGLE(USB11HDP2, USB11H2, USB11H2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(USB11DP1, USB11D1, USB11D1_DESC);
+-PIN_DECL_(K4, SIG_EXPR_LIST_PTR(USB11HDP2), SIG_EXPR_LIST_PTR(USB11DP1));
++SIG_EXPR_LIST_DECL_SINGLE(K4, USB11HDP2, USB11H2, USB11H2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(K4, USB11DP1, USB11D1, USB11D1_DESC);
++PIN_DECL_(K4, SIG_EXPR_LIST_PTR(K4, USB11HDP2),
++	  SIG_EXPR_LIST_PTR(K4, USB11DP1));
+ 
+ #define K3 221
+-SIG_EXPR_LIST_DECL_SINGLE(USB11HDN1, USB11H2, USB11H2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(USB11DDN1, USB11D1, USB11D1_DESC);
+-PIN_DECL_(K3, SIG_EXPR_LIST_PTR(USB11HDN1), SIG_EXPR_LIST_PTR(USB11DDN1));
++SIG_EXPR_LIST_DECL_SINGLE(K3, USB11HDN1, USB11H2, USB11H2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(K3, USB11DDN1, USB11D1, USB11D1_DESC);
++PIN_DECL_(K3, SIG_EXPR_LIST_PTR(K3, USB11HDN1),
++	  SIG_EXPR_LIST_PTR(K3, USB11DDN1));
+ 
+ FUNC_GROUP_DECL(USB11H2, K4, K3);
+ FUNC_GROUP_DECL(USB11D1, K4, K3);
+@@ -1756,14 +1883,16 @@ FUNC_GROUP_DECL(USB11D1, K4, K3);
+ #define USB2D1_DESC	SIG_DESC_BIT(SCU90, 29, 0)
+ 
+ #define AB21 222
+-SIG_EXPR_LIST_DECL_SINGLE(USB2HDP1, USB2H1, USB2H1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(USB2DDP1, USB2D1, USB2D1_DESC);
+-PIN_DECL_(AB21, SIG_EXPR_LIST_PTR(USB2HDP1), SIG_EXPR_LIST_PTR(USB2DDP1));
++SIG_EXPR_LIST_DECL_SINGLE(AB21, USB2HDP1, USB2H1, USB2H1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(AB21, USB2DDP1, USB2D1, USB2D1_DESC);
++PIN_DECL_(AB21, SIG_EXPR_LIST_PTR(AB21, USB2HDP1),
++	  SIG_EXPR_LIST_PTR(AB21, USB2DDP1));
+ 
+ #define AB20 223
+-SIG_EXPR_LIST_DECL_SINGLE(USB2HDN1, USB2H1, USB2H1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(USB2DDN1, USB2D1, USB2D1_DESC);
+-PIN_DECL_(AB20, SIG_EXPR_LIST_PTR(USB2HDN1), SIG_EXPR_LIST_PTR(USB2DDN1));
++SIG_EXPR_LIST_DECL_SINGLE(AB20, USB2HDN1, USB2H1, USB2H1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(AB20, USB2DDN1, USB2D1, USB2D1_DESC);
++PIN_DECL_(AB20, SIG_EXPR_LIST_PTR(AB20, USB2HDN1),
++	  SIG_EXPR_LIST_PTR(AB20, USB2DDN1));
+ 
+ FUNC_GROUP_DECL(USB2H1, AB21, AB20);
+ FUNC_GROUP_DECL(USB2D1, AB21, AB20);
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+index 9f84b6f48fdb..0c9c408c0fbc 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+@@ -21,6 +21,13 @@
+ #include "../pinctrl-utils.h"
+ #include "pinctrl-aspeed.h"
+ 
++/* Wrap some of the common macros for clarity */
++#define SIG_EXPR_DECL_SINGLE(sig, func, ...) \
++	SIG_EXPR_DECL(sig, func, func, __VA_ARGS__)
++
++#define SIG_EXPR_LIST_DECL_SINGLE SIG_EXPR_LIST_DECL_SESG
++#define SIG_EXPR_LIST_DECL_DUAL SIG_EXPR_LIST_DECL_DESG
++
+ /*
+  * The "Multi-function Pins Mapping and Control" table in the SoC datasheet
+  * references registers by the device/offset mnemonic. The register macros
+@@ -63,8 +70,8 @@ SSSF_PIN_DECL(B14, GPIOA0, MAC1LINK, SIG_DESC_SET(SCU80, 0));
+ SSSF_PIN_DECL(D14, GPIOA1, MAC2LINK, SIG_DESC_SET(SCU80, 1));
+ 
+ #define D13 2
+-SIG_EXPR_LIST_DECL_SINGLE(SPI1CS1, SPI1CS1, SIG_DESC_SET(SCU80, 15));
+-SIG_EXPR_LIST_DECL_SINGLE(TIMER3, TIMER3, SIG_DESC_SET(SCU80, 2));
++SIG_EXPR_LIST_DECL_SINGLE(D13, SPI1CS1, SPI1CS1, SIG_DESC_SET(SCU80, 15));
++SIG_EXPR_LIST_DECL_SINGLE(D13, TIMER3, TIMER3, SIG_DESC_SET(SCU80, 2));
+ PIN_DECL_2(D13, GPIOA2, SPI1CS1, TIMER3);
+ FUNC_GROUP_DECL(SPI1CS1, D13);
+ FUNC_GROUP_DECL(TIMER3, D13);
+@@ -75,15 +82,15 @@ SSSF_PIN_DECL(E13, GPIOA3, TIMER4, SIG_DESC_SET(SCU80, 3));
+ #define I2C9_DESC	SIG_DESC_SET(SCU90, 22)
+ 
+ #define C14 4
+-SIG_EXPR_LIST_DECL_SINGLE(SCL9, I2C9, I2C9_DESC, COND1);
+-SIG_EXPR_LIST_DECL_SINGLE(TIMER5, TIMER5, SIG_DESC_SET(SCU80, 4), COND1);
++SIG_EXPR_LIST_DECL_SINGLE(C14, SCL9, I2C9, I2C9_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(C14, TIMER5, TIMER5, SIG_DESC_SET(SCU80, 4), COND1);
+ PIN_DECL_2(C14, GPIOA4, SCL9, TIMER5);
+ 
+ FUNC_GROUP_DECL(TIMER5, C14);
+ 
+ #define A13 5
+-SIG_EXPR_LIST_DECL_SINGLE(SDA9, I2C9, I2C9_DESC, COND1);
+-SIG_EXPR_LIST_DECL_SINGLE(TIMER6, TIMER6, SIG_DESC_SET(SCU80, 5), COND1);
++SIG_EXPR_LIST_DECL_SINGLE(A13, SDA9, I2C9, I2C9_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(A13, TIMER6, TIMER6, SIG_DESC_SET(SCU80, 5), COND1);
+ PIN_DECL_2(A13, GPIOA5, SDA9, TIMER6);
+ 
+ FUNC_GROUP_DECL(TIMER6, A13);
+@@ -93,15 +100,15 @@ FUNC_GROUP_DECL(I2C9, C14, A13);
+ #define MDIO2_DESC	SIG_DESC_SET(SCU90, 2)
+ 
+ #define C13 6
+-SIG_EXPR_LIST_DECL_SINGLE(MDC2, MDIO2, MDIO2_DESC, COND1);
+-SIG_EXPR_LIST_DECL_SINGLE(TIMER7, TIMER7, SIG_DESC_SET(SCU80, 6), COND1);
++SIG_EXPR_LIST_DECL_SINGLE(C13, MDC2, MDIO2, MDIO2_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(C13, TIMER7, TIMER7, SIG_DESC_SET(SCU80, 6), COND1);
+ PIN_DECL_2(C13, GPIOA6, MDC2, TIMER7);
+ 
+ FUNC_GROUP_DECL(TIMER7, C13);
+ 
+ #define B13 7
+-SIG_EXPR_LIST_DECL_SINGLE(MDIO2, MDIO2, MDIO2_DESC, COND1);
+-SIG_EXPR_LIST_DECL_SINGLE(TIMER8, TIMER8, SIG_DESC_SET(SCU80, 7), COND1);
++SIG_EXPR_LIST_DECL_SINGLE(B13, MDIO2, MDIO2, MDIO2_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(B13, TIMER8, TIMER8, SIG_DESC_SET(SCU80, 7), COND1);
+ PIN_DECL_2(B13, GPIOA7, MDIO2, TIMER8);
+ 
+ FUNC_GROUP_DECL(TIMER8, B13);
+@@ -125,8 +132,8 @@ SSSF_PIN_DECL(J20, GPIOB4, USBCKI, SIG_DESC_SET(HW_STRAP1, 23));
+ 
+ #define H21 13
+ #define H21_DESC	SIG_DESC_SET(SCU80, 13)
+-SIG_EXPR_LIST_DECL_SINGLE(LPCPD, LPCPD, H21_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(LPCSMI, LPCSMI, H21_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(H21, LPCPD, LPCPD, H21_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(H21, LPCSMI, LPCSMI, H21_DESC);
+ PIN_DECL_2(H21, GPIOB5, LPCPD, LPCSMI);
+ FUNC_GROUP_DECL(LPCPD, H21);
+ FUNC_GROUP_DECL(LPCSMI, H21);
+@@ -141,52 +148,52 @@ GPIO_PIN_DECL(H20, GPIOB7);
+ 
+ #define C12 16
+ #define I2C10_DESC	SIG_DESC_SET(SCU90, 23)
+-SIG_EXPR_LIST_DECL_SINGLE(SD1CLK, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SCL10, I2C10, I2C10_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C12, SD1CLK, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C12, SCL10, I2C10, I2C10_DESC);
+ PIN_DECL_2(C12, GPIOC0, SD1CLK, SCL10);
+ 
+ #define A12 17
+-SIG_EXPR_LIST_DECL_SINGLE(SD1CMD, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SDA10, I2C10, I2C10_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A12, SD1CMD, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A12, SDA10, I2C10, I2C10_DESC);
+ PIN_DECL_2(A12, GPIOC1, SD1CMD, SDA10);
+ 
+ FUNC_GROUP_DECL(I2C10, C12, A12);
+ 
+ #define B12 18
+ #define I2C11_DESC	SIG_DESC_SET(SCU90, 24)
+-SIG_EXPR_LIST_DECL_SINGLE(SD1DAT0, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SCL11, I2C11, I2C11_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B12, SD1DAT0, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B12, SCL11, I2C11, I2C11_DESC);
+ PIN_DECL_2(B12, GPIOC2, SD1DAT0, SCL11);
+ 
+ #define D9  19
+-SIG_EXPR_LIST_DECL_SINGLE(SD1DAT1, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SDA11, I2C11, I2C11_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D9, SD1DAT1, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D9, SDA11, I2C11, I2C11_DESC);
+ PIN_DECL_2(D9, GPIOC3, SD1DAT1, SDA11);
+ 
+ FUNC_GROUP_DECL(I2C11, B12, D9);
+ 
+ #define D10 20
+ #define I2C12_DESC	SIG_DESC_SET(SCU90, 25)
+-SIG_EXPR_LIST_DECL_SINGLE(SD1DAT2, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SCL12, I2C12, I2C12_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D10, SD1DAT2, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D10, SCL12, I2C12, I2C12_DESC);
+ PIN_DECL_2(D10, GPIOC4, SD1DAT2, SCL12);
+ 
+ #define E12 21
+-SIG_EXPR_LIST_DECL_SINGLE(SD1DAT3, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SDA12, I2C12, I2C12_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E12, SD1DAT3, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E12, SDA12, I2C12, I2C12_DESC);
+ PIN_DECL_2(E12, GPIOC5, SD1DAT3, SDA12);
+ 
+ FUNC_GROUP_DECL(I2C12, D10, E12);
+ 
+ #define C11 22
+ #define I2C13_DESC	SIG_DESC_SET(SCU90, 26)
+-SIG_EXPR_LIST_DECL_SINGLE(SD1CD, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SCL13, I2C13, I2C13_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C11, SD1CD, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C11, SCL13, I2C13, I2C13_DESC);
+ PIN_DECL_2(C11, GPIOC6, SD1CD, SCL13);
+ 
+ #define B11 23
+-SIG_EXPR_LIST_DECL_SINGLE(SD1WP, SD1, SD1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SDA13, I2C13, I2C13_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B11, SD1WP, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B11, SDA13, I2C13, I2C13_DESC);
+ PIN_DECL_2(B11, GPIOC7, SD1WP, SDA13);
+ 
+ FUNC_GROUP_DECL(I2C13, C11, B11);
+@@ -197,17 +204,17 @@ FUNC_GROUP_DECL(SD1, C12, A12, B12, D9, D10, E12, C11, B11);
+ #define GPID_DESC       SIG_DESC_SET(HW_STRAP1, 21)
+ 
+ #define F19 24
+-SIG_EXPR_LIST_DECL_SINGLE(SD2CLK, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID0IN, GPID0, GPID0_DESC);
+-SIG_EXPR_DECL(GPID0IN, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID0IN, GPID0, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(F19, SD2CLK, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID0IN, GPID0, GPID0_DESC);
++SIG_EXPR_DECL_SINGLE(GPID0IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(F19, GPID0IN, GPID0, GPID);
+ PIN_DECL_2(F19, GPIOD0, SD2CLK, GPID0IN);
+ 
+ #define E21 25
+-SIG_EXPR_LIST_DECL_SINGLE(SD2CMD, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID0OUT, GPID0, GPID0_DESC);
+-SIG_EXPR_DECL(GPID0OUT, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID0OUT, GPID0, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(E21, SD2CMD, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID0OUT, GPID0, GPID0_DESC);
++SIG_EXPR_DECL_SINGLE(GPID0OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(E21, GPID0OUT, GPID0, GPID);
+ PIN_DECL_2(E21, GPIOD1, SD2CMD, GPID0OUT);
+ 
+ FUNC_GROUP_DECL(GPID0, F19, E21);
+@@ -215,17 +222,17 @@ FUNC_GROUP_DECL(GPID0, F19, E21);
+ #define GPID2_DESC      SIG_DESC_SET(SCU8C, 9)
+ 
+ #define F20 26
+-SIG_EXPR_LIST_DECL_SINGLE(SD2DAT0, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID2IN, GPID2, GPID2_DESC);
+-SIG_EXPR_DECL(GPID2IN, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID2IN, GPID2, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(F20, SD2DAT0, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID2IN, GPID2, GPID2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID2IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(F20, GPID2IN, GPID2, GPID);
+ PIN_DECL_2(F20, GPIOD2, SD2DAT0, GPID2IN);
+ 
+ #define D20 27
+-SIG_EXPR_LIST_DECL_SINGLE(SD2DAT1, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID2OUT, GPID2, GPID2_DESC);
+-SIG_EXPR_DECL(GPID2OUT, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID2OUT, GPID2, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(D20, SD2DAT1, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID2OUT, GPID2, GPID2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID2OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(D20, GPID2OUT, GPID2, GPID);
+ PIN_DECL_2(D20, GPIOD3, SD2DAT1, GPID2OUT);
+ 
+ FUNC_GROUP_DECL(GPID2, F20, D20);
+@@ -233,17 +240,17 @@ FUNC_GROUP_DECL(GPID2, F20, D20);
+ #define GPID4_DESC      SIG_DESC_SET(SCU8C, 10)
+ 
+ #define D21 28
+-SIG_EXPR_LIST_DECL_SINGLE(SD2DAT2, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID4IN, GPID4, GPID4_DESC);
+-SIG_EXPR_DECL(GPID4IN, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID4IN, GPID4, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(D21, SD2DAT2, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID4IN, GPID4, GPID4_DESC);
++SIG_EXPR_DECL_SINGLE(GPID4IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(D21, GPID4IN, GPID4, GPID);
+ PIN_DECL_2(D21, GPIOD4, SD2DAT2, GPID4IN);
+ 
+ #define E20 29
+-SIG_EXPR_LIST_DECL_SINGLE(SD2DAT3, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID4OUT, GPID4, GPID4_DESC);
+-SIG_EXPR_DECL(GPID4OUT, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID4OUT, GPID4, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(E20, SD2DAT3, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID4OUT, GPID4, GPID4_DESC);
++SIG_EXPR_DECL_SINGLE(GPID4OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(E20, GPID4OUT, GPID4, GPID);
+ PIN_DECL_2(E20, GPIOD5, SD2DAT3, GPID4OUT);
+ 
+ FUNC_GROUP_DECL(GPID4, D21, E20);
+@@ -251,17 +258,17 @@ FUNC_GROUP_DECL(GPID4, D21, E20);
+ #define GPID6_DESC      SIG_DESC_SET(SCU8C, 11)
+ 
+ #define G18 30
+-SIG_EXPR_LIST_DECL_SINGLE(SD2CD, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID6IN, GPID6, GPID6_DESC);
+-SIG_EXPR_DECL(GPID6IN, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID6IN, GPID6, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(G18, SD2CD, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID6IN, GPID6, GPID6_DESC);
++SIG_EXPR_DECL_SINGLE(GPID6IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(G18, GPID6IN, GPID6, GPID);
+ PIN_DECL_2(G18, GPIOD6, SD2CD, GPID6IN);
+ 
+ #define C21 31
+-SIG_EXPR_LIST_DECL_SINGLE(SD2WP, SD2, SD2_DESC);
+-SIG_EXPR_DECL(GPID6OUT, GPID6, GPID6_DESC);
+-SIG_EXPR_DECL(GPID6OUT, GPID, GPID_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPID6OUT, GPID6, GPID);
++SIG_EXPR_LIST_DECL_SINGLE(C21, SD2WP, SD2, SD2_DESC);
++SIG_EXPR_DECL_SINGLE(GPID6OUT, GPID6, GPID6_DESC);
++SIG_EXPR_DECL_SINGLE(GPID6OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(C21, GPID6OUT, GPID6, GPID);
+ PIN_DECL_2(C21, GPIOD7, SD2WP, GPID6OUT);
+ 
+ FUNC_GROUP_DECL(GPID6, G18, C21);
+@@ -271,18 +278,18 @@ FUNC_GROUP_DECL(SD2, F19, E21, F20, D20, D21, E20, G18, C21);
+ #define GPIE0_DESC	SIG_DESC_SET(SCU8C, 12)
+ 
+ #define B20 32
+-SIG_EXPR_LIST_DECL_SINGLE(NCTS3, NCTS3, SIG_DESC_SET(SCU80, 16));
+-SIG_EXPR_DECL(GPIE0IN, GPIE0, GPIE0_DESC);
+-SIG_EXPR_DECL(GPIE0IN, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE0IN, GPIE0, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(B20, NCTS3, NCTS3, SIG_DESC_SET(SCU80, 16));
++SIG_EXPR_DECL_SINGLE(GPIE0IN, GPIE0, GPIE0_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE0IN, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(B20, GPIE0IN, GPIE0, GPIE);
+ PIN_DECL_2(B20, GPIOE0, NCTS3, GPIE0IN);
+ FUNC_GROUP_DECL(NCTS3, B20);
+ 
+ #define C20 33
+-SIG_EXPR_LIST_DECL_SINGLE(NDCD3, NDCD3, SIG_DESC_SET(SCU80, 17));
+-SIG_EXPR_DECL(GPIE0OUT, GPIE0, GPIE0_DESC);
+-SIG_EXPR_DECL(GPIE0OUT, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE0OUT, GPIE0, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(C20, NDCD3, NDCD3, SIG_DESC_SET(SCU80, 17));
++SIG_EXPR_DECL_SINGLE(GPIE0OUT, GPIE0, GPIE0_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE0OUT, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(C20, GPIE0OUT, GPIE0, GPIE);
+ PIN_DECL_2(C20, GPIOE1, NDCD3, GPIE0OUT);
+ FUNC_GROUP_DECL(NDCD3, C20);
+ 
+@@ -291,19 +298,19 @@ FUNC_GROUP_DECL(GPIE0, B20, C20);
+ #define GPIE2_DESC	SIG_DESC_SET(SCU8C, 13)
+ 
+ #define F18 34
+-SIG_EXPR_LIST_DECL_SINGLE(NDSR3, NDSR3, SIG_DESC_SET(SCU80, 18));
+-SIG_EXPR_DECL(GPIE2IN, GPIE2, GPIE2_DESC);
+-SIG_EXPR_DECL(GPIE2IN, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE2IN, GPIE2, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(F18, NDSR3, NDSR3, SIG_DESC_SET(SCU80, 18));
++SIG_EXPR_DECL_SINGLE(GPIE2IN, GPIE2, GPIE2_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE2IN, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(F18, GPIE2IN, GPIE2, GPIE);
+ PIN_DECL_2(F18, GPIOE2, NDSR3, GPIE2IN);
+ FUNC_GROUP_DECL(NDSR3, F18);
+ 
+ 
+ #define F17 35
+-SIG_EXPR_LIST_DECL_SINGLE(NRI3, NRI3, SIG_DESC_SET(SCU80, 19));
+-SIG_EXPR_DECL(GPIE2OUT, GPIE2, GPIE2_DESC);
+-SIG_EXPR_DECL(GPIE2OUT, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE2OUT, GPIE2, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(F17, NRI3, NRI3, SIG_DESC_SET(SCU80, 19));
++SIG_EXPR_DECL_SINGLE(GPIE2OUT, GPIE2, GPIE2_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE2OUT, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(F17, GPIE2OUT, GPIE2, GPIE);
+ PIN_DECL_2(F17, GPIOE3, NRI3, GPIE2OUT);
+ FUNC_GROUP_DECL(NRI3, F17);
+ 
+@@ -312,18 +319,18 @@ FUNC_GROUP_DECL(GPIE2, F18, F17);
+ #define GPIE4_DESC	SIG_DESC_SET(SCU8C, 14)
+ 
+ #define E18 36
+-SIG_EXPR_LIST_DECL_SINGLE(NDTR3, NDTR3, SIG_DESC_SET(SCU80, 20));
+-SIG_EXPR_DECL(GPIE4IN, GPIE4, GPIE4_DESC);
+-SIG_EXPR_DECL(GPIE4IN, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE4IN, GPIE4, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(E18, NDTR3, NDTR3, SIG_DESC_SET(SCU80, 20));
++SIG_EXPR_DECL_SINGLE(GPIE4IN, GPIE4, GPIE4_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE4IN, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(E18, GPIE4IN, GPIE4, GPIE);
+ PIN_DECL_2(E18, GPIOE4, NDTR3, GPIE4IN);
+ FUNC_GROUP_DECL(NDTR3, E18);
+ 
+ #define D19 37
+-SIG_EXPR_LIST_DECL_SINGLE(NRTS3, NRTS3, SIG_DESC_SET(SCU80, 21));
+-SIG_EXPR_DECL(GPIE4OUT, GPIE4, GPIE4_DESC);
+-SIG_EXPR_DECL(GPIE4OUT, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE4OUT, GPIE4, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(D19, NRTS3, NRTS3, SIG_DESC_SET(SCU80, 21));
++SIG_EXPR_DECL_SINGLE(GPIE4OUT, GPIE4, GPIE4_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE4OUT, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(D19, GPIE4OUT, GPIE4, GPIE);
+ PIN_DECL_2(D19, GPIOE5, NRTS3, GPIE4OUT);
+ FUNC_GROUP_DECL(NRTS3, D19);
+ 
+@@ -332,18 +339,18 @@ FUNC_GROUP_DECL(GPIE4, E18, D19);
+ #define GPIE6_DESC	SIG_DESC_SET(SCU8C, 15)
+ 
+ #define A20 38
+-SIG_EXPR_LIST_DECL_SINGLE(TXD3, TXD3, SIG_DESC_SET(SCU80, 22));
+-SIG_EXPR_DECL(GPIE6IN, GPIE6, GPIE6_DESC);
+-SIG_EXPR_DECL(GPIE6IN, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE6IN, GPIE6, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(A20, TXD3, TXD3, SIG_DESC_SET(SCU80, 22));
++SIG_EXPR_DECL_SINGLE(GPIE6IN, GPIE6, GPIE6_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE6IN, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(A20, GPIE6IN, GPIE6, GPIE);
+ PIN_DECL_2(A20, GPIOE6, TXD3, GPIE6IN);
+ FUNC_GROUP_DECL(TXD3, A20);
+ 
+ #define B19 39
+-SIG_EXPR_LIST_DECL_SINGLE(RXD3, RXD3, SIG_DESC_SET(SCU80, 23));
+-SIG_EXPR_DECL(GPIE6OUT, GPIE6, GPIE6_DESC);
+-SIG_EXPR_DECL(GPIE6OUT, GPIE, GPIE_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(GPIE6OUT, GPIE6, GPIE);
++SIG_EXPR_LIST_DECL_SINGLE(B19, RXD3, RXD3, SIG_DESC_SET(SCU80, 23));
++SIG_EXPR_DECL_SINGLE(GPIE6OUT, GPIE6, GPIE6_DESC);
++SIG_EXPR_DECL_SINGLE(GPIE6OUT, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(B19, GPIE6OUT, GPIE6, GPIE);
+ PIN_DECL_2(B19, GPIOE7, RXD3, GPIE6OUT);
+ FUNC_GROUP_DECL(RXD3, B19);
+ 
+@@ -353,64 +360,64 @@ FUNC_GROUP_DECL(GPIE6, A20, B19);
+ #define LPCPLUS_DESC	SIG_DESC_SET(SCU90, 30)
+ 
+ #define J19 40
+-SIG_EXPR_DECL(LHAD0, LPCHC, LPCHC_DESC);
+-SIG_EXPR_DECL(LHAD0, LPCPLUS, LPCPLUS_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(LHAD0, LPCHC, LPCPLUS);
+-SIG_EXPR_LIST_DECL_SINGLE(NCTS4, NCTS4, SIG_DESC_SET(SCU80, 24));
++SIG_EXPR_DECL_SINGLE(LHAD0, LPCHC, LPCHC_DESC);
++SIG_EXPR_DECL_SINGLE(LHAD0, LPCPLUS, LPCPLUS_DESC);
++SIG_EXPR_LIST_DECL_DUAL(J19, LHAD0, LPCHC, LPCPLUS);
++SIG_EXPR_LIST_DECL_SINGLE(J19, NCTS4, NCTS4, SIG_DESC_SET(SCU80, 24));
+ PIN_DECL_2(J19, GPIOF0, LHAD0, NCTS4);
+ FUNC_GROUP_DECL(NCTS4, J19);
+ 
+ #define J18 41
+-SIG_EXPR_DECL(LHAD1, LPCHC, LPCHC_DESC);
+-SIG_EXPR_DECL(LHAD1, LPCPLUS, LPCPLUS_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(LHAD1, LPCHC, LPCPLUS);
+-SIG_EXPR_LIST_DECL_SINGLE(NDCD4, NDCD4, SIG_DESC_SET(SCU80, 25));
++SIG_EXPR_DECL_SINGLE(LHAD1, LPCHC, LPCHC_DESC);
++SIG_EXPR_DECL_SINGLE(LHAD1, LPCPLUS, LPCPLUS_DESC);
++SIG_EXPR_LIST_DECL_DUAL(J18, LHAD1, LPCHC, LPCPLUS);
++SIG_EXPR_LIST_DECL_SINGLE(J18, NDCD4, NDCD4, SIG_DESC_SET(SCU80, 25));
+ PIN_DECL_2(J18, GPIOF1, LHAD1, NDCD4);
+ FUNC_GROUP_DECL(NDCD4, J18);
+ 
+ #define B22 42
+-SIG_EXPR_DECL(LHAD2, LPCHC, LPCHC_DESC);
+-SIG_EXPR_DECL(LHAD2, LPCPLUS, LPCPLUS_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(LHAD2, LPCHC, LPCPLUS);
+-SIG_EXPR_LIST_DECL_SINGLE(NDSR4, NDSR4, SIG_DESC_SET(SCU80, 26));
++SIG_EXPR_DECL_SINGLE(LHAD2, LPCHC, LPCHC_DESC);
++SIG_EXPR_DECL_SINGLE(LHAD2, LPCPLUS, LPCPLUS_DESC);
++SIG_EXPR_LIST_DECL_DUAL(B22, LHAD2, LPCHC, LPCPLUS);
++SIG_EXPR_LIST_DECL_SINGLE(B22, NDSR4, NDSR4, SIG_DESC_SET(SCU80, 26));
+ PIN_DECL_2(B22, GPIOF2, LHAD2, NDSR4);
+ FUNC_GROUP_DECL(NDSR4, B22);
+ 
+ #define B21 43
+-SIG_EXPR_DECL(LHAD3, LPCHC, LPCHC_DESC);
+-SIG_EXPR_DECL(LHAD3, LPCPLUS, LPCPLUS_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(LHAD3, LPCHC, LPCPLUS);
+-SIG_EXPR_LIST_DECL_SINGLE(NRI4, NRI4, SIG_DESC_SET(SCU80, 27));
++SIG_EXPR_DECL_SINGLE(LHAD3, LPCHC, LPCHC_DESC);
++SIG_EXPR_DECL_SINGLE(LHAD3, LPCPLUS, LPCPLUS_DESC);
++SIG_EXPR_LIST_DECL_DUAL(B21, LHAD3, LPCHC, LPCPLUS);
++SIG_EXPR_LIST_DECL_SINGLE(B21, NRI4, NRI4, SIG_DESC_SET(SCU80, 27));
+ PIN_DECL_2(B21, GPIOF3, LHAD3, NRI4);
+ FUNC_GROUP_DECL(NRI4, B21);
+ 
+ #define A21 44
+-SIG_EXPR_DECL(LHCLK, LPCHC, LPCHC_DESC);
+-SIG_EXPR_DECL(LHCLK, LPCPLUS, LPCPLUS_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(LHCLK, LPCHC, LPCPLUS);
+-SIG_EXPR_LIST_DECL_SINGLE(NDTR4, NDTR4, SIG_DESC_SET(SCU80, 28));
++SIG_EXPR_DECL_SINGLE(LHCLK, LPCHC, LPCHC_DESC);
++SIG_EXPR_DECL_SINGLE(LHCLK, LPCPLUS, LPCPLUS_DESC);
++SIG_EXPR_LIST_DECL_DUAL(A21, LHCLK, LPCHC, LPCPLUS);
++SIG_EXPR_LIST_DECL_SINGLE(A21, NDTR4, NDTR4, SIG_DESC_SET(SCU80, 28));
+ PIN_DECL_2(A21, GPIOF4, LHCLK, NDTR4);
+ FUNC_GROUP_DECL(NDTR4, A21);
+ 
+ #define H19 45
+-SIG_EXPR_DECL(LHFRAME, LPCHC, LPCHC_DESC);
+-SIG_EXPR_DECL(LHFRAME, LPCPLUS, LPCPLUS_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(LHFRAME, LPCHC, LPCPLUS);
+-SIG_EXPR_LIST_DECL_SINGLE(NRTS4, NRTS4, SIG_DESC_SET(SCU80, 29));
++SIG_EXPR_DECL_SINGLE(LHFRAME, LPCHC, LPCHC_DESC);
++SIG_EXPR_DECL_SINGLE(LHFRAME, LPCPLUS, LPCPLUS_DESC);
++SIG_EXPR_LIST_DECL_DUAL(H19, LHFRAME, LPCHC, LPCPLUS);
++SIG_EXPR_LIST_DECL_SINGLE(H19, NRTS4, NRTS4, SIG_DESC_SET(SCU80, 29));
+ PIN_DECL_2(H19, GPIOF5, LHFRAME, NRTS4);
+ FUNC_GROUP_DECL(NRTS4, H19);
+ 
+ #define G17 46
+-SIG_EXPR_LIST_DECL_SINGLE(LHSIRQ, LPCHC, LPCHC_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(TXD4, TXD4, SIG_DESC_SET(SCU80, 30));
++SIG_EXPR_LIST_DECL_SINGLE(G17, LHSIRQ, LPCHC, LPCHC_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(G17, TXD4, TXD4, SIG_DESC_SET(SCU80, 30));
+ PIN_DECL_2(G17, GPIOF6, LHSIRQ, TXD4);
+ FUNC_GROUP_DECL(TXD4, G17);
+ 
+ #define H18 47
+-SIG_EXPR_DECL(LHRST, LPCHC, LPCHC_DESC);
+-SIG_EXPR_DECL(LHRST, LPCPLUS, LPCPLUS_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(LHRST, LPCHC, LPCPLUS);
+-SIG_EXPR_LIST_DECL_SINGLE(RXD4, RXD4, SIG_DESC_SET(SCU80, 31));
++SIG_EXPR_DECL_SINGLE(LHRST, LPCHC, LPCHC_DESC);
++SIG_EXPR_DECL_SINGLE(LHRST, LPCPLUS, LPCPLUS_DESC);
++SIG_EXPR_LIST_DECL_DUAL(H18, LHRST, LPCHC, LPCPLUS);
++SIG_EXPR_LIST_DECL_SINGLE(H18, RXD4, RXD4, SIG_DESC_SET(SCU80, 31));
+ PIN_DECL_2(H18, GPIOF7, LHRST, RXD4);
+ FUNC_GROUP_DECL(RXD4, H18);
+ 
+@@ -418,19 +425,19 @@ FUNC_GROUP_DECL(LPCHC, J19, J18, B22, B21, A21, H19, G17, H18);
+ FUNC_GROUP_DECL(LPCPLUS, J19, J18, B22, B21, A21, H19, H18);
+ 
+ #define A19 48
+-SIG_EXPR_LIST_DECL_SINGLE(SGPS1CK, SGPS1, COND1, SIG_DESC_SET(SCU84, 0));
++SIG_EXPR_LIST_DECL_SINGLE(A19, SGPS1CK, SGPS1, COND1, SIG_DESC_SET(SCU84, 0));
+ PIN_DECL_1(A19, GPIOG0, SGPS1CK);
+ 
+ #define E19 49
+-SIG_EXPR_LIST_DECL_SINGLE(SGPS1LD, SGPS1, COND1, SIG_DESC_SET(SCU84, 1));
++SIG_EXPR_LIST_DECL_SINGLE(E19, SGPS1LD, SGPS1, COND1, SIG_DESC_SET(SCU84, 1));
+ PIN_DECL_1(E19, GPIOG1, SGPS1LD);
+ 
+ #define C19 50
+-SIG_EXPR_LIST_DECL_SINGLE(SGPS1I0, SGPS1, COND1, SIG_DESC_SET(SCU84, 2));
++SIG_EXPR_LIST_DECL_SINGLE(C19, SGPS1I0, SGPS1, COND1, SIG_DESC_SET(SCU84, 2));
+ PIN_DECL_1(C19, GPIOG2, SGPS1I0);
+ 
+ #define E16 51
+-SIG_EXPR_LIST_DECL_SINGLE(SGPS1I1, SGPS1, COND1, SIG_DESC_SET(SCU84, 3));
++SIG_EXPR_LIST_DECL_SINGLE(E16, SGPS1I1, SGPS1, COND1, SIG_DESC_SET(SCU84, 3));
+ PIN_DECL_1(E16, GPIOG3, SGPS1I1);
+ 
+ FUNC_GROUP_DECL(SGPS1, A19, E19, C19, E16);
+@@ -438,26 +445,26 @@ FUNC_GROUP_DECL(SGPS1, A19, E19, C19, E16);
+ #define SGPS2_DESC	SIG_DESC_SET(SCU94, 12)
+ 
+ #define E17 52
+-SIG_EXPR_LIST_DECL_SINGLE(SGPS2CK, SGPS2, COND1, SGPS2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SALT1, SALT1, COND1, SIG_DESC_SET(SCU84, 4));
++SIG_EXPR_LIST_DECL_SINGLE(E17, SGPS2CK, SGPS2, COND1, SGPS2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E17, SALT1, SALT1, COND1, SIG_DESC_SET(SCU84, 4));
+ PIN_DECL_2(E17, GPIOG4, SGPS2CK, SALT1);
+ FUNC_GROUP_DECL(SALT1, E17);
+ 
+ #define D16 53
+-SIG_EXPR_LIST_DECL_SINGLE(SGPS2LD, SGPS2, COND1, SGPS2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SALT2, SALT2, COND1, SIG_DESC_SET(SCU84, 5));
++SIG_EXPR_LIST_DECL_SINGLE(D16, SGPS2LD, SGPS2, COND1, SGPS2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D16, SALT2, SALT2, COND1, SIG_DESC_SET(SCU84, 5));
+ PIN_DECL_2(D16, GPIOG5, SGPS2LD, SALT2);
+ FUNC_GROUP_DECL(SALT2, D16);
+ 
+ #define D15 54
+-SIG_EXPR_LIST_DECL_SINGLE(SGPS2I0, SGPS2, COND1, SGPS2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SALT3, SALT3, COND1, SIG_DESC_SET(SCU84, 6));
++SIG_EXPR_LIST_DECL_SINGLE(D15, SGPS2I0, SGPS2, COND1, SGPS2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D15, SALT3, SALT3, COND1, SIG_DESC_SET(SCU84, 6));
+ PIN_DECL_2(D15, GPIOG6, SGPS2I0, SALT3);
+ FUNC_GROUP_DECL(SALT3, D15);
+ 
+ #define E14 55
+-SIG_EXPR_LIST_DECL_SINGLE(SGPS2I1, SGPS2, COND1, SGPS2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(SALT4, SALT4, COND1, SIG_DESC_SET(SCU84, 7));
++SIG_EXPR_LIST_DECL_SINGLE(E14, SGPS2I1, SGPS2, COND1, SGPS2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E14, SALT4, SALT4, COND1, SIG_DESC_SET(SCU84, 7));
+ PIN_DECL_2(E14, GPIOG7, SGPS2I1, SALT4);
+ FUNC_GROUP_DECL(SALT4, E14);
+ 
+@@ -466,41 +473,41 @@ FUNC_GROUP_DECL(SGPS2, E17, D16, D15, E14);
+ #define UART6_DESC	SIG_DESC_SET(SCU90, 7)
+ 
+ #define A18 56
+-SIG_EXPR_LIST_DECL_SINGLE(DASHA18, DASHA18, COND1, SIG_DESC_SET(SCU94, 5));
+-SIG_EXPR_LIST_DECL_SINGLE(NCTS6, UART6, COND1, UART6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A18, DASHA18, DASHA18, COND1, SIG_DESC_SET(SCU94, 5));
++SIG_EXPR_LIST_DECL_SINGLE(A18, NCTS6, UART6, COND1, UART6_DESC);
+ PIN_DECL_2(A18, GPIOH0, DASHA18, NCTS6);
+ 
+ #define B18 57
+-SIG_EXPR_LIST_DECL_SINGLE(DASHB18, DASHB18, COND1, SIG_DESC_SET(SCU94, 5));
+-SIG_EXPR_LIST_DECL_SINGLE(NDCD6, UART6, COND1, UART6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B18, DASHB18, DASHB18, COND1, SIG_DESC_SET(SCU94, 5));
++SIG_EXPR_LIST_DECL_SINGLE(B18, NDCD6, UART6, COND1, UART6_DESC);
+ PIN_DECL_2(B18, GPIOH1, DASHB18, NDCD6);
+ 
+ #define D17 58
+-SIG_EXPR_LIST_DECL_SINGLE(DASHD17, DASHD17, COND1, SIG_DESC_SET(SCU94, 6));
+-SIG_EXPR_LIST_DECL_SINGLE(NDSR6, UART6, COND1, UART6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D17, DASHD17, DASHD17, COND1, SIG_DESC_SET(SCU94, 6));
++SIG_EXPR_LIST_DECL_SINGLE(D17, NDSR6, UART6, COND1, UART6_DESC);
+ PIN_DECL_2(D17, GPIOH2, DASHD17, NDSR6);
+ 
+ #define C17 59
+-SIG_EXPR_LIST_DECL_SINGLE(DASHC17, DASHC17, COND1, SIG_DESC_SET(SCU94, 6));
+-SIG_EXPR_LIST_DECL_SINGLE(NRI6, UART6, COND1, UART6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C17, DASHC17, DASHC17, COND1, SIG_DESC_SET(SCU94, 6));
++SIG_EXPR_LIST_DECL_SINGLE(C17, NRI6, UART6, COND1, UART6_DESC);
+ PIN_DECL_2(C17, GPIOH3, DASHC17, NRI6);
+ 
+ #define A17 60
+-SIG_EXPR_LIST_DECL_SINGLE(DASHA17, DASHA17, COND1, SIG_DESC_SET(SCU94, 7));
+-SIG_EXPR_LIST_DECL_SINGLE(NDTR6, UART6, COND1, UART6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A17, DASHA17, DASHA17, COND1, SIG_DESC_SET(SCU94, 7));
++SIG_EXPR_LIST_DECL_SINGLE(A17, NDTR6, UART6, COND1, UART6_DESC);
+ PIN_DECL_2(A17, GPIOH4, DASHA17, NDTR6);
+ 
+ #define B17 61
+-SIG_EXPR_LIST_DECL_SINGLE(DASHB17, DASHB17, COND1, SIG_DESC_SET(SCU94, 7));
+-SIG_EXPR_LIST_DECL_SINGLE(NRTS6, UART6, COND1, UART6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B17, DASHB17, DASHB17, COND1, SIG_DESC_SET(SCU94, 7));
++SIG_EXPR_LIST_DECL_SINGLE(B17, NRTS6, UART6, COND1, UART6_DESC);
+ PIN_DECL_2(B17, GPIOH5, DASHB17, NRTS6);
+ 
+ #define A16 62
+-SIG_EXPR_LIST_DECL_SINGLE(TXD6, UART6, COND1, UART6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A16, TXD6, UART6, COND1, UART6_DESC);
+ PIN_DECL_1(A16, GPIOH6, TXD6);
+ 
+ #define D18 63
+-SIG_EXPR_LIST_DECL_SINGLE(RXD6, UART6, COND1, UART6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D18, RXD6, UART6, COND1, UART6_DESC);
+ PIN_DECL_1(D18, GPIOH7, RXD6);
+ 
+ FUNC_GROUP_DECL(UART6, A18, B18, D17, C17, A17, B17, A16, D18);
+@@ -513,69 +520,77 @@ FUNC_GROUP_DECL(UART6, A18, B18, D17, C17, A17, B17, A16, D18);
+ 	{ ASPEED_IP_SCU, HW_STRAP1, GENMASK(13, 12), 3, 0 }
+ 
+ #define C18 64
+-SIG_EXPR_DECL(SYSCS, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SYSCS, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SYSCS, SPI1DEBUG, SPI1PASSTHRU);
++SIG_EXPR_DECL_SINGLE(SYSCS, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SYSCS, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(C18, SYSCS, SPI1DEBUG, SPI1PASSTHRU);
+ PIN_DECL_1(C18, GPIOI0, SYSCS);
+ 
+ #define E15 65
+-SIG_EXPR_DECL(SYSCK, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SYSCK, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SYSCK, SPI1DEBUG, SPI1PASSTHRU);
++SIG_EXPR_DECL_SINGLE(SYSCK, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SYSCK, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(E15, SYSCK, SPI1DEBUG, SPI1PASSTHRU);
+ PIN_DECL_1(E15, GPIOI1, SYSCK);
+ 
+ #define B16 66
+-SIG_EXPR_DECL(SYSMOSI, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SYSMOSI, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SYSMOSI, SPI1DEBUG, SPI1PASSTHRU);
++SIG_EXPR_DECL_SINGLE(SYSMOSI, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SYSMOSI, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(B16, SYSMOSI, SPI1DEBUG, SPI1PASSTHRU);
+ PIN_DECL_1(B16, GPIOI2, SYSMOSI);
+ 
+ #define C16 67
+-SIG_EXPR_DECL(SYSMISO, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SYSMISO, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SYSMISO, SPI1DEBUG, SPI1PASSTHRU);
++SIG_EXPR_DECL_SINGLE(SYSMISO, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SYSMISO, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL_DUAL(C16, SYSMISO, SPI1DEBUG, SPI1PASSTHRU);
+ PIN_DECL_1(C16, GPIOI3, SYSMISO);
+ 
+ #define VB_DESC	SIG_DESC_SET(HW_STRAP1, 5)
+ 
+ #define B15 68
+-SIG_EXPR_DECL(SPI1CS0, SPI1, COND1, SPI1_DESC);
+-SIG_EXPR_DECL(SPI1CS0, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SPI1CS0, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL(SPI1CS0, SIG_EXPR_PTR(SPI1CS0, SPI1),
++SIG_EXPR_DECL_SINGLE(SPI1CS0, SPI1, COND1, SPI1_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1CS0, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1CS0, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1CS0, SPI1,
++			    SIG_EXPR_PTR(SPI1CS0, SPI1),
+ 			    SIG_EXPR_PTR(SPI1CS0, SPI1DEBUG),
+ 			    SIG_EXPR_PTR(SPI1CS0, SPI1PASSTHRU));
+-SIG_EXPR_LIST_DECL_SINGLE(VBCS, VGABIOSROM, COND1, VB_DESC);
++SIG_EXPR_LIST_ALIAS(B15, SPI1CS0, SPI1);
++SIG_EXPR_LIST_DECL_SINGLE(B15, VBCS, VGABIOSROM, COND1, VB_DESC);
+ PIN_DECL_2(B15, GPIOI4, SPI1CS0, VBCS);
+ 
+ #define C15 69
+-SIG_EXPR_DECL(SPI1CK, SPI1, COND1, SPI1_DESC);
+-SIG_EXPR_DECL(SPI1CK, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SPI1CK, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL(SPI1CK, SIG_EXPR_PTR(SPI1CK, SPI1),
++SIG_EXPR_DECL_SINGLE(SPI1CK, SPI1, COND1, SPI1_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1CK, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1CK, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1CK, SPI1,
++			    SIG_EXPR_PTR(SPI1CK, SPI1),
+ 			    SIG_EXPR_PTR(SPI1CK, SPI1DEBUG),
+ 			    SIG_EXPR_PTR(SPI1CK, SPI1PASSTHRU));
+-SIG_EXPR_LIST_DECL_SINGLE(VBCK, VGABIOSROM, COND1, VB_DESC);
++SIG_EXPR_LIST_ALIAS(C15, SPI1CK, SPI1);
++SIG_EXPR_LIST_DECL_SINGLE(C15, VBCK, VGABIOSROM, COND1, VB_DESC);
+ PIN_DECL_2(C15, GPIOI5, SPI1CK, VBCK);
+ 
+ #define A14 70
+-SIG_EXPR_DECL(SPI1MOSI, SPI1, COND1, SPI1_DESC);
+-SIG_EXPR_DECL(SPI1MOSI, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SPI1MOSI, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL(SPI1MOSI, SIG_EXPR_PTR(SPI1MOSI, SPI1),
++SIG_EXPR_DECL_SINGLE(SPI1MOSI, SPI1, COND1, SPI1_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1MOSI, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1MOSI, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1MOSI, SPI1,
++			    SIG_EXPR_PTR(SPI1MOSI, SPI1),
+ 			    SIG_EXPR_PTR(SPI1MOSI, SPI1DEBUG),
+ 			    SIG_EXPR_PTR(SPI1MOSI, SPI1PASSTHRU));
+-SIG_EXPR_LIST_DECL_SINGLE(VBMOSI, VGABIOSROM, COND1, VB_DESC);
++SIG_EXPR_LIST_ALIAS(A14, SPI1MOSI, SPI1);
++SIG_EXPR_LIST_DECL_SINGLE(A14, VBMOSI, VGABIOSROM, COND1, VB_DESC);
+ PIN_DECL_2(A14, GPIOI6, SPI1MOSI, VBMOSI);
+ 
+ #define A15 71
+-SIG_EXPR_DECL(SPI1MISO, SPI1, COND1, SPI1_DESC);
+-SIG_EXPR_DECL(SPI1MISO, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
+-SIG_EXPR_DECL(SPI1MISO, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
+-SIG_EXPR_LIST_DECL(SPI1MISO, SIG_EXPR_PTR(SPI1MISO, SPI1),
++SIG_EXPR_DECL_SINGLE(SPI1MISO, SPI1, COND1, SPI1_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1MISO, SPI1DEBUG, COND1, SPI1DEBUG_DESC);
++SIG_EXPR_DECL_SINGLE(SPI1MISO, SPI1PASSTHRU, COND1, SPI1PASSTHRU_DESC);
++SIG_EXPR_LIST_DECL(SPI1MISO, SPI1,
++			    SIG_EXPR_PTR(SPI1MISO, SPI1),
+ 			    SIG_EXPR_PTR(SPI1MISO, SPI1DEBUG),
+ 			    SIG_EXPR_PTR(SPI1MISO, SPI1PASSTHRU));
+-SIG_EXPR_LIST_DECL_SINGLE(VBMISO, VGABIOSROM, COND1, VB_DESC);
++SIG_EXPR_LIST_ALIAS(A15, SPI1MISO, SPI1);
++SIG_EXPR_LIST_DECL_SINGLE(A15, VBMISO, VGABIOSROM, COND1, VB_DESC);
+ PIN_DECL_2(A15, GPIOI7, SPI1MISO, VBMISO);
+ 
+ FUNC_GROUP_DECL(SPI1, B15, C15, A14, A15);
+@@ -584,55 +599,55 @@ FUNC_GROUP_DECL(SPI1PASSTHRU, C18, E15, B16, C16, B15, C15, A14, A15);
+ FUNC_GROUP_DECL(VGABIOSROM, B15, C15, A14, A15);
+ 
+ #define R2 72
+-SIG_EXPR_LIST_DECL_SINGLE(SGPMCK, SGPM, SIG_DESC_SET(SCU84, 8));
++SIG_EXPR_LIST_DECL_SINGLE(R2, SGPMCK, SGPM, SIG_DESC_SET(SCU84, 8));
+ PIN_DECL_1(R2, GPIOJ0, SGPMCK);
+ 
+ #define L2 73
+-SIG_EXPR_LIST_DECL_SINGLE(SGPMLD, SGPM, SIG_DESC_SET(SCU84, 9));
++SIG_EXPR_LIST_DECL_SINGLE(L2, SGPMLD, SGPM, SIG_DESC_SET(SCU84, 9));
+ PIN_DECL_1(L2, GPIOJ1, SGPMLD);
+ 
+ #define N3 74
+-SIG_EXPR_LIST_DECL_SINGLE(SGPMO, SGPM, SIG_DESC_SET(SCU84, 10));
++SIG_EXPR_LIST_DECL_SINGLE(N3, SGPMO, SGPM, SIG_DESC_SET(SCU84, 10));
+ PIN_DECL_1(N3, GPIOJ2, SGPMO);
+ 
+ #define N4 75
+-SIG_EXPR_LIST_DECL_SINGLE(SGPMI, SGPM, SIG_DESC_SET(SCU84, 11));
++SIG_EXPR_LIST_DECL_SINGLE(N4, SGPMI, SGPM, SIG_DESC_SET(SCU84, 11));
+ PIN_DECL_1(N4, GPIOJ3, SGPMI);
+ 
+ FUNC_GROUP_DECL(SGPM, R2, L2, N3, N4);
+ 
+ #define N5 76
+-SIG_EXPR_LIST_DECL_SINGLE(VGAHS, VGAHS, SIG_DESC_SET(SCU84, 12));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHN5, DASHN5, SIG_DESC_SET(SCU94, 8));
++SIG_EXPR_LIST_DECL_SINGLE(N5, VGAHS, VGAHS, SIG_DESC_SET(SCU84, 12));
++SIG_EXPR_LIST_DECL_SINGLE(N5, DASHN5, DASHN5, SIG_DESC_SET(SCU94, 8));
+ PIN_DECL_2(N5, GPIOJ4, VGAHS, DASHN5);
+ FUNC_GROUP_DECL(VGAHS, N5);
+ 
+ #define R4 77
+-SIG_EXPR_LIST_DECL_SINGLE(VGAVS, VGAVS, SIG_DESC_SET(SCU84, 13));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHR4, DASHR4, SIG_DESC_SET(SCU94, 8));
++SIG_EXPR_LIST_DECL_SINGLE(R4, VGAVS, VGAVS, SIG_DESC_SET(SCU84, 13));
++SIG_EXPR_LIST_DECL_SINGLE(R4, DASHR4, DASHR4, SIG_DESC_SET(SCU94, 8));
+ PIN_DECL_2(R4, GPIOJ5, VGAVS, DASHR4);
+ FUNC_GROUP_DECL(VGAVS, R4);
+ 
+ #define R3 78
+-SIG_EXPR_LIST_DECL_SINGLE(DDCCLK, DDCCLK, SIG_DESC_SET(SCU84, 14));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHR3, DASHR3, SIG_DESC_SET(SCU94, 9));
++SIG_EXPR_LIST_DECL_SINGLE(R3, DDCCLK, DDCCLK, SIG_DESC_SET(SCU84, 14));
++SIG_EXPR_LIST_DECL_SINGLE(R3, DASHR3, DASHR3, SIG_DESC_SET(SCU94, 9));
+ PIN_DECL_2(R3, GPIOJ6, DDCCLK, DASHR3);
+ FUNC_GROUP_DECL(DDCCLK, R3);
+ 
+ #define T3 79
+-SIG_EXPR_LIST_DECL_SINGLE(DDCDAT, DDCDAT, SIG_DESC_SET(SCU84, 15));
+-SIG_EXPR_LIST_DECL_SINGLE(DASHT3, DASHT3, SIG_DESC_SET(SCU94, 9));
++SIG_EXPR_LIST_DECL_SINGLE(T3, DDCDAT, DDCDAT, SIG_DESC_SET(SCU84, 15));
++SIG_EXPR_LIST_DECL_SINGLE(T3, DASHT3, DASHT3, SIG_DESC_SET(SCU94, 9));
+ PIN_DECL_2(T3, GPIOJ7, DDCDAT, DASHT3);
+ FUNC_GROUP_DECL(DDCDAT, T3);
+ 
+ #define I2C5_DESC       SIG_DESC_SET(SCU90, 18)
+ 
+ #define L3 80
+-SIG_EXPR_LIST_DECL_SINGLE(SCL5, I2C5, I2C5_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(L3, SCL5, I2C5, I2C5_DESC);
+ PIN_DECL_1(L3, GPIOK0, SCL5);
+ 
+ #define L4 81
+-SIG_EXPR_LIST_DECL_SINGLE(SDA5, I2C5, I2C5_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(L4, SDA5, I2C5, I2C5_DESC);
+ PIN_DECL_1(L4, GPIOK1, SDA5);
+ 
+ FUNC_GROUP_DECL(I2C5, L3, L4);
+@@ -640,11 +655,11 @@ FUNC_GROUP_DECL(I2C5, L3, L4);
+ #define I2C6_DESC       SIG_DESC_SET(SCU90, 19)
+ 
+ #define L1 82
+-SIG_EXPR_LIST_DECL_SINGLE(SCL6, I2C6, I2C6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(L1, SCL6, I2C6, I2C6_DESC);
+ PIN_DECL_1(L1, GPIOK2, SCL6);
+ 
+ #define N2 83
+-SIG_EXPR_LIST_DECL_SINGLE(SDA6, I2C6, I2C6_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(N2, SDA6, I2C6, I2C6_DESC);
+ PIN_DECL_1(N2, GPIOK3, SDA6);
+ 
+ FUNC_GROUP_DECL(I2C6, L1, N2);
+@@ -652,11 +667,11 @@ FUNC_GROUP_DECL(I2C6, L1, N2);
+ #define I2C7_DESC       SIG_DESC_SET(SCU90, 20)
+ 
+ #define N1 84
+-SIG_EXPR_LIST_DECL_SINGLE(SCL7, I2C7, I2C7_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(N1, SCL7, I2C7, I2C7_DESC);
+ PIN_DECL_1(N1, GPIOK4, SCL7);
+ 
+ #define P1 85
+-SIG_EXPR_LIST_DECL_SINGLE(SDA7, I2C7, I2C7_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(P1, SDA7, I2C7, I2C7_DESC);
+ PIN_DECL_1(P1, GPIOK5, SDA7);
+ 
+ FUNC_GROUP_DECL(I2C7, N1, P1);
+@@ -664,11 +679,11 @@ FUNC_GROUP_DECL(I2C7, N1, P1);
+ #define I2C8_DESC       SIG_DESC_SET(SCU90, 21)
+ 
+ #define P2 86
+-SIG_EXPR_LIST_DECL_SINGLE(SCL8, I2C8, I2C8_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(P2, SCL8, I2C8, I2C8_DESC);
+ PIN_DECL_1(P2, GPIOK6, SCL8);
+ 
+ #define R1 87
+-SIG_EXPR_LIST_DECL_SINGLE(SDA8, I2C8, I2C8_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(R1, SDA8, I2C8, I2C8_DESC);
+ PIN_DECL_1(R1, GPIOK7, SDA8);
+ 
+ FUNC_GROUP_DECL(I2C8, P2, R1);
+@@ -684,231 +699,231 @@ SSSF_PIN_DECL(T2, GPIOL0, NCTS1, SIG_DESC_SET(SCU84, 16));
+ 
+ #define T1 89
+ #define T1_DESC		SIG_DESC_SET(SCU84, 17)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIDE, VPI24, VPI_24_RSVD_DESC, T1_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(NDCD1, NDCD1, T1_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(T1, VPIDE, VPI24, VPI_24_RSVD_DESC, T1_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(T1, NDCD1, NDCD1, T1_DESC, COND2);
+ PIN_DECL_2(T1, GPIOL1, VPIDE, NDCD1);
+ FUNC_GROUP_DECL(NDCD1, T1);
+ 
+ #define U1 90
+ #define U1_DESC		SIG_DESC_SET(SCU84, 18)
+-SIG_EXPR_LIST_DECL_SINGLE(DASHU1, VPI24, VPI_24_RSVD_DESC, U1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(NDSR1, NDSR1, U1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(U1, DASHU1, VPI24, VPI_24_RSVD_DESC, U1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(U1, NDSR1, NDSR1, U1_DESC);
+ PIN_DECL_2(U1, GPIOL2, DASHU1, NDSR1);
+ FUNC_GROUP_DECL(NDSR1, U1);
+ 
+ #define U2 91
+ #define U2_DESC		SIG_DESC_SET(SCU84, 19)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIHS, VPI24, VPI_24_RSVD_DESC, U2_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(NRI1, NRI1, U2_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(U2, VPIHS, VPI24, VPI_24_RSVD_DESC, U2_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(U2, NRI1, NRI1, U2_DESC, COND2);
+ PIN_DECL_2(U2, GPIOL3, VPIHS, NRI1);
+ FUNC_GROUP_DECL(NRI1, U2);
+ 
+ #define P4 92
+ #define P4_DESC		SIG_DESC_SET(SCU84, 20)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIVS, VPI24, VPI_24_RSVD_DESC, P4_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(NDTR1, NDTR1, P4_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(P4, VPIVS, VPI24, VPI_24_RSVD_DESC, P4_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(P4, NDTR1, NDTR1, P4_DESC, COND2);
+ PIN_DECL_2(P4, GPIOL4, VPIVS, NDTR1);
+ FUNC_GROUP_DECL(NDTR1, P4);
+ 
+ #define P3 93
+ #define P3_DESC		SIG_DESC_SET(SCU84, 21)
+-SIG_EXPR_LIST_DECL_SINGLE(VPICLK, VPI24, VPI_24_RSVD_DESC, P3_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(NRTS1, NRTS1, P3_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(P3, VPICLK, VPI24, VPI_24_RSVD_DESC, P3_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(P3, NRTS1, NRTS1, P3_DESC, COND2);
+ PIN_DECL_2(P3, GPIOL5, VPICLK, NRTS1);
+ FUNC_GROUP_DECL(NRTS1, P3);
+ 
+ #define V1 94
+ #define V1_DESC		SIG_DESC_SET(SCU84, 22)
+-SIG_EXPR_LIST_DECL_SINGLE(DASHV1, DASHV1, VPIRSVD_DESC, V1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(TXD1, TXD1, V1_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(V1, DASHV1, DASHV1, VPIRSVD_DESC, V1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(V1, TXD1, TXD1, V1_DESC, COND2);
+ PIN_DECL_2(V1, GPIOL6, DASHV1, TXD1);
+ FUNC_GROUP_DECL(TXD1, V1);
+ 
+ #define W1 95
+ #define W1_DESC		SIG_DESC_SET(SCU84, 23)
+-SIG_EXPR_LIST_DECL_SINGLE(DASHW1, DASHW1, VPIRSVD_DESC, W1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RXD1, RXD1, W1_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(W1, DASHW1, DASHW1, VPIRSVD_DESC, W1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(W1, RXD1, RXD1, W1_DESC, COND2);
+ PIN_DECL_2(W1, GPIOL7, DASHW1, RXD1);
+ FUNC_GROUP_DECL(RXD1, W1);
+ 
+ #define Y1 96
+ #define Y1_DESC		SIG_DESC_SET(SCU84, 24)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIB2, VPI24, VPI_24_RSVD_DESC, Y1_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(NCTS2, NCTS2, Y1_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(Y1, VPIB2, VPI24, VPI_24_RSVD_DESC, Y1_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(Y1, NCTS2, NCTS2, Y1_DESC, COND2);
+ PIN_DECL_2(Y1, GPIOM0, VPIB2, NCTS2);
+ FUNC_GROUP_DECL(NCTS2, Y1);
+ 
+ #define AB2 97
+ #define AB2_DESC	SIG_DESC_SET(SCU84, 25)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIB3, VPI24, VPI_24_RSVD_DESC, AB2_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(NDCD2, NDCD2, AB2_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(AB2, VPIB3, VPI24, VPI_24_RSVD_DESC, AB2_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(AB2, NDCD2, NDCD2, AB2_DESC, COND2);
+ PIN_DECL_2(AB2, GPIOM1, VPIB3, NDCD2);
+ FUNC_GROUP_DECL(NDCD2, AB2);
+ 
+ #define AA1 98
+ #define AA1_DESC	SIG_DESC_SET(SCU84, 26)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIB4, VPI24, VPI_24_RSVD_DESC, AA1_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(NDSR2, NDSR2, AA1_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(AA1, VPIB4, VPI24, VPI_24_RSVD_DESC, AA1_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(AA1, NDSR2, NDSR2, AA1_DESC, COND2);
+ PIN_DECL_2(AA1, GPIOM2, VPIB4, NDSR2);
+ FUNC_GROUP_DECL(NDSR2, AA1);
+ 
+ #define Y2 99
+ #define Y2_DESC		SIG_DESC_SET(SCU84, 27)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIB5, VPI24, VPI_24_RSVD_DESC, Y2_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(NRI2, NRI2, Y2_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(Y2, VPIB5, VPI24, VPI_24_RSVD_DESC, Y2_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(Y2, NRI2, NRI2, Y2_DESC, COND2);
+ PIN_DECL_2(Y2, GPIOM3, VPIB5, NRI2);
+ FUNC_GROUP_DECL(NRI2, Y2);
+ 
+ #define AA2 100
+ #define AA2_DESC	SIG_DESC_SET(SCU84, 28)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIB6, VPI24, VPI_24_RSVD_DESC, AA2_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(NDTR2, NDTR2, AA2_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(AA2, VPIB6, VPI24, VPI_24_RSVD_DESC, AA2_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(AA2, NDTR2, NDTR2, AA2_DESC, COND2);
+ PIN_DECL_2(AA2, GPIOM4, VPIB6, NDTR2);
+ FUNC_GROUP_DECL(NDTR2, AA2);
+ 
+ #define P5 101
+ #define P5_DESC	SIG_DESC_SET(SCU84, 29)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIB7, VPI24, VPI_24_RSVD_DESC, P5_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(NRTS2, NRTS2, P5_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(P5, VPIB7, VPI24, VPI_24_RSVD_DESC, P5_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(P5, NRTS2, NRTS2, P5_DESC, COND2);
+ PIN_DECL_2(P5, GPIOM5, VPIB7, NRTS2);
+ FUNC_GROUP_DECL(NRTS2, P5);
+ 
+ #define R5 102
+ #define R5_DESC	SIG_DESC_SET(SCU84, 30)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIB8, VPI24, VPI_24_RSVD_DESC, R5_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(TXD2, TXD2, R5_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(R5, VPIB8, VPI24, VPI_24_RSVD_DESC, R5_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(R5, TXD2, TXD2, R5_DESC, COND2);
+ PIN_DECL_2(R5, GPIOM6, VPIB8, TXD2);
+ FUNC_GROUP_DECL(TXD2, R5);
+ 
+ #define T5 103
+ #define T5_DESC	SIG_DESC_SET(SCU84, 31)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIB9, VPI24, VPI_24_RSVD_DESC, T5_DESC, COND2);
+-SIG_EXPR_LIST_DECL_SINGLE(RXD2, RXD2, T5_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(T5, VPIB9, VPI24, VPI_24_RSVD_DESC, T5_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(T5, RXD2, RXD2, T5_DESC, COND2);
+ PIN_DECL_2(T5, GPIOM7, VPIB9, RXD2);
+ FUNC_GROUP_DECL(RXD2, T5);
+ 
+ #define V2 104
+ #define V2_DESC         SIG_DESC_SET(SCU88, 0)
+-SIG_EXPR_LIST_DECL_SINGLE(DASHN0, DASHN0, VPIRSVD_DESC, V2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM0, PWM0, V2_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(V2, DASHN0, DASHN0, VPIRSVD_DESC, V2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(V2, PWM0, PWM0, V2_DESC, COND2);
+ PIN_DECL_2(V2, GPION0, DASHN0, PWM0);
+ FUNC_GROUP_DECL(PWM0, V2);
+ 
+ #define W2 105
+ #define W2_DESC         SIG_DESC_SET(SCU88, 1)
+-SIG_EXPR_LIST_DECL_SINGLE(DASHN1, DASHN1, VPIRSVD_DESC, W2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM1, PWM1, W2_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(W2, DASHN1, DASHN1, VPIRSVD_DESC, W2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(W2, PWM1, PWM1, W2_DESC, COND2);
+ PIN_DECL_2(W2, GPION1, DASHN1, PWM1);
+ FUNC_GROUP_DECL(PWM1, W2);
+ 
+ #define V3 106
+ #define V3_DESC         SIG_DESC_SET(SCU88, 2)
+-SIG_EXPR_DECL(VPIG2, VPI24, VPI24_DESC, V3_DESC, COND2);
+-SIG_EXPR_DECL(VPIG2, VPIRSVD, VPIRSVD_DESC, V3_DESC, COND2);
+-SIG_EXPR_LIST_DECL_DUAL(VPIG2, VPI24, VPIRSVD);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM2, PWM2, V3_DESC, COND2);
++SIG_EXPR_DECL_SINGLE(VPIG2, VPI24, VPI24_DESC, V3_DESC, COND2);
++SIG_EXPR_DECL_SINGLE(VPIG2, VPIRSVD, VPIRSVD_DESC, V3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(V3, VPIG2, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(V3, PWM2, PWM2, V3_DESC, COND2);
+ PIN_DECL_2(V3, GPION2, VPIG2, PWM2);
+ FUNC_GROUP_DECL(PWM2, V3);
+ 
+ #define U3 107
+ #define U3_DESC         SIG_DESC_SET(SCU88, 3)
+-SIG_EXPR_DECL(VPIG3, VPI24, VPI24_DESC, U3_DESC, COND2);
+-SIG_EXPR_DECL(VPIG3, VPIRSVD, VPIRSVD_DESC, U3_DESC, COND2);
+-SIG_EXPR_LIST_DECL_DUAL(VPIG3, VPI24, VPIRSVD);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM3, PWM3, U3_DESC, COND2);
++SIG_EXPR_DECL_SINGLE(VPIG3, VPI24, VPI24_DESC, U3_DESC, COND2);
++SIG_EXPR_DECL_SINGLE(VPIG3, VPIRSVD, VPIRSVD_DESC, U3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(U3, VPIG3, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(U3, PWM3, PWM3, U3_DESC, COND2);
+ PIN_DECL_2(U3, GPION3, VPIG3, PWM3);
+ FUNC_GROUP_DECL(PWM3, U3);
+ 
+ #define W3 108
+ #define W3_DESC         SIG_DESC_SET(SCU88, 4)
+-SIG_EXPR_DECL(VPIG4, VPI24, VPI24_DESC, W3_DESC, COND2);
+-SIG_EXPR_DECL(VPIG4, VPIRSVD, VPIRSVD_DESC, W3_DESC, COND2);
+-SIG_EXPR_LIST_DECL_DUAL(VPIG4, VPI24, VPIRSVD);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM4, PWM4, W3_DESC, COND2);
++SIG_EXPR_DECL_SINGLE(VPIG4, VPI24, VPI24_DESC, W3_DESC, COND2);
++SIG_EXPR_DECL_SINGLE(VPIG4, VPIRSVD, VPIRSVD_DESC, W3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(W3, VPIG4, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(W3, PWM4, PWM4, W3_DESC, COND2);
+ PIN_DECL_2(W3, GPION4, VPIG4, PWM4);
+ FUNC_GROUP_DECL(PWM4, W3);
+ 
+ #define AA3 109
+ #define AA3_DESC        SIG_DESC_SET(SCU88, 5)
+-SIG_EXPR_DECL(VPIG5, VPI24, VPI24_DESC, AA3_DESC, COND2);
+-SIG_EXPR_DECL(VPIG5, VPIRSVD, VPIRSVD_DESC, AA3_DESC, COND2);
+-SIG_EXPR_LIST_DECL_DUAL(VPIG5, VPI24, VPIRSVD);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM5, PWM5, AA3_DESC, COND2);
++SIG_EXPR_DECL_SINGLE(VPIG5, VPI24, VPI24_DESC, AA3_DESC, COND2);
++SIG_EXPR_DECL_SINGLE(VPIG5, VPIRSVD, VPIRSVD_DESC, AA3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(AA3, VPIG5, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(AA3, PWM5, PWM5, AA3_DESC, COND2);
+ PIN_DECL_2(AA3, GPION5, VPIG5, PWM5);
+ FUNC_GROUP_DECL(PWM5, AA3);
+ 
+ #define Y3 110
+ #define Y3_DESC         SIG_DESC_SET(SCU88, 6)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIG6, VPI24, VPI24_DESC, Y3_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM6, PWM6, Y3_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(Y3, VPIG6, VPI24, VPI24_DESC, Y3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(Y3, PWM6, PWM6, Y3_DESC, COND2);
+ PIN_DECL_2(Y3, GPION6, VPIG6, PWM6);
+ FUNC_GROUP_DECL(PWM6, Y3);
+ 
+ #define T4 111
+ #define T4_DESC         SIG_DESC_SET(SCU88, 7)
+-SIG_EXPR_LIST_DECL_SINGLE(VPIG7, VPI24, VPI24_DESC, T4_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(PWM7, PWM7, T4_DESC, COND2);
++SIG_EXPR_LIST_DECL_SINGLE(T4, VPIG7, VPI24, VPI24_DESC, T4_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(T4, PWM7, PWM7, T4_DESC, COND2);
+ PIN_DECL_2(T4, GPION7, VPIG7, PWM7);
+ FUNC_GROUP_DECL(PWM7, T4);
+ 
+ #define U5 112
+-SIG_EXPR_LIST_DECL_SINGLE(VPIG8, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 8),
++SIG_EXPR_LIST_DECL_SINGLE(U5, VPIG8, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 8),
+ 			  COND2);
+ PIN_DECL_1(U5, GPIOO0, VPIG8);
+ 
+ #define U4 113
+-SIG_EXPR_LIST_DECL_SINGLE(VPIG9, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 9),
++SIG_EXPR_LIST_DECL_SINGLE(U4, VPIG9, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 9),
+ 			  COND2);
+ PIN_DECL_1(U4, GPIOO1, VPIG9);
+ 
+ #define V5 114
+-SIG_EXPR_LIST_DECL_SINGLE(DASHV5, DASHV5, VPI_24_RSVD_DESC,
++SIG_EXPR_LIST_DECL_SINGLE(V5, DASHV5, DASHV5, VPI_24_RSVD_DESC,
+ 			  SIG_DESC_SET(SCU88, 10));
+ PIN_DECL_1(V5, GPIOO2, DASHV5);
+ 
+ #define AB4 115
+-SIG_EXPR_LIST_DECL_SINGLE(DASHAB4, DASHAB4, VPI_24_RSVD_DESC,
++SIG_EXPR_LIST_DECL_SINGLE(AB4, DASHAB4, DASHAB4, VPI_24_RSVD_DESC,
+ 			  SIG_DESC_SET(SCU88, 11));
+ PIN_DECL_1(AB4, GPIOO3, DASHAB4);
+ 
+ #define AB3 116
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR2, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 12),
+-			  COND2);
++SIG_EXPR_LIST_DECL_SINGLE(AB3, VPIR2, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 12), COND2);
+ PIN_DECL_1(AB3, GPIOO4, VPIR2);
+ 
+ #define Y4 117
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR3, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 13),
+-			  COND2);
++SIG_EXPR_LIST_DECL_SINGLE(Y4, VPIR3, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 13), COND2);
+ PIN_DECL_1(Y4, GPIOO5, VPIR3);
+ 
+ #define AA4 118
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR4, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 14),
+-			  COND2);
++SIG_EXPR_LIST_DECL_SINGLE(AA4, VPIR4, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 14), COND2);
+ PIN_DECL_1(AA4, GPIOO6, VPIR4);
+ 
+ #define W4 119
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR5, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 15),
+-			  COND2);
++SIG_EXPR_LIST_DECL_SINGLE(W4, VPIR5, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 15), COND2);
+ PIN_DECL_1(W4, GPIOO7, VPIR5);
+ 
+ #define V4 120
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR6, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 16),
+-			  COND2);
++SIG_EXPR_LIST_DECL_SINGLE(V4, VPIR6, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 16), COND2);
+ PIN_DECL_1(V4, GPIOP0, VPIR6);
+ 
+ #define W5 121
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR7, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 17),
+-			  COND2);
++SIG_EXPR_LIST_DECL_SINGLE(W5, VPIR7, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 17), COND2);
+ PIN_DECL_1(W5, GPIOP1, VPIR7);
+ 
+ #define AA5 122
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR8, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 18),
+-			  COND2);
++SIG_EXPR_LIST_DECL_SINGLE(AA5, VPIR8, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 18), COND2);
+ PIN_DECL_1(AA5, GPIOP2, VPIR8);
+ 
+ #define AB5 123
+-SIG_EXPR_LIST_DECL_SINGLE(VPIR9, VPI24, VPI24_DESC, SIG_DESC_SET(SCU88, 19),
+-			  COND2);
++SIG_EXPR_LIST_DECL_SINGLE(AB5, VPIR9, VPI24, VPI24_DESC,
++			  SIG_DESC_SET(SCU88, 19), COND2);
+ PIN_DECL_1(AB5, GPIOP3, VPIR9);
+ 
+ FUNC_GROUP_DECL(VPI24, T1, U2, P4, P3, Y1, AB2, AA1, Y2, AA2, P5, R5, T5, V3,
+@@ -916,33 +931,33 @@ FUNC_GROUP_DECL(VPI24, T1, U2, P4, P3, Y1, AB2, AA1, Y2, AA2, P5, R5, T5, V3,
+ 		AB5);
+ 
+ #define Y6 124
+-SIG_EXPR_LIST_DECL_SINGLE(DASHY6, DASHY6, SIG_DESC_SET(SCU90, 28),
++SIG_EXPR_LIST_DECL_SINGLE(Y6, DASHY6, DASHY6, SIG_DESC_SET(SCU90, 28),
+ 			  SIG_DESC_SET(SCU88, 20));
+ PIN_DECL_1(Y6, GPIOP4, DASHY6);
+ 
+ #define Y5 125
+-SIG_EXPR_LIST_DECL_SINGLE(DASHY5, DASHY5, SIG_DESC_SET(SCU90, 28),
++SIG_EXPR_LIST_DECL_SINGLE(Y5, DASHY5, DASHY5, SIG_DESC_SET(SCU90, 28),
+ 			  SIG_DESC_SET(SCU88, 21));
+ PIN_DECL_1(Y5, GPIOP5, DASHY5);
+ 
+ #define W6 126
+-SIG_EXPR_LIST_DECL_SINGLE(DASHW6, DASHW6, SIG_DESC_SET(SCU90, 28),
++SIG_EXPR_LIST_DECL_SINGLE(W6, DASHW6, DASHW6, SIG_DESC_SET(SCU90, 28),
+ 			  SIG_DESC_SET(SCU88, 22));
+ PIN_DECL_1(W6, GPIOP6, DASHW6);
+ 
+ #define V6 127
+-SIG_EXPR_LIST_DECL_SINGLE(DASHV6, DASHV6, SIG_DESC_SET(SCU90, 28),
++SIG_EXPR_LIST_DECL_SINGLE(V6, DASHV6, DASHV6, SIG_DESC_SET(SCU90, 28),
+ 			  SIG_DESC_SET(SCU88, 23));
+ PIN_DECL_1(V6, GPIOP7, DASHV6);
+ 
+ #define I2C3_DESC	SIG_DESC_SET(SCU90, 16)
+ 
+ #define A11 128
+-SIG_EXPR_LIST_DECL_SINGLE(SCL3, I2C3, I2C3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A11, SCL3, I2C3, I2C3_DESC);
+ PIN_DECL_1(A11, GPIOQ0, SCL3);
+ 
+ #define A10 129
+-SIG_EXPR_LIST_DECL_SINGLE(SDA3, I2C3, I2C3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A10, SDA3, I2C3, I2C3_DESC);
+ PIN_DECL_1(A10, GPIOQ1, SDA3);
+ 
+ FUNC_GROUP_DECL(I2C3, A11, A10);
+@@ -950,11 +965,11 @@ FUNC_GROUP_DECL(I2C3, A11, A10);
+ #define I2C4_DESC	SIG_DESC_SET(SCU90, 17)
+ 
+ #define A9 130
+-SIG_EXPR_LIST_DECL_SINGLE(SCL4, I2C4, I2C4_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A9, SCL4, I2C4, I2C4_DESC);
+ PIN_DECL_1(A9, GPIOQ2, SCL4);
+ 
+ #define B9 131
+-SIG_EXPR_LIST_DECL_SINGLE(SDA4, I2C4, I2C4_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B9, SDA4, I2C4, I2C4_DESC);
+ PIN_DECL_1(B9, GPIOQ3, SDA4);
+ 
+ FUNC_GROUP_DECL(I2C4, A9, B9);
+@@ -962,11 +977,11 @@ FUNC_GROUP_DECL(I2C4, A9, B9);
+ #define I2C14_DESC	SIG_DESC_SET(SCU90, 27)
+ 
+ #define N21 132
+-SIG_EXPR_LIST_DECL_SINGLE(SCL14, I2C14, I2C14_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(N21, SCL14, I2C14, I2C14_DESC);
+ PIN_DECL_1(N21, GPIOQ4, SCL14);
+ 
+ #define N22 133
+-SIG_EXPR_LIST_DECL_SINGLE(SDA14, I2C14, I2C14_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(N22, SDA14, I2C14, I2C14_DESC);
+ PIN_DECL_1(N22, GPIOQ5, SDA14);
+ 
+ FUNC_GROUP_DECL(I2C14, N21, N22);
+@@ -996,11 +1011,11 @@ SSSF_PIN_DECL(W19, GPIOR4, SPI2MOSI, SIG_DESC_SET(SCU88, 28), COND2);
+ SSSF_PIN_DECL(V19, GPIOR5, SPI2MISO, SIG_DESC_SET(SCU88, 29), COND2);
+ 
+ #define D8 142
+-SIG_EXPR_LIST_DECL_SINGLE(MDC1, MDIO1, SIG_DESC_SET(SCU88, 30));
++SIG_EXPR_LIST_DECL_SINGLE(D8, MDC1, MDIO1, SIG_DESC_SET(SCU88, 30));
+ PIN_DECL_1(D8, GPIOR6, MDC1);
+ 
+ #define E10 143
+-SIG_EXPR_LIST_DECL_SINGLE(MDIO1, MDIO1, SIG_DESC_SET(SCU88, 31));
++SIG_EXPR_LIST_DECL_SINGLE(E10, MDIO1, MDIO1, SIG_DESC_SET(SCU88, 31));
+ PIN_DECL_1(E10, GPIOR7, MDIO1);
+ 
+ FUNC_GROUP_DECL(MDIO1, D8, E10);
+@@ -1014,82 +1029,106 @@ FUNC_GROUP_DECL(MDIO1, D8, E10);
+ 
+ #define V20 144
+ #define V20_DESC	SIG_DESC_SET(SCU8C, 0)
+-SIG_EXPR_DECL(VPOB2, VPO, V20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB2, VPOOFF1, V20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB2, VPOOFF2, V20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOB2, SIG_EXPR_PTR(VPOB2, VPO),
+-		SIG_EXPR_PTR(VPOB2, VPOOFF1), SIG_EXPR_PTR(VPOB2, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(SPI2CS1, SPI2CS1, V20_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB2, VPO, V20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB2, VPOOFF1, V20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB2, VPOOFF2, V20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOB2, VPO,
++		SIG_EXPR_PTR(VPOB2, VPO),
++		SIG_EXPR_PTR(VPOB2, VPOOFF1),
++		SIG_EXPR_PTR(VPOB2, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(V20, VPOB2, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(V20, SPI2CS1, SPI2CS1, V20_DESC);
+ PIN_DECL_2(V20, GPIOS0, VPOB2, SPI2CS1);
+ FUNC_GROUP_DECL(SPI2CS1, V20);
+ 
+ #define U19 145
+ #define U19_DESC	SIG_DESC_SET(SCU8C, 1)
+-SIG_EXPR_DECL(VPOB3, VPO, U19_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB3, VPOOFF1, U19_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB3, VPOOFF2, U19_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOB3, SIG_EXPR_PTR(VPOB3, VPO),
+-		SIG_EXPR_PTR(VPOB3, VPOOFF1), SIG_EXPR_PTR(VPOB3, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(BMCINT, BMCINT, U19_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB3, VPO, U19_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB3, VPOOFF1, U19_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB3, VPOOFF2, U19_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOB3, VPO,
++		SIG_EXPR_PTR(VPOB3, VPO),
++		SIG_EXPR_PTR(VPOB3, VPOOFF1),
++		SIG_EXPR_PTR(VPOB3, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(U19, VPOB3, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(U19, BMCINT, BMCINT, U19_DESC);
+ PIN_DECL_2(U19, GPIOS1, VPOB3, BMCINT);
+ FUNC_GROUP_DECL(BMCINT, U19);
+ 
+ #define R18 146
+ #define R18_DESC	SIG_DESC_SET(SCU8C, 2)
+-SIG_EXPR_DECL(VPOB4, VPO, R18_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB4, VPOOFF1, R18_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB4, VPOOFF2, R18_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOB4, SIG_EXPR_PTR(VPOB4, VPO),
+-		SIG_EXPR_PTR(VPOB4, VPOOFF1), SIG_EXPR_PTR(VPOB4, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(SALT5, SALT5, R18_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB4, VPO, R18_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB4, VPOOFF1, R18_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB4, VPOOFF2, R18_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOB4, VPO,
++		SIG_EXPR_PTR(VPOB4, VPO),
++		SIG_EXPR_PTR(VPOB4, VPOOFF1),
++		SIG_EXPR_PTR(VPOB4, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(R18, VPOB4, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(R18, SALT5, SALT5, R18_DESC);
+ PIN_DECL_2(R18, GPIOS2, VPOB4, SALT5);
+ FUNC_GROUP_DECL(SALT5, R18);
+ 
+ #define P18 147
+ #define P18_DESC	SIG_DESC_SET(SCU8C, 3)
+-SIG_EXPR_DECL(VPOB5, VPO, P18_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB5, VPOOFF1, P18_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB5, VPOOFF2, P18_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOB5, SIG_EXPR_PTR(VPOB5, VPO),
+-		SIG_EXPR_PTR(VPOB5, VPOOFF1), SIG_EXPR_PTR(VPOB5, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(SALT6, SALT6, P18_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB5, VPO, P18_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB5, VPOOFF1, P18_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB5, VPOOFF2, P18_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOB5, VPO,
++		SIG_EXPR_PTR(VPOB5, VPO),
++		SIG_EXPR_PTR(VPOB5, VPOOFF1),
++		SIG_EXPR_PTR(VPOB5, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(P18, VPOB5, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(P18, SALT6, SALT6, P18_DESC);
+ PIN_DECL_2(P18, GPIOS3, VPOB5, SALT6);
+ FUNC_GROUP_DECL(SALT6, P18);
+ 
+ #define R19 148
+ #define R19_DESC	SIG_DESC_SET(SCU8C, 4)
+-SIG_EXPR_DECL(VPOB6, VPO, R19_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB6, VPOOFF1, R19_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB6, VPOOFF2, R19_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOB6, SIG_EXPR_PTR(VPOB6, VPO),
+-		SIG_EXPR_PTR(VPOB6, VPOOFF1), SIG_EXPR_PTR(VPOB6, VPOOFF2));
++SIG_EXPR_DECL_SINGLE(VPOB6, VPO, R19_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB6, VPOOFF1, R19_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB6, VPOOFF2, R19_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOB6, VPO,
++		SIG_EXPR_PTR(VPOB6, VPO),
++		SIG_EXPR_PTR(VPOB6, VPOOFF1),
++		SIG_EXPR_PTR(VPOB6, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(R19, VPOB6, VPO);
+ PIN_DECL_1(R19, GPIOS4, VPOB6);
+ 
+ #define W20 149
+ #define W20_DESC	SIG_DESC_SET(SCU8C, 5)
+-SIG_EXPR_DECL(VPOB7, VPO, W20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB7, VPOOFF1, W20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB7, VPOOFF2, W20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOB7, SIG_EXPR_PTR(VPOB7, VPO),
+-		SIG_EXPR_PTR(VPOB7, VPOOFF1), SIG_EXPR_PTR(VPOB7, VPOOFF2));
++SIG_EXPR_DECL_SINGLE(VPOB7, VPO, W20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB7, VPOOFF1, W20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB7, VPOOFF2, W20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOB7, VPO,
++		SIG_EXPR_PTR(VPOB7, VPO),
++		SIG_EXPR_PTR(VPOB7, VPOOFF1),
++		SIG_EXPR_PTR(VPOB7, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(W20, VPOB7, VPO);
+ PIN_DECL_1(W20, GPIOS5, VPOB7);
+ 
+ #define U20 150
+ #define U20_DESC	SIG_DESC_SET(SCU8C, 6)
+-SIG_EXPR_DECL(VPOB8, VPO, U20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB8, VPOOFF1, U20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB8, VPOOFF2, U20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOB8, SIG_EXPR_PTR(VPOB8, VPO),
+-		SIG_EXPR_PTR(VPOB8, VPOOFF1), SIG_EXPR_PTR(VPOB8, VPOOFF2));
++SIG_EXPR_DECL_SINGLE(VPOB8, VPO, U20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB8, VPOOFF1, U20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB8, VPOOFF2, U20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOB8, VPO,
++		SIG_EXPR_PTR(VPOB8, VPO),
++		SIG_EXPR_PTR(VPOB8, VPOOFF1),
++		SIG_EXPR_PTR(VPOB8, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(U20, VPOB8, VPO);
+ PIN_DECL_1(U20, GPIOS6, VPOB8);
+ 
+ #define AA20 151
+ #define AA20_DESC	SIG_DESC_SET(SCU8C, 7)
+-SIG_EXPR_DECL(VPOB9, VPO, AA20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB9, VPOOFF1, AA20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOB9, VPOOFF2, AA20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOB9, SIG_EXPR_PTR(VPOB9, VPO),
+-		SIG_EXPR_PTR(VPOB9, VPOOFF1), SIG_EXPR_PTR(VPOB9, VPOOFF2));
++SIG_EXPR_DECL_SINGLE(VPOB9, VPO, AA20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB9, VPOOFF1, AA20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOB9, VPOOFF2, AA20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOB9, VPO,
++		SIG_EXPR_PTR(VPOB9, VPO),
++		SIG_EXPR_PTR(VPOB9, VPOOFF1),
++		SIG_EXPR_PTR(VPOB9, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(AA20, VPOB9, VPO);
+ PIN_DECL_1(AA20, GPIOS7, VPOB9);
+ 
+ /* RGMII1/RMII1 */
+@@ -1098,308 +1137,308 @@ PIN_DECL_1(AA20, GPIOS7, VPOB9);
+ #define RMII2_DESC      SIG_DESC_BIT(HW_STRAP1, 7, 0)
+ 
+ #define B5 152
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT0, GPIOT0, SIG_DESC_SET(SCUA0, 0));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1RCLKO, RMII1, RMII1_DESC,
++SIG_EXPR_LIST_DECL_SINGLE(B5, GPIOT0, GPIOT0, SIG_DESC_SET(SCUA0, 0));
++SIG_EXPR_LIST_DECL_SINGLE(B5, RMII1RCLKO, RMII1, RMII1_DESC,
+ 		SIG_DESC_SET(SCU48, 29));
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXCK, RGMII1);
+-PIN_DECL_(B5, SIG_EXPR_LIST_PTR(GPIOT0), SIG_EXPR_LIST_PTR(RMII1RCLKO),
+-		SIG_EXPR_LIST_PTR(RGMII1TXCK));
++SIG_EXPR_LIST_DECL_SINGLE(B5, RGMII1TXCK, RGMII1);
++PIN_DECL_(B5, SIG_EXPR_LIST_PTR(B5, GPIOT0), SIG_EXPR_LIST_PTR(B5, RMII1RCLKO),
++		SIG_EXPR_LIST_PTR(B5, RGMII1TXCK));
+ 
+ #define E9 153
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT1, GPIOT1, SIG_DESC_SET(SCUA0, 1));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1TXEN, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXCTL, RGMII1);
+-PIN_DECL_(E9, SIG_EXPR_LIST_PTR(GPIOT1), SIG_EXPR_LIST_PTR(RMII1TXEN),
+-		SIG_EXPR_LIST_PTR(RGMII1TXCTL));
++SIG_EXPR_LIST_DECL_SINGLE(E9, GPIOT1, GPIOT1, SIG_DESC_SET(SCUA0, 1));
++SIG_EXPR_LIST_DECL_SINGLE(E9, RMII1TXEN, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E9, RGMII1TXCTL, RGMII1);
++PIN_DECL_(E9, SIG_EXPR_LIST_PTR(E9, GPIOT1), SIG_EXPR_LIST_PTR(E9, RMII1TXEN),
++		SIG_EXPR_LIST_PTR(E9, RGMII1TXCTL));
+ 
+ #define F9 154
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT2, GPIOT2, SIG_DESC_SET(SCUA0, 2));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1TXD0, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD0, RGMII1);
+-PIN_DECL_(F9, SIG_EXPR_LIST_PTR(GPIOT2), SIG_EXPR_LIST_PTR(RMII1TXD0),
+-		SIG_EXPR_LIST_PTR(RGMII1TXD0));
++SIG_EXPR_LIST_DECL_SINGLE(F9, GPIOT2, GPIOT2, SIG_DESC_SET(SCUA0, 2));
++SIG_EXPR_LIST_DECL_SINGLE(F9, RMII1TXD0, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(F9, RGMII1TXD0, RGMII1);
++PIN_DECL_(F9, SIG_EXPR_LIST_PTR(F9, GPIOT2), SIG_EXPR_LIST_PTR(F9, RMII1TXD0),
++		SIG_EXPR_LIST_PTR(F9, RGMII1TXD0));
+ 
+ #define A5 155
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT3, GPIOT3, SIG_DESC_SET(SCUA0, 3));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1TXD1, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD1, RGMII1);
+-PIN_DECL_(A5, SIG_EXPR_LIST_PTR(GPIOT3), SIG_EXPR_LIST_PTR(RMII1TXD1),
+-		SIG_EXPR_LIST_PTR(RGMII1TXD1));
++SIG_EXPR_LIST_DECL_SINGLE(A5, GPIOT3, GPIOT3, SIG_DESC_SET(SCUA0, 3));
++SIG_EXPR_LIST_DECL_SINGLE(A5, RMII1TXD1, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A5, RGMII1TXD1, RGMII1);
++PIN_DECL_(A5, SIG_EXPR_LIST_PTR(A5, GPIOT3), SIG_EXPR_LIST_PTR(A5, RMII1TXD1),
++		SIG_EXPR_LIST_PTR(A5, RGMII1TXD1));
+ 
+ #define E7 156
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT4, GPIOT4, SIG_DESC_SET(SCUA0, 4));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1DASH0, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD2, RGMII1);
+-PIN_DECL_(E7, SIG_EXPR_LIST_PTR(GPIOT4), SIG_EXPR_LIST_PTR(RMII1DASH0),
+-		SIG_EXPR_LIST_PTR(RGMII1TXD2));
++SIG_EXPR_LIST_DECL_SINGLE(E7, GPIOT4, GPIOT4, SIG_DESC_SET(SCUA0, 4));
++SIG_EXPR_LIST_DECL_SINGLE(E7, RMII1DASH0, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E7, RGMII1TXD2, RGMII1);
++PIN_DECL_(E7, SIG_EXPR_LIST_PTR(E7, GPIOT4), SIG_EXPR_LIST_PTR(E7, RMII1DASH0),
++		SIG_EXPR_LIST_PTR(E7, RGMII1TXD2));
+ 
+ #define D7 157
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT5, GPIOT5, SIG_DESC_SET(SCUA0, 5));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1DASH1, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD3, RGMII1);
+-PIN_DECL_(D7, SIG_EXPR_LIST_PTR(GPIOT5), SIG_EXPR_LIST_PTR(RMII1DASH1),
+-		SIG_EXPR_LIST_PTR(RGMII1TXD3));
++SIG_EXPR_LIST_DECL_SINGLE(D7, GPIOT5, GPIOT5, SIG_DESC_SET(SCUA0, 5));
++SIG_EXPR_LIST_DECL_SINGLE(D7, RMII1DASH1, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D7, RGMII1TXD3, RGMII1);
++PIN_DECL_(D7, SIG_EXPR_LIST_PTR(D7, GPIOT5), SIG_EXPR_LIST_PTR(D7, RMII1DASH1),
++		SIG_EXPR_LIST_PTR(D7, RGMII1TXD3));
+ 
+ #define B2 158
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT6, GPIOT6, SIG_DESC_SET(SCUA0, 6));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2RCLKO, RMII2, RMII2_DESC,
++SIG_EXPR_LIST_DECL_SINGLE(B2, GPIOT6, GPIOT6, SIG_DESC_SET(SCUA0, 6));
++SIG_EXPR_LIST_DECL_SINGLE(B2, RMII2RCLKO, RMII2, RMII2_DESC,
+ 		SIG_DESC_SET(SCU48, 30));
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXCK, RGMII2);
+-PIN_DECL_(B2, SIG_EXPR_LIST_PTR(GPIOT6), SIG_EXPR_LIST_PTR(RMII2RCLKO),
+-		SIG_EXPR_LIST_PTR(RGMII2TXCK));
++SIG_EXPR_LIST_DECL_SINGLE(B2, RGMII2TXCK, RGMII2);
++PIN_DECL_(B2, SIG_EXPR_LIST_PTR(B2, GPIOT6), SIG_EXPR_LIST_PTR(B2, RMII2RCLKO),
++		SIG_EXPR_LIST_PTR(B2, RGMII2TXCK));
+ 
+ #define B1 159
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOT7, GPIOT7, SIG_DESC_SET(SCUA0, 7));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2TXEN, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXCTL, RGMII2);
+-PIN_DECL_(B1, SIG_EXPR_LIST_PTR(GPIOT7), SIG_EXPR_LIST_PTR(RMII2TXEN),
+-		SIG_EXPR_LIST_PTR(RGMII2TXCTL));
++SIG_EXPR_LIST_DECL_SINGLE(B1, GPIOT7, GPIOT7, SIG_DESC_SET(SCUA0, 7));
++SIG_EXPR_LIST_DECL_SINGLE(B1, RMII2TXEN, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B1, RGMII2TXCTL, RGMII2);
++PIN_DECL_(B1, SIG_EXPR_LIST_PTR(B1, GPIOT7), SIG_EXPR_LIST_PTR(B1, RMII2TXEN),
++		SIG_EXPR_LIST_PTR(B1, RGMII2TXCTL));
+ 
+ #define A2 160
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU0, GPIOU0, SIG_DESC_SET(SCUA0, 8));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2TXD0, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD0, RGMII2);
+-PIN_DECL_(A2, SIG_EXPR_LIST_PTR(GPIOU0), SIG_EXPR_LIST_PTR(RMII2TXD0),
+-		SIG_EXPR_LIST_PTR(RGMII2TXD0));
++SIG_EXPR_LIST_DECL_SINGLE(A2, GPIOU0, GPIOU0, SIG_DESC_SET(SCUA0, 8));
++SIG_EXPR_LIST_DECL_SINGLE(A2, RMII2TXD0, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A2, RGMII2TXD0, RGMII2);
++PIN_DECL_(A2, SIG_EXPR_LIST_PTR(A2, GPIOU0), SIG_EXPR_LIST_PTR(A2, RMII2TXD0),
++		SIG_EXPR_LIST_PTR(A2, RGMII2TXD0));
+ 
+ #define B3 161
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU1, GPIOU1, SIG_DESC_SET(SCUA0, 9));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2TXD1, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD1, RGMII2);
+-PIN_DECL_(B3, SIG_EXPR_LIST_PTR(GPIOU1), SIG_EXPR_LIST_PTR(RMII2TXD1),
+-		SIG_EXPR_LIST_PTR(RGMII2TXD1));
++SIG_EXPR_LIST_DECL_SINGLE(B3, GPIOU1, GPIOU1, SIG_DESC_SET(SCUA0, 9));
++SIG_EXPR_LIST_DECL_SINGLE(B3, RMII2TXD1, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B3, RGMII2TXD1, RGMII2);
++PIN_DECL_(B3, SIG_EXPR_LIST_PTR(B3, GPIOU1), SIG_EXPR_LIST_PTR(B3, RMII2TXD1),
++		SIG_EXPR_LIST_PTR(B3, RGMII2TXD1));
+ 
+ #define D5 162
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU2, GPIOU2, SIG_DESC_SET(SCUA0, 10));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2DASH0, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD2, RGMII2);
+-PIN_DECL_(D5, SIG_EXPR_LIST_PTR(GPIOU2), SIG_EXPR_LIST_PTR(RMII2DASH0),
+-		SIG_EXPR_LIST_PTR(RGMII2TXD2));
++SIG_EXPR_LIST_DECL_SINGLE(D5, GPIOU2, GPIOU2, SIG_DESC_SET(SCUA0, 10));
++SIG_EXPR_LIST_DECL_SINGLE(D5, RMII2DASH0, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D5, RGMII2TXD2, RGMII2);
++PIN_DECL_(D5, SIG_EXPR_LIST_PTR(D5, GPIOU2), SIG_EXPR_LIST_PTR(D5, RMII2DASH0),
++		SIG_EXPR_LIST_PTR(D5, RGMII2TXD2));
+ 
+ #define D4 163
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU3, GPIOU3, SIG_DESC_SET(SCUA0, 11));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2DASH1, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD3, RGMII2);
+-PIN_DECL_(D4, SIG_EXPR_LIST_PTR(GPIOU3), SIG_EXPR_LIST_PTR(RMII2DASH1),
+-		SIG_EXPR_LIST_PTR(RGMII2TXD3));
++SIG_EXPR_LIST_DECL_SINGLE(D4, GPIOU3, GPIOU3, SIG_DESC_SET(SCUA0, 11));
++SIG_EXPR_LIST_DECL_SINGLE(D4, RMII2DASH1, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D4, RGMII2TXD3, RGMII2);
++PIN_DECL_(D4, SIG_EXPR_LIST_PTR(D4, GPIOU3), SIG_EXPR_LIST_PTR(D4, RMII2DASH1),
++		SIG_EXPR_LIST_PTR(D4, RGMII2TXD3));
+ 
+ #define B4 164
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU4, GPIOU4, SIG_DESC_SET(SCUA0, 12));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1RCLKI, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXCK, RGMII1);
+-PIN_DECL_(B4, SIG_EXPR_LIST_PTR(GPIOU4), SIG_EXPR_LIST_PTR(RMII1RCLKI),
+-		SIG_EXPR_LIST_PTR(RGMII1RXCK));
++SIG_EXPR_LIST_DECL_SINGLE(B4, GPIOU4, GPIOU4, SIG_DESC_SET(SCUA0, 12));
++SIG_EXPR_LIST_DECL_SINGLE(B4, RMII1RCLKI, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B4, RGMII1RXCK, RGMII1);
++PIN_DECL_(B4, SIG_EXPR_LIST_PTR(B4, GPIOU4), SIG_EXPR_LIST_PTR(B4, RMII1RCLKI),
++		SIG_EXPR_LIST_PTR(B4, RGMII1RXCK));
+ 
+ #define A4 165
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU5, GPIOU5, SIG_DESC_SET(SCUA0, 13));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1DASH2, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXCTL, RGMII1);
+-PIN_DECL_(A4, SIG_EXPR_LIST_PTR(GPIOU5), SIG_EXPR_LIST_PTR(RMII1DASH2),
+-		SIG_EXPR_LIST_PTR(RGMII1RXCTL));
++SIG_EXPR_LIST_DECL_SINGLE(A4, GPIOU5, GPIOU5, SIG_DESC_SET(SCUA0, 13));
++SIG_EXPR_LIST_DECL_SINGLE(A4, RMII1DASH2, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A4, RGMII1RXCTL, RGMII1);
++PIN_DECL_(A4, SIG_EXPR_LIST_PTR(A4, GPIOU5), SIG_EXPR_LIST_PTR(A4, RMII1DASH2),
++		SIG_EXPR_LIST_PTR(A4, RGMII1RXCTL));
+ 
+ #define A3 166
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU6, GPIOU6, SIG_DESC_SET(SCUA0, 14));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1RXD0, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD0, RGMII1);
+-PIN_DECL_(A3, SIG_EXPR_LIST_PTR(GPIOU6), SIG_EXPR_LIST_PTR(RMII1RXD0),
+-		SIG_EXPR_LIST_PTR(RGMII1RXD0));
++SIG_EXPR_LIST_DECL_SINGLE(A3, GPIOU6, GPIOU6, SIG_DESC_SET(SCUA0, 14));
++SIG_EXPR_LIST_DECL_SINGLE(A3, RMII1RXD0, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A3, RGMII1RXD0, RGMII1);
++PIN_DECL_(A3, SIG_EXPR_LIST_PTR(A3, GPIOU6), SIG_EXPR_LIST_PTR(A3, RMII1RXD0),
++		SIG_EXPR_LIST_PTR(A3, RGMII1RXD0));
+ 
+ #define D6 167
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOU7, GPIOU7, SIG_DESC_SET(SCUA0, 15));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1RXD1, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD1, RGMII1);
+-PIN_DECL_(D6, SIG_EXPR_LIST_PTR(GPIOU7), SIG_EXPR_LIST_PTR(RMII1RXD1),
+-		SIG_EXPR_LIST_PTR(RGMII1RXD1));
++SIG_EXPR_LIST_DECL_SINGLE(D6, GPIOU7, GPIOU7, SIG_DESC_SET(SCUA0, 15));
++SIG_EXPR_LIST_DECL_SINGLE(D6, RMII1RXD1, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D6, RGMII1RXD1, RGMII1);
++PIN_DECL_(D6, SIG_EXPR_LIST_PTR(D6, GPIOU7), SIG_EXPR_LIST_PTR(D6, RMII1RXD1),
++		SIG_EXPR_LIST_PTR(D6, RGMII1RXD1));
+ 
+ #define C5 168
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV0, GPIOV0, SIG_DESC_SET(SCUA0, 16));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1CRSDV, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD2, RGMII1);
+-PIN_DECL_(C5, SIG_EXPR_LIST_PTR(GPIOV0), SIG_EXPR_LIST_PTR(RMII1CRSDV),
+-		SIG_EXPR_LIST_PTR(RGMII1RXD2));
++SIG_EXPR_LIST_DECL_SINGLE(C5, GPIOV0, GPIOV0, SIG_DESC_SET(SCUA0, 16));
++SIG_EXPR_LIST_DECL_SINGLE(C5, RMII1CRSDV, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C5, RGMII1RXD2, RGMII1);
++PIN_DECL_(C5, SIG_EXPR_LIST_PTR(C5, GPIOV0), SIG_EXPR_LIST_PTR(C5, RMII1CRSDV),
++		SIG_EXPR_LIST_PTR(C5, RGMII1RXD2));
+ 
+ #define C4 169
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV1, GPIOV1, SIG_DESC_SET(SCUA0, 17));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII1RXER, RMII1, RMII1_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD3, RGMII1);
+-PIN_DECL_(C4, SIG_EXPR_LIST_PTR(GPIOV1), SIG_EXPR_LIST_PTR(RMII1RXER),
+-		SIG_EXPR_LIST_PTR(RGMII1RXD3));
++SIG_EXPR_LIST_DECL_SINGLE(C4, GPIOV1, GPIOV1, SIG_DESC_SET(SCUA0, 17));
++SIG_EXPR_LIST_DECL_SINGLE(C4, RMII1RXER, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C4, RGMII1RXD3, RGMII1);
++PIN_DECL_(C4, SIG_EXPR_LIST_PTR(C4, GPIOV1), SIG_EXPR_LIST_PTR(C4, RMII1RXER),
++		SIG_EXPR_LIST_PTR(C4, RGMII1RXD3));
+ 
+ FUNC_GROUP_DECL(RGMII1, B4, A4, A3, D6, C5, C4, B5, E9, F9, A5, E7, D7);
+ FUNC_GROUP_DECL(RMII1, B4, A3, D6, C5, C4, B5, E9, F9, A5);
+ 
+ #define C2 170
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV2, GPIOV2, SIG_DESC_SET(SCUA0, 18));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2RCLKI, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXCK, RGMII2);
+-PIN_DECL_(C2, SIG_EXPR_LIST_PTR(GPIOV2), SIG_EXPR_LIST_PTR(RMII2RCLKI),
+-		SIG_EXPR_LIST_PTR(RGMII2RXCK));
++SIG_EXPR_LIST_DECL_SINGLE(C2, GPIOV2, GPIOV2, SIG_DESC_SET(SCUA0, 18));
++SIG_EXPR_LIST_DECL_SINGLE(C2, RMII2RCLKI, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C2, RGMII2RXCK, RGMII2);
++PIN_DECL_(C2, SIG_EXPR_LIST_PTR(C2, GPIOV2), SIG_EXPR_LIST_PTR(C2, RMII2RCLKI),
++		SIG_EXPR_LIST_PTR(C2, RGMII2RXCK));
+ 
+ #define C1 171
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV3, GPIOV3, SIG_DESC_SET(SCUA0, 19));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2DASH2, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXCTL, RGMII2);
+-PIN_DECL_(C1, SIG_EXPR_LIST_PTR(GPIOV3), SIG_EXPR_LIST_PTR(RMII2DASH2),
+-		SIG_EXPR_LIST_PTR(RGMII2RXCTL));
++SIG_EXPR_LIST_DECL_SINGLE(C1, GPIOV3, GPIOV3, SIG_DESC_SET(SCUA0, 19));
++SIG_EXPR_LIST_DECL_SINGLE(C1, RMII2DASH2, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C1, RGMII2RXCTL, RGMII2);
++PIN_DECL_(C1, SIG_EXPR_LIST_PTR(C1, GPIOV3), SIG_EXPR_LIST_PTR(C1, RMII2DASH2),
++		SIG_EXPR_LIST_PTR(C1, RGMII2RXCTL));
+ 
+ #define C3 172
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV4, GPIOV4, SIG_DESC_SET(SCUA0, 20));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2RXD0, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD0, RGMII2);
+-PIN_DECL_(C3, SIG_EXPR_LIST_PTR(GPIOV4), SIG_EXPR_LIST_PTR(RMII2RXD0),
+-		SIG_EXPR_LIST_PTR(RGMII2RXD0));
++SIG_EXPR_LIST_DECL_SINGLE(C3, GPIOV4, GPIOV4, SIG_DESC_SET(SCUA0, 20));
++SIG_EXPR_LIST_DECL_SINGLE(C3, RMII2RXD0, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C3, RGMII2RXD0, RGMII2);
++PIN_DECL_(C3, SIG_EXPR_LIST_PTR(C3, GPIOV4), SIG_EXPR_LIST_PTR(C3, RMII2RXD0),
++		SIG_EXPR_LIST_PTR(C3, RGMII2RXD0));
+ 
+ #define D1 173
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV5, GPIOV5, SIG_DESC_SET(SCUA0, 21));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2RXD1, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD1, RGMII2);
+-PIN_DECL_(D1, SIG_EXPR_LIST_PTR(GPIOV5), SIG_EXPR_LIST_PTR(RMII2RXD1),
+-		SIG_EXPR_LIST_PTR(RGMII2RXD1));
++SIG_EXPR_LIST_DECL_SINGLE(D1, GPIOV5, GPIOV5, SIG_DESC_SET(SCUA0, 21));
++SIG_EXPR_LIST_DECL_SINGLE(D1, RMII2RXD1, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D1, RGMII2RXD1, RGMII2);
++PIN_DECL_(D1, SIG_EXPR_LIST_PTR(D1, GPIOV5), SIG_EXPR_LIST_PTR(D1, RMII2RXD1),
++		SIG_EXPR_LIST_PTR(D1, RGMII2RXD1));
+ 
+ #define D2 174
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV6, GPIOV6, SIG_DESC_SET(SCUA0, 22));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2CRSDV, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD2, RGMII2);
+-PIN_DECL_(D2, SIG_EXPR_LIST_PTR(GPIOV6), SIG_EXPR_LIST_PTR(RMII2CRSDV),
+-		SIG_EXPR_LIST_PTR(RGMII2RXD2));
++SIG_EXPR_LIST_DECL_SINGLE(D2, GPIOV6, GPIOV6, SIG_DESC_SET(SCUA0, 22));
++SIG_EXPR_LIST_DECL_SINGLE(D2, RMII2CRSDV, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D2, RGMII2RXD2, RGMII2);
++PIN_DECL_(D2, SIG_EXPR_LIST_PTR(D2, GPIOV6), SIG_EXPR_LIST_PTR(D2, RMII2CRSDV),
++		SIG_EXPR_LIST_PTR(D2, RGMII2RXD2));
+ 
+ #define E6 175
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOV7, GPIOV7, SIG_DESC_SET(SCUA0, 23));
+-SIG_EXPR_LIST_DECL_SINGLE(RMII2RXER, RMII2, RMII2_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD3, RGMII2);
+-PIN_DECL_(E6, SIG_EXPR_LIST_PTR(GPIOV7), SIG_EXPR_LIST_PTR(RMII2RXER),
+-		SIG_EXPR_LIST_PTR(RGMII2RXD3));
++SIG_EXPR_LIST_DECL_SINGLE(E6, GPIOV7, GPIOV7, SIG_DESC_SET(SCUA0, 23));
++SIG_EXPR_LIST_DECL_SINGLE(E6, RMII2RXER, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E6, RGMII2RXD3, RGMII2);
++PIN_DECL_(E6, SIG_EXPR_LIST_PTR(E6, GPIOV7), SIG_EXPR_LIST_PTR(E6, RMII2RXER),
++		SIG_EXPR_LIST_PTR(E6, RGMII2RXD3));
+ 
+ FUNC_GROUP_DECL(RGMII2, B2, B1, A2, B3, D5, D4, C2, C1, C3, D1, D2, E6);
+ FUNC_GROUP_DECL(RMII2, B2, B1, A2, B3, C2, C3, D1, D2, E6);
+ 
+ #define F4 176
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW0, GPIOW0, SIG_DESC_SET(SCUA0, 24));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC0, ADC0);
+-PIN_DECL_(F4, SIG_EXPR_LIST_PTR(GPIOW0), SIG_EXPR_LIST_PTR(ADC0));
++SIG_EXPR_LIST_DECL_SINGLE(F4, GPIOW0, GPIOW0, SIG_DESC_SET(SCUA0, 24));
++SIG_EXPR_LIST_DECL_SINGLE(F4, ADC0, ADC0);
++PIN_DECL_(F4, SIG_EXPR_LIST_PTR(F4, GPIOW0), SIG_EXPR_LIST_PTR(F4, ADC0));
+ FUNC_GROUP_DECL(ADC0, F4);
+ 
+ #define F5 177
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW1, GPIOW1, SIG_DESC_SET(SCUA0, 25));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC1, ADC1);
+-PIN_DECL_(F5, SIG_EXPR_LIST_PTR(GPIOW1), SIG_EXPR_LIST_PTR(ADC1));
++SIG_EXPR_LIST_DECL_SINGLE(F5, GPIOW1, GPIOW1, SIG_DESC_SET(SCUA0, 25));
++SIG_EXPR_LIST_DECL_SINGLE(F5, ADC1, ADC1);
++PIN_DECL_(F5, SIG_EXPR_LIST_PTR(F5, GPIOW1), SIG_EXPR_LIST_PTR(F5, ADC1));
+ FUNC_GROUP_DECL(ADC1, F5);
+ 
+ #define E2 178
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW2, GPIOW2, SIG_DESC_SET(SCUA0, 26));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC2, ADC2);
+-PIN_DECL_(E2, SIG_EXPR_LIST_PTR(GPIOW2), SIG_EXPR_LIST_PTR(ADC2));
++SIG_EXPR_LIST_DECL_SINGLE(E2, GPIOW2, GPIOW2, SIG_DESC_SET(SCUA0, 26));
++SIG_EXPR_LIST_DECL_SINGLE(E2, ADC2, ADC2);
++PIN_DECL_(E2, SIG_EXPR_LIST_PTR(E2, GPIOW2), SIG_EXPR_LIST_PTR(E2, ADC2));
+ FUNC_GROUP_DECL(ADC2, E2);
+ 
+ #define E1 179
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW3, GPIOW3, SIG_DESC_SET(SCUA0, 27));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC3, ADC3);
+-PIN_DECL_(E1, SIG_EXPR_LIST_PTR(GPIOW3), SIG_EXPR_LIST_PTR(ADC3));
++SIG_EXPR_LIST_DECL_SINGLE(E1, GPIOW3, GPIOW3, SIG_DESC_SET(SCUA0, 27));
++SIG_EXPR_LIST_DECL_SINGLE(E1, ADC3, ADC3);
++PIN_DECL_(E1, SIG_EXPR_LIST_PTR(E1, GPIOW3), SIG_EXPR_LIST_PTR(E1, ADC3));
+ FUNC_GROUP_DECL(ADC3, E1);
+ 
+ #define F3 180
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW4, GPIOW4, SIG_DESC_SET(SCUA0, 28));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC4, ADC4);
+-PIN_DECL_(F3, SIG_EXPR_LIST_PTR(GPIOW4), SIG_EXPR_LIST_PTR(ADC4));
++SIG_EXPR_LIST_DECL_SINGLE(F3, GPIOW4, GPIOW4, SIG_DESC_SET(SCUA0, 28));
++SIG_EXPR_LIST_DECL_SINGLE(F3, ADC4, ADC4);
++PIN_DECL_(F3, SIG_EXPR_LIST_PTR(F3, GPIOW4), SIG_EXPR_LIST_PTR(F3, ADC4));
+ FUNC_GROUP_DECL(ADC4, F3);
+ 
+ #define E3 181
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW5, GPIOW5, SIG_DESC_SET(SCUA0, 29));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC5, ADC5);
+-PIN_DECL_(E3, SIG_EXPR_LIST_PTR(GPIOW5), SIG_EXPR_LIST_PTR(ADC5));
++SIG_EXPR_LIST_DECL_SINGLE(E3, GPIOW5, GPIOW5, SIG_DESC_SET(SCUA0, 29));
++SIG_EXPR_LIST_DECL_SINGLE(E3, ADC5, ADC5);
++PIN_DECL_(E3, SIG_EXPR_LIST_PTR(E3, GPIOW5), SIG_EXPR_LIST_PTR(E3, ADC5));
+ FUNC_GROUP_DECL(ADC5, E3);
+ 
+ #define G5 182
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW6, GPIOW6, SIG_DESC_SET(SCUA0, 30));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC6, ADC6);
+-PIN_DECL_(G5, SIG_EXPR_LIST_PTR(GPIOW6), SIG_EXPR_LIST_PTR(ADC6));
++SIG_EXPR_LIST_DECL_SINGLE(G5, GPIOW6, GPIOW6, SIG_DESC_SET(SCUA0, 30));
++SIG_EXPR_LIST_DECL_SINGLE(G5, ADC6, ADC6);
++PIN_DECL_(G5, SIG_EXPR_LIST_PTR(G5, GPIOW6), SIG_EXPR_LIST_PTR(G5, ADC6));
+ FUNC_GROUP_DECL(ADC6, G5);
+ 
+ #define G4 183
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOW7, GPIOW7, SIG_DESC_SET(SCUA0, 31));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC7, ADC7);
+-PIN_DECL_(G4, SIG_EXPR_LIST_PTR(GPIOW7), SIG_EXPR_LIST_PTR(ADC7));
++SIG_EXPR_LIST_DECL_SINGLE(G4, GPIOW7, GPIOW7, SIG_DESC_SET(SCUA0, 31));
++SIG_EXPR_LIST_DECL_SINGLE(G4, ADC7, ADC7);
++PIN_DECL_(G4, SIG_EXPR_LIST_PTR(G4, GPIOW7), SIG_EXPR_LIST_PTR(G4, ADC7));
+ FUNC_GROUP_DECL(ADC7, G4);
+ 
+ #define F2 184
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX0, GPIOX0, SIG_DESC_SET(SCUA4, 0));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC8, ADC8);
+-PIN_DECL_(F2, SIG_EXPR_LIST_PTR(GPIOX0), SIG_EXPR_LIST_PTR(ADC8));
++SIG_EXPR_LIST_DECL_SINGLE(F2, GPIOX0, GPIOX0, SIG_DESC_SET(SCUA4, 0));
++SIG_EXPR_LIST_DECL_SINGLE(F2, ADC8, ADC8);
++PIN_DECL_(F2, SIG_EXPR_LIST_PTR(F2, GPIOX0), SIG_EXPR_LIST_PTR(F2, ADC8));
+ FUNC_GROUP_DECL(ADC8, F2);
+ 
+ #define G3 185
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX1, GPIOX1, SIG_DESC_SET(SCUA4, 1));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC9, ADC9);
+-PIN_DECL_(G3, SIG_EXPR_LIST_PTR(GPIOX1), SIG_EXPR_LIST_PTR(ADC9));
++SIG_EXPR_LIST_DECL_SINGLE(G3, GPIOX1, GPIOX1, SIG_DESC_SET(SCUA4, 1));
++SIG_EXPR_LIST_DECL_SINGLE(G3, ADC9, ADC9);
++PIN_DECL_(G3, SIG_EXPR_LIST_PTR(G3, GPIOX1), SIG_EXPR_LIST_PTR(G3, ADC9));
+ FUNC_GROUP_DECL(ADC9, G3);
+ 
+ #define G2 186
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX2, GPIOX2, SIG_DESC_SET(SCUA4, 2));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC10, ADC10);
+-PIN_DECL_(G2, SIG_EXPR_LIST_PTR(GPIOX2), SIG_EXPR_LIST_PTR(ADC10));
++SIG_EXPR_LIST_DECL_SINGLE(G2, GPIOX2, GPIOX2, SIG_DESC_SET(SCUA4, 2));
++SIG_EXPR_LIST_DECL_SINGLE(G2, ADC10, ADC10);
++PIN_DECL_(G2, SIG_EXPR_LIST_PTR(G2, GPIOX2), SIG_EXPR_LIST_PTR(G2, ADC10));
+ FUNC_GROUP_DECL(ADC10, G2);
+ 
+ #define F1 187
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX3, GPIOX3, SIG_DESC_SET(SCUA4, 3));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC11, ADC11);
+-PIN_DECL_(F1, SIG_EXPR_LIST_PTR(GPIOX3), SIG_EXPR_LIST_PTR(ADC11));
++SIG_EXPR_LIST_DECL_SINGLE(F1, GPIOX3, GPIOX3, SIG_DESC_SET(SCUA4, 3));
++SIG_EXPR_LIST_DECL_SINGLE(F1, ADC11, ADC11);
++PIN_DECL_(F1, SIG_EXPR_LIST_PTR(F1, GPIOX3), SIG_EXPR_LIST_PTR(F1, ADC11));
+ FUNC_GROUP_DECL(ADC11, F1);
+ 
+ #define H5 188
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX4, GPIOX4, SIG_DESC_SET(SCUA4, 4));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC12, ADC12);
+-PIN_DECL_(H5, SIG_EXPR_LIST_PTR(GPIOX4), SIG_EXPR_LIST_PTR(ADC12));
++SIG_EXPR_LIST_DECL_SINGLE(H5, GPIOX4, GPIOX4, SIG_DESC_SET(SCUA4, 4));
++SIG_EXPR_LIST_DECL_SINGLE(H5, ADC12, ADC12);
++PIN_DECL_(H5, SIG_EXPR_LIST_PTR(H5, GPIOX4), SIG_EXPR_LIST_PTR(H5, ADC12));
+ FUNC_GROUP_DECL(ADC12, H5);
+ 
+ #define G1 189
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX5, GPIOX5, SIG_DESC_SET(SCUA4, 5));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC13, ADC13);
+-PIN_DECL_(G1, SIG_EXPR_LIST_PTR(GPIOX5), SIG_EXPR_LIST_PTR(ADC13));
++SIG_EXPR_LIST_DECL_SINGLE(G1, GPIOX5, GPIOX5, SIG_DESC_SET(SCUA4, 5));
++SIG_EXPR_LIST_DECL_SINGLE(G1, ADC13, ADC13);
++PIN_DECL_(G1, SIG_EXPR_LIST_PTR(G1, GPIOX5), SIG_EXPR_LIST_PTR(G1, ADC13));
+ FUNC_GROUP_DECL(ADC13, G1);
+ 
+ #define H3 190
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX6, GPIOX6, SIG_DESC_SET(SCUA4, 6));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC14, ADC14);
+-PIN_DECL_(H3, SIG_EXPR_LIST_PTR(GPIOX6), SIG_EXPR_LIST_PTR(ADC14));
++SIG_EXPR_LIST_DECL_SINGLE(H3, GPIOX6, GPIOX6, SIG_DESC_SET(SCUA4, 6));
++SIG_EXPR_LIST_DECL_SINGLE(H3, ADC14, ADC14);
++PIN_DECL_(H3, SIG_EXPR_LIST_PTR(H3, GPIOX6), SIG_EXPR_LIST_PTR(H3, ADC14));
+ FUNC_GROUP_DECL(ADC14, H3);
+ 
+ #define H4 191
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOX7, GPIOX7, SIG_DESC_SET(SCUA4, 7));
+-SIG_EXPR_LIST_DECL_SINGLE(ADC15, ADC15);
+-PIN_DECL_(H4, SIG_EXPR_LIST_PTR(GPIOX7), SIG_EXPR_LIST_PTR(ADC15));
++SIG_EXPR_LIST_DECL_SINGLE(H4, GPIOX7, GPIOX7, SIG_DESC_SET(SCUA4, 7));
++SIG_EXPR_LIST_DECL_SINGLE(H4, ADC15, ADC15);
++PIN_DECL_(H4, SIG_EXPR_LIST_PTR(H4, GPIOX7), SIG_EXPR_LIST_PTR(H4, ADC15));
+ FUNC_GROUP_DECL(ADC15, H4);
+ 
+ #define ACPI_DESC	SIG_DESC_SET(HW_STRAP1, 19)
+ 
+ #define R22 192
+-SIG_EXPR_DECL(SIOS3, SIOS3, SIG_DESC_SET(SCUA4, 8));
+-SIG_EXPR_DECL(SIOS3, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOS3, SIOS3, ACPI);
+-SIG_EXPR_LIST_DECL_SINGLE(DASHR22, DASHR22, SIG_DESC_SET(SCU94, 10));
++SIG_EXPR_DECL_SINGLE(SIOS3, SIOS3, SIG_DESC_SET(SCUA4, 8));
++SIG_EXPR_DECL_SINGLE(SIOS3, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(R22, SIOS3, SIOS3, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(R22, DASHR22, DASHR22, SIG_DESC_SET(SCU94, 10));
+ PIN_DECL_2(R22, GPIOY0, SIOS3, DASHR22);
+ FUNC_GROUP_DECL(SIOS3, R22);
+ 
+ #define R21 193
+-SIG_EXPR_DECL(SIOS5, SIOS5, SIG_DESC_SET(SCUA4, 9));
+-SIG_EXPR_DECL(SIOS5, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOS5, SIOS5, ACPI);
+-SIG_EXPR_LIST_DECL_SINGLE(DASHR21, DASHR21, SIG_DESC_SET(SCU94, 10));
++SIG_EXPR_DECL_SINGLE(SIOS5, SIOS5, SIG_DESC_SET(SCUA4, 9));
++SIG_EXPR_DECL_SINGLE(SIOS5, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(R21, SIOS5, SIOS5, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(R21, DASHR21, DASHR21, SIG_DESC_SET(SCU94, 10));
+ PIN_DECL_2(R21, GPIOY1, SIOS5, DASHR21);
+ FUNC_GROUP_DECL(SIOS5, R21);
+ 
+ #define P22 194
+-SIG_EXPR_DECL(SIOPWREQ, SIOPWREQ, SIG_DESC_SET(SCUA4, 10));
+-SIG_EXPR_DECL(SIOPWREQ, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOPWREQ, SIOPWREQ, ACPI);
+-SIG_EXPR_LIST_DECL_SINGLE(DASHP22, DASHP22, SIG_DESC_SET(SCU94, 11));
++SIG_EXPR_DECL_SINGLE(SIOPWREQ, SIOPWREQ, SIG_DESC_SET(SCUA4, 10));
++SIG_EXPR_DECL_SINGLE(SIOPWREQ, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(P22, SIOPWREQ, SIOPWREQ, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(P22, DASHP22, DASHP22, SIG_DESC_SET(SCU94, 11));
+ PIN_DECL_2(P22, GPIOY2, SIOPWREQ, DASHP22);
+ FUNC_GROUP_DECL(SIOPWREQ, P22);
+ 
+ #define P21 195
+-SIG_EXPR_DECL(SIOONCTRL, SIOONCTRL, SIG_DESC_SET(SCUA4, 11));
+-SIG_EXPR_DECL(SIOONCTRL, ACPI, ACPI_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOONCTRL, SIOONCTRL, ACPI);
+-SIG_EXPR_LIST_DECL_SINGLE(DASHP21, DASHP21, SIG_DESC_SET(SCU94, 11));
++SIG_EXPR_DECL_SINGLE(SIOONCTRL, SIOONCTRL, SIG_DESC_SET(SCUA4, 11));
++SIG_EXPR_DECL_SINGLE(SIOONCTRL, ACPI, ACPI_DESC);
++SIG_EXPR_LIST_DECL_DUAL(P21, SIOONCTRL, SIOONCTRL, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(P21, DASHP21, DASHP21, SIG_DESC_SET(SCU94, 11));
+ PIN_DECL_2(P21, GPIOY3, SIOONCTRL, DASHP21);
+ FUNC_GROUP_DECL(SIOONCTRL, P21);
+ 
+@@ -1419,66 +1458,81 @@ SSSF_PIN_DECL(P20, GPIOY7, SDA2, SIG_DESC_SET(SCUA4, 15));
+ 
+ #define Y20 200
+ #define Y20_DESC	SIG_DESC_SET(SCUA4, 16)
+-SIG_EXPR_DECL(VPOG2, VPO, Y20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOG2, VPOOFF1, Y20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOG2, VPOOFF2, Y20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOG2, SIG_EXPR_PTR(VPOG2, VPO),
+-		SIG_EXPR_PTR(VPOG2, VPOOFF1), SIG_EXPR_PTR(VPOG2, VPOOFF2));
+-SIG_EXPR_DECL(SIOPBI, SIOPBI, Y20_DESC);
+-SIG_EXPR_DECL(SIOPBI, ACPI, Y20_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOPBI, SIOPBI, ACPI);
+-SIG_EXPR_LIST_DECL_SINGLE(NORA0, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOZ0, GPIOZ0);
+-PIN_DECL_(Y20, SIG_EXPR_LIST_PTR(VPOG2), SIG_EXPR_LIST_PTR(SIOPBI),
+-		SIG_EXPR_LIST_PTR(NORA0), SIG_EXPR_LIST_PTR(GPIOZ0));
++SIG_EXPR_DECL_SINGLE(VPOG2, VPO, Y20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG2, VPOOFF1, Y20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG2, VPOOFF2, Y20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOG2, VPO,
++		SIG_EXPR_PTR(VPOG2, VPO),
++		SIG_EXPR_PTR(VPOG2, VPOOFF1),
++		SIG_EXPR_PTR(VPOG2, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(Y20, VPOG2, VPO);
++SIG_EXPR_DECL_SINGLE(SIOPBI, SIOPBI, Y20_DESC);
++SIG_EXPR_DECL_SINGLE(SIOPBI, ACPI, Y20_DESC);
++SIG_EXPR_LIST_DECL_DUAL(Y20, SIOPBI, SIOPBI, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(Y20, NORA0, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(Y20, GPIOZ0, GPIOZ0);
++PIN_DECL_(Y20, SIG_EXPR_LIST_PTR(Y20, VPOG2), SIG_EXPR_LIST_PTR(Y20, SIOPBI),
++		SIG_EXPR_LIST_PTR(Y20, NORA0), SIG_EXPR_LIST_PTR(Y20, GPIOZ0));
+ FUNC_GROUP_DECL(SIOPBI, Y20);
+ 
+ #define AB20 201
+ #define AB20_DESC	SIG_DESC_SET(SCUA4, 17)
+-SIG_EXPR_DECL(VPOG3, VPO, AB20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOG3, VPOOFF1, AB20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOG3, VPOOFF2, AB20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOG3, SIG_EXPR_PTR(VPOG3, VPO),
+-		SIG_EXPR_PTR(VPOG3, VPOOFF1), SIG_EXPR_PTR(VPOG3, VPOOFF2));
+-SIG_EXPR_DECL(SIOPWRGD, SIOPWRGD, AB20_DESC);
+-SIG_EXPR_DECL(SIOPWRGD, ACPI, AB20_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOPWRGD, SIOPWRGD, ACPI);
+-SIG_EXPR_LIST_DECL_SINGLE(NORA1, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOZ1, GPIOZ1);
+-PIN_DECL_(AB20, SIG_EXPR_LIST_PTR(VPOG3), SIG_EXPR_LIST_PTR(SIOPWRGD),
+-		SIG_EXPR_LIST_PTR(NORA1), SIG_EXPR_LIST_PTR(GPIOZ1));
++SIG_EXPR_DECL_SINGLE(VPOG3, VPO, AB20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG3, VPOOFF1, AB20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG3, VPOOFF2, AB20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOG3, VPO,
++		SIG_EXPR_PTR(VPOG3, VPO),
++		SIG_EXPR_PTR(VPOG3, VPOOFF1),
++		SIG_EXPR_PTR(VPOG3, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(AB20, VPOG3, VPO);
++SIG_EXPR_DECL_SINGLE(SIOPWRGD, SIOPWRGD, AB20_DESC);
++SIG_EXPR_DECL_SINGLE(SIOPWRGD, ACPI, AB20_DESC);
++SIG_EXPR_LIST_DECL_DUAL(AB20, SIOPWRGD, SIOPWRGD, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(AB20, NORA1, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(AB20, GPIOZ1, GPIOZ1);
++PIN_DECL_(AB20, SIG_EXPR_LIST_PTR(AB20, VPOG3),
++	  SIG_EXPR_LIST_PTR(AB20, SIOPWRGD), SIG_EXPR_LIST_PTR(AB20, NORA1),
++	  SIG_EXPR_LIST_PTR(AB20, GPIOZ1));
+ FUNC_GROUP_DECL(SIOPWRGD, AB20);
+ 
+ #define AB21 202
+ #define AB21_DESC	SIG_DESC_SET(SCUA4, 18)
+-SIG_EXPR_DECL(VPOG4, VPO, AB21_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOG4, VPOOFF1, AB21_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOG4, VPOOFF2, AB21_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOG4, SIG_EXPR_PTR(VPOG4, VPO),
+-		SIG_EXPR_PTR(VPOG4, VPOOFF1), SIG_EXPR_PTR(VPOG4, VPOOFF2));
+-SIG_EXPR_DECL(SIOPBO, SIOPBO, AB21_DESC);
+-SIG_EXPR_DECL(SIOPBO, ACPI, AB21_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOPBO, SIOPBO, ACPI);
+-SIG_EXPR_LIST_DECL_SINGLE(NORA2, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOZ2, GPIOZ2);
+-PIN_DECL_(AB21, SIG_EXPR_LIST_PTR(VPOG4), SIG_EXPR_LIST_PTR(SIOPBO),
+-		SIG_EXPR_LIST_PTR(NORA2), SIG_EXPR_LIST_PTR(GPIOZ2));
++SIG_EXPR_DECL_SINGLE(VPOG4, VPO, AB21_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG4, VPOOFF1, AB21_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG4, VPOOFF2, AB21_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOG4, VPO,
++		SIG_EXPR_PTR(VPOG4, VPO),
++		SIG_EXPR_PTR(VPOG4, VPOOFF1),
++		SIG_EXPR_PTR(VPOG4, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(AB21, VPOG4, VPO);
++SIG_EXPR_DECL_SINGLE(SIOPBO, SIOPBO, AB21_DESC);
++SIG_EXPR_DECL_SINGLE(SIOPBO, ACPI, AB21_DESC);
++SIG_EXPR_LIST_DECL_DUAL(AB21, SIOPBO, SIOPBO, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(AB21, NORA2, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(AB21, GPIOZ2, GPIOZ2);
++PIN_DECL_(AB21, SIG_EXPR_LIST_PTR(AB21, VPOG4),
++	  SIG_EXPR_LIST_PTR(AB21, SIOPBO), SIG_EXPR_LIST_PTR(AB21, NORA2),
++	  SIG_EXPR_LIST_PTR(AB21, GPIOZ2));
+ FUNC_GROUP_DECL(SIOPBO, AB21);
+ 
+ #define AA21 203
+ #define AA21_DESC	SIG_DESC_SET(SCUA4, 19)
+-SIG_EXPR_DECL(VPOG5, VPO, AA21_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOG5, VPOOFF1, AA21_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOG5, VPOOFF2, AA21_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOG5, SIG_EXPR_PTR(VPOG5, VPO),
+-		SIG_EXPR_PTR(VPOG5, VPOOFF1), SIG_EXPR_PTR(VPOG5, VPOOFF2));
+-SIG_EXPR_DECL(SIOSCI, SIOSCI, AA21_DESC);
+-SIG_EXPR_DECL(SIOSCI, ACPI, AA21_DESC);
+-SIG_EXPR_LIST_DECL_DUAL(SIOSCI, SIOSCI, ACPI);
+-SIG_EXPR_LIST_DECL_SINGLE(NORA3, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOZ3, GPIOZ3);
+-PIN_DECL_(AA21, SIG_EXPR_LIST_PTR(VPOG5), SIG_EXPR_LIST_PTR(SIOSCI),
+-		SIG_EXPR_LIST_PTR(NORA3), SIG_EXPR_LIST_PTR(GPIOZ3));
++SIG_EXPR_DECL_SINGLE(VPOG5, VPO, AA21_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG5, VPOOFF1, AA21_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG5, VPOOFF2, AA21_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOG5, VPO,
++		SIG_EXPR_PTR(VPOG5, VPO),
++		SIG_EXPR_PTR(VPOG5, VPOOFF1),
++		SIG_EXPR_PTR(VPOG5, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(AA21, VPOG5, VPO);
++SIG_EXPR_DECL_SINGLE(SIOSCI, SIOSCI, AA21_DESC);
++SIG_EXPR_DECL_SINGLE(SIOSCI, ACPI, AA21_DESC);
++SIG_EXPR_LIST_DECL_DUAL(AA21, SIOSCI, SIOSCI, ACPI);
++SIG_EXPR_LIST_DECL_SINGLE(AA21, NORA3, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(AA21, GPIOZ3, GPIOZ3);
++PIN_DECL_(AA21, SIG_EXPR_LIST_PTR(AA21, VPOG5),
++	  SIG_EXPR_LIST_PTR(AA21, SIOSCI), SIG_EXPR_LIST_PTR(AA21, NORA3),
++	  SIG_EXPR_LIST_PTR(AA21, GPIOZ3));
+ FUNC_GROUP_DECL(SIOSCI, AA21);
+ 
+ FUNC_GROUP_DECL(ACPI, R22, R21, P22, P21, Y20, AB20, AB21, AA21);
+@@ -1497,174 +1551,217 @@ FUNC_GROUP_DECL(ACPI, R22, R21, P22, P21, Y20, AB20, AB21, AA21);
+ 
+ #define U21 204
+ #define U21_DESC	SIG_DESC_SET(SCUA4, 20)
+-SIG_EXPR_DECL(VPOG6, VPO, U21_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOG6, VPOOFF1, U21_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOG6, VPOOFF2, U21_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOG6, SIG_EXPR_PTR(VPOG6, VPO),
+-		SIG_EXPR_PTR(VPOG6, VPOOFF1), SIG_EXPR_PTR(VPOG6, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(NORA4, PNOR, PNOR_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG6, VPO, U21_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG6, VPOOFF1, U21_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG6, VPOOFF2, U21_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOG6, VPO,
++		SIG_EXPR_PTR(VPOG6, VPO),
++		SIG_EXPR_PTR(VPOG6, VPOOFF1),
++		SIG_EXPR_PTR(VPOG6, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(U21, VPOG6, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(U21, NORA4, PNOR, PNOR_DESC);
+ PIN_DECL_2(U21, GPIOZ4, VPOG6, NORA4);
+ 
+ #define W22 205
+ #define W22_DESC	SIG_DESC_SET(SCUA4, 21)
+-SIG_EXPR_DECL(VPOG7, VPO, W22_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOG7, VPOOFF1, W22_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOG7, VPOOFF2, W22_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOG7, SIG_EXPR_PTR(VPOG7, VPO),
+-		SIG_EXPR_PTR(VPOG7, VPOOFF1), SIG_EXPR_PTR(VPOG7, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(NORA5, PNOR, PNOR_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG7, VPO, W22_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG7, VPOOFF1, W22_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG7, VPOOFF2, W22_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOG7, VPO,
++		SIG_EXPR_PTR(VPOG7, VPO),
++		SIG_EXPR_PTR(VPOG7, VPOOFF1),
++		SIG_EXPR_PTR(VPOG7, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(W22, VPOG7, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(W22, NORA5, PNOR, PNOR_DESC);
+ PIN_DECL_2(W22, GPIOZ5, VPOG7, NORA5);
+ 
+ #define V22 206
+ #define V22_DESC	SIG_DESC_SET(SCUA4, 22)
+-SIG_EXPR_DECL(VPOG8, VPO, V22_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOG8, VPOOFF1, V22_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOG8, VPOOFF2, V22_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOG8, SIG_EXPR_PTR(VPOG8, VPO),
+-		SIG_EXPR_PTR(VPOG8, VPOOFF1), SIG_EXPR_PTR(VPOG8, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(NORA6, PNOR, PNOR_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG8, VPO, V22_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG8, VPOOFF1, V22_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG8, VPOOFF2, V22_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOG8, VPO,
++		SIG_EXPR_PTR(VPOG8, VPO),
++		SIG_EXPR_PTR(VPOG8, VPOOFF1),
++		SIG_EXPR_PTR(VPOG8, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(V22, VPOG8, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(V22, NORA6, PNOR, PNOR_DESC);
+ PIN_DECL_2(V22, GPIOZ6, VPOG8, NORA6);
+ 
+ #define W21 207
+ #define W21_DESC	SIG_DESC_SET(SCUA4, 23)
+-SIG_EXPR_DECL(VPOG9, VPO, W21_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOG9, VPOOFF1, W21_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOG9, VPOOFF2, W21_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOG9, SIG_EXPR_PTR(VPOG9, VPO),
+-		SIG_EXPR_PTR(VPOG9, VPOOFF1), SIG_EXPR_PTR(VPOG9, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(NORA7, PNOR, PNOR_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG9, VPO, W21_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG9, VPOOFF1, W21_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOG9, VPOOFF2, W21_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOG9, VPO,
++		SIG_EXPR_PTR(VPOG9, VPO),
++		SIG_EXPR_PTR(VPOG9, VPOOFF1),
++		SIG_EXPR_PTR(VPOG9, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(W21, VPOG9, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(W21, NORA7, PNOR, PNOR_DESC);
+ PIN_DECL_2(W21, GPIOZ7, VPOG9, NORA7);
+ 
+ #define Y21 208
+ #define Y21_DESC	SIG_DESC_SET(SCUA4, 24)
+-SIG_EXPR_DECL(VPOR2, VPO, Y21_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR2, VPOOFF1, Y21_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR2, VPOOFF2, Y21_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOR2, SIG_EXPR_PTR(VPOR2, VPO),
+-		SIG_EXPR_PTR(VPOR2, VPOOFF1), SIG_EXPR_PTR(VPOR2, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(SALT7, SALT7, Y21_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(NORD0, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOAA0, GPIOAA0);
+-PIN_DECL_(Y21, SIG_EXPR_LIST_PTR(VPOR2), SIG_EXPR_LIST_PTR(SALT7),
+-		SIG_EXPR_LIST_PTR(NORD0), SIG_EXPR_LIST_PTR(GPIOAA0));
++SIG_EXPR_DECL_SINGLE(VPOR2, VPO, Y21_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR2, VPOOFF1, Y21_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR2, VPOOFF2, Y21_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOR2, VPO,
++		SIG_EXPR_PTR(VPOR2, VPO),
++		SIG_EXPR_PTR(VPOR2, VPOOFF1),
++		SIG_EXPR_PTR(VPOR2, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(Y21, VPOR2, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(Y21, SALT7, SALT7, Y21_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(Y21, NORD0, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(Y21, GPIOAA0, GPIOAA0);
++PIN_DECL_(Y21, SIG_EXPR_LIST_PTR(Y21, VPOR2), SIG_EXPR_LIST_PTR(Y21, SALT7),
++		SIG_EXPR_LIST_PTR(Y21, NORD0), SIG_EXPR_LIST_PTR(Y21, GPIOAA0));
+ FUNC_GROUP_DECL(SALT7, Y21);
+ 
+ #define V21 209
+ #define V21_DESC	SIG_DESC_SET(SCUA4, 25)
+-SIG_EXPR_DECL(VPOR3, VPO, V21_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR3, VPOOFF1, V21_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR3, VPOOFF2, V21_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOR3, SIG_EXPR_PTR(VPOR3, VPO),
+-		SIG_EXPR_PTR(VPOR3, VPOOFF1), SIG_EXPR_PTR(VPOR3, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(SALT8, SALT8, V21_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(NORD1, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOAA1, GPIOAA1);
+-PIN_DECL_(V21, SIG_EXPR_LIST_PTR(VPOR3), SIG_EXPR_LIST_PTR(SALT8),
+-		SIG_EXPR_LIST_PTR(NORD1), SIG_EXPR_LIST_PTR(GPIOAA1));
++SIG_EXPR_DECL_SINGLE(VPOR3, VPO, V21_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR3, VPOOFF1, V21_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR3, VPOOFF2, V21_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOR3, VPO,
++		SIG_EXPR_PTR(VPOR3, VPO),
++		SIG_EXPR_PTR(VPOR3, VPOOFF1),
++		SIG_EXPR_PTR(VPOR3, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(V21, VPOR3, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(V21, SALT8, SALT8, V21_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(V21, NORD1, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(V21, GPIOAA1, GPIOAA1);
++PIN_DECL_(V21, SIG_EXPR_LIST_PTR(V21, VPOR3), SIG_EXPR_LIST_PTR(V21, SALT8),
++		SIG_EXPR_LIST_PTR(V21, NORD1), SIG_EXPR_LIST_PTR(V21, GPIOAA1));
+ FUNC_GROUP_DECL(SALT8, V21);
+ 
+ #define Y22 210
+ #define Y22_DESC	SIG_DESC_SET(SCUA4, 26)
+-SIG_EXPR_DECL(VPOR4, VPO, Y22_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR4, VPOOFF1, Y22_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR4, VPOOFF2, Y22_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOR4, SIG_EXPR_PTR(VPOR4, VPO),
+-		SIG_EXPR_PTR(VPOR4, VPOOFF1), SIG_EXPR_PTR(VPOR4, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(SALT9, SALT9, Y22_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(NORD2, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOAA2, GPIOAA2);
+-PIN_DECL_(Y22, SIG_EXPR_LIST_PTR(VPOR4), SIG_EXPR_LIST_PTR(SALT9),
+-		SIG_EXPR_LIST_PTR(NORD2), SIG_EXPR_LIST_PTR(GPIOAA2));
++SIG_EXPR_DECL_SINGLE(VPOR4, VPO, Y22_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR4, VPOOFF1, Y22_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR4, VPOOFF2, Y22_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOR4, VPO,
++		SIG_EXPR_PTR(VPOR4, VPO),
++		SIG_EXPR_PTR(VPOR4, VPOOFF1),
++		SIG_EXPR_PTR(VPOR4, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(Y22, VPOR4, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(Y22, SALT9, SALT9, Y22_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(Y22, NORD2, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(Y22, GPIOAA2, GPIOAA2);
++PIN_DECL_(Y22, SIG_EXPR_LIST_PTR(Y22, VPOR4), SIG_EXPR_LIST_PTR(Y22, SALT9),
++		SIG_EXPR_LIST_PTR(Y22, NORD2), SIG_EXPR_LIST_PTR(Y22, GPIOAA2));
+ FUNC_GROUP_DECL(SALT9, Y22);
+ 
+ #define AA22 211
+ #define AA22_DESC	SIG_DESC_SET(SCUA4, 27)
+-SIG_EXPR_DECL(VPOR5, VPO, AA22_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR5, VPOOFF1, AA22_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR5, VPOOFF2, AA22_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOR5, SIG_EXPR_PTR(VPOR5, VPO),
+-		SIG_EXPR_PTR(VPOR5, VPOOFF1), SIG_EXPR_PTR(VPOR5, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(SALT10, SALT10, AA22_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(NORD3, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOAA3, GPIOAA3);
+-PIN_DECL_(AA22, SIG_EXPR_LIST_PTR(VPOR5), SIG_EXPR_LIST_PTR(SALT10),
+-		SIG_EXPR_LIST_PTR(NORD3), SIG_EXPR_LIST_PTR(GPIOAA3));
++SIG_EXPR_DECL_SINGLE(VPOR5, VPO, AA22_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR5, VPOOFF1, AA22_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR5, VPOOFF2, AA22_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOR5, VPO,
++		SIG_EXPR_PTR(VPOR5, VPO),
++		SIG_EXPR_PTR(VPOR5, VPOOFF1),
++		SIG_EXPR_PTR(VPOR5, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(AA22, VPOR5, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(AA22, SALT10, SALT10, AA22_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(AA22, NORD3, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(AA22, GPIOAA3, GPIOAA3);
++PIN_DECL_(AA22, SIG_EXPR_LIST_PTR(AA22, VPOR5),
++	  SIG_EXPR_LIST_PTR(AA22, SALT10), SIG_EXPR_LIST_PTR(AA22, NORD3),
++	  SIG_EXPR_LIST_PTR(AA22, GPIOAA3));
+ FUNC_GROUP_DECL(SALT10, AA22);
+ 
+ #define U22 212
+ #define U22_DESC	SIG_DESC_SET(SCUA4, 28)
+-SIG_EXPR_DECL(VPOR6, VPO, U22_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR6, VPOOFF1, U22_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR6, VPOOFF2, U22_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOR6, SIG_EXPR_PTR(VPOR6, VPO),
+-		SIG_EXPR_PTR(VPOR6, VPOOFF1), SIG_EXPR_PTR(VPOR6, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(SALT11, SALT11, U22_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(NORD4, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOAA4, GPIOAA4);
+-PIN_DECL_(U22, SIG_EXPR_LIST_PTR(VPOR6), SIG_EXPR_LIST_PTR(SALT11),
+-		SIG_EXPR_LIST_PTR(NORD4), SIG_EXPR_LIST_PTR(GPIOAA4));
++SIG_EXPR_DECL_SINGLE(VPOR6, VPO, U22_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR6, VPOOFF1, U22_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR6, VPOOFF2, U22_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOR6, VPO,
++		SIG_EXPR_PTR(VPOR6, VPO),
++		SIG_EXPR_PTR(VPOR6, VPOOFF1),
++		SIG_EXPR_PTR(VPOR6, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(U22, VPOR6, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(U22, SALT11, SALT11, U22_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(U22, NORD4, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(U22, GPIOAA4, GPIOAA4);
++PIN_DECL_(U22, SIG_EXPR_LIST_PTR(U22, VPOR6), SIG_EXPR_LIST_PTR(U22, SALT11),
++		SIG_EXPR_LIST_PTR(U22, NORD4), SIG_EXPR_LIST_PTR(U22, GPIOAA4));
+ FUNC_GROUP_DECL(SALT11, U22);
+ 
+ #define T20 213
+ #define T20_DESC	SIG_DESC_SET(SCUA4, 29)
+-SIG_EXPR_DECL(VPOR7, VPO, T20_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR7, VPOOFF1, T20_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR7, VPOOFF2, T20_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOR7, SIG_EXPR_PTR(VPOR7, VPO),
+-		SIG_EXPR_PTR(VPOR7, VPOOFF1), SIG_EXPR_PTR(VPOR7, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(SALT12, SALT12, T20_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(NORD5, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOAA5, GPIOAA5);
+-PIN_DECL_(T20, SIG_EXPR_LIST_PTR(VPOR7), SIG_EXPR_LIST_PTR(SALT12),
+-		SIG_EXPR_LIST_PTR(NORD5), SIG_EXPR_LIST_PTR(GPIOAA5));
++SIG_EXPR_DECL_SINGLE(VPOR7, VPO, T20_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR7, VPOOFF1, T20_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR7, VPOOFF2, T20_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOR7, VPO,
++		SIG_EXPR_PTR(VPOR7, VPO),
++		SIG_EXPR_PTR(VPOR7, VPOOFF1),
++		SIG_EXPR_PTR(VPOR7, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(T20, VPOR7, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(T20, SALT12, SALT12, T20_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(T20, NORD5, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(T20, GPIOAA5, GPIOAA5);
++PIN_DECL_(T20, SIG_EXPR_LIST_PTR(T20, VPOR7), SIG_EXPR_LIST_PTR(T20, SALT12),
++		SIG_EXPR_LIST_PTR(T20, NORD5), SIG_EXPR_LIST_PTR(T20, GPIOAA5));
+ FUNC_GROUP_DECL(SALT12, T20);
+ 
+ #define N18 214
+ #define N18_DESC	SIG_DESC_SET(SCUA4, 30)
+-SIG_EXPR_DECL(VPOR8, VPO, N18_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR8, VPOOFF1, N18_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR8, VPOOFF2, N18_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOR8, SIG_EXPR_PTR(VPOR8, VPO),
+-		SIG_EXPR_PTR(VPOR8, VPOOFF1), SIG_EXPR_PTR(VPOR8, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(SALT13, SALT13, N18_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(NORD6, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOAA6, GPIOAA6);
+-PIN_DECL_(N18, SIG_EXPR_LIST_PTR(VPOR8), SIG_EXPR_LIST_PTR(SALT13),
+-		SIG_EXPR_LIST_PTR(NORD6), SIG_EXPR_LIST_PTR(GPIOAA6));
++SIG_EXPR_DECL_SINGLE(VPOR8, VPO, N18_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR8, VPOOFF1, N18_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR8, VPOOFF2, N18_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOR8, VPO,
++		SIG_EXPR_PTR(VPOR8, VPO),
++		SIG_EXPR_PTR(VPOR8, VPOOFF1),
++		SIG_EXPR_PTR(VPOR8, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(N18, VPOR8, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(N18, SALT13, SALT13, N18_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(N18, NORD6, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(N18, GPIOAA6, GPIOAA6);
++PIN_DECL_(N18, SIG_EXPR_LIST_PTR(N18, VPOR8), SIG_EXPR_LIST_PTR(N18, SALT13),
++		SIG_EXPR_LIST_PTR(N18, NORD6), SIG_EXPR_LIST_PTR(N18, GPIOAA6));
+ FUNC_GROUP_DECL(SALT13, N18);
+ 
+ #define P19 215
+ #define P19_DESC	SIG_DESC_SET(SCUA4, 31)
+-SIG_EXPR_DECL(VPOR9, VPO, P19_DESC, VPO_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR9, VPOOFF1, P19_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_DECL(VPOR9, VPOOFF2, P19_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
+-SIG_EXPR_LIST_DECL(VPOR9, SIG_EXPR_PTR(VPOR9, VPO),
+-		SIG_EXPR_PTR(VPOR9, VPOOFF1), SIG_EXPR_PTR(VPOR9, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(SALT14, SALT14, P19_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(NORD7, PNOR, PNOR_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(GPIOAA7, GPIOAA7);
+-PIN_DECL_(P19, SIG_EXPR_LIST_PTR(VPOR9), SIG_EXPR_LIST_PTR(SALT14),
+-		SIG_EXPR_LIST_PTR(NORD7), SIG_EXPR_LIST_PTR(GPIOAA7));
++SIG_EXPR_DECL_SINGLE(VPOR9, VPO, P19_DESC, VPO_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR9, VPOOFF1, P19_DESC, VPOOFF1_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_DECL_SINGLE(VPOR9, VPOOFF2, P19_DESC, VPOOFF2_DESC, CRT_DVO_ES_DESC);
++SIG_EXPR_LIST_DECL(VPOR9, VPO,
++		SIG_EXPR_PTR(VPOR9, VPO),
++		SIG_EXPR_PTR(VPOR9, VPOOFF1),
++		SIG_EXPR_PTR(VPOR9, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(P19, VPOR9, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(P19, SALT14, SALT14, P19_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(P19, NORD7, PNOR, PNOR_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(P19, GPIOAA7, GPIOAA7);
++PIN_DECL_(P19, SIG_EXPR_LIST_PTR(P19, VPOR9), SIG_EXPR_LIST_PTR(P19, SALT14),
++		SIG_EXPR_LIST_PTR(P19, NORD7), SIG_EXPR_LIST_PTR(P19, GPIOAA7));
+ FUNC_GROUP_DECL(SALT14, P19);
+ 
+ #define N19 216
+ #define N19_DESC	SIG_DESC_SET(SCUA8, 0)
+-SIG_EXPR_DECL(VPODE, VPO, N19_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPODE, VPOOFF1, N19_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPODE, VPOOFF2, N19_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPODE, SIG_EXPR_PTR(VPODE, VPO),
+-		SIG_EXPR_PTR(VPODE, VPOOFF1), SIG_EXPR_PTR(VPODE, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(NOROE, PNOR, PNOR_DESC);
++SIG_EXPR_DECL_SINGLE(VPODE, VPO, N19_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPODE, VPOOFF1, N19_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPODE, VPOOFF2, N19_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPODE, VPO,
++		SIG_EXPR_PTR(VPODE, VPO),
++		SIG_EXPR_PTR(VPODE, VPOOFF1),
++		SIG_EXPR_PTR(VPODE, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(N19, VPODE, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(N19, NOROE, PNOR, PNOR_DESC);
+ PIN_DECL_2(N19, GPIOAB0, VPODE, NOROE);
+ 
+ #define T21 217
+ #define T21_DESC	SIG_DESC_SET(SCUA8, 1)
+-SIG_EXPR_DECL(VPOHS, VPO, T21_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOHS, VPOOFF1, T21_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOHS, VPOOFF2, T21_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOHS, SIG_EXPR_PTR(VPOHS, VPO),
+-		SIG_EXPR_PTR(VPOHS, VPOOFF1), SIG_EXPR_PTR(VPOHS, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(NORWE, PNOR, PNOR_DESC);
++SIG_EXPR_DECL_SINGLE(VPOHS, VPO, T21_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOHS, VPOOFF1, T21_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOHS, VPOOFF2, T21_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOHS, VPO,
++		SIG_EXPR_PTR(VPOHS, VPO),
++		SIG_EXPR_PTR(VPOHS, VPOOFF1),
++		SIG_EXPR_PTR(VPOHS, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(T21, VPOHS, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(T21, NORWE, PNOR, PNOR_DESC);
+ PIN_DECL_2(T21, GPIOAB1, VPOHS, NORWE);
+ 
+ FUNC_GROUP_DECL(PNOR, Y20, AB20, AB21, AA21, U21, W22, V22, W21, Y21, V21, Y22,
+@@ -1672,23 +1769,29 @@ FUNC_GROUP_DECL(PNOR, Y20, AB20, AB21, AA21, U21, W22, V22, W21, Y21, V21, Y22,
+ 
+ #define T22 218
+ #define T22_DESC	SIG_DESC_SET(SCUA8, 2)
+-SIG_EXPR_DECL(VPOVS, VPO, T22_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOVS, VPOOFF1, T22_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOVS, VPOOFF2, T22_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOVS, SIG_EXPR_PTR(VPOVS, VPO),
+-		SIG_EXPR_PTR(VPOVS, VPOOFF1), SIG_EXPR_PTR(VPOVS, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(WDTRST1, WDTRST1, T22_DESC);
++SIG_EXPR_DECL_SINGLE(VPOVS, VPO, T22_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOVS, VPOOFF1, T22_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOVS, VPOOFF2, T22_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOVS, VPO,
++		SIG_EXPR_PTR(VPOVS, VPO),
++		SIG_EXPR_PTR(VPOVS, VPOOFF1),
++		SIG_EXPR_PTR(VPOVS, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(T22, VPOVS, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(T22, WDTRST1, WDTRST1, T22_DESC);
+ PIN_DECL_2(T22, GPIOAB2, VPOVS, WDTRST1);
+ FUNC_GROUP_DECL(WDTRST1, T22);
+ 
+ #define R20 219
+ #define R20_DESC	SIG_DESC_SET(SCUA8, 3)
+-SIG_EXPR_DECL(VPOCLK, VPO, R20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOCLK, VPOOFF1, R20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_DECL(VPOCLK, VPOOFF2, R20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
+-SIG_EXPR_LIST_DECL(VPOCLK, SIG_EXPR_PTR(VPOCLK, VPO),
+-		SIG_EXPR_PTR(VPOCLK, VPOOFF1), SIG_EXPR_PTR(VPOCLK, VPOOFF2));
+-SIG_EXPR_LIST_DECL_SINGLE(WDTRST2, WDTRST2, R20_DESC);
++SIG_EXPR_DECL_SINGLE(VPOCLK, VPO, R20_DESC, VPO_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOCLK, VPOOFF1, R20_DESC, VPOOFF1_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_DECL_SINGLE(VPOCLK, VPOOFF2, R20_DESC, VPOOFF2_DESC, CRT_DVO_EN_DESC);
++SIG_EXPR_LIST_DECL(VPOCLK, VPO,
++		SIG_EXPR_PTR(VPOCLK, VPO),
++		SIG_EXPR_PTR(VPOCLK, VPOOFF1),
++		SIG_EXPR_PTR(VPOCLK, VPOOFF2));
++SIG_EXPR_LIST_ALIAS(R20, VPOCLK, VPO);
++SIG_EXPR_LIST_DECL_SINGLE(R20, WDTRST2, WDTRST2, R20_DESC);
+ PIN_DECL_2(R20, GPIOAB3, VPOCLK, WDTRST2);
+ FUNC_GROUP_DECL(WDTRST2, R20);
+ 
+@@ -1699,64 +1802,64 @@ FUNC_GROUP_DECL(VPO, V20, U19, R18, P18, R19, W20, U20, AA20, Y20, AB20,
+ #define ESPI_DESC	SIG_DESC_SET(HW_STRAP1, 25)
+ 
+ #define G21 224
+-SIG_EXPR_LIST_DECL_SINGLE(ESPID0, ESPI, ESPI_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(LAD0, LAD0, SIG_DESC_SET(SCUAC, 0));
++SIG_EXPR_LIST_DECL_SINGLE(G21, ESPID0, ESPI, ESPI_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(G21, LAD0, LAD0, SIG_DESC_SET(SCUAC, 0));
+ PIN_DECL_2(G21, GPIOAC0, ESPID0, LAD0);
+ FUNC_GROUP_DECL(LAD0, G21);
+ 
+ #define G20 225
+-SIG_EXPR_LIST_DECL_SINGLE(ESPID1, ESPI, ESPI_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(LAD1, LAD1, SIG_DESC_SET(SCUAC, 1));
++SIG_EXPR_LIST_DECL_SINGLE(G20, ESPID1, ESPI, ESPI_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(G20, LAD1, LAD1, SIG_DESC_SET(SCUAC, 1));
+ PIN_DECL_2(G20, GPIOAC1, ESPID1, LAD1);
+ FUNC_GROUP_DECL(LAD1, G20);
+ 
+ #define D22 226
+-SIG_EXPR_LIST_DECL_SINGLE(ESPID2, ESPI, ESPI_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(LAD2, LAD2, SIG_DESC_SET(SCUAC, 2));
++SIG_EXPR_LIST_DECL_SINGLE(D22, ESPID2, ESPI, ESPI_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(D22, LAD2, LAD2, SIG_DESC_SET(SCUAC, 2));
+ PIN_DECL_2(D22, GPIOAC2, ESPID2, LAD2);
+ FUNC_GROUP_DECL(LAD2, D22);
+ 
+ #define E22 227
+-SIG_EXPR_LIST_DECL_SINGLE(ESPID3, ESPI, ESPI_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(LAD3, LAD3, SIG_DESC_SET(SCUAC, 3));
++SIG_EXPR_LIST_DECL_SINGLE(E22, ESPID3, ESPI, ESPI_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(E22, LAD3, LAD3, SIG_DESC_SET(SCUAC, 3));
+ PIN_DECL_2(E22, GPIOAC3, ESPID3, LAD3);
+ FUNC_GROUP_DECL(LAD3, E22);
+ 
+ #define C22 228
+-SIG_EXPR_LIST_DECL_SINGLE(ESPICK, ESPI, ESPI_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(LCLK, LCLK, SIG_DESC_SET(SCUAC, 4));
++SIG_EXPR_LIST_DECL_SINGLE(C22, ESPICK, ESPI, ESPI_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(C22, LCLK, LCLK, SIG_DESC_SET(SCUAC, 4));
+ PIN_DECL_2(C22, GPIOAC4, ESPICK, LCLK);
+ FUNC_GROUP_DECL(LCLK, C22);
+ 
+ #define F21 229
+-SIG_EXPR_LIST_DECL_SINGLE(ESPICS, ESPI, ESPI_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(LFRAME, LFRAME, SIG_DESC_SET(SCUAC, 5));
++SIG_EXPR_LIST_DECL_SINGLE(F21, ESPICS, ESPI, ESPI_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(F21, LFRAME, LFRAME, SIG_DESC_SET(SCUAC, 5));
+ PIN_DECL_2(F21, GPIOAC5, ESPICS, LFRAME);
+ FUNC_GROUP_DECL(LFRAME, F21);
+ 
+ #define F22 230
+-SIG_EXPR_LIST_DECL_SINGLE(ESPIALT, ESPI, ESPI_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(LSIRQ, LSIRQ, SIG_DESC_SET(SCUAC, 6));
++SIG_EXPR_LIST_DECL_SINGLE(F22, ESPIALT, ESPI, ESPI_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(F22, LSIRQ, LSIRQ, SIG_DESC_SET(SCUAC, 6));
+ PIN_DECL_2(F22, GPIOAC6, ESPIALT, LSIRQ);
+ FUNC_GROUP_DECL(LSIRQ, F22);
+ 
+ #define G22 231
+-SIG_EXPR_LIST_DECL_SINGLE(ESPIRST, ESPI, ESPI_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(LPCRST, LPCRST, SIG_DESC_SET(SCUAC, 7));
++SIG_EXPR_LIST_DECL_SINGLE(G22, ESPIRST, ESPI, ESPI_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(G22, LPCRST, LPCRST, SIG_DESC_SET(SCUAC, 7));
+ PIN_DECL_2(G22, GPIOAC7, ESPIRST, LPCRST);
+ FUNC_GROUP_DECL(LPCRST, G22);
+ 
+ FUNC_GROUP_DECL(ESPI, G21, G20, D22, E22, C22, F21, F22, G22);
+ 
+ #define A7 232
+-SIG_EXPR_LIST_DECL_SINGLE(USB2AHDP, USB2AH, SIG_DESC_SET(SCU90, 29));
+-SIG_EXPR_LIST_DECL_SINGLE(USB2ADDP, USB2AD, SIG_DESC_BIT(SCU90, 29, 0));
+-PIN_DECL_(A7, SIG_EXPR_LIST_PTR(USB2AHDP), SIG_EXPR_LIST_PTR(USB2ADDP));
++SIG_EXPR_LIST_DECL_SINGLE(A7, USB2AHDP, USB2AH, SIG_DESC_SET(SCU90, 29));
++SIG_EXPR_LIST_DECL_SINGLE(A7, USB2ADDP, USB2AD, SIG_DESC_BIT(SCU90, 29, 0));
++PIN_DECL_(A7, SIG_EXPR_LIST_PTR(A7, USB2AHDP), SIG_EXPR_LIST_PTR(A7, USB2ADDP));
+ 
+ #define A8 233
+-SIG_EXPR_LIST_DECL_SINGLE(USB2AHDN, USB2AH, SIG_DESC_SET(SCU90, 29));
+-SIG_EXPR_LIST_DECL_SINGLE(USB2ADDN, USB2AD, SIG_DESC_BIT(SCU90, 29, 0));
+-PIN_DECL_(A8, SIG_EXPR_LIST_PTR(USB2AHDN), SIG_EXPR_LIST_PTR(USB2ADDN));
++SIG_EXPR_LIST_DECL_SINGLE(A8, USB2AHDN, USB2AH, SIG_DESC_SET(SCU90, 29));
++SIG_EXPR_LIST_DECL_SINGLE(A8, USB2ADDN, USB2AD, SIG_DESC_BIT(SCU90, 29, 0));
++PIN_DECL_(A8, SIG_EXPR_LIST_PTR(A8, USB2AHDN), SIG_EXPR_LIST_PTR(A8, USB2ADDN));
+ 
+ FUNC_GROUP_DECL(USB2AH, A7, A8);
+ FUNC_GROUP_DECL(USB2AD, A7, A8);
+@@ -1767,24 +1870,28 @@ FUNC_GROUP_DECL(USB2AD, A7, A8);
+ #define USB2BH2_DESC { ASPEED_IP_SCU, SCU94, GENMASK(14, 13), 3, 0 }
+ 
+ #define B6 234
+-SIG_EXPR_LIST_DECL_SINGLE(USB11BDP, USB11BHID, USB11BHID_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(USB2BDDP, USB2BD, USB2BD_DESC);
+-SIG_EXPR_DECL(USB2BHDP1, USB2BH, USB2BH1_DESC);
+-SIG_EXPR_DECL(USB2BHDP2, USB2BH, USB2BH2_DESC);
+-SIG_EXPR_LIST_DECL(USB2BHDP, SIG_EXPR_PTR(USB2BHDP1, USB2BH),
++SIG_EXPR_LIST_DECL_SINGLE(B6, USB11BDP, USB11BHID, USB11BHID_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(B6, USB2BDDP, USB2BD, USB2BD_DESC);
++SIG_EXPR_DECL_SINGLE(USB2BHDP1, USB2BH, USB2BH1_DESC);
++SIG_EXPR_DECL_SINGLE(USB2BHDP2, USB2BH, USB2BH2_DESC);
++SIG_EXPR_LIST_DECL(USB2BHDP, USB2BH,
++		SIG_EXPR_PTR(USB2BHDP1, USB2BH),
+ 		SIG_EXPR_PTR(USB2BHDP2, USB2BH));
+-PIN_DECL_(B6, SIG_EXPR_LIST_PTR(USB11BDP), SIG_EXPR_LIST_PTR(USB2BDDP),
+-		SIG_EXPR_LIST_PTR(USB2BHDP));
++SIG_EXPR_LIST_ALIAS(B6, USB2BHDP, USB2BH);
++PIN_DECL_(B6, SIG_EXPR_LIST_PTR(B6, USB11BDP), SIG_EXPR_LIST_PTR(B6, USB2BDDP),
++		SIG_EXPR_LIST_PTR(B6, USB2BHDP));
+ 
+ #define A6 235
+-SIG_EXPR_LIST_DECL_SINGLE(USB11BDN, USB11BHID, USB11BHID_DESC);
+-SIG_EXPR_LIST_DECL_SINGLE(USB2BDN, USB2BD, USB2BD_DESC);
+-SIG_EXPR_DECL(USB2BHDN1, USB2BH, USB2BH1_DESC);
+-SIG_EXPR_DECL(USB2BHDN2, USB2BH, USB2BH2_DESC);
+-SIG_EXPR_LIST_DECL(USB2BHDN, SIG_EXPR_PTR(USB2BHDN1, USB2BH),
++SIG_EXPR_LIST_DECL_SINGLE(A6, USB11BDN, USB11BHID, USB11BHID_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(A6, USB2BDN, USB2BD, USB2BD_DESC);
++SIG_EXPR_DECL_SINGLE(USB2BHDN1, USB2BH, USB2BH1_DESC);
++SIG_EXPR_DECL_SINGLE(USB2BHDN2, USB2BH, USB2BH2_DESC);
++SIG_EXPR_LIST_DECL(USB2BHDN, USB2BH,
++		SIG_EXPR_PTR(USB2BHDN1, USB2BH),
+ 		SIG_EXPR_PTR(USB2BHDN2, USB2BH));
+-PIN_DECL_(A6, SIG_EXPR_LIST_PTR(USB11BDN), SIG_EXPR_LIST_PTR(USB2BDN),
+-		SIG_EXPR_LIST_PTR(USB2BHDN));
++SIG_EXPR_LIST_ALIAS(A6, USB2BHDN, USB2BH);
++PIN_DECL_(A6, SIG_EXPR_LIST_PTR(A6, USB11BDN), SIG_EXPR_LIST_PTR(A6, USB2BDN),
++		SIG_EXPR_LIST_PTR(A6, USB2BHDN));
+ 
+ FUNC_GROUP_DECL(USB11BHID, B6, A6);
+ FUNC_GROUP_DECL(USB2BD, B6, A6);
+diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+index 964dd5b242ac..474820df6263 100644
+--- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
++++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+@@ -162,10 +162,11 @@
+  * * Enabling lower priority signals requires higher priority signals be
+  *   disabled
+  *
+- * * A function represents a set of signals; functions are distinct if their
+- *   sets of signals are not equal
++ * * A function represents a set of signals; functions are distinct if they
++ *   do not share a subset of signals (and may be distinct if they are a
++ *   strict subset).
+  *
+- * * Signals participate in one or more functions
++ * * Signals participate in one or more functions or groups
+  *
+  * * A function is described by an expression of one or more signal
+  *   descriptors, which compare bit values in a register
+@@ -508,19 +509,19 @@ struct aspeed_pin_desc {
+  */
+ #define SIG_DESC_SET(reg, idx) SIG_DESC_IP_BIT(ASPEED_IP_SCU, reg, idx, 1)
+ 
+-#define SIG_DESC_LIST_SYM(sig, func) sig_descs_ ## sig ## _ ## func
+-#define SIG_DESC_LIST_DECL(sig, func, ...) \
+-	static const struct aspeed_sig_desc SIG_DESC_LIST_SYM(sig, func)[] = \
++#define SIG_DESC_LIST_SYM(sig, group) sig_descs_ ## sig ## _ ## group
++#define SIG_DESC_LIST_DECL(sig, group, ...) \
++	static const struct aspeed_sig_desc SIG_DESC_LIST_SYM(sig, group)[] = \
+ 		{ __VA_ARGS__ }
+ 
+-#define SIG_EXPR_SYM(sig, func) sig_expr_ ## sig ## _ ## func
+-#define SIG_EXPR_DECL_(sig, func) \
+-	static const struct aspeed_sig_expr SIG_EXPR_SYM(sig, func) = \
++#define SIG_EXPR_SYM(sig, group) sig_expr_ ## sig ## _ ## group
++#define SIG_EXPR_DECL_(sig, group, func) \
++	static const struct aspeed_sig_expr SIG_EXPR_SYM(sig, group) = \
+ 	{ \
+ 		.signal = #sig, \
+ 		.function = #func, \
+-		.ndescs = ARRAY_SIZE(SIG_DESC_LIST_SYM(sig, func)), \
+-		.descs = &(SIG_DESC_LIST_SYM(sig, func))[0], \
++		.ndescs = ARRAY_SIZE(SIG_DESC_LIST_SYM(sig, group)), \
++		.descs = &(SIG_DESC_LIST_SYM(sig, group))[0], \
+ 	}
+ 
+ /**
+@@ -533,16 +534,16 @@ struct aspeed_pin_desc {
+  *
+  * For example, the following declares the ROMD8 signal for the ROM16 function:
+  *
+- *     SIG_EXPR_DECL(ROMD8, ROM16, SIG_DESC_SET(SCU90, 6));
++ *     SIG_EXPR_DECL(ROMD8, ROM16, ROM16, SIG_DESC_SET(SCU90, 6));
+  *
+  * And with multiple signal descriptors:
+  *
+- *     SIG_EXPR_DECL(ROMD8, ROM16S, SIG_DESC_SET(HW_STRAP1, 4),
++ *     SIG_EXPR_DECL(ROMD8, ROM16S, ROM16S, SIG_DESC_SET(HW_STRAP1, 4),
+  *              { HW_STRAP1, GENMASK(1, 0), 0, 0 });
+  */
+-#define SIG_EXPR_DECL(sig, func, ...) \
+-	SIG_DESC_LIST_DECL(sig, func, __VA_ARGS__); \
+-	SIG_EXPR_DECL_(sig, func)
++#define SIG_EXPR_DECL(sig, group, func, ...) \
++	SIG_DESC_LIST_DECL(sig, group, __VA_ARGS__); \
++	SIG_EXPR_DECL_(sig, group, func)
+ 
+ /**
+  * Declare a pointer to a signal expression
+@@ -550,9 +551,9 @@ struct aspeed_pin_desc {
+  * @sig: The macro symbol name for the signal (subjected to token pasting)
+  * @func: The macro symbol name for the function (subjected to token pasting)
+  */
+-#define SIG_EXPR_PTR(sig, func) (&SIG_EXPR_SYM(sig, func))
++#define SIG_EXPR_PTR(sig, group) (&SIG_EXPR_SYM(sig, group))
+ 
+-#define SIG_EXPR_LIST_SYM(sig) sig_exprs_ ## sig
++#define SIG_EXPR_LIST_SYM(sig, group) sig_exprs_ ## sig ## _ ## group
+ 
+ /**
+  * Declare a signal expression list for reference in a struct aspeed_pin_prio.
+@@ -563,36 +564,89 @@ struct aspeed_pin_desc {
+  * For example, the 16-bit ROM bus can be enabled by one of two possible signal
+  * expressions:
+  *
+- *     SIG_EXPR_DECL(ROMD8, ROM16, SIG_DESC_SET(SCU90, 6));
+- *     SIG_EXPR_DECL(ROMD8, ROM16S, SIG_DESC_SET(HW_STRAP1, 4),
++ *     SIG_EXPR_DECL(ROMD8, ROM16, ROM16, SIG_DESC_SET(SCU90, 6));
++ *     SIG_EXPR_DECL(ROMD8, ROM16S, ROM16S, SIG_DESC_SET(HW_STRAP1, 4),
+  *              { HW_STRAP1, GENMASK(1, 0), 0, 0 });
+  *     SIG_EXPR_LIST_DECL(ROMD8, SIG_EXPR_PTR(ROMD8, ROM16),
+  *              SIG_EXPR_PTR(ROMD8, ROM16S));
+  */
+-#define SIG_EXPR_LIST_DECL(sig, ...) \
+-	static const struct aspeed_sig_expr *SIG_EXPR_LIST_SYM(sig)[] = \
++#define SIG_EXPR_LIST_DECL(sig, group, ...) \
++	static const struct aspeed_sig_expr *SIG_EXPR_LIST_SYM(sig, group)[] =\
+ 		{ __VA_ARGS__, NULL }
+ 
++#define stringify(x) #x
++#define istringify(x) stringify(x)
 +
 +/**
-+ * Configure a pin's signal by applying an expression's descriptor state for
-+ * all descriptors in the expression.
++ * Create an expression symbol alias from (signal, group) to (pin, signal).
 + *
-+ * @ctx: The pinmux context
-+ * @expr: The expression associated with the function whose signal is to be
-+ *        configured
-+ * @enable: true to enable an function's signal through a pin's signal
-+ *          expression, false to disable the function's signal
++ * @pin: The pin number
++ * @sig: The signal name
++ * @group: The name of the group of which the pin is a member that is
++ *         associated with the function's signal
 + *
-+ * Return: 0 if the expression is configured as requested and a negative error
-+ * code otherwise
++ * Using an alias in this way enables detection of copy/paste errors (defining
++ * the signal for a group multiple times) whilst enabling multiple pin groups
++ * to exist for a signal without intrusive side-effects on defining the list of
++ * signals available on a pin.
 + */
-+static int aspeed_g6_sig_expr_set(const struct aspeed_pinmux_data *ctx,
-+				  const struct aspeed_sig_expr *expr,
-+				  bool enable)
-+{
-+	int ret;
-+	int i;
++#define SIG_EXPR_LIST_ALIAS(pin, sig, group) \
++	static const struct aspeed_sig_expr *\
++		SIG_EXPR_LIST_SYM(pin, sig)[ARRAY_SIZE(SIG_EXPR_LIST_SYM(sig, group))] \
++		__attribute__((alias(istringify(SIG_EXPR_LIST_SYM(sig, group)))))
 +
-+	for (i = 0; i < expr->ndescs; i++) {
-+		const struct aspeed_sig_desc *desc = &expr->descs[i];
-+		u32 pattern = enable ? desc->enable : desc->disable;
-+		u32 val = (pattern << __ffs(desc->mask));
-+		bool is_strap;
+ /**
+  * A short-hand macro for declaring a function expression and an expression
+- * list with a single function.
++ * list with a single expression (SE) and a single group (SG) of pins.
+  *
+- * @func: A macro symbol name for the function (is subjected to token pasting)
++ * @pin: The pin the signal will be routed to
++ * @sig: The signal that will be routed to the pin for the function
++ * @func: A macro symbol name for the function
+  * @...: Function descriptors that define the function expression
+  *
+  * For example, signal NCTS6 participates in its own function with one group:
+  *
+- *     SIG_EXPR_LIST_DECL_SINGLE(NCTS6, NCTS6, SIG_DESC_SET(SCU90, 7));
++ *     SIG_EXPR_LIST_DECL_SINGLE(A18, NCTS6, NCTS6, SIG_DESC_SET(SCU90, 7));
+  */
+-#define SIG_EXPR_LIST_DECL_SINGLE(sig, func, ...) \
++#define SIG_EXPR_LIST_DECL_SESG(pin, sig, func, ...) \
+ 	SIG_DESC_LIST_DECL(sig, func, __VA_ARGS__); \
+-	SIG_EXPR_DECL_(sig, func); \
+-	SIG_EXPR_LIST_DECL(sig, SIG_EXPR_PTR(sig, func))
++	SIG_EXPR_DECL_(sig, func, func); \
++	SIG_EXPR_LIST_DECL(sig, func, SIG_EXPR_PTR(sig, func)); \
++	SIG_EXPR_LIST_ALIAS(pin, sig, func)
+ 
+-#define SIG_EXPR_LIST_DECL_DUAL(sig, f0, f1) \
+-	SIG_EXPR_LIST_DECL(sig, SIG_EXPR_PTR(sig, f0), SIG_EXPR_PTR(sig, f1))
++/**
++ * Similar to the above, but for pins with a single expression (SE) and
++ * multiple groups (MG) of pins.
++ *
++ * @pin: The pin the signal will be routed to
++ * @sig: The signal that will be routed to the pin for the function
++ * @group: The name of the function's pin group in which the pin participates
++ * @func: A macro symbol name for the function
++ * @...: Function descriptors that define the function expression
++ */
++#define SIG_EXPR_LIST_DECL_SEMG(pin, sig, group, func, ...) \
++	SIG_DESC_LIST_DECL(sig, group, __VA_ARGS__); \
++	SIG_EXPR_DECL_(sig, group, func); \
++	SIG_EXPR_LIST_DECL(sig, group, SIG_EXPR_PTR(sig, group)); \
++	SIG_EXPR_LIST_ALIAS(pin, sig, group)
+ 
+-#define SIG_EXPR_LIST_PTR(sig) (&SIG_EXPR_LIST_SYM(sig)[0])
++/**
++ * Similar to the above, but for pins with a dual expressions (DE) and
++ * and a single group (SG) of pins.
++ *
++ * @pin: The pin the signal will be routed to
++ * @sig: The signal that will be routed to the pin for the function
++ * @group: The name of the function's pin group in which the pin participates
++ * @func: A macro symbol name for the function
++ * @...: Function descriptors that define the function expression
++ */
++#define SIG_EXPR_LIST_DECL_DESG(pin, sig, f0, f1) \
++	SIG_EXPR_LIST_DECL(sig, f0, \
++			   SIG_EXPR_PTR(sig, f0), \
++			   SIG_EXPR_PTR(sig, f1)); \
++	SIG_EXPR_LIST_ALIAS(pin, sig, f0)
 +
-+		if (!ctx->maps[desc->ip])
-+			return -ENODEV;
++#define SIG_EXPR_LIST_PTR(sig, group) SIG_EXPR_LIST_SYM(sig, group)
+ 
+ #define PIN_EXPRS_SYM(pin) pin_exprs_ ## pin
+ #define PIN_EXPRS_PTR(pin) (&PIN_EXPRS_SYM(pin)[0])
+@@ -618,8 +672,9 @@ struct aspeed_pin_desc {
+  *     PIN_DECL_1(E3, GPIOK0, SCL5);
+  */
+ #define PIN_DECL_1(pin, other, sig) \
+-	SIG_EXPR_LIST_DECL_SINGLE(other, other); \
+-	PIN_DECL_(pin, SIG_EXPR_LIST_PTR(sig), SIG_EXPR_LIST_PTR(other))
++	SIG_EXPR_LIST_DECL_SESG(pin, other, other); \
++	PIN_DECL_(pin, SIG_EXPR_LIST_PTR(pin, sig), \
++		  SIG_EXPR_LIST_PTR(pin, other))
+ 
+ /**
+  * Single signal, single function pin declaration
+@@ -634,9 +689,10 @@ struct aspeed_pin_desc {
+  *    SSSF_PIN_DECL(A4, GPIOA2, TIMER3, SIG_DESC_SET(SCU80, 2));
+  */
+ #define SSSF_PIN_DECL(pin, other, sig, ...) \
+-	SIG_EXPR_LIST_DECL_SINGLE(sig, sig, __VA_ARGS__); \
+-	SIG_EXPR_LIST_DECL_SINGLE(other, other); \
+-	PIN_DECL_(pin, SIG_EXPR_LIST_PTR(sig), SIG_EXPR_LIST_PTR(other)); \
++	SIG_EXPR_LIST_DECL_SESG(pin, sig, sig, __VA_ARGS__); \
++	SIG_EXPR_LIST_DECL_SESG(pin, other, other); \
++	PIN_DECL_(pin, SIG_EXPR_LIST_PTR(pin, sig), \
++		  SIG_EXPR_LIST_PTR(pin, other)); \
+ 	FUNC_GROUP_DECL(sig, pin)
+ /**
+  * Declare a two-signal pin
+@@ -658,30 +714,38 @@ struct aspeed_pin_desc {
+  *     PIN_DECL_2(A8, GPIOH0, ROMD8, NCTS6);
+  */
+ #define PIN_DECL_2(pin, other, high, low) \
+-	SIG_EXPR_LIST_DECL_SINGLE(other, other); \
++	SIG_EXPR_LIST_DECL_SESG(pin, other, other); \
+ 	PIN_DECL_(pin, \
+-			SIG_EXPR_LIST_PTR(high), \
+-			SIG_EXPR_LIST_PTR(low), \
+-			SIG_EXPR_LIST_PTR(other))
++			SIG_EXPR_LIST_PTR(pin, high), \
++			SIG_EXPR_LIST_PTR(pin, low), \
++			SIG_EXPR_LIST_PTR(pin, other))
+ 
+ #define PIN_DECL_3(pin, other, high, medium, low) \
+-	SIG_EXPR_LIST_DECL_SINGLE(other, other); \
++	SIG_EXPR_LIST_DECL_SESG(pin, other, other); \
+ 	PIN_DECL_(pin, \
+-			SIG_EXPR_LIST_PTR(high), \
+-			SIG_EXPR_LIST_PTR(medium), \
+-			SIG_EXPR_LIST_PTR(low), \
+-			SIG_EXPR_LIST_PTR(other))
++			SIG_EXPR_LIST_PTR(pin, high), \
++			SIG_EXPR_LIST_PTR(pin, medium), \
++			SIG_EXPR_LIST_PTR(pin, low), \
++			SIG_EXPR_LIST_PTR(pin, other))
 +
-+		WARN_ON(desc->ip != ASPEED_IP_SCU);
-+		is_strap = desc->reg == SCU500 || desc->reg == SCU510;
++#define GROUP_SYM(group) group_pins_ ## group
++#define GROUP_DECL(group, ...) \
++	static const int GROUP_SYM(group)[] = { __VA_ARGS__ }
 +
-+		if (is_strap) {
-+			/*
-+			 * The AST2600 has write protection mask registers for
-+			 * the hardware strapping in SCU508 and SCU518. Assume
-+			 * that if the platform doesn't want the strapping
-+			 * values changed that it has set the write mask.
-+			 *
-+			 * The strapping registers implement write-1-clear
-+			 * behaviour. SCU500 is paired with clear writes on
-+			 * SCU504, likewise SCU510 is paired with SCU514.
-+			 */
-+			u32 clear = ~val & desc->mask;
-+			u32 w1c = desc->reg + 4;
++#define FUNC_SYM(func) func_groups_ ## func
++#define FUNC_DECL_(func, ...) \
++	static const char *FUNC_SYM(func)[] = { __VA_ARGS__ }
 +
-+			if (clear)
-+				ret = regmap_update_bits(ctx->maps[desc->ip],
-+							 w1c, desc->mask,
-+							 clear);
-+		}
-+
-+		ret = regmap_update_bits(ctx->maps[desc->ip], desc->reg,
-+					 desc->mask, val);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = aspeed_sig_expr_eval(ctx, expr, enable);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!ret)
-+		return -EPERM;
-+	return 0;
-+}
-+
-+static const struct aspeed_pinmux_ops aspeed_g5_ops = {
-+	.set = aspeed_g6_sig_expr_set,
-+};
-+
-+static struct aspeed_pinctrl_data aspeed_g6_pinctrl_data = {
-+	.pins = aspeed_g6_pins,
-+	.npins = ARRAY_SIZE(aspeed_g6_pins),
-+	.pinmux = {
-+		.ops = &aspeed_g5_ops,
-+		.groups = aspeed_g6_groups,
-+		.ngroups = ARRAY_SIZE(aspeed_g6_groups),
-+		.functions = aspeed_g6_functions,
-+		.nfunctions = ARRAY_SIZE(aspeed_g6_functions),
-+	},
-+};
-+
-+static const struct pinmux_ops aspeed_g6_pinmux_ops = {
-+	.get_functions_count = aspeed_pinmux_get_fn_count,
-+	.get_function_name = aspeed_pinmux_get_fn_name,
-+	.get_function_groups = aspeed_pinmux_get_fn_groups,
-+	.set_mux = aspeed_pinmux_set_mux,
-+	.gpio_request_enable = aspeed_gpio_request_enable,
-+	.strict = true,
-+};
-+
-+static const struct pinctrl_ops aspeed_g6_pinctrl_ops = {
-+	.get_groups_count = aspeed_pinctrl_get_groups_count,
-+	.get_group_name = aspeed_pinctrl_get_group_name,
-+	.get_group_pins = aspeed_pinctrl_get_group_pins,
-+	.pin_dbg_show = aspeed_pinctrl_pin_dbg_show,
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
-+	.dt_free_map = pinctrl_utils_free_map,
-+};
-+
-+static struct pinctrl_desc aspeed_g6_pinctrl_desc = {
-+	.name = "aspeed-g6-pinctrl",
-+	.pins = aspeed_g6_pins,
-+	.npins = ARRAY_SIZE(aspeed_g6_pins),
-+	.pctlops = &aspeed_g6_pinctrl_ops,
-+	.pmxops = &aspeed_g6_pinmux_ops,
-+};
-+
-+static int aspeed_g6_pinctrl_probe(struct platform_device *pdev)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(aspeed_g6_pins); i++)
-+		aspeed_g6_pins[i].number = i;
-+
-+	return aspeed_pinctrl_probe(pdev, &aspeed_g6_pinctrl_desc,
-+			&aspeed_g6_pinctrl_data);
-+}
-+
-+static const struct of_device_id aspeed_g6_pinctrl_of_match[] = {
-+	{ .compatible = "aspeed,ast2600-pinctrl", },
-+	{ },
-+};
-+
-+static struct platform_driver aspeed_g6_pinctrl_driver = {
-+	.probe = aspeed_g6_pinctrl_probe,
-+	.driver = {
-+		.name = "aspeed-g6-pinctrl",
-+		.of_match_table = aspeed_g6_pinctrl_of_match,
-+	},
-+};
-+
-+static int aspeed_g6_pinctrl_init(void)
-+{
-+	return platform_driver_register(&aspeed_g6_pinctrl_driver);
-+}
-+
-+arch_initcall(aspeed_g6_pinctrl_init);
++#define FUNC_DECL_2(func, one, two) FUNC_DECL_(func, #one, #two)
+ 
+-#define PIN_GROUP_SYM(func) pins_ ## func
+-#define FUNC_GROUP_SYM(func) groups_ ## func
+ #define FUNC_GROUP_DECL(func, ...) \
+-	static const int PIN_GROUP_SYM(func)[] = { __VA_ARGS__ }; \
+-	static const char *FUNC_GROUP_SYM(func)[] = { #func }
++	GROUP_DECL(func, __VA_ARGS__); \
++	FUNC_DECL_(func, #func)
+ 
+ 
+ #define GPIO_PIN_DECL(pin, gpio) \
+-	SIG_EXPR_LIST_DECL_SINGLE(gpio, gpio); \
+-	PIN_DECL_(pin, SIG_EXPR_LIST_PTR(gpio))
++	SIG_EXPR_LIST_DECL_SESG(pin, gpio, gpio); \
++	PIN_DECL_(pin, SIG_EXPR_LIST_PTR(pin, gpio))
+ 
+ struct aspeed_pin_group {
+ 	const char *name;
+@@ -691,8 +755,8 @@ struct aspeed_pin_group {
+ 
+ #define ASPEED_PINCTRL_GROUP(name_) { \
+ 	.name = #name_, \
+-	.pins = &(PIN_GROUP_SYM(name_))[0], \
+-	.npins = ARRAY_SIZE(PIN_GROUP_SYM(name_)), \
++	.pins = &(GROUP_SYM(name_))[0], \
++	.npins = ARRAY_SIZE(GROUP_SYM(name_)), \
+ }
+ 
+ struct aspeed_pin_function {
+@@ -703,8 +767,8 @@ struct aspeed_pin_function {
+ 
+ #define ASPEED_PINCTRL_FUNC(name_, ...) { \
+ 	.name = #name_, \
+-	.groups = &FUNC_GROUP_SYM(name_)[0], \
+-	.ngroups = ARRAY_SIZE(FUNC_GROUP_SYM(name_)), \
++	.groups = &FUNC_SYM(name_)[0], \
++	.ngroups = ARRAY_SIZE(FUNC_SYM(name_)), \
+ }
+ 
+ struct aspeed_pinmux_data;
 -- 
 2.20.1
 
