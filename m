@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D839C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0050C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8333217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A3220C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429674;
-	bh=+q4NSSOLfFejeKgjm+a4Zt1g+dMeLao8no5g7S/GTkE=;
+	s=default; t=1564429676;
+	bh=BHGsMctAAKajpWPyduF1Vy/iq5jNO/ew+a7KQB/4AGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+xfCtlrZvZ8AYC/FScFGijRoRP6uiGrRHULfVd5qAOxisMI5j8+TiEIPsabrd+MR
-	 KT60ps6BxUWhRSqtxa267GIcXRB6YNg8zZ5EXSDTtM1yb09XpIeyCX2XlMPOkwqxX0
-	 rOzsPvrbAgWyybOdi9ZD1wyVcwvpqI8nvE34z3mA=
+	b=nhc+AdL/vdLftJH8XRselnNVQYRK0Q+BDx6U5kTp4FJswVZpW3Q5TPtFWPpgDBC1C
+	 pAFyuAJdefJAUar265Zp6HJle1DWcmXdHvgnOxObieIm61NlWe4Ppm8sBnCKA1PurO
+	 HzH3lnbwXi71oXIU7oNu5DHTA5STC0gdiFP05CTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390039AbfG2Trw (ORCPT
+        id S2390392AbfG2Trz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:47:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37626 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:47:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390380AbfG2Trr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:47:47 -0400
+        id S2389961AbfG2Trw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:47:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBC8C2054F;
-        Mon, 29 Jul 2019 19:47:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E87E2054F;
+        Mon, 29 Jul 2019 19:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429667;
-        bh=+q4NSSOLfFejeKgjm+a4Zt1g+dMeLao8no5g7S/GTkE=;
+        s=default; t=1564429671;
+        bh=BHGsMctAAKajpWPyduF1Vy/iq5jNO/ew+a7KQB/4AGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OH4KhzE7YFQgBNtBmHrGZr3SZ0USh7Gwi41qyaBSjtCOkCyVSIXh9sH0CHsfvdaY/
-         xIaTYgG6FClex71Zmk35qZfGakFIJ0tfbWY9t9qTt9ANne9pm9SLMlJ7rz9dyWueSU
-         xDMflESRVKNoBySD0yySxHXL+RCCXZE2i3KqXFK8=
+        b=WNkZZ8xf6UZUrrOAlnVPjvK5eOAv1xRn1GUfVX2OCnh3btBzKgZ2nHIczbzOKaBxq
+         fX+8P//Pa4V+Cy4ebWTRVgU/VK7bBaBL7sEOWRit+Z40hmDR8NbRV6sYLbOvGqtyk7
+         hEuOzkYd8fdGlr8L4zoSCJBdRG6Sed2CiKCzC9o4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Riley <davidriley@chromium.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+        stable@vger.kernel.org, Samson Tam <Samson.Tam@amd.com>,
+        Jun Lei <Jun.Lei@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 056/215] drm/virtio: Add memory barriers for capset cache.
-Date:   Mon, 29 Jul 2019 21:20:52 +0200
-Message-Id: <20190729190750.215529932@linuxfoundation.org>
+Subject: [PATCH 5.2 057/215] drm/amd/display: set link->dongle_max_pix_clk to 0 on a disconnect
+Date:   Mon, 29 Jul 2019 21:20:53 +0200
+Message-Id: <20190729190750.398062385@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,48 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9ff3a5c88e1f1ab17a31402b96d45abe14aab9d7 ]
+[ Upstream commit 233d87a579b8adcc6da5823fa507ecb6675e7562 ]
 
-After data is copied to the cache entry, atomic_set is used indicate
-that the data is the entry is valid without appropriate memory barriers.
-Similarly the read side was missing the corresponding memory barriers.
+[Why]
+Found issue in EDID Emulation where if we connect a display using
+ a passive HDMI-DP dongle, disconnect it and then try to emulate
+ a display using DP, we could not see 4K modes.  This was because
+ on a disconnect, dongle_max_pix_clk was still set so when we
+ emulate using DP, in dc_link_validate_mode_timing(), it would
+ think we were still using a dongle and limit the modes we support.
 
-Signed-off-by: David Riley <davidriley@chromium.org>
-Link: http://patchwork.freedesktop.org/patch/msgid/20190610211810.253227-5-davidriley@chromium.org
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+[How]
+In dc_link_detect(), set dongle_max_pix_clk to 0 when we detect
+ a hotplug out ( if new_connection_type = dc_connection_none ).
+
+Signed-off-by: Samson Tam <Samson.Tam@amd.com>
+Reviewed-by: Jun Lei <Jun.Lei@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 3 +++
- drivers/gpu/drm/virtio/virtgpu_vq.c    | 2 ++
- 2 files changed, 5 insertions(+)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index 949a264985fc..19fbffd0f7a3 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -542,6 +542,9 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
- 	if (!ret)
- 		return -EBUSY;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index b37ecc3ede61..a3ff33ff6da1 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -960,6 +960,12 @@ bool dc_link_detect(struct dc_link *link, enum dc_detect_reason reason)
  
-+	/* is_valid check must proceed before copy of the cache entry. */
-+	smp_rmb();
-+
- 	ptr = cache_ent->caps_cache;
+ 		link->type = dc_connection_none;
+ 		sink_caps.signal = SIGNAL_TYPE_NONE;
++		/* When we unplug a passive DP-HDMI dongle connection, dongle_max_pix_clk
++		 *  is not cleared. If we emulate a DP signal on this connection, it thinks
++		 *  the dongle is still there and limits the number of modes we can emulate.
++		 *  Clear dongle_max_pix_clk on disconnect to fix this
++		 */
++		link->dongle_max_pix_clk = 0;
+ 	}
  
- copy_exit:
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 5bb0f0a084e9..a7684f9c80db 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -583,6 +583,8 @@ static void virtio_gpu_cmd_capset_cb(struct virtio_gpu_device *vgdev,
- 		    cache_ent->id == le32_to_cpu(cmd->capset_id)) {
- 			memcpy(cache_ent->caps_cache, resp->capset_data,
- 			       cache_ent->size);
-+			/* Copy must occur before is_valid is signalled. */
-+			smp_wmb();
- 			atomic_set(&cache_ent->is_valid, 1);
- 			break;
- 		}
+ 	LINK_INFO("link=%d, dc_sink_in=%p is now %s prev_sink=%p dpcd same=%d edid same=%d\n",
 -- 
 2.20.1
 
