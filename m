@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11B7C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A88AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 834C8206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C79B205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429286;
-	bh=gMtJx6n2k6Cgtgh0FR7msq+MIrOSZmtui9BJYIUlbLk=;
+	s=default; t=1564429289;
+	bh=7M2fhzTcQpuBUatI/D1JN5eOLvcGekCgBEf/1DH9Zlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ATzvzGLUinEIspki7AxYERchigafrsFEg5S2zPIT9Wry4IefntfW4V3Ubj5BXR3t6
-	 p5nd2d72jh/fD2mRGZmamQFePDYCJyDTbnv8HzRwfNJHJEhx3u7ukBCyx2+mE18Yii
-	 oVcSEciui6sZBK4/4bIe6wbIrNlY8h9S22T/yRcA=
+	b=CK0PXzNjVleEmzTTwQLkPVa/kNgETrosXxCLPkIlLusQbj/ma5aGEWqH23aaTfvoC
+	 rtlfPGEAEW2prcmVQAGMCKkCslYPSPcRiHDkd02niYZ7L5KtStTxNDmymwsfiwBNs9
+	 8VepQMO6PhPZOL6G5MUIZaDxJ0KOQQlpbnVEsdd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389303AbfG2TlY (ORCPT
+        id S2389327AbfG2Tl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:41:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56706 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:41:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389354AbfG2TlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:41:18 -0400
+        id S2389302AbfG2TlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:41:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AD9C206DD;
-        Mon, 29 Jul 2019 19:41:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F341C205F4;
+        Mon, 29 Jul 2019 19:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429277;
-        bh=gMtJx6n2k6Cgtgh0FR7msq+MIrOSZmtui9BJYIUlbLk=;
+        s=default; t=1564429284;
+        bh=7M2fhzTcQpuBUatI/D1JN5eOLvcGekCgBEf/1DH9Zlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1tvDAnBaDj3l9iL1DymS3OfYvbq285SjanDHnVn19pCJ0AVj4dU56dNdOZ6TWNu5+
-         vjfIIO0AFwoLLH2MRu6w1GNRd9KzFud/1hX2uz5qfaJgKtNieiiKggJFPHG7KBY7k4
-         On3/HBUHNmgerYIvzUGZBjOCbt4+LZLuZb5h6W3A=
+        b=fyskzldb0nVs/d31PT6s2enX/ZUezUxK6M5ZZl8gO3wfRv7Kp+Pdbs/EN07JecbGz
+         XXV3One9eiAaPBkMOsOekjGfv2hTMTdS1DV8RC0hwUgIEmRN8tdpDsG8j9BDWXRk5K
+         5yRtV10y8GVHDt+NQFjMo/0PH3ZhKmEebgCZkRkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Daniel Gomez <dagmcr@gmail.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 048/113] mfd: madera: Add missing of table registration
-Date:   Mon, 29 Jul 2019 21:22:15 +0200
-Message-Id: <20190729190707.024661411@linuxfoundation.org>
+Subject: [PATCH 4.19 050/113] mfd: arizona: Fix undefined behavior
+Date:   Mon, 29 Jul 2019 21:22:17 +0200
+Message-Id: <20190729190707.505517770@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -62,47 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5aa3709c0a5c026735b0ddd4ec80810a23d65f5b ]
+[ Upstream commit 5da6cbcd2f395981aa9bfc571ace99f1c786c985 ]
 
-MODULE_DEVICE_TABLE(of, <of_match_table>) should be called to complete DT
-OF mathing mechanism and register it.
+When the driver is used with a subdevice that is disabled in the
+kernel configuration, clang gets a little confused about the
+control flow and fails to notice that n_subdevs is only
+uninitialized when subdevs is NULL, and we check for that,
+leading to a false-positive warning:
 
-Before this patch:
-modinfo ./drivers/mfd/madera.ko | grep alias
+drivers/mfd/arizona-core.c:1423:19: error: variable 'n_subdevs' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                              subdevs, n_subdevs, NULL, 0, NULL);
+                                       ^~~~~~~~~
+drivers/mfd/arizona-core.c:999:15: note: initialize the variable 'n_subdevs' to silence this warning
+        int n_subdevs, ret, i;
+                     ^
+                      = 0
 
-After this patch:
-modinfo ./drivers/mfd/madera.ko | grep alias
-alias:          of:N*T*Ccirrus,wm1840C*
-alias:          of:N*T*Ccirrus,wm1840
-alias:          of:N*T*Ccirrus,cs47l91C*
-alias:          of:N*T*Ccirrus,cs47l91
-alias:          of:N*T*Ccirrus,cs47l90C*
-alias:          of:N*T*Ccirrus,cs47l90
-alias:          of:N*T*Ccirrus,cs47l85C*
-alias:          of:N*T*Ccirrus,cs47l85
-alias:          of:N*T*Ccirrus,cs47l35C*
-alias:          of:N*T*Ccirrus,cs47l35
+Ideally, we would rearrange the code to avoid all those early
+initializations and have an explicit exit in each disabled case,
+but it's much easier to chicken out and add one more initialization
+here to shut up the warning.
 
-Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/madera-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/arizona-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-index 8cfea969b060..45c7d8b97349 100644
---- a/drivers/mfd/madera-core.c
-+++ b/drivers/mfd/madera-core.c
-@@ -278,6 +278,7 @@ const struct of_device_id madera_of_match[] = {
- 	{ .compatible = "cirrus,wm1840", .data = (void *)WM1840 },
- 	{}
- };
-+MODULE_DEVICE_TABLE(of, madera_of_match);
- EXPORT_SYMBOL_GPL(madera_of_match);
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 5f1e37d23943..47d6d40f41cd 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -996,7 +996,7 @@ int arizona_dev_init(struct arizona *arizona)
+ 	unsigned int reg, val;
+ 	int (*apply_patch)(struct arizona *) = NULL;
+ 	const struct mfd_cell *subdevs = NULL;
+-	int n_subdevs, ret, i;
++	int n_subdevs = 0, ret, i;
  
- static int madera_get_reset_gpio(struct madera *madera)
+ 	dev_set_drvdata(arizona->dev, arizona);
+ 	mutex_init(&arizona->clk_lock);
 -- 
 2.20.1
 
