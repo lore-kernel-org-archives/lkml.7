@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3604CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4D3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068D321655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C77D21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428829;
-	bh=6tIyMhAmocpLo35jAQBAWhLR5BOUQsgzB1G264Fvzv8=;
+	s=default; t=1564428834;
+	bh=XhTA8PoUkzEYG4NqiODIrmkO834GvK3lKmU38uHhakc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wd0S5pJtrA1xg6tDbJfGOeW1U6QJ1ZjvLytvaHgtDkA9atg1dBrR0p9UGgdv1EOC3
-	 E9GYFwpghDQgvke0H0FXyZzMg1pF6bCCM3mZcXOzM+BpiVL0f9tgFBv170l46Ap4xz
-	 ltggNXtDXRSHz3G8m6D1kPnYaQ2X5E29/J+Ii4J4=
+	b=Kk+M5Pm2SLdawB7+OHmeUPicXG+uDowXQ4OL63FfxTbNNYj0+q8NSfor+rHq+3hXo
+	 CQbQJ8ErBWIgH2rpsCOtdttCLmcE71ymQqzAaW25w5LGEtL4pfRxqQ/wPw8/RrdQwh
+	 eJhjKw4t0P2EP4NL0O3l4XxbqUa2ptpJujhrO7mY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730319AbfG2Tdr (ORCPT
+        id S2387926AbfG2Tdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:33:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48008 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729402AbfG2Tdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:33:44 -0400
+        id S1729402AbfG2Tdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:33:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 443A12070B;
-        Mon, 29 Jul 2019 19:33:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 990542171F;
+        Mon, 29 Jul 2019 19:33:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428822;
-        bh=6tIyMhAmocpLo35jAQBAWhLR5BOUQsgzB1G264Fvzv8=;
+        s=default; t=1564428829;
+        bh=XhTA8PoUkzEYG4NqiODIrmkO834GvK3lKmU38uHhakc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DNc4lPc2UNY+tNlVhsQ2qaLKMqph9DVR70RihN6789vag5IyQqwrLBINB+o3N5PTy
-         yi4cDQ6oJyJLXsbgZrAN/6mlLTN3kGGVGjtCuv7ZEXdx6xhp8YZcghYwWpIfT/cUII
-         lAz6ZyVdC9AkDw0qu/8LHTBZpArb4IM20cj2FuUw=
+        b=rMHhqusw1EhMgrKWtihkdkRNarwcGT8p3eGNNYe//vtbl7mJAG7qePfEvqTWOZ3tX
+         nAPxtV9Q56ZK8pmgO2yA7jNsxnGjh0MUL5E6GAbrBqZUgwuaWCOHqf8xxCPwT6ReTX
+         YZA6zIuArRul3gGlG4AVhIRdImu/KfFUzc4gsABE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 198/293] bonding: validate ip header before check IPPROTO_IGMP
-Date:   Mon, 29 Jul 2019 21:21:29 +0200
-Message-Id: <20190729190839.642048519@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 200/293] tcp: fix tcp_set_congestion_control() use from bpf hook
+Date:   Mon, 29 Jul 2019 21:21:31 +0200
+Message-Id: <20190729190839.809665460@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -63,85 +61,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 9d1bc24b52fb8c5d859f9a47084bf1179470e04c ]
+[ Upstream commit 8d650cdedaabb33e85e9b7c517c0c71fcecc1de9 ]
 
-bond_xmit_roundrobin() checks for IGMP packets but it parses
-the IP header even before checking skb->protocol.
+Neal reported incorrect use of ns_capable() from bpf hook.
 
-We should validate the IP header with pskb_may_pull() before
-using iph->protocol.
+bpf_setsockopt(...TCP_CONGESTION...)
+  -> tcp_set_congestion_control()
+   -> ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN)
+    -> ns_capable_common()
+     -> current_cred()
+      -> rcu_dereference_protected(current->cred, 1)
 
-Reported-and-tested-by: syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
-Fixes: a2fd940f4cff ("bonding: fix broken multicast with round-robin mode")
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Cc: Veaceslav Falico <vfalico@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Accessing 'current' in bpf context makes no sense, since packets
+are processed from softirq context.
+
+As Neal stated : The capability check in tcp_set_congestion_control()
+was written assuming a system call context, and then was reused from
+a BPF call site.
+
+The fix is to add a new parameter to tcp_set_congestion_control(),
+so that the ns_capable() call is only performed under the right
+context.
+
+Fixes: 91b5b21c7c16 ("bpf: Add support for changing congestion control")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Lawrence Brakmo <brakmo@fb.com>
+Reported-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Lawrence Brakmo <brakmo@fb.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_main.c |   37 +++++++++++++++++++++++--------------
- 1 file changed, 23 insertions(+), 14 deletions(-)
+ include/net/tcp.h   |    3 ++-
+ net/core/filter.c   |    3 ++-
+ net/ipv4/tcp.c      |    4 +++-
+ net/ipv4/tcp_cong.c |    6 +++---
+ 4 files changed, 10 insertions(+), 6 deletions(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -3817,8 +3817,8 @@ static u32 bond_rr_gen_slave_id(struct b
- static int bond_xmit_roundrobin(struct sk_buff *skb, struct net_device *bond_dev)
- {
- 	struct bonding *bond = netdev_priv(bond_dev);
--	struct iphdr *iph = ip_hdr(skb);
- 	struct slave *slave;
-+	int slave_cnt;
- 	u32 slave_id;
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1043,7 +1043,8 @@ void tcp_get_default_congestion_control(
+ void tcp_get_available_congestion_control(char *buf, size_t len);
+ void tcp_get_allowed_congestion_control(char *buf, size_t len);
+ int tcp_set_allowed_congestion_control(char *allowed);
+-int tcp_set_congestion_control(struct sock *sk, const char *name, bool load, bool reinit);
++int tcp_set_congestion_control(struct sock *sk, const char *name, bool load,
++			       bool reinit, bool cap_net_admin);
+ u32 tcp_slow_start(struct tcp_sock *tp, u32 acked);
+ void tcp_cong_avoid_ai(struct tcp_sock *tp, u32 w, u32 acked);
  
- 	/* Start with the curr_active_slave that joined the bond as the
-@@ -3827,23 +3827,32 @@ static int bond_xmit_roundrobin(struct s
- 	 * send the join/membership reports.  The curr_active_slave found
- 	 * will send all of this type of traffic.
- 	 */
--	if (iph->protocol == IPPROTO_IGMP && skb->protocol == htons(ETH_P_IP)) {
--		slave = rcu_dereference(bond->curr_active_slave);
--		if (slave)
--			bond_dev_queue_xmit(bond, skb, slave->dev);
--		else
--			bond_xmit_slave_id(bond, skb, 0);
--	} else {
--		int slave_cnt = ACCESS_ONCE(bond->slave_cnt);
-+	if (skb->protocol == htons(ETH_P_IP)) {
-+		int noff = skb_network_offset(skb);
-+		struct iphdr *iph;
-+
-+		if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph))))
-+			goto non_igmp;
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -3122,7 +3122,8 @@ BPF_CALL_5(bpf_setsockopt, struct bpf_so
+ 			strncpy(name, optval, min_t(long, optlen,
+ 						    TCP_CA_NAME_MAX-1));
+ 			name[TCP_CA_NAME_MAX-1] = 0;
+-			ret = tcp_set_congestion_control(sk, name, false, reinit);
++			ret = tcp_set_congestion_control(sk, name, false,
++							 reinit, true);
+ 		} else {
+ 			struct tcp_sock *tp = tcp_sk(sk);
  
--		if (likely(slave_cnt)) {
--			slave_id = bond_rr_gen_slave_id(bond);
--			bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
--		} else {
--			bond_tx_drop(bond_dev, skb);
-+		iph = ip_hdr(skb);
-+		if (iph->protocol == IPPROTO_IGMP) {
-+			slave = rcu_dereference(bond->curr_active_slave);
-+			if (slave)
-+				bond_dev_queue_xmit(bond, skb, slave->dev);
-+			else
-+				bond_xmit_slave_id(bond, skb, 0);
-+			return NETDEV_TX_OK;
- 		}
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2500,7 +2500,9 @@ static int do_tcp_setsockopt(struct sock
+ 		name[val] = 0;
+ 
+ 		lock_sock(sk);
+-		err = tcp_set_congestion_control(sk, name, true, true);
++		err = tcp_set_congestion_control(sk, name, true, true,
++						 ns_capable(sock_net(sk)->user_ns,
++							    CAP_NET_ADMIN));
+ 		release_sock(sk);
+ 		return err;
  	}
- 
-+non_igmp:
-+	slave_cnt = ACCESS_ONCE(bond->slave_cnt);
-+	if (likely(slave_cnt)) {
-+		slave_id = bond_rr_gen_slave_id(bond);
-+		bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
-+	} else {
-+		bond_tx_drop(bond_dev, skb);
-+	}
- 	return NETDEV_TX_OK;
- }
- 
+--- a/net/ipv4/tcp_cong.c
++++ b/net/ipv4/tcp_cong.c
+@@ -338,7 +338,8 @@ out:
+  * tcp_reinit_congestion_control (if the current congestion control was
+  * already initialized.
+  */
+-int tcp_set_congestion_control(struct sock *sk, const char *name, bool load, bool reinit)
++int tcp_set_congestion_control(struct sock *sk, const char *name, bool load,
++			       bool reinit, bool cap_net_admin)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	const struct tcp_congestion_ops *ca;
+@@ -372,8 +373,7 @@ int tcp_set_congestion_control(struct so
+ 		} else {
+ 			err = -EBUSY;
+ 		}
+-	} else if (!((ca->flags & TCP_CONG_NON_RESTRICTED) ||
+-		     ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))) {
++	} else if (!((ca->flags & TCP_CONG_NON_RESTRICTED) || cap_net_admin)) {
+ 		err = -EPERM;
+ 	} else if (!try_module_get(ca->owner)) {
+ 		err = -EBUSY;
 
 
