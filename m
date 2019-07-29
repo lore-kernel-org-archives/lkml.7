@@ -2,142 +2,165 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CBDC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69CEC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02912070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564374373;
-	bh=CzttnjlFh6UNzw5qv7d7Z1f2832TtQ+OkE9O6nLJJZ8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FGhDCS0hnII051OLNmkWFFnkcE/cTPttzVxbDXnva2wgpwAuDBk48VKAKPecOQ8Hq
-	 pkmEWtp/bM4zw2ZqoTjTgr+xQsmqQirHaYI0JmJL01OEqqHIuwqbg3ZU6WjY7LzNoo
-	 JLNPbFtbBaNmgUvGkLLIYvavPQxXbY25lRvkk1us=
+	by mail.kernel.org (Postfix) with ESMTP id 92FC8206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 04:39:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="NySZzJ1I";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GMRpQ/in"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfG2E0M (ORCPT
+        id S1726678AbfG2Eja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 00:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726164AbfG2E0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 00:26:11 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F1C42075B
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 04:26:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564374370;
-        bh=CzttnjlFh6UNzw5qv7d7Z1f2832TtQ+OkE9O6nLJJZ8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wuvz1Bdsr270oQaXKbsBoVoUwpOdZTeaJ5DN0Sl+cVeTA6afYvndWsZuu38GDBDYW
-         jx6797SZ/GtrzOwzfcQbxLYJzm8Nlvic/Vu2ic4OyHzwxGmNrGeorIeU+n89IiCcX1
-         ogqPy4PB1E+EUEG0ie6213kbJehjVi6Q7zF1hI18=
-Received: by mail-wm1-f43.google.com with SMTP id v15so52520680wml.0
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 21:26:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAW8VKWVB7zexCDEcjizfFQlUVukToA90wzb6W6lI3d9OsNsk8Wo
-        CQFMSsX13MVUvmmXQem5FowX3MH92Ll7NkpQQ5KNcg==
-X-Google-Smtp-Source: APXvYqwJ+771E+nh3CDUcgUmU42g0hgbAA6c8xaMFMiyy+NfW9b/zbOuW2go9yk5QO5L7Nl+HAyQaHd2kY9juqJ7hD4=
-X-Received: by 2002:a1c:9a53:: with SMTP id c80mr36652865wme.173.1564374369164;
- Sun, 28 Jul 2019 21:26:09 -0700 (PDT)
+        Mon, 29 Jul 2019 00:39:30 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:52875 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726605AbfG2Eja (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 00:39:30 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id E3BA31CAE;
+        Mon, 29 Jul 2019 00:39:28 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 29 Jul 2019 00:39:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=G6hgEco4soyYy
+        jXTRVgtKMFuWO/Dyh09lmRyo+FCylI=; b=NySZzJ1IIzpYTm2JJ93bX5Y/jGlyH
+        GzR7WFf0SH5xEEdWQWgkUll+lQWJgivGR2KRTzuwlg7IBql3bFRbV9lbxM1RSGf0
+        18aF9UAwcASKHHa5CIgjmPbmk05Zl1uZlVf1zGzvGo7BnSBYwRaSoaOPK5Qqc6xL
+        028HADhPPFWHhn+spYs6boGL5Tw9mPgRuqNWFFkSc7X4IELTPIT85fmQthJGw8iz
+        xpqoeJJulorNUsP2lRRDaXChQyRMqVnVGtaifGejXgbvVFJQqdf4OjVry4ENGg6r
+        WsQW5amz9bUvIXir+uUX/ovQ4HOWJ5fwQ5BnVBkplAozOzShXFbMfRHUQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=G6hgEco4soyYyjXTRVgtKMFuWO/Dyh09lmRyo+FCylI=; b=GMRpQ/in
+        RgOA/DW0V7rJoVVnfIFbgsRMnskWSYLDSwf1Zb8/B/gfLGfnbxqa4flTKm8QnR7A
+        M1T3iCLPQ/VS43Us2OpCKHoEvj30op26kWYoQ53s3+kd5//ehLc1XtOInXn9quJP
+        QsINYH6pkF2CCmLAKM7m44GStn8vbHfWLffL32K4H77nMa+Tly6Vz0pjrqWP0f65
+        JDttAawZ2I1M5ELpDQvc/lwck7lr8eeT0Klap2nqj8ByztfMSP4XSKx1XJVQdoHy
+        MyhluNnYaQXnuXLlLgDMLV8FSjXle/xxwHXmtfWoMPtVLuKuQyXEmmtgL5KpfQhm
+        73u6e0NTo75OPA==
+X-ME-Sender: <xms:f3g-XbGAJ66EgNly2M4negyUNqSgPde7mTy_02gh9X1DYDpyZMa12g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledtgdekgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
+    ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
+    rdhiugdrrghuqeenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppe
+    dvtddvrdekuddrudekrdeftdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgif
+    segrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:f3g-Xdsur2Dms6tlAFVWCcIdqyImbvqllCXsgqT6xFqGV_IbjGzpCw>
+    <xmx:f3g-XZm3t30zCqtHSGO5m6jMY9vfBf_AV0vfXJ9wY4OTyYlni7AmVw>
+    <xmx:f3g-XeMzeanFH3PvXTrUqerr2n1uuhhpPAoGuKvAsCFo5qTo4wE7ww>
+    <xmx:gHg-XVjSEb67ucZAdm4zi7fb7gQ0uPHoGdh4mkooh-cmOEP7JSXFEw>
+Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E282E8005A;
+        Mon, 29 Jul 2019 00:39:23 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     netdev@vger.kernel.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
+        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] dt-bindings: net: Add aspeed,ast2600-mdio binding
+Date:   Mon, 29 Jul 2019 14:09:23 +0930
+Message-Id: <20190729043926.32679-2-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190729043926.32679-1-andrew@aj.id.au>
+References: <20190729043926.32679-1-andrew@aj.id.au>
 MIME-Version: 1.0
-References: <20190729010734.3352-1-devel@etsukata.com>
-In-Reply-To: <20190729010734.3352-1-devel@etsukata.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 28 Jul 2019 21:25:58 -0700
-X-Gmail-Original-Message-ID: <CALCETrVavLdQ8Rp+6fmTd7kJJwvRKdaEnudaiMAu8g9ZXuNfWA@mail.gmail.com>
-Message-ID: <CALCETrVavLdQ8Rp+6fmTd7kJJwvRKdaEnudaiMAu8g9ZXuNfWA@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Prevent RCU EQS breakage in preemptirq events
-To:     Eiichi Tsukata <devel@etsukata.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 6:08 PM Eiichi Tsukata <devel@etsukata.com> wrote:
->
-> If context tracking is enabled, causing page fault in preemptirq
-> irq_enable or irq_disable events triggers the following RCU EQS warning.
->
+The AST2600 splits out the MDIO bus controller from the MAC into its own
+IP block and rearranges the register layout. Add a new binding to
+describe the new hardware.
 
-Yuck.
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ .../bindings/net/aspeed,ast2600-mdio.yaml     | 61 +++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
 
-> diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
-> index be01a4d627c9..860eaf9780e5 100644
-> --- a/kernel/context_tracking.c
-> +++ b/kernel/context_tracking.c
-> @@ -148,6 +148,11 @@ void __context_tracking_exit(enum ctx_state state)
->                 return;
->
->         if (__this_cpu_read(context_tracking.state) == state) {
-> +               /*
-> +                * Change state before executing codes which can trigger
-> +                * page fault leading unnecessary re-entrance.
-> +                */
-> +               __this_cpu_write(context_tracking.state, CONTEXT_KERNEL);
+diff --git a/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml b/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
+new file mode 100644
+index 000000000000..fa86f6438473
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/aspeed,ast2600-mdio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ASPEED AST2600 MDIO Controller
++
++maintainers:
++  - Andrew Jeffery <andrew@aj.id.au>
++
++description: |+
++  The ASPEED AST2600 MDIO controller is the third iteration of ASPEED's MDIO
++  bus register interface, this time also separating out the controller from the
++  MAC.
++
++properties:
++  compatible:
++    const: aspeed,ast2600-mdio
++  reg:
++    maxItems: 1
++    description: The register range of the MDIO controller instance
++  "#address-cells":
++    const: 1
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  "^ethernet-phy@[a-f0-9]$":
++    properties:
++      reg:
++        description:
++          The MDIO bus index of the PHY
++      compatible:
++        enum:
++          - ethernet-phy-ieee802.3-c22
++          - ethernet-phy-ieee802.3-c45
++    required:
++      - reg
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    mdio0: mdio@1e650000 {
++            compatible = "aspeed,ast2600-mdio";
++            reg = <0x1e650000 0x8>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            status = "okay";
++
++            ethphy0: ethernet-phy@0 {
++                    compatible = "ethernet-phy-ieee802.3-c22";
++                    reg = <0>;
++            };
++    };
+-- 
+2.20.1
 
-Seems reasonable.
-
->                 if (__this_cpu_read(context_tracking.active)) {
->                         /*
->                          * We are going to run code that may use RCU. Inform
-> @@ -159,7 +164,6 @@ void __context_tracking_exit(enum ctx_state state)
->                                 trace_user_exit(0);
->                         }
->                 }
-> -               __this_cpu_write(context_tracking.state, CONTEXT_KERNEL);
->         }
->         context_tracking_recursion_exit();
->  }
-> diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
-> index 4d8e99fdbbbe..031b51cb94d0 100644
-> --- a/kernel/trace/trace_preemptirq.c
-> +++ b/kernel/trace/trace_preemptirq.c
-> @@ -10,6 +10,7 @@
->  #include <linux/module.h>
->  #include <linux/ftrace.h>
->  #include <linux/kprobes.h>
-> +#include <linux/context_tracking.h>
->  #include "trace.h"
->
->  #define CREATE_TRACE_POINTS
-> @@ -49,9 +50,14 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
->
->  __visible void trace_hardirqs_on_caller(unsigned long caller_addr)
->  {
-> +       enum ctx_state prev_state;
-> +
->         if (this_cpu_read(tracing_irq_cpu)) {
-> -               if (!in_nmi())
-> +               if (!in_nmi()) {
-> +                       prev_state = exception_enter();
->                         trace_irq_enable_rcuidle(CALLER_ADDR0, caller_addr);
-> +                       exception_exit(prev_state);
-> +               }
->                 tracer_hardirqs_on(CALLER_ADDR0, caller_addr);
->                 this_cpu_write(tracing_irq_cpu, 0);
->         }
-
-This seems a bit distressing.  Now we're going to do a whole bunch of
-context tracking transitions for each kernel entry.  Would a better
-fix me to change trace_hardirqs_on_caller to skip the trace event if
-the previous state was already IRQs on and, more importantly, to skip
-tracing IRQs off if IRQs were already off?  The x86 code is very
-careful to avoid ever having IRQs on and CONTEXT_USER at the same
-time.
-
---Andy
