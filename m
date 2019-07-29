@@ -2,187 +2,139 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2744C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC212C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B43A20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dp9heUFN"
+	by mail.kernel.org (Postfix) with ESMTP id 8C5EB20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564431141;
+	bh=d8Rhx9wi7iBHJQRfIlU9sxJP5KGSpoaz0j5bTOi3UgA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TG8lTRYpVMxhwVqeIzKMPYxBk7sr25Rib1a8SXjnmEdkJPFncmQBVv06/grPZjK6w
+	 QJv5ih5buqWJJLazT59gi6IS9DXccslbIB5iJ1Vsax5Ry7rYtkItELSp7mCzqDIPds
+	 2+uKErSYODdYgv37fMA5Lqm2Q8EdoGTUZKEWX01Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbfG2UMG (ORCPT
+        id S1730375AbfG2UMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:12:06 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39673 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728245AbfG2TcY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:32:24 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x4so9936463wrt.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 12:32:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8upL6qrx/Dku4beiU/9+Km060tmr3ZR5MWxxCZyyP9I=;
-        b=dp9heUFNPuLguWBoxY40ChTIuX06DyHskIzK1fea05PYc9rCdVlA7cXoQInGXSCuyY
-         SQBajmQNbzz2Q3cus9Su4cRvYtNAtnmVMMC9JOUl881feAEly1c0h5F+KV/MiWuhgKiT
-         iEGjpK9Wu18czQP2hOeridWPzsVal98/F5E/KrdbgQqOCIkpc/1KOSedYTtCLveJbonY
-         feSXQDlkR4l7PqrA+6FP9f5T7mLxxVs5A1kS8g7cucINjC/qWVK1+VTZTeUv90fINtAD
-         UrW60gMJQME+HFlbBSVBH3hV8R8/bbhe8sLcKvmWJuj0sly7KGJNWCF/lBp+7ffoHpj6
-         3MnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8upL6qrx/Dku4beiU/9+Km060tmr3ZR5MWxxCZyyP9I=;
-        b=Ad0byrwjNZOTOz3fj06gGx2w3CElMP2zbntnSW9H9n6fP4DGTnqYeUak9J6hNrcZzS
-         gh7gO2zmaPpRUAHC9gNvItML3LhjkLiCJ+dknSPKEAVoc+eoT5lR7RlpUZNNWUTE+Rw1
-         g4Pd7DyPYGgXy5BG+pDBm01g8hed8KMx9bYnQRLUWzhRJHJEwoIbd8MNmxeOhxRVvlFS
-         Aei6CwL5r9TloMaufLBZRIs+4HNBc95MfIY6CSdDtQikJ7nN0mVpOILufEMns1sZ0v2i
-         hjBzOqB3tEV6togNhpSGtt94p9iwIdvu1MApi7qsFOFuki0xYtzjGHhGid/Gn3CoGYvP
-         ZCwQ==
-X-Gm-Message-State: APjAAAV2aXFMBcdfSeXy9Z7OcLLFTW5uSbM61a2mdLplZOVOc+J573nk
-        NLyviBfJpHO3hEL1AF/xfZ5ezRXnvJOyTMnuB9L11A==
-X-Google-Smtp-Source: APXvYqzoKDoCDsPlUX4JnlYHES2KAh4hWjesv1N7r4wpe3qemewDk+Hr7mPpA/TjcA35PXCTpvganho7U9axtOaRrwU=
-X-Received: by 2002:a5d:43d0:: with SMTP id v16mr117650363wrr.252.1564428741297;
- Mon, 29 Jul 2019 12:32:21 -0700 (PDT)
+        Mon, 29 Jul 2019 16:12:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729353AbfG2TcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:32:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FD2D217F4;
+        Mon, 29 Jul 2019 19:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564428721;
+        bh=d8Rhx9wi7iBHJQRfIlU9sxJP5KGSpoaz0j5bTOi3UgA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VD4bb8yTmDGiQx05IiWgLkNsQ7ym6a3nDukB5jYDshpPvkd+lWXXbJ1u68AtfL9c7
+         lyjq0UZdewVOhaOBpqd6VWz2mFqBhat4TQed1SSUey8+bWC5OZ1e9q+7BB+0bhOwQc
+         stoRZd0Ykbc8BWH9vSLkgkRylxwTkh7XqHmpWxJY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH 4.14 165/293] PCI: hv: Fix a use-after-free bug in hv_eject_device_work()
+Date:   Mon, 29 Jul 2019 21:20:56 +0200
+Message-Id: <20190729190837.187517038@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
+References: <20190729190820.321094988@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190724184512.162887-1-nums@google.com> <20190724184512.162887-4-nums@google.com>
- <20190726193806.GB24867@kernel.org> <20190727184638.3263eb76c3cbde95f9896210@kernel.org>
- <2bc0fcc6-0477-ba1d-7418-5497efa7d571@intel.com>
-In-Reply-To: <2bc0fcc6-0477-ba1d-7418-5497efa7d571@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 29 Jul 2019 12:32:09 -0700
-Message-ID: <CAP-5=fU2XBoOa2=00VCuWYqsLUzMSMzUXY63ZJt9rz-NJ+vYwA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] Fix insn.c misaligned address error
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, mbd@fb.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 1:24 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 27/07/19 12:46 PM, Masami Hiramatsu wrote:
-> > On Fri, 26 Jul 2019 16:38:06 -0300
-> > Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> >> Em Wed, Jul 24, 2019 at 11:45:12AM -0700, Numfor Mbiziwo-Tiapo escreveu:
-> >>> The ubsan (undefined behavior sanitizer) version of perf throws an
-> >>> error on the 'x86 instruction decoder - new instructions' function
-> >>> of perf test.
-> >>>
-> >>> To reproduce this run:
-> >>> make -C tools/perf USE_CLANG=1 EXTRA_CFLAGS="-fsanitize=undefined"
-> >>>
-> >>> then run: tools/perf/perf test 62 -v
-> >>>
-> >>> The error occurs in the __get_next macro (line 34) where an int is
-> >>> read from a potentially unaligned address. Using memcpy instead of
-> >>> assignment from an unaligned pointer.
-> >>
-> >> Since this came from the kernel, don't we have to fix it there as well?
-> >> Masami, Adrian?
-> >
-> > I guess we don't need it, since x86 can access "unaligned address" and
-> > x86 insn decoder in kernel runs only on x86. I'm not sure about perf's
-> > that part. Maybe if we run it on other arch as cross-arch application,
-> > it may cause unaligned pointer issue.
+From: Dexuan Cui <decui@microsoft.com>
 
-http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf
-"A pointer to an object or incomplete type may be converted to a
-pointer to a different object or incomplete type. If the resulting
-pointer is not correctly aligned for the pointed-to type, the behavior
-is undefined."
-I agree the code will generally run on x86.
+commit 4df591b20b80cb77920953812d894db259d85bd7 upstream.
 
-> Yes, theoretically Intel PT decoding can be done on any arch.
->
-> But the memcpy is probably sub-optimal for x86, so the patch as it stands
-> does not seem suitable.  I notice the kernel has get_unaligned() and
-> put_unaligned().
+Fix a use-after-free in hv_eject_device_work().
 
-Why is a fixed sized memcpy suboptimal? The compiler can should turn
-into a load.
+Fixes: 05f151a73ec2 ("PCI: hv: Fix a memory leak in hv_eject_device_work()")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Thanks,
-Ian
+---
+ drivers/pci/host/pci-hyperv.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-> Obviously it would be better for a patch to be accepted to
-> arch/x86/lib/insn.c also.
->
-> >
-> > Thank you,
-> >
-> >>
-> >> [acme@quaco perf]$ find . -name insn.c
-> >> ./arch/x86/lib/insn.c
-> >> ./arch/arm/kernel/insn.c
-> >> ./arch/arm64/kernel/insn.c
-> >> ./tools/objtool/arch/x86/lib/insn.c
-> >> ./tools/perf/util/intel-pt-decoder/insn.c
-> >> [acme@quaco perf]$ diff -u ./tools/perf/util/intel-pt-decoder/insn.c ./arch/x86/lib/insn.c
-> >> --- ./tools/perf/util/intel-pt-decoder/insn.c        2019-07-06 16:59:05.734265998 -0300
-> >> +++ ./arch/x86/lib/insn.c    2019-07-06 16:59:01.369202998 -0300
-> >> @@ -10,8 +10,8 @@
-> >>  #else
-> >>  #include <string.h>
-> >>  #endif
-> >> -#include "inat.h"
-> >> -#include "insn.h"
-> >> +#include <asm/inat.h>
-> >> +#include <asm/insn.h>
-> >>
-> >>  /* Verify next sizeof(t) bytes can be on the same instruction */
-> >>  #define validate_next(t, insn, n)   \
-> >> [acme@quaco perf]$
-> >>
-> >>
-> >> - Arnaldo
-> >>
-> >>> Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-> >>> ---
-> >>>  tools/perf/util/intel-pt-decoder/insn.c | 3 ++-
-> >>>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/tools/perf/util/intel-pt-decoder/insn.c b/tools/perf/util/intel-pt-decoder/insn.c
-> >>> index ca983e2bea8b..de1944c60aa9 100644
-> >>> --- a/tools/perf/util/intel-pt-decoder/insn.c
-> >>> +++ b/tools/perf/util/intel-pt-decoder/insn.c
-> >>> @@ -31,7 +31,8 @@
-> >>>     ((insn)->next_byte + sizeof(t) + n <= (insn)->end_kaddr)
-> >>>
-> >>>  #define __get_next(t, insn)        \
-> >>> -   ({ t r = *(t*)insn->next_byte; insn->next_byte += sizeof(t); r; })
-> >>> +   ({ t r; memcpy(&r, insn->next_byte, sizeof(t)); \
-> >>> +           insn->next_byte += sizeof(t); r; })
-> >>>
-> >>>  #define __peek_nbyte_next(t, insn, n)      \
-> >>>     ({ t r = *(t*)((insn)->next_byte + n); r; })
-> >>> --
-> >>> 2.22.0.657.g960e92d24f-goog
-> >>
-> >> --
-> >>
-> >> - Arnaldo
-> >
-> >
->
+--- a/drivers/pci/host/pci-hyperv.c
++++ b/drivers/pci/host/pci-hyperv.c
+@@ -1912,6 +1912,7 @@ static void hv_pci_devices_present(struc
+ static void hv_eject_device_work(struct work_struct *work)
+ {
+ 	struct pci_eject_response *ejct_pkt;
++	struct hv_pcibus_device *hbus;
+ 	struct hv_pci_dev *hpdev;
+ 	struct pci_dev *pdev;
+ 	unsigned long flags;
+@@ -1922,6 +1923,7 @@ static void hv_eject_device_work(struct
+ 	} ctxt;
+ 
+ 	hpdev = container_of(work, struct hv_pci_dev, wrk);
++	hbus = hpdev->hbus;
+ 
+ 	if (hpdev->state != hv_pcichild_ejecting) {
+ 		put_pcichild(hpdev, hv_pcidev_ref_pnp);
+@@ -1935,8 +1937,7 @@ static void hv_eject_device_work(struct
+ 	 * because hbus->pci_bus may not exist yet.
+ 	 */
+ 	wslot = wslot_to_devfn(hpdev->desc.win_slot.slot);
+-	pdev = pci_get_domain_bus_and_slot(hpdev->hbus->sysdata.domain, 0,
+-					   wslot);
++	pdev = pci_get_domain_bus_and_slot(hbus->sysdata.domain, 0, wslot);
+ 	if (pdev) {
+ 		pci_lock_rescan_remove();
+ 		pci_stop_and_remove_bus_device(pdev);
+@@ -1944,9 +1945,9 @@ static void hv_eject_device_work(struct
+ 		pci_unlock_rescan_remove();
+ 	}
+ 
+-	spin_lock_irqsave(&hpdev->hbus->device_list_lock, flags);
++	spin_lock_irqsave(&hbus->device_list_lock, flags);
+ 	list_del(&hpdev->list_entry);
+-	spin_unlock_irqrestore(&hpdev->hbus->device_list_lock, flags);
++	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
+ 
+ 	if (hpdev->pci_slot)
+ 		pci_destroy_slot(hpdev->pci_slot);
+@@ -1955,14 +1956,16 @@ static void hv_eject_device_work(struct
+ 	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
+ 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
+ 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+-	vmbus_sendpacket(hpdev->hbus->hdev->channel, ejct_pkt,
++	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
+ 			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
+ 			 VM_PKT_DATA_INBAND, 0);
+ 
+ 	put_pcichild(hpdev, hv_pcidev_ref_childlist);
+ 	put_pcichild(hpdev, hv_pcidev_ref_initial);
+ 	put_pcichild(hpdev, hv_pcidev_ref_pnp);
+-	put_hvpcibus(hpdev->hbus);
++
++	/* hpdev has been freed. Do not use it any more. */
++	put_hvpcibus(hbus);
+ }
+ 
+ /**
+
+
