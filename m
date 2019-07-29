@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCF1C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D32C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645CF2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ABC2217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428565;
-	bh=GFBXUdjCkqdWSyja6Renha4vSWYo1fMMNG5jLNDPuTA=;
+	s=default; t=1564428571;
+	bh=aW/DoCHxhgIWen+f8hrgEFLzKXjHLURQXKYaosEwwJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EtQzT70kV6IpzEN8UXfNR5h11RCtjzWWWq9iy9PMMSo+zoG0kj0s83FZCnQNoxfmQ
-	 i5xrycX9KoeX6mckDH1LAHcO/y2BAexgcU13Iq9uE5QomXegp+164v90zT489+qLVz
-	 0fFYnMV8rXv0WyjNH4G8HwzH8vdu461LyWDmOkeg=
+	b=2ca0cKSl3pqIwkmtOoqi5G5boaWScZVUy/lUp60K0wlKNIMGHL8CejUwA8vGkwXi6
+	 pStWC36cFVGwr/lMG01vvMJYm3zHkhiCgK2Wy7Y+2qfsU3n+OVUqTKZH/jhkEyXqDj
+	 WLedtBM0Kqua6OL4ZriwYwWTKuNNaUNbf73uXJrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbfG2T3Y (ORCPT
+        id S2387655AbfG2T33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:29:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42006 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:29:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727721AbfG2T3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:29:19 -0400
+        id S1728345AbfG2T3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:29:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAE30217D7;
-        Mon, 29 Jul 2019 19:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B8B52070B;
+        Mon, 29 Jul 2019 19:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428558;
-        bh=GFBXUdjCkqdWSyja6Renha4vSWYo1fMMNG5jLNDPuTA=;
+        s=default; t=1564428561;
+        bh=aW/DoCHxhgIWen+f8hrgEFLzKXjHLURQXKYaosEwwJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iWDrhbig7bKmbb0yPMBKFlnYBVBEvvl76TkkSKmZqd+esdf96ikmq9/hAJFSMbIiy
-         W1QzyNLLd/JFWyhn4ngKHz7EO0qnUV2u3uZbJzIBccqkCjKE4VU4eEct2803n5c1fT
-         HLu36S2uajVhiSKVu0AovfP7TfMMoQPUOedoVnQ0=
+        b=AwvmJDkHLYuPHD1zfvNqxdNj4PCncHsvdava+XsaaRJUM7Npf3X2lfE0IsIDiYAwS
+         4JLYAq3BrRvuXvrusnv1DFz1e0eftlYRBVF6BcDQJxpp1a58zlW9wLq1heqz6HyZB7
+         fBY+CG/5FLv+m5WbkHgkUFm4UsJNDf3rmUixB4cI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>,
+        stable@vger.kernel.org,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 115/293] scsi: core: Fix race on creating sense cache
-Date:   Mon, 29 Jul 2019 21:20:06 +0200
-Message-Id: <20190729190833.421885040@linuxfoundation.org>
+Subject: [PATCH 4.14 116/293] scsi: megaraid_sas: Fix calculation of target ID
+Date:   Mon, 29 Jul 2019 21:20:07 +0200
+Message-Id: <20190729190833.487686220@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -62,55 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 
-commit f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc upstream.
+commit c8f96df5b8e633056b7ebf5d52a9d6fb1b156ce3 upstream.
 
-When scsi_init_sense_cache(host) is called concurrently from different
-hosts, each code path may find that no cache has been created and
-allocate a new one. The lack of locking can lead to potentially
-overriding a cache allocated by a different host.
+In megasas_get_target_prop(), driver is incorrectly calculating the target
+ID for devices with channel 1 and 3.  Due to this, firmware will either
+fail the command (if there is no device with the target id sent from
+driver) or could return the properties for a target which was not
+intended.  Devices could end up with the wrong queue depth due to this.
 
-Fix the issue by moving 'mutex_lock(&scsi_sense_cache_mutex)' before
-scsi_select_sense_cache().
+Fix target id calculation for channel 1 and 3.
 
-Fixes: 0a6ac4ee7c21 ("scsi: respect unchecked_isa_dma for blk-mq")
-Cc: Stable <stable@vger.kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Fixes: 96188a89cc6d ("scsi: megaraid_sas: NVME interface target prop added")
+Cc: stable@vger.kernel.org
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/scsi_lib.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -71,11 +71,11 @@ int scsi_init_sense_cache(struct Scsi_Ho
- 	struct kmem_cache *cache;
- 	int ret = 0;
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -5806,7 +5806,8 @@ megasas_get_target_prop(struct megasas_i
+ 	int ret;
+ 	struct megasas_cmd *cmd;
+ 	struct megasas_dcmd_frame *dcmd;
+-	u16 targetId = (sdev->channel % 2) + sdev->id;
++	u16 targetId = ((sdev->channel % 2) * MEGASAS_MAX_DEV_PER_CHANNEL) +
++			sdev->id;
  
-+	mutex_lock(&scsi_sense_cache_mutex);
- 	cache = scsi_select_sense_cache(shost->unchecked_isa_dma);
- 	if (cache)
--		return 0;
-+		goto exit;
+ 	cmd = megasas_get_cmd(instance);
  
--	mutex_lock(&scsi_sense_cache_mutex);
- 	if (shost->unchecked_isa_dma) {
- 		scsi_sense_isadma_cache =
- 			kmem_cache_create("scsi_sense_cache(DMA)",
-@@ -90,7 +90,7 @@ int scsi_init_sense_cache(struct Scsi_Ho
- 		if (!scsi_sense_cache)
- 			ret = -ENOMEM;
- 	}
--
-+ exit:
- 	mutex_unlock(&scsi_sense_cache_mutex);
- 	return ret;
- }
 
 
