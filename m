@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C084DC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CAEC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94FE1205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D8520C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429861;
-	bh=LzfNP2/2fiV3yQotqscSonDsmaMObuAwMCULeBTHQHg=;
+	s=default; t=1564429865;
+	bh=7vje2itFpn752mX8Yf8zqkH//JVLSqFrMo8kkfuZFns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YfsFII1+6pKDi+Q77ZMBcQjBAIoldHTBDpBtTWDYlVXAolg06xWbQeLuJ1eeweaCc
-	 MGjOzSrlJLFzsxs8HRjECwXDGnxoUramue4JKeP1y0JGEbPYD1wXkNliOdVbQ0Buii
-	 BzhV3rBEz0b0T+L3fHo1wHuIgszrwqErMM1izBXQ=
+	b=JuDAhCO71BeQnlb3IluRTvVtg9pp4tO3fR+cLMpF6RjdijcjnCsYwuMFM6peXn4UU
+	 F/n8Q0+VMia2Yjpko65ue1HPOnB6ZI4mHhI6icMzz6q8qHPauEWdsrznLNWsgvYVZx
+	 7Xoh40ZTrt6/Jy2gnbBdiTRqjZ77H2ncJivkvOkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403837AbfG2TvA (ORCPT
+        id S2390702AbfG2TvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:51:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42056 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:51:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403813AbfG2Tu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:50:57 -0400
+        id S2403829AbfG2TvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:51:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14FE52054F;
-        Mon, 29 Jul 2019 19:50:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B81592054F;
+        Mon, 29 Jul 2019 19:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429856;
-        bh=LzfNP2/2fiV3yQotqscSonDsmaMObuAwMCULeBTHQHg=;
+        s=default; t=1564429859;
+        bh=7vje2itFpn752mX8Yf8zqkH//JVLSqFrMo8kkfuZFns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WdReC12PJtSMpZA4axGc8MeRwLa7Y7QM5wMnBggOlMhE0r8pzgmN6hDNWuIxfCjI0
-         CPc55Lrjp629yUBct3g5SbxzUumhJnUVaQo2BIIJrHkKSmhwlahZFhkN0ji07thWts
-         ssilu8gdXTL8dZgu63iJXiudVsqtjXxX3DCvTWzI=
+        b=L0pfKsYlbWq0pDBWyTPA5kUx0oSsF13a3Ks2z6YwJYjiaQQFVmZeaxyXtuohAWm7X
+         UD1PNEPfxoSuBG38WgGY2k/RV6QM4OB3o6GA7tDL3LTRD0DMtGudtrEXUZJN7+rOqw
+         DKSEnulUU04YoxVS49Nvr376xJK0IUFBGQEcm084=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
+        stable@vger.kernel.org, Stefan Roese <sr@denx.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 078/215] drm/msm: Depopulate platform on probe failure
-Date:   Mon, 29 Jul 2019 21:21:14 +0200
-Message-Id: <20190729190753.404914906@linuxfoundation.org>
+Subject: [PATCH 5.2 079/215] serial: mctrl_gpio: Check if GPIO property exisits before requesting it
+Date:   Mon, 29 Jul 2019 21:21:15 +0200
+Message-Id: <20190729190753.521871557@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,58 +63,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4368a1539c6b41ac3cddc06f5a5117952998804c ]
+[ Upstream commit d99482673f950817b30caf3fcdfb31179b050ce1 ]
 
-add_display_components() calls of_platform_populate, and we depopluate
-on pdev remove, but not when probe fails. So if we get a probe deferral
-in one of the components, we won't depopulate the platform. This causes
-the core to keep references to devices which should be destroyed, which
-causes issues when those same devices try to re-initialize on the next
-probe attempt.
+This patch adds a check for the GPIOs property existence, before the
+GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
+support is added (2nd patch in this patch series) on x86 platforms using
+ACPI.
 
-I think this is the reason we had issues with the gmu's device-managed
-resources on deferral (worked around in commit 94e3a17f33a5).
+Here Mika's comments from 2016-08-09:
 
-Reviewed-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190617201301.133275-3-sean@poorly.run
+"
+I noticed that with v4.8-rc1 serial console of some of our Broxton
+systems does not work properly anymore. I'm able to see output but input
+does not work.
+
+I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
+("tty/serial/8250: use mctrl_gpio helpers").
+
+The reason why it fails is that in ACPI we do not have names for GPIOs
+(except when _DSD is used) so we use the "idx" to index into _CRS GPIO
+resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
+calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
+UART device in Broxton has following (simplified) ACPI description:
+
+    Device (URT4)
+    {
+        ...
+        Name (_CRS, ResourceTemplate () {
+            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+                    "\\_SB.GPO0", 0x00, ResourceConsumer)
+            {
+                0x003A
+            }
+            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+                    "\\_SB.GPO0", 0x00, ResourceConsumer)
+            {
+                0x003D
+            }
+        })
+
+In this case it finds the first GPIO (0x003A which happens to be RX pin
+for that UART), turns it into GPIO which then breaks input for the UART
+device. This also breaks systems with bluetooth connected to UART (those
+typically have some GPIOs in their _CRS).
+
+Any ideas how to fix this?
+
+We cannot just drop the _CRS index lookup fallback because that would
+break many existing machines out there so maybe we can limit this to
+only DT enabled machines. Or alternatively probe if the property first
+exists before trying to acquire the GPIOs (using
+device_property_present()).
+"
+
+This patch implements the fix suggested by Mika in his statement above.
+
+Signed-off-by: Stefan Roese <sr@denx.de>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Yegor Yefremov <yegorslists@googlemail.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Yegor Yefremov <yegorslists@googlemail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_drv.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/tty/serial/serial_mctrl_gpio.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index f38d7367bd3b..4a0fe8a25ad7 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1306,16 +1306,24 @@ static int msm_pdev_probe(struct platform_device *pdev)
+diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+index 39ed56214cd3..2b400189be91 100644
+--- a/drivers/tty/serial/serial_mctrl_gpio.c
++++ b/drivers/tty/serial/serial_mctrl_gpio.c
+@@ -12,6 +12,7 @@
+ #include <linux/termios.h>
+ #include <linux/serial_core.h>
+ #include <linux/module.h>
++#include <linux/property.h>
  
- 	ret = add_gpu_components(&pdev->dev, &match);
- 	if (ret)
--		return ret;
-+		goto fail;
+ #include "serial_mctrl_gpio.h"
  
- 	/* on all devices that I am aware of, iommu's which can map
- 	 * any address the cpu can see are used:
- 	 */
- 	ret = dma_set_mask_and_coherent(&pdev->dev, ~0);
- 	if (ret)
--		return ret;
-+		goto fail;
+@@ -116,6 +117,19 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
+ 
+ 	for (i = 0; i < UART_GPIO_MAX; i++) {
+ 		enum gpiod_flags flags;
++		char *gpio_str;
++		bool present;
 +
-+	ret = component_master_add_with_match(&pdev->dev, &msm_drm_ops, match);
-+	if (ret)
-+		goto fail;
- 
--	return component_master_add_with_match(&pdev->dev, &msm_drm_ops, match);
-+	return 0;
++		/* Check if GPIO property exists and continue if not */
++		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
++				     mctrl_gpios_desc[i].name);
++		if (!gpio_str)
++			continue;
 +
-+fail:
-+	of_platform_depopulate(&pdev->dev);
-+	return ret;
- }
++		present = device_property_present(dev, gpio_str);
++		kfree(gpio_str);
++		if (!present)
++			continue;
  
- static int msm_pdev_remove(struct platform_device *pdev)
+ 		if (mctrl_gpios_desc[i].dir_out)
+ 			flags = GPIOD_OUT_LOW;
 -- 
 2.20.1
 
