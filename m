@@ -2,104 +2,309 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2860EC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD1AC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF221216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:11:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RAfvxQcl"
+	by mail.kernel.org (Postfix) with ESMTP id 96E0D217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 22:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388344AbfG2WLc (ORCPT
+        id S2388656AbfG2WLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 18:11:32 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:37146 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387769AbfG2WL3 (ORCPT
+        Mon, 29 Jul 2019 18:11:38 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41214 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387769AbfG2WLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 18:11:29 -0400
-Received: by mail-qt1-f202.google.com with SMTP id 41so50626753qtm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:11:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=q/JO0jIzFDUcBLNa0OLAVEbtuFfd8ssnFHaHdmtCpxU=;
-        b=RAfvxQcl4h2BOyaK31H1/xWYCyBx/eMduTNV0vQvG5cGkn5cGK3RzQnHoHIatewHnm
-         Fg1LrxZP4gf7iMy/GnI+7ngsBGnaRAZjvWfL4bpRWJKpKv0/5v8jJJ54kIYZll1fkhrs
-         CXXej9PXznYSVaqvLO4jibT0OH+iqf5eceI834QosZHeYCIlkQTBEqAYfwFwSt4dLmuw
-         p49wppWLaI3vC7K4KJRvbYvAbQ8Uu8YGMIn/Ymu/YE8ZZOEgVLlGivl3A6edYaBM1xtW
-         +v4tiDen5L66O2NJg/9wyISohBTn/MqJv8xjwO5aYduPo5+sY0d122+2EzQXQz0RNUx5
-         j4nQ==
+        Mon, 29 Jul 2019 18:11:36 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d17so60968243qtj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:11:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=q/JO0jIzFDUcBLNa0OLAVEbtuFfd8ssnFHaHdmtCpxU=;
-        b=CyPpxDwtlcIJg89DP6xyW/6+UU8XHZDurqvNtuM5w/SqMqyGu2RP7nsgJqDqe9v4Js
-         F0hyvIa1cCRX3Me0Y1Md3LTmfk1/y6+3mTsDbrAnxEKNYvfdURwVQhWNNaCPSQ/Kxhoi
-         1Z6K+BsQj/2KC9XzrKX1YSJhbsLty0eXLep1gvmrTEGoImeKQtbA62PJieGyiqs9f0nr
-         fr8hDp28rP74phgrSXT2iPBaOasnhnkpNhBN+OVJedCfEWFJ48AwLyI1b0w207LvDBM2
-         G7tzmZPm+JpQuebZNVe12ojsFOpOw8wauTQmopHYABG+3yVXJTbZgJi09e0cH4DCibha
-         U32g==
-X-Gm-Message-State: APjAAAXHuQfx57JhEJhuS6pBJWZVbzjtk7zCL5bOLrQ2zDhdqN+Q307l
-        vC9yaFCvE1zsnGrNZJ5k9l5bxTX/CRRb8J4=
-X-Google-Smtp-Source: APXvYqydELxRbsHighcxSWgGx87UveXV5heA+fTgZ2mjwG8HEYlndd5i5Hfoa3E9mNglZFW6alDPgxqaqeQ/Og8=
-X-Received: by 2002:a05:620a:1228:: with SMTP id v8mr29782991qkj.357.1564438288576;
- Mon, 29 Jul 2019 15:11:28 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 15:11:01 -0700
-In-Reply-To: <20190729221101.228240-1-saravanak@google.com>
-Message-Id: <20190729221101.228240-8-saravanak@google.com>
-Mime-Version: 1.0
-References: <20190729221101.228240-1-saravanak@google.com>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v8 7/7] of/platform: Don't create device links for default busses
-From:   Saravana Kannan <saravanak@google.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        David Collins <collinsd@codeaurora.org>,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ALqlLhg7YVLING1D36Gu74QDTz3FR0Y+jcw5/H0ey+0=;
+        b=HZrP23uipWPqpLk+z7U6bfU2pHgP8S6uxxsxiBTnBKPoBdTyOUtD7Filrl0olyTqJQ
+         5uXNizgwIrbNLT0aMVYZqXoHN/BDCYThCA0iwwEJGmi63f9F2wrkhzUj4saWX3N0pSJD
+         2nbYEeWLalhiuiGfV7J+iRvXG136EQM4rjjT4lEaj3PcYqPO9hDI2N5swrmiYqW//0eb
+         DEzIfVFFG8TN8azslbAMHXNdn9oTTtkgBae4rmE8oscXe7oeAgA5MZSctf00oj6mOYwC
+         u+ObvWe/wtYXkzlupGmoRXlQnpA95Klwei8bCI/spKhPl7N7xzVTVFEJUYZEfUwwvtNS
+         qubQ==
+X-Gm-Message-State: APjAAAUyfHP7aMRR3xXjGhpfvjx5OzK4ydeadRPzz2L+KZl7Jv2tozFo
+        KkzwUMsyz9khO5gSczMDJ/2uWA==
+X-Google-Smtp-Source: APXvYqxJ0s6j/+aW7uhUJ7Ou5tiS0KDhEtIRqfl6oc0MOrCIsIfMaaGujQ6r+wGU4kSPuTh7F5lDQQ==
+X-Received: by 2002:ac8:6898:: with SMTP id m24mr78017676qtq.362.1564438295068;
+        Mon, 29 Jul 2019 15:11:35 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id y3sm30240363qtj.46.2019.07.29.15.11.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 15:11:33 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 18:11:26 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     wei.w.wang@intel.com, Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com
+Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
+ hinting"
+Message-ID: <20190729180806-mutt-send-email-mst@kernel.org>
+References: <20190724171050.7888.62199.stgit@localhost.localdomain>
+ <20190724150224-mutt-send-email-mst@kernel.org>
+ <6218af96d7d55935f2cf607d47680edc9b90816e.camel@linux.intel.com>
+ <ee5387b1-89af-daf4-8492-8139216c6dcf@redhat.com>
+ <20190724164023-mutt-send-email-mst@kernel.org>
+ <CAKgT0Ud6jPpsvJWFAMSnQXAXeNZb116kR7D2Xb7U-7BOtctK_Q@mail.gmail.com>
+ <20190729151805-mutt-send-email-mst@kernel.org>
+ <CAKgT0Ufq9RE_4B5bdsYyEf65WJkZsDHMD+MEJVJyev22+J3XAg@mail.gmail.com>
+ <20190729163053-mutt-send-email-mst@kernel.org>
+ <CAKgT0UfxQb2aLiTKz5JeHt76R8WFQcnVg_wq1wxJV_1UhbPJMg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UfxQb2aLiTKz5JeHt76R8WFQcnVg_wq1wxJV_1UhbPJMg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Default busses also have devices created for them. But there's no point
-in creating device links for them. It's especially wasteful as it'll
-cause the traversal of the entire device tree and also spend a lot of
-time checking and figuring out that creating those links isn't allowed.
-So check for default busses and skip trying to create device links for
-them.
+On Mon, Jul 29, 2019 at 02:37:26PM -0700, Alexander Duyck wrote:
+> On Mon, Jul 29, 2019 at 1:49 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Mon, Jul 29, 2019 at 01:21:32PM -0700, Alexander Duyck wrote:
+> > > On Mon, Jul 29, 2019 at 12:25 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > >
+> > > > On Mon, Jul 29, 2019 at 09:58:04AM -0700, Alexander Duyck wrote:
+> > > > > On Wed, Jul 24, 2019 at 1:42 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > > >
+> > > > > > On Wed, Jul 24, 2019 at 04:29:27PM -0400, Nitesh Narayan Lal wrote:
+> > > > > > >
+> > > > > > > On 7/24/19 4:18 PM, Alexander Duyck wrote:
+> > > > > > > > On Wed, 2019-07-24 at 15:02 -0400, Michael S. Tsirkin wrote:
+> > > > > > > >> On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
+> > > > > > > >>> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > > > > >>>
+> > > > > > > >>> Add support for what I am referring to as "bubble hinting". Basically the
+> > > > > > > >>> idea is to function very similar to how the balloon works in that we
+> > > > > > > >>> basically end up madvising the page as not being used. However we don't
+> > > > > > > >>> really need to bother with any deflate type logic since the page will be
+> > > > > > > >>> faulted back into the guest when it is read or written to.
+> > > > > > > >>>
+> > > > > > > >>> This is meant to be a simplification of the existing balloon interface
+> > > > > > > >>> to use for providing hints to what memory needs to be freed. I am assuming
+> > > > > > > >>> this is safe to do as the deflate logic does not actually appear to do very
+> > > > > > > >>> much other than tracking what subpages have been released and which ones
+> > > > > > > >>> haven't.
+> > > > > > > >>>
+> > > > > > > >>> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > > > > >>> ---
+> > > > > > > >>>  hw/virtio/virtio-balloon.c                      |   40 +++++++++++++++++++++++
+> > > > > > > >>>  include/hw/virtio/virtio-balloon.h              |    2 +
+> > > > > > > >>>  include/standard-headers/linux/virtio_balloon.h |    1 +
+> > > > > > > >>>  3 files changed, 42 insertions(+), 1 deletion(-)
+> > > > > > > >>>
+> > > > > > > >>> diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+> > > > > > > >>> index 2112874055fb..70c0004c0f88 100644
+> > > > > > > >>> --- a/hw/virtio/virtio-balloon.c
+> > > > > > > >>> +++ b/hw/virtio/virtio-balloon.c
+> > > > > > > >>> @@ -328,6 +328,39 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
+> > > > > > > >>>      balloon_stats_change_timer(s, 0);
+> > > > > > > >>>  }
+> > > > > > > >>>
+> > > > > > > >>> +static void virtio_bubble_handle_output(VirtIODevice *vdev, VirtQueue *vq)
+> > > > > > > >>> +{
+> > > > > > > >>> +    VirtQueueElement *elem;
+> > > > > > > >>> +
+> > > > > > > >>> +    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
+> > > > > > > >>> +         unsigned int i;
+> > > > > > > >>> +
+> > > > > > > >>> +        for (i = 0; i < elem->in_num; i++) {
+> > > > > > > >>> +            void *addr = elem->in_sg[i].iov_base;
+> > > > > > > >>> +            size_t size = elem->in_sg[i].iov_len;
+> > > > > > > >>> +            ram_addr_t ram_offset;
+> > > > > > > >>> +            size_t rb_page_size;
+> > > > > > > >>> +            RAMBlock *rb;
+> > > > > > > >>> +
+> > > > > > > >>> +            if (qemu_balloon_is_inhibited())
+> > > > > > > >>> +                continue;
+> > > > > > > >>> +
+> > > > > > > >>> +            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
+> > > > > > > >>> +            rb_page_size = qemu_ram_pagesize(rb);
+> > > > > > > >>> +
+> > > > > > > >>> +            /* For now we will simply ignore unaligned memory regions */
+> > > > > > > >>> +            if ((ram_offset | size) & (rb_page_size - 1))
+> > > > > > > >>> +                continue;
+> > > > > > > >>> +
+> > > > > > > >>> +            ram_block_discard_range(rb, ram_offset, size);
+> > > > > > > >> I suspect this needs to do like the migration type of
+> > > > > > > >> hinting and get disabled if page poisoning is in effect.
+> > > > > > > >> Right?
+> > > > > > > > Shouldn't something like that end up getting handled via
+> > > > > > > > qemu_balloon_is_inhibited, or did I miss something there? I assumed cases
+> > > > > > > > like that would end up setting qemu_balloon_is_inhibited to true, if that
+> > > > > > > > isn't the case then I could add some additional conditions. I would do it
+> > > > > > > > in about the same spot as the qemu_balloon_is_inhibited check.
+> > > > > > > I don't think qemu_balloon_is_inhibited() will take care of the page poisoning
+> > > > > > > situations.
+> > > > > > > If I am not wrong we may have to look to extend VIRTIO_BALLOON_F_PAGE_POISON
+> > > > > > > support as per Michael's suggestion.
+> > > > > >
+> > > > > >
+> > > > > > BTW upstream qemu seems to ignore VIRTIO_BALLOON_F_PAGE_POISON ATM.
+> > > > > > Which is probably a bug.
+> > > > > > Wei, could you take a look pls?
+> > > > >
+> > > > > So I was looking at sorting out this for the unused page reporting
+> > > > > that I am working on and it occurred to me that I don't think we can
+> > > > > do the free page hinting if any sort of poison validation is present.
+> > > > > The problem is that free page hinting simply stops the page from being
+> > > > > migrated. As a result if there was stale data present it will just
+> > > > > leave it there instead of zeroing it or writing it to alternating 1s
+> > > > > and 0s.
+> > > >
+> > > > stale data where? on source or on destination?
+> > > > do you mean the case where memory was corrupted?
+> > > >
+> > >
+> > > Actually I am getting my implementation and this one partially mixed
+> > > up again. I was thinking that the page just gets put back. However it
+> > > doesn't. Instead free_pages is called. As such it is going to dirty
+> > > the page by poisoning it as soon as the hinting is complete.
+> > >
+> > > In some ways it is worse because I think page poisoning combined with
+> > > free page hinting will make the VM nearly unusable because it will be
+> > > burning cycles allocating all memory, and then poisoning all those
+> > > pages on free. So it will be populating the dirty bitmap with all free
+> > > memory each time it goes through and attempts to determine what memory
+> > > is free.
+> >
+> > Right, it does make it useless.
+> >
+> > I really consider this a bug: page should be given to hypervisor after
+> > it's poisoned. Then at least with 0 poison we could just mark it clean.
+> > For non-zero poison, we could think about adding kvm APIs for
+> > aggressively mapping all freed pages to a single non-zero one with COW.
+> >
+> > I guess it's prudent to sacrifice another feature bit if/when
+> > we fix it properly, saving a feature bit isn't worth
+> > the risk that someone shipped a guest like this.
+> >
+> > But it does show why just using alloc/free for hinting isn't
+> > as great an idea as it seems on the surface.
+> 
+> What I think I can do for now is address this partially in QEMU. What
+> I will do is just return without starting the free page hinting in
+> virtio_balloon_free_page_start() if VIRTIO_BALLOON_F_PAGE_POISON is
+> set.
+> 
+> > > > >
+> > > > > Also it looks like the VIRTIO_BALLOON_F_PAGE_POISON feature is
+> > > > > assuming that 0 means that page poisoning is disabled,
+> > > > > when in reality
+> > > > > it might just mean we are using the value zero to poison pages instead
+> > > > > of the 0xaa pattern. As such I think there are several cases where we
+> > > > > could incorrectly flag the pages with the hint and result in the
+> > > > > migrated guest reporting pages that contain non-poison values.
+> > > > >
+> > > >
+> > > >
+> > > > Well guest has this code:
+> > > > static int virtballoon_validate(struct virtio_device *vdev)
+> > > > {
+> > > >         if (!page_poisoning_enabled())
+> > > >                 __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_PAGE_POISON);
+> > > >
+> > > >         __virtio_clear_bit(vdev, VIRTIO_F_IOMMU_PLATFORM);
+> > > >         return 0;
+> > > > }
+> > > >
+> > > > So it seems that host can figure out what is going on easily enough.
+> > > > What did I miss?
+> > >
+> > > Okay. So it is clearing that feature bit. I didn't see that part.
+> > > However that leads to the question of where we should be setting that
+> > > feature bit in the QEMU side of things. I was looking at setting that
+> > > bit in virtio_balloon_get_features(). Would that be the appropriate
+> > > place to set that so that the feature flag is reset when we are
+> > > changing OSes or rebooting the guest?
+> >
+> > We have
+> >     DEFINE_PROP_BIT("free-page-hint", VirtIOBalloon, host_features,
+> >                     VIRTIO_BALLOON_F_FREE_PAGE_HINT, false),
+> > and poison should be there, too.
+> 
+> I don't think we want it to be user configurable though, do we? It
+> seems like it should be set if either free-page-hint or
+> unused-page-reporting are enabled. Then the guest can disable it on
+> its end if poisoning is not present.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/of/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 41499ddc8d95..676b2f730d1b 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -682,6 +682,8 @@ static int of_link_to_suppliers(struct device *dev)
- 		return 0;
- 	if (unlikely(!dev->of_node))
- 		return 0;
-+	if (of_match_node(of_default_bus_match_table, dev->of_node))
-+		return 0;
- 
- 	return __of_link_to_suppliers(dev, dev->of_node);
- }
--- 
-2.22.0.709.g102302147b-goog
+Oh right. So it can be in virtio_balloon_get_features then, sorry.  We
+still do need to make it conditional on a property (internal one,
+starting with "x-") for machine compat reasons.
 
+
+
+> > > > > The zero assumption works for unused page reporting since we will be
+> > > > > zeroing out the page when it is faulted back into the guest, however
+> > > > > the same doesn't work for the free page hint since it is simply
+> > > > > skipping the migration of the recently dirtied page.
+> > > >
+> > > > Right but the dirtied page is normally full of 0 since that is the
+> > > > poison value, if we just leave it there we still get 0s, right?
+> > >
+> > > So for the unused page reporting which I am working on we can still
+> > > hint the page away since it will be 0s, and us returning the pages
+> > > doesn't alter the page data. However for the free page hinting I don't
+> > > think we can.
+> > >
+> > > With page poisoning and free page hinting I am thinking we should just
+> > > disable the free page hinting as I don't see how there can be any
+> > > advantage to it if page poisoning is enbled. Basically the thing that
+> > > makes the hinting "safe" will sabotage it since for every page we
+> > > don't migrate we will also be marking as dirty for the next iteration
+> > > through migration. As such we are just pushing the migration of any
+> > > free pages until the VM has stopped since the VM will just keep
+> > > dirtying the free pages until it stops hinting.
+> >
+> >
+> > Right this was discussed at the time for non-zero poison.
+> >
+> > For hinting, my argument was simple: the reason it's useless is contained
+> > within the hypervisor. So don't put the logic in the guest:
+> > hypervisor can see poison is set and not request hints from guest.
+> 
+> Agreed. What I am going to do is store off the config value to a value
+> local to the vdev when the config is written from the guest and the
+> VIRTIO_BALLOON_F_PAGE_POISON value is set.
+> 
+> Like I mentioned above I will just disable the free page hinting
+> functionality by just not having the hypervisor request hinting if
+> page poisoning is set. I will just drop the reports from the guest
+> when the poison value is non-zero.
+
+Makes sense. In fact this part is a bugfix, and if you
+can post it quickly I'll try to fast track it into 4.1
+(might be too late for that, we'll see).
+
+> > For reporting, as you say it works with 0s and we can thinkably
+> > make it work with non-0s down the road.
+> > Until we do we can always have the hypervisor do something like
+> >
+> >         if (poisoning && poison != 0)
+> >                 return;
+> >         madvise(MADV_FREE);
+> 
+> Agreed.
