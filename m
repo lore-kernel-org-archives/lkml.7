@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27114C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E82C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8992054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046892054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429321;
-	bh=mrPfb4yn5qmbsy+jrQ54Euyf0XfhyDXl+Ju9S5MQqmo=;
+	s=default; t=1564429325;
+	bh=O1vQYt8aWgXf55lft2fOPPZ64nQp9DyO7NU2Lkv8ZnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aTLHL4KgGl8JM6sIAI2BFsSz1XyAyaZ125IKv5PwXwhdUv6tiMgg9WCv5mXBW5EXf
-	 FZWdh9jQZOlbxPbaZpLsOkJF6Tvj+e+0lh9DiksJ+RPH7XwqTEVC4vfiwNuTkTthkQ
-	 9P3gjKFZuyLouvqp5+Jf4S9fAojpssuWGw5GexuM=
+	b=xsXhcADIZdIPqCllOdsaBZFrs0FiBsvs4pHi7UaEVOdl8fMoS9RLmdiPMI32XOv/3
+	 xPYlvGacgoa9/V6DXgQF2Y8ErBHPJFUQz7WnSp6GcQAIImUrbtKrrn56CPJkOjC5c1
+	 s2oSZ1ld2ooKZy8efYJarlez0pxRXDRJhnAL+EcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389441AbfG2Tl7 (ORCPT
+        id S2389453AbfG2TmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:41:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57518 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:42:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388566AbfG2Tl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:41:57 -0400
+        id S2388566AbfG2TmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:42:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C83CB2054F;
-        Mon, 29 Jul 2019 19:41:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E08220C01;
+        Mon, 29 Jul 2019 19:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429316;
-        bh=mrPfb4yn5qmbsy+jrQ54Euyf0XfhyDXl+Ju9S5MQqmo=;
+        s=default; t=1564429319;
+        bh=O1vQYt8aWgXf55lft2fOPPZ64nQp9DyO7NU2Lkv8ZnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jSv+hbUitAT5C6QCp9fmUAWvjyHdCojAOL620B7LkIQBi5e3RN06dDa2iurm6xzeE
-         8+OzcO9xpeT7DQjbgXi2gBQZJy8UoajqzlYI2RmblaRmME6jCnA4hCHA2/aDWBPlVI
-         f32tG/FsCgJpq5ld7CaGQ0xhEOd6NbvaWk6uoMo0=
+        b=b7iB2uHdW6QDgQKk/tLV8jwWHpAh7qSOzzXcoD6kjFaQ+8cXkPJdiAFt9NeHXBm0M
+         K+K/V9ZG6k5m1N7wX3Y/tIXbjq/tGspHck4DJ57HXhwp2aQzus82OfUIdevFWtJxde
+         LCw5QgT6Pe4jJA83l01TrJP/CnNXhJIuxAz4BXTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Valentine Fatiev <valentinef@mellanox.com>,
+        Feras Daoud <ferasda@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 059/113] powerpc/mm: Handle page table allocation failures
-Date:   Mon, 29 Jul 2019 21:22:26 +0200
-Message-Id: <20190729190709.585562359@linuxfoundation.org>
+Subject: [PATCH 4.19 060/113] IB/ipoib: Add child to parent list only if device initialized
+Date:   Mon, 29 Jul 2019 21:22:27 +0200
+Message-Id: <20190729190709.867511240@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -61,58 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2230ebf6e6dd0b7751e2921b40f6cfe34f09bb16 ]
+[ Upstream commit 91b01061fef9c57d2f5b712a6322ef51061f4efd ]
 
-This fixes kernel crash that arises due to not handling page table allocation
-failures while allocating hugetlb page table.
+Despite failure in ipoib_dev_init() we continue with initialization flow
+and creation of child device. It causes to the situation where this child
+device is added too early to parent device list.
 
-Fixes: e2b3d202d1db ("powerpc: Switch 16GB and 16MB explicit hugepages to a different page table format")
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Change the logic, so in case of failure we properly return error from
+ipoib_dev_init() and add child only in success path.
+
+Fixes: eaeb39842508 ("IB/ipoib: Move init code to ndo_init")
+Signed-off-by: Valentine Fatiev <valentinef@mellanox.com>
+Reviewed-by: Feras Daoud <ferasda@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/hugetlbpage.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/infiniband/ulp/ipoib/ipoib_main.c | 34 +++++++++++++----------
+ 1 file changed, 20 insertions(+), 14 deletions(-)
 
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index 7296a42eb62e..cef0b7ee1024 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -150,6 +150,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
- 	} else {
- 		pdshift = PUD_SHIFT;
- 		pu = pud_alloc(mm, pg, addr);
-+		if (!pu)
-+			return NULL;
- 		if (pshift == PUD_SHIFT)
- 			return (pte_t *)pu;
- 		else if (pshift > PMD_SHIFT) {
-@@ -158,6 +160,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
- 		} else {
- 			pdshift = PMD_SHIFT;
- 			pm = pmd_alloc(mm, pu, addr);
-+			if (!pm)
-+				return NULL;
- 			if (pshift == PMD_SHIFT)
- 				/* 16MB hugepage */
- 				return (pte_t *)pm;
-@@ -174,12 +178,16 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
- 	} else {
- 		pdshift = PUD_SHIFT;
- 		pu = pud_alloc(mm, pg, addr);
-+		if (!pu)
-+			return NULL;
- 		if (pshift >= PUD_SHIFT) {
- 			ptl = pud_lockptr(mm, pu);
- 			hpdp = (hugepd_t *)pu;
- 		} else {
- 			pdshift = PMD_SHIFT;
- 			pm = pmd_alloc(mm, pu, addr);
-+			if (!pm)
-+				return NULL;
- 			ptl = pmd_lockptr(mm, pm);
- 			hpdp = (hugepd_t *)pm;
- 		}
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+index 009615499b37..78dd36daac00 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+@@ -1892,12 +1892,6 @@ static void ipoib_child_init(struct net_device *ndev)
+ 	struct ipoib_dev_priv *priv = ipoib_priv(ndev);
+ 	struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
+ 
+-	dev_hold(priv->parent);
+-
+-	down_write(&ppriv->vlan_rwsem);
+-	list_add_tail(&priv->list, &ppriv->child_intfs);
+-	up_write(&ppriv->vlan_rwsem);
+-
+ 	priv->max_ib_mtu = ppriv->max_ib_mtu;
+ 	set_bit(IPOIB_FLAG_SUBINTERFACE, &priv->flags);
+ 	memcpy(priv->dev->dev_addr, ppriv->dev->dev_addr, INFINIBAND_ALEN);
+@@ -1940,6 +1934,17 @@ static int ipoib_ndo_init(struct net_device *ndev)
+ 	if (rc) {
+ 		pr_warn("%s: failed to initialize device: %s port %d (ret = %d)\n",
+ 			priv->ca->name, priv->dev->name, priv->port, rc);
++		return rc;
++	}
++
++	if (priv->parent) {
++		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
++
++		dev_hold(priv->parent);
++
++		down_write(&ppriv->vlan_rwsem);
++		list_add_tail(&priv->list, &ppriv->child_intfs);
++		up_write(&ppriv->vlan_rwsem);
+ 	}
+ 
+ 	return 0;
+@@ -1957,6 +1962,14 @@ static void ipoib_ndo_uninit(struct net_device *dev)
+ 	 */
+ 	WARN_ON(!list_empty(&priv->child_intfs));
+ 
++	if (priv->parent) {
++		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
++
++		down_write(&ppriv->vlan_rwsem);
++		list_del(&priv->list);
++		up_write(&ppriv->vlan_rwsem);
++	}
++
+ 	ipoib_neigh_hash_uninit(dev);
+ 
+ 	ipoib_ib_dev_cleanup(dev);
+@@ -1968,15 +1981,8 @@ static void ipoib_ndo_uninit(struct net_device *dev)
+ 		priv->wq = NULL;
+ 	}
+ 
+-	if (priv->parent) {
+-		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
+-
+-		down_write(&ppriv->vlan_rwsem);
+-		list_del(&priv->list);
+-		up_write(&ppriv->vlan_rwsem);
+-
++	if (priv->parent)
+ 		dev_put(priv->parent);
+-	}
+ }
+ 
+ static int ipoib_set_vf_link_state(struct net_device *dev, int vf, int link_state)
 -- 
 2.20.1
 
