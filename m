@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D410C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29629C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB87621655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79E9205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJ4WwWNl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="duEiWJqA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404056AbfG2T7b (ORCPT
+        id S2404362AbfG2T7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:59:31 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46934 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388432AbfG2TxE (ORCPT
+        Mon, 29 Jul 2019 15:59:40 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46463 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728882AbfG2TxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:53:04 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c2so27881860plz.13;
-        Mon, 29 Jul 2019 12:53:04 -0700 (PDT)
+        Mon, 29 Jul 2019 15:53:01 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k189so9730240pgk.13;
+        Mon, 29 Jul 2019 12:53:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+kp9NlyUvWGSuGBjaaMhEx2jUU1orNg+BgS3bQvSUoQ=;
-        b=dJ4WwWNl5W0Y8xr4wUOip3VYwrrR2Wy5dKPVcw63R2Fofn+YdzJBK1+DOwhk12m1zX
-         adpIP40lZwUSqBLXWw3PfCUpSg2HQ+sK7VJFWOHliIC8C6hDwPehPEiFk5SzJDYViKvG
-         KrdIJ49W4Cd20HlaBY9hrrcK306SZclLfmL++wpqY5iBhRDfC4pKpHZQBfwXxan565QT
-         Y8GHQTmqUfgnmE8iAw5+I2v7YLcEkGCCSFx7b6b77rnFmnzOZ2tV8p1E3vJ6lqAN1jsM
-         QcPvPn5IxrFPSJKaUOTDdUtw6C5nV3q+l/Qhk5+1f4YLZxj95SQY0TArfbxNGDkl0N3N
-         nR2g==
+        bh=txBFEA0p0mencL2FMZffTtTBfxW3XrDp/4JH32LKLg4=;
+        b=duEiWJqAE4UPSZq/9tzAYpc+uL61VBt4tJ1ePuEtIn+sKgLJgKuO88g+UOLkEHty+a
+         H+e80AqYmT2zulzRH3YmpyzB+wiNa9wpbKqzcU/tm5VK11dTgzYRwSZLFE3gXkQ0kstB
+         81ikjiImNRIF09o2tFebG6wcs0h5InIqWz+5hN5L31xlSn0dljW0q99WMOYwnMrJOtSQ
+         8ZzSjwZVNE4TJjD1SXynbxEY6YEeL5PbsHqC3/z9ZZOQn2Mlvvoj2yb0yjNbdQbzWQAY
+         UHdmjKEEzvmq1Pq2/1K5dc31I/Ubt1fjDBsZcDMWpEt+LNHz1MRiScHBwLT5n6sH/Q/Q
+         45Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+kp9NlyUvWGSuGBjaaMhEx2jUU1orNg+BgS3bQvSUoQ=;
-        b=KgQZG6v2qbgC+5ZSDR/Ty+fhyobGGbAmHm4X+muSCx5N9tDKNaPBaYjgxB8H1SfdlM
-         ZMhMTWsw2Y03LxbIqb4ggzPHMtvNvEgOLjzhvuM6Omin3HUS06/ghjqVwuWtv6OYs+Av
-         vsyryPNME6zYIaFaPYzSFU7Swm9pJEAdg70emHMRxNZlbuL8kxdEHVU5dUdZcS2q6gVN
-         nR7PUzuHGowSFRF73WHWFVW4yF2jSlDofCMdGpFne5C1hUU/gQyk75xN8wm5hfJpUecH
-         bVji9LGFkxyunJNoHrh1gTnyk4preB0tDfiaIqz+p2yjIiFc3nR0r9di3yZfMjYRHms7
-         ZMtw==
-X-Gm-Message-State: APjAAAWuouo9cnDC4v6m3pduoj0KkYPk3WWfo9ZTzeeYnisf6SSwx1Fd
-        tE5rMeouQrVQuDbJ+PbsG+0ZBkiV
-X-Google-Smtp-Source: APXvYqz4bLV800O6SVQamkGgA98ToKg19UzIkdYDx8IpNv+UwxaBwOLtOjhx0V2M7hHuCjrpiQuEPg==
-X-Received: by 2002:a17:902:bd49:: with SMTP id b9mr17569555plx.343.1564429983541;
-        Mon, 29 Jul 2019 12:53:03 -0700 (PDT)
+        bh=txBFEA0p0mencL2FMZffTtTBfxW3XrDp/4JH32LKLg4=;
+        b=XQicbLnfMCDjlXO5kQgt6iQIJo+jNJ+RCQHqpHp/n2ApeUfrkbCTRL0/hEb8SGoFPO
+         aK077GXl4YHjgAqr9GMxvsdCq74+1IvFHrjt/KkVk4w5YQBabXCpNiTMN+Ufi5ABYbHY
+         xE/apzkSztTHWxAZJkylGuh/sZwFwjktgEbTvZHyO5J+QPwj6hyR82D7hjYRS/0fFZfH
+         tdxLER1Ae7jhwUC6j9M6JqSE7OFDTS0id0b5va14s6pIMkQtTBzd6MISaSlmkbcRKhAN
+         vrvRhy7Ae3C9u96AV5+JC/6DIslVNv5vBoJnSrPFTC/VwkCE493Xmom425QfwatTdM/h
+         avIw==
+X-Gm-Message-State: APjAAAVbGxT+UiX9iFQituVilmw5Fqo5h7mtzL+FB9uGA5tt0vqZnPx5
+        S2B2yggV1pqY/TsLiVnoBEQ7Oq4o
+X-Google-Smtp-Source: APXvYqyZA64AdyyRDDWjGksnRFKzgAF1EPZGhkMHmGHI/TUqw1qcy2bpBGj83iyyUVhQS7SaG9cWFQ==
+X-Received: by 2002:a17:90a:360c:: with SMTP id s12mr115325049pjb.30.1564429979746;
+        Mon, 29 Jul 2019 12:52:59 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.53.02
+        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.52.58
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 12:53:02 -0700 (PDT)
+        Mon, 29 Jul 2019 12:52:59 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-serial@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 13/24] tty: serial: fsl_lpuart: Use appropriate lpuart32_* I/O funcs
-Date:   Mon, 29 Jul 2019 12:52:15 -0700
-Message-Id: <20190729195226.8862-14-andrew.smirnov@gmail.com>
+Subject: [PATCH 10/24] tty: serial: fsl_lpuart: Drop no-op bit opearation
+Date:   Mon, 29 Jul 2019 12:52:12 -0700
+Message-Id: <20190729195226.8862-11-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190729195226.8862-1-andrew.smirnov@gmail.com>
 References: <20190729195226.8862-1-andrew.smirnov@gmail.com>
@@ -81,12 +81,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When dealing with 32-bit variant of LPUART IP block appropriate I/O
-helpers have to be used to properly deal with endianness
-differences. Change all of the offending code to do that.
+The check for termios->c_cflag & CRTSCTS ensure that if we reach else
+branch, CRTSCTS in termios->c_cflag is already going to be
+cleard. Doing so explicitly there is not necessary. Drop it.
 
-Fixes: a5fa2660d787 ("tty/serial/fsl_lpuart: Add CONSOLE_POLL support
-for lpuart32.")
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Stefan Agner <stefan@agner.ch>
 Cc: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
@@ -99,73 +97,28 @@ Cc: linux-imx@nxp.com
 Cc: linux-serial@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/tty/serial/fsl_lpuart.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 10f1af51c58d..50a707c88a16 100644
+index f87ea889ff86..5181ba5d8f71 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -616,26 +616,26 @@ static int lpuart32_poll_init(struct uart_port *port)
- 	spin_lock_irqsave(&sport->port.lock, flags);
+@@ -1651,12 +1651,10 @@ lpuart_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	if (sport->port.rs485.flags & SER_RS485_ENABLED)
+ 		termios->c_cflag &= ~CRTSCTS;
  
- 	/* Disable Rx & Tx */
--	writel(0, sport->port.membase + UARTCTRL);
-+	lpuart32_write(&sport->port, UARTCTRL, 0);
+-	if (termios->c_cflag & CRTSCTS) {
++	if (termios->c_cflag & CRTSCTS)
+ 		modem |= (UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
+-	} else {
+-		termios->c_cflag &= ~CRTSCTS;
++	else
+ 		modem &= ~(UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
+-	}
  
--	temp = readl(sport->port.membase + UARTFIFO);
-+	temp = lpuart32_read(&sport->port, UARTFIFO);
- 
- 	/* Enable Rx and Tx FIFO */
--	writel(temp | UARTFIFO_RXFE | UARTFIFO_TXFE,
--		   sport->port.membase + UARTFIFO);
-+	lpuart32_write(&sport->port, UARTFIFO,
-+		       temp | UARTFIFO_RXFE | UARTFIFO_TXFE);
- 
- 	/* flush Tx and Rx FIFO */
--	writel(UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH,
--			sport->port.membase + UARTFIFO);
-+	lpuart32_write(&sport->port, UARTFIFO,
-+		       UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH);
- 
- 	/* explicitly clear RDRF */
--	if (readl(sport->port.membase + UARTSTAT) & UARTSTAT_RDRF) {
--		readl(sport->port.membase + UARTDATA);
--		writel(UARTFIFO_RXUF, sport->port.membase + UARTFIFO);
-+	if (lpuart32_read(&sport->port, UARTSTAT) & UARTSTAT_RDRF) {
-+		lpuart32_read(&sport->port, UARTDATA);
-+		lpuart32_write(&sport->port, UARTFIFO, UARTFIFO_RXUF);
- 	}
- 
- 	/* Enable Rx and Tx */
--	writel(UARTCTRL_RE | UARTCTRL_TE, sport->port.membase + UARTCTRL);
-+	lpuart32_write(&sport->port, UARTCTRL, UARTCTRL_RE | UARTCTRL_TE);
- 	spin_unlock_irqrestore(&sport->port.lock, flags);
- 
- 	return 0;
-@@ -643,18 +643,18 @@ static int lpuart32_poll_init(struct uart_port *port)
- 
- static void lpuart32_poll_put_char(struct uart_port *port, unsigned char c)
- {
--	while (!(readl(port->membase + UARTSTAT) & UARTSTAT_TDRE))
-+	while (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_TDRE))
- 		barrier();
- 
--	writel(c, port->membase + UARTDATA);
-+	lpuart32_write(port, UARTDATA, c);
- }
- 
- static int lpuart32_poll_get_char(struct uart_port *port)
- {
--	if (!(readl(port->membase + UARTSTAT) & UARTSTAT_RDRF))
-+	if (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_RDRF))
- 		return NO_POLL_CHAR;
- 
--	return readl(port->membase + UARTDATA);
-+	return lpuart32_read(port, UARTDATA);
- }
- #endif
- 
+ 	if (termios->c_cflag & CSTOPB)
+ 		termios->c_cflag &= ~CSTOPB;
 -- 
 2.21.0
 
