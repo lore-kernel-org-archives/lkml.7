@@ -2,89 +2,77 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E0BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1416C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8A6206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88303206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564426736;
+	bh=LMYE72QRPJ7AroWxMTYIGAa/DcfFy16T0+x3qktaQwU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T/SAEkv7hIy8dlavH+tlila/TICM2R4tMFQPVwMsLRUby9+b/kkPSLbHtMhcYo111
+	 zSj5i6fTRU05a8+SBgNgRSgKosJSjoE0xmmdTx+e8Hp44FXhxO47DO6itb+dnFjHmZ
+	 2iw4YAgsBS8CzT/OfBTV89de9eoJulxEbPxcmPg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbfG2S4Z (ORCPT
+        id S1728868AbfG2S6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:56:25 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:60961 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727622AbfG2S4Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 14:56:25 -0400
-Received: from orion.localdomain ([77.4.29.213]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mi2BV-1iMqmk0KkT-00e1bO; Mon, 29 Jul 2019 20:55:27 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] net: sctp: drop unneeded likely() call around IS_ERR()
-Date:   Mon, 29 Jul 2019 20:55:21 +0200
-Message-Id: <1564426521-22525-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:i9VAZizxx+eH8r0jwuYwZQDbCo18h5YiuaRZbO0+UbEQvlijxZa
- 4TveSmdAeApi9mrr/px0U9CQPkq3sLPwuV2Rb1xKRWxqo2AdQno8XpFbBoc6hMoYT6dSUsn
- OWIGdKV5RpVjVTathxOV2wmrAjZZAJ1xBL4NyAqv7NeK7fPnrx8RrfYwDAWJKb7r2TjEiCq
- JOQAYvEkfylVdH2zi9oNQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0j1dMNDXM08=:FybE/YAxvCSouvkrzuAsmd
- k1GAFLXyDu5cQv0anbTKgEchzCv2F0aj9ayLyVpjzWNGEpveANpicYw+G9TmLyQiTo1mUZQ+3
- L8l6wNaw992W3j1ZQI9bOwliX4Gi8l0PlCatTfmeh4eikkBjBLnasWCuqlXpBUkxN4FAV4Fc1
- NvAa+9qqBSlH4k9BbaDDODabvW8z9WW4EJ7gBIlPqOUc3x8d3eTBokXAKoMXpF8/kkGCIOQBC
- BbBLT2WL4QKpBK6zpCOIBJaxOAN0RAnHsU4kXuiR3DUSKSMyOCGE5riZ+YgA125tWMYb20kdh
- izhPh+Db3ixIHZumSDpCOv4achqWesxNNxkXXjhRVCg3OtoiIo8IKywy0jGpun5/vt4Vz8or6
- oXjHW37IK/WtQsthbiMwlQPdnyBt/D/+FaU8J4YnyFiTB7ITg3XKRtaocQi4ngkoooFpxK3Sq
- ASv+DivmloXQLgwptXEmdNZNhLOm4p+LRPrgaTE7eAqGvygir2NUyXzmR9eNDoEj9Yg0EQjjr
- B4PUKlRPou3IQCp9zC0BZtnOULbM0ovS3mGAjOXqFY9Gg/AEDc07cMcEyRjh+wT57vvn1AQHD
- Xe7tVEAeSNBvWykttSwAaq4f9Pdap7wO1mz+Wi3rMgTgvp9wFnAQQdfodYjWlnhFdAVtKRQo+
- vEt9fSwdnaQUlmkjhZ/9nmt2iVvDptA6R/wNOT7L91WsYhyw2L6n2HLm/fg73gx766L16vpcR
- E1E0OPiQBfbsgchSBjaeQVfwbCxoVW0cvOi9Bg==
+        Mon, 29 Jul 2019 14:58:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55892 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727089AbfG2S6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 14:58:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E2B4CAD85;
+        Mon, 29 Jul 2019 18:58:53 +0000 (UTC)
+Date:   Mon, 29 Jul 2019 20:58:53 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH v2] sched/core: Don't use dying mm as active_mm of
+ kthreads
+Message-ID: <20190729185853.GJ9330@dhcp22.suse.cz>
+References: <20190727171047.31610-1-longman@redhat.com>
+ <20190729091249.GE9330@dhcp22.suse.cz>
+ <556445a2-8912-c017-413c-7a4f36c4b89e@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <556445a2-8912-c017-413c-7a4f36c4b89e@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+On Mon 29-07-19 11:27:35, Waiman Long wrote:
+> On 7/29/19 5:12 AM, Michal Hocko wrote:
+> > On Sat 27-07-19 13:10:47, Waiman Long wrote:
+> >> It was found that a dying mm_struct where the owning task has exited
+> >> can stay on as active_mm of kernel threads as long as no other user
+> >> tasks run on those CPUs that use it as active_mm. This prolongs the
+> >> life time of dying mm holding up memory and other resources like swap
+> >> space that cannot be freed.
+> > IIRC use_mm doesn't pin the address space. It only pins the mm_struct
+> > itself. So what exactly is the problem here?
+> 
+> As explained in my response to Peter, I found that resource like swap
+> space were depleted even after the exit of the offending program in a
+> mostly idle system. This patch is to make sure that those resources get
+> freed after program exit ASAP.
 
-IS_ERR() already calls unlikely(), so this extra unlikely() call
-around IS_ERR() is not needed.
+Could you elaborate more? How can a mm counter (do not confuse with
+mm_users) prevent address space to be torn down on exit?
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- net/sctp/socket.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index aa80cda..9d1f83b 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -985,7 +985,7 @@ static int sctp_setsockopt_bindx(struct sock *sk,
- 		return -EINVAL;
- 
- 	kaddrs = memdup_user(addrs, addrs_size);
--	if (unlikely(IS_ERR(kaddrs)))
-+	if (IS_ERR(kaddrs))
- 		return PTR_ERR(kaddrs);
- 
- 	/* Walk through the addrs buffer and count the number of addresses. */
-@@ -1315,7 +1315,7 @@ static int __sctp_setsockopt_connectx(struct sock *sk,
- 		return -EINVAL;
- 
- 	kaddrs = memdup_user(addrs, addrs_size);
--	if (unlikely(IS_ERR(kaddrs)))
-+	if (IS_ERR(kaddrs))
- 		return PTR_ERR(kaddrs);
- 
- 	/* Allow security module to validate connectx addresses. */
 -- 
-1.9.1
-
+Michal Hocko
+SUSE Labs
