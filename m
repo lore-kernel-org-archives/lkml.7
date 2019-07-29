@@ -3,124 +3,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0363CC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939DFC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D25E12070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B0D2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387454AbfG2KRQ (ORCPT
+        id S1728185AbfG2KTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:17:16 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39734 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387428AbfG2KRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:17:15 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 72AA6AD22FDC85C90763;
-        Mon, 29 Jul 2019 18:17:12 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
- 18:17:02 +0800
-Subject: Re: [PATCH net-next 08/11] net: hns3: add interrupt affinity support
- for misc interrupt
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        "tanhuazhong@huawei.com" <tanhuazhong@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "lipeng321@huawei.com" <lipeng321@huawei.com>,
-        "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>,
-        "salil.mehta@huawei.com" <salil.mehta@huawei.com>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
- <1563938327-9865-9-git-send-email-tanhuazhong@huawei.com>
- <67b32cdc72c0be03622e78899ac518d807ca7b85.camel@mellanox.com>
- <db2d081f-b892-b141-7fa5-44e66dd97eb9@huawei.com>
- <fa9b747119c2e7acb1ef5f139c022402cd2c854d.camel@mellanox.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <6a1d85f1-cc6c-1f5a-38c4-e08915e3bc45@huawei.com>
-Date:   Mon, 29 Jul 2019 18:17:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <fa9b747119c2e7acb1ef5f139c022402cd2c854d.camel@mellanox.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+        Mon, 29 Jul 2019 06:19:10 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35481 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfG2KTK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:19:10 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hs2k8-0005Yb-DO; Mon, 29 Jul 2019 12:19:00 +0200
+Message-ID: <1564395538.7633.7.camel@pengutronix.de>
+Subject: Re: [PATCH 2/6] pwm: sun4i: Add a quirk for reset line
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Chen-Yu Tsai <wens@csie.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Date:   Mon, 29 Jul 2019 12:18:58 +0200
+In-Reply-To: <20190729071218.bukw7vxilqy523k3@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+         <20190726184045.14669-3-jernej.skrabec@siol.net>
+         <20190729063630.rn325whatfnc3m7n@pengutronix.de>
+         <CAGb2v65KOpivHQNkg+R2=D=ejCJYnPdVcyHJZW-GJCR8j0Yk0g@mail.gmail.com>
+         <20190729071218.bukw7vxilqy523k3@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/27 7:18, Saeed Mahameed wrote:
-> On Thu, 2019-07-25 at 10:05 +0800, Yunsheng Lin wrote:
->> On 2019/7/25 3:24, Saeed Mahameed wrote:
->>> On Wed, 2019-07-24 at 11:18 +0800, Huazhong Tan wrote:
->>>> From: Yunsheng Lin <linyunsheng@huawei.com>
->>>>
-> 
-> [...]
->>>>
->>>> +static void hclge_irq_affinity_notify(struct irq_affinity_notify
->>>> *notify,
->>>> +				      const cpumask_t *mask)
->>>> +{
->>>> +	struct hclge_dev *hdev = container_of(notify, struct hclge_dev,
->>>> +					      affinity_notify);
->>>> +
->>>> +	cpumask_copy(&hdev->affinity_mask, mask);
->>>> +	del_timer_sync(&hdev->service_timer);
->>>> +	hdev->service_timer.expires = jiffies + HZ;
->>>> +	add_timer_on(&hdev->service_timer, cpumask_first(&hdev-
->>>>> affinity_mask));
->>>> +}
->>>
->>> I don't see any relation between your misc irq vector and &hdev-
->>>> service_timer, to me this looks like an abuse of the irq affinity
->>>> API
->>> to allow the user to move the service timer affinity.
->>
->> Hi, thanks for reviewing.
->>
->> hdev->service_timer is used to schedule the periodic work
->> queue hdev->service_task， we want all the management work
->> queue including hdev->service_task to bind to the same cpu
->> to improve cache and power efficiency, it is better to move
->> service timer affinity according to that.
->>
->> The hdev->service_task is changed to delay work queue in
->> next patch " net: hns3: make hclge_service use delayed workqueue",
->> So the affinity in the timer of the delay work queue is automatically
->> set to the affinity of the delay work queue, we will move the
->> "make hclge_service use delayed workqueue" patch before the
->> "add interrupt affinity support for misc interrupt" patch, so
->> we do not have to set service timer affinity explicitly.
->>
->> Also, There is there work queues(mbx_service_task, service_task,
->> rst_service_task) in the hns3 driver, we plan to combine them
->> to one or two workqueue to improve efficiency and readability.
->>
-> 
-> So just to make it clear, you have 3 deferred works, 2 are triggered by
-> the misc irq and 1 is periodic, you want them all on the same core and
-> you want to control their affinity via the irq affinity ? for works #1
-> and  #2 you get that for free since the irq is triggering them, but for
-> work #3 (the periodic one) you need to manually move it when the irq
-> affinity changes.
+Hi,
 
-Yes, You are right.
+On Mon, 2019-07-29 at 09:12 +0200, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Mon, Jul 29, 2019 at 02:43:23PM +0800, Chen-Yu Tsai wrote:
+> > On Mon, Jul 29, 2019 at 2:36 PM Uwe Kleine-König
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Fri, Jul 26, 2019 at 08:40:41PM +0200, Jernej Skrabec wrote:
+> > > > @@ -371,6 +374,14 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+> > > >       if (IS_ERR(pwm->clk))
+> > > >               return PTR_ERR(pwm->clk);
+> > > > 
+> > > > +     if (pwm->data->has_reset) {
+> > > > +             pwm->rst = devm_reset_control_get(&pdev->dev, NULL);
+> > > > +             if (IS_ERR(pwm->rst))
+> > > > +                     return PTR_ERR(pwm->rst);
+> > > > +
+> > > > +             reset_control_deassert(pwm->rst);
+> > > > +     }
+> > > > +
+> > > 
+> > > I wonder why there is a need to track if a given chip needs a reset
+> > > line. I'd just use devm_reset_control_get_optional() and drop the
+> > > .has_reset member in struct sun4i_pwm_data.
+> > 
+> > Because it's not optional for this platform, i.e. it won't work if
+> > the reset control (or clk, in the next patch) is somehow missing from
+> > the device tree.
+> 
+> If the device tree is wrong it is considered ok that the driver doesn't
+> behave correctly. So this is not a problem you need (or should) care
+> about.
 
-> 
-> I guess i am ok with this, since moving the irq affinity isn't only
-> required by the periodic work but also for the other works that the irq
-> is actually triggering (so it is not an actual abuse, sort of .. )
-> 
-> 
-> 
+I agree with this. Catching missing DT properties and other device tree
+validation is not the job of device drivers. The _optional request
+variants were introduced to simplify drivers that require the reset line
+on some platforms and not on others.
 
+I would ask to explicitly state whether the driver needs full control
+over the moment of (de)assertion of the reset signal, or whether the
+only requirement is that the reset signal stays deasserted while the PWM
+driver is active, by using devm_reset_control_get_optional_exclusive or
+devm_reset_control_get_optional_shared to request the reset control.
+
+regards
+Philipp
