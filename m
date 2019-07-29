@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB29C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3415C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB06B217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B4F2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429069;
-	bh=bDfhRMuXP5B3GwHpV1Bk3DWSkybPAdwcpwijME229TQ=;
+	s=default; t=1564429072;
+	bh=tuvR4FtMWj/BuN1LbZaX9rJkZodiYMjRD5VoourNhZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vruNy3GlAKDGYKbMTaFePBIRaT7n2OGbPRnOKFBR9mJ+4n48bzhTTGx0YYTGotu6w
-	 MBydoqtdIYEOjRY9DtEOHaZrUqfdzo36N1pHTPRRsPwdNthzVe6ygRT6T1hwovmkFU
-	 FMEj0L0mMdxlUwQFsXY1zxl4mnCqxI6u0ZpgS/Ts=
+	b=KCSRijdeWvscfC1kT9jGPiiBXi6WYALDbWRsK7dUG4sWPuUm+vFZ4NuGzAS/TNEar
+	 9etR705c8YzNZArKhxIzwG+Y3rPyR3zsbwMdF+O0J/kt6G9qTcrp6kiOBZlIi8D6Qu
+	 6x4JVSUBA/9zCcN3vGRIv3G9uiNK/wAqukDeFzQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388783AbfG2Ths (ORCPT
+        id S2388791AbfG2Thv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:37:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52638 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:37:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388750AbfG2Thq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:37:46 -0400
+        id S2388750AbfG2Tht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:37:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2615020C01;
-        Mon, 29 Jul 2019 19:37:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2B392171F;
+        Mon, 29 Jul 2019 19:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429065;
-        bh=bDfhRMuXP5B3GwHpV1Bk3DWSkybPAdwcpwijME229TQ=;
+        s=default; t=1564429068;
+        bh=tuvR4FtMWj/BuN1LbZaX9rJkZodiYMjRD5VoourNhZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EN1wyJCbiBJF0S9Noh0wOBDi+6nTgxYZ4yrF6dyKgzwZWSRgDIX01HDqIXmu91CIN
-         cXnIfebgNUE+bg1ow+q73VOKdD2DLsr4+4R6eWPDXcuNXc8BNDwQZLnVASMuOezP0z
-         Z8VDc7+5F5DV9rM5mecGeFm5NKmSVy/49eong5xQ=
+        b=C8Z/1UTCiidRq/61EW7+N0G4Luwqft1eRk41r4Kgt9dTtDZfTDrNFc2kllEPV1OFm
+         iHNgxsIZQ5HhzYhdj1b+WLDaaJBKuvOxm7qicNvpkG4CZ5b9fTKTh3mSningfSFrj8
+         l5TqVjbGo2+DnPrfrm4K8ACBWJSJExpS6k13N/pA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kimmo Rautkoski <ext-kimmo.rautkoski@vaisala.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 235/293] serial: 8250: Fix TX interrupt handling condition
-Date:   Mon, 29 Jul 2019 21:22:06 +0200
-Message-Id: <20190729190842.470737156@linuxfoundation.org>
+Subject: [PATCH 4.14 226/293] tty: serial: cpm_uart - fix init when SMC is relocated
+Date:   Mon, 29 Jul 2019 21:21:57 +0200
+Message-Id: <20190729190841.807021309@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,44 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit db1b5bc047b3cadaedab3826bba82c3d9e023c4b ]
+[ Upstream commit 06aaa3d066db87e8478522d910285141d44b1e58 ]
 
-Interrupt handler checked THRE bit (transmitter holding register
-empty) in LSR to detect if TX fifo is empty.
-In case when there is only receive interrupts the TX handling
-got called because THRE bit in LSR is set when there is no
-transmission (FIFO empty). TX handling caused TX stop, which in
-RS-485 half-duplex mode actually resets receiver FIFO. This is not
-desired during reception because of possible data loss.
+SMC relocation can also be activated earlier by the bootloader,
+so the driver's behaviour cannot rely on selected kernel config.
 
-The fix is to check if THRI is set in IER in addition of the TX
-fifo status. THRI in IER is set when TX is started and cleared
-when TX is stopped.
-This ensures that TX handling is only called when there is really
-transmission on going and an interrupt for THRE and not when there
-are only RX interrupts.
+When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
 
-Signed-off-by: Kimmo Rautkoski <ext-kimmo.rautkoski@vaisala.com>
+But the only thing CPM_CR_INIT_TRX does is to clear the
+rstate and tstate registers, so this can be done manually,
+even when SMC is not relocated.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_port.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index ab0796d14ac1..a73d2bc4b685 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -1878,7 +1878,8 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
- 			status = serial8250_rx_chars(up, status);
+diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+index 8b2b694334ec..8f5a5a16cb3b 100644
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+@@ -421,7 +421,16 @@ static int cpm_uart_startup(struct uart_port *port)
+ 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
+ 		}
+ 		cpm_uart_initbd(pinfo);
+-		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		if (IS_SMC(pinfo)) {
++			out_be32(&pinfo->smcup->smc_rstate, 0);
++			out_be32(&pinfo->smcup->smc_tstate, 0);
++			out_be16(&pinfo->smcup->smc_rbptr,
++				 in_be16(&pinfo->smcup->smc_rbase));
++			out_be16(&pinfo->smcup->smc_tbptr,
++				 in_be16(&pinfo->smcup->smc_tbase));
++		} else {
++			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		}
  	}
- 	serial8250_modem_status(up);
--	if ((!up->dma || up->dma->tx_err) && (status & UART_LSR_THRE))
-+	if ((!up->dma || up->dma->tx_err) && (status & UART_LSR_THRE) &&
-+		(up->ier & UART_IER_THRI))
- 		serial8250_tx_chars(up);
+ 	/* Install interrupt handler. */
+ 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
+@@ -875,16 +884,14 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
  
- 	spin_unlock_irqrestore(&port->lock, flags);
+ /*
+- *  In case SMC1 is being relocated...
++ *  In case SMC is being relocated...
+  */
+-#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
+ 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
+ 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
+ 	out_be32(&up->smc_rstate, 0);
+ 	out_be32(&up->smc_tstate, 0);
+ 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
+ 	out_be16(&up->smc_brkec, 0);
+-#endif
+ 
+ 	/* Set up the uart parameters in the
+ 	 * parameter ram.
+@@ -898,8 +905,6 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	out_be16(&up->smc_brkec, 0);
+ 	out_be16(&up->smc_brkcr, 1);
+ 
+-	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
+-
+ 	/* Set UART mode, 8 bit, no parity, one stop.
+ 	 * Enable receive and transmit.
+ 	 */
 -- 
 2.20.1
 
