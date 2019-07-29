@@ -2,117 +2,120 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEFBC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 00:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B09DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 00:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C2020693
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 00:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E08206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 00:56:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h/A1tD8s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rB+czlHi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbfG2AzT (ORCPT
+        id S1726384AbfG2A4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 20:55:19 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39067 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbfG2AzT (ORCPT
+        Sun, 28 Jul 2019 20:56:47 -0400
+Received: from gateway20.websitewelcome.com ([192.185.54.2]:29038 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726238AbfG2A4r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 20:55:19 -0400
-Received: by mail-pf1-f194.google.com with SMTP id f17so23091035pfn.6
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 17:55:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hGjJJlgqf6fIZSYi0mQxt5rqQsfHh14p1KL8R7bqkag=;
-        b=h/A1tD8sZhM/v7+RhsC11wSVFXSwvl1nieW+O+yBXi1T6IcOt/iyzsP0danqDHl3If
-         EiMovzmXIpZ6a4yeWiLLWBocBfGVofuspHURaV752iQnXN95SEOtoI132oPpKIsPhe+L
-         dOrVhiDAQWg0OokDiIIWhrFDs5y0lk3yMY/3dhZSMBOHAKBNw/bJeLdpv7bJ4VJXwy/D
-         PWUQzxXW8kSvWm+azVhd44dOKo9Aw98CRIfOHQQhbdkCGwdub2hNUQvXMlHJEXOKBY50
-         kQcgdE47s1P8T8yv0odSj87jXcrztl61FQMCMJIsay49iIqYbD69vr6zETn5X5eLCFcz
-         Jhrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hGjJJlgqf6fIZSYi0mQxt5rqQsfHh14p1KL8R7bqkag=;
-        b=iACrjrKn8nejNYF9Jjglh61kDdJNW145hK1Kyfu73h+hBNdTlOvLNFDqh3dpuIzrMq
-         yUYg7f8CSScIKPPFdH3eyFykyJtixJ/MRzq2MeNkZ6CvplVMNCNRK/KLAppLRvSyHRow
-         H5N4ZX+0EKAKCr8GMjVRyM4pNlBXChkMorruvYBWWj72wNT+u6z+xGpv9jS0FDsdIoYM
-         GHJ8jbXbAl72EO5e1SC1WPLwIQ/uKA/YDpROK1/ltF+oqHnckjALO6PdzewhHGFj8BP5
-         7HEUl0zSc5qXy7cuR0d8net7CmtPcEid5Av3SdmY+RHPWP5HhnsasImawpbAQbXpfq9F
-         0B5A==
-X-Gm-Message-State: APjAAAX01aF8LzGLXHGdxx11UGs3XolfCm0esl3DW821EPx8IJ+gmNmh
-        eKqtQXDAJAVVe2TyqHAKtgQVpA==
-X-Google-Smtp-Source: APXvYqz2PSVwN5dKDaP+S/qEaEHuy+/ZLKEjdJ0szwpHKcNw3tpo1lQ9Z3MmyOBXuI4l1b9E1lGNFA==
-X-Received: by 2002:a63:1020:: with SMTP id f32mr72808691pgl.203.1564361718219;
-        Sun, 28 Jul 2019 17:55:18 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k22sm62936954pfk.157.2019.07.28.17.55.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 28 Jul 2019 17:55:17 -0700 (PDT)
-Date:   Sun, 28 Jul 2019 17:56:41 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        kernel-build-reports@lists.linaro.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: next/master boot: 254 boots: 16 failed, 231 passed with 4
- offline, 1 untried/unknown, 2 conflicts (next-20190726)
-Message-ID: <20190729005641.GR7234@tuxbook-pro>
-References: <5d3aef79.1c69fb81.111b9.a701@mx.google.com>
- <20190726134843.GC55803@sirena.org.uk>
+        Sun, 28 Jul 2019 20:56:47 -0400
+X-Greylist: delayed 1319 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Jul 2019 20:56:46 EDT
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 38C50400C5FBE
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 18:29:28 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id rtawhEdRbiQerrtawhdspi; Sun, 28 Jul 2019 19:32:54 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jsM2jggX28X4Rf3N6HWALVQI3TBcdvqhgj8CBeNFHos=; b=rB+czlHihcm6fnZHM7M1wvFA/j
+        Fz96eEIAmbxFRb6sK+q8LAvnlvJ0ORK5bwwZt89pTIMkG/8DyF6NV48kquwxdS6T7EXMGlitLH50j
+        8nq37GT5uLfD+xwcFFzD4m9Te1vffD/s9SwYDcgmTcYor+ZVGGxpKzyWj4pyqj/1FbfDYGCn904q0
+        Y2uYU9ya/+hsCdd59bSYLLOdmm3ozNrrWJhW7xIFxJuzHjSrN07r2o5j0pkaE5wW2gtoue4t0EM35
+        JGs9+Zj3cex28r44D11jcYsVOUEYSLrjP93YKnRAN3h0EdIcM+WCIv03KlkeeWc4LvHFnVR9PK4/g
+        jYH96FWg==;
+Received: from [187.192.11.120] (port=40114 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hrtav-0040c6-7s; Sun, 28 Jul 2019 19:32:53 -0500
+Date:   Sun, 28 Jul 2019 19:32:51 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Ishizaki Kou <kou.ishizaki@toshiba.co.jp>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] net: spider_net: Mark expected switch fall-through
+Message-ID: <20190729003251.GA25556@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190726134843.GC55803@sirena.org.uk>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hrtav-0040c6-7s
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:40114
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 58
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 26 Jul 06:48 PDT 2019, Mark Brown wrote:
+Mark switch cases where we are expecting to fall through.
 
-> On Fri, Jul 26, 2019 at 05:18:01AM -0700, kernelci.org bot wrote:
-> 
-> The past few versions of -next failed to boot on apq8096-db820c:
-> 
-> >     defconfig:
-> >         gcc-8:
-> >             apq8096-db820c: 1 failed lab
-> 
-> with an RCU stall towards the end of boot:
-> 
-> 00:03:40.521336  [   18.487538] qcom_q6v5_pas adsp-pil: adsp-pil supply px not found, using dummy regulator
-> 00:04:01.523104  [   39.499613] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> 00:04:01.533371  [   39.499657] rcu: 	2-...!: (0 ticks this GP) idle=9ca/1/0x4000000000000000 softirq=1450/1450 fqs=50
-> 00:04:01.537544  [   39.504689] 	(detected by 0, t=5252 jiffies, g=2425, q=619)
-> 00:04:01.541727  [   39.513539] Task dump for CPU 2:
-> 00:04:01.547929  [   39.519096] seq             R  running task        0   199    198 0x00000000
-> 
-> Full details and logs at:
-> 
-> 	https://kernelci.org/boot/id/5d3aa7ea59b5142ba868890f/
-> 
-> The last version that worked was from the 15th and there seem to be
-> similar issues in mainline since -rc1.
+This patch fixes the following warning:
 
-Thanks for the report Mark, afaict the problem showed up in v5.3-rc1 as
-well.
+drivers/net/ethernet/toshiba/spider_net.c: In function 'spider_net_release_tx_chain':
+drivers/net/ethernet/toshiba/spider_net.c:783:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    if (!brutal) {
+       ^
+drivers/net/ethernet/toshiba/spider_net.c:792:3: note: here
+   case SPIDER_NET_DESCR_RESPONSE_ERROR:
+   ^~~~
 
-I think the problem is that the regulator supplying the GPU power
-domain(s) isn't enabled - and I think there's a lack of agreement of how
-this should be controlled.
+Notice that, in this particular case, the code comment is
+modified in accordance with what GCC is expecting to find.
 
-But we have a partial fix for this floating around, I will give it a
-spin.
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/toshiba/spider_net.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards,
-Bjorn
+diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
+index 5b196ebfed49..0f346761a2b2 100644
+--- a/drivers/net/ethernet/toshiba/spider_net.c
++++ b/drivers/net/ethernet/toshiba/spider_net.c
+@@ -788,6 +788,7 @@ spider_net_release_tx_chain(struct spider_net_card *card, int brutal)
+ 			/* fallthrough, if we release the descriptors
+ 			 * brutally (then we don't care about
+ 			 * SPIDER_NET_DESCR_CARDOWNED) */
++			/* Fall through */
+ 
+ 		case SPIDER_NET_DESCR_RESPONSE_ERROR:
+ 		case SPIDER_NET_DESCR_PROTECTION_ERROR:
+-- 
+2.22.0
+
