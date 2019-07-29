@@ -5,52 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C1FC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEC6C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3747320C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850F92171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429749;
-	bh=j0lY89zL8lm04jqxntNdtd32n6H1hVaxj2cQkmT5++4=;
+	s=default; t=1564429753;
+	bh=0K6RHdAK4FBoesDM4xqngRUIE526J2Hk2OhVGo0EqLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Wm83pCsoSBrDMqkZcuBmm4wI/Goh406adCT8ui2KfNC+ibLC3EITlY32OUS1AWly
-	 cTnX+mzoUl9uwrVzus2wDTLGF0+AV0A2gx8ewFnvhezCg4penMks7DxDzOTbcKkig5
-	 IM2icDbzEij4wxq4bdsGs6i3c4/Lw+KoZFoJLiZ4=
+	b=q9xohxziq4dPARj+2NHLKlKBXUfTHJ54M54fOrKwhUoRvJiB/V6dmhAezZtz0zxP0
+	 7CtwEqZiz2lF8l8ZmBm83icBq1e8i+iioINVTnCk0qVoWBNxXxBUmXJXpy8z6BUxug
+	 sMxcHLNRfmcGeU9qr8orxTV/B8qDAG/R5Fowk0x8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390481AbfG2TtI (ORCPT
+        id S2390062AbfG2TtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:49:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39468 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:49:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390471AbfG2TtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:49:05 -0400
+        id S2390478AbfG2TtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:49:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEB3B20C01;
-        Mon, 29 Jul 2019 19:49:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 401332171F;
+        Mon, 29 Jul 2019 19:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429744;
-        bh=j0lY89zL8lm04jqxntNdtd32n6H1hVaxj2cQkmT5++4=;
+        s=default; t=1564429747;
+        bh=0K6RHdAK4FBoesDM4xqngRUIE526J2Hk2OhVGo0EqLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCzaObMcqNwjOP1XpCWfbb0GcnMFuT4sbVpHBxhJETTyoGCnN5if5ExNZILdVlpKA
-         zJjB4AfATrYuIf48OT8sw/KOWB3Xj5knI7vn/7YwdsVfspt0N3p1jr9Sb1FYIBETOc
-         bEXgJIJvRZG4FS2lcfCURgReptA1NxS+BhWYOwCs=
+        b=uZ4h28bWIAHZ3n5MjD8ZkGqW1Eg2Jc848Hq214RptRXfmCD1d4EjVUleDb9j+qOAb
+         5mbTPX2S6VKyRsabpqXrOJJiHoZ39rgwRJ7LV3Xm7tZlIJQYt3EwxKpwuE2/vhD11X
+         BQwDwWbj3Bh8MOswE2s/hc8hsl7wHDijlHjdEycE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 082/215] i2c: stm32f7: fix the get_irq error cases
-Date:   Mon, 29 Jul 2019 21:21:18 +0200
-Message-Id: <20190729190753.899907991@linuxfoundation.org>
+Subject: [PATCH 5.2 083/215] net/ipv4: fib_trie: Avoid cryptic ternary expressions
+Date:   Mon, 29 Jul 2019 21:21:19 +0200
+Message-Id: <20190729190753.998851246@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -63,84 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 79b4499524ed659fb76323efc30f3dc03967c88f ]
+[ Upstream commit 25cec756891e8733433efea63b2254ddc93aa5cc ]
 
-During probe, return the "get_irq" error value instead of -EINVAL which
-allows the driver to be deferred probed if needed.
-Fix also the case where of_irq_get() returns a negative value.
-Note :
-On failure of_irq_get() returns 0 or a negative value while
-platform_get_irq() returns a negative value.
+empty_child_inc/dec() use the ternary operator for conditional
+operations. The conditions involve the post/pre in/decrement
+operator and the operation is only performed when the condition
+is *not* true. This is hard to parse for humans, use a regular
+'if' construct instead and perform the in/decrement separately.
 
-Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+This also fixes two warnings that are emitted about the value
+of the ternary expression being unused, when building the kernel
+with clang + "kbuild: Remove unnecessary -Wno-unused-value"
+(https://lore.kernel.org/patchwork/patch/1089869/):
+
+CC      net/ipv4/fib_trie.o
+net/ipv4/fib_trie.c:351:2: error: expression result unused [-Werror,-Wunused-value]
+        ++tn_info(n)->empty_children ? : ++tn_info(n)->full_children;
+
+Fixes: 95f60ea3e99a ("fib_trie: Add collapse() and should_collapse() to resize")
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-stm32f7.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ scripts/Makefile.extrawarn | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 48337bef5b87..3d90c0bb049e 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -25,7 +25,6 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
--#include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/pinctrl/consumer.h>
-@@ -1816,15 +1815,14 @@ static struct i2c_algorithm stm32f7_i2c_algo = {
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index 3ab8d1a303cd..b293246e48fe 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -68,7 +68,6 @@ else
  
- static int stm32f7_i2c_probe(struct platform_device *pdev)
- {
--	struct device_node *np = pdev->dev.of_node;
- 	struct stm32f7_i2c_dev *i2c_dev;
- 	const struct stm32f7_i2c_setup *setup;
- 	struct resource *res;
--	u32 irq_error, irq_event, clk_rate, rise_time, fall_time;
-+	u32 clk_rate, rise_time, fall_time;
- 	struct i2c_adapter *adap;
- 	struct reset_control *rst;
- 	dma_addr_t phy_addr;
--	int ret;
-+	int irq_error, irq_event, ret;
- 
- 	i2c_dev = devm_kzalloc(&pdev->dev, sizeof(*i2c_dev), GFP_KERNEL);
- 	if (!i2c_dev)
-@@ -1836,16 +1834,20 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 		return PTR_ERR(i2c_dev->base);
- 	phy_addr = (dma_addr_t)res->start;
- 
--	irq_event = irq_of_parse_and_map(np, 0);
--	if (!irq_event) {
--		dev_err(&pdev->dev, "IRQ event missing or invalid\n");
--		return -EINVAL;
-+	irq_event = platform_get_irq(pdev, 0);
-+	if (irq_event <= 0) {
-+		if (irq_event != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get IRQ event: %d\n",
-+				irq_event);
-+		return irq_event ? : -ENOENT;
- 	}
- 
--	irq_error = irq_of_parse_and_map(np, 1);
--	if (!irq_error) {
--		dev_err(&pdev->dev, "IRQ error missing or invalid\n");
--		return -EINVAL;
-+	irq_error = platform_get_irq(pdev, 1);
-+	if (irq_error <= 0) {
-+		if (irq_error != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get IRQ error: %d\n",
-+				irq_error);
-+		return irq_error ? : -ENOENT;
- 	}
- 
- 	i2c_dev->clk = devm_clk_get(&pdev->dev, NULL);
+ ifdef CONFIG_CC_IS_CLANG
+ KBUILD_CFLAGS += -Wno-initializer-overrides
+-KBUILD_CFLAGS += -Wno-unused-value
+ KBUILD_CFLAGS += -Wno-format
+ KBUILD_CFLAGS += -Wno-sign-compare
+ KBUILD_CFLAGS += -Wno-format-zero-length
 -- 
 2.20.1
 
