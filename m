@@ -2,101 +2,91 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FB4C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2BCC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4A0206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC8CF206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhQ24Xm4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1BUanzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfG2CI6 (ORCPT
+        id S1726455AbfG2CQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 22:08:58 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36086 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfG2CI6 (ORCPT
+        Sun, 28 Jul 2019 22:16:31 -0400
+Received: from mail-pf1-f171.google.com ([209.85.210.171]:41357 "EHLO
+        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfG2CQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 22:08:58 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l21so27389693pgm.3;
-        Sun, 28 Jul 2019 19:08:57 -0700 (PDT)
+        Sun, 28 Jul 2019 22:16:31 -0400
+Received: by mail-pf1-f171.google.com with SMTP id m30so27176595pff.8;
+        Sun, 28 Jul 2019 19:16:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=GgqqXrj0IVL3XCjuqMEeh46rLbd7N7hEVY5Hg1vftSk=;
-        b=VhQ24Xm4qxQ1CYPaB6WhF5IedavT1hfH+pAW+nNKczx/aBxtKhr9dgC0SKzTRe7Ki1
-         Q/JIQnvaFXbFkPQPNUtjOH9TiNTZxLeArg10E3/dbQT5HukCE3gU6ogpsY0Xe023uXaB
-         xn6L0Njlqzzes1/8U6W8kkKjqQWd09QkV9vm68h+BXbnNyszCP9lzlVNMEulf7UTfHVd
-         r6c/3wkyPbUYYHd411oyZDnVh08fs0lVD0Tki4DtGEgvvM2GURS+ibiV/DJcHrma8HIU
-         g/7LUwI7OneWn3HokbE90LPxQFDugrsUgxA8SSO9yUJfauib0nV78nnai5iBhOqMhig/
-         QmQQ==
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=v7gMhfaXzQj2ttlXL3n3b9J2dA62pv8dP+adujB69Tc=;
+        b=R1BUanzJhfnaO5aRBrpB7Up7A/v6wvhe/rS8r7qHQqRZFNGh/OVhnLuwVCvNk3Tlsb
+         cdDLGAEXBTK7SbKmrITXJ9NHELfQFVo/wj2HP1w26GE5rzvjuLwBTJPEpmhHR3zX41ty
+         mL5CsSjl8cPdtKyWyVoykJ3Ao32KyE05VDcOMQFKLmQRuJq2iEPIQA4G0aaYwX50oZNX
+         ATwwByk6t7nOD/L3bZZKuU2css3zFui/dmVoLqjvaOcGuBbvi8nq6DKIXXzE4Laei7dj
+         nFuobhC5q1PrPG3SNe3eAu535Va6BtFUAIVRy85ELnHjryDgpfF5l5YMu+KXW8OReABo
+         nCBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GgqqXrj0IVL3XCjuqMEeh46rLbd7N7hEVY5Hg1vftSk=;
-        b=YTtsZdVqAT+oNTb226A4dkGA/wjs3+wDyJeEWgpDuOvVpFEssrFyDTcIiJh+5unUFE
-         tEnSfCu//qrGe22KCBhYgdeVEaCE3ocQyA/5mCirq1itXgtLPKugxg6qKby3HZ4MAxUH
-         DmJjL0wWYW3B6Az2LxE1sxaBbhPpkHiuMip0isUBQppFfEbp0ZgTs8DLidoeT/Cd2Uf+
-         4jlpHYe7mNKGMXJc0hwsztI4GuwNB7zMSp6d1YIIxqAoGhu7TFafJgtEy6zizSUtDym4
-         OvvLVANjll60Jx6jt3v1VN2Ku12LwLhhqKyg4mKgPARj05fP851T00epmC3KMs8ynhcn
-         jhYg==
-X-Gm-Message-State: APjAAAWnHR2BXCf6u18yzQMhCN3GEThi/NiVU3cpDoIblAyIgPTzAUBB
-        VVPYBlduzL3A81QfnFuG2Tg=
-X-Google-Smtp-Source: APXvYqziKiVqdTi0EohhcF4w3kBjAEogyGJ2Ibb+1USarrNmtJONCBPCB1AYleTdYQ9v52s4F2E6kA==
-X-Received: by 2002:a65:68c9:: with SMTP id k9mr68919329pgt.17.1564366137516;
-        Sun, 28 Jul 2019 19:08:57 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id p15sm57011634pjf.27.2019.07.28.19.08.54
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=v7gMhfaXzQj2ttlXL3n3b9J2dA62pv8dP+adujB69Tc=;
+        b=PuYXiVCYMEaGppiWV7dvmPQYuTeXtViK2HzCKVQgPVvHsoVTe6Qk5n8D+vIes/iRBT
+         0ORbthhORNEhdY5gKJJQT8NVM6al0mw2cubQwu1ULHgUD+WWb4o260NPAribzF7zKjWE
+         2KHB1/KsNkP1EvgF47W7xdyIx8FwdOsOL5UAptW45MhLJzUM+Q8B80ekV3mB6XcAGZXp
+         hA7whb8MtV1eVy4OtjOWG1j6Z05A/DNEJ8mPiXn5UQ3gmTlBNJYGqGIer2mQKDdKs30G
+         eaKUtD7nqLbvZwWdZAke7FN8cSBh4E3CDEP2fwKkhamQBhnLTBwoaHwzv28Axx9wmNP9
+         GzyQ==
+X-Gm-Message-State: APjAAAWvcAgkgX5w2JojFyaDxBGbFDQ+AEyu9lAAEupKv0oUdSQQSg80
+        DWxM7gQRpaRjBmroUtvN3CRxfpW6
+X-Google-Smtp-Source: APXvYqzhgdCgzjVqPfke8X9nFyqHLkUMbCPnoCohpw0l4SgEBYrZ/QSffdxjOmvgmRLmnlAw0khDbw==
+X-Received: by 2002:a17:90a:d996:: with SMTP id d22mr109842800pjv.86.1564366590585;
+        Sun, 28 Jul 2019 19:16:30 -0700 (PDT)
+Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
+        by smtp.gmail.com with ESMTPSA id o24sm16112870pgn.93.2019.07.28.19.16.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Jul 2019 19:08:56 -0700 (PDT)
+        Sun, 28 Jul 2019 19:16:30 -0700 (PDT)
+To:     leon@kernel.org, dledford@redhat.com, jgg@ziepe.ca
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
 From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Cc:     dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] dma: stm32-mdma: Fix a possible null-pointer dereference in stm32_mdma_irq_handler()
-Date:   Mon, 29 Jul 2019 10:08:49 +0800
-Message-Id: <20190729020849.17971-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+Subject: [BUG] infiniband: mlx5: a possible null-pointer dereference in
+ set_roce_addr()
+Message-ID: <f99031cc-795e-92bd-9310-29c669ada7dc@gmail.com>
+Date:   Mon, 29 Jul 2019 10:16:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In stm32_mdma_irq_handler(), chan is checked on line 1368.
-When chan is NULL, it is still used on line 1369:
-    dev_err(chan2dev(chan), "MDMA channel not initialized\n");
+In set_roce_addr(), there is an if statement on line 589 to check 
+whether gid is NULL:
+     if (gid)
+
+When gid is NULL, it is used on line 613:
+     return mlx5_core_roce_gid_set(..., gid->raw, ...);
 
 Thus, a possible null-pointer dereference may occur.
 
-To fix this bug, "dev_dbg(mdma2dev(dmadev), ...)" is used instead.
+This bug is found by a static analysis tool STCheck written by us.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/dma/stm32-mdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I do not know how to correctly fix this bug, so I only report it.
 
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index d6e919d3936a..1311de74bfdd 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -1366,7 +1366,7 @@ static irqreturn_t stm32_mdma_irq_handler(int irq, void *devid)
- 
- 	chan = &dmadev->chan[id];
- 	if (!chan) {
--		dev_err(chan2dev(chan), "MDMA channel not initialized\n");
-+		dev_dbg(mdma2dev(dmadev), "MDMA channel not initialized\n");
- 		goto exit;
- 	}
- 
--- 
-2.17.0
 
+Best wishes,
+Jia-Ju Bai
