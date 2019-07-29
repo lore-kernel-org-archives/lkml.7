@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25519C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA0DC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E33A921773
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB2A21773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428927;
-	bh=6VxoevqU13y+krWgCZOS1XIMk1y2SPkfoW4m36eNQLk=;
+	s=default; t=1564428932;
+	bh=4KB6ApOO5VXzkwrm94y5kEN0+XnP2AfWaKzUDwMHyjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IhTLCM0CzrkLPlfDsiVM5O0baYjHCA/3mNR0/vgIxPAIATAVLMkqFqNh+ATYySWlu
-	 dIXNFSO8g/tHCRLda1kaktzA8/9vmm7on2C3Z0hXQV0Y4UOKoPxGNd7miO5vzgYKtB
-	 if0xWezGLhXbC5ZwcjYFgPMM9sBkTPrpUEOBsp/U=
+	b=hvRvf0JzcLpcYimH5NXhbmyxbNhPUjhSfPw1CcAzWO9g8h9rFXhvUXadCqnYuOZDW
+	 O0JVyC8zLRuk8iLoc5GbCOJ5VJdBsHlih0uS/BULS/K9AtqXUTKJGd/Rzyh5rLRS15
+	 7uCsMh4b4QZCQrJfo4nelCRHDmrjV6fG1DwEAyo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388524AbfG2TfZ (ORCPT
+        id S1729741AbfG2Tfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49728 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:35:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728886AbfG2TfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:35:23 -0400
+        id S1729427AbfG2Tf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:35:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A0052171F;
-        Mon, 29 Jul 2019 19:35:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D84712070B;
+        Mon, 29 Jul 2019 19:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428922;
-        bh=6VxoevqU13y+krWgCZOS1XIMk1y2SPkfoW4m36eNQLk=;
+        s=default; t=1564428927;
+        bh=4KB6ApOO5VXzkwrm94y5kEN0+XnP2AfWaKzUDwMHyjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ExzBdSykKggISnzaZUWxFpzUtD24eg6/KOiXR4RmcnEXdaAKwbDL0+xrckT2OdSuz
-         MU1U2rrN1aTJ7z2eRlSVDC3YAtj8k1MKfhW/JsNEA3XcUrhNE0RH041NjQXq0BSfyT
-         0AZhUi0KaSry+wTUNafG3HMHTwWSEwnMXnzGUxck=
+        b=RkRNGtH9Mg5JttHvCgadb6ym7TCFU7eFXsy3aZfoO2gF4/ADTSCRKkTe37KCx+co1
+         vq12/XxyYouRzJpW+VQYJW7S/3+7Nj0LY69VVf45nYIZw9FRBn5EPVjvjchGP4e/8m
+         9k7KxbSQ7jIh/JTCuvjUh29Vd3XWunKVsAEDSL/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Hurley <john.hurley@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Pravin B Shelar <pshelar@ovn.org>,
+        stable@vger.kernel.org,
+        syzbot+7966f2a0b2c7da8939b4@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 189/293] net: openvswitch: fix csum updates for MPLS actions
-Date:   Mon, 29 Jul 2019 21:21:20 +0200
-Message-Id: <20190729190838.969560477@linuxfoundation.org>
+Subject: [PATCH 4.14 191/293] rxrpc: Fix send on a connected, but unbound socket
+Date:   Mon, 29 Jul 2019 21:21:22 +0200
+Message-Id: <20190729190839.119131343@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -62,73 +62,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hurley <john.hurley@netronome.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 0e3183cd2a64843a95b62f8bd4a83605a4cf0615 ]
+[ Upstream commit e835ada07091f40dcfb1bc735082bd0a7c005e59 ]
 
-Skbs may have their checksum value populated by HW. If this is a checksum
-calculated over the entire packet then the CHECKSUM_COMPLETE field is
-marked. Changes to the data pointer on the skb throughout the network
-stack still try to maintain this complete csum value if it is required
-through functions such as skb_postpush_rcsum.
+If sendmsg() or sendmmsg() is called on a connected socket that hasn't had
+bind() called on it, then an oops will occur when the kernel tries to
+connect the call because no local endpoint has been allocated.
 
-The MPLS actions in Open vSwitch modify a CHECKSUM_COMPLETE value when
-changes are made to packet data without a push or a pull. This occurs when
-the ethertype of the MAC header is changed or when MPLS lse fields are
-modified.
+Fix this by implicitly binding the socket if it is in the
+RXRPC_CLIENT_UNBOUND state, just like it does for the RXRPC_UNBOUND state.
 
-The modification is carried out using the csum_partial function to get the
-csum of a buffer and add it into the larger checksum. The buffer is an
-inversion of the data to be removed followed by the new data. Because the
-csum is calculated over 16 bits and these values align with 16 bits, the
-effect is the removal of the old value from the CHECKSUM_COMPLETE and
-addition of the new value.
+Further, the state should be transitioned to RXRPC_CLIENT_BOUND after this
+to prevent further attempts to bind it.
 
-However, the csum fed into the function and the outcome of the
-calculation are also inverted. This would only make sense if it was the
-new value rather than the old that was inverted in the input buffer.
+This can be tested with:
 
-Fix the issue by removing the bit inverts in the csum_partial calculation.
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <sys/socket.h>
+	#include <arpa/inet.h>
+	#include <linux/rxrpc.h>
+	static const unsigned char inet6_addr[16] = {
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0xac, 0x14, 0x14, 0xaa
+	};
+	int main(void)
+	{
+		struct sockaddr_rxrpc srx;
+		struct cmsghdr *cm;
+		struct msghdr msg;
+		unsigned char control[16];
+		int fd;
+		memset(&srx, 0, sizeof(srx));
+		srx.srx_family = 0x21;
+		srx.srx_service = 0;
+		srx.transport_type = AF_INET;
+		srx.transport_len = 0x1c;
+		srx.transport.sin6.sin6_family = AF_INET6;
+		srx.transport.sin6.sin6_port = htons(0x4e22);
+		srx.transport.sin6.sin6_flowinfo = htons(0x4e22);
+		srx.transport.sin6.sin6_scope_id = htons(0xaa3b);
+		memcpy(&srx.transport.sin6.sin6_addr, inet6_addr, 16);
+		cm = (struct cmsghdr *)control;
+		cm->cmsg_len	= CMSG_LEN(sizeof(unsigned long));
+		cm->cmsg_level	= SOL_RXRPC;
+		cm->cmsg_type	= RXRPC_USER_CALL_ID;
+		*(unsigned long *)CMSG_DATA(cm) = 0;
+		msg.msg_name = NULL;
+		msg.msg_namelen = 0;
+		msg.msg_iov = NULL;
+		msg.msg_iovlen = 0;
+		msg.msg_control = control;
+		msg.msg_controllen = cm->cmsg_len;
+		msg.msg_flags = 0;
+		fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET);
+		connect(fd, (struct sockaddr *)&srx, sizeof(srx));
+		sendmsg(fd, &msg, 0);
+		return 0;
+	}
 
-The bug was verified and the fix tested by comparing the folded value of
-the updated CHECKSUM_COMPLETE value with the folded value of a full
-software checksum calculation (reset skb->csum to 0 and run
-skb_checksum_complete(skb)). Prior to the fix the outcomes differed but
-after they produce the same result.
+Leading to the following oops:
 
-Fixes: 25cd9ba0abc0 ("openvswitch: Add basic MPLS support to kernel")
-Fixes: bc7cc5999fd3 ("openvswitch: update checksum in {push,pop}_mpls")
-Signed-off-by: John Hurley <john.hurley@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Acked-by: Pravin B Shelar <pshelar@ovn.org>
+	BUG: kernel NULL pointer dereference, address: 0000000000000018
+	#PF: supervisor read access in kernel mode
+	#PF: error_code(0x0000) - not-present page
+	...
+	RIP: 0010:rxrpc_connect_call+0x42/0xa01
+	...
+	Call Trace:
+	 ? mark_held_locks+0x47/0x59
+	 ? __local_bh_enable_ip+0xb6/0xba
+	 rxrpc_new_client_call+0x3b1/0x762
+	 ? rxrpc_do_sendmsg+0x3c0/0x92e
+	 rxrpc_do_sendmsg+0x3c0/0x92e
+	 rxrpc_sendmsg+0x16b/0x1b5
+	 sock_sendmsg+0x2d/0x39
+	 ___sys_sendmsg+0x1a4/0x22a
+	 ? release_sock+0x19/0x9e
+	 ? reacquire_held_locks+0x136/0x160
+	 ? release_sock+0x19/0x9e
+	 ? find_held_lock+0x2b/0x6e
+	 ? __lock_acquire+0x268/0xf73
+	 ? rxrpc_connect+0xdd/0xe4
+	 ? __local_bh_enable_ip+0xb6/0xba
+	 __sys_sendmsg+0x5e/0x94
+	 do_syscall_64+0x7d/0x1bf
+	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 2341e0775747 ("rxrpc: Simplify connect() implementation and simplify sendmsg() op")
+Reported-by: syzbot+7966f2a0b2c7da8939b4@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/openvswitch/actions.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ net/rxrpc/af_rxrpc.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -174,8 +174,7 @@ static void update_ethertype(struct sk_b
- 	if (skb->ip_summed == CHECKSUM_COMPLETE) {
- 		__be16 diff[] = { ~(hdr->h_proto), ethertype };
+--- a/net/rxrpc/af_rxrpc.c
++++ b/net/rxrpc/af_rxrpc.c
+@@ -504,6 +504,7 @@ static int rxrpc_sendmsg(struct socket *
  
--		skb->csum = ~csum_partial((char *)diff, sizeof(diff),
--					~skb->csum);
-+		skb->csum = csum_partial((char *)diff, sizeof(diff), skb->csum);
- 	}
+ 	switch (rx->sk.sk_state) {
+ 	case RXRPC_UNBOUND:
++	case RXRPC_CLIENT_UNBOUND:
+ 		rx->srx.srx_family = AF_RXRPC;
+ 		rx->srx.srx_service = 0;
+ 		rx->srx.transport_type = SOCK_DGRAM;
+@@ -528,10 +529,9 @@ static int rxrpc_sendmsg(struct socket *
+ 		}
  
- 	hdr->h_proto = ethertype;
-@@ -267,8 +266,7 @@ static int set_mpls(struct sk_buff *skb,
- 	if (skb->ip_summed == CHECKSUM_COMPLETE) {
- 		__be32 diff[] = { ~(stack->label_stack_entry), lse };
+ 		rx->local = local;
+-		rx->sk.sk_state = RXRPC_CLIENT_UNBOUND;
++		rx->sk.sk_state = RXRPC_CLIENT_BOUND;
+ 		/* Fall through */
  
--		skb->csum = ~csum_partial((char *)diff, sizeof(diff),
--					  ~skb->csum);
-+		skb->csum = csum_partial((char *)diff, sizeof(diff), skb->csum);
- 	}
- 
- 	stack->label_stack_entry = lse;
+-	case RXRPC_CLIENT_UNBOUND:
+ 	case RXRPC_CLIENT_BOUND:
+ 		if (!m->msg_name &&
+ 		    test_bit(RXRPC_SOCK_CONNECTED, &rx->flags)) {
 
 
