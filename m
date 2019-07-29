@@ -2,92 +2,153 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD8EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB7CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190542075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564372457;
-	bh=2tQuQHTnu/mJjklJUZsHAQI0kaAk3Bi3c79GlFJnet8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Gg3ulyLtoEGnqt7M6TLM8FBN3BInkFaKulxsN3ma/zfYsxeeUTFicNmU5uc1rETh4
-	 KpOD1qU+6BEkbnUKP7Onk3jhl5Kn7+BWDWbmmEr8VuBTih9HNhdGPz1VoKP1vOD2Nt
-	 KgjtYnZE2HSauMfS+CuKdIAOYdWhKSQ+C5CrFzTk=
+	by mail.kernel.org (Postfix) with ESMTP id 336EF20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfG2DyN (ORCPT
+        id S1726659AbfG2D7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 23:54:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbfG2DyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 23:54:12 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6826B21655
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 03:54:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564372451;
-        bh=2tQuQHTnu/mJjklJUZsHAQI0kaAk3Bi3c79GlFJnet8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LjpAREuKb+1hbftFyPqNYMkp3woKKhr2b/xHD86G8/XOG2/HqU20ZDei2Za6qUDjv
-         NhliTYYQuvTUzRx4lCxBkS5glhuezc4dly9I6qeEzB/jVlMy2YtxpcECvflyiAxD85
-         gIKr07F+OCIx3PUpjCdjeuBZ/ArPjmebpT5OSlyU=
-Received: by mail-wr1-f41.google.com with SMTP id f9so60112048wre.12
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 20:54:11 -0700 (PDT)
-X-Gm-Message-State: APjAAAVQWFCN3AUhhPp/DZCeLej0xx+52vIO3SDcmYO1NkeITZWNhzaK
-        kFZCM+O3ckWYtDVmSGQJPhWfZ+WxjXPYXMAlgCQgmQ==
-X-Google-Smtp-Source: APXvYqx9kG3JhSn4ejzWbB2Y6ZZXlzbRvrHqILc4LGopmKRBvxtYUVZM7ewWknjCh0gGn94azjkdPJGXhhbOHIAqf6Q=
-X-Received: by 2002:adf:f28a:: with SMTP id k10mr39238424wro.343.1564372449880;
- Sun, 28 Jul 2019 20:54:09 -0700 (PDT)
+        Sun, 28 Jul 2019 23:59:40 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2491 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726134AbfG2D7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 23:59:40 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id E653D654BCAE1A68456B;
+        Mon, 29 Jul 2019 11:59:36 +0800 (CST)
+Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 29 Jul 2019 11:59:36 +0800
+Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
+ (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 29
+ Jul 2019 11:59:36 +0800
+Subject: Re: [RFC] net: phy: read link status twice when
+ phy_check_link_status()
+To:     Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
+References: <1564134831-24962-1-git-send-email-liuyonglong@huawei.com>
+ <92f42ee8-3659-87a7-ac96-d312a98046ba@gmail.com>
+From:   liuyonglong <liuyonglong@huawei.com>
+Message-ID: <4b4ba599-f160-39e7-d611-45ac53268389@huawei.com>
+Date:   Mon, 29 Jul 2019 11:59:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190729015933.18049-1-dja@axtens.net>
-In-Reply-To: <20190729015933.18049-1-dja@axtens.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 28 Jul 2019 20:53:58 -0700
-X-Gmail-Original-Message-ID: <CALCETrX_+_zT8iKp9QMpaN0+NPS9_rmhZvPgG=ejN-5KkBbfdQ@mail.gmail.com>
-Message-ID: <CALCETrX_+_zT8iKp9QMpaN0+NPS9_rmhZvPgG=ejN-5KkBbfdQ@mail.gmail.com>
-Subject: Re: [PATCH] x86: panic when a kernel stack overflow is detected
-To:     Daniel Axtens <dja@axtens.net>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     kasan-dev <kasan-dev@googlegroups.com>, X86 ML <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <92f42ee8-3659-87a7-ac96-d312a98046ba@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.37.248]
+X-ClientProxiedBy: dggeme711-chm.china.huawei.com (10.1.199.107) To
+ dggeme760-chm.china.huawei.com (10.3.19.106)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 6:59 PM Daniel Axtens <dja@axtens.net> wrote:
->
-> Currently, when a kernel stack overflow is detected via VMAP_STACK,
-> the task is killed with die().
->
-> This isn't safe, because we don't know how that process has affected
-> kernel state. In particular, we don't know what locks have been taken.
-> For example, we can hit a case with lkdtm where a thread takes a
-> stack overflow in printk() after taking the logbuf_lock. In that case,
-> we deadlock when the kernel next does a printk.
->
-> Do not attempt to kill the process when a kernel stack overflow is
-> detected. The system state is unknown, the only safe thing to do is
-> panic(). (panic() also prints without taking locks so a useful debug
-> splat is printed even when logbuf_lock is held.)
 
-The thing I don't like about this is that it reduces the chance that
-we successfully log anything to disk.
 
-PeterZ, do you have any useful input here?  I wonder if we could do
-something like printk_oh_crap() that is just printk() except that it
-panics if it fails to return after a few seconds.
+On 2019/7/27 2:14, Heiner Kallweit wrote:
+> On 26.07.2019 11:53, Yonglong Liu wrote:
+>> According to the datasheet of Marvell phy and Realtek phy, the
+>> copper link status should read twice, or it may get a fake link
+>> up status, and cause up->down->up at the first time when link up.
+>> This happens more oftem at Realtek phy.
+>>
+> This is not correct, there is no fake link up status.
+> Read the comment in genphy_update_link, only link-down events
+> are latched. Means if the first read returns link up, then there
+> is no need for a second read. And in polling mode we don't do a
+> second read because we want to detect also short link drops.
+> 
+> It would be helpful if you could describe your actual problem
+> and whether you use polling or interrupt mode.
+> 
 
---Andy
+[   44.498633] hns3 0000:bd:00.1 eth5: net open
+[   44.504273] hns3 0000:bd:00.1: reg=0x1, data=0x79ad -> called from phy_start_aneg
+[   44.532348] hns3 0000:bd:00.1: reg=0x1, data=0x798d -> called from phy_state_machine,update link.
+
+According to the datasheet:
+reg 1.5=0 now, means copper auto-negotiation not complete
+reg 1.2=1 now, means link is up
+
+We can see that, when we read the link up, the auto-negotiation
+is not complete yet, so the speed is invalid.
+
+I don't know why this happen, maybe this state is keep from bios?
+Or we may do something else in the phy initialize to fix it?
+And also confuse that why read twice can fix it?
+
+[   44.554063] hns3 0000:bd:00.1: invalid speed (-1)
+[   44.560412] hns3 0000:bd:00.1 eth5: failed to adjust link.
+[   45.194870] hns3 0000:bd:00.1 eth5: link up
+[   45.574095] hns3 0000:bd:00.1: phyid=3, reg=0x1, data=0x7989
+[   46.150051] hns3 0000:bd:00.1 eth5: link down
+[   46.598074] hns3 0000:bd:00.1: phyid=3, reg=0x1, data=0x7989
+[   47.622075] hns3 0000:bd:00.1: phyid=3, reg=0x1, data=0x79a9
+[   48.646077] hns3 0000:bd:00.1: phyid=3, reg=0x1, data=0x79ad
+[   48.934050] hns3 0000:bd:00.1 eth5: link up
+[   49.702140] hns3 0000:bd:00.1: phyid=3, reg=0x1, data=0x79ad
+
+>> I add a fake status read, and can solve this problem.
+>>
+>> I also see that in genphy_update_link(), had delete the fake
+>> read in polling mode, so I don't know whether my solution is
+>> correct.
+>>
+>> Or provide a phydev->drv->read_status functions for the phy I
+>> used is more acceptable?
+>>
+>> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+>> ---
+>>  drivers/net/phy/phy.c | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+>> index ef7aa73..0c03edc 100644
+>> --- a/drivers/net/phy/phy.c
+>> +++ b/drivers/net/phy/phy.c
+>> @@ -1,4 +1,7 @@
+>>  // SPDX-License-Identifier: GPL-2.0+
+>> +	err = phy_read_status(phydev);
+>> +	if (err)
+>> +		return err;
+> 
+> This seems to be completely wrong at that place.
+> 
+
+Sorry, this can be ignore.
+
+>>  /* Framework for configuring and reading PHY devices
+>>   * Based on code in sungem_phy.c and gianfar_phy.c
+>>   *
+>> @@ -525,6 +528,11 @@ static int phy_check_link_status(struct phy_device *phydev)
+>>  
+>>  	WARN_ON(!mutex_is_locked(&phydev->lock));
+>>  
+>> +	/* Do a fake read */
+>> +	err = phy_read(phydev, MII_BMSR);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>>  	err = phy_read_status(phydev);
+>>  	if (err)
+>>  		return err;
+>>
+> 
+> 
+> .
+> 
+
