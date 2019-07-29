@@ -2,88 +2,61 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A945C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D521C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131D62073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564382717;
-	bh=OObfax840R6bh9rjFceVGkLchDJCG652v03RGds9gFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B0ynPAbvmb5GtAsfp0t/hmYF7AMUeNLL3IM1i68SLar2LnETwi5boC26FA9xrckkV
-	 UWDd0MP7MWNzQNnZFNVpySxI9Sop279E+HF2eWwH1sbogdEROx8FnWTByA8Eal4NYW
-	 CHuZbWkGozoTvHN0HoEPB0RNYiHVRR49OOaC4T6Q=
+	by mail.kernel.org (Postfix) with ESMTP id 180582073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:46:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfG2GpQ (ORCPT
+        id S1726984AbfG2GqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 02:45:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58380 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 02:46:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46838 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbfG2GpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 02:45:15 -0400
-Received: from localhost (unknown [122.178.221.187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726508AbfG2GqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 02:46:05 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95086206BA;
-        Mon, 29 Jul 2019 06:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564382714;
-        bh=OObfax840R6bh9rjFceVGkLchDJCG652v03RGds9gFA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LSbox5NdaQ3BOobR6anCjjqjcwe7a/gzulM+4ZQtjQyz1Il7lgEOjtDVlq5tfUGm/
-         fyMsz+iLv2edW7yTgjYigFt2ghcb7VqdnJtaNFRZkBflZooGnqSJ125aw/9/GzR4Zq
-         E/aKBut0usnFTitcTVppLrBXrAomIQENZkc/MA7s=
-Date:   Mon, 29 Jul 2019 12:14:02 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, od@zcrc.me,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH 06/11] dma: Drop JZ4740 driver
-Message-ID: <20190729064402.GG12733@vkoul-mobl.Dlink>
-References: <20190725220215.460-1-paul@crapouillou.net>
- <20190725220215.460-7-paul@crapouillou.net>
+        by mx1.redhat.com (Postfix) with ESMTPS id 457435945B;
+        Mon, 29 Jul 2019 06:46:04 +0000 (UTC)
+Received: from localhost (unknown [10.43.2.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CA106600C0;
+        Mon, 29 Jul 2019 06:46:03 +0000 (UTC)
+Date:   Mon, 29 Jul 2019 08:46:01 +0200
+From:   Stanislaw Gruszka <sgruszka@redhat.com>
+To:     Masanari Iida <standby24x7@gmail.com>
+Cc:     helmut.schaa@googlemail.com, kvalo@codeaurora.org,
+        davem@davemloft.net, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] rt2800usb: Add new rt2800usb device PLANEX
+ GW-USMicroN
+Message-ID: <20190729064601.GA2066@redhat.com>
+References: <20190728140742.3280-1-standby24x7@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190725220215.460-7-paul@crapouillou.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190728140742.3280-1-standby24x7@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 29 Jul 2019 06:46:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-07-19, 18:02, Paul Cercueil wrote:
-> The newer and better JZ4780 driver is now used to provide DMA
-> functionality on the JZ4740.
+On Sun, Jul 28, 2019 at 11:07:42PM +0900, Masanari Iida wrote:
+> This patch add a device ID for PLANEX GW-USMicroN.
+> Without this patch, I had to echo the device IDs in order to
+> recognize the device.
+> 
+> # lsusb |grep PLANEX
+> Bus 002 Device 005: ID 2019:ed14 PLANEX GW-USMicroN
+> 
+> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 
-Please change subjetc to dmaengine: xxx
-
-After that
-
-Acked-by: Vinod Koul <vkoul@kernel.org>
-
--- 
-~Vinod
+Acked-by: Stanislaw Gruszka <sgruszka@redhat.com>
