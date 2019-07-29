@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FC0C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FC3C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78AE021655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91FC217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430441;
-	bh=w0GuBMuaQl17zfa8FY0kwHgVAdFRg6KpuFNW7q5+UDA=;
+	s=default; t=1564430443;
+	bh=gTOeOC5VmGuItE7SqR1J06FTqVJudN8LyY0SgeGDW4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F/5jv1XEaJKodYGOJvb3p6diuY8PG0Gn7uVmGwqyOmh5UWWZTUQYSgNw52kWPQasD
-	 eEGxUm+79YG0/zZUkOkw5Uw2It+uHlvv86pt0hO4ou7z79zQrL6YQRVe417vIXjpon
-	 BLbEOe9tP7xZ595VqpKLHBvvvKElCAf/qu2oRNfk=
+	b=dMhr0XXVHtWe5c8lBIMa/hnYM+fIm2oQXlQdHSJod8zJhb7WKHeXDcApQPfBBZCOS
+	 h0RiRS5tneW+HmzHddQ+5TOlTcHp/LOz2rzgJIL/4vrnV3NBAHzdmSSZKSMNCeFLvm
+	 pMfXcluX20NDeoR2U7WI15mxBRQFmG5d+OfX9+Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391055AbfG2UAg (ORCPT
+        id S2390286AbfG2TwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:00:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44350 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:52:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390121AbfG2Twc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:52:32 -0400
+        id S2390791AbfG2TvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:51:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9817A204EC;
-        Mon, 29 Jul 2019 19:52:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97975205F4;
+        Mon, 29 Jul 2019 19:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429952;
-        bh=w0GuBMuaQl17zfa8FY0kwHgVAdFRg6KpuFNW7q5+UDA=;
+        s=default; t=1564429872;
+        bh=gTOeOC5VmGuItE7SqR1J06FTqVJudN8LyY0SgeGDW4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=azzjUBHZKG0ubkAwKSu7wOD028EkZtucD5glSEl4pvke9eBdfNIJG2uXfebwS68vB
-         aalZTx68nsDw0Zr8OjnoiQsvxMOLV0pA5v4nKa+VipPBL2DO3ZKeax24YpmDcK4ZUB
-         OVNIWfaM7q7/HvYZAxQfnUDNK9Mz3CrW10alymeA=
+        b=teIp+lS14h/FbBs/iRm/Qt+Sttr6VZT6Y8ztTJpeCnR83phSUNUNSRbnN0hXMcLgM
+         2wzL4DkXD9iWXAY7CSFqmpr+d+KB6CAdQ2g+FlrFnm+yWVZ1EnDe3ElKGc+jcNrbWb
+         3WE+pZob7cYoFtt4D+lJ0SsmY1wtlUX9tQB6bH6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Wenwen Wang <wenwen@cs.uga.edu>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 147/215] block/bio-integrity: fix a memory leak bug
-Date:   Mon, 29 Jul 2019 21:22:23 +0200
-Message-Id: <20190729190805.209329734@linuxfoundation.org>
+Subject: [PATCH 5.2 115/215] PCI: mobiveil: Fix the Class Code field
+Date:   Mon, 29 Jul 2019 21:21:51 +0200
+Message-Id: <20190729190758.970953197@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -61,48 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e7bf90e5afe3aa1d1282c1635a49e17a32c4ecec ]
+[ Upstream commit 0122af0a08243f344a438f924e5c2486486555b3 ]
 
-In bio_integrity_prep(), a kernel buffer is allocated through kmalloc() to
-hold integrity metadata. Later on, the buffer will be attached to the bio
-structure through bio_integrity_add_page(), which returns the number of
-bytes of integrity metadata attached. Due to unexpected situations,
-bio_integrity_add_page() may return 0. As a result, bio_integrity_prep()
-needs to be terminated with 'false' returned to indicate this error.
-However, the allocated kernel buffer is not freed on this execution path,
-leading to a memory leak.
+Fix up the Class Code field in PCI configuration space and set it to
+PCI_CLASS_BRIDGE_PCI.
 
-To fix this issue, free the allocated buffer before returning from
-bio_integrity_prep().
+Move the Class Code fixup to function mobiveil_host_init() where
+it belongs.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio-integrity.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 4db620849515..fb95dbb21dd8 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -276,8 +276,12 @@ bool bio_integrity_prep(struct bio *bio)
- 		ret = bio_integrity_add_page(bio, virt_to_page(buf),
- 					     bytes, offset);
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index 03d697b63e2a..88e9b70081fc 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -558,6 +558,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 		}
+ 	}
  
--		if (ret == 0)
--			return false;
-+		if (ret == 0) {
-+			printk(KERN_ERR "could not attach integrity payload\n");
-+			kfree(buf);
-+			status = BLK_STS_RESOURCE;
-+			goto err_end_io;
-+		}
++	/* fixup for PCIe class register */
++	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
++	value &= 0xff;
++	value |= (PCI_CLASS_BRIDGE_PCI << 16);
++	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
++
+ 	/* setup MSI hardware registers */
+ 	mobiveil_pcie_enable_msi(pcie);
  
- 		if (ret < bytes)
- 			break;
+@@ -798,9 +804,6 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+ 		goto error;
+ 	}
+ 
+-	/* fixup for PCIe class register */
+-	csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
+-
+ 	/* initialize the IRQ domains */
+ 	ret = mobiveil_pcie_init_irq_domain(pcie);
+ 	if (ret) {
 -- 
 2.20.1
 
