@@ -2,63 +2,51 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EA0C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD500C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA2B2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8471A217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430104;
-	bh=4OAOV4eLg5aS+22JvGjmkV/W14HiKNop4uNcdJS+FYo=;
+	s=default; t=1564430107;
+	bh=Su9El4zE9CqFO7ZFLiW6WLgYA1RJp2b/hBWoEB5mFpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BeZLyzKnFxWA3kCjHnay1IZaRBb1CYfuHKOeDc1Fya6So/3oEXnLBzeEFRV9j0j01
-	 DW/vSbINgncr5jtaOEmF0THIQ9Jxv7PYwA6wMQ7hfhazps2rLiRW6jKcJBhuTscpDd
-	 hme/h6LOxFNtt5vy2jLTO0i+FaqHqe4PG/9E57hI=
+	b=N9SL9tflvj/CmnwVbtDGFkwjJoM4+dboX2POE0/A/Bpri0FhqUp0oejmsvTS+ms6c
+	 Mz/L2c9APjv2m0D/zCFY8LUmAL9rHvYIWBcf6kDuj8DszwvU1oq0aWa5iCFLtRuMAl
+	 Inwqmsmn1KYAw7jdpqRIayGZF3MfnKIlF7YbzZMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404151AbfG2TzA (ORCPT
+        id S2389975AbfG2TzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:55:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47624 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404134AbfG2Ty4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:54:56 -0400
+        id S2404141AbfG2TzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:55:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB0C7217F4;
-        Mon, 29 Jul 2019 19:54:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CDFB204EC;
+        Mon, 29 Jul 2019 19:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430095;
-        bh=4OAOV4eLg5aS+22JvGjmkV/W14HiKNop4uNcdJS+FYo=;
+        s=default; t=1564430101;
+        bh=Su9El4zE9CqFO7ZFLiW6WLgYA1RJp2b/hBWoEB5mFpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=orRxnYmIxq6eoXZoaWjOFanPmq1XlJbL/Y/kLNTpxCEAPsKVfKP+VF4k8c7/vukuO
-         VaYDaUp4VKpZriFvRyrf93sB4akzKc8C/bpunOlfb2IErdDDVXPomxgq5IOxzuGU/f
-         QubaHS6Lf9l/Gcc6tMdQf0LS5gxG+7mHE9vRoUNc=
+        b=ZMXQKqETQqfnuVhEA/Vct58m0+VVhN7m0BdhL974lCSDPiWZo7X9/CsA2dKym5Kh8
+         lZdfUaJPB2/t3jucpDk/FW8GeSuCEaBmb02+OPyLDqJGHtkhvhD153P4qrSs0LkMod
+         Cx9PK4DvRsFUjq4NBv8Ub9WjGNS7e5HTWEapJS0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Roman Gushchin <guro@fb.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 158/215] proc: use down_read_killable mmap_sem for /proc/pid/pagemap
-Date:   Mon, 29 Jul 2019 21:22:34 +0200
-Message-Id: <20190729190807.218887608@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 195/215] ALSA: hda - Add a conexant codec entry to let mute led work
+Date:   Mon, 29 Jul 2019 21:23:11 +0200
+Message-Id: <20190729190813.709357569@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -71,46 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ad80b932c57d85fd6377f97f359b025baf179a87 ]
+From: Hui Wang <hui.wang@canonical.com>
 
-Do not remain stuck forever if something goes wrong.  Using a killable
-lock permits cleanup of stuck tasks and simplifies investigation.
+commit 3f8809499bf02ef7874254c5e23fc764a47a21a0 upstream.
 
-Link: http://lkml.kernel.org/r/156007493638.3335.4872164955523928492.stgit@buzz
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Michal Koutný <mkoutny@suse.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This conexant codec isn't in the supported codec list yet, the hda
+generic driver can drive this codec well, but on a Lenovo machine
+with mute/mic-mute leds, we need to apply CXT_FIXUP_THINKPAD_ACPI
+to make the leds work. After adding this codec to the list, the
+driver patch_conexant.c will apply THINKPAD_ACPI to this machine.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/proc/task_mmu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_conexant.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 4d9a8e72d91f..1d9c63cd8a3c 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -1543,7 +1543,9 @@ static ssize_t pagemap_read(struct file *file, char __user *buf,
- 		/* overflow ? */
- 		if (end < start_vaddr || end > end_vaddr)
- 			end = end_vaddr;
--		down_read(&mm->mmap_sem);
-+		ret = down_read_killable(&mm->mmap_sem);
-+		if (ret)
-+			goto out_free;
- 		ret = walk_page_range(start_vaddr, end, &pagemap_walk);
- 		up_read(&mm->mmap_sem);
- 		start_vaddr = end;
--- 
-2.20.1
-
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -1083,6 +1083,7 @@ static int patch_conexant_auto(struct hd
+  */
+ 
+ static const struct hda_device_id snd_hda_id_conexant[] = {
++	HDA_CODEC_ENTRY(0x14f11f86, "CX8070", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f12008, "CX8200", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f15045, "CX20549 (Venice)", patch_conexant_auto),
+ 	HDA_CODEC_ENTRY(0x14f15047, "CX20551 (Waikiki)", patch_conexant_auto),
 
 
