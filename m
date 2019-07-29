@@ -2,100 +2,75 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6045C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B727BC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E969206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E28E206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564391572;
+	bh=3d02EKjJm4O9dbv+9xbLgOQOwyUp4Wuvq3MjJrQVdbs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lBxd+boJgXk3kS87+ptRJ4FKCHNFra3N+7fvKRY2SR/Dbv1kgsWqcwfQbqfjp7cmT
+	 JvrbWBgq6ONQaUnjy3LsSONEjBbwX3Od1L/F8Sn0YXNpr6Ix0o6ctc5ErnV6GYxw4t
+	 /IOguDYsa7rRhpVXYTEIEUsfwdu+cb2LeLx34/YM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbfG2JK1 (ORCPT
+        id S1727223AbfG2JMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:10:27 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43687 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfG2JK0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:10:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p13so60913370wru.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:10:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zV+bTIgChlMbStRhEz4HmI17F1bLOP/P0h9cutKjnuk=;
-        b=IlPDEYH6L29CIojsnYJeK7f5HgO+vJAGtT7fsNBJEyVh9uu6JPeO9q4/hNhtQZix4U
-         K3cvzn0vZDh7rsDlun7paa+Hj8Z2BoHRfV0aEVYoLySCI2G3NOjKAxlGY3Rs+aCs1Nrx
-         vUBSlyKWsNeLsD1uojr2MI5hw9+/77uIs2t3hSvioqL+IQK2uA/g8WFac9oXGYBS79tR
-         bbHvL/Em/S+kmS4BZCpiyO5SyGL+2WS2T8OH9ARU6vvicrEbpLrBUnbReE4CQ0Sra3r1
-         tTnIRRqY3Dq+85lZ9DcOSJSFNwzogerNH++aMCfOYPlwoZjrKDlKqtWScHwm28JAABqo
-         OtoQ==
-X-Gm-Message-State: APjAAAUaqYs321B9TaYA4Xp8BIVchMQQoGJkDUias5lAe2Ok6nqD/Tvq
-        wA4wbylKLaVgor7YcdtRe6yV1A==
-X-Google-Smtp-Source: APXvYqwu+iJxG0Nnx1LAgpMTW4dJUcSifVyQWlGLBgiZPy7xi6UkywxpJxOjNTGIQL6gbv5Vi6t8kA==
-X-Received: by 2002:a5d:4e8a:: with SMTP id e10mr38159080wru.26.1564391424671;
-        Mon, 29 Jul 2019 02:10:24 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id e6sm57983191wrw.23.2019.07.29.02.10.23
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 02:10:23 -0700 (PDT)
-Subject: Re: [PATCH stable-4.19 1/2] KVM: nVMX: do not use dangling shadow
- VMCS after guest reset
-To:     Jack Wang <jack.wang.usish@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     stable@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <20190725104645.30642-1-vkuznets@redhat.com>
- <20190725104645.30642-2-vkuznets@redhat.com>
- <CA+res+RfqpT=g1QbCqr3OkHVzFFSAt3cfCYNcwqiemWmOifFxg@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <2ea5d588-8573-6653-b848-0b06d1f98310@redhat.com>
-Date:   Mon, 29 Jul 2019 11:10:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 05:12:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33024 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726694AbfG2JMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 05:12:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0304BB60C;
+        Mon, 29 Jul 2019 09:12:50 +0000 (UTC)
+Date:   Mon, 29 Jul 2019 11:12:49 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH v2] sched/core: Don't use dying mm as active_mm of
+ kthreads
+Message-ID: <20190729091249.GE9330@dhcp22.suse.cz>
+References: <20190727171047.31610-1-longman@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+res+RfqpT=g1QbCqr3OkHVzFFSAt3cfCYNcwqiemWmOifFxg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190727171047.31610-1-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/19 10:58, Jack Wang wrote:
-> Vitaly Kuznetsov <vkuznets@redhat.com> 于2019年7月25日周四 下午3:29写道：
->>
->> From: Paolo Bonzini <pbonzini@redhat.com>
->>
->> [ Upstream commit 88dddc11a8d6b09201b4db9d255b3394d9bc9e57 ]
->>
->> If a KVM guest is reset while running a nested guest, free_nested will
->> disable the shadow VMCS execution control in the vmcs01.  However,
->> on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
->> the VMCS12 to the shadow VMCS which has since been freed.
->>
->> This causes a vmptrld of a NULL pointer on my machime, but Jan reports
->> the host to hang altogether.  Let's see how much this trivial patch fixes.
->>
->> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
->> Cc: Liran Alon <liran.alon@oracle.com>
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> 
-> Hi all,
-> 
-> Do we need to backport the fix also to stable 4.14?  It applies
-> cleanly and compiles fine.
+On Sat 27-07-19 13:10:47, Waiman Long wrote:
+> It was found that a dying mm_struct where the owning task has exited
+> can stay on as active_mm of kernel threads as long as no other user
+> tasks run on those CPUs that use it as active_mm. This prolongs the
+> life time of dying mm holding up memory and other resources like swap
+> space that cannot be freed.
 
-The reproducer required newer kernels that support KVM_GET_NESTED_STATE
-and KVM_SET_NESTED_STATE, so it would be hard to test it.  However, the
-patch itself should be safe.
+IIRC use_mm doesn't pin the address space. It only pins the mm_struct
+itself. So what exactly is the problem here?
 
-Paolo
+> 
+> Fix that by forcing the kernel threads to use init_mm as the active_mm
+> if the previous active_mm is dying.
+> 
+> The determination of a dying mm is based on the absence of an owning
+> task. The selection of the owning task only happens with the CONFIG_MEMCG
+> option. Without that, there is no simple way to determine the life span
+> of a given mm. So it falls back to the old behavior.
+
+Please don't. We really wont to remove mm->owner long term.
+-- 
+Michal Hocko
+SUSE Labs
