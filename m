@@ -2,149 +2,81 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9856C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E404C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80414214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371482070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387768AbfG2MCd (ORCPT
+        id S2387816AbfG2MD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:02:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48766 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387637AbfG2MCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:02:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2914DB61A;
-        Mon, 29 Jul 2019 12:02:31 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 8355B1E3C1F; Mon, 29 Jul 2019 14:02:28 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 14:02:28 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Boaz Harrosh <openosd@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-Message-ID: <20190729120228.GC17833@quack2.suse.cz>
-References: <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
- <20190705191004.GC32320@bombadil.infradead.org>
- <CAPcyv4jVARa38Qc4NjQ04wJ4ZKJ6On9BbJgoL95wQqU-p-Xp_w@mail.gmail.com>
- <20190710190204.GB14701@quack2.suse.cz>
- <20190710201539.GN32320@bombadil.infradead.org>
- <20190710202647.GA7269@quack2.suse.cz>
- <20190711141350.GS32320@bombadil.infradead.org>
- <20190711152550.GT32320@bombadil.infradead.org>
- <20190711154111.GA29284@quack2.suse.cz>
- <CAPcyv4hA+44EHpGN9F5eQD5Y_AuyPTKmovNWvccAFGhF_O2JMg@mail.gmail.com>
+        Mon, 29 Jul 2019 08:03:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57427 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387398AbfG2MD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:03:28 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hs4NA-0004K2-3O; Mon, 29 Jul 2019 12:03:24 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        linux-pm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][V2] drivers: thermal: processor_thermal_device: fix missing bitwise-or operators
+Date:   Mon, 29 Jul 2019 13:03:23 +0100
+Message-Id: <20190729120323.15838-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="opJtzjQTFsWo+cga"
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hA+44EHpGN9F5eQD5Y_AuyPTKmovNWvccAFGhF_O2JMg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
---opJtzjQTFsWo+cga
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The variable val is having the top 8 bits cleared and then the variable is being
+re-assinged and setting just the top 8 bits.  I believe the intention was bitwise-or
+in the top 8 bits.  Fix this by replacing the = operators with &= and |= instead.
 
-On Tue 16-07-19 20:39:46, Dan Williams wrote:
-> On Fri, Jul 12, 2019 at 2:14 AM Jan Kara <jack@suse.cz> wrote:
-> >
-> > On Thu 11-07-19 08:25:50, Matthew Wilcox wrote:
-> > > On Thu, Jul 11, 2019 at 07:13:50AM -0700, Matthew Wilcox wrote:
-> > > > However, the XA_RETRY_ENTRY might be a good choice.  It doesn't normally
-> > > > appear in an XArray (it may appear if you're looking at a deleted node,
-> > > > but since we're holding the lock, we can't see deleted nodes).
-> > >
-> > ...
-> >
-> > > @@ -254,7 +267,7 @@ static void wait_entry_unlocked(struct xa_state *xas, void *entry)
-> > >  static void put_unlocked_entry(struct xa_state *xas, void *entry)
-> > >  {
-> > >       /* If we were the only waiter woken, wake the next one */
-> > > -     if (entry)
-> > > +     if (entry && dax_is_conflict(entry))
-> >
-> > This should be !dax_is_conflict(entry)...
-> >
-> > >               dax_wake_entry(xas, entry, false);
-> > >  }
-> >
-> > Otherwise the patch looks good to me so feel free to add:
-> >
-> > Reviewed-by: Jan Kara <jack@suse.cz>
-> 
-> Looks good, and passes the test case. Now pushed out to
-> libnvdimm-for-next for v5.3 inclusion:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/commit/?h=libnvdimm-for-next&id=23c84eb7837514e16d79ed6d849b13745e0ce688
-
-Thanks for picking up the patch but you didn't apply the fix I've mentioned
-above. So put_unlocked_entry() is not waking up anybody anymore... Since
-this got already to Linus' tree, I guess a separate fixup patch is needed
-(attached).
-
-								Honza
-
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
-
---opJtzjQTFsWo+cga
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment; filename="0001-dax-Fix-missed-wakup-in-put_unlocked_entry.patch"
-
-From 950204f7dfdb06198f40820be4d33ce824508f11 Mon Sep 17 00:00:00 2001
-From: Jan Kara <jack@suse.cz>
-Date: Mon, 29 Jul 2019 13:57:49 +0200
-Subject: [PATCH] dax: Fix missed wakup in put_unlocked_entry()
-
-The condition checking whether put_unlocked_entry() needs to wake up
-following waiter got broken by commit 23c84eb78375 ("dax: Fix missed
-wakeup with PMD faults"). We need to wake the waiter whenever the passed
-entry is valid (i.e., non-NULL and not special conflict entry). This
-could lead to processes never being woken up when waiting for entry
-lock. Fix the condition.
-
-CC: stable@vger.kernel.org
-Fixes: 23c84eb78375 ("dax: Fix missed wakeup with PMD faults")
-Signed-off-by: Jan Kara <jack@suse.cz>
+Addresses-Coverity: ("Unused value")
+Fixes: b0c74b08517e ("drivers: thermal: processor_thermal_device: Export sysfs inteface for TCC offset")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- fs/dax.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index a237141d8787..b64964ef44f6 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -266,7 +266,7 @@ static void wait_entry_unlocked(struct xa_state *xas, void *entry)
- static void put_unlocked_entry(struct xa_state *xas, void *entry)
- {
- 	/* If we were the only waiter woken, wake the next one */
--	if (entry && dax_is_conflict(entry))
-+	if (entry && !dax_is_conflict(entry))
- 		dax_wake_entry(xas, entry, false);
- }
+V2: Add in &= operator missing from V1. Doh.
+
+---
+ .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+index 6f6ac6a8e82d..97333fc4be42 100644
+--- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
++++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+@@ -163,8 +163,8 @@ static int tcc_offset_update(int tcc)
+ 	if (err)
+ 		return err;
  
+-	val = ~GENMASK_ULL(31, 24);
+-	val = (tcc & 0xff) << 24;
++	val &= ~GENMASK_ULL(31, 24);
++	val |= (tcc & 0xff) << 24;
+ 
+ 	err = wrmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, val);
+ 	if (err)
 -- 
-2.16.4
+2.20.1
 
-
---opJtzjQTFsWo+cga--
