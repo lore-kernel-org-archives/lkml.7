@@ -2,144 +2,120 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DA9C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076D0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA4C92067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D565C217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:24:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="nByOcS25"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="P2gaG9Qs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387675AbfG2LYj (ORCPT
+        id S2387684AbfG2LY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:24:39 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:38100 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387450AbfG2LYj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:24:39 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 058D02E12DD;
-        Mon, 29 Jul 2019 14:24:36 +0300 (MSK)
-Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id TcQGodNMlR-OZNmerOf;
-        Mon, 29 Jul 2019 14:24:35 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1564399475; bh=0rOY1hf/vJwvLzCfaIpmU6fmgpWmli7XV2Wh26/reCw=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=nByOcS2558rwwbSDAEFX2ECRH9cbBKFJaqHwq5HMsvxsD7/jzng5DQod4BtWEnb02
-         nZJtRjZ8Zv2vy73Awdgp0hBWRsof8qOxZYo+VXuBmFOCl89Fox23CMoLSgOX4cRU6Z
-         yHZqAu8Cmmg5ZnLDYFt0xwqNaLD3D6ptE3l9l5p4=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:6454:ac35:2758:ad6a])
-        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id QfhZn5Pecb-OZAml5J4;
-        Mon, 29 Jul 2019 14:24:35 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
- in get_user_pages loop
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-References: <156431697805.3170.6377599347542228221.stgit@buzz>
- <20190729091738.GF9330@dhcp22.suse.cz>
- <3d6fc779-2081-ba4b-22cf-be701d617bb4@yandex-team.ru>
- <20190729103307.GG9330@dhcp22.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <5002e67b-b87f-d753-0f9c-6e732b8e7a80@yandex-team.ru>
-Date:   Mon, 29 Jul 2019 14:24:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 29 Jul 2019 07:24:56 -0400
+Received: from mx01-fr.bfs.de ([193.174.231.67]:51171 "EHLO mx01-fr.bfs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387450AbfG2LYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:24:55 -0400
+Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
+        by mx01-fr.bfs.de (Postfix) with ESMTPS id 120DA20189;
+        Mon, 29 Jul 2019 13:24:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1564399490; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WmlXqkmds8g4l2sZZVC0NbuTSq+L6u5Hywts6yOE/DE=;
+        b=P2gaG9Qshu1YGUCXyU+ZC5GpryOcsTWcN7tbGQESId4jsD25pqFqkmyJg66rC9RvsA7Km+
+        I4URapGaWUD3/kphIFWZUdRH+lUE3hRTRPFCVNsACe3ILW31KM1Gd11OIwi2oLYG5CK2MR
+        q26XQGwRSrcBxzhM/5/Dz7Wqr+V0tKz1kVcdmJSKPLEvN/caaKks6AD0Pxuq/R7ZHk8Dct
+        xTfoyupYtOcChJLGbi6kg6Sk8htEXDFrdT0c62Pis2nidEwybR44f6kGOLxuPCKuXV51JH
+        R7cBpn/a1STF+ExZsFv7tSiglBCz/ivpx17Dp0Pl6kW6mi8m/+6VqRa9jSjZJg==
+Received: from [134.92.181.33] (unknown [134.92.181.33])
+        by mail-fr.bfs.de (Postfix) with ESMTPS id 75646BEEBD;
+        Mon, 29 Jul 2019 13:24:49 +0200 (CEST)
+Message-ID: <5D3ED780.7010407@bfs.de>
+Date:   Mon, 29 Jul 2019 13:24:48 +0200
+From:   walter harms <wharms@bfs.de>
+Reply-To: wharms@bfs.de
+User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
 MIME-Version: 1.0
-In-Reply-To: <20190729103307.GG9330@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
+To:     Colin King <colin.king@canonical.com>
+CC:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pm@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] drivers: thermal: processor_thermal_device: fix
+ missing bitwise-or operator
+References: <20190729102930.2956-1-colin.king@canonical.com>
+In-Reply-To: <20190729102930.2956-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+Authentication-Results: mx01-fr.bfs.de
+X-Spamd-Result: default: False [-3.10 / 7.00];
+         ARC_NA(0.00)[];
+         HAS_REPLYTO(0.00)[wharms@bfs.de];
+         BAYES_HAM(-3.00)[100.00%];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         MIME_GOOD(-0.10)[text/plain];
+         REPLYTO_ADDR_EQ_FROM(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[9];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         RCVD_TLS_ALL(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.07.2019 13:33, Michal Hocko wrote:
-> On Mon 29-07-19 12:40:29, Konstantin Khlebnikov wrote:
->> On 29.07.2019 12:17, Michal Hocko wrote:
->>> On Sun 28-07-19 15:29:38, Konstantin Khlebnikov wrote:
->>>> High memory limit in memory cgroup allows to batch memory reclaiming and
->>>> defer it until returning into userland. This moves it out of any locks.
->>>>
->>>> Fixed gap between high and max limit works pretty well (we are using
->>>> 64 * NR_CPUS pages) except cases when one syscall allocates tons of
->>>> memory. This affects all other tasks in cgroup because they might hit
->>>> max memory limit in unhandy places and\or under hot locks.
->>>>
->>>> For example mmap with MAP_POPULATE or MAP_LOCKED might allocate a lot
->>>> of pages and push memory cgroup usage far ahead high memory limit.
->>>>
->>>> This patch uses halfway between high and max limits as threshold and
->>>> in this case starts memory reclaiming if mem_cgroup_handle_over_high()
->>>> called with argument only_severe = true, otherwise reclaim is deferred
->>>> till returning into userland. If high limits isn't set nothing changes.
->>>>
->>>> Now long running get_user_pages will periodically reclaim cgroup memory.
->>>> Other possible targets are generic file read/write iter loops.
->>>
->>> I do see how gup can lead to a large high limit excess, but could you be
->>> more specific why is that a problem? We should be reclaiming the similar
->>> number of pages cumulatively.
->>>
->>
->> Large gup might push usage close to limit and keep it here for a some time.
->> As a result concurrent allocations will enter direct reclaim right at
->> charging much more frequently.
+
+
+Am 29.07.2019 12:29, schrieb Colin King:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Yes, this is indeed prossible. On the other hand even the reclaim from
-> the charge path doesn't really prevent from that happening because the
-> context might get preempted or blocked on locks. So I guess we need a
-> more detailed information of an actual world visible problem here.
->   
->> Right now deferred recalaim after passing high limit works like distributed
->> memcg kswapd which reclaims memory in "background" and prevents completely
->> synchronous direct reclaim.
->>
->> Maybe somebody have any plans for real kswapd for memcg?
+> The variable val is having the top 8 bits cleared and then the variable
+> is being re-assinged and setting just the top 8 bits.  I believe the
+> intention was bitwise-or in the top 8 bits.  Fix this by replacing
+> the = operator with |= instead.
 > 
-> I am not aware of that. The primary problem back then was that we simply
-> cannot have a kernel thread per each memcg because that doesn't scale.
-> Using kthreads and a dynamic pool of threads tends to be quite tricky -
-> e.g. a proper accounting, scaling again.
-
-Yep, for containers proper accounting is important, especially cpu usage.
-
-We're using manual kwapd-style reclaim in userspace by MADV_STOCKPILE
-within container where memory allocation latency is critical.
-
-This patch is about less extreme cases which would be nice to handle
-automatically, without custom tuning.
-
->   
->> I've put mem_cgroup_handle_over_high in gup next to cond_resched() and
->> later that gave me idea that this is good place for running any
->> deferred works, like bottom half for tasks. Right now this happens
->> only at switching into userspace.
+> Addresses-Coverity: ("Unused value")
+> Fixes: b0c74b08517e ("drivers: thermal: processor_thermal_device: Export sysfs inteface for TCC offset")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  .../thermal/intel/int340x_thermal/processor_thermal_device.c    | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I am not against pushing high memory reclaim into the charge path in
-> principle. I just want to hear how big of a problem this really is in
-> practice. If this is mostly a theoretical problem that might hit then I
-> would rather stick with the existing code though.
-> 
+> diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> index 6f6ac6a8e82d..cb22317911ef 100644
+> --- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> +++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> @@ -164,7 +164,7 @@ static int tcc_offset_update(int tcc)
+>  		return err;
+>  
+>  	val = ~GENMASK_ULL(31, 24);
+> -	val = (tcc & 0xff) << 24;
+> +	val |= (tcc & 0xff) << 24;
+>  
 
-Besides latency which might be not so important for everybody I see these:
+I do not think that GENMASK makes sence here.
 
-First problem is a fairness within cgroup - task that generates allocation
-flow isn't throttled after passing high limits as documentation states.
-It will feel memory pressure only after hitting max limit while other
-tasks with smaller allocations will go into direct reclaim right away.
+re,
+ wh
 
-Second is an accumulating too much deferred reclaim - after large gup task
-might call direct reclaim with target amount much larger than gap between
-high and max limits, or even larger than max limit itself.
+>  	err = wrmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, val);
+>  	if (err)
