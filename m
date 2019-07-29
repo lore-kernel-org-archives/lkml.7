@@ -2,88 +2,124 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC43C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3174DC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029F52171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BE9206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fLUYnMvB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NDvJyUbd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbfG2QfL (ORCPT
+        id S1729239AbfG2QfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:35:11 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45372 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729210AbfG2QfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:35:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=xO0CP8AV1H6UAZ0iA2YeRu/E0C6+LBoCdmOpD6uQBuw=; b=fLUYnMvBS4xOpFiXxiBEXt0C9k
-        XRhUToIX6rC1gVoie4UGaQHmN9lGhxCpPerfuv2b7S4COFNcwL2l3KeoaoQ5DzHAN/AyM4cTV2fGd
-        Zbf7Wu+nJelHm3XNhcpGWb8COKANWnTQiKQ+7eZlGoPX5eIoZKG+2/ZSkW87nFIY+oKQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hs8c6-00030c-N5; Mon, 29 Jul 2019 18:35:06 +0200
-Date:   Mon, 29 Jul 2019 18:35:06 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, davem@davemloft.net, f.fainelli@gmail.com,
-        jiri@mellanox.com
-Subject: Re: [PATCH 0/5] staging: fsl-dpaa2/ethsw: add the .ndo_fdb_dump
- callback
-Message-ID: <20190729163506.GJ4110@lunn.ch>
-References: <1564416712-16946-1-git-send-email-ioana.ciornei@nxp.com>
+        Mon, 29 Jul 2019 12:35:17 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39289 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbfG2QfQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:35:16 -0400
+Received: by mail-pf1-f193.google.com with SMTP id f17so24313778pfn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:35:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LosA34Pi06t550ndfWq1HZ2X46u/LpML1Ea5fccWC7E=;
+        b=NDvJyUbd4FPZnEzvHlG0+LLOrnWEIWl8T1uF/R3sM9rTbDL1xgrMCms2SH12h3QByl
+         jQzeedo8qh7F1CKOkRgu6JO8CNoHChExWpJqfPHUx0yYX43YkvvT/cT8HfLH3HdVawEM
+         TZ0YrjtHl/lRT++4pspAHq2IqXkmm/X0gjEg4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LosA34Pi06t550ndfWq1HZ2X46u/LpML1Ea5fccWC7E=;
+        b=iqjV5Xz5UnFl1fcTp0U14/NXYCyfSsV3MlCiclpTrRXdsaFSQr2Rpk8E6otRFP6loC
+         9b4sj8YwElQFOP6k6LFBhT8LPQDKj7YspqSRZnR8B+q3gOC1re62eTr2L3EydeK5S/Uu
+         QEVQU48y7YRFTvvzjoF9/2EOchV4AtfUYxXw04fE+nfYjSlVnC2xjlD1JpTqy56PS8WX
+         D/vr2aLvrxOGQu73cYza7DHbGMoLUddLY0xwT4rgIBkOT1e24lx01x0g4/X4o3l8GNlL
+         VRUgfLbGk97VVMhALTM5JXMEBk+dVmk7/xoo5MODZnBniNm+G/CApPm+KGpLJDxFm7WD
+         re0A==
+X-Gm-Message-State: APjAAAU9TKFOodXz5J4OlOCK050PoMY/lkT/G0bSdkU1Mu/Rb8OoiEH/
+        jodtIx12mplPIK9izjGZ3pB8Sg==
+X-Google-Smtp-Source: APXvYqxiO8pf2kEJ5WYkyipUkk47CIU4vFX7JK7bgUojD7XXorF+A7b4LosOiyjpsDE+ksy35reuqQ==
+X-Received: by 2002:aa7:9118:: with SMTP id 24mr36133516pfh.56.1564418115354;
+        Mon, 29 Jul 2019 09:35:15 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w2sm53553878pgc.32.2019.07.29.09.35.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 09:35:14 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:35:13 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] mfd: db8500-prcmu: Mark expected switch fall-throughs
+Message-ID: <201907290935.B02CE809F@keescook>
+References: <20190728235614.GA23618@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1564416712-16946-1-git-send-email-ioana.ciornei@nxp.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190728235614.GA23618@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 07:11:47PM +0300, Ioana Ciornei wrote:
-> This patch set adds some features and small fixes in the
-> FDB table manipulation area.
+On Sun, Jul 28, 2019 at 06:56:14PM -0500, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
 > 
-> First of all, we implement the .ndo_fdb_dump netdev callback so that all
-> offloaded FDB entries, either static or learnt, are available to the user.
-> This is necessary because the DPAA2 switch does not emit interrupts when a
-> new FDB is learnt or deleted, thus we are not able to keep the software
-> bridge state and the HW in sync by calling the switchdev notifiers.
+> This patch fixes the following warnings:
 > 
-> The patch set also adds the .ndo_fdb_[add|del] callbacks in order to
-> facilitate adding FDB entries not associated with any master device.
+> drivers/mfd/db8500-prcmu.c: In function 'dsiclk_rate':
+> drivers/mfd/db8500-prcmu.c:1592:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    div *= 2;
+>    ~~~~^~~~
+> drivers/mfd/db8500-prcmu.c:1593:2: note: here
+>   case PRCM_DSI_PLLOUT_SEL_PHI_2:
+>   ^~~~
+> drivers/mfd/db8500-prcmu.c:1594:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    div *= 2;
+>    ~~~~^~~~
+> drivers/mfd/db8500-prcmu.c:1595:2: note: here
+>   case PRCM_DSI_PLLOUT_SEL_PHI:
+>   ^~~~
 > 
-> One interesting thing that I observed is that when adding an FDB entry
-> associated with a bridge (ie using the 'master' keywork appended to the
-> bridge command) and then dumping the FDB entries, there will be duplicates
-> of the same entry: one listed by the bridge device and one by the
-> driver's .ndo_fdb_dump).
-> It raises the question whether this is the expected behavior or not.
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-DSA devices are the same, they don't provide an interrupt when a new
-entry is added by the hardware. So we can have two entries, or just
-the SW bridge entry, or just the HW entry, depending on ageing.
- 
-> Another concern is regarding the correct/desired machanism for drivers to
-> signal errors back to switchdev on adding or deleting an FDB entry.
-> In the switchdev documentation, there is a TODO in the place of this topic.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-It used to be a two state prepare/commit transaction, but that was
-changed a while back.
+-Kees
 
-Maybe the DSA core code can give you ideas?
+> ---
+>  drivers/mfd/db8500-prcmu.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/mfd/db8500-prcmu.c b/drivers/mfd/db8500-prcmu.c
+> index 3f21e26b8d36..90e0f21bc49c 100644
+> --- a/drivers/mfd/db8500-prcmu.c
+> +++ b/drivers/mfd/db8500-prcmu.c
+> @@ -1590,8 +1590,10 @@ static unsigned long dsiclk_rate(u8 n)
+>  	switch (divsel) {
+>  	case PRCM_DSI_PLLOUT_SEL_PHI_4:
+>  		div *= 2;
+> +		/* Fall through */
+>  	case PRCM_DSI_PLLOUT_SEL_PHI_2:
+>  		div *= 2;
+> +		/* Fall through */
+>  	case PRCM_DSI_PLLOUT_SEL_PHI:
+>  		return pll_rate(PRCM_PLLDSI_FREQ, clock_rate(PRCMU_HDMICLK),
+>  			PLL_RAW) / div;
+> -- 
+> 2.22.0
+> 
 
-      Andrew
+-- 
+Kees Cook
