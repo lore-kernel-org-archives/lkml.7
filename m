@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C253BC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E608C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93DFB205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D151B205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429844;
-	bh=4Xp/Wz0f66uXN/TMOUoQ0CTQLjGaQbFCqB8iIXAjPIw=;
+	s=default; t=1564429847;
+	bh=SLoCrE+l3z1bj2/xRj9SHLZmNuZjXvDISzhJ4Qw/hkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VptUzt0g03XWVkjksTlc9K0DHDM7kKDL81beSRkOndPCMTMqjP5kckmOImagN9765
-	 AkZf69Kj+x6LdEIkYZBMgWNnMTIj3GUTTKaOXQ/aR4nO8kDu76CfCLWyXR4Ev4WQ8i
-	 pnSublXa1Mg8OAPifaY0LfT82ih/vdYD+T7AYUks=
+	b=Zl/kqlgwJeKJU8RmODM9oQY2mpZIWLPl4vG4WjDN8AQMvHA77A8JcZvPBd3VxM5cF
+	 hMkQib6QyEI20HX5mjFeE4X8yiRtFYFE9ioyJEt1SRpfgvqPSngnbqbyG61DVZcBPL
+	 1Jp9QOIUZso4avH/myTkFrKmUxrL6gsm9RfgGob8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403819AbfG2Tun (ORCPT
+        id S2390701AbfG2Tuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:50:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41696 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:50:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390689AbfG2Tul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:50:41 -0400
+        id S2403822AbfG2Tuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:50:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3FFD217D4;
-        Mon, 29 Jul 2019 19:50:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70DEF2054F;
+        Mon, 29 Jul 2019 19:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429840;
-        bh=4Xp/Wz0f66uXN/TMOUoQ0CTQLjGaQbFCqB8iIXAjPIw=;
+        s=default; t=1564429843;
+        bh=SLoCrE+l3z1bj2/xRj9SHLZmNuZjXvDISzhJ4Qw/hkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t/Oxu7GTZETaNZ6Q8+u8rWn1i7jjtWQr690DapcKAlRhMm70xKl1oEFyK2oCsfibg
-         RuZJtYrZEXCmx+N/ZJu35mvk0zFItkG28uOeJ1K23ZylsotWylA2kMWAGBEFapwLr1
-         F/26accjyJGJUJDNwFIhG4KE7G3hXoloQ2bcRVQc=
+        b=EMz+W7Z5FPeUeCm8meKe2thgmvrYPcOl9e06T86YBQBZfdA0kZlHK2kzThsas5Tdz
+         6el7BA/xPPUYEV2xjUQ6RFrCdbAcO8jBf13SXPqN1YhNNxZVN7/oJASKmWU22eOn9v
+         w2HeQxV0SfVI4M9Wn16XHHOn4v13zEzFa5YGFEHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valentine Fatiev <valentinef@mellanox.com>,
-        Feras Daoud <ferasda@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Jordan Crouse <jcrouse@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 111/215] IB/ipoib: Add child to parent list only if device initialized
-Date:   Mon, 29 Jul 2019 21:21:47 +0200
-Message-Id: <20190729190758.172267917@linuxfoundation.org>
+Subject: [PATCH 5.2 076/215] drm/msm/adreno: Ensure that the zap shader region is big enough
+Date:   Mon, 29 Jul 2019 21:21:12 +0200
+Message-Id: <20190729190753.184172489@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -62,93 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 91b01061fef9c57d2f5b712a6322ef51061f4efd ]
+[ Upstream commit 6672e11cad662ce6631e04c38f92a140a99c042c ]
 
-Despite failure in ipoib_dev_init() we continue with initialization flow
-and creation of child device. It causes to the situation where this child
-device is added too early to parent device list.
+Before loading the zap shader we should ensure that the reserved memory
+region is big enough to hold the loaded file.
 
-Change the logic, so in case of failure we properly return error from
-ipoib_dev_init() and add child only in success path.
-
-Fixes: eaeb39842508 ("IB/ipoib: Move init code to ndo_init")
-Signed-off-by: Valentine Fatiev <valentinef@mellanox.com>
-Reviewed-by: Feras Daoud <ferasda@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_main.c | 34 +++++++++++++----------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 04ea7db08e87..ac0583ff280d 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -1893,12 +1893,6 @@ static void ipoib_child_init(struct net_device *ndev)
- 	struct ipoib_dev_priv *priv = ipoib_priv(ndev);
- 	struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index a9c0ac937b00..9acbbc0f3232 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -56,7 +56,6 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+ 		return ret;
  
--	dev_hold(priv->parent);
--
--	down_write(&ppriv->vlan_rwsem);
--	list_add_tail(&priv->list, &ppriv->child_intfs);
--	up_write(&ppriv->vlan_rwsem);
--
- 	priv->max_ib_mtu = ppriv->max_ib_mtu;
- 	set_bit(IPOIB_FLAG_SUBINTERFACE, &priv->flags);
- 	memcpy(priv->dev->dev_addr, ppriv->dev->dev_addr, INFINIBAND_ALEN);
-@@ -1941,6 +1935,17 @@ static int ipoib_ndo_init(struct net_device *ndev)
- 	if (rc) {
- 		pr_warn("%s: failed to initialize device: %s port %d (ret = %d)\n",
- 			priv->ca->name, priv->dev->name, priv->port, rc);
-+		return rc;
-+	}
-+
-+	if (priv->parent) {
-+		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
-+
-+		dev_hold(priv->parent);
-+
-+		down_write(&ppriv->vlan_rwsem);
-+		list_add_tail(&priv->list, &ppriv->child_intfs);
-+		up_write(&ppriv->vlan_rwsem);
+ 	mem_phys = r.start;
+-	mem_size = resource_size(&r);
+ 
+ 	/* Request the MDT file for the firmware */
+ 	fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
+@@ -72,6 +71,13 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+ 		goto out;
  	}
  
- 	return 0;
-@@ -1958,6 +1963,14 @@ static void ipoib_ndo_uninit(struct net_device *dev)
- 	 */
- 	WARN_ON(!list_empty(&priv->child_intfs));
- 
-+	if (priv->parent) {
-+		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
-+
-+		down_write(&ppriv->vlan_rwsem);
-+		list_del(&priv->list);
-+		up_write(&ppriv->vlan_rwsem);
++	if (mem_size > resource_size(&r)) {
++		DRM_DEV_ERROR(dev,
++			"memory region is too small to load the MDT\n");
++		ret = -E2BIG;
++		goto out;
 +	}
 +
- 	ipoib_neigh_hash_uninit(dev);
- 
- 	ipoib_ib_dev_cleanup(dev);
-@@ -1969,15 +1982,8 @@ static void ipoib_ndo_uninit(struct net_device *dev)
- 		priv->wq = NULL;
- 	}
- 
--	if (priv->parent) {
--		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
--
--		down_write(&ppriv->vlan_rwsem);
--		list_del(&priv->list);
--		up_write(&ppriv->vlan_rwsem);
--
-+	if (priv->parent)
- 		dev_put(priv->parent);
--	}
- }
- 
- static int ipoib_set_vf_link_state(struct net_device *dev, int vf, int link_state)
+ 	/* Allocate memory for the firmware image */
+ 	mem_region = memremap(mem_phys, mem_size,  MEMREMAP_WC);
+ 	if (!mem_region) {
 -- 
 2.20.1
 
