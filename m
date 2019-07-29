@@ -2,108 +2,178 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7969BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FD8C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47EF1206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55D8206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:07:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t7MQStdA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbfG2MHW (ORCPT
+        id S1728379AbfG2MH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:07:22 -0400
-Received: from mga04.intel.com ([192.55.52.120]:38024 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728297AbfG2MHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:07:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 05:07:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,322,1559545200"; 
-   d="scan'208";a="190555061"
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 29 Jul 2019 05:07:16 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 29 Jul 2019 15:07:15 +0300
-Date:   Mon, 29 Jul 2019 15:07:15 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] drivers: base: swnode: link devices to software nodes
-Message-ID: <20190729120715.GA28600@kuha.fi.intel.com>
-References: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
- <20190713075259.243565-2-dmitry.torokhov@gmail.com>
+        Mon, 29 Jul 2019 08:07:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55827 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727337AbfG2MH1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:07:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a15so53606683wmj.5;
+        Mon, 29 Jul 2019 05:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gM6RZR/xuSgNkduhudM33+Jl+xZNye+TDqxtWpDFzAo=;
+        b=t7MQStdA5gwux77+Pa53mpvuqD+H3287P1yq7MyAcRU9kUXyIRHmHjnNIqnSHdQwWR
+         iE7sfIlN3CEcMTeS7EMpnR9+yiqApasHBTjh97OzCr2rzVuRALHa9Cib3pP7u5Vueqdt
+         cdaRzyQU5cht/WBYVWFtX3NysfPMRLB5cVM4WCGh+E6i1QRrKQsI9sXRzY6wTl0HcDAM
+         SoUzRh81aPSBuHUuD12Vqeh1B2K/Z9Z20N6SepRjaIcMAArgivrCCYk449lLJnG7VOAk
+         RNzDHbEksAa3PZ3GwdV1pkxiwYO/cRB4KGQ0W0kPStuQRLXV3xWlg0lLEN0f12UB6pHs
+         VUhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gM6RZR/xuSgNkduhudM33+Jl+xZNye+TDqxtWpDFzAo=;
+        b=UG1wRCgSeapeIpDQcYJ+qH3SgXikY/UYjpn1Zd6GsGJW+2+YCUrmbYBqkxk+miRtVl
+         zDI8cUiMX0EdUgZE1aLxJuyA139IRwb1XqzMrKtIC/rubTe8hyh0JbRMWa3x+Chd3azj
+         E10QMpRjonezAVk9jfgJUqcBSM4bM150XJihEhNDWyrx0o9rLfWPOxvIE698kNYYGjK1
+         2BARRt6TNa8RvI8szMcw6mALfQTDvuk+wkNMszox23oPYfUIZIlmc17CfvluHp31F8hi
+         +MpnO/0iyvQTedVMrpiSCNhJTOP4bU/g92euOlLylkL0UtwxTK1dDZeQYhu1iaDMzP8T
+         xQFw==
+X-Gm-Message-State: APjAAAU+Y8oX29cljxY9ibUwSNEIthmLe1qiUlXlc7/NrpVf6m5h/CPa
+        Do1ZV0Q9oF56xntVe90jzmk=
+X-Google-Smtp-Source: APXvYqxjBo/7epFEnfJJdpOYUIFcyVlfYCRMmA1B522kacmx8rIl91lwfYyS/+igdir3snROfEy0RA==
+X-Received: by 2002:a1c:e108:: with SMTP id y8mr56874498wmg.65.1564402045631;
+        Mon, 29 Jul 2019 05:07:25 -0700 (PDT)
+Received: from [10.0.20.253] ([95.157.63.22])
+        by smtp.gmail.com with ESMTPSA id w25sm57989346wmk.18.2019.07.29.05.07.24
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 05:07:24 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com
+Subject: Re: Error (?) in man page for ppoll(2)
+To:     Alan Stern <stern@rowland.harvard.edu>, linux-man@vger.kernel.org,
+        Kernel development list <linux-kernel@vger.kernel.org>
+References: <Pine.LNX.4.44L0.1907211104350.15063-100000@netrider.rowland.org>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <4ce02b01-f174-99a1-ac34-21a2c6414df2@gmail.com>
+Date:   Mon, 29 Jul 2019 14:07:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190713075259.243565-2-dmitry.torokhov@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <Pine.LNX.4.44L0.1907211104350.15063-100000@netrider.rowland.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 12:52:58AM -0700, Dmitry Torokhov wrote:
-> It is helpful to know what device, if any, a software node is tied to, so
-> let's store a pointer to the device in software node structure. Note that
-> children software nodes will inherit their parent's device pointer, so we
-> do not have to traverse hierarchy to see what device the [sub]tree belongs
-> to.
+Hello Alan,
+
+On 7/21/19 5:32 PM, Alan Stern wrote:
+> Here are two extracts from the man page for ppoll(2) (from the
+> man-pages 4.16 package; the 5.01 version is the same):
 > 
-> We will be using the device pointer to locate GPIO lookup tables for
-> devices with static properties.
+>        Specifying a negative value in timeout means an infinite timeout.
 > 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/base/property.c  |  1 +
->  drivers/base/swnode.c    | 35 ++++++++++++++++++++++++++++++++++-
->  include/linux/property.h |  5 +++++
->  3 files changed, 40 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 348b37e64944..3bc93d4b35c4 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -527,6 +527,7 @@ int device_add_properties(struct device *dev,
->  	if (IS_ERR(fwnode))
->  		return PTR_ERR(fwnode);
->  
-> +	software_node_link_device(fwnode, dev);
->  	set_secondary_fwnode(dev, fwnode);
->  	return 0;
->  }
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index 7fc5a18e02ad..fd12eea539b6 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -24,6 +24,9 @@ struct software_node {
->  
->  	/* properties */
->  	const struct property_entry *properties;
-> +
-> +	/* device this node is associated with */
-> +	struct device *dev;
->  };
+>        Other than the difference in the precision of the timeout argument, the
+>        following ppoll() call:
+> 
+>            ready = ppoll(&fds, nfds, tmo_p, &sigmask);
+> 
+>        is equivalent to atomically executing the following calls:
+> 
+>            sigset_t origmask;
+>            int timeout;
+> 
+>            timeout = (tmo_p == NULL) ? -1 :
+>                      (tmo_p->tv_sec * 1000 + tmo_p->tv_nsec / 1000000);
+>            pthread_sigmask(SIG_SETMASK, &sigmask, &origmask);
+>            ready = poll(&fds, nfds, timeout);
+>            pthread_sigmask(SIG_SETMASK, &origmask, NULL);
+> 
+> But if tmo_p->tv_sec is negative, the ppoll() call is not equivalent to 
+> the corresponding poll() call.  The kernel rejects negative values of 
+> tv_sec with an EINVAL error; it does not interpret the value as meaning 
+> an infinite timeout.
+> 
+> (Yes, the kernel interprets tmo_p == NULL as an infinite timeout, but 
+> the man page is still wrong for the case tmo_p->tv_sec < 0.)
+> 
+> Suggested fix: Following the end of the second extract above, add:
+> 
+> 	except that negative time values in tmo_p are not interpreted
+> 	as an infinite timeout.
+> 
+> Also, in the ERRORS section, change the text for EINVAL to:
+> 
+> 	EINVAL The nfds value exceeds the RLIMIT_NOFILE value or
+> 	*tmo_p contains an invalid (negative) time value.
 
-Let's not do that! The nodes can be, and in many cases are, associated
-with multiple devices.
+Thanks for the report, and the text change suggestions.
+I've applied the patch below.
 
-Every device is already linked with the software node kobject, so
-isn't it possible to simply walk trough those links in order to check
-the devices associated with the node?
+Thanks,
 
+Michael
 
-thanks,
+diff --git a/man2/poll.2 b/man2/poll.2
+index 0b023e0a5..3eacb88b7 100644
+--- a/man2/poll.2
++++ b/man2/poll.2
+@@ -271,7 +271,7 @@ ready = ppoll(&fds, nfds, tmo_p, &sigmask);
+ .EE
+ .in
+ .PP
+-is equivalent to
++is nearly equivalent to
+ .I atomically
+ executing the following calls:
+ .PP
+@@ -288,6 +288,17 @@ pthread_sigmask(SIG_SETMASK, &origmask, NULL);
+ .EE
+ .in
+ .PP
++The above code segment is described as
++.I nearly
++equivalent because whereas a negative
++.I timeout
++value for
++.BR poll ()
++is interpreted as an infinite timeout, a negative value expressed in
++.IR *tmo_p
++results in an error from
++.BR ppoll ().
++.PP
+ See the description of
+ .BR pselect (2)
+ for an explanation of why
+@@ -354,6 +365,12 @@ value exceeds the
+ .B RLIMIT_NOFILE
+ value.
+ .TP
++.B EINVAL
++.RB ( ppoll ())
++The timeout value expressed in
++.IR *ip
++is invalid (nragtive).
++.TP
+ .B ENOMEM
+ There was no space to allocate file descriptor tables.
+ .SH VERSIONS
 
 -- 
-heikki
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
