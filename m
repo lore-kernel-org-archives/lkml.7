@@ -2,114 +2,170 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DF7C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF5DC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0C52070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A63206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E6X9hG/q"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ld68ao26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727651AbfG2RRu (ORCPT
+        id S1728189AbfG2RTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 13:17:50 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40838 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727481AbfG2RRt (ORCPT
+        Mon, 29 Jul 2019 13:19:34 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:40900 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfG2RTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:17:49 -0400
-Received: by mail-pl1-f196.google.com with SMTP id a93so27712477pla.7
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 10:17:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XDpc8dttTfICfu+NA2rP7d7EK6Xfd1t48iUvlABkY5c=;
-        b=E6X9hG/qC+ZFNxAoh/s2Pax+XfWjHa0cGxosOaBllMvG1GoZ+bG7ht/P+SsHlvVM2i
-         iAKE8UKAG1/U41GXIS9cayYInLH7IhdLfc9d2fM77LE/9ZjF5EAp0NTs1Umd/hYBB8aK
-         ZPWUu/MSUNU+qmL7DyG4FegdgaQ4lSbnnfvmIHoynHJTgZfshP1otKFBvsI9Uw0nDVGF
-         u2gAJ5e8o+Q2z+6XMKTj0WNKR210qYVB2RM8HcZNBnh8Aci3EM3fKgJDZtv7nH7yjLdc
-         a5EsADvAaOmrrvElKx5wG0aHrb7xop8JK3ZevyugGcR3LOoQb7hb6N0oIP1G1cJjeoVZ
-         cQtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XDpc8dttTfICfu+NA2rP7d7EK6Xfd1t48iUvlABkY5c=;
-        b=OMGovCymPBtiTNUojnSbqfyzrUNMmSZj+O/QgqmTiBlmbp5rC4bdFdm9DiuDx04im2
-         k3pJHF1VkaT3WMpirVFyobE4KguxhyyEzcF/wBsgOikI3gwayinLPQEmMEdqtmPialPa
-         oibUHHLA86oNtY4P0i2Plir4izezzGo0FBM7aPPQDptHrBhTaEuW8nkPkwxvcCn/CHxp
-         TXat9Ae637/rZi+hVzsG+ehRF7YbOsJFX2lxntqLy5l2AZulkBw1CW6RYzyeGd/lc7xF
-         ZKIte2ffFJk8vTu8FOwBA3pLvIbOmFfW9EsX2sYDv02HMLpXaUzjI/6C/Js6PSSNkc6A
-         ygcg==
-X-Gm-Message-State: APjAAAUORT2BUK/X8Rf3slwG0+Z5CXUkxO5IyXMyhxg6WsrySKY6kTBv
-        8oZGDdpnlenenGNVc/PBovj5JYEfeWsrU3S9mI4fpZJV0ZQ=
-X-Google-Smtp-Source: APXvYqxkT4VhjJ6KR1/tOHA5hLJ9UZagJd/hPjuYBLQaKT1Zd31YQEsLjxmsmeguf6m3YBH0px2RpYUr7v78Frn4l0M=
-X-Received: by 2002:a17:902:b944:: with SMTP id h4mr34783730pls.179.1564420668750;
- Mon, 29 Jul 2019 10:17:48 -0700 (PDT)
+        Mon, 29 Jul 2019 13:19:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1564420771; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=n8E4jxEmkny3KYi/27FNI9LuXpecTWt4GD8+XB/Ki9w=;
+        b=ld68ao2693if3y+5k9n2v4iD3Tr1wo1bSDYqyRtQDHGrjbRHNm7d9GIybz2nt4o9eaDwU8
+        rBzd0kmXRaz+ZaRywMxBbQbxdD8JPP/VqzC9w2NwU3ftcutP1d5G4iVUZ+TWOe0JqExRww
+        wohj74rYHgC/H7/SaegAykIc20AFXuc=
+Date:   Mon, 29 Jul 2019 13:19:14 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/4 v4] irqchip: Ingenic: Change interrupt handling form
+ cascade to chained_irq.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, tglx@linutronix.de, mark.rutland@arm.com,
+        jason@lakedaemon.net, marc.zyngier@arm.com
+Message-Id: <1564420754.6633.0@crapouillou.net>
+In-Reply-To: <1564335273-22931-2-git-send-email-zhouyanjie@zoho.com>
+References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
+        <1564335273-22931-1-git-send-email-zhouyanjie@zoho.com>
+        <1564335273-22931-2-git-send-email-zhouyanjie@zoho.com>
 MIME-Version: 1.0
-References: <20190727030110.17208-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190727030110.17208-1-yamada.masahiro@socionext.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 29 Jul 2019 10:17:36 -0700
-Message-ID: <CAKwvOdmUUuFvdqD3X4SO7xPOpUevvc0iDpyUGC98KQH_AvvD=A@mail.gmail.com>
-Subject: Re: [PATCH] gen_compile_commands: lower the entry count threshold
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Tom Roeder <tmroeder@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 8:01 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Running gen_compile_commands.py after building with allnoconfig
-> gave this:
->
-> $ ./scripts/gen_compile_commands.py
-> WARNING: Found 449 entries. Have you compiled the kernel?
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Hi Zhou,
 
-This potentially may need to go lower for other arch's allnoconfig.
-I'm guessing you tested x86_64?
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
 
+
+Le dim. 28 juil. 2019 =E0 13:34, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+=E9crit :
+> The interrupt handling method is changed from old-style cascade to
+> chained_irq which is more appropriate. Also, it can process the
+> corner situation that more than one irq is coming to a single
+> chip at the same time.
+>=20
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 > ---
->
->  scripts/gen_compile_commands.py | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
-> index 7915823b92a5..c458696ef3a7 100755
-> --- a/scripts/gen_compile_commands.py
-> +++ b/scripts/gen_compile_commands.py
-> @@ -21,9 +21,9 @@ _LINE_PATTERN = r'^cmd_[^ ]*\.o := (.* )([^ ]*\.c)$'
->  _VALID_LOG_LEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
->
->  # A kernel build generally has over 2000 entries in its compile_commands.json
-> -# database. If this code finds 500 or fewer, then warn the user that they might
-> +# database. If this code finds 300 or fewer, then warn the user that they might
->  # not have all the .cmd files, and they might need to compile the kernel.
-> -_LOW_COUNT_THRESHOLD = 500
-> +_LOW_COUNT_THRESHOLD = 300
->
->
->  def parse_arguments():
+>  drivers/irqchip/irq-ingenic.c | 37=20
+> +++++++++++++++++++++++--------------
+>  1 file changed, 23 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/irqchip/irq-ingenic.c=20
+> b/drivers/irqchip/irq-ingenic.c
+> index f126255..49f7685 100644
+> --- a/drivers/irqchip/irq-ingenic.c
+> +++ b/drivers/irqchip/irq-ingenic.c
+> @@ -1,7 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+>   *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
+> - *  JZ4740 platform IRQ support
+> + *  Ingenic XBurst platform IRQ support
+>   */
+>=20
+>  #include <linux/errno.h>
+> @@ -10,6 +10,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/ioport.h>
+>  #include <linux/irqchip.h>
+> +#include <linux/irqchip/chained_irq.h>
+>  #include <linux/irqchip/ingenic.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+> @@ -32,22 +33,34 @@ struct ingenic_intc_data {
+>  #define JZ_REG_INTC_PENDING	0x10
+>  #define CHIP_SIZE		0x20
+>=20
+> -static irqreturn_t intc_cascade(int irq, void *data)
+> +static void ingenic_chained_handle_irq(struct irq_desc *desc)
+>  {
+> -	struct ingenic_intc_data *intc =3D irq_get_handler_data(irq);
+> -	uint32_t irq_reg;
+> +	struct ingenic_intc_data *intc =3D irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip =3D irq_desc_get_chip(desc);
+> +	bool have_irq =3D false;
+> +	uint32_t pending;
+>  	unsigned i;
+>=20
+> +	chained_irq_enter(chip, desc);
+>  	for (i =3D 0; i < intc->num_chips; i++) {
+> -		irq_reg =3D readl(intc->base + (i * CHIP_SIZE) +
+> +		pending =3D readl(intc->base + (i * CHIP_SIZE) +
+>  				JZ_REG_INTC_PENDING);
+> -		if (!irq_reg)
+> +		if (!pending)
+>  			continue;
+>=20
+> -		generic_handle_irq(__fls(irq_reg) + (i * 32) + JZ4740_IRQ_BASE);
+> +		have_irq =3D true;
+> +		while (pending) {
+> +			int bit =3D __fls(pending);
+
+Use the for_each_set_bit() macro here, that will be simpler.
+
+
+> +
+> +			generic_handle_irq(bit + (i * 32) + JZ4740_IRQ_BASE);
+> +			pending &=3D ~BIT(bit);
+> +		}
+>  	}
+>=20
+> -	return IRQ_HANDLED;
+> +	if (!have_irq)
+> +		spurious_interrupt();
+> +
+> +	chained_irq_exit(chip, desc);
+>  }
+>=20
+>  static void intc_irq_set_mask(struct irq_chip_generic *gc, uint32_t=20
+> mask)
+> @@ -70,11 +83,6 @@ void ingenic_intc_irq_resume(struct irq_data *data)
+>  	intc_irq_set_mask(gc, gc->mask_cache);
+>  }
+>=20
+> -static struct irqaction intc_cascade_action =3D {
+> -	.handler =3D intc_cascade,
+> -	.name =3D "SoC intc cascade interrupt",
+> -};
+> -
+>  static int __init ingenic_intc_of_init(struct device_node *node,
+>  				       unsigned num_chips)
+>  {
+> @@ -139,7 +147,8 @@ static int __init ingenic_intc_of_init(struct=20
+> device_node *node,
+>  	if (!domain)
+>  		pr_warn("unable to register IRQ domain\n");
+>=20
+> -	setup_irq(parent_irq, &intc_cascade_action);
+> +	irq_set_chained_handler_and_data(parent_irq,
+> +					ingenic_chained_handle_irq, intc);
+>  	return 0;
+>=20
+>  out_unmap_irq:
 > --
-> 2.17.1
->
+> 2.7.4
 
+=
 
--- 
-Thanks,
-~Nick Desaulniers
