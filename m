@@ -2,121 +2,101 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB118C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56105C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886402070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29ADC2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:58:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqvfLHPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfG2I5R (ORCPT
+        id S1727260AbfG2I6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:57:17 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38671 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfG2I5Q (ORCPT
+        Mon, 29 Jul 2019 04:58:44 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34672 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727195AbfG2I6o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:57:16 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g17so60895177wrr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 01:57:15 -0700 (PDT)
+        Mon, 29 Jul 2019 04:58:44 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b29so34247708lfq.1;
+        Mon, 29 Jul 2019 01:58:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=I1Kj7YUPvkqZu0AVoqLEWB0rMOmtYob12XhQjO3Ri6Q=;
+        b=cqvfLHPFUr5VxLj7mTj7MPXkdMQrlElRYzxTAKvcRGsHMjXI10VTKm4NlH9fEjQCX7
+         +HyrBLZh73kMWXuARtvgjMlo6mHSUe5xs+i/Jhy4EblsDE7sji2m1JzJ3oaeyt/EuFnb
+         mK0hJ18HHpmV3uHcNB5U6SBZc7ICPlwSSgwX5eQbHPsRuHa9PhFEJnjhPo29ufjn+mwK
+         REBtU646Guh/uerj6wz5DOsVddH3mBBhJ/5AGJO97VwAofsGZeelKO0q0Lemqj50c/Dz
+         nsneBBBi7xzaAPaX/70YoFTn0x2CY4K+SXJKHtxuWSOA8+6uFU4I2i+2HPZNAGKevH7s
+         fV4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GU8Bvnm5AE0VXkANPpUl4+WscmSB0FOHcgJpamxiC9E=;
-        b=RePskPjAV87coQThHv98miwIh3GnjARnR62+EI2xArMFinOYDtLTUMKKorwT2/cWVt
-         AKAufm5er6kHGprlfvHZqHji5/T447OqbhSppo96obi+SW93yJEzwQic38TZ2rfGpWS+
-         RJFwNrCaQ24nmpz4iS1FpcYhDgvayznpVVbAy7QQCwM4Bo7JeIQzmRrW7Va8U3TvjMtH
-         vhI1mTb3V8zPriz/EXaJqjfJ+K1+q8IBLAoJpDbvvKZ7Vx/ysWnOpsJ9XJCYmgFkzoAy
-         rwpYDrBTTP5tYL35c3LRu3BTYMAGYCpettx/nxP6eODys0WYuKCjEynvgcXob93AL/7z
-         T4Rg==
-X-Gm-Message-State: APjAAAXaOUAt3riygh0iTjTTBU38OhIrw1wgp624j43Om5FGQc4tyeYE
-        1RhAXJZVyE6MuzLkuuvLWj+dEA==
-X-Google-Smtp-Source: APXvYqxMlgLy0o+hJvyxEmX2tJZjwuv5PqV8XMU567WW6hpg++Fqoqfz2NV9iO5OfIAZ1QQLvH//yQ==
-X-Received: by 2002:a5d:6a52:: with SMTP id t18mr17604836wrw.178.1564390634485;
-        Mon, 29 Jul 2019 01:57:14 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.237.107])
-        by smtp.gmail.com with ESMTPSA id 17sm52608965wmx.47.2019.07.29.01.57.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 01:57:13 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 10:57:11 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
-        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
-        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
-        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
-Subject: Re: [RFC][PATCH 01/13] sched/deadline: Impose global limits on
- sched_attr::sched_period
-Message-ID: <20190729085711.GQ25636@localhost.localdomain>
-References: <20190726145409.947503076@infradead.org>
- <20190726161357.397880775@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=I1Kj7YUPvkqZu0AVoqLEWB0rMOmtYob12XhQjO3Ri6Q=;
+        b=MgHmd4uYtFe8WB38OOp4+SUMj6T76r5U+PX7+WqTQePF+FWrZqlLYdvvtH9SbuxYff
+         RfHnvD+7JlYP/ogyZMlyCZRHI2Ny2wTd230B9EBwEMKWPFj0J5Wk616AdU0OlXXO09Ew
+         /WUOhJjegZbdXNouxW4CH3q+rW7xPRdeZmiEM00WYgppMc7pIGkLHTd+hsZY0Qa/Htfx
+         QYHyCh3fRXpLPd676/YpiXA5rr5Ldj/v6c4vXgNxb93YwMqfHDJq0a2tI6y736u0hCyl
+         a5Yb/g1uJHyUCLm5oJa1DqgcbAkeEn46kzTHmIwn7JxEh3S2wmbPuW5paej+s3LLeJn6
+         tVgw==
+X-Gm-Message-State: APjAAAXBZryT5ctImfqcZnTuRQsY2Nta8R30GPnHmVuSWY2ELajUXD5D
+        7Ak0m4er+tJAn+yHcGB4BqX6bjm2z3qPuUtD9/1iIA==
+X-Google-Smtp-Source: APXvYqwEYMRATv6hJXcp2sN2uBqY7MeCPBYc/cx7vGGCDzzL9FkPA8m7NHC3RC8RJW7yXkhUwM+YmkfaE0n50XYnM0E=
+X-Received: by 2002:a19:4349:: with SMTP id m9mr50210064lfj.64.1564390721868;
+ Mon, 29 Jul 2019 01:58:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726161357.397880775@infradead.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190725104645.30642-1-vkuznets@redhat.com> <20190725104645.30642-2-vkuznets@redhat.com>
+In-Reply-To: <20190725104645.30642-2-vkuznets@redhat.com>
+From:   Jack Wang <jack.wang.usish@gmail.com>
+Date:   Mon, 29 Jul 2019 10:58:30 +0200
+Message-ID: <CA+res+RfqpT=g1QbCqr3OkHVzFFSAt3cfCYNcwqiemWmOifFxg@mail.gmail.com>
+Subject: Re: [PATCH stable-4.19 1/2] KVM: nVMX: do not use dangling shadow
+ VMCS after guest reset
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     stable@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Vitaly Kuznetsov <vkuznets@redhat.com> =E4=BA=8E2019=E5=B9=B47=E6=9C=8825=
+=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=883:29=E5=86=99=E9=81=93=EF=BC=
+=9A
+>
+> From: Paolo Bonzini <pbonzini@redhat.com>
+>
+> [ Upstream commit 88dddc11a8d6b09201b4db9d255b3394d9bc9e57 ]
+>
+> If a KVM guest is reset while running a nested guest, free_nested will
+> disable the shadow VMCS execution control in the vmcs01.  However,
+> on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
+> the VMCS12 to the shadow VMCS which has since been freed.
+>
+> This causes a vmptrld of a NULL pointer on my machime, but Jan reports
+> the host to hang altogether.  Let's see how much this trivial patch fixes=
+.
+>
+> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+> Cc: Liran Alon <liran.alon@oracle.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-On 26/07/19 16:54, Peter Zijlstra wrote:
-> 
-> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-> Cc: Luca Abeni <luca.abeni@santannapisa.it>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  include/linux/sched/sysctl.h |    3 +++
->  kernel/sched/deadline.c      |   23 +++++++++++++++++++++--
->  kernel/sysctl.c              |   14 ++++++++++++++
->  3 files changed, 38 insertions(+), 2 deletions(-)
-> 
-> --- a/include/linux/sched/sysctl.h
-> +++ b/include/linux/sched/sysctl.h
-> @@ -56,6 +56,9 @@ int sched_proc_update_handler(struct ctl
->  extern unsigned int sysctl_sched_rt_period;
->  extern int sysctl_sched_rt_runtime;
->  
-> +extern unsigned int sysctl_sched_dl_period_max;
-> +extern unsigned int sysctl_sched_dl_period_min;
-> +
->  #ifdef CONFIG_UCLAMP_TASK
->  extern unsigned int sysctl_sched_uclamp_util_min;
->  extern unsigned int sysctl_sched_uclamp_util_max;
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -2597,6 +2597,14 @@ void __getparam_dl(struct task_struct *p
->  }
->  
->  /*
-> + * Default limits for DL period; on the top end we guard against small util
-> + * tasks still getting rediculous long effective runtimes, on the bottom end we
+Hi all,
 
-s/rediculous/ridiculous/
+Do we need to backport the fix also to stable 4.14?  It applies
+cleanly and compiles fine.
 
-> + * guard against timer DoS.
-> + */
-> +unsigned int sysctl_sched_dl_period_max = 1 << 22; /* ~4 seconds */
-> +unsigned int sysctl_sched_dl_period_min = 100;     /* 100 us */
-
-These limits look sane to me. I've actually been experimenting with 10us
-period tasks and throttling seemed to behave fine, but I guess 100us is
-a saner default.
-
-So, (with a few lines of changelog :)
-
-Acked-by: Juri Lelli <juri.lelli@redhat.com>
-
-Thanks for doing this.
-
-Best,
-
-Juri
+Regards,
+Jack Wang
