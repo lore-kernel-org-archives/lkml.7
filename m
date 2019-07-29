@@ -2,151 +2,111 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBF4C7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A21C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300B221655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:51:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="kQ7u2Z5D"
+	by mail.kernel.org (Postfix) with ESMTP id 9A984204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:51:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564429903;
+	bh=IdEMgGy0pL2VQ26yIXXQLlHAcV2TSQxywE3X7xeZwE8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jz+jWjoYWYH9sRC9cbllclSF9A2DgHIaQzyMki3KztLBDaa9PYboenkzdY+ZJs04V
+	 hbQlz/mpWUZdf9LgC8IWfyWqtOpCD9SV+9/+zc44BTS8SGxZ/EYIaY+TLsabVy+Q88
+	 J+lnoFgNrXM0ygj8NB+EMOhbsWZMqcm6ePO/oVPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403876AbfG2Tvj (ORCPT
+        id S2390830AbfG2Tvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jul 2019 15:51:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403873AbfG2Tvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 15:51:39 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40420 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390587AbfG2Tvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:51:36 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m8so26160688lji.7
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 12:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=El7Ib0jTQtxwv9EQk3d/9hKJrGZteddjh0+HIjhP2fo=;
-        b=kQ7u2Z5De3ynsZA4y1P68rxHq30RnVHHlC09c4hOT6vJoDwyIv6DSwaSTbaVAM92Pv
-         1TahDbRIHgs/SWIeE6HzY6g9xHQ51ZQ5zZYicb15lxBgunoQ/egqY4zSsFVzcZvsJ9z6
-         /jkH3fkKht0WAtOabiND7dhBWBZLBAmy/ckrfV3RVnvJEODoamQy182/Y1NfIbPyZbd/
-         1ZUE+uEJRDrgK63qsJzjL0eMxk9Gtdfdtrp+7Ny0zciaIr0gjghMGsvkVFZhTqlbo46e
-         jnp85j0bXEkkyE7GICxMVSEZitxSjBtcaBUblR9nc6GmO5npRlHqhqNnxh44LsNKm9OO
-         VePA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=El7Ib0jTQtxwv9EQk3d/9hKJrGZteddjh0+HIjhP2fo=;
-        b=kARBh3RWHzVVrcKJnnYXfIeWro8MyuJVGawQRnTnarFxdrUm9v4bRAtk2QZ41muYeJ
-         vPr4DNf99BVEnS56KEjY3lepv0qCHAfu6XjSteHbunCa5UJ+7lKzFKye66qCTOnG+uqu
-         /YSDaytI6Ny9c03GrlL+EpqM6qCblBThsxYA8Aj0lAQS/4t4aaaDA0z4YyISvudQ8UPH
-         HLga87IbkOOxaOWHpcpViNHfuiBldCSpmlEMp/+3nmpGkgoGmR3pK6PPjIJdrugxhFw0
-         cQR13p9sYjshuKY77QEE6RJIOzJCtJgaBs7ojbLiClx0FvMD5IValzLwyrwtb+Ue6Bf4
-         JCxw==
-X-Gm-Message-State: APjAAAWpG21fF7u/lD/hVor4Bb5z5RUQ6UA+yztxXLoXrbCads7YyaqR
-        Q3p8exTlT95YQttw20GTgopg7YzG
-X-Google-Smtp-Source: APXvYqwmerTp9GT9ypUFcw81F3w6Ua2ebUM6nBiNjoQILyLAd8+1+ULuFfpyzKPNNcwa9HX4Oh8pTw==
-X-Received: by 2002:a2e:9048:: with SMTP id n8mr12228496ljg.37.1564429895116;
-        Mon, 29 Jul 2019 12:51:35 -0700 (PDT)
-Received: from localhost (customer-145-14-112-32.stosn.net. [145.14.112.32])
-        by smtp.gmail.com with ESMTPSA id y12sm12077703lfy.36.2019.07.29.12.51.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 12:51:34 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 21:51:34 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Add Geert as Renesas SoC Co-Maintainer
-Message-ID: <20190729195134.GF3186@bigcity.dyn.berto.se>
-References: <20190729175658.13672-1-geert+renesas@glider.be>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50E56204EC;
+        Mon, 29 Jul 2019 19:51:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564429898;
+        bh=IdEMgGy0pL2VQ26yIXXQLlHAcV2TSQxywE3X7xeZwE8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RGHn6vC/WtuCioAzjjinAmfdPfq9yVj+67xoAkK50/y57NZkaE5G65xnU3lzyrT02
+         wlXS+j7bVafDP8UsFTaUhDrnTxQwKprwKOyLaR8V1ttsHO6jH8SqBwqZafLS/F6WGS
+         LE1EGlU5w63kLOfh4jA+YHTxh0M7/2GECpt7wPxQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Mikhak <alan.mikhak@sifive.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 132/215] nvme-pci: check for NULL return from pci_alloc_p2pmem()
+Date:   Mon, 29 Jul 2019 21:22:08 +0200
+Message-Id: <20190729190802.348929092@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
+References: <20190729190739.971253303@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190729175658.13672-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert, Simon,
+[ Upstream commit bfac8e9f55cf62a000b643a0081488badbe92d96 ]
 
-On 2019-07-29 19:56:58 +0200, Geert Uytterhoeven wrote:
-> At the end of the v5.3 upstream kernel development cycle, Simon will be
-> stepping down from his role as Renesas SoC maintainer.  Starting with
-> the v5.4 development cycle, Geert is taking over this role.
+Modify nvme_alloc_sq_cmds() to call pci_free_p2pmem() to free the memory
+it allocated using pci_alloc_p2pmem() in case pci_p2pmem_virt_to_bus()
+returns null.
 
-I would like to thank Simon for his good humor and support in all my 
-interactions with him as a maintainer. And wish Geert the best of luck 
-picking up the baton, not that you need it I know you will be just as 
-fun to work with.
+Makes sure not to call pci_free_p2pmem() if pci_alloc_p2pmem() returned
+NULL, which can happen if CONFIG_PCI_P2PDMA is not configured.
 
-> 
-> Add Geert as a co-maintainer, and add his git repository and branch.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The current implementation is not expected to leak since
+pci_p2pmem_virt_to_bus() is expected to fail only if pci_alloc_p2pmem()
+returns null. However, checking the return value of pci_alloc_p2pmem()
+is more explicit.
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/nvme/host/pci.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-> ---
-> Stephen: Can you please add my branch to linux-next, after Simon's
-> 	 branch, which may still receive fixes for v5.3?
-> 
-> 	 Thanks!
-> ---
->  MAINTAINERS | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6426db5198f05377..6de667021591fb52 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2155,10 +2155,12 @@ F:	Documentation/devicetree/bindings/arm/realtek.txt
->  
->  ARM/RENESAS ARM64 ARCHITECTURE
->  M:	Simon Horman <horms@verge.net.au>
-> +M:	Geert Uytterhoeven <geert+renesas@glider.be>
->  M:	Magnus Damm <magnus.damm@gmail.com>
->  L:	linux-renesas-soc@vger.kernel.org
->  Q:	http://patchwork.kernel.org/project/linux-renesas-soc/list/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git next
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git next
->  S:	Supported
->  F:	arch/arm64/boot/dts/renesas/
->  F:	Documentation/devicetree/bindings/arm/renesas.yaml
-> @@ -2269,10 +2271,12 @@ F:	drivers/media/platform/s5p-mfc/
->  
->  ARM/SHMOBILE ARM ARCHITECTURE
->  M:	Simon Horman <horms@verge.net.au>
-> +M:	Geert Uytterhoeven <geert+renesas@glider.be>
->  M:	Magnus Damm <magnus.damm@gmail.com>
->  L:	linux-renesas-soc@vger.kernel.org
->  Q:	http://patchwork.kernel.org/project/linux-renesas-soc/list/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git next
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git next
->  S:	Supported
->  F:	arch/arm/boot/dts/emev2*
->  F:	arch/arm/boot/dts/gr-peach*
-> -- 
-> 2.17.1
-> 
-
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index f5bc1c30cef5..245b6e2151c1 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1456,11 +1456,15 @@ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
+ 
+ 	if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)) {
+ 		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(depth));
+-		nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
+-						nvmeq->sq_cmds);
+-		if (nvmeq->sq_dma_addr) {
+-			set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
+-			return 0; 
++		if (nvmeq->sq_cmds) {
++			nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
++							nvmeq->sq_cmds);
++			if (nvmeq->sq_dma_addr) {
++				set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
++				return 0;
++			}
++
++			pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(depth));
+ 		}
+ 	}
+ 
 -- 
-Regards,
-Niklas Söderlund
+2.20.1
+
+
+
