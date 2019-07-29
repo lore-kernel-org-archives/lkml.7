@@ -2,130 +2,215 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EC1C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27989C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B139E206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A54206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:46:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388207AbfG2SqB convert rfc822-to-8bit (ORCPT
+        id S2388244AbfG2Sqc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:46:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54436 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387512AbfG2SqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 14:46:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2C7F0AE62;
-        Mon, 29 Jul 2019 18:45:58 +0000 (UTC)
-Date:   Mon, 29 Jul 2019 20:45:57 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v3 5/7] mfd: ioc3: Add driver for SGI IOC3 chip
-Message-Id: <20190729204557.468db2153efefda96dd41ec0@suse.de>
-In-Reply-To: <20190725114716.GB23883@dell>
-References: <20190613170636.6647-1-tbogendoerfer@suse.de>
-        <20190613170636.6647-6-tbogendoerfer@suse.de>
-        <20190725114716.GB23883@dell>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+        Mon, 29 Jul 2019 14:46:32 -0400
+Received: from mailoutvs57.siol.net ([185.57.226.248]:41145 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387512AbfG2Sqc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 14:46:32 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id E42D2521EA5;
+        Mon, 29 Jul 2019 20:46:26 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ptq6DxYnJ009; Mon, 29 Jul 2019 20:46:26 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 52C3E5225A9;
+        Mon, 29 Jul 2019 20:46:26 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id A5E33521EA5;
+        Mon, 29 Jul 2019 20:46:25 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Date:   Mon, 29 Jul 2019 20:46:25 +0200
+Message-ID: <173825848.1FZsmuHfpq@jernej-laptop>
+In-Reply-To: <20190729184041.vlvfz3vz3ykhufdk@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net> <2346193.MplWYqIveT@jernej-laptop> <20190729184041.vlvfz3vz3ykhufdk@pengutronix.de>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jul 2019 12:47:16 +0100
-Lee Jones <lee.jones@linaro.org> wrote:
-
-> On Thu, 13 Jun 2019, Thomas Bogendoerfer wrote:
-> > +/*
-> > + * On IP30 the RTC (a DS1687) is behind the IOC3 on the generic
-> > + * ByteBus regions. We have to write the RTC address of interest to
-> > + * IOC3_BYTEBUS_DEV1, then read the data from IOC3_BYTEBUS_DEV2.
-> > + * rtc->regs already points to IOC3_BYTEBUS_DEV1.
-> > + */
-> > +#define IP30_RTC_ADDR(rtc) (rtc->regs)
-> > +#define IP30_RTC_DATA(rtc) ((rtc->regs) + IOC3_BYTEBUS_DEV2 - IOC3_BYTEBUS_DEV1)
-> > +
-> > +static u8 ip30_rtc_read(struct ds1685_priv *rtc, int reg)
-> > +{
-> > +	writeb((reg & 0x7f), IP30_RTC_ADDR(rtc));
-> > +	return readb(IP30_RTC_DATA(rtc));
-> > +}
-> > +
-> > +static void ip30_rtc_write(struct ds1685_priv *rtc, int reg, u8 value)
-> > +{
-> > +	writeb((reg & 0x7f), IP30_RTC_ADDR(rtc));
-> > +	writeb(value, IP30_RTC_DATA(rtc));
-> > +}
+Dne ponedeljek, 29. julij 2019 ob 20:40:41 CEST je Uwe Kleine-König 
+napisal(a):
+> On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej Škrabec wrote:
+> > Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König
+> > 
+> > napisal(a):
+> > > Hello,
+> > > 
+> > > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
+> > > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
+> > > > 
+> > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
+> > > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe
+> > > > > > Kleine-König
+> > > > > > 
+> > > > > > napisal(a):
+> > > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
+> > > > > > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
+> > > > > > > > sun4i_pwm_single_bypass = {>
+> > > > > > > > 
+> > > > > > > >   .npwm = 1,
+> > > > > > > >  
+> > > > > > > >  };
+> > > > > > > > 
+> > > > > > > > +static const struct sun4i_pwm_data
+> > > > > > > > sun50i_pwm_dual_bypass_clk_rst
+> > > > > > > > = {
+> > > > > > > > + .has_bus_clock = true,
+> > > > > > > > + .has_prescaler_bypass = true,
+> > > > > > > > + .has_reset = true,
+> > > > > > > > + .npwm = 2,
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > 
+> > > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
+> > > > > > > >  
+> > > > > > > >   {
+> > > > > > > >   
+> > > > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
+> > > > > > > > 
+> > > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
+> > > > > > > > sun4i_pwm_dt_ids[] =
+> > > > > > > > {
+> > > > > > > > 
+> > > > > > > >   }, {
+> > > > > > > >   
+> > > > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
+> > > > > > > >           .data = &sun4i_pwm_single_bypass,
+> > > > > > > > 
+> > > > > > > > + }, {
+> > > > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
+> > > > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
+> > > > > > > 
+> > > > > > > If you follow my suggestion for the two previous patches, you
+> > > > > > > can
+> > > > > > > just
+> > > > > > > 
+> > > > > > > use:
+> > > > > > >     compatible = "allwinner,sun50i-h6-pwm",
+> > > > > > >     "allwinner,sun5i-a10s-pwm";
+> > > > > > > 
+> > > > > > > and drop this patch.
+> > > > > > 
+> > > > > > Maxime found out that it's not compatible with A10s due to
+> > > > > > difference
+> > > > > > in bypass bit, but yes, I know what you mean.
+> > > > > > 
+> > > > > > Since H6 requires reset line and bus clock to be specified, it's
+> > > > > > not
+> > > > > > compatible from DT binding side. New yaml based binding must
+> > > > > > somehow
+> > > > > > know that in order to be able to validate DT node, so it needs
+> > > > > > standalone compatible. However, depending on conclusions of other
+> > > > > > discussions, this new compatible can be associated with already
+> > > > > > available quirks structure or have it's own.> >
+> > > > > 
+> > > > > I cannot follow. You should be able to specify in the binding that
+> > > > > the
+> > > > > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
+> > > > > without a reset line and bus clock also verifies, but this doesn't
+> > > > > really hurt (and who knows, maybe the next allwinner chip needs
+> > > > > exactly
+> > > > > this).
+> > > > 
+> > > > It is not optional. It will not work if either the clocks or reset
+> > > > controls
+> > > > are missing. How would these be optional anyway? Either it's connected
+> > > > and
+> > > > thus required, or it's not and therefore should be omitted from the
+> > > > description.
+> > > 
+> > > [Just arguing about the clock here, the argumentation is analogous for
+> > > the reset control.]
+> > > 
+> > > From the driver's perspective it's optional: There are devices with and
+> > > without a bus clock. This doesn't mean that you can just ignore this
+> > > clock if it's specified. It's optional in the sense "If dt doesn't
+> > > specify it, then assume this is a device that doesn't have it and so you
+> > > don't need to handle it." but not in the sense "it doesn't matter if
+> > > you handle it or not.".
+> > > 
+> > > Other than that I'm on your side. So for example I think it's not
+> > > optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
+> > > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
+> > > because this hides exactly the kind of problem you point out here.
+> > 
+> > I think there's misunderstanding. I only argued that we can't use
+> > 
+> > compatible = "allwinner,sun50i-h6-pwm",
+> > 
+> > 	 "allwinner,sun5i-a10s-pwm";
+> > 
+> > as you suggested and only
+> > 
+> > compatible = "allwinner,sun50i-h6-pwm";
+> > 
+> > will work. Not because of driver itself (it can still use _optional()
+> > variants), but because of DT binding, which should be able to validate H6
+> > PWM node - reset and bus clock references are required in this case.
 > 
-> Why is this not in the RTC driver?
-
-because rtc1685 is used in different systems and accessing the chip
-differs between those systems. 
-
-> > +static struct ds1685_rtc_platform_data ip30_rtc_platform_data = {
-> > +	.bcd_mode = false,
-> > +	.no_irq = false,
-> > +	.uie_unsupported = true,
-> > +	.alloc_io_resources = true,
+> I think I understood. In my eyes there is no need to let validation of
+> the DT bindings catch a missing "optional" property that is needed on
+> H6.
 > 
-> > +	.plat_read = ip30_rtc_read,
-> > +	.plat_write = ip30_rtc_write,
+> You have to draw the line somewhere which information the driver has
+> hard-coded and what is only provided by the device tree and just assumed
+> to be correct by the driver. You argue the driver should know that 
+
+No, in this thread I argue that DT validation tool, executed by
+
+make ARCH=arm64 dtbs_check
+
+should catch that. This is not a driver, but DT binding described in YAML.
+
+Best regards,
+Jernej
+
+> if it
+> cares for a "allwinner,sun50i-h6-pwm" device it should know (and check)
+> that there is a clock named "bus" and a resets property that links to a
+> reset controller. How is that different from checking that the base
+> address is 0x0300a000 or that the "pwm" clock is the osc24M clock
+> running at 24 MHz? This isn't checked in the driver or the dt schema.
+> Still if the device tree got one of them wrong this yields an
+> non-working pwm device that isn't catched in the driver.
 > 
-> Call-backs in a non-subsystem API is pretty ugly IMHO.
+> Best regards
+> Uwe
 
-I agree
 
-> Where are these called from?
 
-drivers/rtc/rtc-ds1685.c
 
-I could do the same as done for serial8250 and add an additional .c file
-in  drivers/rtc which handles this for SGI-IP30. Alexandre would this work
-for you as well ?
-
-> > +#define IOC3_SID(_name, _sid, _setup) \
-> > +	{								   \
-> > +		.name = _name,						   \
-> > +		.sid = (PCI_VENDOR_ID_SGI << 16) | IOC3_SUBSYS_ ## _sid,   \
-> > +		.setup = _setup,					   \
-> > +	}
-> > +
-> > +static struct {
-> > +	const char *name;
-> > +	u32 sid;
-> > +	int (*setup)(struct ioc3_priv_data *ipd);
-> > +} ioc3_infos[] = {
-> 
-> IMHO it's neater if you separate the definition and static data part.
-
-I don't quite understand what you mean here. Should I move the #define at
-the beginning of the file ? Why is it neater ?
-
-Thomas.
-
--- 
-SUSE Linux GmbH
-GF: Felix Imend�rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N�rnberg)
