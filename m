@@ -2,231 +2,136 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96500C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6ABC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A77D20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D1B216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfG2OEj (ORCPT
+        id S1728386AbfG2OEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:04:39 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35135 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727461AbfG2OEf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:04:35 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d23so59789103qto.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 07:04:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9TGrSWXBSPwHy8jYtphhW0dEmj0QZhEapSIaBCYSsds=;
-        b=idpPcT1f57xK2DO+Cd2M8r58pJA+2uGImfJHpT1ZWQpa6sSsCBNbeO3UujaA4YH79Q
-         uBcOjtBg5mOgPa3NIfhnKUXyCbFGzC3vzOr3eNYD5HgRQqQvtwaqja0cXBvHv+pB7Ymr
-         hobvVqAYAoCBEVKQ22+DYTzo0ugtk/lmcFT2KAdXMrCX7akDuOGAU9/8ftUicW0Y2wcA
-         2SmkevfWLjKW9BTG8mHlClnR3HhR6INeMafOCrvVgsVPFnjeRcH/haOqIqC8NOQplxrL
-         KlBBnMqpFC9cfEieW9MrUwhisUely7NuVVShQIk3staaZwn8dG0foznsHJC46Kjg7Myo
-         qoJg==
-X-Gm-Message-State: APjAAAUvtCwpbkONdmHXb6e34hoj1sIEiBScjT1HW95LO+eNtZ5vHdES
-        iiaZm7pBJ6AqFPaNS4a7pNV/QA==
-X-Google-Smtp-Source: APXvYqxjkWPX2jNn/Dzz4DX/RzsFfIydjYDR0yXBAhz1UUZ7xlpbws8nDmZPX4DMGukA3N0rsbT+uA==
-X-Received: by 2002:ac8:333d:: with SMTP id t58mr79478835qta.167.1564409074630;
-        Mon, 29 Jul 2019 07:04:34 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id f25sm32100187qta.81.2019.07.29.07.04.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 07:04:33 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 10:04:29 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
-Message-ID: <20190729095956-mutt-send-email-mst@kernel.org>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-2-sgarzare@redhat.com>
+        Mon, 29 Jul 2019 10:04:46 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3234 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727461AbfG2OEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 10:04:45 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CCB4D861A3D54308FD35;
+        Mon, 29 Jul 2019 22:04:41 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
+ 22:04:32 +0800
+Subject: Re: [RFC PATCH 09/10] powerpc/fsl_booke/kaslr: support nokaslr
+ cmdline parameter
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
+        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
+        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>
+References: <20190717080621.40424-1-yanaijie@huawei.com>
+ <20190717080621.40424-10-yanaijie@huawei.com>
+ <e31851fd-5032-2787-ea36-c48a7a6ebbe9@c-s.fr>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <846fa5fc-5d21-d974-e021-c314b554fa51@huawei.com>
+Date:   Mon, 29 Jul 2019 22:04:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717113030.163499-2-sgarzare@redhat.com>
+In-Reply-To: <e31851fd-5032-2787-ea36-c48a7a6ebbe9@c-s.fr>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
-> Since virtio-vsock was introduced, the buffers filled by the host
-> and pushed to the guest using the vring, are directly queued in
-> a per-socket list. These buffers are preallocated by the guest
-> with a fixed size (4 KB).
-> 
-> The maximum amount of memory used by each socket should be
-> controlled by the credit mechanism.
-> The default credit available per-socket is 256 KB, but if we use
-> only 1 byte per packet, the guest can queue up to 262144 of 4 KB
-> buffers, using up to 1 GB of memory per-socket. In addition, the
-> guest will continue to fill the vring with new 4 KB free buffers
-> to avoid starvation of other sockets.
-> 
-> This patch mitigates this issue copying the payload of small
-> packets (< 128 bytes) into the buffer of last packet queued, in
-> order to avoid wasting memory.
-> 
-> Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-
-This is good enough for net-next, but for net I think we
-should figure out how to address the issue completely.
-Can we make the accounting precise? What happens to
-performance if we do?
 
 
-> ---
->  drivers/vhost/vsock.c                   |  2 +
->  include/linux/virtio_vsock.h            |  1 +
->  net/vmw_vsock/virtio_transport.c        |  1 +
->  net/vmw_vsock/virtio_transport_common.c | 60 +++++++++++++++++++++----
->  4 files changed, 55 insertions(+), 9 deletions(-)
+On 2019/7/29 19:38, Christophe Leroy wrote:
 > 
-> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> index 6a50e1d0529c..6c8390a2af52 100644
-> --- a/drivers/vhost/vsock.c
-> +++ b/drivers/vhost/vsock.c
-> @@ -329,6 +329,8 @@ vhost_vsock_alloc_pkt(struct vhost_virtqueue *vq,
->  		return NULL;
->  	}
->  
-> +	pkt->buf_len = pkt->len;
-> +
->  	nbytes = copy_from_iter(pkt->buf, pkt->len, &iov_iter);
->  	if (nbytes != pkt->len) {
->  		vq_err(vq, "Expected %u byte payload, got %zu bytes\n",
-> diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-> index e223e2632edd..7d973903f52e 100644
-> --- a/include/linux/virtio_vsock.h
-> +++ b/include/linux/virtio_vsock.h
-> @@ -52,6 +52,7 @@ struct virtio_vsock_pkt {
->  	/* socket refcnt not held, only use for cancellation */
->  	struct vsock_sock *vsk;
->  	void *buf;
-> +	u32 buf_len;
->  	u32 len;
->  	u32 off;
->  	bool reply;
-> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-> index 0815d1357861..082a30936690 100644
-> --- a/net/vmw_vsock/virtio_transport.c
-> +++ b/net/vmw_vsock/virtio_transport.c
-> @@ -307,6 +307,7 @@ static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
->  			break;
->  		}
->  
-> +		pkt->buf_len = buf_len;
->  		pkt->len = buf_len;
->  
->  		sg_init_one(&hdr, &pkt->hdr, sizeof(pkt->hdr));
-> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> index 6f1a8aff65c5..095221f94786 100644
-> --- a/net/vmw_vsock/virtio_transport_common.c
-> +++ b/net/vmw_vsock/virtio_transport_common.c
-> @@ -26,6 +26,9 @@
->  /* How long to wait for graceful shutdown of a connection */
->  #define VSOCK_CLOSE_TIMEOUT (8 * HZ)
->  
-> +/* Threshold for detecting small packets to copy */
-> +#define GOOD_COPY_LEN  128
-> +
->  static const struct virtio_transport *virtio_transport_get_ops(void)
->  {
->  	const struct vsock_transport *t = vsock_core_get_transport();
-> @@ -64,6 +67,9 @@ virtio_transport_alloc_pkt(struct virtio_vsock_pkt_info *info,
->  		pkt->buf = kmalloc(len, GFP_KERNEL);
->  		if (!pkt->buf)
->  			goto out_pkt;
-> +
-> +		pkt->buf_len = len;
-> +
->  		err = memcpy_from_msg(pkt->buf, info->msg, len);
->  		if (err)
->  			goto out;
-> @@ -841,24 +847,60 @@ virtio_transport_recv_connecting(struct sock *sk,
->  	return err;
->  }
->  
-> +static void
-> +virtio_transport_recv_enqueue(struct vsock_sock *vsk,
-> +			      struct virtio_vsock_pkt *pkt)
-> +{
-> +	struct virtio_vsock_sock *vvs = vsk->trans;
-> +	bool free_pkt = false;
-> +
-> +	pkt->len = le32_to_cpu(pkt->hdr.len);
-> +	pkt->off = 0;
-> +
-> +	spin_lock_bh(&vvs->rx_lock);
-> +
-> +	virtio_transport_inc_rx_pkt(vvs, pkt);
-> +
-> +	/* Try to copy small packets into the buffer of last packet queued,
-> +	 * to avoid wasting memory queueing the entire buffer with a small
-> +	 * payload.
-> +	 */
-> +	if (pkt->len <= GOOD_COPY_LEN && !list_empty(&vvs->rx_queue)) {
-> +		struct virtio_vsock_pkt *last_pkt;
-> +
-> +		last_pkt = list_last_entry(&vvs->rx_queue,
-> +					   struct virtio_vsock_pkt, list);
-> +
-> +		/* If there is space in the last packet queued, we copy the
-> +		 * new packet in its buffer.
-> +		 */
-> +		if (pkt->len <= last_pkt->buf_len - last_pkt->len) {
-> +			memcpy(last_pkt->buf + last_pkt->len, pkt->buf,
-> +			       pkt->len);
-> +			last_pkt->len += pkt->len;
-> +			free_pkt = true;
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	list_add_tail(&pkt->list, &vvs->rx_queue);
-> +
-> +out:
-> +	spin_unlock_bh(&vvs->rx_lock);
-> +	if (free_pkt)
-> +		virtio_transport_free_pkt(pkt);
-> +}
-> +
->  static int
->  virtio_transport_recv_connected(struct sock *sk,
->  				struct virtio_vsock_pkt *pkt)
->  {
->  	struct vsock_sock *vsk = vsock_sk(sk);
-> -	struct virtio_vsock_sock *vvs = vsk->trans;
->  	int err = 0;
->  
->  	switch (le16_to_cpu(pkt->hdr.op)) {
->  	case VIRTIO_VSOCK_OP_RW:
-> -		pkt->len = le32_to_cpu(pkt->hdr.len);
-> -		pkt->off = 0;
-> -
-> -		spin_lock_bh(&vvs->rx_lock);
-> -		virtio_transport_inc_rx_pkt(vvs, pkt);
-> -		list_add_tail(&pkt->list, &vvs->rx_queue);
-> -		spin_unlock_bh(&vvs->rx_lock);
-> -
-> +		virtio_transport_recv_enqueue(vsk, pkt);
->  		sk->sk_data_ready(sk);
->  		return err;
->  	case VIRTIO_VSOCK_OP_CREDIT_UPDATE:
-> -- 
-> 2.20.1
+> 
+> Le 17/07/2019 à 10:06, Jason Yan a écrit :
+>> One may want to disable kaslr when boot, so provide a cmdline parameter
+>> 'nokaslr' to support this.
+>>
+>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>> Cc: Diana Craciun <diana.craciun@nxp.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Paul Mackerras <paulus@samba.org>
+>> Cc: Nicholas Piggin <npiggin@gmail.com>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> ---
+>>   arch/powerpc/kernel/kaslr_booke.c | 14 ++++++++++++++
+>>   1 file changed, 14 insertions(+)
+>>
+>> diff --git a/arch/powerpc/kernel/kaslr_booke.c 
+>> b/arch/powerpc/kernel/kaslr_booke.c
+>> index 00339c05879f..e65a5d9d2ff1 100644
+>> --- a/arch/powerpc/kernel/kaslr_booke.c
+>> +++ b/arch/powerpc/kernel/kaslr_booke.c
+>> @@ -373,6 +373,18 @@ static unsigned long __init 
+>> kaslr_choose_location(void *dt_ptr, phys_addr_t size
+>>       return kaslr_offset;
+>>   }
+>> +static inline __init bool kaslr_disabled(void)
+>> +{
+>> +    char *str;
+>> +
+>> +    str = strstr(early_command_line, "nokaslr");
+> 
+> Why using early_command_line instead of boot_command_line ?
+> 
+
+Will switch to boot_command_line.
+
+> 
+>> +    if ((str == early_command_line) ||
+>> +        (str > early_command_line && *(str - 1) == ' '))
+> 
+> Is that stuff really needed ?
+> 
+> Why not just:
+> 
+> return strstr(early_command_line, "nokaslr") != NULL;
+> 
+
+This code is derived from other arch such as arm64/mips. It's trying to
+make sure that 'nokaslr' is a separate word but not part of other words 
+such as 'abcnokaslr'.
+
+>> +        return true;
+>> +
+>> +    return false;
+>> +}
+> 
+> 
+>> +
+>>   /*
+>>    * To see if we need to relocate the kernel to a random offset
+>>    * void *dt_ptr - address of the device tree
+>> @@ -388,6 +400,8 @@ notrace void __init kaslr_early_init(void *dt_ptr, 
+>> phys_addr_t size)
+>>       kernel_sz = (unsigned long)_end - KERNELBASE;
+>>       kaslr_get_cmdline(dt_ptr);
+>> +    if (kaslr_disabled())
+>> +        return;
+>>       offset = kaslr_choose_location(dt_ptr, size, kernel_sz);
+>>
+> 
+> Christophe
+> 
+> .
+> 
+
