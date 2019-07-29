@@ -2,96 +2,120 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D718AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297E8C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC24B20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:31:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cw5OnLdN"
+	by mail.kernel.org (Postfix) with ESMTP id 098CA206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfG2Qb0 (ORCPT
+        id S1729067AbfG2QcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:31:26 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43823 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728124AbfG2Qb0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:31:26 -0400
-Received: by mail-pl1-f196.google.com with SMTP id 4so20723550pld.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:31:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Vq1Kz8k0O51lzb+4+nT4SnOcDRvvPOMVuyD9fuPhFbU=;
-        b=Cw5OnLdNSKm6b88kLuQsbNDuU1qthb2yQQwAtKotZ5fUhc+DTrvjuYqwCTVAGDtH1t
-         1tsZSW12ZyO9fXG3YB3xN3XlFBsKRBOJ9QIMDkK+awpKYxWJwBzA5TDAhSNd2yEfZk/U
-         A35fXtlk26AesBlPqkZO+pFSjuOe55jkRx73A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Vq1Kz8k0O51lzb+4+nT4SnOcDRvvPOMVuyD9fuPhFbU=;
-        b=Nz6RNYHOXvs1JzKZfAtnXWyj+eRjG2FGZBhoa/tlZstssaVVW6gBac7qz8bmbmYTLk
-         MZQOxyD7rBXNq/r5IywjvbXZ54pcZNmUMShy9rzVMBveOM7DN65nvif/jpibzzTZ77De
-         duT5mQFrNK3xQx5nrtBbDXEJtrmWyZz+yUHz04U7WDWPwpQSLwpJomS3oXigTiu3kp1Q
-         JtvJKg54NFhYzEbSp6T81a17UI5a/Z26eUCamrh+0MMgHIHABwwvXU8FRCpHB7SqcjZc
-         bTwMjtv//hnouHXxMXjbachk6C3HnhRIOgzcJ7qf7bANvRSccB2c6T/7KtxOHVASquOM
-         Aktg==
-X-Gm-Message-State: APjAAAVMqBQw2iAIn/PNXtnLPaCQz4MXx7nntPaJ5NdmrnRkgVXpuEBo
-        UjgZndy0jO7wDiMkek7uzz2FCQ==
-X-Google-Smtp-Source: APXvYqwBFstQTHiCdChdn7F2ZhZ2y89R5nQrYhZKFeYNPKq/ZhzQUR5UbsmgLdCLjqGWJ0L6iy+ORg==
-X-Received: by 2002:a17:902:a03:: with SMTP id 3mr109536484plo.302.1564417885250;
-        Mon, 29 Jul 2019 09:31:25 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y11sm64852299pfb.119.2019.07.29.09.31.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 09:31:24 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 09:31:23 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     linux-kernel@vger.kernel.org, oleg@redhat.com,
-        torvalds@linux-foundation.org, arnd@arndb.de,
-        ebiederm@xmission.com, joel@joelfernandes.org, tglx@linutronix.de,
-        tj@kernel.org, dhowells@redhat.com, jannh@google.com,
-        luto@kernel.org, akpm@linux-foundation.org, cyphar@cyphar.com,
-        viro@zeniv.linux.org.uk, kernel-team@android.com
-Subject: Re: [PATCH v3 2/2] pidfd: add pidfd_wait tests
-Message-ID: <201907290929.09B5189@keescook>
-References: <20190727222229.6516-1-christian@brauner.io>
- <20190727222229.6516-3-christian@brauner.io>
+        Mon, 29 Jul 2019 12:32:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:47346 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727093AbfG2QcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:32:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7922F337;
+        Mon, 29 Jul 2019 09:32:14 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A97143F694;
+        Mon, 29 Jul 2019 09:32:13 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Refactor snapshot vs nocow writers locking
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Nikolay Borisov <nborisov@suse.com>, linux-btrfs@vger.kernel.org,
+        paulmck@linux.ibm.com, andrea.parri@amarulasolutions.com,
+        linux-kernel@vger.kernel.org
+References: <20190719083949.5351-1-nborisov@suse.com>
+ <ed015bb1-490e-7102-d172-73c1d069476c@arm.com>
+ <20190729153319.GH2368@arrakis.emea.arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <60eda0ab-08b3-de82-5b06-98386ee1928f@arm.com>
+Date:   Mon, 29 Jul 2019 17:32:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190727222229.6516-3-christian@brauner.io>
+In-Reply-To: <20190729153319.GH2368@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 12:22:30AM +0200, Christian Brauner wrote:
-> Add tests for pidfd_wait() and CLONE_WAIT_PID:
-> - test that waitid(P_PIDFD) can wait on a pidfd
-> - test that waitid(P_PIDFD) can wait on a pidfd and return siginfo_t
-> - test that waitid(P_PIDFD) works with WEXITED
-> - test that waitid(P_PIDFD) works with WSTOPPED
-> - test that waitid(P_PIDFD) works with WUNTRACED
-> - test that waitid(P_PIDFD) works with WCONTINUED
-> - test that waitid(P_PIDFD) works with WNOWAIT
-> - test that waitid(P_PIDFD)works with WNOHANG
+On 29/07/2019 16:33, Catalin Marinas wrote:
+[...]
+>> ---- MODULE specs ----
+>> EXTENDS Integers, Sequences, TLC
+>>
+>> CONSTANTS
+>>     NR_WRITERS,
+>>     NR_READERS,
+>>     WRITER_TASK,
+>>     READER_TASK
+>>
+>> WRITERS == {WRITER_TASK} \X (1..NR_WRITERS)
+>> READERS == {READER_TASK} \X (1..NR_READERS)
+>> THREADS == WRITERS \union READERS
+> 
+> Recommendation: use symbolic values for WRITERS and READERS (defined in
+> .cfg: e.g. r1, r2, r3, w1, w2, w2). It allows you do to symmetry
+> optimisations. We've also hit a TLC bug in the past with process values
+> made up of a Cartesian product (though it may have been fixed since).
+> 
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Right, I had forgotten that one:
 
-This all looks good to me! :) One note that doesn't apply to this patch
-in particular, but might be nice to add (as I didn't see in the existing
-tests) was testing for pathological conditions: passing in /dev/zero for
-the pidfd, etc. (Maybe I missed those?)
+  https://github.com/tlaplus/tlaplus/issues/164
 
--- 
-Kees Cook
+Being very lazy I dislike having to manually input those, but as you say
+it can't be avoided if we want to use symmetry.
+
+>> macro ReadLock(tid)
+>> {
+>>     if (lock_state = "idle" \/ lock_state = "read_locked") {
+>>         lock_state := "read_locked";
+>>         threads[tid] := "read_locked";
+>>     } else {
+>>         assert lock_state = "write_locked";
+>>         \* waiting for writers to finish
+>>         threads[tid] := "write_waiting";
+>>         await lock_state = "" \/ lock_state = "read_locked";
+> 
+> lock_state = "idle"?
+> 
+
+Aye, I didn't modify those macros from the original spec.
+
+>> macro WriteLock(tid)
+>> {
+>>     if (lock_state = "idle" \/ lock_state = "write_locked") {
+>>         lock_state := "write_locked";
+>>         threads[tid] := "write_locked";
+>>     } else {
+>>         assert lock_state = "read_locked";
+>>         \* waiting for readers to finish
+>>         threads[tid] := "read_waiting";
+>>         await lock_state = "idle" \/ lock_state = "write_locked";
+>>     };
+>> }
+> 
+> I'd say that's one of the pitfalls of PlusCal. The above is executed
+> atomically, so you'd have the lock_state read and updated in the same
+> action. Looking at the C patches, there is an
+> atomic_read(&lock->readers) followed by a
+> percpu_counter_inc(&lock->writers). Between these two, you can have
+> "readers" becoming non-zero via a different CPU.
+> 
+> My suggestion would be to use procedures with labels to express the
+> non-atomicity of such sequences.
+> 
+
+Agreed, I've suggested something like this in my reply.
+
+[...]
