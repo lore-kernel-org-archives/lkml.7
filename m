@@ -2,52 +2,63 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F395C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A324C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5302205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD30205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430711;
-	bh=g3Qa5pRkKnZVNZExxBrPTdWu2N5wP1p8syJV2zVv3rc=;
+	s=default; t=1564430715;
+	bh=QlRxDaIWmUxVA6DHWBBI528oV9qu+xRdOM6oOA2tRzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jC24bdUpJNVkjibSSKdOkBU73Ipy1GtIzDpMfSGK8n9+3LKASG7PBALiOoxxXnEfb
-	 F2JpY2HTkUrFsvmPFJh/Z/D/LVIKEt3op9fGRST0GqxKgZN+NKUB8mAWUkZMrusfRr
-	 X5K0d0hVe8dtqsEm3yX+/o+SyZDq7J64J7NSwB68=
+	b=Ne1oTL0QQSHMlRDd3NFqSf/m0gDrG0q/iEnWBv18hvDRPXugLc/mUX9GFIBIp5Uj4
+	 br+0pD68/Z2neIMti/h6tXB2VAgBLbTVEzQlQZA1xOnPwZEfo/KtXQHpoUE0H4O1AH
+	 m/jMuf+qmZZKNw4IJ7O458MjH+Xl+JI3Ndn6U440=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390335AbfG2UFK (ORCPT
+        id S2390403AbfG2UFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:05:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:05:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389705AbfG2ToB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:44:01 -0400
+        id S2389203AbfG2Tn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:43:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C6A1205F4;
-        Mon, 29 Jul 2019 19:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 591A520C01;
+        Mon, 29 Jul 2019 19:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429441;
-        bh=g3Qa5pRkKnZVNZExxBrPTdWu2N5wP1p8syJV2zVv3rc=;
+        s=default; t=1564429435;
+        bh=QlRxDaIWmUxVA6DHWBBI528oV9qu+xRdOM6oOA2tRzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tqvt1ZUPKvbaj0oEbVKEmI5gPREhUpyJH+SQ+xNxGzm6zyuZIcm7JyZUIkd2bqxMg
-         ibbxtYoSAqBp8BqK7+UQMV7bx540+WXh6rwEgXsUf0UK4my+sLJTGHKp1r5k0WhcU5
-         GCTzXlhaj5unnolvTezANxxVntRIlEMBxUPM2R+0=
+        b=g4KsCGiRJHyBUSKzY5jGo6+j0TM5ybmuBe/3qvhWHaONbRag3tSylvavJrLonk/Yo
+         3Gt+5R/sS89DhaPi202AmS8hg4l8cttmIaEnSywToCVLwuDFOageQgbdNPmUbkLG2K
+         iHA2uvqB048i1T9Aj30H4Le1YACZQjMwXl5SfTkc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+fd2bd7df88c606eea4ef@syzkaller.appspotmail.com,
-        Phong Tran <tranmanphong@gmail.com>
-Subject: [PATCH 4.19 098/113] usb: wusbcore: fix unbalanced get/put cluster_id
-Date:   Mon, 29 Jul 2019 21:23:05 +0200
-Message-Id: <20190729190718.955497803@linuxfoundation.org>
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 096/113] mm: use down_read_killable for locking mmap_sem in access_remote_vm
+Date:   Mon, 29 Jul 2019 21:23:03 +0200
+Message-Id: <20190729190718.502020243@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,61 +71,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+[ Upstream commit 1e426fe28261b03f297992e89da3320b42816f4e ]
 
-commit f90bf1ece48a736097ea224430578fe586a9544c upstream.
+This function is used by ptrace and proc files like /proc/pid/cmdline and
+/proc/pid/environ.
 
-syzboot reported that
-https://syzkaller.appspot.com/bug?extid=fd2bd7df88c606eea4ef
+Access_remote_vm never returns error codes, all errors are ignored and
+only size of successfully read data is returned.  So, if current task was
+killed we'll simply return 0 (bytes read).
 
-There is not consitency parameter in cluste_id_get/put calling.
-In case of getting the id with result is failure, the wusbhc->cluster_id
-will not be updated and this can not be used for wusb_cluster_id_put().
+Mmap_sem could be locked for a long time or forever if something goes
+wrong.  Using a killable lock permits cleanup of stuck tasks and
+simplifies investigation.
 
-Tested report
-https://groups.google.com/d/msg/syzkaller-bugs/0znZopp3-9k/oxOrhLkLEgAJ
-
-Reproduce and gdb got the details:
-
-139		addr = wusb_cluster_id_get();
-(gdb) n
-140		if (addr == 0)
-(gdb) print addr
-$1 = 254 '\376'
-(gdb) n
-142		result = __hwahc_set_cluster_id(hwahc, addr);
-(gdb) print result
-$2 = -71
-(gdb) break wusb_cluster_id_put
-Breakpoint 3 at 0xffffffff836e3f20: file drivers/usb/wusbcore/wusbhc.c, line 384.
-(gdb) s
-Thread 2 hit Breakpoint 3, wusb_cluster_id_put (id=0 '\000') at drivers/usb/wusbcore/wusbhc.c:384
-384		id = 0xff - id;
-(gdb) n
-385		BUG_ON(id >= CLUSTER_IDS);
-(gdb) print id
-$3 = 255 '\377'
-
-Reported-by: syzbot+fd2bd7df88c606eea4ef@syzkaller.appspotmail.com
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190724020601.15257-1-tranmanphong@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/156007494202.3335.16782303099589302087.stgit@buzz
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Michal Koutný <mkoutny@suse.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Cyrill Gorcunov <gorcunov@gmail.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Roman Gushchin <guro@fb.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/hwa-hc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memory.c | 4 +++-
+ mm/nommu.c  | 3 ++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/host/hwa-hc.c
-+++ b/drivers/usb/host/hwa-hc.c
-@@ -159,7 +159,7 @@ out:
- 	return result;
+diff --git a/mm/memory.c b/mm/memory.c
+index e0010cb870e0..fb5655b518c9 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4491,7 +4491,9 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
+ 	void *old_buf = buf;
+ 	int write = gup_flags & FOLL_WRITE;
  
- error_set_cluster_id:
--	wusb_cluster_id_put(wusbhc->cluster_id);
-+	wusb_cluster_id_put(addr);
- error_cluster_id_get:
- 	goto out;
+-	down_read(&mm->mmap_sem);
++	if (down_read_killable(&mm->mmap_sem))
++		return 0;
++
+ 	/* ignore errors, just check how much was successfully transferred */
+ 	while (len) {
+ 		int bytes, ret, offset;
+diff --git a/mm/nommu.c b/mm/nommu.c
+index e4aac33216ae..1d63ecfc98c5 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -1779,7 +1779,8 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
+ 	struct vm_area_struct *vma;
+ 	int write = gup_flags & FOLL_WRITE;
  
+-	down_read(&mm->mmap_sem);
++	if (down_read_killable(&mm->mmap_sem))
++		return 0;
+ 
+ 	/* the access must start within one of the target process's mappings */
+ 	vma = find_vma(mm, addr);
+-- 
+2.20.1
+
 
 
