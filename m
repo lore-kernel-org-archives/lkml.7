@@ -2,104 +2,232 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C9EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69641C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D18C42070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:36:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iST9y/tl"
+	by mail.kernel.org (Postfix) with ESMTP id 3472F2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564389469;
+	bh=knet6KVnV1LE5iZFyD1wUyD7XHc/EZesMMVj+Wnb9Ks=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qoURtwMUNcVRtarsB67lWXsGFphm12ThIJye1JiOZKqASWcRrPYskfG5wxB1rwuZt
+	 4d06LWp8xxcjBKO7Daw+c5eFrBwQT5xBoeMFJFcYUpQhgtrwsX2G/1KT56t9d3elCy
+	 2wOMeHm1PI1dgthV96fidpN8E07AToJve2yeffcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbfG2Igy (ORCPT
+        id S1727814AbfG2Ihs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:36:54 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45386 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfG2Igy (ORCPT
+        Mon, 29 Jul 2019 04:37:48 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38208 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727739AbfG2Ihr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:36:54 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y8so27241387plr.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 01:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hx3TEgY39elQOvRZKIYlQACZaQ3s3d5tMJmYsbA0qFg=;
-        b=iST9y/tlbMyiCwmbhHY9FWNkXPObO3xF30WMu+ksVmee+SRojWEPUfrXP+0RzqxskY
-         RaRdvHnCaN9Uhnu3AgkBcArypuRqsoEF02Nae/zIr/OIDROVrQAoicdpMpLzT/e0QPh2
-         Y/FEu/KbEDb19WdXexYIYZ/YBWbhvx3Sf7WQhDoWwIdjucrP5qt1FWEyGsaGx/8fLYDR
-         S5fIwvTmk8gk2FEwDKIs7SQat2v7w9fI8HMlnwrF+1Z/nKVnB1UvdMW3wlbk358O29cZ
-         /x4zWC4Ihp96LgkcYWKNXui8P/lCcO1vsgqT+OasJ9I8Eq28/7uJUNT/tS9mcyjYhd57
-         7bXQ==
+        Mon, 29 Jul 2019 04:37:47 -0400
+Received: by mail-ot1-f67.google.com with SMTP id d17so61767628oth.5;
+        Mon, 29 Jul 2019 01:37:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hx3TEgY39elQOvRZKIYlQACZaQ3s3d5tMJmYsbA0qFg=;
-        b=HTp1Y9BII6J/X2hiZpTmBLgbFREzvpOZIUl2WPpBX9ppMhuW+srGkT1OhMaDoHjfgS
-         HH96a2Blk1LOAPfzY4MVVZ0B2TWZvT2RkJwjQgXnvCdE0RFStoYNgt60HnSstxdICIz4
-         82AHrh14jS/1FXRblyvgd6E8laDEvVjZt1YfVNMFwmYQ0Z1v0WvsCdYudLuyiUGToLGE
-         VjbQbwrG/MkUUPfabUHh2HsZbCwSa6L4Kzc1Oiu3dIVdq1GyBgSGYtXMMnT31do3WJOP
-         wi2r3Zsu8Eo+edd7Ri1wHM+n1R3ZgbDwBZ6DGZgf04DKx1Mpkv5Dj2lMxatgpShn/Zcx
-         l81Q==
-X-Gm-Message-State: APjAAAWqxgdh2Taxs+xGWDAU0uh1aiGusBTzy56Dir74asl2qTNRmJCl
-        e8rdUOdrl2GZPxle4IfptVU=
-X-Google-Smtp-Source: APXvYqz0jP2Bf6pvAx3SlTHB23BYM2WveDGGVsJhaXd3i0zzdponpYcgg/rEwUJhrPR9XGrPRwJVDg==
-X-Received: by 2002:a17:902:2929:: with SMTP id g38mr88476612plb.163.1564389413648;
-        Mon, 29 Jul 2019 01:36:53 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id z19sm52920862pgv.35.2019.07.29.01.36.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 01:36:53 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     alexander.deucher@amd.com, christian.koenig@amd.com,
-        David1.Zhou@amd.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] gpu: drm: radeon: Fix a possible null-pointer dereference in radeon_connector_set_property()
-Date:   Mon, 29 Jul 2019 16:36:44 +0800
-Message-Id: <20190729083644.29160-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0FNJJFcF3C8wNVBynkeaKAIuICl/dlha/IHcRCFKwAY=;
+        b=USJ7q3aWNCJHO5PSfCzOBJrnBFFWEKv42VsLlkoqRMY1gTx9bJbL1gJxH6fXbACh3V
+         7QGUgYahsnvdLd3ZLW8Ud5gsJhe30mZf5INQcr6z/afgvM1bYCOSFYgfTMlWaBgiCX3m
+         B7hWKah70XePNuGIjmwXS3L/HroG2bVgLGPjk5nZ+r1xtpgn5BMUEMVWi5nMXbMrohTg
+         RDxp+tJd/8IiWn/EQdZo7bZRfFu35YlQs2ZgP7+foQ1NNPTNzfe+pcmVeDJq3J+O+40F
+         vsylama+d3/uNpy/Byt22qgQBOEyS4ogecUTvS2cD+4AgoaPxWdMdBbOHSDotST+ikE9
+         rmuw==
+X-Gm-Message-State: APjAAAXIwc7wLSy9z/WwzmbbpkEPKZ+6VRKq2reVl5OntGLFfNiTcCKy
+        LQB8Ih8EfMNt/VPpSdz9v/hPoJpgxALn4B6LgBI=
+X-Google-Smtp-Source: APXvYqw2A4zHAxw1daqPl8bUdwnOEy78fNX1ADvTHdF0vLutd32wL302dlwNu18JqghX+NM1u7+hY+8+bFw5cSdxF+E=
+X-Received: by 2002:a9d:6959:: with SMTP id p25mr65277955oto.118.1564389466248;
+ Mon, 29 Jul 2019 01:37:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <1563431200-3042-1-git-send-email-dsmythies@telus.net>
+ <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org>
+ <001201d54125$a6a82350$f3f869f0$@net> <20190723091551.nchopfpqlmdmzvge@vireshk-i7>
+ <CAJZ5v0ji+ksapJ4kc2m5UM_O+AShAvJWmYhTQHiXiHnpTq+xRg@mail.gmail.com>
+ <20190724114327.apmx35c7a4tv3qt5@vireshk-i7> <000c01d542fc$703ff850$50bfe8f0$@net>
+ <20190726065739.xjvyvqpkb3o6m4ty@vireshk-i7> <000001d545e3$047d9750$0d78c5f0$@net>
+ <20190729083219.fe4xxq4ugmetzntm@vireshk-i7>
+In-Reply-To: <20190729083219.fe4xxq4ugmetzntm@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 29 Jul 2019 10:37:35 +0200
+Message-ID: <CAJZ5v0gaW=ujtsDmewrVXL7V8K0YZysNqwu=qKLw+kPC86ydqA@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Doug Smythies <dsmythies@telus.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "v4 . 18+" <stable@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In radeon_connector_set_property(), there is an if statement on line 743
-to check whether connector->encoder is NULL:
-    if (connector->encoder)
+On Mon, Jul 29, 2019 at 10:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 29-07-19, 00:55, Doug Smythies wrote:
+> > On 2019.07.25 23:58 Viresh Kumar wrote:
+> > > Hmm, so I tried to reproduce your setup on my ARM board.
+> > > - booted only with CPU0 so I hit the sugov_update_single() routine
+> > > - And applied below diff to make CPU look permanently busy:
+> > >
+> > > -------------------------8<-------------------------
+> > >diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > > index 2f382b0959e5..afb47490e5dc 100644
+> > > --- a/kernel/sched/cpufreq_schedutil.c
+> > > +++ b/kernel/sched/cpufreq_schedutil.c
+> > > @@ -121,6 +121,7 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
+> > >         if (!sugov_update_next_freq(sg_policy, time, next_freq))
+> > >                return;
+> > >
+> > > +       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
+> >
+> > ?? there is no "freq" variable here, and so this doesn't compile. However this works:
+> >
+> > +       pr_info("%s: %d: %u\n", __func__, __LINE__, next_freq);
+>
+> There are two paths we can take to change the frequency, normal
+> sleep-able path (sugov_work) or fast path. Only one of them is taken
+> by any driver ever. In your case it is the fast path always and in
+> mine it was the slow path.
+>
+> I only tested the diff with slow-path and copy pasted to fast path
+> while giving out to you and so the build issue. Sorry about that.
+>
+> Also make sure that the print is added after sugov_update_next_freq()
+> is called, not before it.
+>
+> > >         next_freq = cpufreq_driver_fast_switch(policy, next_freq);
+> > >        if (!next_freq)
+> > >                return;
+> > > @@ -424,14 +425,10 @@ static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
+> > > #ifdef CONFIG_NO_HZ_COMMON
+> > > static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
+> > > {
+> > > -       unsigned long idle_calls = tick_nohz_get_idle_calls_cpu(sg_cpu->cpu);
+> > > -       bool ret = idle_calls == sg_cpu->saved_idle_calls;
+> > > -
+> > > -       sg_cpu->saved_idle_calls = idle_calls;
+> > > -       return ret;
+> > > +       return true;
+> > >  }
+> > >  #else
+> > > -static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
+> > > +static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return true; }
+> > > #endif /* CONFIG_NO_HZ_COMMON */
+> > >
+> > >  /*
+> > > @@ -565,6 +562,7 @@ static void sugov_work(struct kthread_work *work)
+> > >         sg_policy->work_in_progress = false;
+> > >         raw_spin_unlock_irqrestore(&sg_policy->update_lock, flags);
+> > >
+> > > +       pr_info("%s: %d: %u\n", __func__, __LINE__, freq);
+> > >         mutex_lock(&sg_policy->work_lock);
+> > >         __cpufreq_driver_target(sg_policy->policy, freq, CPUFREQ_RELATION_L);
+> > >         mutex_unlock(&sg_policy->work_lock);
+> > >
+> > > -------------------------8<-------------------------
+> > >
+> > > Now, the frequency never gets down and so gets set to the maximum
+> > > possible after a bit.
+> > >
+> > > - Then I did:
+> > >
+> > > echo <any-low-freq-value> > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+> > >
+> > > Without my patch applied:
+> > >        The print never gets printed and so frequency doesn't go down.
+> > >
+> > > With my patch applied:
+> > >        The print gets printed immediately from sugov_work() and so
+> > >        the frequency reduces.
+> > >
+> > > Can you try with this diff along with my Patch2 ? I suspect there may
+> > > be something wrong with the intel_cpufreq driver as the patch fixes
+> > > the only path we have in the schedutil governor which takes busyness
+> > > of a CPU into account.
+> >
+> > With this diff along with your patch2 There is never a print message
+> > from sugov_work. There are from sugov_fast_switch.
+>
+> Which is okay. sugov_work won't get hit in your case as I explained
+> above.
+>
+> > Note that for the intel_cpufreq CPU scaling driver and the schedutil
+> > governor I adjust the maximum clock frequency this way:
+> >
+> > echo <any-low-percent> > /sys/devices/system/cpu/intel_pstate/max_perf_pct
+>
+> This should eventually call sugov_limits() in schedutil governor, this
+> can be easily checked with another print message.
+>
+> > I also applied the pr_info messages to the reverted kernel, and re-did
+> > my tests (where everything works as expected). There is never a print
+> > message from sugov_work. There are from sugov_fast_switch.
+>
+> that's fine.
+>
+> > Notes:
+> >
+> > I do not know if:
+> > /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
+> > /sys/devices/system/cpu/cpufreq/policy*/scaling_min_freq
+> > Need to be accurate when using the intel_pstate driver in passive mode.
+> > They are not.
+> > The commit comment for 9083e4986124389e2a7c0ffca95630a4983887f0
+> > suggests that they might need to be representative.
+> > I wonder if something similar to that commit is needed
+> > for other global changes, such as max_perf_pct and min_perf_pct?
+>
+> We are already calling intel_pstate_update_policies() in that case, so
+> it should be fine I believe.
+>
+> > intel_cpufreq/ondemand doesn't work properly on the reverted kernel.
+>
+> reverted kernel ? The patch you reverted was only for schedutil and it
+> shouldn't have anything to do with ondemand.
+>
+> > (just discovered, not investigated)
+> > I don't know about other governors.
+>
+> When you do:
+>
+> echo <any-low-percent> > /sys/devices/system/cpu/intel_pstate/max_perf_pct
+>
+> How soon does the print from sugov_fast_switch() gets printed ?
+> Immediately ? Check with both the kernels, with my patch and with the
+> reverted patch.
+>
+> Also see if there is any difference in the next_freq value in both the
+> kernels when you change max_perf_pct.
+>
+> FWIW, we now know the difference between intel-pstate and
+> acpi-cpufreq/my testcase and why we see differences here. In the cases
+> where my patch fixed the issue (acpi/ARM), we were really changing the
+> limits, i.e. policy->min/max. This happened because we touched
+> scaling_max_freq directly.
+>
+> For the case of intel-pstate, you are changing max_perf_pct which
+> doesn't change policy->max directly. I am not very sure how all of it
+> work really, but at least schedutil will not see policy->max changing.
+>
+> @Rafael: Do you understand why things don't work properly with
+> intel_cpufreq driver ?
 
-When connector->encoder is NULL, it is used on line 755:
-    if (connector->encoder->crtc)
+I haven't tried to understand this yet, so no.
 
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, connector->encoder is checked before being used.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/gpu/drm/radeon/radeon_connectors.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
-index c60d1a44d22a..b684cd719612 100644
---- a/drivers/gpu/drm/radeon/radeon_connectors.c
-+++ b/drivers/gpu/drm/radeon/radeon_connectors.c
-@@ -752,7 +752,7 @@ static int radeon_connector_set_property(struct drm_connector *connector, struct
- 
- 		radeon_encoder->output_csc = val;
- 
--		if (connector->encoder->crtc) {
-+		if (connector->encoder && connector->encoder->crtc) {
- 			struct drm_crtc *crtc  = connector->encoder->crtc;
- 			struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
- 
--- 
-2.17.0
-
+My somewhat educated guess is that using max_perf_pct has to do with
+it, so I would try to retest to see if there's any difference when
+scaling_max_freq is used instead of that.
