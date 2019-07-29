@@ -2,115 +2,111 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11388C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F34C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2337206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB712085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vsUZVzRX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BMUkO3xi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfG2C2K (ORCPT
+        id S1726518AbfG2CaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 22:28:10 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:46479 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfG2C2K (ORCPT
+        Sun, 28 Jul 2019 22:30:06 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41762 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfG2CaF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 22:28:10 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x6T2RvWA017712;
-        Mon, 29 Jul 2019 11:27:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6T2RvWA017712
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564367278;
-        bh=fuZnDsZpEjCp0F5PNZMcUKY5REV4m18B0lrZlOvAENw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vsUZVzRXAnGOJXyG6FvMBKTegKUZilyCP9sDOxJzbUlCUMKwl8aWmKG32OqWEHkWx
-         Hy4JlKv7FEfsnoB1xZiypCxZK9Ge38s2v74tDlkAJlIrpR7r7c1NIjZED3n8+4Uw4E
-         ipuRBmaQys67OgDpP7YipMVvktuSxdfIFrtVk/0ornkNux5le1yqbbSRQzyVy6LauS
-         T1sDhvTOi9oeLHwSsSnVxsOozf43oDqV2vb+ej9iWIuvhfb1WF3hDg/5qsAQjwxnXQ
-         4k504SAAFYq03KSVoBK/vIO9uPi41tCJDixaN8vv2DTkcPEGHqzN2JHgbYKceh3XZL
-         N9pRIBiBAJk6g==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id a186so38168529vsd.7;
-        Sun, 28 Jul 2019 19:27:57 -0700 (PDT)
-X-Gm-Message-State: APjAAAVxRRDhVu/ZFnm+xM6+FL9iwvoPVR/iWKN0V/ys5BizT6WZek7A
-        sA15JcPEWwflJkHuRFjcEf//1oaI9SqJQrgkTPY=
-X-Google-Smtp-Source: APXvYqzxpkojkQEpX7swU62BBxk4pqBB3bItrBsJECsncJjK9lP6nEWHSj07bRXwqpxupvKDkuycdvonNU518J3dcrU=
-X-Received: by 2002:a67:d46:: with SMTP id 67mr66750201vsn.181.1564367276406;
- Sun, 28 Jul 2019 19:27:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
- <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
- <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com>
- <alpine.DEB.2.21.1907170955250.1767@nanos.tec.linutronix.de>
- <CAHbf0-GyQzWcRg_BP2B5pVzEJoxSE_hX5xFypS--7Q5LSHxzWw@mail.gmail.com>
- <CAK7LNATJGbSYyuxV7npC_bQiXQShb=7J7dcQcOaupnL5-GhADg@mail.gmail.com>
- <alpine.DEB.2.21.1907230837400.1659@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907231013340.1659@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1907231013340.1659@nanos.tec.linutronix.de>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 29 Jul 2019 11:27:20 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATg38uFeY8JKnNPXudv8y4O1g=TPtvEbcBjrqFXSaKgdQ@mail.gmail.com>
-Message-ID: <CAK7LNATg38uFeY8JKnNPXudv8y4O1g=TPtvEbcBjrqFXSaKgdQ@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Mike Lothian <mike@fireburn.co.uk>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 28 Jul 2019 22:30:05 -0400
+Received: by mail-pf1-f196.google.com with SMTP id m30so27190796pff.8;
+        Sun, 28 Jul 2019 19:30:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Sd/DjDKLeclOpZaxncDp/vjS9lj3GlycX2/FHJjPnxs=;
+        b=BMUkO3xi4i5Xc3KrFoN5BWow64A86h/9Icz0HkUm4MQDgmut7d6OdEBpHl1UHTYIlx
+         DkwSKRZOyyvD1ZA9MKj2Ga6VuqYq7sg9SJ99OBV00l5GQ9h2p68TScg4mVFak0q7YHcj
+         XsCvJ4sCVNxByWe2ppiN5tkxjhAFEnIy/Utf1TmjOSMVFPnfysw3WWbjuaRv3AGlQnFt
+         ePVl300eQknArGxDN/EaObpWs+d6JxIA8RsKlpu41OOF7/zsef0le6CiPWtySNsw1DpO
+         yuH2cNtaubcBktdVBFPNoFXacioUyCJGU6OFvJ54nwqLTmuTsQMg7BHusq/NmOo/dKq6
+         0iiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Sd/DjDKLeclOpZaxncDp/vjS9lj3GlycX2/FHJjPnxs=;
+        b=ZglRInrJBHpZQHQKmChSu02OCMjcUYjkv97gTmHbVzSN4FhyhfVAIuENiT8Dlsq1YC
+         80n85CXnVA0cOC6pqgIn1hfJ9XcOwy5IlyxD+zGxi13k60smL5+Hnzr38Kc3nkOKUdIM
+         1uFBv9djKuk7RmTCw9CNUcYSYLHMK1BBKDwMxJTQgPqvxY5RE54+h7OSJ1+WENKZRyrH
+         o7RUsECAISSyboTti3EOhIuTJsdtYLmIgA8Rl/p59rhUI7q6uPBEs31FjcpbbOt5d53f
+         8Wz655tB1zr1uPcJyZOpy+r2e2V4izdcOkv2LwruAlUt34+CdVAzdt5H4ZzhW+eamizz
+         6zFw==
+X-Gm-Message-State: APjAAAUrpuvSZxCwUaldoVJRM4O8YL0jqGSbXhOjONhzSu3Rh34Bi3qY
+        jHERvsHf3I/CMXqOTbMxMhw=
+X-Google-Smtp-Source: APXvYqzdf1rHwoSc3NoauOY0IX65jj4xPPvhB4ljTe0Trb7U/qI87Y3y5Nc5ce7lPDVuoWA8nIWddQ==
+X-Received: by 2002:a62:26c1:: with SMTP id m184mr32754682pfm.200.1564367404905;
+        Sun, 28 Jul 2019 19:30:04 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id d6sm52862840pgf.55.2019.07.28.19.30.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Jul 2019 19:30:04 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     martin.petersen@oracle.com, kstewart@linuxfoundation.org,
+        allison@lohutok.net, rfontana@redhat.com, tglx@linutronix.de,
+        gregkh@linuxfoundation.org
+Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] target: iscsi: iscsi_target_tpg: Fix a possible null-pointer dereference in iscsit_tpg_add_network_portal()
+Date:   Mon, 29 Jul 2019 10:29:56 +0800
+Message-Id: <20190729022956.18192-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 5:17 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Tue, 23 Jul 2019, Thomas Gleixner wrote:
-> > On Tue, 23 Jul 2019, Masahiro Yamada wrote:
-> > > Right.
-> > > I was able to build with ld.gold
-> > >
-> > > So, we can use gold, depending on the kernel configuration.
-> >
-> > That's exactly the problem. It breaks with random kernel configurations
-> > which is not acceptable except for people who know what they are doing.
-> >
-> > I'm tired of dealing with half baken fixes and 'regression' reports. Either
-> > there is an effort to fix the issues with gold like the clang people fix
-> > their issues or it needs to be disabled. We have a clear statement that
-> > gold developers have other priorities.
->
-> That said, I'm perfectly happy to move this to x86 and leave it alone for
-> other architectures, but it does not make sense to me.
+In iscsit_tpg_add_network_portal(), there is an if statement on line 496
+to check whether tpg->tpg_tiqn is NULL:
+    if (tpg->tpg_tiqn)
 
+When tpg->tpg_tiqn is NULL, it is used on line 508:
+    pr_debug(..., tpg->tpg_tiqn->tiqn, ...);
 
-I did not see opposition from other arch maintainers.
+Thus, a possible null-pointer dereference may occur.
 
+To fix this bug, tpg->tpg_tiqn is checked before being used.
 
-> If the gold fans care enough, then we can add something like
-> CONFIG_I_WANT_TO_USE_GOLD_AND_DEAL_WITH_THE_FALLOUT_MYSELF.
+This bug is found by a static analysis tool STCheck written by us.
 
-Let's apply this and see.
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/target/iscsi/iscsi_target_tpg.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-If somebody really wants to use gold by his risk,
-I will consider such a config option.
-
-
-Applied to linux-kbuild.
-Thanks.
-
-
+diff --git a/drivers/target/iscsi/iscsi_target_tpg.c b/drivers/target/iscsi/iscsi_target_tpg.c
+index 8075f60fd02c..bf97be36ec1f 100644
+--- a/drivers/target/iscsi/iscsi_target_tpg.c
++++ b/drivers/target/iscsi/iscsi_target_tpg.c
+@@ -505,9 +505,11 @@ struct iscsi_tpg_np *iscsit_tpg_add_network_portal(
+ 		spin_unlock(&tpg_np_parent->tpg_np_parent_lock);
+ 	}
+ 
+-	pr_debug("CORE[%s] - Added Network Portal: %pISpc,%hu on %s\n",
+-		tpg->tpg_tiqn->tiqn, &np->np_sockaddr, tpg->tpgt,
+-		np->np_transport->name);
++	if (tpg->tpg_tiqn) {
++		pr_debug("CORE[%s] - Added Network Portal: %pISpc,%hu on %s\n",
++			tpg->tpg_tiqn->tiqn, &np->np_sockaddr, tpg->tpgt,
++			np->np_transport->name);
++	}
+ 
+ 	return tpg_np;
+ }
 -- 
-Best Regards
-Masahiro Yamada
+2.17.0
+
