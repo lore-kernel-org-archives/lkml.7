@@ -2,116 +2,90 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E14C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6717C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888B021655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F452070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:48:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NuafK1iU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l/RL7Y2K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbfG2Vrz (ORCPT
+        id S1730195AbfG2VsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:47:55 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35619 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfG2Vry (ORCPT
+        Mon, 29 Jul 2019 17:48:09 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42851 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725209AbfG2VsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:47:54 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u14so28704412pfn.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:47:54 -0700 (PDT)
+        Mon, 29 Jul 2019 17:48:08 -0400
+Received: by mail-io1-f68.google.com with SMTP id e20so93051985iob.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:48:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=XLND97VJqxRGNRPkPJlee12ZiV4Pa0PqINHbyj3L9qI=;
-        b=NuafK1iUNbvpkdCGy+I/VAbbNtK2QFUpJvgqoxHuOj60i9aitSiIaF8+fL1/P1C1W4
-         2wE/9eqPhOw84SOnnNxOpCQfAEpNvU7pedpJyQcUVMCcKh0rJ88m8vw5x9CfoUp2Bap4
-         IoZOWqat+V4QcxdoMlrVnJelk+ocqFxjhMWeM=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=piQh2aqA30RCLiw+cIf1d6IHR82wSEf3qDisOX1wwys=;
+        b=l/RL7Y2Kyz2I8kqXJkJw/9E/ltkRzEbVMXQD38G56U8PUZAmwtnkKyk1cYdnW4RkE/
+         BRx+ImBhz8Kd0e72PSmi6DzIFPzZz64kGMHUiXYdecWyOMNgVaC54BmGAJFKRoNTuut8
+         PZd4JDjulvHHx4sqTgtjDyqilDAzhxkxGuPCGpSJoxbcIGu7fdFKOObX4H8TdzQlWyCM
+         G23CxF+/n1MtU/bkyCuBe7R2qSG66UQrAnRhW82VgKpIhP1sJHF6XJdewBfIXFoJb6tR
+         EDp+Xzcfwt3MI6laa6/wlpnuRJwSVMA/8v0UeVucDpQ8IOX0/R1elEKP78IJ2z5WBQ0k
+         ESlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=XLND97VJqxRGNRPkPJlee12ZiV4Pa0PqINHbyj3L9qI=;
-        b=pKxJU+xLakcpgU8EnIn6HqHSxCOSW15N0h8kaqcQGuWyUZs71XmuaNG60veXCrKQLi
-         turccp5urRJL9YWdymQGR7BflHmBhdp7NkgtlLPgBX55fkfObxoFTGoBecOSyGAgTD8b
-         8QMp+fPfh8FPA9DsIRsILBU3WPBPw4yPbKX5PzFmpYdqsexB52jjryJ4Im7sqnh9JhEh
-         m+kdJPRy1MTKO2Bc+qnxr2wmNuB+DkfktSIg2uwWNPC7X3pCX2aBzxEqXZv8/CDtc7zp
-         jIHfrK7u2HUdO6MgX9h/JDtHlrCYf6SEOOoEE7IcYhLh+14IrN9WKKTlgZy5ETw62Zm8
-         83qQ==
-X-Gm-Message-State: APjAAAWV4m8zxSyMAra+BqXviathMtK9aRt0haXOsBm/6+Rkr4wRhK6I
-        pZLTpR63Uoy3EpdTOKpr5YdWIQ==
-X-Google-Smtp-Source: APXvYqzEODFFburSUpBiyJGkJcA1avidySxsHUY0dCaesN0aG++Mx9veA1Ui7EDkYXiCFCp8x/h3xw==
-X-Received: by 2002:a62:764d:: with SMTP id r74mr40203960pfc.110.1564436874284;
-        Mon, 29 Jul 2019 14:47:54 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id bg3sm61476695pjb.9.2019.07.29.14.47.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 14:47:53 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 14:47:52 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jim Cromie <jim.cromie@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watchdog: scx200_wdt: Mark expected switch fall-through
-Message-ID: <201907291447.7A0E3EF23A@keescook>
-References: <20190729200602.GA6854@embeddedor>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=piQh2aqA30RCLiw+cIf1d6IHR82wSEf3qDisOX1wwys=;
+        b=D5tBuOygr6npUVpukKcDstFKooVQyvtK6jCdTDN2u1aP/ioHLL0iIxWd6QnrSc/UEZ
+         +h1ehcfqu97yHHy0NFLOKj136EvNz4qsiQOBuQRICPgezGupmEzhH/TX4X7daxD/8zcX
+         xHRyMHD0fLNLT5KptnW77pE3mBXldPXz4pUkUe8slPov0S5HnEsUt7Wp54+1wrdvZStZ
+         kaRIgZhe8A5hIGvc1d00ZBz24k5giXsCjCfNNHaZwExFkijo4/3eyUUerzKD4sDS3+jS
+         Yqc3B4xwpvQpGQr/FeCNi9I8qNqlH4caDbnwhLI0YeYipjA1kmaWmObAh68KfXZwOzlO
+         rzMw==
+X-Gm-Message-State: APjAAAUKMRH7d71z5CLTmu3WlmJza0wwBnZbzzHu4A/m01NmqaykITrr
+        LBbseOQe2/HfqWitI58TIcKGUj+MIDQC35CmE6SGeYCqVbk=
+X-Google-Smtp-Source: APXvYqxS/upLfLcv1Opnwp9lYxlnoZ2TkKlbL41OpS0AiGsoLM5gWBwfxkyYcoAUnk0nANWmnZfxFJngb/NBSwuBQkk=
+X-Received: by 2002:a5e:9404:: with SMTP id q4mr42722436ioj.46.1564436887846;
+ Mon, 29 Jul 2019 14:48:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190729200602.GA6854@embeddedor>
+References: <20190718194415.108476-1-matthewgarrett@google.com> <20190718194415.108476-20-matthewgarrett@google.com>
+In-Reply-To: <20190718194415.108476-20-matthewgarrett@google.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Mon, 29 Jul 2019 14:47:56 -0700
+Message-ID: <CACdnJute8aakro+Cb7oNrxgCiZTYj2BOt2WMc1dYF-xktxBucQ@mail.gmail.com>
+Subject: Re: [PATCH V36 19/29] Lock down module params that specify hardware
+ parameters (eg. ioport)
+To:     James Morris <jmorris@namei.org>
+Cc:     LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 03:06:02PM -0500, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warning (Building: i386):
-> 
-> drivers/watchdog/scx200_wdt.c: In function ‘scx200_wdt_ioctl’:
-> drivers/watchdog/scx200_wdt.c:188:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    scx200_wdt_ping();
->    ^~~~~~~~~~~~~~~~~
-> drivers/watchdog/scx200_wdt.c:189:2: note: here
->   case WDIOC_GETTIMEOUT:
->   ^~~~
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On Thu, Jul 18, 2019 at 12:45 PM Matthew Garrett
+<matthewgarrett@google.com> wrote:
+>
+> From: David Howells <dhowells@redhat.com>
+>
+> Provided an annotation for module parameters that specify hardware
+> parameters (such as io ports, iomem addresses, irqs, dma channels, fixed
+> dma buffers and other types).
+>
+> Suggested-by: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Cc: Jessica Yu <jeyu@kernel.org>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  drivers/watchdog/scx200_wdt.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/watchdog/scx200_wdt.c b/drivers/watchdog/scx200_wdt.c
-> index efd7996694de..46268309ee9b 100644
-> --- a/drivers/watchdog/scx200_wdt.c
-> +++ b/drivers/watchdog/scx200_wdt.c
-> @@ -186,6 +186,7 @@ static long scx200_wdt_ioctl(struct file *file, unsigned int cmd,
->  		margin = new_margin;
->  		scx200_wdt_update_margin();
->  		scx200_wdt_ping();
-> +		/* Fall through */
->  	case WDIOC_GETTIMEOUT:
->  		if (put_user(margin, p))
->  			return -EFAULT;
-> -- 
-> 2.22.0
-> 
-
--- 
-Kees Cook
+Jessica, any feedback on this?
