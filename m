@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B44C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D32BC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56642087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB3420C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfG2HBp (ORCPT
+        id S1727437AbfG2HBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 03:01:45 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:48608 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727197AbfG2HBW (ORCPT
+        Mon, 29 Jul 2019 03:01:50 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:63730 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727128AbfG2HBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 03:01:22 -0400
-X-UUID: 1a0265c92b064b9595dbe04f17d143dc-20190729
-X-UUID: 1a0265c92b064b9595dbe04f17d143dc-20190729
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+X-UUID: ff653d2dcbaf4cd681514c2941f3ab41-20190729
+X-UUID: ff653d2dcbaf4cd681514c2941f3ab41-20190729
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1492465932; Mon, 29 Jul 2019 15:01:07 +0800
+        with ESMTP id 611002067; Mon, 29 Jul 2019 15:01:16 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 29 Jul 2019 15:01:09 +0800
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 29 Jul 2019 15:01:10 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 29 Jul 2019 15:01:09 +0800
+ Transport; Mon, 29 Jul 2019 15:01:10 +0800
 From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
 To:     Jassi Brar <jassisinghbrar@gmail.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -52,64 +52,56 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v11 03/12] dt-binding: gce: add binding for gce client reg property
-Date:   Mon, 29 Jul 2019 15:00:57 +0800
-Message-ID: <20190729070106.9332-4-bibby.hsieh@mediatek.com>
+Subject: [PATCH v11 12/12] arm64: dts: add gce node for mt8183
+Date:   Mon, 29 Jul 2019 15:01:06 +0800
+Message-ID: <20190729070106.9332-13-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
 References: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: 452939164E0A036E79BC4354F5DBF2B0307C990B92DAE3B1B63BCA2416DACB8F2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cmdq driver provide a function that get the relationship
-of sub system number from device node for client.
-add specification for #subsys-cells, mediatek,gce-client-reg.
+add gce device node for mt8183
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 ---
- .../devicetree/bindings/mailbox/mtk-gce.txt      | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-index 1f7f8f2a3f49..7b13787ab13d 100644
---- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-+++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-@@ -25,8 +25,16 @@ Required properties:
- Required properties for a client device:
- - mboxes: Client use mailbox to communicate with GCE, it should have this
-   property and list of phandle, mailbox specifiers.
--- mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
--  to the register address.
-+Optional properties for a client device:
-+- mediatek,gce-client-reg: Specify the sub-system id which is corresponding
-+  to the register address, it should have this property and list of phandle,
-+  sub-system specifiers.
-+  <&phandle subsys_number start_offset size>
-+  phandle: Label name of a gce node.
-+  subsys_number: specify the sub-system id which is corresponding
-+                 to the register address.
-+  start_offset: the start offset of register address that GCE can access.
-+  size: the total size of register address that GCE can access.
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 08274bfcebd8..98d17d0bdebf 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/clock/mt8183-clk.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/gce/mt8183-gce.h>
  
- Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
- or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
-@@ -48,9 +56,9 @@ Example for a client device:
- 		compatible = "mediatek,mt8173-mmsys";
- 		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
- 			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
--		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
- 		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
- 				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
--
-+		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
-+					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
- 		...
- 	};
+ / {
+ 	compatible = "mediatek,mt8183";
+@@ -212,6 +213,15 @@
+ 			clock-names = "spi", "wrap";
+ 		};
+ 
++		gce: gce@10238000 {
++			compatible = "mediatek,mt8183-gce";
++			reg = <0 0x10238000 0 0x4000>;
++			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_LOW>;
++			#mbox-cells = <3>;
++			clocks = <&infracfg CLK_INFRA_GCE>;
++			clock-names = "gce";
++		};
++
+ 		uart0: serial@11002000 {
+ 			compatible = "mediatek,mt8183-uart",
+ 				     "mediatek,mt6577-uart";
 -- 
 2.18.0
 
