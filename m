@@ -2,66 +2,89 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B684C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B92FC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1393B206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:38:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nBEkEzd3"
+	by mail.kernel.org (Postfix) with ESMTP id 58E5B206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbfG2Kiu (ORCPT
+        id S1728346AbfG2KjV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:38:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37654 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbfG2Kit (ORCPT
+        Mon, 29 Jul 2019 06:39:21 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:39252 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728107AbfG2KjU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:38:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KAggO34scn31WY7TrlvVv9v9Jlh8D/gvQUy8nUnXkHk=; b=nBEkEzd3Pwsz4U13WP8pfhzI0
-        S7e8IJB4PaJ/+Kn+2q8cRtyp1OCQNMNmnM87aiwj94/vHkqSNRq6Pjlj0+Ap6FPdbzJP51TtUd7Go
-        +y1E4dh8Ac9FjHQa8YwvLXowOyTQkZXeTLxc0P+sAU8x64nOoJnGjAmNCnI7XtL6O0OfB+dCcRPuH
-        IcjUw8lQwA43toWGGElJGCLShD9u2jkU4RoNOAUT9Wri7lS2khLOgvGWwWYGzLYVBWcUMb/90KTGe
-        h+7yrY/G/eBtgbj6w32Gi4BIcDAwydt/KJI1TE7ENc3JgFvrTVFN2lyaoHgNPGcmwiZuwFJC1zDvz
-        tr+kRNn/Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs33G-0002r4-1B; Mon, 29 Jul 2019 10:38:46 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 76B5F203BF70D; Mon, 29 Jul 2019 12:38:44 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 12:38:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     mingo@kernel.org, longman@redhat.com, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH -tip] locking/rwsem: Check for operations on an
- uninitialized rwsem
-Message-ID: <20190729103844.GA31381@hirez.programming.kicks-ass.net>
-References: <20190729044735.9632-1-dave@stgolabs.net>
+        Mon, 29 Jul 2019 06:39:20 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-24-dISn8bX0OCytxGZ1hwsOwQ-1; Mon, 29 Jul 2019 11:39:17 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
+ 29 Jul 2019 11:39:16 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 29 Jul 2019 11:39:16 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Qian Cai' <cai@lca.pw>,
+        "vyasevich@gmail.com" <vyasevich@gmail.com>,
+        "nhorman@tuxdriver.com" <nhorman@tuxdriver.com>,
+        "marcelo.leitner@gmail.com" <marcelo.leitner@gmail.com>
+CC:     "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] net/sctp: fix GCC8+ -Wpacked-not-aligned warnings
+Thread-Topic: [PATCH] net/sctp: fix GCC8+ -Wpacked-not-aligned warnings
+Thread-Index: AQHVQ/TTkQHT5kEjjEefGhuj7/2hGabhauMA
+Date:   Mon, 29 Jul 2019 10:39:16 +0000
+Message-ID: <158b26b6f3b24164aceacd2428095315@AcuMS.aculab.com>
+References: <1564174659-21211-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1564174659-21211-1-git-send-email-cai@lca.pw>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729044735.9632-1-dave@stgolabs.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: dISn8bX0OCytxGZ1hwsOwQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 09:47:35PM -0700, Davidlohr Bueso wrote:
-> Currently rwsems is the only locking primitive that lacks this
-> debug feature. Add it under CONFIG_DEBUG_RWSEMS and do the magic
-> checking in the locking fastpath (trylock) operation such that
-> we cover all cases. The unlocking part is pretty straightforward.
+From: Qian Cai
+> Sent: 26 July 2019 21:58
+> 
+> There are a lot of those warnings with GCC8+ 64bit,
+> 
+...
+> Fix them by aligning the structures and fields to 8 bytes instead.
+...
+>  struct sctp_setpeerprim {
+>  	sctp_assoc_t            sspp_assoc_id;
+> -	struct sockaddr_storage sspp_addr;
+> -} __attribute__((packed, aligned(4)));
+> +	struct sockaddr_storage sspp_addr __attribute__((aligned(8)));
+> +} __attribute__((packed, aligned(8)));
 
-Thanks!
+What happens to this one if you change both to aligned(4) ?
+Much the same way as:
+	struct {
+		int a;
+		long b __attribute__((aligned(4));
+	};
+is only 12 bytes on (most) 64bit systems.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
