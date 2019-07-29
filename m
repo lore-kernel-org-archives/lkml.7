@@ -2,137 +2,127 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDFAC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C05C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18D0E206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034F4206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfG2Ibf (ORCPT
+        id S1727621AbfG2IcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:31:35 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:48702 "EHLO honk.sigxcpu.org"
+        Mon, 29 Jul 2019 04:32:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:39908 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbfG2Ibe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:31:34 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 9B614FB03;
-        Mon, 29 Jul 2019 10:31:32 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3gdsxkg-VJ_P; Mon, 29 Jul 2019 10:31:31 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 1B86846BAF; Mon, 29 Jul 2019 10:31:31 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 10:31:31 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, l.stach@pengutronix.de, ccaione@baylibre.com,
-        abel.vesa@nxp.com, baruch@tkos.co.il, andrew.smirnov@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, shengjiu.wang@nxp.com,
-        angus@akkea.ca, Anson.Huang@nxp.com
-Subject: Re: [PATCH v3] arm64: dts: imx8mq: Init rates and parents configs
- for clocks
-Message-ID: <20190729083130.GA3904@bogon.m.sigxcpu.org>
-References: <20190728141218.12702-1-daniel.baluta@nxp.com>
+        id S1726305AbfG2IcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 04:32:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9CDF337;
+        Mon, 29 Jul 2019 01:32:15 -0700 (PDT)
+Received: from [10.162.40.126] (p8cg001049571a15.blr.arm.com [10.162.40.126])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 990293F575;
+        Mon, 29 Jul 2019 01:32:11 -0700 (PDT)
+Subject: Re: [RFC] mm/pgtable/debug: Add test validating architecture page
+ table helpers
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <Mark.Brown@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1564037723-26676-1-git-send-email-anshuman.khandual@arm.com>
+ <1564037723-26676-2-git-send-email-anshuman.khandual@arm.com>
+ <20190725143920.GW363@bombadil.infradead.org>
+ <c3bb0420-584c-de3b-2439-8702bc09595e@arm.com>
+ <20190726195457.GI30641@bombadil.infradead.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <10ed1022-a5c0-c80c-c0c9-025bb2307666@arm.com>
+Date:   Mon, 29 Jul 2019 14:02:52 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190728141218.12702-1-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190726195457.GI30641@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Sun, Jul 28, 2019 at 05:12:18PM +0300, Daniel Baluta wrote:
-> From: Abel Vesa <abel.vesa@nxp.com>
+On 07/27/2019 01:24 AM, Matthew Wilcox wrote:
+> On Fri, Jul 26, 2019 at 10:17:11AM +0530, Anshuman Khandual wrote:
+>>> But 'page' isn't necessarily PMD-aligned.  I don't think we can rely on
+>>> architectures doing the right thing if asked to make a PMD for a randomly
+>>> aligned page.
+>>>
+>>> How about finding the physical address of something like kernel_init(),
+>>
+>> Physical address corresponding to the symbol in the kernel text segment ?
 > 
-> Add the initial configuration for clocks that need default parent and rate
-> setting. This is based on the vendor tree clock provider parents and rates
-> configuration except this is doing the setup in dts rather then using clock
-> consumer API in a clock provider driver.
-> 
-> Note that by adding the initial rate setting for audio_pll1/audio_pll
-> setting we need to remove it from imx8mq-librem5-devkit.dts
-> imx8mq-librem5-devkit.dts
-> 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
-> Changes since v2:
-> 	- set rate for audio_pll1/audio_pll2  in the dtsi file and
-> 	remove the setting from imx8mq-librem5-devkit.dts
-> 
->  .../dts/freescale/imx8mq-librem5-devkit.dts   |  5 -----
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 21 +++++++++++++++++++
->  2 files changed, 21 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> index 683a11035643..c702ccc82867 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> @@ -169,11 +169,6 @@
->  	};
->  };
->  
-> -&clk {
-> -	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL2>;
-> -	assigned-clock-rates = <786432000>, <722534400>;
-> -};
-> -
->  &dphy {
->  	status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 02fbd0625318..c67625a881a4 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -494,6 +494,27 @@
->  				clock-names = "ckil", "osc_25m", "osc_27m",
->  				              "clk_ext1", "clk_ext2",
->  				              "clk_ext3", "clk_ext4";
-> +				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
-> +					<&clk IMX8MQ_AUDIO_PLL1>,
-> +					<&clk IMX8MQ_AUDIO_PLL2>,
-> +					<&clk IMX8MQ_CLK_AHB>,
-> +					<&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
-> +					<&clk IMX8MQ_CLK_AUDIO_AHB>,
-> +					<&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
-> +					<&clk IMX8MQ_CLK_NOC>;
-> +				assigned-clock-parents = <0>,
-> +						<0>,
-> +						<0>,
-> +						<&clk IMX8MQ_SYS1_PLL_133M>,
-> +						<&clk IMX8MQ_SYS1_PLL_266M>,
-> +						<&clk IMX8MQ_SYS2_PLL_500M>,
-> +						<&clk IMX8MQ_CLK_27M>,
-> +						<&clk IMX8MQ_SYS1_PLL_800M>;
-> +				assigned-clock-rates = <593999999>,
-> +						<786432000>,
-> +						<722534400>;
-> +
-> +
->  			};
->  
->  			src: reset-controller@30390000 {
+> Yes.  We need the address of something that's definitely memory.
+> The stack might be in vmalloc space.  We can't allocate memory from the
+> allocator that's PUD-aligned.  This seems like a reasonable approximation
+> to something that might work.
 
-togethe with http://code.bulix.org/pd88jp-812381?raw tested on
-linux-20190725 (plus mipi dsi):
+Okay sure. What is about vmalloc space being PUD aligned and how that is
+problematic here ? Could you please give some details. Just being curious.
 
-Tested-by: Guido Günther <agx@sigxcpu.org>
-
-Cheers,
- -- Guido
-
-> -- 
-> 2.17.1
 > 
+>>> and using the corresponding pte/pmd/pud/p4d/pgd that encompasses that
+>>
+>> So I guess this will help us use pte/pmd/pud/p4d/pgd entries from a real and
+>> present mapping rather then making them up for test purpose. Although we are
+>> not creating real page tables here just wondering if this could some how
+>> affect these real mapping in anyway from some accessors. The current proposal
+>> stays clear from anything real - allocates, evaluates and releases.
+> 
+> I think that's a mistake.  As Russell said, the ARM p*d manipulation
+> functions expect to operate on tables, not on individual entries
+> constructed on the stack.
+
+Hmm. I assume that it will take care of dual 32 bit entry updates on arm
+platform through various helper functions as Russel had mentioned earlier.
+After we create page table with p?d_alloc() functions and pick an entry at
+each page table level.
+
+> 
+> So I think the right thing to do here is allocate an mm, then do the
+> pgd_alloc / p4d_alloc / pud_alloc / pmd_alloc / pte_alloc() steps giving
+> you real page tables that you can manipulate.
+> 
+> Then destroy them, of course.  And don't access through them.
+
+mm_alloc() seems like a comprehensive helper to allocate and initialize a
+mm_struct. But could we use mm_init() with 'current' in the driver context or we
+need to create a dummy task_struct for this purpose. Some initial tests show that
+p?d_alloc() and p?d_free() at each level with a fixed virtual address gives p?d_t
+entries required at various page table level to test upon.
+
+> 
+>>>> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+>>>> +static void pud_basic_tests(void)
+>>>
+>>> Is this the right ifdef?
+>>
+>> IIUC THP at PUD is where the pud_t entries are directly operated upon and the
+>> corresponding accessors are present only when HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+>> is enabled. Am I missing something here ?
+> 
+> Maybe I am.  I thought we could end up operating on PUDs for kernel mappings,
+> even without transparent hugepages turned on.
+
+In generic MM ? IIUC except ioremap mapping all other PUD handling for kernel virtual
+range is platform specific. All the helpers used in the function pud_basic_tests() are
+part of THP and used in mm/huge_memory.c
