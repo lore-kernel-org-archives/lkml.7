@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C795C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A717AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1DA6217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6617A21773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428870;
-	bh=FRTWK1UW7JCfMIwKadFY/C0ZNh5/pNuZbIf5M2pQ2sY=;
+	s=default; t=1564428874;
+	bh=i8k7dCpkFk85zm07G0bXS/wey0EkGA6BUjPmersWp/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mvhy4Yp+m9GK37kc2J5QaT4qFILQaDYg7hSoBwDb5fwxIuRl0o1NMPChjihZOPluG
-	 3V1N8j9+A2sKYrWS/DmW9wSnPDmkN+lWza/FRVdb+HnudISzWJtcw8aVcUmcgFKZl0
-	 k8a1F8sFrK+wqSdeST1hj6wF7dvqOU6+rwmEnfeQ=
+	b=N4MdUw0AQoGGcLGUcYNudIDR4eALDKXQCUpGZFo6d1Id/qfSUnEoo/RF1Aj3deKpK
+	 h/AAlzckDK3zHbbTRO3pb+vz0URAgYqzZ5+4HdjiWPvai4NPxZfxOHQf1Ujwm88wSF
+	 UcFW7/FQm5ZakgQ42mK9eduSbvbe0vxxtPyosl+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388440AbfG2Te2 (ORCPT
+        id S2388048AbfG2Tec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48812 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:34:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388336AbfG2TeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:34:24 -0400
+        id S2388434AbfG2Te2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:34:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F7D32070B;
-        Mon, 29 Jul 2019 19:34:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5EA02070B;
+        Mon, 29 Jul 2019 19:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428863;
-        bh=FRTWK1UW7JCfMIwKadFY/C0ZNh5/pNuZbIf5M2pQ2sY=;
+        s=default; t=1564428867;
+        bh=i8k7dCpkFk85zm07G0bXS/wey0EkGA6BUjPmersWp/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NA+l6CFWFvjYkooNF84rAOZKh8YaiOyMvCf9LrZGAG5vG0DupOQ0CM6ELdIwVdvhU
-         H48B5+516EbkcWwrkwruaVBdJcJwcP9bCMwSBrC/2dNu29bO1GFx8sqDZrdtBzCWBv
-         0HHEevKqEXac2X0Z0HDvrXWfPsqyPHXzcmVY76y4=
+        b=2bEjW6EDDsdJRqnG5wH3x5uuToSccWPg1A9BEo+djifcfTWzG8LsnHPuOdgRGZPUH
+         zm0ScUgYB3Go23bH9aFSEwJ9Z3fLloQpfyvPDfiAjy6cM6GiNC7IipjXvd4F4qNWW8
+         nciu2dZi9+ugQiiGNl11NBrctBBXKgwHNDkXxETk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
         Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 210/293] mm: add filemap_fdatawait_range_keep_errors()
-Date:   Mon, 29 Jul 2019 21:21:41 +0200
-Message-Id: <20190729190840.547311068@linuxfoundation.org>
+Subject: [PATCH 4.14 211/293] jbd2: introduce jbd2_inode dirty range scoping
+Date:   Mon, 29 Jul 2019 21:21:42 +0200
+Message-Id: <20190729190840.630244034@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,12 +61,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ross Zwisler <zwisler@chromium.org>
 
-commit aa0bfcd939c30617385ffa28682c062d78050eba upstream.
+commit 6ba0e7dc64a5adcda2fbe65adc466891795d639e upstream.
 
-In the spirit of filemap_fdatawait_range() and
-filemap_fdatawait_keep_errors(), introduce
-filemap_fdatawait_range_keep_errors() which both takes a range upon
-which to wait and does not clear errors from the address space.
+Currently both journal_submit_inode_data_buffers() and
+journal_finish_inode_data_buffers() operate on the entire address space
+of each of the inodes associated with a given journal entry.  The
+consequence of this is that if we have an inode where we are constantly
+appending dirty pages we can end up waiting for an indefinite amount of
+time in journal_finish_inode_data_buffers() while we wait for all the
+pages under writeback to be written out.
+
+The easiest way to cause this type of workload is do just dd from
+/dev/zero to a file until it fills the entire filesystem.  This can
+cause journal_finish_inode_data_buffers() to wait for the duration of
+the entire dd operation.
+
+We can improve this situation by scoping each of the inode dirty ranges
+associated with a given transaction.  We do this via the jbd2_inode
+structure so that the scoping is contained within jbd2 and so that it
+follows the lifetime and locking rules for that structure.
+
+This allows us to limit the writeback & wait in
+journal_submit_inode_data_buffers() and
+journal_finish_inode_data_buffers() respectively to the dirty range for
+a given struct jdb2_inode, keeping us from waiting forever if the inode
+in question is still being appended to.
 
 Signed-off-by: Ross Zwisler <zwisler@google.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
@@ -75,51 +94,216 @@ Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/fs.h |    2 ++
- mm/filemap.c       |   22 ++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+ fs/jbd2/commit.c      |   23 +++++++++++++++++------
+ fs/jbd2/journal.c     |    4 ++++
+ fs/jbd2/transaction.c |   49 ++++++++++++++++++++++++++++---------------------
+ include/linux/jbd2.h  |   22 ++++++++++++++++++++++
+ 4 files changed, 71 insertions(+), 27 deletions(-)
 
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2580,6 +2580,8 @@ extern int filemap_flush(struct address_
- extern int filemap_fdatawait_keep_errors(struct address_space *mapping);
- extern int filemap_fdatawait_range(struct address_space *, loff_t lstart,
- 				   loff_t lend);
-+extern int filemap_fdatawait_range_keep_errors(struct address_space *mapping,
-+		loff_t start_byte, loff_t end_byte);
- 
- static inline int filemap_fdatawait(struct address_space *mapping)
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -189,14 +189,15 @@ static int journal_wait_on_commit_record
+  * use writepages() because with dealyed allocation we may be doing
+  * block allocation in writepages().
+  */
+-static int journal_submit_inode_data_buffers(struct address_space *mapping)
++static int journal_submit_inode_data_buffers(struct address_space *mapping,
++		loff_t dirty_start, loff_t dirty_end)
  {
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -464,6 +464,28 @@ int filemap_fdatawait_range(struct addre
- EXPORT_SYMBOL(filemap_fdatawait_range);
+ 	int ret;
+ 	struct writeback_control wbc = {
+ 		.sync_mode =  WB_SYNC_ALL,
+ 		.nr_to_write = mapping->nrpages * 2,
+-		.range_start = 0,
+-		.range_end = i_size_read(mapping->host),
++		.range_start = dirty_start,
++		.range_end = dirty_end,
+ 	};
  
- /**
-+ * filemap_fdatawait_range_keep_errors - wait for writeback to complete
-+ * @mapping:		address space structure to wait for
-+ * @start_byte:		offset in bytes where the range starts
-+ * @end_byte:		offset in bytes where the range ends (inclusive)
-+ *
-+ * Walk the list of under-writeback pages of the given address space in the
-+ * given range and wait for all of them.  Unlike filemap_fdatawait_range(),
-+ * this function does not clear error status of the address space.
-+ *
-+ * Use this function if callers don't handle errors themselves.  Expected
-+ * call sites are system-wide / filesystem-wide data flushers: e.g. sync(2),
-+ * fsfreeze(8)
-+ */
-+int filemap_fdatawait_range_keep_errors(struct address_space *mapping,
-+		loff_t start_byte, loff_t end_byte)
-+{
-+	__filemap_fdatawait_range(mapping, start_byte, end_byte);
-+	return filemap_check_and_keep_errors(mapping);
-+}
-+EXPORT_SYMBOL(filemap_fdatawait_range_keep_errors);
+ 	ret = generic_writepages(mapping, &wbc);
+@@ -220,6 +221,9 @@ static int journal_submit_data_buffers(j
+ 
+ 	spin_lock(&journal->j_list_lock);
+ 	list_for_each_entry(jinode, &commit_transaction->t_inode_list, i_list) {
++		loff_t dirty_start = jinode->i_dirty_start;
++		loff_t dirty_end = jinode->i_dirty_end;
 +
-+/**
-  * file_fdatawait_range - wait for writeback to complete
-  * @file:		file pointing to address space structure to wait for
-  * @start_byte:		offset in bytes where the range starts
+ 		if (!(jinode->i_flags & JI_WRITE_DATA))
+ 			continue;
+ 		mapping = jinode->i_vfs_inode->i_mapping;
+@@ -232,7 +236,8 @@ static int journal_submit_data_buffers(j
+ 		 * only allocated blocks here.
+ 		 */
+ 		trace_jbd2_submit_inode_data(jinode->i_vfs_inode);
+-		err = journal_submit_inode_data_buffers(mapping);
++		err = journal_submit_inode_data_buffers(mapping, dirty_start,
++				dirty_end);
+ 		if (!ret)
+ 			ret = err;
+ 		spin_lock(&journal->j_list_lock);
+@@ -259,12 +264,16 @@ static int journal_finish_inode_data_buf
+ 	/* For locking, see the comment in journal_submit_data_buffers() */
+ 	spin_lock(&journal->j_list_lock);
+ 	list_for_each_entry(jinode, &commit_transaction->t_inode_list, i_list) {
++		loff_t dirty_start = jinode->i_dirty_start;
++		loff_t dirty_end = jinode->i_dirty_end;
++
+ 		if (!(jinode->i_flags & JI_WAIT_DATA))
+ 			continue;
+ 		jinode->i_flags |= JI_COMMIT_RUNNING;
+ 		spin_unlock(&journal->j_list_lock);
+-		err = filemap_fdatawait_keep_errors(
+-				jinode->i_vfs_inode->i_mapping);
++		err = filemap_fdatawait_range_keep_errors(
++				jinode->i_vfs_inode->i_mapping, dirty_start,
++				dirty_end);
+ 		if (!ret)
+ 			ret = err;
+ 		spin_lock(&journal->j_list_lock);
+@@ -284,6 +293,8 @@ static int journal_finish_inode_data_buf
+ 				&jinode->i_transaction->t_inode_list);
+ 		} else {
+ 			jinode->i_transaction = NULL;
++			jinode->i_dirty_start = 0;
++			jinode->i_dirty_end = 0;
+ 		}
+ 	}
+ 	spin_unlock(&journal->j_list_lock);
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -97,6 +97,8 @@ EXPORT_SYMBOL(jbd2_journal_try_to_free_b
+ EXPORT_SYMBOL(jbd2_journal_force_commit);
+ EXPORT_SYMBOL(jbd2_journal_inode_add_write);
+ EXPORT_SYMBOL(jbd2_journal_inode_add_wait);
++EXPORT_SYMBOL(jbd2_journal_inode_ranged_write);
++EXPORT_SYMBOL(jbd2_journal_inode_ranged_wait);
+ EXPORT_SYMBOL(jbd2_journal_init_jbd_inode);
+ EXPORT_SYMBOL(jbd2_journal_release_jbd_inode);
+ EXPORT_SYMBOL(jbd2_journal_begin_ordered_truncate);
+@@ -2581,6 +2583,8 @@ void jbd2_journal_init_jbd_inode(struct
+ 	jinode->i_next_transaction = NULL;
+ 	jinode->i_vfs_inode = inode;
+ 	jinode->i_flags = 0;
++	jinode->i_dirty_start = 0;
++	jinode->i_dirty_end = 0;
+ 	INIT_LIST_HEAD(&jinode->i_list);
+ }
+ 
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -2503,7 +2503,7 @@ void jbd2_journal_refile_buffer(journal_
+  * File inode in the inode list of the handle's transaction
+  */
+ static int jbd2_journal_file_inode(handle_t *handle, struct jbd2_inode *jinode,
+-				   unsigned long flags)
++		unsigned long flags, loff_t start_byte, loff_t end_byte)
+ {
+ 	transaction_t *transaction = handle->h_transaction;
+ 	journal_t *journal;
+@@ -2515,26 +2515,17 @@ static int jbd2_journal_file_inode(handl
+ 	jbd_debug(4, "Adding inode %lu, tid:%d\n", jinode->i_vfs_inode->i_ino,
+ 			transaction->t_tid);
+ 
+-	/*
+-	 * First check whether inode isn't already on the transaction's
+-	 * lists without taking the lock. Note that this check is safe
+-	 * without the lock as we cannot race with somebody removing inode
+-	 * from the transaction. The reason is that we remove inode from the
+-	 * transaction only in journal_release_jbd_inode() and when we commit
+-	 * the transaction. We are guarded from the first case by holding
+-	 * a reference to the inode. We are safe against the second case
+-	 * because if jinode->i_transaction == transaction, commit code
+-	 * cannot touch the transaction because we hold reference to it,
+-	 * and if jinode->i_next_transaction == transaction, commit code
+-	 * will only file the inode where we want it.
+-	 */
+-	if ((jinode->i_transaction == transaction ||
+-	    jinode->i_next_transaction == transaction) &&
+-	    (jinode->i_flags & flags) == flags)
+-		return 0;
+-
+ 	spin_lock(&journal->j_list_lock);
+ 	jinode->i_flags |= flags;
++
++	if (jinode->i_dirty_end) {
++		jinode->i_dirty_start = min(jinode->i_dirty_start, start_byte);
++		jinode->i_dirty_end = max(jinode->i_dirty_end, end_byte);
++	} else {
++		jinode->i_dirty_start = start_byte;
++		jinode->i_dirty_end = end_byte;
++	}
++
+ 	/* Is inode already attached where we need it? */
+ 	if (jinode->i_transaction == transaction ||
+ 	    jinode->i_next_transaction == transaction)
+@@ -2569,12 +2560,28 @@ done:
+ int jbd2_journal_inode_add_write(handle_t *handle, struct jbd2_inode *jinode)
+ {
+ 	return jbd2_journal_file_inode(handle, jinode,
+-				       JI_WRITE_DATA | JI_WAIT_DATA);
++			JI_WRITE_DATA | JI_WAIT_DATA, 0, LLONG_MAX);
+ }
+ 
+ int jbd2_journal_inode_add_wait(handle_t *handle, struct jbd2_inode *jinode)
+ {
+-	return jbd2_journal_file_inode(handle, jinode, JI_WAIT_DATA);
++	return jbd2_journal_file_inode(handle, jinode, JI_WAIT_DATA, 0,
++			LLONG_MAX);
++}
++
++int jbd2_journal_inode_ranged_write(handle_t *handle,
++		struct jbd2_inode *jinode, loff_t start_byte, loff_t length)
++{
++	return jbd2_journal_file_inode(handle, jinode,
++			JI_WRITE_DATA | JI_WAIT_DATA, start_byte,
++			start_byte + length - 1);
++}
++
++int jbd2_journal_inode_ranged_wait(handle_t *handle, struct jbd2_inode *jinode,
++		loff_t start_byte, loff_t length)
++{
++	return jbd2_journal_file_inode(handle, jinode, JI_WAIT_DATA,
++			start_byte, start_byte + length - 1);
+ }
+ 
+ /*
+--- a/include/linux/jbd2.h
++++ b/include/linux/jbd2.h
+@@ -454,6 +454,22 @@ struct jbd2_inode {
+ 	 * @i_flags: Flags of inode [j_list_lock]
+ 	 */
+ 	unsigned long i_flags;
++
++	/**
++	 * @i_dirty_start:
++	 *
++	 * Offset in bytes where the dirty range for this inode starts.
++	 * [j_list_lock]
++	 */
++	loff_t i_dirty_start;
++
++	/**
++	 * @i_dirty_end:
++	 *
++	 * Inclusive offset in bytes where the dirty range for this inode
++	 * ends. [j_list_lock]
++	 */
++	loff_t i_dirty_end;
+ };
+ 
+ struct jbd2_revoke_table_s;
+@@ -1399,6 +1415,12 @@ extern int	   jbd2_journal_force_commit(
+ extern int	   jbd2_journal_force_commit_nested(journal_t *);
+ extern int	   jbd2_journal_inode_add_write(handle_t *handle, struct jbd2_inode *inode);
+ extern int	   jbd2_journal_inode_add_wait(handle_t *handle, struct jbd2_inode *inode);
++extern int	   jbd2_journal_inode_ranged_write(handle_t *handle,
++			struct jbd2_inode *inode, loff_t start_byte,
++			loff_t length);
++extern int	   jbd2_journal_inode_ranged_wait(handle_t *handle,
++			struct jbd2_inode *inode, loff_t start_byte,
++			loff_t length);
+ extern int	   jbd2_journal_begin_ordered_truncate(journal_t *journal,
+ 				struct jbd2_inode *inode, loff_t new_size);
+ extern void	   jbd2_journal_init_jbd_inode(struct jbd2_inode *jinode, struct inode *inode);
 
 
