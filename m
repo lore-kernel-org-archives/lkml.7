@@ -2,147 +2,112 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01E8C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E6AC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3225216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7617216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388096AbfG2Pdu (ORCPT
+        id S1728058AbfG2PhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:33:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:45822 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387887AbfG2Pdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:33:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEAE3337;
-        Mon, 29 Jul 2019 08:33:48 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D6103F694;
-        Mon, 29 Jul 2019 08:33:46 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 16:33:41 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jianjun Wang <jianjun.wang@mediatek.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, youlin.pei@mediatek.com
-Subject: Re: [v2,2/2] PCI: mediatek: Add controller support for MT7629
-Message-ID: <20190729153341.GA23266@e121166-lin.cambridge.arm.com>
-References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
- <20190628073425.25165-3-jianjun.wang@mediatek.com>
- <1564385918.17211.6.camel@mhfsdcap03>
+        Mon, 29 Jul 2019 11:37:02 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40256 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfG2PhB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:37:01 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r1so62357724wrl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 08:36:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kbdqHLDZjC9a+s2gzn3LKNYZtrgZuml85rJixr3NhMA=;
+        b=WpEpoZQZZ9PDYpfnO7sTpeHWy1slYQ9JUt3NCK1aXFPqPAfgRIhMG17DK5BIbefwnZ
+         XTJa2sVb5R7Q0QSQOIbgdnMLiE7s5EUcOvMb6SBm4BGKkp3GyOdpgHUQecn+OfJ69g6T
+         D0oN4rXaoeIC95gRUmz8yb88OyoF2pVKAQYpf/99OOta6zR3GEQouuSLwEnucsGgfBcK
+         1+PD99+YrsOC3ADcaz6X29SK2AYmrRnEO0I3gpuzsmsq2USB30qW199VcdxJDokH87Xo
+         z+uMixplN0sKEZbI4ddjIWG+6KT/utCJbfqDUHMQtpqtBclhBtz66aoef/LSBMdvCVQE
+         LsEg==
+X-Gm-Message-State: APjAAAXJEeqwlcABode0wWNjnYHJLLIX13+KNpT5XCM684ddDEvb8llt
+        Rj8DLDcNGPpl3HEJw/fXjxX2bQ==
+X-Google-Smtp-Source: APXvYqyIgEmmE4cqBkrJP3fc56zTUtO2PgG0o7WjOjV8vL0usOvWpBwWKxfFJk/mZ144VJ835dKMgA==
+X-Received: by 2002:adf:e705:: with SMTP id c5mr73459454wrm.270.1564414619334;
+        Mon, 29 Jul 2019 08:36:59 -0700 (PDT)
+Received: from steredhat (host122-201-dynamic.13-79-r.retail.telecomitalia.it. [79.13.201.122])
+        by smtp.gmail.com with ESMTPSA id p63sm13455498wmp.45.2019.07.29.08.36.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 08:36:58 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 17:36:56 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
+Message-ID: <20190729153656.zk4q4rob5oi6iq7l@steredhat>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-2-sgarzare@redhat.com>
+ <20190729095956-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1564385918.17211.6.camel@mhfsdcap03>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190729095956-mutt-send-email-mst@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 03:38:38PM +0800, Jianjun Wang wrote:
-> On Fri, 2019-06-28 at 15:34 +0800, Jianjun Wang wrote:
-> > MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
+On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
+> On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
+> > Since virtio-vsock was introduced, the buffers filled by the host
+> > and pushed to the guest using the vring, are directly queued in
+> > a per-socket list. These buffers are preallocated by the guest
+> > with a fixed size (4 KB).
 > > 
-> > The HW default value of its Device ID is invalid, fix its Device ID to
-> > match the hardware implementation.
+> > The maximum amount of memory used by each socket should be
+> > controlled by the credit mechanism.
+> > The default credit available per-socket is 256 KB, but if we use
+> > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
+> > buffers, using up to 1 GB of memory per-socket. In addition, the
+> > guest will continue to fill the vring with new 4 KB free buffers
+> > to avoid starvation of other sockets.
 > > 
-> > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> > ---
-> >  drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
-> >  include/linux/pci_ids.h                |  1 +
-> >  2 files changed, 19 insertions(+)
+> > This patch mitigates this issue copying the payload of small
+> > packets (< 128 bytes) into the buffer of last packet queued, in
+> > order to avoid wasting memory.
 > > 
-> > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> > index 80601e1b939e..e5e6740b635d 100644
-> > --- a/drivers/pci/controller/pcie-mediatek.c
-> > +++ b/drivers/pci/controller/pcie-mediatek.c
-> > @@ -73,6 +73,7 @@
-> >  #define PCIE_MSI_VECTOR		0x0c0
-> >  
-> >  #define PCIE_CONF_VEND_ID	0x100
-> > +#define PCIE_CONF_DEVICE_ID	0x102
-> >  #define PCIE_CONF_CLASS_ID	0x106
-> >  
-> >  #define PCIE_INT_MASK		0x420
-> > @@ -141,12 +142,16 @@ struct mtk_pcie_port;
-> >  /**
-> >   * struct mtk_pcie_soc - differentiate between host generations
-> >   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-> > + * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
-> > + * @device_id: Device ID which this host need to be fixed
-> >   * @ops: pointer to configuration access functions
-> >   * @startup: pointer to controller setting functions
-> >   * @setup_irq: pointer to initialize IRQ functions
-> >   */
-> >  struct mtk_pcie_soc {
-> >  	bool need_fix_class_id;
-> > +	bool need_fix_device_id;
-> > +	unsigned int device_id;
-> >  	struct pci_ops *ops;
-> >  	int (*startup)(struct mtk_pcie_port *port);
-> >  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-> > @@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
-> >  		writew(val, port->base + PCIE_CONF_CLASS_ID);
-> >  	}
-> >  
-> > +	if (soc->need_fix_device_id)
-> > +		writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
-> > +
-> >  	/* 100ms timeout value should be enough for Gen1/2 training */
-> >  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
-> >  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
-> > @@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
-> >  	.setup_irq = mtk_pcie_setup_irq,
-> >  };
-> >  
-> > +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
-> > +	.need_fix_class_id = true,
-> > +	.need_fix_device_id = true,
-> > +	.device_id = PCI_DEVICE_ID_MEDIATEK_7629,
-> > +	.ops = &mtk_pcie_ops_v2,
-> > +	.startup = mtk_pcie_startup_port_v2,
-> > +	.setup_irq = mtk_pcie_setup_irq,
-> > +};
-> > +
-> >  static const struct of_device_id mtk_pcie_ids[] = {
-> >  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
-> >  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
-> >  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
-> >  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
-> > +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
-> >  	{},
-> >  };
-> >  
-> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > index 70e86148cb1e..aa32962759b2 100644
-> > --- a/include/linux/pci_ids.h
-> > +++ b/include/linux/pci_ids.h
-> > @@ -2131,6 +2131,7 @@
-> >  #define PCI_VENDOR_ID_MYRICOM		0x14c1
-> >  
-> >  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
-> > +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
-> >  
-> >  #define PCI_VENDOR_ID_TITAN		0x14D2
-> >  #define PCI_DEVICE_ID_TITAN_010L	0x8001
+> > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 > 
-> Hi Bjorn & Lorenzo,
+> This is good enough for net-next, but for net I think we
+> should figure out how to address the issue completely.
+> Can we make the accounting precise? What happens to
+> performance if we do?
 > 
-> Is this patch ok or is there anything I need to fixed?
 
-We are getting to it shortly, thanks for your patience.
+In order to do more precise accounting maybe we can use the buffer size,
+instead of payload size when we update the credit available.
+In this way, the credit available for each socket will reflect the memory
+actually used.
 
-Lorenzo
+I should check better, because I'm not sure what happen if the peer sees
+1KB of space available, then it sends 1KB of payload (using a 4KB
+buffer).
+
+The other option is to copy each packet in a new buffer like I did in
+the v2 [2], but this forces us to make a copy for each packet that does
+not fill the entire buffer, perhaps too expensive.
+
+[2] https://patchwork.kernel.org/patch/10938741/
+
+
+Thanks,
+Stefano
