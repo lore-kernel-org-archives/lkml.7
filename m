@@ -2,123 +2,186 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB82C433FF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90679C41514
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEAF0206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B87206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:43:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ui5138LA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvWWSK0J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbfG2Bjb (ORCPT
+        id S1726425AbfG2BnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 21:39:31 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43224 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfG2Bjb (ORCPT
+        Sun, 28 Jul 2019 21:43:08 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40669 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfG2BnI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 21:39:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i189so27132053pfg.10
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jul 2019 18:39:30 -0700 (PDT)
+        Sun, 28 Jul 2019 21:43:08 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p184so27124856pfp.7;
+        Sun, 28 Jul 2019 18:43:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=c1uHsnX/WnSI8+586zLkoV7QQKmUDl0aRnKS/YZ6qok=;
-        b=Ui5138LAx1zch27e5gPKEmiSWQ+NzklokjKVFqbDa6+NKrrizvMsmt9IMLEyjY6IlU
-         NcTAeyYC/T7fHKXBVkquD46FoM0XbyvxFbY4/gluvDrn1vx3Y21WKT8SUleD0m+4tRuu
-         OWKUbWAWHvOgy6KgX6bNc+FnZIq9ttf+kyZwk/ksE2Cf5ut/iO5tJMo/ANyu/mGoxWKk
-         j6dWgdxUs3GpXKMCuSzB05gKBF/jpJVwX11RsfG/LMwuxmd0aDmqxGmTyjChKnkqCvJp
-         8z1CYkh2nIarGkUjjnnXGs+tTiKY7T1wRQV1wnlNUyVY3ayhIRIe6jR4iNLECPBqk6jn
-         VJ/w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LV39I9aLdwL8Ba7krSV4uBeXZ89IOyHpbCxzE7258B4=;
+        b=gvWWSK0JytSMopVhFA0NawbhUPQQPNyzNxYAQY5G00eOVqDZsp1Ys370zU7aDPBbFl
+         xz8/HU7B+7VUOD8bbMNLKx0/RGh6CVk8SomEfrbTI8MVnML3WIdGl/6sxgbSkDfsuJKP
+         1NCV1aFIE746ubZOX8jn8EOHuxcLwFljuQ6TuZSXX7oSa5BafoBzbPH/5aOvwxHC5BZL
+         Guh4Y+mCzhpYNnjl7vav69WJPc8xNCTkYwd9YuAAQpelRthTG8O1vDrELvg1epKzO9by
+         hVHn22fBNIcgeMl0fxI6fwHRil5gcImSufsi+2kILwaJp+uE89nwRNth2ucvxLjG4cgP
+         gCDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=c1uHsnX/WnSI8+586zLkoV7QQKmUDl0aRnKS/YZ6qok=;
-        b=DQ53fDZaEAb3YxqWWoADi7lguRblqXsSCqv8cJNxmmJQzYmWW9lMndx578Fdu5WFh+
-         Y3Eqwha0MV86TU6AfiWEpi5jFxpTUDnxIePN1fw40UJNateYkDoXcQ0fZdvYBNuDK0yy
-         wbRO6jEV1qTVpxm5rfsjl3/0hjuh0jTyb5LlhSFmOqnC8gxJoSj5EA6D2sBie58Vd5Yb
-         cJpTXKkdNXs5W3uvkTzbNV/jREdxQHU1t/rCiqzM+S/hLg3DV9vnymQXziEXT+PO3spm
-         spsC1jjj4g9YTJUtCMZxTQjXJYUtjSwW0/v6PkisqN1RbFyIjwZGJcyMZOoI1Wp3LfYh
-         vTjA==
-X-Gm-Message-State: APjAAAV05BBCZv5IIjYNrqlzTKpd+R8e/IOz7fwu2c5elcqq2sNnuOoM
-        5PCDBGT3Ba3nvR8t5F+EjWM=
-X-Google-Smtp-Source: APXvYqycYQSy4zkpEsmQu71+26qyTxUjbC0/UDcbpxafuc8TBJr+JD80Sx7p9BHNQ1ct8aFBsLHaTw==
-X-Received: by 2002:a17:90a:26e4:: with SMTP id m91mr109783963pje.93.1564364370481;
-        Sun, 28 Jul 2019 18:39:30 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id w197sm74139684pfd.41.2019.07.28.18.39.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Jul 2019 18:39:29 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 07:09:22 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Vatsala Narang <vatsalanarang@gmail.com>,
-        Jeeeun Evans <jeeeunevans@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Larry.Finger@lwfinger.net
-Subject: [PATCH] staging: rtl8723bs: core: Remove unneeded variables
- sgi_20m,sgi_40m and sgi_80m
-Message-ID: <20190729013922.GA5379@hari-Inspiron-1545>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LV39I9aLdwL8Ba7krSV4uBeXZ89IOyHpbCxzE7258B4=;
+        b=B33BXczhRQ+8SNiEMaZrWIOCyphpv2XVjeThAbz3nrK5HsJAK1Lez2csTAgBwYeO1z
+         1dOHZjAAzbyBTSVqyGMmgm1QyCbDmO2j/qRm5ZPhTmuMR3MMhPVfXnmNrz1LlyXJL+zQ
+         m1snLfoacu3n19lSzBgu4HJG7dcD+JCp8zaTbx5sXHMRkHMNPSHjh0vX6Ci6EQwrCCg+
+         DI26OWkc6hzefRlv6RJnkZDcJ8N6SgZ/UrN11tGs0wCG9VzexeWVhaUEwc5/gsMGbNMA
+         NVkijnh2OlZUlfn2Eq9rSJPgVsQTDQgLDtGoNVCDOy9kaiN4N7N+QD5TDTiQQVBb6JGo
+         vPNg==
+X-Gm-Message-State: APjAAAW2eH8TAkU93Xp7j1f4xa1M5uKCICz051tK8z46ZJFBf++H2NbN
+        Yht8XeXtp7GQYCblSlN7yB4=
+X-Google-Smtp-Source: APXvYqy33T1WT3c2ceVt49IN+W8TfL9YaK4sBZZ5C+bItnu4spucVXkt+KxG/Gn+mGavkkjYCGawMw==
+X-Received: by 2002:a17:90a:9bc5:: with SMTP id b5mr110329060pjw.109.1564364587501;
+        Sun, 28 Jul 2019 18:43:07 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id b6sm52386509pgq.26.2019.07.28.18.43.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 28 Jul 2019 18:43:06 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] iio: light: si1145: Use device-managed APIs
+Date:   Mon, 29 Jul 2019 09:43:01 +0800
+Message-Id: <20190729014301.13402-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-htpriv.sgi_* variables are of type u8 ,instead of storing them in local
-variables ,its better to read value directly from structure.
+Use device-managed APIs to simplify the code.
+The remove functions are redundant now and can
+be deleted.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+Changes in v2:
+  - Split v1 into two patches.
+  - Use devm_iio_trigger_register in probe_trigger,
+    delete redundant remove_trigger.
+  - Return devm_iio_device_register directly as a
+    minor optimization.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index b5dcb78..0690d5e 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -346,21 +346,18 @@ void _rtw_free_xmit_priv(struct xmit_priv *pxmitpriv)
- 
- u8 query_ra_short_GI(struct sta_info *psta)
- {
--	u8 sgi = false, sgi_20m = false, sgi_40m = false, sgi_80m = false;
--
--	sgi_20m = psta->htpriv.sgi_20m;
--	sgi_40m = psta->htpriv.sgi_40m;
-+	u8 sgi = false;
- 
- 	switch (psta->bw_mode) {
- 	case CHANNEL_WIDTH_80:
--		sgi = sgi_80m;
-+		sgi = false;
- 		break;
- 	case CHANNEL_WIDTH_40:
--		sgi = sgi_40m;
-+		sgi = psta->htpriv.sgi_40m;
- 		break;
- 	case CHANNEL_WIDTH_20:
- 	default:
--		sgi = sgi_20m;
-+		sgi = psta->htpriv.sgi_20m;
- 		break;
+ drivers/iio/light/si1145.c | 42 +++++---------------------------------
+ 1 file changed, 5 insertions(+), 37 deletions(-)
+
+diff --git a/drivers/iio/light/si1145.c b/drivers/iio/light/si1145.c
+index 6579d2418814..982bba0c54e7 100644
+--- a/drivers/iio/light/si1145.c
++++ b/drivers/iio/light/si1145.c
+@@ -1261,7 +1261,7 @@ static int si1145_probe_trigger(struct iio_dev *indio_dev)
+ 		return ret;
  	}
  
+-	ret = iio_trigger_register(trig);
++	ret = devm_iio_trigger_register(&client->dev, trig);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1271,16 +1271,6 @@ static int si1145_probe_trigger(struct iio_dev *indio_dev)
+ 	return 0;
+ }
+ 
+-static void si1145_remove_trigger(struct iio_dev *indio_dev)
+-{
+-	struct si1145_data *data = iio_priv(indio_dev);
+-
+-	if (data->trig) {
+-		iio_trigger_unregister(data->trig);
+-		data->trig = NULL;
+-	}
+-}
+-
+ static int si1145_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
+ {
+@@ -1332,7 +1322,8 @@ static int si1145_probe(struct i2c_client *client,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = iio_triggered_buffer_setup(indio_dev, NULL,
++	ret = devm_iio_triggered_buffer_setup(&client->dev,
++		indio_dev, NULL,
+ 		si1145_trigger_handler, &si1145_buffer_setup_ops);
+ 	if (ret < 0)
+ 		return ret;
+@@ -1340,23 +1331,12 @@ static int si1145_probe(struct i2c_client *client,
+ 	if (client->irq) {
+ 		ret = si1145_probe_trigger(indio_dev);
+ 		if (ret < 0)
+-			goto error_free_buffer;
++			return ret;
+ 	} else {
+ 		dev_info(&client->dev, "no irq, using polling\n");
+ 	}
+ 
+-	ret = iio_device_register(indio_dev);
+-	if (ret < 0)
+-		goto error_free_trigger;
+-
+-	return 0;
+-
+-error_free_trigger:
+-	si1145_remove_trigger(indio_dev);
+-error_free_buffer:
+-	iio_triggered_buffer_cleanup(indio_dev);
+-
+-	return ret;
++	return devm_iio_device_register(&client->dev, indio_dev);
+ }
+ 
+ static const struct i2c_device_id si1145_ids[] = {
+@@ -1371,23 +1351,11 @@ static const struct i2c_device_id si1145_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, si1145_ids);
+ 
+-static int si1145_remove(struct i2c_client *client)
+-{
+-	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+-
+-	iio_device_unregister(indio_dev);
+-	si1145_remove_trigger(indio_dev);
+-	iio_triggered_buffer_cleanup(indio_dev);
+-
+-	return 0;
+-}
+-
+ static struct i2c_driver si1145_driver = {
+ 	.driver = {
+ 		.name   = "si1145",
+ 	},
+ 	.probe  = si1145_probe,
+-	.remove = si1145_remove,
+ 	.id_table = si1145_ids,
+ };
+ 
 -- 
-2.7.4
+2.20.1
 
