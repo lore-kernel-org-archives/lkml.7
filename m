@@ -2,153 +2,125 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A91C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0363CC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82922070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:17:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="tFKJc9Yt"
+	by mail.kernel.org (Postfix) with ESMTP id D25E12070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387426AbfG2KRE (ORCPT
+        id S2387454AbfG2KRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:17:04 -0400
-Received: from mail.kapsi.fi ([91.232.154.25]:41637 "EHLO mail.kapsi.fi"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbfG2KRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:17:04 -0400
-X-Greylist: delayed 1870 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 06:17:03 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
-         s=20161220; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nAOqsxTyQ4gYltZdfhxaj3SXIvjncVO2sE1nkzwLk4E=; b=tFKJc9Yt/mc9zFIxobPi3ypDnT
-        FuFFk4dfGUY/bNKduZtIu8/UzABRB1Mha/OY/Ka8bOZirm+sTiODILWjX4eI+TPKltxOPPiQlbBWf
-        lcHn1Z0FzpIT4jJpnngoKPRCpZkJSiAYOKF0inIIvZbjXYs/JEN1xIMWhsW+oqqxsCRG8jjpVYtwH
-        xIu5UVDbY4tj1Vq8rYyxrZzG8FuW5l7NvTl6UJXLmzrim4oCDDlYgIVT73gKTNknPKxmV2BKUwywp
-        /lusWQQUCCBhcY3HRSvCHguQ35UYGPRHyFfrjCxbM/1CiWrqTaSa0O7WpHNTzhkMPxg/krGIShmVI
-        9u4ITH2A==;
-Received: from [193.209.96.43] (helo=[10.21.26.179])
-        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <cyndis@kapsi.fi>)
-        id 1hs2Dn-0007rJ-W0; Mon, 29 Jul 2019 12:45:36 +0300
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Lars Persson <lists@bofh.nu>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Mon, 29 Jul 2019 06:17:16 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39734 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387428AbfG2KRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:17:15 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 72AA6AD22FDC85C90763;
+        Mon, 29 Jul 2019 18:17:12 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
+ 18:17:02 +0800
+Subject: Re: [PATCH net-next 08/11] net: hns3: add interrupt affinity support
+ for misc interrupt
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        "tanhuazhong@huawei.com" <tanhuazhong@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "lipeng321@huawei.com" <lipeng321@huawei.com>,
+        "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>,
+        "salil.mehta@huawei.com" <salil.mehta@huawei.com>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190722101830.GA24948@apalos>
- <CADnJP=thexf2sWcVVOLWw14rpteEj0RrfDdY8ER90MpbNN4-oA@mail.gmail.com>
- <BN8PR12MB326661846D53AAEE315A7434D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <11557fe0-0cba-cb49-0fb6-ad24792d4a53@nvidia.com>
- <BN8PR12MB3266664ECA192E02C06061EED3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <BYAPR12MB3269A725AFDDA21E92946558D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <ab14f31f-2045-b1be-d31f-2a81b8527dac@nvidia.com>
- <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <2ad7bf21-1f1f-db0f-2358-4901b7988b7d@nvidia.com>
- <BYAPR12MB3269D050556BD51030DCDDFCD3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <8093e352-d992-e17f-7168-5afbd9d3fb3f@nvidia.com>
- <BYAPR12MB3269EC45ABAF8F279288B003D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <f3525260-c43f-c983-0b5b-34a83bd53283@nvidia.com>
-From:   Mikko Perttunen <cyndis@kapsi.fi>
-Message-ID: <299d1803-fc5c-9298-3d10-582e76b47a9e@kapsi.fi>
-Date:   Mon, 29 Jul 2019 12:45:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
+ <1563938327-9865-9-git-send-email-tanhuazhong@huawei.com>
+ <67b32cdc72c0be03622e78899ac518d807ca7b85.camel@mellanox.com>
+ <db2d081f-b892-b141-7fa5-44e66dd97eb9@huawei.com>
+ <fa9b747119c2e7acb1ef5f139c022402cd2c854d.camel@mellanox.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <6a1d85f1-cc6c-1f5a-38c4-e08915e3bc45@huawei.com>
+Date:   Mon, 29 Jul 2019 18:17:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-In-Reply-To: <f3525260-c43f-c983-0b5b-34a83bd53283@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <fa9b747119c2e7acb1ef5f139c022402cd2c854d.camel@mellanox.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 193.209.96.43
-X-SA-Exim-Mail-From: cyndis@kapsi.fi
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My understanding is that Tegra186 does not have DMA coherency, but 
-Tegra194 does.
-
-Mikko
-
-On 23.7.2019 16.34, Jon Hunter wrote:
-> 
-> On 23/07/2019 13:51, Jose Abreu wrote:
->> From: Jon Hunter <jonathanh@nvidia.com>
->> Date: Jul/23/2019, 12:58:55 (UTC+00:00)
->>
->>>
->>> On 23/07/2019 11:49, Jose Abreu wrote:
->>>> From: Jon Hunter <jonathanh@nvidia.com>
->>>> Date: Jul/23/2019, 11:38:33 (UTC+00:00)
+On 2019/7/27 7:18, Saeed Mahameed wrote:
+> On Thu, 2019-07-25 at 10:05 +0800, Yunsheng Lin wrote:
+>> On 2019/7/25 3:24, Saeed Mahameed wrote:
+>>> On Wed, 2019-07-24 at 11:18 +0800, Huazhong Tan wrote:
+>>>> From: Yunsheng Lin <linyunsheng@huawei.com>
 >>>>
->>>>>
->>>>> On 23/07/2019 11:07, Jose Abreu wrote:
->>>>>> From: Jon Hunter <jonathanh@nvidia.com>
->>>>>> Date: Jul/23/2019, 11:01:24 (UTC+00:00)
->>>>>>
->>>>>>> This appears to be a winner and by disabling the SMMU for the ethernet
->>>>>>> controller and reverting commit 954a03be033c7cef80ddc232e7cbdb17df735663
->>>>>>> this worked! So yes appears to be related to the SMMU being enabled. We
->>>>>>> had to enable the SMMU for ethernet recently due to commit
->>>>>>> 954a03be033c7cef80ddc232e7cbdb17df735663.
->>>>>>
->>>>>> Finally :)
->>>>>>
->>>>>> However, from "git show 954a03be033c7cef80ddc232e7cbdb17df735663":
->>>>>>
->>>>>> +         There are few reasons to allow unmatched stream bypass, and
->>>>>> +         even fewer good ones.  If saying YES here breaks your board
->>>>>> +         you should work on fixing your board.
->>>>>>
->>>>>> So, how can we fix this ? Is your ethernet DT node marked as
->>>>>> "dma-coherent;" ?
->>>>>
->>>>> TBH I have no idea. I can't say I fully understand your change or how it
->>>>> is breaking things for us.
->>>>>
->>>>> Currently, the Tegra DT binding does not have 'dma-coherent' set. I see
->>>>> this is optional, but I am not sure how you determine whether or not
->>>>> this should be set.
+> 
+> [...]
 >>>>
->>>>  From my understanding it means that your device / IP DMA accesses are coherent regarding the CPU point of view. I think it will be the case if GMAC is not behind any kind of IOMMU in the HW arch.
+>>>> +static void hclge_irq_affinity_notify(struct irq_affinity_notify
+>>>> *notify,
+>>>> +				      const cpumask_t *mask)
+>>>> +{
+>>>> +	struct hclge_dev *hdev = container_of(notify, struct hclge_dev,
+>>>> +					      affinity_notify);
+>>>> +
+>>>> +	cpumask_copy(&hdev->affinity_mask, mask);
+>>>> +	del_timer_sync(&hdev->service_timer);
+>>>> +	hdev->service_timer.expires = jiffies + HZ;
+>>>> +	add_timer_on(&hdev->service_timer, cpumask_first(&hdev-
+>>>>> affinity_mask));
+>>>> +}
 >>>
->>> I understand what coherency is, I just don't know how you tell if this
->>> implementation of the ethernet controller is coherent or not.
+>>> I don't see any relation between your misc irq vector and &hdev-
+>>>> service_timer, to me this looks like an abuse of the irq affinity
+>>>> API
+>>> to allow the user to move the service timer affinity.
 >>
->> Do you have any detailed diagram of your HW ? Such as blocks / IPs
->> connection, address space wiring , ...
+>> Hi, thanks for reviewing.
+>>
+>> hdev->service_timer is used to schedule the periodic work
+>> queue hdev->service_task， we want all the management work
+>> queue including hdev->service_task to bind to the same cpu
+>> to improve cache and power efficiency, it is better to move
+>> service timer affinity according to that.
+>>
+>> The hdev->service_task is changed to delay work queue in
+>> next patch " net: hns3: make hclge_service use delayed workqueue",
+>> So the affinity in the timer of the delay work queue is automatically
+>> set to the affinity of the delay work queue, we will move the
+>> "make hclge_service use delayed workqueue" patch before the
+>> "add interrupt affinity support for misc interrupt" patch, so
+>> we do not have to set service timer affinity explicitly.
+>>
+>> Also, There is there work queues(mbx_service_task, service_task,
+>> rst_service_task) in the hns3 driver, we plan to combine them
+>> to one or two workqueue to improve efficiency and readability.
+>>
 > 
-> Yes, this can be found in the Tegra X2 Technical Reference Manual [0].
-> Unfortunately, you need to create an account to download it.
+> So just to make it clear, you have 3 deferred works, 2 are triggered by
+> the misc irq and 1 is periodic, you want them all on the same core and
+> you want to control their affinity via the irq affinity ? for works #1
+> and  #2 you get that for free since the irq is triggering them, but for
+> work #3 (the periodic one) you need to manually move it when the irq
+> affinity changes.
+
+Yes, You are right.
+
 > 
-> Jon
+> I guess i am ok with this, since moving the irq affinity isn't only
+> required by the periodic work but also for the other works that the irq
+> is actually triggering (so it is not an actual abuse, sort of .. )
 > 
-> [0] https://developer.nvidia.com/embedded/dlc/parker-series-trm
 > 
+> 
+
