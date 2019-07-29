@@ -5,50 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4259AC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E55C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132FA21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B6521655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429388;
-	bh=f+8Ftz2vLwSHvraHowlMQIfQXhGubVSDurcWm4TMKqw=;
+	s=default; t=1564429391;
+	bh=L/0UbfsQuSYVVoqqmZY9l7Kzvao87zU9df+ydNE1jbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nCbfPsDyGBL0XZ9YcFY4OOrR/kx6YGHynhtKqfeUavtPSyNHysyFNS0M44aujGSCs
-	 Rhy9FudA8VLKYSSdE1grKRQ1jy3KdI3gqBz1XG++gy2X/OrYph9NXMe+spb4N4dauu
-	 rXdCWBWUvG54L48Qj83l8Xsdal778HXf8lE+b9eM=
+	b=tM/G2YpZy0oXlf7XQRv9bTHsvFlOM2skFqnqITM0kxz7TftK9e5BOQL4Q+5g4eVfU
+	 OoEVJaoRKDxHRI6l/euMcsaHbPBEXXtALqVsSyyx0ZSYdgNS+nK2nKVUPiUP67S+Gr
+	 Xu/Gt4hnKNWSreuKSilLXqzBQuDHwFf9SZySnH9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389600AbfG2TnH (ORCPT
+        id S2389610AbfG2TnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:43:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59168 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:43:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388798AbfG2TnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:43:05 -0400
+        id S2389599AbfG2TnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:43:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C476421655;
-        Mon, 29 Jul 2019 19:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56A162054F;
+        Mon, 29 Jul 2019 19:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429384;
-        bh=f+8Ftz2vLwSHvraHowlMQIfQXhGubVSDurcWm4TMKqw=;
+        s=default; t=1564429386;
+        bh=L/0UbfsQuSYVVoqqmZY9l7Kzvao87zU9df+ydNE1jbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmGN1XwGpaOCH9F0bUg5+/BIroWTeT2n1FxVYO/knefmaVgXsTR1yi1FbUCTBLBpI
-         Q2TGz0p7xNzmKMo95JW1Ku1hkfhHJ7Af0Qf6n3S88cHylLAxnVSx7NX70BFhzwOiRy
-         Qch/gN4F0lW+Az7CA2rN/Bd4wrsjxEsKv23/xfS4=
+        b=hMiuzRTFKK9Vw6fhgJgE5lJwmCRTQ8g2xAZYoUdGka5SCRMoVfmcmkEBeDmdxMOu0
+         DXxEN85mmbefebF3BFl2xQjonuJYR62HNRn/bCH1uzVwAAbAvLbXcSxNdodp+X2FB9
+         GbDro1b9WfSAKnh42/vDbX1JMnDWdUczkqkBU8lg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Taranov <konstantin.taranov@inf.ethz.ch>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Inki Dae <inki.dae@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 073/113] RDMA/rxe: Fill in wc byte_len with IB_WC_RECV_RDMA_WITH_IMM
-Date:   Mon, 29 Jul 2019 21:22:40 +0200
-Message-Id: <20190729190712.935561329@linuxfoundation.org>
+Subject: [PATCH 4.19 082/113] sh: prevent warnings when using iounmap
+Date:   Mon, 29 Jul 2019 21:22:49 +0200
+Message-Id: <20190729190715.130329828@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -61,59 +68,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bdce1290493caa3f8119f24b5dacc3fb7ca27389 ]
+[ Upstream commit 733f0025f0fb43e382b84db0930ae502099b7e62 ]
 
-Calculate the correct byte_len on the receiving side when a work
-completion is generated with IB_WC_RECV_RDMA_WITH_IMM opcode.
+When building drm/exynos for sh, as part of an allmodconfig build, the
+following warning triggered:
 
-According to the IBA byte_len must indicate the number of written bytes,
-whereas it was always equal to zero for the IB_WC_RECV_RDMA_WITH_IMM
-opcode, even though data was transferred.
+  exynos7_drm_decon.c: In function `decon_remove':
+  exynos7_drm_decon.c:769:24: warning: unused variable `ctx'
+    struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Konstantin Taranov <konstantin.taranov@inf.ethz.ch>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+The ctx variable is only used as argument to iounmap().
+
+In sh - allmodconfig CONFIG_MMU is not defined
+so it ended up in:
+
+\#define __iounmap(addr)	do { } while (0)
+\#define iounmap		__iounmap
+
+Fix the warning by introducing a static inline function for iounmap.
+
+This is similar to several other architectures.
+
+Link: http://lkml.kernel.org/r/20190622114208.24427-1-sam@ravnborg.org
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Inki Dae <inki.dae@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_resp.c  | 5 ++++-
- drivers/infiniband/sw/rxe/rxe_verbs.h | 1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ arch/sh/include/asm/io.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
-index 4111b798fd3c..681d8e0913d0 100644
---- a/drivers/infiniband/sw/rxe/rxe_resp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_resp.c
-@@ -435,6 +435,7 @@ static enum resp_states check_rkey(struct rxe_qp *qp,
- 			qp->resp.va = reth_va(pkt);
- 			qp->resp.rkey = reth_rkey(pkt);
- 			qp->resp.resid = reth_len(pkt);
-+			qp->resp.length = reth_len(pkt);
- 		}
- 		access = (pkt->mask & RXE_READ_MASK) ? IB_ACCESS_REMOTE_READ
- 						     : IB_ACCESS_REMOTE_WRITE;
-@@ -859,7 +860,9 @@ static enum resp_states do_complete(struct rxe_qp *qp,
- 				pkt->mask & RXE_WRITE_MASK) ?
- 					IB_WC_RECV_RDMA_WITH_IMM : IB_WC_RECV;
- 		wc->vendor_err = 0;
--		wc->byte_len = wqe->dma.length - wqe->dma.resid;
-+		wc->byte_len = (pkt->mask & RXE_IMMDT_MASK &&
-+				pkt->mask & RXE_WRITE_MASK) ?
-+					qp->resp.length : wqe->dma.length - wqe->dma.resid;
+diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
+index 98cb8c802b1a..0ae60d680000 100644
+--- a/arch/sh/include/asm/io.h
++++ b/arch/sh/include/asm/io.h
+@@ -371,7 +371,11 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
  
- 		/* fields after byte_len are different between kernel and user
- 		 * space
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-index 332a16dad2a7..3b731c7682e5 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-@@ -212,6 +212,7 @@ struct rxe_resp_info {
- 	struct rxe_mem		*mr;
- 	u32			resid;
- 	u32			rkey;
-+	u32			length;
- 	u64			atomic_orig;
+ #define ioremap_nocache	ioremap
+ #define ioremap_uc	ioremap
+-#define iounmap		__iounmap
++
++static inline void iounmap(void __iomem *addr)
++{
++	__iounmap(addr);
++}
  
- 	/* SRQ only */
+ /*
+  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
 -- 
 2.20.1
 
