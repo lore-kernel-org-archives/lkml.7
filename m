@@ -2,154 +2,120 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFD0C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F3BC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8749C2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE361206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="CTDMp8e5";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="SGt0ltx6"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Pyv87Ytl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbfG2JdB (ORCPT
+        id S1727963AbfG2Jdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:33:01 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:43288 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727500AbfG2JdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:33:01 -0400
-Received: by mail.z3ntu.xyz (Postfix, from userid 182)
-        id 12B98C71AA; Mon, 29 Jul 2019 09:32:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1564392778; bh=HN+MbnexiLAyOK7zOuZGtlCRFx/AHgiy8HDEo75eHGs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=CTDMp8e5BBkNLBABgUNlMn7Tfx5A14+WTPdGO2NZNCgpDr0Dwz4yUWIcBhTm5uqJz
-         Ha7+huWIML1t2ir8MiuGMm0q4L2Grg17KtzmvIBR7tTj4MftwXgcs/8mIncfcOdwzS
-         S9/ZaF26D6rIdkrdLQWZGiwSlXiASvqEcGxv8554=
-Received: from g550jk.localnet (80-110-121-20.cgn.dynamic.surfer.at [80.110.121.20])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 31A56C718B;
-        Mon, 29 Jul 2019 09:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1564392774; bh=HN+MbnexiLAyOK7zOuZGtlCRFx/AHgiy8HDEo75eHGs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=SGt0ltx66MUUflBY5dI2vSOMoR+ux/nl3JmLfiLedlCIFimmgOq0/PrS5bybyu2wa
-         Ss+SqKbdnfwUIn7Bpjyt8MdJrgW4qLjm5FTc/1NhNxSb8pzYFk83c8R30DTd9JnHyQ
-         OoaXjRsN3WL6t86es7kXdvJdVEiVXHFoybvvk9eQ=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-kernel@vger.kernel.org
-Cc:     Brian Masney <masneyb@onstation.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH 00/15] thermal: qcom: tsens: Add interrupt support
-Date:   Mon, 29 Jul 2019 11:32:52 +0200
-Message-ID: <2123341.TWUfUUIiFt@g550jk>
-In-Reply-To: <20190729090735.GA897@onstation.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org> <CAHLCerNay31+RNQvQZyxMMVyb1mLLfN5BoZbz-M+bMqbmbYwtA@mail.gmail.com> <20190729090735.GA897@onstation.org>
+        Mon, 29 Jul 2019 05:33:39 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:46481 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfG2Jdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 05:33:39 -0400
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x6T9XVJ7003071;
+        Mon, 29 Jul 2019 18:33:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6T9XVJ7003071
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564392812;
+        bh=GbQD+NQzpNYdvCeXSDoU44vwY5qR02vwvWZY2Y2V8Xs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Pyv87YtlEC8J7FRdnY4xxIHsdzjGj9PzI0JEIkvXnzAS/MWQTFI4nAFEivuneIDmR
+         0VLUO+nD1Tb1oi9Ey2ClOsrsmehhrfeXg4oTynbbCcXP146gUORQlifnZNgUbYWLjL
+         qeX0WVdtm6v7cXg/Pvdcf1OrC0UA1jtDsVEj3mjJihFWn1ggU+kbwvUkwfNkKxCekz
+         e7Jz7lVUu2JtzUHNBO3wwxvlJzffOXM/t3QbS/twIsUCDBkT4aEvzatDVXh/LKUh8b
+         LRHvgfX+gZECWgmhL/WMtBNQ1bDtSRjX0IzhGoHwvxWUCMAtOSMlqWwBOuT4WbZxVE
+         zriJGpygB7KkA==
+X-Nifty-SrcIP: [209.85.222.44]
+Received: by mail-ua1-f44.google.com with SMTP id z13so23705297uaa.4;
+        Mon, 29 Jul 2019 02:33:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAXa7oihszkzxr6aJpBkKC4DlW/ja70oh535GEmCAdmoS+liaED3
+        B0p7rvVHrvaMDbClHQ+H/NgaeaSa9NR+qKYuGyU=
+X-Google-Smtp-Source: APXvYqw4MkB8nxsg4qaDoFhTrvHPu/otiN3CkYvB5SuPJDtu/q2o9OMeaQMSZ/nc3rEooE+2IVrLlNRPv6jxI0Jcl3o=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr67487725uag.40.1564392811271;
+ Mon, 29 Jul 2019 02:33:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2004695.fh42H4uLbJ"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+References: <20190714152817.24693-1-efremov@linux.com> <20190728100906.18847-1-efremov@linux.com>
+ <20190729151351.24f9eeb9@canb.auug.org.au> <e2b5607f-0f74-41c6-a83d-5a22d6828778@linux.com>
+In-Reply-To: <e2b5607f-0f74-41c6-a83d-5a22d6828778@linux.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 29 Jul 2019 18:32:55 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATFKv=gm=Q8_0Xqjq4NAb-FL59xY6C3VQ3RXq3NaP2=jQ@mail.gmail.com>
+Message-ID: <CAK7LNATFKv=gm=Q8_0Xqjq4NAb-FL59xY6C3VQ3RXq3NaP2=jQ@mail.gmail.com>
+Subject: Re: [PATCH] modpost: check for static EXPORT_SYMBOL* functions
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart2004695.fh42H4uLbJ
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+On Mon, Jul 29, 2019 at 6:16 PM Denis Efremov <efremov@linux.com> wrote:
+>
+> > Just a reminder that some of us (just me?) do well over 100+ builds per
+> > day ...  if this can be optimised some what that would be good.
+>
+> These measurements for the worst case (allmodconfig). Is it possible to
+> measure the slowdown in your case? How it will perform on your typical
+> workflow?
+>
+> Looks like it is possible to optimize it, but I need some hints from
+> Masahiro on how to do it properly. Because I don't know how to match
+> __ksymtab_<symbol> with the <symbol> without an additional loop.
 
-On Montag, 29. Juli 2019 11:07:35 CEST Brian Masney wrote:
-> On Sat, Jul 27, 2019 at 12:58:54PM +0530, Amit Kucheria wrote:
-> > On Fri, Jul 26, 2019 at 4:59 PM Brian Masney <masneyb@onstation.org> wrote:
-> > > On Fri, Jul 26, 2019 at 04:40:16PM +0530, Amit Kucheria wrote:
-> > > > How well does cpufreq work on 8974? I haven't looked at it yet but
-> > > > we'll need it for thermal throttling.
-> > > 
-> > > I'm not sure how to tell if the frequency is dynamically changed during
-> > > runtime on arm. x86-64 shows this information in /proc/cpuinfo. Here's
-> > 
-> > > the /proc/cpuinfo on the Nexus 5:
-> > Nah. /proc/cpuinfo won't show what we need.
-> > 
-> > Try the following:
-> > 
-> > $ grep "" /sys/devices/system/cpu/cpufreq/policy?/*
-> > 
-> > More specifically, the following files have the information you need.
-> > Run watch -n1 on them.
-> > 
-> > $ grep "" /sys/devices/system/cpu/cpufreq/policy?/scaling_*_freq
-> 
-> There's no cpufreq directory on msm8974:
-> 
->     # ls -1 /sys/devices/system/cpu/
->     cpu0
->     cpu1
->     cpu2
->     cpu3
->     cpuidle
->     hotplug
->     isolated
->     kernel_max
->     modalias
->     offline
->     online
->     possible
->     power
->     present
->     smt
->     uevent
-> 
-> I'm using qcom_defconfig.
-> 
-> Brian
+Right.
+This is not feasible without an additional loop
+since we put only exported symbols into the hash table.
 
-Hi Brian,
-cpufreq isn't supported on msm8974 yet.
-I have these patches [0] in my tree but I'm not sure they work correctly, but I haven't tested much with them. Feel free to try them on hammerhead.
 
-Luca
+Perhaps, we could put every symbol into the hash table
+so that we can quickly look-up <symbol> from __ksymtab_<symbol>,
+but it would consume lots of memory.
 
-[0] https://github.com/z3ntu/linux/compare/b0917f53ada0e929896a094b451219cd8091366e...6459ca6aff498c9d12acd35709b4903effc4c3f8
+So, I think the implementation is this patch is good enough.
 
---nextPart2004695.fh42H4uLbJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE66ocILd+OiPORlvAOY2pEqPLBhkFAl0+vUQACgkQOY2pEqPL
-BhlwxQ/9FYvDo8UHyQXIQVJJGe70bpy3b2Ea/66omuwaw0BLmetJe2PvQq9IsiVD
-TV60M8z4yQdRLp2P3YKQWYg7z3dNRM2mVxX11KfrXdI9rM7xqF+VFwZ21qUY+fht
-canQPM1Ln11OJQaZ0fhrH1j9c6fbJ0DoQ3C4AG8CKxzRGIu8FPmWc6XObbxOhEYG
-pc3Dy6i0NvldNtgKrxiZ5e1YAjyqdpiKcsw5ZM4xdohcmNj7dLLC6BMebpxzzXRW
-NijyZsH9TJkjqLTGT7N7J7jQcEFhpgt0L+HrZOpcKncNpCAxVQDVWezI1AseFIuQ
-ZsYjG+QKay+JCfZ3AmwPPVpgm9I+yB3ywzYytb22nrsIX1WzKd2qv1Q7HhNYrJfv
-Nar7n7ecAi3cd7wxANrKTRn7FB3hcyIOmwXcoaeTxDRqtPqv6bbXiUGV5uaN2sd3
-IHK1XnipnttdfaOnlGW/9JFngiMN6mmlENPiTLL+TMlaCBphOhe302bpK6FWcHI+
-AQOXs/cDuYRfH16h/ArfrlnFl6L7Va6MQhKQxOFkhf/NorbJBYcA52E+bQelOChd
-Ud6cIOLCIZa64ohYrRZVB/Il8PyC8vl4o+buainb6YUC5yBKxVHzP3Gd2lHboh5T
-Gls7AeMsZNULixostOPRdA/KpwO72ePeqU2MtLi577P3qIu3uj4=
-=Ia3N
------END PGP SIGNATURE-----
-
---nextPart2004695.fh42H4uLbJ--
+> Introduce another hash table?
+>
+> The first loop from this patch could traverse only the exported symbols
+> instead of all symbols. But in this case, I don't know how to break
+> early from the loop because there can be many symbols with the same name
+> but with the different scope (static/non-static).
+>
+> For example, ring_buffer_size:
+> kernel/trace/ring_buffer.c
+> 4334:unsigned long ring_buffer_size(struct ring_buffer *buffer, int cpu)
+> 4347:EXPORT_SYMBOL_GPL(ring_buffer_size);
+> And
+> drivers/usb/misc/ldusb.c
+> 125:static int ring_buffer_size = 128;
+>
+> Or for, nfs4_disable_idmapping:
+> fs/nfs/super.c
+> 2920:bool nfs4_disable_idmapping = true;
+> 2930:EXPORT_SYMBOL_GPL(nfs4_disable_idmapping);
+> fs/nfsd/nfs4idmap.c
+> 48:static bool nfs4_disable_idmapping = true;
 
 
 
+
+
+-- 
+Best Regards
+Masahiro Yamada
