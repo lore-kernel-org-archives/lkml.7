@@ -2,112 +2,157 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D06AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F1CC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F97A206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:23:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="d5BbKW8/"
+	by mail.kernel.org (Postfix) with ESMTP id 9D42F20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfG2QXA (ORCPT
+        id S1728901AbfG2QYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:23:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42136 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727576AbfG2QW7 (ORCPT
+        Mon, 29 Jul 2019 12:24:35 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41483 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728487AbfG2QYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:22:59 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t132so28501981pgb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:22:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=TGe/geZ87qC/Bj1IMgqU+ytXYrP/0N7tQMUhQt/p3/s=;
-        b=d5BbKW8/plsBM1AKOfuFUhf26MKZlqMYSKZDr8YVVWH1IQPUij8aMiPu4C+K9FSEMO
-         r4nAW5vgRlXPfAiJoR2Mo/SVuNnvyA+9FpLZefF+PeC8iy3gma6OYYB3emW4chRNY+Oi
-         Up2xrTvtE4xPfvotTloTBiJcshYpwNAdYxWuzPcg8qsDe+cMHsRul3r18mDjwMymD2pr
-         EllcF47OUaf0ugNxSYdeljZCTi/tC4FKHS14+RTLb+YtgIJuVTtnlLNx3WIh2aZHvOB5
-         xWHx/cfPosBIEtg1/8Sq9RROEL8NTq3owgj/7WE/vEEf0dPBKloa07fUa0FPY98fAIeU
-         SgCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=TGe/geZ87qC/Bj1IMgqU+ytXYrP/0N7tQMUhQt/p3/s=;
-        b=E1J0nE7d/7y5+pZBAZeB8Q2mCiHL5rQTZ5PMdIUhLxutuvIV/iHqwlOXe6XP5TKtgy
-         HBcCevtb96GJWcQ8e65Rpcs4GevP6e/xtx0RYAEZT6XZ03veZXZUJ2bW38oumE+TKlzx
-         JsjOFXMxbjOHxah0AUYCZVGhpPqHEXP/i2ymsRrNDxqMHF3iI4/jgz1EFzgmC3hR3BvC
-         1xLdTKF1fkq96HYiXedw0r/+Gw2yuRsJirqtozxj+WFHnxYplDQAkA0yAkpaB+5dSE7b
-         XWasmyY6MfPPRohNEbMHHa70+2ssxz2TKIWCY8U/udsLtRN80XCxAeJZQCgzwIm9oZAh
-         1tZg==
-X-Gm-Message-State: APjAAAXMazfyu1oRGQ3US9R4NyfVPo9AJiXAUy0hd5OdqNpFzfkwc81h
-        vxczrgaumD3wCHao4aMKAruo+mnHo8g=
-X-Google-Smtp-Source: APXvYqxa3zdBmZyR2hRDHMLO+UBzY5e8eP5A8amqoK/P8m6Ef0NEtSeTPeXrCXXju44jDTKGgVZhvg==
-X-Received: by 2002:a65:6256:: with SMTP id q22mr104646436pgv.408.1564417379277;
-        Mon, 29 Jul 2019 09:22:59 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b041:eebe:98d2:d02:46c3:a133? ([2600:1010:b041:eebe:98d2:d02:46c3:a133])
-        by smtp.gmail.com with ESMTPSA id f27sm45266394pgm.60.2019.07.29.09.22.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 09:22:58 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2] sched/core: Don't use dying mm as active_mm of kthreads
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16F203)
-In-Reply-To: <20190729150338.GF31398@hirez.programming.kicks-ass.net>
-Date:   Mon, 29 Jul 2019 09:22:56 -0700
-Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>, Rik van Riel <riel@surriel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D6DB6BFE-BD85-4329-B313-5D84539CD2FD@amacapital.net>
-References: <20190727171047.31610-1-longman@redhat.com> <20190729085235.GT31381@hirez.programming.kicks-ass.net> <4cd17c3a-428c-37a0-b3a2-04e6195a61d5@redhat.com> <20190729150338.GF31398@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
+        Mon, 29 Jul 2019 12:24:35 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hs8Rq-0008EM-0Y; Mon, 29 Jul 2019 18:24:30 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hs8Ro-000620-Ls; Mon, 29 Jul 2019 18:24:28 +0200
+Date:   Mon, 29 Jul 2019 18:24:28 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Message-ID: <20190729162428.bxuzgxg5sjqptlbp@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <20190726184045.14669-5-jernej.skrabec@siol.net>
+ <20190729064030.7uenld2kbof45zti@pengutronix.de>
+ <223488703.0I5IR7NXoI@jernej-laptop>
+ <20190729160723.am3cs5pasi22pibi@pengutronix.de>
+ <CAGb2v66C=ghjck6rxTg6Vt4xN2DcXntzVOa=KJWh98KRjkhnHQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGb2v66C=ghjck6rxTg6Vt4xN2DcXntzVOa=KJWh98KRjkhnHQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
+On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
+> On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
+> > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König
+> > > napisal(a):
+> > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
+> > > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
+> > > > > sun4i_pwm_single_bypass = {>
+> > > > >   .npwm = 1,
+> > > > >
+> > > > >  };
+> > > > >
+> > > > > +static const struct sun4i_pwm_data sun50i_pwm_dual_bypass_clk_rst = {
+> > > > > + .has_bus_clock = true,
+> > > > > + .has_prescaler_bypass = true,
+> > > > > + .has_reset = true,
+> > > > > + .npwm = 2,
+> > > > > +};
+> > > > > +
+> > > > >
+> > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
+> > > > >
+> > > > >   {
+> > > > >
+> > > > >           .compatible = "allwinner,sun4i-a10-pwm",
+> > > > >
+> > > > > @@ -347,6 +354,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] =
+> > > > > {
+> > > > >
+> > > > >   }, {
+> > > > >
+> > > > >           .compatible = "allwinner,sun8i-h3-pwm",
+> > > > >           .data = &sun4i_pwm_single_bypass,
+> > > > >
+> > > > > + }, {
+> > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
+> > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
+> > > >
+> > > > If you follow my suggestion for the two previous patches, you can just
+> > > > use:
+> > > >
+> > > >     compatible = "allwinner,sun50i-h6-pwm", "allwinner,sun5i-a10s-pwm";
+> > > >
+> > > > and drop this patch.
+> > >
+> > > Maxime found out that it's not compatible with A10s due to difference in bypass
+> > > bit, but yes, I know what you mean.
+> > >
+> > > Since H6 requires reset line and bus clock to be specified, it's not compatible
+> > > from DT binding side. New yaml based binding must somehow know that in order
+> > > to be able to validate DT node, so it needs standalone compatible. However,
+> > > depending on conclusions of other discussions, this new compatible can be
+> > > associated with already available quirks structure or have it's own.
+> >
+> > I cannot follow. You should be able to specify in the binding that the
+> > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
+> > without a reset line and bus clock also verifies, but this doesn't
+> > really hurt (and who knows, maybe the next allwinner chip needs exactly
+> > this).
+> 
+> It is not optional. It will not work if either the clocks or reset controls
+> are missing. How would these be optional anyway? Either it's connected and
+> thus required, or it's not and therefore should be omitted from the
+> description.
 
-> On Jul 29, 2019, at 8:03 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
->> On Mon, Jul 29, 2019 at 10:51:51AM -0400, Waiman Long wrote:
->>> On 7/29/19 4:52 AM, Peter Zijlstra wrote:
->>>> On Sat, Jul 27, 2019 at 01:10:47PM -0400, Waiman Long wrote:
->>>> It was found that a dying mm_struct where the owning task has exited
->>>> can stay on as active_mm of kernel threads as long as no other user
->>>> tasks run on those CPUs that use it as active_mm. This prolongs the
->>>> life time of dying mm holding up memory and other resources like swap
->>>> space that cannot be freed.
->>> Sure, but this has been so 'forever', why is it a problem now?
->>=20
->> I ran into this probem when running a test program that keeps on
->> allocating and touch memory and it eventually fails as the swap space is
->> full. After the failure, I could not rerun the test program again
->> because the swap space remained full. I finally track it down to the
->> fact that the mm stayed on as active_mm of kernel threads. I have to
->> make sure that all the idle cpus get a user task to run to bump the
->> dying mm off the active_mm of those cpus, but this is just a workaround,
->> not a solution to this problem.
->=20
-> The 'sad' part is that x86 already switches to init_mm on idle and we
-> only keep the active_mm around for 'stupid'.
->=20
-> Rik and Andy were working on getting that 'fixed' a while ago, not sure
-> where that went.
+[Just arguing about the clock here, the argumentation is analogous for
+the reset control.]
 
-I thought the current status was that we don=E2=80=99t always switch to init=
-_mm on idle and instead we use a fancier and actually correct flushing routi=
-ne that only flushed idle CPUs when pagetables are freed.  I still think we s=
-hould be able to kill active_mm in favor of explicit refcounting in the arch=
- code.=
+From the driver's perspective it's optional: There are devices with and
+without a bus clock. This doesn't mean that you can just ignore this
+clock if it's specified. It's optional in the sense "If dt doesn't
+specify it, then assume this is a device that doesn't have it and so you
+don't need to handle it." but not in the sense "it doesn't matter if
+you handle it or not.".
+
+Other than that I'm on your side. So for example I think it's not
+optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
+devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
+because this hides exactly the kind of problem you point out here.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
