@@ -2,109 +2,168 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E162C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFA3C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1E42073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F3620C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRwGlQTb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+0Hj67X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbfG2TSK (ORCPT
+        id S1729356AbfG2TTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:18:10 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36330 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729315AbfG2TSK (ORCPT
+        Mon, 29 Jul 2019 15:19:50 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40467 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729141AbfG2TTu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:18:10 -0400
-Received: by mail-io1-f68.google.com with SMTP id o9so18949813iom.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 12:18:10 -0700 (PDT)
+        Mon, 29 Jul 2019 15:19:50 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r1so63062876wrl.7;
+        Mon, 29 Jul 2019 12:19:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fkNhqmWyxRYv5Kdfb5HpWhEVzT1gnAMwAelRd/BmI88=;
-        b=JRwGlQTbHXYqHAf8W32La/6QQeE5VTgq2DtbFa/+2ygIuaZI7jENRSdi5GU9I11yqm
-         C7CybBUDK4Rb5/31p8FYbL9luLdLCLLJ/+80tCnvSxVHp5a9rhlT/sfaHb4pyNqCUk9g
-         MfHaxe22qMlof1s8ExD5ILbRslPUcPi6NJJXX3yZlZ6/FlIXMENgk+QoohcfAY2infu4
-         8SY5z0MTBqbpI5B65gd3f/kBXBe2WV3Zlpu9RGYcsGiBOrWFboCMS+DH9cvDlP448X/j
-         rL8BZg3qtalU8KG8IkFRer/qIlBPdTcYgkaxvXqhOzaXrNO/r4Bx6enkWweTtxaXoja5
-         1G4g==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IC6AhNaUochbr8eNg202VjmvgNDySHaGSRtYPT5r/sM=;
+        b=R+0Hj67XY9BrfvpMkvSqIevAupXwChaHlUgYHXqCsDnLscnmXsXiOYFGulz5gUva06
+         FMymicoOHogtuo/yX3rPEtxA9ZSayDRa/8OBEqoouqkMwL8HRBRiS7SYYi5OjDTTfaUd
+         rZwgw0zgdvaxxJFJgGLnYsdQyLYSZkO4s31EbmZlyGiFcssqMnow2BGtpZ5bTJ/wVuXI
+         /LuptZV3zLtv3yFrfUo0dZo7XPYE3lO/rqJL/rYl5G3Oo4457RHak75ruVXYXeLFp2a7
+         FPsI4PfccYTuaWqwXn38BkK0k9/9luuNd1pyb9mu1LQ/+Ee5/50FirBg4dtgpUbxJKeU
+         mZxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fkNhqmWyxRYv5Kdfb5HpWhEVzT1gnAMwAelRd/BmI88=;
-        b=hcBHo0RcUuoLTds7L24B0kOGbkptNvROgdJYlABqCIDmji2GT0lMgkw9CukAI6sX6b
-         9oqVeVlyry6FpYHTHKfwAFQmDkeXwVDnizADFWwk9ndDUFKSVCn68C0kNCRG0oHxBAnZ
-         PPlHpP/YsSfuhPdKxxgsFsNe6NQM9Q2CLDoJtU2HNEt5IqjZLnq1F7bjjwn5BhRygigW
-         zYGQCmNkKVq7NZQmW9m/i3odDz7rDFLJw4zpYb6WtgJ70//+INXUPhdJ+08vsKnlVoDZ
-         heyVJ/NQYVdaU83IbXplpyc6uI83YCwZpLW2YDuBHKOL6plfMnDz1zif74riD8DYRNOl
-         LMyQ==
-X-Gm-Message-State: APjAAAWcga2umPbBqaqb9Xj7bh+fHC2Jt3oN1uCSiqMUC5m2RzHIFjjn
-        PJJmWCcN5w0lWt8Fp+cQMQ5c9uEV2zv16Hwycq0=
-X-Google-Smtp-Source: APXvYqw8HF/0j9zalspb+6UnLzunuTJNOIWoe/Ex7/Lsq0Lh+rYXBuLRdD0RRoKNSDg6amjVgEYC8TKYU7Q8x/jHbUY=
-X-Received: by 2002:a5e:de0d:: with SMTP id e13mr3557196iok.144.1564427889720;
- Mon, 29 Jul 2019 12:18:09 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=IC6AhNaUochbr8eNg202VjmvgNDySHaGSRtYPT5r/sM=;
+        b=M52VESZZqHyhCRel8s8EH7ukskwCRMybMUSFISssnuJaHjl7toLvCsD59/JNG7nc6q
+         zQvf4XVjhkhagSMSzK9+gB1ZkMOjeR0n9eXJvCILYNcQbEmSXwYBxWwmtpU2DSbF/zxN
+         C+bneH4ZPPK1yO5a2e8zGNXpzMbTJajnle2IxgTHDkHzl0q0mOPhue+awYtH/eM/VoUA
+         Th/kM8GcFryT7bk9/BRPNeVzZ6ILbW2lUTJIzK2OERShGO4Fp8oUoOp31PAoQ4LUL+u5
+         4sJBVTbxxZ3Cm19vapecR8ENNzYUBBmrfYke9CP5xo7zpOHPLoYC2kqZDu3Le5qp+Dpi
+         QyiA==
+X-Gm-Message-State: APjAAAXvfu4XuVxa//j1gNMp9jJaBY4Nj78OjnistmKXvluElxwyTKcm
+        8btTrQFG4P4TwObzsCRynv1KLFm4
+X-Google-Smtp-Source: APXvYqw5Mq/gKZ2qpEiRMEF78yzwj/BTsegOW50yX9sNhgabpRIWgKzbRCDvkXneVFBHLkmHmVHciQ==
+X-Received: by 2002:a5d:514f:: with SMTP id u15mr23030729wrt.183.1564427986784;
+        Mon, 29 Jul 2019 12:19:46 -0700 (PDT)
+Received: from [192.168.1.19] (civ151.neoplus.adsl.tpnet.pl. [83.31.45.151])
+        by smtp.gmail.com with ESMTPSA id s188sm51714022wmf.40.2019.07.29.12.19.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 12:19:46 -0700 (PDT)
+Subject: Re: [PATCH] leds: netxbig: remove legacy board-file support
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+References: <20190728164015.15405-1-yamada.masahiro@socionext.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <3723142a-30b9-0ca3-5e31-73eabda54145@gmail.com>
+Date:   Mon, 29 Jul 2019 21:19:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190729163355.4530-1-areber@redhat.com> <CAJwJo6Z5qHThG5wECSn+jiS0iM3smuXA1OS96Gho1HL-gD=RKQ@mail.gmail.com>
-In-Reply-To: <CAJwJo6Z5qHThG5wECSn+jiS0iM3smuXA1OS96Gho1HL-gD=RKQ@mail.gmail.com>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Date:   Mon, 29 Jul 2019 20:17:58 +0100
-Message-ID: <CAJwJo6baR_w_sE8Qtr4Le9KTLWx0Qzi99qmoTm+6hd1j1UkmFA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] fork: extend clone3() to support CLONE_SET_TID
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190728164015.15405-1-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jul 2019 at 20:12, Dmitry Safonov <0x7f454c46@gmail.com> wrote:
->
-> On Mon, 29 Jul 2019 at 17:52, Adrian Reber <areber@redhat.com> wrote:
-> [..]
-> > --- a/include/uapi/linux/sched.h
-> > +++ b/include/uapi/linux/sched.h
-> > @@ -32,6 +32,7 @@
-> >  #define CLONE_NEWPID           0x20000000      /* New pid namespace */
-> >  #define CLONE_NEWNET           0x40000000      /* New network namespace */
-> >  #define CLONE_IO               0x80000000      /* Clone io context */
-> > +#define CLONE_SET_TID          0x100000000ULL  /* set if the desired TID is set in set_tid */
-> >
-> >  /*
-> >   * Arguments for the clone3 syscall
-> > @@ -45,6 +46,7 @@ struct clone_args {
-> >         __aligned_u64 stack;
-> >         __aligned_u64 stack_size;
-> >         __aligned_u64 tls;
-> > +       __aligned_u64 set_tid;
-> >  };
-> >
->
-> I don't see a change to
-> :    if (unlikely(size < sizeof(struct clone_args)))
-> :        return -EINVAL;
->
-> That seems backwards-incompatible, but I may miss some part..
+Hi Masahiro,
 
-On the other hand, clone3() was merged in v5.3 window, so probably,
-it doesn't matter.
+Thank you for the patch.
+
+On 7/28/19 6:40 PM, Masahiro Yamada wrote:
+> Since commit ebc278f15759 ("ARM: mvebu: remove static LED setup for
+> netxbig boards"), no one in upstream passes in the platform data to
+> this driver.
+> 
+> Squash leds-kirkwood-netxbig.h into the driver, and remove the legacy
+> board-file support.
+> 
+> Link: https://lkml.org/lkml/2019/7/20/83
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  drivers/leds/Kconfig                          |  1 +
+>  drivers/leds/leds-netxbig.c                   | 70 +++++++++++++------
+>  .../platform_data/leds-kirkwood-netxbig.h     | 54 --------------
+>  3 files changed, 51 insertions(+), 74 deletions(-)
+>  delete mode 100644 include/linux/platform_data/leds-kirkwood-netxbig.h
+[...]
+
+
+Applied.
 
 -- 
-             Dmitry
+Best regards,
+Jacek Anaszewski
