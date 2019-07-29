@@ -2,173 +2,70 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D0DC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4CAC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50E1221655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07EB62073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:52:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388885AbfG2VvB (ORCPT
+        id S2388936AbfG2Vwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:51:01 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60255 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727129AbfG2VvA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:51:00 -0400
-X-Originating-IP: 37.176.111.81
-Received: from uno.localdomain (mob-37-176-111-81.net.vodafone.it [37.176.111.81])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9443C20005;
-        Mon, 29 Jul 2019 21:50:56 +0000 (UTC)
-Date:   Mon, 29 Jul 2019 23:52:14 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH 04/12] iio: adc: max9611: Fix misuse of GENMASK macro
-Message-ID: <20190729215214.eueitve4tfxmqer3@uno.localdomain>
-References: <cover.1562734889.git.joe@perches.com>
- <2929234bd4ecec41c0d012edc52416ef80f3e368.1562734889.git.joe@perches.com>
- <20190714125403.0789dc9e@archlinux>
- <b3744e64b22de98bfe8885f76811d4fc7e41b8eb.camel@perches.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bspti6iz3s7zaaw6"
+        Mon, 29 Jul 2019 17:52:41 -0400
+Received: from gate.crashing.org ([63.228.1.57]:52742 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388888AbfG2Vwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 17:52:41 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6TLq2Kf032552;
+        Mon, 29 Jul 2019 16:52:02 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6TLq0h1032546;
+        Mon, 29 Jul 2019 16:52:00 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Mon, 29 Jul 2019 16:52:00 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>, mpe@ellerman.id.au,
+        christophe.leroy@c-s.fr, arnd@arndb.de,
+        kbuild test robot <lkp@intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] powerpc: workaround clang codegen bug in dcbz
+Message-ID: <20190729215200.GN31406@gate.crashing.org>
+References: <20190729202542.205309-1-ndesaulniers@google.com> <20190729203246.GA117371@archlinux-threadripper>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b3744e64b22de98bfe8885f76811d4fc7e41b8eb.camel@perches.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190729203246.GA117371@archlinux-threadripper>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 29, 2019 at 01:32:46PM -0700, Nathan Chancellor wrote:
+> For the record:
+> 
+> https://godbolt.org/z/z57VU7
+> 
+> This seems consistent with what Michael found so I don't think a revert
+> is entirely unreasonable.
 
---bspti6iz3s7zaaw6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Try this:
 
-Hello,
-  so I finally run some test and...
+  https://godbolt.org/z/6_ZfVi
 
-On Sun, Jul 14, 2019 at 05:19:32AM -0700, Joe Perches wrote:
-> On Sun, 2019-07-14 at 12:54 +0100, Jonathan Cameron wrote:
-> > On Tue,  9 Jul 2019 22:04:17 -0700
-> > Joe Perches <joe@perches.com> wrote:
-> >
-> > > Arguments are supposed to be ordered high then low.
-> > >
-> > > Signed-off-by: Joe Perches <joe@perches.com>
-> >
-> > Applied to the fixes-togreg branch of iio.git and marked for
-> > stable etc.
+This matters in non-trivial loops, for example.  But all current cases
+where such non-trivial loops are done with cache block instructions are
+actually written in real assembler already, using two registers.
+Because performance matters.  Not that I recommend writing code as
+critical as memset in C with inline asm :-)
 
-I don't see it in v5.3-rc2, has it been collected or are we still in
-time for an additional fix?
 
->
-> This mask is used in an init function called from a probe.
->
-> I don't have this hardware but it looks as if it could
-> never have worked so I doubt the driver and the hardware
-> have ever been tested.
->
-> Does anyone have this device in actual use?
-
-Because it turns out this is 2 times embarrassing. The mask definition
-is indeed wrong, as Joe reported and fixed, but also this line
->
-> 	regval = ret & MAX9611_TEMP_MASK;
-
-is very wrong as regval is read as:
-        ret = max9611_read_single(max9611, CONF_TEMP, &regval);
-
-So that should actually be:
-        regval &= MAX9611_TEMP_MASK;
-not
- 	regval = ret & MAX9611_TEMP_MASK;
-Ups...
-
-Yes, it worked by chance, as regval was always 0, which is in the
-range of acceptable temperatures :/
-
->
-> 	if ((regval > MAX9611_TEMP_MAX_POS &&
-> 	     regval < MAX9611_TEMP_MIN_NEG) ||
-> 	     regval > MAX9611_TEMP_MAX_NEG) {
-
-Also reading this condition and how I had defined the temperature
-calculation formula makes me wonder if this it totally correct, but
-for the moment:
-
-1) if Joe's patch has been collected, I can send an additional patch to
-fix how regval is computed.
-2) If Joe's patch still have to be collected, the regval computation
-might be fixed there.
-
-Sorry for taking so long to get back to you and thanks for noticing.
-
-Thanks
-  j
-
-> 		dev_err(max9611->dev,
-> 			"Invalid value received from ADC 0x%4x: aborting\n",
-> 			regval);
-> 		return -EIO;
-> 	}
->
->
-> > Thanks,
-> >
-> > Jonathan
-> >
-> > > ---
-> > >  drivers/iio/adc/max9611.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-> > > index 917223d5ff5b..0e3c6529fc4c 100644
-> > > --- a/drivers/iio/adc/max9611.c
-> > > +++ b/drivers/iio/adc/max9611.c
-> > > @@ -83,7 +83,7 @@
-> > >  #define MAX9611_TEMP_MAX_POS		0x7f80
-> > >  #define MAX9611_TEMP_MAX_NEG		0xff80
-> > >  #define MAX9611_TEMP_MIN_NEG		0xd980
-> > > -#define MAX9611_TEMP_MASK		GENMASK(7, 15)
-> > > +#define MAX9611_TEMP_MASK		GENMASK(15, 7)
-> > >  #define MAX9611_TEMP_SHIFT		0x07
-> > >  #define MAX9611_TEMP_RAW(_r)		((_r) >> MAX9611_TEMP_SHIFT)
-> > >  #define MAX9611_TEMP_SCALE_NUM		1000000
->
-
---bspti6iz3s7zaaw6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0/aogACgkQcjQGjxah
-VjyVXBAAjXySZDbxeeH6TCp5TWOwWLpebJjJ99v++lJUK4A6ohVeqyyGbyZt7ak6
-ADGJEjNkeh1ilm/DXcyCCqTQ7w4loj6RsYPK5AHPT2jYaCf43VIkHArYg20SKtYI
-5nREJc2RYXpmOk+2s3oaosA4RgL6WV2shsLF/OYGubvdDWhGfRlAlPAZTtNG/siv
-GLidkma6RAbi1iqQUw4hsI7LJTmFn6F1T4wkiRx0SejBkLqHmLnrtvFjsWH1hgXW
-k9urqsRYR9Io3wVBvMOiKcQUVrfneOW6wo2KMYMVhNfxwUtKU6NWyWUzfgGpk8Hl
-jDG1FoRs3u86e3gTsN+yT4JSZuOjsPovuGOo7NO0MepRRGbfHqFJRBBL7Z9T04pL
-QySWlgMZvVQIi40uI/QHLmgm0ztzl19Ez/rJm6fYVSyBE8VKtLCkySI+pmiL8OWl
-JcjfMMq2KgElToxFfSF+CuU0Qe6hn8ye/boKsnuWfz9Vk7em07uPGaCDTe+gD4RR
-c3pQLaGO16FhSQygRDpiO9/3K9OsGUDCDPrkOoCi5nDqXjmBD4Uu2OEJvch86rku
-bmnyJ4ejXzsStjpUUbsNP1AmLT8yPxMA+SvZ8nrUIvfeKkEbD4Mff61ndJP52BX/
-g1yN+rSGk8OWRoB++9TUqmHr5EXxgLyJI0hJ9+B+chlgmvapGCM=
-=5EgF
------END PGP SIGNATURE-----
-
---bspti6iz3s7zaaw6--
+Segher
