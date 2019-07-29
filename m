@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBC1C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E702C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B582070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2669F217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428898;
-	bh=cuj6gjrv7yJRiT+f42miZQVAU+p3pGlzJe2vlggRx0Y=;
+	s=default; t=1564428902;
+	bh=FuE/bac3E4Wb0YAwTYorxq2zJYmikUC5EUvOJqBOYac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CeUV8rdVh0ErDdojVYNKcWKt4lV17PgckYVjCLIg85ugOWBe+zOiTwmMHN4gbybbv
-	 Y6XjrffQSgbt+dfZBEHwFX65w9ZAp47gJB/iQYISQcXLBSzI5jWRwctkFE83VZIYYh
-	 MV+L8rApzQsMqVw91jqbXzKzcf4QnYdtHIBy3jDI=
+	b=B2YTHUZeAV+hrxKZFntVbrhupojW0LNRDEn4IA2iLZJOfF2mNokSQzKWE01ldmFVz
+	 X8drtlUpOkChKtJns1Kkt9isR3FHeJvsj5vXKIX9/L3lKEYScatHVnj9bI20RypmLl
+	 q0wgyJEOOXKJlSLQKPqu0zHhmaPkBG6b+zB3Teag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387836AbfG2Te4 (ORCPT
+        id S1727219AbfG2TfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:34:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49216 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:35:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388488AbfG2Teu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:34:50 -0400
+        id S2388368AbfG2Tex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:34:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75ABE21773;
-        Mon, 29 Jul 2019 19:34:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A1252070B;
+        Mon, 29 Jul 2019 19:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428889;
-        bh=cuj6gjrv7yJRiT+f42miZQVAU+p3pGlzJe2vlggRx0Y=;
+        s=default; t=1564428892;
+        bh=FuE/bac3E4Wb0YAwTYorxq2zJYmikUC5EUvOJqBOYac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yQaZ0Q5Mcm9gERxUZHC2dSVlTVXDCBIi49TQCh6wY/8DypgXd7M5m9FvMGTERR7Zn
-         UuYHehmS7NTEBORCY24awTdo267B6NDnq+AIf+ZOV9EXGshJfgLCZBTz7GNgLP8CAt
-         swu4Sh5bB8JXEOZnjb8CuBOvk4vi2RqGwk6KUnNU=
+        b=pxaIWDGvNdxzAJHkqgAn/YNJoMmxODg8vGV47v+f3MLEFMDF+a6cW7+zDRHU+0iEW
+         5dM9h18X9J1tn4NjORPLKQWh6996bUf7Xpw+dGpgYfqth52p/YRoWYh2aiapc/lqKG
+         9aW3XBIq8c85UHoMbvBynCQg6oPCogk+Kq1ZGnl0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 217/293] nfsd: increase DRC cache limit
-Date:   Mon, 29 Jul 2019 21:21:48 +0200
-Message-Id: <20190729190841.137329436@linuxfoundation.org>
+Subject: [PATCH 4.14 218/293] nfsd: give out fewer session slots as limit approaches
+Date:   Mon, 29 Jul 2019 21:21:49 +0200
+Message-Id: <20190729190841.214221951@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -59,36 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 44d8660d3bb0a1c8363ebcb906af2343ea8e15f6 ]
+[ Upstream commit de766e570413bd0484af0b580299b495ada625c3 ]
 
-An NFSv4.1+ client negotiates the size of its duplicate reply cache size
-in the initial CREATE_SESSION request.  The server preallocates the
-memory for the duplicate reply cache to ensure that we'll never fail to
-record the response to a nonidempotent operation.
+Instead of granting client's full requests until we hit our DRC size
+limit and then failing CREATE_SESSIONs (and hence mounts) completely,
+start granting clients smaller slot tables as we approach the limit.
 
-To prevent a few CREATE_SESSIONs from consuming all of memory we set an
-upper limit based on nr_free_buffer_pages().  1/2^10 has been too
-limiting in practice; 1/2^7 is still less than one percent.
+The factor chosen here is pretty much arbitrary.
 
 Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfssvc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index e02bd2783124..4a9e0fb634b6 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -447,7 +447,7 @@ void nfsd_reset_versions(void)
-  */
- static void set_max_drc(void)
- {
--	#define NFSD_DRC_SIZE_SHIFT	10
-+	#define NFSD_DRC_SIZE_SHIFT	7
- 	nfsd_drc_max_mem = (nr_free_buffer_pages()
- 					>> NFSD_DRC_SIZE_SHIFT) * PAGE_SIZE;
- 	nfsd_drc_mem_used = 0;
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 94128643ec1a..dd48353357d7 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1507,6 +1507,11 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
+ 	spin_lock(&nfsd_drc_lock);
+ 	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION,
+ 		    nfsd_drc_max_mem - nfsd_drc_mem_used);
++	/*
++	 * Never use more than a third of the remaining memory,
++	 * unless it's the only way to give this client a slot:
++	 */
++	avail = clamp_t(int, avail, slotsize, avail/3);
+ 	num = min_t(int, num, avail / slotsize);
+ 	nfsd_drc_mem_used += num * slotsize;
+ 	spin_unlock(&nfsd_drc_lock);
 -- 
 2.20.1
 
