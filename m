@@ -2,112 +2,100 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02323C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6045C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E52216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:07:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="GGtx1ojS"
+	by mail.kernel.org (Postfix) with ESMTP id 8E969206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfG2JHh (ORCPT
+        id S1726972AbfG2JK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:07:37 -0400
-Received: from onstation.org ([52.200.56.107]:34966 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbfG2JHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:07:36 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 8B73C3E910;
-        Mon, 29 Jul 2019 09:07:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1564391255;
-        bh=V1mGH9ikCIK/K3J8F2Qd4/cjZZvLv966i1sALH+R43k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GGtx1ojSV4tAj6m8rDAyxqCchGky5/dS1e6/1+SZW/FWuiRrLmc+saF7OsAJTOsg5
-         NoupnDprFoloMMgioKnPspzrJUC5ArAJe5R6HvjmYbLsObp0UyHvnGsFm41qfqBef8
-         DuJJMWWQWuahZrwiLZvZjJAKRDs5HXMdoq3eKe2o=
-Date:   Mon, 29 Jul 2019 05:07:35 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH 00/15] thermal: qcom: tsens: Add interrupt support
-Message-ID: <20190729090735.GA897@onstation.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
- <20190726103605.GB3327@onstation.org>
- <CAHLCerOs3cMQrWrYk7F_bnxr_nxJ-nsRL8oOGALU63ySqmLaig@mail.gmail.com>
- <20190726112954.GA3984@onstation.org>
- <CAHLCerNay31+RNQvQZyxMMVyb1mLLfN5BoZbz-M+bMqbmbYwtA@mail.gmail.com>
+        Mon, 29 Jul 2019 05:10:27 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43687 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfG2JK0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 05:10:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p13so60913370wru.10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 02:10:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zV+bTIgChlMbStRhEz4HmI17F1bLOP/P0h9cutKjnuk=;
+        b=IlPDEYH6L29CIojsnYJeK7f5HgO+vJAGtT7fsNBJEyVh9uu6JPeO9q4/hNhtQZix4U
+         K3cvzn0vZDh7rsDlun7paa+Hj8Z2BoHRfV0aEVYoLySCI2G3NOjKAxlGY3Rs+aCs1Nrx
+         vUBSlyKWsNeLsD1uojr2MI5hw9+/77uIs2t3hSvioqL+IQK2uA/g8WFac9oXGYBS79tR
+         bbHvL/Em/S+kmS4BZCpiyO5SyGL+2WS2T8OH9ARU6vvicrEbpLrBUnbReE4CQ0Sra3r1
+         tTnIRRqY3Dq+85lZ9DcOSJSFNwzogerNH++aMCfOYPlwoZjrKDlKqtWScHwm28JAABqo
+         OtoQ==
+X-Gm-Message-State: APjAAAUaqYs321B9TaYA4Xp8BIVchMQQoGJkDUias5lAe2Ok6nqD/Tvq
+        wA4wbylKLaVgor7YcdtRe6yV1A==
+X-Google-Smtp-Source: APXvYqwu+iJxG0Nnx1LAgpMTW4dJUcSifVyQWlGLBgiZPy7xi6UkywxpJxOjNTGIQL6gbv5Vi6t8kA==
+X-Received: by 2002:a5d:4e8a:: with SMTP id e10mr38159080wru.26.1564391424671;
+        Mon, 29 Jul 2019 02:10:24 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id e6sm57983191wrw.23.2019.07.29.02.10.23
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 02:10:23 -0700 (PDT)
+Subject: Re: [PATCH stable-4.19 1/2] KVM: nVMX: do not use dangling shadow
+ VMCS after guest reset
+To:     Jack Wang <jack.wang.usish@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     stable@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <20190725104645.30642-1-vkuznets@redhat.com>
+ <20190725104645.30642-2-vkuznets@redhat.com>
+ <CA+res+RfqpT=g1QbCqr3OkHVzFFSAt3cfCYNcwqiemWmOifFxg@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <2ea5d588-8573-6653-b848-0b06d1f98310@redhat.com>
+Date:   Mon, 29 Jul 2019 11:10:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHLCerNay31+RNQvQZyxMMVyb1mLLfN5BoZbz-M+bMqbmbYwtA@mail.gmail.com>
+In-Reply-To: <CA+res+RfqpT=g1QbCqr3OkHVzFFSAt3cfCYNcwqiemWmOifFxg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 12:58:54PM +0530, Amit Kucheria wrote:
-> On Fri, Jul 26, 2019 at 4:59 PM Brian Masney <masneyb@onstation.org> wrote:
-> > On Fri, Jul 26, 2019 at 04:40:16PM +0530, Amit Kucheria wrote:
-> > > How well does cpufreq work on 8974? I haven't looked at it yet but
-> > > we'll need it for thermal throttling.
-> >
-> > I'm not sure how to tell if the frequency is dynamically changed during
-> > runtime on arm. x86-64 shows this information in /proc/cpuinfo. Here's
-> > the /proc/cpuinfo on the Nexus 5:
+On 29/07/19 10:58, Jack Wang wrote:
+> Vitaly Kuznetsov <vkuznets@redhat.com> 于2019年7月25日周四 下午3:29写道：
+>>
+>> From: Paolo Bonzini <pbonzini@redhat.com>
+>>
+>> [ Upstream commit 88dddc11a8d6b09201b4db9d255b3394d9bc9e57 ]
+>>
+>> If a KVM guest is reset while running a nested guest, free_nested will
+>> disable the shadow VMCS execution control in the vmcs01.  However,
+>> on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
+>> the VMCS12 to the shadow VMCS which has since been freed.
+>>
+>> This causes a vmptrld of a NULL pointer on my machime, but Jan reports
+>> the host to hang altogether.  Let's see how much this trivial patch fixes.
+>>
+>> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+>> Cc: Liran Alon <liran.alon@oracle.com>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > 
-> Nah. /proc/cpuinfo won't show what we need.
+> Hi all,
 > 
-> Try the following:
-> 
-> $ grep "" /sys/devices/system/cpu/cpufreq/policy?/*
-> 
-> More specifically, the following files have the information you need.
-> Run watch -n1 on them.
-> 
-> $ grep "" /sys/devices/system/cpu/cpufreq/policy?/scaling_*_freq
+> Do we need to backport the fix also to stable 4.14?  It applies
+> cleanly and compiles fine.
 
-There's no cpufreq directory on msm8974:
+The reproducer required newer kernels that support KVM_GET_NESTED_STATE
+and KVM_SET_NESTED_STATE, so it would be hard to test it.  However, the
+patch itself should be safe.
 
-    # ls -1 /sys/devices/system/cpu/
-    cpu0
-    cpu1
-    cpu2
-    cpu3
-    cpuidle
-    hotplug
-    isolated
-    kernel_max
-    modalias
-    offline
-    online
-    possible
-    power
-    present
-    smt
-    uevent
-
-I'm using qcom_defconfig.
-
-Brian
+Paolo
