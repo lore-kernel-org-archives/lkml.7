@@ -2,113 +2,153 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4752C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9C0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1F5206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:33:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564396390;
-	bh=np3d3M/9gn246cR8SHopmMlUazcgV/L4Se+vCa4MlK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UtfT+MfGpeLqs7lF71/masXaOQTnZMi+5fbOgSuCnUHdM8mDr/rzMnBJU/31cQsgZ
-	 rr7fdvSaebOG9ZqsLgQUckil4eH+nFkvJHbIu1K1o9zyH6vYVL/e8DYHAsUKmrE2cd
-	 pE4e1qhyz6x0llZ73giCfdAKLeVJGp41aXHCSWxk=
+	by mail.kernel.org (Postfix) with ESMTP id 791CE206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfG2KdJ (ORCPT
+        id S1728270AbfG2Ke3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:33:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54816 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726358AbfG2KdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:33:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BFE98AE1C;
-        Mon, 29 Jul 2019 10:33:07 +0000 (UTC)
-Date:   Mon, 29 Jul 2019 12:33:07 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
- in get_user_pages loop
-Message-ID: <20190729103307.GG9330@dhcp22.suse.cz>
-References: <156431697805.3170.6377599347542228221.stgit@buzz>
- <20190729091738.GF9330@dhcp22.suse.cz>
- <3d6fc779-2081-ba4b-22cf-be701d617bb4@yandex-team.ru>
+        Mon, 29 Jul 2019 06:34:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:41626 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728179AbfG2Ke3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:34:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25567344;
+        Mon, 29 Jul 2019 03:34:28 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D8923F694;
+        Mon, 29 Jul 2019 03:34:26 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 11:34:24 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>,
+        linux-kernel@vger.kernel.org,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Gaku Inami <gaku.inami.xh@renesas.com>,
+        aidapala@qti.qualcomm.com, pajay@qti.qualcomm.com,
+        Etienne Carriere <etienne.carriere@linaro.org>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        wesleys@xilinx.com, Felix Burton <fburton@xilinx.com>,
+        Saeed Nowshadi <saeed.nowshadi@xilinx.com>
+Subject: Re: [PATCH 5/5] reset: Add support for resets provided by SCMI
+Message-ID: <20190729103424.GB831@e107155-lin>
+References: <20190726135954.11078-1-sudeep.holla@arm.com>
+ <20190726135954.11078-6-sudeep.holla@arm.com>
+ <1564394355.7633.5.camel@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3d6fc779-2081-ba4b-22cf-be701d617bb4@yandex-team.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1564394355.7633.5.camel@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 29-07-19 12:40:29, Konstantin Khlebnikov wrote:
-> On 29.07.2019 12:17, Michal Hocko wrote:
-> > On Sun 28-07-19 15:29:38, Konstantin Khlebnikov wrote:
-> > > High memory limit in memory cgroup allows to batch memory reclaiming and
-> > > defer it until returning into userland. This moves it out of any locks.
-> > > 
-> > > Fixed gap between high and max limit works pretty well (we are using
-> > > 64 * NR_CPUS pages) except cases when one syscall allocates tons of
-> > > memory. This affects all other tasks in cgroup because they might hit
-> > > max memory limit in unhandy places and\or under hot locks.
-> > > 
-> > > For example mmap with MAP_POPULATE or MAP_LOCKED might allocate a lot
-> > > of pages and push memory cgroup usage far ahead high memory limit.
-> > > 
-> > > This patch uses halfway between high and max limits as threshold and
-> > > in this case starts memory reclaiming if mem_cgroup_handle_over_high()
-> > > called with argument only_severe = true, otherwise reclaim is deferred
-> > > till returning into userland. If high limits isn't set nothing changes.
-> > > 
-> > > Now long running get_user_pages will periodically reclaim cgroup memory.
-> > > Other possible targets are generic file read/write iter loops.
-> > 
-> > I do see how gup can lead to a large high limit excess, but could you be
-> > more specific why is that a problem? We should be reclaiming the similar
-> > number of pages cumulatively.
-> > 
-> 
-> Large gup might push usage close to limit and keep it here for a some time.
-> As a result concurrent allocations will enter direct reclaim right at
-> charging much more frequently.
+On Mon, Jul 29, 2019 at 11:59:15AM +0200, Philipp Zabel wrote:
+> Hi Sudeep,
+>
+> On Fri, 2019-07-26 at 14:59 +0100, Sudeep Holla wrote:
+> > On some ARM based systems, a separate Cortex-M based System Control
+> > Processor(SCP) provides the overall power, clock, reset and system
+> > control. System Control and Management Interface(SCMI) Message Protocol
+> > is defined for the communication between the Application Cores(AP)
+> > and the SCP.
+> >
+> > Adds support for the resets provided using SCMI protocol for performing
+> > reset management of various devices present on the SoC. Various reset
+> > functionalities are achieved by the means of different ARM SCMI device
+> > operations provided by the ARM SCMI framework.
+> >
+> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>
+> thank you for the patch. I have a few suggestions below.
+>
 
-Yes, this is indeed prossible. On the other hand even the reclaim from
-the charge path doesn't really prevent from that happening because the
-context might get preempted or blocked on locks. So I guess we need a
-more detailed information of an actual world visible problem here.
- 
-> Right now deferred recalaim after passing high limit works like distributed
-> memcg kswapd which reclaims memory in "background" and prevents completely
-> synchronous direct reclaim.
-> 
-> Maybe somebody have any plans for real kswapd for memcg?
+Thanks for reviewing so quickly, all points taken and fixed locally.
+Will wait for some more time before posting v2.
 
-I am not aware of that. The primary problem back then was that we simply
-cannot have a kernel thread per each memcg because that doesn't scale.
-Using kthreads and a dynamic pool of threads tends to be quite tricky -
-e.g. a proper accounting, scaling again.
- 
-> I've put mem_cgroup_handle_over_high in gup next to cond_resched() and
-> later that gave me idea that this is good place for running any
-> deferred works, like bottom half for tasks. Right now this happens
-> only at switching into userspace.
+[...]
 
-I am not against pushing high memory reclaim into the charge path in
-principle. I just want to hear how big of a problem this really is in
-practice. If this is mostly a theoretical problem that might hit then I
-would rather stick with the existing code though.
+> > +static int
+> > +scmi_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
+> > +{
+> > +	struct scmi_reset_data *data = to_scmi_reset_data(rcdev);
+> > +	const struct scmi_handle *handle = data->handle;
+>
+> This could be shortened to to_scmi_handle(rcdev), since none of the
+> other fields in scmi_reset_data are used by the reset_control_ops
+> callbacks.
+>
 
--- 
-Michal Hocko
-SUSE Labs
+Makes sense, missed to see that.
+
+[...]
+
+> > +
+> > +static int scmi_reset_probe(struct scmi_device *sdev)
+> > +{
+> > +	struct scmi_reset_data *data;
+> > +	struct device *dev = &sdev->dev;
+> > +	struct device_node *np = dev->of_node;
+> > +	const struct scmi_handle *handle = sdev->handle;
+> > +
+> > +	if (!handle || !handle->reset_ops)
+> > +		return -ENODEV;
+> > +
+> > +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> > +	if (!data)
+> > +		return -ENOMEM;
+> > +
+> > +	data->rcdev.ops = &scmi_reset_ops;
+> > +	data->rcdev.owner = THIS_MODULE;
+> > +	data->rcdev.of_node = np;
+>
+> This is missing rcdev.nr_resets. When nr_resets is kept at zero, the
+> check in of_reset_simple_xlate will fail for any id.
+>
+
+I clearly missed to do git add for the above :(. I did find these
+after testing.
+
+> > +	data->dev = dev;
+> > +
+> > +	return devm_reset_controller_register(dev, &data->rcdev);
+> > +}
+> > +
+> > +static const struct scmi_device_id scmi_id_table[] = {
+> > +	{ SCMI_PROTOCOL_RESET },
+> > +	{ },
+> > +};
+> > +MODULE_DEVICE_TABLE(scmi, scmi_id_table);
+> > +
+> > +static struct scmi_driver scmi_reset_driver = {
+> > +	.name = "scmi-reset",
+> > +	.probe = scmi_reset_probe,
+> > +	.id_table = scmi_id_table,
+> > +};
+> > +module_scmi_driver(scmi_reset_driver);
+> > +
+> > +MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
+> > +MODULE_DESCRIPTION("ARM SCMI clock driver");
+>
+> s/clock/reset controller/
+>
+
+Stupid copy-paste :(
+
+Thanks again.
+
+--
+Regards,
+Sudeep
