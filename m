@@ -2,88 +2,117 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827D8C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F522C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6B42070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01B1A20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:59:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eiwUf6EU";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eiwUf6EU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oW8HPCyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfG2H4L (ORCPT
+        id S1727290AbfG2H7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 03:56:11 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49286 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfG2H4K (ORCPT
+        Mon, 29 Jul 2019 03:59:10 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36378 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfG2H7K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 03:56:10 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B3CDB6030E; Mon, 29 Jul 2019 07:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564386969;
-        bh=Q3GrgOXXJ5DPh+opvjNnjdxQLGAJvH18gDZjL4btvwI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eiwUf6EUoSDmVOr0mHNiFXEU8PH4vsF0rM3Cameeiaz6xX80foLVR6RgWuTel8f9h
-         6qVZzhpgsexRnuSS292/I5YnpFE8zDjVy6j1RRmlxtyuMas8GiAezV7rDu+NFYUUMO
-         X/b5FWttoAY1IOffS6IbJxmIROhClDzDNNa1ROrQ=
-Received: from mojha-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F3EC5602AE;
-        Mon, 29 Jul 2019 07:56:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564386969;
-        bh=Q3GrgOXXJ5DPh+opvjNnjdxQLGAJvH18gDZjL4btvwI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eiwUf6EUoSDmVOr0mHNiFXEU8PH4vsF0rM3Cameeiaz6xX80foLVR6RgWuTel8f9h
-         6qVZzhpgsexRnuSS292/I5YnpFE8zDjVy6j1RRmlxtyuMas8GiAezV7rDu+NFYUUMO
-         X/b5FWttoAY1IOffS6IbJxmIROhClDzDNNa1ROrQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F3EC5602AE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-From:   Mukesh Ojha <mojha@codeaurora.org>
-To:     paulmck@linux.ibm.com, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Mukesh Ojha <mojha@codeaurora.org>
-Subject: [PATCH] rcu: Fix spelling mistake "greate"->"great"
-Date:   Mon, 29 Jul 2019 13:25:57 +0530
-Message-Id: <1564386957-22833-1-git-send-email-mojha@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 29 Jul 2019 03:59:10 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so27819898pgm.3;
+        Mon, 29 Jul 2019 00:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=hVKgxo5+thjjaYk/Yk8B+iRVEVZJZX4gP0vhIOS+Azg=;
+        b=oW8HPCyUnG1G/qh/ZqyOf9Ly2icn+RPHi2u12IJ/fvZobqYLhRsssp3H7PvztqcjqH
+         zAG2TjavnJ1sc3XqkhiVefYerpgzkhBvl2qhnTNooGfa7sDzJsAU9O0xnuL4Zi2XAc8K
+         csMPOd0lCNfCfjzIJ+yi3kvT4OXLcFKH7MUzse12adZl9HdT4jVT6vCi3pzcqwcf1bLi
+         k8q5DvdP57+ECchTl3TPeNGAFLxUaUsjDCoqNj2r0kAuB/6PWCD40QzPYjwOOeTZAFCN
+         u/HgWPdblFJBVWUFU3ORK0l43dy3gwIhDB3ngHWJERMyLeQU1Cpto5P0NcU1xl/8Kmta
+         XWnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=hVKgxo5+thjjaYk/Yk8B+iRVEVZJZX4gP0vhIOS+Azg=;
+        b=hUF+nDK6jhKKynzUz/cR3ovFVWKalTAwVVc2xUWWDYMfXdHNTfQ+tkJDpxOE+yeYZ2
+         pTodXTYS+66CPmTzEKVJ8w4ddXPZ2f5Kb/AitlbCizTCG++nxn2HgC905GOhrZRHPvDW
+         ubuyq2NLobv2k/iUu2FUUJUMeekBxTOOBp+d2UBdO6IGBNXWxJFxqYa58RV8B0C12lYL
+         21dk0nszXi130V4IVIkJfhm5Jvrc0/1HRpambWbwhZShorFLGpCxl95El3N2JvUy9VDP
+         A9JiCb7Of1ueoKoK/DDxo5K4d8D30Q0LyTMZIG0una/XYB+jZsLxBi97Vq8L1waTxcd/
+         uqmw==
+X-Gm-Message-State: APjAAAWcKTvJsQdETU8wbpSpBOET6ytNYmxeE+rfg1M7tis0RKNc/c+w
+        Ou7FAWDYp4X2s1/O2P7jQmzRWbgI
+X-Google-Smtp-Source: APXvYqzn3O2Dk8BApNuBZD/9i95kddDTvXEdWbGxdEwDCpAipJhJ2NdRtyT/CuJnzdgCGVpi/MDT6A==
+X-Received: by 2002:a65:6152:: with SMTP id o18mr99380023pgv.279.1564387149516;
+        Mon, 29 Jul 2019 00:59:09 -0700 (PDT)
+Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
+        by smtp.gmail.com with ESMTPSA id k3sm45597854pgq.92.2019.07.29.00.59.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 00:59:09 -0700 (PDT)
+Subject: Re: [PATCH] net: sched: Fix a possible null-pointer dereference in
+ dequeue_func()
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190729022157.18090-1-baijiaju1990@gmail.com>
+ <20190729065653.GA2211@nanopsycho>
+ <4752bf67-7a0c-7bc9-3d54-f18361085ba2@gmail.com>
+ <20190729074125.GB2211@nanopsycho>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <5a8fc4cb-4ee8-b2be-2b14-90e8285fef07@gmail.com>
+Date:   Mon, 29 Jul 2019 15:59:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190729074125.GB2211@nanopsycho>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a spelling mistake in file tree_exp.h,
-fix this.
 
-Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
----
- kernel/rcu/tree_exp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index af7e7b9..609fc87 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -781,7 +781,7 @@ static int rcu_print_task_exp_stall(struct rcu_node *rnp)
-  * other hand, if the CPU is not in an RCU read-side critical section,
-  * the IPI handler reports the quiescent state immediately.
-  *
-- * Although this is a greate improvement over previous expedited
-+ * Although this is a great improvement over previous expedited
-  * implementations, it is still unfriendly to real-time workloads, so is
-  * thus not recommended for any sort of common-case code.  In fact, if
-  * you are using synchronize_rcu_expedited() in a loop, please restructure
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+On 2019/7/29 15:41, Jiri Pirko wrote:
+> Mon, Jul 29, 2019 at 09:32:00AM CEST, baijiaju1990@gmail.com wrote:
+>>
+>> On 2019/7/29 14:56, Jiri Pirko wrote:
+>>> Mon, Jul 29, 2019 at 04:21:57AM CEST, baijiaju1990@gmail.com wrote:
+>>>> In dequeue_func(), there is an if statement on line 74 to check whether
+>>>> skb is NULL:
+>>>>      if (skb)
+>>>>
+>>>> When skb is NULL, it is used on line 77:
+>>>>      prefetch(&skb->end);
+>>>>
+>>>> Thus, a possible null-pointer dereference may occur.
+>>>>
+>>>> To fix this bug, skb->end is used when skb is not NULL.
+>>>>
+>>>> This bug is found by a static analysis tool STCheck written by us.
+>>>>
+>>>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+>>> Fixes tag, please?
+>> Sorry, I do not know what "fixes tag" means...
+>> I just find a possible bug and fix it in this patch.
+> git log |grep Fixes:
+>
+> If A fix goes to -net tree, it most probably fixes some bug introduced
+> by some commit in the past. So this tag is to put a reference.
 
+Thanks for the explanation.
+I will add it and submit a v2 patch.
+
+
+Best wishes,
+Jia-Ju Bai
