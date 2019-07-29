@@ -2,99 +2,99 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33753C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A7BC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0124C216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:12:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564413179;
-	bh=EgtQdelxp1g4TpBBqKIIM/eEKG436mdnHUtsXOz0uLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xXFJyZjXzchLdlK7a7A6AydDCTp5a4DN8Qth2rTWRdjDu8AUT27f3P+kRoZVh9psZ
-	 ezRxy659R5KJufYp4oGHV19FZGwdZBY51qolzFzuXOdzjk9mdWM9Zgo6SUDm14oZKc
-	 ZcWPDOoSQ+pP/EVJrQv2t++HoFtKiXoPUJYspsyw=
+	by mail.kernel.org (Postfix) with ESMTP id CE49521655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:13:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUK3INaf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387941AbfG2PM6 (ORCPT
+        id S1728691AbfG2PNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:12:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387402AbfG2PM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:12:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7FB421655;
-        Mon, 29 Jul 2019 15:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564413176;
-        bh=EgtQdelxp1g4TpBBqKIIM/eEKG436mdnHUtsXOz0uLU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B8vOoLPTzebiHzQDIdPLmyTe01fnu7HRQXSkCyO0efG21d+5Dx94sGxrr+/G1QSKD
-         +s2uUyeDH1eainxXJ88u/A8G7JJsnavoZfXwLKu+3N/v905DKWSsqblUwwfHaAHZQz
-         s+DMptx280EEft4lLzcRSl5bH3T3oa8SPZbHJU4M=
-Date:   Mon, 29 Jul 2019 17:12:51 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.2 00/66] 5.2.4-stable review
-Message-ID: <20190729151251.GC21262@kroah.com>
-References: <20190726152301.936055394@linuxfoundation.org>
- <df4d349b-03a1-58b1-cf82-4e76d5820614@nvidia.com>
+        Mon, 29 Jul 2019 11:13:54 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35192 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfG2PNy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:13:54 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s1so22117784pgr.2;
+        Mon, 29 Jul 2019 08:13:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZnLXcFhj+Go8GG8/vsP0gGZ0JCfmJSZ7rbeDeF2qVeE=;
+        b=XUK3INafO/K7rNvFDvDF8JVU+N+jADLF5S80ly0dl6c7dAg3Bn2NK4Xi3vS3+cBW6z
+         k530Dav9ZNTwqZJ1gPbBE7huyQlh36P5Vt5+PcuZ+3tereumhe73oBeYjt1CandmYOwd
+         csjOa6nhfGoWBtDgy7w/dzUn92301/n8eILgg62MHBX/MGo7k6jt7YTO+EnilKFCQ6S4
+         pJvgnA1r2WpJzbU5JnudrG5cZ8fgRfu/22BfZiAonM2S0O9Y0ne4MrC1X7Arz7HUp/sr
+         +2k/LOkqHrtganDCGLJRHHxYjM62wplT1spDMbekbbFIAQNKSCXVIhJ3xLzI8pJfJFrI
+         LqOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZnLXcFhj+Go8GG8/vsP0gGZ0JCfmJSZ7rbeDeF2qVeE=;
+        b=cuBb1livmVKcFqWPnXLwopcrwggPF9m1jo3jHiF9l6VOZn1N2C/OC9c66cmbu0CzP4
+         il95YY8v1ZUBcv0k1PIacqO6AhKbSh09O5B6XPjvcr4Scgxc6lyJkx1IGRFalRJ5h1ml
+         rqodo8pxm+GsHyFoCxqxkOXVTecIS/QEGTT56DGxG9ViiCYw9q4kCHaF0lhclkGp7jLc
+         TVPgzGzaNAcDsKNns9XM0QMlTew+3TswaFTCde4cUOn2I8mOd3El2QSE3VScx/8aoizD
+         +Ov2W4QtYKJioqI21UAbx5f81sWK5H3TNdp3EQFPDAEPycHsEsXTvDiVcO3EVfKkrrtj
+         pLXg==
+X-Gm-Message-State: APjAAAVuFZrVEDLAKpaUBzUulk8edMkKlYHf1bk8m+neYPesx9VXGAtm
+        /YKde2jG2PZkckebBzUtdeo=
+X-Google-Smtp-Source: APXvYqzMajOUoR19pFuqbmPr8IgmUhfrMFA45ZK9qFI+NJaThzATOY9KVAMv5D52hHPcjJfWOhVCeQ==
+X-Received: by 2002:a63:c009:: with SMTP id h9mr77405961pgg.166.1564413233854;
+        Mon, 29 Jul 2019 08:13:53 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id q1sm72661765pfg.84.2019.07.29.08.13.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 08:13:53 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH 01/12] rdmacg: Replace strncmp with str_has_prefix
+Date:   Mon, 29 Jul 2019 23:13:46 +0800
+Message-Id: <20190729151346.9280-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <df4d349b-03a1-58b1-cf82-4e76d5820614@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:03:10AM +0100, Jon Hunter wrote:
-> 
-> On 26/07/2019 16:23, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.2.4 release.
-> > There are 66 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sun 28 Jul 2019 03:21:13 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.4-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.2:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     38 tests:	38 pass, 0 fail
-> 
-> Linux version:	5.2.4-gfc89179bfa10
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
->
+strncmp(str, const, len) is error-prone.
+We had better use newly introduced
+str_has_prefix() instead of it.
 
-Thanks for testing all of these and letting me know.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ kernel/cgroup/rdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/kernel/cgroup/rdma.c b/kernel/cgroup/rdma.c
+index ae042c347c64..fd12a227f8e4 100644
+--- a/kernel/cgroup/rdma.c
++++ b/kernel/cgroup/rdma.c
+@@ -379,7 +379,7 @@ static int parse_resource(char *c, int *intval)
+ 			return -EINVAL;
+ 		return i;
+ 	}
+-	if (strncmp(value, RDMACG_MAX_STR, len) == 0) {
++	if (str_has_prefix(value, RDMACG_MAX_STR)) {
+ 		*intval = S32_MAX;
+ 		return i;
+ 	}
+-- 
+2.20.1
+
