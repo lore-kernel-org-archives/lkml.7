@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787ECC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E768C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4918821773
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16B9217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428708;
-	bh=bW1U4CuDnSX+m9qq7oDT1Ab0rj2wLfUzFhX/s30R79A=;
+	s=default; t=1564428714;
+	bh=wplSXBTVma7MrVFbXRm589LGQUK/dpHSK1of8vGYDL4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j891vGF9Ltbdgtm8/HqoFdS/QrOgOr4yWAE2jN3qtQ+pnUXPjcUIS9jsZ6xLN3xqm
-	 usfluEoGqWt2IgFQQZrVO0eKOvILGKttUVctVSkZC0HTWwUqkEL0J8rMa7g9C6PDun
-	 MddSYuflH0z91waasasNU2zB0cXPOSfbGQ0CbTRo=
+	b=beZ5tqsVy41ILPUKykkjpA2bRW2XHgyk063JJVq5zguZJcdSgu+EFA/d5hvhU1KJO
+	 q+7oyAE5EZi0fptzKl8lZqu49bVfKMJwngEZ+VR34vdzVAuuPDdHI/wnfezCZQGwuC
+	 K8GyGEcH6cQc13/dxHRZt6nSt1I/TSujNfVbEerI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbfG2Tbq (ORCPT
+        id S1729114AbfG2Tbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:31:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44576 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728931AbfG2Tbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:31:39 -0400
+        id S1730171AbfG2Tbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:31:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3C242070B;
-        Mon, 29 Jul 2019 19:31:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3E5121773;
+        Mon, 29 Jul 2019 19:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428698;
-        bh=bW1U4CuDnSX+m9qq7oDT1Ab0rj2wLfUzFhX/s30R79A=;
+        s=default; t=1564428704;
+        bh=wplSXBTVma7MrVFbXRm589LGQUK/dpHSK1of8vGYDL4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w2u1LnzYU/hfnpamfy8zR5fc7vbFS4Nj9SksgdUN4XLp2zLtM2QqAIdw1bmFenV7q
-         xi4FhoLn8CCbS9vQ4jKmAtKrrUGZ/ZXWjDCxQ9BxVv/DIcdATXL+FVLSQ/lu9Nh3WL
-         neEbwTKhWU9ij+dE2AKMD3FFrK2s//jzUOhHgH5k=
+        b=MdGxoyoDtj0jhs5myYQ8UMiGp4iBZ/IY9Azf4lEkYDCX0WXKKioGWHOhKFINN5xS9
+         H/3h3yOfxwhAidxvBvHFarWPQb0gbqsvbuaOqHn7b+xD+Q9Da0uvDF1t8I4EpTvCbY
+         X2DM7CZl4O5dcHtmFDtdyxhVwRhObAtvOsL+KHBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 159/293] Btrfs: add missing inode version, ctime and mtime updates when punching hole
-Date:   Mon, 29 Jul 2019 21:20:50 +0200
-Message-Id: <20190729190836.737755799@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
+        Jason Gerecke <jason.gerecke@wacom.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.14 161/293] HID: wacom: correct touch resolution x/y typo
+Date:   Mon, 29 Jul 2019 21:20:52 +0200
+Message-Id: <20190729190836.885421469@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -59,42 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Aaron Armstrong Skomra <skomra@gmail.com>
 
-commit 179006688a7e888cbff39577189f2e034786d06a upstream.
+commit 68c20cc2164cc5c7c73f8012ae6491afdb1f7f72 upstream.
 
-If the range for which we are punching a hole covers only part of a page,
-we end up updating the inode item but we skip the update of the inode's
-iversion, mtime and ctime. Fix that by ensuring we update those properties
-of the inode.
+This affects the 2nd-gen Intuos Pro Medium and Large
+when using their Bluetooth connection.
 
-A patch for fstests test case generic/059 that tests this as been sent
-along with this fix.
-
-Fixes: 2aaa66558172b0 ("Btrfs: add hole punching")
-Fixes: e8c1c76e804b18 ("Btrfs: add missing inode update when punching hole")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 4922cd26f03c ("HID: wacom: Support 2nd-gen Intuos Pro's Bluetooth classic interface")
+Cc: <stable@vger.kernel.org> # v4.11+
+Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+Reviewed-by: Jason Gerecke <jason.gerecke@wacom.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/file.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/hid/wacom_wac.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -2784,6 +2784,11 @@ out_only_mutex:
- 		 * for detecting, at fsync time, if the inode isn't yet in the
- 		 * log tree or it's there but not up to date.
- 		 */
-+		struct timespec now = current_time(inode);
-+
-+		inode_inc_iversion(inode);
-+		inode->i_mtime = now;
-+		inode->i_ctime = now;
- 		trans = btrfs_start_transaction(root, 1);
- 		if (IS_ERR(trans)) {
- 			err = PTR_ERR(trans);
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -3550,7 +3550,7 @@ int wacom_setup_touch_input_capabilities
+ 					     0, 5920, 4, 0);
+ 		}
+ 		input_abs_set_res(input_dev, ABS_MT_POSITION_X, 40);
+-		input_abs_set_res(input_dev, ABS_MT_POSITION_X, 40);
++		input_abs_set_res(input_dev, ABS_MT_POSITION_Y, 40);
+ 
+ 		/* fall through */
+ 
 
 
