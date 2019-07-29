@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D020C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB67C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC99A217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7BEF2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428854;
-	bh=wbyM6RbvZIQm3+NgUtFet8W7UaelmwWaworHQg34nyQ=;
+	s=default; t=1564428858;
+	bh=JTbbLUrqNFcBTWKuNtawhRcJdyH9435aAAWqmKj3o2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QTw1zvaum+bkKZn/xP2lqdbDGjqaHkAm0btVpSRQj0V3X5NKetHl9yNi9B8oc/1dS
-	 xewLqu2q93BDejcxwf4uUAGpHxlqLfzsErYlTMbGctRdYxq5Lg1h3JxAfrThoRuzav
-	 WEJzSe4PA7QRIL2mWJSo412jNpQecrDpx5kYt2xY=
+	b=2TKeEIBCy/RVOGCgGjLI0YAZO9ej5+SewAsgl4aGFhe1A0bgpCrbrNLtlQCbw4ihR
+	 KbEelkqY47bfD/eNg4uGv2i6ODOud3zCUaIDQoZ8vplQcC9qsxhUMqgnMLVp3kuZyT
+	 s6wn60hAqshX4m1fDWSeTN0tPmYXFBk0nEiPerSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfG2TeN (ORCPT
+        id S2388280AbfG2TeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48528 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:34:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388219AbfG2TeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:34:08 -0400
+        id S2388245AbfG2TeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:34:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76384217D7;
-        Mon, 29 Jul 2019 19:34:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40D9F2171F;
+        Mon, 29 Jul 2019 19:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428848;
-        bh=wbyM6RbvZIQm3+NgUtFet8W7UaelmwWaworHQg34nyQ=;
+        s=default; t=1564428850;
+        bh=JTbbLUrqNFcBTWKuNtawhRcJdyH9435aAAWqmKj3o2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UOrGaiKo5s9nLLZ0WpdMN6lJRFM+UlIlypQ/Zml8QlTfouIbVuzwHRTkCgW2kzGLW
-         58G+M+aIVOwPxdmNHG7OJ5oV7brdLspzfhp8OkIQlspe3U7PrqisYDRQz9yocm0eye
-         FhvknBwIbtbjqboS6pPUBK7GpgUI0Yk8RD6ELkik=
+        b=SDA2ejk42ePxmcfd6iyh8zRiGAVBFpMOYd3Se2WkppzlRoLYS1916fVlFVFrJJgXP
+         DPxxr7wAbZuqN26XntPlBauxpbYSEhv9EMgUp8PtcwUMEIuyosZz49MtveDbQ7iSXa
+         LsSUk2ykxR05tz8Kb9wXJKayGIphxkdhdsPyEWtk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org,
-        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>
-Subject: [PATCH 4.14 205/293] dma-buf: balance refcount inbalance
-Date:   Mon, 29 Jul 2019 21:21:36 +0200
-Message-Id: <20190729190840.168417823@linuxfoundation.org>
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [PATCH 4.14 206/293] dma-buf: Discard old fence_excl on retrying get_fences_rcu for realloc
+Date:   Mon, 29 Jul 2019 21:21:37 +0200
+Message-Id: <20190729190840.230106531@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -65,39 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Glisse <jglisse@redhat.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 5e383a9798990c69fc759a4930de224bb497e62c upstream.
+commit f5b07b04e5f090a85d1e96938520f2b2b58e4a8e upstream.
 
-The debugfs take reference on fence without dropping them.
+If we have to drop the seqcount & rcu lock to perform a krealloc, we
+have to restart the loop. In doing so, be careful not to lose track of
+the already acquired exclusive fence.
 
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Cc: Christian König <christian.koenig@amd.com>
+Fixes: fedf54132d24 ("dma-buf: Restart reservation_object_get_fences_rcu() after writes")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
 Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
 Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linaro-mm-sig@lists.linaro.org
-Cc: Stéphane Marchesin <marcheu@chromium.org>
-Cc: stable@vger.kernel.org
+Cc: stable@vger.kernel.org #v4.10
 Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181206161840.6578-1-jglisse@redhat.com
+Link: https://patchwork.freedesktop.org/patch/msgid/20190604125323.21396-1-chris@chris-wilson.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma-buf/dma-buf.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma-buf/reservation.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -1115,6 +1115,7 @@ static int dma_buf_debug_show(struct seq
- 				   fence->ops->get_driver_name(fence),
- 				   fence->ops->get_timeline_name(fence),
- 				   dma_fence_is_signaled(fence) ? "" : "un");
-+			dma_fence_put(fence);
- 		}
- 		rcu_read_unlock();
- 
+--- a/drivers/dma-buf/reservation.c
++++ b/drivers/dma-buf/reservation.c
+@@ -394,6 +394,10 @@ int reservation_object_get_fences_rcu(st
+ 					   GFP_NOWAIT | __GFP_NOWARN);
+ 			if (!nshared) {
+ 				rcu_read_unlock();
++
++				dma_fence_put(fence_excl);
++				fence_excl = NULL;
++
+ 				nshared = krealloc(shared, sz, GFP_KERNEL);
+ 				if (nshared) {
+ 					shared = nshared;
 
 
