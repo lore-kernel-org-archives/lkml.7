@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BACC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D9AC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66A92070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747002070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfG2Czi (ORCPT
+        id S1726703AbfG2Czq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 22:55:38 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45438 "EHLO huawei.com"
+        Sun, 28 Jul 2019 22:55:46 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45570 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726150AbfG2Czi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 22:55:38 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 177D4FCDE4A6DFD469AF;
-        Mon, 29 Jul 2019 10:55:36 +0800 (CST)
+        id S1726302AbfG2Czm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 22:55:42 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0EFBBFB997AE0FAB15E2;
+        Mon, 29 Jul 2019 10:55:41 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 29 Jul 2019 10:55:27 +0800
+ 14.3.439.0; Mon, 29 Jul 2019 10:55:31 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <saeedm@mellanox.com>,
-        Jian Shen <shenjian15@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V4 net-next 01/10] net: hns3: add reset checking before set channels
-Date:   Mon, 29 Jul 2019 10:53:22 +0800
-Message-ID: <1564368811-65492-2-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V4 net-next 10/10] net: hns3: use dev_info() instead of pr_info()
+Date:   Mon, 29 Jul 2019 10:53:31 +0800
+Message-ID: <1564368811-65492-11-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,32 +46,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+dev_info() is more appropriate for printing messages when driver
+initialization done, so switch to dev_info().
 
-hns3_set_channels() should check the resetting status firstly,
-since the device will reinitialize when resetting. If the
-reset has not completed, the hns3_set_channels() may access
-invalid memory.
-
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 4 +++-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 3 ++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 69f7ef8..08af782 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -4378,6 +4378,9 @@ int hns3_set_channels(struct net_device *netdev,
- 	u16 org_tqp_num;
- 	int ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 30a7074..4138780 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -8862,7 +8862,9 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 	hclge_state_init(hdev);
+ 	hdev->last_reset_time = jiffies;
  
-+	if (hns3_nic_resetting(netdev))
-+		return -EBUSY;
+-	pr_info("%s driver initialization finished.\n", HCLGE_DRIVER_NAME);
++	dev_info(&hdev->pdev->dev, "%s driver initialization finished.\n",
++		 HCLGE_DRIVER_NAME);
 +
- 	if (ch->rx_count || ch->tx_count)
- 		return -EINVAL;
+ 	return 0;
+ 
+ err_mdiobus_unreg:
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index a13a0e1..ae0e6a6 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -2695,7 +2695,8 @@ static int hclgevf_init_hdev(struct hclgevf_dev *hdev)
+ 	}
+ 
+ 	hdev->last_reset_time = jiffies;
+-	pr_info("finished initializing %s driver\n", HCLGEVF_DRIVER_NAME);
++	dev_info(&hdev->pdev->dev, "finished initializing %s driver\n",
++		 HCLGEVF_DRIVER_NAME);
+ 
+ 	return 0;
  
 -- 
 2.7.4
