@@ -2,99 +2,103 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0C6C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA3BC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FC3206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D48206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 17:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfG2RFE (ORCPT
+        id S1728311AbfG2RFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 13:05:04 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:40125 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727487AbfG2RFE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 13:05:04 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x6TH3wlC028965;
-        Mon, 29 Jul 2019 20:03:58 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 8441)
-        id BD76B62A2E; Mon, 29 Jul 2019 20:03:58 +0300 (IDT)
-From:   Avi Fishman <avifishman70@gmail.com>
-To:     tmaimon77@gmail.com, tali.perry1@gmail.com, venture@google.com,
-        yuenn@google.com, benjaminfair@google.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        avifishman70@gmail.com
-Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [v5] clocksource/drivers/npcm: fix GENMASK and timer operation
-Date:   Mon, 29 Jul 2019 20:03:54 +0300
-Message-Id: <20190729170354.202374-1-avifishman70@gmail.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 29 Jul 2019 13:05:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:57308 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727487AbfG2RFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 13:05:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 10:05:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,323,1559545200"; 
+   d="scan'208";a="190627735"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Jul 2019 10:05:47 -0700
+Date:   Mon, 29 Jul 2019 10:05:47 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-sgx@vger.kernel.org
+Subject: Re: [RFC PATCH 04/21] x86/sgx: Add /dev/sgx/virt_epc device to
+ allocate "raw" EPC for VMs
+Message-ID: <20190729170547.GH21120@linux.intel.com>
+References: <20190727055214.9282-1-sean.j.christopherson@intel.com>
+ <20190727055214.9282-5-sean.j.christopherson@intel.com>
+ <CALCETrXLE6RpR9p9eGPNvU+Nt=yyCkqsQHv7hzmNaC61sFK7Jg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrXLE6RpR9p9eGPNvU+Nt=yyCkqsQHv7hzmNaC61sFK7Jg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NPCM7XX_Tx_OPER GENMASK bits where wrong,
-Since NPCM7XX_REG_TICR0 register reset value of those bits was 0,
-it did not cause an issue.
-in npcm7xx_timer_oneshot() the original NPCM7XX_REG_TCSR0 register was
-read again after masking it with ~NPCM7XX_Tx_OPER so the masking didn't
-take effect.
+On Sat, Jul 27, 2019 at 10:44:24AM -0700, Andy Lutomirski wrote:
+> On Fri, Jul 26, 2019 at 10:52 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > Add an SGX device to enable userspace to allocate EPC without an
+> > associated enclave.  The intended and only known use case for direct EPC
+> > allocation is to expose EPC to a KVM guest, hence the virt_epc moniker,
+> > virt.{c,h} files and INTEL_SGX_VIRTUALIZATION Kconfig.
+> >
+> > Although KVM is the end consumer of EPC, and will need hooks into the
+> > virtual EPC management if oversubscription of EPC for guest is ever
+> > supported (see below), implement direct access to EPC in the SGX
+> > subsystem instead of in KVM.  Doing so has two major advantages:
+> >
+> >   - Does not require changes to KVM's uAPI, e.g. EPC gets handled as
+> >     just another memory backend for guests.
+> 
+> This is general grumbling more than useful feedback, but I wish there
+> was a way for KVM's userspace to add a memory region that is *not*
+> backed by a memory mapping.  For SGX, this would avoid the slightly
+> awkward situation where useless EPC pages are mapped by QEMU.  For
+> SEV, it would solve the really fairly awful situation where the SEV
+> pages are mapped *incoherently* for QEMU.  And even in the absence of
+> fancy hardware features, it would allow the guest to have secrets in
+> memory that are not exposed to wild reads, speculation attacks, etc
+> coming from QEMU.
+> 
+> I realize the implementation would be extremely intrusive, but it just
+> might make it a lot easier to do things like making SEV pages property
+> movable.  Similarly, I could see EPC oversubscription being less nasty
+> in this model.  For one thing, it would make it more straightforward
+> to keep track of exactly which VMs have a given EPC page mapped,
+> whereas right now this driver only really knows which host userspace
+> mm has the EPC page mapped.
 
-npcm7xx_timer_periodic() was not wrong but it wrote to NPCM7XX_REG_TICR0
-in a middle of read modify write to NPCM7XX_REG_TCSR0 which is
-confusing.
-npcm7xx_timer_oneshot() did wrong calculation
+Host userspace vs VM doesn't add much, if any, complexity to EPC
+oversubscription, especially since the problem of supporting multiple mm
+structs needs to be solved for the native driver anyways.
 
-Signed-off-by: Avi Fishman <avifishman70@gmail.com>
----
- drivers/clocksource/timer-npcm7xx.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/clocksource/timer-npcm7xx.c b/drivers/clocksource/timer-npcm7xx.c
-index 8a30da7f083b..9780ffd8010e 100644
---- a/drivers/clocksource/timer-npcm7xx.c
-+++ b/drivers/clocksource/timer-npcm7xx.c
-@@ -32,7 +32,7 @@
- #define NPCM7XX_Tx_INTEN		BIT(29)
- #define NPCM7XX_Tx_COUNTEN		BIT(30)
- #define NPCM7XX_Tx_ONESHOT		0x0
--#define NPCM7XX_Tx_OPER			GENMASK(27, 3)
-+#define NPCM7XX_Tx_OPER			GENMASK(28, 27)
- #define NPCM7XX_Tx_MIN_PRESCALE		0x1
- #define NPCM7XX_Tx_TDR_MASK_BITS	24
- #define NPCM7XX_Tx_MAX_CNT		0xFFFFFF
-@@ -84,8 +84,6 @@ static int npcm7xx_timer_oneshot(struct clock_event_device *evt)
- 
- 	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
- 	val &= ~NPCM7XX_Tx_OPER;
--
--	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
- 	val |= NPCM7XX_START_ONESHOT_Tx;
- 	writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
- 
-@@ -97,12 +95,11 @@ static int npcm7xx_timer_periodic(struct clock_event_device *evt)
- 	struct timer_of *to = to_timer_of(evt);
- 	u32 val;
- 
-+	writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
-+
- 	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
- 	val &= ~NPCM7XX_Tx_OPER;
--
--	writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
- 	val |= NPCM7XX_START_PERIODIC_Tx;
--
- 	writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
- 
- 	return 0;
--- 
-2.18.0
-
+The nastiness of oversubscribing a VM is primarily in dealing with
+EBLOCK/ETRACK/EWB conflicts between guest and host.  The other nasty bit
+is that it all but requires fancier VA page management, e.g. allocating a
+dedicated VA slot for every EPC page doesn't scale when presenting a
+multi-{GB,TB} EPC to a guest, especially since there's no guarantee the
+guest will ever access EPC.
