@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBA2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D05C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D8E21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F6A21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429715;
-	bh=dY4+MCoX2L9K8Jk3aHUD3La1eiee6KJrz9EY35TJmxw=;
+	s=default; t=1564429718;
+	bh=swzzTSWVDkECQUft7G79O2Qg7RSN7yfYSx8KiYioYDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cI7XOM0s7833ghHjzZqwGjcVa95syssdGiSK1Xik7m9yO2i1JMwEXPrjxkpckxlyk
-	 nPZ/bB9/KWWXc5L+RBcQQiAYjYDtu+9yeR/8BvkI/BBr571NJtGgNZBp9g2EqejcDm
-	 jrn9kI0rat1967hioNd3uIEAy1PD6GOkTnBSQH/E=
+	b=FLh6tkudjCbUeIuFPgyyNaChbIPmmJmHjJuSZI0gU+c9d7zYJ4DWnRYBg4sDVGJgs
+	 eASO0aZXyq6hX+vnr4FSWV88Wy9QidT97LdoD2VoK3yC54Fgh8O4DJSxII5IwscVMR
+	 Nw7XmWj4jcQixU8J/ohyJetELyPROwfhhRrCdk4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390144AbfG2Tse (ORCPT
+        id S2390193AbfG2Tsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38746 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:48:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390094AbfG2Tsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:48:32 -0400
+        id S2390142AbfG2Tse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:48:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9923E205F4;
-        Mon, 29 Jul 2019 19:48:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63052205F4;
+        Mon, 29 Jul 2019 19:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429711;
-        bh=dY4+MCoX2L9K8Jk3aHUD3La1eiee6KJrz9EY35TJmxw=;
+        s=default; t=1564429713;
+        bh=swzzTSWVDkECQUft7G79O2Qg7RSN7yfYSx8KiYioYDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJxluEHPg3whow8CBaLV4zMZSuE/GQuQP/UnmCAuB8pj7xrqQQragvQt8CfxFvC3N
-         7SLh9hxLNeyZpyaa/u9fbira06CsZS5uoFqQqqXuHqJ+GZF0mVYyIHWgj8lGxUu7j9
-         B7+A8IcDMMrUrIB6c/XKZkQmmmR4q8/Psx8w8wIs=
+        b=hurK1f/UPT6JlWb5KcHrNCoBnn2ChOGMOLHA/UNN3ZPpH9T9/P91xL1WCN3fJ5cDH
+         +9CC2tbPyez1mve3lg8ZvlmmFw6nze2KQAx0NTXJfeFnJxtGD9ysb1+FOYUNnK2Fqa
+         8dpSeTO8kc5hS16HJgW9Gb98VJjE5QfOfxKi7BOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 069/215] tty: serial_core: Set port active bit in uart_port_activate
-Date:   Mon, 29 Jul 2019 21:21:05 +0200
-Message-Id: <20190729190752.259653310@linuxfoundation.org>
+Subject: [PATCH 5.2 034/215] staging: kpc2000: report error status to spi core
+Date:   Mon, 29 Jul 2019 21:20:30 +0200
+Message-Id: <20190729190746.218831662@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -59,69 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 13b18d35909707571af9539f7731389fbf0feb31 ]
+[ Upstream commit 9164f336311863d3e9f80840f4a1cce2aee293bd ]
 
-A bug was introduced by commit b3b576461864 ("tty: serial_core: convert
-uart_open to use tty_port_open"). It caused a constant warning printed
-into the system log regarding the tty and port counter mismatch:
+There is an error condition that's not reported to
+the spi core in kp_spi_transfer_one_message().
+It should restore status value to m->status, and
+return it in error path.
 
-[   21.644197] ttyS ttySx: tty_port_close_start: tty->count = 1 port count = 2
-
-in case if session hangup was detected so the warning is printed starting
-from the second open-close iteration.
-
-Particularly the problem was discovered in situation when there is a
-serial tty device without hardware back-end being setup. It is considered
-by the tty-serial subsystems as a hardware problem with session hang up.
-In this case uart_startup() will return a positive value with TTY_IO_ERROR
-flag set in corresponding tty_struct instance. The same value will get
-passed to be returned from the activate() callback and then being returned
-from tty_port_open(). But since in this case tty_port_block_til_ready()
-isn't called the TTY_PORT_ACTIVE flag isn't set (while the method had been
-called before tty_port_open conversion was introduced and the rest of the
-subsystem code expected the bit being set in this case), which prevents the
-uart_hangup() method to perform any cleanups including the tty port
-counter setting to zero. So the next attempt to open/close the tty device
-will discover the counters mismatch.
-
-In order to fix the problem we need to manually set the TTY_PORT_ACTIVE
-flag in case if uart_startup() returned a positive value. In this case
-the hang up procedure will perform a full set of cleanup actions including
-the port ref-counter resetting.
-
-Fixes: b3b576461864 "tty: serial_core: convert uart_open to use tty_port_open"
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/serial_core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/staging/kpc2000/kpc_spi/spi_driver.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 83f4dd0bfd74..4223cb496764 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -1777,6 +1777,7 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
- {
- 	struct uart_state *state = container_of(port, struct uart_state, port);
- 	struct uart_port *uport;
-+	int ret;
- 
- 	uport = uart_port_check(state);
- 	if (!uport || uport->flags & UPF_DEAD)
-@@ -1787,7 +1788,11 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
- 	/*
- 	 * Start up the serial port.
- 	 */
--	return uart_startup(tty, state, 0);
-+	ret = uart_startup(tty, state, 0);
-+	if (ret > 0)
-+		tty_port_set_active(port, 1);
+diff --git a/drivers/staging/kpc2000/kpc_spi/spi_driver.c b/drivers/staging/kpc2000/kpc_spi/spi_driver.c
+index 86df16547a92..2f535022dc03 100644
+--- a/drivers/staging/kpc2000/kpc_spi/spi_driver.c
++++ b/drivers/staging/kpc2000/kpc_spi/spi_driver.c
+@@ -333,7 +333,7 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+     list_for_each_entry(transfer, &m->transfers, transfer_list) {
+         if (transfer->tx_buf == NULL && transfer->rx_buf == NULL && transfer->len) {
+             status = -EINVAL;
+-            break;
++            goto error;
+         }
+         
+         /* transfer */
+@@ -371,7 +371,7 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+             
+             if (count != transfer->len) {
+                 status = -EIO;
+-                break;
++                goto error;
+             }
+         }
+         
+@@ -389,6 +389,10 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+     /* done work */
+     spi_finalize_current_message(master);
+     return 0;
 +
-+	return ret;
++ error:
++    m->status = status;
++    return status;
  }
  
- static const char *uart_type(struct uart_port *port)
+ static void
 -- 
 2.20.1
 
