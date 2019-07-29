@@ -7,145 +7,167 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6906C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04291C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736292077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A87D32070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 01:22:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TodBXMiD"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A3+kEApp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfG2BV4 (ORCPT
+        id S1726437AbfG2BWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 21:21:56 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:61394 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbfG2BVy (ORCPT
+        Sun, 28 Jul 2019 21:22:52 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:48284 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbfG2BWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 21:21:54 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190729012151epoutp01bfdd94050d38325edde8e6919fea99a5~1vCTTqMWL0849308493epoutp01X
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 01:21:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190729012151epoutp01bfdd94050d38325edde8e6919fea99a5~1vCTTqMWL0849308493epoutp01X
+        Sun, 28 Jul 2019 21:22:52 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190729012248epoutp04d8807da538a4ef5c084580802bd936f3~1vDH6DQM22747627476epoutp04y
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 01:22:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190729012248epoutp04d8807da538a4ef5c084580802bd936f3~1vDH6DQM22747627476epoutp04y
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1564363311;
-        bh=6DR3fTdlt0boV+AzGWvP5T7Xmgn/l959r2ivP+jLWFY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=TodBXMiDOvjK8YJ6XUGQba4ECLtwyXBQtDgvCqawx+TyEfccCfxr6SS9tVbLlEm0o
-         zgFtFvpdBXFFjAS0OXBuDhZV4YMitrvuq58wZOPPrRuHh+KSuy54PfQBmhF2C9eDkA
-         OZ6JMC+aKELOALiCQQFnGfjD/u7XeqmzPSJcs9z4=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190729012151epcas1p2bc5e0d4a7036682106f8f527ad798cfb~1vCS9VEOz2297622976epcas1p24;
-        Mon, 29 Jul 2019 01:21:51 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 45xhjn1K51zMqYkY; Mon, 29 Jul
-        2019 01:21:49 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0F.30.04088.D2A4E3D5; Mon, 29 Jul 2019 10:21:49 +0900 (KST)
+        s=mail20170921; t=1564363368;
+        bh=7nRHgCPiqghLB/3Lv2RJ4KgCd8OSyKlqtd5fFhfhjwA=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=A3+kEAppLRGodSI70jCWsvM1Bus8pdebf/bYiXxd753+Pg2bIP1nQPqItRA9iv3xa
+         l4Nb0ZB2BVd0BsixxNUeBTORMlrZ40ZHC2z3l2peny+x7MkOtlQPmwhOeIZEi33MDs
+         2DEN8X/zIGC3IGpcJnKz5Z3xqJFPx3afV5jJCMRs=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190729012248epcas1p3b9dabd6dc702b2fa44c7815d818f3816~1vDHl7jrT3103131031epcas1p3I;
+        Mon, 29 Jul 2019 01:22:48 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 45xhkh0KgxzMqYkl; Mon, 29 Jul
+        2019 01:22:36 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D6.E3.04075.23A4E3D5; Mon, 29 Jul 2019 10:21:54 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190729012148epcas1p4cc94c1e47ae819e4ad36837fb1678a6f~1vCQVUiAH1835118351epcas1p41;
-        Mon, 29 Jul 2019 01:21:48 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190729012153epcas1p18118c737bc7f641dfe515846bc6a13dd~1vCVLakGD1907219072epcas1p1K;
+        Mon, 29 Jul 2019 01:21:53 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
         epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190729012148epsmtrp1541c577b61d19aaf57a19c6370382f09~1vCQUkJVB2310823108epsmtrp1f;
-        Mon, 29 Jul 2019 01:21:48 +0000 (GMT)
-X-AuditID: b6c32a35-845ff70000000ff8-cd-5d3e4a2dce6b
+        20190729012153epsmtrp1df2a9c5aed2cf44f3eb2c80b3ed399b7~1vCVKxqBc2310823108epsmtrp1q;
+        Mon, 29 Jul 2019 01:21:53 +0000 (GMT)
+X-AuditID: b6c32a36-b61ff70000000feb-7d-5d3e4a32e574
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        16.91.03706.C2A4E3D5; Mon, 29 Jul 2019 10:21:48 +0900 (KST)
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        06.51.03638.13A4E3D5; Mon, 29 Jul 2019 10:21:53 +0900 (KST)
 Received: from [10.113.221.102] (unknown [10.113.221.102]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190729012148epsmtip1874a4fd2d0ad5d0246f55b6a0b8af269~1vCQIj0a30040100401epsmtip1l;
-        Mon, 29 Jul 2019 01:21:48 +0000 (GMT)
-Subject: Re: [PATCH v2 1/2] extcon: axp288: Add missed error check
+        20190729012153epsmtip1b0254d56e3ffd8b5af743f3eca5406d8~1vCVD8baV3226732267epsmtip1c;
+        Mon, 29 Jul 2019 01:21:53 +0000 (GMT)
+Subject: Re: [PATCH v2 2/2] extcon: axp288: Use for_each_set_bit() in
+ axp288_extcon_log_rsi()
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
         linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
         Chen-Yu Tsai <wens@csie.org>
-Cc:     Ramakrishna Pallala <ramakrishna.pallala@intel.com>
 From:   Chanwoo Choi <cw00.choi@samsung.com>
 Organization: Samsung Electronics
-Message-ID: <6b03a817-edd9-f76a-9322-43cb1a4fb3d0@samsung.com>
-Date:   Mon, 29 Jul 2019 10:25:14 +0900
+Message-ID: <0454e9cd-e2fb-cb60-11c3-19bc0233ae03@samsung.com>
+Date:   Mon, 29 Jul 2019 10:25:19 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190726121820.69679-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20190726121820.69679-2-andriy.shevchenko@linux.intel.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTQRiGM7vt0hKra0X85IfWRRMlAbrASlGKF9EG+YFHjFEJrnQDhHbb
-        dAsR8QdivAggxisUFLEYBQ8IIgE8MEWDjfFEBO+LKKLQBIVAPHDbhcifyTPfvO+8882MAldX
-        EUGKDN7O2XjWRBH+ssa2RdrQ0IS4ZO0Jh1JXlH8S031vF4eOlnJC92rPBUJX+f0Fpht1PcKW
-        E4a6jxflBueNr5jhtHudwXOrkzAUN9Qgw4/6OUnElszYdI41cjYNx6dajBl8mp5auyFlVQqz
-        WEuH0jG6aErDs2ZOT8UnJoWuzjCJp6A02awpSywlsYJAhcfF2ixZdk6TbhHseoqzGk3WGGuY
-        wJqFLD4tLNViXkJrtRGMKNyemX69rQ5ZhxQ7666W4HnorF8BUiqAjALP0A3My2qyCcGfMaoA
-        +Ys8iKDubT8hTYYR3O17gE84xmo6cGnhJoKjrvPjdg8Cd6HGyzPIldD+rt7PKwog7yJoGv7m
-        c+NkNAy+d8i9TJAh0NrbTXh5GjkPOkc+IS+ryDgoHeyVeVlGLoAPXcO+gJnkZtHbJpc008Fd
-        2uPTKMk1UNk3JJf2nwUveyowiefC3mtlvpMC6SGg3/MUSS3EQ39FmUziGdDX3jB+GUHw9fD+
-        cc6FavcdQjIfRNDQ+lguLURC67mjYoJCTFgEtS3hUnkeNP86haTgqTAwVCj3SoBUwcH9akkS
-        DB3v32ASzwbngUNECaIck9pxTGrBMakFx/+wM0hWgwI5q2BO4wTaSk9+7Xrk+6EhTBM69jDR
-        hUgFoqaoep/rk9VyNlvIMbsQKHAqQNVALU1Wq4xszi7OZkmxZZk4wYUY8baP4EEzUy3if+ft
-        KTQTERkZqYuiFzM0Tc1SVY7oktVkGmvnMjnOytkmfJhCGZSHWoreOV86f8dm1DD4KLOQ57t3
-        Y6s016pXzm/elx/j2XzPmBBsKu1xmf+2PdtalaTBerKdn0fPBexo119ZFt6nyTuS21UYu97p
-        znxSUlu+bVNtY8Lx260VypNuS2DeHYZtjn/1Onhge/WXy+ctG9f+rF7hubT11OD9Mr+L0cXd
-        5TdJSiaks3QIbhPYf+ENWva3AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LZdlhJTlfHyy7W4MdkNYvepulMFm+OA4nL
-        u+awWdxuXMFmsfDNTSaLn4fOMzmweWx4tJrVY/Gel0we804Gerzfd5XNo2/LKkaPz5vkAtii
-        uGxSUnMyy1KL9O0SuDJ2H97AWPCVo2LD5gnMDYyL2LsYOTkkBEwk/q+6zNzFyMUhJLCbUeL3
-        gbVQCUmJaRePAiU4gGxhicOHiyFq3jJKHLv7mBGkRljASeL4/U3sIAkRgaOMEgufTWYBSTAL
-        mEt8ejCLFcQWEpjFKNF0rB7EZhPQktj/4gYbiM0voChx9QfEIF4BO4mZn16A9bIIqEo8vP6N
-        CcQWFYiQOLxjFlSNoMTJmU/AajgF3CUWvvrKCrFLXeLPvEvMELa4xK0n85kgbHmJ5q2zmScw
-        Cs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHE1amjsY
-        Ly+JP8QowMGoxMPrcNM2Vog1say4MvcQowQHs5II7xYl61gh3pTEyqrUovz4otKc1OJDjNIc
-        LErivE/zjkUKCaQnlqRmp6YWpBbBZJk4OKUaGFWMt90O+7/k35u9i8vfST9b9Ojozf/feG+F
-        y96dUxwg5TjjP5uARanJOU73NyvuGn5e1Myz4UjWrxTxbI7nb2Ydt2b9FHpwXcCh8N4EtRjW
-        fdeUEy473pr1/nhEosBe7fLgmwteX1smqdkVuuB50tqTdm0T0j6sOT8r9oXirp6YIjefbU9m
-        NpxWYinOSDTUYi4qTgQAmt6BhaICAAA=
-X-CMS-MailID: 20190729012148epcas1p4cc94c1e47ae819e4ad36837fb1678a6f
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmrq6Rl12swYEWJYvepulMFm+OA4nL
+        u+awWdxuXMFm8fPQeSYHVo8Nj1azesw7Gejxft9VNo++LasYPT5vkgtgjcq2yUhNTEktUkjN
+        S85PycxLt1XyDo53jjc1MzDUNbS0MFdSyEvMTbVVcvEJ0HXLzAHaraRQlphTChQKSCwuVtK3
+        synKLy1JVcjILy6xVUotSMkpsCzQK07MLS7NS9dLzs+1MjQwMDIFKkzIzji1aBNzwXT+ih/T
+        axsYF/N0MXJySAiYSGx+PIWli5GLQ0hgB6PE/5+zoZxPjBKTJh1mhXC+MUr03/7JAtOy7PQ9
+        ZojEXkaJ0/d+QDnvGSU2nrkPViUsEC+x5+ojsHYRgaOMEju+vWYGSbAJaEnsf3GDDcTmF1CU
+        uPrjMSOIzStgJ/FgKcg+Tg4WAVWJL1eXgQ0SFYiQ+PQAIs4rIChxcuYTsDingLvEvSUrweLM
+        AuISt57MZ4Kw5SWat84Gu0hC4DKbxLdLu4EaOIAcF4n7L6IgXhCWeHV8CzuELSXxsr8Nyq6W
+        WHnyCBtEbwejxJb9F1ghEsYS+5dOZgKZwyygKbF+lz5EWFFi5++5jBB7+STefe1hhVjFK9HR
+        JgRRoixx+cFdJghbUmJxeycbhO0h0bdlG/MERsVZSD6bheSbWUi+mYWweAEjyypGsdSC4tz0
+        1GLDAiPk2N7ECE6XWmY7GBed8znEKMDBqMTD63DTNlaINbGsuDL3EKMEB7OSCO8WJetYId6U
+        xMqq1KL8+KLSnNTiQ4ymwICfyCwlmpwPTOV5JfGGpkbGxsYWJoZmpoaGSuK8C39YxAoJpCeW
+        pGanphakFsH0MXFwSjUwNt3t2vz9rL7KugeJ+TE87Qu/rN0lPnWm8Np3JQ8Peuu1+RQx/8rf
+        6XjB9pXXmp4CgU9rf6+1+vviu3TuItlPV9ifLGJjjXpsKfao/OPrFO2/Geradit1TpbNfdGR
+        1GU/8+Lyvp9Cx94YuS5uX1D6Tf/ODfvEZcaPzdUubFMJfDejzSzBMXFrlhJLcUaioRZzUXEi
+        ABeLZ9StAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJLMWRmVeSWpSXmKPExsWy7bCSnK6hl12swaQZ5ha9TdOZLN4cBxKX
+        d81hs7jduILN4ueh80wOrB4bHq1m9Zh3MtDj/b6rbB59W1YxenzeJBfAGsVlk5Kak1mWWqRv
+        l8CVcWrRJuaC6fwVP6bXNjAu5uli5OSQEDCRWHb6HnMXIxeHkMBuRolFj7oZIRKSEtMuHgVK
+        cADZwhKHDxdD1LxllFj34x4bSI2wQLzEnquPWEESIgJHGSUWPpvMAlF1nVHi7tK/zCBVbAJa
+        Evtf3ADr4BdQlLj64zHYBl4BO4kHSw+zgtgsAqoSX64uYwGxRQUiJA7vmAVVIyhxcuYTsDin
+        gLvEvSUrweqZBdQl/sy7xAxhi0vcejKfCcKWl2jeOpt5AqPQLCTts5C0zELSMgtJywJGllWM
+        kqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmbGMERoqW1g/HEifhDjAIcjEo8vC+u2cYKsSaW
+        FVfmHmKU4GBWEuHdomQdK8SbklhZlVqUH19UmpNafIhRmoNFSZxXPv9YpJBAemJJanZqakFq
+        EUyWiYNTqoFR5+vp+6enfN18LzmDvbNiyd3WYxaS+puPHy7t9fqZP2eFcYBjyCa2T6UftNO6
+        /QMrhT2jdLscTiYqvRIqU1v5vOR+lufCG8+m/7n2UT/z96KXgZ3mRw1OJWYxbc6YrSvxe7HN
+        kYVdtQd1P6xa9dnnra78Hs+sLEkZuwm1wWwHZ80R1nwZLnJCiaU4I9FQi7moOBEAFwE8uIwC
+        AAA=
+X-CMS-MailID: 20190729012153epcas1p18118c737bc7f641dfe515846bc6a13dd
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190726121827epcas5p36e03788323eb0c805f9c340f7c6f7944
-References: <CGME20190726121827epcas5p36e03788323eb0c805f9c340f7c6f7944@epcas5p3.samsung.com>
-        <20190726121820.69679-1-andriy.shevchenko@linux.intel.com>
+X-CMS-RootMailID: 20190726121826epcas3p203050cc7ed2678556b1694fc14397240
+References: <20190726121820.69679-1-andriy.shevchenko@linux.intel.com>
+        <CGME20190726121826epcas3p203050cc7ed2678556b1694fc14397240@epcas3p2.samsung.com>
+        <20190726121820.69679-2-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 19. 7. 26. 오후 9:18, Andy Shevchenko wrote:
-> It seems from the very beginning the error check has been missed
-> in axp288_extcon_log_rsi(). Add it here.
+> This simplifies and standardizes axp288_extcon_log_rsi()
+> by using for_each_set_bit() library function.
 > 
-> Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
-> - added error message (Chanwoo)
->  drivers/extcon/extcon-axp288.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/extcon/extcon-axp288.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
 > 
 > diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp288.c
-> index 7254852e6ec0..694a8d4a57ff 100644
+> index 694a8d4a57ff..415afaf479e7 100644
 > --- a/drivers/extcon/extcon-axp288.c
 > +++ b/drivers/extcon/extcon-axp288.c
-> @@ -135,6 +135,11 @@ static void axp288_extcon_log_rsi(struct axp288_extcon_info *info)
+> @@ -121,7 +121,6 @@ static const char * const axp288_pwr_up_down_info[] = {
+>  	"Last shutdown caused by PMIC UVLO threshold",
+>  	"Last shutdown caused by SOC initiated cold off",
+>  	"Last shutdown caused by user pressing the power button",
+> -	NULL,
+>  };
+>  
+>  /*
+> @@ -130,8 +129,8 @@ static const char * const axp288_pwr_up_down_info[] = {
+>   */
+>  static void axp288_extcon_log_rsi(struct axp288_extcon_info *info)
+>  {
+> -	const char * const *rsi;
+>  	unsigned int val, i, clear_mask = 0;
+> +	unsigned long bits;
 >  	int ret;
 >  
 >  	ret = regmap_read(info->regmap, AXP288_PS_BOOT_REASON_REG, &val);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "failed to read reset source indicator\n");
-> +		return;
-> +	}
-> +
->  	for (i = 0, rsi = axp288_pwr_up_down_info; *rsi; rsi++, i++) {
->  		if (val & BIT(i)) {
->  			dev_dbg(info->dev, "%s\n", *rsi);
+> @@ -140,12 +139,10 @@ static void axp288_extcon_log_rsi(struct axp288_extcon_info *info)
+>  		return;
+>  	}
+>  
+> -	for (i = 0, rsi = axp288_pwr_up_down_info; *rsi; rsi++, i++) {
+> -		if (val & BIT(i)) {
+> -			dev_dbg(info->dev, "%s\n", *rsi);
+> -			clear_mask |= BIT(i);
+> -		}
+> -	}
+> +	bits = val & GENMASK(ARRAY_SIZE(axp288_pwr_up_down_info) - 1, 0);
+> +	for_each_set_bit(i, &bits, ARRAY_SIZE(axp288_pwr_up_down_info))
+> +		dev_dbg(info->dev, "%s\n", axp288_pwr_up_down_info[i]);
+> +	clear_mask = bits;
+>  
+>  	/* Clear the register value for next reboot (write 1 to clear bit) */
+>  	regmap_write(info->regmap, AXP288_PS_BOOT_REASON_REG, clear_mask);
 > 
 
 Applied it. Thanks.
