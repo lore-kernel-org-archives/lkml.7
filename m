@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D56C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070FEC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D6B20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5DC8205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429506;
-	bh=oMVB5LUCxLBc4d04rJgABbGj+3wyZ+J3zsf37SFGpH4=;
+	s=default; t=1564429508;
+	bh=pHc7wbZC2CQyPwbypAX1PB3PGUIUAQS/3zqsA9hgQkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I5NqA1w05xfZcCzVI4Imvl55x0p8g1QeB6d6snCaaj227KdiptmvfqyeIfz4P5VOg
-	 aSM5vUmcurpyI0StOac5IaDkKO5HfKQyeQbsL3fMKE87/ib2u9ByiU2njjg+KvyMDM
-	 qKZtbIw2m80vQxq8vu/6zgmvkBtaRkbNPUXpSs9U=
+	b=IPBdPxpTm/CieLpLicGVaS1fcnMl4Pjl8uDcfNVpkqH8k5ASKWPtqXMQVPDIwdyH7
+	 9pFWQVJug+9bHVf2nZ+f+F8Txpf2DvZhGzBH4BN6gOybquMZ2e9KMXty/Q1s/GyQGz
+	 aEa9jXfDih6Gii7UEI7EOshRsNECo5s3qxRL0BEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389897AbfG2TpF (ORCPT
+        id S2389907AbfG2TpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:45:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33660 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:45:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389851AbfG2To7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:44:59 -0400
+        id S2389827AbfG2TpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:45:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A69720C01;
-        Mon, 29 Jul 2019 19:44:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0890220C01;
+        Mon, 29 Jul 2019 19:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429498;
-        bh=oMVB5LUCxLBc4d04rJgABbGj+3wyZ+J3zsf37SFGpH4=;
+        s=default; t=1564429501;
+        bh=pHc7wbZC2CQyPwbypAX1PB3PGUIUAQS/3zqsA9hgQkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RBj3hhteEjANR893qEXecaxw23ofKrgbtBpzQcSdK9OSff54fP8CjAoPqGvA2ifcq
-         lRX/OX2LKCOm1uHUQtoyn3AtzC03AXOb7RccPIZeWRpzu5vjadPNnxzOl07m7hYp+M
-         EaZrROWpvmrRn8B33QAT/22mu0pYRz376ox0J6cY=
+        b=xYoYaEXc/ySqtsvWWTmJJ4sZ0zb2bdynSeIQQYNw+WzVfHJa2BNnbAMtKnrxJuBGd
+         Q4rmIlEfS5BvQis6BjB4wwzQWIAK5iOMlTGHXwZibRemtnMqMvilTvJcd9/r1l0x93
+         8yIMb+WoE2To8kDJCBw0Q5e0r1RfJoWDpz5mt+Y4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Morten Borup Petersen <morten_bp@live.dk>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
+        stable@vger.kernel.org, David Windsor <dwindsor@redhat.com>,
+        David Teigland <teigland@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 078/113] mailbox: handle failed named mailbox channel request
-Date:   Mon, 29 Jul 2019 21:22:45 +0200
-Message-Id: <20190729190714.296045350@linuxfoundation.org>
+Subject: [PATCH 4.19 079/113] dlm: check if workqueues are NULL before flushing/destroying
+Date:   Mon, 29 Jul 2019 21:22:46 +0200
+Message-Id: <20190729190714.519242769@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,42 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 25777e5784a7b417967460d4fcf9660d05a0c320 ]
+[ Upstream commit b355516f450703c9015316e429b66a93dfff0e6f ]
 
-Previously, if mbox_request_channel_byname was used with a name
-which did not exist in the "mbox-names" property of a mailbox
-client, the mailbox corresponding to the last entry in the
-"mbox-names" list would be incorrectly selected.
-With this patch, -EINVAL is returned if the named mailbox is
-not found.
+If the DLM lowcomms stack is shut down before any DLM
+traffic can be generated, flush_workqueue() and
+destroy_workqueue() can be called on empty send and/or recv
+workqueues.
 
-Signed-off-by: Morten Borup Petersen <morten_bp@live.dk>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Insert guard conditionals to only call flush_workqueue()
+and destroy_workqueue() on workqueues that are not NULL.
+
+Signed-off-by: David Windsor <dwindsor@redhat.com>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/mailbox.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/dlm/lowcomms.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index 674b35f402f5..055c90b8253c 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -391,11 +391,13 @@ struct mbox_chan *mbox_request_channel_byname(struct mbox_client *cl,
+diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
+index a5e4a221435c..a93ebffe84b3 100644
+--- a/fs/dlm/lowcomms.c
++++ b/fs/dlm/lowcomms.c
+@@ -1630,8 +1630,10 @@ static void clean_writequeues(void)
  
- 	of_property_for_each_string(np, "mbox-names", prop, mbox_name) {
- 		if (!strncmp(name, mbox_name, strlen(name)))
--			break;
-+			return mbox_request_channel(cl, index);
- 		index++;
- 	}
- 
--	return mbox_request_channel(cl, index);
-+	dev_err(cl->dev, "%s() could not locate channel named \"%s\"\n",
-+		__func__, name);
-+	return ERR_PTR(-EINVAL);
+ static void work_stop(void)
+ {
+-	destroy_workqueue(recv_workqueue);
+-	destroy_workqueue(send_workqueue);
++	if (recv_workqueue)
++		destroy_workqueue(recv_workqueue);
++	if (send_workqueue)
++		destroy_workqueue(send_workqueue);
  }
- EXPORT_SYMBOL_GPL(mbox_request_channel_byname);
  
+ static int work_start(void)
+@@ -1691,13 +1693,17 @@ static void work_flush(void)
+ 	struct hlist_node *n;
+ 	struct connection *con;
+ 
+-	flush_workqueue(recv_workqueue);
+-	flush_workqueue(send_workqueue);
++	if (recv_workqueue)
++		flush_workqueue(recv_workqueue);
++	if (send_workqueue)
++		flush_workqueue(send_workqueue);
+ 	do {
+ 		ok = 1;
+ 		foreach_conn(stop_conn);
+-		flush_workqueue(recv_workqueue);
+-		flush_workqueue(send_workqueue);
++		if (recv_workqueue)
++			flush_workqueue(recv_workqueue);
++		if (send_workqueue)
++			flush_workqueue(send_workqueue);
+ 		for (i = 0; i < CONN_HASH_SIZE && ok; i++) {
+ 			hlist_for_each_entry_safe(con, n,
+ 						  &connection_hash[i], list) {
 -- 
 2.20.1
 
