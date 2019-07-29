@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A273C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE25BC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44ED120C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97297205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429281;
-	bh=LkhTR1jtv6mZvsxW3rN/7e3ErRuvQ0ZWb9hCGv4YeVY=;
+	s=default; t=1564429283;
+	bh=+UH73TabjstyQM1ZGgm2X7vTE469AT8mDDRMpApa9lY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1vA3SDdNw/IwtQ0nr3pjhNDdkhQRhhLdvk1ggje7Fr8TMnb/xnPd6lRRUiM6hILlU
-	 Ef479OU4YJkRIYcoqoljBg/3ljLhAHmOQzOv18QrFOKZmFjAMZsUItffsOp8U5nHl+
-	 lqktpMj9qC6t9PKF2alg3op5Prnzx//EyyePXVXQ=
+	b=fqRmK2hVa9a0BymYLHNiS1Yr6BCzu9dC5zmBW8fZ3xCiOw1erzfr8eGgDg4rkV8sT
+	 cMOGnKLTJMbEVUslRQ36Muv1qTVx8kO0KS++4os0mLKbvTdCS+q4eS86dj4hAC4X4V
+	 LdkL9wX5D/C7Mt5u3Tq+GBPXAH8+vLn5+mHyQ5lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388728AbfG2TlT (ORCPT
+        id S2389272AbfG2TlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:41:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56614 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:41:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388940AbfG2TlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:41:12 -0400
+        id S2389343AbfG2TlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:41:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04B1C206DD;
-        Mon, 29 Jul 2019 19:41:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F4C12054F;
+        Mon, 29 Jul 2019 19:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429271;
-        bh=LkhTR1jtv6mZvsxW3rN/7e3ErRuvQ0ZWb9hCGv4YeVY=;
+        s=default; t=1564429275;
+        bh=+UH73TabjstyQM1ZGgm2X7vTE469AT8mDDRMpApa9lY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XMYsWoVxzlsVUA8JIgUgJ/tebzCDufBd0T5wuWDim/RgYaSMjKxVHnQKdGOXCnj8e
-         ucQxSKoIe5LVd6PxJ69qrkQChoPRpN0uj1Ko89EuyxNmEBXjk0nB/QHyrccYRlJ6+7
-         5eYg2362voSI85jwX38Pv9mgKSnmjTb6qGA2Klxc=
+        b=FlIzDAf1EKrjOSp63SF/GxjVnoXYEOnBy4WogSNNZc9CVfiWQcopuE0NbpxD9SrKd
+         Fpcs8LVav5LhR3INP7CZb7rygHeR1yVpwmDmhA5pVOG9ZDmH8SrUoux50UGfCLbU8v
+         QakgtV7Jfapyo4zkkh6BmmUtPXxzQiY3FCPJA6Zk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/113] powerpc/xmon: Fix disabling tracing while in xmon
-Date:   Mon, 29 Jul 2019 21:22:13 +0200
-Message-Id: <20190729190706.618173979@linuxfoundation.org>
+Subject: [PATCH 4.19 047/113] recordmcount: Fix spurious mcount entries on powerpc
+Date:   Mon, 29 Jul 2019 21:22:14 +0200
+Message-Id: <20190729190706.872741216@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -61,44 +63,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aaf06665f7ea3ee9f9754e16c1a507a89f1de5b1 ]
+[ Upstream commit 80e5302e4bc85a6b685b7668c36c6487b5f90e9a ]
 
-Commit ed49f7fd6438d ("powerpc/xmon: Disable tracing when entering
-xmon") added code to disable recording trace entries while in xmon. The
-commit introduced a variable 'tracing_enabled' to record if tracing was
-enabled on xmon entry, and used this to conditionally enable tracing
-during exit from xmon.
+An impending change to enable HAVE_C_RECORDMCOUNT on powerpc leads to
+warnings such as the following:
 
-However, we are not checking the value of 'fromipi' variable in
-xmon_core() when setting 'tracing_enabled'. Due to this, when secondary
-cpus enter xmon, they will see tracing as being disabled already and
-tracing won't be re-enabled on exit. Fix the same.
+  # modprobe kprobe_example
+  ftrace-powerpc: Not expected bl: opcode is 3c4c0001
+  WARNING: CPU: 0 PID: 227 at kernel/trace/ftrace.c:2001 ftrace_bug+0x90/0x318
+  Modules linked in:
+  CPU: 0 PID: 227 Comm: modprobe Not tainted 5.2.0-rc6-00678-g1c329100b942 #2
+  NIP:  c000000000264318 LR: c00000000025d694 CTR: c000000000f5cd30
+  REGS: c000000001f2b7b0 TRAP: 0700   Not tainted  (5.2.0-rc6-00678-g1c329100b942)
+  MSR:  900000010282b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 28228222  XER: 00000000
+  CFAR: c0000000002642fc IRQMASK: 0
+  <snip>
+  NIP [c000000000264318] ftrace_bug+0x90/0x318
+  LR [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
+  Call Trace:
+  [c000000001f2ba40] [0000000000000004] 0x4 (unreliable)
+  [c000000001f2bad0] [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
+  [c000000001f2bb90] [c00000000020ff10] load_module+0x25b0/0x30c0
+  [c000000001f2bd00] [c000000000210cb0] sys_finit_module+0xc0/0x130
+  [c000000001f2be20] [c00000000000bda4] system_call+0x5c/0x70
+  Instruction dump:
+  419e0018 2f83ffff 419e00bc 2f83ffea 409e00cc 4800001c 0fe00000 3c62ff96
+  39000001 39400000 386386d0 480000c4 <0fe00000> 3ce20003 39000001 3c62ff96
+  ---[ end trace 4c438d5cebf78381 ]---
+  ftrace failed to modify
+  [<c0080000012a0008>] 0xc0080000012a0008
+   actual:   01:00:4c:3c
+  Initializing ftrace call sites
+  ftrace record flags: 2000000
+   (0)
+   expected tramp: c00000000006af4c
 
-Fixes: ed49f7fd6438d ("powerpc/xmon: Disable tracing when entering xmon")
+Looking at the relocation records in __mcount_loc shows a few spurious
+entries:
+
+  RELOCATION RECORDS FOR [__mcount_loc]:
+  OFFSET           TYPE              VALUE
+  0000000000000000 R_PPC64_ADDR64    .text.unlikely+0x0000000000000008
+  0000000000000008 R_PPC64_ADDR64    .text.unlikely+0x0000000000000014
+  0000000000000010 R_PPC64_ADDR64    .text.unlikely+0x0000000000000060
+  0000000000000018 R_PPC64_ADDR64    .text.unlikely+0x00000000000000b4
+  0000000000000020 R_PPC64_ADDR64    .init.text+0x0000000000000008
+  0000000000000028 R_PPC64_ADDR64    .init.text+0x0000000000000014
+
+The first entry in each section is incorrect. Looking at the
+relocation records, the spurious entries correspond to the
+R_PPC64_ENTRY records:
+
+  RELOCATION RECORDS FOR [.text.unlikely]:
+  OFFSET           TYPE              VALUE
+  0000000000000000 R_PPC64_REL64     .TOC.-0x0000000000000008
+  0000000000000008 R_PPC64_ENTRY     *ABS*
+  0000000000000014 R_PPC64_REL24     _mcount
+  <snip>
+
+The problem is that we are not validating the return value from
+get_mcountsym() in sift_rel_mcount(). With this entry, mcountsym is 0,
+but Elf_r_sym(relp) also ends up being 0. Fix this by ensuring
+mcountsym is valid before processing the entry.
+
 Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Tested-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/xmon/xmon.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ scripts/recordmcount.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index dd6badc31f45..74cfc1be04d6 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -466,8 +466,10 @@ static int xmon_core(struct pt_regs *regs, int fromipi)
- 	local_irq_save(flags);
- 	hard_irq_disable();
+diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
+index 2e7793735e14..ccfbfde61556 100644
+--- a/scripts/recordmcount.h
++++ b/scripts/recordmcount.h
+@@ -326,7 +326,8 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
+ 		if (!mcountsym)
+ 			mcountsym = get_mcountsym(sym0, relp, str0);
  
--	tracing_enabled = tracing_is_on();
--	tracing_off();
-+	if (!fromipi) {
-+		tracing_enabled = tracing_is_on();
-+		tracing_off();
-+	}
- 
- 	bp = in_breakpoint_table(regs->nip, &offset);
- 	if (bp != NULL) {
+-		if (mcountsym == Elf_r_sym(relp) && !is_fake_mcount(relp)) {
++		if (mcountsym && mcountsym == Elf_r_sym(relp) &&
++				!is_fake_mcount(relp)) {
+ 			uint_t const addend =
+ 				_w(_w(relp->r_offset) - recval + mcount_adjust);
+ 			mrelp->r_offset = _w(offbase
 -- 
 2.20.1
 
