@@ -2,100 +2,208 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB20C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1346EC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C81F2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B822067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfG2QQM (ORCPT
+        id S1728363AbfG2QRA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:16:12 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:36419 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfG2QQM (ORCPT
+        Mon, 29 Jul 2019 12:17:00 -0400
+Received: from mailoutvs18.siol.net ([185.57.226.209]:60067 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727408AbfG2QRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:16:12 -0400
-Received: by mail-ua1-f68.google.com with SMTP id v20so24189289uao.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:16:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=AyvJSduUmZn33FbpJeTkP5NHm1ThVmp/uEoZugiTS6k=;
-        b=Hdv75bp3y7N0KY9LQEjenz9ab3aSVFTwcD6WpRCNfc+twZKK2yxtzWZF/HDyNzfG5j
-         oPPhEXpM1rbkNurayAbSYEnkZ5IhIkoefwlCerQT+JTM24jliJhE3dC3oaOlSYlnPE71
-         iwXFJljKueslDOcFe/A9f5bzY8ySAt8FwjzXhXRhpQ1Q3uIq0BviDE9e7aiiSkyijxbY
-         aSQQYvLC8K0YAU1QZjHWokVHC1qwKeum1EhBtlMl1innfnGP7P5v/8yS0QdIbj+E4kxl
-         IK4k2nQE63WTmMWqjIu3GGObh7Jrb7LzOv7F1kjQLvM94h/nJAKBnO4g7LZ90WpV33HN
-         9FPw==
-X-Gm-Message-State: APjAAAWV12ns46RukSODcTrVCWBrVxTFcC7+i0tqMWyqHNBA3vk5PN/m
-        juLKmx8OShoza5qniTUt8NnHtw==
-X-Google-Smtp-Source: APXvYqwG8Q4XQWblCYfrnvjYrxOZIt94OjzyFiLAXTSDaMhX/fRr5dDybVH26+paFqcxZZfddeveUQ==
-X-Received: by 2002:a9f:31a2:: with SMTP id v31mr67985907uad.15.1564416971073;
-        Mon, 29 Jul 2019 09:16:11 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id u5sm60539788uah.0.2019.07.29.09.16.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 09:16:10 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 12:16:05 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eric.auger@redhat.com, jean-philippe@linaro.org, jroedel@suse.de,
-        mst@redhat.com, namit@vmware.com, wei.w.wang@intel.com
-Subject: [PULL] vhost,virtio: cleanups and fixes
-Message-ID: <20190729121605-mutt-send-email-mst@kernel.org>
+        Mon, 29 Jul 2019 12:17:00 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id CB4C9522935;
+        Mon, 29 Jul 2019 18:16:56 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id pA7Ggt9CdWmA; Mon, 29 Jul 2019 18:16:56 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 4B0915225A6;
+        Mon, 29 Jul 2019 18:16:56 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id C909752294C;
+        Mon, 29 Jul 2019 18:16:55 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     thierry.reding@gmail.com, mripard@kernel.org, wens@csie.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 5/6] pwm: sun4i: Add support to output source clock directly
+Date:   Mon, 29 Jul 2019 18:16:55 +0200
+Message-ID: <2499807.IN78SsLMYo@jernej-laptop>
+In-Reply-To: <20190729070605.vlu7kgzn362ph2q3@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net> <20190726184045.14669-6-jernej.skrabec@siol.net> <20190729070605.vlu7kgzn362ph2q3@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mutt-Fcc: =sent
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+Hi Uwe,
 
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+Dne ponedeljek, 29. julij 2019 ob 09:06:05 CEST je Uwe Kleine-König 
+napisal(a):
+> On Fri, Jul 26, 2019 at 08:40:44PM +0200, Jernej Skrabec wrote:
+> > PWM core has an option to bypass whole logic and output unchanged source
+> > clock as PWM output. This is achieved by enabling bypass bit.
+> > 
+> > Note that when bypass is enabled, no other setting has any meaning, not
+> > even enable bit.
+> > 
+> > This mode of operation is needed to achieve high enough frequency to
+> > serve as clock source for AC200 chip, which is integrated into same
+> > package as H6 SoC.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/pwm/pwm-sun4i.c | 31 ++++++++++++++++++++++++++++++-
+> >  1 file changed, 30 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index 9e0eca79ff88..848cff26f385 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -120,6 +120,19 @@ static void sun4i_pwm_get_state(struct pwm_chip
+> > *chip,
+> > 
+> >  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> > 
+> > +	/*
+> > +	 * PWM chapter in H6 manual has a diagram which explains that if 
+bypass
+> > +	 * bit is set, no other setting has any meaning. Even more, 
+experiment
+> > +	 * proved that also enable bit is ignored in this case.
+> > +	 */
+> > +	if (val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) {
+> > +		state->period = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, 
+clk_rate);
+> > +		state->duty_cycle = state->period / 2;
+> > +		state->polarity = PWM_POLARITY_NORMAL;
+> > +		state->enabled = true;
+> > +		return;
+> > +	}
+> > +
+> > 
+> >  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
+> >  	
+> >  	    sun4i_pwm->data->has_prescaler_bypass)
+> >  		
+> >  		prescaler = 1;
+> > 
+> > @@ -211,7 +224,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
+> > struct pwm_device *pwm,> 
+> >  {
+> >  
+> >  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
+> >  	struct pwm_state cstate;
+> > 
+> > -	u32 ctrl;
+> > +	u32 ctrl, clk_rate;
+> > +	bool bypass;
+> > 
+> >  	int ret;
+> >  	unsigned int delay_us;
+> >  	unsigned long now;
+> > 
+> > @@ -226,6 +240,16 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
+> > struct pwm_device *pwm,> 
+> >  		}
+> >  	
+> >  	}
+> > 
+> > +	/*
+> > +	 * Although it would make much more sense to check for bypass in
+> > +	 * sun4i_pwm_calculate(), value of bypass bit also depends on 
+"enabled".
+> > +	 * Period is allowed to be rounded up or down.
+> > +	 */
+> 
+> Every driver seems to implement rounding the way its driver considers it
+> sensible. @Thierry: This is another patch where it would be good to have
+> a global directive about how rounding is supposed to work to provide the
+> users an reliable and uniform way to work with PWMs.
+> 
+> > +	clk_rate = clk_get_rate(sun4i_pwm->clk);
+> > +	bypass = (state->period == NSEC_PER_SEC / clk_rate ||
+> > +		 state->period == DIV_ROUND_UP(NSEC_PER_SEC, clk_rate)) 
+&&
+> > +		 state->enabled;
+> 
+> Not sure if the compiler is clever enough to notice the obvious
+> optimisation with this code construct, but you can write this test in a
+> more clever way which has zero instead of up to two divisions. Something
+> like:
+> 
+> bypass = ((state->period * clk_rate >= NSEC_PER_SEC &&
+> 	   state->period * clk_rate < NSEC_PER_SEC + clk_rate) &&
+> 	  state->enabled);
+> 
+> In the commit log you write the motivation for using bypass is that it
+> allows to implement higher frequency then with the "normal" operation.
+> As you don't skip calculating the normal parameters requesting such a
+> high-frequency setting either errors out or doesn't catch the impossible
+> request. In both cases there is something to fix.
 
-are available in the Git repository at:
+It's the latter, otherwise it wouldn't work for my case. I'll fix the check and 
+skip additional logic.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+> 
+> > +
+> > 
+> >  	spin_lock(&sun4i_pwm->ctrl_lock);
+> >  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> > 
+> > @@ -273,6 +297,11 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
+> > struct pwm_device *pwm,> 
+> >  		ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+> >  	
+> >  	}
+> > 
+> > +	if (bypass)
+> > +		ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > +	else
+> > +		ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > +
+> 
+> Does switching on (or off) the bypass bit complete the currently running
+> period?
 
-for you to fetch changes up to 73f628ec9e6bcc45b77c53fe6d0c0ec55eaf82af:
+I don't really know. If I understand correctly, it just bypasses PWM logic 
+completely, so I would say it doesn't complete the currently running period.
 
-  vhost: disable metadata prefetch optimization (2019-07-26 07:49:29 -0400)
+Take a look at chapter 3.9.2 http://linux-sunxi.org/
+File:Allwinner_H6_V200_User_Manual_V1.1.pdf
 
-----------------------------------------------------------------
-virtio, vhost: bugfixes
+Best regards,
+Jernej
 
-Fixes in the iommu and balloon devices.
-Disable the meta-data optimization for now - I hope we can get it fixed
-shortly, but there's no point in making users suffer crashes while we
-are working on that.
+> 
+> >  	sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
+> >  	
+> >  	spin_unlock(&sun4i_pwm->ctrl_lock);
+> 
+> Best regards
+> Uwe
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 
-----------------------------------------------------------------
-Jean-Philippe Brucker (1):
-      iommu/virtio: Update to most recent specification
 
-Michael S. Tsirkin (2):
-      balloon: fix up comments
-      vhost: disable metadata prefetch optimization
 
-Wei Wang (1):
-      mm/balloon_compaction: avoid duplicate page removal
-
- drivers/iommu/virtio-iommu.c      | 40 ++++++++++++++++-------
- drivers/vhost/vhost.h             |  2 +-
- include/uapi/linux/virtio_iommu.h | 32 ++++++++++--------
- mm/balloon_compaction.c           | 69 +++++++++++++++++++++++----------------
- 4 files changed, 89 insertions(+), 54 deletions(-)
