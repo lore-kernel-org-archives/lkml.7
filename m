@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F28C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B06C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA04B20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A16720C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429448;
-	bh=YwuccWPC67nky6oHRiVyPdUqhiollFHNBC3F7IK5tXM=;
+	s=default; t=1564429452;
+	bh=xNwiuznsOjYzk1ckiVdZu9i10yFwm7YgRHBwL1Elp+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0VLRkMuRR9ZjFudlmuJiaC5WIDQESVYyIlNay6hNx1QlfK716gHl6c7vySFAp6ENI
-	 NH3L6pWjG7gMOI0K8ss+np+4w8/qttAgg6AZVh+VdEWGkNy69m8Dzl5bZfZ/w8Vs4v
-	 jrDE9iYuUrnRRanXKNNAAH6ceccNHwHpD+SKrwkc=
+	b=XpmwOF+nMjfBClRal7X1NQIFn020A4jcIj6N0UZb1JJtfzrhU2dVzy3OjfIvtVGpE
+	 NNqndPXHerqPwJZFvZ/wto9gIyn24r9fF+tB62r5EhKLVwDpexmb37e5SJ3XJySKUi
+	 fsqNQZcUrezkzvbeCNaU/6AdGOwoI5Pg+DmDv2mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389744AbfG2ToH (ORCPT
+        id S2389751AbfG2ToK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:44:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60776 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389739AbfG2ToE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:44:04 -0400
+        id S2389741AbfG2ToH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:44:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C413217D4;
-        Mon, 29 Jul 2019 19:44:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D31AE205F4;
+        Mon, 29 Jul 2019 19:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429443;
-        bh=YwuccWPC67nky6oHRiVyPdUqhiollFHNBC3F7IK5tXM=;
+        s=default; t=1564429446;
+        bh=xNwiuznsOjYzk1ckiVdZu9i10yFwm7YgRHBwL1Elp+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mMWMvYilQdh/9EdLQ+ZQGrxNtxcYApRkHsuhmkxpzdR70slJEGQVxbtTv+hVii1Ky
-         wS1gSCXBgFz1hBuNtlJRVuK7p5FioyfrZAqq5HpziwjQ5zdHmqH9VBBYSWewWTiU3A
-         P7SMA5iSWo5xvG026ZD9gXXOEEShgpIxGuA2yjLw=
+        b=xkURDhzQy+hyVJdI/OSATVV6dDmAM96KEg4JPJ0lQDTGJPrVXs04rkz7AKE8fUTPi
+         UfznpEp+YqnL+8dps1RuncBf8i0BoF/FXaLFAgTzsbVhBm5fnR/sFuXex4zIiVsGXY
+         MogtGuVpnq2U3W0KI5OJ9dF/GF3CukaA7uqHFhrI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ryan Kennedy <ryan5544@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.19 099/113] usb: pci-quirks: Correct AMD PLL quirk detection
-Date:   Mon, 29 Jul 2019 21:23:06 +0200
-Message-Id: <20190729190719.218930773@linuxfoundation.org>
+        stable@vger.kernel.org, James Harvey <jamespharvey20@gmail.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 100/113] btrfs: inode: Dont compress if NODATASUM or NODATACOW set
+Date:   Mon, 29 Jul 2019 21:23:07 +0200
+Message-Id: <20190729190719.413799969@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -59,103 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryan Kennedy <ryan5544@gmail.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit f3dccdaade4118070a3a47bef6b18321431f9ac6 upstream.
+commit 42c16da6d684391db83788eb680accd84f6c2083 upstream.
 
-The AMD PLL USB quirk is incorrectly enabled on newer Ryzen
-chipsets. The logic in usb_amd_find_chipset_info currently checks
-for unaffected chipsets rather than affected ones. This broke
-once a new chipset was added in e788787ef. It makes more sense
-to reverse the logic so it won't need to be updated as new
-chipsets are added. Note that the core of the workaround in
-usb_amd_quirk_pll does correctly check the chipset.
+As btrfs(5) specified:
 
-Signed-off-by: Ryan Kennedy <ryan5544@gmail.com>
-Fixes: e788787ef4f9 ("usb:xhci:Add quirk for Certain failing HP keyboard on reset after resume")
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20190704153529.9429-2-ryan5544@gmail.com
+	Note
+	If nodatacow or nodatasum are enabled, compression is disabled.
+
+If NODATASUM or NODATACOW set, we should not compress the extent.
+
+Normally NODATACOW is detected properly in run_delalloc_range() so
+compression won't happen for NODATACOW.
+
+However for NODATASUM we don't have any check, and it can cause
+compressed extent without csum pretty easily, just by:
+  mkfs.btrfs -f $dev
+  mount $dev $mnt -o nodatasum
+  touch $mnt/foobar
+  mount -o remount,datasum,compress $mnt
+  xfs_io -f -c "pwrite 0 128K" $mnt/foobar
+
+And in fact, we have a bug report about corrupted compressed extent
+without proper data checksum so even RAID1 can't recover the corruption.
+(https://bugzilla.kernel.org/show_bug.cgi?id=199707)
+
+Running compression without proper checksum could cause more damage when
+corruption happens, as compressed data could make the whole extent
+unreadable, so there is no need to allow compression for
+NODATACSUM.
+
+The fix will refactor the inode compression check into two parts:
+
+- inode_can_compress()
+  As the hard requirement, checked at btrfs_run_delalloc_range(), so no
+  compression will happen for NODATASUM inode at all.
+
+- inode_need_compress()
+  As the soft requirement, checked at btrfs_run_delalloc_range() and
+  compress_file_range().
+
+Reported-by: James Harvey <jamespharvey20@gmail.com>
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/pci-quirks.c |   31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ fs/btrfs/inode.c |   24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/host/pci-quirks.c
-+++ b/drivers/usb/host/pci-quirks.c
-@@ -205,7 +205,7 @@ int usb_amd_find_chipset_info(void)
- {
- 	unsigned long flags;
- 	struct amd_chipset_info info;
--	int ret;
-+	int need_pll_quirk = 0;
- 
- 	spin_lock_irqsave(&amd_lock, flags);
- 
-@@ -219,21 +219,28 @@ int usb_amd_find_chipset_info(void)
- 	spin_unlock_irqrestore(&amd_lock, flags);
- 
- 	if (!amd_chipset_sb_type_init(&info)) {
--		ret = 0;
- 		goto commit;
- 	}
- 
--	/* Below chipset generations needn't enable AMD PLL quirk */
--	if (info.sb_type.gen == AMD_CHIPSET_UNKNOWN ||
--			info.sb_type.gen == AMD_CHIPSET_SB600 ||
--			info.sb_type.gen == AMD_CHIPSET_YANGTZE ||
--			(info.sb_type.gen == AMD_CHIPSET_SB700 &&
--			info.sb_type.rev > 0x3b)) {
-+	switch (info.sb_type.gen) {
-+	case AMD_CHIPSET_SB700:
-+		need_pll_quirk = info.sb_type.rev <= 0x3B;
-+		break;
-+	case AMD_CHIPSET_SB800:
-+	case AMD_CHIPSET_HUDSON2:
-+	case AMD_CHIPSET_BOLTON:
-+		need_pll_quirk = 1;
-+		break;
-+	default:
-+		need_pll_quirk = 0;
-+		break;
-+	}
-+
-+	if (!need_pll_quirk) {
- 		if (info.smbus_dev) {
- 			pci_dev_put(info.smbus_dev);
- 			info.smbus_dev = NULL;
- 		}
--		ret = 0;
- 		goto commit;
- 	}
- 
-@@ -252,7 +259,7 @@ int usb_amd_find_chipset_info(void)
- 		}
- 	}
- 
--	ret = info.probe_result = 1;
-+	need_pll_quirk = info.probe_result = 1;
- 	printk(KERN_DEBUG "QUIRK: Enable AMD PLL fix\n");
- 
- commit:
-@@ -263,7 +270,7 @@ commit:
- 
- 		/* Mark that we where here */
- 		amd_chipset.probe_count++;
--		ret = amd_chipset.probe_result;
-+		need_pll_quirk = amd_chipset.probe_result;
- 
- 		spin_unlock_irqrestore(&amd_lock, flags);
- 
-@@ -277,7 +284,7 @@ commit:
- 		spin_unlock_irqrestore(&amd_lock, flags);
- 	}
- 
--	return ret;
-+	return need_pll_quirk;
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -388,10 +388,31 @@ static noinline int add_async_extent(str
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(usb_amd_find_chipset_info);
  
++/*
++ * Check if the inode has flags compatible with compression
++ */
++static inline bool inode_can_compress(struct inode *inode)
++{
++	if (BTRFS_I(inode)->flags & BTRFS_INODE_NODATACOW ||
++	    BTRFS_I(inode)->flags & BTRFS_INODE_NODATASUM)
++		return false;
++	return true;
++}
++
++/*
++ * Check if the inode needs to be submitted to compression, based on mount
++ * options, defragmentation, properties or heuristics.
++ */
+ static inline int inode_need_compress(struct inode *inode, u64 start, u64 end)
+ {
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 
++	if (!inode_can_compress(inode)) {
++		WARN(IS_ENABLED(CONFIG_BTRFS_DEBUG),
++			KERN_ERR "BTRFS: unexpected compression for ino %llu\n",
++			btrfs_ino(BTRFS_I(inode)));
++		return 0;
++	}
+ 	/* force compress */
+ 	if (btrfs_test_opt(fs_info, FORCE_COMPRESS))
+ 		return 1;
+@@ -1596,7 +1617,8 @@ static int run_delalloc_range(void *priv
+ 	} else if (BTRFS_I(inode)->flags & BTRFS_INODE_PREALLOC && !force_cow) {
+ 		ret = run_delalloc_nocow(inode, locked_page, start, end,
+ 					 page_started, 0, nr_written);
+-	} else if (!inode_need_compress(inode, start, end)) {
++	} else if (!inode_can_compress(inode) ||
++		   !inode_need_compress(inode, start, end)) {
+ 		ret = cow_file_range(inode, locked_page, start, end, end,
+ 				      page_started, nr_written, 1, NULL);
+ 	} else {
 
 
