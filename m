@@ -7,83 +7,85 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64350C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B631C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D202067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8AC2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 21:48:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aLXoYLOL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jTV7nJdE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbfG2Vse (ORCPT
+        id S1730253AbfG2Vs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 17:48:34 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39178 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfG2Vsd (ORCPT
+        Mon, 29 Jul 2019 17:48:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44469 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730223AbfG2Vs4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 17:48:33 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so28057338pls.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:48:33 -0700 (PDT)
+        Mon, 29 Jul 2019 17:48:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so28653388pfe.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:48:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mHb7K/quzh/o9A0rhyew79DzGwVBiK/JKWkURFhBbPg=;
-        b=aLXoYLOL9bhkDKwRtYhOygieMGKXSKL7OIukbB5IHhN9BIlS95bKQZUqFFb32huu4N
-         noBkyP1aNp6N+UNxp0EvxGURLyduEawdLwt7dMSZ3fye87lVjcqTeBgcdWeTWO0nGRyp
-         8AlwzN7d0PZSga4djNARnHts+njcY0DCqcd14=
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=PBTMvcbHzZT2ylPnK6/N5vcdHNMJLTiFP+3wGDUQr2I=;
+        b=jTV7nJdEl0NkTwN34RMqsJBOee8l5Z3q0hOXS3OUXvWyUfdKDCh9T+qa6f1H3zLt5Q
+         BwkBPHekvwmFAjO6ryu51O5kzdnBYzfsnwSZBTdqxW6wJQkU2sE8aCqNvU9qdDzfyROK
+         lYkYQVPqkjTEDAka1fm7+NWXWevb2tQ6tXoU8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mHb7K/quzh/o9A0rhyew79DzGwVBiK/JKWkURFhBbPg=;
-        b=W244l1NXnRms8YakX63gG8zCN/Ca1Zu0IbwNlcsYcTVIQKztKdUTa3sP+3te2O/AUY
-         Ua2pqRiAEdqZrDBD8wYEYJW7SMrQ1/SS7N1oOB73dNL48+hYBPV+RT1IPKbxl9VnQQrj
-         HF7fYM2Mif0pDGLBEcYt4mjmC5HnTW+Xlat97XA7rpwGatV+jC+Jq/EPBeW4+XuvefM8
-         cajqmEHbFcv9dEH77X3wl/u18YWOOw/cSkbHXadgGVmzDFSaTfN3BQWZ0lHlLru6gZo2
-         bV10PUIP6GUP4rV+U3rTo/zCg6UQA8GM5/ckHVJdEVlhOkdXFnjv98soa/8LUBp1x9TO
-         POeg==
-X-Gm-Message-State: APjAAAWhPyx36FJjyCs19Wf5XqPyAMBZyGKsdiYE+xslH8RLv9D+G6jf
-        tMqD9+Ia9t+MGiDBJli4E6qSOVl/k3A=
-X-Google-Smtp-Source: APXvYqyX4/6lzKkOPc8+bZ/Wr8naVik9Xqd0hoI58Yfve8v7GAHab9WzvrM4B0ZwL294T52ZxlWhnA==
-X-Received: by 2002:a17:902:2ac7:: with SMTP id j65mr113085915plb.242.1564436913282;
-        Mon, 29 Jul 2019 14:48:33 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=PBTMvcbHzZT2ylPnK6/N5vcdHNMJLTiFP+3wGDUQr2I=;
+        b=P9zY71td9nK7z+vdrf317IvGEiedsoH5yirv9QpRhMDq6AqZqrQZTbWDwiZGHq5cy0
+         kV/XFBabBxH0qQjBP+jHXI/KxXJ/UO6fsfGPVG8KPMRaSenbQXcBv99W9G1HIYM1D+3y
+         KGlG8Kq3wCXi2WieXjU/LG9xHSzLZPpCeIOlP2IJdPxMcaelTBw6vI+EN8RCw9NdVIm+
+         bsH9V0eLUkjDMcKspuudnoJ4TUVQOtvBfAwPJyEIildMqFZaa+wytsIiqal4iHUMeZ48
+         KjOsjQ3UfCHZr46EKYeVvOXs1M95F/mN2uPGEs7EQ+v4jEmbpi17/wCJZcBEtwdmFbBE
+         UrtQ==
+X-Gm-Message-State: APjAAAVrgurofbIDN/LcK2QCS7/nRt9UTpvCoY7IWpI8mHNyWroxEuyF
+        rCt3Y7DfXrkh7bnyH3sEFDzIhA==
+X-Google-Smtp-Source: APXvYqy/bap7RfEtFb7EQIgK80j1BhkxTEm0QBIJyQZLWzek6h6g2aCIGDdMPLFJ1yb6bJe0f4S3xg==
+X-Received: by 2002:aa7:8502:: with SMTP id v2mr37715386pfn.98.1564436936079;
+        Mon, 29 Jul 2019 14:48:56 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a3sm65759270pfi.63.2019.07.29.14.48.32
+        by smtp.gmail.com with ESMTPSA id z4sm99551147pfg.166.2019.07.29.14.48.55
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 14:48:32 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 14:48:31 -0700
+        Mon, 29 Jul 2019 14:48:55 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 14:48:54 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] sound: dmasound_atari: Mark expected switch
- fall-through
-Message-ID: <201907291448.E375AA59F@keescook>
-References: <20190729205454.GA5084@embeddedor>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: wd33c93: Mark expected swich fall-through
+Message-ID: <201907291448.C98BB1E8F1@keescook>
+References: <20190729210313.GA5896@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190729205454.GA5084@embeddedor>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190729210313.GA5896@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 03:54:54PM -0500, Gustavo A. R. Silva wrote:
+On Mon, Jul 29, 2019 at 04:03:13PM -0500, Gustavo A. R. Silva wrote:
 > Mark switch cases where we are expecting to fall through.
 > 
 > This patch fixes the following warning (Building: m68k):
 > 
-> sound/oss/dmasound/dmasound_atari.c: warning: this statement may fall
-> through [-Wimplicit-fallthrough=]:  => 1449:24
+> drivers/scsi/wd33c93.c: In function ‘round_4’:
+> drivers/scsi/wd33c93.c:1856:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    case 2: ++x;
+>            ^~~
+> drivers/scsi/wd33c93.c:1857:3: note: here
+>    case 3: ++x;
+>    ^~~~
 > 
-> Notice that, in this particular case, the code comment is
-> modified in accordance with what GCC is expecting to find.
-> 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
 > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
@@ -91,50 +93,21 @@ Reviewed-by: Kees Cook <keescook@chromium.org>
 -Kees
 
 > ---
-> Changes in v2:
->  - Update code so switch and case statements are at the same indent.
+>  drivers/scsi/wd33c93.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->  sound/oss/dmasound/dmasound_atari.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/sound/oss/dmasound/dmasound_atari.c b/sound/oss/dmasound/dmasound_atari.c
-> index 83653683fd68..823ccfa089b2 100644
-> --- a/sound/oss/dmasound/dmasound_atari.c
-> +++ b/sound/oss/dmasound/dmasound_atari.c
-> @@ -1432,25 +1432,25 @@ static int FalconMixerIoctl(u_int cmd, u_long arg)
->  {
->  	int data;
->  	switch (cmd) {
-> -	    case SOUND_MIXER_READ_RECMASK:
-> +	case SOUND_MIXER_READ_RECMASK:
->  		return IOCTL_OUT(arg, SOUND_MASK_MIC);
-> -	    case SOUND_MIXER_READ_DEVMASK:
-> +	case SOUND_MIXER_READ_DEVMASK:
->  		return IOCTL_OUT(arg, SOUND_MASK_VOLUME | SOUND_MASK_MIC | SOUND_MASK_SPEAKER);
-> -	    case SOUND_MIXER_READ_STEREODEVS:
-> +	case SOUND_MIXER_READ_STEREODEVS:
->  		return IOCTL_OUT(arg, SOUND_MASK_VOLUME | SOUND_MASK_MIC);
-> -	    case SOUND_MIXER_READ_VOLUME:
-> +	case SOUND_MIXER_READ_VOLUME:
->  		return IOCTL_OUT(arg,
->  			VOLUME_ATT_TO_VOXWARE(dmasound.volume_left) |
->  			VOLUME_ATT_TO_VOXWARE(dmasound.volume_right) << 8);
-> -	    case SOUND_MIXER_READ_CAPS:
-> +	case SOUND_MIXER_READ_CAPS:
->  		return IOCTL_OUT(arg, SOUND_CAP_EXCL_INPUT);
-> -	    case SOUND_MIXER_WRITE_MIC:
-> +	case SOUND_MIXER_WRITE_MIC:
->  		IOCTL_IN(arg, data);
->  		tt_dmasnd.input_gain =
->  			RECLEVEL_VOXWARE_TO_GAIN(data & 0xff) << 4 |
->  			RECLEVEL_VOXWARE_TO_GAIN(data >> 8 & 0xff);
-> -		/* fall thru, return set value */
-> -	    case SOUND_MIXER_READ_MIC:
-> +		/* fall through - return set value */
-> +	case SOUND_MIXER_READ_MIC:
->  		return IOCTL_OUT(arg,
->  			RECLEVEL_GAIN_TO_VOXWARE(tt_dmasnd.input_gain >> 4 & 0xf) |
->  			RECLEVEL_GAIN_TO_VOXWARE(tt_dmasnd.input_gain & 0xf) << 8);
+> diff --git a/drivers/scsi/wd33c93.c b/drivers/scsi/wd33c93.c
+> index fb7b289fa09f..f81046f0e68a 100644
+> --- a/drivers/scsi/wd33c93.c
+> +++ b/drivers/scsi/wd33c93.c
+> @@ -1854,6 +1854,7 @@ round_4(unsigned int x)
+>  		case 1: --x;
+>  			break;
+>  		case 2: ++x;
+> +			/* fall through */
+>  		case 3: ++x;
+>  	}
+>  	return x;
 > -- 
 > 2.22.0
 > 
