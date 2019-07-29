@@ -4,33 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEF7C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BC0C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF582073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FA52073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387957AbfG2Sd6 (ORCPT
+        id S2388048AbfG2Sd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:33:58 -0400
-Received: from mxwww.masterlogin.de ([95.129.51.220]:40432 "EHLO
+        Mon, 29 Jul 2019 14:33:59 -0400
+Received: from mxwww.masterlogin.de ([95.129.51.220]:40470 "EHLO
         mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387536AbfG2Sd6 (ORCPT
+        with ESMTP id S2387849AbfG2Sd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 14:33:58 -0400
-X-Greylist: delayed 581 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 14:33:56 EDT
-Received: from mxout1.routing.net (unknown [192.168.10.81])
-        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id 94D8196323;
-        Mon, 29 Jul 2019 18:24:26 +0000 (UTC)
-Received: from mxbox1.masterlogin.de (unknown [192.168.10.253])
-        by mxout1.routing.net (Postfix) with ESMTP id C407B40983;
-        Mon, 29 Jul 2019 18:24:26 +0000 (UTC)
+Received: from mxout2.routing.net (unknown [192.168.10.82])
+        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id E1DAD961CD;
+        Mon, 29 Jul 2019 18:24:11 +0000 (UTC)
+Received: from mxbox2.masterlogin.de (unknown [192.168.10.253])
+        by mxout2.routing.net (Postfix) with ESMTP id 1DB7D64896;
+        Mon, 29 Jul 2019 18:24:12 +0000 (UTC)
 Received: from localhost.localdomain (fttx-pool-185.76.97.79.bambit.de [185.76.97.79])
-        by mxbox1.masterlogin.de (Postfix) with ESMTPSA id 78DB0405D3;
-        Mon, 29 Jul 2019 20:24:25 +0200 (CEST)
+        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id B23E5100051;
+        Mon, 29 Jul 2019 20:24:10 +0200 (CEST)
 From:   Frank Wunderlich <frank-w@public-files.de>
 To:     Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -55,9 +53,9 @@ To:     Alessandro Zummo <a.zummo@towertech.it>,
         "Tianping . Fang" <tianping.fang@mediatek.com>
 Cc:     Josef Friedl <josef.friedl@speed.at>,
         Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v3 10/10] arm: dts: mt6323: add keys, power-controller, rtc and codec
-Date:   Mon, 29 Jul 2019 20:24:21 +0200
-Message-Id: <20190729182421.7192-1-frank-w@public-files.de>
+Subject: [PATCH v3 09/10] MAINTAINERS: add Mediatek shutdown drivers
+Date:   Mon, 29 Jul 2019 20:24:03 +0200
+Message-Id: <20190729182403.7128-1-frank-w@public-files.de>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -66,54 +64,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Friedl <josef.friedl@speed.at>
 
-support poweroff and power-related keys on bpi-r2
+add Section in MAINTAINERS file for poweroff driver
 
-changes since v2: none (=v2 part 7)
+changes since v2: none (=v2 part 6)
 
-Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 ---
- arch/arm/boot/dts/mt6323.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mt6323.dtsi b/arch/arm/boot/dts/mt6323.dtsi
-index ba397407c1dd..7fda40ab5fe8 100644
---- a/arch/arm/boot/dts/mt6323.dtsi
-+++ b/arch/arm/boot/dts/mt6323.dtsi
-@@ -238,5 +238,32 @@
- 				regulator-enable-ramp-delay = <216>;
- 			};
- 		};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6426db5198f0..4172a3177633 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10128,6 +10128,13 @@ S:	Maintained
+ F:	drivers/net/dsa/mt7530.*
+ F:	net/dsa/tag_mtk.c
+ 
++MEDIATEK BOARD LEVEL SHUTDOWN DRIVERS
++M:	Sean Wang <sean.wang@mediatek.com>
++L:	linux-pm@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
++F:	drivers/power/reset/mt6323-poweroff.c
 +
-+		mt6323keys: mt6323keys {
-+			compatible = "mediatek,mt6323-keys";
-+			mediatek,long-press-mode = <1>;
-+			power-off-time-sec = <0>;
-+
-+			power {
-+				linux,keycodes = <116>;
-+				wakeup-source;
-+			};
-+
-+			home {
-+				linux,keycodes = <114>;
-+			};
-+		};
-+
-+		codec: mt6397codec {
-+			compatible = "mediatek,mt6397-codec";
-+		};
-+
-+		power-controller {
-+			compatible = "mediatek,mt6323-pwrc";
-+		};
-+
-+		rtc {
-+			compatible = "mediatek,mt6323-rtc";
-+		};
- 	};
- };
+ MEDIATEK JPEG DRIVER
+ M:	Rick Chang <rick.chang@mediatek.com>
+ M:	Bin Liu <bin.liu@mediatek.com>
 -- 
 2.17.1
 
