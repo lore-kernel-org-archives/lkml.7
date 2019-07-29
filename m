@@ -2,346 +2,701 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EAAC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E099BC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10EFA206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889D8206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqN6GVuk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sx8OT53j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729587AbfG2Uq5 (ORCPT
+        id S2387793AbfG2UrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:46:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38883 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbfG2Uq4 (ORCPT
+        Mon, 29 Jul 2019 16:47:07 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35958 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729598AbfG2UrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:46:56 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s15so33304675wmj.3;
-        Mon, 29 Jul 2019 13:46:53 -0700 (PDT)
+        Mon, 29 Jul 2019 16:47:06 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r6so63984005oti.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 13:47:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KRJOdYspkea3ctcgfyL4vkSaMvPUbA3jB1qwHSVBZHI=;
-        b=iqN6GVuk9n9YK8Hc3Uy7Wnz1A8Ufu6NBu+nWTNVfLVAPzKbT1HuvQITJFAPvv7siRt
-         5df28Q3payr+XqJZNpa8lTMbpTraKhUXpKtKOLH+DZ7ZwaFOVFfXLVs2f15nBSEjWuwU
-         rs/AcAjdmKVITMs50LvsyLv6kqgKCGYOMxLjtYDoEr4GFR5J29jSkD+zC8PKAXasWRKM
-         ngLgl3CZGmhkxyiM65H6IYY0U8a3y3dgDJ+YLaH6q4qUZsMIHy8wLokMGj15Mk3BnvEJ
-         CdFmS0ZNzEpI8ZRS+LCgHmB8WUp8yzQx7kvgaDgUseDmYJmqA8gAZ2jpctQJayBe2UvO
-         ke+w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dD9LE4rmiBsyy2hb0av6tpTt7bcQcZg77Ns+lCmzg58=;
+        b=sx8OT53j0mMxr/KiqBMWYfO/0UdbKvn+ro6b58ZBkf+8E5C3IuHRBjuaIrrWzwPAjI
+         K9EhAiA87PAXWOpsrobjMF9AW50eO47tpbIhbNj/EbO9YuKfGDg7484ZNsA56sTv/Plv
+         SFrTA1Bo/B7qxtRzUsrseEQU3zq1mJYmWTNfoUFM0XK+Z1RrI3x65btUObAsYfwicWd4
+         caog8rUwKvLBleQEhdqhbQTQVy0DrcK/dc4aeA1Xh9x6FJfWIldlI1qkqT8kTed3bEmR
+         n5A5O8TiRS9500/DjdXU6FXcv7ggALC5ukf4eYsZ5NEMm1vTDD5ZDaboaWlNM7ZVt3ta
+         0S+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=KRJOdYspkea3ctcgfyL4vkSaMvPUbA3jB1qwHSVBZHI=;
-        b=eDLibrd6ZMHV/9YoZXTNo9n5zpjAsZysUm1Ihsiwyz5hcvrG6kUB/Lula3T70x/xSb
-         qqmkf9D/Szjil9U0gReLghNwYVEfajHBFDZSdMuM89rZ9cJxQMQ6pYuQS64Y2IHeUMEw
-         BnMLgBuc/L2XzcwHOO9BbgdH1VG206vgsd/tN8FtIBeiuRY+2redH01FtGHj3fvQSwng
-         4YeLe/7lSP9UmKSP5tvOd/5ciOO6FVbf8IGHOStmVxhJEvQ5cbrxtfEe7Be8ZFY3Rt9l
-         UKmraeYbdh5muHa+KHDYZwBhPjLkO0VnuNljbsmXefkx05KppGsKd1TUhS/HJgK2uN5v
-         p6Sw==
-X-Gm-Message-State: APjAAAVmIK40oIE68AfBgUkC+rdcVS6D/A4S7Eh8E5zx/J1VZGofoDXr
-        kfWEr4f6S4cfO/Ct/mEaykOBezLJ
-X-Google-Smtp-Source: APXvYqw7ffFcrjgMGuy3P4p+E0xgTvURlXmVvAs6uqp+u5/UEpf0lvzSYLQht63Bq/VP2RIT7bG1vw==
-X-Received: by 2002:a1c:a8c9:: with SMTP id r192mr103805639wme.43.1564433212415;
-        Mon, 29 Jul 2019 13:46:52 -0700 (PDT)
-Received: from [192.168.1.19] (civ151.neoplus.adsl.tpnet.pl. [83.31.45.151])
-        by smtp.gmail.com with ESMTPSA id s10sm47415435wrt.49.2019.07.29.13.46.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 13:46:51 -0700 (PDT)
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v4 2/9] documention: leds: Add multicolor class
- documentation
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190725182818.29556-1-dmurphy@ti.com>
- <20190725182818.29556-3-dmurphy@ti.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <bdbe95b0-83c8-53a6-1be0-1a8f43a0810c@gmail.com>
-Date:   Mon, 29 Jul 2019 22:46:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dD9LE4rmiBsyy2hb0av6tpTt7bcQcZg77Ns+lCmzg58=;
+        b=oOVKneUX2HhizfMWX8SiavV9NVlQDglcHmbMkmWpBCv7OUD1zXwNzNtWkC4Q0FolVg
+         c8E+WRfhkOk1qYPyBj6vAQDywHWNhZYhJOCx2nLtnIyR7oSCNxCSZ2am5wBJuwDxS/jl
+         JLQ5ujeR+FrqQvRGHJwK6uOk9mFzFhf+5x8ssgQj9c6GEssDCUf16JW/m/jVfQYViF0e
+         UEsEvcmGXZHIeWXy4+vcAJjMzOD3INGCX6FhxFXNTqwEls5p0FHraBzVwCLAVw7vBEm1
+         BFoGChPZrOD9dlmsYL7T3xytHkkmDVQNLLHw+pP+XOThn/auLdNH/RQ8FFCMeGLAFNpz
+         BJtA==
+X-Gm-Message-State: APjAAAUnZGsrvyg7HTsKCdoC82kCdOgbbEgtAAxphszwGwLV89sUZa9A
+        BAjU7vnHTHY/eSzp4phhlKuCtK7A8o+VWicdw2ZbFQ==
+X-Google-Smtp-Source: APXvYqzM0srgoFZV+g4XfdVc/WnVLFZrX7ZGHj9oA3GE+34pX9/IB+QGQVaKNzgc0Rpa9+frooGvsv91FAuEHNpSxlU=
+X-Received: by 2002:a9d:6d06:: with SMTP id o6mr32840720otp.225.1564433225522;
+ Mon, 29 Jul 2019 13:47:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190725182818.29556-3-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <2305283.AStDPdUUnE@kreacher> <c8960d91-4446-9acf-5575-e442a652bd05@gmail.com>
+In-Reply-To: <c8960d91-4446-9acf-5575-e442a652bd05@gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 29 Jul 2019 13:46:26 -0700
+Message-ID: <CAGETcx_+i6_0Q2rf-UdzZ3bCPUos9Tu4JmvvO0zUoy5gB8_ESQ@mail.gmail.com>
+Subject: Re: [PATCH v2] driver core: Remove device link creation limitation
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+Rafael,
 
-Now we will need this in rst format. It doesn't involve
-much tweaking to the txt, but some details like links
-to other documents can be enhanced.
+This is the fix you need. Or something link this.
 
-I've also come across an issue of lack of line break after listed quoted
-strings but I don't see such occurrence here. There might be still
-some other quirks emerging after translating rst to html format.
+I had asked you to reject DL_FLAG_MANAGED as an input flag if you are
+marking it as internal (in the comments). But looks like you were also
+trying to check for "undefined" bit positions. However, the check
+isn't correct because DL_MANAGED_FLAGS doesn't include (rightfully so)
+DL_FLAG_PM_RUNTIME and DL_FLAG_RPM_ACTIVE .
 
-Please check Documentation/doc-guide/sphinx.rst for starter.
+I tried to write a DL_FLAG_EXTERNAL to include all the external flags,
+but that felt like a maintenance headache that's not worth carrying. I
+think it's simpler to just error out when internal flags being passed
+in and ignore any undefined bit positions.
 
-On 7/25/19 8:28 PM, Dan Murphy wrote:
-> Add the support documentation on the multicolor LED framework.
-> This document defines the directores and file generated by the
+Feel free to squash this into your patch. Or if people would rather
+have me do a separate patch, that's fine too. Sorry I missed this
+during the review.
 
-s/directores/directories/
++++ b/drivers/base/core.c
+@@ -275,7 +275,7 @@ struct device_link *device_link_add(struct device *cons=
+umer,
+        struct device_link *link;
 
-> multicolor framework.  It also documents usage.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  Documentation/leds/leds-class-multicolor.txt | 152 +++++++++++++++++++
->  1 file changed, 152 insertions(+)
->  create mode 100644 Documentation/leds/leds-class-multicolor.txt
-> 
-> diff --git a/Documentation/leds/leds-class-multicolor.txt b/Documentation/leds/leds-class-multicolor.txt
-> new file mode 100644
-> index 000000000000..3b354e523660
-> --- /dev/null
-> +++ b/Documentation/leds/leds-class-multicolor.txt
-> @@ -0,0 +1,152 @@
-> +
-> +Multi Color LED handling under Linux
-> +=================================================
-> +
-> +Author: Dan Murphy <dmurphy@ti.com>
-> +
-> +Description
-> +-----------
-> +There are varying monochrome LED colors available for application.  These
-> +LEDs can be used as a single use case LED or can be mixed with other color
-> +LEDs to produce the full spectrum of color.  Color LEDs that are grouped
-> +can be presented under a single LED node with individual color control.
-> +The multicolor class groups these LEDs and allows dynamically setting the value
-> +of a single LED or setting the intensity values of the LEDs in the group and
-> +updating the LEDs virtually simultaneously.
-> +
-> +Multicolor Class Control
-> +-------------------------
-> +The multicolor class presents the LED groups under a directory called "colors".
-> +This directory is a child under the LED parent node created by the led_class
-> +framework.  The led_class framework is documented in led-class.txt within this
-> +documentation directory.
-> +
-> +Each colored LED is given its own directory.  These directories can be, but not
-> +limited to red, green, blue, white, amber, yellow and violet.  Under these
+        if (!consumer || !supplier ||
+-           (flags & ~(DL_FLAG_STATELESS | DL_MANAGED_LINK_FLAGS)) ||
++           flags & DL_FLAG_MANAGED ||
+            (flags & DL_FLAG_STATELESS && flags & DL_MANAGED_LINK_FLAGS) ||
+            (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
+             flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
 
-Similarly as in 1/9 please refer to the document with available LED
-colors and mention that required color should be added if it is
-missing.
+-Saravana
 
-> +directories the intensity and max_intensity files are presented for each LED.
-> +
-> +
-> +Directory Layout Example
-> +------------------------
-> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
-> +colors/:
-> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
-> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 green
-> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
-> +-rw-------    1 root     root          4096 Jun 28 20:21 color_mix
-> +
-> +colors/blue:
-> +-rw-------    1 root     root          4096 Jun 28 20:21 intensity
-> +-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-> +-r--------    1 root     root          4096 Jun 28 20:21 color_id
-> +
-> +colors/green:
-> +-rw-------    1 root     root          4096 Jun 28 20:22 intensity
-> +-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-> +-r--------    1 root     root          4096 Jun 28 20:21 color_id
-> +
-> +colors/red:
-> +-rw-------    1 root     root          4096 Jun 28 20:21 intensity
-> +-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-> +-r--------    1 root     root          4096 Jun 28 20:21 color_id
-> +
-> +Multicolor Color Mixing
-> +-----------------------
-> +Multicolor monochrome LEDs intensity can be modified and mixed to produce a
-> +varying array of colors.  The color_mix file gives the user the ability to write
-> +all the monochrome LEDs registered in the directory with a single call.
-> +To create a specific color from monochrome LEDs the color_mix file needs to be
-> +written with each color's intensity.  The order in which the monochrome LEDs
-> +should be written is based on the colors color_id.
-> +
-> +For example:
-> +cat /sys/class/leds/rgb:grouped_leds/red/color_id
-> +0
-> +cat /sys/class/leds/rgb:grouped_leds/green/color_id
-> +1
-> +cat /sys/class/leds/rgb:grouped_leds/blue/color_id
-> +2
-> +
-> +red - color_id = 0
-> +green - color_id = 1
-> +blue - color_id = 2
-> +
-> +These id's are the order in which to write the color_mix file.
-> +
-> +echo "<red> <green> <blue>" > color_mix
-> +
-> +echo "80 00 80" > color_mix
-> +
-> +The order of the monochrome LEDs are determined during multicolor class
-> +registration and will not change unless unregistered and re-registered.
-> +
-> +Other example with amber monochrome LED:
-> +blue - color_id = 0
-> +amber - color_id = 1
-> +
-> +In this exampe blue is at ID 0 and amber ID is 1 so the user would write
-
-s/exampe/example/
-
-> +echo "<blue> <amber>" > color_mix
-> +
-> +echo "38 80" > color_mix
-> +
-> +If a single monochrome LED needs to be modified then the user would write the
-> +colors/<color>/intensity file.
-> +
-> +
-> +Multicolor Class Brightness Control
-> +-----------------------------------
-> +The multiclor class framework will calculate each monochrome LEDs intensity.
-> +
-> +The brightness level for each LED is calculated based on the color LED
-> +intensity setting divided by the color LED max intensity setting multiplied by
-> +the requested value.
-> +
-> +led_brightness = requested_value * led_color_intensity/led_color_max_intensity
-> +
-> +Example:
-> +Three LEDs are present in the group as defined in "Directory Layout Example"
-> +within this document.
-> +
-> +A user first writes the color LED brightness file with the brightness level that
-> +is necessary to achieve a blueish violet output from the RGB LED group.
-> +
-> +echo 138 > /sys/class/leds/rgb:grouped_leds/red/intensity
-> +echo 43 > /sys/class/leds/rgb:grouped_leds/green/intensity
-> +echo 226 > /sys/class/leds/rgb:grouped_leds/blue/intensity
-> +
-> +red -
-> +	intensity = 138
-> +	max_intensity = 255
-> +green -
-> +	intensity = 43
-> +	max_intensity = 255
-> +blue -
-> +	intensity = 226
-> +	max_intensity = 255
-> +
-> +The user can control the brightness of that RGB group by writing the parent
-> +'brightness' control.  Assuming a parent max_brightness of 255 the user may want
-> +to dim the LED color group to half.  The user would write a value of 128 to the
-> +parent brightness file then the values written to each LED will be adjusted
-> +base on this value
-
-s/base/based/
-
-> +
-> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
-> +255
-> +echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
-> +
-> +adjusted_red_value = 128 * 138/255 = 69
-> +adjusted_green_value = 128 * 43/255 = 21
-> +adjusted_blue_value = 128 * 226/255 = 113
-> +
-> +Reading the parent brightness file will return the current brightness value of
-> +the color LED group.
-> +
-> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
-> +255
-> +
-> +echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
-> +
-> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
-
-s/max_brightness/brightness/
-
-But I'd skip the three above examples - they are trivial and this part
-of the interface works identically as the current LED class interface.
-
-> +128
-> +
-> +
-> 
-
--- 
-Best regards,
-Jacek Anaszewski
-
-
+On Mon, Jul 29, 2019 at 8:48 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> 16.07.2019 18:21, Rafael J. Wysocki =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Subject: [PATCH] driver core: Remove device link creation limitation
+> >
+> > If device_link_add() is called for a consumer/supplier pair with an
+> > existing device link between them and the existing link's type is
+> > not in agreement with the flags passed to that function by its
+> > caller, NULL will be returned.  That is seriously inconvenient,
+> > because it forces the callers of device_link_add() to worry about
+> > what others may or may not do even if that is not relevant to them
+> > for any other reasons.
+> >
+> > It turns out, however, that this limitation can be made go away
+> > relatively easily.
+> >
+> > The underlying observation is that if DL_FLAG_STATELESS has been
+> > passed to device_link_add() in flags for the given consumer/supplier
+> > pair at least once, calling either device_link_del() or
+> > device_link_remove() to release the link returned by it should work,
+> > but there are no other requirements associated with that flag.  In
+> > turn, if at least one of the callers of device_link_add() for the
+> > given consumer/supplier pair has not passed DL_FLAG_STATELESS to it
+> > in flags, the driver core should track the status of the link and act
+> > on it as appropriate (ie. the link should be treated as "managed").
+> > This means that DL_FLAG_STATELESS needs to be set for managed device
+> > links and it should be valid to call device_link_del() or
+> > device_link_remove() to drop references to them in certain
+> > sutiations.
+> >
+> > To allow that to happen, introduce a new (internal) device link flag
+> > called DL_FLAG_MANAGED and make device_link_add() set it automatically
+> > whenever DL_FLAG_STATELESS is not passed to it.  Also make it take
+> > additional references to existing device links that were previously
+> > stateless (that is, with DL_FLAG_STATELESS set and DL_FLAG_MANAGED
+> > unset) and will need to be managed going forward and initialize
+> > their status (which has been DL_STATE_NONE so far).
+> >
+> > Accordingly, when a managed device link is dropped automatically
+> > by the driver core, make it clear DL_FLAG_MANAGED, reset the link's
+> > status back to DL_STATE_NONE and drop the reference to it associated
+> > with DL_FLAG_MANAGED instead of just deleting it right away (to
+> > allow it to stay around in case it still needs to be released
+> > explicitly by someone).
+> >
+> > With that, since setting DL_FLAG_STATELESS doesn't mean that the
+> > device link in question is not managed any more, replace all of the
+> > status-tracking checks against DL_FLAG_STATELESS with analogous
+> > checks against DL_FLAG_MANAGED and update the documentation to
+> > reflect these changes.
+> >
+> > While at it, make device_link_add() reject flags that it does not
+> > recognize, including DL_FLAG_MANAGED.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Reviewed-by: Saravana Kannan <saravanak@google.com>
+> > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > ---
+> >
+> > -> v2:
+> >    * Add a check to device_link_add() to return NULL if unrecognized fl=
+ags are
+> >      passed to it.
+> >    * Modify kerneldoc comments around DL_FLAG_MANAGED.
+> >
+> > I've tentatively added the Tested-by tag from Marek, because I don't ex=
+pect
+> > the changes made between the initial posting and the v2 to make any dif=
+ference
+> > for him.
+> >
+> > ---
+> >  Documentation/driver-api/device_link.rst |    4
+> >  drivers/base/core.c                      |  176 +++++++++++++++++-----=
+---------
+> >  drivers/base/power/runtime.c             |    4
+> >  include/linux/device.h                   |    4
+> >  4 files changed, 106 insertions(+), 82 deletions(-)
+> >
+> > Index: linux-pm/drivers/base/core.c
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > --- linux-pm.orig/drivers/base/core.c
+> > +++ linux-pm/drivers/base/core.c
+> > @@ -124,6 +124,50 @@ static int device_is_dependent(struct de
+> >       return ret;
+> >  }
+> >
+> > +static void device_link_init_status(struct device_link *link,
+> > +                                 struct device *consumer,
+> > +                                 struct device *supplier)
+> > +{
+> > +     switch (supplier->links.status) {
+> > +     case DL_DEV_PROBING:
+> > +             switch (consumer->links.status) {
+> > +             case DL_DEV_PROBING:
+> > +                     /*
+> > +                      * A consumer driver can create a link to a suppl=
+ier
+> > +                      * that has not completed its probing yet as long=
+ as it
+> > +                      * knows that the supplier is already functional =
+(for
+> > +                      * example, it has just acquired some resources f=
+rom the
+> > +                      * supplier).
+> > +                      */
+> > +                     link->status =3D DL_STATE_CONSUMER_PROBE;
+> > +                     break;
+> > +             default:
+> > +                     link->status =3D DL_STATE_DORMANT;
+> > +                     break;
+> > +             }
+> > +             break;
+> > +     case DL_DEV_DRIVER_BOUND:
+> > +             switch (consumer->links.status) {
+> > +             case DL_DEV_PROBING:
+> > +                     link->status =3D DL_STATE_CONSUMER_PROBE;
+> > +                     break;
+> > +             case DL_DEV_DRIVER_BOUND:
+> > +                     link->status =3D DL_STATE_ACTIVE;
+> > +                     break;
+> > +             default:
+> > +                     link->status =3D DL_STATE_AVAILABLE;
+> > +                     break;
+> > +             }
+> > +             break;
+> > +     case DL_DEV_UNBINDING:
+> > +             link->status =3D DL_STATE_SUPPLIER_UNBIND;
+> > +             break;
+> > +     default:
+> > +             link->status =3D DL_STATE_DORMANT;
+> > +             break;
+> > +     }
+> > +}
+> > +
+> >  static int device_reorder_to_tail(struct device *dev, void *not_used)
+> >  {
+> >       struct device_link *link;
+> > @@ -165,6 +209,10 @@ void device_pm_move_to_tail(struct devic
+> >       device_links_read_unlock(idx);
+> >  }
+> >
+> > +#define DL_MANAGED_LINK_FLAGS (DL_FLAG_AUTOREMOVE_CONSUMER | \
+> > +                            DL_FLAG_AUTOREMOVE_SUPPLIER | \
+> > +                            DL_FLAG_AUTOPROBE_CONSUMER)
+> > +
+> >  /**
+> >   * device_link_add - Create a link between two devices.
+> >   * @consumer: Consumer end of the link.
+> > @@ -179,9 +227,9 @@ void device_pm_move_to_tail(struct devic
+> >   * of the link.  If DL_FLAG_PM_RUNTIME is not set, DL_FLAG_RPM_ACTIVE =
+will be
+> >   * ignored.
+> >   *
+> > - * If DL_FLAG_STATELESS is set in @flags, the link is not going to be =
+managed by
+> > - * the driver core and, in particular, the caller of this function is =
+expected
+> > - * to drop the reference to the link acquired by it directly.
+> > + * If DL_FLAG_STATELESS is set in @flags, the caller of this function =
+is
+> > + * expected to release the link returned by it directly with the help =
+of either
+> > + * device_link_del() or device_link_remove().
+> >   *
+> >   * If that flag is not set, however, the caller of this function is ha=
+nding the
+> >   * management of the link over to the driver core entirely and its ret=
+urn value
+> > @@ -201,9 +249,16 @@ void device_pm_move_to_tail(struct devic
+> >   * be used to request the driver core to automaticall probe for a cons=
+mer
+> >   * driver after successfully binding a driver to the supplier device.
+> >   *
+> > - * The combination of DL_FLAG_STATELESS and either DL_FLAG_AUTOREMOVE_=
+CONSUMER
+> > - * or DL_FLAG_AUTOREMOVE_SUPPLIER set in @flags at the same time is in=
+valid and
+> > - * will cause NULL to be returned upfront.
+> > + * The combination of DL_FLAG_STATELESS and one of DL_FLAG_AUTOREMOVE_=
+CONSUMER,
+> > + * DL_FLAG_AUTOREMOVE_SUPPLIER, or DL_FLAG_AUTOPROBE_CONSUMER set in @=
+flags at
+> > + * the same time is invalid and will cause NULL to be returned upfront=
+.
+> > + * However, if a device link between the given @consumer and @supplier=
+ pair
+> > + * exists already when this function is called for them, the existing =
+link will
+> > + * be returned regardless of its current type and status (the link's f=
+lags may
+> > + * be modified then).  The caller of this function is then expected to=
+ treat
+> > + * the link as though it has just been created, so (in particular) if
+> > + * DL_FLAG_STATELESS was passed in @flags, the link needs to be releas=
+ed
+> > + * explicitly when not needed any more (as stated above).
+> >   *
+> >   * A side effect of the link creation is re-ordering of dpm_list and t=
+he
+> >   * devices_kset list by moving the consumer device and all devices dep=
+ending
+> > @@ -220,10 +275,8 @@ struct device_link *device_link_add(stru
+> >       struct device_link *link;
+> >
+> >       if (!consumer || !supplier ||
+> > -         (flags & DL_FLAG_STATELESS &&
+> > -          flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
+> > -                   DL_FLAG_AUTOREMOVE_SUPPLIER |
+> > -                   DL_FLAG_AUTOPROBE_CONSUMER)) ||
+> > +         (flags & ~(DL_FLAG_STATELESS | DL_MANAGED_LINK_FLAGS)) ||
+> > +         (flags & DL_FLAG_STATELESS && flags & DL_MANAGED_LINK_FLAGS) =
+||
+> >           (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
+> >            flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
+> >                     DL_FLAG_AUTOREMOVE_SUPPLIER)))
+> > @@ -236,6 +289,9 @@ struct device_link *device_link_add(stru
+> >               }
+> >       }
+> >
+> > +     if (!(flags & DL_FLAG_STATELESS))
+> > +             flags |=3D DL_FLAG_MANAGED;
+> > +
+> >       device_links_write_lock();
+> >       device_pm_lock();
+> >
+> > @@ -262,15 +318,6 @@ struct device_link *device_link_add(stru
+> >               if (link->consumer !=3D consumer)
+> >                       continue;
+> >
+> > -             /*
+> > -              * Don't return a stateless link if the caller wants a st=
+ateful
+> > -              * one and vice versa.
+> > -              */
+> > -             if (WARN_ON((flags & DL_FLAG_STATELESS) !=3D (link->flags=
+ & DL_FLAG_STATELESS))) {
+> > -                     link =3D NULL;
+> > -                     goto out;
+> > -             }
+> > -
+> >               if (flags & DL_FLAG_PM_RUNTIME) {
+> >                       if (!(link->flags & DL_FLAG_PM_RUNTIME)) {
+> >                               pm_runtime_new_link(consumer);
+> > @@ -281,6 +328,7 @@ struct device_link *device_link_add(stru
+> >               }
+> >
+> >               if (flags & DL_FLAG_STATELESS) {
+> > +                     link->flags |=3D DL_FLAG_STATELESS;
+> >                       kref_get(&link->kref);
+> >                       goto out;
+> >               }
+> > @@ -299,6 +347,11 @@ struct device_link *device_link_add(stru
+> >                       link->flags &=3D ~(DL_FLAG_AUTOREMOVE_CONSUMER |
+> >                                        DL_FLAG_AUTOREMOVE_SUPPLIER);
+> >               }
+> > +             if (!(link->flags & DL_FLAG_MANAGED)) {
+> > +                     kref_get(&link->kref);
+> > +                     link->flags |=3D DL_FLAG_MANAGED;
+> > +                     device_link_init_status(link, consumer, supplier)=
+;
+> > +             }
+> >               goto out;
+> >       }
+> >
+> > @@ -325,48 +378,10 @@ struct device_link *device_link_add(stru
+> >       kref_init(&link->kref);
+> >
+> >       /* Determine the initial link state. */
+> > -     if (flags & DL_FLAG_STATELESS) {
+> > +     if (flags & DL_FLAG_STATELESS)
+> >               link->status =3D DL_STATE_NONE;
+> > -     } else {
+> > -             switch (supplier->links.status) {
+> > -             case DL_DEV_PROBING:
+> > -                     switch (consumer->links.status) {
+> > -                     case DL_DEV_PROBING:
+> > -                             /*
+> > -                              * A consumer driver can create a link to=
+ a
+> > -                              * supplier that has not completed its pr=
+obing
+> > -                              * yet as long as it knows that the suppl=
+ier is
+> > -                              * already functional (for example, it ha=
+s just
+> > -                              * acquired some resources from the suppl=
+ier).
+> > -                              */
+> > -                             link->status =3D DL_STATE_CONSUMER_PROBE;
+> > -                             break;
+> > -                     default:
+> > -                             link->status =3D DL_STATE_DORMANT;
+> > -                             break;
+> > -                     }
+> > -                     break;
+> > -             case DL_DEV_DRIVER_BOUND:
+> > -                     switch (consumer->links.status) {
+> > -                     case DL_DEV_PROBING:
+> > -                             link->status =3D DL_STATE_CONSUMER_PROBE;
+> > -                             break;
+> > -                     case DL_DEV_DRIVER_BOUND:
+> > -                             link->status =3D DL_STATE_ACTIVE;
+> > -                             break;
+> > -                     default:
+> > -                             link->status =3D DL_STATE_AVAILABLE;
+> > -                             break;
+> > -                     }
+> > -                     break;
+> > -             case DL_DEV_UNBINDING:
+> > -                     link->status =3D DL_STATE_SUPPLIER_UNBIND;
+> > -                     break;
+> > -             default:
+> > -                     link->status =3D DL_STATE_DORMANT;
+> > -                     break;
+> > -             }
+> > -     }
+> > +     else
+> > +             device_link_init_status(link, consumer, supplier);
+> >
+> >       /*
+> >        * Some callers expect the link creation during consumer driver p=
+robe to
+> > @@ -528,7 +543,7 @@ static void device_links_missing_supplie
+> >   * mark the link as "consumer probe in progress" to make the supplier =
+removal
+> >   * wait for us to complete (or bad things may happen).
+> >   *
+> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
+> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
+> >   */
+> >  int device_links_check_suppliers(struct device *dev)
+> >  {
+> > @@ -538,7 +553,7 @@ int device_links_check_suppliers(struct
+> >       device_links_write_lock();
+> >
+> >       list_for_each_entry(link, &dev->links.suppliers, c_node) {
+> > -             if (link->flags & DL_FLAG_STATELESS)
+> > +             if (!(link->flags & DL_FLAG_MANAGED))
+> >                       continue;
+> >
+> >               if (link->status !=3D DL_STATE_AVAILABLE) {
+> > @@ -563,7 +578,7 @@ int device_links_check_suppliers(struct
+> >   *
+> >   * Also change the status of @dev's links to suppliers to "active".
+> >   *
+> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
+> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
+> >   */
+> >  void device_links_driver_bound(struct device *dev)
+> >  {
+> > @@ -572,7 +587,7 @@ void device_links_driver_bound(struct de
+> >       device_links_write_lock();
+> >
+> >       list_for_each_entry(link, &dev->links.consumers, s_node) {
+> > -             if (link->flags & DL_FLAG_STATELESS)
+> > +             if (!(link->flags & DL_FLAG_MANAGED))
+> >                       continue;
+> >
+> >               /*
+> > @@ -593,7 +608,7 @@ void device_links_driver_bound(struct de
+> >       }
+> >
+> >       list_for_each_entry(link, &dev->links.suppliers, c_node) {
+> > -             if (link->flags & DL_FLAG_STATELESS)
+> > +             if (!(link->flags & DL_FLAG_MANAGED))
+> >                       continue;
+> >
+> >               WARN_ON(link->status !=3D DL_STATE_CONSUMER_PROBE);
+> > @@ -605,6 +620,13 @@ void device_links_driver_bound(struct de
+> >       device_links_write_unlock();
+> >  }
+> >
+> > +static void device_link_drop_managed(struct device_link *link)
+> > +{
+> > +     link->flags &=3D ~DL_FLAG_MANAGED;
+> > +     WRITE_ONCE(link->status, DL_STATE_NONE);
+> > +     kref_put(&link->kref, __device_link_del);
+> > +}
+> > +
+> >  /**
+> >   * __device_links_no_driver - Update links of a device without a drive=
+r.
+> >   * @dev: Device without a drvier.
+> > @@ -615,18 +637,18 @@ void device_links_driver_bound(struct de
+> >   * unless they already are in the "supplier unbind in progress" state =
+in which
+> >   * case they need not be updated.
+> >   *
+> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
+> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
+> >   */
+> >  static void __device_links_no_driver(struct device *dev)
+> >  {
+> >       struct device_link *link, *ln;
+> >
+> >       list_for_each_entry_safe_reverse(link, ln, &dev->links.suppliers,=
+ c_node) {
+> > -             if (link->flags & DL_FLAG_STATELESS)
+> > +             if (!(link->flags & DL_FLAG_MANAGED))
+> >                       continue;
+> >
+> >               if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
+> > -                     __device_link_del(&link->kref);
+> > +                     device_link_drop_managed(link);
+> >               else if (link->status =3D=3D DL_STATE_CONSUMER_PROBE ||
+> >                        link->status =3D=3D DL_STATE_ACTIVE)
+> >                       WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
+> > @@ -643,7 +665,7 @@ static void __device_links_no_driver(str
+> >   * %__device_links_no_driver() to update links to suppliers for it as
+> >   * appropriate.
+> >   *
+> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
+> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
+> >   */
+> >  void device_links_no_driver(struct device *dev)
+> >  {
+> > @@ -652,7 +674,7 @@ void device_links_no_driver(struct devic
+> >       device_links_write_lock();
+> >
+> >       list_for_each_entry(link, &dev->links.consumers, s_node) {
+> > -             if (link->flags & DL_FLAG_STATELESS)
+> > +             if (!(link->flags & DL_FLAG_MANAGED))
+> >                       continue;
+> >
+> >               /*
+> > @@ -680,7 +702,7 @@ void device_links_no_driver(struct devic
+> >   * invoke %__device_links_no_driver() to update links to suppliers for=
+ it as
+> >   * appropriate.
+> >   *
+> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
+> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
+> >   */
+> >  void device_links_driver_cleanup(struct device *dev)
+> >  {
+> > @@ -689,7 +711,7 @@ void device_links_driver_cleanup(struct
+> >       device_links_write_lock();
+> >
+> >       list_for_each_entry_safe(link, ln, &dev->links.consumers, s_node)=
+ {
+> > -             if (link->flags & DL_FLAG_STATELESS)
+> > +             if (!(link->flags & DL_FLAG_MANAGED))
+> >                       continue;
+> >
+> >               WARN_ON(link->flags & DL_FLAG_AUTOREMOVE_CONSUMER);
+> > @@ -702,7 +724,7 @@ void device_links_driver_cleanup(struct
+> >                */
+> >               if (link->status =3D=3D DL_STATE_SUPPLIER_UNBIND &&
+> >                   link->flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
+> > -                     __device_link_del(&link->kref);
+> > +                     device_link_drop_managed(link);
+> >
+> >               WRITE_ONCE(link->status, DL_STATE_DORMANT);
+> >       }
+> > @@ -724,7 +746,7 @@ void device_links_driver_cleanup(struct
+> >   *
+> >   * Return 'false' if there are no probing or active consumers.
+> >   *
+> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
+> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
+> >   */
+> >  bool device_links_busy(struct device *dev)
+> >  {
+> > @@ -734,7 +756,7 @@ bool device_links_busy(struct device *de
+> >       device_links_write_lock();
+> >
+> >       list_for_each_entry(link, &dev->links.consumers, s_node) {
+> > -             if (link->flags & DL_FLAG_STATELESS)
+> > +             if (!(link->flags & DL_FLAG_MANAGED))
+> >                       continue;
+> >
+> >               if (link->status =3D=3D DL_STATE_CONSUMER_PROBE
+> > @@ -764,7 +786,7 @@ bool device_links_busy(struct device *de
+> >   * driver to unbind and start over (the consumer will not re-probe as =
+we have
+> >   * changed the state of the link already).
+> >   *
+> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
+> > + * Links without the DL_FLAG_MANAGED flag set are ignored.
+> >   */
+> >  void device_links_unbind_consumers(struct device *dev)
+> >  {
+> > @@ -776,7 +798,7 @@ void device_links_unbind_consumers(struc
+> >       list_for_each_entry(link, &dev->links.consumers, s_node) {
+> >               enum device_link_state status;
+> >
+> > -             if (link->flags & DL_FLAG_STATELESS)
+> > +             if (!(link->flags & DL_FLAG_MANAGED))
+> >                       continue;
+> >
+> >               status =3D link->status;
+> > Index: linux-pm/drivers/base/power/runtime.c
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > --- linux-pm.orig/drivers/base/power/runtime.c
+> > +++ linux-pm/drivers/base/power/runtime.c
+> > @@ -1624,7 +1624,7 @@ void pm_runtime_remove(struct device *de
+> >   * runtime PM references to the device, drop the usage counter of the =
+device
+> >   * (as many times as needed).
+> >   *
+> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
+> > + * Links with the DL_FLAG_MANAGED flag unset are ignored.
+> >   *
+> >   * Since the device is guaranteed to be runtime-active at the point th=
+is is
+> >   * called, nothing else needs to be done here.
+> > @@ -1641,7 +1641,7 @@ void pm_runtime_clean_up_links(struct de
+> >       idx =3D device_links_read_lock();
+> >
+> >       list_for_each_entry_rcu(link, &dev->links.consumers, s_node) {
+> > -             if (link->flags & DL_FLAG_STATELESS)
+> > +             if (!(link->flags & DL_FLAG_MANAGED))
+> >                       continue;
+> >
+> >               while (refcount_dec_not_one(&link->rpm_active))
+> > Index: linux-pm/include/linux/device.h
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > --- linux-pm.orig/include/linux/device.h
+> > +++ linux-pm/include/linux/device.h
+> > @@ -829,12 +829,13 @@ enum device_link_state {
+> >  /*
+> >   * Device link flags.
+> >   *
+> > - * STATELESS: The core won't track the presence of supplier/consumer d=
+rivers.
+> > + * STATELESS: The core will not remove this link automatically.
+> >   * AUTOREMOVE_CONSUMER: Remove the link automatically on consumer driv=
+er unbind.
+> >   * PM_RUNTIME: If set, the runtime PM framework will use this link.
+> >   * RPM_ACTIVE: Run pm_runtime_get_sync() on the supplier during link c=
+reation.
+> >   * AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driv=
+er unbind.
+> >   * AUTOPROBE_CONSUMER: Probe consumer driver automatically after suppl=
+ier binds.
+> > + * MANAGED: The core tracks presence of supplier/consumer drivers (int=
+ernal).
+> >   */
+> >  #define DL_FLAG_STATELESS            BIT(0)
+> >  #define DL_FLAG_AUTOREMOVE_CONSUMER  BIT(1)
+> > @@ -842,6 +843,7 @@ enum device_link_state {
+> >  #define DL_FLAG_RPM_ACTIVE           BIT(3)
+> >  #define DL_FLAG_AUTOREMOVE_SUPPLIER  BIT(4)
+> >  #define DL_FLAG_AUTOPROBE_CONSUMER   BIT(5)
+> > +#define DL_FLAG_MANAGED                      BIT(6)
+> >
+> >  /**
+> >   * struct device_link - Device link representation.
+> > Index: linux-pm/Documentation/driver-api/device_link.rst
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > --- linux-pm.orig/Documentation/driver-api/device_link.rst
+> > +++ linux-pm/Documentation/driver-api/device_link.rst
+> > @@ -78,8 +78,8 @@ typically deleted in its ``->remove`` ca
+> >  driver is compiled as a module, the device link is added on module loa=
+d and
+> >  orderly deleted on unload.  The same restrictions that apply to device=
+ link
+> >  addition (e.g. exclusion of a parallel suspend/resume transition) appl=
+y equally
+> > -to deletion.  Device links with ``DL_FLAG_STATELESS`` unset (i.e. mana=
+ged
+> > -device links) are deleted automatically by the driver core.
+> > +to deletion.  Device links managed by the driver core are deleted auto=
+matically
+> > +by it.
+> >
+> >  Several flags may be specified on device link addition, two of which
+> >  have already been mentioned above:  ``DL_FLAG_STATELESS`` to express t=
+hat no
+> >
+> >
+> >
+> >
+>
+> Hello Rafael,
+>
+> This patch breaks NVIDIA Tegra DRM driver, which fails to probe now
+> using the recent linux-next.
+>
+>         tegra-dc 54240000.dc: failed to link controllers
