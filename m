@@ -2,96 +2,112 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5027FC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3F4C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EEAE20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F241F20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:13:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMc4NRl9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfG2INK (ORCPT
+        id S1727533AbfG2IN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:13:10 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:34916 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726690AbfG2INJ (ORCPT
+        Mon, 29 Jul 2019 04:13:27 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34686 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfG2IN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:13:09 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=kerneljasonxing@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TY1HZl2_1564387964;
-Received: from ali-6c96cfdd2b5d.local(mailfrom:kerneljasonxing@linux.alibaba.com fp:SMTPD_---0TY1HZl2_1564387964)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 29 Jul 2019 16:13:03 +0800
-Subject: Re: [PATCH] psi: get poll_work to run when calling poll syscall next
- time
-To:     hannes@cmpxchg.org, surenb@google.com, mingo@redhat.com,
-        peterz@infradead.org
-Cc:     dennis@kernel.org, axboe@kernel.dk, lizefan@huawei.com,
-        tj@kernel.org, linux-kernel@vger.kernel.org
-References: <1563864339-2621-1-git-send-email-kerneljasonxing@linux.alibaba.com>
-From:   Jason Xing <kerneljasonxing@linux.alibaba.com>
-Message-ID: <4d7ca842-3246-10ee-9ae2-973d1b88ed93@linux.alibaba.com>
-Date:   Mon, 29 Jul 2019 16:12:44 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Mon, 29 Jul 2019 04:13:27 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w9so42409795wmd.1;
+        Mon, 29 Jul 2019 01:13:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SyFl8pL1iDZjmoOSkzXlnQ91ZUZpLkZdLRiM5vUWoME=;
+        b=RMc4NRl9Idazs+XYRc2PCVJrla+XcMB5QI9fW4vskcW4AWdCAjW114u0ltcwv3J3kS
+         MejM0+8lWjKST59WU3AMIZxd4/R8oxvP5WYmQZ/s+MfdW0r6aFSv4SZMNIv8js7Nr4IX
+         7Gaa0m/10cn1v9XCIjcejFparxRsgjkUPGkLrC907ae/L4wg583BzHLdcoNoI1Xw+JJL
+         J4QUDcdP7QMkggQGmKsgFfCqz9l+OvK80s89AN0hnR8wIaN8/pIPLxO/Jq7oo4ieNU4W
+         2n2Ym18F3HuEavyXhWQ9Wbjei3xF1zzsbxx0b3hGtD55UjczEVPEeLSlS6D+SvQpiqid
+         wP1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SyFl8pL1iDZjmoOSkzXlnQ91ZUZpLkZdLRiM5vUWoME=;
+        b=EOTzOhZSouXAe9wGvfqX8QNJf3XlGPafKuOvNgKeB/TkSASVeeW40rBN1KuIQoXIqt
+         4pwMAVBsxcyVRPACcINZ+I/kaGgb+Ka5C91KSzZVENB/s321KJ3N2LfjlsiEuMdLhZ22
+         jfO4WBxgL/dFzwn/BH/O0RXlO8p381udF3xxBDQ9jelJiZVA0VVq7lgOexOeYYFoXyf2
+         sAi4UKlzX9Lex3PgOgf8vJQ9TBek8UI6MP2M9xJwAzliShy6pd9Gw6R6ZHnaCJMF1CaW
+         r37HrFP4DzwC5ZD9Nx4y47KZrkeIO13o5Shwj1HP3F7TfsahdAcvreg/zDA38HyFO8Br
+         5jXQ==
+X-Gm-Message-State: APjAAAXw2JaYHpBjkta+ERTioOoc0IL8Aomsh1YsubRdopSHt05tKELL
+        Qfcv6fFOdnGjmVKggncR3l7NvUMzM6vQq7JVwF4=
+X-Google-Smtp-Source: APXvYqyJSF9giFQVsItTxUvBm5InpdKI0AD91vYK8YMt/vMVNe8Bcy9zHxVTrPIj7PKEgF2MKDJZ8Wm9t5JIOx9xuEE=
+X-Received: by 2002:a7b:c247:: with SMTP id b7mr102240187wmj.13.1564388004695;
+ Mon, 29 Jul 2019 01:13:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1563864339-2621-1-git-send-email-kerneljasonxing@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190705045612.27665-1-Anson.Huang@nxp.com> <20190705045612.27665-5-Anson.Huang@nxp.com>
+ <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
+ <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAEnQRZCrZybzcy__u4p_Eq4zSVc2ESyfKLk5sPf1JYba1JSOiA@mail.gmail.com>
+ <20190727161736.4dkfqgwftre67v56@fsr-ub1664-175> <DB3PR0402MB391600891BA75DFFA9674058F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAEnQRZB6tmYFA8wwh0Fm49LTTDuCLq-SWVfrcUkRWWBo=0U13w@mail.gmail.com>
+ <DB3PR0402MB391627F725AA7237BCACBE87F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAEnQRZBrmikenTvnh7syhy=PDPcTL3fn2TJ+ya=ToZ+SFmH5tw@mail.gmail.com>
+ <CAEnQRZDSjmcU8Q7+kMeFf12tx0NuMNjrcsgnXayvHpu4ChwHGA@mail.gmail.com> <DB3PR0402MB3916F32F03E542AEFBD39A43F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916F32F03E542AEFBD39A43F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Mon, 29 Jul 2019 11:13:12 +0300
+Message-ID: <CAEnQRZBqdGY9A69ew=ukdp1iWVR_jvJih-cZPx_XzAri+xWppA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Abel Vesa <abel.vesa@nxp.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Carlo Caione <ccaione@baylibre.com>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Jul 29, 2019 at 10:49 AM Anson Huang <anson.huang@nxp.com> wrote:
 
-Could someone take a quick look at this patch? It's not complicated at 
-all, just one line added into PSI which can make the poll() run in the 
-right way.
+> > We are all set then. Thanks Anson for clarifications!
+>
+> Thanks, so we are all clear about this issue, need to wait thermal maintainer to review
+> the rest patch in this series, but I did NOT receive any response from thermal sub-system
+> maintainer for really long time, NOT sure when the thermal patches can be accepted.
 
-Thanks,
-Jason
+This is really unfortunate. I think it is safe to do a RESEND of the
+patches as it has
+been at least 3 weeks since your first send them.
 
-On 2019/7/23 下午2:45, Jason Xing wrote:
-> Only when calling the poll syscall the first time can user
-> receive POLLPRI correctly. After that, user always fails to
-> acquire the event signal.
-> 
-> Reproduce case:
-> 1. Get the monitor code in Documentation/accounting/psi.txt
-> 2. Run it, and wait for the event triggered.
-> 3. Kill and restart the process.
-> 
-> If the user doesn't kill the monitor process, it seems the
-> poll_work works fine. After killing and restarting the monitor,
-> the poll_work in kernel will never run again due to the wrong
-> value of poll_scheduled. Therefore, we should reset the value
-> as group_init() does after the last trigger is destroyed.
-> 
-> Signed-off-by: Jason Xing <kerneljasonxing@linux.alibaba.com>
-> ---
->   kernel/sched/psi.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> index 7acc632..66f4385 100644
-> --- a/kernel/sched/psi.c
-> +++ b/kernel/sched/psi.c
-> @@ -1133,6 +1133,12 @@ static void psi_trigger_destroy(struct kref *ref)
->   	if (kworker_to_destroy) {
->   		kthread_cancel_delayed_work_sync(&group->poll_work);
->   		kthread_destroy_worker(kworker_to_destroy);
-> +		/*
-> +		 * The poll_work should have the chance to be put into the
-> +		 * kthread queue when calling poll syscall next time. So
-> +		 * reset poll_scheduled to zero as group_init() does
-> +		 */
-> +		atomic_set(&group->poll_scheduled, 0);
->   	}
->   	kfree(t);
->   }
-> 
+Pick any reviewed-by you got and do a resend.
