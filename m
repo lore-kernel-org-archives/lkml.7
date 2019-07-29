@@ -2,154 +2,115 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A45C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478B6C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA98206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:08:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="arONxYLf"
+	by mail.kernel.org (Postfix) with ESMTP id 27D62206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387576AbfG2LIK (ORCPT
+        id S2387587AbfG2LIR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:08:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:15122 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387457AbfG2LIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:08:10 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45xxkC44QKz9v9MV;
-        Mon, 29 Jul 2019 13:08:03 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=arONxYLf; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ESTVg6lnoUGW; Mon, 29 Jul 2019 13:08:03 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45xxkC2ztgz9v9Lx;
-        Mon, 29 Jul 2019 13:08:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1564398483; bh=5INwHw7XbuC/K2OjMZ4KYRax0cv2G+pbjXkMo1syWiI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=arONxYLfYazH1Zuv1sjYhl+98rYh7/IMm8wcB9t915KfBP0mg7p23qtwKyOzwnotp
-         W40nOf8zFdXdk+whAYptqqCcrHrHC6a8ulMz3YYeOFBKwQhFMNHEzDbTqPDV1UtWXJ
-         Wm699DyCi1utuj1uMB5IRkKVDDV3wBaTlHP6sh5E=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 449968B7CB;
-        Mon, 29 Jul 2019 13:08:08 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id vS0yC_BC0m1Z; Mon, 29 Jul 2019 13:08:08 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 13A6E8B7B3;
-        Mon, 29 Jul 2019 13:08:08 +0200 (CEST)
-Subject: Re: [RFC PATCH 05/10] powerpc/fsl_booke/32: introduce
- reloc_kernel_entry() helper
-To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
-        keescook@chromium.org, kernel-hardening@lists.openwall.com
-Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
-        yebin10@huawei.com, thunder.leizhen@huawei.com,
-        jingxiangfeng@huawei.com, fanchengyang@huawei.com
-References: <20190717080621.40424-1-yanaijie@huawei.com>
- <20190717080621.40424-6-yanaijie@huawei.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <e4ccd015-a9c4-b0a6-e3ca-d37a04e29ec6@c-s.fr>
-Date:   Mon, 29 Jul 2019 13:08:08 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 07:08:17 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33830 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387457AbfG2LIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 07:08:16 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E9A9B49CBBCFC5F6072D;
+        Mon, 29 Jul 2019 19:08:14 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
+ 19:08:11 +0800
+Date:   Mon, 29 Jul 2019 12:08:02 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Brian Masney <masneyb@onstation.org>
+CC:     Chuhong Yuan <hslester96@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: tsl2772: Use device-managed API
+Message-ID: <20190729120802.000025e8@huawei.com>
+In-Reply-To: <20190729080307.GA360@onstation.org>
+References: <20190726123058.22915-1-hslester96@gmail.com>
+        <20190727125749.63297c28@archlinux>
+        <20190728083141.GA14194@onstation.org>
+        <CANhBUQ3QiV1mPD6p+AROv6YnK+1CB5voVAHKbmzueUWc7P6vcQ@mail.gmail.com>
+        <20190729080307.GA360@onstation.org>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20190717080621.40424-6-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 29 Jul 2019 04:03:07 -0400
+Brian Masney <masneyb@onstation.org> wrote:
 
-
-Le 17/07/2019 à 10:06, Jason Yan a écrit :
-> Add a new helper reloc_kernel_entry() to jump back to the start of the
-> new kernel. After we put the new kernel in a randomized place we can use
-> this new helper to enter the kernel and begin to relocate again.
+> On Mon, Jul 29, 2019 at 11:03:00AM +0800, Chuhong Yuan wrote:
+> > Brian Masney <masneyb@onstation.org> 于2019年7月28日周日 下午4:31写道：  
+> > > devm_add_action() could be used in the probe function to schedule the call
+> > > to tsl2772_chip_off(). That would eliminate the need for
+> > > tsl2772_remove(). See tsl2772_disable_regulators_action() for an example in
+> > > that driver.
+> > >  
+> > 
+> > I find that we can use devm_add_action_or_reset() for
+> > tsl2772_disable_regulators_action() to eliminate the fault handling code.
+> > 
+> > I am not sure whether devm_add_action() can be used for
+> > tsl2772_chip_off() because it returns an integer, not void.
+> > And the return value is used in several functions.  
 > 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> Cc: Diana Craciun <diana.craciun@nxp.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> ---
->   arch/powerpc/kernel/head_fsl_booke.S | 16 ++++++++++++++++
->   arch/powerpc/mm/mmu_decl.h           |  1 +
->   2 files changed, 17 insertions(+)
+> I would add a wrapper function (tsl2772_chip_off_action?) with the
+> expected declaration that calls tsl2772_chip_off().
 > 
-> diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
-> index a57d44638031..ce40f96dae20 100644
-> --- a/arch/powerpc/kernel/head_fsl_booke.S
-> +++ b/arch/powerpc/kernel/head_fsl_booke.S
-> @@ -1144,6 +1144,22 @@ _GLOBAL(create_tlb_entry)
->   	sync
->   	blr
->   
-> +/*
-> + * Return to the start of the relocated kernel and run again
-> + * r3 - virtual address of fdt
-> + * r4 - entry of the kernel
-> + */
-> +_GLOBAL(reloc_kernel_entry)
-> +	mfmsr	r7
-> +	li	r8,(MSR_IS | MSR_DS)
-> +	andc	r7,r7,r8
-
-Instead of the li/andc, what about the following:
-
-rlwinm r7, r7, 0, ~(MSR_IS | MSR_DS)
-
-> +
-> +	mtspr	SPRN_SRR0,r4
-> +	mtspr	SPRN_SRR1,r7
-> +	isync
-> +	sync
-> +	rfi
-
-Are the isync/sync really necessary ? AFAIK, rfi is context synchronising.
-
-> +
->   /*
->    * Create a tlb entry with the same effective and physical address as
->    * the tlb entry used by the current running code. But set the TS to 1.
-> diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-> index d7737cf97cee..dae8e9177574 100644
-> --- a/arch/powerpc/mm/mmu_decl.h
-> +++ b/arch/powerpc/mm/mmu_decl.h
-> @@ -143,6 +143,7 @@ extern void adjust_total_lowmem(void);
->   extern int switch_to_as1(void);
->   extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
->   extern void create_tlb_entry(phys_addr_t phys, unsigned long virt, int entry);
-> +extern void reloc_kernel_entry(void *fdt, int addr);
-
-No new 'extern' please, see 
-https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/8125//artifact/linux/checkpatch.log
-
-
->   #endif
->   extern void loadcam_entry(unsigned int index);
->   extern void loadcam_multi(int first_idx, int num, int tmp_idx);
+> > > Chuhong: Another potential cleanup to shrink the size of this driver is
+> > > to move it over to the regulator_bulk_() API. I didn't realize that API
+> > > existed at the time I introduced the regulator support. If you're
+> > > interested in taking on that cleanup as well, I can test those changes
+> > > for you if you don't have the hardware.
+> > >
+> > > Brian
+> > >  
+> > 
+> > Does that mean merging vdd_supply and vddio_supply to an array of
+> > regulator_bulk_data and utilize regulator_bulk_() API to operate them
+> > together?  
 > 
+> Yes.
+> 
+> > I have an additional question that I find regulator_disable() is used in the
+> > end of many .remove functions of drivers, which hinders us to use devm
+> > functions.
+> > One example is drivers/iio/light/gp2ap020a00f.c.
+> > Is there any solution to this problem?  
+> 
+> There are devm_regulator_*() variants of the regulator API available
+> that you can use. Lots of other APIs in the kernel have devm variants
+> to simply drivers.
+I don't think there are any devm_ versions of regulator disable.
 
-Christophe
+IIRC the argument made when this last came up was that it was rarely correct
+to be as course grained as a lot of IIO drivers are.   We should probably
+do runtime pm and turn these regulators off a lot more frequently.
+
+The reality is that it is an optimization that doesn't get done in 
+IIO drivers that often as we mostly just want them to work and many
+usecases aren't actually power constrained,
+
+So we end up doing a lot of devm_add_action_or_reset to power down the
+regulators.
+
+Jonathan
+> 
+> Brian
+
+
