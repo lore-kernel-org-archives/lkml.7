@@ -2,96 +2,123 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F80CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA40C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09EBB217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431166;
-	bh=cD9rrDxEyc0yZkzD6bSEDLpUywUmGpNUOh7GXJ8xpX8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBAEwppLXsBLdFkERW5RT0pHBp4XGIyab6S1sV9wJoHNq1DV2Dk4iFJ++hec8ugDb
-	 4PNcHUOdd0aJnaaeUm1wqqBTV8wlWuBIQ+UCi2qJ5rEV3pO6Ejj58WQeazj/bPI+Gx
-	 acI0yM83To/dcpcfIrYRDH9gnJogMuAG7Y1oq9YY=
+	by mail.kernel.org (Postfix) with ESMTP id 0CCCB205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:12:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tGszBRzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbfG2TbT (ORCPT
+        id S1730515AbfG2UMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:31:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728715AbfG2TbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:31:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D6142171F;
-        Mon, 29 Jul 2019 19:31:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428672;
-        bh=cD9rrDxEyc0yZkzD6bSEDLpUywUmGpNUOh7GXJ8xpX8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IlVhvXBbm7p/L+VOO2twgcA1FwRa6ZezfV3OSPZZO8ipu9R9CFIpjK6R8Vnolku1w
-         AyPP0EZ+sGZFc/8KO9XyCDpSgpNcHXA0N5+03+ADlBKPgd9lESTVbscYValV+uIPgx
-         925TM8XqCj4D+CiOmsXmu59sdLw2xZvaBYJ9HIhw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 143/293] KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
-Date:   Mon, 29 Jul 2019 21:20:34 +0200
-Message-Id: <20190729190835.494094365@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
-References: <20190729190820.321094988@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 29 Jul 2019 16:12:48 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40990 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730159AbfG2UMp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 16:12:45 -0400
+Received: by mail-ot1-f68.google.com with SMTP id o101so63869607ota.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 13:12:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rLtTrMx9bNgV2e5WT+U4GbHrtwL6tZTxsShVYrHD6s8=;
+        b=tGszBRzPbi6dD+NRM2bN3t9p9ftDIDFlandOwt8DpUAVkYZ4vU9DgEhnuPtU35uxQ/
+         KJflcPgXXlm6X0pPEHjnN6jl2/WiXLYOc8kTsFgZjm52JZb//9cc8NSlJ0h/z9Gntkww
+         IHh1MZfFJO8t/jlHNiHPzn2KUh++WFzQaiWc7R7+sEi8mVNA/wgN1EoPKSVvlaWeX9U4
+         Cqmw8jl8KuzAg9Pto9YHhmzF1ClROkAaxGZTDhB2AgrMQ6fC9wMp2k2yFzK7yUsFbviP
+         jHFwQ0oNY3I0nJ4xOe0eVdhRJm6bn2zkQQhWvisj0JWCFFjM/ME1xtG/G/UGYMcwvYHp
+         hFtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rLtTrMx9bNgV2e5WT+U4GbHrtwL6tZTxsShVYrHD6s8=;
+        b=tJ6cNEP7m6bcJMAMU8aU64XSaPaBJvfLXd2mE9XzLCQiMBsulf10/6oPWU+g6w5StC
+         +x7adSolJe2MibHe+Q0wN8+G7HGsKl54D4+SE9UyI3LJvy9e6UTDv4gbuQ+x763R0qjr
+         3ghxcxDj8clh2TKn0fBWqiSBNq6YX2hpkd0s3mNNwo3yPFQ05h25YZ3wvx0a5zfanRgN
+         inDqucto24EBUXCTlYWhxPAf1AZ8Zdbkd0zLQUOYEWkZwprKkdeNxFYGRisfFIwiGuQd
+         6Fr/jpAzXRim0VDM04Kiu2Pdzgz1RF8D1kLFmRbT/ognq/kdoEUaD9v92++Rz/OhH8sR
+         SD3A==
+X-Gm-Message-State: APjAAAW7C3v7LlJA5SDHANx++pRnGHyfRsVchvF+X4c0r7Kx3k43otE0
+        iRTx89Fgn5OXvqcDwZA2FNJMnCI72ccfXOjDFxhLdg==
+X-Google-Smtp-Source: APXvYqyalfL7uKo9yflW1Pyt9NtQK1vzEzGUhuLM63HRXQD3JmtpxZUwdeQTJ4TkIvAAhjMpgK7mWf7IUvOUuGB9nzw=
+X-Received: by 2002:a9d:6256:: with SMTP id i22mr4789080otk.139.1564431164859;
+ Mon, 29 Jul 2019 13:12:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190703011020.151615-1-saravanak@google.com> <20190717103220.f7cys267hq23fbsb@vireshk-i7>
+ <CAGETcx-tbjVzRKW8D-564zgNOhrA_z-NC1q5U70bhoUDBhp6VA@mail.gmail.com>
+ <20190718053746.64drmonk72vwnt4s@vireshk-i7> <CAGETcx_-=b3An9YdxLUnZap=0iaeczvWTEnw65FMLU8BwA3HfQ@mail.gmail.com>
+ <20190729092454.6lfqzmhkvrhpimsp@vireshk-i7>
+In-Reply-To: <20190729092454.6lfqzmhkvrhpimsp@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 29 Jul 2019 13:12:08 -0700
+Message-ID: <CAGETcx_7fK20VZ6Zn07Z+Ran1_O7gSPohck_tg-aEr5oONQ5iA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Like Xu <like.xu@linux.intel.com>
+On Mon, Jul 29, 2019 at 2:24 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 18-07-19, 21:12, Saravana Kannan wrote:
+> > On Wed, Jul 17, 2019 at 10:37 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > I would like
+> > > to put this data in the GPU OPP table only. What about putting a
+> > > range in the GPU OPP table for the Bandwidth if it can change so much
+> > > for the same frequency.
+> >
+> > I don't think the range is going to work.
+>
+> Any specific reason for that ?
 
-commit 6fc3977ccc5d3c22e851f2dce2d3ce2a0a843842 upstream.
+The next sentence was literally explaining this :) Fine to debate
+that, but ignoring that and asking this question is kinda funny.
 
-If a perf_event creation fails due to any reason of the host perf
-subsystem, it has no chance to log the corresponding event for guest
-which may cause abnormal sampling data in guest result. In debug mode,
-this message helps to understand the state of vPMC and we may not
-limit the number of occurrences but not in a spamming style.
+> > If a GPU is doing purely
+> > computational work, it's not unreasonable for it to vote for the
+> > lowest bandwidth for any GPU frequency.
+>
+> I think that is fine, but if the GPU is able to find how much
+> bandwidth it needs why can't it just pass that value without needing
+> to have another OPP table for the path ?
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+You were asking this question in the context of "can the GPU OPP just
+list all the range of bandwidth it might use per GPU frequency". My point
+is that the range would be useless because it would the entire
+available bandwidth range (because purely compute work might not need
+any bandwidth).
 
----
- arch/x86/kvm/pmu.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Whereas, what the GPU's algorithm actually needs might be the list of
+"useful" bandwidth levels to use.
 
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -131,8 +131,8 @@ static void pmc_reprogram_counter(struct
- 						 intr ? kvm_perf_overflow_intr :
- 						 kvm_perf_overflow, pmc);
- 	if (IS_ERR(event)) {
--		printk_once("kvm_pmu: event creation failed %ld\n",
--			    PTR_ERR(event));
-+		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
-+			    PTR_ERR(event), pmc->idx);
- 		return;
- 	}
- 
+Also, as we add more ICC request properties, this range idea will not scale.
 
-
+-Saravana
