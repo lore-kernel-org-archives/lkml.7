@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC08C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B130C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF6C20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C707C20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564431079;
-	bh=QEj/HLs4qgcfXS9pAfCuX2BkTk9HK4xqAbKdsVSyGCM=;
+	s=default; t=1564431082;
+	bh=4H05V33b22NBKbavxlsFHLdxSESXPpMrppj84sOSSIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T5jCsjAjD3gp9wgo8v/rb3v5Dt9nB/Dz3+OweAjZSJ6cosGa4XoQYtSxMw0isze8d
-	 g3DdF+ZPFPKBt2mMT80jkHV1+bX4dShFHegl28V8OwZVm05DuNO7zcjZurq+85FLMp
-	 r9F6b4ywfiTGvlO6zBdOMykycYt1q3TIuQOdGpGY=
+	b=pHzMO4tN3QmgVosCDfUOScAsYMAjF5R6TcVZf4ScktYsVc3RVKaH5ywKcyXTaN2h6
+	 7ibT+a4kmOkQkdzm5fMQ8YcWY/C+Qcso5nWqK7XbtT+V8kr8xHOafOwvIqLtJlNNe4
+	 mEaoQQjVic77KITJ4LXzhtVMPs7f9eloG2EkSkFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbfG2ULR (ORCPT
+        id S1730356AbfG2Tde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:11:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47896 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:33:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387748AbfG2Tdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:33:39 -0400
+        id S1729096AbfG2Tdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:33:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73F3721773;
-        Mon, 29 Jul 2019 19:33:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB3162070B;
+        Mon, 29 Jul 2019 19:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428819;
-        bh=QEj/HLs4qgcfXS9pAfCuX2BkTk9HK4xqAbKdsVSyGCM=;
+        s=default; t=1564428810;
+        bh=4H05V33b22NBKbavxlsFHLdxSESXPpMrppj84sOSSIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AzdpvB4uVkbv2Spv2xRwuZhESchNV/XgF5OvsS/KtQ6ZNta0XjvyQUHukRII+8+S1
-         PxzOvWyTbh/x0NVdu9FFOlCa+rf1t3weL6dVeCpbz+HfV9Y7iwNEjCl97+tHZRgC4n
-         zZZrNfRHw1DH5QLMXsRIZv8/PKyO6OeOo9Vzum4I=
+        b=vGru/Li2f9/xp0jYxVo0v00xz7B0T5lx/dP+LRjxqAFeI6FpkuYwJdycWOxlr8b9Q
+         tUBTOjm0vOLvlno58ERLaTVrfFapUDGlhnBRO3mW6sPUvH9/P7yglnAV8FrKSWYbhk
+         vPtCnBTjwdCShBdC8q31G2ZwFSeOqeB8Wunhm7AI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com,
-        syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com,
-        syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com,
-        syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 197/293] netrom: hold sock when setting skb->destructor
-Date:   Mon, 29 Jul 2019 21:21:28 +0200
-Message-Id: <20190729190839.561909247@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Steinmetz <ast@domdv.de>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 194/293] macsec: fix use-after-free of skb during RX
+Date:   Mon, 29 Jul 2019 21:21:25 +0200
+Message-Id: <20190729190839.332167533@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -64,39 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Andreas Steinmetz <ast@domdv.de>
 
-[ Upstream commit 4638faac032756f7eab5524be7be56bee77e426b ]
+[ Upstream commit 095c02da80a41cf6d311c504d8955d6d1c2add10 ]
 
-sock_efree() releases the sock refcnt, if we don't hold this refcnt
-when setting skb->destructor to it, the refcnt would not be balanced.
-This leads to several bug reports from syzbot.
+Fix use-after-free of skb when rx_handler returns RX_HANDLER_PASS.
 
-I have checked other users of sock_efree(), all of them hold the
-sock refcnt.
-
-Fixes: c8c8218ec5af ("netrom: fix a memory leak in nr_rx_frame()")
-Reported-and-tested-by: <syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Andreas Steinmetz <ast@domdv.de>
+Acked-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netrom/af_netrom.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/macsec.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/net/netrom/af_netrom.c
-+++ b/net/netrom/af_netrom.c
-@@ -969,6 +969,7 @@ int nr_rx_frame(struct sk_buff *skb, str
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1099,10 +1099,9 @@ static rx_handler_result_t macsec_handle
+ 	}
  
- 	window = skb->data[20];
+ 	skb = skb_unshare(skb, GFP_ATOMIC);
+-	if (!skb) {
+-		*pskb = NULL;
++	*pskb = skb;
++	if (!skb)
+ 		return RX_HANDLER_CONSUMED;
+-	}
  
-+	sock_hold(make);
- 	skb->sk             = make;
- 	skb->destructor     = sock_efree;
- 	make->sk_state	    = TCP_ESTABLISHED;
+ 	pulled_sci = pskb_may_pull(skb, macsec_extra_len(true));
+ 	if (!pulled_sci) {
 
 
