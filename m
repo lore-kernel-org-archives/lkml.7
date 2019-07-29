@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F46C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AF5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1BA205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4380E205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430546;
-	bh=Drb7JSB57DtMotOFpPRiaDsEWKfqyiq2kMzgnVjtx9o=;
+	s=default; t=1564430553;
+	bh=WdrHKz/K3QX9mTPzujPiV0e9Ku7Nh1BB4Ow0C7qRfzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZC+dntRF3aAGd4TwtV5sacqYsti6oVSRcrJ5nWuk/9LBrb/1qWzsadO2AW9f4cFsT
-	 AJZR+XkhdFyD7WrOkIxEnYXufywzO01EUO6x0tG+ZvMBu0Sw2DXC9KuSMgwOWqhE7D
-	 vNkVq63RBgh1TZv83M7Px38W4mRbzdijGJIcHcjw=
+	b=MhrVnOWdSIzKlDITzkfB2Oy5DsGzLMYR0mDSzrcgKj2em2h+eLV/D5nuCusZfk4ey
+	 ft8sJPDEA9Z/NkxvwiRRNVkpIrZVm4tVGJ42RnU0GprCtFKRpHqCGooms2PAan5l5H
+	 gkVz11U/a7bIGTaxF1WufApb10zKxg1jc0YQJ60g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390425AbfG2Tsp (ORCPT
+        id S2389129AbfG2UCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:48:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38982 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:02:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390410AbfG2Tsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:48:39 -0400
+        id S2390001AbfG2Ts3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:48:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CA68205F4;
-        Mon, 29 Jul 2019 19:48:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD60721655;
+        Mon, 29 Jul 2019 19:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429719;
-        bh=Drb7JSB57DtMotOFpPRiaDsEWKfqyiq2kMzgnVjtx9o=;
+        s=default; t=1564429708;
+        bh=WdrHKz/K3QX9mTPzujPiV0e9Ku7Nh1BB4Ow0C7qRfzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jy313OOk5zUuXc4T8FfHA6LDIRq2x/u064DtiqKNzbpm3wWnAeyjodJfoEIH1yQPL
-         4cgw/hX2NQFcQl43794K2JMUFdH07pLijY2i4I+q7FzYptSVEk8bkNvwtV95mi74oo
-         cLhySnN8vtA5MHE95WdBVHxS1mDgPqkX5PFvpTXU=
+        b=nH+8Hgk4Kg94NrjzuqX3AwHqCtEtLmzyLWbuFHhBAcjpZJ8lhf6pYP2iOcPqcQLug
+         5Xag7r4B3/h8kL9zUWYLsf/Puqx4XoFutpoMmIRdg3QUUE7RcKglYybIePTWq8EVAQ
+         O4CO1wSfDa3BxGBuDS80QcIL8YLvt0DnhvVx34mQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 071/215] usb: dwc3: Fix core validation in probe, move after clocks are enabled
-Date:   Mon, 29 Jul 2019 21:21:07 +0200
-Message-Id: <20190729190752.561773195@linuxfoundation.org>
+Subject: [PATCH 5.2 068/215] serial: uartps: Use the same dynamic major number for all ports
+Date:   Mon, 29 Jul 2019 21:21:04 +0200
+Message-Id: <20190729190752.123069943@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -61,68 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dc1b5d9aed1794b5a1c6b0da46e372cc09974cbc ]
+[ Upstream commit ab262666018de6f4e206b021386b93ed0c164316 ]
 
-The required clocks needs to be enabled before the first register
-access. After commit fe8abf332b8f ("usb: dwc3: support clocks and resets
-for DWC3 core"), this happens when the dwc3_core_is_valid function is
-called, but the mentioned commit adds that call in the wrong place,
-before the clocks are enabled. So, move that call after the
-clk_bulk_enable() to ensure the clocks are enabled and the reset
-deasserted.
+Let kernel to find out major number dynamically for the first device and
+then reuse it for other instances.
+This fixes the issue that each uart is registered with a
+different major number.
 
-I detected this while, as experiment, I tried to move the clocks and resets
-from the glue layer to the DWC3 core on a Samsung Chromebook Plus.
+After the patch:
+crw-------    1 root     root      253,   0 Jun 10 08:31 /dev/ttyPS0
+crw--w----    1 root     root      253,   1 Jan  1  1970 /dev/ttyPS1
 
-That was not detected before because, in most cases, the glue layer
-initializes SoC-specific things and then populates the child "snps,dwc3"
-with those clocks already enabled.
-
-Fixes: b873e2d0ea1ef ("usb: dwc3: Do core validation early on probe")
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: 024ca329bfb9 ("serial: uartps: Register own uart console and driver structures")
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/core.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/tty/serial/xilinx_uartps.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 4aff1d8dbc4f..6e9e172010fc 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1423,11 +1423,6 @@ static int dwc3_probe(struct platform_device *pdev)
- 	dwc->regs	= regs;
- 	dwc->regs_size	= resource_size(&dwc_res);
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index 605354fd60b1..9dcc4d855ddd 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -29,12 +29,12 @@
  
--	if (!dwc3_core_is_valid(dwc)) {
--		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
--		return -ENODEV;
--	}
--
- 	dwc3_get_properties(dwc);
+ #define CDNS_UART_TTY_NAME	"ttyPS"
+ #define CDNS_UART_NAME		"xuartps"
+-#define CDNS_UART_MAJOR		0	/* use dynamic node allocation */
+ #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
+ #define CDNS_UART_REGISTER_SPACE	0x1000
  
- 	dwc->reset = devm_reset_control_get_optional_shared(dev, NULL);
-@@ -1460,6 +1455,12 @@ static int dwc3_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto unprepare_clks;
+ /* Rx Trigger level */
+ static int rx_trigger_level = 56;
++static int uartps_major;
+ module_param(rx_trigger_level, uint, S_IRUGO);
+ MODULE_PARM_DESC(rx_trigger_level, "Rx trigger level, 1-63 bytes");
  
-+	if (!dwc3_core_is_valid(dwc)) {
-+		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
-+		ret = -ENODEV;
-+		goto disable_clks;
-+	}
-+
- 	platform_set_drvdata(pdev, dwc);
- 	dwc3_cache_hwparams(dwc);
+@@ -1517,7 +1517,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
+ 	cdns_uart_uart_driver->owner = THIS_MODULE;
+ 	cdns_uart_uart_driver->driver_name = driver_name;
+ 	cdns_uart_uart_driver->dev_name	= CDNS_UART_TTY_NAME;
+-	cdns_uart_uart_driver->major = CDNS_UART_MAJOR;
++	cdns_uart_uart_driver->major = uartps_major;
+ 	cdns_uart_uart_driver->minor = cdns_uart_data->id;
+ 	cdns_uart_uart_driver->nr = 1;
  
-@@ -1525,6 +1526,7 @@ static int dwc3_probe(struct platform_device *pdev)
- 	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
+@@ -1546,6 +1546,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
+ 		goto err_out_id;
+ 	}
  
-+disable_clks:
- 	clk_bulk_disable(dwc->num_clks, dwc->clks);
- unprepare_clks:
- 	clk_bulk_unprepare(dwc->num_clks, dwc->clks);
++	uartps_major = cdns_uart_uart_driver->tty_driver->major;
+ 	cdns_uart_data->cdns_uart_driver = cdns_uart_uart_driver;
+ 
+ 	/*
 -- 
 2.20.1
 
