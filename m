@@ -2,55 +2,162 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8126BC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4B6C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4C42070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4F820644
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfG2IK0 (ORCPT
+        id S1727461AbfG2IM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:10:26 -0400
-Received: from mga04.intel.com ([192.55.52.120]:19763 "EHLO mga04.intel.com"
+        Mon, 29 Jul 2019 04:12:26 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:48310 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfG2IK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:10:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 01:10:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,322,1559545200"; 
-   d="scan'208";a="199514235"
-Received: from um.fi.intel.com (HELO localhost) ([10.237.72.183])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Jul 2019 01:10:24 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        kan.liang@linux.intel.com, alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH v1 0/7] perf, intel: Add support for PEBS output to Intel PT
-In-Reply-To: <20190704160024.56600-1-alexander.shishkin@linux.intel.com>
-References: <20190704160024.56600-1-alexander.shishkin@linux.intel.com>
-Date:   Mon, 29 Jul 2019 11:10:23 +0300
-Message-ID: <875znl45xs.fsf@ashishki-desk.ger.corp.intel.com>
+        id S1725988AbfG2IM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 04:12:26 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 5FE39FB03;
+        Mon, 29 Jul 2019 10:12:23 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3avP_g3MYwj1; Mon, 29 Jul 2019 10:12:22 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 9C4E846BAF; Mon, 29 Jul 2019 10:12:21 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 10:12:21 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Anson.Huang@nxp.com
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com,
+        sboyd@kernel.org, l.stach@pengutronix.de, abel.vesa@nxp.com,
+        andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com,
+        leonard.crestez@nxp.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 4/6] thermal: qoriq: Add clock operations
+Message-ID: <20190729081221.GA2523@bogon.m.sigxcpu.org>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+ <20190705045612.27665-4-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190705045612.27665-4-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexander Shishkin <alexander.shishkin@linux.intel.com> writes:
+Hi Anson,
+On Fri, Jul 05, 2019 at 12:56:10PM +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> Some platforms like i.MX8MQ has clock control for this module,
+> need to add clock operations to make sure the driver is working
+> properly.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/thermal/qoriq_thermal.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+> index 2b2f79b..0813c1b 100644
+> --- a/drivers/thermal/qoriq_thermal.c
+> +++ b/drivers/thermal/qoriq_thermal.c
+> @@ -2,6 +2,7 @@
+>  //
+>  // Copyright 2016 Freescale Semiconductor, Inc.
+>  
+> +#include <linux/clk.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/err.h>
+> @@ -72,6 +73,7 @@ struct qoriq_sensor {
+>  
+>  struct qoriq_tmu_data {
+>  	struct qoriq_tmu_regs __iomem *regs;
+> +	struct clk *clk;
+>  	bool little_endian;
+>  	struct qoriq_sensor	*sensor[SITES_MAX];
+>  };
+> @@ -208,6 +210,19 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+>  		return PTR_ERR(data->regs);
+>  	}
+>  
+> +	data->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(data->clk)) {
+> +		if (PTR_ERR(data->clk) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +		data->clk = NULL;
+> +	}
 
-> Hi Peter,
+Wouldn't devm_clk_get_optional make more sense?
 
-Ping.
+> +
+> +	ret = clk_prepare_enable(data->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to enable clock\n");
+> +		return ret;
+> +	}
+> +
+>  	qoriq_tmu_init_device(data);	/* TMU initialization */
+>  
+>  	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
+> @@ -235,6 +250,8 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
+>  	/* Disable monitoring */
+>  	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
+>  
+> +	clk_disable_unprepare(data->clk);
+> +
+>  	platform_set_drvdata(pdev, NULL);
+>  
+>  	return 0;
+> @@ -250,14 +267,21 @@ static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
+>  	tmr &= ~TMR_ME;
+>  	tmu_write(data, tmr, &data->regs->tmr);
+>  
+> +	clk_disable_unprepare(data->clk);
+> +
+>  	return 0;
+>  }
+>  
+>  static int __maybe_unused qoriq_tmu_resume(struct device *dev)
+>  {
+>  	u32 tmr;
+> +	int ret;
+>  	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
+>  
+> +	ret = clk_prepare_enable(data->clk);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Enable monitoring */
+>  	tmr = tmu_read(data, &data->regs->tmr);
+>  	tmr |= TMR_ME;
 
-Thanks,
---
-Alex
+Apart from that it looks like what Fabio sent and what i tested so
+
+Reviewed-by: Guido Günther <agx@sigxcpu.org>
+
+Cheers,
+ -- Guido
+
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
