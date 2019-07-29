@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070FEC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C16C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5DC8205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813E7217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429508;
-	bh=pHc7wbZC2CQyPwbypAX1PB3PGUIUAQS/3zqsA9hgQkg=;
+	s=default; t=1564429511;
+	bh=wtXHkZtQffmUoNUxLjTz2YwyNGzfTIxgP+jSTbowfvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IPBdPxpTm/CieLpLicGVaS1fcnMl4Pjl8uDcfNVpkqH8k5ASKWPtqXMQVPDIwdyH7
-	 9pFWQVJug+9bHVf2nZ+f+F8Txpf2DvZhGzBH4BN6gOybquMZ2e9KMXty/Q1s/GyQGz
-	 aEa9jXfDih6Gii7UEI7EOshRsNECo5s3qxRL0BEs=
+	b=uZw4maM3qjvTa+MK496bGK4Dp714orsIi2ZtbwuodtY5ccSRI01XDkTwsi7zW0kiT
+	 WN2Az2iSPLXQkmgmrVglHksNdCUhEn9uxBymHwkCDfin5+ifGid1V4Z4iEEpVhXCEu
+	 ZS6AUJYdHLeEN+ipkG8CVEvOx3kMeD8PuBZmiVng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389907AbfG2TpI (ORCPT
+        id S2389915AbfG2TpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33730 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:45:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389827AbfG2TpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:45:02 -0400
+        id S2389899AbfG2TpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:45:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0890220C01;
-        Mon, 29 Jul 2019 19:45:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC35C205F4;
+        Mon, 29 Jul 2019 19:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429501;
-        bh=pHc7wbZC2CQyPwbypAX1PB3PGUIUAQS/3zqsA9hgQkg=;
+        s=default; t=1564429505;
+        bh=wtXHkZtQffmUoNUxLjTz2YwyNGzfTIxgP+jSTbowfvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xYoYaEXc/ySqtsvWWTmJJ4sZ0zb2bdynSeIQQYNw+WzVfHJa2BNnbAMtKnrxJuBGd
-         Q4rmIlEfS5BvQis6BjB4wwzQWIAK5iOMlTGHXwZibRemtnMqMvilTvJcd9/r1l0x93
-         8yIMb+WoE2To8kDJCBw0Q5e0r1RfJoWDpz5mt+Y4=
+        b=eWGeEqyOBrm2HWbrX+wke/clkQ6hPx2sHnpFxE/usPxAXTOTrS8cTsjZ7yRD/cHnG
+         Kx/B6aFKJz0miEqENk+JClUWl9j3jf4tbIVp0BNmu3PafL3HxPKDVzKq/AeiJ4tOEI
+         xziwYyMEdGkq6CMUqxLyMbD7TVVKKFsT7AlYFzIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Windsor <dwindsor@redhat.com>,
-        David Teigland <teigland@redhat.com>,
+        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Oliver OHalloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 079/113] dlm: check if workqueues are NULL before flushing/destroying
-Date:   Mon, 29 Jul 2019 21:22:46 +0200
-Message-Id: <20190729190714.519242769@linuxfoundation.org>
+Subject: [PATCH 4.19 080/113] powerpc/eeh: Handle hugepages in ioremap space
+Date:   Mon, 29 Jul 2019 21:22:47 +0200
+Message-Id: <20190729190714.732630471@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,62 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b355516f450703c9015316e429b66a93dfff0e6f ]
+[ Upstream commit 33439620680be5225c1b8806579a291e0d761ca0 ]
 
-If the DLM lowcomms stack is shut down before any DLM
-traffic can be generated, flush_workqueue() and
-destroy_workqueue() can be called on empty send and/or recv
-workqueues.
+In commit 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap
+space") support for using hugepages in the vmalloc and ioremap areas was
+enabled for radix. Unfortunately this broke EEH MMIO error checking.
 
-Insert guard conditionals to only call flush_workqueue()
-and destroy_workqueue() on workqueues that are not NULL.
+Detection works by inserting a hook which checks the results of the
+ioreadXX() set of functions.  When a read returns a 0xFFs response we
+need to check for an error which we do by mapping the (virtual) MMIO
+address back to a physical address, then mapping physical address to a
+PCI device via an interval tree.
 
-Signed-off-by: David Windsor <dwindsor@redhat.com>
-Signed-off-by: David Teigland <teigland@redhat.com>
+When translating virt -> phys we currently assume the ioremap space is
+only populated by PAGE_SIZE mappings. If a hugepage mapping is found we
+emit a WARN_ON(), but otherwise handles the check as though a normal
+page was found. In pathalogical cases such as copying a buffer
+containing a lot of 0xFFs from BAR memory this can result in the system
+not booting because it's too busy printing WARN_ON()s.
+
+There's no real reason to assume huge pages can't be present and we're
+prefectly capable of handling them, so do that.
+
+Fixes: 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap space")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190710150517.27114-1-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/lowcomms.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/eeh.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
-index a5e4a221435c..a93ebffe84b3 100644
---- a/fs/dlm/lowcomms.c
-+++ b/fs/dlm/lowcomms.c
-@@ -1630,8 +1630,10 @@ static void clean_writequeues(void)
+diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
+index c72767a5327a..fe3c6f3bd3b6 100644
+--- a/arch/powerpc/kernel/eeh.c
++++ b/arch/powerpc/kernel/eeh.c
+@@ -360,10 +360,19 @@ static inline unsigned long eeh_token_to_phys(unsigned long token)
+ 	ptep = find_init_mm_pte(token, &hugepage_shift);
+ 	if (!ptep)
+ 		return token;
+-	WARN_ON(hugepage_shift);
+-	pa = pte_pfn(*ptep) << PAGE_SHIFT;
  
- static void work_stop(void)
- {
--	destroy_workqueue(recv_workqueue);
--	destroy_workqueue(send_workqueue);
-+	if (recv_workqueue)
-+		destroy_workqueue(recv_workqueue);
-+	if (send_workqueue)
-+		destroy_workqueue(send_workqueue);
+-	return pa | (token & (PAGE_SIZE-1));
++	pa = pte_pfn(*ptep);
++
++	/* On radix we can do hugepage mappings for io, so handle that */
++	if (hugepage_shift) {
++		pa <<= hugepage_shift;
++		pa |= token & ((1ul << hugepage_shift) - 1);
++	} else {
++		pa <<= PAGE_SHIFT;
++		pa |= token & (PAGE_SIZE - 1);
++	}
++
++	return pa;
  }
  
- static int work_start(void)
-@@ -1691,13 +1693,17 @@ static void work_flush(void)
- 	struct hlist_node *n;
- 	struct connection *con;
- 
--	flush_workqueue(recv_workqueue);
--	flush_workqueue(send_workqueue);
-+	if (recv_workqueue)
-+		flush_workqueue(recv_workqueue);
-+	if (send_workqueue)
-+		flush_workqueue(send_workqueue);
- 	do {
- 		ok = 1;
- 		foreach_conn(stop_conn);
--		flush_workqueue(recv_workqueue);
--		flush_workqueue(send_workqueue);
-+		if (recv_workqueue)
-+			flush_workqueue(recv_workqueue);
-+		if (send_workqueue)
-+			flush_workqueue(send_workqueue);
- 		for (i = 0; i < CONN_HASH_SIZE && ok; i++) {
- 			hlist_for_each_entry_safe(con, n,
- 						  &connection_hash[i], list) {
+ /*
 -- 
 2.20.1
 
