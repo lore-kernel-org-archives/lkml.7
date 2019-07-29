@@ -2,163 +2,91 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33699C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6ECC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F418206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F1D206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 10:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfG2Kh2 (ORCPT
+        id S1728300AbfG2Kik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 06:37:28 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3197 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728151AbfG2Kh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:37:28 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AEA81E6113E8A0C205BC;
-        Mon, 29 Jul 2019 18:37:25 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
- 18:37:19 +0800
-Subject: Re: [PATCH net-next 08/11] net: hns3: add interrupt affinity support
- for misc interrupt
-To:     Salil Mehta <salil.mehta@huawei.com>,
-        tanhuazhong <tanhuazhong@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "lipeng (Y)" <lipeng321@huawei.com>
-References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
- <1563938327-9865-9-git-send-email-tanhuazhong@huawei.com>
- <fa3dbcce9e22453fb1ef111fd107d20f@huawei.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <f6e02338-b545-61a9-17de-222543dfef75@huawei.com>
-Date:   Mon, 29 Jul 2019 18:37:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Mon, 29 Jul 2019 06:38:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53187 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728151AbfG2Kik (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 06:38:40 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hs331-0007e8-9y; Mon, 29 Jul 2019 12:38:31 +0200
+Date:   Mon, 29 Jul 2019 12:38:30 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: sched: Unexpected reschedule of offline CPU#2!
+In-Reply-To: <20190729101349.GX31381@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.DEB.2.21.1907291235580.1791@nanos.tec.linutronix.de>
+References: <20190727164450.GA11726@roeck-us.net> <20190729093545.GV31381@hirez.programming.kicks-ass.net> <alpine.DEB.2.21.1907291156170.1791@nanos.tec.linutronix.de> <20190729101349.GX31381@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <fa3dbcce9e22453fb1ef111fd107d20f@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/29 17:18, Salil Mehta wrote:
->> From: tanhuazhong
->> Sent: Wednesday, July 24, 2019 4:19 AM
->> To: davem@davemloft.net
->> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Salil Mehta
->> <salil.mehta@huawei.com>; Zhuangyuzeng (Yisen) <yisen.zhuang@huawei.com>;
->> Linuxarm <linuxarm@huawei.com>; linyunsheng <linyunsheng@huawei.com>; lipeng
->> (Y) <lipeng321@huawei.com>; tanhuazhong <tanhuazhong@huawei.com>
->> Subject: [PATCH net-next 08/11] net: hns3: add interrupt affinity support for
->> misc interrupt
->>
->> From: Yunsheng Lin <linyunsheng@huawei.com>
->>
->> The misc interrupt is used to schedule the reset and mailbox
->> subtask, and a 1 sec timer is used to schedule the service
->> subtask, which does periodic work.
->>
->> This patch sets the above three subtask's affinity using the
->> misc interrupt' affinity.
->>
->> Also this patch setups a affinity notify for misc interrupt to
->> allow user to change the above three subtask's affinity.
->>
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> Signed-off-by: Peng Li <lipeng321@huawei.com>
->> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
->> ---
->>  .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 59
->> ++++++++++++++++++++--
->>  .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  4 ++
->>  2 files changed, 59 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
->> b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
->> index f345095..fe45986 100644
->> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
->> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
->> @@ -1270,6 +1270,12 @@ static int hclge_configure(struct hclge_dev *hdev)
->>
->>  	hclge_init_kdump_kernel_config(hdev);
->>
->> +	/* Set the init affinity based on pci func number */
->> +	i = cpumask_weight(cpumask_of_node(dev_to_node(&hdev->pdev->dev)));
->> +	i = i ? PCI_FUNC(hdev->pdev->devfn) % i : 0;
->> +	cpumask_set_cpu(cpumask_local_spread(i, dev_to_node(&hdev->pdev->dev)),
->> +			&hdev->affinity_mask);
->> +
->>  	return ret;
->>  }
->>
->> @@ -2502,14 +2508,16 @@ static void hclge_mbx_task_schedule(struct hclge_dev
->> *hdev)
->>  {
->>  	if (!test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state) &&
->>  	    !test_and_set_bit(HCLGE_STATE_MBX_SERVICE_SCHED, &hdev->state))
->> -		schedule_work(&hdev->mbx_service_task);
->> +		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
+On Mon, 29 Jul 2019, Peter Zijlstra wrote:
+> On Mon, Jul 29, 2019 at 11:58:24AM +0200, Thomas Gleixner wrote:
+> > On Mon, 29 Jul 2019, Peter Zijlstra wrote:
+> > > On Sat, Jul 27, 2019 at 09:44:50AM -0700, Guenter Roeck wrote:
+> > > > [   61.348866] Call Trace:
+> > > > [   61.349392]  kick_ilb+0x90/0xa0
+> > > > [   61.349629]  trigger_load_balance+0xf0/0x5c0
+> > > > [   61.349859]  ? check_preempt_wakeup+0x1b0/0x1b0
+> > > > [   61.350057]  scheduler_tick+0xa7/0xd0
+> > > 
+> > > kick_ilb() iterates nohz.idle_cpus_mask to find itself an idle_cpu().
+> > > 
+> > > idle_cpus_mask() is set from nohz_balance_enter_idle() and cleared from
+> > > nohz_balance_exit_idle(). nohz_balance_enter_idle() is called from
+> > > __tick_nohz_idle_stop_tick() when entering nohz idle, this includes the
+> > > cpu_is_offline() clause of the idle loop.
+> > > 
+> > > However, when offline, cpu_active() should also be false, and this
+> > > function should no-op.
+> > 
+> > Ha. That reboot mess is not clearing cpu active as it's not going through
+> > the regular cpu hotplug path. It's using reboot IPI which 'stops' the cpus
+> > dead in their tracks after clearing cpu online....
 > 
+> $string-of-cock-compliant-curses
 > 
-> Why we have to use system Work Queue here? This could adversely affect
-> other work scheduled not related to the HNS3 driver. Mailbox is internal
-> to the driver and depending upon utilization of the mbx channel(which could
-> be heavy if many VMs are running), this might stress other system tasks
-> as well. Have we thought of this?
+> What a trainwreck...
+> 
+> So if it doesn't play by the normal rules; how does it expect to work?
+> 
+> So what do we do? 'Fix' reboot or extend the rules?
 
-If I understand the CMWQ correctly, it is better to reuse the system Work
-Queue when the work queue needed by HNS3 driver shares the same property of
-system Work Queue, because Concurrency Managed Workqueue mechnism has ensured
-they have the same worker pool if they share the same property.
+Reboot has two modes:
 
-Some driver(i40e) allocates a work queue with WQ_MEM_RECLAIM, I am not sure
-what is the usecase which requires the WQ_MEM_RECLAIM.
+ - Regular reboot initiated from user space
 
-Anyway, If the HNS3 need to allocate a new work queue, we need to
-figure out the usecase first.
+ - Panic reboot
 
-> 
-> 
-> 
->> +			      &hdev->mbx_service_task);
->>  }
->>
->>  static void hclge_reset_task_schedule(struct hclge_dev *hdev)
->>  {
->>  	if (!test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
->>  	    !test_and_set_bit(HCLGE_STATE_RST_SERVICE_SCHED, &hdev->state))
->> -		schedule_work(&hdev->rst_service_task);
->> +		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
->> +			      &hdev->rst_service_task);
->>  }
->>
->>  static void hclge_task_schedule(struct hclge_dev *hdev)
->> @@ -2517,7 +2525,8 @@ static void hclge_task_schedule(struct hclge_dev *hdev)
->>  	if (!test_bit(HCLGE_STATE_DOWN, &hdev->state) &&
->>  	    !test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
->>  	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state))
->> -		(void)schedule_work(&hdev->service_task);
->> +		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
-> 
-> Same here.
-> 
-> 
-> Salil.
-> 
-> .
-> 
+For the regular reboot we can make it go through proper hotplug, for the
+panic case not so much.
 
+thanks,
+
+	tglx
