@@ -2,141 +2,95 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE11C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72423C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623EE205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430631;
-	bh=DWUUnzFNgLaVE7J8zIwm2jy31/hoonbPAzRNCUQY77g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZiH5LEyGA0wDRxg8IEFLj33uZ18S08jrp6299ix9pcI2ZcXCI7PBGuUTX5ecTcOC
-	 ghtqAHDuuW2Ad/y4krc2P3X7mbZLIGqz+n0qWV2hDTfJb7n2rhegKFyfDk2dSn3QOj
-	 uAPutaRLx+gWuAgGQOusyFCNSecRW83+1xwClxUY=
+	by mail.kernel.org (Postfix) with ESMTP id 3DEC7205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389758AbfG2TqG (ORCPT
+        id S1729971AbfG2UD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:46:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390051AbfG2TqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:46:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 866742171F;
-        Mon, 29 Jul 2019 19:46:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429563;
-        bh=DWUUnzFNgLaVE7J8zIwm2jy31/hoonbPAzRNCUQY77g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jfMzFzir/ImPrnD7Ck+FlElRZayVvHZk66VrwDaGD/xPffsatJT92euq45zX6S8ay
-         ZkfjmUz3jkv+tvY5usEEuIXNGxj6/i01+dxFfzz+5UaO0JNDwgTu0mBYXRb6V/hBhJ
-         /xptiSzqQsUQc/0pB2PqRzU+Ou9YOUR1AlE2sTAc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Sun peng Li <Sunpeng.Li@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 023/215] drm/amd/display: Disable cursor when offscreen in negative direction
-Date:   Mon, 29 Jul 2019 21:20:19 +0200
-Message-Id: <20190729190743.902352878@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
-References: <20190729190739.971253303@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 29 Jul 2019 16:03:57 -0400
+Received: from ja.ssi.bg ([178.16.129.10]:52746 "EHLO ja.ssi.bg"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729843AbfG2UDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 16:03:55 -0400
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x6TK3VOW005690;
+        Mon, 29 Jul 2019 23:03:32 +0300
+Date:   Mon, 29 Jul 2019 23:03:31 +0300 (EEST)
+From:   Julian Anastasov <ja@ssi.bg>
+To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+cc:     "David S. Miller" <davem@davemloft.net>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Simon Horman <horms@verge.net.au>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org
+Subject: Re: [net-next 1/2] ipvs: batch __ip_vs_cleanup
+In-Reply-To: <8441EA26-E197-4F40-A6D7-5B7D59AA7F7F@cmss.chinamobile.com>
+Message-ID: <alpine.LFD.2.21.1907292300580.2909@ja.home.ssi.bg>
+References: <1563031186-2101-1-git-send-email-yanhaishuang@cmss.chinamobile.com> <1563031186-2101-2-git-send-email-yanhaishuang@cmss.chinamobile.com> <alpine.LFD.2.21.1907152333300.5700@ja.home.ssi.bg>
+ <8441EA26-E197-4F40-A6D7-5B7D59AA7F7F@cmss.chinamobile.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e371e19c10a264bd72c2ff1d21e2167b994710d1 ]
 
-[Why]
-When x or y is negative we set the x and y values to 0 and compensate
-with a positive cursor hotspot in DM since DC expects positive cursor
-values.
+	Hello,
 
-When x or y is less than or equal to the maximum cursor width or height
-the cursor hotspot is clamped so the hotspot doesn't exceed the
-cursor size:
+On Thu, 18 Jul 2019, Haishuang Yan wrote:
 
-if (x < 0) {
-        xorigin = min(-x, amdgpu_crtc->max_cursor_width - 1);
-        x = 0;
-}
+> As the following benchmark testing results show, there is a little performance improvement:
 
-if (y < 0) {
-        yorigin = min(-y, amdgpu_crtc->max_cursor_height - 1);
-        y = 0;
-}
+	OK, can you send v2 after removing the LIST_HEAD(list) from
+both patches, I guess, it is not needed. If you prefer, you can
+include these benchmark results too.
 
-This incorrectly forces the cursor to be at least 1 pixel on the screen
-in either direction when x or y is sufficiently negative.
+> $  cat add_del_unshare.sh
+> #!/bin/bash
+> 
+> for i in `seq 1 100`
+>     do
+>      (for j in `seq 1 40` ; do  unshare -n ipvsadm -A -t 172.16.$i.$j:80 >/dev/null ; done) &
+>     done
+> wait; grep net_namespace /proc/slabinfo
+> 
+> Befor patch:
+> $  time sh add_del_unshare.sh
+> net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
+> 
+> real    0m8.086s
+> user    0m2.025s
+> sys     0m36.956s
+> 
+> After patch:
+> $  time sh add_del_unshare.sh
+> net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
+> 
+> real    0m7.623s
+> user    0m2.003s
+> sys     0m32.935s
+> 
+> 
+> > 
+> >> +		ipvs = net_ipvs(net);
+> >> +		ip_vs_conn_net_cleanup(ipvs);
+> >> +		ip_vs_app_net_cleanup(ipvs);
+> >> +		ip_vs_protocol_net_cleanup(ipvs);
+> >> +		ip_vs_control_net_cleanup(ipvs);
+> >> +		ip_vs_estimator_net_cleanup(ipvs);
+> >> +		IP_VS_DBG(2, "ipvs netns %d released\n", ipvs->gen);
+> >> +		net->ipvs = NULL;
 
-[How]
-Just disable the cursor when it goes far enough off the screen in one
-of these directions.
+Regards
 
-This fixes kms_cursor_crc@cursor-256x256-offscreen.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index ab7c5c3004ee..fa268dd736f4 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -4952,12 +4952,12 @@ static int get_cursor_position(struct drm_plane *plane, struct drm_crtc *crtc,
- 	int x, y;
- 	int xorigin = 0, yorigin = 0;
- 
--	if (!crtc || !plane->state->fb) {
--		position->enable = false;
--		position->x = 0;
--		position->y = 0;
-+	position->enable = false;
-+	position->x = 0;
-+	position->y = 0;
-+
-+	if (!crtc || !plane->state->fb)
- 		return 0;
--	}
- 
- 	if ((plane->state->crtc_w > amdgpu_crtc->max_cursor_width) ||
- 	    (plane->state->crtc_h > amdgpu_crtc->max_cursor_height)) {
-@@ -4971,6 +4971,10 @@ static int get_cursor_position(struct drm_plane *plane, struct drm_crtc *crtc,
- 	x = plane->state->crtc_x;
- 	y = plane->state->crtc_y;
- 
-+	if (x <= -amdgpu_crtc->max_cursor_width ||
-+	    y <= -amdgpu_crtc->max_cursor_height)
-+		return 0;
-+
- 	if (crtc->primary->state) {
- 		/* avivo cursor are offset into the total surface */
- 		x += crtc->primary->state->src_x >> 16;
--- 
-2.20.1
-
-
-
+--
+Julian Anastasov <ja@ssi.bg>
