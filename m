@@ -2,63 +2,126 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAB3C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15331C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECB82070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:53:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P3ghzHyr"
+	by mail.kernel.org (Postfix) with ESMTP id E8FFC206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 08:53:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfG2IxI (ORCPT
+        id S1727081AbfG2IxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 04:53:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40262 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbfG2IxI (ORCPT
+        Mon, 29 Jul 2019 04:53:21 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38228 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfG2IxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 04:53:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=P08er2k4BOyqJGgXnVu3fzZuyZwmGSPU9ApKU3uDuck=; b=P3ghzHyr6Bayxh+MSd8rfYNDe
-        Rv/tfuH0Hzk2GJhyxKlBscOD9CKu+1d1bQtyVCWp9DPoDY3oOGGlasyPe9qLv//vfPFJXX0367z4+
-        qb2SkUIDWtaF/xJzAbuvMoy1iysgvLAzmgQyE30NDJf0ryDXS1OgA3IPeIG9ikpFWPzGQix/lJoDj
-        +zRDotHYSnS0xY5SENiaqPuVBTLN6BuZ6Awqmx6coHEfcUSvRgzOHDDbCM35mWVSfbntaTejBZoXK
-        ylTen1YRJIzYSnTcbLr5iw0uF8jM2hqXCP3Uh39hxhOcbXejJd6IIdk32mCa5gYgUnd2b1/BRytVs
-        JrOnPaIbA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hs1P0-0008QD-4n; Mon, 29 Jul 2019 08:53:06 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9799F2025E7AD; Mon, 29 Jul 2019 10:53:04 +0200 (CEST)
-Date:   Mon, 29 Jul 2019 10:53:04 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Eiichi Tsukata <devel@etsukata.com>
-Cc:     tglx@linutronix.de, luto@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/core: Remove the unused schedule_user() function
-Message-ID: <20190729085304.GU31381@hirez.programming.kicks-ass.net>
-References: <20190727165513.25636-1-devel@etsukata.com>
+        Mon, 29 Jul 2019 04:53:21 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g17so60881839wrr.5;
+        Mon, 29 Jul 2019 01:53:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gYEJAxjcgTtQm2cZf+kuqC8244eoV04/bbKoaP0JwWQ=;
+        b=hrKT5Ot/r7j4G30s4V9YYNaBuGxXYNQQ3g6LL2i+YOjZNg6pgpPgi+9aNJDDy2f3Kn
+         fT8IRvocwDjv3zPiKap+N7DlLmzIBuJWJ7u5MBTUWFM3e1sOxTJ+ptxjr0lVOIYkITAH
+         KuUNUJ76ibu/Em0nF6t0vIMXguAfa+TPBVxhi7Xoupam9ZR7AJO9tOA09709Egzzg5It
+         g0/JiHXUBoQpltlevOxAzYe9SEa1c7l47w1DtxPEXON/uW9yqyhPU5UHrZ2dN4pL8KlQ
+         trMiQJh3fd1hiJdWnJJ+UD75dQdHd9yIWN69PadGqhr2BlLZOlsNEJV3wox8Kd8O0l7U
+         JCmQ==
+X-Gm-Message-State: APjAAAV93uT9FLai778aVqN8CI7B9UYsa+g9ZAozfypX823xVcvZL7y+
+        8PZDpIEijVfNAaC2uBUaxdsxnAQ8nbV2zZ99hTZUYM53
+X-Google-Smtp-Source: APXvYqx8nJujn6ne9ZWaFEFrYjHAXB637TBnOpb2N0+qfCp412FAB/ohFygoSLEF6ctIy65qF9cINXkMdMZ2RNME/WE=
+X-Received: by 2002:a5d:630c:: with SMTP id i12mr31091883wru.312.1564390398844;
+ Mon, 29 Jul 2019 01:53:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190727165513.25636-1-devel@etsukata.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190725102211.8526-1-max@enpas.org>
+In-Reply-To: <20190725102211.8526-1-max@enpas.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 29 Jul 2019 10:53:07 +0200
+Message-ID: <CAMuHMdXFW2mEg8jChA=JFt-u9NMGp9m+1FnoGe=+Pxme3O2ESg@mail.gmail.com>
+Subject: Re: [PATCH v2] ata/pata_buddha: Probe via modalias instead of initcall
+To:     Max Staudt <max@enpas.org>
+Cc:     linux-ide@vger.kernel.org,
+        "Linux/m68k" <linux-m68k@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 01:55:13AM +0900, Eiichi Tsukata wrote:
-> Since commit 02bc7768fe44 ("x86/asm/entry/64: Migrate error and IRQ exit
-> work to C and remove old assembly code"), it's no longer used.
+Hi Max,
 
-Thanks!
+On Thu, Jul 25, 2019 at 3:25 PM Max Staudt <max@enpas.org> wrote:
+> Up until now, the pata_buddha driver would only check for cards on
+> initcall time. Now, the kernel will call its probe function as soon
+> as a compatible card is detected.
+>
+> Device removal remains unimplemented. A WARN_ONCE() serves as a
+> reminder.
+>
+> v2: Rename 'zdev' to 'z' to make the patch easy to analyse with
+>     git diff --ignore-space-change
+>
+> Tested-by: Max Staudt <max@enpas.org>
+> Signed-off-by: Max Staudt <max@enpas.org>
+
+Thanks for your patch!
+
+> --- a/drivers/ata/pata_buddha.c
+> +++ b/drivers/ata/pata_buddha.c
+
+> @@ -145,111 +146,162 @@ static struct ata_port_operations pata_xsurf_ops = {
+>         .set_mode       = pata_buddha_set_mode,
+>  };
+>
+> -static int __init pata_buddha_init_one(void)
+> +static int pata_buddha_probe(struct zorro_dev *z,
+> +                            const struct zorro_device_id *ent)
+>  {
+
+[...]
+
+> +       switch (z->id) {
+> +       case ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA:
+> +       default:
+> +               type = BOARD_BUDDHA;
+> +               break;
+> +       case ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL:
+> +               type = BOARD_CATWEASEL;
+> +               nr_ports++;
+> +               break;
+> +       case ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF:
+> +               type = BOARD_XSURF;
+> +               break;
+> +       }
+
+Please obtain the type from ent->driver_data instead of using a switch()
+statement...
+
+> -module_init(pata_buddha_init_one);
+> +static const struct zorro_device_id pata_buddha_zorro_tbl[] = {
+> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA, },
+> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL, },
+> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, },
+
+... after storing it in zorro_device_id.driver_data here.
+
+> +       { 0 }
+> +};
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
