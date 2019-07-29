@@ -2,110 +2,78 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E960C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BACC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B11A2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:54:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rpzzYJCD"
+	by mail.kernel.org (Postfix) with ESMTP id A66A92070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 02:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfG2Cyz (ORCPT
+        id S1726586AbfG2Czi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 22:54:55 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42008 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfG2Cyy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 22:54:54 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so27195837pff.9;
-        Sun, 28 Jul 2019 19:54:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ULGnzYJXZaJE7MAKvACKGRFG44YFo4oofMSCNLQo9x0=;
-        b=rpzzYJCDah/qwpKl6PxReqg+Kn7i0regxqwMVdhNBBC4W1g3goPhN3MPyviApdhSSd
-         bJ4L5KNVop6mqeyZv9ZphD8SjWMrlTJI3OQ9wH0oq/G6KhASHMJKK82LmAHJCVMOjDij
-         5mweyGgMAlXPIAzjeh+/MWWxT798tfAmR2eue6v5LxRlnPm97uzdtCe30gsCGjXw3dgo
-         6xKMb+O/GPzRhmsycV19N+ogd+aWG7XTOCt1L88zku+gLSBuqLNK/eUFxNzdfLMhCdKa
-         3HTmBglBwcYceBE/LSdqGQigGNWnI54DOOlTpWKPk+nQpGUh4VhFKSwq7dvbg7/Sxn3C
-         wKdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ULGnzYJXZaJE7MAKvACKGRFG44YFo4oofMSCNLQo9x0=;
-        b=UaKjQRESncpiDYDMUHesvCxLjuLVcPqd+eFL6CRwbfB1hM7FCjnICo6k34Qnfisfhi
-         BrpMW/ugevDrl+rBcIMuiOTDmFrsfxdSG5+jPAWAJfTJL7Xm1lbgKZdt4hhoDxI7BswP
-         o/z3c1ciKK1fKhEfTgmXQgqJRKEfFIxtNfdRSyljcKYd+dHA+y1e922favdPfd1Nl1Vg
-         pGc/gCvtx2cGCj2iUwyrYR402DrxlUqYqcCmLNexgt+HCuIZDyR/gmM2/algSEme2+8O
-         1gJOum5HOWBJlTG4GWiNgPiIqdRI2QgPImGJZ3xfQy5MEQXf4N96PXrHCzz0Pw3q7oJU
-         51Hg==
-X-Gm-Message-State: APjAAAXJR1H4oi3S97MMN0/TzEzqfupT+g+Hdd0TCSak79n4af2vV+EO
-        kSrL2cDhwZoe5jRi6dTbA02VZEjo
-X-Google-Smtp-Source: APXvYqyZ2efTdk6a2sgndgeD3VPyZ5NbmxlxLpmgCiNY8sJefJKAZzV5kAV8xLBCw8+dvfmMWlTMJg==
-X-Received: by 2002:a17:90b:d8f:: with SMTP id bg15mr109236464pjb.65.1564368894245;
-        Sun, 28 Jul 2019 19:54:54 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id 131sm73963621pfx.57.2019.07.28.19.54.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Jul 2019 19:54:53 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
-        shivasharan.srikanteshwara@broadcom.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] scsi: megaraid: Fix possible null-pointer dereferences in megasas_complete_cmd()
-Date:   Mon, 29 Jul 2019 10:54:45 +0800
-Message-Id: <20190729025445.18312-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Sun, 28 Jul 2019 22:55:38 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45438 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726150AbfG2Czi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 22:55:38 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 177D4FCDE4A6DFD469AF;
+        Mon, 29 Jul 2019 10:55:36 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 29 Jul 2019 10:55:27 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, <saeedm@mellanox.com>,
+        Jian Shen <shenjian15@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH V4 net-next 01/10] net: hns3: add reset checking before set channels
+Date:   Mon, 29 Jul 2019 10:53:22 +0800
+Message-ID: <1564368811-65492-2-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
+References: <1564368811-65492-1-git-send-email-tanhuazhong@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In megasas_complete_cmd(), there is an if statement on line 3411 to
-check whether cmd->scmd is NULL:
-    if (cmd->scmd)
+From: Jian Shen <shenjian15@huawei.com>
 
-When cmd->scmd is NULL, it is used at some places, such as on line 3286:
-    cmd->scmd->result = alt_status << 16;
-on line 3295:
-    cmd->scmd->scsi_done(cmd->scmd);
-on line 3343:
-    cmd->scmd->scsi_done(cmd->scmd);
+hns3_set_channels() should check the resetting status firstly,
+since the device will reinitialize when resetting. If the
+reset has not completed, the hns3_set_channels() may access
+invalid memory.
 
-Thus, possible null-pointer dereferences may occur.
-
-To fix these bugs, cmd->scmd is checked before being used.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 3 +++
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index b2339d04a700..181c4d9cd707 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -3440,6 +3440,9 @@ megasas_complete_cmd(struct megasas_instance *instance, struct megasas_cmd *cmd,
- 	case MFI_CMD_LD_READ:
- 	case MFI_CMD_LD_WRITE:
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 69f7ef8..08af782 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -4378,6 +4378,9 @@ int hns3_set_channels(struct net_device *netdev,
+ 	u16 org_tqp_num;
+ 	int ret;
  
-+		if (!cmd->scmd)
-+			break;
++	if (hns3_nic_resetting(netdev))
++		return -EBUSY;
 +
- 		if (alt_status) {
- 			cmd->scmd->result = alt_status << 16;
- 			exception = 1;
+ 	if (ch->rx_count || ch->tx_count)
+ 		return -EINVAL;
+ 
 -- 
-2.17.0
+2.7.4
 
