@@ -2,53 +2,53 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A7EC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A264C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE8B205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4837F205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430698;
-	bh=Jb5//ygbKyXJ/q7wmeUpiah/CscHFECierkUDcF46nM=;
+	s=default; t=1564430705;
+	bh=ZPmfZoJlLwTcRkZU0BsWm4+fuP0Yq8LQoHWCzuFYCAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mbvnICbv/TpkFCmjn1S4LIS5YX+IPq1QTI/TEbnp+RMHK5SfVrxvWMWlkzqwcwsH1
-	 oL9InZyGnF0Fesq1wrTI4nAWBm1nzOdj0tpgBeliujeId2/WPxqonFSrUwtd1or85O
-	 Qi1gK5HeIPK02/OcEo8liAxE1BQk09D8karAVTp8=
+	b=R6jHgENqirbHANgX3aCXFu5SOOpB6W+sCc1U5MyUiL74cakcBM3yMSBawYABEcTpk
+	 axd86nbRJ2hFTYu3FaX4RMvS/YSLUwiyaPPWSdKFS+9PBss8O8U5vaH4JrrtPV+hEq
+	 OZ+BKT07MhGJ+mSG4c4Gv65YPTgXJFK6EJXPsvIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389773AbfG2ToS (ORCPT
+        id S2390071AbfG2UFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:44:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60946 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:05:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389330AbfG2ToM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:44:12 -0400
+        id S2389766AbfG2ToS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:44:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D030205F4;
-        Mon, 29 Jul 2019 19:44:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6A4E205F4;
+        Mon, 29 Jul 2019 19:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429451;
-        bh=Jb5//ygbKyXJ/q7wmeUpiah/CscHFECierkUDcF46nM=;
+        s=default; t=1564429457;
+        bh=ZPmfZoJlLwTcRkZU0BsWm4+fuP0Yq8LQoHWCzuFYCAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uKQnx0cRij/fP/oaUclzM2iBL9BqfICS+bstNF5J9Qc6gyyxjqr5/u3+gKgp8GVlH
-         zFx7YFlNvqS/TGpVp05Fy6i3r1Yvp6Rc22DUOZ+Cj1IVHIFN2YB7673e5hb0COswnk
-         Evp261Sj8O4oqTB5tPWB6JIUmYMQET7mNJnRVB8U=
+        b=HmAsbEE1NfwvcBSn2zR5owKMgkf/FIbZsGl1LpKIQfqMDSfL/4qxk7YjVj9+NW871
+         5MDywK8Tozj2XgJokzyYsfufyrmTtMFQ+/OKOhgbt6xEQSkL/J5Fs73/EnXsvzTFD9
+         glE7PgwdUfwj5veBnQdX0d0xyJIg15CHv2FXHS7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/113] powerpc/boot: add {get, put}_unaligned_be32 to xz_config.h
-Date:   Mon, 29 Jul 2019 21:22:42 +0200
-Message-Id: <20190729190713.461109334@linuxfoundation.org>
+        syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com,
+        Hridya Valsaraju <hridya@google.com>,
+        Todd Kjos <tkjos@google.com>
+Subject: [PATCH 4.19 103/113] binder: prevent transactions to context manager from its own process.
+Date:   Mon, 29 Jul 2019 21:23:10 +0200
+Message-Id: <20190729190720.129090388@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -61,102 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9e005b761e7ad153dcf40a6cba1d681fe0830ac6 ]
+From: Hridya Valsaraju <hridya@google.com>
 
-The next commit will make the way of passing CONFIG options more robust.
-Unfortunately, it would uncover another hidden issue; without this
-commit, skiroot_defconfig would be broken like this:
+commit 49ed96943a8e0c62cc5a9b0a6cfc88be87d1fcec upstream.
 
-|   WRAP    arch/powerpc/boot/zImage.pseries
-| arch/powerpc/boot/wrapper.a(decompress.o): In function `bcj_powerpc.isra.10':
-| decompress.c:(.text+0x720): undefined reference to `get_unaligned_be32'
-| decompress.c:(.text+0x7a8): undefined reference to `put_unaligned_be32'
-| make[1]: *** [arch/powerpc/boot/Makefile;383: arch/powerpc/boot/zImage.pseries] Error 1
-| make: *** [arch/powerpc/Makefile;295: zImage] Error 2
+Currently, a transaction to context manager from its own process
+is prevented by checking if its binder_proc struct is the same as
+that of the sender. However, this would not catch cases where the
+process opens the binder device again and uses the new fd to send
+a transaction to the context manager.
 
-skiroot_defconfig is the only defconfig that enables CONFIG_KERNEL_XZ
-for ppc, which has never been correctly built before.
+Reported-by: syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
+Signed-off-by: Hridya Valsaraju <hridya@google.com>
+Acked-by: Todd Kjos <tkjos@google.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190715191804.112933-1-hridya@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-I figured out the root cause in lib/decompress_unxz.c:
-
-| #ifdef CONFIG_PPC
-| #      define XZ_DEC_POWERPC
-| #endif
-
-CONFIG_PPC is undefined here in the ppc bootwrapper because autoconf.h
-is not included except by arch/powerpc/boot/serial.c
-
-XZ_DEC_POWERPC is not defined, therefore, bcj_powerpc() is not compiled
-for the bootwrapper.
-
-With the next commit passing CONFIG_PPC correctly, we would realize that
-{get,put}_unaligned_be32 was missing.
-
-Unlike the other decompressors, the ppc bootwrapper duplicates all the
-necessary helpers in arch/powerpc/boot/.
-
-The other architectures define __KERNEL__ and pull in helpers for
-building the decompressors.
-
-If ppc bootwrapper had defined __KERNEL__, lib/xz/xz_private.h would
-have included <asm/unaligned.h>:
-
-| #ifdef __KERNEL__
-| #       include <linux/xz.h>
-| #       include <linux/kernel.h>
-| #       include <asm/unaligned.h>
-
-However, doing so would cause tons of definition conflicts since the
-bootwrapper has duplicated everything.
-
-I just added copies of {get,put}_unaligned_be32, following the
-bootwrapper coding convention.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190705100144.28785-1-yamada.masahiro@socionext.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/xz_config.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/android/binder.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/boot/xz_config.h b/arch/powerpc/boot/xz_config.h
-index e22e5b3770dd..ebfadd39e192 100644
---- a/arch/powerpc/boot/xz_config.h
-+++ b/arch/powerpc/boot/xz_config.h
-@@ -20,10 +20,30 @@ static inline uint32_t swab32p(void *p)
- 
- #ifdef __LITTLE_ENDIAN__
- #define get_le32(p) (*((uint32_t *) (p)))
-+#define cpu_to_be32(x) swab32(x)
-+static inline u32 be32_to_cpup(const u32 *p)
-+{
-+	return swab32p((u32 *)p);
-+}
- #else
- #define get_le32(p) swab32p(p)
-+#define cpu_to_be32(x) (x)
-+static inline u32 be32_to_cpup(const u32 *p)
-+{
-+	return *p;
-+}
- #endif
- 
-+static inline uint32_t get_unaligned_be32(const void *p)
-+{
-+	return be32_to_cpup(p);
-+}
-+
-+static inline void put_unaligned_be32(u32 val, void *p)
-+{
-+	*((u32 *)p) = cpu_to_be32(val);
-+}
-+
- #define memeq(a, b, size) (memcmp(a, b, size) == 0)
- #define memzero(buf, size) memset(buf, 0, size)
- 
--- 
-2.20.1
-
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -2838,7 +2838,7 @@ static void binder_transaction(struct bi
+ 			else
+ 				return_error = BR_DEAD_REPLY;
+ 			mutex_unlock(&context->context_mgr_node_lock);
+-			if (target_node && target_proc == proc) {
++			if (target_node && target_proc->pid == proc->pid) {
+ 				binder_user_error("%d:%d got transaction to context manager from process owning it\n",
+ 						  proc->pid, thread->pid);
+ 				return_error = BR_FAILED_REPLY;
 
 
