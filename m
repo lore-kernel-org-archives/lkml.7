@@ -2,114 +2,74 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0B0C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ECCC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83FC5206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:40:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FMdTb7NC"
+	by mail.kernel.org (Postfix) with ESMTP id 85F2A206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbfG2MkM (ORCPT
+        id S2387911AbfG2Ml1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:40:12 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58383 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbfG2MkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:40:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45xzmT2FFpz9s7T;
-        Mon, 29 Jul 2019 22:40:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564404009;
-        bh=4dbux8Y2IDJ4EDhwD0REmwTgzoEb9eQxcpaRGFuIzmM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FMdTb7NCf+Lf6WP2/YPUZrqnlJlghpg1I156bYWPP43qkXO7a2EgOTl3JGK8Fl6n5
-         uyqOn4Q7Czkw++Fvbo5epE/6LKXNYY73dwg0C23tSm4sTALah3+jROYd+BdDUWoFLz
-         YdH8/Tny3UB1IOjlretfoo74we7pkmVLvua/QCFGN21i5ZSKg3sUNwcPnWre4lco+2
-         DKO9bjKV545W928GJD+rVtFN+B3rpHHHCTxXw89JAYxMzWwZFADU1ysve13RiyILLv
-         Quqqy/lHeiKhWou0q9E+e0erRkA6tOKBD4v57v/h0bo01TeS4EfE3VXU7TujyKKOAP
-         oQFzKE/EEbUvw==
-Date:   Mon, 29 Jul 2019 22:40:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] modpost: check for static EXPORT_SYMBOL* functions
-Message-ID: <20190729224007.2f7fdcb4@canb.auug.org.au>
-In-Reply-To: <e2b5607f-0f74-41c6-a83d-5a22d6828778@linux.com>
-References: <20190714152817.24693-1-efremov@linux.com>
-        <20190728100906.18847-1-efremov@linux.com>
-        <20190729151351.24f9eeb9@canb.auug.org.au>
-        <e2b5607f-0f74-41c6-a83d-5a22d6828778@linux.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/5dSy6MPx/cOnKQYrF6_o2JA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 29 Jul 2019 08:41:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60298 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726986AbfG2Ml1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:41:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D7383ADCB;
+        Mon, 29 Jul 2019 12:41:25 +0000 (UTC)
+From:   Anthony Iliopoulos <ailiopoulos@suse.com>
+To:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
+        Anthony Iliopoulos <ailiopoulos@suse.com>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nvme/multipath: revalidate nvme_ns_head gendisk in nvme_validate_ns
+Date:   Mon, 29 Jul 2019 14:40:40 +0200
+Message-Id: <20190729124040.16581-1-ailiopoulos@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/5dSy6MPx/cOnKQYrF6_o2JA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When CONFIG_NVME_MULTIPATH is set, only the hidden gendisk associated
+with the per-controller ns is run through revalidate_disk when a
+rescan is triggered, while the visible blockdev never gets its size
+(bdev->bd_inode->i_size) updated to reflect any capacity changes that
+may have occurred.
 
-Hi Denis,
+This prevents online resizing of nvme block devices and in extension of
+any filesystems atop that will are unable to expand while mounted, as
+userspace relies on the blockdev size for obtaining the disk capacity
+(via BLKGETSIZE/64 ioctls).
 
-On Mon, 29 Jul 2019 12:16:29 +0300 Denis Efremov <efremov@linux.com> wrote:
->
-> > Just a reminder that some of us (just me?) do well over 100+ builds per
-> > day ...  if this can be optimised some what that would be good. =20
->=20
-> These measurements for the worst case (allmodconfig). Is it possible to=20
-> measure the slowdown in your case? How it will perform on your typical=20
-> workflow?
+Fix this by explicitly revalidating the actual namespace gendisk in
+addition to the per-controller gendisk, when multipath is enabled.
 
-I did 3 x86_64 allmodconfig builds without and with the patch (I do
--j 80 powerpc64 le hosted cross builds) and it doesn't look like the
-patch has much impact at all.
+Signed-off-by: Anthony Iliopoulos <ailiopoulos@suse.com>
+---
+ drivers/nvme/host/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Without the patch:
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 8f3fbe5ca937..80c7a7ee240b 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1715,6 +1715,7 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
+ 	if (ns->head->disk) {
+ 		nvme_update_disk_info(ns->head->disk, ns, id);
+ 		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
++		revalidate_disk(ns->head->disk);
+ 	}
+ #endif
+ }
+-- 
+2.16.4
 
-real	8m41.390s user	587m25.249s sys	22m0.411s
-real	8m40.100s user	587m32.148s sys	21m58.419s
-real	8m40.084s user	587m25.311s sys	22m2.794s
-
-With the patch:
-
-real	8m40.351s user	587m21.819s sys	21m57.389s
-real	8m40.868s user	587m23.730s sys	21m58.737s
-real	8m40.970s user	587m22.525s sys	22m2.467s
-
-I do other builds as well, but that is the biggest, so actually looks
-ok.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/5dSy6MPx/cOnKQYrF6_o2JA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0+6ScACgkQAVBC80lX
-0GxtVwf+MXedKDg7Tc/3WCsRA44hxudZyWbH10T4khIcptSuioPqoBgz9abNYI3K
-IKyTryqu6lXAgyQvY+bYs/qqdZp9FuDcIJPVOdPmCBlRvslVom4GtJecR+DXa6Rb
-6NxWWglkWJf4iJl8izJKdQTyWRI4utWrW8iERkgK3GyNubvtS8p0ZJPtOox4LhJL
-sL4sqBrgoZcNyUiK5LLAAt/iYZQ+IeMFDWJ5C+T4kv1JpTM1FlpqRVrIJcHLrG2N
-kV3DK59Si0OFGq+4FajbI72YEw+0B3qEVCBZQjYEc6gr1Gxpm8XN/9EIqJqJ2AN+
-/thOOrhvw7v3oh/ZEHdSRtKGdHt1Qw==
-=tynr
------END PGP SIGNATURE-----
-
---Sig_/5dSy6MPx/cOnKQYrF6_o2JA--
