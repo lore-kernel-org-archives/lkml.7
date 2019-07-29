@@ -5,60 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B98C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACC8C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A310820C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C94420C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429441;
-	bh=a6lC2IY5cl8rBIt09mHAn0ZYddmAartBKkgpZCHNYjw=;
+	s=default; t=1564429444;
+	bh=rkS9jAr5xbZv1Y6w7MuAJaQu3AhAQDt7cEO3t9brTQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qDTbV4SJahpmWzezHhFJon/YWHooWu7yq+GUBUgy+dvUz1YqdC8JFwfriXHqs89ok
-	 kohD11kbkH+fIkGVOFrnpRm+NJkwRIcMWva3XMshu6JsuXFKOf12+uX9DKvKeagzxQ
-	 dERYuthvp67wMW4qw/HnOpYwa1AEwEuMHXTSeMOM=
+	b=CHpxMev57Gqz/j3nMVP327li+HWAkUYgGXRWgmLhf9foNOCu4GGqmKtC95VYbtfh0
+	 qxIi8RG2adn0sCP5I9IdrxdYTZ/WZVVOcuewnOhbR78KVLu5lUK95u5HYebJ4SqABO
+	 OPiUkpDjNwBFnq9xOitYfcchcPM3t3aX6EJo1yG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389442AbfG2ToA (ORCPT
+        id S2389470AbfG2ToD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:44:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60362 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:44:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389703AbfG2Tnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:43:49 -0400
+        id S2389725AbfG2Tn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:43:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CB6B2054F;
-        Mon, 29 Jul 2019 19:43:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0363B2054F;
+        Mon, 29 Jul 2019 19:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429428;
-        bh=a6lC2IY5cl8rBIt09mHAn0ZYddmAartBKkgpZCHNYjw=;
+        s=default; t=1564429437;
+        bh=rkS9jAr5xbZv1Y6w7MuAJaQu3AhAQDt7cEO3t9brTQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oq/EV3SYPZquawfSP023vTXBz205a0NtCPlH1vrIet6ukhotzYjttMWAThJvJsv/p
-         6zhjz7khuv8VGOGV5xUdkt6uPG1plLHngakW3vn0gjnjNIgmYJhTMuFTb/67G9KEon
-         1kTPWuFJPbc7ZFezH75A+4VcUckEMUWxK3QZuluc=
+        b=EpSsFCvtnhYmYuktXLBfzcwIx8CPOgaI+/geTscqzyTtlhXfpu5sGujGyBF3uY+a2
+         Vs29IyTMCRHDahNubcUWTlmD0w5wAHssYPy7UBDxkBVze6jBBpLcZ38heMUCMgx/Mu
+         B/k3HJocXUo3bJzVhScQ80N0Xl6TbcMmQgyNSAm8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Roman Gushchin <guro@fb.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Oleg Nesterov <oleg@redhat.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Bart Van Assche <bvanassche@acm.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Will Deacon <will@kernel.org>, Yuyang Du <duyuyang@gmail.com>,
+        frederic@kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 094/113] proc: use down_read_killable mmap_sem for /proc/pid/maps
-Date:   Mon, 29 Jul 2019 21:23:01 +0200
-Message-Id: <20190729190717.991622786@linuxfoundation.org>
+Subject: [PATCH 4.19 097/113] locking/lockdep: Hide unused class variable
+Date:   Mon, 29 Jul 2019 21:23:04 +0200
+Message-Id: <20190729190718.722179820@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -71,66 +69,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8a713e7df3352b8d9392476e9cf29e4e185dac32 ]
+[ Upstream commit 68037aa78208f34bda4e5cd76c357f718b838cbb ]
 
-Do not remain stuck forever if something goes wrong.  Using a killable
-lock permits cleanup of stuck tasks and simplifies investigation.
+The usage is now hidden in an #ifdef, so we need to move
+the variable itself in there as well to avoid this warning:
 
-This function is also used for /proc/pid/smaps.
+  kernel/locking/lockdep_proc.c:203:21: error: unused variable 'class' [-Werror,-Wunused-variable]
 
-Link: http://lkml.kernel.org/r/156007493160.3335.14447544314127417266.stgit@buzz
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Michal Koutný <mkoutny@suse.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Yuyang Du <duyuyang@gmail.com>
+Cc: frederic@kernel.org
+Fixes: 68d41d8c94a3 ("locking/lockdep: Fix lock used or unused stats error")
+Link: https://lkml.kernel.org/r/20190715092809.736834-1-arnd@arndb.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/task_mmu.c   | 6 +++++-
- fs/proc/task_nommu.c | 6 +++++-
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ kernel/locking/lockdep_proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 195fbbaf77d4..71aba44c4fa6 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -166,7 +166,11 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
- 	if (!mm || !mmget_not_zero(mm))
- 		return NULL;
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 6cf288eef670..6fcc4650f0c4 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -200,7 +200,6 @@ static void lockdep_stats_debug_show(struct seq_file *m)
  
--	down_read(&mm->mmap_sem);
-+	if (down_read_killable(&mm->mmap_sem)) {
-+		mmput(mm);
-+		return ERR_PTR(-EINTR);
-+	}
+ static int lockdep_stats_show(struct seq_file *m, void *v)
+ {
+-	struct lock_class *class;
+ 	unsigned long nr_unused = 0, nr_uncategorized = 0,
+ 		      nr_irq_safe = 0, nr_irq_unsafe = 0,
+ 		      nr_softirq_safe = 0, nr_softirq_unsafe = 0,
+@@ -211,6 +210,8 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		      sum_forward_deps = 0;
+ 
+ #ifdef CONFIG_PROVE_LOCKING
++	struct lock_class *class;
 +
- 	hold_task_mempolicy(priv);
- 	priv->tail_vma = get_gate_vma(mm);
+ 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
  
-diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-index 0b63d68dedb2..5161894a6d62 100644
---- a/fs/proc/task_nommu.c
-+++ b/fs/proc/task_nommu.c
-@@ -211,7 +211,11 @@ static void *m_start(struct seq_file *m, loff_t *pos)
- 	if (!mm || !mmget_not_zero(mm))
- 		return NULL;
- 
--	down_read(&mm->mmap_sem);
-+	if (down_read_killable(&mm->mmap_sem)) {
-+		mmput(mm);
-+		return ERR_PTR(-EINTR);
-+	}
-+
- 	/* start from the Nth VMA */
- 	for (p = rb_first(&mm->mm_rb); p; p = rb_next(p))
- 		if (n-- == 0)
+ 		if (class->usage_mask == 0)
 -- 
 2.20.1
 
