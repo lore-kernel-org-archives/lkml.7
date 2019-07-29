@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCA4C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2BBC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B085B204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6A7204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430251;
-	bh=wb7JobYxQwKUM5KVL6HwRUr07E2etF55+QCdxL56Di8=;
+	s=default; t=1564430254;
+	bh=rHm3w1s+OA3vgn6UbbqNpJH1RefhjVI02EjHY1GJZcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CD5swWoY9ERPFL2RCDdZ6NpWKMc4Ax2vGjRLXtp2kPLm9moChFbuNiMDtO1Gtk/aI
-	 vSXc8q/ArNL0mh6E99CHLMoRDqSLrLd3/xUPI4H+mnqNUKbP65QtFebrHjoe6MoX1l
-	 a+dvYgdF4k+MLmUODHiuDB1VsjuUAap7d+oCqjeE=
+	b=IKgnOQB6mH4KDRSfSDV3V08Kl/gNXfk2NgAPH7W9IeWrfjdBmljg14q8mCLH0v0pc
+	 0Bg/2VsUFJ/PbFeIP0GV+N+9CfNGEwtqcCYO3N1rj4oJ02pDWIbe7zU4PsR7jIDv0w
+	 QzEViWc5kkjvzrg2vwa0WCRm58TijCYhY/XZLMG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404041AbfG2Ty2 (ORCPT
+        id S2404009AbfG2TyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46854 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:54:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391014AbfG2TyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:54:15 -0400
+        id S2390989AbfG2TyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:54:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D409204EC;
-        Mon, 29 Jul 2019 19:54:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B49C32054F;
+        Mon, 29 Jul 2019 19:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430053;
-        bh=wb7JobYxQwKUM5KVL6HwRUr07E2etF55+QCdxL56Di8=;
+        s=default; t=1564430050;
+        bh=rHm3w1s+OA3vgn6UbbqNpJH1RefhjVI02EjHY1GJZcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aEStrOQOYScv5CzEssH1UfztltLST4ZY+OSHa1oargP69Z425FBq3COsaEYerBdP/
-         jaD0aLJ9V+QetcAmXQcY9L2t9L98hm8rXWz8Hn8ddo4BWm3HRI06V708CGXVjhvRZZ
-         WJytyXXu5Ir+HjwaQBXQEpwdfGN/+PlPErhjYIoU=
+        b=2iV6RCgeHS6+M27njPBltpyfnwTh+bjdCaf7SbuVboNzVuv+dW8KI3s+eikCo0zdo
+         NfqXGx/ZdrRnpmiRNsy1/JtRelcJXlreE45UQKg8KPOQ3bTk2wezGTZo/VfPUPcBKo
+         GRrzLllwoMHrhlf5mhYl97466XiXjIjyGlx9vcKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.2 181/215] x86/sysfb_efi: Add quirks for some devices with swapped width and height
-Date:   Mon, 29 Jul 2019 21:22:57 +0200
-Message-Id: <20190729190811.458919191@linuxfoundation.org>
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 5.2 180/215] selinux: check sidtab limit before adding a new entry
+Date:   Mon, 29 Jul 2019 21:22:56 +0200
+Message-Id: <20190729190811.251798429@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -59,91 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Ondrej Mosnacek <omosnace@redhat.com>
 
-commit d02f1aa39189e0619c3525d5cd03254e61bf606a upstream.
+commit acbc372e6109c803cbee4733769d02008381740f upstream.
 
-Some Lenovo 2-in-1s with a detachable keyboard have a portrait screen but
-advertise a landscape resolution and pitch, resulting in a messed up
-display if the kernel tries to show anything on the efifb (because of the
-wrong pitch).
+We need to error out when trying to add an entry above SIDTAB_MAX in
+sidtab_reverse_lookup() to avoid overflow on the odd chance that this
+happens.
 
-Fix this by adding a new DMI match table for devices which need to have
-their width and height swapped.
-
-At first it was tried to use the existing table for overriding some of the
-efifb parameters, but some of the affected devices have variants with
-different LCD resolutions which will not work with hardcoded override
-values.
-
-Reference: https://bugzilla.redhat.com/show_bug.cgi?id=1730783
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190721152418.11644-1-hdegoede@redhat.com
+Fixes: ee1a84fdfeed ("selinux: overhaul sidtab to fix bug and improve performance")
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/sysfb_efi.c |   46 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ security/selinux/ss/sidtab.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/arch/x86/kernel/sysfb_efi.c
-+++ b/arch/x86/kernel/sysfb_efi.c
-@@ -230,9 +230,55 @@ static const struct dmi_system_id efifb_
- 	{},
- };
+--- a/security/selinux/ss/sidtab.c
++++ b/security/selinux/ss/sidtab.c
+@@ -286,6 +286,11 @@ static int sidtab_reverse_lookup(struct
+ 		++count;
+ 	}
  
-+/*
-+ * Some devices have a portrait LCD but advertise a landscape resolution (and
-+ * pitch). We simply swap width and height for these devices so that we can
-+ * correctly deal with some of them coming with multiple resolutions.
-+ */
-+static const struct dmi_system_id efifb_dmi_swap_width_height[] __initconst = {
-+	{
-+		/*
-+		 * Lenovo MIIX310-10ICR, only some batches have the troublesome
-+		 * 800x1280 portrait screen. Luckily the portrait version has
-+		 * its own BIOS version, so we match on that.
-+		 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION, "MIIX 310-10ICR"),
-+			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "1HCN44WW"),
-+		},
-+	},
-+	{
-+		/* Lenovo MIIX 320-10ICR with 800x1280 portrait screen */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION,
-+					"Lenovo MIIX 320-10ICR"),
-+		},
-+	},
-+	{
-+		/* Lenovo D330 with 800x1280 or 1200x1920 portrait screen */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION,
-+					"Lenovo ideapad D330-10IGM"),
-+		},
-+	},
-+	{},
-+};
++	/* bail out if we already reached max entries */
++	rc = -EOVERFLOW;
++	if (count >= SIDTAB_MAX)
++		goto out_unlock;
 +
- __init void sysfb_apply_efi_quirks(void)
- {
- 	if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI ||
- 	    !(screen_info.capabilities & VIDEO_CAPABILITY_SKIP_QUIRKS))
- 		dmi_check_system(efifb_dmi_system_table);
-+
-+	if (screen_info.orig_video_isVGA == VIDEO_TYPE_EFI &&
-+	    dmi_check_system(efifb_dmi_swap_width_height)) {
-+		u16 temp = screen_info.lfb_width;
-+
-+		screen_info.lfb_width = screen_info.lfb_height;
-+		screen_info.lfb_height = temp;
-+		screen_info.lfb_linelength = 4 * screen_info.lfb_width;
-+	}
- }
+ 	/* insert context into new entry */
+ 	rc = -ENOMEM;
+ 	dst = sidtab_do_lookup(s, count, 1);
 
 
