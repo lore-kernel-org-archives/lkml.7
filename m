@@ -2,154 +2,176 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D35BC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4119C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8FB2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA4A2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387811AbfG2OPv (ORCPT
+        id S2387746AbfG2OTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:15:51 -0400
-Received: from mga12.intel.com ([192.55.52.136]:58806 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727861AbfG2OPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:15:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 07:15:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,323,1559545200"; 
-   d="scan'208";a="190590604"
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 29 Jul 2019 07:15:48 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 29 Jul 2019 17:15:47 +0300
-Date:   Mon, 29 Jul 2019 17:15:47 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Gilbert <dgilbert@interlog.com>
-Subject: Re: [PATCH v2] usb: typec: tcpm: Add NULL check before dereferencing
- config
-Message-ID: <20190729141547.GD28600@kuha.fi.intel.com>
-References: <1563979112-22483-1-git-send-email-linux@roeck-us.net>
+        Mon, 29 Jul 2019 10:19:22 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50612 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387596AbfG2OTW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 10:19:22 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v15so54046332wml.0;
+        Mon, 29 Jul 2019 07:19:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mPSU7CQ3trXT2tBc057UKDI1+jBvLcsqm50IJJJ4aTY=;
+        b=PnvPa+hMSTqgdkPp1GuROQzUUXctTrtig3ipUIH9xAo21NUykDOoxXVirhGymVkGDc
+         oTaVcb3hAvGxMuI4gLGaH4dg6F4LAVa6iPXbQLPPZnC4lCmSk0qcvcPgRn6wWnyPEOgG
+         uvIodJP1gVoh1L8O/h9YNpFuCuu1lnnNK8B6Wqy/C0P6zPp+pabrsSJpXB3zmmimQ3ep
+         O69x1SaMQXH/m+dWQUDQHpb/BKjdKUMGVgQLknRDcQYEp41vb4Ui6S1jh3x840CmIwM1
+         t3Qf5fuwzead6vOZDgSenlmY4hdEjDQKOOZbY24WtfJIp1azD8QGBGcSEjIi8VrbMEoQ
+         MG7A==
+X-Gm-Message-State: APjAAAW6AI+TTUE4ZqTo9FiMP3jNOoxPnmqeNMAH4qlpMVwfCtF3Vwku
+        Sx9tdBrEsDH2CZZECftZPLs=
+X-Google-Smtp-Source: APXvYqwmE0Uv8sxCs53JJCegd52VZoY6HnfxIL16sCkRb/S7FUs1bx49IJ5sieNsO8qa2EHRTil8Dg==
+X-Received: by 2002:a1c:d108:: with SMTP id i8mr104623902wmg.28.1564409959862;
+        Mon, 29 Jul 2019 07:19:19 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id o126sm57104044wmo.1.2019.07.29.07.19.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 07:19:19 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] modpost: check for static EXPORT_SYMBOL* functions
+Date:   Mon, 29 Jul 2019 17:18:01 +0300
+Message-Id: <20190729141801.31333-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190714152817.24693-1-efremov@linux.com>
+References: <20190714152817.24693-1-efremov@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563979112-22483-1-git-send-email-linux@roeck-us.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 07:38:32AM -0700, Guenter Roeck wrote:
-> When instantiating tcpm on an NXP OM 13588 board with NXP PTN5110,
-> the following crash is seen when writing into the 'preferred_role'
-> sysfs attribute.
-> 
-> Unable to handle kernel NULL pointer dereference at virtual address 00000028
-> pgd = f69149ad
-> [00000028] *pgd=00000000
-> Internal error: Oops: 5 [#1] THUMB2
-> Modules linked in: tcpci tcpm
-> CPU: 0 PID: 1882 Comm: bash Not tainted 5.1.18-sama5-armv7-r2 #4
-> Hardware name: Atmel SAMA5
-> PC is at tcpm_try_role+0x3a/0x4c [tcpm]
-> LR is at tcpm_try_role+0x15/0x4c [tcpm]
-> pc : [<bf8000e2>]    lr : [<bf8000bd>]    psr: 60030033
-> sp : dc1a1e88  ip : c03fb47d  fp : 00000000
-> r10: dc216190  r9 : dc1a1f78  r8 : 00000001
-> r7 : df4ae044  r6 : dd032e90  r5 : dd1ce340  r4 : df4ae054
-> r3 : 00000000  r2 : 00000000  r1 : 00000000  r0 : df4ae044
-> Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment none
-> Control: 50c53c7d  Table: 3efec059  DAC: 00000051
-> Process bash (pid: 1882, stack limit = 0x6a6d4aa5)
-> Stack: (0xdc1a1e88 to 0xdc1a2000)
-> 1e80:                   dd05d808 dd1ce340 00000001 00000007 dd1ce340 c03fb4a7
-> 1ea0: 00000007 00000007 dc216180 00000000 00000000 c01e1e03 00000000 00000000
-> 1ec0: c0907008 dee98b40 c01e1d5d c06106c4 00000000 00000000 00000007 c0194e8b
-> 1ee0: 0000000a 00000400 00000000 c01a97db dc22bf00 ffffe000 df4b6a00 df745900
-> 1f00: 00000001 00000001 000000dd c01a9c2f 7aeab3be c0907008 00000000 dc22bf00
-> 1f20: c0907008 00000000 00000000 00000000 00000000 7aeab3be 00000007 dee98b40
-> 1f40: 005dc318 dc1a1f78 00000000 00000000 00000007 c01969f7 0000000a c01a20cb
-> 1f60: dee98b40 c0907008 dee98b40 005dc318 00000000 c0196b9b 00000000 00000000
-> 1f80: dee98b40 7aeab3be 00000074 005dc318 b6f3bdb0 00000004 c0101224 dc1a0000
-> 1fa0: 00000004 c0101001 00000074 005dc318 00000001 005dc318 00000007 00000000
-> 1fc0: 00000074 005dc318 b6f3bdb0 00000004 00000007 00000007 00000000 00000000
-> 1fe0: 00000004 be800880 b6ed35b3 b6e5c746 60030030 00000001 00000000 00000000
-> [<bf8000e2>] (tcpm_try_role [tcpm]) from [<c03fb4a7>] (preferred_role_store+0x2b/0x5c)
-> [<c03fb4a7>] (preferred_role_store) from [<c01e1e03>] (kernfs_fop_write+0xa7/0x150)
-> [<c01e1e03>] (kernfs_fop_write) from [<c0194e8b>] (__vfs_write+0x1f/0x104)
-> [<c0194e8b>] (__vfs_write) from [<c01969f7>] (vfs_write+0x6b/0x104)
-> [<c01969f7>] (vfs_write) from [<c0196b9b>] (ksys_write+0x43/0x94)
-> [<c0196b9b>] (ksys_write) from [<c0101001>] (ret_fast_syscall+0x1/0x62)
-> 
-> Since commit 96232cbc6c994 ("usb: typec: tcpm: support get typec and pd
-> config from device properties"), the 'config' pointer in struct tcpc_dev
-> is optional when registering a Type-C port. Since it is optional, we have
-> to check if it is NULL before dereferencing it.
-> 
-> Reported-by: Douglas Gilbert <dgilbert@interlog.com>
-> Cc: Douglas Gilbert <dgilbert@interlog.com>
-> Fixes: 96232cbc6c994 ("usb: typec: tcpm: support get typec and pd config from device properties")
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+This patch adds a check to warn about static EXPORT_SYMBOL* functions
+during the modpost. In most of the cases, a static symbol marked for
+exporting is an odd combination that should be fixed either by deleting
+the exporting mark or by removing the static attribute and adding the
+appropriate declaration to headers.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+This check could help to detect the following problems:
+1. 550113d4e9f5 ("i2c: add newly exported functions to the header, too")
+2. 54638c6eaf44 ("net: phy: make exported variables non-static")
+3. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
+4. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
+5. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
+6. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
+7. 14b4c48bb1ce ("gve: Remove the exporting of gve_probe")
+8. 9b79ee9773a8 ("scsi: libsas: remove the exporting of sas_wait_eh")
+9. ...
 
-> ---
-> v2: Added missing Cc:. Sorry for the noise.
-> 
-> Doug:
->     I didn't add your Tested-by: since I added more code.
->     It would be great if you can re-test.
-> 
->  drivers/usb/typec/tcpm/tcpm.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> index fba32d84e578..77f71f602f73 100644
-> --- a/drivers/usb/typec/tcpm/tcpm.c
-> +++ b/drivers/usb/typec/tcpm/tcpm.c
-> @@ -379,7 +379,8 @@ static enum tcpm_state tcpm_default_state(struct tcpm_port *port)
->  			return SNK_UNATTACHED;
->  		else if (port->try_role == TYPEC_SOURCE)
->  			return SRC_UNATTACHED;
-> -		else if (port->tcpc->config->default_role == TYPEC_SINK)
-> +		else if (port->tcpc->config &&
-> +			 port->tcpc->config->default_role == TYPEC_SINK)
->  			return SNK_UNATTACHED;
->  		/* Fall through to return SRC_UNATTACHED */
->  	} else if (port->port_type == TYPEC_PORT_SNK) {
-> @@ -4114,7 +4115,7 @@ static int tcpm_try_role(const struct typec_capability *cap, int role)
->  	mutex_lock(&port->lock);
->  	if (tcpc->try_role)
->  		ret = tcpc->try_role(tcpc, role);
-> -	if (!ret && !tcpc->config->try_role_hw)
-> +	if (!ret && (!tcpc->config || !tcpc->config->try_role_hw))
->  		port->try_role = role;
->  	port->try_src_count = 0;
->  	port->try_snk_count = 0;
-> @@ -4701,7 +4702,7 @@ static int tcpm_copy_caps(struct tcpm_port *port,
->  	port->typec_caps.prefer_role = tcfg->default_role;
->  	port->typec_caps.type = tcfg->type;
->  	port->typec_caps.data = tcfg->data;
-> -	port->self_powered = port->tcpc->config->self_powered;
-> +	port->self_powered = tcfg->self_powered;
->  
->  	return 0;
->  }
-> -- 
-> 2.7.4
+Build time impact, allmodconfig, Dell XPS 15 9570 (measurements 3x):
+$ make mrproper; make allmodconfig; time make -j12; \
+  git checkout HEAD~1; \
+  make mrproper; make allmodconfig; time make -j12
+1.
+   (with patch) 17635,94s user 1895,54s system 1085% cpu 29:59,22 total
+   (w/o  patch) 17275,42s user 1803,87s system 1112% cpu 28:35,66 total
+2.
+   (with patch) 17369,51s user 1763,28s system 1111% cpu 28:41,47 total
+   (w/o  patch) 16880,50s user 1670,93s system 1113% cpu 27:46,56 total
+3.
+   (with patch) 17937,88s user 1842,53s system 1109% cpu 29:42,26 total
+   (w/o  patch) 17267,55s user 1725,09s system 1111% cpu 28:28,17 total
 
-thanks,
+The check adds less than a minute to a usual build.
 
+Acked-by: Emil Velikov <emil.l.velikov@gmail.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ scripts/mod/modpost.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index f277e116e0eb..332898d34e47 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -169,6 +169,7 @@ struct symbol {
+ 	unsigned int kernel:1;     /* 1 if symbol is from kernel
+ 				    *  (only for external modules) **/
+ 	unsigned int preloaded:1;  /* 1 if symbol from Module.symvers, or crc */
++	unsigned int is_static:1;  /* 1 if symbol is not global */
+ 	enum export  export;       /* Type of export */
+ 	char name[0];
+ };
+@@ -201,6 +202,7 @@ static struct symbol *alloc_symbol(const char *name, unsigned int weak,
+ 	strcpy(s->name, name);
+ 	s->weak = weak;
+ 	s->next = next;
++	s->is_static = 1;
+ 	return s;
+ }
+ 
+@@ -1980,6 +1982,22 @@ static void read_symbols(const char *modname)
+ 		handle_modversions(mod, &info, sym, symname);
+ 		handle_moddevtable(mod, &info, sym, symname);
+ 	}
++
++	// check for static EXPORT_SYMBOL_* functions && global vars
++	for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
++		unsigned char bind = ELF_ST_BIND(sym->st_info);
++		unsigned char type = ELF_ST_TYPE(sym->st_info);
++
++		if (type == STT_OBJECT || type == STT_FUNC) {
++			struct symbol *s =
++				find_symbol(remove_dot(info.strtab +
++						       sym->st_name));
++
++			if (s && (bind == STB_GLOBAL || bind == STB_WEAK))
++				s->is_static = 0;
++		}
++	}
++
+ 	if (!is_vmlinux(modname) || vmlinux_section_warnings)
+ 		check_sec_ref(mod, modname, &info);
+ 
+@@ -2425,6 +2443,7 @@ int main(int argc, char **argv)
+ 	char *dump_write = NULL, *files_source = NULL;
+ 	int opt;
+ 	int err;
++	int n;
+ 	struct ext_sym_list *extsym_iter;
+ 	struct ext_sym_list *extsym_start = NULL;
+ 
+@@ -2520,6 +2539,19 @@ int main(int argc, char **argv)
+ 	if (sec_mismatch_count && sec_mismatch_fatal)
+ 		fatal("modpost: Section mismatches detected.\n"
+ 		      "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
++	for (n = 0; n < SYMBOL_HASH_SIZE; n++) {
++		struct symbol *s = symbolhash[n];
++
++		while (s) {
++			if (s->is_static)
++				warn("\"%s\" [%s] is a static %s\n",
++				     s->name, s->module->name,
++				     export_str(s->export));
++
++			s = s->next;
++		}
++	}
++
+ 	free(buf.p);
+ 
+ 	return err;
 -- 
-heikki
+2.21.0
+
