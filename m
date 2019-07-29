@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6376C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3670C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB11205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB27D205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430853;
-	bh=Bk4euBxqH5qlll/EnIf32IESFKGEKVT4LqtJsXFNGTE=;
+	s=default; t=1564430860;
+	bh=hIvLzSMFIklJ8+m8wmolvyy/M8acELv/Jtlw11xSbsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xM5ezqHUY/BjB7d1FP3u9NV2F+uOxZJXldKLleu+ZU757XRGjW/etvrDR2hh8DCaL
-	 3l2XYEEG2iEM+nA/K/xqUFNmmz5k/kzWVl8lEUXB9nafOfBSYJxVUvyB2OHKnaCR0z
-	 oLReSdcghYXyka1K0F9N0hfSSalrdxHtvZzTPu18=
+	b=C3lfWfNbeDEGUQN/3Bnecga1lPeq7/ln2uxQfUZWSeBWdaVJ46mlwbEO2GzzB3Dfh
+	 DbvyNLiLFvsYi6D+/3ZuKuUzzakvxnFdCCBw9YDsf/3SAgvua4kSWgOdZeNLTF+h2P
+	 1g90Ta1l2PNeJasYUgcQiRrafo1PtTp0pyTCwBeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387909AbfG2TjI (ORCPT
+        id S1730116AbfG2UHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:39:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54112 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:07:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388925AbfG2TjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:39:04 -0400
+        id S2388921AbfG2TjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:39:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A4382171F;
-        Mon, 29 Jul 2019 19:39:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96C6E206DD;
+        Mon, 29 Jul 2019 19:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429143;
-        bh=Bk4euBxqH5qlll/EnIf32IESFKGEKVT4LqtJsXFNGTE=;
+        s=default; t=1564429141;
+        bh=hIvLzSMFIklJ8+m8wmolvyy/M8acELv/Jtlw11xSbsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVv+HESF+Zocdz3+I7by6SK+AzzM23C1U13/Md7EXyvizjERySkEX/44viDi6vhE0
-         uv9cvd5PjFGHharfua2WvR/4oO1TSBYPOVfNXmpz2FlfPnANtKEfrCOWsgpSzyIaG+
-         BRJss+4VFK4X+Cf7H/i088V2vxkKmJ1k9FpufO4c=
+        b=nbMnbzG4RU6gQasoqf7CSAGP4Lt4e720kABAS30DKStmHiZ/DOo9WanaG9EhGwJKv
+         tcpDTfreW/HcpLvcUMe1iGKc4tEi+P5vO/FMljDorDmh+xmi4b6KZf70+01J65LvvW
+         Sf82W43NIFfhPNOB5K42SbCRJzRwx5axJTY/i360=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 274/293] mm/gup.c: remove some BUG_ONs from get_gate_page()
-Date:   Mon, 29 Jul 2019 21:22:45 +0200
-Message-Id: <20190729190845.306981562@linuxfoundation.org>
+Subject: [PATCH 4.14 273/293] mm/gup.c: mark undo_dev_pagemap as __maybe_unused
+Date:   Mon, 29 Jul 2019 21:22:44 +0200
+Message-Id: <20190729190845.233364232@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -64,51 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b5d1c39f34d1c9bca0c4b9ae2e339fbbe264a9c7 ]
+[ Upstream commit 790c73690c2bbecb3f6f8becbdb11ddc9bcff8cc ]
 
-If we end up without a PGD or PUD entry backing the gate area, don't BUG
--- just fail gracefully.
+Several mips builds generate the following build warning.
 
-It's not entirely implausible that this could happen some day on x86.  It
-doesn't right now even with an execute-only emulated vsyscall page because
-the fixmap shares the PUD, but the core mm code shouldn't rely on that
-particular detail to avoid OOPSing.
+  mm/gup.c:1788:13: warning: 'undo_dev_pagemap' defined but not used
 
-Link: http://lkml.kernel.org/r/a1d9f4efb75b9d464e59fd6af00104b21c58f6f7.1561610798.git.luto@kernel.org
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+The function is declared unconditionally but only called from behind
+various ifdefs. Mark it __maybe_unused.
+
+Link: http://lkml.kernel.org/r/1562072523-22311-1-git-send-email-linux@roeck-us.net
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Jann Horn <jannh@google.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/gup.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ mm/gup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/mm/gup.c b/mm/gup.c
-index cee599d1692c..12b9626b1a9e 100644
+index babcbd6d99c3..cee599d1692c 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -442,11 +442,14 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
- 		pgd = pgd_offset_k(address);
- 	else
- 		pgd = pgd_offset_gate(mm, address);
--	BUG_ON(pgd_none(*pgd));
-+	if (pgd_none(*pgd))
-+		return -EFAULT;
- 	p4d = p4d_offset(pgd, address);
--	BUG_ON(p4d_none(*p4d));
-+	if (p4d_none(*p4d))
-+		return -EFAULT;
- 	pud = pud_offset(p4d, address);
--	BUG_ON(pud_none(*pud));
-+	if (pud_none(*pud))
-+		return -EFAULT;
- 	pmd = pmd_offset(pud, address);
- 	if (!pmd_present(*pmd))
- 		return -EFAULT;
+@@ -1364,7 +1364,8 @@ static inline pte_t gup_get_pte(pte_t *ptep)
+ }
+ #endif
+ 
+-static void undo_dev_pagemap(int *nr, int nr_start, struct page **pages)
++static void __maybe_unused undo_dev_pagemap(int *nr, int nr_start,
++					    struct page **pages)
+ {
+ 	while ((*nr) - nr_start) {
+ 		struct page *page = pages[--(*nr)];
 -- 
 2.20.1
 
