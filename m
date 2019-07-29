@@ -2,110 +2,95 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C87C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAB7C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548F4206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:57:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dzGYBm0i"
+	by mail.kernel.org (Postfix) with ESMTP id 7CC38206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387426AbfG2J5C (ORCPT
+        id S2387438AbfG2J5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:57:02 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35776 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfG2J5B (ORCPT
+        Mon, 29 Jul 2019 05:57:34 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39946 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbfG2J5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:57:01 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s1so21684113pgr.2;
-        Mon, 29 Jul 2019 02:57:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Boz4CFC7012LYcZRn2NFsg+lEMbJ7x6Jzm6H/OkCj4M=;
-        b=dzGYBm0i5+xbYycnw/1P98m/Td+tn/kioZg5kvlCjnyffm/s3cgtxd6l04UXIlHlIN
-         9XpNVvasz+CC9R78FO7NTLk7WzOoasUv4MjyK30Tz9DKeNZbgaMhLdysWq3HtPWTT8Yf
-         RdvUS5IWFAClnWpmgZ5a9WsJb1rsCOEljo49QU6ohcUybVAKkRFfwnYoMl2yWepxpb2d
-         AmC2ZFLbCTZ3jV3hNMtnNNTEeC5e5ZUzNyA7l+/1Kx58bXz2b1udx/xYnf85KHAiKkD0
-         Mcva4oP7F9qhKnqPKjYINYDY4Ydm2M+H8gxWJ9dok2A9VgWzP+MSzO3ROvatG8++HCKl
-         CgyQ==
+        Mon, 29 Jul 2019 05:57:34 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r1so61109453wrl.7;
+        Mon, 29 Jul 2019 02:57:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Boz4CFC7012LYcZRn2NFsg+lEMbJ7x6Jzm6H/OkCj4M=;
-        b=Xw3BgAYOskQ/cPTQ3+LJs4gmF7oSJegUvJB0VOMnwR74DzdAj+BoK/dSbmp7KLJDpR
-         wTVwV4oxlBwm21WYBbWrA2TmLZVfCp6rdBxAz7H12KdmdDYQ389XAmAOfkmCY1yHtcPf
-         ZcHzuAY7/ZLbYYCv9em1WiSU5GsoNBQMSl6UJI6IWfH6OqhYm1rSD4/VQWyYvbnTqFI1
-         F/pec5QGsCUk6xfHIjz8pyoiRVP5D3/052/bFkMD9e16LPLG2C0tno0loKdXKW2fW8hC
-         abFlYtuFFr1B9nnjONcbz7C4jzTAZVgqqWW72g+zmQ8YILvopNVdFMmLNBdYxnjbFGZZ
-         x0iA==
-X-Gm-Message-State: APjAAAXLzerbd8WbztYouMgyEqGuHtL0cMMROnc2mltAtTQ6w35AiOVJ
-        sKuxv+p6ytOgjPnCAgTW7TA=
-X-Google-Smtp-Source: APXvYqwRNYtT5fZyrSqbg3o+wefLyl/tc7EQg1xRieNdSVRqsO0sKu97NGcWbbw/Fj3NWcBmqMOBQg==
-X-Received: by 2002:aa7:8193:: with SMTP id g19mr34737721pfi.16.1564394220850;
-        Mon, 29 Jul 2019 02:57:00 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id s7sm52910913pjn.28.2019.07.29.02.56.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 02:57:00 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
-        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
-        wright.feng@cypress.com, kvalo@codeaurora.org, davem@davemloft.net,
-        pieter-paul.giesberts@broadcom.com, plaes@plaes.org,
-        rvarsha016@gmail.com
-Cc:     linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] brcm80211: Avoid possible null-pointer dereferences in wlc_phy_radio_init_2056()
-Date:   Mon, 29 Jul 2019 17:56:52 +0800
-Message-Id: <20190729095652.1976-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3EgmHLFik/OPgDdGuLMAdfuPiX1r55Htn8ht8rmVprc=;
+        b=iaRJt83iIe9rYC/VeVp51ao+N1QSI7arn17YvYlggOPWgnTXL9NPJQYIBFbePFqMW0
+         lKexKmKwPccT4d20+MI/I/vqSnpP5Xdg8zpf/q0vUb6heWfgAGeRGt/b9hXUdjZ1pHBG
+         0+wsdQ1iH4u9srnWGh5skMcvEa42LopACl9Ta2UE/wD39WGf6MEymIRRQHAgU6fEUVj+
+         JwAtMRjiSI1jjRVIKmG+BRoc5kY7y8K1crDJ/fxZHS2JEzvrz1N9/9ZiXrxofcYHM+JB
+         An9G6L3aOBKkEf9NSJKKXLjK0eckLsa6f6grPi97kKifp6S6BHu/MP5cYxMt3MB+fuGM
+         B9dA==
+X-Gm-Message-State: APjAAAUoixkFwGp/HA8FFhz+SrvgBNywByeW+IZFTuqj/IyzeczHm/S1
+        11Kj5g+HPpefLhc/gly4F8MTAj7Is6JXC3iqOFGLQr6O
+X-Google-Smtp-Source: APXvYqwjfJqS4NGp1R7UrJA2JKANbRDFjcVknk63xGwZnvz1sSMLkkUqcYNpnDqWGXG4WZ8w21QgE4NZzRTpKbjjx94=
+X-Received: by 2002:adf:f08f:: with SMTP id n15mr35431224wro.213.1564394251709;
+ Mon, 29 Jul 2019 02:57:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190725063401.29904-1-hch@lst.de> <20190725063401.29904-5-hch@lst.de>
+In-Reply-To: <20190725063401.29904-5-hch@lst.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 29 Jul 2019 11:57:19 +0200
+Message-ID: <CAMuHMdUBPj8AVSuDwaBB_4gRD6k7vzo0WAFJEkTUbxSw31bzUg@mail.gmail.com>
+Subject: Re: [PATCH 4/5] dma-mapping: provide a better default ->get_required_mask
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In wlc_phy_radio_init_2056(), regs_SYN_2056_ptr, regs_TX_2056_ptr and
-regs_RX_2056_ptr may be not assigned, and thus they are still NULL.
-Then, they are used on lines 20042-20050:
-    wlc_phy_init_radio_regs(pi, regs_SYN_2056_ptr, (u16) RADIO_2056_SYN);
-	wlc_phy_init_radio_regs(pi, regs_TX_2056_ptr, (u16) RADIO_2056_TX0);
-	wlc_phy_init_radio_regs(pi, regs_TX_2056_ptr, (u16) RADIO_2056_TX1);
-	wlc_phy_init_radio_regs(pi, regs_RX_2056_ptr, (u16) RADIO_2056_RX0);
-	wlc_phy_init_radio_regs(pi, regs_RX_2056_ptr, (u16) RADIO_2056_RX1);
+Hi Christoph,
 
-Thus, possible null-pointer dereferences may occur.
+On Thu, Jul 25, 2019 at 8:35 AM Christoph Hellwig <hch@lst.de> wrote:
+> Most dma_map_ops instances are IOMMUs that work perfectly fine in 32-bits
+> of IOVA space, and the generic direct mapping code already provides its
+> own routines that is intelligent based on the amount of memory actually
+> present.  Wire up the dma-direct routine for the ARM direct mapping code
+> as well, and otherwise default to the constant 32-bit mask.  This way
+> we only need to override it for the occasional odd IOMMU that requires
+> 64-bit IOVA support, or IOMMU drivers that are more efficient if they
+> can fall back to the direct mapping.
 
-To avoid these bugs, when these variables are not assigned,
-wlc_phy_radio_init_2056() directly returns.
+As I know you like diving into cans of worms ;-)
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_n.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Does 64-bit IOVA support actually work in general? Or only on 64-bit
+platforms, due to dma_addr_t to unsigned long truncation on 32-bit?
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_n.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_n.c
-index 07f61d6155ea..0c57d48f47b1 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_n.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_n.c
-@@ -20035,7 +20035,7 @@ static void wlc_phy_radio_init_2056(struct brcms_phy *pi)
- 			break;
- 
- 		default:
--			break;
-+			return;
- 		}
- 	}
- 
+https://lore.kernel.org/linux-renesas-soc/CAMuHMdWkQ918Y61tMJbHEu29AGLEyNwbvZbSBB-RRH7YYUNRcA@mail.gmail.com/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
