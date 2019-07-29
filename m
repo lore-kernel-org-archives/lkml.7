@@ -2,108 +2,114 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5DFC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7754FC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 200A72054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="CXfoye8P"
+	by mail.kernel.org (Postfix) with ESMTP id 5399F2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbfG2OyN (ORCPT
+        id S2387677AbfG2OzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:54:13 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41857 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfG2OyM (ORCPT
+        Mon, 29 Jul 2019 10:55:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:47785 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbfG2OzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:54:12 -0400
-Received: by mail-io1-f67.google.com with SMTP id j5so116482889ioj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 07:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CbcFasXRs6Q74mapSNu5x1SKgIy5eGtlSI7L4N2Lods=;
-        b=CXfoye8Pdzp7J2mVhI3180iIaSeGw1qThtognGOELxFYcijNrAvvXFx9vjukuWh+1+
-         BFJD1ysvRTVYRo+8efiKY6SsUEGiEtiNMsXSGEGEdned2l6RntHpR4sSvwPFCahq0FYK
-         KISP+N/oKHc4o6vIw8547M7O50eDjxDxy/S6+0N//kgSZEq1lQ6ArlzN/is463BAkheM
-         1CqE1Dsapd0rCRZ/UkzYRmwnRzXHAE2Mcut/FMlr6Es/8H4C1IgwT8GtCy6V6jqyJUV4
-         nL8JwtU63HzNXjUqIuYfmYGMRwUXd5MsGpzWIjEh0Zsx6dgmTjZ6U9k9Qzl46veV3/uX
-         cLXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CbcFasXRs6Q74mapSNu5x1SKgIy5eGtlSI7L4N2Lods=;
-        b=XFWS0wBwF0bz9bE3BKnAqKPkG1HbEFoARqSuqPDZEpKr8e9XOU0UVg0clVnF5ua9Rb
-         TEIkMCRXyFyqZd9RqOZckK0FoDym7VSt788LMZfr5KhoAw2H+O+gzODPdHnBROt+3VqZ
-         3zY4SARnI/IldXW/SXG8dfwdmuYtbk/m+UvYn6gO69Ba8l0fGXnx3JvvXNzMsrcSfHRX
-         ddLu+CUyTipKct0+K3fgfK3ljHt97+hslwSZNJP4lQtTiS4pRIPo1eFLrPSXgSeSpW8Y
-         pnIG1LEdA6H7aTtjRkHgKltISpSYD6bRS5tuk0CILhtnSkNU5SKaAca15XIXYytiJ8V8
-         1aYg==
-X-Gm-Message-State: APjAAAWTb+PbUsxmPqhGHBMgN+MEy2LEBoEE/i/EOpMtGh1aB8diC9cu
-        KMPGxmv65P8/svYXrV+CDGs=
-X-Google-Smtp-Source: APXvYqz/xLLmzzwvYt9ZuWv99pATMaOsHNF7q2MgBnomCBQYVO6oB/5s4HDRhoaJ3giaBNT3ALbkKA==
-X-Received: by 2002:a02:ac03:: with SMTP id a3mr117002554jao.132.1564412051832;
-        Mon, 29 Jul 2019 07:54:11 -0700 (PDT)
-Received: from brauner.io ([162.223.5.124])
-        by smtp.gmail.com with ESMTPSA id j14sm52530376ioa.78.2019.07.29.07.54.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 07:54:11 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 16:54:10 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
-        joel@joelfernandes.org, tglx@linutronix.de, tj@kernel.org,
-        dhowells@redhat.com, jannh@google.com, luto@kernel.org,
-        akpm@linux-foundation.org, cyphar@cyphar.com,
-        viro@zeniv.linux.org.uk, kernel-team@android.com
-Subject: Re: [PATCH v3 1/2] pidfd: add P_PIDFD to waitid()
-Message-ID: <20190729145408.ro2loxchmbtfk6h6@brauner.io>
-References: <20190727222229.6516-1-christian@brauner.io>
- <20190727222229.6516-2-christian@brauner.io>
- <20190729142744.GA11349@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190729142744.GA11349@redhat.com>
-User-Agent: NeoMutt/20180716
+        Mon, 29 Jul 2019 10:55:21 -0400
+Received: from orion.localdomain ([77.4.29.213]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1My2pz-1iabhp0e9H-00zVu0; Mon, 29 Jul 2019 16:53:34 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH] drivers: scsi: Kconfig: minor indention fixes
+Date:   Mon, 29 Jul 2019 16:53:33 +0200
+Message-Id: <1564412013-30893-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:xzhcNkMu2jW4LChw2xGWTYi+VXMJqg6RPiVceSHF81BcP8GvEQV
+ 5kFehbIgMnnNUd/B+/9CJbl0OYQq6Ij+6n/cXW4XkkYyFefyam5OvN3iS8MBBXsZ9p0fdqZ
+ rvzzkfjt3FLxj0dQDutxFg0a22uce8gJvKpcur3XO+AMYTdqKnx8lMVR9o3hw9Ozc7YInpj
+ 2qkqe5NELiakT+lT5tdEQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BrnYRfFxzhI=:IfTQRqdNFkVhzydFE1ZCLq
+ sOSn7jKkqFTmbyIxdekA7IFJyQaqgyEQltJUG4uZBiMMqbEGRbdDrWs2YlQeRtMyXFwD5ZHoE
+ V9QetRxtb5xoCO5suH7CpdjiZP+W6FWt6Q9p+ZKnclaJgM6qlMnyQuyIq3SC0dTbhEyP6XKBR
+ NcM3Bt3e6TNNDeUmOyNbMr/AawbLaPvbr3fcJr9XBADJxl/38RNd03sbP9aEagwDrE9vI+lI6
+ DCkDgMSK9qirhxdLFLLRrFU6wyuaCGph1CaKIo40KnbfIUPl/qlyoDZ0K1Q/Hac1+GH5MW0vT
+ HabcuYclAD3C8diZH2sywYVRniPhAl7WqdFCuSx4VwjHgxTzpDSwJN8C0uGTF2m4XMle+Fj6H
+ qi5PsQMTA/I2WTK4iMTBt/xKt4HWaS7hhmeoPzKvMepdWrk0Y/z7S+p8F/XdYZXsi25KejkFe
+ 49WcK31SaAVKOD0+OUPN8qgEKNUgt0KNA3wfpgV4+KpAg7ex3iWWnOK8NfI2edFfsar9lWpou
+ ntjfvDqNeEUscJUu6mRUer93Fi2iWQLoLyUynrBmEQ3Cno2iVEZwbyskcfW+u7Y9GAt48xLW6
+ 7n8LoVv4i5R+8Qi3EOsxpP3noG3iQmAaj399H4sv8zb7PbD2BjsH0rl7tIifGHx9+8Ky5JR3S
+ XjPC+f3tqBMZtzOvEsdoXCQoaGjjrJbSlfsL2JfZyiqA1f0cAvmeVEIJZ6Y/TGwDPc9HN91Fu
+ T3RggB1/sUKDF7h59lQ+4eue+2idpIuw62l/QQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 04:27:44PM +0200, Oleg Nesterov wrote:
-> On 07/28, Christian Brauner wrote:
-> >
-> > +static struct pid *pidfd_get_pid(unsigned int fd)
-> > +{
-> > +	struct fd f;
-> > +	struct pid *pid;
-> > +
-> > +	f = fdget(fd);
-> > +	if (!f.file)
-> > +		return ERR_PTR(-EBADF);
-> > +
-> > +	pid = pidfd_pid(f.file);
-> > +	if (!IS_ERR(pid))
-> > +		get_pid(pid);
-> > +
-> > +	fdput(f);
-> > +	return pid;
-> > +}
-> 
-> Agreed, this looks better than the previous version.
-> 
-> FWIW,
-> 
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Align the indentions to the common practise in Kconfig files,
+make it look at little bit prettier. Just whitespace changes.
 
-Thanks Oleg!
-Christian
+Signed-off-by: Enrico Weigelt <info@metux.net>
+---
+ drivers/scsi/Kconfig | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index 1b92f3c..1332671 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -2,9 +2,9 @@
+ menu "SCSI device support"
+ 
+ config SCSI_MOD
+-       tristate
+-       default y if SCSI=n || SCSI=y
+-       default m if SCSI=m
++	tristate
++	default y if SCSI=n || SCSI=y
++	default m if SCSI=m
+ 
+ config RAID_ATTRS
+ 	tristate "RAID Transport Class"
+@@ -1480,14 +1480,14 @@ config ZFCP
+ 	depends on S390 && QDIO && SCSI
+ 	depends on SCSI_FC_ATTRS
+ 	help
+-          If you want to access SCSI devices attached to your IBM eServer
+-          zSeries by means of Fibre Channel interfaces say Y.
+-          For details please refer to the documentation provided by IBM at
+-          <http://oss.software.ibm.com/developerworks/opensource/linux390>
++	  If you want to access SCSI devices attached to your IBM eServer
++	  zSeries by means of Fibre Channel interfaces say Y.
++	  For details please refer to the documentation provided by IBM at
++	  <http://oss.software.ibm.com/developerworks/opensource/linux390>
+ 
+-          This driver is also available as a module. This module will be
+-          called zfcp. If you want to compile it as a module, say M here
+-          and read <file:Documentation/kbuild/modules.rst>.
++	  This driver is also available as a module. This module will be
++	  called zfcp. If you want to compile it as a module, say M here
++	  and read <file:Documentation/kbuild/modules.rst>.
+ 
+ config SCSI_PMCRAID
+ 	tristate "PMC SIERRA Linux MaxRAID adapter support"
+@@ -1518,8 +1518,8 @@ config SCSI_VIRTIO
+ 	tristate "virtio-scsi support"
+ 	depends on VIRTIO
+ 	help
+-          This is the virtual HBA driver for virtio.  If the kernel will
+-          be used in a virtual machine, say Y or M.
++	  This is the virtual HBA driver for virtio. If the kernel will
++	  be used in a virtual machine, say Y or M.
+ 
+ source "drivers/scsi/csiostor/Kconfig"
+ 
+-- 
+1.9.1
+
