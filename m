@@ -2,123 +2,138 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F40C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFD3C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320A7204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:58:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+VcYzBB"
+	by mail.kernel.org (Postfix) with ESMTP id 51E4C204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564430336;
+	bh=yNRuLvnJl93keGWCDhEdJDmk3b9iv2u3ZP53YRNB+QU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sNLOXjzh2ydzuQCVq7nTUaFCZw8opJlanTlPAWACHQBRA2qlzMAcCgtJBTa5Mq+jR
+	 9fh+47anGLi7Px4QFsXzEVnce6mPyVzLW4Ae65jMB3Fli9jgsDYrwwIAi6HWYxwi+l
+	 sUP8ZgL3iRtwjpCFyIBWX5rJfWlPDrW2Jk4tADcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404191AbfG2T6t (ORCPT
+        id S2404231AbfG2T6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:58:49 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40346 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403987AbfG2TxT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:53:19 -0400
-Received: by mail-pf1-f195.google.com with SMTP id p184so28546196pfp.7;
-        Mon, 29 Jul 2019 12:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UTe5mPM7f1pV9orkaVJAo8Cd7JN3aBjfBjN0gqFIAzs=;
-        b=Q+VcYzBBoYzym9F4Y3YKDTnTyuiEMCxSJJT7W4d89Ynbb4KF/cNM+NCYRpl3r/6ElT
-         f8Kw/QPxLSNWLSBKqVNEkrmnFW/4YA4N0OiLyq4fHXWs0e3YgSwh0Yl2srC7exH7yZxU
-         OC//f24FWusvnHXAwiPtpmfGttgxFyhKJ73eBADItiey5769PUNVztGuX9kViFU7Ig0t
-         C7PGBL/Tv26vEI9roGipcAPm1QrrwMxnUQZFb4i1yXpX7utXXpvbEYBQVaqdc8B8Y+zM
-         9XzRimKtsN1RSxq78TLCVxqWvNVAuTxVxuYA7PxkF2jWzG45Nix2CuR6jjuUlsP0JGlY
-         OZGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UTe5mPM7f1pV9orkaVJAo8Cd7JN3aBjfBjN0gqFIAzs=;
-        b=cWscGmZJbxWdX19sKwz92Ywrkcpol2rR0mpEUatPI7R4ENM03r/pgcAWxbBcKIxgLh
-         r8+td8phnmc2Un2ROfCDLoC3H0OmYp9GI03XreS55Q7vCY0eRrCeVwC3CqnHdIVwXJIT
-         PDNmxVtqxBqBLZXrmvEIwbheaemXcfRIivjXqUUa4V3cENsFjBJnwZ0F8YsvAa5lfyyA
-         1GBg3L4/DjyKZP5KbKYUQV+xW1VusgHmdBDw/silDc+JhaU0m46i9lTxJn4kTI8D72xH
-         D6MrhJcHEPj4X4oyO7w3JQ6qJLNkJtiQRa0c5FZC3e1U9/l6ml0vBS8Ci0G0koXhxCTX
-         yvGA==
-X-Gm-Message-State: APjAAAXXOf2RmOZrTFOk3aePkU5Namy/UKguCRRCEznEdLRBbCzpUjXK
-        uUqV3jfffbkuBUPhQM5NC1lztJ/L
-X-Google-Smtp-Source: APXvYqymB4e0aI9pTVQhe+ehzNIfwM6rBdmBxZIDSFHt46QlEQYwLO0MYZD1TGtbghV6cb5exO+6WQ==
-X-Received: by 2002:a17:90a:2247:: with SMTP id c65mr109572871pje.24.1564429998279;
-        Mon, 29 Jul 2019 12:53:18 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.53.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 12:53:17 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-serial@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 23/24] tty: serial: fsl_lpuart: Don't enable TIE in .startup() or .resume()
-Date:   Mon, 29 Jul 2019 12:52:25 -0700
-Message-Id: <20190729195226.8862-24-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190729195226.8862-1-andrew.smirnov@gmail.com>
-References: <20190729195226.8862-1-andrew.smirnov@gmail.com>
+        Mon, 29 Jul 2019 15:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403816AbfG2TxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:53:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C98CB2171F;
+        Mon, 29 Jul 2019 19:53:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564429997;
+        bh=yNRuLvnJl93keGWCDhEdJDmk3b9iv2u3ZP53YRNB+QU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VlWJnCDY01Mu3HSFfclfBncKfGRYlnHE0uAUkltmReFYBT29VVByNeUeQgHfMUiiJ
+         GBkjmErQXHIKU3bIRKrKivP9IYSzJjfy8qLG6+liVTv7Nosymnnny5EdNKkiCiWp1U
+         EmE4cKWRrx20ACqx65D+s+ZTA/DIeHV5TR3Jagbw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 164/215] mm: use down_read_killable for locking mmap_sem in access_remote_vm
+Date:   Mon, 29 Jul 2019 21:22:40 +0200
+Message-Id: <20190729190808.252237041@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
+References: <20190729190739.971253303@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enabling TIE in .startup() callback causes the driver to start (or at
-least try) to transmit data before .start_tx() is called. Which, while
-harmless (since TIE handler will immediately disable it), is a no-op
-and shouldn't really happen. Drop UARTCR2_TIE from list of bits set in
-lpuart_startup().
+[ Upstream commit 1e426fe28261b03f297992e89da3320b42816f4e ]
 
-This change will also not enable TIE in .resume(), but it seems that,
-similart to .startup(), transmit interrupt shouldn't be enabled there
-either.
+This function is used by ptrace and proc files like /proc/pid/cmdline and
+/proc/pid/environ.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-imx@nxp.com
-Cc: linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Access_remote_vm never returns error codes, all errors are ignored and
+only size of successfully read data is returned.  So, if current task was
+killed we'll simply return 0 (bytes read).
+
+Mmap_sem could be locked for a long time or forever if something goes
+wrong.  Using a killable lock permits cleanup of stuck tasks and
+simplifies investigation.
+
+Link: http://lkml.kernel.org/r/156007494202.3335.16782303099589302087.stgit@buzz
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Michal Koutný <mkoutny@suse.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Cyrill Gorcunov <gorcunov@gmail.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Roman Gushchin <guro@fb.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/fsl_lpuart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memory.c | 4 +++-
+ mm/nommu.c  | 3 ++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 9643d4524e59..53b98065f9c5 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -1409,7 +1409,7 @@ static void lpuart_setup_watermark_enable(struct lpuart_port *sport)
- 	lpuart_setup_watermark(sport);
+diff --git a/mm/memory.c b/mm/memory.c
+index ddf20bd0c317..9a4401d21e94 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4349,7 +4349,9 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
+ 	void *old_buf = buf;
+ 	int write = gup_flags & FOLL_WRITE;
  
- 	cr2 = readb(sport->port.membase + UARTCR2);
--	cr2 |= UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE;
-+	cr2 |= UARTCR2_RIE | UARTCR2_RE | UARTCR2_TE;
- 	writeb(cr2, sport->port.membase + UARTCR2);
- }
+-	down_read(&mm->mmap_sem);
++	if (down_read_killable(&mm->mmap_sem))
++		return 0;
++
+ 	/* ignore errors, just check how much was successfully transferred */
+ 	while (len) {
+ 		int bytes, ret, offset;
+diff --git a/mm/nommu.c b/mm/nommu.c
+index d8c02fbe03b5..b2823519f8cd 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -1792,7 +1792,8 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
+ 	struct vm_area_struct *vma;
+ 	int write = gup_flags & FOLL_WRITE;
  
+-	down_read(&mm->mmap_sem);
++	if (down_read_killable(&mm->mmap_sem))
++		return 0;
+ 
+ 	/* the access must start within one of the target process's mappings */
+ 	vma = find_vma(mm, addr);
 -- 
-2.21.0
+2.20.1
+
+
 
