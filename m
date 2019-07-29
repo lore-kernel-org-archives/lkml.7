@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759FEC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDD1C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486A720C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A086221655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429648;
-	bh=DwiTYpHToriGmCvggj76p9zkk9aM82mDOnrbNXFfG/c=;
+	s=default; t=1564429652;
+	bh=cfF5JTRL9wJTAdyolM8Phzi3rYbFHUx/a1jzKwjHkxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z9dp8N9OiTuSN3+fQt++PAdB9fR0JUXCIgoLTKaX4jKIvF+mrfCTYZMh0Gqoa7+v5
-	 IJT+1uu1MMZ7w+tsjTU/n88LEcseqk+tJUQgrKZWTyjNJ0pSZfamjmP1VSC3oQqOPy
-	 8niFKKlaHg+lpEFBIVeBKrfMldambzYcvtpdlRvY=
+	b=czl+bcTgOx7H0mAIMsOfoDJb3Cb1TLBCuWRQnlq4AXJ+0WeKu6X0eaVPiJLhzCi2j
+	 kjyLVnT82JHePvD0FLqo6beYogwkr7oYavZLwlxWBo6fqM2040qmHF/7mDq6t5v4yO
+	 oSMlkV/+Q9afU+ZkxOCnRaSR/AsDWrH5FdrKF6+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390339AbfG2Tr0 (ORCPT
+        id S2390351AbfG2Tra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:47:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:47:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389476AbfG2TrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:47:22 -0400
+        id S2389965AbfG2Tr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:47:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A49FD21655;
-        Mon, 29 Jul 2019 19:47:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AFE520C01;
+        Mon, 29 Jul 2019 19:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429642;
-        bh=DwiTYpHToriGmCvggj76p9zkk9aM82mDOnrbNXFfG/c=;
+        s=default; t=1564429645;
+        bh=cfF5JTRL9wJTAdyolM8Phzi3rYbFHUx/a1jzKwjHkxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jLmPTUBSWUMguK02F5t50BUucVg3/MPmE91RoBNUDBpJ9Na6xXUR9jzihKG8rjma0
-         1UX7Y7O1i+W/RMv/8+EjzCGJEm6jlMe3AYZPMup8K7+gvkpDa2SfNDFZecDLpRM3qS
-         rO3QCSJuaXWH4di7TQK7J7sw6TMNmtf86792f4pg=
+        b=id6SBAwOkWf70euLLop96Jz2EoicRfoWzktQNaXRp+IvjZWQ0gVzPI38GiW9ZDVNr
+         /587km8GdZcc4qi42Up5JVwOed640D4kPLIiQjXfygbe03RVFWWUhg/klmeyYN1chf
+         h1CNiJlYH9Q+0UA8tySBa9gipWe6B1920ydJR4aM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai26@huawei.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Alan Mikhak <alan.mikhak@sifive.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 049/215] memstick: Fix error cleanup path of memstick_init
-Date:   Mon, 29 Jul 2019 21:20:45 +0200
-Message-Id: <20190729190749.009083340@linuxfoundation.org>
+Subject: [PATCH 5.2 032/215] tools: PCI: Fix broken pcitest compilation
+Date:   Mon, 29 Jul 2019 21:20:28 +0200
+Message-Id: <20190729190745.776649298@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -61,73 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 65f1a0d39c289bb6fc85635528cd36c4b07f560e ]
+[ Upstream commit 8a5e0af240e07dd3d4897eb8ff52aab757da7fab ]
 
-If bus_register fails. On its error handling path, it has cleaned up
-what it has done. There is no need to call bus_unregister again.
-Otherwise, if bus_unregister is called, issues such as null-ptr-deref
-will arise.
+pcitest is currently broken due to the following compiler error
+and related warning. Fix by changing the run_test() function
+signature to return an integer result.
 
-Syzkaller report this:
+pcitest.c: In function run_test:
+pcitest.c:143:9: warning: return with a value, in function
+returning void
+  return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
 
-kobject_add_internal failed for memstick (error: -12 parent: bus)
-BUG: KASAN: null-ptr-deref in sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
-Read of size 8 at addr 0000000000000078 by task syz-executor.0/4460
+pcitest.c: In function main:
+pcitest.c:232:9: error: void value not ignored as it ought to be
+  return run_test(test);
 
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xa9/0x10e lib/dump_stack.c:113
- __kasan_report+0x171/0x18d mm/kasan/report.c:321
- kasan_report+0xe/0x20 mm/kasan/common.c:614
- sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
- sysfs_remove_file include/linux/sysfs.h:519 [inline]
- bus_remove_file+0x6c/0x90 drivers/base/bus.c:145
- remove_probe_files drivers/base/bus.c:599 [inline]
- bus_unregister+0x6e/0x100 drivers/base/bus.c:916 ? 0xffffffffc1590000
- memstick_init+0x7a/0x1000 [memstick]
- do_one_initcall+0xb9/0x3b5 init/main.c:914
- do_init_module+0xe0/0x330 kernel/module.c:3468
- load_module+0x38eb/0x4270 kernel/module.c:3819
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
- do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: baf8532a147d ("memstick: initial commit for Sony MemoryStick support")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai26@huawei.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: fef31ecaaf2c ("tools: PCI: Fix compilation warnings")
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memstick/core/memstick.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ tools/pci/pcitest.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/memstick/core/memstick.c b/drivers/memstick/core/memstick.c
-index 6cfb293396f2..693ee73eb291 100644
---- a/drivers/memstick/core/memstick.c
-+++ b/drivers/memstick/core/memstick.c
-@@ -625,13 +625,18 @@ static int __init memstick_init(void)
- 		return -ENOMEM;
+diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+index cb7a47dfd8b6..49ddfa6f5a8c 100644
+--- a/tools/pci/pcitest.c
++++ b/tools/pci/pcitest.c
+@@ -36,15 +36,15 @@ struct pci_test {
+ 	unsigned long	size;
+ };
  
- 	rc = bus_register(&memstick_bus_type);
--	if (!rc)
--		rc = class_register(&memstick_host_class);
-+	if (rc)
-+		goto error_destroy_workqueue;
+-static void run_test(struct pci_test *test)
++static int run_test(struct pci_test *test)
+ {
+-	long ret;
++	int ret = -EINVAL;
+ 	int fd;
  
--	if (!rc)
--		return 0;
-+	rc = class_register(&memstick_host_class);
-+	if (rc)
-+		goto error_bus_unregister;
-+
-+	return 0;
+ 	fd = open(test->device, O_RDWR);
+ 	if (fd < 0) {
+ 		perror("can't open PCI Endpoint Test device");
+-		return;
++		return -ENODEV;
+ 	}
  
-+error_bus_unregister:
- 	bus_unregister(&memstick_bus_type);
-+error_destroy_workqueue:
- 	destroy_workqueue(workqueue);
- 
- 	return rc;
+ 	if (test->barnum >= 0 && test->barnum <= 5) {
 -- 
 2.20.1
 
