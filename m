@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D60C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDCCC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B39205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C49721655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429361;
-	bh=3dBqoLX1MdZnGh9qolzsC9YWNOT/TRcQp7It1oiIhRE=;
+	s=default; t=1564429365;
+	bh=PC1jyJSYs8kQGazeAblx2dFnoYd09Pwf5CS25k/MkAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ppiYerML6hwmL1N0JMUCo7e8w0rC8F1BUfHsNMeXAV+KGh+6zTYqZWoMBtJTmM7n2
-	 l+QOv/G+0rVN9pvyqOpZbn0pairsWOsU1LPMS0pM1MMxcSkIQuFpkp9Z2hYZXUMG7a
-	 CVexwdf5WnIihfmcUWYzFFx8Joo8J7e/R//NM2Kw=
+	b=w5Jj8Pzybopeo1qP/Woc2xvtLQ/mQ7f7izgGSYupe+hjjGk9HS90R1nvJrMinq5B1
+	 4yvFG44gVJQDO7DWzTtWw/aPknpxYElB7N5WBfYAKWAEpknlslEstYJsuBg4G6k2gp
+	 CMpesSBKbXOwefA0OAoXFSN5PqXRMf39iGGhJ/30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389531AbfG2Tmk (ORCPT
+        id S2389549AbfG2Tmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58436 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:42:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389509AbfG2Tmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:42:35 -0400
+        id S2389536AbfG2Tmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:42:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60DAB217D6;
-        Mon, 29 Jul 2019 19:42:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D920217F5;
+        Mon, 29 Jul 2019 19:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429354;
-        bh=3dBqoLX1MdZnGh9qolzsC9YWNOT/TRcQp7It1oiIhRE=;
+        s=default; t=1564429360;
+        bh=PC1jyJSYs8kQGazeAblx2dFnoYd09Pwf5CS25k/MkAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yn6qj5pDUquT+gUYpqAnTvzJELHD4wIk4xzXNeEADcUiLA+lwbUia9vJhIzEPeRRV
-         frAbAajWdLgdHRDObS8TykZy/sUwqxdq0KafMBqb/6DKSGBod/vd6X0FGwqx0BBpTv
-         2krGZql9B0UrYaCuLp6vH1SOEx1TcR8igkB3ZLmw=
+        b=0AxitwQsiE4X/Hky0vsCd+z4OZKGnaknPMUvIQO6ybI0R9LjfIo+mn9Q/jsCEofuv
+         oYsvoHFtMVRu6DqXP607AQR2MNG4UquaZtHh8IaYsI2HEUFhKkITa9gRBKD12JiwTI
+         7uK2GgMmrMiVchmDwFMKM3MWYVs9i8RnoRAYWORo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -66,9 +66,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 070/113] perf session: Fix potential NULL pointer dereference found by the smatch tool
-Date:   Mon, 29 Jul 2019 21:22:37 +0200
-Message-Id: <20190729190712.209366309@linuxfoundation.org>
+Subject: [PATCH 4.19 071/113] perf annotate: Fix dereferencing freed memory found by the smatch tool
+Date:   Mon, 29 Jul 2019 21:22:38 +0200
+Message-Id: <20190729190712.439276151@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -81,33 +81,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f3c8d90757724982e5f07cd77d315eb64ca145ac ]
+[ Upstream commit 600c787dbf6521d8d07ee717ab7606d5070103ea ]
 
 Based on the following report from Smatch, fix the potential
-NULL pointer dereference check.
+dereferencing freed memory check.
 
-  tools/perf/util/session.c:1252
-  dump_read() error: we previously assumed 'evsel' could be null
-  (see line 1249)
+  tools/perf/util/annotate.c:1125
+  disasm_line__parse() error: dereferencing freed memory 'namep'
 
-  tools/perf/util/session.c
-  1240 static void dump_read(struct perf_evsel *evsel, union perf_event *event)
-  1241 {
-  1242         struct read_event *read_event = &event->read;
-  1243         u64 read_format;
-  1244
-  1245         if (!dump_trace)
-  1246                 return;
-  1247
-  1248         printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
-  1249                evsel ? perf_evsel__name(evsel) : "FAIL",
-  1250                event->read.value);
-  1251
-  1252         read_format = evsel->attr.read_format;
-                             ^^^^^^^
+  tools/perf/util/annotate.c
+  1100 static int disasm_line__parse(char *line, const char **namep, char **rawp)
+  1101 {
+  1102         char tmp, *name = ltrim(line);
 
-'evsel' could be NULL pointer, for this case this patch directly bails
-out without dumping read_event.
+  [...]
+
+  1114         *namep = strdup(name);
+  1115
+  1116         if (*namep == NULL)
+  1117                 goto out_free_name;
+
+  [...]
+
+  1124 out_free_name:
+  1125         free((void *)namep);
+                            ^^^^^
+  1126         *namep = NULL;
+               ^^^^^^
+  1127         return -1;
+  1128 }
+
+If strdup() fails to allocate memory space for *namep, we don't need to
+free memory with pointer 'namep', which is resident in data structure
+disasm_line::ins::name; and *namep is NULL pointer for this failure, so
+it's pointless to assign NULL to *namep again.
+
+Committer note:
+
+Freeing namep, which is the address of the first entry of the 'struct
+ins' that is the first member of struct disasm_line would in fact free
+that disasm_line instance, if it was allocated via malloc/calloc, which,
+later, would a dereference of freed memory.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -131,27 +145,36 @@ Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190702103420.27540-9-leo.yan@linaro.org
+Link: http://lkml.kernel.org/r/20190702103420.27540-5-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/session.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/annotate.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 11086097fc9f..f016d1b330e5 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1141,6 +1141,9 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
- 	       evsel ? perf_evsel__name(evsel) : "FAIL",
- 	       event->read.value);
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index c357051dd2b6..daea1fdf7385 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1079,16 +1079,14 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
+ 	*namep = strdup(name);
  
-+	if (!evsel)
-+		return;
-+
- 	read_format = evsel->attr.read_format;
+ 	if (*namep == NULL)
+-		goto out_free_name;
++		goto out;
  
- 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+ 	(*rawp)[0] = tmp;
+ 	*rawp = ltrim(*rawp);
+ 
+ 	return 0;
+ 
+-out_free_name:
+-	free((void *)namep);
+-	*namep = NULL;
++out:
+ 	return -1;
+ }
+ 
 -- 
 2.20.1
 
