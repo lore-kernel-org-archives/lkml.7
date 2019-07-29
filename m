@@ -8,59 +8,59 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5B2C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7CDC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D834C2182B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E1E12054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KLl5ZrY+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XgrBHmVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403955AbfG2TxC (ORCPT
+        id S2390838AbfG2TxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:53:02 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42556 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403808AbfG2Twt (ORCPT
+        Mon, 29 Jul 2019 15:53:05 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39051 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388511AbfG2Twu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:52:49 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t132so28763559pgb.9;
-        Mon, 29 Jul 2019 12:52:48 -0700 (PDT)
+        Mon, 29 Jul 2019 15:52:50 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u17so28772476pgi.6;
+        Mon, 29 Jul 2019 12:52:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uSaHP0QqkD0s9itI8zThvuVWmdKrdr4qQiU1/5TRtVY=;
-        b=KLl5ZrY+FHLEnaKKmPNzNyRaXomnJvIlw5WwWHtjyFMT3Em1Sf+5n4R84/NetDIyZc
-         nBj6tmZ+q6nz2ff7EtN+W3ZVMT6lbaIDPN/soMcRG777RJm9G9Yxi0W9GHU01/chwaXu
-         SD3X37AmZ9P9xvlFUv+QIPKC8akkJ/oEZEVgWA6c/tXpn4Go79aAkojC7csVd6cRhUtz
-         8MQ4cAAGFSMjXAYldJnyz0de6asyFctxu5mYG0rbswk/RfN2h5nmyErWnkIum/GfdSxC
-         GitLjKNvnV3j9qb6OebkqQWOD+jqS/KNHW0IFGqEtbe813XRpN6UKWzyztu9xPC0dvcc
-         5irA==
+        bh=ZybvyzKqpU4oPoCBYrIT2ASoiu315DqUEs+msQVN1Wk=;
+        b=XgrBHmVxvkxSNwoaWTbONdqzHFMbWr4AH98Y51n2MJNbmeKLWsT/HnL58yeWNO7/RE
+         2DqduHNgp4tSdgQEvauyEW9T5LED27uwDzxqSwu/TVHAkbHZ+26RPM1TGzWwN3mi1Ss6
+         a7jRTdpKsKIqG+OBjdOkywGIsie8RIem9rOJPsVgcUiMueyMdv0hS5TVbCmInt1HqUDb
+         N8QVanNINk5nXSlDA9cs77zylZRXaciGF2w60QaIOBc9wTG1ZP0P3zwjAjSS5kHCLpn6
+         ljGOQCfVg0rcmO5rM7WlkGU4DmtYcUeGGuuFp4Wf3CMvkkpIEfGhW4ykeHVzMiBJXe+E
+         1sjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uSaHP0QqkD0s9itI8zThvuVWmdKrdr4qQiU1/5TRtVY=;
-        b=JkVcvrJW8xhxkvwVQwlPukLanoan8eVvkKVpzn+El2lsOCPgjzyZrXm5kMqYaiBYlS
-         /mjw4MbzBZwQX1XZEfeVWX3Fc0ILnxfv9H0nPxH/8yrL32nIsei87hAsIwfCqcb/ISMf
-         5A8Mhcy5fqdZiyYb2YBtHbLOnYgkwReUMSw77EcFcfbsWIsOpIeTMciVeT49xJUpcEv5
-         G0OmyWOWRXO9hwntQRoE+Davs8tC/Jed+Ezs7ZC4+AsAZwFDXnB0w/KKwC324DgGQWlc
-         9/nj2ksTO5lVnWD0aURAuqjZV0JtYjQprYcY6nnnZvPbWnxczaJCX5uOUUoqe5OPSwVV
-         AAHA==
-X-Gm-Message-State: APjAAAWKLe6Z1tQtBhrIuhjULkCrr5CQbdW/mN903K6OqOraD9t04sjy
-        w+aIKX9+/DIuFN+Ife7451/dTPqS
-X-Google-Smtp-Source: APXvYqwK+8MFBJYhqU57T1JP6Eg7Bn/WXrT3D67wHlKHTUcyE6NiMd/0soZIJqdj7gB8RTNU9kbTug==
-X-Received: by 2002:a63:1f1b:: with SMTP id f27mr10071440pgf.233.1564429967729;
-        Mon, 29 Jul 2019 12:52:47 -0700 (PDT)
+        bh=ZybvyzKqpU4oPoCBYrIT2ASoiu315DqUEs+msQVN1Wk=;
+        b=J2SzIYQ4B73SAq3pVhabl/kzjTvS/pqXjxd9BkJTPDT6jmXf7cOZTorbshustkkHJm
+         m7g36yr1ANZaOsqYGgZEuTkYdnJunl6ssRIB71AwwVvQwTb5D7IRhJtTGmFjqpYMnKpd
+         Zj43iq1INNlsl2AeAE1UXRHisJi/EJjb6P93GAmUUd4PEq8XKy+3NSClXAyLQtNOXkRD
+         B7/kgpV45wzU/gcRhzD3hf0g3IhfoyUDFHP72lswfZp4XoLw/KaG1w5BhW7rdRR5obSs
+         nmteEPqk20/VDlJNa/kUu/HeYlQv43ewKNuMBFUHisQ6Pp0HBxMQekfbAxk1IZy9nB7f
+         9jLw==
+X-Gm-Message-State: APjAAAU3XHp+G6ifK4FiiFUzNl0cp44BHUVikWyo6dtI46wOSXp1bOS+
+        JHI+vZjfDTJiqzL0A64hW9+YqJsi
+X-Google-Smtp-Source: APXvYqyOFZOFmd+OGrpceXnPd85a571mancWj08pkt/QlosqHQmGMlPOqgYQkcTJKjZoW1lBA15lVg==
+X-Received: by 2002:a63:2364:: with SMTP id u36mr102326172pgm.449.1564429969160;
+        Mon, 29 Jul 2019 12:52:49 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.52.46
+        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.52.47
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 12:52:47 -0700 (PDT)
+        Mon, 29 Jul 2019 12:52:48 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-serial@vger.kernel.org
-Cc:     Stefan Agner <stefan.agner@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
         Stefan Agner <stefan@agner.ch>,
         Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>,
         Chris Healy <cphealy@gmail.com>,
@@ -69,9 +69,9 @@ Cc:     Stefan Agner <stefan.agner@toradex.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 02/24] tty: serial: fsl_lpuart: flush receive FIFO after overruns
-Date:   Mon, 29 Jul 2019 12:52:04 -0700
-Message-Id: <20190729195226.8862-3-andrew.smirnov@gmail.com>
+Subject: [PATCH 03/24] tty: serial: fsl_lpuart: Flush HW FIFOs in .flush_buffer
+Date:   Mon, 29 Jul 2019 12:52:05 -0700
+Message-Id: <20190729195226.8862-4-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190729195226.8862-1-andrew.smirnov@gmail.com>
 References: <20190729195226.8862-1-andrew.smirnov@gmail.com>
@@ -82,26 +82,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan.agner@toradex.com>
+Switching baud rate might cause bogus data to appear in HW
+FIFO. Add code to do a HW FIFO flush to .flush_buffer callback to
+avoid that.
 
-After overruns the FIFO pointers become misaligned. This
-typically shows by characters still being stuck in the FIFO
-despite the empty flag being asserted. After the first
-assertion of the overrun flag the empty flag still seems to
-indicate FIFO state correctly and all data can be read.
-However, after another overrun assertion the FIFO seems to
-be off by one such that the last received character is still
-in the FIFO (despite the empty flag being asserted).
-
-Flushing the receive FIFO reinitializes pointers. Hence it
-is recommended to flush the FIFO after overruns, see also:
-https://community.nxp.com/thread/321175
-
-Hence, on assertion of the overrun flag read the remaining
-data from the FIFO and flush buffers.
-
-Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
-Acked-by: Max Krummenacher <max.krummenacher@toradex.com>
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Stefan Agner <stefan@agner.ch>
 Cc: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
 Cc: Chris Healy <cphealy@gmail.com>
@@ -113,49 +99,60 @@ Cc: linux-imx@nxp.com
 Cc: linux-serial@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/tty/serial/fsl_lpuart.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 586b3513a6b0..edb1a9425fac 100644
+index edb1a9425fac..56423ad02f0f 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -798,7 +798,7 @@ static irqreturn_t lpuart_txint(int irq, void *dev_id)
- static irqreturn_t lpuart_rxint(int irq, void *dev_id)
+@@ -517,9 +517,16 @@ static int lpuart_dma_tx_request(struct uart_port *port)
+ 	return 0;
+ }
+ 
++static bool lpuart_is_32(struct lpuart_port *sport)
++{
++	return sport->port.iotype == UPIO_MEM32 ||
++	       sport->port.iotype ==  UPIO_MEM32BE;
++}
++
+ static void lpuart_flush_buffer(struct uart_port *port)
+ {
+ 	struct lpuart_port *sport = container_of(port, struct lpuart_port, port);
++	u32 val;
+ 
+ 	if (sport->lpuart_dma_tx_use) {
+ 		if (sport->dma_tx_in_progress) {
+@@ -529,6 +536,16 @@ static void lpuart_flush_buffer(struct uart_port *port)
+ 		}
+ 		dmaengine_terminate_all(sport->dma_tx_chan);
+ 	}
++
++	if (lpuart_is_32(sport)) {
++		val = lpuart32_read(&sport->port, UARTFIFO);
++		val |= UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH;
++		lpuart32_write(&sport->port, val, UARTFIFO);
++	} else {
++		val = readb(sport->port.membase + UARTPFIFO);
++		val |= UARTCFIFO_TXFLUSH | UARTCFIFO_RXFLUSH;
++		writeb(val, sport->port.membase + UARTCFIFO);
++	}
+ }
+ 
+ #if defined(CONFIG_CONSOLE_POLL)
+@@ -753,12 +770,6 @@ static unsigned int lpuart32_tx_empty(struct uart_port *port)
+ 	return 0;
+ }
+ 
+-static bool lpuart_is_32(struct lpuart_port *sport)
+-{
+-	return sport->port.iotype == UPIO_MEM32 ||
+-	       sport->port.iotype ==  UPIO_MEM32BE;
+-}
+-
+ static irqreturn_t lpuart_txint(int irq, void *dev_id)
  {
  	struct lpuart_port *sport = dev_id;
--	unsigned int flg, ignored = 0;
-+	unsigned int flg, ignored = 0, overrun = 0;
- 	struct tty_port *port = &sport->port.state->port;
- 	unsigned long flags;
- 	unsigned char rx, sr;
-@@ -825,7 +825,7 @@ static irqreturn_t lpuart_rxint(int irq, void *dev_id)
- 				sport->port.icount.frame++;
- 
- 			if (sr & UARTSR1_OR)
--				sport->port.icount.overrun++;
-+				overrun++;
- 
- 			if (sr & sport->port.ignore_status_mask) {
- 				if (++ignored > 100)
-@@ -852,6 +852,17 @@ static irqreturn_t lpuart_rxint(int irq, void *dev_id)
- 	}
- 
- out:
-+	if (overrun) {
-+		sport->port.icount.overrun += overrun;
-+
-+		/*
-+		 * Overruns cause FIFO pointers to become missaligned.
-+		 * Flushing the receive FIFO reinitializes the pointers.
-+		 */
-+		writeb(UARTCFIFO_RXFLUSH, sport->port.membase + UARTCFIFO);
-+		writeb(UARTSFIFO_RXOF, sport->port.membase + UARTSFIFO);
-+	}
-+
- 	spin_unlock_irqrestore(&sport->port.lock, flags);
- 
- 	tty_flip_buffer_push(port);
 -- 
 2.21.0
 
