@@ -2,149 +2,207 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FB7C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16693C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76831206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E004C206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 11:31:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S88qVkXq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387755AbfG2Lac (ORCPT
+        id S2387757AbfG2LbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 07:30:32 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39224 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387666AbfG2Lac (ORCPT
+        Mon, 29 Jul 2019 07:31:17 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:45540 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387638AbfG2LbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 07:30:32 -0400
-Received: by mail-wm1-f68.google.com with SMTP id u25so42773532wmc.4;
-        Mon, 29 Jul 2019 04:30:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mYgTCADguDanxFOEAPrmobWhF2N2XCa1x0cKc1vynOs=;
-        b=r5F5lq4yaHC3gSbNRzVFesm6pheoa1cmO7sbzThyM3fT7JDySssZx2XFq/WZLTISHD
-         xA/hY/vGccR9Qwed9daWO0P4Ztjjd/W6EAGaRyFtvpmeFHsow08cgaFVLiUnszobt1sV
-         mRZC9GF7naLS2waW5ulIqqwsPdKdWKNDg67TCq6W6z3pjLDQ6bMoVQW0ZugU9O789H5N
-         8G5aPUSYOCGutGFeOXTpDXThYl2s/Ixew1qs6k/7p7inzyOpiK5oDOCHK1OSnMuDIJ11
-         YhwOxND3biSE2V0uRfcUbxfk2KppFigKhCXZrvyyrwVDqR0qWIkWEdY0OKY+X+9GJE6X
-         sO2w==
-X-Gm-Message-State: APjAAAWFZcpY+DxZ/6cr7FrVu2K5JLI7qWTxsf6HZzSF/yATIeVLUDb0
-        cAlHW1S7rSLdAWjuSgB97lAh8v/VeHs4a8dq+ThbiSuE
-X-Google-Smtp-Source: APXvYqwDEPOHPZ3E0KgxisZBB6lCwoAfdCHOdH5TFR4vuced9FNVTwhHtpMIWIn+X32IlCaCma6G7CGcZjlSmETYarA=
-X-Received: by 2002:a1c:a7c6:: with SMTP id q189mr100793795wme.146.1564399829718;
- Mon, 29 Jul 2019 04:30:29 -0700 (PDT)
+        Mon, 29 Jul 2019 07:31:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=P3TKPDZQPD5gXt2IiDJs0VEeFQQfYbDYBVnCgJofwQM=; b=S88qVkXqKFkxmOOvTDgvCfW6f
+        0ZDQoAkk1MuDM7JeYWsF7KlORvIGUELwh74+3hRG7R8BGV688PmFQwDD7rtCRcsC/TK5doB5sikGH
+        a/6bl7mZjHT+5WpPCEScX1gpw/CkjWZxbxqcVwl4Q140DqYRHE2mFed5Eq4acD33RL9i/D0YVuNFz
+        WCqgWVi44Dj0On5VzRn/cwqIjotVQRLq7y+ETSzI+QGL748pYu+E0pi6iZy/grO4ux3AG6uNZVDkr
+        dmpBxezYk/GVBo0EWfcpmJWukU+Pyaov2pEvlTo/RWfJO7LVu+Q1pE85r4aP8/wNVorsx09j54SFJ
+        AOGG+rUEg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hs3s2-00015F-J9; Mon, 29 Jul 2019 11:31:14 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2FBCB20B0155B; Mon, 29 Jul 2019 13:31:13 +0200 (CEST)
+Date:   Mon, 29 Jul 2019 13:31:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        kan.liang@linux.intel.com
+Subject: Re: [PATCH v1 1/7] perf: Allow normal events to be sources of AUX
+ data
+Message-ID: <20190729113113.GB31381@hirez.programming.kicks-ass.net>
+References: <20190704160024.56600-1-alexander.shishkin@linux.intel.com>
+ <20190704160024.56600-2-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
-References: <20190725180825.31508-1-max@enpas.org> <CAMuHMdURm-9nazOBTL8uRH8WMt7gi=QUYy0qr9kaxzczCr+ujg@mail.gmail.com>
- <9cde6e79-52da-e0c0-f452-6afc2e5fa5ee@enpas.org>
-In-Reply-To: <9cde6e79-52da-e0c0-f452-6afc2e5fa5ee@enpas.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 29 Jul 2019 13:30:17 +0200
-Message-ID: <CAMuHMdUGsfzQg8xy2OqWfuo09MxwZ5OJz=t5CARJp+A1ZVtqaA@mail.gmail.com>
-Subject: Re: [PATCH v3] ata/pata_buddha: Probe via modalias instead of initcall
-To:     Max Staudt <max@enpas.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-ide@vger.kernel.org,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704160024.56600-2-alexander.shishkin@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Max,
+On Thu, Jul 04, 2019 at 07:00:18PM +0300, Alexander Shishkin wrote:
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 8cfb721bb284..fc586da37067 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -1887,6 +1887,57 @@ list_del_event(struct perf_event *event, struct perf_event_context *ctx)
+>  	ctx->generation++;
+>  }
+>  
+> +static int
+> +perf_aux_source_match(struct perf_event *event, struct perf_event *aux_event)
+> +{
+> +	if (!has_aux(aux_event))
+> +		return 0;
+> +
+> +	if (!event->pmu->aux_source_match)
+> +		return 0;
+> +
+> +	return event->pmu->aux_source_match(aux_event);
+> +}
+> +
+> +static void put_event(struct perf_event *event);
+> +static void event_sched_out(struct perf_event *event,
+> +			    struct perf_cpu_context *cpuctx,
+> +			    struct perf_event_context *ctx);
+> +
+> +static void perf_put_aux_event(struct perf_event *event)
+> +{
+> +	struct perf_event_context *ctx = event->ctx;
+> +	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
+> +	struct perf_event *iter = NULL;
+> +
+> +	/*
+> +	 * If event uses aux_event tear down the link
+> +	 */
+> +	if (event->aux_event) {
+> +		put_event(event->aux_event);
+> +		event->aux_event = NULL;
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * If the event is an aux_event, tear down all links to
+> +	 * it from other events.
+> +	 */
+> +	for_each_sibling_event(iter, event->group_leader) {
+> +		if (iter->aux_event != event)
+> +			continue;
+> +
+> +		iter->aux_event = NULL;
+> +		put_event(event);
+> +
+> +		/*
+> +		 * If it's ACTIVE, schedule it out. It won't schedule
+> +		 * again because !aux_event.
+> +		 */
+> +		event_sched_out(iter, cpuctx, ctx);
+> +	}
+> +}
 
-On Mon, Jul 29, 2019 at 1:10 PM Max Staudt <max@enpas.org> wrote:
-> On 07/29/2019 11:05 AM, Geert Uytterhoeven wrote:
-> >> --- a/drivers/ata/pata_buddha.c
-> >> +++ b/drivers/ata/pata_buddha.c
-> >
-> >> +static const struct zorro_device_id pata_buddha_zorro_tbl[] = {
-> >> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_BUDDHA, },
-> >> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_CATWEASEL, },
-> >> +       { ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, },
-> >
-> > drivers/net/ethernet/8390/zorro8390.c also matches against
-> > ZORRO_PROD_INDIVIDUAL_COMPUTERS_X_SURF, while only
-> > a single zorro_driver can bind to it.  Hence you can no longer use both
-> > IDE and Ethernet on X-Surf :-(
-> > Before, this worked, as the IDE driver just walked the list of devices.
->
-> Okay, now this gets dirty.
->
-> The reason why I've submitted this patch is to allow pata_buddha to be built into the kernel at all. Without this patch, its initcall would be called before the Zorro structures are initialised, hence not finding any boards.
+I'm thinking we can use a perf_get_aux_event() to use below.
 
-IC. I wasn't aware of the new pata_buddha.c driver not working at all
-when builtin.
+> +
+>  static void perf_group_detach(struct perf_event *event)
+>  {
+>  	struct perf_event *sibling, *tmp;
+> @@ -1902,6 +1953,8 @@ static void perf_group_detach(struct perf_event *event)
+>  
+>  	event->attach_state &= ~PERF_ATTACH_GROUP;
+>  
+> +	perf_put_aux_event(event);
+> +
+>  	/*
+>  	 * If this is a sibling, remove it from its group.
+>  	 */
+> @@ -10396,6 +10449,12 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>  		goto err_ns;
+>  	}
+>  
+> +	if (event->attr.aux_source &&
+> +	    !(pmu->capabilities & PERF_PMU_CAP_AUX_SOURCE)) {
+> +		err = -EOPNOTSUPP;
+> +		goto err_pmu;
+> +	}
+> +
+>  	err = exclusive_event_init(event);
+>  	if (err)
+>  		goto err_pmu;
+> @@ -11052,6 +11111,39 @@ SYSCALL_DEFINE5(perf_event_open,
+>  		}
+>  	}
+>  
+> +	if (event->attr.aux_source) {
+> +		struct perf_event *aux_event = group_leader;
+> +
+> +		/*
+> +		 * One of the events in the group must be an aux event
+> +		 * if we want to be an aux_source. This way, the aux event
+> +		 * will precede its aux_source events in the group, and
+> +		 * therefore will always schedule first.
 
-> That means that not only would the previous driver only make sense as a module that is manually ensured to be loaded after Zorro has started, but the X-Surf IDE support was a really ugly hack to begin with.
+Can't we mandate that the group leader is the AUX event?
 
-Right. Please note that most drivers for Zorro boards predate the device
-driver framework, and thus all started life using zorro_find_device().
-But this did have the advantage of supporting multi-function cards
-out-of-the-box.
-Later, several drivers were converted to the new driver framework.
-but not all of them, due to multi-function cards.
+> +		 */
+> +		err = -EINVAL;
+> +		if (!aux_event)
+> +			goto err_locked;
+> +
+> +		if (perf_aux_source_match(event, aux_event))
+> +			goto found_aux;
+> +
+> +		for_each_sibling_event(aux_event, group_leader) {
+> +			if (perf_aux_source_match(event, aux_event))
+> +				goto found_aux;
+> +		}
+> +
+> +		goto err_locked;
+> +
+> +found_aux:
+> +		/*
+> +		 * Link aux_sources to their aux event; this is undone in
+> +		 * perf_group_detach(). When the group in torn down, the
+> +		 * aux_source events loose their link to the aux_event and
+> +		 * can't schedule any more.
+> +		 */
+> +		if (atomic_long_inc_not_zero(&aux_event->refcount))
+> +			event->aux_event = aux_event;
 
-> > I think the proper solution is to create MFD devices for Zorro boards
-> > with multiple functions, and bind against the individual MFD cells.
-> > That would also get rid of the nr_ports loop in the IDE driver, as each
-> > instance would have its own cell.
-> >
-> > I played with this a long time ago, but never finished it.
-> > It worked fine for my Ariadne Ethernet card.
-> > Last state at
-> > https://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git/log/?h=zorro-mfd
-> >
-> > Oh, seems I wrote up most of this before in
-> > https://lore.kernel.org/lkml/CAMuHMdVe1KgQWYZ_BfBkSo3zr0c+TenLMEw3T=BLEQNoZ6ex7A@mail.gmail.com/
->
-> This looks great!
->
-> Unfortunately, I don't have any MFD hardware other than a single
-> Buddha to test this with. I especially don't have an X-Surf, hence no
-> good way of testing this other than the two IDE channels on my Buddha.
-> WinUAE doesn't seem to emulate the IDE controller either.
->
-> What shall I do? Maybe as a stop-gap measure, we could hard-code a
-> module_init() again, just for X-Surf? It's been good enough until a
-> few weeks ago, so what could go wrong ;)
+I'm thinking failing that inc_not_zero() is BAD (tm) ?!
 
-In the short run: keep on using drivers/ide/buddha.c?
+> +	}
 
-Your single Buddha should be sufficient to convert pata_buddha.c from
-a plain Zorro driver to an MFD cell driver, and test it.
-I expect the buddha-mfd.c MFD driver from my zorro-mfd branch to
-work as-is, or with very minor changes.
+With the sugggested perf_get_aux_event() this would become something
+like:
 
-However, to keep X-Surf working, this needs to be synchronized with
-a Zorro MFD conversion of the zorro8390 driver, too.
+	if (event->attr.aux_source && !perf_get_aux_event(event, group_leader))
+		goto err_locked;
 
-> On another note: Maybe your MFD idea could be used to expose the
-> clockports on the Buddhas as well? That wouldn't solve the issue of
-> clockport *expansions* being fundamentally non-enumerable, but maybe
-> you can think of a reasonable way to attach a driver?
+or something.
 
-Yes, the clockport could be added as an extra MFD cell.  Later, drivers can
-be written to bind against the clockport cell.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  
+>  	/*
+>  	 * Must be under the same ctx::mutex as perf_install_in_context(),
+> -- 
+> 2.20.1
+> 
