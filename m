@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D34FC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDDEC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECEF2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 125842171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429327;
-	bh=QxH2mou0ZhhzmjsCzvNUYTR3sj0Y2sitMANirnGFbOo=;
+	s=default; t=1564429331;
+	bh=Pc4AGbWAnFsdeRUAkr5mSLk9VgIA/HBJyrByJg+IG1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=In4LWWr8vn691E7j74tpCRAbc5PIU6+DwnWrA9D3FYRiZLTJK+WXEDbMLdNWc9207
-	 GOXT4VdjEv66m4b9dWnmxnwtRt3G6JxXPXK/njZQtCz4+1UPKCRmfBBzDeouF9fseZ
-	 1tvCbndffZf61qkt46y/bDjr7f0w6UJ+D3RzNTW8=
+	b=gaAMSCR4KNPO0o9vti2+HXyvd5vceGmJe/VBXyQZ0H6+KLOrvq6A2JO9E3JsT0aMV
+	 GUxjWLZU9vMc+LTCSc5BR4DHA0E+YTFrMVeAGQAjzQtBKFw2KhWJZaZhIEtI0cOGPB
+	 Q2yIfTCyknlkbZ3+FlzTPgOB+nOJ4+wMkBJbXHgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389270AbfG2TlH (ORCPT
+        id S2389464AbfG2TmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:41:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:42:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389242AbfG2TlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:41:03 -0400
+        id S1729370AbfG2TmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:42:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E89C6217D9;
-        Mon, 29 Jul 2019 19:41:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF0222171F;
+        Mon, 29 Jul 2019 19:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429262;
-        bh=QxH2mou0ZhhzmjsCzvNUYTR3sj0Y2sitMANirnGFbOo=;
+        s=default; t=1564429326;
+        bh=Pc4AGbWAnFsdeRUAkr5mSLk9VgIA/HBJyrByJg+IG1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cjr9Mk4TD6EGWBS17jC+kdU8EUpzrvGRHrbFpb57Xd33glxVE2pDXgStwZYlt+gcc
-         O2ijOlaM68B3+qpQA7y+KjjQUbLTz2+fyjTFg6BPn/lB8VYmCG47VqPAOkhhdxI7FD
-         xAJ6tkFiEtMXCnFFknjc3I5T/A2fkt96FfUYbQHs=
+        b=I1R5DrQVvoJi1iIip6RGRe0y+k6hsQWSa7ajqlFMXVSZEuWd37tm8JHQMH3gz7vNl
+         rZYORuVRImJfet+fRCtvMB021TTKDBcnKXPnvKEuoKA6LZc5aRsb1tyLgm8pICW5uy
+         ZW899NuQzUN25We6fOT0h13kecVmprUfpw2uxIi8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 043/113] PCI: xilinx-nwl: Fix Multi MSI data programming
-Date:   Mon, 29 Jul 2019 21:22:10 +0200
-Message-Id: <20190729190705.962255545@linuxfoundation.org>
+Subject: [PATCH 4.19 061/113] arm64: assembler: Switch ESB-instruction with a vanilla nop if !ARM64_HAS_RAS
+Date:   Mon, 29 Jul 2019 21:22:28 +0200
+Message-Id: <20190729190710.058948087@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -61,95 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 181fa434d0514e40ebf6e9721f2b72700287b6e2 ]
+[ Upstream commit 2b68a2a963a157f024c67c0697b16f5f792c8a35 ]
 
-According to the PCI Local Bus specification Revision 3.0,
-section 6.8.1.3 (Message Control for MSI), endpoints that
-are Multiple Message Capable as defined by bits [3:1] in
-the Message Control for MSI can request a number of vectors
-that is power of two aligned.
+The ESB-instruction is a nop on CPUs that don't implement the RAS
+extensions. This lets us use it in places like the vectors without
+having to use alternatives.
 
-As specified in section 6.8.1.6 "Message data for MSI", the Multiple
-Message Enable field (bits [6:4] of the Message Control register)
-defines the number of low order message data bits the function is
-permitted to modify to generate its system software allocated
-vectors.
+If someone disables CONFIG_ARM64_RAS_EXTN, this instruction still has
+its RAS extensions behaviour, but we no longer read DISR_EL1 as this
+register does depend on alternatives.
 
-The MSI controller in the Xilinx NWL PCIe controller supports a number
-of MSI vectors specified through a bitmap and the hwirq number for an
-MSI, that is the value written in the MSI data TLP is determined by
-the bitmap allocation.
+This could go wrong if we want to synchronize an SError from a KVM
+guest. On a CPU that has the RAS extensions, but the KConfig option
+was disabled, we consume the pending SError with no chance of ever
+reading it.
 
-For instance, in a situation where two endpoints sitting on
-the PCI bus request the following MSI configuration, with
-the current PCI Xilinx bitmap allocation code (that does not
-align MSI vector allocation on a power of two boundary):
+Hide the ESB-instruction behind the CONFIG_ARM64_RAS_EXTN option,
+outputting a regular nop if the feature has been disabled.
 
-Endpoint #1: Requesting 1 MSI vector - allocated bitmap bits 0
-Endpoint #2: Requesting 2 MSI vectors - allocated bitmap bits [1,2]
-
-The bitmap value(s) corresponds to the hwirq number that is programmed
-into the Message Data for MSI field in the endpoint MSI capability
-and is detected by the root complex to fire the corresponding
-MSI irqs. The value written in Message Data for MSI field corresponds
-to the first bit allocated in the bitmap for Multi MSI vectors.
-
-The current Xilinx NWL MSI allocation code allows a bitmap allocation
-that is not a power of two boundaries, so endpoint #2, is allowed to
-toggle Message Data bit[0] to differentiate between its two vectors
-(meaning that the MSI data will be respectively 0x0 and 0x1 for the two
-vectors allocated to endpoint #2).
-
-This clearly aliases with the Endpoint #1 vector allocation, resulting
-in a broken Multi MSI implementation.
-
-Update the code to allocate MSI bitmap ranges with a power of two
-alignment, fixing the bug.
-
-Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe Host Controller")
-Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-[lorenzo.pieralisi@arm.com: updated commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Reported-by: Julien Thierry <julien.thierry@arm.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-xilinx-nwl.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ arch/arm64/include/asm/assembler.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index fb32840ce8e6..4850a1b8eec1 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -483,15 +483,13 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	int i;
+diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+index f90f5d83b228..5a97ac853168 100644
+--- a/arch/arm64/include/asm/assembler.h
++++ b/arch/arm64/include/asm/assembler.h
+@@ -112,7 +112,11 @@
+  * RAS Error Synchronization barrier
+  */
+ 	.macro  esb
++#ifdef CONFIG_ARM64_RAS_EXTN
+ 	hint    #16
++#else
++	nop
++#endif
+ 	.endm
  
- 	mutex_lock(&msi->lock);
--	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
--					 nr_irqs, 0);
--	if (bit >= INT_PCI_MSI_NR) {
-+	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
-+				      get_count_order(nr_irqs));
-+	if (bit < 0) {
- 		mutex_unlock(&msi->lock);
- 		return -ENOSPC;
- 	}
- 
--	bitmap_set(msi->bitmap, bit, nr_irqs);
--
- 	for (i = 0; i < nr_irqs; i++) {
- 		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
- 				domain->host_data, handle_simple_irq,
-@@ -509,7 +507,8 @@ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct nwl_msi *msi = &pcie->msi;
- 
- 	mutex_lock(&msi->lock);
--	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
-+	bitmap_release_region(msi->bitmap, data->hwirq,
-+			      get_count_order(nr_irqs));
- 	mutex_unlock(&msi->lock);
- }
- 
+ /*
 -- 
 2.20.1
 
