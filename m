@@ -2,211 +2,225 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2098C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82829C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84C21206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:09:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dW1tFk4j"
+	by mail.kernel.org (Postfix) with ESMTP id 639792070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 07:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfG2HJL (ORCPT
+        id S1726747AbfG2HJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 03:09:11 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35901 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfG2HJK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 03:09:10 -0400
-Received: by mail-io1-f65.google.com with SMTP id o9so14154678iom.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 00:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VUdf5YnKpAJwylxl/ycwhJ4KC3kGMhohvJ8eC68Wkak=;
-        b=dW1tFk4jEtVlXfgeb3SHVVbL78P7kmDnXs/6cBlP5NoogRImJw72mLK3rJ50mB13Tz
-         75I84NhCw7Rufe6pGZLxmDGJXZvDT9AImVTyTLIBueDJb1Fsx5/IbxpYrEssvWsPbsLS
-         zNF6DsHTnfgab8E7fzAMT5mi1LbNAvs/N4MbtfUzIdhck8gSe5U+IhTR2uuAwWYhFbx8
-         z3nz7LYMoUlxDoPZa4+M9ksh+KmF4Yat5qslLoRA71UyibFTXRIDVZPHgUZ0gYGnSA0B
-         xUpSWYdlvQKAlZDVsBwuVah0jG6Ot6RsJLbpnUe4TH4RWbMxydx7X4qYTkOf6omvvijg
-         Nj+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VUdf5YnKpAJwylxl/ycwhJ4KC3kGMhohvJ8eC68Wkak=;
-        b=jNzTbx/M4wxMBqkWpJta3QVMRlz9jlsiL0zCEy6s/yHt937nlM4mDMK0kqYLTvOSz3
-         MzxUCdHW8ggfOdWigCNB0sUisNkNyli7RYf8/2I+zDQOrqlM+fE68oStZDT6ZIZrAqTq
-         JwNZBgsV/oqw9NGWPyaMvMBpI9Bsw6548QElKBQe6+cXenxDZLa3Qi1n2xpiOI935zsL
-         Sujk/pnc9NuHZYmjmGOVzquzyq5UAI48OU9Bkzj9S0pVM8hRKVsMLgkxp58Tw5prw8h1
-         FUuZiHpYqbnyaevkWbj1bLyRwgJSfsoxlaZ1LIseAKGuMkbyVnfF+Oi5EIQwRaFlfB/5
-         92mA==
-X-Gm-Message-State: APjAAAW5X84aBS3raXjV7SKy4XlvVHC2q7AJ8AJdTJGsl07bScH/NsVw
-        wHqbcpPEf79YedjWMvEiweWpx9opD1+uTc8ziVm3vw==
-X-Google-Smtp-Source: APXvYqxfyLRG2NB8NA6t2hptMHKLx1/S6kETRqPNP50e41r75/fCTH+7913CQDbpvLvodTcgaUntXV0H/NiJXLo2GsY=
-X-Received: by 2002:a6b:c9d8:: with SMTP id z207mr96480501iof.184.1564384149745;
- Mon, 29 Jul 2019 00:09:09 -0700 (PDT)
+        Mon, 29 Jul 2019 03:09:37 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38670 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725957AbfG2HJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 03:09:36 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6BEF6B5D462CD359A977;
+        Mon, 29 Jul 2019 15:09:34 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 29 Jul
+ 2019 15:09:30 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity with enabled features
+ in image
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     Chao Yu <chao@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190424094850.118323-1-yuchao0@huawei.com>
+ <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
+ <373f4633-d331-5cf3-74b7-e982072bc4b4@kernel.org>
+ <20190501032242.GA84420@jaegeuk-macbookpro.roam.corp.google.com>
+ <3f170d86-e556-13ae-ce19-3bba3944f5fa@huawei.com>
+ <192bae92-2193-570f-7b50-00334271bd2e@huawei.com>
+ <a16a0c1c-16c6-5fe8-bfc4-7cc0e0866c77@huawei.com>
+ <20190723013546.GA60778@jaegeuk-macbookpro.roam.corp.google.com>
+ <00726135-f210-7791-a372-ef9cb1ae209f@huawei.com>
+ <20190729054706.GB94090@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <bed4eb2f-2261-5f88-1359-b00881a174da@huawei.com>
+Date:   Mon, 29 Jul 2019 15:09:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
- <1560421833-27414-4-git-send-email-sumit.garg@linaro.org> <20190708153908.GA28253@jax>
- <CAFA6WYNzs=RErreWaa5BmF-P03Vf9nzQjvY_JpMckw87k9z12w@mail.gmail.com>
- <20190709070354.GA5791@jax> <CAFA6WYPHVXbsOjzGVT1WWziMRKmWns=3YkD6_j+C1OJxTUbDmw@mail.gmail.com>
-In-Reply-To: <CAFA6WYPHVXbsOjzGVT1WWziMRKmWns=3YkD6_j+C1OJxTUbDmw@mail.gmail.com>
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-Date:   Mon, 29 Jul 2019 09:08:58 +0200
-Message-ID: <CAHUa44GBt-8Z8ZniTraJYHgFVEUgMTjTJLEden3m2jhhY9qc-w@mail.gmail.com>
-Subject: Re: [RFC 3/7] tee: add private login method for kernel clients
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, dhowells@redhat.com,
-        jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, jmorris@namei.org,
-        serge@hallyn.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190729054706.GB94090@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sumit,
+On 2019/7/29 13:47, Jaegeuk Kim wrote:
+> On 07/23, Chao Yu wrote:
+>> On 2019/7/23 9:35, Jaegeuk Kim wrote:
+>>> On 07/16, Chao Yu wrote:
+>>>> Hi Jaegeuk,
+>>>>
+>>>> On 2019/5/9 9:15, Chao Yu wrote:
+>>>>> On 2019/5/5 10:51, Chao Yu wrote:
+>>>>>> On 2019/5/1 11:22, Jaegeuk Kim wrote:
+>>>>>>> On 04/29, Chao Yu wrote:
+>>>>>>>> On 2019-4-28 21:38, Jaegeuk Kim wrote:
+>>>>>>>>> On 04/24, Chao Yu wrote:
+>>>>>>>>>> This patch fixes to do sanity with enabled features in image, if
+>>>>>>>>>> there are features kernel can not recognize, just fail the mount.
+>>>>>>>>>
+>>>>>>>>> We need to figure out per-feature-based rejection, since some of them can
+>>>>>>>>> be set without layout change.
+>>>>
+>>>> What about adding one field in superblock for compatible features in future?
+>>>>
+>>>> sb.feature(F2FS_FEATURE_LAST, max] stores uncompatible features
+>>>> sb.compatible_feature stores compatible features
+>>>>
+>>>> If we follow above rule when adding one feature, then, we can fail the mount if
+>>>> sb.feature(F2FS_FEATURE_LAST, max] is valid.
+>>>
+>>> How about adding required_features flag in sb to check part of features only?
+>>
+>> You mean all incompatible features can be add into sb.required_features later
+>> like this?
+>>
+>> __le32 required_features;	/* incompatible feature to old kernel */
+>>
+>> And we can check required_features with supported features in current kernel?
+> 
+> Yeah, I think so.
 
-On Tue, Jul 9, 2019 at 11:36 AM Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> On Tue, 9 Jul 2019 at 12:33, Jens Wiklander <jens.wiklander@linaro.org> wrote:
-> >
-> > On Tue, Jul 09, 2019 at 11:26:19AM +0530, Sumit Garg wrote:
-> > > Thanks Jens for your comments.
-> > >
-> > > On Mon, 8 Jul 2019 at 21:09, Jens Wiklander <jens.wiklander@linaro.org> wrote:
-> > > >
-> > > > Hi Sumit,
-> > > >
-> > > > On Thu, Jun 13, 2019 at 04:00:29PM +0530, Sumit Garg wrote:
-> > > > > There are use-cases where user-space shouldn't be allowed to communicate
-> > > > > directly with a TEE device which is dedicated to provide a specific
-> > > > > service for a kernel client. So add a private login method for kernel
-> > > > > clients and disallow user-space to open-session using this login method.
-> > > > >
-> > > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > > > > ---
-> > > > >  drivers/tee/tee_core.c   | 6 ++++++
-> > > > >  include/uapi/linux/tee.h | 2 ++
-> > > > >  2 files changed, 8 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-> > > > > index 0f16d9f..4581bd1 100644
-> > > > > --- a/drivers/tee/tee_core.c
-> > > > > +++ b/drivers/tee/tee_core.c
-> > > > > @@ -334,6 +334,12 @@ static int tee_ioctl_open_session(struct tee_context *ctx,
-> > > > >                       goto out;
-> > > > >       }
-> > > > >
-> > > > > +     if (arg.clnt_login == TEE_IOCTL_LOGIN_REE_KERNEL) {
-> > > > TEE_IOCTL_LOGIN_REE_KERNEL is defined as 0x80000000 which is in the
-> > > > range specified and implementation defined by the GP spec. I wonder if
-> > > > we shouldn't filter the entire implementation defined range instead of
-> > > > just this value.
-> > >
-> > > Agree. Will rather check for entire implementation defined range:
-> > > 0x80000000 - 0xFFFFFFFF.
-> > >
->
-> I had a second thought on this. It would be more restrictive for
-> user-space TEE client library which may need to use implementation
-> defined login method. So either we could define specific ranges for
-> kernel and user-space or we can start with single login method
-> reserved for kernel.
-
-I think we should reserve a range for kernel internal use. Only
-reserving a single single login for kernel could force us to restrict
-the API once more later, better to take a chunk now and be done with
-it. Half of 0x80000000 - 0xFFFFFFFF is probably more than enough too
-to leave a range for user space too.
-
->
-> > > >
-> > > > > +             pr_err("login method not allowed for user-space client\n");
-> > > > pr_debug(), if it's needed at all.
-> > > >
-> > >
-> > > Ok will use pr_debug() instead.
-> > >
-> > > > > +             rc = -EPERM;
-> > > > > +             goto out;
-> > > > > +     }
-> > > > > +
-> > > > >       rc = ctx->teedev->desc->ops->open_session(ctx, &arg, params);
-> > > > >       if (rc)
-> > > > >               goto out;
-> > > > > diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
-> > > > > index 4b9eb06..f33c69c 100644
-> > > > > --- a/include/uapi/linux/tee.h
-> > > > > +++ b/include/uapi/linux/tee.h
-> > > > > @@ -172,6 +172,8 @@ struct tee_ioctl_buf_data {
-> > > > >  #define TEE_IOCTL_LOGIN_APPLICATION          4
-> > > > >  #define TEE_IOCTL_LOGIN_USER_APPLICATION     5
-> > > > >  #define TEE_IOCTL_LOGIN_GROUP_APPLICATION    6
-> > > > > +/* Private login method for REE kernel clients */
-> > > > It's worth noting that this is filtered by the TEE framework, compared
-> > > > to everything else which is treated opaquely.
-> > > >
-> > >
-> > > IIUC, you are referring to login filter in optee_os. Change to prevent
-> > > filter for this login method is part of this PR [1].
-> > >
-> > > [1] https://github.com/OP-TEE/optee_os/pull/3082
-> >
-> > No, I was referring to the changes in tee_ioctl_open_session() above.
-> > It's relevant for user space to know since it will be prevented from
-> > using that range of login identifiers.
->
-> Ok, so you mean to extend the comment here for user-space to know that
-> this login method/range is filtered by the TEE framework. Will do
-> that.
->
-> > This will restrict the user space
-> > API, but I think the risk of breakage is minimal as OP-TEE is the only
-> > in-tree driver registering in the TEE framework. I'm not aware of any
-> > out-of-tree drivers registering.
->
-> I am not sure if I follow you here. How do you expect this change to
-> break out-of-tree TEE driver registration?
-
-It's a change in common code that put restrictions on the API.
+Copied, let me update the patch.
 
 Thanks,
-Jens
 
-
->
-> -Sumit
->
-> >
-> > Thanks,
-> > Jens
-> >
-> > >
-> > > -Sumit
-> > >
-> > > > > +#define TEE_IOCTL_LOGIN_REE_KERNEL           0x80000000
-> > > > >
-> > > > >  /**
-> > > > >   * struct tee_ioctl_param - parameter
-> > > > > --
-> > > > > 2.7.4
-> > > > >
-> > > >
-> > > > Thanks,
-> > > > Jens
+> 
+>>
+>> if (le32_to_cpu(raw_super->required_features) &
+>> 	(~NOW_SUPPORTED_FEATURES_IN_CURRENT_KERNEL)) {
+>> 	print msg & ret error;
+>> }
+>>
+>> Thanks,
+>>
+>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>>>>
+>>>>>>>> So any suggestion on how to implement this?
+>>>>>>>
+>>>>>>> Which features do we need to disallow? When we introduce new features, they
+>>>>>>
+>>>>>> I guess it should be the new features.
+>>>>>>
+>>>>>>> didn't hurt the previous flow by checking f2fs_sb_has_###().
+>>>>>>
+>>>>>> Yes, but new features may use new disk layout, if old kernel handled it with old
+>>>>>> disk layout, there must be problematic.
+>>>>>>
+>>>>>> e.g. format image with -O extra_attr, and mount it with kernel who don't
+>>>>>> recognize new inode layout.
+>>>>>
+>>>>> Jaegeuk,
+>>>>>
+>>>>> Any thoughts?
+>>>>>
+>>>>> Thanks,
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>>
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Maybe:
+>>>>>>>>
+>>>>>>>> if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0))
+>>>>>>>> 	check 4.14+ features
+>>>>>>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 9, 0))
+>>>>>>>> 	check 4.9+ features
+>>>>>>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0))
+>>>>>>>> 	check 4.4+ features
+>>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>>>>>>>>> ---
+>>>>>>>>>>  fs/f2fs/f2fs.h  | 13 +++++++++++++
+>>>>>>>>>>  fs/f2fs/super.c |  9 +++++++++
+>>>>>>>>>>  2 files changed, 22 insertions(+)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>>>>>>>> index f5ffc09705eb..15b640967e12 100644
+>>>>>>>>>> --- a/fs/f2fs/f2fs.h
+>>>>>>>>>> +++ b/fs/f2fs/f2fs.h
+>>>>>>>>>> @@ -151,6 +151,19 @@ struct f2fs_mount_info {
+>>>>>>>>>>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
+>>>>>>>>>>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
+>>>>>>>>>>  
+>>>>>>>>>> +#define F2FS_ALL_FEATURES	(F2FS_FEATURE_ENCRYPT |			\
+>>>>>>>>>> +				F2FS_FEATURE_BLKZONED |			\
+>>>>>>>>>> +				F2FS_FEATURE_ATOMIC_WRITE |		\
+>>>>>>>>>> +				F2FS_FEATURE_EXTRA_ATTR |		\
+>>>>>>>>>> +				F2FS_FEATURE_PRJQUOTA |			\
+>>>>>>>>>> +				F2FS_FEATURE_INODE_CHKSUM |		\
+>>>>>>>>>> +				F2FS_FEATURE_FLEXIBLE_INLINE_XATTR |	\
+>>>>>>>>>> +				F2FS_FEATURE_QUOTA_INO |		\
+>>>>>>>>>> +				F2FS_FEATURE_INODE_CRTIME |		\
+>>>>>>>>>> +				F2FS_FEATURE_LOST_FOUND |		\
+>>>>>>>>>> +				F2FS_FEATURE_VERITY |			\
+>>>>>>>>>> +				F2FS_FEATURE_SB_CHKSUM)
+>>>>>>>>>> +
+>>>>>>>>>>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
+>>>>>>>>>>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
+>>>>>>>>>>  #define F2FS_HAS_FEATURE(sbi, mask)	__F2FS_HAS_FEATURE(sbi->raw_super, mask)
+>>>>>>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>>>>>>>>>> index 4f8e9ab48b26..57f2fc6d14ba 100644
+>>>>>>>>>> --- a/fs/f2fs/super.c
+>>>>>>>>>> +++ b/fs/f2fs/super.c
+>>>>>>>>>> @@ -2573,6 +2573,15 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+>>>>>>>>>>  		return 1;
+>>>>>>>>>>  	}
+>>>>>>>>>>  
+>>>>>>>>>> +	/* check whether kernel supports all features */
+>>>>>>>>>> +	if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
+>>>>>>>>>> +		f2fs_msg(sb, KERN_INFO,
+>>>>>>>>>> +			"Unsupported feature:%u: supported:%u",
+>>>>>>>>>> +			le32_to_cpu(raw_super->feature),
+>>>>>>>>>> +			F2FS_ALL_FEATURES);
+>>>>>>>>>> +		return 1;
+>>>>>>>>>> +	}
+>>>>>>>>>> +
+>>>>>>>>>>  	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
+>>>>>>>>>>  	if (sanity_check_area_boundary(sbi, bh))
+>>>>>>>>>>  		return 1;
+>>>>>>>>>> -- 
+>>>>>>>>>> 2.18.0.rc1
+>>>>>>> .
+>>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> _______________________________________________
+>>>>>> Linux-f2fs-devel mailing list
+>>>>>> Linux-f2fs-devel@lists.sourceforge.net
+>>>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>>>>> .
+>>>>>>
+>>>>>
+>>>>>
+>>>>> _______________________________________________
+>>>>> Linux-f2fs-devel mailing list
+>>>>> Linux-f2fs-devel@lists.sourceforge.net
+>>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>>>> .
+>>>>>
+>>> .
+>>>
+> .
+> 
