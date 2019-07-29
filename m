@@ -2,181 +2,106 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3B5C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6229C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62CDE2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8875E2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3NGlBhY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dpmv/JAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfG2JD7 (ORCPT
+        id S1727679AbfG2JEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:03:59 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42432 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfG2JD7 (ORCPT
+        Mon, 29 Jul 2019 05:04:36 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42512 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfG2JEf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:03:59 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x1so11014022wrr.9;
-        Mon, 29 Jul 2019 02:03:57 -0700 (PDT)
+        Mon, 29 Jul 2019 05:04:35 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t132so27903157pgb.9;
+        Mon, 29 Jul 2019 02:04:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7y+B0NsHK08ns87YYWWmTZg44ekWnBl+gyEZRdNH7dk=;
-        b=Q3NGlBhYcmY7gU7pa16M4xiyd4vGtiytI6d390UxmvVqpbpPMRQrlvlHUz0UP8G+os
-         BCn59Q5YiDmTmmJUy0RRvJWMcQj9ENlFM5DJahpwI6dWPxbZ+gKMN2FgHQp01b4uHr3X
-         lFwKQ9aBY+LCEihdfxwmsiC3o0xRn0WlcEgSOkC/XCwR++CHeME1MRbLGMifhwVfZyIB
-         tPT7vERlOK82OnoEPIKs4H43XD7k1KcIH3XBSeclCTmaUAtnRIWZOuQZa38li4tMj2w8
-         6Bo77DH/eulrOOkNA8Ofw8gHuPCuFOz8b7Ec6YZY4DlGcMOxX5v94wRhWa9RsG80Xgrr
-         dImg==
+        h=from:to:cc:subject:date:message-id;
+        bh=v/A21rAwjhZMNLCDz5qblCoOcY3twfiyDKBiZflQpBQ=;
+        b=Dpmv/JAygDIespOi7yY+Pll4NwJss+4gHitbFUWYnGC8LgfvYn0OlweiqB9Vi4w2Ni
+         XLp94Y5QJ0tSLmKin/zDMce9xpI8+S9yRgkyMEWulc+/HLE0sz8sp/Zr5IT6U7D7vpb/
+         oQQz9LOW0CxOBqdDk5+ThBOMpIEFQGBW5rYceBD59U9ICIKUhQ557jYViwHNcXgAHIHc
+         L1MfSwJ/WhcHlm8Bk3AWCdp+pQKJLlf/IlmQ1ruyR7m/YBgeWk1ujfJpCUTua4Qa9uJh
+         m+vKcvusOHAygtUf6PA3YFx7qLs3l9T2sST9dbgkkYgk2LZch1LJSs5cLD53opL8Y3Wp
+         mSlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7y+B0NsHK08ns87YYWWmTZg44ekWnBl+gyEZRdNH7dk=;
-        b=maXhu0awdH4aFKs2OxijuF+/nqh6Fj2RmaM63/GgIMxuTJhV2M7ml6kVQExvUEruSx
-         xrJdjK9HcHiuJnGC1rx+cMtOow58pE3kbFGg+sGcjmK2PKVCY/nD+7MFvG/NV4dp3TNF
-         GVU1C73vez+Oo7QzrlX0j6APPT/XoiRWB3p3ATivnEfnxh/sgdlx/SW3PVLlX6akpVpP
-         DXW3vhHkse5GkOD/xhulGJVYMvQx83a8HhV7CeW/MPxmAaEyQasPfh+ltY21raEMkZu4
-         2xo8Ojg4D8ZtjyNW1bitwclmnf/ObCiqD5WDGronF50mjqSW2+DjB0vRn8A5Aur+7x12
-         5Zjw==
-X-Gm-Message-State: APjAAAVa9yG8/NQWzrursvz4hC+8bU10dBmdZX/LRA5DQMeOx7pTis7c
-        SSKjRvUVfDqHehKW1XDBj2ANM8mDkSTZmNRyuUs=
-X-Google-Smtp-Source: APXvYqxr49mqHWNHmDv+kvjF41anGCxPRTZve8h+rl+VxZ+94QVxFkj3HV+j0emyuMOH5LeC2mJrrnrQpEI4SlZ0SLc=
-X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr45325987wrx.196.1564391036430;
- Mon, 29 Jul 2019 02:03:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190728141218.12702-1-daniel.baluta@nxp.com> <20190729083130.GA3904@bogon.m.sigxcpu.org>
-In-Reply-To: <20190729083130.GA3904@bogon.m.sigxcpu.org>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Mon, 29 Jul 2019 12:03:45 +0300
-Message-ID: <CAEnQRZDwAQZ7E=ayJeZCvXJ8fyayCmpAqe9=oLm4gxw8zoN0oQ@mail.gmail.com>
-Subject: Re: [PATCH v3] arm64: dts: imx8mq: Init rates and parents configs for clocks
-To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Abel Vesa <abel.vesa@nxp.com>, baruch@tkos.co.il,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Anson Huang <Anson.Huang@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=v/A21rAwjhZMNLCDz5qblCoOcY3twfiyDKBiZflQpBQ=;
+        b=Nr028G8H4GV3f+XycgII/CsuGZlgWoaYEhZ4p2EW0nc0G1xzGU1XzxTMsx0FuiSs80
+         Jmr5vAMCz0fUrVE1q43zy5HoD8YOgTRUVQkkm6S2trpjVDwcKcROIV6nC9CMO+7qLhCP
+         BIauzEEvbMEsB3iqMHbWi5UbxGKfX/4g8rflJKB8JjKFRJbCWK/pe+4nz9xgSjGZuOHN
+         CsllcJrc5MSl5HsH77sVC5MLB0f0idtF6cP9fQIcF0Nc7lLe94fWJ24oyV4dHAwt2eoe
+         zNsjSUrJYCciOhXMCXvRr/oax8wpB5gqpm/ZSQjSKYGUynJ2M+9UjYKxpy66/LGwn0jk
+         V20w==
+X-Gm-Message-State: APjAAAWXsuYgx4HydQ4owV839/FuFNz0FNFeJz4bGq+rgKm9iTm/A8FP
+        6eUyQjz203FNasSxUgtLd/k=
+X-Google-Smtp-Source: APXvYqwpAAAlCWGA6TCIkU80kb4HRWXdT1LVGsa211XYFZoBbK1cuefj+7QZRS7MNa1z9AQPXoxOdw==
+X-Received: by 2002:a63:5c07:: with SMTP id q7mr50879183pgb.436.1564391074974;
+        Mon, 29 Jul 2019 02:04:34 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id 30sm140861632pjk.17.2019.07.29.02.04.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 02:04:34 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     b-liu@ti.com, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] usb: musb: Fix a possible null-pointer dereference in musb_handle_intr_connect()
+Date:   Mon, 29 Jul 2019 17:04:28 +0800
+Message-Id: <20190729090428.29508-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 11:32 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote=
-:
->
-> Hi,
-> On Sun, Jul 28, 2019 at 05:12:18PM +0300, Daniel Baluta wrote:
-> > From: Abel Vesa <abel.vesa@nxp.com>
-> >
-> > Add the initial configuration for clocks that need default parent and r=
-ate
-> > setting. This is based on the vendor tree clock provider parents and ra=
-tes
-> > configuration except this is doing the setup in dts rather then using c=
-lock
-> > consumer API in a clock provider driver.
-> >
-> > Note that by adding the initial rate setting for audio_pll1/audio_pll
-> > setting we need to remove it from imx8mq-librem5-devkit.dts
-> > imx8mq-librem5-devkit.dts
-> >
-> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> > Changes since v2:
-> >       - set rate for audio_pll1/audio_pll2  in the dtsi file and
-> >       remove the setting from imx8mq-librem5-devkit.dts
-> >
-> >  .../dts/freescale/imx8mq-librem5-devkit.dts   |  5 -----
-> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 21 +++++++++++++++++++
-> >  2 files changed, 21 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/=
-arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> > index 683a11035643..c702ccc82867 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> > @@ -169,11 +169,6 @@
-> >       };
-> >  };
-> >
-> > -&clk {
-> > -     assigned-clocks =3D <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_=
-PLL2>;
-> > -     assigned-clock-rates =3D <786432000>, <722534400>;
-> > -};
-> > -
-> >  &dphy {
-> >       status =3D "okay";
-> >  };
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boo=
-t/dts/freescale/imx8mq.dtsi
-> > index 02fbd0625318..c67625a881a4 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > @@ -494,6 +494,27 @@
-> >                               clock-names =3D "ckil", "osc_25m", "osc_2=
-7m",
-> >                                             "clk_ext1", "clk_ext2",
-> >                                             "clk_ext3", "clk_ext4";
-> > +                             assigned-clocks =3D <&clk IMX8MQ_VIDEO_PL=
-L1>,
-> > +                                     <&clk IMX8MQ_AUDIO_PLL1>,
-> > +                                     <&clk IMX8MQ_AUDIO_PLL2>,
-> > +                                     <&clk IMX8MQ_CLK_AHB>,
-> > +                                     <&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
-> > +                                     <&clk IMX8MQ_CLK_AUDIO_AHB>,
-> > +                                     <&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
-> > +                                     <&clk IMX8MQ_CLK_NOC>;
-> > +                             assigned-clock-parents =3D <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <&clk IMX8MQ_SYS1_PLL_133=
-M>,
-> > +                                             <&clk IMX8MQ_SYS1_PLL_266=
-M>,
-> > +                                             <&clk IMX8MQ_SYS2_PLL_500=
-M>,
-> > +                                             <&clk IMX8MQ_CLK_27M>,
-> > +                                             <&clk IMX8MQ_SYS1_PLL_800=
-M>;
-> > +                             assigned-clock-rates =3D <593999999>,
-> > +                                             <786432000>,
-> > +                                             <722534400>;
-> > +
-> > +
-> >                       };
-> >
-> >                       src: reset-controller@30390000 {
->
-> togethe with http://code.bulix.org/pd88jp-812381?raw tested on
-> linux-20190725 (plus mipi dsi):
->
-> Tested-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+In musb_handle_intr_connect(), there is an if statement on line 783 to
+check whether musb->hcd is NULL:
+    if (musb->hcd)
 
-Thanks for testing this Guido. Can you please add your Tested-by
-to my fourth version of the patch.
+When musb->hcd is NULL, it is used on line 797:
+    musb_host_poke_root_hub(musb);
+        if (musb->hcd->status_urb)
 
-[PATCH v4] arm64: dts: imx8mq: Init rates and parents configs for clocks
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, musb->hcd is checked before calling
+musb_host_poke_root_hub().
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/usb/musb/musb_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index 9f5a4819a744..329ff52f8167 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -794,7 +794,8 @@ static void musb_handle_intr_connect(struct musb *musb, u8 devctl, u8 int_usb)
+ 		break;
+ 	}
+ 
+-	musb_host_poke_root_hub(musb);
++	if (musb->hcd)
++		musb_host_poke_root_hub(musb);
+ 
+ 	musb_dbg(musb, "CONNECT (%s) devctl %02x",
+ 			usb_otg_state_string(musb->xceiv->otg->state), devctl);
+-- 
+2.17.0
+
