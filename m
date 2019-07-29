@@ -2,61 +2,51 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACC8C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F28C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C94420C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA04B20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429444;
-	bh=rkS9jAr5xbZv1Y6w7MuAJaQu3AhAQDt7cEO3t9brTQo=;
+	s=default; t=1564429448;
+	bh=YwuccWPC67nky6oHRiVyPdUqhiollFHNBC3F7IK5tXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CHpxMev57Gqz/j3nMVP327li+HWAkUYgGXRWgmLhf9foNOCu4GGqmKtC95VYbtfh0
-	 qxIi8RG2adn0sCP5I9IdrxdYTZ/WZVVOcuewnOhbR78KVLu5lUK95u5HYebJ4SqABO
-	 OPiUkpDjNwBFnq9xOitYfcchcPM3t3aX6EJo1yG4=
+	b=0VLRkMuRR9ZjFudlmuJiaC5WIDQESVYyIlNay6hNx1QlfK716gHl6c7vySFAp6ENI
+	 NH3L6pWjG7gMOI0K8ss+np+4w8/qttAgg6AZVh+VdEWGkNy69m8Dzl5bZfZ/w8Vs4v
+	 jrDE9iYuUrnRRanXKNNAAH6ceccNHwHpD+SKrwkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389470AbfG2ToD (ORCPT
+        id S2389744AbfG2ToH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:44:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:44:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389725AbfG2Tn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:43:58 -0400
+        id S2389739AbfG2ToE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:44:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0363B2054F;
-        Mon, 29 Jul 2019 19:43:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C413217D4;
+        Mon, 29 Jul 2019 19:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429437;
-        bh=rkS9jAr5xbZv1Y6w7MuAJaQu3AhAQDt7cEO3t9brTQo=;
+        s=default; t=1564429443;
+        bh=YwuccWPC67nky6oHRiVyPdUqhiollFHNBC3F7IK5tXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EpSsFCvtnhYmYuktXLBfzcwIx8CPOgaI+/geTscqzyTtlhXfpu5sGujGyBF3uY+a2
-         Vs29IyTMCRHDahNubcUWTlmD0w5wAHssYPy7UBDxkBVze6jBBpLcZ38heMUCMgx/Mu
-         B/k3HJocXUo3bJzVhScQ80N0Xl6TbcMmQgyNSAm8=
+        b=mMWMvYilQdh/9EdLQ+ZQGrxNtxcYApRkHsuhmkxpzdR70slJEGQVxbtTv+hVii1Ky
+         wS1gSCXBgFz1hBuNtlJRVuK7p5FioyfrZAqq5HpziwjQ5zdHmqH9VBBYSWewWTiU3A
+         P7SMA5iSWo5xvG026ZD9gXXOEEShgpIxGuA2yjLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        Waiman Long <longman@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Will Deacon <will@kernel.org>, Yuyang Du <duyuyang@gmail.com>,
-        frederic@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 097/113] locking/lockdep: Hide unused class variable
-Date:   Mon, 29 Jul 2019 21:23:04 +0200
-Message-Id: <20190729190718.722179820@linuxfoundation.org>
+        stable@vger.kernel.org, Ryan Kennedy <ryan5544@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH 4.19 099/113] usb: pci-quirks: Correct AMD PLL quirk detection
+Date:   Mon, 29 Jul 2019 21:23:06 +0200
+Message-Id: <20190729190719.218930773@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -69,58 +59,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 68037aa78208f34bda4e5cd76c357f718b838cbb ]
+From: Ryan Kennedy <ryan5544@gmail.com>
 
-The usage is now hidden in an #ifdef, so we need to move
-the variable itself in there as well to avoid this warning:
+commit f3dccdaade4118070a3a47bef6b18321431f9ac6 upstream.
 
-  kernel/locking/lockdep_proc.c:203:21: error: unused variable 'class' [-Werror,-Wunused-variable]
+The AMD PLL USB quirk is incorrectly enabled on newer Ryzen
+chipsets. The logic in usb_amd_find_chipset_info currently checks
+for unaffected chipsets rather than affected ones. This broke
+once a new chipset was added in e788787ef. It makes more sense
+to reverse the logic so it won't need to be updated as new
+chipsets are added. Note that the core of the workaround in
+usb_amd_quirk_pll does correctly check the chipset.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Yuyang Du <duyuyang@gmail.com>
-Cc: frederic@kernel.org
-Fixes: 68d41d8c94a3 ("locking/lockdep: Fix lock used or unused stats error")
-Link: https://lkml.kernel.org/r/20190715092809.736834-1-arnd@arndb.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Ryan Kennedy <ryan5544@gmail.com>
+Fixes: e788787ef4f9 ("usb:xhci:Add quirk for Certain failing HP keyboard on reset after resume")
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20190704153529.9429-2-ryan5544@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/locking/lockdep_proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/host/pci-quirks.c |   31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index 6cf288eef670..6fcc4650f0c4 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -200,7 +200,6 @@ static void lockdep_stats_debug_show(struct seq_file *m)
- 
- static int lockdep_stats_show(struct seq_file *m, void *v)
+--- a/drivers/usb/host/pci-quirks.c
++++ b/drivers/usb/host/pci-quirks.c
+@@ -205,7 +205,7 @@ int usb_amd_find_chipset_info(void)
  {
--	struct lock_class *class;
- 	unsigned long nr_unused = 0, nr_uncategorized = 0,
- 		      nr_irq_safe = 0, nr_irq_unsafe = 0,
- 		      nr_softirq_safe = 0, nr_softirq_unsafe = 0,
-@@ -211,6 +210,8 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
- 		      sum_forward_deps = 0;
+ 	unsigned long flags;
+ 	struct amd_chipset_info info;
+-	int ret;
++	int need_pll_quirk = 0;
  
- #ifdef CONFIG_PROVE_LOCKING
-+	struct lock_class *class;
+ 	spin_lock_irqsave(&amd_lock, flags);
+ 
+@@ -219,21 +219,28 @@ int usb_amd_find_chipset_info(void)
+ 	spin_unlock_irqrestore(&amd_lock, flags);
+ 
+ 	if (!amd_chipset_sb_type_init(&info)) {
+-		ret = 0;
+ 		goto commit;
+ 	}
+ 
+-	/* Below chipset generations needn't enable AMD PLL quirk */
+-	if (info.sb_type.gen == AMD_CHIPSET_UNKNOWN ||
+-			info.sb_type.gen == AMD_CHIPSET_SB600 ||
+-			info.sb_type.gen == AMD_CHIPSET_YANGTZE ||
+-			(info.sb_type.gen == AMD_CHIPSET_SB700 &&
+-			info.sb_type.rev > 0x3b)) {
++	switch (info.sb_type.gen) {
++	case AMD_CHIPSET_SB700:
++		need_pll_quirk = info.sb_type.rev <= 0x3B;
++		break;
++	case AMD_CHIPSET_SB800:
++	case AMD_CHIPSET_HUDSON2:
++	case AMD_CHIPSET_BOLTON:
++		need_pll_quirk = 1;
++		break;
++	default:
++		need_pll_quirk = 0;
++		break;
++	}
 +
- 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
++	if (!need_pll_quirk) {
+ 		if (info.smbus_dev) {
+ 			pci_dev_put(info.smbus_dev);
+ 			info.smbus_dev = NULL;
+ 		}
+-		ret = 0;
+ 		goto commit;
+ 	}
  
- 		if (class->usage_mask == 0)
--- 
-2.20.1
-
+@@ -252,7 +259,7 @@ int usb_amd_find_chipset_info(void)
+ 		}
+ 	}
+ 
+-	ret = info.probe_result = 1;
++	need_pll_quirk = info.probe_result = 1;
+ 	printk(KERN_DEBUG "QUIRK: Enable AMD PLL fix\n");
+ 
+ commit:
+@@ -263,7 +270,7 @@ commit:
+ 
+ 		/* Mark that we where here */
+ 		amd_chipset.probe_count++;
+-		ret = amd_chipset.probe_result;
++		need_pll_quirk = amd_chipset.probe_result;
+ 
+ 		spin_unlock_irqrestore(&amd_lock, flags);
+ 
+@@ -277,7 +284,7 @@ commit:
+ 		spin_unlock_irqrestore(&amd_lock, flags);
+ 	}
+ 
+-	return ret;
++	return need_pll_quirk;
+ }
+ EXPORT_SYMBOL_GPL(usb_amd_find_chipset_info);
+ 
 
 
