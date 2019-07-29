@@ -2,109 +2,108 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF6AC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28065C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A48AA2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6B92073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:03:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KuC6J7DH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="LcAO1pzQ";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="cESTXR5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfG2JDP (ORCPT
+        id S1727589AbfG2JDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:03:15 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:17274 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfG2JDP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:03:15 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3eb65a0000>; Mon, 29 Jul 2019 02:03:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 29 Jul 2019 02:03:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 29 Jul 2019 02:03:14 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Jul
- 2019 09:03:11 +0000
-Subject: Re: [PATCH 5.2 00/66] 5.2.4-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190726152301.936055394@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <df4d349b-03a1-58b1-cf82-4e76d5820614@nvidia.com>
-Date:   Mon, 29 Jul 2019 10:03:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 05:03:53 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:42818 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726432AbfG2JDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 05:03:53 -0400
+Received: by mail.z3ntu.xyz (Postfix, from userid 182)
+        id 41B36C71D7; Mon, 29 Jul 2019 09:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1564391031; bh=xgLWFrel2vRAhATJeiJzecL1LosFBCc/BEorby3QZeU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=LcAO1pzQe2fKhwEGzegkdxoL5fOSi0VURHBDFIJ0Wa/WTp/GNLiYhn8Ddk2bYbk0j
+         MM7b/svR3BL10q9HgEFGwqY/iDFgpseuiCD5CrspTaJ25NCHFHjVHk680Ft3ncfE73
+         yPhg8TAXwJCmfvWWUO9H7atWDQvSlpjHniWBMAv4=
+Received: from g550jk.localnet (80-110-121-20.cgn.dynamic.surfer.at [80.110.121.20])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 0D874C6824;
+        Mon, 29 Jul 2019 09:03:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1564391028; bh=xgLWFrel2vRAhATJeiJzecL1LosFBCc/BEorby3QZeU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=cESTXR5Qtp4Ioj0k8yWHeiG/zxwbjbsy9A+W3gf9k0NGuP7kDKe7I1yIHYWD/34Hj
+         4/43SsNJakRvP9OY/846854dgc3FbbbM2Rs1Spv+7Dv5QWxu4xsA8XPpA63yo4wFPm
+         pioSgDYF3ba5e4yLao+NFSp0ruFEHWUtgMPXblF8=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     linux-kernel@vger.kernel.org
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
+        edubezval@gmail.com, andy.gross@linaro.org,
+        Andy Gross <agross@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, masneyb@onstation.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 12/15] arm64: dts: msm8974: thermal: Add interrupt support
+Date:   Mon, 29 Jul 2019 11:03:46 +0200
+Message-ID: <2812534.bLfc0ztHNv@g550jk>
+In-Reply-To: <ec8205566eb9c015ad51fbb88f0da7ca60b414fd.1564091601.git.amit.kucheria@linaro.org>
+References: <cover.1564091601.git.amit.kucheria@linaro.org> <ec8205566eb9c015ad51fbb88f0da7ca60b414fd.1564091601.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190726152301.936055394@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564391002; bh=8XCwXG3bSoPGoVaqWvCQLwGWu4+QUH2urSLln44fk+A=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=KuC6J7DHg7P9VENLrBHysk+8WL3VTuK+Nbfc8raWib1iwAmZNY63cvUXWTmZ0zgPB
-         aOscvcWidrkyTMTl02+1ziIdtwW2lRhFWbxgMHbXqobrDaGpGGRCcgixq8GH7HbNXw
-         Doar6klqDlhwdhDV2gBpv/7xah9F5iU387D/++1qv9L908MHblNh5V/7XhtSswtOBT
-         pnXfPgIFYMuea063519gj0G/S7+XW1Rru02jtWVVbDEU5Ft4PB9ngCALYofUouWJ6x
-         pJ7TdFigAn9o9r16ijfAl6nrG/bs3T+MrO3LhzoYHYryPBTZU3JU9oYk8a8KJuNK62
-         wcKp9Q9u2uFvw==
+Content-Type: multipart/signed; boundary="nextPart47414754.PgozLFlKrf"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--nextPart47414754.PgozLFlKrf
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On 26/07/2019 16:23, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.4 release.
-> There are 66 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Freitag, 26. Juli 2019 00:18:47 CEST Amit Kucheria wrote:
+> Register upper-lower interrupt for the tsens controller.
 > 
-> Responses should be made by Sun 28 Jul 2019 03:21:13 PM UTC.
-> Anything received after that time might be too late.
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+> Cc: masneyb@onstation.org
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.4-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
+>  arch/arm/boot/dts/qcom-msm8974.dtsi | 36 +++++++++++++++--------------
+>  1 file changed, 19 insertions(+), 17 deletions(-)
 > 
-> thanks,
-> 
-> greg k-h
 
-All tests are passing for Tegra ...
+Hi, the title of this patch should be "arm" and not "arm64".
 
-Test results for stable-v5.2:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
+Luca
 
-Linux version:	5.2.4-gfc89179bfa10
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+--nextPart47414754.PgozLFlKrf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-Cheers
-Jon
+-----BEGIN PGP SIGNATURE-----
 
--- 
-nvpublic
+iQIzBAABCAAdFiEE66ocILd+OiPORlvAOY2pEqPLBhkFAl0+tnIACgkQOY2pEqPL
+Bhkyjg/8C4wIk+65w28F4Xcc3cdIuUZypP6UVkCguRZF6zUkrBdjETjJDUhXz0+a
+Oyb44HxdAgQ7E/UqfEozAvpB8z3H5sBFrP6dykqMu3CQtOzPfB1ILhbn7+V+VToF
+bmmuVcxEOnTCgoJb730JL06PvmUUMs/7W9gwAUjCVdp2DymS0OQJ3awSIxugE2GA
+itAxee+KyTq7ttQRK2n3efOlaCqAf3jll7jl7xDBwodJa0uJi2tUhD4b9ZhFpA37
+DCDsAY3wh/KJkf3uN3coZFTT3K635HZ0hP/7Kx9RK6TTXuCVJPyOXqRdw66rO74d
+8sHy/yrqgByCVZex9lMuTcPyQZq3usZnAEakCMM/MPGuVclhSQhtVF8Xt0Utw5+b
+FZlhg2gBflZHv2WLxNMdS/NyF28GN86e4uMJ7jusYxzVu+XBWeY8HGkqrxBdUFYn
+khInFKGamOPVSXQYrmNZX8LW/ZciyNyB6ZOrFOO0aiE5cVsYZEWcmiWqD58XXNzc
+RYupWAtn+ajc0U6mD51PAy2EvX2PFnyK4yxjXbeGT+0fZwQGWUQLFytF7ZBz9QPe
+dZ6jedXlUOfVP1pduqgMJ5Vl6zjz7gN1ZIJOpAqqKT2Ttgy/4fRGcRwaswPSAlhn
+0bxCZzt8QDr+gR9a5eMjr70Q5OGObzj8gPaxWFCjKpPcqHzRXAs=
+=Cmln
+-----END PGP SIGNATURE-----
+
+--nextPart47414754.PgozLFlKrf--
+
+
+
