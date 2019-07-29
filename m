@@ -2,119 +2,120 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363CEC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D157AC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A1C216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CF7216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 15:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfG2PVa (ORCPT
+        id S2387910AbfG2PWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 11:21:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38196 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 11:22:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34034 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728023AbfG2PV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 11:21:29 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728023AbfG2PWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 11:22:17 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B6052064A;
-        Mon, 29 Jul 2019 15:21:27 +0000 (UTC)
-Date:   Mon, 29 Jul 2019 11:21:26 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Eiichi Tsukata <devel@etsukata.com>
-Cc:     joel@joelfernandes.org, paulmck@linux.vnet.ibm.com,
-        tglx@linutronix.de, peterz@infradead.org, mingo@redhat.com,
-        fweisbec@gmail.com, luto@amacapital.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Prevent RCU EQS breakage in preemptirq events
-Message-ID: <20190729112126.6554b141@gandalf.local.home>
-In-Reply-To: <20190729010734.3352-1-devel@etsukata.com>
-References: <20190729010734.3352-1-devel@etsukata.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9F24B882EA;
+        Mon, 29 Jul 2019 15:22:17 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 017A85D6A0;
+        Mon, 29 Jul 2019 15:22:16 +0000 (UTC)
+Subject: Re: [PATCH v2] sched/core: Don't use dying mm as active_mm of
+ kthreads
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Phil Auld <pauld@redhat.com>
+References: <20190727171047.31610-1-longman@redhat.com>
+ <20190729085235.GT31381@hirez.programming.kicks-ass.net>
+ <20190729142756.GF31425@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <2bc722b9-3eff-6d99-4ee7-1f4cab8b6c21@redhat.com>
+Date:   Mon, 29 Jul 2019 11:22:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190729142756.GF31425@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 29 Jul 2019 15:22:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jul 2019 10:07:34 +0900
-Eiichi Tsukata <devel@etsukata.com> wrote:
+On 7/29/19 10:27 AM, Peter Zijlstra wrote:
+> On Mon, Jul 29, 2019 at 10:52:35AM +0200, Peter Zijlstra wrote:
+>> On Sat, Jul 27, 2019 at 01:10:47PM -0400, Waiman Long wrote:
+>>> It was found that a dying mm_struct where the owning task has exited
+>>> can stay on as active_mm of kernel threads as long as no other user
+>>> tasks run on those CPUs that use it as active_mm. This prolongs the
+>>> life time of dying mm holding up memory and other resources like swap
+>>> space that cannot be freed.
+>> Sure, but this has been so 'forever', why is it a problem now?
+>>
+>>> Fix that by forcing the kernel threads to use init_mm as the active_mm
+>>> if the previous active_mm is dying.
+>>>
+>>> The determination of a dying mm is based on the absence of an owning
+>>> task. The selection of the owning task only happens with the CONFIG_MEMCG
+>>> option. Without that, there is no simple way to determine the life span
+>>> of a given mm. So it falls back to the old behavior.
+>>>
+>>> Signed-off-by: Waiman Long <longman@redhat.com>
+>>> ---
+>>>  include/linux/mm_types.h | 15 +++++++++++++++
+>>>  kernel/sched/core.c      | 13 +++++++++++--
+>>>  mm/init-mm.c             |  4 ++++
+>>>  3 files changed, 30 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+>>> index 3a37a89eb7a7..32712e78763c 100644
+>>> --- a/include/linux/mm_types.h
+>>> +++ b/include/linux/mm_types.h
+>>> @@ -623,6 +623,21 @@ static inline bool mm_tlb_flush_nested(struct mm_struct *mm)
+>>>  	return atomic_read(&mm->tlb_flush_pending) > 1;
+>>>  }
+>>>  
+>>> +#ifdef CONFIG_MEMCG
+>>> +/*
+>>> + * A mm is considered dying if there is no owning task.
+>>> + */
+>>> +static inline bool mm_dying(struct mm_struct *mm)
+>>> +{
+>>> +	return !mm->owner;
+>>> +}
+>>> +#else
+>>> +static inline bool mm_dying(struct mm_struct *mm)
+>>> +{
+>>> +	return false;
+>>> +}
+>>> +#endif
+>>> +
+>>>  struct vm_fault;
+>> Yuck. So people without memcg will still suffer the terrible 'whatever
+>> it is this patch fixes'.
+> Also; why then not key off that owner tracking to free the resources
+> (and leave the struct mm around) and avoid touching this scheduling
+> hot-path ?
 
-> If context tracking is enabled, causing page fault in preemptirq
-> irq_enable or irq_disable events triggers the following RCU EQS warning.
-> 
-> Reproducer:
-> 
->   // CONFIG_PREEMPTIRQ_EVENTS=y
->   // CONFIG_CONTEXT_TRACKING=y
->   // CONFIG_RCU_EQS_DEBUG=y
->   # echo 1 > events/preemptirq/irq_disable/enable
->   # echo 1 > options/userstacktrace
+The resources are pinned by the reference count. Making a special case
+will certainly mess up the existing code.
 
-So the problem is only with userstacktrace enabled?
+It is actually a problem for systems that are mostly idle. Only the
+kernel->kernel case needs to be updated. If the CPUs isn't busy running
+user tasks, a little bit more overhead shouldn't really hurt IMHO.
 
-
->  }
-> diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
-> index 4d8e99fdbbbe..031b51cb94d0 100644
-> --- a/kernel/trace/trace_preemptirq.c
-> +++ b/kernel/trace/trace_preemptirq.c
-> @@ -10,6 +10,7 @@
->  #include <linux/module.h>
->  #include <linux/ftrace.h>
->  #include <linux/kprobes.h>
-> +#include <linux/context_tracking.h>
->  #include "trace.h"
->  
->  #define CREATE_TRACE_POINTS
-> @@ -49,9 +50,14 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
->  
->  __visible void trace_hardirqs_on_caller(unsigned long caller_addr)
->  {
-> +	enum ctx_state prev_state;
-> +
->  	if (this_cpu_read(tracing_irq_cpu)) {
-> -		if (!in_nmi())
-> +		if (!in_nmi()) {
-
-This is a very high fast path (for tracing irqs off and such). Instead
-of adding a check here for a case that is seldom used (userstacktrace
-and tracing irqs on/off). Move this to surround the userstack trace
-code.
-
--- Steve
-
-
-> +			prev_state = exception_enter();
->  			trace_irq_enable_rcuidle(CALLER_ADDR0, caller_addr);
-> +			exception_exit(prev_state);
-> +		}
->  		tracer_hardirqs_on(CALLER_ADDR0, caller_addr);
->  		this_cpu_write(tracing_irq_cpu, 0);
->  	}
-> @@ -63,11 +69,16 @@ NOKPROBE_SYMBOL(trace_hardirqs_on_caller);
->  
->  __visible void trace_hardirqs_off_caller(unsigned long caller_addr)
->  {
-> +	enum ctx_state prev_state;
-> +
->  	if (!this_cpu_read(tracing_irq_cpu)) {
->  		this_cpu_write(tracing_irq_cpu, 1);
->  		tracer_hardirqs_off(CALLER_ADDR0, caller_addr);
-> -		if (!in_nmi())
-> +		if (!in_nmi()) {
-> +			prev_state = exception_enter();
->  			trace_irq_disable_rcuidle(CALLER_ADDR0, caller_addr);
-> +			exception_exit(prev_state);
-> +		}
->  	}
->  
->  	lockdep_hardirqs_off(CALLER_ADDR0);
+Cheers,
+Longman
 
