@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BA5C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B5EC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BED8205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C9321773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429375;
-	bh=zYpROnVsZzCeFQOKde21zbITF1meTJ/9cw4mH6Th/ng=;
+	s=default; t=1564429381;
+	bh=Fqr3Y2KSdCliua66hqqup3p0TkuZZx+Pestb7gIWH9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MULXZG+F01yypYU1labIC+HcP2Cbz45uN1TAmUx2gIH5JRZGRDN0STPnR5X2snK/Q
-	 wRRwlTEe2gJTyAW2Mg8S+XaacuPS7zeu46wBFX3cS6eBReCWGcFau8mBtj3Rvx6/mq
-	 Yb+OVLnyeK3HKaiAtd+9rUsii4DLox1LqMXR2wtk=
+	b=UFMADeqIvGt9uiNQgdJbhP2ycQDG4RXIJaFpwnkFoHe0zq4IVhPZ9eIEs9YYAmg/v
+	 Rfzf9zS/7QBHfbTA7w4k3nPfzD7DJTd2ahPRsa3pbErzoi/ZY170r929Z5HdcIZjwI
+	 3ZNPPFCkrsvIRQe2EhsNEudHricmV6ijCLey4/Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389566AbfG2Tmx (ORCPT
+        id S2389579AbfG2TnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:42:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58792 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389557AbfG2Tms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:42:48 -0400
+        id S2389125AbfG2Tm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:42:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D374721655;
-        Mon, 29 Jul 2019 19:42:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B83CE21655;
+        Mon, 29 Jul 2019 19:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429367;
-        bh=zYpROnVsZzCeFQOKde21zbITF1meTJ/9cw4mH6Th/ng=;
+        s=default; t=1564429378;
+        bh=Fqr3Y2KSdCliua66hqqup3p0TkuZZx+Pestb7gIWH9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lQhev5I49gD54aEhNO0iaa2kyq8OguweTL1UQXPsjo7BqXdYP67R9o4O/cZY89z4n
-         1ueS2/uS/zY1qa9EcXu8lFDuMSOn1o6R2Of5WdV6FjBCdXn9pO06sXhdFYoh0UA0MV
-         h7cPl6SpVmluHwwpmESp1IYTmttaLBjHHbOkcSN0=
+        b=KdP1JcPSMW+x9bdFosIlA3NYBlJu6JI2Px6fQzKS1jmrELsPd3IWz7PffsmObS3or
+         TgdZ6xKB1n89W8wMHPTeUAxZ6VsB6elUmpZmVIxO/YX/W8elXpzfZhcgs5m29BEhpV
+         THKia0x5LlVFr8jwN/Gg5BeSvjiQfmEY5iDJpSkE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
+        stable@vger.kernel.org,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 037/113] drm/msm: Depopulate platform on probe failure
-Date:   Mon, 29 Jul 2019 21:22:04 +0200
-Message-Id: <20190729190704.599374925@linuxfoundation.org>
+Subject: [PATCH 4.19 040/113] i2c: stm32f7: fix the get_irq error cases
+Date:   Mon, 29 Jul 2019 21:22:07 +0200
+Message-Id: <20190729190705.318915282@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -60,58 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4368a1539c6b41ac3cddc06f5a5117952998804c ]
+[ Upstream commit 79b4499524ed659fb76323efc30f3dc03967c88f ]
 
-add_display_components() calls of_platform_populate, and we depopluate
-on pdev remove, but not when probe fails. So if we get a probe deferral
-in one of the components, we won't depopulate the platform. This causes
-the core to keep references to devices which should be destroyed, which
-causes issues when those same devices try to re-initialize on the next
-probe attempt.
+During probe, return the "get_irq" error value instead of -EINVAL which
+allows the driver to be deferred probed if needed.
+Fix also the case where of_irq_get() returns a negative value.
+Note :
+On failure of_irq_get() returns 0 or a negative value while
+platform_get_irq() returns a negative value.
 
-I think this is the reason we had issues with the gmu's device-managed
-resources on deferral (worked around in commit 94e3a17f33a5).
-
-Reviewed-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190617201301.133275-3-sean@poorly.run
+Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_drv.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/i2c/busses/i2c-stm32f7.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index c1abad8a8612..ed9a3a1e50ef 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1321,16 +1321,24 @@ static int msm_pdev_probe(struct platform_device *pdev)
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index a492da9fd0d3..ac9c9486b834 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -24,7 +24,6 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+-#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+@@ -1782,15 +1781,14 @@ static struct i2c_algorithm stm32f7_i2c_algo = {
  
- 	ret = add_gpu_components(&pdev->dev, &match);
- 	if (ret)
--		return ret;
-+		goto fail;
+ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
+ 	struct stm32f7_i2c_dev *i2c_dev;
+ 	const struct stm32f7_i2c_setup *setup;
+ 	struct resource *res;
+-	u32 irq_error, irq_event, clk_rate, rise_time, fall_time;
++	u32 clk_rate, rise_time, fall_time;
+ 	struct i2c_adapter *adap;
+ 	struct reset_control *rst;
+ 	dma_addr_t phy_addr;
+-	int ret;
++	int irq_error, irq_event, ret;
  
- 	/* on all devices that I am aware of, iommu's which can map
- 	 * any address the cpu can see are used:
- 	 */
- 	ret = dma_set_mask_and_coherent(&pdev->dev, ~0);
- 	if (ret)
--		return ret;
-+		goto fail;
-+
-+	ret = component_master_add_with_match(&pdev->dev, &msm_drm_ops, match);
-+	if (ret)
-+		goto fail;
+ 	i2c_dev = devm_kzalloc(&pdev->dev, sizeof(*i2c_dev), GFP_KERNEL);
+ 	if (!i2c_dev)
+@@ -1802,16 +1800,20 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c_dev->base);
+ 	phy_addr = (dma_addr_t)res->start;
  
--	return component_master_add_with_match(&pdev->dev, &msm_drm_ops, match);
-+	return 0;
-+
-+fail:
-+	of_platform_depopulate(&pdev->dev);
-+	return ret;
- }
+-	irq_event = irq_of_parse_and_map(np, 0);
+-	if (!irq_event) {
+-		dev_err(&pdev->dev, "IRQ event missing or invalid\n");
+-		return -EINVAL;
++	irq_event = platform_get_irq(pdev, 0);
++	if (irq_event <= 0) {
++		if (irq_event != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get IRQ event: %d\n",
++				irq_event);
++		return irq_event ? : -ENOENT;
+ 	}
  
- static int msm_pdev_remove(struct platform_device *pdev)
+-	irq_error = irq_of_parse_and_map(np, 1);
+-	if (!irq_error) {
+-		dev_err(&pdev->dev, "IRQ error missing or invalid\n");
+-		return -EINVAL;
++	irq_error = platform_get_irq(pdev, 1);
++	if (irq_error <= 0) {
++		if (irq_error != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get IRQ error: %d\n",
++				irq_error);
++		return irq_error ? : -ENOENT;
+ 	}
+ 
+ 	i2c_dev->clk = devm_clk_get(&pdev->dev, NULL);
 -- 
 2.20.1
 
