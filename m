@@ -2,108 +2,91 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CDAC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA33C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343FD206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91923206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfG2MwT (ORCPT
+        id S1727808AbfG2Myn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:52:19 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34421 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfG2MwS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:52:18 -0400
-Received: by mail-ed1-f67.google.com with SMTP id s49so24390529edb.1;
-        Mon, 29 Jul 2019 05:52:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=DXiSUFwveA5DL37XMYfZztp70YvGAlcNnFn/pPeo5N0=;
-        b=uDeGuibDQNfGNJ6iygayXJkR74yjusf5CzwvqczYa2vD7xgZ3hfCTzUc5dtkwpgsP3
-         7KxHStPY/9WFpNrdvPvB4aTB8Sa8vR+c5pr4xJY5Dg/6foHEjTcBLyhiXGoclCNi+v99
-         5A9ZMBhFGIQemwLsH+o+RTFRFNOj3s9Kf+U/e4ubdAIEMYlDbFcx7QspVz5mwYE2CG58
-         aqPk6y2anjTVNjOhkbRtAYB6bOISLw3PFRYZegZfkhrWLYUvK7oOyPbq1c2ndcv1ydED
-         uewyDw0TDv6PTUhfe1aKO/J9glOwhWd18/bDlqJPpq8L+gb3ShijCcdqLyw3as1unIrU
-         zAhw==
-X-Gm-Message-State: APjAAAXvUQCjOj8p2cbrq7AodafH9Y5Ydvvqk4IVRNo6i67hLdE4hEjE
-        GaLRV7KttAQS/DxBwqymBSCu/wfANvY=
-X-Google-Smtp-Source: APXvYqz3aKDzXTLnWZ7cFc8ZXDfLQ5fmAbSEn1hzcUZRHmiN2vyvhbaVysF756g4yxuo6cuskxepzA==
-X-Received: by 2002:a17:906:4e8f:: with SMTP id v15mr83106803eju.47.1564404736683;
-        Mon, 29 Jul 2019 05:52:16 -0700 (PDT)
-Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
-        by smtp.gmail.com with ESMTPSA id rv16sm11431186ejb.79.2019.07.29.05.52.15
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 05:52:16 -0700 (PDT)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH] modpost: check for static EXPORT_SYMBOL* functions
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190714152817.24693-1-efremov@linux.com>
- <20190728100906.18847-1-efremov@linux.com>
- <20190729151351.24f9eeb9@canb.auug.org.au>
- <e2b5607f-0f74-41c6-a83d-5a22d6828778@linux.com>
- <20190729224007.2f7fdcb4@canb.auug.org.au>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <65ea1c44-ac7f-b63f-8ba0-85bb12349383@linux.com>
-Date:   Mon, 29 Jul 2019 15:52:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 08:54:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:43716 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbfG2Mym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 08:54:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86D1A28;
+        Mon, 29 Jul 2019 05:54:41 -0700 (PDT)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9656B3F71F;
+        Mon, 29 Jul 2019 05:54:39 -0700 (PDT)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
+        tglx@linutronix.de, salyzyn@android.com, pcc@google.com,
+        0x7f454c46@gmail.com, linux@rasmusvillemoes.dk,
+        sthotton@marvell.com, andre.przywara@arm.com, luto@kernel.org,
+        Matteo Croce <mcroce@redhat.com>
+Subject: [PATCH] arm64: vdso: Fix Makefile regression
+Date:   Mon, 29 Jul 2019 13:54:21 +0100
+Message-Id: <20190729125421.32482-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <CAGnkfhyT=2kPsiUy-V=aCA_s-C4BXgD++hAZ9ii1h0p94mMVQA@mail.gmail.com>
+References: <CAGnkfhyT=2kPsiUy-V=aCA_s-C4BXgD++hAZ9ii1h0p94mMVQA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190729224007.2f7fdcb4@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/19 3:40 PM, Stephen Rothwell wrote:
-> Hi Denis,
-> 
-> On Mon, 29 Jul 2019 12:16:29 +0300 Denis Efremov <efremov@linux.com> wrote:
->>
->>> Just a reminder that some of us (just me?) do well over 100+ builds per
->>> day ...  if this can be optimised some what that would be good.  
->>
->> These measurements for the worst case (allmodconfig). Is it possible to 
->> measure the slowdown in your case? How it will perform on your typical 
->> workflow?
-> 
-> I did 3 x86_64 allmodconfig builds without and with the patch (I do
-> -j 80 powerpc64 le hosted cross builds) and it doesn't look like the
-> patch has much impact at all.
-> 
-> Without the patch:
-> 
-> real	8m41.390s user	587m25.249s sys	22m0.411s
-> real	8m40.100s user	587m32.148s sys	21m58.419s
-> real	8m40.084s user	587m25.311s sys	22m2.794s
-> 
-> With the patch:
-> 
-> real	8m40.351s user	587m21.819s sys	21m57.389s
-> real	8m40.868s user	587m23.730s sys	21m58.737s
-> real	8m40.970s user	587m22.525s sys	22m2.467s
-> 
-> I do other builds as well, but that is the biggest, so actually looks
-> ok.
-> 
+Using an old .config in combination with "make oldconfig" can cause
+an incorrect detection of the compat compiler:
 
-Is it worth to include your measurements instead of mine in the commit
-description? Maybe the note about performance downgrade could be omitted
-at all in this case?
+$ grep CROSS_COMPILE_COMPAT .config
+CONFIG_CROSS_COMPILE_COMPAT_VDSO=""
 
-Denis
+$ make oldconfig && make
+arch/arm64/Makefile:58: gcc not found, check CROSS_COMPILE_COMPAT.
+Stop.
+
+Accordingly to the section 7.2 of the GNU Make manual "Syntax of
+Conditionals", "When the value results from complex expansions of
+variables and functions, expansions you would consider empty may
+actually contain whitespace characters and thus are not seen as
+empty. However, you can use the strip function to avoid interpreting
+whitespace as a non-empty value."
+
+Fix the issue adding strip to the CROSS_COMPILE_COMPAT string
+evaluation.
+
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Reported-by: Matteo Croce <mcroce@redhat.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+---
+ arch/arm64/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index bb1f1dbb34e8..61de992bbea3 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -52,7 +52,7 @@ ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
+ 
+   ifeq ($(CONFIG_CC_IS_CLANG), y)
+     $(warning CROSS_COMPILE_COMPAT is clang, the compat vDSO will not be built)
+-  else ifeq ($(CROSS_COMPILE_COMPAT),)
++  else ifeq ($(strip $(CROSS_COMPILE_COMPAT)),)
+     $(warning CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built)
+   else ifeq ($(shell which $(CROSS_COMPILE_COMPAT)gcc 2> /dev/null),)
+     $(error $(CROSS_COMPILE_COMPAT)gcc not found, check CROSS_COMPILE_COMPAT)
+-- 
+2.22.0
+
