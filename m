@@ -2,54 +2,55 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FEDC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CB0C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4095221655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B965F21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428384;
-	bh=c0QN6XzbHZvWbQ/ngMjX6N5OMm7wXKy0+mCGT6v1Ckw=;
+	s=default; t=1564428388;
+	bh=R52ornbeCZWB1HwdSHHmV6LWHaK0iQcjDXON9+mDX+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=voaGXoPDU+/fGh22GQiPLZBAjI5UgSC6LWF8tmD6+kYekaIs+LxGtCoamHEHzwfQi
-	 gQXjJVi6zfohfzA4t4lzlS4BRa6zsDJiVDDLMU0mGEAj4ZJx/dNEvniuIKHG164Iv1
-	 rNia3w0EklzWYmLwhQRWuCtbX7ZhUsqBMQBMiVvY=
+	b=LszMM8t43JJ+A97dYhxkWtVWuCFPs9bkVjacNTGqu9sxbkvetud/W1Cff3G9FAJVi
+	 3+EQnvaMm805nb9MxatXwL5sCgzmzgO0Lvu6RdQPURkXIix7nUr3NuQsLPiTVWSieQ
+	 NBFqU9s5LijqOyZLJo166pkB80FL/3UgyrVb+jO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbfG2T0W (ORCPT
+        id S1729764AbfG2T01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38752 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:26:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728102AbfG2T0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:26:21 -0400
+        id S1728102AbfG2T0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:26:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 718C82171F;
-        Mon, 29 Jul 2019 19:26:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6233520C01;
+        Mon, 29 Jul 2019 19:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428379;
-        bh=c0QN6XzbHZvWbQ/ngMjX6N5OMm7wXKy0+mCGT6v1Ckw=;
+        s=default; t=1564428383;
+        bh=R52ornbeCZWB1HwdSHHmV6LWHaK0iQcjDXON9+mDX+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fqb75d/38+b7zDlHtmOEMGNSoAioFiaDSmcJ27w6eOxvioxGU9RbLQI43f1ozyM1O
-         MeqfEBOmofE7iFfWpPBi2FZHvv2WYMJLh+Q0Dd8O3XUkz2+DMDEt+gEdmFlyAMuaPT
-         sySYWeUYik3hYJOnSVMUstmFq8cbVYpHREuXyds4=
+        b=CjeICQpZ70hceBLepzBljv02igRCg6xEkzoIF6XLJLFFT9dBl54Ja3cvl0rR3Tj94
+         tyREzANr3Ai+Lr4PZByNYibrAPQvRji6O7XAPDdtV8ajF5PUAVr6/UMU5d/tL4r3nI
+         Al2TeeN+jYanVsexxeLXgVg4arKhOgNDr5ywpyX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 020/293] qed: Set the doorbell address correctly
-Date:   Mon, 29 Jul 2019 21:18:31 +0200
-Message-Id: <20190729190822.355531212@linuxfoundation.org>
+Subject: [PATCH 4.14 056/293] perf evsel: Make perf_evsel__name() accept a NULL argument
+Date:   Mon, 29 Jul 2019 21:19:07 +0200
+Message-Id: <20190729190828.351725502@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -62,102 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8366d520019f366fabd6c7a13032bdcd837e18d4 ]
+[ Upstream commit fdbdd7e8580eac9bdafa532746c865644d125e34 ]
 
-In 100g mode the doorbell bar is united for both engines. Set
-the correct offset in the hwfn so that the doorbell returned
-for RoCE is in the affined hwfn.
+In which case it simply returns "unknown", like when it can't figure out
+the evsel->name value.
 
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Denis Bolotin <denis.bolotin@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This makes this code more robust and fixes a problem in 'perf trace'
+where a NULL evsel was being passed to a routine that only used the
+evsel for printing its name when a invalid syscall id was passed.
+
+Reported-by: Leo Yan <leo.yan@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-f30ztaasku3z935cn3ak3h53@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_dev.c  | 29 ++++++++++++++--------
- drivers/net/ethernet/qlogic/qed/qed_rdma.c |  2 +-
- 2 files changed, 19 insertions(+), 12 deletions(-)
+ tools/perf/util/evsel.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-index 410528e7d927..c4e8bf0773fe 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-@@ -2947,6 +2947,7 @@ static int qed_get_dev_info(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt)
- static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
- 				 void __iomem *p_regview,
- 				 void __iomem *p_doorbells,
-+				 u64 db_phys_addr,
- 				 enum qed_pci_personality personality)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 0cf6f537f980..3ab81e8e079e 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -587,6 +587,9 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
  {
- 	int rc = 0;
-@@ -2954,6 +2955,7 @@ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
- 	/* Split PCI bars evenly between hwfns */
- 	p_hwfn->regview = p_regview;
- 	p_hwfn->doorbells = p_doorbells;
-+	p_hwfn->db_phys_addr = db_phys_addr;
+ 	char bf[128];
  
- 	if (IS_VF(p_hwfn->cdev))
- 		return qed_vf_hw_prepare(p_hwfn);
-@@ -3036,7 +3038,9 @@ int qed_hw_prepare(struct qed_dev *cdev,
- 	/* Initialize the first hwfn - will learn number of hwfns */
- 	rc = qed_hw_prepare_single(p_hwfn,
- 				   cdev->regview,
--				   cdev->doorbells, personality);
-+				   cdev->doorbells,
-+				   cdev->db_phys_addr,
-+				   personality);
- 	if (rc)
- 		return rc;
- 
-@@ -3045,22 +3049,25 @@ int qed_hw_prepare(struct qed_dev *cdev,
- 	/* Initialize the rest of the hwfns */
- 	if (cdev->num_hwfns > 1) {
- 		void __iomem *p_regview, *p_doorbell;
--		u8 __iomem *addr;
-+		u64 db_phys_addr;
-+		u32 offset;
- 
- 		/* adjust bar offset for second engine */
--		addr = cdev->regview +
--		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
--				       BAR_ID_0) / 2;
--		p_regview = addr;
-+		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
-+					 BAR_ID_0) / 2;
-+		p_regview = cdev->regview + offset;
- 
--		addr = cdev->doorbells +
--		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
--				       BAR_ID_1) / 2;
--		p_doorbell = addr;
-+		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
-+					 BAR_ID_1) / 2;
++	if (!evsel)
++		goto out_unknown;
 +
-+		p_doorbell = cdev->doorbells + offset;
-+
-+		db_phys_addr = cdev->db_phys_addr + offset;
+ 	if (evsel->name)
+ 		return evsel->name;
  
- 		/* prepare second hw function */
- 		rc = qed_hw_prepare_single(&cdev->hwfns[1], p_regview,
--					   p_doorbell, personality);
-+					   p_doorbell, db_phys_addr,
-+					   personality);
+@@ -623,7 +626,10 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
  
- 		/* in case of error, need to free the previously
- 		 * initiliazed hwfn 0.
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-index 1b6554866138..1e13dea66989 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-@@ -753,7 +753,7 @@ static int qed_rdma_add_user(void *rdma_cxt,
- 				     dpi_start_offset +
- 				     ((out_params->dpi) * p_hwfn->dpi_size));
+ 	evsel->name = strdup(bf);
  
--	out_params->dpi_phys_addr = p_hwfn->cdev->db_phys_addr +
-+	out_params->dpi_phys_addr = p_hwfn->db_phys_addr +
- 				    dpi_start_offset +
- 				    ((out_params->dpi) * p_hwfn->dpi_size);
+-	return evsel->name ?: "unknown";
++	if (evsel->name)
++		return evsel->name;
++out_unknown:
++	return "unknown";
+ }
  
+ const char *perf_evsel__group_name(struct perf_evsel *evsel)
 -- 
 2.20.1
 
