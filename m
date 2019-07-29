@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE24C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB7DC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84260217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DB221655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428398;
-	bh=5zrgH3212XZxlRA9/bHkdArtyD4muCdJKVSnbNKioVk=;
+	s=default; t=1564428401;
+	bh=kgKS+LMdkKPPHCb6GVjY3hWtP1rEuJZq78YZ0Pj86O0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xG0KwPj3foXHB76U55RXYQ+kJ0raX5PTIl71tNGfpid/76x9GrjfK3WB+uTqaI3zP
-	 uZs0EwmCTS/W9SE+Ldh5jTEDQbTxzH6XBs6IW9Jujyco8vMw4snCzHLlYVRsYnr0cP
-	 0Ez1BGwPEMfKrn/Yrh+mzZmYA4bVDOZTfjgrG3OM=
+	b=lkxx6rx9JWVP2AO36ztpMNF30y0Bmiooq4/KHfW0WbsMR7WQXypZY/vstL4RUe/Jr
+	 7X4Ah8JX1gvAU4JmSa+V4cYTbyI1/pyUsP2S5v21VRMYo18rZceAPcL/HEU7TWemaW
+	 LGdLcyrKVerjTEdoNtKU18j6ezHe3rT/nSzL2J6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbfG2T0h (ORCPT
+        id S1729799AbfG2T0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:26:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38994 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728513AbfG2T0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:26:34 -0400
+        id S1729230AbfG2T0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:26:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D68021655;
-        Mon, 29 Jul 2019 19:26:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02B2721773;
+        Mon, 29 Jul 2019 19:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428393;
-        bh=5zrgH3212XZxlRA9/bHkdArtyD4muCdJKVSnbNKioVk=;
+        s=default; t=1564428396;
+        bh=kgKS+LMdkKPPHCb6GVjY3hWtP1rEuJZq78YZ0Pj86O0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E+2kQ7TEP7deOIEtNMZUd354z44dQFaxYNpTJCWNYsYdsmimjgf4+swO7pDKar/jj
-         Uuik4KdXzX8/6hR/F3w9rnzcDE9+a5dbvJmclW3Kdf6+irswtCki7X9khYL+rAfBFM
-         Ihvca84Bh80fJEsZkx53VDv+tBzaSE3zHmqKsefo=
+        b=e/aOkT4pNTrKOfvYBIApwqmf2wqFQrXTgb9LMlo734eSyyJbxojW96Cwlqv9x0zNX
+         iaiTA1m3mDEL4TRHnYULahewU1ZOTyQ99OOWkynUwEFhiDUGDWgcoTuw/PMhQXjbEy
+         5jEgaJ0gMBZzUN4osAYUkrv5h4RAHZ1zDJAf2JrA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anirudh Gupta <anirudh.gupta@sophos.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Chandan Rajendra <chandan@linux.ibm.com>,
+        Eric Biggers <ebiggers@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 023/293] xfrm: Fix xfrm sel prefix length validation
-Date:   Mon, 29 Jul 2019 21:18:34 +0200
-Message-Id: <20190729190822.916090014@linuxfoundation.org>
+Subject: [PATCH 4.14 024/293] fscrypt: clean up some BUG_ON()s in block encryption/decryption
+Date:   Mon, 29 Jul 2019 21:18:35 +0200
+Message-Id: <20190729190823.128833624@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -61,54 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b38ff4075a80b4da5cb2202d7965332ca0efb213 ]
+[ Upstream commit eeacfdc68a104967162dfcba60f53f6f5b62a334 ]
 
-Family of src/dst can be different from family of selector src/dst.
-Use xfrm selector family to validate address prefix length,
-while verifying new sa from userspace.
+Replace some BUG_ON()s with WARN_ON_ONCE() and returning an error code,
+and move the check for len divisible by FS_CRYPTO_BLOCK_SIZE into
+fscrypt_crypt_block() so that it's done for both encryption and
+decryption, not just encryption.
 
-Validated patch with this command:
-ip xfrm state add src 1.1.6.1 dst 1.1.6.2 proto esp spi 4260196 \
-reqid 20004 mode tunnel aead "rfc4106(gcm(aes))" \
-0x1111016400000000000000000000000044440001 128 \
-sel src 1011:1:4::2/128 sel dst 1021:1:4::2/128 dev Port5
-
-Fixes: 07bf7908950a ("xfrm: Validate address prefix lengths in the xfrm selector.")
-Signed-off-by: Anirudh Gupta <anirudh.gupta@sophos.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Reviewed-by: Chandan Rajendra <chandan@linux.ibm.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_user.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ fs/crypto/crypto.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index 919b8406028c..b25b68ae7c74 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -150,6 +150,22 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
+diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
+index daf2683f0655..f862ad19c714 100644
+--- a/fs/crypto/crypto.c
++++ b/fs/crypto/crypto.c
+@@ -157,7 +157,10 @@ int fscrypt_do_page_crypto(const struct inode *inode, fscrypt_direction_t rw,
+ 	struct crypto_skcipher *tfm = ci->ci_ctfm;
+ 	int res = 0;
  
- 	err = -EINVAL;
- 	switch (p->family) {
-+	case AF_INET:
-+		break;
-+
-+	case AF_INET6:
-+#if IS_ENABLED(CONFIG_IPV6)
-+		break;
-+#else
-+		err = -EAFNOSUPPORT;
-+		goto out;
-+#endif
-+
-+	default:
-+		goto out;
-+	}
-+
-+	switch (p->sel.family) {
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
+-	BUG_ON(len == 0);
++	if (WARN_ON_ONCE(len <= 0))
++		return -EINVAL;
++	if (WARN_ON_ONCE(len % FS_CRYPTO_BLOCK_SIZE != 0))
++		return -EINVAL;
+ 
+ 	BUILD_BUG_ON(sizeof(iv) != FS_IV_SIZE);
+ 	BUILD_BUG_ON(AES_BLOCK_SIZE != FS_IV_SIZE);
+@@ -257,8 +260,6 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
+ 	struct page *ciphertext_page = page;
+ 	int err;
+ 
+-	BUG_ON(len % FS_CRYPTO_BLOCK_SIZE != 0);
+-
+ 	if (inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES) {
+ 		/* with inplace-encryption we just encrypt the page */
+ 		err = fscrypt_do_page_crypto(inode, FS_ENCRYPT, lblk_num, page,
+@@ -270,7 +271,8 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
+ 		return ciphertext_page;
+ 	}
+ 
+-	BUG_ON(!PageLocked(page));
++	if (WARN_ON_ONCE(!PageLocked(page)))
++		return ERR_PTR(-EINVAL);
+ 
+ 	ctx = fscrypt_get_ctx(inode, gfp_flags);
+ 	if (IS_ERR(ctx))
+@@ -318,8 +320,9 @@ EXPORT_SYMBOL(fscrypt_encrypt_page);
+ int fscrypt_decrypt_page(const struct inode *inode, struct page *page,
+ 			unsigned int len, unsigned int offs, u64 lblk_num)
+ {
+-	if (!(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES))
+-		BUG_ON(!PageLocked(page));
++	if (WARN_ON_ONCE(!PageLocked(page) &&
++			 !(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES)))
++		return -EINVAL;
+ 
+ 	return fscrypt_do_page_crypto(inode, FS_DECRYPT, lblk_num, page, page,
+ 				      len, offs, GFP_NOFS);
 -- 
 2.20.1
 
