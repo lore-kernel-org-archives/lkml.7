@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5D7C7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5051C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B32205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B561E204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sTghtoQ0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVIQeW2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404156AbfG2T7v (ORCPT
+        id S2404367AbfG2T74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:59:51 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36192 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403951AbfG2TxB (ORCPT
+        Mon, 29 Jul 2019 15:59:56 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40172 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403793AbfG2Tw4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:53:01 -0400
-Received: by mail-pl1-f196.google.com with SMTP id k8so27923618plt.3;
-        Mon, 29 Jul 2019 12:53:01 -0700 (PDT)
+        Mon, 29 Jul 2019 15:52:56 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a93so27859131pla.7;
+        Mon, 29 Jul 2019 12:52:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xSR8UIuJtUSfE1z/aFnKt2Qtqi8QrJMV4/6voBg3yuM=;
-        b=sTghtoQ07flTgSh7Epjme4BrL1GNyPeXeHeX7d+kreZhh0eug8TbMG1el8na/8S4iK
-         xSnmylVtUtcDC2Z8NHPpn8TsFhLlAGoYSMd40rg/brQ/qvnWiP7PHMd5NElKleX1up4X
-         S96Dkrwc19E40ZqN+XB6ZbioTJcpWgGrJWdoogufTcmbiHKvydAoDIG4wjhcXu1N0Rws
-         qIQNVFWmqJTWO4JyYY0BU+y0GGUvOG0pvrQh/KHl09pd6wOxUNnytpaq8E/I0UVZ72+Q
-         Hmrg/oloTwUp7l2sVTy2wel1NCoGDpPbD89fImiVluqebqo/CkOjDM58dULGsZdNPymO
-         Dlwg==
+        bh=KotmfPrwT18RHgM88KlaX3lPR9Sm0I4P1BxMeCf6KdI=;
+        b=LVIQeW2VeA0efJol8LrqUzmEf0utzN3AOjeQeB9t1szJZOpODsTxqEbWnfHqDW1cB2
+         MrCd36Xq4UznZnhkNn9jgFGgTvuzPQB9x1k2d2FRFGuTDr+pSXZ2yWS+jL7epTDS9ePg
+         WqBjXTYodrqrANY68cAPoN16Xq/rvawhHH0kawm9ET72JJphKLkS8GRgFRCXcnSPCgwU
+         yUM974AIOp0s64eby11dkrxUKBoNGSXaLEjKyYYfDGK+fw25NoinBTS9F9Vt+kyurp2z
+         gcdE3AMcttSYiMsm1z3df3gvdD0JmMF27Mt7N0R5tTU5SGUhucOqGtzcC1vPAM8b/+ZP
+         TRyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xSR8UIuJtUSfE1z/aFnKt2Qtqi8QrJMV4/6voBg3yuM=;
-        b=KywXcZ0CdP6MO9mAU5RrvxNWKld4yncuL0QDe92ach+bI7kx5JDsl2zfhnbBS6aVzp
-         nCk9+A4QyylGDT5CBAsSIYfoiiRfFiYIR08S9HYBMj/1o5ty6nb0dYGw42OdfU1+mAqM
-         I6G3MWpswKeDSNnfrM5OdbZ6HFQ2A3F5J3TdMuGrNeh+032NfKnRj5CioCJR/hf/FhsT
-         QJ9iwgpXvDXZV7SDSXtcUk6vYUBGAYz3Oi4uvaS48wJSLareJhml3xrzqAKOIwYAsF5o
-         QHh4a4SqoMS0Xa74jbsr6BQ5hGJf+9fXhc8seYHgmIDcHHTeCLEnV6tFavOmDcMKojTt
-         qUyA==
-X-Gm-Message-State: APjAAAWHI7GwgIlfXy+no77azn//6YzkzjlOP7eLRn/zQE1ZcikUmXk2
-        1YJofPViWTPphbxyxkRhLZcxsVQ4
-X-Google-Smtp-Source: APXvYqwAkcJ5VuqJJYKnj+U/FYuNG6xkJZ2V+u3k5VljLDWmRkMRJfyfXhePf/M4hly0tmPNiQu+Nw==
-X-Received: by 2002:a17:902:6a85:: with SMTP id n5mr104225220plk.73.1564429980871;
-        Mon, 29 Jul 2019 12:53:00 -0700 (PDT)
+        bh=KotmfPrwT18RHgM88KlaX3lPR9Sm0I4P1BxMeCf6KdI=;
+        b=GDQmDvHwLw+OVRQOLZgg6SjbLry0oUfgfvwnok68IS7llp5mKmHvk65Sxk/P9Hnt34
+         nBMix+yy7c+p1t6cnrQWeXtCYnV8Eyn5SpGd6/vPB11LKaaz0L92TdtF3ue1fSLGDiXV
+         eRp/GYtmM9WiasOuqnlCoJTeoPTng9JlZLjHRDhEeysA1Z6znrs+BzTz3aelwNoLRusO
+         iFw464tdiisPmodUvUyoShmvkEwtg02ZtAW6sUD+RNJ7IRxi0AJj/Tudf2YpJ/DOwBcK
+         y510LG5ReFNzhRwfD33ymFQkL6z3FjUbZ1c0wxE4iJW5nE69SS3JM7k4MzmBtLtqfy8i
+         Nwdg==
+X-Gm-Message-State: APjAAAWGBzrWKIXKE9xYb4izeLr6avSfi/g8wfaumcpulTm4e3535I5u
+        wGpdAZOPqeLG3Mn04ls028uylilv
+X-Google-Smtp-Source: APXvYqxbZNbG0lxeegJkXnpkYbLAbiklpenVntDNCT/iKbMk8JxHM4gxErpSK9AfuG2eW1ecLEwx3g==
+X-Received: by 2002:a17:902:7791:: with SMTP id o17mr113082092pll.27.1564429975198;
+        Mon, 29 Jul 2019 12:52:55 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.52.59
+        by smtp.gmail.com with ESMTPSA id z12sm43983750pfn.29.2019.07.29.12.52.53
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 12:53:00 -0700 (PDT)
+        Mon, 29 Jul 2019 12:52:54 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-serial@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/24] tty: serial: fsl_lpuart: Drop unnecessary extra parenthesis
-Date:   Mon, 29 Jul 2019 12:52:13 -0700
-Message-Id: <20190729195226.8862-12-andrew.smirnov@gmail.com>
+Subject: [PATCH 07/24] tty: serial: fsl_lpuart: Drop unnecessary uart_write_wakeup()
+Date:   Mon, 29 Jul 2019 12:52:09 -0700
+Message-Id: <20190729195226.8862-8-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190729195226.8862-1-andrew.smirnov@gmail.com>
 References: <20190729195226.8862-1-andrew.smirnov@gmail.com>
@@ -81,7 +81,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop unnecessary extra parenthesis in the driver.
+Uart_write_wakeup() will already be called as a part of
+lpuart*_transmit_buffer() call, so there doesn't seem to be a reason
+to call it again right after.
+
+It also appears that second uart_write_wakeup() might potentially
+cause unwanted write wakeup when transmitting an x_char. See commit
+5e42e9a30cda ("serial: imx: Fix x_char handling and tx flow control")
+where this problem was fixed in a very similarly structured i.MX UART
+driver.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Stefan Agner <stefan@agner.ch>
@@ -95,103 +103,23 @@ Cc: linux-imx@nxp.com
 Cc: linux-serial@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/tty/serial/fsl_lpuart.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 5181ba5d8f71..5a1e19733353 100644
+index b600f591c8c2..840dcbb27e5a 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -1443,7 +1443,7 @@ static int lpuart_startup(struct uart_port *port)
- 	lpuart_setup_watermark(sport);
- 
- 	temp = readb(sport->port.membase + UARTCR2);
--	temp |= (UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE);
-+	temp |= UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE;
- 	writeb(temp, sport->port.membase + UARTCR2);
- 
- 	if (sport->dma_rx_chan && !lpuart_start_rx_dma(sport)) {
-@@ -1652,7 +1652,7 @@ lpuart_set_termios(struct uart_port *port, struct ktermios *termios,
- 		termios->c_cflag &= ~CRTSCTS;
- 
- 	if (termios->c_cflag & CRTSCTS)
--		modem |= (UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
-+		modem |= UARTMODEM_RXRTSE | UARTMODEM_TXCTSE;
+@@ -797,9 +797,6 @@ static void lpuart_txint(struct lpuart_port *sport)
  	else
- 		modem &= ~(UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
+ 		lpuart_transmit_buffer(sport);
  
-@@ -1663,7 +1663,7 @@ lpuart_set_termios(struct uart_port *port, struct ktermios *termios,
- 	if ((termios->c_cflag & CSIZE) == CS7)
- 		termios->c_cflag |= PARENB;
- 
--	if ((termios->c_cflag & PARENB)) {
-+	if (termios->c_cflag & PARENB) {
- 		if (termios->c_cflag & CMSPAR) {
- 			cr1 &= ~UARTCR1_PE;
- 			if (termios->c_cflag & PARODD)
-@@ -1702,7 +1702,7 @@ lpuart_set_termios(struct uart_port *port, struct ktermios *termios,
- 
- 	sport->port.read_status_mask = 0;
- 	if (termios->c_iflag & INPCK)
--		sport->port.read_status_mask |=	(UARTSR1_FE | UARTSR1_PE);
-+		sport->port.read_status_mask |= UARTSR1_FE | UARTSR1_PE;
- 	if (termios->c_iflag & (IGNBRK | BRKINT | PARMRK))
- 		sport->port.read_status_mask |= UARTSR1_FE;
- 
-@@ -1816,7 +1816,7 @@ lpuart32_serial_setbrg(struct lpuart_port *sport, unsigned int baudrate)
- 		tmp |= UARTBAUD_BOTHEDGE;
- 
- 	tmp &= ~(UARTBAUD_OSR_MASK << UARTBAUD_OSR_SHIFT);
--	tmp |= (((osr-1) & UARTBAUD_OSR_MASK) << UARTBAUD_OSR_SHIFT);
-+	tmp |= ((osr-1) & UARTBAUD_OSR_MASK) << UARTBAUD_OSR_SHIFT;
- 
- 	tmp &= ~UARTBAUD_SBR_MASK;
- 	tmp |= sbr & UARTBAUD_SBR_MASK;
-@@ -1869,7 +1869,7 @@ lpuart32_set_termios(struct uart_port *port, struct ktermios *termios,
- 	}
- 
- 	if (termios->c_cflag & CRTSCTS) {
--		modem |= (UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
-+		modem |= UARTMODEM_RXRTSE | UARTMODEM_TXCTSE;
- 	} else {
- 		termios->c_cflag &= ~CRTSCTS;
- 		modem &= ~(UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
-@@ -1918,7 +1918,7 @@ lpuart32_set_termios(struct uart_port *port, struct ktermios *termios,
- 
- 	sport->port.read_status_mask = 0;
- 	if (termios->c_iflag & INPCK)
--		sport->port.read_status_mask |=	(UARTSTAT_FE | UARTSTAT_PE);
-+		sport->port.read_status_mask |= UARTSTAT_FE | UARTSTAT_PE;
- 	if (termios->c_iflag & (IGNBRK | BRKINT | PARMRK))
- 		sport->port.read_status_mask |= UARTSTAT_FE;
- 
-@@ -2085,7 +2085,7 @@ lpuart_console_write(struct console *co, const char *s, unsigned int count)
- 
- 	/* first save CR2 and then disable interrupts */
- 	cr2 = old_cr2 = readb(sport->port.membase + UARTCR2);
--	cr2 |= (UARTCR2_TE |  UARTCR2_RE);
-+	cr2 |= UARTCR2_TE | UARTCR2_RE;
- 	cr2 &= ~(UARTCR2_TIE | UARTCR2_TCIE | UARTCR2_RIE);
- 	writeb(cr2, sport->port.membase + UARTCR2);
- 
-@@ -2116,7 +2116,7 @@ lpuart32_console_write(struct console *co, const char *s, unsigned int count)
- 
- 	/* first save CR2 and then disable interrupts */
- 	cr = old_cr = lpuart32_read(&sport->port, UARTCTRL);
--	cr |= (UARTCTRL_TE |  UARTCTRL_RE);
-+	cr |= UARTCTRL_TE | UARTCTRL_RE;
- 	cr &= ~(UARTCTRL_TIE | UARTCTRL_TCIE | UARTCTRL_RIE);
- 	lpuart32_write(&sport->port, cr, UARTCTRL);
- 
-@@ -2574,7 +2574,7 @@ static int lpuart_resume(struct device *dev)
- 	} else {
- 		lpuart_setup_watermark(sport);
- 		temp = readb(sport->port.membase + UARTCR2);
--		temp |= (UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE);
-+		temp |= UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE;
- 		writeb(temp, sport->port.membase + UARTCR2);
- 	}
- 
+-	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+-		uart_write_wakeup(&sport->port);
+-
+ out:
+ 	spin_unlock_irqrestore(&sport->port.lock, flags);
+ }
 -- 
 2.21.0
 
