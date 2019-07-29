@@ -5,50 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB75C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC65C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3278021655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADCC2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429296;
-	bh=v7sks2e6muLIM6cZO40Wu7vtz4iGZ6tb3NNZnvw9x8w=;
+	s=default; t=1564429301;
+	bh=weLFiGRUtpvtMwP/GcwCVI6hg7EVRdiSe3BgEGYjJxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2wFoAK6de9XvX6eNc7Byxl/IWtBmHlB+DU0RxnxZXttqodfg+tjJHmgXYlSt2eKse
-	 hxyNAJW8oB54adiMVMe+MWlp4g13cK8gwGWGA+b1eH2DPDGAJDFu2vUDhPW/H/thxA
-	 vyJFtzlbWQm9G5II2Jb/kMQChWMDFM0I0gdnl17w=
+	b=tOTXeXHMtpxdI+gGahpoy89PZMWxfRIxT/Nl3d84jdKEQKfJTeqSEf9xeZ5yk+KY2
+	 n8SmCDNUfD9ZOytfWLDZWSPzOp/xEvxJ/LOqfAV5Ykym4PmO881n9uWj/pfqLOn4Vf
+	 ZHJEeNUOPqB1UmUW41+bf1ko7DB1KJ/vfeWUNUuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389274AbfG2Tle (ORCPT
+        id S2389396AbfG2Tlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:41:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57018 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:41:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389363AbfG2Tlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:41:31 -0400
+        id S2388784AbfG2Tlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:41:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DD7221655;
-        Mon, 29 Jul 2019 19:41:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9D60205F4;
+        Mon, 29 Jul 2019 19:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429290;
-        bh=v7sks2e6muLIM6cZO40Wu7vtz4iGZ6tb3NNZnvw9x8w=;
+        s=default; t=1564429295;
+        bh=weLFiGRUtpvtMwP/GcwCVI6hg7EVRdiSe3BgEGYjJxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xrp0CFmBGOPQnE/Ve38nLrFxjC+KE+7kQKLMIYxwz/V+sfIXeWe9no+Qdn6l1tTKG
-         wJqy87lhH/N+75/ESa8Y/EwXHVRgasrwZ9dzMLb3z2IKDYfv2+QebuQn89Mx5947IR
-         ZwonZOGiOlgfxSrPh0s6GNhyf6FeG2CPIqbSMvgo=
+        b=Ccc2sn0UkFu6bGWMhSOqTj7+gP0HVzTTpK5zuEnC5DhSDXJYPRCYtcM8v+EK9E9pX
+         ZSzI2kC6rmLlU6gC2NQ9tEZ5XxPjLtnAUE4BJ9MS/tNc/flLhvFBr6SyPzj6YPxODw
+         B79brS6egk6MuldYPurv8ogOXGKGRja9j4iv5r6U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 051/113] mfd: hi655x-pmic: Fix missing return value check for devm_regmap_init_mmio_clk
-Date:   Mon, 29 Jul 2019 21:22:18 +0200
-Message-Id: <20190729190707.758914907@linuxfoundation.org>
+Subject: [PATCH 4.19 052/113] mm/swap: fix release_pages() when releasing devmap pages
+Date:   Mon, 29 Jul 2019 21:22:19 +0200
+Message-Id: <20190729190707.992644933@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
 References: <20190729190655.455345569@linuxfoundation.org>
@@ -61,31 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7efd105c27fd2323789b41b64763a0e33ed79c08 ]
+[ Upstream commit c5d6c45e90c49150670346967971e14576afd7f1 ]
 
-Since devm_regmap_init_mmio_clk can fail, add return value checking.
+release_pages() is an optimized version of a loop around put_page().
+Unfortunately for devmap pages the logic is not entirely correct in
+release_pages().  This is because device pages can be more than type
+MEMORY_DEVICE_PUBLIC.  There are in fact 4 types, private, public, FS DAX,
+and PCI P2PDMA.  Some of these have specific needs to "put" the page while
+others do not.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Chen Feng <puck.chen@hisilicon.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This logic to handle any special needs is contained in
+put_devmap_managed_page().  Therefore all devmap pages should be processed
+by this function where we can contain the correct logic for a page put.
+
+Handle all device type pages within release_pages() by calling
+put_devmap_managed_page() on all devmap pages.  If
+put_devmap_managed_page() returns true the page has been put and we
+continue with the next page.  A false return of put_devmap_managed_page()
+means the page did not require special processing and should fall to
+"normal" processing.
+
+This was found via code inspection while determining if release_pages()
+and the new put_user_pages() could be interchangeable.[1]
+
+[1] https://lkml.kernel.org/r/20190523172852.GA27175@iweiny-DESK2.sc.intel.com
+
+Link: https://lkml.kernel.org/r/20190605214922.17684-1-ira.weiny@intel.com
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/hi655x-pmic.c | 2 ++
- 1 file changed, 2 insertions(+)
+ mm/swap.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mfd/hi655x-pmic.c b/drivers/mfd/hi655x-pmic.c
-index 96c07fa1802a..6693f74aa6ab 100644
---- a/drivers/mfd/hi655x-pmic.c
-+++ b/drivers/mfd/hi655x-pmic.c
-@@ -112,6 +112,8 @@ static int hi655x_pmic_probe(struct platform_device *pdev)
+diff --git a/mm/swap.c b/mm/swap.c
+index a3fc028e338e..45fdbfb6b2a6 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -740,15 +740,20 @@ void release_pages(struct page **pages, int nr)
+ 		if (is_huge_zero_page(page))
+ 			continue;
  
- 	pmic->regmap = devm_regmap_init_mmio_clk(dev, NULL, base,
- 						 &hi655x_regmap_config);
-+	if (IS_ERR(pmic->regmap))
-+		return PTR_ERR(pmic->regmap);
+-		/* Device public page can not be huge page */
+-		if (is_device_public_page(page)) {
++		if (is_zone_device_page(page)) {
+ 			if (locked_pgdat) {
+ 				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
+ 						       flags);
+ 				locked_pgdat = NULL;
+ 			}
+-			put_devmap_managed_page(page);
+-			continue;
++			/*
++			 * ZONE_DEVICE pages that return 'false' from
++			 * put_devmap_managed_page() do not require special
++			 * processing, and instead, expect a call to
++			 * put_page_testzero().
++			 */
++			if (put_devmap_managed_page(page))
++				continue;
+ 		}
  
- 	regmap_read(pmic->regmap, HI655X_BUS_ADDR(HI655X_VER_REG), &pmic->ver);
- 	if ((pmic->ver < PMU_VER_START) || (pmic->ver > PMU_VER_END)) {
+ 		page = compound_head(page);
 -- 
 2.20.1
 
