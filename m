@@ -2,53 +2,63 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4A1C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1282C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADE221655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1B8821773
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430111;
-	bh=pAGEkEdNZrIayxF3+frudUusRfrprRIXZLWd+vVqxh0=;
+	s=default; t=1564430113;
+	bh=vYx/zHP8wWU9g1UIxBmoe+KnVEnCZqWTIOJc41rRGsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sa1GodDYbe+7ppXIo/f2m1IZB3RPsMmOL8ZwWU5e3fTrMfcYWpr36Ln5002G7baQ2
-	 tZKCS/9xNZfITM3c2A/6fZKdxcisf4tfJ0pw/2SU+TFYIjjqXkNmW5WUJMm/w/uuo0
-	 PmEr6C6MsOAVH6rl1csG1/tPGkju3QUkQY+XKe3E=
+	b=Ka7evbHyAEuFwU/oce7NrRqm7Z3YpLAY4yM3+pwqA/ysv1t1puk1On+DUhZr+2iOK
+	 pFMy9Hc++5YnSM5nVI5wYdSj1JsK78tYeKLb2I5RuH2fM6G09JqeiUYTf+eqRzKXZF
+	 +C+tu5ifTciC2tux2K8YvL/+uI6DQqNs+rcg/72M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404164AbfG2TzJ (ORCPT
+        id S2391039AbfG2TzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:55:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47800 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:55:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390434AbfG2TzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:55:06 -0400
+        id S2403890AbfG2TzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:55:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6DC1204EC;
-        Mon, 29 Jul 2019 19:55:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46E952054F;
+        Mon, 29 Jul 2019 19:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430105;
-        bh=pAGEkEdNZrIayxF3+frudUusRfrprRIXZLWd+vVqxh0=;
+        s=default; t=1564430107;
+        bh=vYx/zHP8wWU9g1UIxBmoe+KnVEnCZqWTIOJc41rRGsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0BYPmtNJp8wBn2IaIytYLxXcYs5Y00yyy4Fnv6bwBch0bafcpQSMy3H7W++DBP34j
-         glWPzWB4QMLmlrvvZJI3c6G5sGoooosVdwCS+0hfNNLPDMBPV8NrMAywAhHndEigN6
-         4vs1z6wG67qz+xXGyBbRV2GVenNFZTbqXvWG+70E=
+        b=pnTPb4AjXNFB1atxPkhyren0de8uUY5M7C5OzZK6Eife3lxasvT3F4XHKO7wNmhTH
+         kqXJSAHRJziPmm+FWxmDk8CvhQClgWxnEOvuiWlkZPgTqVubPevyza6k1YOnFBdz4K
+         57kJQp9pTU0n9JNu4lJo+t+xfCzJfR2G4MY3PTIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shawn Anastasio <shawn@anastas.io>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.2 196/215] powerpc/dma: Fix invalid DMA mmap behavior
-Date:   Mon, 29 Jul 2019 21:23:12 +0200
-Message-Id: <20190729190813.865994407@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Roman Gushchin <guro@fb.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 159/215] proc: use down_read_killable mmap_sem for /proc/pid/clear_refs
+Date:   Mon, 29 Jul 2019 21:22:35 +0200
+Message-Id: <20190729190807.416089191@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -61,88 +71,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shawn Anastasio <shawn@anastas.io>
+[ Upstream commit c46038017fbdcac627b670c9d4176f1d0c2f5fa3 ]
 
-commit b4fc36e60f25cf22bf8b7b015a701015740c3743 upstream.
+Do not remain stuck forever if something goes wrong.  Using a killable
+lock permits cleanup of stuck tasks and simplifies investigation.
 
-The refactor of powerpc DMA functions in commit 6666cc17d780
-("powerpc/dma: remove dma_nommu_mmap_coherent") incorrectly
-changes the way DMA mappings are handled on powerpc.
-Since this change, all mapped pages are marked as cache-inhibited
-through the default implementation of arch_dma_mmap_pgprot.
-This differs from the previous behavior of only marking pages
-in noncoherent mappings as cache-inhibited and has resulted in
-sporadic system crashes in certain hardware configurations and
-workloads (see Bugzilla).
+Replace the only unkillable mmap_sem lock in clear_refs_write().
 
-This commit restores the previous correct behavior by providing
-an implementation of arch_dma_mmap_pgprot that only marks
-pages in noncoherent mappings as cache-inhibited. As this behavior
-should be universal for all powerpc platforms a new file,
-dma-generic.c, was created to store it.
-
-Fixes: 6666cc17d780 ("powerpc/dma: remove dma_nommu_mmap_coherent")
-# NOTE: fixes commit 6666cc17d780 released in v5.1.
-# Consider a stable tag:
-# Cc: stable@vger.kernel.org # v5.1+
-# NOTE: fixes commit 6666cc17d780 released in v5.1.
-# Consider a stable tag:
-# Cc: stable@vger.kernel.org # v5.1+
-Cc: stable@vger.kernel.org # v5.1+
-Signed-off-by: Shawn Anastasio <shawn@anastas.io>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190717235437.12908-1-shawn@anastas.io
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/156007493826.3335.5424884725467456239.stgit@buzz
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Koutný <mkoutny@suse.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Kconfig             |    1 +
- arch/powerpc/kernel/Makefile     |    3 ++-
- arch/powerpc/kernel/dma-common.c |   17 +++++++++++++++++
- 3 files changed, 20 insertions(+), 1 deletion(-)
+ fs/proc/task_mmu.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -121,6 +121,7 @@ config PPC
- 	select ARCH_32BIT_OFF_T if PPC32
- 	select ARCH_HAS_DEBUG_VIRTUAL
- 	select ARCH_HAS_DEVMEM_IS_ALLOWED
-+	select ARCH_HAS_DMA_MMAP_PGPROT
- 	select ARCH_HAS_ELF_RANDOMIZE
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_GCOV_PROFILE_ALL
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -49,7 +49,8 @@ obj-y				:= cputable.o ptrace.o syscalls
- 				   signal.o sysfs.o cacheinfo.o time.o \
- 				   prom.o traps.o setup-common.o \
- 				   udbg.o misc.o io.o misc_$(BITS).o \
--				   of_platform.o prom_parse.o
-+				   of_platform.o prom_parse.o \
-+				   dma-common.o
- obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o \
- 				   signal_64.o ptrace32.o \
- 				   paca.o nvram_64.o firmware.o
---- /dev/null
-+++ b/arch/powerpc/kernel/dma-common.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Contains common dma routines for all powerpc platforms.
-+ *
-+ * Copyright (C) 2019 Shawn Anastasio.
-+ */
-+
-+#include <linux/mm.h>
-+#include <linux/dma-noncoherent.h>
-+
-+pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
-+		unsigned long attrs)
-+{
-+	if (!dev_is_dma_coherent(dev))
-+		return pgprot_noncached(prot);
-+	return prot;
-+}
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 1d9c63cd8a3c..abcd9513efff 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -1136,7 +1136,10 @@ static ssize_t clear_refs_write(struct file *file, const char __user *buf,
+ 			goto out_mm;
+ 		}
+ 
+-		down_read(&mm->mmap_sem);
++		if (down_read_killable(&mm->mmap_sem)) {
++			count = -EINTR;
++			goto out_mm;
++		}
+ 		tlb_gather_mmu(&tlb, mm, 0, -1);
+ 		if (type == CLEAR_REFS_SOFT_DIRTY) {
+ 			for (vma = mm->mmap; vma; vma = vma->vm_next) {
+-- 
+2.20.1
+
 
 
