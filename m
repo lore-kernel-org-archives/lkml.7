@@ -2,69 +2,83 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3F4C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D1AC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE382064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF9F206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbfG2SMr (ORCPT
+        id S1729166AbfG2SO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:12:47 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:37150 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfG2SMp (ORCPT
+        Mon, 29 Jul 2019 14:14:56 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:44781 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfG2SOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 14:12:45 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0E2CA1405336B;
-        Mon, 29 Jul 2019 11:12:45 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 11:12:44 -0700 (PDT)
-Message-Id: <20190729.111244.1579095115694062432.davem@davemloft.net>
-To:     gustavo@embeddedor.com
-Cc:     kou.ishizaki@toshiba.co.jp, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sfr@canb.auug.org.au,
-        keescook@chromium.org
-Subject: Re: [PATCH] net: spider_net: Mark expected switch fall-through
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190729003251.GA25556@embeddedor>
-References: <20190729003251.GA25556@embeddedor>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Mon, 29 Jul 2019 14:14:55 -0400
+Received: from [192.168.1.110] ([77.4.29.213]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MY5s5-1ht0bI3BML-00YQTu; Mon, 29 Jul 2019 20:14:53 +0200
+Subject: Re: [PATCH 1/2] input: keyboard: gpio_keys_polled: use gpio lookup
+ table
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+References: <1564415994-22871-1-git-send-email-info@metux.net>
+ <20190729172607.GB755@penguin>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <b2912c1d-a6d8-ad2a-3e37-19e4d3d1bd3b@metux.net>
+Date:   Mon, 29 Jul 2019 20:14:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190729172607.GB755@penguin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 11:12:45 -0700 (PDT)
+X-Provags-ID: V03:K1:niAflXSiIAGvJeBkeW6ZBFwWCpUhgdJKNJaXl4oxp6SZGttm57Q
+ KIRHkU7RAxE8TGcFK8192TZRKpf4e7namaJ8/lUqRryKBq1UTwE2bPm8B4fdDV9t9rDSgGp
+ wQ7zzxmO5r6NybnZaf4n5NdoTIFmh+fwsq8hx4puN7urem22qsR9Ij9QUbdyN/EkIQ4KHXF
+ 11gRyyIOxTt25IiekRmRQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:F7gHLO2/IiY=://7flOcwe6m3nOYtiFi9kB
+ CVKOunpf8rjPS34R+NviVt70P5yOP6JeiGmgd6zm7QFy5Cu1cqYCJbRabTOR9F7wcQHTEDhoI
+ niwTFZQ6YQ9SgawjBOT723CeKTCpL1VO+vvCMBlCpOJB5iCSi3/dKwWeAIsOMlBgUZ5KqEuHd
+ QJ1QmxQNCOFgx0Qpc8aRkQMD0t+VFmAKsDgZ65py85SJY5puAGxuUfAIW1BcjiUrz1GghBp23
+ s12OF6VdvSFDsWWvqAi80q5k8TZ9y3AbU0F5/t0antSmzaygxYJaZluxD86txyQd7474Yv01i
+ uYO9M5X4GdipJ1nYQtFzUBNXXedCpFlwFNh9NA2Dd6CY9tcar4m4fs2eqAtrGQid5jbXUqwrw
+ qLxm3iPSqnvz03zTl6V04s0+GpZ8X7+sxKSXrtYDhMwoY036t5/p7FNNKgxuvdXzDtZwTCjWe
+ TFS/jf1zx45Sot1oPGYru8jlWhIPYOyHZdmKS2X2j/g2Qj6kMDg7r6NSdemqoKWEQoLCAZykd
+ FkkrCCoBWvY9tzOe+YoSBEGr6g1xFglEiRMWfb/h1HEdSGwVF/Mq43+rjznH7PlQTJISF7EpR
+ L4dw4R3ExcDjBuC/ftvOLKv2hEOIgm0wjKQb+rDVBdT4F2E0aM90SeoYDRATOVB/izDnilk/a
+ ujTkatbafbKKznS4R8ofuIyDPW4UwbImdzoEhp0RhAInur9nEYSAFIwS6wgIkbEaJqQEnUQvY
+ l+lqiUZcfTj4kHiUTOtKfCly+0AYXwzNdpGoLbkU+etgVBw5OilgP2uSbSQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date: Sun, 28 Jul 2019 19:32:51 -0500
+On 29.07.19 19:26, Dmitry Torokhov wrote:
 
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warning:
-> 
-> drivers/net/ethernet/toshiba/spider_net.c: In function 'spider_net_release_tx_chain':
-> drivers/net/ethernet/toshiba/spider_net.c:783:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     if (!brutal) {
->        ^
-> drivers/net/ethernet/toshiba/spider_net.c:792:3: note: here
->    case SPIDER_NET_DESCR_RESPONSE_ERROR:
->    ^~~~
-> 
-> Notice that, in this particular case, the code comment is
-> modified in accordance with what GCC is expecting to find.
-> 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Hi,
 
-Applied.
+> As I think I mentioned a while back I would prefer to get gpiolob > support swnode-backed properties so that the driver would not need 
+to> know about differences between ACPI, DT and static board files.
+Indeed would be nice. But I think we should get rid of raw gpio IDs in
+favour of gpiod lookup tables first.
+
+> I just recently re-posted patches for this, let's see if we can get them > landed in the kernel.
+Can you give me a pointer ?
+
+
+--mtx
+
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
