@@ -2,136 +2,72 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AE5C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A28BC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7282075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7412087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 09:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfG2J6G (ORCPT
+        id S1728165AbfG2J6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 05:58:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:41110 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbfG2J6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 05:58:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E0A715AB;
-        Mon, 29 Jul 2019 02:58:05 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EF7C3F694;
-        Mon, 29 Jul 2019 02:58:05 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id F23AF68240B; Mon, 29 Jul 2019 10:58:03 +0100 (BST)
-Date:   Mon, 29 Jul 2019 10:58:03 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm: mali-dp: Mark expected switch fall-through
-Message-ID: <20190729095803.hd7ehqjc4zlqztv3@e110455-lin.cambridge.arm.com>
-References: <20190726112741.19360-1-anders.roxell@linaro.org>
+        Mon, 29 Jul 2019 05:58:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53103 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbfG2J6h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 05:58:37 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hs2QD-0006V0-KF; Mon, 29 Jul 2019 11:58:25 +0200
+Date:   Mon, 29 Jul 2019 11:58:24 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: sched: Unexpected reschedule of offline CPU#2!
+In-Reply-To: <20190729093545.GV31381@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.DEB.2.21.1907291156170.1791@nanos.tec.linutronix.de>
+References: <20190727164450.GA11726@roeck-us.net> <20190729093545.GV31381@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190726112741.19360-1-anders.roxell@linaro.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anders,
-
-On Fri, Jul 26, 2019 at 01:27:41PM +0200, Anders Roxell wrote:
-> When fall-through warnings was enabled by default, commit d93512ef0f0e
-> ("Makefile: Globally enable fall-through warning"), the following
-> warnings was starting to show up:
+On Mon, 29 Jul 2019, Peter Zijlstra wrote:
+> On Sat, Jul 27, 2019 at 09:44:50AM -0700, Guenter Roeck wrote:
+> > [   61.348866] Call Trace:
+> > [   61.349392]  kick_ilb+0x90/0xa0
+> > [   61.349629]  trigger_load_balance+0xf0/0x5c0
+> > [   61.349859]  ? check_preempt_wakeup+0x1b0/0x1b0
+> > [   61.350057]  scheduler_tick+0xa7/0xd0
 > 
-> ../drivers/gpu/drm/arm/malidp_hw.c: In function ‘malidp_format_get_bpp’:
-> ../drivers/gpu/drm/arm/malidp_hw.c:387:8: warning: this statement may fall
->  through [-Wimplicit-fallthrough=]
->     bpp = 30;
->     ~~~~^~~~
-> ../drivers/gpu/drm/arm/malidp_hw.c:388:3: note: here
->    case DRM_FORMAT_YUV420_10BIT:
->    ^~~~
-> ../drivers/gpu/drm/arm/malidp_hw.c: In function ‘malidp_se_irq’:
-> ../drivers/gpu/drm/arm/malidp_hw.c:1311:4: warning: this statement may fall
->  through [-Wimplicit-fallthrough=]
->     drm_writeback_signal_completion(&malidp->mw_connector, 0);
->     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../drivers/gpu/drm/arm/malidp_hw.c:1313:3: note: here
->    case MW_START:
->    ^~~~
+> kick_ilb() iterates nohz.idle_cpus_mask to find itself an idle_cpu().
 > 
-> Rework to add a 'break;' in a case that didn't have it so that
-> the compiler doesn't warn about fall-through.
+> idle_cpus_mask() is set from nohz_balance_enter_idle() and cleared from
+> nohz_balance_exit_idle(). nohz_balance_enter_idle() is called from
+> __tick_nohz_idle_stop_tick() when entering nohz idle, this includes the
+> cpu_is_offline() clause of the idle loop.
 > 
-> Cc: stable@vger.kernel.org # v4.9+
-> Fixes: b8207562abdd ("drm/arm/malidp: Specified the rotation memory requirements for AFBC YUV formats")
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> However, when offline, cpu_active() should also be false, and this
+> function should no-op.
 
-Running the patch through scripts/get_maintainer.pl would've also given you the
-emails for the mali-dp maintainers to reach directly and have a faster response
-time, but I guess you were trying to see if we check the dri-devel mailing list.
+Ha. That reboot mess is not clearing cpu active as it's not going through
+the regular cpu hotplug path. It's using reboot IPI which 'stops' the cpus
+dead in their tracks after clearing cpu online....
 
-Thanks for the patch!
+Thanks,
 
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-
-Best regards,
-Liviu
-
-> ---
->  drivers/gpu/drm/arm/malidp_hw.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
-> index 50af399d7f6f..dc5fff9af338 100644
-> --- a/drivers/gpu/drm/arm/malidp_hw.c
-> +++ b/drivers/gpu/drm/arm/malidp_hw.c
-> @@ -385,6 +385,7 @@ int malidp_format_get_bpp(u32 fmt)
->  		switch (fmt) {
->  		case DRM_FORMAT_VUY101010:
->  			bpp = 30;
-> +			break;
->  		case DRM_FORMAT_YUV420_10BIT:
->  			bpp = 15;
->  			break;
-> @@ -1309,7 +1310,7 @@ static irqreturn_t malidp_se_irq(int irq, void *arg)
->  			break;
->  		case MW_RESTART:
->  			drm_writeback_signal_completion(&malidp->mw_connector, 0);
-> -			/* fall through to a new start */
-
-It's a shame that the compiler throws a warning here, it would've been really
-useful to keep the hint that going back to a new start is intentional without
-having to type another comment.
-
-> +			/* fall through */
->  		case MW_START:
->  			/* writeback started, need to emulate one-shot mode */
->  			hw->disable_memwrite(hwdev);
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+	tglx
