@@ -2,159 +2,81 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BD0C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD8DC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFEAB2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:29:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="IVO7KIIM"
+	by mail.kernel.org (Postfix) with ESMTP id 5A2022147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 03:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfG2D3w (ORCPT
+        id S1726675AbfG2DcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jul 2019 23:29:52 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:51983 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfG2D3w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jul 2019 23:29:52 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x6T3TmJG026343;
-        Mon, 29 Jul 2019 12:29:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6T3TmJG026343
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564370988;
-        bh=gkNAHjCczRsXqca9Q02PCJev39A+w7fs7vtgMWfTnVQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IVO7KIIMzR3PuLfW2sk/eMGLaMmtrPOAcgzlkWtxFd1RN6B8lXTwci4SJdU/tyD5m
-         k3hdhq3wyTAnwUr0nQTlMoyPz6SgCp6QkDFt1+54k3myvjhCL89IdCmXNKXxtLwzUM
-         BzzJ3KvY3DgI1NW/A6WUL2QEScxwPPgnmUcRMId4cKM9ain2ctczQSFMnBJHe3B7NR
-         A8a0SEr0AG2MJvA/4kkyVulp0+eOfY4e5yRPRB5tIT+XDhgy93sizxMr8C/QDfxchD
-         C6ZtVHPU8szdxhFHDvnWLRhQs1C7ne5x9WeqljOtiEzKoj9m/REBvLm/1Hpk91hNJs
-         FSvijY5vb+sHg==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id v6so39873455vsq.4;
-        Sun, 28 Jul 2019 20:29:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAWL3XYGKXsk0dRBiE44D9MfEC0PzW9ObMShBwINEbwME5Sh9Va7
-        eVKHleSZOn0qP7NWipJ6mkH+jRQYhrajUfaR+b4=
-X-Google-Smtp-Source: APXvYqwJ2InMcZT+uS0/jkiI9sAk8YpdCcOgKwFnQ7S4KMKoZWn8ifksFgimLBMVKGniMnfdTHxoemdxLr3HPnzi108=
-X-Received: by 2002:a67:cd1a:: with SMTP id u26mr66121186vsl.155.1564370987596;
- Sun, 28 Jul 2019 20:29:47 -0700 (PDT)
+        Sun, 28 Jul 2019 23:32:02 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57454 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726320AbfG2DcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jul 2019 23:32:02 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5D63229DBF6460DB3E5C;
+        Mon, 29 Jul 2019 11:16:26 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
+ 11:16:16 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <ronald@innovation.ch>, <dmitry.torokhov@gmail.com>,
+        <nikolas@gnu.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] Input: applespi - Fix build error
+Date:   Mon, 29 Jul 2019 11:14:55 +0800
+Message-ID: <20190729031455.59400-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20190714152817.24693-1-efremov@linux.com> <20190728100906.18847-1-efremov@linux.com>
-In-Reply-To: <20190728100906.18847-1-efremov@linux.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 29 Jul 2019 12:29:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR9Gzeh6s2QGRF55ORCt1MMSit_cagx-+Ooor_sRC1U8w@mail.gmail.com>
-Message-ID: <CAK7LNAR9Gzeh6s2QGRF55ORCt1MMSit_cagx-+Ooor_sRC1U8w@mail.gmail.com>
-Subject: Re: [PATCH] modpost: check for static EXPORT_SYMBOL* functions
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 7:09 PM Denis Efremov <efremov@linux.com> wrote:
->
-> This patch adds a check to warn about static EXPORT_SYMBOL* functions
-> during the modpost. In most of the cases, a static symbol marked for
-> exporting is an odd combination that should be fixed either by deleting
-> the exporting mark or by removing the static attribute and adding the
-> appropriate declaration to headers.
->
-> This check could help to detect the following problems:
-> 1. 550113d4e9f5 ("i2c: add newly exported functions to the header, too")
-> 2. 54638c6eaf44 ("net: phy: make exported variables non-static")
-> 3. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
-> 4. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
-> 5. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
-> 6. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
-> 7. 14b4c48bb1ce ("gve: Remove the exporting of gve_probe")
-> 8. 9b79ee9773a8 ("scsi: libsas: remove the exporting of sas_wait_eh")
-> 9. ...
->
-> Build time impact, allmodconfig, Dell XPS 15 9570 (measurements 3x):
-> $ make mrproper; make allmodconfig; time make -j12; \
->   git checkout HEAD~1; \
->   make mrproper; make allmodconfig; time make -j12
-> 1.
->    (with patch) 17635,94s user 1895,54s system 1085% cpu 29:59,22 total
->    (w/o  patch) 17275,42s user 1803,87s system 1112% cpu 28:35,66 total
-> 2.
->    (with patch) 17369,51s user 1763,28s system 1111% cpu 28:41,47 total
->    (w/o  patch) 16880,50s user 1670,93s system 1113% cpu 27:46,56 total
-> 3.
->    (with patch) 17937,88s user 1842,53s system 1109% cpu 29:42,26 total
->    (w/o  patch) 17267,55s user 1725,09s system 1111% cpu 28:28,17 total
->
-> Thus, the current implementation adds approx. 1 min for allmodconfig.
->
-> Acked-by: Emil Velikov <emil.l.velikov@gmail.com>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  scripts/mod/modpost.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->
+If CONFIG_KEYBOARD_APPLESPI=y but CONFIG_LEDS_CLASS=m
+building fails:
 
->
-> @@ -2425,6 +2443,7 @@ int main(int argc, char **argv)
->         char *dump_write = NULL, *files_source = NULL;
->         int opt;
->         int err;
-> +       size_t n;
+drivers/input/keyboard/applespi.o: In function `applespi_probe':
+applespi.c:(.text+0x1fcd): undefined reference to `devm_led_classdev_register_ext'
 
-Sorry, I missed to ask this in the previous version.
+Wrap it in LEDS_CLASS macro to fix this.
 
-If there is not a particular reason,
-may I ask you to use 'int' instead of 'size_t' here?
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 038b1a05eae6 ("Input: add Apple SPI keyboard and trackpad driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/input/keyboard/applespi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-SYMBOL_HASH_SIZE (= 1024) is small enough, and
-it will keep consistency with
-the write_dump() function in this file.
-
-If it is tedious to send a new version,
-may I fix-up 'size_t' -> 'int' ?
-
-Thanks.
-
-
->         struct ext_sym_list *extsym_iter;
->         struct ext_sym_list *extsym_start = NULL;
->
-> @@ -2520,6 +2539,19 @@ int main(int argc, char **argv)
->         if (sec_mismatch_count && sec_mismatch_fatal)
->                 fatal("modpost: Section mismatches detected.\n"
->                       "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
-> +       for (n = 0; n < SYMBOL_HASH_SIZE; n++) {
-> +               struct symbol *s = symbolhash[n];
-> +
-> +               while (s) {
-> +                       if (s->is_static)
-> +                               warn("\"%s\" [%s] is the static %s\n",
-> +                                    s->name, s->module->name,
-> +                                    export_str(s->export));
-> +
-> +                       s = s->next;
-> +               }
-> +       }
-> +
->         free(buf.p);
->
->         return err;
-> --
-> 2.21.0
->
-
-
+diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
+index acf34a5..9c50b09 100644
+--- a/drivers/input/keyboard/applespi.c
++++ b/drivers/input/keyboard/applespi.c
+@@ -1790,11 +1790,13 @@ static int applespi_probe(struct spi_device *spi)
+ 	applespi->backlight_info.default_trigger = "kbd-backlight";
+ 	applespi->backlight_info.brightness_set  = applespi_set_bl_level;
+ 
++#ifdef CONFIG_LEDS_CLASS
+ 	sts = devm_led_classdev_register(&spi->dev, &applespi->backlight_info);
+ 	if (sts)
+ 		dev_warn(&applespi->spi->dev,
+ 			 "Unable to register keyboard backlight class dev (%d)\n",
+ 			 sts);
++#endif
+ 
+ 	/* set up debugfs entries for touchpad dimensions logging */
+ 	applespi->debugfs_root = debugfs_create_dir("applespi", NULL);
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
+
