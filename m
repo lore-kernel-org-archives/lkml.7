@@ -2,122 +2,102 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2849C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C6DC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8303A2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="bvchi7hM"
+	by mail.kernel.org (Postfix) with ESMTP id 7E6D22070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:13:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564431228;
+	bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Gi9yLg8pLGohio0L8Aa4Sjm5Om/fQjg2pM3aPqrRGXwPC+wEbw7vGDF9ikxwglS5j
+	 vrXCYrCpsPYC0dYE4UWA0Ur64FPsbE/9QCo/qvDGWa8QSu7EHMfZPy8hh1W3gVZs3w
+	 IZjaDE/xbbS6lQy/1/hXIlgaY4rKt0MsDSfxeNFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730567AbfG2UNn (ORCPT
+        id S1726481AbfG2T31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:13:43 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.35]:11397 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728525AbfG2UNj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:13:39 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id E249F8787
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 15:12:32 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id sC0WhH7uMdnCesC0WhkTyz; Mon, 29 Jul 2019 15:12:32 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oENqlPZb6frT+9DV38Oo3+KZ9Fe2eujoFK1IJWgO4vw=; b=bvchi7hMrWhQPxGx54HWPe1FFE
-        9Q7FdSp3dSqUxWMZ+3xyYnsciVZgTrxHcDFC371vq/52zy+/8aD/Hz/ggxNEn2bwxK3flx8V3/g2g
-        l7sfwySfRiFiZq9P3gVtkvj/emQCy/xz3ccUV2c999hwW9IqmPuVRsCn/LXhRnjBiKzTI28sAKyHf
-        lE9nn1YYGg3ji/WXTmN+J7XAE6mIimvc6ZhHwqMzGiwyTiNWol3A4FK13CZFKKY3ZMilxo3uITFrW
-        rY27zgrimQSiK5JbrN+igpeqSesCY2ah3B+6RZf0HhxA3la4QRsbCyutGKebvwisgI03eU+eO+ByX
-        5Ufd6JwQ==;
-Received: from [187.192.11.120] (port=59540 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hsC0V-000znM-P1; Mon, 29 Jul 2019 15:12:31 -0500
-Date:   Mon, 29 Jul 2019 15:12:31 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Thomas Sailer <t.sailer@alumni.ethz.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-hams@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] net: hamradio: baycom_epp: Mark expected switch fall-through
-Message-ID: <20190729201231.GA7576@embeddedor>
+        Mon, 29 Jul 2019 15:29:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727533AbfG2T3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:29:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F714217D4;
+        Mon, 29 Jul 2019 19:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564428555;
+        bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PheJRNPBQkjYTRJP91yw8vNrqWik0wZQkQrf1+Q6ysDoQsv28Izj6D5cE58bkyLWJ
+         IPh38ehUMlznbLrrf3ewBGOxgnBNzy991+weKGDXBSHvZPUzDUOwkEnRZERdrFGJDU
+         tu6O/47HD+LuzURPc5BY7PjEctEsFwjpM3Xo/pIk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 114/293] Revert "scsi: ncr5380: Increase register polling limit"
+Date:   Mon, 29 Jul 2019 21:20:05 +0200
+Message-Id: <20190729190833.357775795@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
+References: <20190729190820.321094988@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hsC0V-000znM-P1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:59540
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+From: Finn Thain <fthain@telegraphics.com.au>
 
-This patch fixes the following warning (Building: i386):
+commit 25fcf94a2fa89dd3e73e965ebb0b38a2a4f72aa4 upstream.
 
-drivers/net/hamradio/baycom_epp.c: In function ‘transmit’:
-drivers/net/hamradio/baycom_epp.c:491:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    if (i) {
-       ^
-drivers/net/hamradio/baycom_epp.c:504:3: note: here
-   default:  /* fall through */
-   ^~~~~~~
+This reverts commit 4822827a69d7cd3bc5a07b7637484ebd2cf88db6.
 
-Notice that, in this particular case, the code comment is
-modified in accordance with what GCC is expecting to find.
+The purpose of that commit was to suppress a timeout warning message which
+appeared to be caused by target latency. But suppressing the warning is
+undesirable as the warning may indicate a messed up transfer count.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Another problem with that commit is that 15 ms is too long to keep
+interrupts disabled as interrupt latency can cause system clock drift and
+other problems.
+
+Cc: Michael Schmitz <schmitzmic@gmail.com>
+Cc: stable@vger.kernel.org
+Fixes: 4822827a69d7 ("scsi: ncr5380: Increase register polling limit")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/hamradio/baycom_epp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/NCR5380.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/hamradio/baycom_epp.c b/drivers/net/hamradio/baycom_epp.c
-index daab2c07d891..9303aeb2595f 100644
---- a/drivers/net/hamradio/baycom_epp.c
-+++ b/drivers/net/hamradio/baycom_epp.c
-@@ -500,8 +500,9 @@ static int transmit(struct baycom_state *bc, int cnt, unsigned char stat)
- 				}
- 				break;
- 			}
-+			/* fall through */
+--- a/drivers/scsi/NCR5380.h
++++ b/drivers/scsi/NCR5380.h
+@@ -235,7 +235,7 @@ struct NCR5380_cmd {
+ #define NCR5380_PIO_CHUNK_SIZE		256
  
--		default:  /* fall through */
-+		default:
- 			if (bc->hdlctx.calibrate <= 0)
- 				return 0;
- 			i = min_t(int, cnt, bc->hdlctx.calibrate);
--- 
-2.22.0
+ /* Time limit (ms) to poll registers when IRQs are disabled, e.g. during PDMA */
+-#define NCR5380_REG_POLL_TIME		15
++#define NCR5380_REG_POLL_TIME		10
+ 
+ static inline struct scsi_cmnd *NCR5380_to_scmd(struct NCR5380_cmd *ncmd_ptr)
+ {
+
 
