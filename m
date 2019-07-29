@@ -2,142 +2,76 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB77C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EB3C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD01206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF776216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 14:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfG2O2c (ORCPT
+        id S1728151AbfG2O2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 10:28:32 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:40090 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726478AbfG2O2b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 10:28:31 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x6TEP6AT025572;
-        Mon, 29 Jul 2019 17:25:06 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id 5665861FD4; Mon, 29 Jul 2019 17:25:06 +0300 (IDT)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     broonie@kernel.org, dwmw2@infradead.org,
-        computersforpeace@gmail.com, marek.vasut@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        bbrezillon@kernel.org, yogeshnarayan.gaur@nxp.com,
-        tudor.ambarus@microchip.com, gregkh@linuxfoundation.org,
-        frieder.schrempf@exceet.de, tglx@linutronix.de
-Cc:     linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
-Subject: [RFC v1 1/3] spi: spi-mem: add spi-mem setup function
-Date:   Mon, 29 Jul 2019 17:25:02 +0300
-Message-Id: <20190729142504.188336-2-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190729142504.188336-1-tmaimon77@gmail.com>
-References: <20190729142504.188336-1-tmaimon77@gmail.com>
+        Mon, 29 Jul 2019 10:28:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:45084 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbfG2O2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 10:28:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0306A28;
+        Mon, 29 Jul 2019 07:28:48 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB0C13F71F;
+        Mon, 29 Jul 2019 07:28:46 -0700 (PDT)
+Subject: Re: [PATCH 3/5] sched/fair: rework load_balance
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Phil Auld <pauld@redhat.com>
+References: <1563523105-24673-1-git-send-email-vincent.guittot@linaro.org>
+ <1563523105-24673-4-git-send-email-vincent.guittot@linaro.org>
+ <d55f906e-6e91-9f49-5c2c-7ec2e6bd68b0@arm.com>
+ <CAKfTPtD2hDxnHSaa5C_Jrtabb_ogJSgkLE=5UPyystKZqUmzWA@mail.gmail.com>
+ <4d3a67f5-c9c4-6397-7405-6f0efbd49d5c@arm.com>
+ <CAKfTPtBE5fzycHk33rf7Bky-tYSeCXaKd9oGR5cgaghzbL2TvA@mail.gmail.com>
+ <aff49e6a-b4d3-baae-9124-3d5bb5abdbfe@arm.com>
+ <CAKfTPtBTH10k56s-sU3TX+vL6Xas-QArLW-CBz7ZeqU0BNzMQA@mail.gmail.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <58f79135-4b6c-2507-3f5d-e3c7704bf8b3@arm.com>
+Date:   Mon, 29 Jul 2019 15:28:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAKfTPtBTH10k56s-sU3TX+vL6Xas-QArLW-CBz7ZeqU0BNzMQA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add spi-mem setup function support SPI memory
-operations the spi-mem setup function running
-after the spi-mem probe function if the spi-mem
-setup function implemented.
+On 26/07/2019 15:47, Vincent Guittot wrote:
+[...]
+>> If CPU0 runs the load balancer, balancing utilization would mean pulling
+>> 2 tasks from CPU1 to reach the domain-average of 40%. The good side of this
+>> is that we could save ourselves from running some newidle balances, but
+>> I'll admit that's all quite "finger in the air".
+> 
+> Don't forget that scheduler also selects a cpu when task wakeup and
+> should cope with such situation
+> 
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- drivers/spi/spi-mem.c       | 27 ++++++++++++++++++++++++++-
- include/linux/spi/spi-mem.h |  4 ++++
- 2 files changed, 30 insertions(+), 1 deletion(-)
+Right, although I'm not sure even the slow wakeup path is any good at
+balancing utilization.
 
-diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
-index 9f0fa9f3116d..21fe3a75d636 100644
---- a/drivers/spi/spi-mem.c
-+++ b/drivers/spi/spi-mem.c
-@@ -398,6 +398,26 @@ const char *spi_mem_get_name(struct spi_mem *mem)
- }
- EXPORT_SYMBOL_GPL(spi_mem_get_name);
- 
-+/**
-+ * spi_mem_setup() - Execute spi memory setup
-+ * @mem: the SPI memory
-+ *
-+ * This function allows SPI mem users to execute spi memory
-+ * setup after the probe finished.
-+ *
-+ * Return: 0 in case of success, a negative error code otherwise.
-+ */
-+int spi_mem_setup(struct spi_mem *mem)
-+{
-+	struct spi_controller *ctlr = mem->spi->controller;
-+
-+	if (ctlr->mem_ops && ctlr->mem_ops->setup)
-+		return ctlr->mem_ops->setup(mem);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(spi_mem_setup);
-+
- /**
-  * spi_mem_adjust_op_size() - Adjust the data size of a SPI mem operation to
-  *			      match controller limitations
-@@ -723,6 +743,7 @@ static int spi_mem_probe(struct spi_device *spi)
- 	struct spi_mem_driver *memdrv = to_spi_mem_drv(spi->dev.driver);
- 	struct spi_controller *ctlr = spi->controller;
- 	struct spi_mem *mem;
-+	int ret;
- 
- 	mem = devm_kzalloc(&spi->dev, sizeof(*mem), GFP_KERNEL);
- 	if (!mem)
-@@ -740,7 +761,11 @@ static int spi_mem_probe(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, mem);
- 
--	return memdrv->probe(mem);
-+	ret = memdrv->probe(mem);
-+	if (ret)
-+		return ret;
-+
-+	return spi_mem_setup(mem);
- }
- 
- static int spi_mem_remove(struct spi_device *spi)
-diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
-index af9ff2f0f1b2..5f7d20bd2b09 100644
---- a/include/linux/spi/spi-mem.h
-+++ b/include/linux/spi/spi-mem.h
-@@ -222,6 +222,7 @@ static inline void *spi_mem_get_drvdata(struct spi_mem *mem)
-  *	      Note that if the implementation of this function allocates memory
-  *	      dynamically, then it should do so with devm_xxx(), as we don't
-  *	      have a ->free_name() function.
-+ * @setup: execute a SPI memory setup
-  * @dirmap_create: create a direct mapping descriptor that can later be used to
-  *		   access the memory device. This method is optional
-  * @dirmap_destroy: destroy a memory descriptor previous created by
-@@ -256,6 +257,7 @@ struct spi_controller_mem_ops {
- 	int (*exec_op)(struct spi_mem *mem,
- 		       const struct spi_mem_op *op);
- 	const char *(*get_name)(struct spi_mem *mem);
-+	int (*setup)(struct spi_mem *mem);
- 	int (*dirmap_create)(struct spi_mem_dirmap_desc *desc);
- 	void (*dirmap_destroy)(struct spi_mem_dirmap_desc *desc);
- 	ssize_t (*dirmap_read)(struct spi_mem_dirmap_desc *desc,
-@@ -334,6 +336,8 @@ int spi_mem_exec_op(struct spi_mem *mem,
- 
- const char *spi_mem_get_name(struct spi_mem *mem);
- 
-+int spi_mem_setup(struct spi_mem *mem);
-+
- struct spi_mem_dirmap_desc *
- spi_mem_dirmap_create(struct spi_mem *mem,
- 		      const struct spi_mem_dirmap_info *info);
--- 
-2.18.0
-
+>>
+>>>> happen, but it'd be a shame to repeatedly do this when we could
+>>>> preemptively balance utilization.
+>>>>
