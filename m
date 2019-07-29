@@ -2,52 +2,52 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E929AC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34E7C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBEEF2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B19442171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428578;
-	bh=/JwY3h9nUS0LG/9eBVEMdwzjPajL0hD0NRE551e2B1k=;
+	s=default; t=1564428583;
+	bh=l3KunXrgj1/1PR7Nhw1HPBgQkLWACq+ht0INIonY6F0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iuKGykBl1dvbIB31nfcPmmBUi544VzQuRFsn0uD9K1ao+E4hEJuyvNtH8vW3RH2Z1
-	 WqKq2b9qoBAcQcg0XTH6jb7m9zyoeiRnLfW/wK2xuEHDh24h3bYOJWpYeNqcLhx/+s
-	 aqlXFDBmLIzj4hzzfuS5yOobXh/Gq2PuwZQnpHCw=
+	b=NXJRH5Xd0b+P33rHRfInUlExnenEpfLZSItgChSoUQEPashWTQ8/9saL58VFJNd6b
+	 71GCDciuHHNWhnyRAFNvpkxV4ikndihVPeco7m74o9XuFLXfbLjZ0vO98pG8HxowNS
+	 vPT7LMABpJk2yiIQ7TKty5j9VbSGyBh3frZ4KMy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbfG2T3h (ORCPT
+        id S1729054AbfG2T3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:29:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42196 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:29:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387545AbfG2T3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:29:32 -0400
+        id S1728897AbfG2T3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:29:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 927152171F;
-        Mon, 29 Jul 2019 19:29:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B38CF21655;
+        Mon, 29 Jul 2019 19:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428571;
-        bh=/JwY3h9nUS0LG/9eBVEMdwzjPajL0hD0NRE551e2B1k=;
+        s=default; t=1564428577;
+        bh=l3KunXrgj1/1PR7Nhw1HPBgQkLWACq+ht0INIonY6F0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s1a084XKqDhePyu8RnIi+yurtCbTBkSMD+2DYDUBS5ZLWFNxuzuGRvn4SDhyXvhah
-         Xo82N/1/hDilgdTUpWfIH9AV1ecAt9HHJUzImKMEj+kX5TNXVqhfTwCK7TjIoKM7Za
-         yuzA59VRLzGE60qknfLUsOZ/CbLQjOaEcgqjkv8k=
+        b=fwmS1x6mfw61d6HDb6p0F9faSxxiDHjYBScgW80a+RdvpXE36klmL38PypFklSzoi
+         kGNQlwpaM4/zEys3as16DpjujVRJO859Hh9tjhHDnVR6sN88ushuvDsHCoDATA6bSE
+         zhHWPPrh789y8ZnCk2+f4f1Q9aumgaGxNO5KrxDE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/293] gtp: fix suspicious RCU usage
-Date:   Mon, 29 Jul 2019 21:19:52 +0200
-Message-Id: <20190729190832.381864907@linuxfoundation.org>
+        stable@vger.kernel.org, Cfir Cohen <cfir@google.com>,
+        Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 120/293] crypto: ccp - Validate the the error value used to index error messages
+Date:   Mon, 29 Jul 2019 21:20:11 +0200
+Message-Id: <20190729190833.779164353@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,92 +60,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e198987e7dd7d3645a53875151cd6f8fc425b706 ]
+From: Hook, Gary <Gary.Hook@amd.com>
 
-gtp_encap_enable_socket() and gtp_encap_destroy() are not protected
-by rcu_read_lock(). and it's not safe to write sk->sk_user_data.
-This patch make these functions to use lock_sock() instead of
-rcu_dereference_sk_user_data().
+commit 52393d617af7b554f03531e6756facf2ea687d2e upstream.
 
-Test commands:
-    gtp-link add gtp1
+The error code read from the queue status register is only 6 bits wide,
+but we need to verify its value is within range before indexing the error
+messages.
 
-Splat looks like:
-[   83.238315] =============================
-[   83.239127] WARNING: suspicious RCU usage
-[   83.239702] 5.2.0-rc6+ #49 Not tainted
-[   83.240268] -----------------------------
-[   83.241205] drivers/net/gtp.c:799 suspicious rcu_dereference_check() usage!
-[   83.243828]
-[   83.243828] other info that might help us debug this:
-[   83.243828]
-[   83.246325]
-[   83.246325] rcu_scheduler_active = 2, debug_locks = 1
-[   83.247314] 1 lock held by gtp-link/1008:
-[   83.248523]  #0: 0000000017772c7f (rtnl_mutex){+.+.}, at: __rtnl_newlink+0x5f5/0x11b0
-[   83.251503]
-[   83.251503] stack backtrace:
-[   83.252173] CPU: 0 PID: 1008 Comm: gtp-link Not tainted 5.2.0-rc6+ #49
-[   83.253271] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   83.254562] Call Trace:
-[   83.254995]  dump_stack+0x7c/0xbb
-[   83.255567]  gtp_encap_enable_socket+0x2df/0x360 [gtp]
-[   83.256415]  ? gtp_find_dev+0x1a0/0x1a0 [gtp]
-[   83.257161]  ? memset+0x1f/0x40
-[   83.257843]  gtp_newlink+0x90/0xa21 [gtp]
-[   83.258497]  ? __netlink_ns_capable+0xc3/0xf0
-[   83.259260]  __rtnl_newlink+0xb9f/0x11b0
-[   83.260022]  ? rtnl_link_unregister+0x230/0x230
-[ ... ]
+Fixes: 81422badb3907 ("crypto: ccp - Make syslog errors human-readable")
+Cc: <stable@vger.kernel.org>
+Reported-by: Cfir Cohen <cfir@google.com>
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 1e3a3abd8b28 ("gtp: make GTP sockets in gtp_newlink optional")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/crypto/ccp/ccp-dev.c |   96 ++++++++++++++++++++++---------------------
+ drivers/crypto/ccp/ccp-dev.h |    2 
+ 2 files changed, 52 insertions(+), 46 deletions(-)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index dba3869b61be..2756edd84abc 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -293,12 +293,14 @@ static void gtp_encap_destroy(struct sock *sk)
+--- a/drivers/crypto/ccp/ccp-dev.c
++++ b/drivers/crypto/ccp/ccp-dev.c
+@@ -35,56 +35,62 @@ struct ccp_tasklet_data {
+ };
+ 
+ /* Human-readable error strings */
++#define CCP_MAX_ERROR_CODE	64
+ static char *ccp_error_codes[] = {
+ 	"",
+-	"ERR 01: ILLEGAL_ENGINE",
+-	"ERR 02: ILLEGAL_KEY_ID",
+-	"ERR 03: ILLEGAL_FUNCTION_TYPE",
+-	"ERR 04: ILLEGAL_FUNCTION_MODE",
+-	"ERR 05: ILLEGAL_FUNCTION_ENCRYPT",
+-	"ERR 06: ILLEGAL_FUNCTION_SIZE",
+-	"ERR 07: Zlib_MISSING_INIT_EOM",
+-	"ERR 08: ILLEGAL_FUNCTION_RSVD",
+-	"ERR 09: ILLEGAL_BUFFER_LENGTH",
+-	"ERR 10: VLSB_FAULT",
+-	"ERR 11: ILLEGAL_MEM_ADDR",
+-	"ERR 12: ILLEGAL_MEM_SEL",
+-	"ERR 13: ILLEGAL_CONTEXT_ID",
+-	"ERR 14: ILLEGAL_KEY_ADDR",
+-	"ERR 15: 0xF Reserved",
+-	"ERR 16: Zlib_ILLEGAL_MULTI_QUEUE",
+-	"ERR 17: Zlib_ILLEGAL_JOBID_CHANGE",
+-	"ERR 18: CMD_TIMEOUT",
+-	"ERR 19: IDMA0_AXI_SLVERR",
+-	"ERR 20: IDMA0_AXI_DECERR",
+-	"ERR 21: 0x15 Reserved",
+-	"ERR 22: IDMA1_AXI_SLAVE_FAULT",
+-	"ERR 23: IDMA1_AIXI_DECERR",
+-	"ERR 24: 0x18 Reserved",
+-	"ERR 25: ZLIBVHB_AXI_SLVERR",
+-	"ERR 26: ZLIBVHB_AXI_DECERR",
+-	"ERR 27: 0x1B Reserved",
+-	"ERR 27: ZLIB_UNEXPECTED_EOM",
+-	"ERR 27: ZLIB_EXTRA_DATA",
+-	"ERR 30: ZLIB_BTYPE",
+-	"ERR 31: ZLIB_UNDEFINED_SYMBOL",
+-	"ERR 32: ZLIB_UNDEFINED_DISTANCE_S",
+-	"ERR 33: ZLIB_CODE_LENGTH_SYMBOL",
+-	"ERR 34: ZLIB _VHB_ILLEGAL_FETCH",
+-	"ERR 35: ZLIB_UNCOMPRESSED_LEN",
+-	"ERR 36: ZLIB_LIMIT_REACHED",
+-	"ERR 37: ZLIB_CHECKSUM_MISMATCH0",
+-	"ERR 38: ODMA0_AXI_SLVERR",
+-	"ERR 39: ODMA0_AXI_DECERR",
+-	"ERR 40: 0x28 Reserved",
+-	"ERR 41: ODMA1_AXI_SLVERR",
+-	"ERR 42: ODMA1_AXI_DECERR",
+-	"ERR 43: LSB_PARITY_ERR",
++	"ILLEGAL_ENGINE",
++	"ILLEGAL_KEY_ID",
++	"ILLEGAL_FUNCTION_TYPE",
++	"ILLEGAL_FUNCTION_MODE",
++	"ILLEGAL_FUNCTION_ENCRYPT",
++	"ILLEGAL_FUNCTION_SIZE",
++	"Zlib_MISSING_INIT_EOM",
++	"ILLEGAL_FUNCTION_RSVD",
++	"ILLEGAL_BUFFER_LENGTH",
++	"VLSB_FAULT",
++	"ILLEGAL_MEM_ADDR",
++	"ILLEGAL_MEM_SEL",
++	"ILLEGAL_CONTEXT_ID",
++	"ILLEGAL_KEY_ADDR",
++	"0xF Reserved",
++	"Zlib_ILLEGAL_MULTI_QUEUE",
++	"Zlib_ILLEGAL_JOBID_CHANGE",
++	"CMD_TIMEOUT",
++	"IDMA0_AXI_SLVERR",
++	"IDMA0_AXI_DECERR",
++	"0x15 Reserved",
++	"IDMA1_AXI_SLAVE_FAULT",
++	"IDMA1_AIXI_DECERR",
++	"0x18 Reserved",
++	"ZLIBVHB_AXI_SLVERR",
++	"ZLIBVHB_AXI_DECERR",
++	"0x1B Reserved",
++	"ZLIB_UNEXPECTED_EOM",
++	"ZLIB_EXTRA_DATA",
++	"ZLIB_BTYPE",
++	"ZLIB_UNDEFINED_SYMBOL",
++	"ZLIB_UNDEFINED_DISTANCE_S",
++	"ZLIB_CODE_LENGTH_SYMBOL",
++	"ZLIB _VHB_ILLEGAL_FETCH",
++	"ZLIB_UNCOMPRESSED_LEN",
++	"ZLIB_LIMIT_REACHED",
++	"ZLIB_CHECKSUM_MISMATCH0",
++	"ODMA0_AXI_SLVERR",
++	"ODMA0_AXI_DECERR",
++	"0x28 Reserved",
++	"ODMA1_AXI_SLVERR",
++	"ODMA1_AXI_DECERR",
+ };
+ 
+-void ccp_log_error(struct ccp_device *d, int e)
++void ccp_log_error(struct ccp_device *d, unsigned int e)
  {
- 	struct gtp_dev *gtp;
- 
--	gtp = rcu_dereference_sk_user_data(sk);
-+	lock_sock(sk);
-+	gtp = sk->sk_user_data;
- 	if (gtp) {
- 		udp_sk(sk)->encap_type = 0;
- 		rcu_assign_sk_user_data(sk, NULL);
- 		sock_put(sk);
- 	}
-+	release_sock(sk);
+-	dev_err(d->dev, "CCP error: %s (0x%x)\n", ccp_error_codes[e], e);
++	if (WARN_ON(e >= CCP_MAX_ERROR_CODE))
++		return;
++
++	if (e < ARRAY_SIZE(ccp_error_codes))
++		dev_err(d->dev, "CCP error %d: %s\n", e, ccp_error_codes[e]);
++	else
++		dev_err(d->dev, "CCP error %d: Unknown Error\n", e);
  }
  
- static void gtp_encap_disable_sock(struct sock *sk)
-@@ -798,7 +800,8 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
- 		goto out_sock;
- 	}
+ /* List of CCPs, CCP count, read-write access lock, and access functions
+--- a/drivers/crypto/ccp/ccp-dev.h
++++ b/drivers/crypto/ccp/ccp-dev.h
+@@ -632,7 +632,7 @@ struct ccp5_desc {
+ void ccp_add_device(struct ccp_device *ccp);
+ void ccp_del_device(struct ccp_device *ccp);
  
--	if (rcu_dereference_sk_user_data(sock->sk)) {
-+	lock_sock(sock->sk);
-+	if (sock->sk->sk_user_data) {
- 		sk = ERR_PTR(-EBUSY);
- 		goto out_sock;
- 	}
-@@ -814,6 +817,7 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
- 	setup_udp_tunnel_sock(sock_net(sock->sk), sock, &tuncfg);
+-extern void ccp_log_error(struct ccp_device *, int);
++extern void ccp_log_error(struct ccp_device *, unsigned int);
  
- out_sock:
-+	release_sock(sock->sk);
- 	sockfd_put(sock);
- 	return sk;
- }
--- 
-2.20.1
-
+ struct ccp_device *ccp_alloc_struct(struct sp_device *sp);
+ bool ccp_queues_suspended(struct ccp_device *ccp);
 
 
