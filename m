@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8038C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3F4C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B987C21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F6B21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429780;
-	bh=ljmbUjArS7s9I0wGp7O46tcK9Gu6RtaNGsPsw8xQges=;
+	s=default; t=1564429783;
+	bh=fR5jMLCfHimJHXkc/0a1Nk2MNCpvdCSQPZ0pDCRTDmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1owvrFfE81fbwbNrfFh2eb6kBXZLcFg3HgY+ggwNbSa1T6TgniLLmO+CCd4PDFVOh
-	 DyMOOoUPPALWhdwLIaK2aJXD+yo0GPv0OSVf1oDrPx+i8UVNqv6GAJpPWrYW9iLhTv
-	 rH9sIz4pmTk6EgrXz42F/9/+Rm9QrtKd+T5AOud8=
+	b=dCZpX4qFxtu7xI8bphkbWazD7TEtjItslh6TNIqqPrWsGdpO9QAViF+9zEHS7GhSm
+	 Ae0GQ5hmh1g18iIXWhgNpR7oH/M1SCEHHvfkyubXuZvFab5vO5ue3DhQMRPhiHRNCU
+	 eEdSJY6Jf5FLbnE7B7MUIVG3ElL5/LB8nvNBew4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390574AbfG2Ttj (ORCPT
+        id S2390580AbfG2Ttm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:49:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40212 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:49:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390559AbfG2Tth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:49:37 -0400
+        id S2387801AbfG2Ttk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:49:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2D542171F;
-        Mon, 29 Jul 2019 19:49:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D5BB2054F;
+        Mon, 29 Jul 2019 19:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429776;
-        bh=ljmbUjArS7s9I0wGp7O46tcK9Gu6RtaNGsPsw8xQges=;
+        s=default; t=1564429779;
+        bh=fR5jMLCfHimJHXkc/0a1Nk2MNCpvdCSQPZ0pDCRTDmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZoTr8s+m2R7uNtipbWZIi7BmLmSXPoafkeN3Ttt/+B4m1ZtfwsCI8Njvj1hA7vfOa
-         VsmPsqkIzKCrCu4JWFOT2d0oyYL7UogrDincb/y8Xs2FRkTrUtCBA2LaWaSXAtmGZH
-         nY/6t5HIhFOd+E2S2/J05e+9zeEEnN8xm3rd+oMk=
+        b=Scgb+/Epc1eeX61nt2QXiSyWld9vg3fwZZYobr167UCZba5VOOZfaWQOITHkkVGQo
+         bp2Bi04sdpouux2h+Du2vNrGR9UVK6g8Tj76kcqxWaJQeLxPFnj6M5cEYKmLnAcNNM
+         0eizb3AyRfsfzP/L880KRbYGxnLNPJK09/HFp1aI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 092/215] powerpc/rtas: retry when cpu offline races with suspend/migration
-Date:   Mon, 29 Jul 2019 21:21:28 +0200
-Message-Id: <20190729190755.293241211@linuxfoundation.org>
+Subject: [PATCH 5.2 093/215] fixdep: check return value of printf() and putchar()
+Date:   Mon, 29 Jul 2019 21:21:29 +0200
+Message-Id: <20190729190755.429852567@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -60,53 +60,183 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9fb603050ffd94f8127df99c699cca2f575eb6a0 ]
+[ Upstream commit 6f9ac9f4427ec0470ccffbf852cfaf326677cc21 ]
 
-The protocol for suspending or migrating an LPAR requires all present
-processor threads to enter H_JOIN. So if we have threads offline, we
-have to temporarily bring them up. This can race with administrator
-actions such as SMT state changes. As of dfd718a2ed1f ("powerpc/rtas:
-Fix a potential race between CPU-Offline & Migration"),
-rtas_ibm_suspend_me() accounts for this, but errors out with -EBUSY
-for what almost certainly is a transient condition in any reasonable
-scenario.
+When there is not enough space on your storage device, the build will
+fail with 'No space left on device' error message.
 
-Callers of rtas_ibm_suspend_me() already retry when -EAGAIN is
-returned, and it is typical during a migration for that to happen
-repeatedly for several minutes polling the H_VASI_STATE hcall result
-before proceeding to the next stage.
+The reason is obvious from the message, so you will free up some disk
+space, then you will resume the build.
 
-So return -EAGAIN instead of -EBUSY when this race is
-encountered. Additionally: logging this event is still appropriate but
-use pr_info instead of pr_err; and remove use of unlikely() while here
-as this is not a hot path at all.
+However, sometimes you may still see a mysterious error message:
 
-Fixes: dfd718a2ed1f ("powerpc/rtas: Fix a potential race between CPU-Offline & Migration")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+  unterminated call to function 'wildcard': missing ')'.
+
+If you run out of the disk space, fixdep may end up with generating
+incomplete .*.cmd files.
+
+For example, if the disk-full error occurs while fixdep is running
+print_dep(), the .*.cmd might be truncated like this:
+
+   $(wildcard include/config/
+
+When you run 'make' next time, this broken .*.cmd will be included,
+then Make will terminate parsing since it is a wrong syntax.
+
+Once this happens, you need to run 'make clean' or delete the broken
+.*.cmd file manually.
+
+Even if you do not see any error message, the .*.cmd files after any
+error could be potentially incomplete, and unreliable. You may miss
+the re-compilation due to missing header dependency.
+
+If printf() cannot output the string for disk shortage or whatever
+reason, it returns a negative value, but currently fixdep does not
+check it at all. Consequently, fixdep *successfully* generates a
+broken .*.cmd file. Make never notices that since fixdep exits with 0,
+which means success.
+
+Given the intended usage of fixdep, it must respect the return value
+of not only malloc(), but also printf() and putchar().
+
+This seems a long-standing issue since the introduction of fixdep.
+
+In old days, Kbuild tried to provide an extra safety by letting fixdep
+output to a temporary file and renaming it after everything is done:
+
+  scripts/basic/fixdep $(depfile) $@ '$(make-cmd)' > $(dot-target).tmp;\
+  rm -f $(depfile);                                                    \
+  mv -f $(dot-target).tmp $(dot-target).cmd)
+
+It was no help to avoid the current issue; fixdep successfully created
+a truncated tmp file, which would be renamed to a .*.cmd file.
+
+This problem should be fixed by propagating the error status to the
+build system because:
+
+[1] Since commit 9c2af1c7377a ("kbuild: add .DELETE_ON_ERROR special
+    target"), Make will delete the target automatically on any failure
+    in the recipe.
+
+[2] Since commit 392885ee82d3 ("kbuild: let fixdep directly write to
+    .*.cmd files"), .*.cmd file is included only when the corresponding
+    target already exists.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/rtas.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ scripts/basic/fixdep.c | 51 +++++++++++++++++++++++++++++++++---------
+ 1 file changed, 41 insertions(+), 10 deletions(-)
 
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index b824f4c69622..fff2eb22427d 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -980,10 +980,9 @@ int rtas_ibm_suspend_me(u64 handle)
- 	cpu_hotplug_disable();
+diff --git a/scripts/basic/fixdep.c b/scripts/basic/fixdep.c
+index facbd603adf6..9ba47b0a47b9 100644
+--- a/scripts/basic/fixdep.c
++++ b/scripts/basic/fixdep.c
+@@ -99,6 +99,7 @@
+ #include <unistd.h>
+ #include <fcntl.h>
+ #include <string.h>
++#include <stdarg.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <ctype.h>
+@@ -109,6 +110,36 @@ static void usage(void)
+ 	exit(1);
+ }
  
- 	/* Check if we raced with a CPU-Offline Operation */
--	if (unlikely(!cpumask_equal(cpu_present_mask, cpu_online_mask))) {
--		pr_err("%s: Raced against a concurrent CPU-Offline\n",
--		       __func__);
--		atomic_set(&data.error, -EBUSY);
-+	if (!cpumask_equal(cpu_present_mask, cpu_online_mask)) {
-+		pr_info("%s: Raced against a concurrent CPU-Offline\n", __func__);
-+		atomic_set(&data.error, -EAGAIN);
- 		goto out_hotplug_enable;
++/*
++ * In the intended usage of this program, the stdout is redirected to .*.cmd
++ * files. The return value of printf() and putchar() must be checked to catch
++ * any error, e.g. "No space left on device".
++ */
++static void xprintf(const char *format, ...)
++{
++	va_list ap;
++	int ret;
++
++	va_start(ap, format);
++	ret = vprintf(format, ap);
++	if (ret < 0) {
++		perror("fixdep");
++		exit(1);
++	}
++	va_end(ap);
++}
++
++static void xputchar(int c)
++{
++	int ret;
++
++	ret = putchar(c);
++	if (ret == EOF) {
++		perror("fixdep");
++		exit(1);
++	}
++}
++
+ /*
+  * Print out a dependency path from a symbol name
+  */
+@@ -116,7 +147,7 @@ static void print_dep(const char *m, int slen, const char *dir)
+ {
+ 	int c, prev_c = '/', i;
+ 
+-	printf("    $(wildcard %s/", dir);
++	xprintf("    $(wildcard %s/", dir);
+ 	for (i = 0; i < slen; i++) {
+ 		c = m[i];
+ 		if (c == '_')
+@@ -124,10 +155,10 @@ static void print_dep(const char *m, int slen, const char *dir)
+ 		else
+ 			c = tolower(c);
+ 		if (c != '/' || prev_c != '/')
+-			putchar(c);
++			xputchar(c);
+ 		prev_c = c;
+ 	}
+-	printf(".h) \\\n");
++	xprintf(".h) \\\n");
+ }
+ 
+ struct item {
+@@ -324,13 +355,13 @@ static void parse_dep_file(char *m, const char *target)
+ 				 */
+ 				if (!saw_any_target) {
+ 					saw_any_target = 1;
+-					printf("source_%s := %s\n\n",
+-					       target, m);
+-					printf("deps_%s := \\\n", target);
++					xprintf("source_%s := %s\n\n",
++						target, m);
++					xprintf("deps_%s := \\\n", target);
+ 				}
+ 				is_first_dep = 0;
+ 			} else {
+-				printf("  %s \\\n", m);
++				xprintf("  %s \\\n", m);
+ 			}
+ 
+ 			buf = read_file(m);
+@@ -353,8 +384,8 @@ static void parse_dep_file(char *m, const char *target)
+ 		exit(1);
  	}
  
+-	printf("\n%s: $(deps_%s)\n\n", target, target);
+-	printf("$(deps_%s):\n", target);
++	xprintf("\n%s: $(deps_%s)\n\n", target, target);
++	xprintf("$(deps_%s):\n", target);
+ }
+ 
+ int main(int argc, char *argv[])
+@@ -369,7 +400,7 @@ int main(int argc, char *argv[])
+ 	target = argv[2];
+ 	cmdline = argv[3];
+ 
+-	printf("cmd_%s := %s\n\n", target, cmdline);
++	xprintf("cmd_%s := %s\n\n", target, cmdline);
+ 
+ 	buf = read_file(depfile);
+ 	parse_dep_file(buf, target);
 -- 
 2.20.1
 
