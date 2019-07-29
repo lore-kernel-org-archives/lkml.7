@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E123C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843D5C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E3C21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482DF20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430434;
-	bh=EHOYCqdFJJuNXpQX4tmYZLiS2CDBP0SO1pXydWmDMgA=;
+	s=default; t=1564430438;
+	bh=tX+IshYVTHGNNujMt94bhRNsrEcqv6riFvKMfNSTxh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wF99uty5GnPO9uWX5EmXIsmlN7A6GD5pi2YFu7EYSsMXt4qfbrFujErxxLiK3/1sE
-	 y1ul22nAGtee5obR4bWVRfafAu8+9IKsHKnQKKWLSPPW+sVTDuPEiQ5kY9XzpsmuIg
-	 02HmiwrEdfvK3WFJOQCWqRyrUx8uQqLLgeyRbnCE=
+	b=HQIcmlDiPMcx8msXd25YNR5hoPxDVti6p5clf1OMM4H9exIC52BMySdgZzF/8YJzU
+	 /8FMfh/odWCxGseX6VkxVfBSIinhae4zzHJroP4jUf+ldZi1T753SK1lSErW939JRv
+	 XwkjEkixIhJb7Vy7JCZPu9qIwWCxSlPT6MRS+/f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403908AbfG2Twd (ORCPT
+        id S2391095AbfG2UAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:52:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44136 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 16:00:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403753AbfG2TwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:52:20 -0400
+        id S2390436AbfG2Tw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:52:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D159B21655;
-        Mon, 29 Jul 2019 19:52:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF0EB217D7;
+        Mon, 29 Jul 2019 19:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429939;
-        bh=EHOYCqdFJJuNXpQX4tmYZLiS2CDBP0SO1pXydWmDMgA=;
+        s=default; t=1564429948;
+        bh=tX+IshYVTHGNNujMt94bhRNsrEcqv6riFvKMfNSTxh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HbMxJHTsqNai3n1kJCxjN0MgW/les2qLI5yvwOsaaswjYwd9dmtTL1u5B4vSMQU6x
-         PuOLxgv4fYcrkTKvI6sv9Kq59R/L53gaTI4a4M7064wd6yeVhlytjiOXtCgupYT3pv
-         oKFqRkD2CTAnUpmpx+TB1++gqNF05g/VXVUJqaVo=
+        b=QagjrEMy8rQf8huRXDWemO/3rv2kWKUhkXjwdAbrB9lao//Bb97dTjgbSZMuADJx9
+         bleVdpR991GxIrJhbouajBqwLSJyTmLVLhAJ9uymResH8wqyzxdlmI9BzfZqgz7MfC
+         nqQbJok7j1MeK0FLA3l8gYLdBx/SZ6lKEJSM7AuU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Minghuan Lian <Minghuan.Lian@nxp.com>,
-        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 117/215] PCI: mobiveil: Initialize Primary/Secondary/Subordinate bus numbers
-Date:   Mon, 29 Jul 2019 21:21:53 +0200
-Message-Id: <20190729190759.367430013@linuxfoundation.org>
+Subject: [PATCH 5.2 146/215] platform/x86: Fix PCENGINES_APU2 Kconfig warning
+Date:   Mon, 29 Jul 2019 21:22:22 +0200
+Message-Id: <20190729190805.047820359@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -62,40 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6f3ab451aa5c2cbff33197d82fe8489cbd55ad91 ]
+[ Upstream commit 7d67c8ac25fbc66ee254aa3e33329d1c9bc152ce ]
 
-The reset value of Primary, Secondary and Subordinate bus numbers is
-zero which is a broken setup.
+Fix Kconfig warning for PCENGINES_APU2 symbol:
 
-Program a sensible default value for Primary/Secondary/Subordinate
-bus numbers.
+WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
+  Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
+  Selected by [y]:
+  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
 
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
+  Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
+  Selected by [y]:
+  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
+
+Add GPIOLIB dependency to fix it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-mobiveil.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/platform/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index 88e9b70081fc..e4a1964e1b43 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -501,6 +501,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 		return err;
- 	}
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 5d5cc6111081..7c2fd1d72e18 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1317,7 +1317,7 @@ config HUAWEI_WMI
  
-+	/* setup bus numbers */
-+	value = csr_readl(pcie, PCI_PRIMARY_BUS);
-+	value &= 0xff000000;
-+	value |= 0x00ff0100;
-+	csr_writel(pcie, value, PCI_PRIMARY_BUS);
-+
- 	/*
- 	 * program Bus Master Enable Bit in Command Register in PAB Config
- 	 * Space
+ config PCENGINES_APU2
+ 	tristate "PC Engines APUv2/3 front button and LEDs driver"
+-	depends on INPUT && INPUT_KEYBOARD
++	depends on INPUT && INPUT_KEYBOARD && GPIOLIB
+ 	depends on LEDS_CLASS
+ 	select GPIO_AMD_FCH
+ 	select KEYBOARD_GPIO_POLLED
 -- 
 2.20.1
 
