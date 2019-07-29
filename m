@@ -2,153 +2,176 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F7AC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81235C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7C2206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:39:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nlGEvZB5"
+	by mail.kernel.org (Postfix) with ESMTP id 5EF12206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 16:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729292AbfG2Qj4 (ORCPT
+        id S1728407AbfG2QkV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 12:39:56 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34844 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfG2Qj4 (ORCPT
+        Mon, 29 Jul 2019 12:40:21 -0400
+Received: from mailoutvs51.siol.net ([185.57.226.242]:38916 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726240AbfG2QkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:39:56 -0400
-Received: by mail-pf1-f195.google.com with SMTP id u14so28334212pfn.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 09:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Nb4CjHnrkOlFdXVrAOvEL/gOTXxG/KIC7AXINQV9eWk=;
-        b=nlGEvZB5fX2ZSbjO+u+hA8aR3krsDKHgKYElzvXmv0PoxwN2zWeRAb4a2Brjil6QEI
-         B0hYH7uYLCYxzBMwAIjS7pmNDh42vwo3hfnbAaUYvsjT0Kh5nxhMPoAwH6hY020rLd1r
-         kiIA8RbrpGdG55B62jcb5KYpu2RuFV4FJczq0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Nb4CjHnrkOlFdXVrAOvEL/gOTXxG/KIC7AXINQV9eWk=;
-        b=LGMC+gzWJjNZk2ox/tpUOdMhLXdm37K7D0F/KQ/1iYjWJK+dAGdAQimHSUScf1fbjr
-         fwO/SqtGp7G+Iorye9gVpiSOWBlaTRhdNCJadMC3M7jAyF94cCQF7OEeQ+M+86VGICg4
-         Qp1Q9SExwARkaHSiSzqLCTrolKOtFwmhOFa7S3iccwilA52RpKOwaj/LznUR3ik2AKeR
-         eHon7FTLIPD7m8iocMljCoGNFFU1MwVIRcf59zIM8v7iFQTzkszgcAJIah/nIMIBUmqz
-         QIPh5CKUFkGTKjl1Me6LapEvdETCZo/Wzl1v3aDQTqavi2A9iZuR5VHF50RMrIjFhKLz
-         bmTQ==
-X-Gm-Message-State: APjAAAUGi7Z40X4d9KA3XZBxWPdP+G8YsoBD02T9MgRfET5cJZpIM8Nk
-        Lv7WtWTUgKiq5uLr5jnFwgFffA==
-X-Google-Smtp-Source: APXvYqyK2+iAItNJDXrCfMN9a1yOxU/cDJlsagolowGQVyJ92TnTYjA+8yIMajRcltnHr0bAJ/49qw==
-X-Received: by 2002:aa7:8502:: with SMTP id v2mr36642822pfn.98.1564418395411;
-        Mon, 29 Jul 2019 09:39:55 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x14sm79017275pfq.158.2019.07.29.09.39.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 09:39:54 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 09:39:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] net/af_iucv: mark expected switch fall-throughs
-Message-ID: <201907290939.A3EF9B979@keescook>
-References: <20190729145947.GA9494@embeddedor>
+        Mon, 29 Jul 2019 12:40:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 56D3A5220E8;
+        Mon, 29 Jul 2019 18:40:17 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id rCV9RUjdNIE8; Mon, 29 Jul 2019 18:40:16 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id CA35F5224B7;
+        Mon, 29 Jul 2019 18:40:16 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 508A35224B1;
+        Mon, 29 Jul 2019 18:40:16 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     linux-sunxi@googlegroups.com, u.kleine-koenig@pengutronix.de
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-pwm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Date:   Mon, 29 Jul 2019 18:40:15 +0200
+Message-ID: <2346193.MplWYqIveT@jernej-laptop>
+In-Reply-To: <20190729162428.bxuzgxg5sjqptlbp@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net> <CAGb2v66C=ghjck6rxTg6Vt4xN2DcXntzVOa=KJWh98KRjkhnHQ@mail.gmail.com> <20190729162428.bxuzgxg5sjqptlbp@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729145947.GA9494@embeddedor>
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 09:59:47AM -0500, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
+Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König 
+napisal(a):
+> Hello,
 > 
-> This patch fixes the following warnings:
+> On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
+> > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
+> > 
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
+> > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König
+> > > > 
+> > > > napisal(a):
+> > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
+> > > > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
+> > > > > > sun4i_pwm_single_bypass = {>
+> > > > > > 
+> > > > > >   .npwm = 1,
+> > > > > >  
+> > > > > >  };
+> > > > > > 
+> > > > > > +static const struct sun4i_pwm_data sun50i_pwm_dual_bypass_clk_rst
+> > > > > > = {
+> > > > > > + .has_bus_clock = true,
+> > > > > > + .has_prescaler_bypass = true,
+> > > > > > + .has_reset = true,
+> > > > > > + .npwm = 2,
+> > > > > > +};
+> > > > > > +
+> > > > > > 
+> > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
+> > > > > >  
+> > > > > >   {
+> > > > > >   
+> > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
+> > > > > > 
+> > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
+> > > > > > sun4i_pwm_dt_ids[] =
+> > > > > > {
+> > > > > > 
+> > > > > >   }, {
+> > > > > >   
+> > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
+> > > > > >           .data = &sun4i_pwm_single_bypass,
+> > > > > > 
+> > > > > > + }, {
+> > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
+> > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
+> > > > > 
+> > > > > If you follow my suggestion for the two previous patches, you can
+> > > > > just
+> > > > > 
+> > > > > use:
+> > > > >     compatible = "allwinner,sun50i-h6-pwm",
+> > > > >     "allwinner,sun5i-a10s-pwm";
+> > > > > 
+> > > > > and drop this patch.
+> > > > 
+> > > > Maxime found out that it's not compatible with A10s due to difference
+> > > > in bypass bit, but yes, I know what you mean.
+> > > > 
+> > > > Since H6 requires reset line and bus clock to be specified, it's not
+> > > > compatible from DT binding side. New yaml based binding must somehow
+> > > > know that in order to be able to validate DT node, so it needs
+> > > > standalone compatible. However, depending on conclusions of other
+> > > > discussions, this new compatible can be associated with already
+> > > > available quirks structure or have it's own.> > 
+> > > I cannot follow. You should be able to specify in the binding that the
+> > > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
+> > > without a reset line and bus clock also verifies, but this doesn't
+> > > really hurt (and who knows, maybe the next allwinner chip needs exactly
+> > > this).
+> > 
+> > It is not optional. It will not work if either the clocks or reset
+> > controls
+> > are missing. How would these be optional anyway? Either it's connected and
+> > thus required, or it's not and therefore should be omitted from the
+> > description.
 > 
-> net/iucv/af_iucv.c: warning: this statement may fall
-> through [-Wimplicit-fallthrough=]:  => 537:3, 519:6, 2246:6, 510:6
+> [Just arguing about the clock here, the argumentation is analogous for
+> the reset control.]
 > 
-> Notice that, in this particular case, the code comment is
-> modified in accordance with what GCC is expecting to find.
+> From the driver's perspective it's optional: There are devices with and
+> without a bus clock. This doesn't mean that you can just ignore this
+> clock if it's specified. It's optional in the sense "If dt doesn't
+> specify it, then assume this is a device that doesn't have it and so you
+> don't need to handle it." but not in the sense "it doesn't matter if
+> you handle it or not.".
 > 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Other than that I'm on your side. So for example I think it's not
+> optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
+> devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
+> because this hides exactly the kind of problem you point out here.
+>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+I think there's misunderstanding. I only argued that we can't use
 
--Kees
+compatible = "allwinner,sun50i-h6-pwm",
+	 "allwinner,sun5i-a10s-pwm";
 
-> ---
->  net/iucv/af_iucv.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
-> index 09e1694b6d34..ebb62a4ebe30 100644
-> --- a/net/iucv/af_iucv.c
-> +++ b/net/iucv/af_iucv.c
-> @@ -512,7 +512,9 @@ static void iucv_sock_close(struct sock *sk)
->  			sk->sk_state = IUCV_DISCONN;
->  			sk->sk_state_change(sk);
->  		}
-> -	case IUCV_DISCONN:   /* fall through */
-> +		/* fall through */
-> +
-> +	case IUCV_DISCONN:
->  		sk->sk_state = IUCV_CLOSING;
->  		sk->sk_state_change(sk);
->  
-> @@ -525,8 +527,9 @@ static void iucv_sock_close(struct sock *sk)
->  					iucv_sock_in_state(sk, IUCV_CLOSED, 0),
->  					timeo);
->  		}
-> +		/* fall through */
->  
-> -	case IUCV_CLOSING:   /* fall through */
-> +	case IUCV_CLOSING:
->  		sk->sk_state = IUCV_CLOSED;
->  		sk->sk_state_change(sk);
->  
-> @@ -535,8 +538,9 @@ static void iucv_sock_close(struct sock *sk)
->  
->  		skb_queue_purge(&iucv->send_skb_q);
->  		skb_queue_purge(&iucv->backlog_skb_q);
-> +		/* fall through */
->  
-> -	default:   /* fall through */
-> +	default:
->  		iucv_sever_path(sk, 1);
->  	}
->  
-> @@ -2247,10 +2251,10 @@ static int afiucv_hs_rcv(struct sk_buff *skb, struct net_device *dev,
->  			kfree_skb(skb);
->  			break;
->  		}
-> -		/* fall through and receive non-zero length data */
-> +		/* fall through - and receive non-zero length data */
->  	case (AF_IUCV_FLAG_SHT):
->  		/* shutdown request */
-> -		/* fall through and receive zero length data */
-> +		/* fall through - and receive zero length data */
->  	case 0:
->  		/* plain data frame */
->  		IUCV_SKB_CB(skb)->class = trans_hdr->iucv_hdr.class;
-> -- 
-> 2.22.0
-> 
+as you suggested and only 
 
--- 
-Kees Cook
+compatible = "allwinner,sun50i-h6-pwm"; 
+
+will work. Not because of driver itself (it can still use _optional() 
+variants), but because of DT binding, which should be able to validate H6 PWM 
+node - reset and bus clock references are required in this case.
+
+Best regards,
+Jernej
+ 
+> Best regards
+> Uwe
+
+
+
+
