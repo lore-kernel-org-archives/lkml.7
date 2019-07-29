@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8A6C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC078C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B042171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4402171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564428303;
-	bh=31Y3PFm7Rdq/mDBbzc0NKinDNh7RGDZq7CL7tzmrL0Q=;
+	s=default; t=1564428307;
+	bh=NFkFRIwreOSnCR1vC8YOMvLJ+63nA0WPzzDhF9pxoIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aIMubPvgpt0AU6nvuUugluE/6YbI1Czv/wZuA5rfh9VhmQsLAepRmT2JKMxrk4BHM
-	 593VXrteEPUCSpQfAC6GwZhFoMgKUmGHiK+beN8ovos6b8oS8rzUHJiB3vX1ltQUXn
-	 UZLSqgV/1zhK1k6fdSSM+flTTxPPnsDRR+dE0pqY=
+	b=u2rRFRavIsK6AAU1+qcLMv6IYvpqc0pdI7GFpBh1nGhSvJECkXBp2Cgm5GARO5W3y
+	 ssbEYJltBuji+EScGCRtCKJHW2UZEuFHP2NxgkRL6hUrQkrseCu/EeybwOetBSAnAP
+	 RRr5lZ203wSse497sgfxnJ83V3vXn/r1wj2isPXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbfG2TZC (ORCPT
+        id S1729603AbfG2TZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:25:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37258 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729562AbfG2TY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:24:59 -0400
+        id S1729586AbfG2TZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:25:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EFE421655;
-        Mon, 29 Jul 2019 19:24:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A7772171F;
+        Mon, 29 Jul 2019 19:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564428297;
-        bh=31Y3PFm7Rdq/mDBbzc0NKinDNh7RGDZq7CL7tzmrL0Q=;
+        s=default; t=1564428301;
+        bh=NFkFRIwreOSnCR1vC8YOMvLJ+63nA0WPzzDhF9pxoIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pXRw0+2CjzZFzDvNCiGXEr9iM21AKUoVw6JFuoqpl7TRq+I5q3DvxAxDxgvr+S/4L
-         fvdrRCncr5upTHyS/IW5sh2/2Ln6U0ddYNCchKFFBLJvXeveNu8IHqtcC3DsmCi1D8
-         1k+b0FZDC0aGK8gDuLvsifqy/q7mNc7K8iFFagCw=
+        b=gmF1FnRlwVRD7RXAyRhFlQi6Z/zBb+b3raPTWQRnSr46xU581KOK8Mq7O81iVCJ1k
+         rGjai2gWo+PFozx8l4ZwTPJqdHRL7jpjYCF6YSRJixrj84PS8kraLZSP7KbZFk/cJ6
+         tfYlchxksRjED+JFxvPytDCSNCCZTxxtYoSu4yCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Abhishek Goel <huntbag@linux.vnet.ibm.com>,
+        Thomas Renninger <trenn@suse.de>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 032/293] media: wl128x: Fix some error handling in fm_v4l2_init_video_device()
-Date:   Mon, 29 Jul 2019 21:18:43 +0200
-Message-Id: <20190729190824.373855223@linuxfoundation.org>
+Subject: [PATCH 4.14 033/293] cpupower : frequency-set -r option misses the last cpu in related cpu list
+Date:   Mon, 29 Jul 2019 21:18:44 +0200
+Message-Id: <20190729190824.592246385@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -62,98 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 69fbb3f47327d959830c94bf31893972b8c8f700 ]
+[ Upstream commit 04507c0a9385cc8280f794a36bfff567c8cc1042 ]
 
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
-The fm_v4l2_init_video_device() forget to unregister v4l2/video device
-in the error path, it could lead to UAF issue, eg,
+To set frequency on specific cpus using cpupower, following syntax can
+be used :
+cpupower -c #i frequency-set -f #f -r
 
-  BUG: KASAN: use-after-free in atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
-  BUG: KASAN: use-after-free in atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
-  BUG: KASAN: use-after-free in __mutex_unlock_slowpath+0x92/0x690 kernel/locking/mutex.c:1206
-  Read of size 8 at addr ffff8881e84a7c70 by task v4l_id/3659
+While setting frequency using cpupower frequency-set command, if we use
+'-r' option, it is expected to set frequency for all cpus related to
+cpu #i. But it is observed to be missing the last cpu in related cpu
+list. This patch fixes the problem.
 
-  CPU: 1 PID: 3659 Comm: v4l_id Not tainted 5.1.0 #8
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-  Call Trace:
-   __dump_stack lib/dump_stack.c:77 [inline]
-   dump_stack+0xa9/0x10e lib/dump_stack.c:113
-   print_address_description+0x65/0x270 mm/kasan/report.c:187
-   kasan_report+0x149/0x18d mm/kasan/report.c:317
-   atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
-   atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
-   __mutex_unlock_slowpath+0x92/0x690 kernel/locking/mutex.c:1206
-   fm_v4l2_fops_open+0xac/0x120 [fm_drv]
-   v4l2_open+0x191/0x390 [videodev]
-   chrdev_open+0x20d/0x570 fs/char_dev.c:417
-   do_dentry_open+0x700/0xf30 fs/open.c:777
-   do_last fs/namei.c:3416 [inline]
-   path_openat+0x7c4/0x2a90 fs/namei.c:3532
-   do_filp_open+0x1a5/0x2b0 fs/namei.c:3563
-   do_sys_open+0x302/0x490 fs/open.c:1069
-   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f8180c17c8e
-  ...
-  Allocated by task 3642:
-   set_track mm/kasan/common.c:87 [inline]
-   __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
-   fm_drv_init+0x13/0x1000 [fm_drv]
-   do_one_initcall+0xbc/0x47d init/main.c:901
-   do_init_module+0x1b5/0x547 kernel/module.c:3456
-   load_module+0x6405/0x8c10 kernel/module.c:3804
-   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
-   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-  Freed by task 3642:
-   set_track mm/kasan/common.c:87 [inline]
-   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
-   slab_free_hook mm/slub.c:1429 [inline]
-   slab_free_freelist_hook mm/slub.c:1456 [inline]
-   slab_free mm/slub.c:3003 [inline]
-   kfree+0xe1/0x270 mm/slub.c:3958
-   fm_drv_init+0x1e6/0x1000 [fm_drv]
-   do_one_initcall+0xbc/0x47d init/main.c:901
-   do_init_module+0x1b5/0x547 kernel/module.c:3456
-   load_module+0x6405/0x8c10 kernel/module.c:3804
-   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
-   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Add relevant unregister functions to fix it.
-
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Reviewed-by: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/radio/wl128x/fmdrv_v4l2.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/power/cpupower/utils/cpufreq-set.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/radio/wl128x/fmdrv_v4l2.c b/drivers/media/radio/wl128x/fmdrv_v4l2.c
-index fc5a7abc83d2..77778c86e04d 100644
---- a/drivers/media/radio/wl128x/fmdrv_v4l2.c
-+++ b/drivers/media/radio/wl128x/fmdrv_v4l2.c
-@@ -549,6 +549,7 @@ int fm_v4l2_init_video_device(struct fmdev *fmdev, int radio_nr)
- 
- 	/* Register with V4L2 subsystem as RADIO device */
- 	if (video_register_device(&gradio_dev, VFL_TYPE_RADIO, radio_nr)) {
-+		v4l2_device_unregister(&fmdev->v4l2_dev);
- 		fmerr("Could not register video device\n");
- 		return -ENOMEM;
+diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
+index 1eef0aed6423..08a405593a79 100644
+--- a/tools/power/cpupower/utils/cpufreq-set.c
++++ b/tools/power/cpupower/utils/cpufreq-set.c
+@@ -306,6 +306,8 @@ int cmd_freq_set(int argc, char **argv)
+ 				bitmask_setbit(cpus_chosen, cpus->cpu);
+ 				cpus = cpus->next;
+ 			}
++			/* Set the last cpu in related cpus list */
++			bitmask_setbit(cpus_chosen, cpus->cpu);
+ 			cpufreq_put_related_cpus(cpus);
+ 		}
  	}
-@@ -562,6 +563,8 @@ int fm_v4l2_init_video_device(struct fmdev *fmdev, int radio_nr)
- 	if (ret < 0) {
- 		fmerr("(fmdev): Can't init ctrl handler\n");
- 		v4l2_ctrl_handler_free(&fmdev->ctrl_handler);
-+		video_unregister_device(fmdev->radio_dev);
-+		v4l2_device_unregister(&fmdev->v4l2_dev);
- 		return -EBUSY;
- 	}
- 
 -- 
 2.20.1
 
