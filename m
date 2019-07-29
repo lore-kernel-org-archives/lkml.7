@@ -2,72 +2,103 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97E9C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F03EC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7879206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505C9206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 18:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfG2SQ7 (ORCPT
+        id S1729222AbfG2STk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 14:16:59 -0400
-Received: from mga06.intel.com ([134.134.136.31]:2183 "EHLO mga06.intel.com"
+        Mon, 29 Jul 2019 14:19:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:19882 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbfG2SQ7 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 14:16:59 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 11:16:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,323,1559545200"; 
-   d="scan'208";a="199833604"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Jul 2019 11:16:58 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 5BA6F301BBA; Mon, 29 Jul 2019 11:16:58 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 11:16:58 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, kan.liang@intel.com,
-        yao.jin@intel.com
-Subject: Re: [PATCH] perf pmu-events: Fix the missing "cpu_clk_unhalted.core"
-Message-ID: <20190729181658.GH25319@tassilo.jf.intel.com>
-References: <20190729072755.2166-1-yao.jin@linux.intel.com>
+        id S1728781AbfG2STj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 14:19:39 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5B37130917F1;
+        Mon, 29 Jul 2019 18:19:39 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 35C235C1B5;
+        Mon, 29 Jul 2019 18:19:38 +0000 (UTC)
+Message-ID: <08d1942fa99465329348a1bbfd55823b590921c2.camel@redhat.com>
+Subject: Re: [PATCH] rdma: siw: remove unused variable
+From:   Doug Ledford <dledford@redhat.com>
+To:     Anders Roxell <anders.roxell@linaro.org>, bmt@zurich.ibm.com,
+        jgg@ziepe.ca
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 29 Jul 2019 14:19:35 -0400
+In-Reply-To: <20190726092540.22467-1-anders.roxell@linaro.org>
+References: <20190726092540.22467-1-anders.roxell@linaro.org>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-KSNZwsQLpkdKs2wwzNU2"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729072755.2166-1-yao.jin@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 29 Jul 2019 18:19:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> index 1a91a197cafb..d413761621b0 100644
-> --- a/tools/perf/pmu-events/jevents.c
-> +++ b/tools/perf/pmu-events/jevents.c
-> @@ -453,6 +453,7 @@ static struct fixed {
->  	{ "inst_retired.any_p", "event=0xc0" },
->  	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
->  	{ "cpu_clk_unhalted.thread", "event=0x3c" },
-> +	{ "cpu_clk_unhalted.core", "event=0x3c" },
 
-Not sure this is correct for non Atom.
+--=-KSNZwsQLpkdKs2wwzNU2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Atom thread==core, but that is not true with SMT/HyperThreading.
+On Fri, 2019-07-26 at 11:25 +0200, Anders Roxell wrote:
+> The variable 'p' si no longer used and the compiler rightly complains
+> that it should be removed.
+>=20
+> ../drivers/infiniband/sw/siw/siw_mem.c: In function =E2=80=98siw_free_pli=
+st=E2=80=99:
+> ../drivers/infiniband/sw/siw/siw_mem.c:66:16: warning: unused variable
+>  =E2=80=98p=E2=80=99 [-Wunused-variable]
+>   struct page **p =3D chunk->plist;
+>                 ^
+>=20
+> Rework to remove unused variable.
+>=20
+> Fixes: 8288d030447f ("mm/gup: add make_dirty arg to
+> put_user_pages_dirty_lock()")
 
-The big cores currently don't have this event, so it would
-match incorrectly.
+This commit hash and the commit subject does not exist in Linus' tree as
+of today.  What tree is this being merged through, and is it slated to
+merge soon or is this a for-next item?
 
-This has to be handled on the event list level, perhaps with
-some enhancements.
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
 
--Andi
+--=-KSNZwsQLpkdKs2wwzNU2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl0/OLcACgkQuCajMw5X
+L92uAw/9HNQKehkFwok7Y0xgyXBoG97C+oVbRCPZ2JBoZ1yPlJUq2/d6tVUBTL1G
+318/c2tcqIqKMo1F1lVcG6Lkv4pRZOrQ+0ZbXPp6TZV4Lnrv7BDjpb1S43jiHYdW
+pa45K6UtGo5chquQI4yQRDcPDsyCcQMfyRdGUmRTtv6rYJiBH9UhU0RONji+jTVm
+pZFn3j8aQvlvS3kmznbyI0KkKOaZ1ffnkSzISyQRCnluBuycKGsHbgoIyIgP1uli
+MhwyA1TW461WWFVA3cYkmt1rkOt8T+AeXuNlC+5HxWu0h/slNccVh/hbuyPSbG+J
+69mzHazulNDse+tqJglhd0QdK04IvxG3ncph29TCSvdizu8wd7Ec0wY00pKfWuwQ
+0kaWdYt4aRpUod453dthDMiy8TIllxSrcf9Uj6zIS7qC7195JGaSh/ars+z7hoM3
+T2V8/QnybDWVQFpw13fv5qoU0RGwG/1Uo/j00CpEwID3QHl7hAncY9uNZ4mTE6tU
+7U/sRiVpe0N6GNfPQ78fr29tA9CSW7Y48cmMyz5JTQ1rGt51t8LdTFDEecO8rsJv
++C1/qCJlxPmQUXT56Zfb3oe3Z8SjciIYxPz8fUnKj202uIZA78eDtVWxxKc/yRI8
+Fj/JpNR2RcLMhLwqLq8+32Xc3xw4Cudo2nZVlfIF7pNhS388Sbs=
+=+fV9
+-----END PGP SIGNATURE-----
+
+--=-KSNZwsQLpkdKs2wwzNU2--
+
