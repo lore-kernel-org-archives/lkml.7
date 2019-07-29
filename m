@@ -7,29 +7,28 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA6CC433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A89C433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46ACA20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E68A20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:26:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="h3AQ9Evo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="D21o2tT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387862AbfG2UY1 (ORCPT
+        id S1728596AbfG2U0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:24:27 -0400
-Received: from gateway20.websitewelcome.com ([192.185.44.20]:11551 "EHLO
+        Mon, 29 Jul 2019 16:26:06 -0400
+Received: from gateway20.websitewelcome.com ([192.185.44.20]:49643 "EHLO
         gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387512AbfG2UY0 (ORCPT
+        by vger.kernel.org with ESMTP id S1725975AbfG2U0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:24:26 -0400
-X-Greylist: delayed 1364 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 16:24:26 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id DD19E400CCC8E
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 13:58:12 -0500 (CDT)
+        Mon, 29 Jul 2019 16:26:06 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 561BF400D20E9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:02:37 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id sBq1hg8Ty4FKpsBq1hpxG4; Mon, 29 Jul 2019 15:01:41 -0500
+        id sBuHhgKUJ2PzOsBuHhmDWO; Mon, 29 Jul 2019 15:06:05 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -37,24 +36,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8IG03zJ4dGQM2zbEUf5K8f+GqYdtT4wDuV0aUuJyIEc=; b=h3AQ9EvojkPpBuTQyEEMrXpXZq
-        nSPz/PMP8BOP/Gkpovpf4ecOi0Bgk1Nj5vZeZuBCjFi7MHcr8mrCsTfHJtd6xdHjqwmCv/2Vtauqa
-        OZ//RWt45ZLleJ711Q0j3wzO75rler0Spa/gO0E1YCVNVtiImHsDaFqUby2/WfTdQZl68xzDsE5Xu
-        0T6Y4kiSO98nkftvORk+VbjLpfg0oEYNZZPMPpZHe7COxSx95ZGsKvvyEuFf536pc3khda2KjBwe9
-        vV0xJFcJCOokYnV+JNKOahJIvEUkJ9RGdHY4zg0Dk9CNfxeah9RUVHS7yGdWmSNd/C33YeA7xswHQ
-        aYERSh3Q==;
-Received: from [187.192.11.120] (port=59520 helo=embeddedor)
+        bh=a+saqhhJ62Tmb3k+GTqe/6Z8xWSbumJEIlxILgYZV68=; b=D21o2tT2ziSnE7MIh2vEJd6fYU
+        QGXkh3zZILMMexb09l2I6lwzM+bfCfVYIswj4T7rz2U6qeV5Pc9y8csMUc09Fyr7SNZhFZYBl0ev9
+        9oU7byiBVw5//0grrI305r6hNvsRqsRcldYxkGLXI2X/9UiFtJf5x+kEp46E+bh3ycsuyJoHQYadw
+        CtSYDIvDJVHnpz6UvVu328gp9aiXMx9XdRSnCGR8NVMij1zLnOORmJmOyf1okfJwOIUR/fKAZdQy+
+        GHoO6zX8b2EsMjupBOH5d1FJpLaDLCcqrUyVew5WN0BmHLt5tnbU8s8HAeoQeV6NmQBIHJYdq0o3t
+        5VxXyO+g==;
+Received: from [187.192.11.120] (port=59530 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1hsBq0-000tYi-Gi; Mon, 29 Jul 2019 15:01:40 -0500
-Date:   Mon, 29 Jul 2019 15:01:39 -0500
+        id 1hsBuG-000wID-R4; Mon, 29 Jul 2019 15:06:04 -0500
+Date:   Mon, 29 Jul 2019 15:06:02 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Jim Cromie <jim.cromie@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Kees Cook <keescook@chromium.org>
-Subject: [PATCH] net: wan: sdla: Mark expected switch fall-through
-Message-ID: <20190729200139.GA6102@embeddedor>
+Subject: [PATCH] watchdog: scx200_wdt: Mark expected switch fall-through
+Message-ID: <20190729200602.GA6854@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -68,13 +69,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.192.11.120
 X-Source-L: No
-X-Exim-ID: 1hsBq0-000tYi-Gi
+X-Exim-ID: 1hsBuG-000wID-R4
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:59520
+X-Source-Sender: (embeddedor) [187.192.11.120]:59530
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
+X-Email-Count: 9
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,31 +87,31 @@ Mark switch cases where we are expecting to fall through.
 
 This patch fixes the following warning (Building: i386):
 
-drivers/net/wan/sdla.c: In function ‘sdla_errors’:
-drivers/net/wan/sdla.c:414:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    if (cmd == SDLA_INFORMATION_WRITE)
-       ^
-drivers/net/wan/sdla.c:417:3: note: here
-   default:
-   ^~~~~~~
+drivers/watchdog/scx200_wdt.c: In function ‘scx200_wdt_ioctl’:
+drivers/watchdog/scx200_wdt.c:188:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   scx200_wdt_ping();
+   ^~~~~~~~~~~~~~~~~
+drivers/watchdog/scx200_wdt.c:189:2: note: here
+  case WDIOC_GETTIMEOUT:
+  ^~~~
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/net/wan/sdla.c | 1 +
+ drivers/watchdog/scx200_wdt.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wan/sdla.c b/drivers/net/wan/sdla.c
-index a9ac3f37b904..e2e679a01b65 100644
---- a/drivers/net/wan/sdla.c
-+++ b/drivers/net/wan/sdla.c
-@@ -413,6 +413,7 @@ static void sdla_errors(struct net_device *dev, int cmd, int dlci, int ret, int
- 		case SDLA_RET_NO_BUFS:
- 			if (cmd == SDLA_INFORMATION_WRITE)
- 				break;
-+			/* Else, fall through */
- 
- 		default: 
- 			netdev_dbg(dev, "Cmd 0x%02X generated return code 0x%02X\n",
+diff --git a/drivers/watchdog/scx200_wdt.c b/drivers/watchdog/scx200_wdt.c
+index efd7996694de..46268309ee9b 100644
+--- a/drivers/watchdog/scx200_wdt.c
++++ b/drivers/watchdog/scx200_wdt.c
+@@ -186,6 +186,7 @@ static long scx200_wdt_ioctl(struct file *file, unsigned int cmd,
+ 		margin = new_margin;
+ 		scx200_wdt_update_margin();
+ 		scx200_wdt_ping();
++		/* Fall through */
+ 	case WDIOC_GETTIMEOUT:
+ 		if (put_user(margin, p))
+ 			return -EFAULT;
 -- 
 2.22.0
 
