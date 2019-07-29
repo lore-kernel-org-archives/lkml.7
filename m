@@ -2,50 +2,56 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE0FC76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC77FC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87650217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AED0204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564430048;
-	bh=TkFUy521NuzO1b0exrOSpw/zPM68krysMkymAJtGe00=;
+	s=default; t=1564430051;
+	bh=4DZFibPYCuNcp0FO2IO2qNHEk2svupAztvwR1Xf2t7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dgRdjxDi7CuiGtTiN3IlDdntzMTuu2NrJ0Tr4U31hMbfGKJfmbAyWSy+NmPq6S3mU
-	 FZ9iMEhxtpRbKcq/n3XqYDuGnwksb6wKoNyR0GApv3asCoV90WxobRjRkKLuPkI2OE
-	 9KWuPJpFBY2EIOqazNs36brza2Yf6KokwlCuvacs=
+	b=ExgMFB83ew8E9XAmVrMI69G9IHEHYRErTFf9V3QQ8oRafp0Zgcp7BqrCWi8c4aTVO
+	 ry6c/E4EG3S3b7kpbGovTMBVC+Js12WyM64KTUjG3lrd4bMDcZ+gf3AGklVNIP0qJ9
+	 pKf2y4tavq3NHsV0a193f1kCNtHno6rCwh1CYmdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390858AbfG2TyH (ORCPT
+        id S2390990AbfG2TyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:54:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46214 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:54:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390821AbfG2Txp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:53:45 -0400
+        id S2390915AbfG2Txs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:53:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CB6F2171F;
-        Mon, 29 Jul 2019 19:53:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 114702171F;
+        Mon, 29 Jul 2019 19:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564430024;
-        bh=TkFUy521NuzO1b0exrOSpw/zPM68krysMkymAJtGe00=;
+        s=default; t=1564430028;
+        bh=4DZFibPYCuNcp0FO2IO2qNHEk2svupAztvwR1Xf2t7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ymJbWoYYJouTm81MUXgD488eLrnBOA6QczfMP6CsbsteNQ1J7WS+Q76C1P+V2XElV
-         wq9jVna5AlRvBw9+dthHrrxKtslhF26zSRx/7Jv1vsBkyM6oZCi2kq+obxKzZpjou+
-         SN6ML49yJYxxG/piN9bSjHkEhKN1LfXNyoKJUeBs=
+        b=S/GDSAMwvO6Ez0XWhizTmPRYy7uki1OBv0LT6n3bQzIcZGsl+9GsgAFLTvM2lv7t+
+         8Wo4nNEfiDKBxO8Y/lBX0t+0+Nt4jwamu89xGEH75DdWbjOPDZCXawbVRz8Oiatb0X
+         urTQ5h9h5UOnBsazhOLrIOypK7Gee0h9CVihYQN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 5.2 173/215] usb: usb251xb: Reallow swap-dx-lanes to apply to the upstream port
-Date:   Mon, 29 Jul 2019 21:22:49 +0200
-Message-Id: <20190729190809.936125511@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 156/215] mm/mmu_notifier: use hlist_add_head_rcu()
+Date:   Mon, 29 Jul 2019 21:22:32 +0200
+Message-Id: <20190729190806.816560456@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
 References: <20190729190739.971253303@linuxfoundation.org>
@@ -58,80 +64,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+[ Upstream commit 543bdb2d825fe2400d6e951f1786d92139a16931 ]
 
-commit 4849ee6129702dcb05d36f9c7c61b4661fcd751f upstream.
+Make mmu_notifier_register() safer by issuing a memory barrier before
+registering a new notifier.  This fixes a theoretical bug on weakly
+ordered CPUs.  For example, take this simplified use of notifiers by a
+driver:
 
-This is a partial revert of 73d31def1aab "usb: usb251xb: Create a ports
-field collector method", which broke a existing devicetree
-(arch/arm64/boot/dts/freescale/imx8mq.dtsi).
+	my_struct->mn.ops = &my_ops; /* (1) */
+	mmu_notifier_register(&my_struct->mn, mm)
+		...
+		hlist_add_head(&mn->hlist, &mm->mmu_notifiers); /* (2) */
+		...
 
-There is no reason why the swap-dx-lanes property should not apply to
-the upstream port. The reason given in the breaking commit was that it's
-inconsitent with respect to other port properties, but in fact it is not.
-All other properties which only apply to the downstream ports explicitly
-reject port 0, so there is pretty strong precedence that the driver
-referred to the upstream port as port 0. So there is no inconsistency in
-this property at all, other than the swapping being also applicable to
-the upstream port.
+Once mmu_notifier_register() releases the mm locks, another thread can
+invalidate a range:
 
-CC: stable@vger.kernel.org #5.2
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Link: https://lore.kernel.org/r/20190719084407.28041-3-l.stach@pengutronix.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	mmu_notifier_invalidate_range()
+		...
+		hlist_for_each_entry_rcu(mn, &mm->mmu_notifiers, hlist) {
+			if (mn->ops->invalidate_range)
 
+The read side relies on the data dependency between mn and ops to ensure
+that the pointer is properly initialized.  But the write side doesn't have
+any dependency between (1) and (2), so they could be reordered and the
+readers could dereference an invalid mn->ops.  mmu_notifier_register()
+does take all the mm locks before adding to the hlist, but those have
+acquire semantics which isn't sufficient.
+
+By calling hlist_add_head_rcu() instead of hlist_add_head() we update the
+hlist using a store-release, ensuring that readers see prior
+initialization of my_struct.  This situation is better illustated by
+litmus test MP+onceassign+derefonce.
+
+Link: http://lkml.kernel.org/r/20190502133532.24981-1-jean-philippe.brucker@arm.com
+Fixes: cddb8a5c14aa ("mmu-notifiers: core")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/usb251xb.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ mm/mmu_notifier.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -375,7 +375,8 @@ out_err:
- 
- #ifdef CONFIG_OF
- static void usb251xb_get_ports_field(struct usb251xb *hub,
--				    const char *prop_name, u8 port_cnt, u8 *fld)
-+				    const char *prop_name, u8 port_cnt,
-+				    bool ds_only, u8 *fld)
- {
- 	struct device *dev = hub->dev;
- 	struct property *prop;
-@@ -383,7 +384,7 @@ static void usb251xb_get_ports_field(str
- 	u32 port;
- 
- 	of_property_for_each_u32(dev->of_node, prop_name, prop, p, port) {
--		if ((port >= 1) && (port <= port_cnt))
-+		if ((port >= ds_only ? 1 : 0) && (port <= port_cnt))
- 			*fld |= BIT(port);
- 		else
- 			dev_warn(dev, "port %u doesn't exist\n", port);
-@@ -501,15 +502,15 @@ static int usb251xb_get_ofdata(struct us
- 
- 	hub->non_rem_dev = USB251XB_DEF_NON_REMOVABLE_DEVICES;
- 	usb251xb_get_ports_field(hub, "non-removable-ports", data->port_cnt,
--				 &hub->non_rem_dev);
-+				 true, &hub->non_rem_dev);
- 
- 	hub->port_disable_sp = USB251XB_DEF_PORT_DISABLE_SELF;
- 	usb251xb_get_ports_field(hub, "sp-disabled-ports", data->port_cnt,
--				 &hub->port_disable_sp);
-+				 true, &hub->port_disable_sp);
- 
- 	hub->port_disable_bp = USB251XB_DEF_PORT_DISABLE_BUS;
- 	usb251xb_get_ports_field(hub, "bp-disabled-ports", data->port_cnt,
--				 &hub->port_disable_bp);
-+				 true, &hub->port_disable_bp);
- 
- 	hub->max_power_sp = USB251XB_DEF_MAX_POWER_SELF;
- 	if (!of_property_read_u32(np, "sp-max-total-current-microamp",
-@@ -573,7 +574,7 @@ static int usb251xb_get_ofdata(struct us
+diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+index 513b9607409d..b5670620aea0 100644
+--- a/mm/mmu_notifier.c
++++ b/mm/mmu_notifier.c
+@@ -274,7 +274,7 @@ static int do_mmu_notifier_register(struct mmu_notifier *mn,
+ 	 * thanks to mm_take_all_locks().
  	 */
- 	hub->port_swap = USB251XB_DEF_PORT_SWAP;
- 	usb251xb_get_ports_field(hub, "swap-dx-lanes", data->port_cnt,
--				 &hub->port_swap);
-+				 false, &hub->port_swap);
+ 	spin_lock(&mm->mmu_notifier_mm->lock);
+-	hlist_add_head(&mn->hlist, &mm->mmu_notifier_mm->list);
++	hlist_add_head_rcu(&mn->hlist, &mm->mmu_notifier_mm->list);
+ 	spin_unlock(&mm->mmu_notifier_mm->lock);
  
- 	/* The following parameters are currently not exposed to devicetree, but
- 	 * may be as soon as needed.
+ 	mm_drop_all_locks(mm);
+-- 
+2.20.1
+
 
 
