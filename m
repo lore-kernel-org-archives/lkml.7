@@ -2,116 +2,148 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A89C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AE9C76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E68A20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD62420679
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="D21o2tT2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NrH9CP3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbfG2U0G (ORCPT
+        id S1729120AbfG2U0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:26:06 -0400
-Received: from gateway20.websitewelcome.com ([192.185.44.20]:49643 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725975AbfG2U0G (ORCPT
+        Mon, 29 Jul 2019 16:26:12 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:43466 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfG2U0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:26:06 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 561BF400D20E9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 14:02:37 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id sBuHhgKUJ2PzOsBuHhmDWO; Mon, 29 Jul 2019 15:06:05 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=a+saqhhJ62Tmb3k+GTqe/6Z8xWSbumJEIlxILgYZV68=; b=D21o2tT2ziSnE7MIh2vEJd6fYU
-        QGXkh3zZILMMexb09l2I6lwzM+bfCfVYIswj4T7rz2U6qeV5Pc9y8csMUc09Fyr7SNZhFZYBl0ev9
-        9oU7byiBVw5//0grrI305r6hNvsRqsRcldYxkGLXI2X/9UiFtJf5x+kEp46E+bh3ycsuyJoHQYadw
-        CtSYDIvDJVHnpz6UvVu328gp9aiXMx9XdRSnCGR8NVMij1zLnOORmJmOyf1okfJwOIUR/fKAZdQy+
-        GHoO6zX8b2EsMjupBOH5d1FJpLaDLCcqrUyVew5WN0BmHLt5tnbU8s8HAeoQeV6NmQBIHJYdq0o3t
-        5VxXyO+g==;
-Received: from [187.192.11.120] (port=59530 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hsBuG-000wID-R4; Mon, 29 Jul 2019 15:06:04 -0500
-Date:   Mon, 29 Jul 2019 15:06:02 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jim Cromie <jim.cromie@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] watchdog: scx200_wdt: Mark expected switch fall-through
-Message-ID: <20190729200602.GA6854@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hsBuG-000wID-R4
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:59530
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Mon, 29 Jul 2019 16:26:12 -0400
+Received: by mail-pl1-f201.google.com with SMTP id t2so33809533plo.10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 13:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=InkWYbyakoin4kW7joWmSnOT6nnJvOIEoZKfiSX6FXM=;
+        b=NrH9CP3j3IaEZeQTRPUpaINe6R+O0NeUPVTiKEqR6ZRIdxWO6b0hnLm51vp8WpodBt
+         b6YZ/M3SVAVCFf3UurTkKgjdqsG/kQ8nQYh7BWrOOjkRKhtlE1ly2pEUBUWxk6GGbYm8
+         1ArC7a1eS8zanTLR4ftZoAMpPBBnZ9ajFP2RpwM+A1dCeK8QIzBW1wpVAYqB7Uuom3Lo
+         CoBW1LSDZajNANwdP5yg7IcmAWWiInk7VkArgc5DgBwQrWjtWw6B0CmJ+6WQc8lHqx03
+         m3b2v59YP42soakHigmlcSIQP5KCqXM6lb/979S2CV6wnYKKJK5lJX989prCYbKth+Ai
+         M+NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=InkWYbyakoin4kW7joWmSnOT6nnJvOIEoZKfiSX6FXM=;
+        b=gNuVQOcWbP7+Av0gXOsjlzkbqiVAPMYiqONG4IPDyXVQqb86Ob9gAuicqeax0ESd70
+         BWvrVDIdPD4w7SGOSk4u128+LU5AqQ48xLYpT/7zLeNNWrGiKD2/Pys42OU3bA6LomRw
+         5tvSXXaIaZim0U0CRoAgEPnm2/Di7vTUwqhotkfZYek0yD4Z9Rt88l3V4gP4cbISdGNT
+         4tLCfItYYv7B5zTqdFRYNDJ4PdmYon2cPCm28E5ZN9wCL70K921qv5Y9CgVQJJyXl8pw
+         tNws+vFrs9M1t+Vc2Uv4M4jC8nXIQ7GQ04bLONDfdJv7UHgPlKqZFhSNcZ/RORjao5Ql
+         MYjw==
+X-Gm-Message-State: APjAAAUfDNKhVft+VenBz2qPXHXXiEZBiLhQCjD6G94vv+O7LGRKeNm3
+        kdINWR5gtEbXcv8CpvFUzS1kxmFvPLDk7/Rgg68=
+X-Google-Smtp-Source: APXvYqzbqjK6rfCZn+o56AxaIOeOmnCvc2eWfzYd3XaqtryKtAIfNfxTDSqVXK8CEHfxuNI/ij2rwh8wRg9LWpZl+Y0=
+X-Received: by 2002:a63:5b52:: with SMTP id l18mr106138942pgm.21.1564431971070;
+ Mon, 29 Jul 2019 13:26:11 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 13:25:41 -0700
+Message-Id: <20190729202542.205309-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+Subject: [PATCH] powerpc: workaround clang codegen bug in dcbz
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     mpe@ellerman.id.au
+Cc:     christophe.leroy@c-s.fr, segher@kernel.crashing.org, arnd@arndb.de,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        kbuild test robot <lkp@intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+Commit 6c5875843b87 ("powerpc: slightly improve cache helpers") exposed
+what looks like a codegen bug in Clang's handling of `%y` output
+template with `Z` constraint. This is resulting in panics during boot
+for 32b powerpc builds w/ Clang, as reported by our CI.
 
-This patch fixes the following warning (Building: i386):
+Add back the original code that worked behind a preprocessor check for
+__clang__ until we can fix LLVM.
 
-drivers/watchdog/scx200_wdt.c: In function ‘scx200_wdt_ioctl’:
-drivers/watchdog/scx200_wdt.c:188:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   scx200_wdt_ping();
-   ^~~~~~~~~~~~~~~~~
-drivers/watchdog/scx200_wdt.c:189:2: note: here
-  case WDIOC_GETTIMEOUT:
-  ^~~~
+Further, it seems that clang allnoconfig builds are unhappy with `Z`, as
+reported by 0day bot. This is likely because Clang warns about inline
+asm constraints when the constraint requires inlining to be semantically
+valid.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Link: https://bugs.llvm.org/show_bug.cgi?id=42762
+Link: https://github.com/ClangBuiltLinux/linux/issues/593
+Link: https://lore.kernel.org/lkml/20190721075846.GA97701@archlinux-threadripper/
+Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- drivers/watchdog/scx200_wdt.c | 1 +
- 1 file changed, 1 insertion(+)
+Alternatively, we could just revert 6c5875843b87. It seems that GCC
+generates the same code for these functions for out of line versions.
+But I'm not sure how the inlined code generated would be affected.
 
-diff --git a/drivers/watchdog/scx200_wdt.c b/drivers/watchdog/scx200_wdt.c
-index efd7996694de..46268309ee9b 100644
---- a/drivers/watchdog/scx200_wdt.c
-+++ b/drivers/watchdog/scx200_wdt.c
-@@ -186,6 +186,7 @@ static long scx200_wdt_ioctl(struct file *file, unsigned int cmd,
- 		margin = new_margin;
- 		scx200_wdt_update_margin();
- 		scx200_wdt_ping();
-+		/* Fall through */
- 	case WDIOC_GETTIMEOUT:
- 		if (put_user(margin, p))
- 			return -EFAULT;
+ arch/powerpc/include/asm/cache.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
+index b3388d95f451..72983da94dce 100644
+--- a/arch/powerpc/include/asm/cache.h
++++ b/arch/powerpc/include/asm/cache.h
+@@ -105,6 +105,30 @@ extern void _set_L3CR(unsigned long);
+ #define _set_L3CR(val)	do { } while(0)
+ #endif
+ 
++/*
++ * Workaround for https://bugs.llvm.org/show_bug.cgi?id=42762.
++ */
++#ifdef __clang__
++static inline void dcbz(void *addr)
++{
++	__asm__ __volatile__ ("dcbz 0, %0" : : "r"(addr) : "memory");
++}
++
++static inline void dcbi(void *addr)
++{
++	__asm__ __volatile__ ("dcbi 0, %0" : : "r"(addr) : "memory");
++}
++
++static inline void dcbf(void *addr)
++{
++	__asm__ __volatile__ ("dcbf 0, %0" : : "r"(addr) : "memory");
++}
++
++static inline void dcbst(void *addr)
++{
++	__asm__ __volatile__ ("dcbst 0, %0" : : "r"(addr) : "memory");
++}
++#else
+ static inline void dcbz(void *addr)
+ {
+ 	__asm__ __volatile__ ("dcbz %y0" : : "Z"(*(u8 *)addr) : "memory");
+@@ -124,6 +148,7 @@ static inline void dcbst(void *addr)
+ {
+ 	__asm__ __volatile__ ("dcbst %y0" : : "Z"(*(u8 *)addr) : "memory");
+ }
++#endif /* __clang__ */
+ #endif /* !__ASSEMBLY__ */
+ #endif /* __KERNEL__ */
+ #endif /* _ASM_POWERPC_CACHE_H */
 -- 
-2.22.0
+2.22.0.709.g102302147b-goog
 
