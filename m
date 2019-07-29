@@ -2,158 +2,115 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37289C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA6CC433FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB2AC20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46ACA20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 20:24:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="YxuOOl8U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="h3AQ9Evo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387748AbfG2UYV (ORCPT
+        id S2387862AbfG2UY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 16:24:21 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:36841 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387512AbfG2UYV (ORCPT
+        Mon, 29 Jul 2019 16:24:27 -0400
+Received: from gateway20.websitewelcome.com ([192.185.44.20]:11551 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387512AbfG2UY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 16:24:21 -0400
-Received: by mail-vk1-f194.google.com with SMTP id b69so12346387vkb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 13:24:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=MdZSh5RxIzhkZKwZhPaXMDYMCWoc5OqdNfaSUD52NhE=;
-        b=YxuOOl8UB79J8g6bZQA1PI0O/aX11tn1uzDGl5Kl698RmntxCh7SGe8lHUfyjZ+xpP
-         /dST/nnVQOU7cNcZWA37Z0aTdUNU53IAOW2heHnR30Fxk9F4Q+IDAVCmWD9sli+Kc7eE
-         JvpGkkfCfbHnqBwcWKL7SdC46rEca8jg+xXDVJX0JpWuCv4AdGmKzURYzUK7SuM5RnM4
-         ove8m6d3s16Ur9ifPhMZesR9RVyKyK+1K6azj+phbjcbs98yxvzIzp5IA4va4PPHyv4l
-         JWUFmx9VdAxIlKvEJsXwxxKvoxAHOcRcQ74lJGIV4JRZhUp99n0g7yWw1WSZIep02yVA
-         p++g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MdZSh5RxIzhkZKwZhPaXMDYMCWoc5OqdNfaSUD52NhE=;
-        b=PawxVkYFTamtWBZKLCFe3zWrVRxb2Kuu2qCfbBnbiefah1X563BIDNdDQTKSXFCKfc
-         x2dTzSuTw7itPF3KblVPZe4Uj8q2wB3fCHXJlN6OPuLz3FsisH8GYM8iAIlG09BA9kG5
-         a6JXnJM9WkAeGBx2sKPssAjvdCt31zF8ZEA0ONRhIawbYt8KrmVaVwP6NKlFbZUEO37E
-         6PtvsEGM+3nZEZedZKj/mPhjs4ElV+EUwWG/esXdkGvyWmSMVNqcVn9Npa6bST77Omca
-         3CrPpDi2y1pOiggyLLirhnRZ7lu5AJy8dxsb1ETweoj6WVHkz1lRvFLCTeyIAdCGSul9
-         Zh5g==
-X-Gm-Message-State: APjAAAUdb1dT1gXNmV0SdwTAVn1YQ4LqRSTi2h7s25liIGAw8hBXIQLU
-        D9SY+kEnGrBFle8dHI312uPWuA==
-X-Google-Smtp-Source: APXvYqwj+GdgasqfsMhmo5I6aD70Un0lsre9nGEv9e8lbsyomLJE+3DtELV4/S7GNOeJ4tJVQWT8wg==
-X-Received: by 2002:a1f:1e47:: with SMTP id e68mr27124799vke.37.1564431859760;
-        Mon, 29 Jul 2019 13:24:19 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 142sm28599412vkc.40.2019.07.29.13.24.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 13:24:19 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     davem@davemloft.net
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] net/socket: fix GCC8+ Wpacked-not-aligned warnings
-Date:   Mon, 29 Jul 2019 16:23:58 -0400
-Message-Id: <1564431838-23051-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 29 Jul 2019 16:24:26 -0400
+X-Greylist: delayed 1364 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 16:24:26 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id DD19E400CCC8E
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 13:58:12 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id sBq1hg8Ty4FKpsBq1hpxG4; Mon, 29 Jul 2019 15:01:41 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8IG03zJ4dGQM2zbEUf5K8f+GqYdtT4wDuV0aUuJyIEc=; b=h3AQ9EvojkPpBuTQyEEMrXpXZq
+        nSPz/PMP8BOP/Gkpovpf4ecOi0Bgk1Nj5vZeZuBCjFi7MHcr8mrCsTfHJtd6xdHjqwmCv/2Vtauqa
+        OZ//RWt45ZLleJ711Q0j3wzO75rler0Spa/gO0E1YCVNVtiImHsDaFqUby2/WfTdQZl68xzDsE5Xu
+        0T6Y4kiSO98nkftvORk+VbjLpfg0oEYNZZPMPpZHe7COxSx95ZGsKvvyEuFf536pc3khda2KjBwe9
+        vV0xJFcJCOokYnV+JNKOahJIvEUkJ9RGdHY4zg0Dk9CNfxeah9RUVHS7yGdWmSNd/C33YeA7xswHQ
+        aYERSh3Q==;
+Received: from [187.192.11.120] (port=59520 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hsBq0-000tYi-Gi; Mon, 29 Jul 2019 15:01:40 -0500
+Date:   Mon, 29 Jul 2019 15:01:39 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] net: wan: sdla: Mark expected switch fall-through
+Message-ID: <20190729200139.GA6102@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hsBq0-000tYi-Gi
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:59520
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In file included from ./include/linux/sctp.h:42,
-                 from net/core/skbuff.c:47:
-./include/uapi/linux/sctp.h:395:1: warning: alignment 4 of 'struct
-sctp_paddr_change' is less than 8 [-Wpacked-not-aligned]
- } __attribute__((packed, aligned(4)));
- ^
-./include/uapi/linux/sctp.h:728:1: warning: alignment 4 of 'struct
-sctp_setpeerprim' is less than 8 [-Wpacked-not-aligned]
- } __attribute__((packed, aligned(4)));
- ^
-./include/uapi/linux/sctp.h:727:26: warning: 'sspp_addr' offset 4 in
-'struct sctp_setpeerprim' isn't aligned to 8 [-Wpacked-not-aligned]
-  struct sockaddr_storage sspp_addr;
-                          ^~~~~~~~~
-./include/uapi/linux/sctp.h:741:1: warning: alignment 4 of 'struct
-sctp_prim' is less than 8 [-Wpacked-not-aligned]
- } __attribute__((packed, aligned(4)));
- ^
-./include/uapi/linux/sctp.h:740:26: warning: 'ssp_addr' offset 4 in
-'struct sctp_prim' isn't aligned to 8 [-Wpacked-not-aligned]
-  struct sockaddr_storage ssp_addr;
-                          ^~~~~~~~
-./include/uapi/linux/sctp.h:792:1: warning: alignment 4 of 'struct
-sctp_paddrparams' is less than 8 [-Wpacked-not-aligned]
- } __attribute__((packed, aligned(4)));
- ^
-./include/uapi/linux/sctp.h:784:26: warning: 'spp_address' offset 4 in
-'struct sctp_paddrparams' isn't aligned to 8 [-Wpacked-not-aligned]
-  struct sockaddr_storage spp_address;
-                          ^~~~~~~~~~~
-./include/uapi/linux/sctp.h:905:1: warning: alignment 4 of 'struct
-sctp_paddrinfo' is less than 8 [-Wpacked-not-aligned]
- } __attribute__((packed, aligned(4)));
- ^
-./include/uapi/linux/sctp.h:899:26: warning: 'spinfo_address' offset 4
-in 'struct sctp_paddrinfo' isn't aligned to 8 [-Wpacked-not-aligned]
-  struct sockaddr_storage spinfo_address;
-                          ^~~~~~~~~~~~~~
+Mark switch cases where we are expecting to fall through.
 
-This is because the commit 20c9c825b12f ("[SCTP] Fix SCTP socket options
-to work with 32-bit apps on 64-bit kernels.") added "packed, aligned(4)"
-GCC attributes to some structures but one of the members, i.e, "struct
-sockaddr_storage" in those structures has the attribute,
-"aligned(__alignof__ (struct sockaddr *)" which is 8-byte on 64-bit
-systems, so the commit overwrites the designed alignments for
-"sockaddr_storage".
+This patch fixes the following warning (Building: i386):
 
-To fix this, "struct sockaddr_storage" needs to be aligned to 4-byte as
-it is only used in those packed sctp structure which is part of UAPI,
-and "struct __kernel_sockaddr_storage" is used in some other
-places of UAPI that need not to change alignments in order to not
-breaking userspace.
+drivers/net/wan/sdla.c: In function ‘sdla_errors’:
+drivers/net/wan/sdla.c:414:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    if (cmd == SDLA_INFORMATION_WRITE)
+       ^
+drivers/net/wan/sdla.c:417:3: note: here
+   default:
+   ^~~~~~~
 
-One option is use typedef between "sockaddr_storage" and
-"__kernel_sockaddr_storage" but it needs to change 35 or 370 lines of
-codes. The other option is to duplicate this simple 2-field structure to
-have a separate "struct sockaddr_storage" so it can use a different
-alignment than "__kernel_sockaddr_storage". Also the structure seems
-stable enough, so it will be low-maintenance to update two structures in
-the future in case of changes.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- include/linux/socket.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/wan/sdla.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/socket.h b/include/linux/socket.h
-index 97523818cb14..301119657125 100644
---- a/include/linux/socket.h
-+++ b/include/linux/socket.h
-@@ -38,7 +38,13 @@ struct linger {
- 	int		l_linger;	/* How long to linger for	*/
- };
+diff --git a/drivers/net/wan/sdla.c b/drivers/net/wan/sdla.c
+index a9ac3f37b904..e2e679a01b65 100644
+--- a/drivers/net/wan/sdla.c
++++ b/drivers/net/wan/sdla.c
+@@ -413,6 +413,7 @@ static void sdla_errors(struct net_device *dev, int cmd, int dlci, int ret, int
+ 		case SDLA_RET_NO_BUFS:
+ 			if (cmd == SDLA_INFORMATION_WRITE)
+ 				break;
++			/* Else, fall through */
  
--#define sockaddr_storage __kernel_sockaddr_storage
-+struct sockaddr_storage {
-+	__kernel_sa_family_t	ss_family;		/* address family */
-+	/* Following field(s) are implementation specific */
-+	char		__data[_K_SS_MAXSIZE - sizeof(unsigned short)];
-+				/* space to achieve desired size, */
-+				/* _SS_MAXSIZE value minus size of ss_family */
-+} __aligned(4);			/* force desired alignment */
- 
- /*
-  *	As we do 4.4BSD message passing we use a 4.4BSD message passing
+ 		default: 
+ 			netdev_dbg(dev, "Cmd 0x%02X generated return code 0x%02X\n",
 -- 
-1.8.3.1
+2.22.0
 
