@@ -6,103 +6,75 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B9EC7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04373C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D639C20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E7820644
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 06:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfG2Gxu (ORCPT
+        id S1727170AbfG2GyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 02:53:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56218 "EHLO huawei.com"
+        Mon, 29 Jul 2019 02:54:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57892 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726900AbfG2Gw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 02:52:26 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1D0D0268880CFE8A0129;
-        Mon, 29 Jul 2019 14:52:25 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 29 Jul
- 2019 14:52:16 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>, Yue Hu <zbestahu@gmail.com>
-Subject: [PATCH 03/22] staging: erofs: fix dummy functions erofs_{get,list}xattr
-Date:   Mon, 29 Jul 2019 14:51:40 +0800
-Message-ID: <20190729065159.62378-4-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190729065159.62378-1-gaoxiang25@huawei.com>
-References: <20190729065159.62378-1-gaoxiang25@huawei.com>
+        id S1726900AbfG2GyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 02:54:04 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 57F4BE75CF37FCE21D54;
+        Mon, 29 Jul 2019 14:54:01 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Jul 2019
+ 14:53:54 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@siol.net>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <eric@anholt.net>
+CC:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] drm/bridge: lvds-encoder: Fix build error while CONFIG_DRM_KMS_HELPER=m
+Date:   Mon, 29 Jul 2019 14:53:44 +0800
+Message-ID: <20190729065344.9680-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
+X-Originating-IP: [10.133.213.239]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dummy functions erofs_{get,list}xattr should be inlined
-without xattr enabled.
+If DRM_LVDS_ENCODER=y but CONFIG_DRM_KMS_HELPER=m,
+build fails:
 
-Signed-off-by: Yue Hu <zbestahu@gmail.com>
-[ Gao Xiang : this patch was "staging: erofs: remove needless
-              dummy functions of erofs_{get,list}xattr. "]
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+drivers/gpu/drm/bridge/lvds-encoder.o: In function `lvds_encoder_probe':
+lvds-encoder.c:(.text+0x155): undefined reference to `devm_drm_panel_bridge_add'
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x228): undefined reference to `drm_atomic_helper_connector_reset'
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x240): undefined reference to `drm_helper_probe_single_connector_modes'
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x268): undefined reference to `drm_atomic_helper_connector_duplicate_state'
+drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x270): undefined reference to `drm_atomic_helper_connector_destroy_state'
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: dbb58bfd9ae6 drm/bridge: ("Fix lvds-encoder since the panel_bridge rework.")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/staging/erofs/xattr.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/bridge/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/erofs/xattr.h b/drivers/staging/erofs/xattr.h
-index fbcd57bdf886..63cc87e3d3f4 100644
---- a/drivers/staging/erofs/xattr.h
-+++ b/drivers/staging/erofs/xattr.h
-@@ -39,6 +39,7 @@ static inline unsigned int xattrblock_offset(struct erofs_sb_info *sbi,
- 	return (xattr_id * sizeof(__u32)) % EROFS_BLKSIZ;
- }
- 
-+#ifdef CONFIG_EROFS_FS_XATTR
- extern const struct xattr_handler erofs_xattr_user_handler;
- extern const struct xattr_handler erofs_xattr_trusted_handler;
- #ifdef CONFIG_EROFS_FS_SECURITY
-@@ -64,25 +65,24 @@ static const struct xattr_handler *xattr_handler_map[] = {
- 		xattr_handler_map[idx] : NULL;
- }
- 
--#ifdef CONFIG_EROFS_FS_XATTR
- extern const struct xattr_handler *erofs_xattr_handlers[];
- 
- int erofs_getxattr(struct inode *, int, const char *, void *, size_t);
- ssize_t erofs_listxattr(struct dentry *, char *, size_t);
- #else
--static int __maybe_unused erofs_getxattr(struct inode *inode, int index,
--	const char *name,
--	void *buffer, size_t buffer_size)
-+static inline int erofs_getxattr(struct inode *inode, int index,
-+				 const char *name, void *buffer,
-+				 size_t buffer_size)
- {
- 	return -ENOTSUPP;
- }
- 
--static ssize_t __maybe_unused erofs_listxattr(struct dentry *dentry,
--	char *buffer, size_t buffer_size)
-+static inline ssize_t erofs_listxattr(struct dentry *dentry,
-+				      char *buffer, size_t buffer_size)
- {
- 	return -ENOTSUPP;
- }
--#endif
-+#endif	/* !CONFIG_EROFS_FS_XATTR */
- 
- #ifdef CONFIG_EROFS_FS_POSIX_ACL
- struct posix_acl *erofs_get_acl(struct inode *inode, int type);
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index a6eec90..77e4b95 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -48,6 +48,7 @@ config DRM_DUMB_VGA_DAC
+ config DRM_LVDS_ENCODER
+ 	tristate "Transparent parallel to LVDS encoder support"
+ 	depends on OF
++	select DRM_KMS_HELPER
+ 	select DRM_PANEL_BRIDGE
+ 	help
+ 	  Support for transparent parallel to LVDS encoders that don't require
 -- 
-2.17.1
+2.7.4
+
 
