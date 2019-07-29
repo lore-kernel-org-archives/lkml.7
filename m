@@ -2,116 +2,106 @@ Return-Path: <SRS0=K9bG=V2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A0FC7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CAFC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B2E214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:14:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="EXVYBv5C"
+	by mail.kernel.org (Postfix) with ESMTP id 6EC922070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 12:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfG2MOf (ORCPT
+        id S1727532AbfG2MOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 08:14:35 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:45780 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726972AbfG2MOf (ORCPT
+        Mon, 29 Jul 2019 08:14:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44648 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726972AbfG2MOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:14:35 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E39CBCC;
-        Mon, 29 Jul 2019 14:14:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1564402473;
-        bh=wCcAv6FM39diFN+jloWxPo/sh6IQxLvyE55J6Ukj43k=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=EXVYBv5C2Fy1T255ejinqH2w7bZ2KZfQLDogsCIDvvZObjLlX3XBstaONLOl1zwYh
-         +PtIcBcFdTS5Es71PD3z2jJ3HGaKPQIMk2i7OaeoC2UTOMCrrnRZ2JpqrMQ08ch3MA
-         cWrtMeLvUSmXhqe96Xg3cKNn3Jz325jQ1LYgV7SM=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH] media: vsp1: fix memory leak of dl on error return path
-To:     Colin Ian King <colin.king@canonical.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190728171124.14202-1-colin.king@canonical.com>
- <e5c3dede-2c59-4c64-7a8c-f022ee06cbfa@ideasonboard.com>
- <22ff8757-fd79-a279-f55e-fc7c8d204a60@canonical.com>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <dd5e9421-9d32-0cad-9411-575569766b2f@ideasonboard.com>
-Date:   Mon, 29 Jul 2019 13:14:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 08:14:40 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6TCA8hP057115
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 08:14:39 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u1y2fwjpt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 08:14:39 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Mon, 29 Jul 2019 13:14:36 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 29 Jul 2019 13:14:33 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6TCEGWk13042042
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jul 2019 12:14:16 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 217A6AE051;
+        Mon, 29 Jul 2019 12:14:32 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E27EDAE05A;
+        Mon, 29 Jul 2019 12:14:31 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.110])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 29 Jul 2019 12:14:31 +0000 (GMT)
+Date:   Mon, 29 Jul 2019 14:14:30 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Young <dyoung@redhat.com>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH] kexec: restore arch_kexec_kernel_image_probe declaration
 MIME-Version: 1.0
-In-Reply-To: <22ff8757-fd79-a279-f55e-fc7c8d204a60@canonical.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+X-Patchwork-Bot: notify
+X-TM-AS-GCONF: 00
+x-cbid: 19072912-0012-0000-0000-0000033748B9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072912-0013-0000-0000-00002170E9DA
+Message-Id: <patch.git-ff1c9045ebdc.your-ad-here.call-01564402297-ext-5690@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-29_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=928 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907290145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2019 13:12, Colin Ian King wrote:
-> On 29/07/2019 13:11, Kieran Bingham wrote:
->> Hi Colin,
->>
->> On 28/07/2019 18:11, Colin King wrote:
->>> From: Colin Ian King <colin.king@canonical.com>
->>>
->>> Currently when the call vsp1_dl_body_get fails and returns null the
->>> error return path leaks the allocation of dl. Fix this by kfree'ing
->>> dl before returning.
->>
->> Eeep. This does indeed look to be the case.
->>
->>>
->>> Addresses-Coverity: ("Resource leak")
->>> Fixes: 5d7936b8e27d ("media: vsp1: Convert display lists to use new body pool")
->>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>
->> Thank you!
-> 
-> Thank static analysis :-)
+arch_kexec_kernel_image_probe function declaration has been removed by
+commit 9ec4ecef0af7 ("kexec_file,x86,powerpc: factor out kexec_file_ops
+functions"). Still this function is overridden by couple of architectures
+and proper prototype declaration is therefore important, so bring it
+back. This fixes the following sparse warning on s390:
+arch/s390/kernel/machine_kexec_file.c:333:5: warning: symbol 'arch_kexec_kernel_image_probe' was not declared. Should it be static?
 
-Bah, that's just the hammer - you're the one finding the nails :-D
---
-Kieran
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+---
+ include/linux/kexec.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-> 
->>
->> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->>
->>
->>> ---
->>>  drivers/media/platform/vsp1/vsp1_dl.c | 4 +++-
->>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/media/platform/vsp1/vsp1_dl.c b/drivers/media/platform/vsp1/vsp1_dl.c
->>> index 104b6f514536..d7b43037e500 100644
->>> --- a/drivers/media/platform/vsp1/vsp1_dl.c
->>> +++ b/drivers/media/platform/vsp1/vsp1_dl.c
->>> @@ -557,8 +557,10 @@ static struct vsp1_dl_list *vsp1_dl_list_alloc(struct vsp1_dl_manager *dlm)
->>>  
->>>  	/* Get a default body for our list. */
->>>  	dl->body0 = vsp1_dl_body_get(dlm->pool);
->>> -	if (!dl->body0)
->>> +	if (!dl->body0) {
->>> +		kfree(dl);
->>>  		return NULL;
->>> +	}
->>>  
->>>  	header_offset = dl->body0->max_entries * sizeof(*dl->body0->entries);
->>>  
->>>
->>
-> 
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 1740fe36b5b7..f7529d120920 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -183,6 +183,8 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 				   bool get_value);
+ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
+ 
++int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
++					 unsigned long buf_len);
+ void * __weak arch_kexec_kernel_image_load(struct kimage *image);
+ int __weak arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+ 					    Elf_Shdr *section,
+-- 
+2.21.0
 
