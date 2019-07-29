@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41721C433FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647DBC76186
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D5B21773
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332452171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jul 2019 19:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564429055;
-	bh=4P2i2gaZ1antH6yCHEkpjWcNYzqo3v1guLr01cMlNC0=;
+	s=default; t=1564429058;
+	bh=OM+oao33KGs0GJ/R8HaZfy5nw4JYJb8g+JBCHwjDJm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mMWptOHW8FSzGjjETcav/WrKPU0Z5PBa90FyOPSSpccsuii/I6qrYcXfkChnX+yd9
-	 heE2txl7+lAAmRWnnB2dvuAp0nLclZxbZ2NTrSoH0qqiU10aF5yg3SzoZc6Uj5XpK5
-	 D51FTpMp5MEMkI0vehv+OcJRKDbj7OaB0Le24W64=
+	b=wN8hxd9kKhWiPvXKe35jrXZHtaRj5753tXJ23IFxxwsVSprG31yk23a2r88sOR8kh
+	 FNeU5LZ708DZbYYNm0gC4fwXAADvwOEnMhSd+Pq2rhEaS5N7MytaQUmnccLvGHhyxi
+	 /XRNOcWyTcsFqzg1tl+bgvhmWoz6MsZ04l/m+RA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388727AbfG2Thd (ORCPT
+        id S2388735AbfG2Thg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 15:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52302 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 15:37:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388714AbfG2Tha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 15:37:30 -0400
+        id S2388723AbfG2Thd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 15:37:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 086212171F;
-        Mon, 29 Jul 2019 19:37:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E135C217F5;
+        Mon, 29 Jul 2019 19:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564429049;
-        bh=4P2i2gaZ1antH6yCHEkpjWcNYzqo3v1guLr01cMlNC0=;
+        s=default; t=1564429052;
+        bh=OM+oao33KGs0GJ/R8HaZfy5nw4JYJb8g+JBCHwjDJm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jT2VXhtSh20kLuh45jJCN8PRyM+8D1C/EB1URDGL4ETtdKLcASg0mhp11o1reFJWD
-         h+584Ksu5cj9JDwUznNx8Kt11pSdNOLxBuYXayxs9na7z73jXiapzzJbpf+AEvg9Iu
-         bUTkZh/aSEXhhLhaQYC1pCtP/qQDjYLOy1esMjvE=
+        b=cGsJ9FJeqDcuAhbtL1dBr15rafB7mb32z+ni0w0I0+tRqJHDEX+8jhIHn2ncClSs7
+         m4zKxz9Y/Sd+p9HL3LhdlTwzMa3LPTBwDrXTmzvy/R9k4nhy7ZdSYPvRWqOBx3QWa5
+         4q0czrqyP4dgXG9zBVN4fKHkc/EoUL3cjE05RJy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ocean Chen <oceanchen@google.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 266/293] f2fs: avoid out-of-range memory access
-Date:   Mon, 29 Jul 2019 21:22:37 +0200
-Message-Id: <20190729190844.753195129@linuxfoundation.org>
+Subject: [PATCH 4.14 231/293] drm/crc-debugfs: User irqsafe spinlock in drm_crtc_add_crc_entry
+Date:   Mon, 29 Jul 2019 21:22:02 +0200
+Message-Id: <20190729190842.182992398@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
 References: <20190729190820.321094988@linuxfoundation.org>
@@ -60,37 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a ]
+[ Upstream commit 1882018a70e06376234133e69ede9dd743b4dbd9 ]
 
-blkoff_off might over 512 due to fs corrupt or security
-vulnerability. That should be checked before being using.
+We can be called from any context, we need to be prepared.
 
-Use ENTRIES_IN_SUM to protect invalid value in cur_data_blkoff.
+Noticed this while hacking on vkms, which calls this function from a
+normal worker. Which really upsets lockdep.
 
-Signed-off-by: Ocean Chen <oceanchen@google.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Emil Velikov <emil.velikov@collabora.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190605194556.16744-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpu/drm/drm_debugfs_crc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 70bd15cadb44..18d51c36a5e3 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2612,6 +2612,11 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
- 		seg_i = CURSEG_I(sbi, i);
- 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
- 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
-+		if (blk_off > ENTRIES_IN_SUM) {
-+			f2fs_bug_on(sbi, 1);
-+			f2fs_put_page(page, 1);
-+			return -EFAULT;
-+		}
- 		seg_i->next_segno = segno;
- 		reset_curseg(sbi, i, 0);
- 		seg_i->alloc_type = ckpt->alloc_type[i];
+diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
+index f9e26dda56d6..021813b20e97 100644
+--- a/drivers/gpu/drm/drm_debugfs_crc.c
++++ b/drivers/gpu/drm/drm_debugfs_crc.c
+@@ -359,8 +359,9 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
+ 	struct drm_crtc_crc *crc = &crtc->crc;
+ 	struct drm_crtc_crc_entry *entry;
+ 	int head, tail;
++	unsigned long flags;
+ 
+-	spin_lock(&crc->lock);
++	spin_lock_irqsave(&crc->lock, flags);
+ 
+ 	/* Caller may not have noticed yet that userspace has stopped reading */
+ 	if (!crc->entries) {
+@@ -385,7 +386,7 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
+ 	head = (head + 1) & (DRM_CRC_ENTRIES_NR - 1);
+ 	crc->head = head;
+ 
+-	spin_unlock(&crc->lock);
++	spin_unlock_irqrestore(&crc->lock, flags);
+ 
+ 	wake_up_interruptible(&crc->wq);
+ 
 -- 
 2.20.1
 
