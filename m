@@ -2,95 +2,159 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C585CC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63257C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9722B206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:27:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564478858;
-	bh=SKrtRvl5PY+xSQMY/2ee+4a4/9Fd63llyHB3gzj8fMw=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=HU7ocgBANI75FX+LHc8kwBgyl2LZDb3WbeLmS6AfG9DxUcCWwoUuZwe0OPpti/Mqy
-	 EuniFD/Dh52Md0vGPUKmyg4iReAnTa7gYPKPwSKdVZBEvtuYnQ4Wt8k0LV+sm4iUwk
-	 qLv/q1o759XL/eKSgzFaTe4RNanJWTm2aqgmvLkg=
+	by mail.kernel.org (Postfix) with ESMTP id 2F95920665
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:28:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1+dT3FF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731304AbfG3J1h (ORCPT
+        id S1731324AbfG3J2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:27:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727247AbfG3J1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:27:37 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2096C20665;
-        Tue, 30 Jul 2019 09:27:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564478856;
-        bh=SKrtRvl5PY+xSQMY/2ee+4a4/9Fd63llyHB3gzj8fMw=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=ygueO2xHBORMlwOlZoAFuDF440R5FDSKuhZ6cPycOBVLY2icVq7RQyfm3gj9MSltQ
-         EHD+sP8Ok6RCtCfOCoL5CJl+xCOS2htNHA+QTX7X/jUH2Lk8lKAQqIijLVZ4zNz5SG
-         yPCiZ48mMqNN5WmPkqyAY/FcD3m9BDPNi0n9uRZI=
-Date:   Tue, 30 Jul 2019 10:27:31 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, arnd@arndb.de,
-        linux@dominikbrodowski.net, ebiederm@xmission.com,
-        akpm@linux-foundation.org, viro@zeniv.linux.org.uk,
-        oleg@redhat.com, steve.mcintyre@arm.com, dave.martin@arm.com
-Subject: Re: [PATCH 0/2] Don't use SIGMINSTKSZ when enforcing alternative
- signal stack size for compat tasks
-Message-ID: <20190730092730.q6djqrv6ag7fcofs@willie-the-truck>
-References: <1532526312-26993-1-git-send-email-will.deacon@arm.com>
- <20190729202302.GA3443@aurel32.net>
+        Tue, 30 Jul 2019 05:28:52 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45969 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727247AbfG3J2w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 05:28:52 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y8so28676200plr.12
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 02:28:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=YuvsEbvLeu9gpGlnWN7D2YTCXaShfpJvy1rRpc/g3Gw=;
+        b=W1+dT3FF153FvLmzoTVoZurqL3wtEb4gbI7pQA4NaeHwdA4jHLKXe/Y8AHo8GYMJJc
+         FwYJwg+yfou7K8KVWBENyT27o41tc/NVPcWSnwtIjj7v1Elu/QZgVxi/WXMXzfCszk1P
+         5MHRR/kHw3x8mDFbR8KEdbTUQ7u12A5LuEYutVQ2gWN6Aw+eDQBCjGh49nhPm49xAO29
+         CK9UE/Kpx5xt2tNdczt1sFwipf2fPEhP+WTy8uAUDZC3g3h8aWQ3pQ3Pv2nZH87dq72n
+         cXeqbo7zQRhHI1DBciVPgd39acSyhjfhEH3ggZz9a4MbBwfdvZ9n4R0VAXyPirTFAadh
+         mxKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=YuvsEbvLeu9gpGlnWN7D2YTCXaShfpJvy1rRpc/g3Gw=;
+        b=CdU5uEzAOjxx0YxI8VZE9GdwZZDClKXP6lWTd5PruDj7q7XdflDqDJGmRKniPBdBVR
+         aibM/EXFK7wZMvVzxkJyWbfjSZica2n3yWtdK3OLVI81TPKGovqNf2ozydf/GYtqIMIn
+         d1HENJtWaq6gzsQMhYD/uJhkNV6xe+Z8U916bqEKydYz25WnCuJ0TkaUDgpNkdFAkml+
+         3IDf91nzVa9fi2vAvkiToKU6ittmWB74HLDLCL6ix0rQfHgWnZ5jpetytGHXcHnBb2O9
+         zGwNFPIfC+Rc3TlpvV7PUpOb9uCW3PGqWljl/DY7maI2q3ZWEPRoQOOBWENdJxHxXScm
+         wg7A==
+X-Gm-Message-State: APjAAAVT0VycugLMiXyRM1//V03ECr8F5t1NSqrJzSJ01RDxXGBvM+YO
+        8KPfRHgxEKWAeFLZ1g7Qg4Q5KG/d
+X-Google-Smtp-Source: APXvYqxOaGD4tc0XVSmbTm2kbit39tXgiR323mk2jyG0N6edIIeiUIciSLvziX46b8Be1tKtESIWBw==
+X-Received: by 2002:a17:902:2baa:: with SMTP id l39mr115483897plb.280.1564478931663;
+        Tue, 30 Jul 2019 02:28:51 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
+        by smtp.gmail.com with ESMTPSA id f3sm102458535pfg.165.2019.07.30.02.28.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 02:28:51 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 14:58:44 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     gregkh@linuxfoundation.org, Matt.Sickler@daktronics.com
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees][PATCH v4] staging: kpc2000: Convert
+ put_page to put_user_page*()
+Message-ID: <20190730092843.GA5150@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190729202302.GA3443@aurel32.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:23:02PM +0200, Aurelien Jarno wrote:
-> On 2018-07-25 14:45, Will Deacon wrote:
-> > Hi all,
-> > 
-> > The Debian folks have observed a failure in the 32-bit arm glibc testsuite
-> > when running under a 64-bit kernel. They tracked this down to sigaltstack(2)
-> > enforcing the alternative signal stack to be at least SIGMINSTKSZ bytes,
-> > which is higher for native arm64 tasks than compat 32-bit tasks.
-> > 
-> > These patches resolve the issue by allowing an architecture to define
-> > COMPAT_SIGMINSTKSZ for compat tasks, which is then used by the sigaltstack
-> > checking code.
-> > 
-> > Feedback welcome,
-> > 
-> > Will
-> > 
-> > --->8
-> > 
-> > Will Deacon (2):
-> >   signal: Introduce COMPAT_SIGMINSTKSZ for use in compat_sys_sigaltstack
-> >   arm64: compat: Provide definition for COMPAT_SIGMINSTKSZ
+put_page() to put_user_page*()
+Reply-To: 
+In-Reply-To: <1564058658-3551-1-git-send-email-linux.bhar@gmail.com>
+
+On Thu, Jul 25, 2019 at 06:14:18PM +0530, Bharath Vedartham wrote:
+[Forwarding patch to linux-kernel-mentees mailing list]
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page().
 > 
-> Only the first patch went to the stable kernels. The second one is
-> missing, so the bug is still not fixed in those kernels. Would it be
-> possible to also get it included?
-
-Damn, you're right. I think the autosel bot picked the first commit but not
-the second. In hindsight, we should've tagged them both, but oh well. I've
-posted the patch here for -stable, with you on cc:
-
-https://lore.kernel.org/lkml/20190730092547.1284-1-will@kernel.org/T/#u
-
-Will
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
+> 
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Jérôme Glisse <jglisse@redhat.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Matt Sickler <Matt.Sickler@daktronics.com>
+> Cc: devel@driverdev.osuosl.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+> ---
+> Changes since v1
+>         - Improved changelog by John's suggestion.
+>         - Moved logic to dirty pages below sg_dma_unmap
+>          and removed PageReserved check.
+> Changes since v2
+>         - Added back PageResevered check as
+>         suggested by John Hubbard.
+> Changes since v3
+>         - Changed the changelog as suggested by John.
+>         - Added John's Reviewed-By tag.
+> Changes since v4
+>         - Rebased the patch on the staging tree.
+>         - Improved commit log by fixing a line wrap.
+> ---
+>  drivers/staging/kpc2000/kpc_dma/fileops.c | 17 ++++++-----------
+>  1 file changed, 6 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> index 48ca88b..f15e292 100644
+> --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
+> +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> @@ -190,9 +190,7 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+>  	sg_free_table(&acd->sgt);
+>   err_dma_map_sg:
+>   err_alloc_sg_table:
+> -	for (i = 0 ; i < acd->page_count ; i++) {
+> -		put_page(acd->user_pages[i]);
+> -	}
+> +	put_user_pages(acd->user_pages, acd->page_count);
+>   err_get_user_pages:
+>  	kfree(acd->user_pages);
+>   err_alloc_userpages:
+> @@ -211,16 +209,13 @@ void  transfer_complete_cb(struct aio_cb_data *acd, size_t xfr_count, u32 flags)
+>  	BUG_ON(acd->ldev == NULL);
+>  	BUG_ON(acd->ldev->pldev == NULL);
+>  
+> -	for (i = 0 ; i < acd->page_count ; i++) {
+> -		if (!PageReserved(acd->user_pages[i])) {
+> -			set_page_dirty(acd->user_pages[i]);
+> -		}
+> -	}
+> -
+>  	dma_unmap_sg(&acd->ldev->pldev->dev, acd->sgt.sgl, acd->sgt.nents, acd->ldev->dir);
+>  
+> -	for (i = 0 ; i < acd->page_count ; i++) {
+> -		put_page(acd->user_pages[i]);
+> +	for (i = 0; i < acd->page_count; i++) {
+> +		if (!PageReserved(acd->user_pages[i]))
+> +			put_user_pages_dirty(&acd->user_pages[i], 1);
+> +		else
+> +			put_user_page(acd->user_pages[i]);
+>  	}
+>  
+>  	sg_free_table(&acd->sgt);
+> -- 
+> 2.7.4
+> 
