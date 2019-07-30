@@ -2,172 +2,193 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65104C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B574C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D37206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F10206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:06:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="WquyfmNw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="VU3eTnD9";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="GULdEayi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731099AbfG3CAs (ORCPT
+        id S1731115AbfG3CGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:00:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38240 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730929AbfG3CAr (ORCPT
+        Mon, 29 Jul 2019 22:06:38 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:31233 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727539AbfG3CGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:00:47 -0400
-Received: by mail-pl1-f196.google.com with SMTP id az7so28206244plb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 19:00:46 -0700 (PDT)
+        Mon, 29 Jul 2019 22:06:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1564452396; x=1595988396;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=DAWwB4PthrIkhHgU0udUzp8i81R1gkPBRTHtTf/eUlU=;
+  b=VU3eTnD9njipZiprlruw9/gCR1IgJy4yE7NOBxRYXmGtPFoPgr7J7RMB
+   8UKSMc4H1K6bsRYykCPgMWlC9Zn36WDPXV9CUN0Q3vnMtizWqKrmDL7er
+   3RJqDIR8uefl4+Wvvlba9jHkBrwfZnjg1fCeTBlETiEzwXa2Dr1V2z5Tr
+   pGwGbErtRu6q00e7yFUAIQpEeicY5LiLSZ+FKB7oBB+GIsiyV8VwhOssr
+   f+15NW22MAMXzM71ZXS1/HEMM7Ch+HPkUCHlNCm9sdlvJFrUgRc9GOuG/
+   SCLZ5julwyKnXBMkJs/DaTjCl5KbHkj+T67o7rW7EZikEaCybxDyH+EQR
+   g==;
+IronPort-SDR: Zyh2aOGVFAiKoOA+aNLiUiELN8oVwQSJO6d4ES9JPlgs0gEyUUAA5OvZnV8kG5w1DfOILnWD+W
+ HmCQpUErw71HvQfhtaV+mgEkQYmv0uKkAC7qEmogtslsFfYZFMavfH+POGD72xt4r7W1btR5bq
+ 2ky0Y0YiKoRRBrfvY3rUXG0j8iK5V8AoGcaw8JE1JbzLzofJKcvbQs0gcr7chFiRkZinfEhNLi
+ M/yes8nkvSSxjzpf1om38E0gcZ+S6MrkoFvBCBRDwmRtbY23QJ/VeSb19NgUvzcqE6uq6ou+BG
+ Vlo=
+X-IronPort-AV: E=Sophos;i="5.64,325,1559491200"; 
+   d="scan'208";a="220903382"
+Received: from mail-sn1nam04lp2052.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.52])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Jul 2019 10:06:35 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ROo4ky4MySbdSFuZTfy+a/pt7L9qpw6ifz4JfydK1EeNKf5ds/1gYbembAqegm9sSMJFnctpCQuL7OwcxK+U8tiVB+Yj2C7G9TlznQ4JTOA3Eu4FyciYodhvlMNPPwFLKcaKcAmEFZsQYx/S/pFP4LHeaGrflXRK/ultDKredCyCRz6F8Nc27Y0y6tuLwmy5SiL/FTZ4yhXgFvMwdP68GCRW00szwbRcIzqtAjc5RoovXTTfYwB4rBfz+jp9WRdYaGNBbH7g6spw3lSQ8QT8uao0Vho9QAFYewkVeSnW+wqzS9Qt0gBcQaBOlFnd2SS8QBqUjv9IpHr1EE7xIc0+7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rZGJJzk0BFAD8E2zFAkqogu/xXdmRo6CozZ14BjqTuc=;
+ b=clqRR08gzZpYJs4thf6Jk5wSke91arx2wj15ouZs5ivO96vNd10XneDYI5v+DYYwM9F0+JteDfql3oXHinX9cJGAuih7/2tG0amF1gr027N5noWb3JGWS4/rb+ixr46nqxKnTbTYEBznPSuGg22DGROPJOmR3Nez9zVNtIqLxb89FXgkgKLYfmeSlS7WrHZogSPGuCztA5lP0ePFd6i6F3/RPYAHMSgZ50bQJ2LHc2tCxN4aTbNovmekChn/wI4Y2lV6S6GY6kzwFiVvQ6nvPhG+tOuXr95y+NlX8FgWXXbp1dkc2tUSFUPnDkXn2v3fdA0wqIPwvsYQldd+pv8Ptg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
+ header.d=wdc.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+CDQKEoJOQIhj1umhGJ0CzRFPA0QDeaVjkPHa4UOJKM=;
-        b=WquyfmNw6WfYapV8car5sPOOJyDMSgxJYM8XVJOUzFKdrPTrkgG069YqbqaZetxhBg
-         fDtxmRxnMa50wUusf1wvGHCme/fBgPCl35Fb6rIlYtNrKGS8AaT7MNZycGejvsp1DNBD
-         zpdBv1pI9ownI+zIbyBMdupgY6VFfWrf3IEyyXi24KaJTjwOZjzvZ7aHJbsG6V4s+gzw
-         r8yUq//6ciLof0gIA2m7mQKcJl5gKQ0nhWYfHMbKySTIBJmFbAjigOQ69eUs7Q9jYa7P
-         QjDW6eT0LPlk6ki1adSAvNSTjWmyPVMwc8W0/zJ7yUs2yTUz7tHHGfy0gk65U32g6ZQE
-         jfYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+CDQKEoJOQIhj1umhGJ0CzRFPA0QDeaVjkPHa4UOJKM=;
-        b=Uq1gQr7twXOCcHAIqgbdXFZ9RSmhGQiz97l3RDgfVzxocRZIwDzap1Vj4CukyOe7Vw
-         ddAMpY70walFacawIRhq2V9O3d2zQCk7sLR9QHPCizQPAsS2djyLZRq/pU4o0lV8lJdJ
-         tfCP6vckpt9yucYX3tbNYMcF4K2O5zEFjjIM71+BT6qfqChlgOw0KD3UTlkG+bOhJBfo
-         0neFE3bfgH/cl0Zm606Ae6iqH5YWRNRRbdV5OvzskftGgFjZ9gYPEFOQNeKROE5SPoAD
-         kriiG5lDNew10t0GQ7Jcf8hJXgDx4tXamJshBzVInrJjkVKJfhJvyR3ZIb0qzCNu+VTG
-         o7yw==
-X-Gm-Message-State: APjAAAV8o7kP8G/YAuE2HfPuPx4Ym4T90R0xKszy4GQ9o1gXwM2Q7JMe
-        +5yQRJeEZPOc1uHhwRbxIekvF7yC
-X-Google-Smtp-Source: APXvYqx6yg/z/CRl2zc2hnB6QNwoaIBbYgVGoBKKZSL89Hs5Ce+HLhbVWgC642xrRuIyMGwPzQS2PQ==
-X-Received: by 2002:a17:902:4c88:: with SMTP id b8mr116727557ple.29.1564452046215;
-        Mon, 29 Jul 2019 19:00:46 -0700 (PDT)
-Received: from etsukata.local (fs76eecbcd.tkyc008.ap.nuro.jp. [118.238.203.205])
-        by smtp.gmail.com with ESMTPSA id k3sm47769126pgq.92.2019.07.29.19.00.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 19:00:45 -0700 (PDT)
-Subject: Re: [PATCH] tracing: Prevent RCU EQS breakage in preemptirq events
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     joel@joelfernandes.org, paulmck@linux.vnet.ibm.com,
-        tglx@linutronix.de, peterz@infradead.org, mingo@redhat.com,
-        fweisbec@gmail.com, luto@amacapital.net,
-        linux-kernel@vger.kernel.org
-References: <20190729010734.3352-1-devel@etsukata.com>
- <20190729112126.6554b141@gandalf.local.home>
-From:   Eiichi Tsukata <devel@etsukata.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=devel@etsukata.com; keydata=
- mQINBFydxe0BEAC2IUPqvxwzh0TS8DvqmjU+pycCq4xToLnCTy9gfmHd/mJWGykQJ7SXXFg2
- bTAp8XcITVEDvhMUc0G4l+RBYkArwkaMHO5iM4a7+Gnn6beV1CL/dk9Wu5gkThgL11bhyKmQ
- Ub1duuVkX3fN2cRW2DrHsTp+Bxd/pq5rrKAbA/LIFmF4Oipapgr69I5wUeYywpzPFuaVkoZc
- oLdAscwEvPImSOAAJN0sesBW9sBAH34P+xaW2/Mug5aNUm/K6whApeFV/qz2UuOGjzY4fbYw
- AjK1ALIK8rdeAPxvp2e1dXrj29YrIZ2DkzdR0Y9O8Lfz1Pp5aQ+pwUQzn2vWA3R45IItVtV5
- 8v04N/F7rc/1OHFpgFtzgAO2M51XiIPdbSmF/WuWPsdEHWgpVW3H/I8amstfH519Xb/AOKYQ
- 7a14/3EESVuqXyyfCdTVnBNRRY0qXJ7mA0oParMD8XKMOVLj6Nlvs2Zh2LjNJhUDsssKNBg+
- sMKiaeSV8dtcbH2XCc2GDKsYbrIKG3cu5nZl8xjlM3WdtdvqWpuHj6KTYBQgsXngBA7TDZWT
- /ccYyEQpUdtCqPwV0BPho6pr8Ug6J99b1KyZKd/z3iQNHYYh3Iy08wIfUHEXoFiYhMtbfKtW
- 21B/27EABXMHYnvekhJkVA9E4sfGlDZypU7hWEoiGnAZLCkr2QARAQABtCNFaWljaGkgVHN1
- a2F0YSA8ZGV2ZWxAZXRzdWthdGEuY29tPokCVAQTAQgAPhYhBKeOigYiCRnByygZ7IOzEG5q
- Kr5hBQJcncXtAhsjBQkJZgGABQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEIOzEG5qKr5h
- UvMP/RIo3iIID+XjPPQOjX26wfLrAapgKkBF2KlenVXpEua8UUY0NV4l1l796TrMWtlRS0B1
- ikGKDcsbP4eQFLrmguaNMihr89YQzM2rwFlloSH8R3bTkub2if/5RCJj2kPXEjgwCb7tofDN
- Hz7hjZOQUYNo3yiyeED/mtJGR05+twMJzedehBHxoEFb3cWXT/aD2fsYdZzRqw74rBAdlTnD
- q0aaJJ/WOP7zSwodQLwTjTxF4WorDY31Q1EqqJun6jErHviWu7mYfSSRc4q8tzh8XfIP7WZV
- O9jB+gYTZxhbgXdxZurV3hiwHgKPgC6Q2bSP6vRgSbzNhvS+jc05JWCWMnpe8kdRyViHKIfm
- y0Kap32OwRP5x+t0y52jLryxvBfUF3xGI78Qx9f8L5l56GQlGkgBH5X2u109XvqD+aed5aPk
- mUSsvO94Mv6ABoGe3Im0nfI07oxwIp79etG1kBE9q4kGiWQ8/7Uhc2JR6a/vIceCVJDyagll
- D7UvNITbFvhsTh6KaDnZQYiGMja2FxXN6sCvjyr+hrya/sqBZPQqXzpvfBq5nLm1rAvJojqM
- 7HA9742wG3GmdwogdbUrcAv6x3mpon12D0guT+4bz5LTCfFFTCBdPLv7OsQEhphsxChGsdt2
- +rFD48wXU6E8XNDcWxbGH0/tJ05ozhqyipAWNrImuQINBFydxe0BEAC6RXbHZqOo8+AL/smo
- 2ft3vqoaE3Za3XHRzNEkLPXCDNjeUKq3/APd9/yVKN6pdkQHdwvOaTu7wwCyc/sgQn8toN1g
- tVTYltW9AbqluHDkzTpsQ+KQUTNVBFtcTM4sMQlEscVds4AcJFlc+LRpcKdVBWHD0BZiZEKM
- /yojmJNN9nr+rp1bkfTnSes8tquUU3JSKLJ01IUlxVMtHPRTT/RBRkujSOCk0wcXh1DmWmgs
- y9qxLtbV8dIh2e8TQIxb3wgTeOEJYhLkFcVoEYPUajHNyNork5fpHNEBoWGIY9VqsA38BNH6
- TZLQjA/6ERvjzDXm+lY7L11ErKpqbHkajliL/J/bYqIebKaQNCO14iT62qsYh/hWTPsEEK5S
- m8T92IDapRCge/hQMuWOzpVyp3ubN0M98PC9MF+tYXQg3kuNoEa/8isArhuv/kQWD0odW4aH
- 3VaUufI+Gy5YmjRQckSHrG5sTTnh13EI5coVIo+HFLBSRBqTkrRjfcnPHvDamcteuzKFkk+m
- uGO4xa6/vacR8cZB/GJ7bLJqNdaJSVDDXc+UYXiN1AITMtUYQoP6fEtw1tKjVbv3gc52kHG6
- Q71FFJU0f08/S3VnyCCjQMy4alQVan3DSjykYNC8ND0lovMtgmSCf4PmGlxCbninP5OU+4y3
- MRo74kGnhqpc9/djiQARAQABiQI8BBgBCAAmFiEEp46KBiIJGcHLKBnsg7MQbmoqvmEFAlyd
- xe0CGwwFCQlmAYAACgkQg7MQbmoqvmGAUA/+P1OdZ6bAnodkAuFmR9h3Tyl+29X5tQ6CCQfp
- RRMqn9y7e1s2Sq5lBKS85YPZpLJ0mkk9CovJb6pVxU2fv5VfL1XMKGmnaD9RGTgsxSoRsRtc
- kB+sdbi5YDsjqOd4NfHvHDpPLcB6dW0BAC3tUOKClMmIFy2RZGz5r/6sWwoDWzJE0YTe63ig
- h64atJYiVqPo4Bt928xC/WEmgWiYoG+TqTFqaK3RbbgNCyyEEW6eJhmKQh1gP0Y9udnjFoaB
- oJGweB++KV1u6eDqjgCmrN603ZIg1Jo2cmJoQK59SNHy/C+g462NF5OTO/hGEYJMRMH+Fmi2
- LyGDIRHkhnZxS12suGxka1Gll0tNyOXA88T2Z9wjOsSHxenGTDv2kP5uNDw+gCZynBvKMnW4
- 8rI3fWjNe5s1rK9a/z/K3Bhk/ojDEJHSeXEr3siS2/6E4UhDNXd/ZGZi5fRI2lo8Cp+oTS0Q
- m6FIxqnoPWVCsi1XJdSSQtTMxU0qesAjRXTPE76lMdUQkYZ/Ux1rbzYAgWFatvx4aUntR+1N
- 2aCDuAIID8CNIhx40fGfdxVa4Rf7vfZ1e7/mK5lDZVnWwTOJFNouvlILKLcDPNO51R5XKsc1
- zxZwI+P1sTpSBI/KtFfphfaN93H3dLiy26D1P8ShFz6IEfTgK4OVWhqCaOe9oTXTwwNzBQ4=
-Message-ID: <2ceec933-503e-5d58-60b4-85b491b017d4@etsukata.com>
-Date:   Tue, 30 Jul 2019 11:00:42 +0900
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190729112126.6554b141@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rZGJJzk0BFAD8E2zFAkqogu/xXdmRo6CozZ14BjqTuc=;
+ b=GULdEayiUswnt8nFYDPNrQd+YCZ0Uf4XxxJMt9AHqk0JVWvPO5htVUtRdMw3EQMtMVY1JL4qzJlhXb1O0LvO7fzqYhPo8Lh6rlYiBrq/DoYbFsD7z/t71HaYNaaW3VCCP2Qf5G4+ZvdS7bJzm7rl1lw8bvnRaE8+8UaGxxkCAoQ=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.58.207) by
+ BYAPR04MB4101.namprd04.prod.outlook.com (52.135.215.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.15; Tue, 30 Jul 2019 02:06:33 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::65a9:db0a:646d:eb1e]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::65a9:db0a:646d:eb1e%6]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
+ 02:06:33 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Andreas Dilger <adilger@dilger.ca>
+CC:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        Masato Suzuki <masato.suzuki@wdc.com>
+Subject: Re: [PATCH] ext4: Fix deadlock on page reclaim
+Thread-Topic: [PATCH] ext4: Fix deadlock on page reclaim
+Thread-Index: AQHVQswib+fLuRINzEOhyZKScmS/IQ==
+Date:   Tue, 30 Jul 2019 02:06:33 +0000
+Message-ID: <BYAPR04MB5816BD641DF55A93986DF826E7DC0@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <20190725093358.30679-1-damien.lemoal@wdc.com>
+ <20190725115442.GA15733@infradead.org>
+ <20190726224423.GE7777@dread.disaster.area> <20190726225508.GA13729@mit.edu>
+ <BYAPR04MB58162929012135E47C68923AE7C30@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <3D2360FA-AD48-48AE-B1CE-D1CF58C1B8AB@dilger.ca>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [199.255.47.11]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 34d260bd-0935-4578-fc3c-08d714928b8c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB4101;
+x-ms-traffictypediagnostic: BYAPR04MB4101:
+x-microsoft-antispam-prvs: <BYAPR04MB41010BF909DC7CB87B70861BE7DC0@BYAPR04MB4101.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0114FF88F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(189003)(199004)(6506007)(25786009)(102836004)(186003)(256004)(26005)(74316002)(53546011)(6246003)(8936002)(14444005)(3846002)(8676002)(33656002)(305945005)(81166006)(66066001)(6116002)(4326008)(99286004)(446003)(76176011)(7696005)(68736007)(486006)(81156014)(476003)(66556008)(66946007)(76116006)(6916009)(54906003)(229853002)(86362001)(6436002)(9686003)(66476007)(5660300002)(55016002)(66446008)(64756008)(71190400001)(91956017)(71200400001)(52536014)(2906002)(7736002)(14454004)(478600001)(53936002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4101;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: KyudndvP1MUGxdyTNylfLU3zyh8YljkUXBPfWOxxrqrQdXoaYoZCO/u3mbas/cX536DFD6rS8ddUDQdMsbPNQueOksxj5EuNcF2tNFsa2Kup1XmIn+89GixXv2dF5+FhK9mhafIgE2SA95FcfGeYzeNfBTLHKYYMb3hJtR9eOVe71wemcMxowC0NOhhHEgQasgcc6gtMy7N7NJwu6qGwZHWIGKjggEDWxsW/gfY6O80y9E5LiXEvG+c7Tf4tccB1yDuObUYmwsB2mmZlyASnY4GuDLJ6BoXnTfXw3hZg6c7m3bqybi/RBk6iNnKe/tC97vcmzSIpbCah97d7yOe+5yviJva6RlVAPX9a5lnLR01A8Ivl6mpYcLlvypYOO0fq3i1/xqbFrhdw0bUpNNpwrwg9n90RDeypWk8F88HQUQw=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34d260bd-0935-4578-fc3c-08d714928b8c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 02:06:33.3688
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Damien.LeMoal@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for comments.
-
-On 2019/07/30 0:21, Steven Rostedt wrote:
-> On Mon, 29 Jul 2019 10:07:34 +0900
-> Eiichi Tsukata <devel@etsukata.com> wrote:
-> 
->> If context tracking is enabled, causing page fault in preemptirq
->> irq_enable or irq_disable events triggers the following RCU EQS warning.
->>
->> Reproducer:
->>
->>   // CONFIG_PREEMPTIRQ_EVENTS=y
->>   // CONFIG_CONTEXT_TRACKING=y
->>   // CONFIG_RCU_EQS_DEBUG=y
->>   # echo 1 > events/preemptirq/irq_disable/enable
->>   # echo 1 > options/userstacktrace
-> 
-> So the problem is only with userstacktrace enabled?
-
-It can happen when tracing code causes page fault in preemptirq events.
-For example, the following perf command also hit the warning:
-
-  # perf record -e 'preemptirq:irq_enable' -g ls
-
-
->>  
->>  __visible void trace_hardirqs_on_caller(unsigned long caller_addr)
->>  {
->> +	enum ctx_state prev_state;
->> +
->>  	if (this_cpu_read(tracing_irq_cpu)) {
->> -		if (!in_nmi())
->> +		if (!in_nmi()) {
-> 
-> This is a very high fast path (for tracing irqs off and such). Instead
-> of adding a check here for a case that is seldom used (userstacktrace
-> and tracing irqs on/off). Move this to surround the userstack trace
-> code.
-> 
-> -- Steve
-
-If the problem was only with userstacktrace, it will be reasonable to
-surround only the userstack unwinder. But the situation is similar to
-the previous "tracing vs CR2" case. As Peter taught me in
-https://lore.kernel.org/lkml/20190708074823.GV3402@hirez.programming.kicks-ass.net/
-there are some other codes likely to to user access.
-So I surround preemptirq events earlier.
+Andreas,=0A=
+=0A=
+On 2019/07/30 3:40, Andreas Dilger wrote:=0A=
+> On Jul 26, 2019, at 8:59 PM, Damien Le Moal <damien.lemoal@wdc.com> wrote=
+:=0A=
+>>=0A=
+>> On 2019/07/27 7:55, Theodore Y. Ts'o wrote:=0A=
+>>> On Sat, Jul 27, 2019 at 08:44:23AM +1000, Dave Chinner wrote:=0A=
+>>>>>=0A=
+>>>>> This looks like something that could hit every file systems, so=0A=
+>>>>> shouldn't we fix this in common code?  We could also look into=0A=
+>>>>> just using memalloc_nofs_save for the page cache allocation path=0A=
+>>>>> instead of the per-mapping gfp_mask.=0A=
+>>>>=0A=
+>>>> I think it has to be the entire IO path - any allocation from the=0A=
+>>>> underlying filesystem could recurse into the top level filesystem=0A=
+>>>> and then deadlock if the memory reclaim submits IO or blocks on=0A=
+>>>> IO completion from the upper filesystem. That's a bloody big hammer=0A=
+>>>> for something that is only necessary when there are stacked=0A=
+>>>> filesystems like this....=0A=
+>>>=0A=
+>>> Yeah.... that's why using memalloc_nofs_save() probably makes the most=
+=0A=
+>>> sense, and dm_zoned should use that before it calls into ext4.=0A=
+>>=0A=
+>> Unfortunately, with this particular setup, that will not solve the probl=
+em.=0A=
+>> dm-zoned submit BIOs to its backend drive in response to XFS activity. T=
+he=0A=
+>> requests for these BIOs are passed along to the kernel tcmu HBA and end =
+up in=0A=
+>> that HBA command ring. The commands themselves are read from the ring an=
+d=0A=
+>> executed by the tcmu-runner user process which executes them doing=0A=
+>> pread()/pwrite() to the ext4 file. The tcmu-runner process being a diffe=
+rent=0A=
+>> context than the dm-zoned worker thread issuing the BIO,=0A=
+>> memalloc_nofs_save/restore() calls in dm-zoned will have no effect.=0A=
+> =0A=
+> One way to handle this is to pass on PF_MEMALLOC/memalloc_nofs_save state=
+=0A=
+> in the BIO so that the worker thread will also get the correct behaviour=
+=0A=
+> when it is processing this IO submission.=0A=
+=0A=
+But there is no BIO to work with here: dm-zoned BIOs are transformed into a=
+n=0A=
+application (tcmu-runner running the ZBC file handler) calls to pread()/pwr=
+ite()=0A=
+into an ext4 file. And processing of these calls trigger the direct reclaim=
+ and=0A=
+FS recursion which cause the deadlock. So BIOs are not the proper vehicle t=
+o=0A=
+transport the information about the NOFS allocation.=0A=
+=0A=
+If we had a pread_nofs()/pwrite_nofs(), that would work. Or we could define=
+ a=0A=
+RWF_NORECLAIM flag for pwritev2()/preadv2(). This last one could actually b=
+e the=0A=
+cleanest approach.=0A=
+=0A=
+Best regards.=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
