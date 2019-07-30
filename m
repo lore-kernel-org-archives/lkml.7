@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C070C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4991C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5103206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1A82087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gqg94NNJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hk0Bac0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388295AbfG3TN3 (ORCPT
+        id S2388347AbfG3TN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 15:13:29 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33339 "EHLO
+        Tue, 30 Jul 2019 15:13:28 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45429 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388279AbfG3TNZ (ORCPT
+        with ESMTP id S2388264AbfG3TNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Jul 2019 15:13:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id g2so30339264pfq.0
+Received: by mail-pf1-f193.google.com with SMTP id r1so30327122pfq.12
         for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 12:13:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4p7Yl4EvALrNapOIPblFQ4RqIFxBJYtmcwuhdJ36a4M=;
-        b=gqg94NNJOdf9cHSR+XH6US+L0jKiqTwG0Xmx1oLuP1Hhp+nDgjGFTPn60im+Ecit12
-         y/IVI2h60aZld1+y9XWSydA3vMe0xeJM9dR6rAMy+Kp7VanoIic5nQjtZLeRn6MaGJms
-         8PRL5H4oh61RS+rUbxcD5n83K03BRRSwK4xJY=
+        bh=aCFi9VKfA/regOH6ME0h7V2OJPrhlZ4OE3HFuZl/Mr4=;
+        b=hk0Bac0aiWQasaW/82OqlXyeS+zRRbeGWMF9iYoYCCjmyk5hKfhbErMAfoM104i7Br
+         TdpwZFEl9pU+frxz1cazoSP6L1BNAC+8jncLJVwuFEsDynqzb3OP7vNis0EU/ikkPW8m
+         /LeN2upB3IFugt/kUzhj6IfHluZI3rXDFFkRA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4p7Yl4EvALrNapOIPblFQ4RqIFxBJYtmcwuhdJ36a4M=;
-        b=DMhK60qiqeRUTBJqcl3YvkGBWnSjq+eE165I1lUXo7C/I5vZ4czt7dBJcVZMFrjLKs
-         eIViijrotDqVrfUZU88r3qdDQdlGATtK7u/kAgLesZU+PsgzUd6tyNRzIv5s7vtM+X2g
-         zYnhaBKeow9GsV0Ab0kw3oL4goQK3vk75C0scXBzFEdNpwXjeKJIVz1+E/OzRzJU0HEE
-         t+cCoBKfbupZYQbmfR62fisFR5gyDJmJnXIPvKgvXqaMnDP0tY3mvSbMobkh9Cw7l0Zo
-         lQfAeSIWlmDpTWlRezPoSWyGTtKFZ/JjjhU39j1Yb1smKzkfVFfiTBpaBGtZrgz+2RBH
-         g7Kg==
-X-Gm-Message-State: APjAAAUAn2mxUOeeprUFnOyz+ldtGjU4LyVObboCs51qsSFMymGGvtpd
-        4tCyW1xu/rr/MCVpHMmWeQyVxw==
-X-Google-Smtp-Source: APXvYqwoE5YtV9czMWqYh5jaOXzzNfppyGGX1LntKX22Zkz6VcJhYSb1VjmmI91pfMMS60cxTSLgPQ==
-X-Received: by 2002:aa7:9407:: with SMTP id x7mr44914613pfo.163.1564514004448;
-        Tue, 30 Jul 2019 12:13:24 -0700 (PDT)
+        bh=aCFi9VKfA/regOH6ME0h7V2OJPrhlZ4OE3HFuZl/Mr4=;
+        b=LxYznkYhsYURI7Gr7kA7OCQGQ86v/MM0SiYU2AFWtT6YACaha4Nw2W3bfB4FUVdUMo
+         5nWmZDbdgznIGT3L0lN+OI+5EPQQIqPSkOAM0hM0Y36flM8FSkXpRHAVHEMabdAfizkg
+         6JYzL4EejFVUivEmQ8zfhB1cxSyHZQoXw8GET5Xnv4q2IPZBoyrwLfmEzpdlICVAzxI3
+         7nJabwACSH1+QmriAJSiWRFqR1YXlExzHQcoflHlI7eqcpBbg2YnAiVdt+eidT9OUMWF
+         gPwK8bVUE2LIZVM0FK+tmaBogrFKWRemo5ae6eVIJ2eNYmeSjC1+4Sis5uH7CzBmURU1
+         DJMw==
+X-Gm-Message-State: APjAAAV1RdPL8qvzXip/yJfpaM2WcA/thNqba50ADEw/ikZ6uVUXYnYw
+        eEgreNJJQpzl1qAAIjD495z4mw==
+X-Google-Smtp-Source: APXvYqyTpbQ7f3xITrwKbyFWcIPqfOysYAwjkN9vIf84u+eLPDg/LwjNFZLDtMcMgZUrWQ+iiuxmZg==
+X-Received: by 2002:a65:57ca:: with SMTP id q10mr113599135pgr.52.1564514003446;
+        Tue, 30 Jul 2019 12:13:23 -0700 (PDT)
 Received: from skynet.sea.corp.google.com ([2620:0:1008:1100:c4b5:ec23:d87b:d6d3])
-        by smtp.gmail.com with ESMTPSA id n89sm84649540pjc.0.2019.07.30.12.13.23
+        by smtp.gmail.com with ESMTPSA id n89sm84649540pjc.0.2019.07.30.12.13.22
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
         Tue, 30 Jul 2019 12:13:23 -0700 (PDT)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
 Cc:     kristen@linux.intel.com, keescook@chromium.org,
         Thomas Garnier <thgarnie@chromium.org>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 10/11] x86/paravirt: Adapt assembly for PIE support
-Date:   Tue, 30 Jul 2019 12:12:54 -0700
-Message-Id: <20190730191303.206365-11-thgarnie@chromium.org>
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 09/11] x86/power/64: Adapt assembly for PIE support
+Date:   Tue, 30 Jul 2019 12:12:53 -0700
+Message-Id: <20190730191303.206365-10-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
 In-Reply-To: <20190730191303.206365-1-thgarnie@chromium.org>
 References: <20190730191303.206365-1-thgarnie@chromium.org>
@@ -78,64 +77,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-if PIE is enabled, switch the paravirt assembly constraints to be
-compatible. The %c/i constrains generate smaller code so is kept by
-default.
+Change the assembly code to use only relative references of symbols for the
+kernel to be PIE compatible.
 
 Position Independent Executable (PIE) support will allow to extend the
 KASLR randomization range below 0xffffffff80000000.
 
 Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
-Acked-by: Juergen Gross <jgross@suse.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/paravirt_types.h | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ arch/x86/power/hibernate_asm_64.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
-index 70b654f3ffe5..fd7dc37d0010 100644
---- a/arch/x86/include/asm/paravirt_types.h
-+++ b/arch/x86/include/asm/paravirt_types.h
-@@ -338,9 +338,25 @@ extern struct paravirt_patch_template pv_ops;
- #define PARAVIRT_PATCH(x)					\
- 	(offsetof(struct paravirt_patch_template, x) / sizeof(void *))
+diff --git a/arch/x86/power/hibernate_asm_64.S b/arch/x86/power/hibernate_asm_64.S
+index a4d5eb0a7ece..796cd19d575b 100644
+--- a/arch/x86/power/hibernate_asm_64.S
++++ b/arch/x86/power/hibernate_asm_64.S
+@@ -23,7 +23,7 @@
+ #include <asm/frame.h>
  
-+#ifdef CONFIG_X86_PIE
-+#define paravirt_opptr_call "a"
-+#define paravirt_opptr_type "p"
-+
-+/*
-+ * Alternative patching requires a maximum of 7 bytes but the relative call is
-+ * only 6 bytes. If PIE is enabled, add an additional nop to the call
-+ * instruction to ensure patching is possible.
-+ */
-+#define PARAVIRT_CALL_POST  "nop;"
-+#else
-+#define paravirt_opptr_call "c"
-+#define paravirt_opptr_type "i"
-+#define PARAVIRT_CALL_POST  ""
-+#endif
-+
- #define paravirt_type(op)				\
- 	[paravirt_typenum] "i" (PARAVIRT_PATCH(op)),	\
--	[paravirt_opptr] "i" (&(pv_ops.op))
-+	[paravirt_opptr] paravirt_opptr_type (&(pv_ops.op))
- #define paravirt_clobber(clobber)		\
- 	[paravirt_clobber] "i" (clobber)
+ ENTRY(swsusp_arch_suspend)
+-	movq	$saved_context, %rax
++	leaq	saved_context(%rip), %rax
+ 	movq	%rsp, pt_regs_sp(%rax)
+ 	movq	%rbp, pt_regs_bp(%rax)
+ 	movq	%rsi, pt_regs_si(%rax)
+@@ -114,7 +114,7 @@ ENTRY(restore_registers)
+ 	movq	%rax, %cr4;  # turn PGE back on
  
-@@ -379,9 +395,10 @@ int paravirt_disable_iospace(void);
-  * offset into the paravirt_patch_template structure, and can therefore be
-  * freely converted back into a structure offset.
-  */
--#define PARAVIRT_CALL					\
--	ANNOTATE_RETPOLINE_SAFE				\
--	"call *%c[paravirt_opptr];"
-+#define PARAVIRT_CALL						\
-+	ANNOTATE_RETPOLINE_SAFE					\
-+	"call *%" paravirt_opptr_call "[paravirt_opptr];"	\
-+	PARAVIRT_CALL_POST
- 
- /*
-  * These macros are intended to wrap calls through one of the paravirt
+ 	/* We don't restore %rax, it must be 0 anyway */
+-	movq	$saved_context, %rax
++	leaq	saved_context(%rip), %rax
+ 	movq	pt_regs_sp(%rax), %rsp
+ 	movq	pt_regs_bp(%rax), %rbp
+ 	movq	pt_regs_si(%rax), %rsi
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
