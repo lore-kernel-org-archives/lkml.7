@@ -2,501 +2,207 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75471C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEF9C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321472064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:23:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="OgS8ONel";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bIub1S0x"
+	by mail.kernel.org (Postfix) with ESMTP id B146E208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:23:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564467816;
+	bh=7FZ/pMFNKuOnp9FdOoTgWqecv4FgzB0iI31KCf5u0D4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gpXsPEA2S7oF2MLzLVr+gCJ+LBMJa1Z2X3KraXZrCAmk3mmFwcSOlVb5VY85B6bO/
+	 b1++eNwuSkkm0bCdCCOdMiZgVIc3gb21TI63DPDyj99/CQpW91cUMjWOrEt/s3JjcR
+	 GQjZwFfDT0mx3ieX3GBRYys1yftwjFpMi59hkMU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbfG3GXY (ORCPT
+        id S1728857AbfG3GXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 02:23:24 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:36705 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728771AbfG3GXU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 02:23:20 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E58461779;
-        Tue, 30 Jul 2019 02:23:17 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 30 Jul 2019 02:23:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=5PjXi9bBdv+4n
-        kmTJerIj0zlz1FXuUlQAWhQKK2NESo=; b=OgS8ONelBeCCCGwvwPNU3lImyIsG2
-        XSq+1eZajzt/ZgGVIiH954VmyYkuTkN33+SKMxn69KZ5MN49RjNCA06NJz9gQn7I
-        kYh9kAaXVVgOi8xXbiejYKe32kfz3e7FJCf4SaZI4r/04nv6FKqvsWR/zlDwZH+z
-        O13FPvMnkYFFVF2oij6KohnI819dGKzMX7lSBd8Zi5Sfq86t1SI4c5oy+VhQXlun
-        6Gxg6kA51j0JaU3pWXc1rnBSmOUZHjeu9vISOToh9n/FWpvzUJ8rxT62eDxjAnR2
-        PRVHU6S9m5yFS2UTQYealSBqbySKUUeoYln3y6xITO0YCzW9EKJDD7CnQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=5PjXi9bBdv+4nkmTJerIj0zlz1FXuUlQAWhQKK2NESo=; b=bIub1S0x
-        R6+ftucgEcf6vJpOXK4+0sT5+D5FziMENJfdWW7WxuakekVrM/ztatKqtAXh3kKA
-        yPEvTaXRjBrq6mA7LrLhBymxec9MG5p3vMJPo/271FssVFugfi2pyFcJZbmob7dD
-        MPGIdsFTlk3f922wdT+o36fTiEO/7ZSWCeD4dHorkSUPM+S6I4Iq/uoG4oH/zQ6D
-        hyYrE8sy4YoNetwIdXdPbFmxqr2jq3UHO5wu+rH6RboeDvQ+AucvWdS31U4O6ZbW
-        VDEitrusDShbXdj3mlLT3QDKTeGTzPtF2tjWYTFE+/oCwyQBY5Dl326ebGCoomWr
-        uJVJ3rjvNZz+ug==
-X-ME-Sender: <xms:VeI_XSVceDB6DIizqXU2Hm5eDMRIkptNetRKswW2vYBQQP4SFg1gfA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledvgddutdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
-    jhdrihgurdgruheqnecukfhppedvtddvrdekuddrudekrdeftdenucfrrghrrghmpehmrg
-    hilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigv
-    pedt
-X-ME-Proxy: <xmx:VeI_XVy__5DQy0oRarLiBRLuJ1QGlz39p5HTQvjMH_Hi5RWd_gRcsg>
-    <xmx:VeI_XawYAFxnW7pgJ9NfSCakX5LjuhLJAmBQIv5MlTd4f_Tcpqx6iw>
-    <xmx:VeI_XSBzR0PIe9RD_A_K304u2ZpknbGF6g_rgql6w2b1jGqSQdvxBQ>
-    <xmx:VeI_XSVcytPToN7Zf7Mq-oXQUsWyobLxG_Rb5HoC8Y6czVq9Ztp_dA>
-Received: from mistburn.bha-au.ibmmobiledemo.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8140180066;
-        Tue, 30 Jul 2019 02:23:13 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-mmc@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
-        adrian.hunter@intel.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        ryanchen.aspeed@gmail.com
-Subject: [PATCH v3 2/2] mmc: Add support for the ASPEED SD controller
-Date:   Tue, 30 Jul 2019 15:53:16 +0930
-Message-Id: <20190730062316.32037-3-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190730062316.32037-1-andrew@aj.id.au>
-References: <20190730062316.32037-1-andrew@aj.id.au>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 30 Jul 2019 02:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728771AbfG3GXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 02:23:35 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 451CB2064A;
+        Tue, 30 Jul 2019 06:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564467814;
+        bh=7FZ/pMFNKuOnp9FdOoTgWqecv4FgzB0iI31KCf5u0D4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DzqGr9iuNAMqsQsSNIHluH01aaxMXfk6LxptUsvAp6pcjYJwQ3a8L1waNXBjlcpdW
+         moZGSQyrdJK3ywdUukDcHM2iMjcogKqZNJGoUkDM6FWXOkDzbGfchvfP4zo8NLd8a0
+         /Z21bWe/CksTRxxDZtgBcPERcyDuNhtV92AMVepA=
+Date:   Tue, 30 Jul 2019 15:23:31 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v2 00/12] tracing/probe: Add multi-probes per event
+ support
+Message-Id: <20190730152331.2e5867bf8ec7e57bd8dc64d5@kernel.org>
+In-Reply-To: <20190704072833.4bc17d3c@gandalf.local.home>
+References: <156095682948.28024.14190188071338900568.stgit@devnote2>
+        <20190704153958.16a97c881aebbc5898b1264e@kernel.org>
+        <20190704072833.4bc17d3c@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a minimal driver for ASPEED's SD controller, which exposes two
-SDHCIs.
+Hi Steve,
 
-The ASPEED design implements a common register set for the SDHCIs, and
-moves some of the standard configuration elements out to this common
-area (e.g. 8-bit mode, and card detect configuration which is not
-currently supported).
+Have you already picked this series?
+If not yet, should I update and resend this series?
 
-The SD controller has a dedicated hardware interrupt that is shared
-between the slots. The common register set exposes information on which
-slot triggered the interrupt; early revisions of the patch introduced an
-irqchip for the register, but reality is it doesn't behave as an
-irqchip, and the result fits awkwardly into the irqchip APIs. Instead
-I've taken the simple approach of using the IRQ as a shared IRQ with
-some minor performance impact for the second slot.
+Thank you,
 
-Ryan was the original author of the patch - I've taken his work and
-massaged it to drop the irqchip support and rework the devicetree
-integration. The driver has been smoke tested under qemu against a
-minimal SD controller model and lightly tested on an ast2500-evb.
+On Thu, 4 Jul 2019 07:28:33 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Ryan Chen <ryanchen.aspeed@gmail.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> On Thu, 4 Jul 2019 15:39:58 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > Hi Steve,
+> > 
+> > Would you have any comment on this?
+> > 
+> 
+> Hi Masami,
+> 
+> It's on my todo list. As today is a US holiday, I'll look at this on
+> Monday.
+> 
+> Thanks for the reminder!
+> 
+> -- Steve
+> 
+> 
+> > Thank you,
+> > 
+> > On Thu, 20 Jun 2019 00:07:09 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > 
+> > > Hello,
+> > > 
+> > > This is the 2nd version of multi-probes per event support on ftrace
+> > > and perf-tools.
+> > > 
+> > > Previous version is here;
+> > > https://lkml.org/lkml/2019/5/31/573
+> > >   
+> > > >From this version, I omitted first 9 patches which has been picked  
+> > > to Steve's tree.
+> > > In this version, I've fixed some bugs and hardened some unexpected
+> > > error cases according to Steve's comment.
+> > > Here are changes in this version:
+> > > 
+> > >  - [1/12] This have below changes. 
+> > >     - Warn if the primary trace_probe does not exist.
+> > >     - Fix enable_trace_kprobe() to not return error if the any probes
+> > >       are "gone" state. If all probes have gone or any other error
+> > >       reason, the event can not be enabled and return error.
+> > >     - Fix trace_probe_enable() to roll back all enabled uprobe if
+> > >       any one of uprobe is failed to enable.
+> > >  - [7/12] Swap the checking order of filename for avoiding unexpected
+> > >      memory access.
+> > > 
+> > > 
+> > > ====
+> > > For trace-event, we can insert same trace-event on several places
+> > > on the code, and those can record similar information as a same event
+> > > with same format.
+> > > 
+> > > This series implements similar feature on probe-event. Since the probe
+> > > event is based on the compiled binary, sometimes we find that the target
+> > > source line is complied into several different addresses, e.g. inlined
+> > > function, unrolled loop, etc. In those cases, it is useful to put a
+> > > same probe-event on different addresses.
+> > > 
+> > > With this series, we can append multi probes on one event as below
+> > > 
+> > >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
+> > >   # echo p:testevent fork_idle r1=%ax r2=%cx >> kprobe_events
+> > >   # kprobe_events
+> > >   p:kprobes/testevent _do_fork r1=%ax r2=%dx
+> > >   p:kprobes/testevent fork_idle r1=%ax r2=%cx
+> > > 
+> > > This means testevent is hit on both of _do_fork and fork_idle.
+> > > As you can see, the appended event must have same number of arguments
+> > > and those must have same 'type' and 'name' as original one. This is like
+> > > a function signature, it checks whether the appending event has the same
+> > > type and name of event arguments and same probe type, but doesn't care
+> > > about the assignment.
+> > > 
+> > > So, below appending commands will be rejected.
+> > > 
+> > >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
+> > >   # echo p:testevent fork_idle r1=%ax >> kprobe_events
+> > >   (No 2nd argument)
+> > >   # echo p:testevent fork_idle r1=%ax r2=%ax:x8 >> kprobe_events
+> > >   (The type of 2nd argument is different)
+> > > 
+> > > If one inlined code has an argument on a register, but another
+> > > inlined code has fixed value (as a result of optimization),
+> > > you can also specify the fixed immediate value, e.g.
+> > > 
+> > >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
+> > >   # echo p:testevent fork_idle r1=%ax r2=\1 >> kprobe_events
+> > > 
+> > > 
+> > > Thank you,
+> > > 
+> > > ---
+> > > 
+> > > Masami Hiramatsu (12):
+> > >       tracing/probe: Split trace_event related data from trace_probe
+> > >       tracing/dynevent: Delete all matched events
+> > >       tracing/dynevent: Pass extra arguments to match operation
+> > >       tracing/kprobe: Add multi-probe per event support
+> > >       tracing/uprobe: Add multi-probe per uprobe event support
+> > >       tracing/kprobe: Add per-probe delete from event
+> > >       tracing/uprobe: Add per-probe delete from event
+> > >       tracing/probe: Add immediate parameter support
+> > >       tracing/probe: Add immediate string parameter support
+> > >       selftests/ftrace: Add a testcase for kprobe multiprobe event
+> > >       selftests/ftrace: Add syntax error test for immediates
+> > >       selftests/ftrace: Add syntax error test for multiprobe
+> > > 
+> > > 
+> > >  Documentation/trace/kprobetrace.rst                |    1 
+> > >  Documentation/trace/uprobetracer.rst               |    1 
+> > >  kernel/trace/trace.c                               |    8 -
+> > >  kernel/trace/trace_dynevent.c                      |   10 +
+> > >  kernel/trace/trace_dynevent.h                      |    7 -
+> > >  kernel/trace/trace_events_hist.c                   |    4 
+> > >  kernel/trace/trace_kprobe.c                        |  241 ++++++++++++++----
+> > >  kernel/trace/trace_probe.c                         |  176 +++++++++++--
+> > >  kernel/trace/trace_probe.h                         |   67 ++++-
+> > >  kernel/trace/trace_uprobe.c                        |  263 +++++++++++++++-----
+> > >  tools/testing/selftests/ftrace/test.d/functions    |    2 
+> > >  .../ftrace/test.d/kprobe/kprobe_multiprobe.tc      |   35 +++
+> > >  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   15 +
+> > >  13 files changed, 665 insertions(+), 165 deletions(-)
+> > >  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc
+> > > 
+> > > --
+> > > Masami Hiramatsu (Linaro) <mhiramat@kernel.org>  
+> > 
+> > 
+> 
 
----
-v3:
-* Add AST2600 compatible
-* Drop SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
-* Ensure slot number is valid
-* Fix build with CONFIG_MODULES
-* Fix module license string
-* Non-PCI devices won't die
-* Rename aspeed_sdc_configure_8bit_mode()
-* Rename aspeed_sdhci_pdata
-* Switch to sdhci_enable_clk()
-* Use PTR_ERR() on the right `struct platform_device *`
----
- drivers/mmc/host/Kconfig           |  12 ++
- drivers/mmc/host/Makefile          |   1 +
- drivers/mmc/host/sdhci-of-aspeed.c | 328 +++++++++++++++++++++++++++++
- 3 files changed, 341 insertions(+)
- create mode 100644 drivers/mmc/host/sdhci-of-aspeed.c
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 14d89a108edd..0f8a230de2f3 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -154,6 +154,18 @@ config MMC_SDHCI_OF_ARASAN
- 
- 	  If unsure, say N.
- 
-+config MMC_SDHCI_OF_ASPEED
-+	tristate "SDHCI OF support for the ASPEED SDHCI controller"
-+	depends on MMC_SDHCI_PLTFM
-+	depends on OF
-+	help
-+	  This selects the ASPEED Secure Digital Host Controller Interface.
-+
-+	  If you have a controller with this interface, say Y or M here. You
-+	  also need to enable an appropriate bus interface.
-+
-+	  If unsure, say N.
-+
- config MMC_SDHCI_OF_AT91
- 	tristate "SDHCI OF support for the Atmel SDMMC controller"
- 	depends on MMC_SDHCI_PLTFM
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index 73578718f119..390ee162fe71 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -84,6 +84,7 @@ obj-$(CONFIG_MMC_SDHCI_ESDHC_IMX)	+= sdhci-esdhc-imx.o
- obj-$(CONFIG_MMC_SDHCI_DOVE)		+= sdhci-dove.o
- obj-$(CONFIG_MMC_SDHCI_TEGRA)		+= sdhci-tegra.o
- obj-$(CONFIG_MMC_SDHCI_OF_ARASAN)	+= sdhci-of-arasan.o
-+obj-$(CONFIG_MMC_SDHCI_OF_ASPEED)	+= sdhci-of-aspeed.o
- obj-$(CONFIG_MMC_SDHCI_OF_AT91)		+= sdhci-of-at91.o
- obj-$(CONFIG_MMC_SDHCI_OF_ESDHC)	+= sdhci-of-esdhc.o
- obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+= sdhci-of-hlwd.o
-diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
-new file mode 100644
-index 000000000000..d31785ec90d7
---- /dev/null
-+++ b/drivers/mmc/host/sdhci-of-aspeed.c
-@@ -0,0 +1,328 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Copyright (C) 2019 ASPEED Technology Inc. */
-+/* Copyright (C) 2019 IBM Corp. */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/mmc/host.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+
-+#include "sdhci-pltfm.h"
-+
-+#define ASPEED_SDC_INFO		0x00
-+#define   ASPEED_SDC_S1MMC8	BIT(25)
-+#define   ASPEED_SDC_S0MMC8	BIT(24)
-+
-+struct aspeed_sdc {
-+	struct clk *clk;
-+	struct resource *res;
-+
-+	spinlock_t lock;
-+	void __iomem *regs;
-+};
-+
-+struct aspeed_sdhci {
-+	struct aspeed_sdc *parent;
-+	u32 width_mask;
-+};
-+
-+static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
-+					   struct aspeed_sdhci *sdhci,
-+					   bool bus8)
-+{
-+	u32 info;
-+
-+	/* Set/clear 8 bit mode */
-+	spin_lock(&sdc->lock);
-+	info = readl(sdc->regs + ASPEED_SDC_INFO);
-+	if (bus8)
-+		info |= sdhci->width_mask;
-+	else
-+		info &= ~sdhci->width_mask;
-+	writel(info, sdc->regs + ASPEED_SDC_INFO);
-+	spin_unlock(&sdc->lock);
-+}
-+
-+static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
-+{
-+	int div;
-+	u16 clk;
-+
-+	if (clock == host->clock)
-+		return;
-+
-+	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
-+
-+	if (clock == 0)
-+		goto out;
-+
-+	for (div = 1; div < 256; div *= 2) {
-+		if ((host->max_clk / div) <= clock)
-+			break;
-+	}
-+	div >>= 1;
-+
-+	clk = div << SDHCI_DIVIDER_SHIFT;
-+
-+	sdhci_enable_clk(host, clk);
-+
-+out:
-+	host->clock = clock;
-+}
-+
-+static void aspeed_sdhci_set_bus_width(struct sdhci_host *host, int width)
-+{
-+	struct sdhci_pltfm_host *pltfm_priv;
-+	struct aspeed_sdhci *aspeed_sdhci;
-+	struct aspeed_sdc *aspeed_sdc;
-+	u8 ctrl;
-+
-+	pltfm_priv = sdhci_priv(host);
-+	aspeed_sdhci = sdhci_pltfm_priv(pltfm_priv);
-+	aspeed_sdc = aspeed_sdhci->parent;
-+
-+	/* Set/clear 8-bit mode */
-+	aspeed_sdc_configure_8bit_mode(aspeed_sdc, aspeed_sdhci,
-+				       width == MMC_BUS_WIDTH_8);
-+
-+	/* Set/clear 1 or 4 bit mode */
-+	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-+	if (width == MMC_BUS_WIDTH_4)
-+		ctrl |= SDHCI_CTRL_4BITBUS;
-+	else
-+		ctrl &= ~SDHCI_CTRL_4BITBUS;
-+	sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-+}
-+
-+static const struct sdhci_ops aspeed_sdhci_ops = {
-+	.set_clock = aspeed_sdhci_set_clock,
-+	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
-+	.set_bus_width = aspeed_sdhci_set_bus_width,
-+	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
-+	.reset = sdhci_reset,
-+	.set_uhs_signaling = sdhci_set_uhs_signaling,
-+};
-+
-+static const struct sdhci_pltfm_data aspeed_sdhci_pdata = {
-+	.ops = &aspeed_sdhci_ops,
-+	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
-+};
-+
-+static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
-+					      struct resource *res)
-+{
-+	resource_size_t delta;
-+
-+	if (!res || resource_type(res) != IORESOURCE_MEM)
-+		return -EINVAL;
-+
-+	if (res->start < dev->parent->res->start)
-+		return -EINVAL;
-+
-+	delta = res->start - dev->parent->res->start;
-+	if (delta & (0x100 - 1))
-+		return -EINVAL;
-+
-+	return (delta / 0x100) - 1;
-+}
-+
-+static int aspeed_sdhci_probe(struct platform_device *pdev)
-+{
-+	struct sdhci_pltfm_host *pltfm_host;
-+	struct aspeed_sdhci *dev;
-+	struct sdhci_host *host;
-+	struct resource *res;
-+	int slot;
-+	int ret;
-+
-+	host = sdhci_pltfm_init(pdev, &aspeed_sdhci_pdata, sizeof(*dev));
-+	if (IS_ERR(host))
-+		return PTR_ERR(host);
-+
-+	pltfm_host = sdhci_priv(host);
-+	dev = sdhci_pltfm_priv(pltfm_host);
-+	dev->parent = dev_get_drvdata(pdev->dev.parent);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	slot = aspeed_sdhci_calculate_slot(dev, res);
-+
-+	if (slot < 0)
-+		return slot;
-+	else if (slot >= 2)
-+		return -EINVAL;
-+
-+	dev_info(&pdev->dev, "Configuring for slot %d\n", slot);
-+	dev->width_mask = !slot ? ASPEED_SDC_S0MMC8 : ASPEED_SDC_S1MMC8;
-+
-+	sdhci_get_of_property(pdev);
-+
-+	pltfm_host->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(pltfm_host->clk))
-+		return PTR_ERR(pltfm_host->clk);
-+
-+	ret = clk_prepare_enable(pltfm_host->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to enable SDIO clock\n");
-+		goto err_pltfm_free;
-+	}
-+
-+	ret = mmc_of_parse(host->mmc);
-+	if (ret)
-+		goto err_sdhci_add;
-+
-+	ret = sdhci_add_host(host);
-+	if (ret)
-+		goto err_sdhci_add;
-+
-+	return 0;
-+
-+err_sdhci_add:
-+	clk_disable_unprepare(pltfm_host->clk);
-+err_pltfm_free:
-+	sdhci_pltfm_free(pdev);
-+	return ret;
-+}
-+
-+static int aspeed_sdhci_remove(struct platform_device *pdev)
-+{
-+	struct sdhci_pltfm_host *pltfm_host;
-+	struct sdhci_host *host;
-+	int dead = 0;
-+
-+	host = platform_get_drvdata(pdev);
-+	pltfm_host = sdhci_priv(host);
-+
-+	sdhci_remove_host(host, dead);
-+
-+	clk_disable_unprepare(pltfm_host->clk);
-+
-+	sdhci_pltfm_free(pdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id aspeed_sdhci_of_match[] = {
-+	{ .compatible = "aspeed,ast2400-sdhci", },
-+	{ .compatible = "aspeed,ast2500-sdhci", },
-+	{ .compatible = "aspeed,ast2600-sdhci", },
-+	{ }
-+};
-+
-+static struct platform_driver aspeed_sdhci_driver = {
-+	.driver		= {
-+		.name	= "sdhci-aspeed",
-+		.of_match_table = aspeed_sdhci_of_match,
-+	},
-+	.probe		= aspeed_sdhci_probe,
-+	.remove		= aspeed_sdhci_remove,
-+};
-+
-+static int aspeed_sdc_probe(struct platform_device *pdev)
-+
-+{
-+	struct device_node *parent, *child;
-+	struct aspeed_sdc *sdc;
-+	int ret;
-+
-+	sdc = devm_kzalloc(&pdev->dev, sizeof(*sdc), GFP_KERNEL);
-+	if (!sdc)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&sdc->lock);
-+
-+	sdc->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(sdc->clk))
-+		return PTR_ERR(sdc->clk);
-+
-+	ret = clk_prepare_enable(sdc->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to enable SDCLK\n");
-+		return ret;
-+	}
-+
-+	sdc->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	sdc->regs = devm_ioremap_resource(&pdev->dev, sdc->res);
-+	if (IS_ERR(sdc->regs)) {
-+		ret = PTR_ERR(sdc->regs);
-+		goto err_clk;
-+	}
-+
-+	dev_set_drvdata(&pdev->dev, sdc);
-+
-+	parent = pdev->dev.of_node;
-+	for_each_available_child_of_node(parent, child) {
-+		struct platform_device *cpdev;
-+
-+		cpdev = of_platform_device_create(child, NULL, &pdev->dev);
-+		if (IS_ERR(cpdev)) {
-+			of_node_put(child);
-+			ret = PTR_ERR(cpdev);
-+			goto err_clk;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_clk:
-+	clk_disable_unprepare(sdc->clk);
-+	return ret;
-+}
-+
-+static int aspeed_sdc_remove(struct platform_device *pdev)
-+{
-+	struct aspeed_sdc *sdc = dev_get_drvdata(&pdev->dev);
-+
-+	clk_disable_unprepare(sdc->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id aspeed_sdc_of_match[] = {
-+	{ .compatible = "aspeed,ast2400-sd-controller", },
-+	{ .compatible = "aspeed,ast2500-sd-controller", },
-+	{ .compatible = "aspeed,ast2600-sd-controller", },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, aspeed_sdc_of_match);
-+
-+static struct platform_driver aspeed_sdc_driver = {
-+	.driver		= {
-+		.name	= "sd-controller-aspeed",
-+		.pm	= &sdhci_pltfm_pmops,
-+		.of_match_table = aspeed_sdc_of_match,
-+	},
-+	.probe		= aspeed_sdc_probe,
-+	.remove		= aspeed_sdc_remove,
-+};
-+
-+static int __init aspeed_sdc_init(void)
-+{
-+	int rc;
-+
-+	rc = platform_driver_register(&aspeed_sdhci_driver);
-+	if (rc < 0)
-+		return rc;
-+
-+	return platform_driver_register(&aspeed_sdc_driver);
-+}
-+module_init(aspeed_sdc_init);
-+
-+static void __exit aspeed_sdc_exit(void)
-+{
-+	platform_driver_unregister(&aspeed_sdc_driver);
-+	platform_driver_unregister(&aspeed_sdhci_driver);
-+}
-+module_exit(aspeed_sdc_exit);
-+
-+MODULE_DESCRIPTION("Driver for the ASPEED SD/SDIO/SDHCI Controllers");
-+MODULE_AUTHOR("Ryan Chen <ryan_chen@aspeedtech.com>");
-+MODULE_AUTHOR("Andrew Jeffery <andrew@aj.id.au>");
-+MODULE_LICENSE("GPL");
 -- 
-2.20.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
