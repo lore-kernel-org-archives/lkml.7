@@ -2,92 +2,86 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A404C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B913C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8AA206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:49:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2Wk25Jui"
+	by mail.kernel.org (Postfix) with ESMTP id 09973206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfG3Nt1 (ORCPT
+        id S1727496AbfG3Ntp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:49:27 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:47744 "EHLO vps0.lunn.ch"
+        Tue, 30 Jul 2019 09:49:45 -0400
+Received: from gate.crashing.org ([63.228.1.57]:41407 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfG3Nt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:49:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=z6G1T+G+Sh+UZiHP63MYhPyDhXCWooN/11V93iSPTqI=; b=2Wk25JuibETR1EL8M7VecZlEQi
-        czkPicuRevafjQcQ4Kx/zJkF9BY4H6Eh/Vb6YG+9HbTjOogmyiG1AJjwd4L7EdyayqKIkZJwKFD+7
-        /qlV5d4f5HT5IaamQMzBKUUhdKy08aBgnIGCNyQqhNkWX6qQLqOMMcDPUvnSRz8zdOIM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hsSVI-0007t8-Nc; Tue, 30 Jul 2019 15:49:24 +0200
-Date:   Tue, 30 Jul 2019 15:49:24 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Hubert Feurstein <h.feurstein@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: Re: [PATCH 1/4] net: dsa: mv88e6xxx: add support for MV88E6220
-Message-ID: <20190730134924.GH28552@lunn.ch>
-References: <20190730100429.32479-1-h.feurstein@gmail.com>
- <20190730100429.32479-2-h.feurstein@gmail.com>
-MIME-Version: 1.0
+        id S1725871AbfG3Nto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 09:49:44 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6UDmwB5006744;
+        Tue, 30 Jul 2019 08:48:58 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6UDmu7O006742;
+        Tue, 30 Jul 2019 08:48:56 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 30 Jul 2019 08:48:56 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        christophe leroy <christophe.leroy@c-s.fr>,
+        kbuild test robot <lkp@intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] powerpc: workaround clang codegen bug in dcbz
+Message-ID: <20190730134856.GO31406@gate.crashing.org>
+References: <20190729202542.205309-1-ndesaulniers@google.com> <20190729203246.GA117371@archlinux-threadripper> <20190729215200.GN31406@gate.crashing.org> <CAK8P3a1GQSyCj1L8fFG4Pah8dr5Lanw=1yuimX1o+53ARzOX+Q@mail.gmail.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190730100429.32479-2-h.feurstein@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAK8P3a1GQSyCj1L8fFG4Pah8dr5Lanw=1yuimX1o+53ARzOX+Q@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 12:04:26PM +0200, Hubert Feurstein wrote:
-> The MV88E6220 is almost the same as MV88E6250 except that the ports 2-4 are
-> not routed to pins. So the usable ports are 0, 1, 5 and 6.
+On Tue, Jul 30, 2019 at 09:34:28AM +0200, Arnd Bergmann wrote:
+> Upon a second look, I think the issue is that the "Z" is an input argument
+> when it should be an output. clang decides that it can make a copy of the
+> input and pass that into the inline asm. This is not the most efficient
+> way, but it seems entirely correct according to the constraints.
 
-Hi Hubert
+Most dcb* (and all icb*) do not change the memory pointed to.  The
+memory is an input here, logically as well, and that is obvious.
 
-Do the registers for the ports exist?
+> Changing it to an output "=Z" constraint seems to make it work:
+> 
+> https://godbolt.org/z/FwEqHf
+> 
+> Clang still doesn't use the optimum form, but it passes the correct pointer.
 
-> +	[MV88E6220] = {
-> +		.prod_num = MV88E6XXX_PORT_SWITCH_ID_PROD_6220,
-> +		.family = MV88E6XXX_FAMILY_6250,
-> +		.name = "Marvell 88E6220",
-> +		.num_databases = 64,
-> +
-> +		/* Ports 2-4 are not routed to pins
-> +		 * => usable ports 0, 1, 5, 6
-> +		 */
-> +		.num_ports = 7,
+As I said many times already, LLVM does not seem to treat all asm
+operands as lvalues.  That is a bug.  And it is critical for memory
+operands for example, as should be obvious if you look at at for a few
+seconds (you pass *that* memory, not a copy of it).  The thing you pass
+has an identity.  It's an lvalue.  This is true for *all* inline asm
+operands, not just output operands and memory operands, but it is most
+obvious there.
 
-I'm wondering if we should add something like
+Or, LLVM might have a bug elsewhere.
 
-		.invalid_port_mask = BIT(2) | BIT(3) | BIT(4)
+Either way, the asm is fine, and it has worked fine in GCC since
+forever.  Changing this constraint to be an output constraint would
+just be obfuscation (we could change *all* operands to *everything* to
+be inout ("+") constraints, and it won't affect correctness, just the
+reader's sanity).
 
 
-and
-
-        /* Setup Switch Port Registers */
-        for (i = 0; i < mv88e6xxx_num_ports(chip); i++) {
-+		if (chip->info->invalid_port_mask & BIT(i) &&
-+		    !dsa_is_unused_port(ds, i))
-+		    return -EINVAL;
-                if (dsa_is_unused_port(ds, i)) {
-                        err = mv88e6xxx_port_set_state(chip, i,
-                                                       BR_STATE_DISABLED);
-  
-	Andrew
+Segher
