@@ -2,265 +2,107 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8676FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEF2C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50FBD206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:40:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JnpuD7Lh"
+	by mail.kernel.org (Postfix) with ESMTP id 328CF206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:40:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564501241;
+	bh=Hzq0ia0CHKkeUj+wGU+RlxUjicn8yuNyVPFWEwlJse8=;
+	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
+	b=HvR3Hb+wrK75SFxpdKLC6mZlKcyZ24mmpJGxjOC/cUxGqeLRhYQNwsMQJdaqqu0h1
+	 Z1Og2NetKTAMHhExaS9dFwrw0oAYEUzkju4wYdx9wLQTd/lCX06qtMgKIWhdADBuhB
+	 HUspXkFEGnhICJ/89YEYCfQh5Bi/57JKxBAAZddc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731406AbfG3PkK (ORCPT
+        id S1731974AbfG3Pkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:40:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44350 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726941AbfG3PkK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:40:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so30010481pfe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VL69OhOnAwL0XYVUd4iryHVhyGAPtRV3TIOYsddsZuM=;
-        b=JnpuD7Lhn/qE7XJv7n7efhB9Y1FFuZ2F4tOy7xPNk3kBOJquUa5ZdXVE2CaWJEsrVh
-         yMfhPN5d3zlY7lks50LSVx43a9lRWN3fEw+2mRlkOtiPyWUiI+jM084e7+I7io06LwW4
-         kK68uPBHyuRVpRWRsz+aFk7D++UOdv1Lu2AkC6wYhYUrHLpHRAcI7yLQGzf4fxZ1UvEf
-         MqI3XIEqPLJYE3iB6QcnVLgMG3zmHV68RS5MYxD0/c3AeU0Dct6278t6LVZ1T4B0j1Ew
-         DlcnLz7xXh4kbs/9etasPC7viCglq3IR4SDSVF2nF9sw0Uiur+vimuBZvOX2mrvMzSNT
-         29Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VL69OhOnAwL0XYVUd4iryHVhyGAPtRV3TIOYsddsZuM=;
-        b=U1OGlnPysQqCIPwXX/XWbh5/H2I3IDRiPg0c57S1iKgbdSZHfsqwTBUfRMs2GC3EJc
-         A3yP95LedsK93UbIcGDdkwqd52jBlI8r6BhFo7Yn/EV+EGFOiVDZwZtBydaiC86Yh2ns
-         yyCc/n9guznEVR71qOp9G2BpvIx8tAMuEmqplLFjPrJB/qNZH4zYMqirThRAu+PJKioO
-         jJ44oP5WKRXWxfz7LCPUtrAuKy7QpBVW64hsnfDhYXoxaGROjOGQ+0kEjwXumrielhfa
-         caTnfLYsXuoIq7G2F+aFZXtrYk2jkEEruBGtntonJmt920jPAa1ev61CgvG/E+HHt6/l
-         0Tpw==
-X-Gm-Message-State: APjAAAWuhJwv3ugW/rw/jBY88CXmaX3cQTISLqlCH2XrFyxSaCO7Q4Qs
-        C5YQfS/AiiUBGYksObOEvxY=
-X-Google-Smtp-Source: APXvYqxzMdxms+bc78CL5gsMck7qwh7ISTe+alN65NyxUVXjwyMgBoEubKQB6gleAbfiP0OgFFPVqg==
-X-Received: by 2002:a17:90a:8a0b:: with SMTP id w11mr116924577pjn.125.1564501209516;
-        Tue, 30 Jul 2019 08:40:09 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
-        by smtp.gmail.com with ESMTPSA id 67sm36860864pfd.177.2019.07.30.08.40.08
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 30 Jul 2019 08:40:09 -0700 (PDT)
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     sivanich@sgi.com, arnd@arndb.de
-Cc:     ira.weiny@intel.com, jhubbard@nvidia.com, jglisse@redhat.com,
-        gregkh@linuxfoundation.org, william.kucharski@oracle.com,
-        hch@lst.de, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bharath Vedartham <linux.bhar@gmail.com>
-Subject: [Linux-kernel-mentees][PATCH v4 1/1] sgi-gru: Remove *pte_lookup functions
-Date:   Tue, 30 Jul 2019 21:09:30 +0530
-Message-Id: <1564501170-6830-2-git-send-email-linux.bhar@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564501170-6830-1-git-send-email-linux.bhar@gmail.com>
-References: <1564501170-6830-1-git-send-email-linux.bhar@gmail.com>
+        Tue, 30 Jul 2019 11:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730217AbfG3Pkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 11:40:39 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BF53206B8;
+        Tue, 30 Jul 2019 15:40:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564501238;
+        bh=Hzq0ia0CHKkeUj+wGU+RlxUjicn8yuNyVPFWEwlJse8=;
+        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
+        b=J+IemHzqC/q/0eG0EA+O0zIUFE1RGjuSlcqYUZ/KV4a7h0Bzke3gwq4H1PyH+5uEM
+         tV+g6r3oSYAM8Ehlj4tiSzY9JCl1O6MFVvXr4baS+V+HY6QKR9KD9qaCfws51eypmQ
+         4kKL6/O+NmS4yh3X1v2eZn4E4iUJOgRk3KMLE/y0=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <63d15392-f296-cd13-7821-61d59d568347@codeaurora.org>
+References: <1557339895-21952-1-git-send-email-tdas@codeaurora.org> <1557339895-21952-4-git-send-email-tdas@codeaurora.org> <155742286525.14659.18081373668341127486@swboyd.mtv.corp.google.com> <07bcd2df-a786-ea52-8566-70f484248952@codeaurora.org> <155751085370.14659.7749105088997177801@swboyd.mtv.corp.google.com> <f65811f8-42ea-6365-7822-db662eaea228@codeaurora.org> <20190715224441.F12122080A@mail.kernel.org> <243de3a4-292b-77c0-6232-0b38d124d183@codeaurora.org> <20190716232228.2B84F2173E@mail.kernel.org> <63d15392-f296-cd13-7821-61d59d568347@codeaurora.org>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v1 3/3] clk: qcom: rcg: update the DFS macro for RCG
+User-Agent: alot/0.8.1
+Date:   Tue, 30 Jul 2019 08:40:37 -0700
+Message-Id: <20190730154038.8BF53206B8@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The *pte_lookup functions can be removed and be easily replaced with
-get_user_pages_fast functions. In the case of atomic lookup,
-__get_user_pages_fast is used which does not fall back to slow
-get_user_pages. get_user_pages_fast on the other hand tries to use
-__get_user_pages_fast but fallbacks to slow get_user_pages if
-__get_user_pages_fast fails.
+Quoting Taniya Das (2019-07-30 03:51:07)
+>=20
+>=20
+> On 7/17/2019 4:52 AM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2019-07-15 21:22:02)
+> >> Hello Stephen,
+> >>
+> >> Thanks for the review.
+> >>
+> >> On 7/16/2019 4:14 AM, Stephen Boyd wrote:
+> >>> Quoting Taniya Das (2019-05-12 20:44:46)
+> >>>> On 5/10/2019 11:24 PM, Stephen Boyd wrote:
+> >>>>> Why is the clk name changing to not have a _src after the "root" of=
+ the
+> >>>>> clk name? As long as I can remember, RCGs have a "_src" postfix.
+> >>>>>
+> >>>>
+> >>>> Yes, the RCGs would have _src, so we do want the init data also to be
+> >>>> generated with _src postfix. So that we do not have to manually clea=
+n up
+> >>>> the generated code.
+> >>>>
+> >>>
+> >>> Please manually cleanup the generated code, or fix the code
+> >>> generator to do what you want.
+> >>>
+> >>
+> >> Fixing the code manually is not what we intend to do and it is time
+> >> consuming with too many DFS controlled clocks. This really helps us
+> >> align to internal code.
+> >>
+> >=20
+> > And you can't fix the code generator to drop the _src part of whatever
+> > is spit out for the DFS lines?
+> >=20
+>=20
+> Sure, will drop this.
+>=20
 
-Also unnecessary ifdefs to check for CONFIG_HUGETLB is removed as the
-check is redundant.
-
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Dimitri Sivanich <sivanich@sgi.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: William Kucharski <william.kucharski@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel-mentees@lists.linuxfoundation.org
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
----
-This is a fold of the 3 patches in the v2 patch series.
-The review tags were given to the individual patches.
-
-Changes since v3
-	- Used gup flags in get_user_pages_fast rather than
-	boolean flags.
----
- drivers/misc/sgi-gru/grufault.c | 112 +++++++++-------------------------------
- 1 file changed, 24 insertions(+), 88 deletions(-)
-
-diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
-index 4b713a8..304e9c5 100644
---- a/drivers/misc/sgi-gru/grufault.c
-+++ b/drivers/misc/sgi-gru/grufault.c
-@@ -166,96 +166,20 @@ static void get_clear_fault_map(struct gru_state *gru,
- }
- 
- /*
-- * Atomic (interrupt context) & non-atomic (user context) functions to
-- * convert a vaddr into a physical address. The size of the page
-- * is returned in pageshift.
-- * 	returns:
-- * 		  0 - successful
-- * 		< 0 - error code
-- * 		  1 - (atomic only) try again in non-atomic context
-- */
--static int non_atomic_pte_lookup(struct vm_area_struct *vma,
--				 unsigned long vaddr, int write,
--				 unsigned long *paddr, int *pageshift)
--{
--	struct page *page;
--
--#ifdef CONFIG_HUGETLB_PAGE
--	*pageshift = is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
--#else
--	*pageshift = PAGE_SHIFT;
--#endif
--	if (get_user_pages(vaddr, 1, write ? FOLL_WRITE : 0, &page, NULL) <= 0)
--		return -EFAULT;
--	*paddr = page_to_phys(page);
--	put_page(page);
--	return 0;
--}
--
--/*
-- * atomic_pte_lookup
-+ * mmap_sem is already helod on entry to this function. This guarantees
-+ * existence of the page tables.
-  *
-- * Convert a user virtual address to a physical address
-  * Only supports Intel large pages (2MB only) on x86_64.
-- *	ZZZ - hugepage support is incomplete
-- *
-- * NOTE: mmap_sem is already held on entry to this function. This
-- * guarantees existence of the page tables.
-+ *	ZZZ - hugepage support is incomplete.
-  */
--static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long vaddr,
--	int write, unsigned long *paddr, int *pageshift)
--{
--	pgd_t *pgdp;
--	p4d_t *p4dp;
--	pud_t *pudp;
--	pmd_t *pmdp;
--	pte_t pte;
--
--	pgdp = pgd_offset(vma->vm_mm, vaddr);
--	if (unlikely(pgd_none(*pgdp)))
--		goto err;
--
--	p4dp = p4d_offset(pgdp, vaddr);
--	if (unlikely(p4d_none(*p4dp)))
--		goto err;
--
--	pudp = pud_offset(p4dp, vaddr);
--	if (unlikely(pud_none(*pudp)))
--		goto err;
--
--	pmdp = pmd_offset(pudp, vaddr);
--	if (unlikely(pmd_none(*pmdp)))
--		goto err;
--#ifdef CONFIG_X86_64
--	if (unlikely(pmd_large(*pmdp)))
--		pte = *(pte_t *) pmdp;
--	else
--#endif
--		pte = *pte_offset_kernel(pmdp, vaddr);
--
--	if (unlikely(!pte_present(pte) ||
--		     (write && (!pte_write(pte) || !pte_dirty(pte)))))
--		return 1;
--
--	*paddr = pte_pfn(pte) << PAGE_SHIFT;
--#ifdef CONFIG_HUGETLB_PAGE
--	*pageshift = is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
--#else
--	*pageshift = PAGE_SHIFT;
--#endif
--	return 0;
--
--err:
--	return 1;
--}
--
- static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
- 		    int write, int atomic, unsigned long *gpa, int *pageshift)
- {
- 	struct mm_struct *mm = gts->ts_mm;
- 	struct vm_area_struct *vma;
- 	unsigned long paddr;
--	int ret, ps;
-+	int ret;
-+	struct page *page;
- 
- 	vma = find_vma(mm, vaddr);
- 	if (!vma)
-@@ -263,21 +187,33 @@ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
- 
- 	/*
- 	 * Atomic lookup is faster & usually works even if called in non-atomic
--	 * context.
-+	 * context. get_user_pages_fast does atomic lookup before falling back to
-+	 * slow gup.
- 	 */
- 	rmb();	/* Must/check ms_range_active before loading PTEs */
--	ret = atomic_pte_lookup(vma, vaddr, write, &paddr, &ps);
--	if (ret) {
--		if (atomic)
-+	if (atomic) {
-+		ret = __get_user_pages_fast(vaddr, 1, write, &page);
-+		if (!ret)
- 			goto upm;
--		if (non_atomic_pte_lookup(vma, vaddr, write, &paddr, &ps))
-+	} else {
-+		ret = get_user_pages_fast(vaddr, 1, write ? FOLL_WRITE : 0, &page);
-+		if (!ret)
- 			goto inval;
- 	}
-+
-+	paddr = page_to_phys(page);
-+	put_user_page(page);
-+
-+	if (unlikely(is_vm_hugetlb_page(vma)))
-+		*pageshift = HPAGE_SHIFT;
-+	else
-+		*pageshift = PAGE_SHIFT;
-+
- 	if (is_gru_paddr(paddr))
- 		goto inval;
--	paddr = paddr & ~((1UL << ps) - 1);
-+	paddr = paddr & ~((1UL << *pageshift) - 1);
- 	*gpa = uv_soc_phys_ram_to_gpa(paddr);
--	*pageshift = ps;
-+
- 	return VTOP_SUCCESS;
- 
- inval:
--- 
-2.7.4
+Actually, I'm OK with this patch, but I'd like to see it in a larger
+series that introduces another clk driver using this macro. The reason I
+like it is that I can search for the same string name and find the clk
+that has DFS enabled on it, instead of finding the branch which doesn't
+have DFS. Sorry for the back and forth, I got confused about what was
+going on.
 
