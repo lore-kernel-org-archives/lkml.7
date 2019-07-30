@@ -2,149 +2,87 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A145C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0798C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09C62089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:58:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVeBtdDE"
+	by mail.kernel.org (Postfix) with ESMTP id BD7BC2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564495168;
+	bh=RN3WLgtLO9LxEGGK8h3FFzXxmqTQiS7tuLP6iCmYr9E=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=EEP/RxJnRs0EdP3OGIHvtPLOzz/VsYx391oMtlfVcffnmMMlHKxCXas3oq6TEN5GL
+	 FJT9XYVaSFAvRaYGcYmsBg7iQSXoILL18BqwcGc/a4bNTtFCWV3KfDodj7Mg8cYp7g
+	 VMQoh7z8RCQg73WolJcjdoRbshu66u+fB1BkniOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbfG3N6l (ORCPT
+        id S1729010AbfG3N71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:58:41 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:36676 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbfG3N6l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:58:41 -0400
-Received: by mail-vs1-f67.google.com with SMTP id y16so43489586vsc.3;
-        Tue, 30 Jul 2019 06:58:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2wlNZmUcgZRDidSciC7cz76BeVYG+FEQ83Cs9K4SOBA=;
-        b=FVeBtdDES/SHbdFJWLmUniCv+rCwtOZUL4YRXj7VyvmKOq//WfcJeyfInMj9zBCDoD
-         WMzpWqLNXzZgQsK4ns4FtLPl3HrWc+aoiDWa+gcN+Zw/rYsK6NZQm459qg+OPOagPjRv
-         7oCvZAoRAGsxJ0YOP+VGZHhL3G3ERgjvzy4GAqIqpYnJpnugu78kXSURDYUgRC7olx7o
-         nIv4HtmDcioFY16WmuHQXFmxswX2HFfh0WNWoI6x7nqosv74bfuGGY9ktCuXI7Hy5AaU
-         rt8gzdpem/y9jtpgeH1T2Zv0zpwsTMhj5itHFjUJsIEW9c+DNuJFo6RpupZufSJK2S34
-         +dwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2wlNZmUcgZRDidSciC7cz76BeVYG+FEQ83Cs9K4SOBA=;
-        b=DuQyO0HW9UlY+9VTyQWPXdngdnVlH/Cz3SD1/eMRE5plg3qNIIwWRFGagKpvlTyxm5
-         t4mADUI/S+KVnOr6NdGYv5Epj3OIsy8sR7pIcOPbAkYQKFZ4w3ezgYnhigUOoGBgyvqz
-         +waP5CiN0BigofxZ32JNtOoMiTbd0/kdHRrXWDjjF5ceIhXKeaaIcH0o1c90xVSC17U4
-         Ur1lnkvQWezaZWGAIkpSfS/CuTS7Cw5lvXuAmtWImlgulPb3uS+Tt1PpzGvEakO65jFQ
-         7P24+g93EfCrtNzkxLUMcj5HhkDSIbu7LQmX7j6tmIMqFklV3Rr1SuEMKoHBA4P3d+sj
-         i39A==
-X-Gm-Message-State: APjAAAV8ojG4KgFpb+t5zTweX03+DY1KrAo8rU0hyjdIaWr5wGF82LWI
-        BsOINsFeRTx+lreNT1B6fq37d7f8YR7Wgtz+YA==
-X-Google-Smtp-Source: APXvYqyNweaqA9rqsZHNK6P/0G3KMoy4dWlSLU5p9XweSbuxi6+WsvoXQx+dz7RZqnixJysAG0iZf1LohCdH4A9+6ts=
-X-Received: by 2002:a67:eb19:: with SMTP id a25mr71625097vso.109.1564495120210;
- Tue, 30 Jul 2019 06:58:40 -0700 (PDT)
+        Tue, 30 Jul 2019 09:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728974AbfG3N71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 09:59:27 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E7A206E0;
+        Tue, 30 Jul 2019 13:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564495166;
+        bh=RN3WLgtLO9LxEGGK8h3FFzXxmqTQiS7tuLP6iCmYr9E=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Wcf45IXHQGtvtPZzwWCv+1yYZsKFZjU6J+s0yIuoJ4Qilj7f06eaJ/UnF1xBTcTgP
+         6rP9YBijd3MkEKRmmOksXnGR1R7Z7oipGfGvk5wrrChyA0Ppm7G0mZtXLZZEFjTXx4
+         fIv1vTLyUjYdpXTMaHGMKVIdErgNhVR6fCHWTBMU=
+Subject: Re: [PATCH 4.14 000/293] 4.14.135-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190729190820.321094988@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <850e4aba-cf24-d4b3-9d0f-59e8c4c6a46b@kernel.org>
+Date:   Tue, 30 Jul 2019 07:59:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190730122534.30687-1-rdong.ge@gmail.com> <1dc87e69-628b-fd04-619a-8dbe5bdfa108@cumulusnetworks.com>
-In-Reply-To: <1dc87e69-628b-fd04-619a-8dbe5bdfa108@cumulusnetworks.com>
-From:   Rundong Ge <rdong.ge@gmail.com>
-Date:   Tue, 30 Jul 2019 21:58:29 +0800
-Message-ID: <CAN1Lvyr5UcBrNJ8RLMgjT77sDjic7aXNeRmRex=BvzB02He9aQ@mail.gmail.com>
-Subject: Re: [PATCH] bridge:fragmented packets dropped by bridge
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        kadlec@netfilter.org, Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yes it is about the frag_size check in br_nf_ip_fragment(). As i said
-without br_netfilter the packets forwarding is fine.
-And I feel it is weird that br_nf_dev_queue_xmit() use out dev's mtu
-to decide whether to do the fragmentation, but
-then br_nf_ip_fragment() use bridge's mtu to do the actual fragmentation.
+On 7/29/19 1:18 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.135 release.
+> There are 293 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 31 Jul 2019 07:05:01 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.135-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-And in this case fragmented packets fit the out dev mtu but were
-dropped, I think it is not right.
+Compiled and booted on my test system. No dmesg regressions.
 
-Nikolay Aleksandrov <nikolay@cumulusnetworks.com> =E4=BA=8E2019=E5=B9=B47=
-=E6=9C=8830=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=888:41=E5=86=99=E9=
-=81=93=EF=BC=9A
->
-> On 30/07/2019 15:25, Rundong Ge wrote:
-> > Given following setup:
-> > -modprobe br_netfilter
-> > -echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
-> > -brctl addbr br0
-> > -brctl addif br0 enp2s0
-> > -brctl addif br0 enp3s0
-> > -brctl addif br0 enp6s0
-> > -ifconfig enp2s0 mtu 1300
-> > -ifconfig enp3s0 mtu 1500
-> > -ifconfig enp6s0 mtu 1500
-> > -ifconfig br0 up
-> >
-> >                  multi-port
-> > mtu1500 - mtu1500|bridge|1500 - mtu1500
-> >   A                  |            B
-> >                    mtu1300
-> >
-> > With netfilter defragmentation/conntrack enabled, fragmented
-> > packets from A will be defragmented in prerouting, and refragmented
-> > at postrouting.
-> > But in this scenario the bridge found the frag_max_size(1500) is
-> > larger than the dst mtu stored in the fake_rtable whitch is
-> > always equal to the bridge's mtu 1300, then packets will be dopped.
-> >
-> > This modifies ip_skb_dst_mtu to use the out dev's mtu instead
-> > of bridge's mtu in bridge refragment.
-> >
-> > Signed-off-by: Rundong Ge <rdong.ge@gmail.com>
-> > ---
-> >  include/net/ip.h | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/include/net/ip.h b/include/net/ip.h
-> > index 29d89de..0512de3 100644
-> > --- a/include/net/ip.h
-> > +++ b/include/net/ip.h
-> > @@ -450,6 +450,8 @@ static inline unsigned int ip_dst_mtu_maybe_forward=
-(const struct dst_entry *dst,
-> >  static inline unsigned int ip_skb_dst_mtu(struct sock *sk,
-> >                                         const struct sk_buff *skb)
-> >  {
-> > +     if ((skb_dst(skb)->flags & DST_FAKE_RTABLE) && skb->dev)
-> > +             return min(skb->dev->mtu, IP_MAX_MTU);
-> >       if (!sk || !sk_fullsock(sk) || ip_sk_use_pmtu(sk)) {
-> >               bool forwarding =3D IPCB(skb)->flags & IPSKB_FORWARDED;
-> >
-> >
->
-> I don't think this is correct, there's a reason why the bridge chooses th=
-e smallest
-> possible MTU out of its members and this is simply a hack to circumvent i=
-t.
-> If you really like to do so just set the bridge MTU manually, we've added=
- support
-> so it won't change automatically to the smallest, but then how do you pas=
-s packets
-> 1500 -> 1300 in this setup ?
->
-> You're talking about the frag_size check in br_nf_ip_fragment(), right ?
->
+thanks,
+-- Shuah
