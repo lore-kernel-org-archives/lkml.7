@@ -2,115 +2,124 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EE0C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D54DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B6520693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0576920693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:08:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730258AbfG3LGv (ORCPT
+        id S1730259AbfG3LIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:06:51 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55492 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfG3LGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:06:51 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C798A20067C;
-        Tue, 30 Jul 2019 13:06:48 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BB077200679;
-        Tue, 30 Jul 2019 13:06:48 +0200 (CEST)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 55B37204D6;
-        Tue, 30 Jul 2019 13:06:48 +0200 (CEST)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>
-Subject: [PATCH v4 00/14] crypto: caam - fixes for kernel v5.3
-Date:   Tue, 30 Jul 2019 14:06:31 +0300
-Message-Id: <1564484805-28735-1-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
+        Tue, 30 Jul 2019 07:08:10 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:45038 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbfG3LIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:08:09 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id 4B3A8141AE94CC;
+        Tue, 30 Jul 2019 11:08:06 +0000 (UTC)
+Received: from saetre (unknown [154.53.1.40])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Tue, 30 Jul 2019 11:08:05 +0000 (UTC)
+Message-ID: <1ffa6265ec30bc0e2d720def221dc046cc17520b.camel@archlinux.org>
+Subject: Re: [PATCH] hid-logitech-dj: add other Lightspeed receiver
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+Cc:     nlopezcasad@logitech.com, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190718140358.9058-1-lains@archlinux.org>
+References: <20190718140358.9058-1-lains@archlinux.org>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-dRUS50kxUdxY1qNpVTUb"
+Date:   Tue, 30 Jul 2019 12:08:04 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Evolution 3.32.4 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The series solves:
-- the failures found with fuzz testing;
-- resources clean-up on caampkc/caamrng exit path.
 
-The first 10 patches solve the issues found with
-CONFIG_CRYPTO_MANAGER_EXTRA_TESTS enabled.
-They modify the drivers to provide a valid error (and not the hardware
-error ID) to the user, via completion callbacks.
-They check key length, assoclen, authsize and input size to solve the
-fuzz tests that expect -EINVAL to be returned when these values are
-not valid.
+--=-dRUS50kxUdxY1qNpVTUb
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The next 4 patches check the algorithm registration for caampkc
-module and unregister it only if the registration was successful.
-Also, on caampkc/caamrng, the exit point function is executed only if the
-registration was successful to avoid double freeing of resources in case
-the initialization function failed.
+On Thu, 2019-07-18 at 15:03 +0100, Filipe La=C3=ADns wrote:
+> This receiver seems to only be used in the G305.
+>=20
+> Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
+> ---
+>  drivers/hid/hid-ids.h         | 1 +
+>  drivers/hid/hid-logitech-dj.c | 4 ++++
+>  2 files changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+> index 884356feb016..e5d0fd85e61d 100644
+> --- a/drivers/hid/hid-ids.h
+> +++ b/drivers/hid/hid-ids.h
+> @@ -770,6 +770,7 @@
+>  #define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_2		0xc534
+>  #define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED	0xc539
+>  #define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_POWERPLAY	0xc53a
+> +#define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_2	0xc53f
+>  #define USB_DEVICE_ID_SPACETRAVELLER	0xc623
+>  #define USB_DEVICE_ID_SPACENAVIGATOR	0xc626
+>  #define USB_DEVICE_ID_DINOVO_DESKTOP	0xc704
+> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
+> logitech-dj.c
+> index d5b47ec1510c..0139912c3f69 100644
+> --- a/drivers/hid/hid-logitech-dj.c
+> +++ b/drivers/hid/hid-logitech-dj.c
+> @@ -1836,6 +1836,10 @@ static const struct hid_device_id
+> logi_dj_receivers[] =3D {
+>  	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
+>  		USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED),
+>  	 .driver_data =3D recvr_type_gaming_hidpp},
+> +	{ /* Logitech lightspeed receiver (0xc53f) */
+> +	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
+> +		USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_2),
+> +	 .driver_data =3D recvr_type_gaming_hidpp},
+>  	{ /* Logitech 27 MHz HID++ 1.0 receiver (0xc513) */
+>  	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
+> USB_DEVICE_ID_MX3000_RECEIVER),
+>  	 .driver_data =3D recvr_type_27mhz},
 
-This patch depends on series:
-https://patchwork.kernel.org/project/linux-crypto/list/?series=152649
+Please don't merge this as it introduces a regression. I will send a new re=
+vision.
 
-Changes since v3:
-- use, newly renamed, helper functions from crypto API, to validate
-the inputs;
-- update rfc4106 shared descriptor, by moving the erratum workaround.
+Filipe La=C3=ADns
+3DCE 51D6 0930 EBA4 7858 BA41 46F6 33CB B0EB 4BF2
 
-Horia Geantă (5):
-  crypto: caam/qi - fix error handling in ERN handler
-  crypto: caam - fix return code in completion callbacks
-  crypto: caam - update IV only when crypto operation succeeds
-  crypto: caam - keep both virtual and dma key addresses
-  crypto: caam - fix MDHA key derivation for certain user key lengths
+--=-dRUS50kxUdxY1qNpVTUb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-Iuliana Prodan (9):
-  crypto: caam - check key length
-  crypto: caam - check authsize
-  crypto: caam - check assoclen
-  crypto: caam - check zero-length input
-  crypto: caam - update rfc4106 sh desc to support zero length input
-  crypto: caam - free resources in case caam_rng registration failed
-  crypto: caam - execute module exit point only if necessary
-  crypto: caam - unregister algorithm only if the registration succeeded
-  crypto: caam - change return value in case CAAM has no MDHA
+-----BEGIN PGP SIGNATURE-----
 
- drivers/crypto/caam/Kconfig         |   2 +
- drivers/crypto/caam/caamalg.c       | 227 +++++++++++++++----------
- drivers/crypto/caam/caamalg_desc.c  |  47 ++++--
- drivers/crypto/caam/caamalg_desc.h  |   2 +-
- drivers/crypto/caam/caamalg_qi.c    | 225 +++++++++++++++----------
- drivers/crypto/caam/caamalg_qi2.c   | 320 +++++++++++++++++++++++-------------
- drivers/crypto/caam/caamhash.c      | 114 ++++++++-----
- drivers/crypto/caam/caamhash_desc.c |   5 +-
- drivers/crypto/caam/caamhash_desc.h |   2 +-
- drivers/crypto/caam/caampkc.c       |  80 ++++++---
- drivers/crypto/caam/caamrng.c       |  17 +-
- drivers/crypto/caam/desc_constr.h   |  34 ++--
- drivers/crypto/caam/error.c         |  61 ++++---
- drivers/crypto/caam/error.h         |   2 +-
- drivers/crypto/caam/key_gen.c       |  14 +-
- drivers/crypto/caam/qi.c            |  10 +-
- drivers/crypto/caam/regs.h          |   1 +
- 17 files changed, 748 insertions(+), 415 deletions(-)
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl1AJQoACgkQ+JPGdIFq
+qV3x8Q//ekkTDb7koCBceey+dLahDlF6CWC7CGKzt2wbhp55PkmpX+9E/PXnY5eD
+R8wh07Dwdmxk0rqG3t33Q/nZAt1HJRQ5UBP/cb0alWiVj3gWIteLsA4R0+tcMAko
+NQJ90SMMOYpco823IwH2zwAGLtRaJUQB7scefAxMjZidYyCa8PBkaYi80QsY5Swc
+V+0J4t9nknieMlKIZc70yzU34+r7I901Poi/GefnEHhAEGLQw93pGmq9EK64JcEV
+pKISOpS7z2UgBOTkKl6Fq6dri+0adKAgSBPWj65cmx39iBhuBkaKekbRF7jVxq4l
+SgzF/3oqkVAba7IQ4eONrUyXBnBzHkHXJDP6MkVhb0bQz+ar1/6iSIwaBLbi9SIO
+arDIc1iTg0y9Wo/C1xRHfMzGpTbVAXWVVA/qJEAhVb87Q0gfpxcK8I3J6iVZ6ys4
+qA6YaPp8oi/5XADDP7k3OsXn3rAKHj48XhGiU0vOO7bWzW0NpcgmjVRvFxLIWy1f
+p8W5kxZAGjIatI3AkobmGN3BNqcMIoUx44jKcIZd6xfxC79weGYBuBHIOYLR9nnd
+oMpoWulrDryL2g3I72ZliupieQcZ+mSY7qLH3TV842w6CTvuev5lFV90UiBvDS4X
+zuymPsXHnV/QZI3ueKqPbEjsR7mSL5TNSH0AfjxpnnLpqYagPdY=
+=dDRO
+-----END PGP SIGNATURE-----
 
--- 
-2.1.0
-
+--=-dRUS50kxUdxY1qNpVTUb--
