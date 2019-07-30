@@ -2,199 +2,85 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4A3C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFC4C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1377206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA9E206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbfG3MfK (ORCPT
+        id S1730053AbfG3Mfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 08:35:10 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43556 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727993AbfG3MfK (ORCPT
+        Tue, 30 Jul 2019 08:35:39 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38845 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbfG3Mfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 08:35:10 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m14so20740798qka.10
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 05:35:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g2ET/kZvh1H491JD/TSiFJpfecsqdQVSFC56hQtaoSY=;
-        b=ElvLDwEiFlPIVpaqsI0UtGaj8owmQnbPTFg3QbZ198zJ3FjJgY+PodTMbsd66cNWDL
-         P6LnE7mFOCLA6fSS0AaEwXIgzYzk8CNffaaEDLGhHDPREdYe7BrapHa/1V5DLTwVBjy/
-         PLcPNwU7p0p83wz3eZUH6sLO3il1tDq1xbk7XD3rCthea4KRH5h5JKTPBeR9JpfWuxzH
-         wzhAceUh21HSYhcnFkqbWgYl5AzGUzqhY9F2F4wew4sAy7i9XeszOcmmNcS6bA6v3kq7
-         X3B6pQq04f295/Ef4CMneI7aAo8oaXIosQ3nA7Tcje7YFkcbeeLN7fS9vdr9o8ytcnUD
-         gJRA==
-X-Gm-Message-State: APjAAAWQH5HhCJYnTg0AuKVkLoUspKHCzskgD6+15quJ7ZPl0rPiV3Hp
-        I4WN/X7TsjMEBj7016fp1L2usxVxMNXt3tilYx8=
-X-Google-Smtp-Source: APXvYqyh0x/1Zyt2iDcvuCOh+fyIYW2Z0BtsGqLh3zhxA7nVpumo94n27zGzeXa33w3BFeh3yGbmSDmmETktKWa0ERU=
-X-Received: by 2002:a37:76c5:: with SMTP id r188mr75767170qkc.394.1564490106487;
- Tue, 30 Jul 2019 05:35:06 -0700 (PDT)
+        Tue, 30 Jul 2019 08:35:38 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hsRLj-0005tb-FO; Tue, 30 Jul 2019 14:35:27 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hsRLf-0001Vh-M1; Tue, 30 Jul 2019 14:35:23 +0200
+Date:   Tue, 30 Jul 2019 14:35:23 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     David Lechner <david@lechnology.com>
+Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 2/4] counter: new TI eQEP driver
+Message-ID: <20190730123523.cjtmr3tpttn6r3pt@pengutronix.de>
+References: <20190722154538.5314-1-david@lechnology.com>
+ <20190722154538.5314-3-david@lechnology.com>
 MIME-Version: 1.0
-References: <CAK8P3a3jjDh6aEVf0bBFYc=8GtB38kL6sWVZGJiUe427A7m2ng@mail.gmail.com>
-In-Reply-To: <CAK8P3a3jjDh6aEVf0bBFYc=8GtB38kL6sWVZGJiUe427A7m2ng@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 30 Jul 2019 14:34:50 +0200
-Message-ID: <CAK8P3a1ss9-G_mr48-UMOenrA0XDGWUFik4TC=m0WFfimoFdnQ@mail.gmail.com>
-Subject: Re: RFC: remove Nuvoton w90x900/nuc900 platform?
-To:     Wan Zongshun <Vincent.Wan@amd.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190722154538.5314-3-david@lechnology.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying Wan Zongshun <Vincent.Wan@amd.com> instead of
-the bouncing Wan ZongShun <mcuos.com@gmail.com>.
-(I assume you are the same person, sorry if not).
+On Mon, Jul 22, 2019 at 10:45:36AM -0500, David Lechner wrote:
+> This adds a new counter driver for the Texas Instruments Enhanced
+> Quadrature Encoder Pulse (eQEP) module.
+> 
+> Only very basic functionality is currently implemented - only enough to
+> be able to read the position. The actual device has many more features
+> which can be added to the driver on an as-needed basis.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
+> ---
+>  MAINTAINERS               |   6 +
+>  drivers/counter/Kconfig   |  12 ++
+>  drivers/counter/Makefile  |   1 +
+>  drivers/counter/ti-eqep.c | 381 ++++++++++++++++++++++++++++++++++++++
+>  drivers/pwm/Kconfig       |   2 +-
 
-On Tue, Jul 30, 2019 at 2:09 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> As the mach-netx and mach-8695 platforms are being removed now,
-> I wonder whether we should do the same with w90x00: Here is what
-> I found after looking at the git history and external material for it.
->
->     - The supported chips (nuc910/950/960) are no longer marketed
->       by the manufacturer
->
->     - Newer chips from the same family (nuc97x, nuc980, n329x)
->       that are still marketed have Linux BSPs but those were never
->       submitted for upstream inclusion.
->
->     - Wan ZongShun is listed as maintainer, but the last patch he wrote
->       was in 2011.
->
->     - All patches to w90x900 platform specific files afterwards
->       are cleanups that were apparently done without access to
->       test hardware.
->
->     - The http://www.mcuos.com/ website listed in the MAINTAINERS
->        file is no longer reachable.
->
-> We do support the newer NPCM platform from Nuvoton. I don't think
-> there are any shared drivers between the two, but I've added its
-> maintainers to Cc anyway, in case they still (plan to) use one of
-> those drivers.
->
-> If we decide that it's time to let go, I'll would the patches below.
->
->       watchdog: remove w90x900 driver
->       spi: remove w90x900 driver
->       ASoC: remove w90x900/nuc900 platform drivers
->       fbdev: remove w90x900/nuc900 platform drivers
->       Input: remove w90x900 keyboard driver
->       Input: remove w90x900 touchscreen driver
->       mtd: rawnand: remove w90x900 driver
->       net: remove w90p910-ether driver
->       rtc: remove w90x900/nuc900 driver
->       usb: remove ehci-w90x900 driver
->       ARM: remove w90x900 platform
->
->  Documentation/watchdog/watchdog-parameters.rst   |   10 -
->  MAINTAINERS                                      |   16 -
->  arch/arm/Kconfig                                 |   21 +-
->  arch/arm/Makefile                                |    1 -
->  arch/arm/configs/nuc910_defconfig                |   51 -
->  arch/arm/configs/nuc950_defconfig                |   67 --
->  arch/arm/configs/nuc960_defconfig                |   57 --
->  arch/arm/mach-w90x900/Kconfig                    |   54 --
->  arch/arm/mach-w90x900/Makefile                   |   20 -
->  arch/arm/mach-w90x900/Makefile.boot              |    4 -
->  arch/arm/mach-w90x900/clksel.c                   |   88 --
->  arch/arm/mach-w90x900/clock.c                    |  121 ---
->  arch/arm/mach-w90x900/clock.h                    |   40 -
->  arch/arm/mach-w90x900/cpu.c                      |  238 -----
->  arch/arm/mach-w90x900/cpu.h                      |   56 --
->  arch/arm/mach-w90x900/dev.c                      |  537 -----------
->  arch/arm/mach-w90x900/gpio.c                     |  150 ---
->  arch/arm/mach-w90x900/include/mach/entry-macro.S |   26 -
->  arch/arm/mach-w90x900/include/mach/hardware.h    |   19 -
->  arch/arm/mach-w90x900/include/mach/irqs.h        |   82 --
->  arch/arm/mach-w90x900/include/mach/map.h         |  153 ---
->  arch/arm/mach-w90x900/include/mach/mfp.h         |   21 -
->  arch/arm/mach-w90x900/include/mach/regs-clock.h  |   49 -
->  arch/arm/mach-w90x900/include/mach/regs-irq.h    |   46 -
->  arch/arm/mach-w90x900/include/mach/regs-ldm.h    |  248 -----
->  arch/arm/mach-w90x900/include/mach/regs-serial.h |   54 --
->  arch/arm/mach-w90x900/include/mach/uncompress.h  |   43 -
->  arch/arm/mach-w90x900/irq.c                      |  212 -----
->  arch/arm/mach-w90x900/mach-nuc910evb.c           |   38 -
->  arch/arm/mach-w90x900/mach-nuc950evb.c           |   42 -
->  arch/arm/mach-w90x900/mach-nuc960evb.c           |   38 -
->  arch/arm/mach-w90x900/mfp.c                      |  197 ----
->  arch/arm/mach-w90x900/nuc910.c                   |   58 --
->  arch/arm/mach-w90x900/nuc910.h                   |   17 -
->  arch/arm/mach-w90x900/nuc950.c                   |   52 --
->  arch/arm/mach-w90x900/nuc950.h                   |   17 -
->  arch/arm/mach-w90x900/nuc960.c                   |   50 -
->  arch/arm/mach-w90x900/nuc960.h                   |   17 -
->  arch/arm/mach-w90x900/nuc9xx.h                   |   22 -
->  arch/arm/mach-w90x900/regs-ebi.h                 |   29 -
->  arch/arm/mach-w90x900/regs-gcr.h                 |   34 -
->  arch/arm/mach-w90x900/regs-timer.h               |   37 -
->  arch/arm/mach-w90x900/regs-usb.h                 |   31 -
->  arch/arm/mach-w90x900/time.c                     |  168 ----
->  drivers/input/keyboard/Kconfig                   |   11 -
->  drivers/input/keyboard/Makefile                  |    1 -
->  drivers/input/keyboard/w90p910_keypad.c          |  264 ------
->  drivers/input/touchscreen/Kconfig                |    9 -
->  drivers/input/touchscreen/Makefile               |    1 -
->  drivers/input/touchscreen/w90p910_ts.c           |  331 -------
->  drivers/mtd/nand/raw/Kconfig                     |    8 -
->  drivers/mtd/nand/raw/Makefile                    |    1 -
->  drivers/mtd/nand/raw/nuc900_nand.c               |  304 ------
->  drivers/net/ethernet/Kconfig                     |    1 -
->  drivers/net/ethernet/Makefile                    |    1 -
->  drivers/net/ethernet/nuvoton/Kconfig             |   29 -
->  drivers/net/ethernet/nuvoton/Makefile            |    6 -
->  drivers/net/ethernet/nuvoton/w90p910_ether.c     | 1082 ----------------------
->  drivers/rtc/Kconfig                              |    7 -
->  drivers/rtc/Makefile                             |    1 -
->  drivers/rtc/rtc-nuc900.c                         |  271 ------
->  drivers/spi/Kconfig                              |    7 -
->  drivers/spi/Makefile                             |    1 -
->  drivers/spi/spi-nuc900.c                         |  429 ---------
->  drivers/usb/host/Kconfig                         |    6 -
->  drivers/usb/host/Makefile                        |    1 -
->  drivers/usb/host/ehci-w90x900.c                  |  130 ---
->  drivers/video/fbdev/Kconfig                      |   14 -
->  drivers/video/fbdev/Makefile                     |    1 -
->  drivers/video/fbdev/nuc900fb.c                   |  760 ---------------
->  drivers/video/fbdev/nuc900fb.h                   |   51 -
->  drivers/watchdog/Kconfig                         |    9 -
->  drivers/watchdog/Makefile                        |    1 -
->  drivers/watchdog/nuc900_wdt.c                    |  303 ------
->  include/Kbuild                                   |    2 -
->  include/linux/platform_data/keypad-w90p910.h     |   16 -
->  include/linux/platform_data/spi-nuc900.h         |   29 -
->  include/linux/platform_data/video-nuc900fb.h     |   79 --
->  sound/soc/Kconfig                                |    1 -
->  sound/soc/Makefile                               |    1 -
->  sound/soc/nuc900/Kconfig                         |   29 -
->  sound/soc/nuc900/Makefile                        |   12 -
->  sound/soc/nuc900/nuc900-ac97.c                   |  391 --------
->  sound/soc/nuc900/nuc900-audio.c                  |   73 --
->  sound/soc/nuc900/nuc900-audio.h                  |  108 ---
->  sound/soc/nuc900/nuc900-pcm.c                    |  321 -------
->  86 files changed, 1 insertion(+), 8433 deletions(-)
->
->           Arnd
+It's not obvious why the change to drivers/pwm/Kconfig is needed. Can
+you please motivate that in the change log?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
