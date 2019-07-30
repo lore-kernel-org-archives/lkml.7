@@ -2,88 +2,136 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B0AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6F9C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157FA20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C4220651
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:41:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fN3owNYn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731844AbfG3JkS (ORCPT
+        id S1731855AbfG3JlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:40:18 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34583 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfG3JkR (ORCPT
+        Tue, 30 Jul 2019 05:41:24 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46803 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfG3JlY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:40:17 -0400
-Received: by mail-wr1-f66.google.com with SMTP id 31so65027709wrm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 02:40:16 -0700 (PDT)
+        Tue, 30 Jul 2019 05:41:24 -0400
+Received: by mail-lf1-f68.google.com with SMTP id z15so39959754lfh.13;
+        Tue, 30 Jul 2019 02:41:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FiNSWAhWRWHMiKlDO5ZxlnYmA3exJcJjciDpPCvLDeU=;
+        b=fN3owNYnTwvQd7qsBYYz3kIsu5drP5C491VrG/lTnr8qKxdUpNqa1hfmJZjnEdWUL/
+         wyQLbog+bvijwLXw7EAIygGVfeGgXHVkqo+IPOM5RZI4hgsxxBwnHyXQj6AiHx+R+LxI
+         y3ZzNYxqdDUnqIuRJxtgN9+aBwv8c9NGj1ZO9YndqygtLolKYGeE5BakhXFVPLf5MyKE
+         E7Gtt0yg4vZGfBw4esz9zDFBOd6wC8Ddz0H5NvjXKmsrTStgw9qWluG7rB5KC/aVzJ7A
+         6fszIOc1wQD3hq/lW3P0ywLDvXEKasVRO2WSROblAlULx9JaI+EW+EFykPZzPY4pBK2C
+         56fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fQg1192WhNDyv6FjBGie6urrqGv9zjrLIH2bCUp56uc=;
-        b=Fe2zoBCE8MtA2ErAN6i2pIjsGmlKNhdwaiTig230LGMoViR20Ss6l0tOGVii9opfMj
-         RG5rdbTkINshD2Em+n81hkpuJ4DdRJL5zII7GNSykDuQhB46h2o8gQPE5azIeX19d+yZ
-         BtjK8Ci0nimgAAiBxC1YWu5iiow+lJrRQ12QCnhpggJUZ6oRIvRQ/+sdzmhZgRjY2F3m
-         YFPizpvlP75mTfIVZNDjroy0vlRHR3cHfgvNDVGROaM3kQdjNUUiKC8BsRhgp35CXx5X
-         TI9Rff25xlnhPr2/lJHhE7JTI00IlpN69zPpLt2zyyZjObSLaaoCMcdLMYGJwvAJyrv7
-         A8sw==
-X-Gm-Message-State: APjAAAXnGc8vgFcFy3l7Y05aHLGge7Q5IR43Yqe/9XWvkTFeuUfWzwQ0
-        nfQoXmJg918jSiET3AP2NUmjqQ==
-X-Google-Smtp-Source: APXvYqwQrJXSgJVI83eo1dkA3KRV/8pRzTuIDgoLCeF0kh3lvGAFxSVFdhlDZkRo9pud0n2msXMp9A==
-X-Received: by 2002:a5d:50d1:: with SMTP id f17mr72705216wrt.124.1564479615723;
-        Tue, 30 Jul 2019 02:40:15 -0700 (PDT)
-Received: from steredhat (host122-201-dynamic.13-79-r.retail.telecomitalia.it. [79.13.201.122])
-        by smtp.gmail.com with ESMTPSA id r12sm77203676wrt.95.2019.07.30.02.40.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 02:40:15 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 11:40:13 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] vsock/virtio: optimizations to increase the
- throughput
-Message-ID: <20190730094013.ruqjllqrjmkdnh5y@steredhat>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190729095743-mutt-send-email-mst@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FiNSWAhWRWHMiKlDO5ZxlnYmA3exJcJjciDpPCvLDeU=;
+        b=PU21LcygPMlRO/eJ3kOGd2+hliv67kKMPiaYS8cxBoS2iO2A8ccEPIpLs4QuDwwMBm
+         V5f7Frnmi+b2fEd2UrPEXPCbS309zcjVTvJXYli7CpZX0G8OED11RXJShjItJjJ9flqq
+         9njbP1l/NLCCKC+tcdTiuoeZkK1ETH7G3AH3yFmHnxDQP4LqDVEt2Oc8mGdU9BgGRyYm
+         37BGNq7kJ6twLJFVEp+EQmGTt+m/ugV25orCRaurrjwZqRpdz/jJKcxxldswrpSjWIAq
+         nUawenTDNQHKDGoGJkVCkl+VbGh9hrHQGZ7dj5UobN9pJpXF2J78+LlzplMdo+1rVxyV
+         ChKQ==
+X-Gm-Message-State: APjAAAWEZSiE5kSh+Tz798XRGWS9ZtS+IunVdqRdABYxWrCdP6LWh8B5
+        rYOh4FtbQPgRsbKAmbVRjEs=
+X-Google-Smtp-Source: APXvYqweTQ5kKdUYAfu0E6bmpPzufMx9qE7rgZuRRHxFXTW3BTKaHYUoF6WnsZFej3rpfp3dqB1JvQ==
+X-Received: by 2002:a19:491d:: with SMTP id w29mr54806862lfa.149.1564479681978;
+        Tue, 30 Jul 2019 02:41:21 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id i23sm13297621ljb.7.2019.07.30.02.41.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 02:41:21 -0700 (PDT)
+Subject: Re: [PATCH] driver core: Fix creation of device links with PM-runtime
+ flags
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+References: <7674989.cD04D8YV3U@kreacher>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <eea5e138-33cc-42c4-1c42-56d309847d82@gmail.com>
+Date:   Tue, 30 Jul 2019 12:41:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729095743-mutt-send-email-mst@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <7674989.cD04D8YV3U@kreacher>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 09:59:23AM -0400, Michael S. Tsirkin wrote:
-> On Wed, Jul 17, 2019 at 01:30:25PM +0200, Stefano Garzarella wrote:
-> > This series tries to increase the throughput of virtio-vsock with slight
-> > changes.
-> > While I was testing the v2 of this series I discovered an huge use of memory,
-> > so I added patch 1 to mitigate this issue. I put it in this series in order
-> > to better track the performance trends.
+30.07.2019 12:28, Rafael J. Wysocki пишет:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Series:
+> After commit 515db266a9da ("driver core: Remove device link creation
+> limitation"), if PM-runtime flags are passed to device_link_add(), it
+> will fail (returning NULL) due to an overly restrictive flags check
+> introduced by that commit.
 > 
-> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> Fix this issue by extending the check in question to cover the
+> PM-runtime flags too.
 > 
-> Can this go into net-next?
+> Fixes: 515db266a9da ("driver core: Remove device link creation limitation")
+> Reported-by: Dmitry Osipenko <digetx@gmail.com>
+> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/base/core.c |    6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> Index: linux-pm/drivers/base/core.c
+> ===================================================================
+> --- linux-pm.orig/drivers/base/core.c
+> +++ linux-pm/drivers/base/core.c
+> @@ -213,6 +213,9 @@ void device_pm_move_to_tail(struct devic
+>  			       DL_FLAG_AUTOREMOVE_SUPPLIER | \
+>  			       DL_FLAG_AUTOPROBE_CONSUMER)
+>  
+> +#define DL_ADD_VALID_FLAGS (DL_MANAGED_LINK_FLAGS | DL_FLAG_STATELESS | \
+> +			    DL_FLAG_PM_RUNTIME | DL_FLAG_RPM_ACTIVE)
+> +
+>  /**
+>   * device_link_add - Create a link between two devices.
+>   * @consumer: Consumer end of the link.
+> @@ -274,8 +277,7 @@ struct device_link *device_link_add(stru
+>  {
+>  	struct device_link *link;
+>  
+> -	if (!consumer || !supplier ||
+> -	    (flags & ~(DL_FLAG_STATELESS | DL_MANAGED_LINK_FLAGS)) ||
+> +	if (!consumer || !supplier || flags & ~DL_ADD_VALID_FLAGS ||
+>  	    (flags & DL_FLAG_STATELESS && flags & DL_MANAGED_LINK_FLAGS) ||
+>  	    (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
+>  	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
+> 
+> 
 > 
 
-I think so.
-Michael, Stefan thanks to ack the series!
+Thank you very much!
 
-Should I resend it with net-next tag?
-
-Thanks,
-Stefano
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
