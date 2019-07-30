@@ -2,215 +2,112 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FD1C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176CCC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A875D2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F732070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7Px++Gy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHAo1WeQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbfG3AXd (ORCPT
+        id S1730009AbfG3A0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 20:23:33 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45794 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727723AbfG3AXd (ORCPT
+        Mon, 29 Jul 2019 20:26:04 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33551 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728107AbfG3A0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 20:23:33 -0400
-Received: by mail-pg1-f194.google.com with SMTP id o13so29057375pgp.12;
-        Mon, 29 Jul 2019 17:23:32 -0700 (PDT)
+        Mon, 29 Jul 2019 20:26:04 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so28858119pfq.0;
+        Mon, 29 Jul 2019 17:26:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SDS/oRbp3ndQD48erCJR8LYHts1U4WFu/TkobcIYFLU=;
-        b=K7Px++GyUB3IKchznHVKlpORjcHhnjcdO6Lw067w6ofIzdRXflKRgfr3ZFCzzGfrLp
-         xXxVa9do5SNUJCaGd5yUkgiUOXV45J8S6jDKMNVw8AXl0TMfRzsgP5+eEKITgCezoBKn
-         DGrDJETdxGJEUcMwZL4HgYXgSX9/zspKvJ66ODuUYM5SCxwKhfPMQXupCrw9CKehZdWI
-         uxlY9PrDQR9tc5cb63vDo23DQ+1Cf0KseuXbMjfHC5VomKrUXiJglEzfZ6sBGDNLc5Gg
-         8f2lFSMjnks1nFi4Y2rmokYXB9qpyPPgEDKaI0VSN2BESinSKo8N0Jv3z1TfkGjz/k80
-         PiFg==
+        bh=jpO8sreDUzvlvw9og2Hp8i68FPwJ8U55RoYi0du41uw=;
+        b=gHAo1WeQFtuGBTDEwAMCbseXy/B/bPQAtjCYg/HdwPS28nJqFO7jf7nsFZxNLVtqRA
+         PqddFVYUFtXo2rw9iMUt5OCvlpYSioXj2Z8yGVNDbzqESA3gLqu3P8k/v7uHizSKoKhn
+         du2IBREJ6kx4G+gOFQgUxTdbNqDPWA6nh0hJ85zTyVqesHAX2nrvFCSppHDz2e2H1LMw
+         XCfaJOPe9GBh3L5a96L8CWHkdZa4cItaG+li34wz3Vl1FkZERqT1nejifIr2jJQORHaQ
+         9XOGIkD9v9C9Ou0blkmLynJSlPAQtgOqgpnJ+lSiELoJlWAF0SHEurS+pgdNvaCk0qQX
+         edtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=SDS/oRbp3ndQD48erCJR8LYHts1U4WFu/TkobcIYFLU=;
-        b=uhix5wd26pemwhdrlBMQihdLBpwuIvt04TlaStN9seftHbP2S4vHR03RjqJaWzOnN9
-         OXQRpXU9DMmxyEgcNk3HwC+mjP5LLxzzwH+uiwIziesQzbTmn8eLKOsWR9EzuLZmgeRf
-         mfU2uQ81EXTu4cN4nD/yLsDMfbL/sGXEuCGMBWMx5Fz3v3YAoYxhSPdLkT6/62/L08pr
-         aug4kZMp780VUr2qANx3SgL0vb5oTdK4sntmw0i5yFPb2NjXnTvZ3BwGQTdfCIpkDPhf
-         lwn+e4Rqg/TWQloFyHPwBomRuPe+zyS/e7PqKY6Vn0TNRzWtToGNtBv7dAx/o2Yg9bGC
-         z/pQ==
-X-Gm-Message-State: APjAAAWJz03/0ybQM9Gyaub4BMV9XYni4lRTv4v8TOAr1Kg3cYifS3pP
-        O1ULw4mABEIfCDZLtTKuVJhULKvO
-X-Google-Smtp-Source: APXvYqwAc8rdlD+UPsbJp6Atian7nae1A5y24Hm5XKecZwzNVtco3YvJ9gjxt47hwdUsAQQOgRZSow==
-X-Received: by 2002:a17:90a:36a7:: with SMTP id t36mr112276735pjb.34.1564446211820;
-        Mon, 29 Jul 2019 17:23:31 -0700 (PDT)
-Received: from [172.27.227.219] ([216.129.126.118])
-        by smtp.googlemail.com with ESMTPSA id v126sm251489pgb.23.2019.07.29.17.23.29
+        bh=jpO8sreDUzvlvw9og2Hp8i68FPwJ8U55RoYi0du41uw=;
+        b=q1l3tHd4Z5bL7M0WOk11yZFGX0l3HzC2Aigd/nw0H9aAFwNbClYuCy3DFJpugePxI2
+         WQj+6mMr5Ms/M1n2N2zNqTqIhJTQ0CSwWc+94Th3GJQqKGmjvDHS3NO0ZCSLuodZqacE
+         kvv5NYSkgiSirKI7RCIDpDvmuS7fFvE7LN/u+JoVCArfNJZ6KmS8CmrLURCCSn9FF+5n
+         sEHPkHY6Zm/gLro2PLVHhG3b9HTz8CJSEHxw5dwlZK0uDBWghAFpg3njIfilYW4BnHZ/
+         qQW9QgaKnlc2cZ0rCoNLRyIbhdPBDgjKUA2yIwJLXWLu0bdZhw4YyPzVQ7QF45lBP18y
+         J6fw==
+X-Gm-Message-State: APjAAAWKEufvDVxgyTj5znN1olGoAaXORHkcU5gz0FYFLXdAtJ7lfMCQ
+        nsY7ASB9mhWSvTICBtlu9mJvJPU8
+X-Google-Smtp-Source: APXvYqytTwX1w7ww9EqbSB9XCZga85xJ5JB0M2Mdzt3Hx/ZNaYeDn5HitiAFbeJhTx0fTbfn/UDc4A==
+X-Received: by 2002:a62:cd45:: with SMTP id o66mr39819439pfg.112.1564446363613;
+        Mon, 29 Jul 2019 17:26:03 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i126sm74812969pfb.32.2019.07.29.17.26.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 17:23:30 -0700 (PDT)
-Subject: Re: [PATCH net] net: ipv6: Fix a bug in ndisc_send_ns when netdev
- only has a global address
-To:     Su Yanjun <suyj.fnst@cn.fujitsu.com>, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1564368591-42301-1-git-send-email-suyj.fnst@cn.fujitsu.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <4889aab0-5d79-bbba-1286-91d89c55fc1e@gmail.com>
-Date:   Mon, 29 Jul 2019 18:23:28 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Mon, 29 Jul 2019 17:26:02 -0700 (PDT)
+Subject: Re: [PATCH] watchdog device drivers:pc87413_wdt: Rewriting of
+ pc87413_wdt driver to utilize common watchdog interface (fwd)
+To:     Mark Balantzyan <mbalant3@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        wim@linux-watchdog.org
+References: <alpine.DEB.2.21.1907291614270.2893@mbalantz-desktop>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <8e159e06-023e-6e20-ced5-3a645c0a1242@roeck-us.net>
+Date:   Mon, 29 Jul 2019 17:26:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1564368591-42301-1-git-send-email-suyj.fnst@cn.fujitsu.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <alpine.DEB.2.21.1907291614270.2893@mbalantz-desktop>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/19 8:49 PM, Su Yanjun wrote:
-> When we send mpls packets and the interface only has a
-> manual global ipv6 address, then the two hosts cant communicate.
-> I find that in ndisc_send_ns it only tries to get a ll address.
-> In my case, the executive path is as below.
-> ip6_output
->  ->ip6_finish_output
->   ->lwtunnel_xmit
->    ->mpls_xmit
->     ->neigh_resolve_output
->      ->neigh_probe
->       ->ndisc_solicit
->        ->ndisc_send_ns
-
-for the archives, this is not an MPLS problem but a general IPv6
-forwarding problem when the egress interface does not have a link local
-address.
-
+On 7/29/19 4:17 PM, Mark Balantzyan wrote:
 > 
-> In RFC4861, 7.2.2 says
-> "If the source address of the packet prompting the solicitation is the
-> same as one of the addresses assigned to the outgoing interface, that
-> address SHOULD be placed in the IP Source Address of the outgoing
-> solicitation.  Otherwise, any one of the addresses assigned to the
-> interface should be used."
 > 
-> In this patch we try get a global address if we get ll address failed.
+> ---------- Forwarded message ----------
+> Hi all, sorry for the duplicate message Guenter, wanted to be sure my
+> message is transferred:
 > 
-> Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-> ---
->  include/net/addrconf.h |  4 ++++
->  net/ipv6/addrconf.c    | 34 ++++++++++++++++++++++++++++++++++
->  net/ipv6/ndisc.c       |  8 ++++++--
->  3 files changed, 44 insertions(+), 2 deletions(-)
+> Thank you for your reply, Guenter! Sorry there were issues applying the
+> patch, I used git format-patch to produce the patch and pasted the main
+> contents into a plaintext email client so I thought it would work..
 > 
-> diff --git a/include/net/addrconf.h b/include/net/addrconf.h
-> index becdad5..006db8e 100644
-> --- a/include/net/addrconf.h
-> +++ b/include/net/addrconf.h
-> @@ -107,6 +107,10 @@ int __ipv6_get_lladdr(struct inet6_dev *idev, struct in6_addr *addr,
->  		      u32 banned_flags);
->  int ipv6_get_lladdr(struct net_device *dev, struct in6_addr *addr,
->  		    u32 banned_flags);
-> +int __ipv6_get_addr(struct inet6_dev *idev, struct in6_addr *addr,
-> +		      u32 banned_flags);
-
-no reason to export __ipv6_get_addr. I suspect you copied
-__ipv6_get_lladdr but it has an external (to addrconf.c) user. In this
-case only ipv6_get_addr needs to be exported.
-
-
-> +int ipv6_get_addr(struct net_device *dev, struct in6_addr *addr,
-> +		    u32 banned_flags);
->  bool inet_rcv_saddr_equal(const struct sock *sk, const struct sock *sk2,
->  			  bool match_wildcard);
->  bool inet_rcv_saddr_any(const struct sock *sk);
-> diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-> index 521e320..4c0a43f 100644
-> --- a/net/ipv6/addrconf.c
-> +++ b/net/ipv6/addrconf.c
-> @@ -1870,6 +1870,40 @@ int ipv6_get_lladdr(struct net_device *dev, struct in6_addr *addr,
->  	return err;
->  }
->  
-> +int __ipv6_get_addr(struct inet6_dev *idev, struct in6_addr *addr,
-> +		    u32 banned_flags)
-> +{
-> +	struct inet6_ifaddr *ifp;
-> +	int err = -EADDRNOTAVAIL;
-> +
-> +	list_for_each_entry_reverse(ifp, &idev->addr_list, if_list) {
-
-Addresses are ordered by scope. __ipv6_get_lladdr uses
-list_for_each_entry_reverse because the LLA's are after the globals.
-Since this is falling back to 'give an address' from this interface, I
-think you can just use list_for_each_entry.
-
-
-> +		if (ifp->scope == 0 &&
-> +		    !(ifp->flags & banned_flags)) {
-> +			*addr = ifp->addr;
-> +			err = 0;
-> +			break;
-> +		}
-> +	}
-> +	return err;
-> +}
-> +
-> +int ipv6_get_addr(struct net_device *dev, struct in6_addr *addr,
-> +		  u32 banned_flags)
-> +{
-> +	struct inet6_dev *idev;
-> +	int err = -EADDRNOTAVAIL;
-> +
-> +	rcu_read_lock();
-> +	idev = __in6_dev_get(dev);
-> +	if (idev) {
-> +		read_lock_bh(&idev->lock);
-> +		err = __ipv6_get_addr(idev, addr, banned_flags);
-> +		read_unlock_bh(&idev->lock);
-> +	}
-> +	rcu_read_unlock();
-> +	return err;
-> +}
-> +
->  static int ipv6_count_addresses(const struct inet6_dev *idev)
->  {
->  	const struct inet6_ifaddr *ifp;
-> diff --git a/net/ipv6/ndisc.c b/net/ipv6/ndisc.c
-> index 083cc1c..18ac2fb 100644
-> --- a/net/ipv6/ndisc.c
-> +++ b/net/ipv6/ndisc.c
-> @@ -606,8 +606,12 @@ void ndisc_send_ns(struct net_device *dev, const struct in6_addr *solicit,
->  
->  	if (!saddr) {
-
-And since you are going to do a v2, another nit - define a local banned
-flags and use it for both lookups just to make it clear.
-
-		u32 banned_flags = IFA_F_TENTATIVE | IFA_F_OPTIMISTIC;
-
->  		if (ipv6_get_lladdr(dev, &addr_buf,
-> -				   (IFA_F_TENTATIVE|IFA_F_OPTIMISTIC)))
-> -			return;
-> +				   (IFA_F_TENTATIVE | IFA_F_OPTIMISTIC))) {
-> +			/* try global address */
-> +			if (ipv6_get_addr(dev, &addr_buf,
-> +					  (IFA_F_TENTATIVE | IFA_F_OPTIMISTIC)))
-> +				return;
-> +		}
->  		saddr = &addr_buf;
->  	}
->  
+> May I please request clarification on which functions are no longer needed?
 > 
 
+All functions dealing with file accesses directly. open, read, write, ioctl.
+Don't you see that when you compile the code ?
+
+> Sorry about forgetting about that last misc_deregister(). Will do more
+> tests, if that’s alright with you.
+> 
+> In effect, may it be best to start the watchdog from the “init” function?
+> 
+The watchdog should only be started from its start function, when it is
+opened. There are alternatives, such as informing the watchdog core that
+the watchdog has been started even though it is not closed.
+
+I am repeating myself here, since I don't recall an answer: Do you have
+the hardware ? If not, it does not make sense to continue this work; it
+is too risky to make all those changes without testing them on real
+hardware (or, at the very least, with qemu, but qemu doesn't support
+this chip).
+
+Thanks,
+Guenter
