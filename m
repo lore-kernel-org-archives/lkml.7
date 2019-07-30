@@ -2,147 +2,127 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1810C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403A5C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1D620693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1350320693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:21:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cv1cQIoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbfG3LUS (ORCPT
+        id S1729477AbfG3LU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:20:18 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35674 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729197AbfG3LUS (ORCPT
+        Tue, 30 Jul 2019 07:20:58 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41996 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726870AbfG3LU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:20:18 -0400
-Received: by mail-wm1-f67.google.com with SMTP id l2so56262311wmg.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 04:20:16 -0700 (PDT)
+        Tue, 30 Jul 2019 07:20:58 -0400
+Received: by mail-ed1-f66.google.com with SMTP id v15so62243708eds.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 04:20:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HuK0NMbHIeL5R+Lo0vRZLhccdEIiNCzuWozzwqDVd8w=;
+        b=Cv1cQIoKy6X6DttMsBcZfqs4es6CuyH7Zes6l42IuR4Fd3iseO+41GWkeU32pnJ2I/
+         dg1rnI6SCQ8UQ9s0v4xSEU+qlnQX96GFTQ5vQdaQB3mjnIZsBXNCcx1DNCZTTZciQ3AA
+         W6VVkorVtxW7hL5iPhpSIx0IfX6NrfeBUwy51Cx2LxonGE443LtQ+CSkDuXSdXma7erU
+         n/TSZ3CbXk2Gd6OMq5u/83p3KF600YhCYKt6IkFyl3iA0s+FjKaonC5SGC/DrK/rxQhc
+         DbrjTv/SyFTgMZ7/IDW6hmIswaWAZD250Xl4CC4v9Es+J4E+opM/yCPh0k0e5+UgxCot
+         EWjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dU6DC0DBnzponZWFwxW0e6zjqYJ2z/TxlXP6MPH2kzU=;
-        b=FFcy+rmohstzMPjtzox2o/afkG7ToGKr4ncAWHzA7+tfxGdd7XsLsMho/2yutF0atF
-         xE+vQNPBby+v5ySBHnPVgiFb8eyHMDiEdhCRG04r/6LkNFs4fRxPbPh0kXFJbzVqR+s6
-         rW9M8rLR3qEsKNC7VhAlqRO/C3e0+llW5YdxoySxKESU3DEh8Xh9oBoHf4dVU3HMWHho
-         KhvwA+hV7gU6BjVwEI5AiIfIcdaa5hzbvAK0NQIorGY22EQsA4boRdVkUX5SQeZoNKLh
-         UaWQOh3J9fuWJOekHO4lw24qhz7+aRKO+Ir1HoV2E49+DZRr2yd9UJ7zX85Epehm1WUE
-         RpVA==
-X-Gm-Message-State: APjAAAVc4j26muTJC4zNqNMUi5l2XQvUX0XWhCBKkewF6gPGwpfwFy7u
-        NrYvPjLqAVcEB2aI3vNCYiptjGIBr0Y=
-X-Google-Smtp-Source: APXvYqxGPEGFqFhh+SybAHgvqyZjBla5wxFfR6C1Wpq433TyWcQ3KrXJLcUDIP/E7F7OQac0mNBfoA==
-X-Received: by 2002:a1c:cb43:: with SMTP id b64mr107521wmg.135.1564485615636;
-        Tue, 30 Jul 2019 04:20:15 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id 18sm54002868wmg.43.2019.07.30.04.20.14
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 04:20:15 -0700 (PDT)
-Subject: Re: [RFC PATCH 08/16] RISC-V: KVM: Handle MMIO exits for VCPU
-To:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190729115544.17895-1-anup.patel@wdc.com>
- <20190729115544.17895-9-anup.patel@wdc.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <05d41219-6c0c-8851-dab6-24f9c76aed57@redhat.com>
-Date:   Tue, 30 Jul 2019 13:20:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HuK0NMbHIeL5R+Lo0vRZLhccdEIiNCzuWozzwqDVd8w=;
+        b=czWMubiZ7hnzhcXp4TAEhJhy58aBSAf0lrYlS5d706a9J4dFbP3ltv8ZveoG+xvngK
+         AEeiLbsNkYY+uour9W5LyGxSHeYF3e2fkT+9HHga296WViYIP97RHquwuDMZZ/C9gCZV
+         ZTABAwBzbEFLC+LdEoQsH0pZwtEy0i6AH6kwHoHtNCIEwx+aO2iAtezgx9mIdPaWGTAn
+         15MHPRQQ+NmELFexnzJvzmmxZCjTlFwGVh3/NTa74ppH3lwsbL03lYINrFMDmTFi1gQy
+         ctlD6eDpe5hht978Or/1J/rSwiStTK+A0D+GP/IqW5xoiw1k9kLNDQAtnNcJ55hmIZrL
+         MvEQ==
+X-Gm-Message-State: APjAAAVVhIz/yIrN8M9kmCoN3BzgxMMxSq0Obs1expKjs327y+Pa7XRY
+        91X7cFv5IWdcjB3oc8QO7w7MbhIh6spZaQIk+h4=
+X-Google-Smtp-Source: APXvYqzgck29Wek0Q637GHCS3mnzpJyXc5pFJERINHwDs/+cdQllN7bSXJ18MnogG/COgn93hHQFHxQ6gwYMA9pO5UQ=
+X-Received: by 2002:a17:906:78c7:: with SMTP id r7mr90317796ejn.147.1564485657187;
+ Tue, 30 Jul 2019 04:20:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190729115544.17895-9-anup.patel@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190729151435.9498-1-hslester96@gmail.com> <alpine.DEB.2.21.1907301113580.1738@nanos.tec.linutronix.de>
+ <CANhBUQ2L71Q2j_iOUaHW7qk0BS6wwMBwmtd8N4S5mNLYHr4Dhw@mail.gmail.com> <708d8d79-6464-fbd3-6a62-853c29b32cc3@kernel.org>
+In-Reply-To: <708d8d79-6464-fbd3-6a62-853c29b32cc3@kernel.org>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Tue, 30 Jul 2019 19:20:47 +0800
+Message-ID: <CANhBUQ0uWu5yt3jXWxgH1a-i2vuHpkxwPbQ4PZdpPoi+LJ+P1Q@mail.gmail.com>
+Subject: Re: [PATCH 05/12] genirq/debugfs: Replace strncmp with str_has_prefix
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/19 13:57, Anup Patel wrote:
-> +static ulong get_insn(struct kvm_vcpu *vcpu)
-> +{
-> +	ulong __sepc = vcpu->arch.guest_context.sepc;
-> +	ulong __hstatus, __sstatus, __vsstatus;
-> +#ifdef CONFIG_RISCV_ISA_C
-> +	ulong rvc_mask = 3, tmp;
-> +#endif
-> +	ulong flags, val;
-> +
-> +	local_irq_save(flags);
-> +
-> +	__vsstatus = csr_read(CSR_VSSTATUS);
-> +	__sstatus = csr_read(CSR_SSTATUS);
-> +	__hstatus = csr_read(CSR_HSTATUS);
-> +
-> +	csr_write(CSR_VSSTATUS, __vsstatus | SR_MXR);
-> +	csr_write(CSR_SSTATUS, vcpu->arch.guest_context.sstatus | SR_MXR);
-> +	csr_write(CSR_HSTATUS, vcpu->arch.guest_context.hstatus | HSTATUS_SPRV);
-> +
-> +#ifndef CONFIG_RISCV_ISA_C
-> +	asm ("\n"
-> +#ifdef CONFIG_64BIT
-> +		STR(LWU) " %[insn], (%[addr])\n"
-> +#else
-> +		STR(LW) " %[insn], (%[addr])\n"
-> +#endif
-> +		: [insn] "=&r" (val) : [addr] "r" (__sepc));
-> +#else
-> +	asm ("and %[tmp], %[addr], 2\n"
-> +		"bnez %[tmp], 1f\n"
-> +#ifdef CONFIG_64BIT
-> +		STR(LWU) " %[insn], (%[addr])\n"
-> +#else
-> +		STR(LW) " %[insn], (%[addr])\n"
-> +#endif
-> +		"and %[tmp], %[insn], %[rvc_mask]\n"
-> +		"beq %[tmp], %[rvc_mask], 2f\n"
-> +		"sll %[insn], %[insn], %[xlen_minus_16]\n"
-> +		"srl %[insn], %[insn], %[xlen_minus_16]\n"
-> +		"j 2f\n"
-> +		"1:\n"
-> +		"lhu %[insn], (%[addr])\n"
-> +		"and %[tmp], %[insn], %[rvc_mask]\n"
-> +		"bne %[tmp], %[rvc_mask], 2f\n"
-> +		"lhu %[tmp], 2(%[addr])\n"
-> +		"sll %[tmp], %[tmp], 16\n"
-> +		"add %[insn], %[insn], %[tmp]\n"
-> +		"2:"
-> +	: [vsstatus] "+&r" (__vsstatus), [insn] "=&r" (val),
-> +	  [tmp] "=&r" (tmp)
-> +	: [addr] "r" (__sepc), [rvc_mask] "r" (rvc_mask),
-> +	  [xlen_minus_16] "i" (__riscv_xlen - 16));
-> +#endif
-> +
-> +	csr_write(CSR_HSTATUS, __hstatus);
-> +	csr_write(CSR_SSTATUS, __sstatus);
-> +	csr_write(CSR_VSSTATUS, __vsstatus);
-> +
-> +	local_irq_restore(flags);
-> +
-> +	return val;
-> +}
-> +
+Marc Zyngier <maz@kernel.org> =E4=BA=8E2019=E5=B9=B47=E6=9C=8830=E6=97=A5=
+=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=887:13=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On 30/07/2019 11:58, Chuhong Yuan wrote:
+> > Thomas Gleixner <tglx@linutronix.de> =E4=BA=8E2019=E5=B9=B47=E6=9C=8830=
+=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=885:17=E5=86=99=E9=81=93=EF=BC=
+=9A
+> >>
+> >> On Mon, 29 Jul 2019, Chuhong Yuan wrote:
+> >>
+> >>> strncmp(str, const, len) is error-prone.
+> >>> We had better use newly introduced
+> >>> str_has_prefix() instead of it.
+> >>
+> >> Can you please provide a proper explanation why the below strncmp() is
+> >> error prone?
+> >>
+> >
+> > If the size is less than 7, for example, 2, then even if buf is "tr", t=
+he
+> > result will still be true. This is an error.
+> > strncmp(str, const, len) is error-prone mainly because the len is easy
+> > to be wrong.
+> >
+> >> Just running a script and copying some boiler plate changelog saying
+> >> 'strncmp() is error prone' does not cut it.
+> >>
+> >>> -     if (!strncmp(buf, "trigger", size)) {
+> >>> +     if (str_has_prefix(buf, "trigger")) {
+> >>
+> >> Especially when the resulting code is not equivalent.
+> >>
+> >
+> > I think here the semantic is the comparison should only return true
+> > when buf is "trigger".
+>
+> Not quite. It will satisfy the condition for 't', 'tr', 'trig',
+> 'trigger', and of course 'triggerthissillyinterruptwhichImdebugging'.
+>
+> I agree that the semantic is a bit bizarre and maybe not quite expected,
+> but still... You seem to be changing the semantic without any
+> justification other than "this is safer".
+>
 
-This also needs fixups for exceptions, because the guest can race
-against the host and modify its page tables concurrently with the
-vmexit.  (How effective this is, of course, depends on how the TLB is
-implemented in hardware, but you need to do the safe thing anyway).
+I am sorry about that... It is my fault.
+I will improve my script and avoid such mistakes.
+Thanks for your correction.
 
-Paolo
+Regards,
+Chuhong
+
+> Thanks,
+>
+>         M.
+> --
+> Jazz is not dead, it just smells funny...
