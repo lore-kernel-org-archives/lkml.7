@@ -2,75 +2,286 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005D7C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF34C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D129C2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37AA42087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564471650;
+	bh=Ii7zVX9FASAgsMK5DMextMabXxNZCGoAeztLKZJHQL4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=niiGf+qUjTgDwfJQBQnF6EXtfmizbe2rABSFr+YdRzbVz9/W8F6GGFc7/Nj3+L3DM
+	 ZSI7eezPV6ZsSetXf4lIO7myQKQJhJXrCrCi2g2Arki3R8tEcmJGGXDetIMpLt5ifZ
+	 t5QNU+Ss3Umpxogvxd8E4e8EDgLKf4l9NxLibmVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730111AbfG3H04 (ORCPT
+        id S1730144AbfG3H13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:26:56 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3246 "EHLO huawei.com"
+        Tue, 30 Jul 2019 03:27:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53694 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726432AbfG3H04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:26:56 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 977212EF994AA4D160AD;
-        Tue, 30 Jul 2019 15:26:51 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 30 Jul
- 2019 15:26:42 +0800
-Subject: Re: [PATCH 01/22] staging: erofs: update source file headers
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        Chao Yu <chao@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <weidu.du@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20190729065159.62378-1-gaoxiang25@huawei.com>
- <20190729065159.62378-2-gaoxiang25@huawei.com>
- <20190730072003.GA31548@kroah.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <17ef206b-cb90-b04a-d4e0-978786741238@huawei.com>
-Date:   Tue, 30 Jul 2019 15:26:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        id S1726432AbfG3H12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 03:27:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8A31BAFBB;
+        Tue, 30 Jul 2019 07:27:25 +0000 (UTC)
+Date:   Tue, 30 Jul 2019 09:27:24 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Miles Chen <miles.chen@mediatek.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        wsd_upstream@mediatek.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v4] mm: memcontrol: fix use after free in
+ mem_cgroup_iter()
+Message-ID: <20190730072724.GM9330@dhcp22.suse.cz>
+References: <20190730015729.4406-1-miles.chen@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20190730072003.GA31548@kroah.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730015729.4406-1-miles.chen@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+[Cc Andrew to pick up the patch]
 
-On 2019/7/30 15:20, Greg Kroah-Hartman wrote:
-> On Mon, Jul 29, 2019 at 02:51:38PM +0800, Gao Xiang wrote:
->> - Use the correct style for all SPDX License Identifiers;
->> - Get rid of the unnecessary license boilerplate;
->> - Use "GPL-2.0-only" instead of "GPL-2.0" suggested-by Stephen.
+On Tue 30-07-19 09:57:29, Miles Chen wrote:
+> This patch is sent to report an use after free in mem_cgroup_iter()
+> after merging commit: be2657752e9e "mm: memcg: fix use after free in
+> mem_cgroup_iter()".
 > 
-> Note, either tag works just fine, they are identical.  I'll take this,
-> but just be aware of this in the future please.
-
-Okay, got it. I will keep track of potential GPL3.0+ stuffes
-if community has such license discussions again.
-
-It seems fine for now. :)
-
-Thanks,
-Gao Xiang
-
+> I work with android kernel tree (4.9 & 4.14), and the commit:
+> be2657752e9e "mm: memcg: fix use after free in mem_cgroup_iter()" has
+> been merged to the trees. However, I can still observe use after free
+> issues addressed in the commit be2657752e9e.
+> (on low-end devices, a few times this month)
 > 
-> thanks,
+> backtrace:
+> 	css_tryget <- crash here
+> 	mem_cgroup_iter
+> 	shrink_node
+> 	shrink_zones
+> 	do_try_to_free_pages
+> 	try_to_free_pages
+> 	__perform_reclaim
+> 	__alloc_pages_direct_reclaim
+> 	__alloc_pages_slowpath
+> 	__alloc_pages_nodemask
 > 
-> greg k-h
+> To debug, I poisoned mem_cgroup before freeing it:
 > 
+> static void __mem_cgroup_free(struct mem_cgroup *memcg)
+> 	for_each_node(node)
+> 	free_mem_cgroup_per_node_info(memcg, node);
+> 	free_percpu(memcg->stat);
+> +       /* poison memcg before freeing it */
+> +       memset(memcg, 0x78, sizeof(struct mem_cgroup));
+> 	kfree(memcg);
+> }
+> 
+> The coredump shows the position=0xdbbc2a00 is freed.
+> 
+> (gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
+> $13 = {position = 0xdbbc2a00, generation = 0x2efd}
+> 
+> 0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
+> 0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
+> 0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
+> 0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
+> 0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
+> 0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
+> 0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
+> 0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
+> 0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
+> 0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
+> 0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
+> 0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
+> 0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
+> 0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
+> 0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
+> 0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
+> 0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
+> 0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
+> 0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
+> 0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
+> 0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
+> 0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
+> 0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
+> 0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
+> 0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
+> 0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
+> 0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
+> 
+> In the reclaim path, try_to_free_pages() does not setup
+> sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
+> shrink_node().
+> 
+> In mem_cgroup_iter(), root is set to root_mem_cgroup because
+> sc->target_mem_cgroup is NULL.
+> It is possible to assign a memcg to root_mem_cgroup.nodeinfo.iter in
+> mem_cgroup_iter().
+> 
+> 	try_to_free_pages
+> 		struct scan_control sc = {...}, target_mem_cgroup is 0x0;
+> 	do_try_to_free_pages
+> 	shrink_zones
+> 	shrink_node
+> 		 mem_cgroup *root = sc->target_mem_cgroup;
+> 		 memcg = mem_cgroup_iter(root, NULL, &reclaim);
+> 	mem_cgroup_iter()
+> 		if (!root)
+> 			root = root_mem_cgroup;
+> 		...
+> 
+> 		css = css_next_descendant_pre(css, &root->css);
+> 		memcg = mem_cgroup_from_css(css);
+> 		cmpxchg(&iter->position, pos, memcg);
+> 
+> My device uses memcg non-hierarchical mode.
+> When we release a memcg: invalidate_reclaim_iterators() reaches only
+> dead_memcg and its parents. If non-hierarchical mode is used,
+> invalidate_reclaim_iterators() never reaches root_mem_cgroup.
+> 
+> static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
+> {
+> 	struct mem_cgroup *memcg = dead_memcg;
+> 
+> 	for (; memcg; memcg = parent_mem_cgroup(memcg)
+> 	...
+> }
+> 
+> So the use after free scenario looks like:
+> 
+> CPU1						CPU2
+> 
+> try_to_free_pages
+> do_try_to_free_pages
+> shrink_zones
+> shrink_node
+> mem_cgroup_iter()
+>     if (!root)
+>     	root = root_mem_cgroup;
+>     ...
+>     css = css_next_descendant_pre(css, &root->css);
+>     memcg = mem_cgroup_from_css(css);
+>     cmpxchg(&iter->position, pos, memcg);
+> 
+> 					invalidate_reclaim_iterators(memcg);
+> 					...
+> 					__mem_cgroup_free()
+> 						kfree(memcg);
+> 
+> try_to_free_pages
+> do_try_to_free_pages
+> shrink_zones
+> shrink_node
+> mem_cgroup_iter()
+>     if (!root)
+>     	root = root_mem_cgroup;
+>     ...
+>     mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
+>     iter = &mz->iter[reclaim->priority];
+>     pos = READ_ONCE(iter->position);
+>     css_tryget(&pos->css) <- use after free
+> 
+> To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter in
+> invalidate_reclaim_iterators().
+> 
+> Change since v1:
+> Add a comment to explain why we need to handle root_mem_cgroup separately.
+> Rename invalid_root to invalidate_root.
+> 
+> Change since v2:
+> Add fix tag
+> 
+> Change since v3:
+> Remove confusing 'invalidate_root', make the code easier to read
+> 
+> Fixes: 5ac8fb31ad2e ("mm: memcontrol: convert reclaim iterator to simple css refcounting")
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/memcontrol.c | 39 +++++++++++++++++++++++++++++----------
+>  1 file changed, 29 insertions(+), 10 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index cdbb7a84cb6e..8a2a2d5cfc26 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1130,26 +1130,45 @@ void mem_cgroup_iter_break(struct mem_cgroup *root,
+>  		css_put(&prev->css);
+>  }
+>  
+> -static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
+> +static void __invalidate_reclaim_iterators(struct mem_cgroup *from,
+> +					struct mem_cgroup *dead_memcg)
+>  {
+> -	struct mem_cgroup *memcg = dead_memcg;
+>  	struct mem_cgroup_reclaim_iter *iter;
+>  	struct mem_cgroup_per_node *mz;
+>  	int nid;
+>  	int i;
+>  
+> -	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
+> -		for_each_node(nid) {
+> -			mz = mem_cgroup_nodeinfo(memcg, nid);
+> -			for (i = 0; i <= DEF_PRIORITY; i++) {
+> -				iter = &mz->iter[i];
+> -				cmpxchg(&iter->position,
+> -					dead_memcg, NULL);
+> -			}
+> +	for_each_node(nid) {
+> +		mz = mem_cgroup_nodeinfo(from, nid);
+> +		for (i = 0; i <= DEF_PRIORITY; i++) {
+> +			iter = &mz->iter[i];
+> +			cmpxchg(&iter->position,
+> +				dead_memcg, NULL);
+>  		}
+>  	}
+>  }
+>  
+> +static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
+> +{
+> +	struct mem_cgroup *memcg = dead_memcg;
+> +	struct mem_cgroup *last;
+> +
+> +	do {
+> +		__invalidate_reclaim_iterators(memcg, dead_memcg);
+> +		last = memcg;
+> +	} while (memcg = parent_mem_cgroup(memcg));
+> +
+> +	/*
+> +	 * When cgruop1 non-hierarchy mode is used,
+> +	 * parent_mem_cgroup() does not walk all the way up to the
+> +	 * cgroup root (root_mem_cgroup). So we have to handle
+> +	 * dead_memcg from cgroup root separately.
+> +	 */
+> +	if (last != root_mem_cgroup)
+> +		__invalidate_reclaim_iterators(root_mem_cgroup,
+> +						dead_memcg);
+> +}
+> +
+>  /**
+>   * mem_cgroup_scan_tasks - iterate over tasks of a memory cgroup hierarchy
+>   * @memcg: hierarchy root
+> -- 
+> 2.18.0
+
+-- 
+Michal Hocko
+SUSE Labs
