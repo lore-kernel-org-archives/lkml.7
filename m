@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C27C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CADAC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E775220679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BFFE20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732451AbfG3KKN (ORCPT
+        id S1732184AbfG3KKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 06:10:13 -0400
-Received: from icp-osb-irony-out1.external.iinet.net.au ([203.59.1.210]:44702
+        Tue, 30 Jul 2019 06:10:12 -0400
+Received: from icp-osb-irony-out1.external.iinet.net.au ([203.59.1.210]:44712
         "EHLO icp-osb-irony-out1.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729648AbfG3KKK (ORCPT
+        by vger.kernel.org with ESMTP id S1727360AbfG3KKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 06:10:10 -0400
+        Tue, 30 Jul 2019 06:10:09 -0400
 X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AIBgDsFkBd/1/rO8tmghmDVSESFxO?=
- =?us-ascii?q?NGogdAYJDAYkskRsJAQEBAQEBAQEBGxwBAYQ6BAICgmQ3Bg4BAwEBAQQBAQE?=
- =?us-ascii?q?BBQFthGVFhUsGJy8zPxJXBxKDIoF3E61XM4QGAYRygUiBNIcJhG6BQD+DdWy?=
- =?us-ascii?q?EAwobhX8ElTqVQwmBJXeUGBmYEYtkgVmZaCKBWE0fGYMngnmNVkQ1MIt0glI?=
- =?us-ascii?q?BAQ?=
-X-IPAS-Result: =?us-ascii?q?A2AIBgDsFkBd/1/rO8tmghmDVSESFxONGogdAYJDAYksk?=
- =?us-ascii?q?RsJAQEBAQEBAQEBGxwBAYQ6BAICgmQ3Bg4BAwEBAQQBAQEBBQFthGVFhUsGJ?=
- =?us-ascii?q?y8zPxJXBxKDIoF3E61XM4QGAYRygUiBNIcJhG6BQD+DdWyEAwobhX8ElTqVQ?=
- =?us-ascii?q?wmBJXeUGBmYEYtkgVmZaCKBWE0fGYMngnmNVkQ1MIt0glIBAQ?=
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2BcBwDsFkBd/1/rO8tmHgEfBgeBTgK?=
+ =?us-ascii?q?DUwwVEhcTjRqIHQGCQwGJLJEbCQEBAQEBAQEBARscAQGEOgQCAoJkNwYOAQM?=
+ =?us-ascii?q?BAQEEAQEBAQUBbYRlRYVLBlYzPxJXBxKDIoF3E64KhAYBhHKBSIE0hwmEboF?=
+ =?us-ascii?q?AP4ERg1CEAwobhV0iBJU6lUMJgSV3lBgZmBEtizeBWZloIoFYTR8ZgyeQT0Q?=
+ =?us-ascii?q?1MIt0glIBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2BcBwDsFkBd/1/rO8tmHgEfBgeBTgKDUwwVEhcTjRqIH?=
+ =?us-ascii?q?QGCQwGJLJEbCQEBAQEBAQEBARscAQGEOgQCAoJkNwYOAQMBAQEEAQEBAQUBb?=
+ =?us-ascii?q?YRlRYVLBlYzPxJXBxKDIoF3E64KhAYBhHKBSIE0hwmEboFAP4ERg1CEAwobh?=
+ =?us-ascii?q?V0iBJU6lUMJgSV3lBgZmBEtizeBWZloIoFYTR8ZgyeQT0Q1MIt0glIBAQ?=
 X-IronPort-AV: E=Sophos;i="5.64,326,1559491200"; 
-   d="scan'208";a="229598851"
+   d="scan'208";a="229598849"
 Received: from 203-59-235-95.perm.iinet.net.au (HELO rtcentos7.electromag.com.au) ([203.59.235.95])
-  by icp-osb-irony-out1.iinet.net.au with ESMTP; 30 Jul 2019 18:10:07 +0800
+  by icp-osb-irony-out1.iinet.net.au with ESMTP; 30 Jul 2019 18:10:06 +0800
 From:   Richard Tresidder <rtresidd@electromag.com.au>
 To:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         rtresidd@electromag.com.au, kstewart@linuxfoundation.org,
         gregkh@linuxfoundation.org, tglx@linutronix.de,
         rfontana@redhat.com, allison@lohutok.net, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RESEND v2 2/2] power/supply/sbs-battery: Add ability to force load a battery via the devicetree
-Date:   Tue, 30 Jul 2019 18:10:04 +0800
-Message-Id: <1564481404-39505-3-git-send-email-rtresidd@electromag.com.au>
+Subject: [RESEND v2 1/2] dt-binding docs: sbs_sbs-battery: Addition of force_load binding
+Date:   Tue, 30 Jul 2019 18:10:03 +0800
+Message-Id: <1564481404-39505-2-git-send-email-rtresidd@electromag.com.au>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1564481404-39505-1-git-send-email-rtresidd@electromag.com.au>
 References: <1564481404-39505-1-git-send-email-rtresidd@electromag.com.au>
@@ -51,46 +51,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ability to force load a hot pluggable battery during boot where
-there is no gpio detect method available and the module is statically
-built. Normal polling will then occur on that battery when it is inserted.
+Add device tree binding documentation for addition of force_load boolean value
+to allow loading a battery during boot even if notpresent at that time.
 
 Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
 ---
- drivers/power/supply/sbs-battery.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-index 048d205..b55721d 100644
---- a/drivers/power/supply/sbs-battery.c
-+++ b/drivers/power/supply/sbs-battery.c
-@@ -816,6 +816,7 @@ static int sbs_probe(struct i2c_client *client,
- 	struct power_supply_config psy_cfg = {};
- 	int rc;
- 	int irq;
-+	bool dt_force_load;
+diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+index 4e78e51..187d7bb 100644
+--- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+@@ -15,7 +15,8 @@ Optional properties :
+    after an external change notification.
+  - sbs,battery-detect-gpios : The gpio which signals battery detection and
+    a flag specifying its polarity.
+-
++ - sbs,force-load : Allow loading of a hot-pluggable battery when there is no
++   GPIO detect available and the module is statically built.
+ Example:
  
- 	sbs_desc = devm_kmemdup(&client->dev, &sbs_default_desc,
- 			sizeof(*sbs_desc), GFP_KERNEL);
-@@ -852,6 +853,9 @@ static int sbs_probe(struct i2c_client *client,
- 	if (rc)
- 		chip->poll_retry_count = 0;
- 
-+	dt_force_load = of_property_read_bool(client->dev.of_node,
-+						"sbs,force-load");
-+
- 	if (pdata) {
- 		chip->poll_retry_count = pdata->poll_retry_count;
- 		chip->i2c_retry_count  = pdata->i2c_retry_count;
-@@ -890,7 +894,7 @@ static int sbs_probe(struct i2c_client *client,
- 	 * Before we register, we might need to make sure we can actually talk
- 	 * to the battery.
- 	 */
--	if (!(force_load || chip->gpio_detect)) {
-+	if (!(force_load || chip->gpio_detect || dt_force_load)) {
- 		rc = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
- 
- 		if (rc < 0) {
+ 	battery@b {
+@@ -24,4 +25,5 @@ Example:
+ 		sbs,i2c-retry-count = <2>;
+ 		sbs,poll-retry-count = <10>;
+ 		sbs,battery-detect-gpios = <&gpio-controller 122 1>;
++		sbs,force-load;
+ 	}
 -- 
 1.8.3.1
 
