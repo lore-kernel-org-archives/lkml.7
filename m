@@ -2,94 +2,82 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6879DC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8850C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1E92089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2EE20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:23:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="w6sW6Bpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbfG3NWt (ORCPT
+        id S1730958AbfG3NXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:22:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45346 "EHLO mail.kernel.org"
+        Tue, 30 Jul 2019 09:23:07 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47634 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbfG3NWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:22:48 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80CBE20644;
-        Tue, 30 Jul 2019 13:22:45 +0000 (UTC)
-Date:   Tue, 30 Jul 2019 09:22:40 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, juri.lelli@redhat.com,
-        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
-        luca.abeni@santannapisa.it, bristot@redhat.com,
-        balsini@android.com, dvyukov@google.com, tglx@linutronix.de,
-        vpillai@digitalocean.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Aaron Lu <aaron.lwe@gmail.com>, keescook@chromium.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Phil Auld <pauld@redhat.com>, torvalds@linux-foundation.org,
-        Tim Chen <tim.c.chen@linux.intel.com>, fweisbec@gmail.com,
-        subhra.mazumdar@oracle.com,
-        Julien Desfossez <jdesfossez@digitalocean.com>, pjt@google.com,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>, kerrnel@google.com,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC][PATCH 02/13] stop_machine: Fix stop_cpus_in_progress
- ordering
-Message-ID: <20190730092240.42383953@gandalf.local.home>
-In-Reply-To: <20190726161357.455421817@infradead.org>
-References: <20190726145409.947503076@infradead.org>
-        <20190726161357.455421817@infradead.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726096AbfG3NXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 09:23:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=rXRe9kHDGGLyA6ncp3ZI9KHQuqcnVK8NrDCC7iqaddA=; b=w6sW6BpyS5l6hMWAd9l8xOA83D
+        H4NPG9IckFh697Pl9FN1XsESmkSY3d9IgHRS679ncIkR21uK/Zevu4ZNgYWSfH7NCP01kaGc7FYfZ
+        KMTdhxY2Ec0urBfRCqMNodkUBet+58Cl5eZbFngzGr0R3XWr3Sw/zsGUbvaJ3Tq9aeV4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hsS5h-0007de-Fc; Tue, 30 Jul 2019 15:22:57 +0200
+Date:   Tue, 30 Jul 2019 15:22:57 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Claudiu Manoil <claudiu.manoil@nxp.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        alexandru.marginean@nxp.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v4 2/4] enetc: Add mdio bus driver for the PCIe
+ MDIO endpoint
+Message-ID: <20190730132257.GB28552@lunn.ch>
+References: <1564479919-18835-1-git-send-email-claudiu.manoil@nxp.com>
+ <1564479919-18835-3-git-send-email-claudiu.manoil@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564479919-18835-3-git-send-email-claudiu.manoil@nxp.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 16:54:11 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> Make sure the entire for loop has stop_cpus_in_progress set.
-
-
->  kernel/stop_machine.c |    2 ++
->  1 file changed, 2 insertions(+)
+On Tue, Jul 30, 2019 at 12:45:17PM +0300, Claudiu Manoil wrote:
+> ENETC ports can manage the MDIO bus via local register
+> interface.  However there's also a centralized way
+> to manage the MDIO bus, via the MDIO PCIe endpoint
+> device integrated by the same root complex that also
+> integrates the ENETC ports (eth controllers).
 > 
-> --- a/kernel/stop_machine.c
-> +++ b/kernel/stop_machine.c
-> @@ -383,6 +383,7 @@ static bool queue_stop_cpus_work(const s
->  	 */
->  	preempt_disable();
->  	stop_cpus_in_progress = true;
-> +	barrier();
-
-Like smp_mb() shouldn't barrier() have a comment to what is being
-ordered and why?
-
--- Steve
-
->  	for_each_cpu(cpu, cpumask) {
->  		work = &per_cpu(cpu_stopper.stop_work, cpu);
->  		work->fn = fn;
-> @@ -391,6 +392,7 @@ static bool queue_stop_cpus_work(const s
->  		if (cpu_stop_queue_work(cpu, work))
->  			queued = true;
->  	}
-> +	barrier();
->  	stop_cpus_in_progress = false;
->  	preempt_enable();
->  
+> Depending on board design and use case, centralized
+> access to MDIO may be better than using local ENETC
+> port registers.  For instance, on the LS1028A QDS board
+> where MDIO muxing is required.  Also, the LS1028A on-chip
+> switch doesn't have a local MDIO register interface.
 > 
+> The current patch registers the above PCIe endpoint as a
+> separate MDIO bus and provides a driver for it by re-using
+> the code used for local MDIO access.  It also allows the
+> ENETC port PHYs to be managed by this driver if the local
+> "mdio" node is missing from the ENETC port node.
+> 
+> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
