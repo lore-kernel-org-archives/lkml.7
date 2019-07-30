@@ -2,95 +2,97 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7370C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDBEC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA75206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F999206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:29:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1aV4lQCW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731236AbfG3Q2R (ORCPT
+        id S1728292AbfG3Q34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:28:17 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:52538 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbfG3Q2R (ORCPT
+        Tue, 30 Jul 2019 12:29:56 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59886 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbfG3Q3z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:28:17 -0400
-Received: from [167.98.27.226] (helo=[10.35.6.253])
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1hsUyy-0002cI-8m; Tue, 30 Jul 2019 17:28:12 +0100
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on diagnostic
- routine
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kirill Marinushkin <kmarinushkin@birdec.tech>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        Takashi Iwai <tiwai@suse.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-kernel@vger.kernel.org,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
- <20190730120937.16271-4-thomas.preston@codethink.co.uk>
- <20190730141935.GF4264@sirena.org.uk>
- <45156592-a90f-b4f8-4d30-9631c03f1280@codethink.co.uk>
- <20190730155027.GJ4264@sirena.org.uk>
-From:   Thomas Preston <thomas.preston@codethink.co.uk>
-Message-ID: <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
-Date:   Tue, 30 Jul 2019 17:28:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 30 Jul 2019 12:29:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zGVc/pyY2Km9LX6V8SnBhWdxyvSk4iYd46CX7MaxL3Q=; b=1aV4lQCWTmXBt4QcQjDXfTMiZ
+        Wr0I/mX++WkGkzyNfbVhdjUHzy9CPYAyQJbEnFJx6sBwusmKgo2EJA2w51dH4KC3O3uHiiWGuWrQZ
+        nQanZdrwUV8UzKDMHW5n7CvjWVRNgIhQc1odz/mGtd0bqwDC6rzo9fWH2GdDcb3E+zfhVd1cGMbYH
+        oGabreNrHpY4CwHEJD2Cw8K3AD/Nz6OH7QVV5PYg5jY6OLKmyeomV2tmfbrBmBEh/hcuQI0I6+LnD
+        RxvmkmvysPFD0KRJOswc3oDPff+LOdVTBDDCPJN1dd64tqmD21vV/PeRj36DZ5jIdgit47+QkiKvO
+        wmWrBidrg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsV0I-00019U-F3; Tue, 30 Jul 2019 16:29:34 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2A9852029FD58; Tue, 30 Jul 2019 18:29:33 +0200 (CEST)
+Date:   Tue, 30 Jul 2019 18:29:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Rik van Riel <riel@surriel.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, pjt@google.com,
+        dietmar.eggemann@arm.com, mingo@redhat.com,
+        morten.rasmussen@arm.com, tglx@linutronix.de,
+        mgorman@techsingularity.net, vincent.guittot@linaro.org
+Subject: Re: [PATCH RFC v3 0/14] sched,fair: flatten CPU controller runqueues
+Message-ID: <20190730162933.GW31398@hirez.programming.kicks-ass.net>
+References: <20190722173348.9241-1-riel@surriel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190730155027.GJ4264@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722173348.9241-1-riel@surriel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/07/2019 16:50, Mark Brown wrote:
-> On Tue, Jul 30, 2019 at 04:25:56PM +0100, Thomas Preston wrote:
->> On 30/07/2019 15:19, Mark Brown wrote:
-> 
->>> It is unclear what this mutex usefully protects, it only gets taken when
->>> writing to the debugfs file to trigger this diagnostic mode but doesn't
->>> do anything to control interactions with any other code path in the
->>> driver.
-> 
->> If another process reads the debugfs node "diagnostic" while the turn-on 
->> diagnostic mode is running, this mutex prevents the second process
->> restarting the diagnostics.
-> 
->> This is redundant if debugfs reads are atomic, but I don't think they are.
-> 
-> Like I say it's not just debugfs though, there's the standard driver
-> interface too.
-> 
+On Mon, Jul 22, 2019 at 01:33:34PM -0400, Rik van Riel wrote:
+> Plan for the CONFIG_CFS_BANDWIDTH reimplementation:
+> - When a cgroup gets throttled, mark the cgroup and its children
+>   as throttled.
+> - When pick_next_entity finds a task that is on a throttled cgroup,
+>   stash it on the cgroup runqueue (which is not used for runnable
+>   tasks any more). Leave the vruntime unchanged, and adjust that
+>   runqueue's vruntime to be that of the left-most task.
 
-Ah right, I understand. So if we run the turn-on diagnostics routine, there's
-nothing stopping anyone from interacting with the device in other ways.
+and ignore such tasks for the load-balancer; I suppose
 
-I guess there's no way to share that mutex with ALSA? In that case, it doesn't
-matter if this mutex is there or not - this feature is incompatible. How
-compatible do debugfs interfaces have to be? I was under the impression anything
-goes. I would argue that the debugfs is better off for having the mutex so
-that no one re-reads "diagnostic" within the 5s poll timeout.
+> - When a cgroup gets unthrottled, and has tasks on it, place it on
+>   a vruntime ordered heap separate from the main runqueue.
 
-Alternatively, this diagnostic feature could be handled with an external-handler
-kcontrol SOC_SINGLE_EXT? I'm not sure if this is an atomic interface either.
+and expose said heap to the load-balancer..
 
-What would be acceptable?
+Now, I suppose you do this because merging heaps is easier than merging
+RB trees? (not in complexity iirc, but probably in code)
+
+> - Have pick_next_task_fair grab one task off that heap every time it
+>   is called, and the min vruntime of that heap is lower than the
+>   vruntime of the CPU's cfs_rq (or the CPU has no other runnable tasks).
+
+That's like a smeared out merge :-) But since the other tasks kept on
+running, this CPUs vruntime will be (much) advanced vs those throttled
+tasks and we'll most likely end up picking them all before we pick a
+'normal' task.
+
+> - Place that selected task on the CPU's cfs_rq, renormalizing its
+>   vruntime with the GENTLE_FAIR_SLEEPERS logic. That should help
+>   interleave the already runnable tasks with the recently unthrottled
+>   group, and prevent thundering herd issues.
+> - If the group gets throttled again before all of its task had a chance
+>   to run, vruntime sorting ensures all the tasks in the throttled cgroup
+>   get a chance to run over time.
+
+
