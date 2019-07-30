@@ -2,102 +2,77 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED636C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532D2C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59FA2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564522810;
-	bh=SZSfxS8OeqC//cyK+U9fS3g64U6+kM4axmL/pZ6RfQw=;
-	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
-	b=HWnzL3joPr3ReHLv3iDtBSpdEvbm2KFuB5STL0ybEfIja3PHvDJyouj7VLArXwrjJ
-	 TsMuqm2FxHl8nxQNxPk+BBkpnWxL5BEW5hvjf+cWv9oMGHvr7yHQCilGS1UBq4pssz
-	 fFqqQaCYw7sdXJU//i9o60NuQXmDvNYK3yyYahOk=
+	by mail.kernel.org (Postfix) with ESMTP id 19087206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:42:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfG3VkJ (ORCPT
+        id S1728866AbfG3Vmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 17:40:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728834AbfG3VkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 17:40:09 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F8E206E0;
-        Tue, 30 Jul 2019 21:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564522808;
-        bh=SZSfxS8OeqC//cyK+U9fS3g64U6+kM4axmL/pZ6RfQw=;
-        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
-        b=g2dt8aQ+Yd3kdmtz5hTDZ9LA/BBYXzSQFMux+T09KThIbnXDTvVW1qbY54VZtsGnx
-         Pl9jrFUCO9Kyh6vZl6eCa78fNWgAZZj+vux1D5urvuW2yiKaoFV5mqgoDAcpfjxhPm
-         6F8yhHn3zqnRCPiNGI2XjzYk+yksCuNJY+p5CvmY=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190730183818.mvoo5q3s4xylrqao@fsr-ub1664-175>
-References: <1564471375-6736-1-git-send-email-abel.vesa@nxp.com> <20190730175231.B05ED206A2@mail.kernel.org> <20190730183818.mvoo5q3s4xylrqao@fsr-ub1664-175>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Guido Gunther <agx@sigxcpu.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Abel Vesa <abel.vesa@nxp.com>
-Subject: Re: [PATCH v3] clk: imx8mq: Mark AHB clock as critical
-User-Agent: alot/0.8.1
-Date:   Tue, 30 Jul 2019 14:40:07 -0700
-Message-Id: <20190730214008.22F8E206E0@mail.kernel.org>
+        Tue, 30 Jul 2019 17:42:37 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:55724 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfG3Vmg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 17:42:36 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A68DC14E7A6C2;
+        Tue, 30 Jul 2019 14:42:35 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 14:42:35 -0700 (PDT)
+Message-Id: <20190730.144235.188879655867188705.davem@davemloft.net>
+To:     arnd@arndb.de
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, g.nault@alphalink.fr,
+        mostrows@earthlink.net, xeb@mail.ru, jchapman@katalix.com,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v5 09/29] compat_ioctl: pppoe: fix PPPOEIOCSFWD handling
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190730192552.4014288-10-arnd@arndb.de>
+References: <20190730192552.4014288-1-arnd@arndb.de>
+        <20190730192552.4014288-10-arnd@arndb.de>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 30 Jul 2019 14:42:36 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Abel Vesa (2019-07-30 11:38:18)
-> On 19-07-30 10:52:30, Stephen Boyd wrote:
-> > Quoting Abel Vesa (2019-07-30 00:22:55)
-> > > Initially, the TMU_ROOT clock was marked as critical, which automatic=
-ally
-> > > made the AHB clock to stay always on. Since the TMU_ROOT clock is not
-> > > marked as critical anymore, following commit:
-> > >=20
-> > > 431bdd1df48e ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CL=
-K_TMU_ROOT")
-> > >=20
-> > > all the clocks that derive from ipg_root clock (and implicitly ahb cl=
-ock)
-> > > would also have to enable, along with their own gate, the AHB clock.
-> > >=20
-> > > But considering that AHB is actually a bus that has to be always on, =
-we mark
-> > > it as critical in the clock provider driver and then all the clocks t=
-hat
-> > > derive from it can be controlled through the dedicated per IP gate wh=
-ich
-> > > follows after the ipg_root clock.
-> > >=20
-> > > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> > > Tested-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > > Fixes: 431bdd1df48e ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for IM=
-X8MQ_CLK_TMU_ROOT")
-> > > ---
-> > >=20
-> >=20
-> > Should I just apply this to clk-fixes branch?
-> >=20
->=20
-> Nope. The commit 431bdd1df48e is just in -next for now.
-> So this has to be taken by Shawn, I think.
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Tue, 30 Jul 2019 21:25:20 +0200
 
-Ah ok. I thought it was related to some other problem someone was seeing
-in the rc series but you're right, it was just linux-next for them.
+> Support for handling the PPPOEIOCSFWD ioctl in compat mode was added in
+> linux-2.5.69 along with hundreds of other commands, but was always broken
+> sincen only the structure is compatible, but the command number is not,
+> due to the size being sizeof(size_t), or at first sizeof(sizeof((struct
+> sockaddr_pppox)), which is different on 64-bit architectures.
+> 
+> Guillaume Nault adds:
+> 
+>   And the implementation was broken until 2016 (see 29e73269aa4d ("pppoe:
+>   fix reference counting in PPPoE proxy")), and nobody ever noticed. I
+>   should probably have removed this ioctl entirely instead of fixing it.
+>   Clearly, it has never been used.
+> 
+> Fix it by adding a compat_ioctl handler for all pppoe variants that
+> translates the command number and then calls the regular ioctl function.
+> 
+> All other ioctl commands handled by pppoe are compatible between 32-bit
+> and 64-bit, and require compat_ptr() conversion.
+> 
+> This should apply to all stable kernels.
+> 
+> Acked-by: Guillaume Nault <g.nault@alphalink.fr>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
+Applied and queued up for -stable, thanks everyone.
