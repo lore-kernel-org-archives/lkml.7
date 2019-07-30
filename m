@@ -2,76 +2,93 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54856C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D2CC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EAED206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14864206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:34:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfG3XcU (ORCPT
+        id S1727723AbfG3Xer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 19:32:20 -0400
-Received: from trent.utfs.org ([94.185.90.103]:59736 "EHLO trent.utfs.org"
+        Tue, 30 Jul 2019 19:34:47 -0400
+Received: from mga07.intel.com ([134.134.136.100]:22466 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbfG3XcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 19:32:19 -0400
-X-Greylist: delayed 456 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Jul 2019 19:32:19 EDT
-Received: from localhost (localhost [IPv6:::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by trent.utfs.org (Postfix) with ESMTPS id 69A185FCCE;
-        Wed, 31 Jul 2019 01:24:40 +0200 (CEST)
-Date:   Tue, 30 Jul 2019 16:24:40 -0700 (PDT)
-From:   Christian Kujau <lists@nerdbynature.de>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-cc:     Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org
-Subject: ptrace.c:202:6: warning: this statement may fall through
-Message-ID: <alpine.DEB.2.21.99999.352.1907301559210.29629@trent.utfs.org>
-User-Agent: Alpine 2.21.99999 (DEB 352 2019-06-22)
+        id S1725877AbfG3Xeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 19:34:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 16:34:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,327,1559545200"; 
+   d="scan'208";a="196124120"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga004.fm.intel.com with ESMTP; 30 Jul 2019 16:34:45 -0700
+Date:   Tue, 30 Jul 2019 16:34:45 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] IB/core: Add mitigation for Spectre V1
+Message-ID: <20190730233444.GA13835@iweiny-DESK2.sc.intel.com>
+References: <20190730202407.31046-1-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730202407.31046-1-tony.luck@intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While compiling mainline with gcc-9.1.1 the following warning is emitted:
+On Tue, Jul 30, 2019 at 01:24:07PM -0700, Tony Luck wrote:
+> Some processors may mispredict an array bounds check and
+> speculatively access memory that they should not. With
+> a user supplied array index we like to play things safe
+> by masking the value with the array size before it is
+> used as an index.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
 
-===========================================================
-../arch/x86/kernel/ptrace.c: In function ‘set_segment_reg’: 
-../arch/x86/kernel/ptrace.c:202:6: warning: this statement may fall 
-through [-Wimplicit-fallthrough=]
-  202 |   if (unlikely(value == 0))
-      |      ^
-../arch/x86/kernel/ptrace.c:205:2: note: here
-  205 |  default:
-      |  ^~~~~~~
-===========================================================
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Tested-by: Ira Weiny <ira.weiny@intel.com>
 
-The patch below silences the warning, but I don't know if this is actual 
-intended behaviour.
-
-Christian.
-
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index 0fdbe89d0754..0030456d6e5c 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -201,6 +201,7 @@ static int set_segment_reg(struct task_struct *task,
- 	case offsetof(struct user_regs_struct, ss):
- 		if (unlikely(value == 0))
- 			return -EIO;
-+		/* fall through */
-
- 	default:
- 		*pt_regs_access(task_pt_regs(task), offset) = value;
--- 
-BOFH excuse #326:
-
-We need a licensed electrician to replace the light bulbs in the computer room.
+> ---
+> 
+> [I don't have h/w, so just compile tested]
+> 
+>  drivers/infiniband/core/user_mad.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
+> index 9f8a48016b41..fdce254e4f65 100644
+> --- a/drivers/infiniband/core/user_mad.c
+> +++ b/drivers/infiniband/core/user_mad.c
+> @@ -49,6 +49,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/semaphore.h>
+>  #include <linux/slab.h>
+> +#include <linux/nospec.h>
+>  
+>  #include <linux/uaccess.h>
+>  
+> @@ -888,6 +889,7 @@ static int ib_umad_unreg_agent(struct ib_umad_file *file, u32 __user *arg)
+>  	mutex_lock(&file->port->file_mutex);
+>  	mutex_lock(&file->mutex);
+>  
+> +	id = array_index_nospec(id, IB_UMAD_MAX_AGENTS);
+>  	if (id >= IB_UMAD_MAX_AGENTS || !__get_agent(file, id)) {
+>  		ret = -EINVAL;
+>  		goto out;
+> -- 
+> 2.20.1
+> 
