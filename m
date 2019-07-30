@@ -2,119 +2,113 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DF9C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A55BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 500B62089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC9C206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:22:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S3vv2HDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732259AbfG3PWV (ORCPT
+        id S1732268AbfG3PWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:22:21 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34513 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727848AbfG3PWU (ORCPT
+        Tue, 30 Jul 2019 11:22:33 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38623 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728855AbfG3PWd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:22:20 -0400
-Received: by mail-qt1-f193.google.com with SMTP id k10so63499017qtq.1;
-        Tue, 30 Jul 2019 08:22:19 -0700 (PDT)
+        Tue, 30 Jul 2019 11:22:33 -0400
+Received: by mail-qt1-f194.google.com with SMTP id n11so63400689qtl.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:22:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0/VikeT/40/94mlzafqQ+br06jiibogiKOd39iZFxVU=;
+        b=S3vv2HDTN4GlOLWRrQu3XWT4f7svDBLxxP3BZ+0r+2d9QzUmW4mbQN09LYmtyL1+p+
+         HD0LZROqt+yxspDRIhYZIywaOnDd7tAyFU81sKIzQMxVoR22sbVFXRz0CkULNmEjq8PU
+         FeZsgGbmbAg/rUHJZCIixw7umVesNt7VUdF+Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OO/c2yP4uoM3ppaExnLB+KAvV4cUlurSN+r0MW83xlg=;
-        b=WihixSBZsSk4tuW4mTArRd//LjzwXTlTekMEaBoM01+VFMHSMGwlNwTGRtO5bgVKXf
-         uhzUFRTaI9TO2W4wl4FyVjvrsNQSTAN7uKxpByoPE191KJ9x1O56QSms8jFiA1C05dKn
-         m9shLV8G6TZCoyAcpKLix1l/DVO5RZoOGtkbRGjRS9qDu63S7aBPDC+XcD9t6OnxbTjl
-         h09JHJY0Q8TnHOgRaj3QNrqZ7s7A0f1p+KEQ/FEv3Y8uYIMLOb1VimOAzCV4AUNb+1Ou
-         8M7mTuORHyJJIDwE1kY3ATO0RKnum7hOTA2l0BFWwO3UOmiQy40NBq1290EAsdbXKJZ9
-         b6rQ==
-X-Gm-Message-State: APjAAAUhCrYl2S02psQlxyuEIXSuHttZ+Yp/MrTm1flJHBVdf6TMzscL
-        ZowGEAFyzfjJ0PcgH3aPV4W3AXVwcUdN7LptHEI=
-X-Google-Smtp-Source: APXvYqyNaVmHsewzA5uGAkmwyujcInHVc5NafBq6UZp+mxjp0XLZGFtJJ1W0M6qb4L13sIRzLVc0fGBFSXk7dc+Z+iU=
-X-Received: by 2002:ac8:f99:: with SMTP id b25mr74385867qtk.142.1564500139259;
- Tue, 30 Jul 2019 08:22:19 -0700 (PDT)
+        bh=0/VikeT/40/94mlzafqQ+br06jiibogiKOd39iZFxVU=;
+        b=ILeEZYXxC/Fpqqt8nckJfSbkgPpQLCBu/gDmgKPtlxyHz7Nr3bAFXSiIIu6pj/aOUe
+         u+PNgXf2Ar7YQ3DlaLn+s7pIblulIlFRwchbTYSe2rzoGE2kjK5ur4kz7Rn3Oqp2WlGU
+         lKuCd0SG+pfPRXFE2TysFNMSPqVZoEmwyCYTuokAKkG4d8vDS4EDqZo7hj19IcwDBp6L
+         vSL0Xdnkx67pJl9Fn5sGE6GpskqWZSnt2VT3D8WmsYprfTtzmUNp7qf4TkcpPveqL2Kb
+         6yYN0z0sjv1L1pEX0w/frCMU0++CzgA+RnACU+w7puBgRjtkk32UYV5yiVfAnOtsoeZ8
+         t8HQ==
+X-Gm-Message-State: APjAAAUOPR7UkwMXV1dWzbgChXmRX5cTiXn7i64UDbvGRj4D1/2qgWk6
+        YRV2Ok+8ZGmcFguL17WMnz6o6j7zlKZo/AWb7xcQbA==
+X-Google-Smtp-Source: APXvYqxiF9XqXsJgYZY66tLmHlKA6YyZSyll6VNgtMH212HpnhK5C6yShyQYlQFVlW6Wd6QG22HtLlKUmTWvPqbkc58=
+X-Received: by 2002:ac8:6619:: with SMTP id c25mr44624329qtp.221.1564500152521;
+ Tue, 30 Jul 2019 08:22:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <1564488945-20149-1-git-send-email-guoren@kernel.org>
- <1564488945-20149-4-git-send-email-guoren@kernel.org> <CAK8P3a0v3oVS5cCkORxA7na+VE7ofTQRxiv5o5xNf5v=esnN9A@mail.gmail.com>
- <CAJF2gTQC0e3zGxtCdwvZpen=Gj8CtgjNYCuy3hSupDXt3KM0Zg@mail.gmail.com>
-In-Reply-To: <CAJF2gTQC0e3zGxtCdwvZpen=Gj8CtgjNYCuy3hSupDXt3KM0Zg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 30 Jul 2019 17:22:03 +0200
-Message-ID: <CAK8P3a0miz=yghtqK+1=1APGf4R1-NW64TJTtGiO5pOPBQNgKg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] csky: Add dma_inv_range for DMA_FROM_DEVICE
-To:     Guo Ren <guoren@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-csky@vger.kernel.org, feng_shizhu@dahuatech.com,
-        zhang_jian5@dahuatech.com, zheng_xingjian@dahuatech.com,
-        zhu_peng@dahuatech.com, Guo Ren <ren_guo@c-sky.com>
+References: <20190723072605.103456-1-drinkcat@chromium.org>
+ <CACT4Y+bi5KkZ8igSeYVxjwtr8t0Vjz55gzWfAu_c8VMAqw0zPA@mail.gmail.com>
+ <CANMq1KB8ECeRqNhSWyUf3amAkF7qvAmS3aU6rGNnZ=kUV3LC5Q@mail.gmail.com> <095e2bc3-9284-e72d-8ed8-e2c6ec3f7c23@virtuozzo.com>
+In-Reply-To: <095e2bc3-9284-e72d-8ed8-e2c6ec3f7c23@virtuozzo.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 30 Jul 2019 08:22:21 -0700
+Message-ID: <CANMq1KDrPDjHB=hsVBrW4WCiTBBAm6T2TS0yo3icU8Zt0krNog@mail.gmail.com>
+Subject: Re: [PATCH] kmemleak: Increase maximum early log entries to 1000000
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 5:11 PM Guo Ren <guoren@kernel.org> wrote:
-> > > diff --git a/arch/csky/mm/dma-mapping.c b/arch/csky/mm/dma-mapping.c
-> > >                 cache_op(paddr, size, dma_wb_range);
-> > >                 break;
-> > >         case DMA_FROM_DEVICE:
-> > > +               cache_op(paddr, size, dma_inv_range);
-> > > +               break;
-> > >         case DMA_BIDIRECTIONAL:
-> > >                 cache_op(paddr, size, dma_wbinv_range);
-> > >                 break;
+On Wed, Jul 24, 2019 at 2:01 AM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
+>
+>
+>
+> On 7/23/19 11:13 AM, Nicolas Boichat wrote:
+> > On Tue, Jul 23, 2019 at 3:46 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >>
+> >> On Tue, Jul 23, 2019 at 9:26 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> >>>
+> >>> When KASan is enabled, a lot of memory is allocated early on,
+> >>> and kmemleak complains (this is on a 4GB RAM system):
+> >>> kmemleak: Early log buffer exceeded (129846), please increase
+> >>>   DEBUG_KMEMLEAK_EARLY_LOG_SIZE
+> >>>
+> >>> Let's increase the upper limit to 1M entry. That would take up
+> >>> 160MB of RAM at init (each early_log entry is 160 bytes), but
+> >>> the memory would later be freed (early_log is __initdata).
+> >>
+> >> Interesting. Is it on an arm64 system?
 > >
-> > When syncing 'for_cpu', you should not need to write back, because
-> > there won't be any dirty cache lines.
->
-> I just follow the dma_data_direction param, seems dir param and
-> function are a little bit duplicated. And our cpu won't clear clean
-> cache line into memory, so dma_wb_page won't cause problem.
-> Seems arch_sync_dma_for_cpu with dir=DMA_TO_DEVICE is
-> self-contradictory.
-
-Right, you generally don't need to do cache management for that
-combination.
-
-There might be other things to do here though, e.g. with a strict
-iommu implementation one could tear down the i/o page table
-entry to prevent the device from accessing a buffer while that is
-owned by the cpu.
-
-> Do you want me modfiy like these:
-> @@ -88,6 +90,8 @@ void arch_sync_dma_for_cpu(struct device *dev,
-> phys_addr_t paddr,
->         case DMA_TO_DEVICE:
->         case DMA_FROM_DEVICE:
->         case DMA_BIDIRECTIONAL:
->                cache_op(paddr, size, dma_inv_range);
->                break;
->
-> @@ -72,6 +72,8 @@ void arch_sync_dma_for_device(struct device *dev,
-> phys_addr_t paddr,
->         case DMA_TO_DEVICE:
->                 cache_op(paddr, size, dma_wb_range);
->                 break;
->         case DMA_FROM_DEVICE:
->         case DMA_BIDIRECTIONAL:
->                 cache_op(paddr, size, dma_wbinv_range);
->                 break;
->
+> > Yes arm64. And this is chromiumos-4.19 tree. I didn't try to track
+> > down where these allocations come from...
 > >
-> > If you have a CPU core that does not do speculative loads, you also don't
-> > need to invalidate here, because you have already done that in the
-> > _for_device() case, the only reason to invalidate the CPU cache
-> > again is if a speculative load created a stale cache line that now
-> > shadows the data received from the device.
-> Our CPU support speculative loads :)
+>
+> Is this still a problem in upstream tree? 4.19 doesn't have fed84c785270 ("mm/memblock.c: skip kmemleak for kasan_init()")
 
-Ok, then you both invalidations are indeed needed.
-I was guessing that CK610 had no speculation.
+Sorry for the delay, and thanks for the hint, indeed, not a problem
+with that patch backported to our 4.19 tree: the number of allocations
+shrinks from 100K+ to 1K+.
 
-       Arnd
+However, I think Dmitry is still right that the default (400) is too
+low, I will send a patch for that.
