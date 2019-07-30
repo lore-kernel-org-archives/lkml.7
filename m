@@ -7,59 +7,60 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2C8C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE7FC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09BD2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A56A20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f3jwSZ3E"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NMzARui8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388186AbfG3SQt (ORCPT
+        id S2388198AbfG3SQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:16:49 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34461 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387527AbfG3SQf (ORCPT
+        Tue, 30 Jul 2019 14:16:51 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36300 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387944AbfG3SQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:16:35 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so24256650pgc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:35 -0700 (PDT)
+        Tue, 30 Jul 2019 14:16:38 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so30266012pfl.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9X8hLkpiNTOcIMGNmROyV+w/FtAgznL0afZf+kaW+1c=;
-        b=f3jwSZ3EQ9GvK4fVs1HrYT6eWXNJzLuiBDiXgH+a9XTQUwb1eOy93OUYR3vkqieVSE
-         tC4YOGiz0tPLhXddU9RH/QlGNaPEFCtPk0EG2IwVgSsDCHjFJ0922PL1Cvun02i1xlzc
-         Ur2mbzEv7HSZDz12ksiL9gIopzeB/87yCns5o=
+        bh=nPhDfjxW/VqkltTfokj9fJ6/qREHMvH5O4AA+8mxaUw=;
+        b=NMzARui867kGdB9A1UYs4zbCXT3RjzMlWWT7kvvFXXaz5/vfwU02qjop8UMwz8/TnX
+         NnKda0EyH8SlHsr+/6bNxInRvbF8MYuf+Pa6qiUJkO1Yj6zE2Uvw6c3jCjjBtMr5n8nJ
+         xy0P8QaPvniobYF5/gIKwaFnSpgFElmSTiA6E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9X8hLkpiNTOcIMGNmROyV+w/FtAgznL0afZf+kaW+1c=;
-        b=hAxdrFTOD2YGdh9nQ7PMr9j7QpWtYx87jbnvffXBx52N/C5xVc2QEh1YhXGt/3waUx
-         6RHU5xAwVGu9CMEcymFT4uSDjHVwfkmnmrQT1j6rW9moFrz70VDmyehNp1s3Tk0uzhgx
-         UGS+XJixioCHbzsuBxg7M+0+8nHe1JVo8sChr2Z7c6NThyP2iqGsO2+4k2Wx8QPpsMD7
-         dqIGL5DLcFsvNxRp/K6uR2OfKX8atjI711m0Ln9XF0gyL2X8gSrajxplWyETABCdtD3v
-         itgnfLT92QREPtLAHYO3WkghguyKO0qwXUnB4YbtT15HrsfnTeYQ0IIurr4+MQyY7TvN
-         tLnQ==
-X-Gm-Message-State: APjAAAXGdo8KhqOa+cmpLWYt7OFFg1WUYYUlc6KzOxVTAPjHl/B7QYMZ
-        pKT5HuUf/2TBa21NxlKSjwWJDG410kjtow==
-X-Google-Smtp-Source: APXvYqxxoz2inFV06sgWI8/GJPaap+cnYFKP3l0gEbP2XOuYCnhK/v3QWrXBbYo5msllu20SzT+1OQ==
-X-Received: by 2002:aa7:989a:: with SMTP id r26mr30667497pfl.232.1564510594816;
-        Tue, 30 Jul 2019 11:16:34 -0700 (PDT)
+        bh=nPhDfjxW/VqkltTfokj9fJ6/qREHMvH5O4AA+8mxaUw=;
+        b=gTEE0zf20x5/ovBZnoaiB0lidDRmgQPf0xFw06nIYWgm7cqXSNH19lhvjgz3KDyOcP
+         XNHBGGW4xk9oBEPX0fdDDgB3HrE3NRyxUQCKzz7FLmfF46J72S4g9WfHXPC86g3zDlLB
+         wFDOldPkuNSeJPKv4HW2SHSOe/qPjkl+Sh09RAw8rOQePRGVigxRNl9QcetKmN+ui80q
+         1V+v1WN+VDRDPHqTd55OhkNYwwOrbccFFO8uDieJ7t0VP3L1QS6OGeXVTNZ7Uk7tyIKw
+         rtEyglERH/C0/sFUJ5xwl0bcFTZdQlmtyrIqkFB5pplAe3hFA391DbSUj1q+6VZK6e2z
+         OnJw==
+X-Gm-Message-State: APjAAAXF7SHqHuSiEZTSl+7qBAvZsdZqjKIPnAem5dDKCfomTOfKVf8S
+        vfE8qL9NnPEBO1OveCUOn0mSQsY9SDhvFQ==
+X-Google-Smtp-Source: APXvYqw19MihHg/lZICk2Z6Mer8w0uXAamqYkW9qwe9AgnCF26fFuoRNzw9fB3+j11R0Q+UGDxqeLA==
+X-Received: by 2002:a17:90a:1785:: with SMTP id q5mr117320027pja.106.1564510597533;
+        Tue, 30 Jul 2019 11:16:37 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.34
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.36
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 11:16:34 -0700 (PDT)
+        Tue, 30 Jul 2019 11:16:37 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: [PATCH v6 44/57] tty: Remove dev_err() usage after platform_get_irq()
-Date:   Tue, 30 Jul 2019 11:15:44 -0700
-Message-Id: <20190730181557.90391-45-swboyd@chromium.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v6 47/57] video: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:47 -0700
+Message-Id: <20190730181557.90391-48-swboyd@chromium.org>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
 References: <20190730181557.90391-1-swboyd@chromium.org>
@@ -105,309 +106,137 @@ if ( \( ret < 0 \| ret <= 0 \) )
 While we're here, remove braces on if statements that only have one
 statement (manually).
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-fbdev@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
 Please apply directly to subsystem trees
 
- drivers/tty/serial/8250/8250_bcm2835aux.c |  4 +---
- drivers/tty/serial/8250/8250_lpc18xx.c    |  4 +---
- drivers/tty/serial/8250/8250_uniphier.c   |  4 +---
- drivers/tty/serial/amba-pl011.c           |  5 +----
- drivers/tty/serial/fsl_lpuart.c           |  4 +---
- drivers/tty/serial/lpc32xx_hs.c           |  5 +----
- drivers/tty/serial/mvebu-uart.c           | 12 +++---------
- drivers/tty/serial/owl-uart.c             |  4 +---
- drivers/tty/serial/qcom_geni_serial.c     |  4 +---
- drivers/tty/serial/rda-uart.c             |  4 +---
- drivers/tty/serial/sccnxp.c               |  1 -
- drivers/tty/serial/serial-tegra.c         |  4 +---
- drivers/tty/serial/sifive.c               |  4 +---
- drivers/tty/serial/sprd_serial.c          |  4 +---
- drivers/tty/serial/stm32-usart.c          | 17 ++++-------------
- 15 files changed, 19 insertions(+), 61 deletions(-)
+ drivers/video/fbdev/atmel_lcdfb.c     | 1 -
+ drivers/video/fbdev/mmp/hw/mmp_ctrl.c | 1 -
+ drivers/video/fbdev/nuc900fb.c        | 4 +---
+ drivers/video/fbdev/pxa168fb.c        | 4 +---
+ drivers/video/fbdev/pxa3xx-gcu.c      | 4 +---
+ drivers/video/fbdev/pxafb.c           | 1 -
+ drivers/video/fbdev/s3c2410fb.c       | 4 +---
+ drivers/video/fbdev/vt8500lcdfb.c     | 1 -
+ 8 files changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
-index bd53661103eb..8ce700c1a7fc 100644
---- a/drivers/tty/serial/8250/8250_bcm2835aux.c
-+++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
-@@ -56,10 +56,8 @@ static int bcm2835aux_serial_probe(struct platform_device *pdev)
+diff --git a/drivers/video/fbdev/atmel_lcdfb.c b/drivers/video/fbdev/atmel_lcdfb.c
+index 5ff8e0320d95..4a16354d65c8 100644
+--- a/drivers/video/fbdev/atmel_lcdfb.c
++++ b/drivers/video/fbdev/atmel_lcdfb.c
+@@ -1114,7 +1114,6 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
  
- 	/* get the interrupt */
- 	ret = platform_get_irq(pdev, 0);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "irq not found - %i", ret);
-+	if (ret < 0)
- 		return ret;
--	}
- 	data->uart.port.irq = ret;
- 
- 	/* map the main registers */
-diff --git a/drivers/tty/serial/8250/8250_lpc18xx.c b/drivers/tty/serial/8250/8250_lpc18xx.c
-index eddf119374e1..570e25d6f37e 100644
---- a/drivers/tty/serial/8250/8250_lpc18xx.c
-+++ b/drivers/tty/serial/8250/8250_lpc18xx.c
-@@ -106,10 +106,8 @@ static int lpc18xx_serial_probe(struct platform_device *pdev)
- 	int irq, ret;
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "irq not found");
-+	if (irq < 0)
- 		return irq;
--	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res) {
-diff --git a/drivers/tty/serial/8250/8250_uniphier.c b/drivers/tty/serial/8250/8250_uniphier.c
-index 164ba133437a..e0b73a5402db 100644
---- a/drivers/tty/serial/8250/8250_uniphier.c
-+++ b/drivers/tty/serial/8250/8250_uniphier.c
-@@ -176,10 +176,8 @@ static int uniphier_uart_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(dev, "failed to get IRQ number\n");
-+	if (irq < 0)
- 		return irq;
--	}
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 5921a33b2a07..3a7d1a66f79c 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2718,11 +2718,8 @@ static int sbsa_uart_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	ret = platform_get_irq(pdev, 0);
--	if (ret < 0) {
--		if (ret != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "cannot obtain irq\n");
-+	if (ret < 0)
- 		return ret;
--	}
- 	uap->port.irq	= ret;
- 
- #ifdef CONFIG_ACPI_SPCR_TABLE
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 92dad2b4ec36..1b790cc1c0cf 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -2346,10 +2346,8 @@ static int lpuart_probe(struct platform_device *pdev)
- 	sport->port.type = PORT_LPUART;
- 	sport->devtype = sdata->devtype;
- 	ret = platform_get_irq(pdev, 0);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "cannot obtain irq\n");
-+	if (ret < 0)
- 		return ret;
--	}
- 	sport->port.irq = ret;
- 	sport->port.iotype = sdata->iotype;
- 	if (lpuart_is_32(sport))
-diff --git a/drivers/tty/serial/lpc32xx_hs.c b/drivers/tty/serial/lpc32xx_hs.c
-index f4e27d0ad947..7c67e3afbac7 100644
---- a/drivers/tty/serial/lpc32xx_hs.c
-+++ b/drivers/tty/serial/lpc32xx_hs.c
-@@ -687,11 +687,8 @@ static int serial_hs_lpc32xx_probe(struct platform_device *pdev)
- 	p->port.membase = NULL;
- 
- 	ret = platform_get_irq(pdev, 0);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "Error getting irq for HS UART port %d\n",
--			uarts_registered);
-+	if (ret < 0)
- 		return ret;
--	}
- 	p->port.irq = ret;
- 
- 	p->port.iotype = UPIO_MEM32;
-diff --git a/drivers/tty/serial/mvebu-uart.c b/drivers/tty/serial/mvebu-uart.c
-index 7e7b1559fa36..c12a12556339 100644
---- a/drivers/tty/serial/mvebu-uart.c
-+++ b/drivers/tty/serial/mvebu-uart.c
-@@ -884,10 +884,8 @@ static int mvebu_uart_probe(struct platform_device *pdev)
- 	if (platform_irq_count(pdev) == 1) {
- 		/* Old bindings: no name on the single unamed UART0 IRQ */
- 		irq = platform_get_irq(pdev, 0);
--		if (irq < 0) {
--			dev_err(&pdev->dev, "unable to get UART IRQ\n");
-+		if (irq < 0)
- 			return irq;
--		}
- 
- 		mvuart->irq[UART_IRQ_SUM] = irq;
- 	} else {
-@@ -897,18 +895,14 @@ static int mvebu_uart_probe(struct platform_device *pdev)
- 		 * uart-sum of UART0 port.
- 		 */
- 		irq = platform_get_irq_byname(pdev, "uart-rx");
--		if (irq < 0) {
--			dev_err(&pdev->dev, "unable to get 'uart-rx' IRQ\n");
-+		if (irq < 0)
- 			return irq;
--		}
- 
- 		mvuart->irq[UART_RX_IRQ] = irq;
- 
- 		irq = platform_get_irq_byname(pdev, "uart-tx");
--		if (irq < 0) {
--			dev_err(&pdev->dev, "unable to get 'uart-tx' IRQ\n");
-+		if (irq < 0)
- 			return irq;
--		}
- 
- 		mvuart->irq[UART_TX_IRQ] = irq;
+ 	sinfo->irq_base = platform_get_irq(pdev, 0);
+ 	if (sinfo->irq_base < 0) {
+-		dev_err(dev, "unable to get irq\n");
+ 		ret = sinfo->irq_base;
+ 		goto stop_clk;
  	}
-diff --git a/drivers/tty/serial/owl-uart.c b/drivers/tty/serial/owl-uart.c
-index 29a6dc6a8d23..03963af77b15 100644
---- a/drivers/tty/serial/owl-uart.c
-+++ b/drivers/tty/serial/owl-uart.c
-@@ -662,10 +662,8 @@ static int owl_uart_probe(struct platform_device *pdev)
+diff --git a/drivers/video/fbdev/mmp/hw/mmp_ctrl.c b/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
+index 17174cd7a5bb..d6124976139b 100644
+--- a/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
++++ b/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
+@@ -447,7 +447,6 @@ static int mmphw_probe(struct platform_device *pdev)
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+-		dev_err(&pdev->dev, "%s: no IRQ defined\n", __func__);
+ 		ret = -ENOENT;
+ 		goto failed;
+ 	}
+diff --git a/drivers/video/fbdev/nuc900fb.c b/drivers/video/fbdev/nuc900fb.c
+index 4fd851598584..c4606c734f44 100644
+--- a/drivers/video/fbdev/nuc900fb.c
++++ b/drivers/video/fbdev/nuc900fb.c
+@@ -526,10 +526,8 @@ static int nuc900fb_probe(struct platform_device *pdev)
+ 	display = mach_info->displays + mach_info->default_display;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "no irq for device\n");
++	if (irq < 0)
+ 		return -ENOENT;
+-	}
+ 
+ 	fbinfo = framebuffer_alloc(sizeof(struct nuc900fb_info), &pdev->dev);
+ 	if (!fbinfo)
+diff --git a/drivers/video/fbdev/pxa168fb.c b/drivers/video/fbdev/pxa168fb.c
+index 1410f476e135..d9e5258503f0 100644
+--- a/drivers/video/fbdev/pxa168fb.c
++++ b/drivers/video/fbdev/pxa168fb.c
+@@ -625,10 +625,8 @@ static int pxa168fb_probe(struct platform_device *pdev)
  	}
  
  	irq = platform_get_irq(pdev, 0);
 -	if (irq < 0) {
--		dev_err(&pdev->dev, "could not get irq\n");
+-		dev_err(&pdev->dev, "no IRQ defined\n");
 +	if (irq < 0)
- 		return irq;
+ 		return -ENOENT;
 -	}
  
- 	if (owl_uart_ports[pdev->id]) {
- 		dev_err(&pdev->dev, "port %d already allocated\n", pdev->id);
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 35e5f9c5d5be..f879710e23f1 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -1291,10 +1291,8 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
- 	port->tx_fifo_width = DEF_FIFO_WIDTH_BITS;
+ 	info = framebuffer_alloc(sizeof(struct pxa168fb_info), &pdev->dev);
+ 	if (info == NULL) {
+diff --git a/drivers/video/fbdev/pxa3xx-gcu.c b/drivers/video/fbdev/pxa3xx-gcu.c
+index 74ffb446e00c..07414d43cb3f 100644
+--- a/drivers/video/fbdev/pxa3xx-gcu.c
++++ b/drivers/video/fbdev/pxa3xx-gcu.c
+@@ -614,10 +614,8 @@ static int pxa3xx_gcu_probe(struct platform_device *pdev)
  
+ 	/* request the IRQ */
  	irq = platform_get_irq(pdev, 0);
 -	if (irq < 0) {
--		dev_err(&pdev->dev, "Failed to get IRQ %d\n", irq);
+-		dev_err(dev, "no IRQ defined: %d\n", irq);
 +	if (irq < 0)
  		return irq;
 -	}
- 	uport->irq = irq;
  
- 	uport->private_data = drv;
-diff --git a/drivers/tty/serial/rda-uart.c b/drivers/tty/serial/rda-uart.c
-index 284623eefaeb..c1b0d7662ef9 100644
---- a/drivers/tty/serial/rda-uart.c
-+++ b/drivers/tty/serial/rda-uart.c
-@@ -735,10 +735,8 @@ static int rda_uart_probe(struct platform_device *pdev)
+ 	ret = devm_request_irq(dev, irq, pxa3xx_gcu_handle_irq,
+ 			       0, DRV_NAME, priv);
+diff --git a/drivers/video/fbdev/pxafb.c b/drivers/video/fbdev/pxafb.c
+index 4282cb117b92..b44f402ce552 100644
+--- a/drivers/video/fbdev/pxafb.c
++++ b/drivers/video/fbdev/pxafb.c
+@@ -2353,7 +2353,6 @@ static int pxafb_probe(struct platform_device *dev)
+ 
+ 	irq = platform_get_irq(dev, 0);
+ 	if (irq < 0) {
+-		dev_err(&dev->dev, "no IRQ defined\n");
+ 		ret = -ENODEV;
+ 		goto failed_free_mem;
  	}
+diff --git a/drivers/video/fbdev/s3c2410fb.c b/drivers/video/fbdev/s3c2410fb.c
+index a702da89910b..2a846fd5da2a 100644
+--- a/drivers/video/fbdev/s3c2410fb.c
++++ b/drivers/video/fbdev/s3c2410fb.c
+@@ -849,10 +849,8 @@ static int s3c24xxfb_probe(struct platform_device *pdev,
+ 	display = mach_info->displays + mach_info->default_display;
  
  	irq = platform_get_irq(pdev, 0);
 -	if (irq < 0) {
--		dev_err(&pdev->dev, "could not get irq\n");
+-		dev_err(&pdev->dev, "no irq for device\n");
 +	if (irq < 0)
- 		return irq;
+ 		return -ENOENT;
 -	}
  
- 	if (rda_uart_ports[pdev->id]) {
- 		dev_err(&pdev->dev, "port %d already allocated\n", pdev->id);
-diff --git a/drivers/tty/serial/sccnxp.c b/drivers/tty/serial/sccnxp.c
-index 68a24a14f6b7..d2b77aae42ae 100644
---- a/drivers/tty/serial/sccnxp.c
-+++ b/drivers/tty/serial/sccnxp.c
-@@ -961,7 +961,6 @@ static int sccnxp_probe(struct platform_device *pdev)
- 	if (!s->poll) {
- 		s->irq = platform_get_irq(pdev, 0);
- 		if (s->irq < 0) {
--			dev_err(&pdev->dev, "Missing irq resource data\n");
- 			ret = -ENXIO;
- 			goto err_out;
- 		}
-diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/serial-tegra.c
-index d5269aaaf9b2..76ffbc7826ae 100644
---- a/drivers/tty/serial/serial-tegra.c
-+++ b/drivers/tty/serial/serial-tegra.c
-@@ -1307,10 +1307,8 @@ static int tegra_uart_probe(struct platform_device *pdev)
- 
- 	u->iotype = UPIO_MEM32;
- 	ret = platform_get_irq(pdev, 0);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "Couldn't get IRQ\n");
-+	if (ret < 0)
- 		return ret;
--	}
- 	u->irq = ret;
- 	u->regshift = 2;
- 	ret = uart_add_one_port(&tegra_uart_driver, u);
-diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
-index be4687814353..d5f81b98e4d7 100644
---- a/drivers/tty/serial/sifive.c
-+++ b/drivers/tty/serial/sifive.c
-@@ -896,10 +896,8 @@ static int sifive_serial_probe(struct platform_device *pdev)
- 	int irq, id, r;
+ 	fbinfo = framebuffer_alloc(sizeof(struct s3c2410fb_info), &pdev->dev);
+ 	if (!fbinfo)
+diff --git a/drivers/video/fbdev/vt8500lcdfb.c b/drivers/video/fbdev/vt8500lcdfb.c
+index be8d9702cbb2..a10088e1cdb0 100644
+--- a/drivers/video/fbdev/vt8500lcdfb.c
++++ b/drivers/video/fbdev/vt8500lcdfb.c
+@@ -372,7 +372,6 @@ static int vt8500lcd_probe(struct platform_device *pdev)
  
  	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "could not acquire interrupt\n");
-+	if (irq < 0)
- 		return -EPROBE_DEFER;
--	}
- 
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, mem);
-diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
-index 73d71a4e6c0c..284709f61831 100644
---- a/drivers/tty/serial/sprd_serial.c
-+++ b/drivers/tty/serial/sprd_serial.c
-@@ -1173,10 +1173,8 @@ static int sprd_probe(struct platform_device *pdev)
- 	up->mapbase = res->start;
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "not provide irq resource: %d\n", irq);
-+	if (irq < 0)
- 		return irq;
--	}
- 	up->irq = irq;
- 
- 	/*
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 24a2261f879a..222694352a17 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -927,11 +927,8 @@ static int stm32_init_port(struct stm32_port *stm32port,
- 	port->fifosize	= stm32port->info->cfg.fifosize;
- 
- 	ret = platform_get_irq(pdev, 0);
--	if (ret <= 0) {
--		if (ret != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "Can't get event IRQ: %d\n", ret);
--		return ret ? ret : -ENODEV;
--	}
-+	if (ret <= 0)
-+		return ret ? : -ENODEV;
- 	port->irq = ret;
- 
- 	port->rs485_config = stm32_config_rs485;
-@@ -940,14 +937,8 @@ static int stm32_init_port(struct stm32_port *stm32port,
- 
- 	if (stm32port->info->cfg.has_wakeup) {
- 		stm32port->wakeirq = platform_get_irq(pdev, 1);
--		if (stm32port->wakeirq <= 0 && stm32port->wakeirq != -ENXIO) {
--			if (stm32port->wakeirq != -EPROBE_DEFER)
--				dev_err(&pdev->dev,
--					"Can't get event wake IRQ: %d\n",
--					stm32port->wakeirq);
--			return stm32port->wakeirq ? stm32port->wakeirq :
--				-ENODEV;
--		}
-+		if (stm32port->wakeirq <= 0 && stm32port->wakeirq != -ENXIO)
-+			return stm32port->wakeirq ? : -ENODEV;
+ 	if (irq < 0) {
+-		dev_err(&pdev->dev, "no IRQ defined\n");
+ 		ret = -ENODEV;
+ 		goto failed_free_palette;
  	}
- 
- 	stm32port->fifoen = stm32port->info->cfg.has_fifo;
 -- 
 Sent by a computer through tubes
 
