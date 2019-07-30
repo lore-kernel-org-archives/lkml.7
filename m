@@ -2,178 +2,116 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C20C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26274C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8729F20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDBA120693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:26:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUamGemk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfG3R0O (ORCPT
+        id S1728045AbfG3R0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:26:14 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:54154 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfG3R0N (ORCPT
+        Tue, 30 Jul 2019 13:26:35 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33087 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfG3R0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:26:13 -0400
-Received: from [167.98.27.226] (helo=[10.35.6.253])
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1hsVsz-00044M-Ve; Tue, 30 Jul 2019 18:26:06 +0100
-Subject: Re: [alsa-devel] [PATCH v2 2/3] ASoC: Add codec driver for ST TDA7802
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kirill Marinushkin <kmarinushkin@birdec.tech>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Takashi Iwai <tiwai@suse.com>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Nate Case <ncase@tesla.com>, Rob Duncan <rduncan@tesla.com>,
-        Patrick Glaser <pglaser@tesla.com>,
-        linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
-References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
- <20190730120937.16271-3-thomas.preston@codethink.co.uk>
- <20190730145844.GI4264@sirena.org.uk>
-From:   Thomas Preston <thomas.preston@codethink.co.uk>
-Message-ID: <fe11c806-2285-558c-e35c-d8f61de00784@codethink.co.uk>
-Date:   Tue, 30 Jul 2019 18:26:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 30 Jul 2019 13:26:35 -0400
+Received: by mail-io1-f68.google.com with SMTP id z3so11099224iog.0;
+        Tue, 30 Jul 2019 10:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tsLPrLOcclqm31GATo5KG4DgL5WcwoSIYZV9oMmibkM=;
+        b=LUamGemkbRqnOVHbq7CXnlGi/lEYqOEEySiKtSrwXqEp6shA4gxXuseHjOaOiH3aa7
+         q4CF5Eum/dqTa4wC00EDfSR4wSTPClq6Y3O6fnjnuTa8UISAGRv24/2prGpJP4yj+/5K
+         pp6QgCoaOkGX8YfVQJvI0ldkf7g5Qtz5YPjBIm1MafS1QJbnmne2KPhWiFiOFjpLhpua
+         9zkTIHWrBNLvn7Si20xo61CMzJCVm2tyy8IPzybo7iqfWECXz7HiHXR7qDV7Zs/ri977
+         AjNYEbpGf5FVBSgWnRjBEI6oRswJ4WN7oBSH2Oh+cBt5ZquUgXtZtN3ILEA184MLtXtW
+         bQ/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tsLPrLOcclqm31GATo5KG4DgL5WcwoSIYZV9oMmibkM=;
+        b=NG2H9GcQ68UYhIqA3DHz1MQLHBYaQ6WlL5Ny3/8lQ+dUWqFqL+0L6+rDa36qxFvQWo
+         qMlymEW3nT8NX9di+UldcC6QvPOwEoBDK8G71ADLWoOhkQLLVLOJ0MzNvcgU+im+3N9l
+         0BD0DOaj7nSX8SKV5YisV6gKrqQzYYU00M93mWK33/quxMoauh+PjgBn9HTVH4lTo48Z
+         Ut5k9KXyRWhmkxbRKPwQuIlZ6I4FdJpAg1A8AHgAFMgu3nf4fo9dUgNCg8f3ZorlsVrK
+         laySDgwqOElPQ8R4gIQL8jTinjNKE4LwOu8VL/rhqOLHGs/VwpUNogcvtGwYrYKg2H16
+         Nwqw==
+X-Gm-Message-State: APjAAAXXMf4nUgxDA8dmzb1URvoerk/7LBTv3dn0IeKspqQXe4i/dWfu
+        5Cno/1ccIv/b3fNd+TbqTWxsv/rX8e9g11HV/j8=
+X-Google-Smtp-Source: APXvYqy+9zDOTHm2OHuBLA2soclNQ3YwB8p18dgCUYzErzvrXdSDbEEW8GCwNV3FQCvXOrwwAN9MF+uqzNXPUM4I49E=
+X-Received: by 2002:a5e:8210:: with SMTP id l16mr81558885iom.240.1564507594217;
+ Tue, 30 Jul 2019 10:26:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190730145844.GI4264@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-4-deepa.kernel@gmail.com>
+ <87d0hsapwr.fsf@mail.parknet.co.jp>
+In-Reply-To: <87d0hsapwr.fsf@mail.parknet.co.jp>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Tue, 30 Jul 2019 10:26:22 -0700
+Message-ID: <CABeXuvqgaxDSR8N_D1Tdw06g_5PGinZS--6nx-bPtAWP4v+mwg@mail.gmail.com>
+Subject: Re: [PATCH 03/20] timestamp_truncate: Replace users of timespec64_trunc
+To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>, anton@tuxera.com,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        stoph Hellwig <hch@lst.de>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Joel Becker <jlbec@evilplan.org>,
+        Richard Weinberger <richard@nod.at>, Tejun Heo <tj@kernel.org>,
+        yuchao0@huawei.com,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ntfs-dev@lists.sourceforge.net,
+        linux-mtd <linux-mtd@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/07/2019 15:58, Mark Brown wrote:
-> On Tue, Jul 30, 2019 at 01:09:36PM +0100, Thomas Preston wrote:
-> 
->> index 000000000000..0f82a88bc1a4
->> --- /dev/null
->> +++ b/sound/soc/codecs/tda7802.c
->> @@ -0,0 +1,509 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * tda7802.c  --  codec driver for ST TDA7802
-> 
-> Please make the entire comment a C++ one so this looks intentional.
-> 
+On Tue, Jul 30, 2019 at 1:27 AM OGAWA Hirofumi
+<hirofumi@mail.parknet.co.jp> wrote:
+>
+> Deepa Dinamani <deepa.kernel@gmail.com> writes:
+>
+> > diff --git a/fs/fat/misc.c b/fs/fat/misc.c
+> > index 1e08bd54c5fb..53bb7c6bf993 100644
+> > --- a/fs/fat/misc.c
+> > +++ b/fs/fat/misc.c
+> > @@ -307,8 +307,9 @@ int fat_truncate_time(struct inode *inode, struct timespec64 *now, int flags)
+> >               inode->i_atime = (struct timespec64){ seconds, 0 };
+> >       }
+> >       if (flags & S_CTIME) {
+> > -             if (sbi->options.isvfat)
+> > -                     inode->i_ctime = timespec64_trunc(*now, 10000000);
+> > +             if (sbi->options.isvfat) {
+> > +                     inode->i_ctime = timestamp_truncate(*now, inode);
+> > +             }
+> >               else
+> >                       inode->i_ctime = fat_timespec64_trunc_2secs(*now);
+> >       }
+>
+> Looks like broken. It changed to sb->s_time_gran from 10000000, and
+> changed coding style.
 
-Ok thanks.
+This is using a new api: timestamp_truncate(). granularity is gotten
+by inode->sb->s_time_gran. See Patch [2/20]:
+https://lkml.org/lkml/2019/7/29/1853
 
->> +static int tda7802_digital_mute(struct snd_soc_dai *dai, int mute)
->> +{
->> +	const u8 mute_disabled = mute ? 0 : IB2_DIGITAL_MUTE_DISABLED;
-> 
-> Please write normal conditional statements to make the code easier to
-> read.
-> 
+So this is not broken if fat is filling in the right granularity in the sb.
 
-On it.
-
->> +	case SND_SOC_BIAS_STANDBY:
->> +		err = regulator_enable(tda7802->enable_reg);
->> +		if (err < 0) {
->> +			dev_err(component->dev, "Could not enable.\n");
->> +			return err;
->> +		}
->> +		dev_dbg(component->dev, "Regulator enabled\n");
->> +		msleep(ENABLE_DELAY_MS);
-> 
-> Is this delay needed by the device or is it for the regulator to ramp?
-> If it's for the regulator to ramp then the regulator should be doing it.
-> 
-
-According to the datasheet the device itself takes 10ms to rise from 0V
-after PLLen is enabled. There are additional rise times but they are
-negligible with default capacitor configuration (which we have).
-
-Good to know about the regulator rising configuration though. Thanks.
-
->> +	case SND_SOC_BIAS_OFF:
->> +		regcache_mark_dirty(component->regmap);
-> 
-> If the regulator is going off you should really be marking the device as
-> cache only.
-> 
-
-Got it, thanks.
-
->> +		err = regulator_disable(tda7802->enable_reg);
->> +		if (err < 0)
->> +			dev_err(component->dev, "Could not disable.\n");
-> 
-> Any non-zero value from regulator_disable() is an error, there's similar
-> error checking issues in other places.
-> 
-
-I return the error at the end of the function, but I'll bring it back here
-for consistency.
-
->> +static const struct snd_kcontrol_new tda7802_snd_controls[] = {
->> +	SOC_SINGLE("Channel 4 Tristate", TDA7802_IB0, 7, 1, 0),
->> +	SOC_SINGLE("Channel 3 Tristate", TDA7802_IB0, 6, 1, 0),
->> +	SOC_SINGLE("Channel 2 Tristate", TDA7802_IB0, 5, 1, 0),
->> +	SOC_SINGLE("Channel 1 Tristate", TDA7802_IB0, 4, 1, 0),
-> 
-> These look like simple on/off switches so should have Switch at the end
-> of the control name.  It's also not clear to me why this is exported to
-> userspace - why would this change at runtime and won't any changes need
-> to be coordinated with whatever else is connected to the signal?
-> 
->> +	SOC_ENUM("Mute time", mute_time),
->> +	SOC_SINGLE("Unmute channels 1 & 3", TDA7802_IB2, 4, 1, 0),
->> +	SOC_SINGLE("Unmute channels 2 & 4", TDA7802_IB2, 3, 1, 0),
-> 
-> These are also Switch controls.  There are *lots* of problems with
-> control names, see control-names.rst.
-> 
-
-Ok thanks, I didn't know about the "Switch" suffix, I will read
-control-names.rst.
-
-I will move Tristate to DT properties. I was also unsure about the
-Impedance Efficiency Optimiser but the datasheet doesn't go into much
-detail about this so I left it exposed.
-
-They both seemed like user configurable options in the context of a
-test rig, but I agree - who knows what this output might be connected
-to in other systems. I will lock them down in DT. Thanks.
-
->> +static const struct snd_soc_component_driver tda7802_component_driver = {
->> +	.set_bias_level = tda7802_set_bias_level,
->> +	.idle_bias_on = 1,
-> 
-> Any reason to keep the device powered up?  It looks like the power on
-> process is just powering things up and writing the register cache out
-> and there's not that many registers so the delay is trivial.
-> 
-
-Ah no, I think that's a mistake. I want the PLLen to switch off in
-idle/suspend and the device should restore on wake.
-
->> +	tda7802->enable_reg = devm_regulator_get(dev, "enable");
->> +	if (IS_ERR(tda7802->enable_reg)) {
->> +		dev_err(dev, "Failed to get enable regulator\n");
-> 
-> It's better to print error codes if you have them and are printing a
-> diagnostic so people have more to go on when debugging problems.
-
-Yep on it.
-
-Many thanks, I appreciate the feedback.
+-Deepa
