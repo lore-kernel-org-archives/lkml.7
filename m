@@ -2,113 +2,171 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2128AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE69FC41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E983C20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD61720C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564490383;
+	bh=5EpHfhYIqzNgNKgwS9X5Ks26Lj4nnAt3gfaDtOoZ5Ag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MwDIknba1Tx/5eT9Hm+xguqTa4t4oWuwLLh9u5G8OfBU2ONREkptLN0FpKPb22Mkb
+	 U0W0iWpwqYCrVJd2QJC/A3NdTp9i5iuoipDgvjj8yGDAKe6x6+cN1c4eT7+p6NjMWU
+	 8QAB9NM62rmBOROi5ZVgtXdD7HddTMYRhFa8Vve0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbfG3Mjb (ORCPT
+        id S1730553AbfG3Mjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 08:39:31 -0400
-Received: from mga05.intel.com ([192.55.52.43]:10807 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729579AbfG3Mjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 08:39:31 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 05:39:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,326,1559545200"; 
-   d="scan'208";a="195783793"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga004.fm.intel.com with ESMTP; 30 Jul 2019 05:39:29 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hsRPb-0003Pd-RD; Tue, 30 Jul 2019 15:39:27 +0300
-Date:   Tue, 30 Jul 2019 15:39:27 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Life is hard, and then you die" <ronald@innovation.ch>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mao Wenan <maowenan@huawei.com>,
-        Federico Lorenzi <federico@travelground.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Input: applespi - register touchpad device
- synchronously in probe
-Message-ID: <20190730123927.GN23480@smile.fi.intel.com>
-References: <20190721070523.24695-1-ronald@innovation.ch>
- <20190729132203.GB1201@penguin>
- <20190730065648.GA20206@innovation.ch>
+        Tue, 30 Jul 2019 08:39:42 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44226 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729199AbfG3Mjm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 08:39:42 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i18so30002613pgl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 05:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ab9+yQllgrxhV1PV/fDiWkVd8KTBl0Z4jc93v/FyaQw=;
+        b=YPayV2Tsa3gOdnqXV9g1d7Z1RXrW8NzdVyVVzOilsA1igzI/rHFmlxWqz2QNxpW4U6
+         dD5MFPpint7VYr6z8bGMtBS+li8hGGd4Nu1XQkS7keaj6l/7tg/mAyHSxedtcGS9wFw6
+         9sJgyM95LXS43bfOXzUMz6mCasAm7hzL44R90nb1HLTsJewZ4NcItRMQpRzVNSKcTpb1
+         58FaOZwjOG0vLlee5mEg2Axr4+CZnXJwJP36yn4oI9ZOOP3a3cOPAi1CPhNv/AQ+E+Gx
+         nbtaK5VP7nEcHtlYX8cu2649N1q2zeVjHVwCVQaPys5UeyUD8TWr/IT8oWKWqYsSyFdJ
+         zK4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ab9+yQllgrxhV1PV/fDiWkVd8KTBl0Z4jc93v/FyaQw=;
+        b=YTVoONryBZdDgLt/R8sTaSFPFsn73cqmVzgdDMaef5iC1mnh7LDuMv9VeV4p+EEI83
+         Xh+57tR0Nn7qy/D7VpkeQsJyZeaNEJKxOA3gQ8+CiezIniWWtNkqjgPtnkmnOPhmeswe
+         3tFhy8vZCBPQYt3ANZ43OFszcxSYSh8sabioZADjvLJCuTgFJXNpEA0138y2KRwu2N+4
+         YKQofsVNKT/LOBcQbinCfLufMyZ5HCdzGXTMJn3cofIx4Urey2oIXLewZEa8TbzMoZgM
+         ZT22JqV4dEiktwX0pJ8e0oGJ45paU7bxYfsDeSS6/gC1+BzlL5t7sWtm6hgIRtw4NjEx
+         Y4tA==
+X-Gm-Message-State: APjAAAWD+kbXByO9V2nYA9MTa/Y62WWbyg2rJhpayxdYlwX4LCEqriF9
+        Tw80YRcRofhCM5Ea910/5rvHW7yr
+X-Google-Smtp-Source: APXvYqyKe+n/nS4aOkmskr/0g93PGfZyD+f/iJDZav+UStfSIraoDl2l/xmMU8fmzTdF6fnjVG6qKQ==
+X-Received: by 2002:a63:db47:: with SMTP id x7mr108219665pgi.375.1564490381025;
+        Tue, 30 Jul 2019 05:39:41 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id k70sm64512464pje.14.2019.07.30.05.39.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 05:39:39 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 21:39:35 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Miguel de Dios <migueldedios@google.com>,
+        Wei Wang <wvw@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: Re: [PATCH] mm: release the spinlock on zap_pte_range
+Message-ID: <20190730123935.GB184615@google.com>
+References: <20190729071037.241581-1-minchan@kernel.org>
+ <20190729074523.GC9330@dhcp22.suse.cz>
+ <20190729082052.GA258885@google.com>
+ <20190729083515.GD9330@dhcp22.suse.cz>
+ <20190730121110.GA184615@google.com>
+ <20190730123237.GR9330@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190730065648.GA20206@innovation.ch>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20190730123237.GR9330@dhcp22.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 11:56:48PM -0700, Life is hard, and then you die wrote:
-> On Mon, Jul 29, 2019 at 03:22:03PM +0200, Dmitry Torokhov wrote:
-> > On Sun, Jul 21, 2019 at 12:05:23AM -0700, Ronald Tschalär wrote:
-
-> > Question: is it possible to read command response synchronously as well?
-> > I.e. I was wondering if we could add 2 (or 1?) more read xfers for the
-> > actual result that is coming after the status response, and then we
-> > could use spi_sync() to send the command and read the whole thing.
+On Tue, Jul 30, 2019 at 02:32:37PM +0200, Michal Hocko wrote:
+> On Tue 30-07-19 21:11:10, Minchan Kim wrote:
+> > On Mon, Jul 29, 2019 at 10:35:15AM +0200, Michal Hocko wrote:
+> > > On Mon 29-07-19 17:20:52, Minchan Kim wrote:
+> > > > On Mon, Jul 29, 2019 at 09:45:23AM +0200, Michal Hocko wrote:
+> > > > > On Mon 29-07-19 16:10:37, Minchan Kim wrote:
+> > > > > > In our testing(carmera recording), Miguel and Wei found unmap_page_range
+> > > > > > takes above 6ms with preemption disabled easily. When I see that, the
+> > > > > > reason is it holds page table spinlock during entire 512 page operation
+> > > > > > in a PMD. 6.2ms is never trivial for user experince if RT task couldn't
+> > > > > > run in the time because it could make frame drop or glitch audio problem.
+> > > > > 
+> > > > > Where is the time spent during the tear down? 512 pages doesn't sound
+> > > > > like a lot to tear down. Is it the TLB flushing?
+> > > > 
+> > > > Miguel confirmed there is no such big latency without mark_page_accessed
+> > > > in zap_pte_range so I guess it's the contention of LRU lock as well as
+> > > > heavy activate_page overhead which is not trivial, either.
+> > > 
+> > > Please give us more details ideally with some numbers.
+> > 
+> > I had a time to benchmark it via adding some trace_printk hooks between
+> > pte_offset_map_lock and pte_unmap_unlock in zap_pte_range. The testing
+> > device is 2018 premium mobile device.
+> > 
+> > I can get 2ms delay rather easily to release 2M(ie, 512 pages) when the
+> > task runs on little core even though it doesn't have any IPI and LRU
+> > lock contention. It's already too heavy.
+> > 
+> > If I remove activate_page, 35-40% overhead of zap_pte_range is gone
+> > so most of overhead(about 0.7ms) comes from activate_page via
+> > mark_page_accessed. Thus, if there are LRU contention, that 0.7ms could
+> > accumulate up to several ms.
 > 
-> Yes'ish. But you still need to wait for the GPE to know when to read
-> the response, and while you're doing so any number of keyboard and
-> trackpad events may arrive (i.e. you may need to do any number of read
-> xfers). I suppose those events could all just be discarded, though. So
-> something like this:
+> Thanks for this information. This is something that should be a part of
+> the changelog. I am sorry to still poke into this because I still do not
+
+I will include it.
+
+> have a full understanding of what is going on and while I do not object
+> to drop the spinlock I still suspect this is papering over a deeper
+> problem.
+
+I couldn't come up with better solution. Feel free to suggest it.
+
 > 
->     assemble-info-cmd(write_msg)
+> If mark_page_accessed is really expensive then why do we even bother to
+> do it in the tear down path in the first place? Why don't we simply set
+> a referenced bit on the page to reflect the young pte bit? I might be
+> missing something here of course.
 
->     spi_sync(write_msg)
->     
->     while (1) {
->         wait_event_timeout(wait_queue, gpe_received, timeout)
->         spi_sync(read_msg)
->         if (is-info-cmd-response(read_msg))
->             break
->     }
+commit bf3f3bc5e73
+Author: Nick Piggin <npiggin@suse.de>
+Date:   Tue Jan 6 14:38:55 2009 -0800
 
-Just a side note if you ever going to implement such loops.
+    mm: don't mark_page_accessed in fault path
 
-Consider in this or similar case do {} while approach with more straight exit
-conditional.
+    Doing a mark_page_accessed at fault-time, then doing SetPageReferenced at
+    unmap-time if the pte is young has a number of problems.
 
-Like
+    mark_page_accessed is supposed to be roughly the equivalent of a young pte
+    for unmapped references. Unfortunately it doesn't come with any context:
+    after being called, reclaim doesn't know who or why the page was touched.
 
-	assemble-info-cmd(write_msg)
+    So calling mark_page_accessed not only adds extra lru or PG_referenced
+    manipulations for pages that are already going to have pte_young ptes anyway,
+    but it also adds these references which are difficult to work with from the
+    context of vma specific references (eg. MADV_SEQUENTIAL pte_young may not
+    wish to contribute to the page being referenced).
 
-	do {
-		spi_sync(read_msg)
-		wait_event_timeout(wait_queue, gpe_received, timeout)
-	} while (!is-info-cmd-response(read_msg)
+    Then, simply doing SetPageReferenced when zapping a pte and finding it is
+    young, is not a really good solution either. SetPageReferenced does not
+    correctly promote the page to the active list for example. So after removing
+    mark_page_accessed from the fault path, several mmap()+touch+munmap() would
+    have a very different result from several read(2) calls for example, which
+    is not really desirable.
 
-> and also modify the gpe-handler to wake the wait_queue instead of
-> issuing an spy_async() while doing the above.
-> 
-> I guess the advantage would certainly be the need to avoid the
-> spi-flushing in case of a timeout, at the expense of some slight
-> duplication of some of the received-message handling logic (would
-> refactor make most re-usable, of course).
-> 
-> So would this be the preferred approach then?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+    Signed-off-by: Nick Piggin <npiggin@suse.de>
+    Acked-by: Johannes Weiner <hannes@saeurebad.de>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
