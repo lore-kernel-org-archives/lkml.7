@@ -2,320 +2,111 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B566C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F40C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2B42087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B06AB20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:31:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YsRaAx+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbfG3Had (ORCPT
+        id S1730495AbfG3HbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:30:33 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51772 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726432AbfG3Hac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:30:32 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BC66B84379F6C465A5BD;
-        Tue, 30 Jul 2019 15:14:51 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 30 Jul
- 2019 15:14:43 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>,
-        "David Sterba" <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, "Jan Kara" <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v5 09/24] erofs: support tracepoint
-Date:   Tue, 30 Jul 2019 15:13:58 +0800
-Message-ID: <20190730071413.11871-10-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190730071413.11871-1-gaoxiang25@huawei.com>
-References: <20190730071413.11871-1-gaoxiang25@huawei.com>
+        Tue, 30 Jul 2019 03:31:18 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:36960 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfG3HbS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 03:31:18 -0400
+Received: by mail-vs1-f65.google.com with SMTP id v6so42863807vsq.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 00:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fECuqTI21Ojn1LPYHq9mS1W5JJM7snWl8FCqRE1MoYU=;
+        b=YsRaAx+Hf0mEuPnCsWO2W2dYecdgMTRK+nJ/4M33VHXYcgt7lj5n4IJnicf/5wcAae
+         64a69Md/r9aL7yyzqpZZFIVQ7bSAgGz9+3PY5Ee+6+xCd1QyEwj7sf+tHZjZLfz1PX7m
+         xZJKAnvEakRRnnxcyhhPaC2DOQKcrrdoPO27BhVwFqND8uGjwxUilHIdzaYZwAusqAPG
+         xFQ71irW+Dc1x+CBeOCuijqMadQ9k3OZO1gEfFiNs3cpiyIfW2xF1DQd6dXLCBObU5Bx
+         kJ+TDttpTt4QUqlbC4T/0WzXyAgUELTkmqp0xzQ44NQN8VcbTv6f4nP86EINFUxmnLGw
+         RzCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fECuqTI21Ojn1LPYHq9mS1W5JJM7snWl8FCqRE1MoYU=;
+        b=SWoK1ysPKdm7ZHGsaIM++5skjqvm5oXtD3UasSBe1JPsibVejg9dipqzqDiW3dka/m
+         70R4WLCnHEd3q5W8QQ3XqrprHsm+Y9O1S+TYKykww2di3VEJYrdOd8Bv4PCK543AAtQw
+         NDegD01AiSgHqmssmZh/19Y03+5c3ymIqs8a4DsQBmTN61e0TiVYqJ1yxcEinPZqKIg/
+         2Lxp4hDnfwx87b6LWZMLSdsK7jNAvAhOuCRZkt0WeDFHA+VK9ag7ezsG7wKoSZ6NCmM4
+         bN5b2kMlnVyWFqvSrLWFveFoqlHJkSIfhpR+1vbIYiY7pvokLJbDdgi+wuOSoPGtjXMp
+         wh9g==
+X-Gm-Message-State: APjAAAX/4KbK9OLHZdC2o/uiZ6AblWAnqSnLxyH5YPaRMdH/b6uC/h00
+        NLcJxvnzK7Cy6VbsJYQAHxX4/G5MzD3e/5vdogU9zw==
+X-Google-Smtp-Source: APXvYqzrda20t8D3j5KRYDQFv4L3fC2HefMVmH59xLO2jtaB7TCZGadKQNr1xx7fBjjkKocKHeYxrFzer+xdwJOHtWk=
+X-Received: by 2002:a67:fe5a:: with SMTP id m26mr44751008vsr.230.1564471876985;
+ Tue, 30 Jul 2019 00:31:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+References: <20190703040156.56953-1-walken@google.com> <20190703040156.56953-3-walken@google.com>
+ <CANN689FXgK13wDYNh1zKxdipeTuALG4eKvKpsdZqKFJ-rvtGiQ@mail.gmail.com>
+ <20190726184419.37adea1e227fc793c32427be@linux-foundation.org> <20190729101454.jd6ej2nrlyigjqs4@pc636>
+In-Reply-To: <20190729101454.jd6ej2nrlyigjqs4@pc636>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Tue, 30 Jul 2019 00:31:04 -0700
+Message-ID: <CANN689FMTh=Odn-KM06bPAf9zFwOpSg3FthL7Q5OXRGVWQUOhg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] augmented rbtree: add new RB_DECLARE_CALLBACKS_MAX macro
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic tracepoints for ->readpage{,s}, ->lookup,
-->destroy_inode, fill_inode and map_blocks.
+On Mon, Jul 29, 2019 at 3:15 AM Uladzislau Rezki <urezki@gmail.com> wrote:
+>
+> >
+> > --- a/lib/rbtree_test.c~augmented-rbtree-add-new-rb_declare_callbacks_max-macro-fix-2
+> > +++ a/lib/rbtree_test.c
+> > @@ -220,10 +220,6 @@ static void check_augmented(int nr_nodes
+> >       struct rb_node *rb;
+> >
+> >       check(nr_nodes);
+> > -     for (rb = rb_first(&root.rb_root); rb; rb = rb_next(rb)) {
+> > -             struct test_node *node = rb_entry(rb, struct test_node, rb);
+> > -             WARN_ON_ONCE(node->augmented != augment_recompute(node));
+> > -     }
+> >  }
+> >
+> I have a question here it is a bit out of this topic but still related :)
+>
+> Can we move "check augmented" functionality to the rbtree_augmented.h
+> header file making it public?
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- include/trace/events/erofs.h | 241 +++++++++++++++++++++++++++++++++++
- 1 file changed, 241 insertions(+)
- create mode 100644 include/trace/events/erofs.h
+Hmmm, I had not thought about that. Agree that this can be useful -
+there is already similar test code in rbtree_test.c and also
+vma_compute_subtree_gap() in mmap.c, ...
 
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-new file mode 100644
-index 000000000000..0c5847c54b60
---- /dev/null
-+++ b/include/trace/events/erofs.h
-@@ -0,0 +1,241 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM erofs
-+
-+#if !defined(_TRACE_EROFS_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_EROFS_H
-+
-+#include <linux/tracepoint.h>
-+
-+#define show_dev(dev)		MAJOR(dev), MINOR(dev)
-+#define show_dev_nid(entry)	show_dev(entry->dev), entry->nid
-+
-+#define show_file_type(type)						\
-+	__print_symbolic(type,						\
-+		{ 0,		"FILE" },				\
-+		{ 1,		"DIR" })
-+
-+#define show_map_flags(flags) __print_flags(flags, "|",	\
-+	{ EROFS_GET_BLOCKS_RAW,	"RAW" })
-+
-+#define show_mflags(flags) __print_flags(flags, "",	\
-+	{ EROFS_MAP_MAPPED,	"M" },			\
-+	{ EROFS_MAP_META,	"I" })
-+
-+TRACE_EVENT(erofs_lookup,
-+
-+	TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
-+
-+	TP_ARGS(dir, dentry, flags),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(const char *,	name	)
-+		__field(unsigned int,	flags	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	= dir->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(dir)->nid;
-+		__entry->name	= dentry->d_name.name;
-+		__entry->flags	= flags;
-+	),
-+
-+	TP_printk("dev = (%d,%d), pnid = %llu, name:%s, flags:%x",
-+		show_dev_nid(__entry),
-+		__entry->name,
-+		__entry->flags)
-+);
-+
-+TRACE_EVENT(erofs_fill_inode,
-+	TP_PROTO(struct inode *inode, int isdir),
-+	TP_ARGS(inode, isdir),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(erofs_blk_t,	blkaddr )
-+		__field(unsigned int,	ofs	)
-+		__field(int,		isdir	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev		= inode->i_sb->s_dev;
-+		__entry->nid		= EROFS_V(inode)->nid;
-+		__entry->blkaddr	= erofs_blknr(iloc(EROFS_I_SB(inode), __entry->nid));
-+		__entry->ofs		= erofs_blkoff(iloc(EROFS_I_SB(inode), __entry->nid));
-+		__entry->isdir		= isdir;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, blkaddr %u ofs %u, isdir %d",
-+		  show_dev_nid(__entry),
-+		  __entry->blkaddr, __entry->ofs,
-+		  __entry->isdir)
-+);
-+
-+TRACE_EVENT(erofs_readpage,
-+
-+	TP_PROTO(struct page *page, bool raw),
-+
-+	TP_ARGS(page, raw),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,    nid     )
-+		__field(int,		dir	)
-+		__field(pgoff_t,	index	)
-+		__field(int,		uptodate)
-+		__field(bool,		raw	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	= page->mapping->host->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(page->mapping->host)->nid;
-+		__entry->dir	= S_ISDIR(page->mapping->host->i_mode);
-+		__entry->index	= page->index;
-+		__entry->uptodate = PageUptodate(page);
-+		__entry->raw = raw;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, %s, index = %lu, uptodate = %d "
-+		"raw = %d",
-+		show_dev_nid(__entry),
-+		show_file_type(__entry->dir),
-+		(unsigned long)__entry->index,
-+		__entry->uptodate,
-+		__entry->raw)
-+);
-+
-+TRACE_EVENT(erofs_readpages,
-+
-+	TP_PROTO(struct inode *inode, struct page *page, unsigned int nrpage,
-+		bool raw),
-+
-+	TP_ARGS(inode, page, nrpage, raw),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(pgoff_t,	start	)
-+		__field(unsigned int,	nrpage	)
-+		__field(bool,		raw	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	= inode->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(inode)->nid;
-+		__entry->start	= page->index;
-+		__entry->nrpage	= nrpage;
-+		__entry->raw	= raw;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, start = %lu nrpage = %u raw = %d",
-+		show_dev_nid(__entry),
-+		(unsigned long)__entry->start,
-+		__entry->nrpage,
-+		__entry->raw)
-+);
-+
-+DECLARE_EVENT_CLASS(erofs__map_blocks_enter,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned int flags),
-+
-+	TP_ARGS(inode, map, flags),
-+
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+		__field(	erofs_off_t,	la		)
-+		__field(	u64,		llen		)
-+		__field(	unsigned int,	flags		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev    = inode->i_sb->s_dev;
-+		__entry->nid    = EROFS_V(inode)->nid;
-+		__entry->la	= map->m_la;
-+		__entry->llen	= map->m_llen;
-+		__entry->flags	= flags;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, la %llu llen %llu flags %s",
-+		  show_dev_nid(__entry),
-+		  __entry->la, __entry->llen,
-+		  __entry->flags ? show_map_flags(__entry->flags) : "NULL")
-+);
-+
-+DEFINE_EVENT(erofs__map_blocks_enter, erofs_map_blocks_flatmode_enter,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned flags),
-+
-+	TP_ARGS(inode, map, flags)
-+);
-+
-+DECLARE_EVENT_CLASS(erofs__map_blocks_exit,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned int flags, int ret),
-+
-+	TP_ARGS(inode, map, flags, ret),
-+
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+		__field(        unsigned int,   flags           )
-+		__field(	erofs_off_t,	la		)
-+		__field(	erofs_off_t,	pa		)
-+		__field(	u64,		llen		)
-+		__field(	u64,		plen		)
-+		__field(        unsigned int,	mflags		)
-+		__field(	int,		ret		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev    = inode->i_sb->s_dev;
-+		__entry->nid    = EROFS_V(inode)->nid;
-+		__entry->flags	= flags;
-+		__entry->la	= map->m_la;
-+		__entry->pa	= map->m_pa;
-+		__entry->llen	= map->m_llen;
-+		__entry->plen	= map->m_plen;
-+		__entry->mflags	= map->m_flags;
-+		__entry->ret	= ret;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu, flags %s "
-+		  "la %llu pa %llu llen %llu plen %llu mflags %s ret %d",
-+		  show_dev_nid(__entry),
-+		  __entry->flags ? show_map_flags(__entry->flags) : "NULL",
-+		  __entry->la, __entry->pa, __entry->llen, __entry->plen,
-+		  show_mflags(__entry->mflags), __entry->ret)
-+);
-+
-+DEFINE_EVENT(erofs__map_blocks_exit, erofs_map_blocks_flatmode_exit,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned flags, int ret),
-+
-+	TP_ARGS(inode, map, flags, ret)
-+);
-+
-+TRACE_EVENT(erofs_destroy_inode,
-+	TP_PROTO(struct inode *inode),
-+
-+	TP_ARGS(inode),
-+
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	= inode->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(inode)->nid;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu", show_dev_nid(__entry))
-+);
-+
-+#endif /* _TRACE_EROFS_H */
-+
-+ /* This part must be outside protection */
-+#include <trace/define_trace.h>
--- 
-2.17.1
+With patch 3/3 of this series, the RBCOMPUTE function (typically
+generated through the RB_DECLARE_CALLBACKS_MAX macro) will return a
+bool indicating if the node's augmented value was already correctly
+set. Maybe this can be used for test code, through in the false case,
+the node's augmented value is already overwritten with the correct
+value. Not sure if that is a problem though - the files I mentioned
+above have test code that will dump the values if there is a mismatch,
+but really I think in every realistic case just noting that there was
+one would be just as helpful as being able to dump the old (incorrect)
+value....
 
+What do you think - is the RBCOMPUTE(node, true) function sufficient
+for such debugging ?
