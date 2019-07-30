@@ -2,104 +2,276 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CE6C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0D5C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B56F206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:54:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Bxk8nfhQ"
+	by mail.kernel.org (Postfix) with ESMTP id E601E206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbfG3ByK (ORCPT
+        id S1731080AbfG3B5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:54:10 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54578 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfG3ByK (ORCPT
+        Mon, 29 Jul 2019 21:57:39 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:59235 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729715AbfG3B5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:54:10 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6U1cuHp039393;
-        Tue, 30 Jul 2019 01:53:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=f9BTSG278YCddMybE8N0n7tZAlikyRiUgbx4cTXrEZY=;
- b=Bxk8nfhQhPW6zvVXbPjFUAohvmKJHGHnWZTRS4AQnSlb+E+1mTGqLJi6sGbX+1hWyzQU
- G84JuH/MNIzx+zAMj0Y0xJ7lfJJrpYgB6Tf8KofAlj3b5kYDNibmbTUp7UIAqV1uCwL7
- YHwFFw/Nhk2rHflIt1wPrM8RxkGnfmAGIPOl0Pj/l9U9hSRcUFlLLowPLUX+R8pGA8u8
- fp0O3VZQ0RGNV6/D3dqSdMFn+0w/lhuMmEP+o5FZCXqDQnibHkGO2M1ZzHw4ejwG6vGf
- DrS8llofUk3FkH/GhO0mYN3Hz7JwuyNFtQH3g2/46Xg6iJRO3RKyITFbCr6XzEQBVhF1 Dw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2u0f8qu23y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jul 2019 01:53:50 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6U1h2JG132064;
-        Tue, 30 Jul 2019 01:53:50 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2u0bqttk8c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jul 2019 01:53:50 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6U1rl5b002255;
-        Tue, 30 Jul 2019 01:53:47 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 29 Jul 2019 18:53:47 -0700
-Date:   Mon, 29 Jul 2019 21:53:43 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 3/9] workqueue: require CPU hotplug read exclusion for
- apply_workqueue_attrs
-Message-ID: <20190730015343.lgj4hxejorofibmo@ca-dmjordan1.us.oracle.com>
-References: <20190725212505.15055-1-daniel.m.jordan@oracle.com>
- <20190725212505.15055-4-daniel.m.jordan@oracle.com>
- <20190729194721.GG569612@devbig004.ftw2.facebook.com>
+        Mon, 29 Jul 2019 21:57:39 -0400
+X-UUID: b2d537855ff247a59ab2e8562b6d0a84-20190730
+X-UUID: b2d537855ff247a59ab2e8562b6d0a84-20190730
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1386982138; Tue, 30 Jul 2019 09:57:30 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 30 Jul 2019 09:57:30 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 30 Jul 2019 09:57:30 +0800
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+CC:     <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: [PATCH v4] mm: memcontrol: fix use after free in mem_cgroup_iter()
+Date:   Tue, 30 Jul 2019 09:57:29 +0800
+Message-ID: <20190730015729.4406-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729194721.GG569612@devbig004.ftw2.facebook.com>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9333 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=785
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907300016
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9333 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=832 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907300016
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 12:47:21PM -0700, Tejun Heo wrote:
-> On Thu, Jul 25, 2019 at 05:24:59PM -0400, Daniel Jordan wrote:
-> > Change the calling convention for apply_workqueue_attrs to require CPU
-> > hotplug read exclusion.
-> > 
-> > Avoids lockdep complaints about nested calls to get_online_cpus in a
-> > future patch where padata calls apply_workqueue_attrs when changing
-> > other CPU-hotplug-sensitive data structures with the CPU read lock
-> > already held.
-> > 
-> > Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-> 
-> Acked-by: Tejun Heo <tj@kernel.org>
+This patch is sent to report an use after free in mem_cgroup_iter()
+after merging commit: be2657752e9e "mm: memcg: fix use after free in
+mem_cgroup_iter()".
 
-Thanks, Tejun!
+I work with android kernel tree (4.9 & 4.14), and the commit:
+be2657752e9e "mm: memcg: fix use after free in mem_cgroup_iter()" has
+been merged to the trees. However, I can still observe use after free
+issues addressed in the commit be2657752e9e.
+(on low-end devices, a few times this month)
+
+backtrace:
+	css_tryget <- crash here
+	mem_cgroup_iter
+	shrink_node
+	shrink_zones
+	do_try_to_free_pages
+	try_to_free_pages
+	__perform_reclaim
+	__alloc_pages_direct_reclaim
+	__alloc_pages_slowpath
+	__alloc_pages_nodemask
+
+To debug, I poisoned mem_cgroup before freeing it:
+
+static void __mem_cgroup_free(struct mem_cgroup *memcg)
+	for_each_node(node)
+	free_mem_cgroup_per_node_info(memcg, node);
+	free_percpu(memcg->stat);
++       /* poison memcg before freeing it */
++       memset(memcg, 0x78, sizeof(struct mem_cgroup));
+	kfree(memcg);
+}
+
+The coredump shows the position=0xdbbc2a00 is freed.
+
+(gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
+$13 = {position = 0xdbbc2a00, generation = 0x2efd}
+
+0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
+0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
+0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
+0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
+0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
+0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
+0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
+0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
+0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
+0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
+0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
+0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
+0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
+0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
+
+In the reclaim path, try_to_free_pages() does not setup
+sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
+shrink_node().
+
+In mem_cgroup_iter(), root is set to root_mem_cgroup because
+sc->target_mem_cgroup is NULL.
+It is possible to assign a memcg to root_mem_cgroup.nodeinfo.iter in
+mem_cgroup_iter().
+
+	try_to_free_pages
+		struct scan_control sc = {...}, target_mem_cgroup is 0x0;
+	do_try_to_free_pages
+	shrink_zones
+	shrink_node
+		 mem_cgroup *root = sc->target_mem_cgroup;
+		 memcg = mem_cgroup_iter(root, NULL, &reclaim);
+	mem_cgroup_iter()
+		if (!root)
+			root = root_mem_cgroup;
+		...
+
+		css = css_next_descendant_pre(css, &root->css);
+		memcg = mem_cgroup_from_css(css);
+		cmpxchg(&iter->position, pos, memcg);
+
+My device uses memcg non-hierarchical mode.
+When we release a memcg: invalidate_reclaim_iterators() reaches only
+dead_memcg and its parents. If non-hierarchical mode is used,
+invalidate_reclaim_iterators() never reaches root_mem_cgroup.
+
+static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
+{
+	struct mem_cgroup *memcg = dead_memcg;
+
+	for (; memcg; memcg = parent_mem_cgroup(memcg)
+	...
+}
+
+So the use after free scenario looks like:
+
+CPU1						CPU2
+
+try_to_free_pages
+do_try_to_free_pages
+shrink_zones
+shrink_node
+mem_cgroup_iter()
+    if (!root)
+    	root = root_mem_cgroup;
+    ...
+    css = css_next_descendant_pre(css, &root->css);
+    memcg = mem_cgroup_from_css(css);
+    cmpxchg(&iter->position, pos, memcg);
+
+					invalidate_reclaim_iterators(memcg);
+					...
+					__mem_cgroup_free()
+						kfree(memcg);
+
+try_to_free_pages
+do_try_to_free_pages
+shrink_zones
+shrink_node
+mem_cgroup_iter()
+    if (!root)
+    	root = root_mem_cgroup;
+    ...
+    mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
+    iter = &mz->iter[reclaim->priority];
+    pos = READ_ONCE(iter->position);
+    css_tryget(&pos->css) <- use after free
+
+To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter in
+invalidate_reclaim_iterators().
+
+Change since v1:
+Add a comment to explain why we need to handle root_mem_cgroup separately.
+Rename invalid_root to invalidate_root.
+
+Change since v2:
+Add fix tag
+
+Change since v3:
+Remove confusing 'invalidate_root', make the code easier to read
+
+Fixes: 5ac8fb31ad2e ("mm: memcontrol: convert reclaim iterator to simple css refcounting")
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+---
+ mm/memcontrol.c | 39 +++++++++++++++++++++++++++++----------
+ 1 file changed, 29 insertions(+), 10 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index cdbb7a84cb6e..8a2a2d5cfc26 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1130,26 +1130,45 @@ void mem_cgroup_iter_break(struct mem_cgroup *root,
+ 		css_put(&prev->css);
+ }
+ 
+-static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
++static void __invalidate_reclaim_iterators(struct mem_cgroup *from,
++					struct mem_cgroup *dead_memcg)
+ {
+-	struct mem_cgroup *memcg = dead_memcg;
+ 	struct mem_cgroup_reclaim_iter *iter;
+ 	struct mem_cgroup_per_node *mz;
+ 	int nid;
+ 	int i;
+ 
+-	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
+-		for_each_node(nid) {
+-			mz = mem_cgroup_nodeinfo(memcg, nid);
+-			for (i = 0; i <= DEF_PRIORITY; i++) {
+-				iter = &mz->iter[i];
+-				cmpxchg(&iter->position,
+-					dead_memcg, NULL);
+-			}
++	for_each_node(nid) {
++		mz = mem_cgroup_nodeinfo(from, nid);
++		for (i = 0; i <= DEF_PRIORITY; i++) {
++			iter = &mz->iter[i];
++			cmpxchg(&iter->position,
++				dead_memcg, NULL);
+ 		}
+ 	}
+ }
+ 
++static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
++{
++	struct mem_cgroup *memcg = dead_memcg;
++	struct mem_cgroup *last;
++
++	do {
++		__invalidate_reclaim_iterators(memcg, dead_memcg);
++		last = memcg;
++	} while (memcg = parent_mem_cgroup(memcg));
++
++	/*
++	 * When cgruop1 non-hierarchy mode is used,
++	 * parent_mem_cgroup() does not walk all the way up to the
++	 * cgroup root (root_mem_cgroup). So we have to handle
++	 * dead_memcg from cgroup root separately.
++	 */
++	if (last != root_mem_cgroup)
++		__invalidate_reclaim_iterators(root_mem_cgroup,
++						dead_memcg);
++}
++
+ /**
+  * mem_cgroup_scan_tasks - iterate over tasks of a memory cgroup hierarchy
+  * @memcg: hierarchy root
+-- 
+2.18.0
+
