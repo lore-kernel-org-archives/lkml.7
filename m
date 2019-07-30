@@ -2,336 +2,265 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FDAC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FBFC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F04FB206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vKsw61Cu"
+	by mail.kernel.org (Postfix) with ESMTP id 8EF63208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564504434;
+	bh=PJ1nX39B/gMrVeFaf/k60PewgHYvs5KnBWkzjrZxHA8=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=ar0GeMG6j5i1si4SzR3Ka18xCybSmt1b/nK2G2hHgPl9PchC33kFy6U6Lpjp9kZFv
+	 xNn9vGKDFsdN8ZAW+aZUiB18hwXZraVqedxGA6g74NEdOSoHFOwVJITX78zF0qq+U8
+	 Trj+62/xXyq4pgJ0xJTrKJnwnCrTgBeVntAOwOig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733061AbfG3Qdt (ORCPT
+        id S1729631AbfG3Qdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:33:49 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40471 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732840AbfG3Qce (ORCPT
+        Tue, 30 Jul 2019 12:33:53 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40532 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733060AbfG3Qdu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:32:34 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r1so66466630wrl.7;
-        Tue, 30 Jul 2019 09:32:31 -0700 (PDT)
+        Tue, 30 Jul 2019 12:33:50 -0400
+Received: by mail-io1-f65.google.com with SMTP id h6so4371913iom.7
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 09:33:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2KvKm2ALIBuaggfliWdwhYglH+E1CmsiYLiIW5ZnHiw=;
-        b=vKsw61Cu3HhF00J9L2OvZQAd2Org7P4W8QRpkOmA8ymw7nkS9+FTcj5XShqiLM9eC6
-         r/H/flopcf/S/0HBwsgB2Una4FZrXokZf4c8764JZHiIViO9VU4cLup6sRTYo1321g2w
-         DO4Ufz4HFsESnyiLsJZES5I8e3VchBjUjkx5XyIp2EXdmti3BClu7FjB/WmxCkYU8TdE
-         xmz+raBxw29E6XVRKAvfODj0BR3LG6Cehtde9ytce0+LlMU4WHVbeM1GWxTxvWl/amd7
-         I5VdPFJiyEICB3sLocqs4v9fnW7pMyrpvzNwXMSsGdrVWPybZ1rPAieaM2InTjoXFNvW
-         EDeQ==
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=KDoydqM/4PNQk1C3wiilLCzdxfZ2P2ofICXyjT/BiWg=;
+        b=AFlQcULevo63D36h/Zb6unEW2gvSjI9MHiceRZdIS88Q+ngp+E+CsCyiMJ9KX0ZbRp
+         N4NcU4yHLlwj0uB9BZGJ7QMHWzwdC+PLuku5yV+r11DDAwhkizHHLj3QdwLbf5A3iIO3
+         a6xO0MFHtRmXWO9RJ43RrLtmqyT3ByBAokmBw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2KvKm2ALIBuaggfliWdwhYglH+E1CmsiYLiIW5ZnHiw=;
-        b=udzdU/eWO9MTKmfWACFKBHe+XsiGiQ3H3c9hY2sT3Q0NEE5YsO8zyBP3s2uFIYaaSQ
-         P7+8GvEjamZ6Vix9eq4V0vLpEPoJRmUIr7iFpiuF29FsvZCg4uIqg80BEulBLiTNmWOZ
-         5B36X0jLQZPYuPuQpGXystVnmAt0FwrwpLwAh1jKHc2RroSdPeflLu1lSVrEkJZPWNEZ
-         AY8h9u/OC8Ucp/xlCOw0ve16SyxSYQrD+zw5LUvdEHbC+S2frlBgqrJ9HPgBFpYtXFWQ
-         orz6CtKUVpDZ6R3TuDh07Kcgo30EdIBV3LVeMA7ifnPmFuI57xGaCPdymDkv9M6v4Fq7
-         ok+g==
-X-Gm-Message-State: APjAAAVySvMILyXVTYRrMQsF0cp58LHPEkzkO1Sm1Oiqi3nIoRKJAldj
-        h72AGut3A73zvaZirwj8SaZQyMx7
-X-Google-Smtp-Source: APXvYqyF179OO/fKrRAIOOkHZIa70Y8nDLcjW1bR3vrjvVImVIxyZaIAdt8iQVqKHf5CWj3QLYlfGg==
-X-Received: by 2002:a5d:5186:: with SMTP id k6mr25904366wrv.30.1564504350508;
-        Tue, 30 Jul 2019 09:32:30 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id c65sm64835175wma.44.2019.07.30.09.32.29
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=KDoydqM/4PNQk1C3wiilLCzdxfZ2P2ofICXyjT/BiWg=;
+        b=NmeSURrcrRuiUNaAdUpx0TFq5jkHuszGx0a/HV5wDlQDMbZN0AR7L8tVDSOSB8Hn60
+         VtGylk56ms8YZefLVltl7I4wDd9ACBvs4vksNKOynH6CPHpjc7+EFrRKrFgdWqAdz9Yn
+         OxSxbGsVsjAZ/qRwKpLAGwO8mmvluUDHOaX9F6QhQKufDGzZT1sZmKgbt5hsHwAibufh
+         bftQ3Tj9F1QfPpekYEk++Fs2GIKsZ9kAEohFf+u84emeZF/wFllGPua/UuVTz+GXhSZ7
+         wawlIReHDqQ3//Z+1B1v43kjc1ORODvPlqiuLEJjD65u1Ax5u0Mm2XlqS4CuJGg88HX0
+         zEVA==
+X-Gm-Message-State: APjAAAXdX+06u3DbHMFoSkC71LuVQJYUVf/7GX6ZCGGbyddlfWfwae6P
+        dAemgX/7Y8TRpzpJN9BbvczlTmZBLhM=
+X-Google-Smtp-Source: APXvYqySJCCDz9k+CCH4hXgB2ZZY0msNGZoC4JCZ2dYyOQnEbdov7u9e4hWkSnO3/U7n568ZJuzfjQ==
+X-Received: by 2002:a02:6616:: with SMTP id k22mr80748842jac.100.1564504429163;
+        Tue, 30 Jul 2019 09:33:49 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id u17sm59733545iob.57.2019.07.30.09.33.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 09:32:29 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 09/20] PM / devfreq: tegra30: Use kHz units uniformly in the code
-Date:   Tue, 30 Jul 2019 19:22:25 +0300
-Message-Id: <20190730162236.6063-10-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190730162236.6063-1-digetx@gmail.com>
-References: <20190730162236.6063-1-digetx@gmail.com>
+        Tue, 30 Jul 2019 09:33:48 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>, joe.lawrence@redhat.com,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest update for Linux 5.3-rc3
+Message-ID: <9b7fa63d-7c3f-bb3a-663b-e5279a0a0086@linuxfoundation.org>
+Date:   Tue, 30 Jul 2019 10:33:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed;
+ boundary="------------24AF2ECE419D14C7D78A028E"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all kHz-conversion related bugs are fixed, we can use the kHz
-uniformly. This makes code cleaner and avoids integer divisions in the
-code, which is useful in a case of Tegra30 that has Cortex A9 CPU that
-doesn't support integer division instructions, hence all divisions are
-actually made in software mode. Another small benefit from this change
-is that now powertop utility correctly displays devfreq's stats, for
-some reason it expects them to be in kHz.
+This is a multi-part message in MIME format.
+--------------24AF2ECE419D14C7D78A028E
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/devfreq/tegra30-devfreq.c | 81 +++++++++++++++++++------------
- 1 file changed, 49 insertions(+), 32 deletions(-)
+Hi Linus,
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index ca499368ee81..43d50b4366dd 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -137,8 +137,11 @@ struct tegra_devfreq_device {
- 	const struct tegra_devfreq_device_config *config;
- 	void __iomem *regs;
+Please pull the following Kselftest fixes update for Linux 5.3-rc3.
+
+This Kselftest update for Linux 5.3-rc3 consists of minor fixes to
+tests and one major fix to livepatch test to add skip handling to
+avoid false fail reports when livepatch is disabled.
+
+diff is attached.
+
+thanks,
+-- Shuah
+
+
+----------------------------------------------------------------
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+
+   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-5.3-rc3
+
+for you to fetch changes up to 527d37e9e575bc0e9024de9b499385e7bb31f1ad:
+
+   selftests/livepatch: add test skip handling (2019-07-24 14:17:46 -0600)
+
+----------------------------------------------------------------
+linux-kselftest-5.3-rc3
+
+This Kselftest update for Linux 5.3-rc3 consists of minor fixes to
+tests and one major fix to livepatch test to add skip handling to
+avoid false fail reports when livepatch is disabled.
+
+----------------------------------------------------------------
+Colin Ian King (1):
+       selftests/x86: fix spelling mistake "FAILT" -> "FAIL"
+
+Joe Lawrence (1):
+       selftests/livepatch: add test skip handling
+
+Masanari Iida (2):
+       selftests: kmod: Fix typo in kmod.sh
+       selftests: mlxsw: Fix typo in qos_mc_aware.sh
+
+  .../selftests/drivers/net/mlxsw/qos_mc_aware.sh      |  4 ++--
+  tools/testing/selftests/kmod/kmod.sh                 |  6 +++---
+  tools/testing/selftests/livepatch/functions.sh       | 20 
+++++++++++++++++++++
+  tools/testing/selftests/x86/test_vsyscall.c          |  2 +-
+  4 files changed, 26 insertions(+), 6 deletions(-)
+
+----------------------------------------------------------------
+
+--------------24AF2ECE419D14C7D78A028E
+Content-Type: text/x-patch;
+ name="linux-kselftest-5.3-rc3.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-5.3-rc3.diff"
+
+diff --git a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
+index 71231ad2dbfb..47315fe48d5a 100755
+--- a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
++++ b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
+@@ -262,7 +262,7 @@ test_mc_aware()
  
--	/* Average event count sampled in the last interrupt */
--	u32 avg_count;
-+	/*
-+	 * Average event count sampled in the last interrupt and converted
-+	 * to frequency value.
-+	 */
-+	u32 avg_freq;
+ 	stop_traffic
  
- 	/*
- 	 * Extra frequency to increase the target by due to consecutive
-@@ -222,6 +225,14 @@ static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra)
- 	return 0;
+-	log_test "UC performace under MC overload"
++	log_test "UC performance under MC overload"
+ 
+ 	echo "UC-only throughput  $(humanize $ucth1)"
+ 	echo "UC+MC throughput    $(humanize $ucth2)"
+@@ -316,7 +316,7 @@ test_uc_aware()
+ 
+ 	stop_traffic
+ 
+-	log_test "MC performace under UC overload"
++	log_test "MC performance under UC overload"
+ 	echo "    ingress UC throughput $(humanize ${uc_ir})"
+ 	echo "    egress UC throughput  $(humanize ${uc_er})"
+ 	echo "    sent $attempts BC ARPs, got $passes responses"
+diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
+index 0a76314b4414..8b944cf042f6 100755
+--- a/tools/testing/selftests/kmod/kmod.sh
++++ b/tools/testing/selftests/kmod/kmod.sh
+@@ -28,7 +28,7 @@
+ # override by exporting to your environment prior running this script.
+ # For instance this script assumes you do not have xfs loaded upon boot.
+ # If this is false, export DEFAULT_KMOD_FS="ext4" prior to running this
+-# script if the filesyste module you don't have loaded upon bootup
++# script if the filesystem module you don't have loaded upon bootup
+ # is ext4 instead. Refer to allow_user_defaults() for a list of user
+ # override variables possible.
+ #
+@@ -263,7 +263,7 @@ config_get_test_result()
+ config_reset()
+ {
+ 	if ! echo -n "1" >"$DIR"/reset; then
+-		echo "$0: reset shuld have worked" >&2
++		echo "$0: reset should have worked" >&2
+ 		exit 1
+ 	fi
+ }
+@@ -488,7 +488,7 @@ usage()
+ 	echo Example uses:
+ 	echo
+ 	echo "${TEST_NAME}.sh		-- executes all tests"
+-	echo "${TEST_NAME}.sh -t 0008	-- Executes test ID 0008 number of times is recomended"
++	echo "${TEST_NAME}.sh -t 0008	-- Executes test ID 0008 number of times is recommended"
+ 	echo "${TEST_NAME}.sh -w 0008	-- Watch test ID 0008 run until an error occurs"
+ 	echo "${TEST_NAME}.sh -s 0008	-- Run test ID 0008 once"
+ 	echo "${TEST_NAME}.sh -c 0008 3	-- Run test ID 0008 three times"
+diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
+index 30195449c63c..edcfeace4655 100644
+--- a/tools/testing/selftests/livepatch/functions.sh
++++ b/tools/testing/selftests/livepatch/functions.sh
+@@ -13,6 +13,14 @@ function log() {
+ 	echo "$1" > /dev/kmsg
  }
  
-+static unsigned long
-+tegra_actmon_dev_avg_dependency_freq(struct tegra_devfreq *tegra,
-+				     struct tegra_devfreq_device *dev)
-+{
-+	return dev->config->avg_dependency_threshold /
-+		ACTMON_SAMPLING_PERIOD;
++# skip(msg) - testing can't proceed
++#	msg - explanation
++function skip() {
++	log "SKIP: $1"
++	echo "SKIP: $1" >&2
++	exit 4
 +}
 +
- static unsigned long
- tegra_actmon_account_cpu_freq(struct tegra_devfreq *tegra,
- 			      struct tegra_devfreq_device *dev,
-@@ -229,13 +240,15 @@ tegra_actmon_account_cpu_freq(struct tegra_devfreq *tegra,
- {
- 	unsigned long static_cpu_emc_freq;
- 
--	if (dev->config->avg_dependency_threshold &&
--	    dev->config->avg_dependency_threshold < dev->avg_count) {
-+	if (!dev->config->avg_dependency_threshold)
-+		return target_freq;
-+
-+	if (dev->avg_freq > tegra_actmon_dev_avg_dependency_freq(tegra, dev))
- 		static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra);
--		target_freq = max(target_freq, static_cpu_emc_freq);
--	}
-+	else
-+		static_cpu_emc_freq = 0;
- 
--	return target_freq;
-+	return max(target_freq, static_cpu_emc_freq);
+ # die(msg) - game over, man
+ #	msg - dying words
+ function die() {
+@@ -43,6 +51,12 @@ function loop_until() {
+ 	done
  }
  
- static unsigned long tegra_actmon_lower_freq(struct tegra_devfreq *tegra,
-@@ -261,7 +274,7 @@ static unsigned long tegra_actmon_upper_freq(struct tegra_devfreq *tegra,
- 
- 	opp = dev_pm_opp_find_freq_ceil(tegra->devfreq->dev.parent, &upper);
- 	if (IS_ERR(opp))
--		upper = ULONG_MAX;
-+		upper = KHZ_MAX;
- 	else
- 		dev_pm_opp_put(opp);
- 
-@@ -280,15 +293,12 @@ static void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra,
- 	 * range in a case where target_freq falls into a range of
- 	 * next_possible_opp_freq - 1MHz.
- 	 */
--	target_freq = round_down(target_freq, 1000000);
-+	target_freq = round_down(target_freq, 1000);
- 
- 	/* watermarks are set at the borders of the corresponding OPPs */
- 	*lower = tegra_actmon_lower_freq(tegra, target_freq);
- 	*upper = tegra_actmon_upper_freq(tegra, target_freq);
- 
--	*lower /= KHZ;
--	*upper /= KHZ;
--
- 	/*
- 	 * The upper watermark should take into account CPU's frequency
- 	 * because cpu_to_emc_rate() may override the target_freq with
-@@ -304,10 +314,11 @@ static void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra,
- static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
- 					   struct tegra_devfreq_device *dev)
- {
--	unsigned long lower, upper, freq;
-+	unsigned long avg_dependency_freq, lower, upper;
++function assert_mod() {
++	local mod="$1"
 +
-+	tegra_actmon_get_lower_upper(tegra, dev, dev->avg_freq, &lower, &upper);
- 
--	freq = dev->avg_count / ACTMON_SAMPLING_PERIOD * KHZ;
--	tegra_actmon_get_lower_upper(tegra, dev, freq, &lower, &upper);
-+	avg_dependency_freq = tegra_actmon_dev_avg_dependency_freq(tegra, dev);
- 
- 	/*
- 	 * We want to get interrupts when MCCPU client crosses the
-@@ -316,7 +327,7 @@ static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
- 	 */
- 	if (lower < dev->config->avg_dependency_threshold &&
- 	    upper > dev->config->avg_dependency_threshold) {
--		if (dev->avg_count < dev->config->avg_dependency_threshold)
-+		if (dev->avg_freq < avg_dependency_freq)
- 			upper = dev->config->avg_dependency_threshold;
- 		else
- 			lower = dev->config->avg_dependency_threshold;
-@@ -358,8 +369,7 @@ static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
- 	 * device. Once that mark is hit and boosting is stopped, the
- 	 * interrupt is disabled by ISR.
- 	 */
--	freq = dev->avg_count / ACTMON_SAMPLING_PERIOD * KHZ;
--	tegra_actmon_get_lower_upper(tegra, dev, freq, &lower, &upper);
-+	tegra_actmon_get_lower_upper(tegra, dev, dev->avg_freq, &lower, &upper);
- 
- 	delta = do_percent(upper - lower, dev->config->boost_down_threshold);
- 	device_writel(dev, lower + delta, ACTMON_DEV_LOWER_WMARK);
-@@ -368,12 +378,14 @@ static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
- static void actmon_isr_device(struct tegra_devfreq *tegra,
- 			      struct tegra_devfreq_device *dev)
- {
--	u32 intr_status, dev_ctrl, avg_intr_mask;
-+	u32 intr_status, dev_ctrl, avg_intr_mask, avg_count;
- 
--	dev->avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
- 	intr_status = device_readl(dev, ACTMON_DEV_INTR_STATUS);
-+	avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
- 	dev_ctrl = device_readl(dev, ACTMON_DEV_CTRL);
- 
-+	dev->avg_freq = avg_count / ACTMON_SAMPLING_PERIOD;
++	modprobe --dry-run "$mod" &>/dev/null
++}
 +
- 	avg_intr_mask = ACTMON_DEV_INTR_AVG_BELOW_WMARK |
- 			ACTMON_DEV_INTR_AVG_ABOVE_WMARK;
+ function is_livepatch_mod() {
+ 	local mod="$1"
  
-@@ -427,7 +439,7 @@ static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
- {
- 	unsigned long target_freq;
+@@ -75,6 +89,9 @@ function __load_mod() {
+ function load_mod() {
+ 	local mod="$1"; shift
  
--	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD + dev->boost_freq;
-+	target_freq = dev->avg_freq + dev->boost_freq;
- 	target_freq = tegra_actmon_account_cpu_freq(tegra, dev, target_freq);
- 
- 	return min(target_freq, tegra->max_freq);
-@@ -464,6 +476,7 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
- 	struct clk_notifier_data *data = ptr;
- 	struct tegra_devfreq_device *dev;
- 	struct tegra_devfreq *tegra;
-+	unsigned long freq;
- 	unsigned int i;
- 
- 	if (action != POST_RATE_CHANGE)
-@@ -471,6 +484,8 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
- 
- 	tegra = container_of(nb, struct tegra_devfreq, rate_change_nb);
- 
-+	freq = data->new_rate / KHZ;
++	assert_mod "$mod" ||
++		skip "unable to load module ${mod}, verify CONFIG_TEST_LIVEPATCH=m and run self-tests as root"
 +
- 	/*
- 	 * EMC rate could change due to three reasons:
- 	 *
-@@ -492,7 +507,7 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
- 		dev = &tegra->devices[i];
+ 	is_livepatch_mod "$mod" &&
+ 		die "use load_lp() to load the livepatch module $mod"
  
- 		tegra_devfreq_update_avg_wmark(tegra, dev);
--		tegra_devfreq_update_wmark(tegra, dev, data->new_rate);
-+		tegra_devfreq_update_wmark(tegra, dev, freq);
+@@ -88,6 +105,9 @@ function load_mod() {
+ function load_lp_nowait() {
+ 	local mod="$1"; shift
+ 
++	assert_mod "$mod" ||
++		skip "unable to load module ${mod}, verify CONFIG_TEST_LIVEPATCH=m and run self-tests as root"
++
+ 	is_livepatch_mod "$mod" ||
+ 		die "module $mod is not a livepatch"
+ 
+diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
+index 4602326b8f5b..a4f4d4cf22c3 100644
+--- a/tools/testing/selftests/x86/test_vsyscall.c
++++ b/tools/testing/selftests/x86/test_vsyscall.c
+@@ -451,7 +451,7 @@ static int test_vsys_x(void)
+ 		printf("[OK]\tExecuting the vsyscall page failed: #PF(0x%lx)\n",
+ 		       segv_err);
+ 	} else {
+-		printf("[FAILT]\tExecution failed with the wrong error: #PF(0x%lx)\n",
++		printf("[FAIL]\tExecution failed with the wrong error: #PF(0x%lx)\n",
+ 		       segv_err);
+ 		return 1;
  	}
- 
- 	return NOTIFY_OK;
-@@ -501,14 +516,14 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
- static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
- 					  struct tegra_devfreq_device *dev)
- {
--	u32 val = 0, target_freq;
-+	u32 val = 0;
- 
--	target_freq = clk_get_rate(tegra->emc_clock) / KHZ;
--	dev->avg_count = target_freq * ACTMON_SAMPLING_PERIOD;
--	device_writel(dev, dev->avg_count, ACTMON_DEV_INIT_AVG);
-+	dev->avg_freq = clk_get_rate(tegra->emc_clock) / KHZ;
-+	device_writel(dev, dev->avg_freq * ACTMON_SAMPLING_PERIOD,
-+		      ACTMON_DEV_INIT_AVG);
- 
- 	tegra_devfreq_update_avg_wmark(tegra, dev);
--	tegra_devfreq_update_wmark(tegra, dev, target_freq);
-+	tegra_devfreq_update_wmark(tegra, dev, dev->avg_freq);
- 
- 	device_writel(dev, ACTMON_COUNT_WEIGHT, ACTMON_DEV_COUNT_WEIGHT);
- 	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
-@@ -572,7 +587,7 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
- 	rate = dev_pm_opp_get_freq(opp);
- 	dev_pm_opp_put(opp);
- 
--	err = clk_set_min_rate(tegra->emc_clock, rate);
-+	err = clk_set_min_rate(tegra->emc_clock, rate * KHZ);
- 	if (err)
- 		return err;
- 
-@@ -595,7 +610,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
- 	struct tegra_devfreq_device *actmon_dev;
- 	unsigned long cur_freq;
- 
--	cur_freq = clk_get_rate(tegra->emc_clock);
-+	cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
- 
- 	/* To be used by the tegra governor */
- 	stat->private_data = tegra;
-@@ -612,7 +627,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
- 	stat->busy_time *= 100 / BUS_SATURATION_RATIO;
- 
- 	/* Number of cycles in a sampling period */
--	stat->total_time = cur_freq / KHZ * ACTMON_SAMPLING_PERIOD;
-+	stat->total_time = cur_freq * ACTMON_SAMPLING_PERIOD;
- 
- 	stat->busy_time = min(stat->busy_time, stat->total_time);
- 
-@@ -652,7 +667,7 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
- 		target_freq = max(target_freq, dev_target_freq);
- 	}
- 
--	*freq = target_freq * KHZ;
-+	*freq = target_freq;
- 
- 	return 0;
- }
-@@ -787,7 +802,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 			goto remove_opps;
- 		}
- 
--		err = dev_pm_opp_add(&pdev->dev, rate, 0);
-+		err = dev_pm_opp_add(&pdev->dev, rate / KHZ, 0);
- 		if (err) {
- 			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
- 			goto remove_opps;
-@@ -812,6 +827,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 	}
- 
- 	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
-+	tegra_devfreq_profile.initial_freq /= KHZ;
-+
- 	devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
- 				     "tegra_actmon", NULL);
- 	if (IS_ERR(devfreq)) {
--- 
-2.22.0
 
+--------------24AF2ECE419D14C7D78A028E--
