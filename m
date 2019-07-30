@@ -2,89 +2,178 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12EBC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15F5C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE8B206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564494475;
-	bh=Xu4PP27fkOExOXZ91jKqOFfiFWcud7AAA12IFEJ3dIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NwAIKDA7ZmMkyLRe9+ij4CJ1BSGLeaHTsVDsrk1+zo2ifTvTihjoWoYygxWLVWOUO
-	 XwpEun6sVlXZkPC7GXQmi30eaze3vqO3yMicgDU6zavdXHzj4P45VSat5eazjy8oFK
-	 jXeXLmaF7GiG3FgyyGIeY/r+5BXSA+TfrOrIDAVQ=
+	by mail.kernel.org (Postfix) with ESMTP id AAA632089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:48:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uOYi27sP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfG3Nry (ORCPT
+        id S1731291AbfG3Nr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:47:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbfG3Nrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:47:53 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F274206B8;
-        Tue, 30 Jul 2019 13:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564494472;
-        bh=Xu4PP27fkOExOXZ91jKqOFfiFWcud7AAA12IFEJ3dIA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bO6WslM/NB7k5BZfKjQI0wnX0jW3JE/hDNzXrOtSLQ5weZTbxaQvGxc6vunRjLIWJ
-         7JgP5ECG0o+BMEF/G+sMgWyJrGmao4KJ6Mrdnr9SdvDmllGPozKLDlirSQYlvMGiYv
-         jeEYA26gRjxLLwKfpXjVRdA0I5dwhpUO8Y4QRW+w=
-Date:   Tue, 30 Jul 2019 08:47:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 00/11] Hide PCI symbols that
- don't need to be global
-Message-ID: <20190730134751.GH203187@google.com>
-References: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
- <20190724233848.73327-1-skunberg.kelsey@gmail.com>
+        Tue, 30 Jul 2019 09:47:59 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37058 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728240AbfG3Nr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 09:47:57 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w13so62668273eds.4;
+        Tue, 30 Jul 2019 06:47:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3fepK0Jwe5W6w8k8YhbMt3CwG0aFRSUfnwoWIEoMNS4=;
+        b=uOYi27sPVshsO12cRu1wgKTuW3aD1eYQnWnJ2Am1fF90xmwdBZJOFVJTT8BrZgmEwo
+         ZnvRXMpvklk4YTSBvnvrEuqvIRBfxTWWk3hKpkNdCDHIjKcyePB6RlSuHLJINi71cbig
+         UDS8L5FB1nzxRAGHZufvSU8oEaFBam8Yp8a1Prm3ti5hdJZDerZAju8AS4ViZS3gsZh9
+         PYBqRMQleYpz887iXlk+SP1rIyyB2D/YqW85mmSu4BRWBno5a+WyzzjE3VPw2c/pao3H
+         X9LP10UTo5/zQAPAzpMcph3soTiTW0oDStxuomLhYVyeQow+bpVeR63QBE9Jm62xV3i6
+         2qgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3fepK0Jwe5W6w8k8YhbMt3CwG0aFRSUfnwoWIEoMNS4=;
+        b=HhhJkShQ5dRKzeFjbAGC618F18cWkVX4ZdtminHXEuSxTQi3oBf4HyZPKBupqYb95e
+         6qMi7ogc/M5XK0XHHnNCxv4AluYLE1ISZ4N+sUTE7VSZxytaz908XXNrSN/0MQ7ptsZP
+         BedBQBSEjkaGVXfiE0KHY1Z31sMPdzQE21LYOrj+vNsjqR/XNAOGQufKoF2qz4dorZ+f
+         gBkrpdG2aiUpvNjcyvuBb/Z0TuZr37Pm4TIn14E2xVka/lR/fjD69zPrz+s/DxvvrQr0
+         HM8bjUfN8wB9l/xgxzf/eO7Y8dLC2Xp5HgsdKv+1IbZvfiDg6/0JpIxvPLbOcwBrJWoY
+         W6jQ==
+X-Gm-Message-State: APjAAAWQupYX4gtkEoQGFO1zgdYHCWBhCHbOywWq8uM3FjYBFzlvdCl7
+        3cIVYwTxSrg0mAACvKsuwfiD0MOjJIGz5XwluyU=
+X-Google-Smtp-Source: APXvYqw0Lss1BrfXSJ8BL7bsixwvMwj0uTRxnSUvSMt/BOqrwM0Jqj7X+7JK7PBUHyqM6cDax7UE8TnfnJ8/Xc+V/d4=
+X-Received: by 2002:a17:906:a350:: with SMTP id bz16mr91682077ejb.296.1564494475561;
+ Tue, 30 Jul 2019 06:47:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724233848.73327-1-skunberg.kelsey@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190729151346.9280-1-hslester96@gmail.com> <201907292117.DA40CA7D@keescook>
+ <CANhBUQ3V2A-TBVizVh+eMLSi5Gzw5sMBY7C-0a8=-z15qyQ75w@mail.gmail.com>
+In-Reply-To: <CANhBUQ3V2A-TBVizVh+eMLSi5Gzw5sMBY7C-0a8=-z15qyQ75w@mail.gmail.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Tue, 30 Jul 2019 21:47:46 +0800
+Message-ID: <CANhBUQ3pYGwKng-wxsGn3tBj3z_kN-CZQL__5YTwwJuco=fH0w@mail.gmail.com>
+Subject: Re: [PATCH 01/12] rdmacg: Replace strncmp with str_has_prefix
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 05:38:37PM -0600, Kelsey Skunberg wrote:
-> The include/linux/pci.h header file defines several symbols that are used
-> only in drivers/pci/. These symbols do not need to be visible to the rest
-> of the kernel. Move PCI symbols that are only used in drivers/pci/ to
-> drivers/pci/pci.h.
-> 
-> Changes in v2:
->         - Built patches to work with v5.3-rc1
->         - Changed line lengths on commit logs to stay below 80 characters
-> 	- Changed cover-letter log to better explain patch series
-> 
-> 
-> Kelsey Skunberg (11):
->   PCI: Move #define PCI_PM_* lines to drivers/pci/pci.h
->   PCI: Move PME declarations to drivers/pci/pci.h
->   PCI: Move *_host_bridge_device() declarations to drivers/pci.pci.h
->   PCI: Move PCI Virtual Channel declarations to drivers/pci/pci.h
->   PCI: Move pci_hotplug_*_size declarations to drivers/pci/pci.h
->   PCI: Move pci_bus_* declarations to drivers/pci/pci.h
->   PCI: Move pcie_update_link_speed() to drivers/pci/pci.h
->   PCI: Move pci_ats_init() to drivers/pci/pci.h
->   PCI: Move ECRC declarations to drivers/pci/pci.h
->   PCI: Move PTM declaration to drivers/pci/pci.h
->   PCI: Move pci_*_node() declarations to drivers/pci/pci.h
-> 
->  drivers/pci/pci.h   | 48 ++++++++++++++++++++++++++++++++++++++++++---
->  include/linux/pci.h | 47 --------------------------------------------
->  2 files changed, 45 insertions(+), 50 deletions(-)
+Chuhong Yuan <hslester96@gmail.com> =E4=BA=8E2019=E5=B9=B47=E6=9C=8830=E6=
+=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=882:39=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Kees Cook <keescook@chromium.org> =E4=BA=8E2019=E5=B9=B47=E6=9C=8830=E6=
+=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=8812:26=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > On Mon, Jul 29, 2019 at 11:13:46PM +0800, Chuhong Yuan wrote:
+> > > strncmp(str, const, len) is error-prone.
+> > > We had better use newly introduced
+> > > str_has_prefix() instead of it.
+> >
+> > Wait, stop. :) After Laura called my attention to your conversion serie=
+s,
+> > mpe pointed out that str_has_prefix() is almost redundant to strstarts(=
+)
+> > (from 2009), and the latter has many more users. Let's fix strstarts()
+> > match str_has_prefix()'s return behavior (all the existing callers are
+> > doing boolean tests, so the change in return value won't matter), and
+> > then we can continue with this replacement. (And add some documentation
+> > to Documenation/process/deprecated.rst along with a checkpatch.pl test
+> > maybe too?)
+> >
+>
+> Thanks for your advice!
+> Does that mean replacing strstarts()'s implementation with
+> str_has_prefix()'s and then use strstarts() to substitute
+> strncmp?
+>
+> I am not very clear about how to add the test into checkpatch.pl.
+> Should I write a check for this pattern or directly add strncmp into
+> deprecated_apis?
+>
+> > Actually I'd focus first on the actually broken cases first (sizeof()
+> > without the "-1", etc):
+> >
+> > $ git grep strncmp.*sizeof | grep -v -- '-' | wc -l
+> > 17
+> >
+> > I expect the "copy/paste" changes could just be a Coccinelle script tha=
+t
+> > Linus could run to fix all the cases (and should be added to the kernel
+> > source's list of Coccinelle scripts). Especially since the bulk of the
+> > usage pattern are doing literals like this:
+> >
+>
+> Actually I am using a Coccinelle script to detect the cases and
+> have found 800+ places of strncmp(str, const, len).
+> But the script still needs some improvement since it has false
+> negatives and only focuses on detecting, not replacement.
+> I can upload it after improvement.
+> In which form should I upload it? In a patch's description or put it
+> in coccinelle scripts?
+>
+> > arch/alpha/kernel/setup.c:   if (strncmp(p, "mem=3D", 4) =3D=3D 0) {
+> >
+> > $ git grep -E 'strncmp.*(sizeof|, *[0-9]*)' | wc -l
+> > 2565
+> >
+> > And some cases are weirdly backwards:
+> >
+> > tools/perf/util/callchain.c:  if (!strncmp(tok, "none", strlen(tok))) {
+> >
 
-Applied to pci/encapsulate for v5.4, thanks a lot!
+I find there are cases of this pattern are not wrong.
+One example is kernel/irq/debugfs.c: if (!strncmp(buf, "trigger", size)) {
+
+Thus I do not know whether I should include these cases in my script.
+
+> > -Kees
+> >
+>
+> I think with the help of Coccinelle script, all strncmp(str, const, len)
+> can be replaced and these problems will be eliminated. :)
+>
+> Regards,
+> Chuhong
+>
+> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > > ---
+> > >  kernel/cgroup/rdma.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/cgroup/rdma.c b/kernel/cgroup/rdma.c
+> > > index ae042c347c64..fd12a227f8e4 100644
+> > > --- a/kernel/cgroup/rdma.c
+> > > +++ b/kernel/cgroup/rdma.c
+> > > @@ -379,7 +379,7 @@ static int parse_resource(char *c, int *intval)
+> > >                       return -EINVAL;
+> > >               return i;
+> > >       }
+> > > -     if (strncmp(value, RDMACG_MAX_STR, len) =3D=3D 0) {
+> > > +     if (str_has_prefix(value, RDMACG_MAX_STR)) {
+> > >               *intval =3D S32_MAX;
+> > >               return i;
+> > >       }
+> > > --
+> > > 2.20.1
+> > >
+> >
+> > --
+> > Kees Cook
