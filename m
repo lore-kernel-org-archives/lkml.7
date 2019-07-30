@@ -2,276 +2,110 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0D5C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6FAC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E601E206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60AE2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731080AbfG3B5j (ORCPT
+        id S1730776AbfG3B7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:57:39 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:59235 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729715AbfG3B5j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:57:39 -0400
-X-UUID: b2d537855ff247a59ab2e8562b6d0a84-20190730
-X-UUID: b2d537855ff247a59ab2e8562b6d0a84-20190730
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1386982138; Tue, 30 Jul 2019 09:57:30 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 30 Jul 2019 09:57:30 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 30 Jul 2019 09:57:30 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-CC:     <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH v4] mm: memcontrol: fix use after free in mem_cgroup_iter()
-Date:   Tue, 30 Jul 2019 09:57:29 +0800
-Message-ID: <20190730015729.4406-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 29 Jul 2019 21:59:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbfG3B7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 21:59:47 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C65E206E0;
+        Tue, 30 Jul 2019 01:59:45 +0000 (UTC)
+Date:   Mon, 29 Jul 2019 21:59:43 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Eiichi Tsukata <devel@etsukata.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tracing: Prevent RCU EQS breakage in preemptirq events
+Message-ID: <20190729215943.63ff2081@oasis.local.home>
+In-Reply-To: <d8384113-a5a7-4370-e7fb-a6c4b88325e1@etsukata.com>
+References: <20190729010734.3352-1-devel@etsukata.com>
+        <CALCETrVavLdQ8Rp+6fmTd7kJJwvRKdaEnudaiMAu8g9ZXuNfWA@mail.gmail.com>
+        <20190729102948.GY31381@hirez.programming.kicks-ass.net>
+        <d8384113-a5a7-4370-e7fb-a6c4b88325e1@etsukata.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is sent to report an use after free in mem_cgroup_iter()
-after merging commit: be2657752e9e "mm: memcg: fix use after free in
-mem_cgroup_iter()".
+On Tue, 30 Jul 2019 10:50:36 +0900
+Eiichi Tsukata <devel@etsukata.com> wrote:
 
-I work with android kernel tree (4.9 & 4.14), and the commit:
-be2657752e9e "mm: memcg: fix use after free in mem_cgroup_iter()" has
-been merged to the trees. However, I can still observe use after free
-issues addressed in the commit be2657752e9e.
-(on low-end devices, a few times this month)
+> > 
+> > I think they already (try to) do that; see 'tracing_irq_cpu'.
+> >   
+> 
+> Or you mean something like this?
+> As for trace_hardirqs_off_caller:
 
-backtrace:
-	css_tryget <- crash here
-	mem_cgroup_iter
-	shrink_node
-	shrink_zones
-	do_try_to_free_pages
-	try_to_free_pages
-	__perform_reclaim
-	__alloc_pages_direct_reclaim
-	__alloc_pages_slowpath
-	__alloc_pages_nodemask
+You missed what Peter said.
 
-To debug, I poisoned mem_cgroup before freeing it:
+> 
+> diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
+> index 4d8e99fdbbbe..d39478bcf0f2 100644
+> --- a/kernel/trace/trace_preemptirq.c
+> +++ b/kernel/trace/trace_preemptirq.c
+> @@ -66,7 +66,7 @@ __visible void trace_hardirqs_off_caller(unsigned long caller_addr)
+>         if (!this_cpu_read(tracing_irq_cpu)) {
+                             ^^^^^^^^^^^^^^^
+The above makes this called only the first time we disable interrupts.
 
-static void __mem_cgroup_free(struct mem_cgroup *memcg)
-	for_each_node(node)
-	free_mem_cgroup_per_node_info(memcg, node);
-	free_percpu(memcg->stat);
-+       /* poison memcg before freeing it */
-+       memset(memcg, 0x78, sizeof(struct mem_cgroup));
-	kfree(memcg);
-}
+>                 this_cpu_write(tracing_irq_cpu, 1);
+>                 tracer_hardirqs_off(CALLER_ADDR0, caller_addr);
+> -               if (!in_nmi())
+> +               if (!in_nmi() && !irqs_disabled())
 
-The coredump shows the position=0xdbbc2a00 is freed.
+This would always be false. This function is always called with irqs_disabled()!
 
-(gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
-$13 = {position = 0xdbbc2a00, generation = 0x2efd}
+So no, this is not what is meant.
 
-0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
-0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
-0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
-0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
-0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
-0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
-0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
-0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
-0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
-0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
-0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
-0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
-0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
-0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
+>                         trace_irq_disable_rcuidle(CALLER_ADDR0, caller_addr);
+>         }
+> 
+> Or
+> 
+> diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
+> index 4d8e99fdbbbe..e08c5c6ff2b3 100644
+> --- a/kernel/trace/trace_preemptirq.c
+> +++ b/kernel/trace/trace_preemptirq.c
+> @@ -66,8 +66,6 @@ __visible void trace_hardirqs_off_caller(unsigned long caller_addr)
+>         if (!this_cpu_read(tracing_irq_cpu)) {
+>                 this_cpu_write(tracing_irq_cpu, 1);
+>                 tracer_hardirqs_off(CALLER_ADDR0, caller_addr);
+> -               if (!in_nmi())
+> -                       trace_irq_disable_rcuidle(CALLER_ADDR0, caller_addr);
 
-In the reclaim path, try_to_free_pages() does not setup
-sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
-shrink_node().
+And this just removes the tracepoint completely?
 
-In mem_cgroup_iter(), root is set to root_mem_cgroup because
-sc->target_mem_cgroup is NULL.
-It is possible to assign a memcg to root_mem_cgroup.nodeinfo.iter in
-mem_cgroup_iter().
+-- Steve
 
-	try_to_free_pages
-		struct scan_control sc = {...}, target_mem_cgroup is 0x0;
-	do_try_to_free_pages
-	shrink_zones
-	shrink_node
-		 mem_cgroup *root = sc->target_mem_cgroup;
-		 memcg = mem_cgroup_iter(root, NULL, &reclaim);
-	mem_cgroup_iter()
-		if (!root)
-			root = root_mem_cgroup;
-		...
-
-		css = css_next_descendant_pre(css, &root->css);
-		memcg = mem_cgroup_from_css(css);
-		cmpxchg(&iter->position, pos, memcg);
-
-My device uses memcg non-hierarchical mode.
-When we release a memcg: invalidate_reclaim_iterators() reaches only
-dead_memcg and its parents. If non-hierarchical mode is used,
-invalidate_reclaim_iterators() never reaches root_mem_cgroup.
-
-static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-{
-	struct mem_cgroup *memcg = dead_memcg;
-
-	for (; memcg; memcg = parent_mem_cgroup(memcg)
-	...
-}
-
-So the use after free scenario looks like:
-
-CPU1						CPU2
-
-try_to_free_pages
-do_try_to_free_pages
-shrink_zones
-shrink_node
-mem_cgroup_iter()
-    if (!root)
-    	root = root_mem_cgroup;
-    ...
-    css = css_next_descendant_pre(css, &root->css);
-    memcg = mem_cgroup_from_css(css);
-    cmpxchg(&iter->position, pos, memcg);
-
-					invalidate_reclaim_iterators(memcg);
-					...
-					__mem_cgroup_free()
-						kfree(memcg);
-
-try_to_free_pages
-do_try_to_free_pages
-shrink_zones
-shrink_node
-mem_cgroup_iter()
-    if (!root)
-    	root = root_mem_cgroup;
-    ...
-    mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
-    iter = &mz->iter[reclaim->priority];
-    pos = READ_ONCE(iter->position);
-    css_tryget(&pos->css) <- use after free
-
-To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter in
-invalidate_reclaim_iterators().
-
-Change since v1:
-Add a comment to explain why we need to handle root_mem_cgroup separately.
-Rename invalid_root to invalidate_root.
-
-Change since v2:
-Add fix tag
-
-Change since v3:
-Remove confusing 'invalidate_root', make the code easier to read
-
-Fixes: 5ac8fb31ad2e ("mm: memcontrol: convert reclaim iterator to simple css refcounting")
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
----
- mm/memcontrol.c | 39 +++++++++++++++++++++++++++++----------
- 1 file changed, 29 insertions(+), 10 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index cdbb7a84cb6e..8a2a2d5cfc26 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1130,26 +1130,45 @@ void mem_cgroup_iter_break(struct mem_cgroup *root,
- 		css_put(&prev->css);
- }
- 
--static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-+static void __invalidate_reclaim_iterators(struct mem_cgroup *from,
-+					struct mem_cgroup *dead_memcg)
- {
--	struct mem_cgroup *memcg = dead_memcg;
- 	struct mem_cgroup_reclaim_iter *iter;
- 	struct mem_cgroup_per_node *mz;
- 	int nid;
- 	int i;
- 
--	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
--		for_each_node(nid) {
--			mz = mem_cgroup_nodeinfo(memcg, nid);
--			for (i = 0; i <= DEF_PRIORITY; i++) {
--				iter = &mz->iter[i];
--				cmpxchg(&iter->position,
--					dead_memcg, NULL);
--			}
-+	for_each_node(nid) {
-+		mz = mem_cgroup_nodeinfo(from, nid);
-+		for (i = 0; i <= DEF_PRIORITY; i++) {
-+			iter = &mz->iter[i];
-+			cmpxchg(&iter->position,
-+				dead_memcg, NULL);
- 		}
- 	}
- }
- 
-+static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-+{
-+	struct mem_cgroup *memcg = dead_memcg;
-+	struct mem_cgroup *last;
-+
-+	do {
-+		__invalidate_reclaim_iterators(memcg, dead_memcg);
-+		last = memcg;
-+	} while (memcg = parent_mem_cgroup(memcg));
-+
-+	/*
-+	 * When cgruop1 non-hierarchy mode is used,
-+	 * parent_mem_cgroup() does not walk all the way up to the
-+	 * cgroup root (root_mem_cgroup). So we have to handle
-+	 * dead_memcg from cgroup root separately.
-+	 */
-+	if (last != root_mem_cgroup)
-+		__invalidate_reclaim_iterators(root_mem_cgroup,
-+						dead_memcg);
-+}
-+
- /**
-  * mem_cgroup_scan_tasks - iterate over tasks of a memory cgroup hierarchy
-  * @memcg: hierarchy root
--- 
-2.18.0
+>         }
+> 
+> 
+> As for trace_hardirqs_on_caller, it is called when IRQs off and CONTEXT_USER.
+> So even though we skipped the trace event if the previous state was already IRQs on,
+> we will fall into the same situation.
 
