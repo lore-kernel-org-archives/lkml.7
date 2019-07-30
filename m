@@ -7,60 +7,59 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BC0C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF201C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBBF520693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80CF42064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AnI1bx/d"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SoCtjKj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbfG3S2L (ORCPT
+        id S1729750AbfG3S2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:28:11 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40351 "EHLO
+        Tue, 30 Jul 2019 14:28:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45727 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfG3S2I (ORCPT
+        with ESMTP id S1726522AbfG3S2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:28:08 -0400
+        Tue, 30 Jul 2019 14:28:23 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIRueh3330138
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIRBmu3330078
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:27:56 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIRueh3330138
+        Tue, 30 Jul 2019 11:27:11 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIRBmu3330078
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564511277;
-        bh=dxJbtl4/otJ2aQWWJR0CyGiTiB2QSntuTNV6GbD5jeI=;
+        s=2019071901; t=1564511232;
+        bh=5JjSI86tMyMtPM92TP2hKjaf/Gt7FRV4OORBkc5f/e0=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=AnI1bx/dO9IxBczSj2/iQMsNQ4ED54UOcW7lZXdELBt8R+vw/JxnX9E6TXWOJ00mj
-         /qLNPGo0nsfFfi++CcFp6EjSr6M2MfCYEngNEog0MRTWuDd3mDn77Y7nS1owagVfb4
-         8dUb5DLybu2PQN8LP+RCd9UHfDY/ABBgiHgw15mHcNM1W3wEplDKIIu3yMCs+YhGfT
-         zkK9zD88DiD51XPIphPHaGYdLEA/qWK1UG+LhhCzcu4gK6z9621CDZz6ep4OrJCjFo
-         mVKtTZeyznz1L8wi3sYx+wKbHj2sfNy1xOZFQ68YwY8XJZlZX87u5qdx0T8TDwvZBr
-         GLUnzuP/G87Nw==
+        b=SoCtjKj5VrweDKnLrZukgsm/cLmdd56eMtvirWpvswM4xhAecJ/2lzoxAQpmWWHuO
+         sfZT6XGSFt/km5dlkt13T79q9MRDUjBIIR536VVgIy4xGvlcg8cpDeeP57k/BzFDG2
+         evbZTPJhapzyA1xsYUczsb03P9n9je8EsxtTM8mW17Qg5AX6tgya7GJKixy2XrlIlQ
+         bLwM+TezzckQnhlBl1OGwm5SPfj2wWEIIbdhcZloh0prRvoOVEYZlYwbYyoG6IWQt2
+         ao8sf/Ra4BPnYsvs0c3L+yQfHRWTO46F99UwrckeaenaOKno1PA78mgm7U+irBtpP4
+         42Lz6rZ6qaXXA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIRtd93330134;
-        Tue, 30 Jul 2019 11:27:55 -0700
-Date:   Tue, 30 Jul 2019 11:27:55 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIRB7G3330074;
+        Tue, 30 Jul 2019 11:27:11 -0700
+Date:   Tue, 30 Jul 2019 11:27:11 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-959b83c769389b24d64759f60e64c4c62620ff02@git.kernel.org>
-Cc:     jolsa@kernel.org, acme@redhat.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, mpetlan@redhat.com,
-        tglx@linutronix.de, alexey.budankov@linux.intel.com,
-        mingo@kernel.org, namhyung@kernel.org,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        peterz@infradead.org
-Reply-To: alexey.budankov@linux.intel.com, ak@linux.intel.com,
+Message-ID: <tip-a1556f8479ed58b8d5a33aef54578bad0165c7e7@git.kernel.org>
+Cc:     hpa@zytor.com, mpetlan@redhat.com, jolsa@kernel.org,
+        alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        ak@linux.intel.com, namhyung@kernel.org,
+        alexey.budankov@linux.intel.com, tglx@linutronix.de,
+        mingo@kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+Reply-To: linux-kernel@vger.kernel.org, acme@redhat.com, mingo@kernel.org,
+          tglx@linutronix.de, namhyung@kernel.org,
+          alexey.budankov@linux.intel.com, ak@linux.intel.com,
           alexander.shishkin@linux.intel.com, peterz@infradead.org,
-          namhyung@kernel.org, mingo@kernel.org, tglx@linutronix.de,
-          mpetlan@redhat.com, jolsa@kernel.org, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, acme@redhat.com
-In-Reply-To: <20190721112506.12306-29-jolsa@kernel.org>
-References: <20190721112506.12306-29-jolsa@kernel.org>
+          jolsa@kernel.org, mpetlan@redhat.com, hpa@zytor.com
+In-Reply-To: <20190721112506.12306-28-jolsa@kernel.org>
+References: <20190721112506.12306-28-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] libperf: Add perf_cpu_map struct
-Git-Commit-ID: 959b83c769389b24d64759f60e64c4c62620ff02
+Subject: [tip:perf/core] libperf: Add debug output support
+Git-Commit-ID: a1556f8479ed58b8d5a33aef54578bad0165c7e7
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,33 +73,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  959b83c769389b24d64759f60e64c4c62620ff02
-Gitweb:     https://git.kernel.org/tip/959b83c769389b24d64759f60e64c4c62620ff02
+Commit-ID:  a1556f8479ed58b8d5a33aef54578bad0165c7e7
+Gitweb:     https://git.kernel.org/tip/a1556f8479ed58b8d5a33aef54578bad0165c7e7
 Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:24:15 +0200
+AuthorDate: Sun, 21 Jul 2019 13:24:14 +0200
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 29 Jul 2019 18:34:44 -0300
 
-libperf: Add perf_cpu_map struct
+libperf: Add debug output support
 
-Add perf_cpu_map struct to libperf.
-
-It's added as a declaration into:
-
-  include/perf/cpumap.h
-
-which will be included by users.
-
-The perf_cpu_map struct definition is added into:
-
-  include/internal/cpumap.h
-
-which is not to be included by users, but shared within perf and
-libperf.
-
-We tried the total separation of the perf_cpu_map struct in libperf, but
-it lead to complications and much bigger changes in perf code, so we
-decided to share the declaration.
+Add the perf_set_print() function to allow setting an output function
+for warn/info/debug messages.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -109,85 +92,112 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-29-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-28-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/Build                     |  1 +
- tools/perf/lib/cpumap.c                  |  5 +++++
- tools/perf/lib/include/internal/cpumap.h | 13 +++++++++++++
- tools/perf/lib/include/perf/cpumap.h     |  7 +++++++
- tools/perf/util/cpumap.h                 |  7 +------
- 5 files changed, 27 insertions(+), 6 deletions(-)
+ tools/perf/lib/core.c              | 34 ++++++++++++++++++++++++++++++++++
+ tools/perf/lib/include/perf/core.h | 13 +++++++++++++
+ tools/perf/lib/internal.h          | 18 ++++++++++++++++++
+ tools/perf/lib/libperf.map         |  2 ++
+ 4 files changed, 67 insertions(+)
 
-diff --git a/tools/perf/lib/Build b/tools/perf/lib/Build
-index 5196958cec01..195b274db49a 100644
---- a/tools/perf/lib/Build
-+++ b/tools/perf/lib/Build
-@@ -1 +1,2 @@
- libperf-y += core.o
-+libperf-y += cpumap.o
-diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
-new file mode 100644
-index 000000000000..86a199c26f20
---- /dev/null
-+++ b/tools/perf/lib/cpumap.c
-@@ -0,0 +1,5 @@
+diff --git a/tools/perf/lib/core.c b/tools/perf/lib/core.c
+index e69de29bb2d1..29d5e3348718 100644
+--- a/tools/perf/lib/core.c
++++ b/tools/perf/lib/core.c
+@@ -0,0 +1,34 @@
 +// SPDX-License-Identifier: GPL-2.0-only
-+#include <perf/cpumap.h>
-+#include <stdlib.h>
-+#include <linux/refcount.h>
-+#include <internal/cpumap.h>
-diff --git a/tools/perf/lib/include/internal/cpumap.h b/tools/perf/lib/include/internal/cpumap.h
-new file mode 100644
-index 000000000000..53ce95374b05
---- /dev/null
-+++ b/tools/perf/lib/include/internal/cpumap.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LIBPERF_INTERNAL_CPUMAP_H
-+#define __LIBPERF_INTERNAL_CPUMAP_H
 +
-+#include <linux/refcount.h>
++#define __printf(a, b)  __attribute__((format(printf, a, b)))
 +
-+struct perf_cpu_map {
-+	refcount_t	refcnt;
-+	int		nr;
-+	int		map[];
++#include <stdio.h>
++#include <stdarg.h>
++#include <perf/core.h>
++#include "internal.h"
++
++static int __base_pr(enum libperf_print_level level, const char *format,
++		     va_list args)
++{
++	return vfprintf(stderr, format, args);
++}
++
++static libperf_print_fn_t __libperf_pr = __base_pr;
++
++void libperf_set_print(libperf_print_fn_t fn)
++{
++	__libperf_pr = fn;
++}
++
++__printf(2, 3)
++void libperf_print(enum libperf_print_level level, const char *format, ...)
++{
++	va_list args;
++
++	if (!__libperf_pr)
++		return;
++
++	va_start(args, format);
++	__libperf_pr(level, format, args);
++	va_end(args);
++}
+diff --git a/tools/perf/lib/include/perf/core.h b/tools/perf/lib/include/perf/core.h
+index e2e4b43c9131..c341a7b2c874 100644
+--- a/tools/perf/lib/include/perf/core.h
++++ b/tools/perf/lib/include/perf/core.h
+@@ -2,8 +2,21 @@
+ #ifndef __LIBPERF_CORE_H
+ #define __LIBPERF_CORE_H
+ 
++#include <stdarg.h>
++
+ #ifndef LIBPERF_API
+ #define LIBPERF_API __attribute__((visibility("default")))
+ #endif
+ 
++enum libperf_print_level {
++	LIBPERF_WARN,
++	LIBPERF_INFO,
++	LIBPERF_DEBUG,
 +};
 +
-+#endif /* __LIBPERF_INTERNAL_CPUMAP_H */
-diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
++typedef int (*libperf_print_fn_t)(enum libperf_print_level level,
++				  const char *, va_list ap);
++
++LIBPERF_API void libperf_set_print(libperf_print_fn_t fn);
++
+ #endif /* __LIBPERF_CORE_H */
+diff --git a/tools/perf/lib/internal.h b/tools/perf/lib/internal.h
 new file mode 100644
-index 000000000000..8355d3ce7d0c
+index 000000000000..dc92f241732e
 --- /dev/null
-+++ b/tools/perf/lib/include/perf/cpumap.h
-@@ -0,0 +1,7 @@
++++ b/tools/perf/lib/internal.h
+@@ -0,0 +1,18 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LIBPERF_CPUMAP_H
-+#define __LIBPERF_CPUMAP_H
++#ifndef __LIBPERF_INTERNAL_H
++#define __LIBPERF_INTERNAL_H
 +
-+struct perf_cpu_map;
++void libperf_print(enum libperf_print_level level,
++		   const char *format, ...)
++	__attribute__((format(printf, 2, 3)));
 +
-+#endif /* __LIBPERF_CPUMAP_H */
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 22729beae959..c2ba9ae195f7 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -5,16 +5,11 @@
- #include <stdio.h>
- #include <stdbool.h>
- #include <linux/refcount.h>
-+#include <internal/cpumap.h>
- 
- #include "perf.h"
- #include "util/debug.h"
- 
--struct perf_cpu_map {
--	refcount_t refcnt;
--	int nr;
--	int map[];
--};
--
- struct perf_cpu_map *cpu_map__new(const char *cpu_list);
- struct perf_cpu_map *cpu_map__empty_new(int nr);
- struct perf_cpu_map *cpu_map__dummy_new(void);
++#define __pr(level, fmt, ...)   \
++do {                            \
++	libperf_print(level, "libperf: " fmt, ##__VA_ARGS__);     \
++} while (0)
++
++#define pr_warning(fmt, ...)    __pr(LIBPERF_WARN, fmt, ##__VA_ARGS__)
++#define pr_info(fmt, ...)       __pr(LIBPERF_INFO, fmt, ##__VA_ARGS__)
++#define pr_debug(fmt, ...)      __pr(LIBPERF_DEBUG, fmt, ##__VA_ARGS__)
++
++#endif /* __LIBPERF_INTERNAL_H */
+diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
+index a8e913988edf..3536242c545c 100644
+--- a/tools/perf/lib/libperf.map
++++ b/tools/perf/lib/libperf.map
+@@ -1,4 +1,6 @@
+ LIBPERF_0.0.1 {
++	global:
++		libperf_set_print;
+ 	local:
+ 		*;
+ };
