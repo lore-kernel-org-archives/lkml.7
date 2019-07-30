@@ -2,199 +2,90 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17762C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202BFC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8EE3206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:34:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jmyHZHsp"
+	by mail.kernel.org (Postfix) with ESMTP id E5F80208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbfG3QeI (ORCPT
+        id S1728744AbfG3QfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:34:08 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33048 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732677AbfG3QcX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:32:23 -0400
-Received: by mail-wm1-f67.google.com with SMTP id h19so45682709wme.0;
-        Tue, 30 Jul 2019 09:32:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ox12S6Tw4A+nuZKMeS2Wc28MQmpMbXQ3Ba/CygAYf44=;
-        b=jmyHZHsp2CKndQo92fDRhxclKrIGhfZzfr/veEVbopBWKo8QmsEdN0yPNlRdDHuqgZ
-         sLGOOpuajf6gl0FEwHw9nMUEzZNAVgUyv9c+mjAY321LPQhEixQ0SzOdK24MWch+On5M
-         mSdn8iJu/L3JjAP4xt5JY7428JXbWuIGybUMuLevrffyDYumSZGU9Tx+8ZVj1JPVDkFL
-         Idp3bESlQZim8uo97NYBZlsIL8ChJRB1bTvYDpMKC+r0NF4X5PJfTODk8BxVtAcF8wvF
-         fstXGFF95XLX7g1o80ZsC0+Etoh2ROKtecu5uX9X5QnQfgUZTsTqf+nUVRpV0iGco1KB
-         gJoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ox12S6Tw4A+nuZKMeS2Wc28MQmpMbXQ3Ba/CygAYf44=;
-        b=bo2bnNUTFsy7mNlLGw67smpsUvf5i2S+5YFaw/vJoNhjVArLRhzw7ivR2YinspYASC
-         htJn58NdkeOWx7+eFBVQzBVjmN/6ptxUftJSM9ph6QpN7IWkooNOzotjEqBImhCsPQcZ
-         i1/qA/ByExUE6oSBUk4539HKwDwdk1fFIZ7NS9RvfCjaMe8sASWpCCeHIBf0a3iokYZ9
-         eJQ2ftna64TEWc0exJev/BFfIHrlC9gfJ0pVA0wXE171z0XXZAxqef0peFqQlqE9ECXJ
-         arjjEUL7CGPy7GC+KGziy5PjxPoZB+l/hK9WRhmGVziU8pp3DeBUI77wcZwOT7bgB0CI
-         2cDQ==
-X-Gm-Message-State: APjAAAVr2Ya0ROD6civZzxP7IE13V3qlDoPzWF0+CbmBXmt9MGP/35DU
-        qIX5vLSLtINCDqyGZ4eefrE=
-X-Google-Smtp-Source: APXvYqw8JG3pfF+XLVK0hRFO6f0QeIxfJhVD3nT6uYo73YjCX4jXxgT3T/dyU9HItd+TXHTqiM9k+Q==
-X-Received: by 2002:a7b:c106:: with SMTP id w6mr111461186wmi.80.1564504341406;
-        Tue, 30 Jul 2019 09:32:21 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id c65sm64835175wma.44.2019.07.30.09.32.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 09:32:20 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 02/20] PM / devfreq: tegra30: Keep interrupt disabled while governor is stopped
-Date:   Tue, 30 Jul 2019 19:22:18 +0300
-Message-Id: <20190730162236.6063-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190730162236.6063-1-digetx@gmail.com>
-References: <20190730162236.6063-1-digetx@gmail.com>
+        Tue, 30 Jul 2019 12:35:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32978 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726770AbfG3QfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 12:35:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 45EB2AC9B;
+        Tue, 30 Jul 2019 16:35:00 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id DCA0B1E4370; Tue, 30 Jul 2019 18:34:58 +0200 (CEST)
+Date:   Tue, 30 Jul 2019 18:34:58 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Chengguang Xu <cgxu519@zoho.com.cn>
+Cc:     Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] quota: fix condition for resetting time limit in
+ do_set_dqblk()
+Message-ID: <20190730163458.GI28829@quack2.suse.cz>
+References: <20190724053216.19392-1-cgxu519@zoho.com.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724053216.19392-1-cgxu519@zoho.com.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no real need to keep interrupt always-enabled, will be nicer
-to keep it disabled while governor is inactive.
+On Wed 24-07-19 13:32:16, Chengguang Xu wrote:
+> We reset time limit when current usage is smaller
+> or equal to soft limit in other place, so follow
+> this rule in do_set_dqblk().
+> 
+> Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
 
-Suggested-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/devfreq/tegra30-devfreq.c | 47 ++++++++++++++++---------------
- 1 file changed, 24 insertions(+), 23 deletions(-)
+Thanks! Applied.
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index a27300f40b0b..8be6a33beb9c 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -11,6 +11,7 @@
- #include <linux/devfreq.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/irq.h>
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
- #include <linux/platform_device.h>
-@@ -416,8 +417,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
- {
- 	unsigned int i;
- 
--	disable_irq(tegra->irq);
--
- 	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
- 		      ACTMON_GLB_PERIOD_CTRL);
- 
-@@ -442,8 +441,6 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
- 	}
- 
- 	actmon_write_barrier(tegra);
--
--	enable_irq(tegra->irq);
- }
- 
- static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
-@@ -552,6 +549,12 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
- {
- 	struct tegra_devfreq *tegra = dev_get_drvdata(devfreq->dev.parent);
- 
-+	/*
-+	 * Couple device with the governor early as it is needed at
-+	 * the moment of governor's start (used by ISR).
-+	 */
-+	tegra->devfreq = devfreq;
-+
- 	switch (event) {
- 	case DEVFREQ_GOV_START:
- 		devfreq_monitor_start(devfreq);
-@@ -586,10 +589,11 @@ static struct devfreq_governor tegra_devfreq_governor = {
- 
- static int tegra_devfreq_probe(struct platform_device *pdev)
- {
--	struct tegra_devfreq *tegra;
- 	struct tegra_devfreq_device *dev;
--	unsigned int i;
-+	struct tegra_devfreq *tegra;
-+	struct devfreq *devfreq;
- 	unsigned long rate;
-+	unsigned int i;
- 	int err;
- 
- 	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
-@@ -625,6 +629,16 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 	}
- 	tegra->irq = err;
- 
-+	irq_set_status_flags(tegra->irq, IRQ_NOAUTOEN);
-+
-+	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
-+					actmon_thread_isr, IRQF_ONESHOT,
-+					"tegra-devfreq", tegra);
-+	if (err) {
-+		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
-+		return err;
-+	}
-+
- 	reset_control_assert(tegra->reset);
- 
- 	err = clk_prepare_enable(tegra->clock);
-@@ -672,28 +686,15 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 	}
- 
- 	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
--	tegra->devfreq = devfreq_add_device(&pdev->dev,
--					    &tegra_devfreq_profile,
--					    "tegra_actmon",
--					    NULL);
--	if (IS_ERR(tegra->devfreq)) {
--		err = PTR_ERR(tegra->devfreq);
-+	devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
-+				     "tegra_actmon", NULL);
-+	if (IS_ERR(devfreq)) {
-+		err = PTR_ERR(devfreq);
- 		goto remove_governor;
- 	}
- 
--	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
--					actmon_thread_isr, IRQF_ONESHOT,
--					"tegra-devfreq", tegra);
--	if (err) {
--		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
--		goto remove_devfreq;
--	}
--
- 	return 0;
- 
--remove_devfreq:
--	devfreq_remove_device(tegra->devfreq);
--
- remove_governor:
- 	devfreq_remove_governor(&tegra_devfreq_governor);
- 
+								Honza
+
+> ---
+>  fs/quota/dquot.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+> index be9c471cdbc8..6e826b454082 100644
+> --- a/fs/quota/dquot.c
+> +++ b/fs/quota/dquot.c
+> @@ -2731,7 +2731,7 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
+>  
+>  	if (check_blim) {
+>  		if (!dm->dqb_bsoftlimit ||
+> -		    dm->dqb_curspace + dm->dqb_rsvspace < dm->dqb_bsoftlimit) {
+> +		    dm->dqb_curspace + dm->dqb_rsvspace <= dm->dqb_bsoftlimit) {
+>  			dm->dqb_btime = 0;
+>  			clear_bit(DQ_BLKS_B, &dquot->dq_flags);
+>  		} else if (!(di->d_fieldmask & QC_SPC_TIMER))
+> @@ -2740,7 +2740,7 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
+>  	}
+>  	if (check_ilim) {
+>  		if (!dm->dqb_isoftlimit ||
+> -		    dm->dqb_curinodes < dm->dqb_isoftlimit) {
+> +		    dm->dqb_curinodes <= dm->dqb_isoftlimit) {
+>  			dm->dqb_itime = 0;
+>  			clear_bit(DQ_INODES_B, &dquot->dq_flags);
+>  		} else if (!(di->d_fieldmask & QC_INO_TIMER))
+> -- 
+> 2.20.1
+> 
+> 
+> 
+> 
 -- 
-2.22.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
