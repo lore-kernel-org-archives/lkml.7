@@ -2,130 +2,79 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A46C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F67C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154FA20657
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564497254;
-	bh=HUIjubvJw6ZBXkD/nCiFywd/HIQkLGI0jwF9aj2IqTk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mBIjba3SWTgJjCGW+svh0yYoD5dwsn/099DJ8KIBdwhqLZ1HZWuT4+ZsVE35H1xzK
-	 E6o7p7vo2YZILqV5PwsUzPWwLeXhDxHoJNoXg3hzKk07DnEsPWWAca+ppgae2T6yjY
-	 KTA5TPQBTNCVmhYWtwaIs63lL0XcprpuoCo9QBh4=
+	by mail.kernel.org (Postfix) with ESMTP id 2616820657
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:34:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b0KlczLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731464AbfG3OeM (ORCPT
+        id S1731485AbfG3OeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 10:34:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41072 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728743AbfG3OeM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 10:34:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bnSwB9Iwevew2RMS+oCUNWcQXcWmO0icV8safm3Y+7k=; b=ABK7ohS20te6PnMvyuuZd28/i
-        TAkwBE7yPSt13/jqJ6SNPDPP3lgrEmoMtDV9UHHsHPJhOh1xvle6oaupTJMQ05802ahdVKb2UB8+K
-        YY0hfF+0oCFnz5IWGYJ+cIgCRN6hWP67y7J2CEy2IxvLOelH9ssjwuEUH8Vt7YJAZz2Q4=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hsTC9-0007ku-23; Tue, 30 Jul 2019 14:33:41 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 093CD2742CB5; Tue, 30 Jul 2019 15:33:39 +0100 (BST)
-Date:   Tue, 30 Jul 2019 15:33:39 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Thomas Preston <thomas.preston@codethink.co.uk>
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        Rob Duncan <rduncan@tesla.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kirill Marinushkin <kmarinushkin@birdec.tech>,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Nate Case <ncase@tesla.com>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Patrick Glaser <pglaser@tesla.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [alsa-devel] [PATCH v2 1/3] dt-bindings: ASoC: Add TDA7802
- amplifier
-Message-ID: <20190730143339.GH4264@sirena.org.uk>
-References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
- <20190730120937.16271-2-thomas.preston@codethink.co.uk>
- <20190730122748.GF54126@ediswmail.ad.cirrus.com>
- <20190730131209.rdv2kdlrpfeouh66@pengutronix.de>
- <16a99e45-fd5a-2878-acf9-63518f9ca527@codethink.co.uk>
+        Tue, 30 Jul 2019 10:34:18 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47936 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730484AbfG3OeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 10:34:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=0W0+mRwLqmOfmgb+U09T1ELePqWxxs2khnaIID5pQgE=; b=b0KlczLt2Z1pkj5Zj0Mvo5i21d
+        +HAHbbFYbXFpKPTJWXQmCP2UAmWm8z0keX1iaNubOR3Uo6eft1WySXrrJ9CvIyTEOlzs78zMNvfVS
+        3X1RmVB9G0dv299nrNfe/avRnp7UvYu2O+q0hL85TQNNYrUFWBagdFmyJyaEOUUmYF14=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hsTCS-00005y-3q; Tue, 30 Jul 2019 16:34:00 +0200
+Date:   Tue, 30 Jul 2019 16:34:00 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     Ido Schimmel <idosch@idosch.org>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, davem@davemloft.net,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
+Message-ID: <20190730143400.GO28552@lunn.ch>
+References: <b755f613-e6d8-a2e6-16cd-6f13ec0a6ddc@cumulusnetworks.com>
+ <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
+ <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
+ <20190729131420.tqukz55tz26jkg73@lx-anielsen.microsemi.net>
+ <3cc69103-d194-2eca-e7dd-e2fa6a730223@cumulusnetworks.com>
+ <20190729135205.oiuthcyesal4b4ct@lx-anielsen.microsemi.net>
+ <e4cd0db9-695a-82a7-7dc0-623ded66a4e5@cumulusnetworks.com>
+ <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
+ <20190729175136.GA28572@splinter>
+ <20190730062721.p4vrxo5sxbtulkrx@lx-anielsen.microsemi.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+QwZB9vYiNIzNXIj"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <16a99e45-fd5a-2878-acf9-63518f9ca527@codethink.co.uk>
-X-Cookie: Times approximate.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190730062721.p4vrxo5sxbtulkrx@lx-anielsen.microsemi.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Allan
 
---+QwZB9vYiNIzNXIj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Just throwing out another idea....
 
-On Tue, Jul 30, 2019 at 03:12:21PM +0100, Thomas Preston wrote:
-> On 30/07/2019 14:12, Marco Felsch wrote:
+The whole offloading story has been you use the hardware to accelerate
+what the Linux stack can already do.
 
-> >>> +- compatible : "st,tda7802"
-> >>> +- reg : the I2C address of the device
-> >>> +- enable-supply : a regulator spec for the PLLen pin
+In this case, you want to accelerate Device Level Ring, DLR.  But i've
+not yet seen a software implementation of DLR. Should we really be
+considering first adding DLR to the SW bridge? Make it an alternative
+to the STP code? Once we have a generic implementation we can then
+look at how it can be accelerated using switchdev.
 
-> > Shouldn't that be a pin called 'pllen-gpios'? IMHO I would not use a
-> > regulator for that.
-
-> Hi Marco,
-> We have multiple amplifiers hooked up in a chain, and all the PLLens
-> are connected to one GPIO. So we need to use a regulator so that
-> i2c-TDA7802:00 doesn't turn off the PLLen which i2c-TDA7802:01 still
-> requires.
-
-> This is why we use a regulator. Is there GPIO support for this?
-
-If it's a GPIO not a regulator then it should be a GPIO not a regulator
-in the device tree.  The device tree describes the hardware.  There was
-some work on helping share GPIOs in the GPIO framework to accomodate
-GPIOs for regulator enables, you should be able to do something similar
-to what the regulator framework does.
-
---+QwZB9vYiNIzNXIj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1AVUMACgkQJNaLcl1U
-h9Cu4Qf+OOSeubUr69q1X65qxycxElWJauRAa8zN5ZCS6Corf1z/+hgxkei5GI7D
-p242D+7O5/QHuGlsws3pHfiD3BUJbV+/D05v8DDX1GOEf54+8wv+dnX/1AZKtYzS
-IU/5aki3+oYGj76dQKpAhuTJFnJGGmkMg+O5SWXocr3KZO5P740PKZG0+wVX+yQp
-OdZbJOEfztfQ8AfQQ4vtSjun2grcmxeEyxPo7LiL+iNs2ifAOZW6TWNIl7Y/Xftg
-UNGdYVAtOL9s9G364+UmdAbLbQtKDtLLnotRd98S8NGElOoOGoLss6/pwrW2BHd4
-CgdgNotIdcr1q2Me8acJM2d8pxjKWA==
-=aDlD
------END PGP SIGNATURE-----
-
---+QwZB9vYiNIzNXIj--
+     Andrew
