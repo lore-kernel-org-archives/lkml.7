@@ -2,111 +2,109 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666E4C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE20C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C86420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564527969;
-	bh=T6b2cEcbHAfJ6TlZO6+rHjq/FLX6XMyLeETd/Clzmmo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wgMC8KzXLKS0u5557ljmaEHBUFYAPBYIZZMbQORMn4RholwaV66E0DN6tU+4UU+rz
-	 Wmgl+/2JB5ISJl2Qy2ekimh1WuE5sSPV0kG2UZIiqq94UAJf6JaSZgvHG8+5iVvc9N
-	 K4JyDZsSEXfnN9hbxnab0GRy4KJFthUm0/ibEuvo=
+	by mail.kernel.org (Postfix) with ESMTP id EA60D20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:06:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WrAabiJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfG3XGI (ORCPT
+        id S1729068AbfG3XGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 19:06:08 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41881 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfG3XGI (ORCPT
+        Tue, 30 Jul 2019 19:06:20 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43519 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbfG3XGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 19:06:08 -0400
-Received: by mail-oi1-f195.google.com with SMTP id g7so49175540oia.8;
-        Tue, 30 Jul 2019 16:06:07 -0700 (PDT)
+        Tue, 30 Jul 2019 19:06:20 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j11so10824909otp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 16:06:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GWk710+kd17q1OMPpu/V4kqYNuYX+KuVsErBpC5nLIk=;
+        b=WrAabiJo3Dd0TtRAdJPNb1JBiYkFvBRm3vSWFQpJ+gwuoytfTPfI3f8PTELhhVKlyD
+         Rhp07QkokIAzB6efv9wY6sdxtKIkuJTwvqZULuS9AfQ1pK3jcRPLwP5gxssPI/Ugw1H3
+         tBK4pFecWaDN42C5f8c1CnMEoWW0vrwdcxuHjvtXSAvbkbAKwVQhmLFLECySRswMmtCs
+         iJftiD9zxs5YSMoAkdp/M78U764JOqBiJhvvhAplQjacULBgh1O+teQhg2blsWFp540R
+         8ZQSCjurivZoKK0qnm1XrlEo+kzJzeohTGG8uFoxO5TFALHfsShQTJ6Ae71NzRVe9gon
+         H+xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VimY03f5aoVN/yYxs3dYpIJvqLgBI3pDDuk5hgLPs/4=;
-        b=ggE7PkpVTs0MSwxu+UtKwqyFOI+j5VUyM6rGPtN96hkLwtGQaTw1SLmjaAI6iLrQ8B
-         YWFyTIWdVaCjZd61L1iBEBNTTe9RSc07ZcGBzYl7XRp6ogOVb11HiIyrARe4Ln3o2umL
-         uEm59U3y3zIrcvPvACUDL5XjhQxNooX1u3qtSTLPOtlwIPmkxquabJXEiU1QMBzq14UI
-         akRHC66KSngkaOQmvmL9rrHwduVLcoyp432/fJxYgSlF6rKn5eNwAn/MtYxQpsgU8/Bq
-         vxVoxdzRDo0mel79GnaZ17ky1e76Eb6pmZVgmgxriDXHcEiM1F4RRl3kywbneMM1DSIB
-         xlHQ==
-X-Gm-Message-State: APjAAAVPId8t52fXDdImnIuvuhMS7niyFCy6PI0/phj219dpfqIlLR4w
-        yLh0cHPwueLeVKhhpUQEEAMair/2cIpGuaM26nw=
-X-Google-Smtp-Source: APXvYqys8f5L2s8Ry50x9g2wiZZVapo/nQkID81U6f6jdXRV6XlP08oDVuGarxxjQHWgRo3Fj6LqngpKNPQhrxkRwPU=
-X-Received: by 2002:aca:5a41:: with SMTP id o62mr57540516oib.110.1564527966936;
- Tue, 30 Jul 2019 16:06:06 -0700 (PDT)
+        bh=GWk710+kd17q1OMPpu/V4kqYNuYX+KuVsErBpC5nLIk=;
+        b=KD//G40oyD7PfJz53hNu039MaAxGK+8RyYH7nVb/ZBR5V+7YKQ5Xm0HB8axoH8cK6Y
+         q10K9aFJRR9NWeTxb46g4+SXZTIVhK3fQdY/MjKu8Y2+XddN82zEvUj5Szi9vPMYk9pw
+         Vdmw7Ee/mqkTVejKAESXDg/mzZnP/foKqBd19USj4fp2jT0JbAnjbj1MhJqfElmQ3NtU
+         TxcUzEZD1/PEnkf7gnazSDnNxspt4L2i8vB+sEI4v1x9aAIxLue16g8YTGxGGYlG1elJ
+         iRz43MyRgvzAMmsPXyocQr/XOQpEokD0b6lRoRqqPHmTWneapbYc0ouLrV2S76Jl9zEn
+         fYyg==
+X-Gm-Message-State: APjAAAU1Pe7t2f+FWa+5bIwubLiPkIEZU6gsYAvrXni5W7HMV4cRwRvo
+        LIoaf1jdxdI8gG6++ZlBRzUnZ2c5ea5Bd+HmMGlUqg==
+X-Google-Smtp-Source: APXvYqwRZBGclW0RsoKetYGEdOPnQk2VEPJBoWqPKFhs6YkunF2OBOxQev4HLUxITQUhOPKxNUn5nu5CyC5NSPsHFsA=
+X-Received: by 2002:a05:6830:160c:: with SMTP id g12mr33175342otr.231.1564527978919;
+ Tue, 30 Jul 2019 16:06:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190730024309.233728-1-trong@android.com> <CANA+-vBKg_W88Oy_wJs1NNYaZ2ciJKO=Mrs47etYTDNXUKW9Uw@mail.gmail.com>
- <5d4090ea.1c69fb81.d5cab.4dcd@mx.google.com> <2085893.cJkfNvi94x@kreacher> <5d40c41f.1c69fb81.ac63f.947f@mx.google.com>
-In-Reply-To: <5d40c41f.1c69fb81.ac63f.947f@mx.google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 31 Jul 2019 01:05:55 +0200
-Message-ID: <CAJZ5v0hj+e3+LZ+J1eOAT2REQne_J6aAXzkKVb0tJM4u9u--Rw@mail.gmail.com>
-Subject: Re: [PATCH v5] PM / wakeup: show wakeup sources stats in sysfs
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tri Vo <trong@android.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+References: <20190717222340.137578-1-saravanak@google.com> <20190717222340.137578-4-saravanak@google.com>
+ <CAJMQK-jQA6aeSMmrRKDeJz+mGDsu09=ywPv+kfuo26GhQJD4Ug@mail.gmail.com>
+In-Reply-To: <CAJMQK-jQA6aeSMmrRKDeJz+mGDsu09=ywPv+kfuo26GhQJD4Ug@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 30 Jul 2019 16:05:43 -0700
+Message-ID: <CAGETcx_qKTDd+pid-jdapi4XqVnN1k4EBP9Vt238rUzhDTHzig@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] OPP: Improve require-opps linking
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
         Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        kbuild test robot <lkp@intel.com>
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 12:26 AM Stephen Boyd <swboyd@chromium.org> wrote:
+On Tue, Jul 30, 2019 at 4:03 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
 >
-> Quoting Rafael J. Wysocki (2019-07-30 15:17:55)
-> > On Tuesday, July 30, 2019 8:48:09 PM CEST Stephen Boyd wrote:
-> > > Quoting Tri Vo (2019-07-30 11:39:34)
-> > > > On Mon, Jul 29, 2019 at 10:46 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, Jul 30, 2019 at 4:45 AM Tri Vo <trong@android.com> wrote:
-> > > > > > - Device registering the wakeup source is now the parent of the wakeup source.
-> > > > > >   Updated wakeup_source_register()'s signature and its callers accordingly.
-> > > > >
-> > > > > And I really don't like these changes.  Especially having "wakeup"
-> > > > > twice in the path.
-> > > >
-> > > > I can trim it down to /sys/class/wakeup/<ID>/. Does that sound good?
-> > >
-> > > Using the same prefix for the class and the device name is quite common.
-> > > For example, see the input, regulator, tty, tpm, remoteproc, hwmon,
-> > > extcon classes. I'd prefer it was left as /sys/class/wakeup/wakeupN. The
-> > > class name could be changed to wakeup_source perhaps (i.e.
-> > > /sys/class/wakeup_source/wakeupN)?
-> >
-> > Alternatively /sys/class/wakeup/wsN
-> >
+> On Wed, Jul 17, 2019 at 10:23 PM Saravana Kannan <saravanak@google.com> wrote:
 >
-> Or /sys/class/wakeup/eventN? It's your bikeshed to paint.
+> > -free_required_tables:
+> > -       _opp_table_free_required_tables(opp_table);
+> > -put_np:
+> > -       of_node_put(np);
+> > +       for (i = 0; i < src->required_opp_count; i++) {
+> > +               if (src->required_opp_tables[i])
+> > +                       continue;
+> > +
+> > +               req_np = of_parse_required_opp(src_opp->np, i);
+> > +               if (!req_np)
+> > +                       continue;
+> > +
+> > +               req_table = _find_table_of_opp_np(req_np);
+> Not yet tested in v4, but in v3:
+> In _find_table_of_opp_np(), there's a lockdep check:
+> lockdep_assert_held(&opp_table_lock);
+> which would lead to lockdep warnings.
+>
+> Call trace:
+> _find_table_of_opp_np
+> _of_lazy_link_required_tables
+> dev_pm_opp_xlate_opp
 
-So actually the underlying problem here is that device_wakeup_enable()
-tries to register a wakeup source and then attach it to the device to
-avoid calling possibly sleeping functions under a spinlock.
+Thanks for testing. I'll keep this in mind based on where the rest of
+the discussion goes.
 
-However, it should be possible to call wakeup_source_create(name)
-first, then attach the wakeup source to the device (after checking for
-presence), and then invoke wakeup_source_add() (after dropping the
-lock).  If the wakeup source virtual device registration is done in
-wakeup_source_add(), that should avoid the problem altogether without
-having to introduce extra complexity.
+-Saravana
