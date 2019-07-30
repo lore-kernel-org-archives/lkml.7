@@ -2,111 +2,97 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F40C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3C5C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06AB20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:31:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YsRaAx+H"
+	by mail.kernel.org (Postfix) with ESMTP id 83FAA20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730495AbfG3HbS (ORCPT
+        id S1730532AbfG3Heq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:31:18 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:36960 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfG3HbS (ORCPT
+        Tue, 30 Jul 2019 03:34:46 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39390 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730509AbfG3Hep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:31:18 -0400
-Received: by mail-vs1-f65.google.com with SMTP id v6so42863807vsq.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 00:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fECuqTI21Ojn1LPYHq9mS1W5JJM7snWl8FCqRE1MoYU=;
-        b=YsRaAx+Hf0mEuPnCsWO2W2dYecdgMTRK+nJ/4M33VHXYcgt7lj5n4IJnicf/5wcAae
-         64a69Md/r9aL7yyzqpZZFIVQ7bSAgGz9+3PY5Ee+6+xCd1QyEwj7sf+tHZjZLfz1PX7m
-         xZJKAnvEakRRnnxcyhhPaC2DOQKcrrdoPO27BhVwFqND8uGjwxUilHIdzaYZwAusqAPG
-         xFQ71irW+Dc1x+CBeOCuijqMadQ9k3OZO1gEfFiNs3cpiyIfW2xF1DQd6dXLCBObU5Bx
-         kJ+TDttpTt4QUqlbC4T/0WzXyAgUELTkmqp0xzQ44NQN8VcbTv6f4nP86EINFUxmnLGw
-         RzCQ==
+        Tue, 30 Jul 2019 03:34:45 -0400
+Received: by mail-qk1-f196.google.com with SMTP id w190so45875972qkc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 00:34:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fECuqTI21Ojn1LPYHq9mS1W5JJM7snWl8FCqRE1MoYU=;
-        b=SWoK1ysPKdm7ZHGsaIM++5skjqvm5oXtD3UasSBe1JPsibVejg9dipqzqDiW3dka/m
-         70R4WLCnHEd3q5W8QQ3XqrprHsm+Y9O1S+TYKykww2di3VEJYrdOd8Bv4PCK543AAtQw
-         NDegD01AiSgHqmssmZh/19Y03+5c3ymIqs8a4DsQBmTN61e0TiVYqJ1yxcEinPZqKIg/
-         2Lxp4hDnfwx87b6LWZMLSdsK7jNAvAhOuCRZkt0WeDFHA+VK9ag7ezsG7wKoSZ6NCmM4
-         bN5b2kMlnVyWFqvSrLWFveFoqlHJkSIfhpR+1vbIYiY7pvokLJbDdgi+wuOSoPGtjXMp
-         wh9g==
-X-Gm-Message-State: APjAAAX/4KbK9OLHZdC2o/uiZ6AblWAnqSnLxyH5YPaRMdH/b6uC/h00
-        NLcJxvnzK7Cy6VbsJYQAHxX4/G5MzD3e/5vdogU9zw==
-X-Google-Smtp-Source: APXvYqzrda20t8D3j5KRYDQFv4L3fC2HefMVmH59xLO2jtaB7TCZGadKQNr1xx7fBjjkKocKHeYxrFzer+xdwJOHtWk=
-X-Received: by 2002:a67:fe5a:: with SMTP id m26mr44751008vsr.230.1564471876985;
- Tue, 30 Jul 2019 00:31:16 -0700 (PDT)
+        bh=Zr+6M31Gi9RIhd6WGjh1Vbf2RuBt7+NJdVFSHL2O2pg=;
+        b=TaryWMMIw1asCdXr3irLnmKCisZfKs2JnwOX+AU+LBQY7fPxHjBGquXZ5VUbY8z6uF
+         5SWh1YeuPiG9my9J9OvEiHQqSa/nZ2bzqIsoydKeTtEqULZH68Fl9xRs6ri1H4y4G3oV
+         IGf+sQcSR24ajyj2+CmpAIs83qhyyOhf1UVGjUuTTARleCmXIIvFTVkAKgUaiFv0ewlS
+         0JvNneuONzluJbjYAFeHu0NsrQa2dFE0AKiVqmaOw8742Ve0MDJuY6XlQ/l6/DvjSG7d
+         7QTwIKe1SV8eDwsw/nGPP9ErdGSi7KQXRwbYYM4JJICPR6O2DfnplFxt9ghKQl/IOHIe
+         FKOw==
+X-Gm-Message-State: APjAAAUHmOolOfkWMBMovuNy8qwwXYhIPjmBCv4WRSbsw1WgXmFiiFdE
+        nt5E3o8iRWTZYd0EV5oH7pX27JAUzjicy+sjdIM=
+X-Google-Smtp-Source: APXvYqybWuHcjdBPufsxlBAq5PrDmFRv9hpZANXgyII0B0Cjj/Yb3Q0KornkEI4utqv4T45sDGzfGDmznwSLfL3qQig=
+X-Received: by 2002:a37:76c5:: with SMTP id r188mr74856027qkc.394.1564472084625;
+ Tue, 30 Jul 2019 00:34:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190703040156.56953-1-walken@google.com> <20190703040156.56953-3-walken@google.com>
- <CANN689FXgK13wDYNh1zKxdipeTuALG4eKvKpsdZqKFJ-rvtGiQ@mail.gmail.com>
- <20190726184419.37adea1e227fc793c32427be@linux-foundation.org> <20190729101454.jd6ej2nrlyigjqs4@pc636>
-In-Reply-To: <20190729101454.jd6ej2nrlyigjqs4@pc636>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Tue, 30 Jul 2019 00:31:04 -0700
-Message-ID: <CANN689FMTh=Odn-KM06bPAf9zFwOpSg3FthL7Q5OXRGVWQUOhg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] augmented rbtree: add new RB_DECLARE_CALLBACKS_MAX macro
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190729202542.205309-1-ndesaulniers@google.com>
+ <20190729203246.GA117371@archlinux-threadripper> <20190729215200.GN31406@gate.crashing.org>
+In-Reply-To: <20190729215200.GN31406@gate.crashing.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 30 Jul 2019 09:34:28 +0200
+Message-ID: <CAK8P3a1GQSyCj1L8fFG4Pah8dr5Lanw=1yuimX1o+53ARzOX+Q@mail.gmail.com>
+Subject: Re: [PATCH] powerpc: workaround clang codegen bug in dcbz
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        christophe leroy <christophe.leroy@c-s.fr>,
+        kbuild test robot <lkp@intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 3:15 AM Uladzislau Rezki <urezki@gmail.com> wrote:
+On Mon, Jul 29, 2019 at 11:52 PM Segher Boessenkool
+<segher@kernel.crashing.org> wrote:
 >
+> On Mon, Jul 29, 2019 at 01:32:46PM -0700, Nathan Chancellor wrote:
+> > For the record:
 > >
-> > --- a/lib/rbtree_test.c~augmented-rbtree-add-new-rb_declare_callbacks_max-macro-fix-2
-> > +++ a/lib/rbtree_test.c
-> > @@ -220,10 +220,6 @@ static void check_augmented(int nr_nodes
-> >       struct rb_node *rb;
+> > https://godbolt.org/z/z57VU7
 > >
-> >       check(nr_nodes);
-> > -     for (rb = rb_first(&root.rb_root); rb; rb = rb_next(rb)) {
-> > -             struct test_node *node = rb_entry(rb, struct test_node, rb);
-> > -             WARN_ON_ONCE(node->augmented != augment_recompute(node));
-> > -     }
-> >  }
-> >
-> I have a question here it is a bit out of this topic but still related :)
+> > This seems consistent with what Michael found so I don't think a revert
+> > is entirely unreasonable.
 >
-> Can we move "check augmented" functionality to the rbtree_augmented.h
-> header file making it public?
+> Try this:
+>
+>   https://godbolt.org/z/6_ZfVi
+>
+> This matters in non-trivial loops, for example.  But all current cases
+> where such non-trivial loops are done with cache block instructions are
+> actually written in real assembler already, using two registers.
+> Because performance matters.  Not that I recommend writing code as
+> critical as memset in C with inline asm :-)
 
-Hmmm, I had not thought about that. Agree that this can be useful -
-there is already similar test code in rbtree_test.c and also
-vma_compute_subtree_gap() in mmap.c, ...
+Upon a second look, I think the issue is that the "Z" is an input argument
+when it should be an output. clang decides that it can make a copy of the
+input and pass that into the inline asm. This is not the most efficient
+way, but it seems entirely correct according to the constraints.
 
-With patch 3/3 of this series, the RBCOMPUTE function (typically
-generated through the RB_DECLARE_CALLBACKS_MAX macro) will return a
-bool indicating if the node's augmented value was already correctly
-set. Maybe this can be used for test code, through in the false case,
-the node's augmented value is already overwritten with the correct
-value. Not sure if that is a problem though - the files I mentioned
-above have test code that will dump the values if there is a mismatch,
-but really I think in every realistic case just noting that there was
-one would be just as helpful as being able to dump the old (incorrect)
-value....
+Changing it to an output "=Z" constraint seems to make it work:
 
-What do you think - is the RBCOMPUTE(node, true) function sufficient
-for such debugging ?
+https://godbolt.org/z/FwEqHf
+
+Clang still doesn't use the optimum form, but it passes the correct pointer.
+
+       Arnd
