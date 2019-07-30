@@ -2,113 +2,105 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B562FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AC3C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E160217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 099BE2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:08:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0yfxoot"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bXFfgyHS";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bXFfgyHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbfG3IIa (ORCPT
+        id S1730879AbfG3IIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:08:30 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44404 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730839AbfG3II3 (ORCPT
+        Tue, 30 Jul 2019 04:08:44 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54480 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730839AbfG3IIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:08:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so29639168pgl.11;
-        Tue, 30 Jul 2019 01:08:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=C634oO1Vvg8gLOtxb4yBVodzYW9QR1/y80u/tow7L2k=;
-        b=b0yfxootDJhcs8CuJf+eEBmeq1XhR6C/6+5PDI6ssvqskLe8vuVMIBeOawiBL6fZxM
-         8lpStI2oTnwv+ygzfO7bamEMEOIt8wjKPXXBGzDvTDCuCoI/eGI1oZl+xucyt+iHQHpg
-         01wxQcZznUzy88gdJN6yu+7mt3dPa6UYdBpq7Zw8VbxKXk3wt2+Tl+1mo4MMrJPiSbEM
-         Kvzf6SOg6c2O8icIX6emc9XGtCyT6widBEKdtNzMjgJ7PC6Q+BhLBNX43lYNzS+ERZ3n
-         T6QRhxlvxavNldq0zemUoBxVOdiC6hEcJUGJRkg7RrhRDZ+AwDTvHOGHx7WGG35SbocC
-         EpDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=C634oO1Vvg8gLOtxb4yBVodzYW9QR1/y80u/tow7L2k=;
-        b=VLc9fRMPiUtkDRcsMayL2KlpQdbRj0kPoWjQOIDbvQwOw5y9njuDoH/LxPcySqLS6N
-         gM6Ge+k+mOUZMQtVFsGHouLquxOIcsLmGr/RCtP2rsvFf5wBFi6+vxKwSbOhnmk6JtHG
-         wj6xq5vxlj2aX4KfO0EDwRa9J32VANQk/Q7C5z5hR1tiydrWvkpz106WFZ1zJxiplFjm
-         bUNAVhXv13FP1BPGTodQkdtq7YRfLJkuPfhaeyy9c1rbH2sUke6EgYDQ5hBIlufQAnej
-         s3QPaxQ9HpEEOlfDXvHO+2L2LqdOvtKG89YHy7DfjcMZ8oeT7bPBblnrj+m/hwwUIWAi
-         isXw==
-X-Gm-Message-State: APjAAAXF0NhFBbeZMcmty9TqDOmZnWJwd+G9ArK+di1ZyJifY+e/7wyi
-        nvOPQe2VWshlItBM6xX3f+0=
-X-Google-Smtp-Source: APXvYqwVaja96IEggB/T9248aVYwNZGJvrKt7ibuuT+K/CSoSQHQ9PfoYCfZyYNiW5iVRX/pEnUtKA==
-X-Received: by 2002:a62:e901:: with SMTP id j1mr41448608pfh.189.1564474108960;
-        Tue, 30 Jul 2019 01:08:28 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id q198sm67159888pfq.155.2019.07.30.01.08.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 01:08:28 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH v2] net: phy: phy_led_triggers: Fix a possible null-pointer dereference in phy_led_trigger_change_speed()
-Date:   Tue, 30 Jul 2019 16:08:13 +0800
-Message-Id: <20190730080813.15363-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Tue, 30 Jul 2019 04:08:43 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D6EDC6037C; Tue, 30 Jul 2019 08:08:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564474122;
+        bh=+sMHcpS1ulUUbOmL1Z9dNBUBD3g23n1MFcbcZj3a+ko=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=bXFfgyHSjL0PRBtecGd20UWGA4l8n1uGluyo/dEkV1t2J75intbKIxtYx1SF4SqDl
+         udg1tD2b/zKAVaV3kS58KSkDQCeE8h/onM3dpTe8s8b4G8W5NJqcC2MUg0s8QLId3Q
+         HX5yKOmj71IafmJ2HitJYY84tT3i96fLV3SFnia4=
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92C256037C;
+        Tue, 30 Jul 2019 08:08:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564474122;
+        bh=+sMHcpS1ulUUbOmL1Z9dNBUBD3g23n1MFcbcZj3a+ko=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=bXFfgyHSjL0PRBtecGd20UWGA4l8n1uGluyo/dEkV1t2J75intbKIxtYx1SF4SqDl
+         udg1tD2b/zKAVaV3kS58KSkDQCeE8h/onM3dpTe8s8b4G8W5NJqcC2MUg0s8QLId3Q
+         HX5yKOmj71IafmJ2HitJYY84tT3i96fLV3SFnia4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92C256037C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Ganapathi Bhat <gbhat@marvell.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        stable <stable@vger.kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>
+Subject: Re: [PATCH 5.3] mwifiex: fix 802.11n/WPA detection
+References: <20190724194634.205718-1-briannorris@chromium.org>
+        <s5hv9vkx21i.wl-tiwai@suse.de>
+        <CA+ASDXMEFew2Sg5G1ofKq-0gfOTFEOhZNjfyNJMRzRjv7ZFgXw@mail.gmail.com>
+Date:   Tue, 30 Jul 2019 11:08:37 +0300
+In-Reply-To: <CA+ASDXMEFew2Sg5G1ofKq-0gfOTFEOhZNjfyNJMRzRjv7ZFgXw@mail.gmail.com>
+        (Brian Norris's message of "Mon, 29 Jul 2019 12:45:26 -0700")
+Message-ID: <87y30glzay.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In phy_led_trigger_change_speed(), there is an if statement on line 48
-to check whether phy->last_triggered is NULL: 
-    if (!phy->last_triggered)
+Brian Norris <briannorris@chromium.org> writes:
 
-When phy->last_triggered is NULL, it is used on line 52:
-    led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
+> On Mon, Jul 29, 2019 at 9:01 AM Takashi Iwai <tiwai@suse.de> wrote:
+>> This isn't seen in linux-next yet.
+>
+> Apparently not.
+>
+>> Still pending review?
+>
+> I guess? Probably mostly pending maintainer attention.
 
-Thus, a possible null-pointer dereference may occur.
+Correct, I was offline for few days.
 
-To fix this bug, led_trigger_event(&phy->last_triggered->trigger,
-LED_OFF) is called when phy->last_triggered is not NULL.
+> Also, Johannes already had noticed (and privately messaged me): this
+> patch took a while to show up on the linux-wireless Patchwork
+> instance. So the first review (from Guenter Roeck) and my extra reply
+> noting the -stable regression didn't make it to Patchwork:
+>
+> https://patchwork.kernel.org/patch/11057585/
+>
+>> In anyway,
+>>   Reviewed-by: Takashi Iwai <tiwai@suse.de>
+>
+> Thanks. Hopefully Kalle can pick it up.
 
-This bug is found by a static analysis tool STCheck written by
-the OSLAB group in Tsinghua University.
+I expect to apply this today.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
-v2:
-* Add the organization of the tool's authors.
-  Thank David and Andrew for helpful advice.
-
----
- drivers/net/phy/phy_led_triggers.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/phy_led_triggers.c b/drivers/net/phy/phy_led_triggers.c
-index b86a4b2116f8..59a94e07e7c5 100644
---- a/drivers/net/phy/phy_led_triggers.c
-+++ b/drivers/net/phy/phy_led_triggers.c
-@@ -48,8 +48,9 @@ void phy_led_trigger_change_speed(struct phy_device *phy)
- 		if (!phy->last_triggered)
- 			led_trigger_event(&phy->led_link_trigger->trigger,
- 					  LED_FULL);
-+		else
-+			led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
- 
--		led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
- 		led_trigger_event(&plt->trigger, LED_FULL);
- 		phy->last_triggered = plt;
- 	}
 -- 
-2.17.0
-
+Kalle Valo
