@@ -2,164 +2,112 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5E6C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014BDC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6E12087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC7D2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:47:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jAcfv0YI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbfG3Kpe (ORCPT
+        id S1729187AbfG3Krz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 06:45:34 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:52949 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfG3Kpe (ORCPT
+        Tue, 30 Jul 2019 06:47:55 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:56794 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728907AbfG3Krz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 06:45:34 -0400
-Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 634de1d0b5a8bf38; Tue, 30 Jul 2019 12:45:31 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Keith Busch <keith.busch@intel.com>
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for suspend" has problems
-Date:   Tue, 30 Jul 2019 12:45:31 +0200
-Message-ID: <47415939.KV5G6iaeJG@kreacher>
-In-Reply-To: <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
-References: <2332799.izEFUvJP67@kreacher> <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM> <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
+        Tue, 30 Jul 2019 06:47:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xd8aJIuQ1HAMcxnsxnnuGT/Zwd/6CK6dCjhjivBsWNs=; b=jAcfv0YI5u+CH+N2xxZBD077X
+        WgPpgKKibt8++BpMBtcf9BAXQ8oFUcuoDC70jjU39pPG3tid3H8ga+UqhyTX39kFQot/+W5SGRhtZ
+        U7sgVOW0uVo/V0OOkQv7kWAwNOVvLl33RGXZd+JCPvhlBidCwWCnr/w+Ah9SsPNtPJfD7wSraJnyH
+        uLrMbjSgdsAR23fZAMkWTULEojIblZ4vIuBsOCCD/w8jwAvSZ0X1UzMIbKoLvaw6mCE5qwveg7Suv
+        LcB73+GkpPPNpiWRyUyeWmoa6OthCKPb75BAvAyurJrXBULiJdEdaphLttxaPnNZuEiRri6aKNmLw
+        3EEIbVnxQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:46346)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hsPfY-0004j6-DF; Tue, 30 Jul 2019 11:47:48 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hsPfW-00029f-Ts; Tue, 30 Jul 2019 11:47:46 +0100
+Date:   Tue, 30 Jul 2019 11:47:46 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Luis Araneda <luaraneda@gmail.com>
+Cc:     michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] ARM: zynq: Use memcpy_toio instead of memcpy on smp
+ bring-up
+Message-ID: <20190730104746.GA1330@shell.armlinux.org.uk>
+References: <20190730044326.1805-1-luaraneda@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730044326.1805-1-luaraneda@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, July 25, 2019 7:03:49 PM CEST Rafael J. Wysocki wrote:
-> On Thu, Jul 25, 2019 at 6:24 PM <Mario.Limonciello@dell.com> wrote:
-> >
-> > +Rajat
-> >
-> > > -----Original Message-----
-> > > From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > Sent: Thursday, July 25, 2019 9:03 AM
-> > > To: Rafael J. Wysocki
-> > > Cc: Keith Busch; Christoph Hellwig; Sagi Grimberg; linux-
-> > > nvme@lists.infradead.org; Limonciello, Mario; Linux PM; LKML
-> > > Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
-> > > suspend" has problems
-> > >
-> > >
-> > > [EXTERNAL EMAIL]
-> > >
-> > > Hi Rafael,
-> > >
-> > > at 17:51, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > >
-> > > > Hi Keith,
-> > > >
-> > > > Unfortunately,
-> > > >
-> > > > commit d916b1be94b6dc8d293abed2451f3062f6af7551
-> > > > Author: Keith Busch <keith.busch@intel.com>
-> > > > Date:   Thu May 23 09:27:35 2019 -0600
-> > > >
-> > > >     nvme-pci: use host managed power state for suspend
-> > > >
-> > > > doesn't universally improve things.  In fact, in some cases it makes
-> > > > things worse.
-> > > >
-> > > > For example, on the Dell XPS13 9380 I have here it prevents the processor
-> > > > package
-> > > > from reaching idle states deeper than PC2 in suspend-to-idle (which, of
-> > > > course, also
-> > > > prevents the SoC from reaching any kind of S0ix).
-> > > >
-> > > > That can be readily explained too.  Namely, with the commit above the
-> > > > NVMe device
-> > > > stays in D0 over suspend/resume, so the root port it is connected to also
-> > > > has to stay in
-> > > > D0 and that "blocks" package C-states deeper than PC2.
-> > > >
-> > > > In order for the root port to be able to go to D3, the device connected
-> > > > to it also needs
-> > > > to go into D3, so it looks like (at least on this particular machine, but
-> > > > maybe in
-> > > > general), both D3 and the NVMe-specific PM are needed.
-> >
-> > Well this is really unfortunate to hear.  I recall that with some disks we were
-> > seeing problems where NVME specific PM wasn't working when the disk was in D3.
-> >
-> > On your specific disk, it would be good to know if just removing the pci_save_state(pdev)
-> > call helps.
+On Tue, Jul 30, 2019 at 12:43:26AM -0400, Luis Araneda wrote:
+> This fixes a kernel panic (read overflow) on memcpy when
+> FORTIFY_SOURCE is enabled.
 > 
-> Yes, it does help.
+> The computed size of memcpy args are:
+> - p_size (dst): 4294967295 = (size_t) -1
+> - q_size (src): 1
+> - size (len): 8
 > 
-> > If so, :
-> > * that might be a better option to add as a parameter.
-> > * maybe we should double check all the disks one more time with that tweak.
+> Additionally, the memory is marked as __iomem, so one of
+> the memcpy_* functions should be used for read/write
 > 
-> At this point it seems so.
+> Signed-off-by: Luis Araneda <luaraneda@gmail.com>
+> ---
+> 
+> For anyone trying to reproduce / debug this, it panics
+> before the console has any output.
+> I used JTAG to find the panic, but I had to comment-out
+> the call to "zynq_slcr_cpu_stop" as it stops the JTAG
+> interface and the connection is dropped, at least with OpenOCD.
+> 
+> I run-tested this on a Digilent Zybo Z7 board
+> ---
+>  arch/arm/mach-zynq/platsmp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-zynq/platsmp.c b/arch/arm/mach-zynq/platsmp.c
+> index a7cfe07156f4..407abade7336 100644
+> --- a/arch/arm/mach-zynq/platsmp.c
+> +++ b/arch/arm/mach-zynq/platsmp.c
+> @@ -57,7 +57,7 @@ int zynq_cpun_start(u32 address, int cpu)
+>  			* 0x4: Jump by mov instruction
+>  			* 0x8: Jumping address
+>  			*/
+> -			memcpy((__force void *)zero, &zynq_secondary_trampoline,
+> +			memcpy_toio(zero, &zynq_secondary_trampoline,
+>  							trampoline_size);
+>  			writel(address, zero + trampoline_size);
 
-So I can reproduce this problem with plain 5.3-rc1 and the patch below fixes it.
+I'm not convinced that this is correct.  It looks like
+zynq_secondary_trampoline could be either ARM or Thumb code - there is
+no .arm directive before it.  If it's ARM code, then this is fine.  If
+Thumb code, then zynq_secondary_trampoline will be offset by one, and
+we will miss copying the first byte of code.
 
-Also Mario reports that the same patch needs to be applied for his 9380 to reach
-SLP_S0 after some additional changes under testing/review now, so here it goes.
-
-[The changes mentioned above are in the pm-s2idle-testing branch in the
- linux-pm.git tree at kernel.org.]
-
----
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Subject: [PATCH] nvme-pci: Do not prevent PCI bus-level PM from being used
-
-One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
-host managed power state for suspend") was adding a pci_save_state()
-call to nvme_suspend() in order to prevent the PCI bus-level PM from
-being applied to the suspended NVMe devices, but that causes the NVMe
-drive (PC401 NVMe SK hynix 256GB) in my Dell XPS13 9380 to prevent
-the SoC from reaching package idle states deeper than PC3, which is
-way insufficient for system suspend.
-
-Fix this issue by removing the pci_save_state() call in question.
-
-Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/nvme/host/pci.c |    8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-Index: linux-pm/drivers/nvme/host/pci.c
-===================================================================
---- linux-pm.orig/drivers/nvme/host/pci.c
-+++ linux-pm/drivers/nvme/host/pci.c
-@@ -2897,14 +2897,8 @@ static int nvme_suspend(struct device *d
- 		nvme_dev_disable(ndev, true);
- 		ctrl->npss = 0;
- 		ret = 0;
--		goto unfreeze;
- 	}
--	/*
--	 * A saved state prevents pci pm from generically controlling the
--	 * device's power. If we're using protocol specific settings, we don't
--	 * want pci interfering.
--	 */
--	pci_save_state(pdev);
-+
- unfreeze:
- 	nvme_unfreeze(ctrl);
- 	return ret;
-
-
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
