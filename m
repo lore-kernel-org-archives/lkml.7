@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A3AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4123AC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 415CD206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9C72089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730519AbfG3LHC (ORCPT
+        id S1730550AbfG3LHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:07:02 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55642 "EHLO inva021.nxp.com"
+        Tue, 30 Jul 2019 07:07:04 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:37120 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730305AbfG3LGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:06:55 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8C832200672;
-        Tue, 30 Jul 2019 13:06:52 +0200 (CEST)
+        id S1730324AbfG3LG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:06:56 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9A9331A068B;
+        Tue, 30 Jul 2019 13:06:54 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7EF0C20066A;
-        Tue, 30 Jul 2019 13:06:52 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8E55F1A0676;
+        Tue, 30 Jul 2019 13:06:54 +0200 (CEST)
 Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 152E9204D6;
-        Tue, 30 Jul 2019 13:06:52 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 214D5204D6;
+        Tue, 30 Jul 2019 13:06:54 +0200 (CEST)
 From:   Iuliana Prodan <iuliana.prodan@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Horia Geanta <horia.geanta@nxp.com>,
@@ -35,9 +35,9 @@ To:     Herbert Xu <herbert@gondor.apana.org.au>,
 Cc:     "David S. Miller" <davem@davemloft.net>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-imx <linux-imx@nxp.com>
-Subject: [PATCH v4 08/14] crypto: caam - update rfc4106 sh desc to support zero length input
-Date:   Tue, 30 Jul 2019 14:06:39 +0300
-Message-Id: <1564484805-28735-9-git-send-email-iuliana.prodan@nxp.com>
+Subject: [PATCH v4 12/14] crypto: caam - execute module exit point only if necessary
+Date:   Tue, 30 Jul 2019 14:06:43 +0300
+Message-Id: <1564484805-28735-13-git-send-email-iuliana.prodan@nxp.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1564484805-28735-1-git-send-email-iuliana.prodan@nxp.com>
 References: <1564484805-28735-1-git-send-email-iuliana.prodan@nxp.com>
@@ -47,114 +47,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update share descriptor for rfc4106 to skip instructions in case
-cryptlen is zero. If no instructions are jumped the DECO hangs and a
-timeout error is thrown.
+Commit 1b46c90c8e00 ("crypto: caam - convert top level drivers to libraries")
+changed entry and exit points behavior for caamalg,
+caamalg_qi, caamalg_qi2, caamhash, caampkc, caamrng.
 
+For example, previously caam_pkc_init() and caam_pkc_exit() were
+module entry/exit points. This means that if an error would happen
+in caam_pkc_init(), then caam_pkc_exit() wouldn't have been called.
+After the mentioned commit, caam_pkc_init() and caam_pkc_exit()
+are manually called - from jr.c. caam_pkc_exit() is called
+unconditionally, even if caam_pkc_init() failed.
+
+Added a global variable to keep the status of the algorithm
+registration and free of resources.
+The exit point of caampkc/caamrng module is executed only if the
+registration was successful. Therefore we avoid double free of
+resources in case the algorithm registration failed.
+
+Fixes: 1b46c90c8e00 ("crypto: caam - convert top level drivers to libraries")
 Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
 ---
-Changes since v3:
-- move the erratum workaround to reduce the chances of DECO stalling.
----
- drivers/crypto/caam/caamalg_desc.c | 47 ++++++++++++++++++++++++++------------
- drivers/crypto/caam/caamalg_desc.h |  2 +-
- 2 files changed, 33 insertions(+), 16 deletions(-)
+ drivers/crypto/caam/caampkc.c | 11 +++++++++++
+ drivers/crypto/caam/caamrng.c | 14 +++++++++++++-
+ 2 files changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/caam/caamalg_desc.c b/drivers/crypto/caam/caamalg_desc.c
-index 7253183..5ddaf61 100644
---- a/drivers/crypto/caam/caamalg_desc.c
-+++ b/drivers/crypto/caam/caamalg_desc.c
-@@ -843,13 +843,16 @@ EXPORT_SYMBOL(cnstr_shdsc_gcm_decap);
-  * @ivsize: initialization vector size
-  * @icvsize: integrity check value (ICV) size (truncated or full)
-  * @is_qi: true when called from caam/qi
-+ *
-+ * Input sequence: AAD | PTXT
-+ * Output sequence: AAD | CTXT | ICV
-+ * AAD length (assoclen), which includes the IV length, is available in Math3.
-  */
- void cnstr_shdsc_rfc4106_encap(u32 * const desc, struct alginfo *cdata,
- 			       unsigned int ivsize, unsigned int icvsize,
- 			       const bool is_qi)
+diff --git a/drivers/crypto/caam/caampkc.c b/drivers/crypto/caam/caampkc.c
+index e05d975..e00a470 100644
+--- a/drivers/crypto/caam/caampkc.c
++++ b/drivers/crypto/caam/caampkc.c
+@@ -29,6 +29,12 @@
+ /* buffer filled with zeros, used for padding */
+ static u8 *zero_buffer;
+ 
++/*
++ * variable used to avoid double free of resources in case
++ * algorithm registration was unsuccessful
++ */
++static bool init_done;
++
+ static void rsa_io_unmap(struct device *dev, struct rsa_edesc *edesc,
+ 			 struct akcipher_request *req)
  {
--	u32 *key_jump_cmd;
--
-+	u32 *key_jump_cmd, *zero_cryptlen_jump_cmd, *skip_instructions;
- 	init_sh_desc(desc, HDR_SHARE_SERIAL);
+@@ -1076,6 +1082,7 @@ int caam_pkc_init(struct device *ctrldev)
+ 	struct caam_drv_private *priv = dev_get_drvdata(ctrldev);
+ 	u32 pk_inst;
+ 	int err;
++	init_done = false;
  
- 	/* Skip key loading if it is loaded due to sharing */
-@@ -892,24 +895,26 @@ void cnstr_shdsc_rfc4106_encap(u32 * const desc, struct alginfo *cdata,
- 	append_math_sub_imm_u32(desc, VARSEQINLEN, REG3, IMM, ivsize);
- 	append_math_add(desc, VARSEQOUTLEN, ZERO, REG3, CAAM_CMD_SZ);
+ 	/* Determine public key hardware accelerator presence. */
+ 	if (priv->era < 10)
+@@ -1100,6 +1107,7 @@ int caam_pkc_init(struct device *ctrldev)
+ 		dev_warn(ctrldev, "%s alg registration failed\n",
+ 			 caam_rsa.base.cra_driver_name);
+ 	} else {
++		init_done = true;
+ 		dev_info(ctrldev, "caam pkc algorithms registered in /proc/crypto\n");
+ 	}
  
--	/* Read assoc data */
--	append_seq_fifo_load(desc, 0, FIFOLD_CLASS_CLASS1 | FIFOLDST_VLF |
--			     FIFOLD_TYPE_AAD | FIFOLD_TYPE_FLUSH1);
-+	/* Skip AAD */
-+	append_seq_fifo_store(desc, 0, FIFOST_TYPE_SKIP | FIFOLDST_VLF);
+@@ -1108,6 +1116,9 @@ int caam_pkc_init(struct device *ctrldev)
  
--	/* Skip IV */
--	append_seq_fifo_load(desc, ivsize, FIFOLD_CLASS_SKIP);
-+	/* Read cryptlen and set this value into VARSEQOUTLEN */
-+	append_math_sub(desc, VARSEQOUTLEN, SEQINLEN, REG3, CAAM_CMD_SZ);
- 
--	/* Will read cryptlen bytes */
--	append_math_sub(desc, VARSEQINLEN, SEQINLEN, REG0, CAAM_CMD_SZ);
-+	/* If cryptlen is ZERO jump to AAD command */
-+	zero_cryptlen_jump_cmd = append_jump(desc, JUMP_TEST_ALL |
-+					    JUMP_COND_MATH_Z);
- 
--	/* Workaround for erratum A-005473 (simultaneous SEQ FIFO skips) */
--	append_seq_fifo_load(desc, 0, FIFOLD_CLASS_CLASS1 | FIFOLD_TYPE_MSG);
-+	/* Read AAD data */
-+	append_seq_fifo_load(desc, 0, FIFOLD_CLASS_CLASS1 | FIFOLDST_VLF |
-+			     FIFOLD_TYPE_AAD | FIFOLD_TYPE_FLUSH1);
- 
--	/* Skip assoc data */
--	append_seq_fifo_store(desc, 0, FIFOST_TYPE_SKIP | FIFOLDST_VLF);
-+	/* Workaround for erratum A-005473 (simultaneous SEQ FIFO skips) */
-+	append_seq_fifo_store(desc, 0, FIFOST_TYPE_MESSAGE_DATA);
- 
--	/* cryptlen = seqoutlen - assoclen */
--	append_math_sub(desc, VARSEQOUTLEN, VARSEQINLEN, REG0, CAAM_CMD_SZ);
-+	/* Skip IV */
-+	append_seq_fifo_load(desc, ivsize, FIFOLD_CLASS_SKIP);
-+	append_math_add(desc, VARSEQINLEN, VARSEQOUTLEN, REG0, CAAM_CMD_SZ);
- 
- 	/* Write encrypted data */
- 	append_seq_fifo_store(desc, 0, FIFOST_TYPE_MESSAGE_DATA | FIFOLDST_VLF);
-@@ -918,6 +923,18 @@ void cnstr_shdsc_rfc4106_encap(u32 * const desc, struct alginfo *cdata,
- 	append_seq_fifo_load(desc, 0, FIFOLD_CLASS_CLASS1 | FIFOLDST_VLF |
- 			     FIFOLD_TYPE_MSG | FIFOLD_TYPE_LAST1);
- 
-+	/* Jump instructions to avoid double reading of AAD */
-+	skip_instructions = append_jump(desc, JUMP_TEST_ALL);
+ void caam_pkc_exit(void)
+ {
++	if (!init_done)
++		return;
 +
-+	/* There is no input data, cryptlen = 0 */
-+	set_jump_tgt_here(desc, zero_cryptlen_jump_cmd);
-+
-+	/* Read AAD */
-+	append_seq_fifo_load(desc, 0, FIFOLD_CLASS_CLASS1 | FIFOLDST_VLF |
-+			     FIFOLD_TYPE_AAD | FIFOLD_TYPE_LAST1);
-+
-+	set_jump_tgt_here(desc, skip_instructions);
-+
- 	/* Write ICV */
- 	append_seq_store(desc, icvsize, LDST_CLASS_1_CCB |
- 			 LDST_SRCDST_BYTE_CONTEXT);
-diff --git a/drivers/crypto/caam/caamalg_desc.h b/drivers/crypto/caam/caamalg_desc.h
-index da4a4ee..a6146ea 100644
---- a/drivers/crypto/caam/caamalg_desc.h
-+++ b/drivers/crypto/caam/caamalg_desc.h
-@@ -31,7 +31,7 @@
- #define DESC_QI_GCM_DEC_LEN		(DESC_GCM_DEC_LEN + 3 * CAAM_CMD_SZ)
+ 	kfree(zero_buffer);
+ 	crypto_unregister_akcipher(&caam_rsa);
+ }
+diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
+index 54c32d5..7fbda1b 100644
+--- a/drivers/crypto/caam/caamrng.c
++++ b/drivers/crypto/caam/caamrng.c
+@@ -80,6 +80,12 @@ struct caam_rng_ctx {
  
- #define DESC_RFC4106_BASE		(3 * CAAM_CMD_SZ)
--#define DESC_RFC4106_ENC_LEN		(DESC_RFC4106_BASE + 13 * CAAM_CMD_SZ)
-+#define DESC_RFC4106_ENC_LEN		(DESC_RFC4106_BASE + 16 * CAAM_CMD_SZ)
- #define DESC_RFC4106_DEC_LEN		(DESC_RFC4106_BASE + 13 * CAAM_CMD_SZ)
- #define DESC_QI_RFC4106_ENC_LEN		(DESC_RFC4106_ENC_LEN + 5 * CAAM_CMD_SZ)
- #define DESC_QI_RFC4106_DEC_LEN		(DESC_RFC4106_DEC_LEN + 5 * CAAM_CMD_SZ)
+ static struct caam_rng_ctx *rng_ctx;
+ 
++/*
++ * Variable used to avoid double free of resources in case
++ * algorithm registration was unsuccessful
++ */
++static bool init_done;
++
+ static inline void rng_unmap_buf(struct device *jrdev, struct buf_data *bd)
+ {
+ 	if (bd->addr)
+@@ -296,6 +302,9 @@ static struct hwrng caam_rng = {
+ 
+ void caam_rng_exit(void)
+ {
++	if (!init_done)
++		return;
++
+ 	caam_jr_free(rng_ctx->jrdev);
+ 	hwrng_unregister(&caam_rng);
+ 	kfree(rng_ctx);
+@@ -307,6 +316,7 @@ int caam_rng_init(struct device *ctrldev)
+ 	u32 rng_inst;
+ 	struct caam_drv_private *priv = dev_get_drvdata(ctrldev);
+ 	int err;
++	init_done = false;
+ 
+ 	/* Check for an instantiated RNG before registration */
+ 	if (priv->era < 10)
+@@ -335,8 +345,10 @@ int caam_rng_init(struct device *ctrldev)
+ 	dev_info(dev, "registering rng-caam\n");
+ 
+ 	err = hwrng_register(&caam_rng);
+-	if (!err)
++	if (!err) {
++		init_done = true;
+ 		return err;
++	}
+ 
+ free_rng_ctx:
+ 	kfree(rng_ctx);
 -- 
 2.1.0
 
