@@ -2,127 +2,98 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BD3C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE180C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C380920693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:12:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="engVDig3"
+	by mail.kernel.org (Postfix) with ESMTP id 8DE5420693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564485206;
+	bh=9tf7pyyGFyjMsbo4saqBU7or8vExlKNzfa5rBM69Tw0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=MQnbG8cBj7PzpzjVEzZNhO7Ys2AWS8pgnEkWqjLeKOtw9g84+nBKG656OYqiSsMQ+
+	 6I7ndxIQMOPs2kBi0Tdm6ZmYETCuNSuRlUeWxbqVgXcIpo/hcHzrKgkjZMkvo/TSUr
+	 0c2vD6cDjOZUS7Dr2+534qmoQVk6zNkOL56D0LBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfG3LMl (ORCPT
+        id S1728172AbfG3LNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:12:41 -0400
-Received: from mail-eopbgr130075.outbound.protection.outlook.com ([40.107.13.75]:10727
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726267AbfG3LMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:12:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dQOlQhIv8p8kocslHiMJmdv/9U2mh+dzmW7ZtqbDuBAmeG8j2zoaqTCE7x9rDlKkT8RqMyxEHPxNy+WkvacUEAjhJrO9OC10H1UEFqdHopfroqz8K1uQips1JOOEohNkcnl6tcaqM3hnz5dZy46H1f+FQbcseb8XkyiX3KQQbFlSrZbL6cC3WSBEZ+RSqVbKV8MofusBdVeq8D89ZuJ+x4OmgPCE0bCSQ/mnob7gGQC9cy9ompFDH64Tg4jepql06ke4ofcCQwZNfH6lPvfhprhAP8HfHxzltqXEorX1aY4TQuqxi3GirEoKBEeJW/FgRy7bWfbR9zb1kF6ypXVhqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3C/xFAnnnvYJ78naSRzS2h/X32Skvt+DiXTgt1NaBHo=;
- b=jLBHdLHyQkZJpz9DDoDCsZFqfcgWdzmqgEALisJIstWRueMey6CRzTEHSI8qmuC7GlnZg1fJMxHosxMx+dQYLb1ypoI4+SgzX76Vb8jif5QgyzfQp9ozWghZrgwn+b50aYUU5lakA9kvzoTTHE5m8Q73IZocAsJ6/caPpxSzye5O2YkhXu/PUH/y2/H/PKZOv4YL52/WQ9ILgSuaG3dEgZgxvzGx7Bn6mgvhceyHzvjTPql0Rs9hIChw4Pt4t5QWuEB60NtyUwMsK7aPvdUUkP8vEZeGFQpv0fv3nYc0M5yLSvkTCf6cE19u7ZAIIShTHMsSSZoYReDe0WbATDlekQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3C/xFAnnnvYJ78naSRzS2h/X32Skvt+DiXTgt1NaBHo=;
- b=engVDig3G879Ch+SQHNwwGyec/QvNSZ4y8O4K9cjEGRaqD77HUOh5l52gqooz9HqyOlXN0mmuPB10pxK5UI2TMux/OkMpnpRXMrLhCt9Vd6JzZKPZGQSIhJ3KlbwXgw7Ncxhke3WAZVbxAi47AoLeILD8L8ojbSbqZQABi1AnQQ=
-Received: from DB8PR05MB6044.eurprd05.prod.outlook.com (20.179.10.157) by
- DB8PR05MB5930.eurprd05.prod.outlook.com (20.179.12.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Tue, 30 Jul 2019 11:12:36 +0000
-Received: from DB8PR05MB6044.eurprd05.prod.outlook.com
- ([fe80::1587:f8a7:2e31:c75e]) by DB8PR05MB6044.eurprd05.prod.outlook.com
- ([fe80::1587:f8a7:2e31:c75e%3]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
- 11:12:36 +0000
-From:   Petr Machata <petrm@mellanox.com>
-To:     Colin King <colin.king@canonical.com>
-CC:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] mlxsw: spectrum_ptp: fix duplicated check on
- orig_egr_types
-Thread-Topic: [PATCH][next] mlxsw: spectrum_ptp: fix duplicated check on
- orig_egr_types
-Thread-Index: AQHVRsCGQQzG+jKZokepZOkvOqeUUqbi/mGAgAADfIA=
-Date:   Tue, 30 Jul 2019 11:12:35 +0000
-Message-ID: <87imrjzsgu.fsf@mellanox.com>
-References: <20190730102114.1506-1-colin.king@canonical.com>
- <87mugvzt1m.fsf@mellanox.com>
-In-Reply-To: <87mugvzt1m.fsf@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0012.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100::24)
- To DB8PR05MB6044.eurprd05.prod.outlook.com (2603:10a6:10:aa::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=petrm@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [78.45.160.211]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 02b62426-364c-4e1d-7680-08d714ded352
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR05MB5930;
-x-ms-traffictypediagnostic: DB8PR05MB5930:
-x-microsoft-antispam-prvs: <DB8PR05MB5930F1AB8D49A98068B71577DBDC0@DB8PR05MB5930.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0114FF88F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(51914003)(43544003)(189003)(199004)(6246003)(86362001)(54906003)(81156014)(66946007)(6916009)(66556008)(64756008)(66446008)(8936002)(6436002)(6486002)(6512007)(53936002)(478600001)(26005)(229853002)(3846002)(6116002)(316002)(186003)(66476007)(99286004)(4744005)(71190400001)(36756003)(25786009)(7736002)(11346002)(446003)(52116002)(2616005)(68736007)(305945005)(476003)(386003)(6506007)(14454004)(5660300002)(8676002)(486006)(66066001)(256004)(4326008)(81166006)(71200400001)(2906002)(102836004)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR05MB5930;H:DB8PR05MB6044.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: vgOKyVsW6l6StAsrsDyfH6MjB2IbcV3S6Rj6Bfv8lJdr69GTOZSgTA+ikC/6fJiV2RObvQCJ3QGim9qVLeBA/r76tn1up2XFSerbLg+fKaHKHq6ll03IHTiwQOngekvdBMM6LncDRtkdhSz7Vm0EI0DqNGPZPgm0+k8JbKZJ1B1rhpwxbJAaEb74ndZQQHBfw00UUOoLDk+CpfvvLeJa/bJgfL2yeTSy9VE2dgy4J7N3+NHbuxiGHesOTqRUJKwXLIlzPT/Y+jHS/t78gmYjXrWrplJ2IS58FnTiEkdBxoyJRMsUMHUlJDy+UN2eQ3pkRHpxiOiwdb0FusgGpFHaE+7YCaO3NZ+tnIaFiSWvPYxXjyPj1KXRGDyD0/Zli1p5i5yEWz6ivv1LRAxh5S5WUFZBc979SB/wzHWrkC7AXtU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 30 Jul 2019 07:13:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:59424 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726267AbfG3LNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:13:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30C42344;
+        Tue, 30 Jul 2019 04:13:24 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4D813F575;
+        Tue, 30 Jul 2019 04:13:23 -0700 (PDT)
+Subject: Re: [PATCH 05/12] genirq/debugfs: Replace strncmp with str_has_prefix
+To:     Chuhong Yuan <hslester96@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+References: <20190729151435.9498-1-hslester96@gmail.com>
+ <alpine.DEB.2.21.1907301113580.1738@nanos.tec.linutronix.de>
+ <CANhBUQ2L71Q2j_iOUaHW7qk0BS6wwMBwmtd8N4S5mNLYHr4Dhw@mail.gmail.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <708d8d79-6464-fbd3-6a62-853c29b32cc3@kernel.org>
+Date:   Tue, 30 Jul 2019 12:13:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02b62426-364c-4e1d-7680-08d714ded352
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 11:12:35.8715
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: petrm@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR05MB5930
+In-Reply-To: <CANhBUQ2L71Q2j_iOUaHW7qk0BS6wwMBwmtd8N4S5mNLYHr4Dhw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Petr Machata <petrm@mellanox.com> writes:
-
-> Colin King <colin.king@canonical.com> writes:
->
->> From: Colin Ian King <colin.king@canonical.com>
+On 30/07/2019 11:58, Chuhong Yuan wrote:
+> Thomas Gleixner <tglx@linutronix.de> 于2019年7月30日周二 下午5:17写道：
 >>
->> Currently there is a duplicated check on orig_egr_types which is
->> redundant, I believe this is a typo and should actually be
->> orig_ing_types || orig_egr_types instead of the expression
->> orig_egr_types || orig_egr_types.  Fix this.
->
-> Good catch, yes, there's a typo. Thanks for the fix!
->
->> Addresses-Coverity: ("Same on both sides")
->> Fixes: c6b36bdd04b5 ("mlxsw: spectrum_ptp: Increase parsing depth when P=
-TP is enabled")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->
-> Reviewed-by: Petr Machata <petrm@mellanox.com>
+>> On Mon, 29 Jul 2019, Chuhong Yuan wrote:
+>>
+>>> strncmp(str, const, len) is error-prone.
+>>> We had better use newly introduced
+>>> str_has_prefix() instead of it.
+>>
+>> Can you please provide a proper explanation why the below strncmp() is
+>> error prone?
+>>
+> 
+> If the size is less than 7, for example, 2, then even if buf is "tr", the
+> result will still be true. This is an error.
+> strncmp(str, const, len) is error-prone mainly because the len is easy
+> to be wrong.
+> 
+>> Just running a script and copying some boiler plate changelog saying
+>> 'strncmp() is error prone' does not cut it.
+>>
+>>> -     if (!strncmp(buf, "trigger", size)) {
+>>> +     if (str_has_prefix(buf, "trigger")) {
+>>
+>> Especially when the resulting code is not equivalent.
+>>
+> 
+> I think here the semantic is the comparison should only return true
+> when buf is "trigger".
 
-I see that there is an identical problem in the code one block further.
-Can you take care of that as well, please? Or should I do it?
+Not quite. It will satisfy the condition for 't', 'tr', 'trig',
+'trigger', and of course 'triggerthissillyinterruptwhichImdebugging'.
+
+I agree that the semantic is a bit bizarre and maybe not quite expected,
+but still... You seem to be changing the semantic without any
+justification other than "this is safer".
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead, it just smells funny...
