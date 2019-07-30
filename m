@@ -2,241 +2,167 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E2BC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80136C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37DF9206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455720;
-	bh=DZvGRZn0A38NOtzwPWQOjawpO/0N0seWozRzbGutHvs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o+BimzYsz2HVwCEw0Vgj0sDWm1eeIy4KJI9hUzP5HoVkHpTBF0+AoL7B+h9ysGjSr
-	 YK2eyULsBzc0Ptp+hg0Bf1wrMf/QdmUuifaPivCBTXPOUwh9ggAffMiNRJ+p46u7Zl
-	 lsgiGnxNBKbvPy+bfILMssnUW1PxMrwxGeWU5dwc=
+	by mail.kernel.org (Postfix) with ESMTP id 539932171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:02:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jc/YC9le"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732718AbfG3DB6 (ORCPT
+        id S1732744AbfG3DCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729498AbfG3DB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 23:01:56 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E628121841;
-        Tue, 30 Jul 2019 03:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455715;
-        bh=DZvGRZn0A38NOtzwPWQOjawpO/0N0seWozRzbGutHvs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=exqv1bOE6Hkiui5TH9hZbhzBdtPt6Gw0v/isll/4xdp+2MKL/hR76wFSKs51xX5pN
-         4O35o1WiIhHX6mjhCpasW+0UlqmCpEKDfic7MHoSoV82mEOrVEfRMSicpCa6reO1TU
-         tmJW12UjZ5rB6NjRnxulAEr9cPTL5DaHyqWDE7Ng=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 098/107] libperf: Add install targets
-Date:   Mon, 29 Jul 2019 23:56:01 -0300
-Message-Id: <20190730025610.22603-99-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
-References: <20190730025610.22603-1-acme@kernel.org>
+        Mon, 29 Jul 2019 23:02:04 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39160 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732723AbfG3DCB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:02:01 -0400
+Received: by mail-pf1-f193.google.com with SMTP id f17so25038044pfn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 20:02:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+E8omEH906TCMOUVaEXWKpNgn+JOLXcUorYQ/vWPPf0=;
+        b=Jc/YC9lel3yNzxidJjL/B8/vFfeBsxFRicp39Oey3HLLBmzOKFl/TkdXqJsgaO1ojq
+         U2JDseu5QkwHIr9DHg0Zy0zyY6F38DCkSBbHVg66ejwCQhUvk8ZNDHIfTgLKiL4wcxnX
+         kp3K5zAmDoNjx9JdClWVxBf6JClsj1i/bpDJvJd/D2JYl0wPfjFznJl6Dx/c/a+kWsZy
+         0JCiBkHDo1hgK5btmADMHNmvEiuAHyWZnndkFa5ojybqyyPu7YS0X5qky1c/fzbAFGkL
+         k34hKPYhDnIFWjNHjar8YM+WjTadzFWy1D8/2FLDNSc7iZtKUFacgaiGgqk2bpFYZNGh
+         XuVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+E8omEH906TCMOUVaEXWKpNgn+JOLXcUorYQ/vWPPf0=;
+        b=HjgnrWxS/kZOc4JGWCqwXqFRxNlrGBGZgHorbQgXuShdO/2YBALJAZzz9YgrKRhwOp
+         dBHip4iX5Tn7Pd9bUmikXxYHbzWV7+/aQrWHL6tG3QM+dz9wn/zc9xO/n+2KbzJG1po/
+         TDLyS9DDATYChr3i4ZVBFVcn72LxLAaWqJNNN5zx7ouGVFAWk3j+R48I8mlVAd9ki2sH
+         36A6aMdL5mZrZHqY1MGInn3O7znOnXHwkL2J8xgzTcWy1KV5BAlBNHPYCMk0lwM3bKPj
+         J5qJ1ItHqnC4UHWLDzuMpzdo6Sxx4azy3nMLGPYnDcRNGo9ehXu6c4c5cnz/a0w0+bzV
+         nyCQ==
+X-Gm-Message-State: APjAAAXLTaXMuIG54n8Ie4Lkws1DoR6GZVBP/zbdXeVvS6kHwVDBGaoA
+        lbt6lygCvK+GlAbg0+LaY5+OBQ==
+X-Google-Smtp-Source: APXvYqzE6E6bwEiPVPhC8MPvNKfvs+L5X43/lx99CsVqkOn2lJdGMjp42IO+nI7wkwvsesO+oQP+bA==
+X-Received: by 2002:a63:101b:: with SMTP id f27mr103042864pgl.291.1564455720224;
+        Mon, 29 Jul 2019 20:02:00 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id i126sm75052149pfb.32.2019.07.29.20.01.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 20:01:59 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 08:31:57 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
+Message-ID: <20190730030157.aml7z6vfsiqgyief@vireshk-i7>
+References: <20190703011020.151615-1-saravanak@google.com>
+ <20190717103220.f7cys267hq23fbsb@vireshk-i7>
+ <CAGETcx-tbjVzRKW8D-564zgNOhrA_z-NC1q5U70bhoUDBhp6VA@mail.gmail.com>
+ <20190718053746.64drmonk72vwnt4s@vireshk-i7>
+ <CAGETcx_-=b3An9YdxLUnZap=0iaeczvWTEnw65FMLU8BwA3HfQ@mail.gmail.com>
+ <20190729092454.6lfqzmhkvrhpimsp@vireshk-i7>
+ <CAGETcx_7fK20VZ6Zn07Z+Ran1_O7gSPohck_tg-aEr5oONQ5iA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx_7fK20VZ6Zn07Z+Ran1_O7gSPohck_tg-aEr5oONQ5iA@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+On 29-07-19, 13:12, Saravana Kannan wrote:
+> On Mon, Jul 29, 2019 at 2:24 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 18-07-19, 21:12, Saravana Kannan wrote:
+> > > On Wed, Jul 17, 2019 at 10:37 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > > I would like
+> > > > to put this data in the GPU OPP table only. What about putting a
+> > > > range in the GPU OPP table for the Bandwidth if it can change so much
+> > > > for the same frequency.
+> > >
+> > > I don't think the range is going to work.
+> >
+> > Any specific reason for that ?
+> 
+> The next sentence was literally explaining this :) Fine to debate
+> that, but ignoring that and asking this question is kinda funny.
 
-Add install targets (mostly copied from tools/lib/bpf), it's now
-possible to install libperf with:
+Okay, but ...
+ 
+> > > If a GPU is doing purely
+> > > computational work, it's not unreasonable for it to vote for the
+> > > lowest bandwidth for any GPU frequency.
 
-  $ make DESTDIR=/tmp/krava  install
-    INSTALL  libperf.a
-    INSTALL  libperf.so
-    INSTALL  libperf.so.0
-    INSTALL  libperf.so.0.0.1
-    INSTALL  headers
-    INSTALL  libperf.pc
+... it wasn't clear to me even after reading this sentence again now
+:)
 
-  $ find /tmp/krava/
-  /tmp/krava/
-  /tmp/krava/include
-  /tmp/krava/include/perf
-  /tmp/krava/include/perf/evsel.h
-  /tmp/krava/include/perf/evlist.h
-  /tmp/krava/include/perf/threadmap.h
-  /tmp/krava/include/perf/cpumap.h
-  /tmp/krava/include/perf/core.h
-  /tmp/krava/lib64
-  /tmp/krava/lib64/pkgconfig
-  /tmp/krava/lib64/pkgconfig/libperf.pc
-  /tmp/krava/lib64/libperf.so.0.0.1
-  /tmp/krava/lib64/libperf.so.0
-  /tmp/krava/lib64/libperf.so
-  /tmp/krava/lib64/libperf.a
+I understand that you may have to vote for the lowest bandwidth but
+that doesn't explain why a range can't work (sorry if it was just me
+who doesn't understood it :)).
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-72-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/lib/Makefile            | 69 +++++++++++++++++++++++++++++-
- tools/perf/lib/libperf.pc.template | 11 +++++
- 2 files changed, 78 insertions(+), 2 deletions(-)
- create mode 100644 tools/perf/lib/libperf.pc.template
+> > I think that is fine, but if the GPU is able to find how much
+> > bandwidth it needs why can't it just pass that value without needing
+> > to have another OPP table for the path ?
+> 
+> You were asking this question in the context of "can the GPU OPP just
+> list all the range of bandwidth it might use per GPU frequency". My point
+> is that the range would be useless because it would the entire
+> available bandwidth range (because purely compute work might not need
+> any bandwidth).
 
-diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
-index cd571ec648ad..f1b3d4c6d5f0 100644
---- a/tools/perf/lib/Makefile
-+++ b/tools/perf/lib/Makefile
-@@ -14,9 +14,31 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
- #$(info Determined 'srctree' to be $(srctree))
- endif
- 
-+INSTALL = install
-+
-+# Use DESTDIR for installing into a different root directory.
-+# This is useful for building a package. The program will be
-+# installed in this directory as if it was the root directory.
-+# Then the build tool can move it later.
-+DESTDIR ?=
-+DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
-+
- include $(srctree)/tools/scripts/Makefile.include
- include $(srctree)/tools/scripts/Makefile.arch
- 
-+ifeq ($(LP64), 1)
-+  libdir_relative = lib64
-+else
-+  libdir_relative = lib
-+endif
-+
-+prefix ?=
-+libdir = $(prefix)/$(libdir_relative)
-+
-+# Shell quotes
-+libdir_SQ = $(subst ','\'',$(libdir))
-+libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
-+
- ifeq ("$(origin V)", "command line")
-   VERBOSE = $(V)
- endif
-@@ -49,6 +71,8 @@ override CFLAGS += -fvisibility=hidden
- all:
- 
- export srctree OUTPUT CC LD CFLAGS V
-+export DESTDIR DESTDIR_SQ
-+
- include $(srctree)/tools/build/Makefile.include
- 
- VERSION_SCRIPT := libperf.map
-@@ -60,6 +84,9 @@ VERSION       = $(LIBPERF_VERSION).$(LIBPERF_PATCHLEVEL).$(LIBPERF_EXTRAVERSION)
- LIBPERF_SO := $(OUTPUT)libperf.so.$(VERSION)
- LIBPERF_A  := $(OUTPUT)libperf.a
- LIBPERF_IN := $(OUTPUT)libperf-in.o
-+LIBPERF_PC := $(OUTPUT)libperf.pc
-+
-+LIBPERF_ALL := $(LIBPERF_A) $(OUTPUT)libperf.so*
- 
- $(LIBPERF_IN): FORCE
- 	$(Q)$(MAKE) $(build)=libperf
-@@ -74,14 +101,52 @@ $(LIBPERF_SO): $(LIBPERF_IN)
- 	@ln -sf $(@F) $(OUTPUT)libperf.so.$(LIBPERF_VERSION)
- 
- 
--libs: $(LIBPERF_A) $(LIBPERF_SO)
-+libs: $(LIBPERF_A) $(LIBPERF_SO) $(LIBPERF_PC)
- 
- all: fixdep
- 	$(Q)$(MAKE) libs
- 
- clean:
- 	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
--                *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd LIBPERF-CFLAGS
-+                *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd LIBPERF-CFLAGS $(LIBPERF_PC)
-+
-+$(LIBPERF_PC):
-+	$(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
-+		-e "s|@LIBDIR@|$(libdir_SQ)|" \
-+		-e "s|@VERSION@|$(VERSION)|" \
-+		< libperf.pc.template > $@
-+
-+define do_install_mkdir
-+	if [ ! -d '$(DESTDIR_SQ)$1' ]; then             \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$1'; \
-+	fi
-+endef
-+
-+define do_install
-+	if [ ! -d '$(DESTDIR_SQ)$2' ]; then             \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$2'; \
-+	fi;                                             \
-+	$(INSTALL) $1 $(if $3,-m $3,) '$(DESTDIR_SQ)$2'
-+endef
-+
-+install_lib: libs
-+	$(call QUIET_INSTALL, $(LIBPERF_ALL)) \
-+		$(call do_install_mkdir,$(libdir_SQ)); \
-+		cp -fpR $(LIBPERF_ALL) $(DESTDIR)$(libdir_SQ)
-+
-+install_headers:
-+	$(call QUIET_INSTALL, headers) \
-+		$(call do_install,include/perf/core.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/cpumap.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/threadmap.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/evlist.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/evsel.h,$(prefix)/include/perf,644);
-+
-+install_pkgconfig: $(LIBPERF_PC)
-+	$(call QUIET_INSTALL, $(LIBPERF_PC)) \
-+		$(call do_install,$(LIBPERF_PC),$(libdir_SQ)/pkgconfig,644)
-+
-+install: install_lib install_headers install_pkgconfig
- 
- FORCE:
- 
-diff --git a/tools/perf/lib/libperf.pc.template b/tools/perf/lib/libperf.pc.template
-new file mode 100644
-index 000000000000..117e4a237b55
---- /dev/null
-+++ b/tools/perf/lib/libperf.pc.template
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+
-+prefix=@PREFIX@
-+libdir=@LIBDIR@
-+includedir=${prefix}/include
-+
-+Name: libperf
-+Description: perf library
-+Version: @VERSION@
-+Libs: -L${libdir} -lperf
-+Cflags: -I${includedir}
+If it is useless to have entire range here, then why bother providing
+one ? Why can't the GPU request what it needs in exact terms, based on
+its calculations ? And then based on these requests, let the
+interconnect find what's the best/stable values it really wants to
+program the path for (and for that the interconnect can use its own
+OPP table, which would be fine).
+
+> Whereas, what the GPU's algorithm actually needs might be the list of
+> "useful" bandwidth levels to use.
+
+Hmm, I am not sure GPU's algorithm needs this table AFAIU based on all
+the conversations we had until now. It is very capable of finding how
+much bandwidth it needs, you just want the GPU driver to finally align
+that with a stable bandwidth for the platform later on. And what I am
+asking is that it is not required for the end driver to look for
+stable values, it just requests what it wants and let the interconnect
+core/driver decide the stable values.
+
+Very much like the clock framework, most of the user drivers just ask
+for a clk value to be programmed and it is the clock driver which
+keeps a table of the stable values and then aligns the requested value
+to one of those.
+
+> Also, as we add more ICC request properties, this range idea will not scale.
+
+I am not sure about what kind of properties there can be and where
+should they land. My feedback is completely based on what you have
+presented in this patchset.
+
 -- 
-2.21.0
-
+viresh
