@@ -2,94 +2,152 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EE5C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173FDC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B360E205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564522439;
-	bh=PBEeq/uBUjX4+8wHRQuOVFEZ1PEDG4JdG/NfWEoqhSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VUopQXdcAz+GIQi1fndwptTrCRATGSLc1u0mzoZbErvvXt9YQBN639Dx55jue0E7S
-	 2g8maz590Q9Ig0euqYwowXgvKDaNUgJMNnsaFEJUAfcTaHFb8a15CGZ440Hvh6qe03
-	 gwDDEUoIvMzZWyN7/uEeUz26kP9sqHUJ9S+BYEzY=
+	by mail.kernel.org (Postfix) with ESMTP id DA4D0205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:36:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NDatIQwz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbfG3Vd6 (ORCPT
+        id S1728775AbfG3VgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 17:33:58 -0400
-Received: from mga01.intel.com ([192.55.52.88]:56890 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbfG3Vd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 17:33:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 14:33:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,327,1559545200"; 
-   d="scan'208";a="191033426"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Jul 2019 14:33:57 -0700
-Date:   Tue, 30 Jul 2019 15:31:14 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Mario.Limonciello@dell.com
-Cc:     kai.heng.feng@canonical.com, rjw@rjwysocki.net,
-        keith.busch@intel.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rajatja@google.com
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-Message-ID: <20190730213114.GK13948@localhost.localdomain>
-References: <2332799.izEFUvJP67@kreacher>
- <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
- <47415939.KV5G6iaeJG@kreacher>
- <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
- <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
+        Tue, 30 Jul 2019 17:36:10 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39710 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728756AbfG3VgK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 17:36:10 -0400
+Received: by mail-pf1-f193.google.com with SMTP id f17so26517621pfn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 14:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DUZPlbYVoulEBodKFy8iaUhaLKC523HNHPbS+STT7Mc=;
+        b=NDatIQwzAhbsIPPbZ+NwYM9x/T5r4EH+yZVj9XqWB0o/mw2t7wYfsQ4O2P0lkJgQYp
+         pzK3u7WiZ9/eDE8xR5H+8pwRseGJzzLEnU6PQada61bj8uEbwtoosO0e3ka+l1gKuTFp
+         nEJZ8vrzdr6h435j2nPVD/R8R2trKRWU3GR3s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DUZPlbYVoulEBodKFy8iaUhaLKC523HNHPbS+STT7Mc=;
+        b=RjWn3gIkJgS4aZj5sbrChvfu0nmJqsQ6OXGKFMGEUR/Qugbx4ZYUwn50Ly6Gw4woFJ
+         9EkVhwmLfix+WmJabLw9jo9lWgnDO1Q4YxpZ6qodWzyRHq4SD0jZH2ucKjg+RBvm7nAc
+         K/F5lnnuRnYGTWS7RcaEX5aA3mNoPqGdxgD4/5mxRROZt7gbvblSWdOvRkwoCLZHgTS5
+         KWaeHJSfUq+NIzd3+sTs0OzicJEjIkVhX48zV/LHHJtUZzIHm7n3X3SVCgqXSRL/DcNs
+         oYcG7LYV5Urvuno7jSUeCkJ1haccnu87EqsKppv2IlpOMKCYvo/sSaEcKWGyKn7pDiPS
+         Y1Ug==
+X-Gm-Message-State: APjAAAViUbs8X19WOzkNa2ESaykSFgyQ8XLF/SFeDEfidMt0D9sdMcEe
+        GJnIv+Jx+0CRRQCojKwk5COd3xVBv+SR0w==
+X-Google-Smtp-Source: APXvYqywN/LMd0BIVi4A4sLVzB9NTdG4jbAYa+WXDgPmu1q0fk2kZNlBu/omvQitaQt0oJFecZsLfA==
+X-Received: by 2002:a65:65c5:: with SMTP id y5mr109634193pgv.342.1564522569382;
+        Tue, 30 Jul 2019 14:36:09 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id p26sm14046937pgl.64.2019.07.30.14.36.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 14:36:08 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Thierry Reding <treding@nvidia.com>, Li Yang <leoyang.li@nxp.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v7 1/2] soc: fsl: qbman: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 14:36:06 -0700
+Message-Id: <20190730213607.171156-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+In-Reply-To: <20190730183503.GX7234@tuxbook-pro>
+References: <20190730183503.GX7234@tuxbook-pro>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 09:05:22PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Keith Busch <kbusch@kernel.org>
-> > Sent: Tuesday, July 30, 2019 2:20 PM
-> > To: Kai-Heng Feng
-> > Cc: Limonciello, Mario; rjw@rjwysocki.net; keith.busch@intel.com; hch@lst.de;
-> > sagi@grimberg.me; linux-nvme@lists.infradead.org; linux-pm@vger.kernel.org;
-> > linux-kernel@vger.kernel.org; rajatja@google.com
-> > Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
-> > suspend" has problems
-> > 
-> > 
-> > [EXTERNAL EMAIL]
-> > 
-> > On Wed, Jul 31, 2019 at 02:50:01AM +0800, Kai-Heng Feng wrote:
-> > >
-> > > Just did a quick test, this patch regress SK Hynix BC501, the SoC stays at
-> > > PC3 once the patch is applied.
-> > 
-> > Okay, I'm afraid device/platform quirks may be required unless there are
-> > any other ideas out there.
-> 
-> I think if a quirk goes in for Rafael's SSD it would have to be a quirk specific to this
-> device and FW version per the findings on KH checking the same device with the
-> older FW version.
+We don't need dev_err() messages when platform_get_irq() fails now that
+platform_get_irq() prints an error message itself when something goes
+wrong. Let's remove these prints with a simple semantic patch.
 
-That's fine, we have the infrastructure in place for fw specific quirks.
-See drivers/nvme/host/core.c:nvme_core_quirk_entry
+// <smpl>
+@@
+expression ret;
+struct platform_device *E;
+@@
+
+ret =
+(
+platform_get_irq(E, ...)
+|
+platform_get_irq_byname(E, ...)
+);
+
+if ( \( ret < 0 \| ret <= 0 \) )
+{
+(
+-if (ret != -EPROBE_DEFER)
+-{ ...
+-dev_err(...);
+-... }
+|
+...
+-dev_err(...);
+)
+...
+}
+// </smpl>
+
+While we're here, remove braces on if statements that only have one
+statement (manually).
+
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Li Yang <leoyang.li@nxp.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/soc/fsl/qbman/bman_portal.c | 4 +---
+ drivers/soc/fsl/qbman/qman_portal.c | 4 +---
+ 2 files changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
+index cf4f10d6f590..e4ef35abb508 100644
+--- a/drivers/soc/fsl/qbman/bman_portal.c
++++ b/drivers/soc/fsl/qbman/bman_portal.c
+@@ -135,10 +135,8 @@ static int bman_portal_probe(struct platform_device *pdev)
+ 	pcfg->cpu = -1;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq <= 0) {
+-		dev_err(dev, "Can't get %pOF IRQ'\n", node);
++	if (irq <= 0)
+ 		goto err_ioremap1;
+-	}
+ 	pcfg->irq = irq;
+ 
+ 	pcfg->addr_virt_ce = memremap(addr_phys[0]->start,
+diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qman_portal.c
+index e2186b681d87..991c35a72e00 100644
+--- a/drivers/soc/fsl/qbman/qman_portal.c
++++ b/drivers/soc/fsl/qbman/qman_portal.c
+@@ -275,10 +275,8 @@ static int qman_portal_probe(struct platform_device *pdev)
+ 	pcfg->channel = val;
+ 	pcfg->cpu = -1;
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq <= 0) {
+-		dev_err(dev, "Can't get %pOF IRQ\n", node);
++	if (irq <= 0)
+ 		goto err_ioremap1;
+-	}
+ 	pcfg->irq = irq;
+ 
+ 	pcfg->addr_virt_ce = memremap(addr_phys[0]->start,
+-- 
+Sent by a computer through tubes
+
