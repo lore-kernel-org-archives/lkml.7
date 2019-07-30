@@ -2,86 +2,123 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B913C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE743C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09973206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E03206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:50:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbbXElZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfG3Ntp (ORCPT
+        id S1727613AbfG3NuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:49:45 -0400
-Received: from gate.crashing.org ([63.228.1.57]:41407 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfG3Nto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:49:44 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6UDmwB5006744;
-        Tue, 30 Jul 2019 08:48:58 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6UDmu7O006742;
-        Tue, 30 Jul 2019 08:48:56 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Tue, 30 Jul 2019 08:48:56 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        kbuild test robot <lkp@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] powerpc: workaround clang codegen bug in dcbz
-Message-ID: <20190730134856.GO31406@gate.crashing.org>
-References: <20190729202542.205309-1-ndesaulniers@google.com> <20190729203246.GA117371@archlinux-threadripper> <20190729215200.GN31406@gate.crashing.org> <CAK8P3a1GQSyCj1L8fFG4Pah8dr5Lanw=1yuimX1o+53ARzOX+Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1GQSyCj1L8fFG4Pah8dr5Lanw=1yuimX1o+53ARzOX+Q@mail.gmail.com>
-User-Agent: Mutt/1.4.2.3i
+        Tue, 30 Jul 2019 09:50:18 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:41184 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfG3NuS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 09:50:18 -0400
+Received: by mail-ua1-f65.google.com with SMTP id 34so25465464uar.8;
+        Tue, 30 Jul 2019 06:50:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4+QxDKECEbt2nsi9n15vlp6tEfk79Z3ydNqFgvycDug=;
+        b=lbbXElZcWDWcO7idRfKRT150JkbaE34ZAm5/7WQDWq5VmH58byLnlTttxLjULzGnHi
+         juIjzfAjttSH+39RkV37/FitX0rPvUZjgqNlP8vrm00v0kNql78LyEheKW1AkIAmz4Hr
+         etUy5fge2yzDyv/fLs3IIaWr4M7LBfGOQVr8BtCESNX+Do6SoDJ2tS0KgeYravub+ozp
+         yHOS4INVM3CYGw8okECC5dy8I41Sk1AAsWaLM2PXz3FctBuH69ARB5Ddof1scefU7Gy3
+         TODHQ18+YhCJHQC2eSWwGl8MvutnGGuJaIIW9IOdwVbIQkc2oZQz5ap0aAEhFV5qTgRj
+         CuAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4+QxDKECEbt2nsi9n15vlp6tEfk79Z3ydNqFgvycDug=;
+        b=bCkG3t0qhhGwo5nOfK7XhY3XEnWBObuO5n/TsGojmBZDy4REDTO5o0rQxEsXOmKrbF
+         cU7swAePAy/LRxb/cTYyRVbKqyyfwDtHNQzeSr/+xC/F+emFKB0K5B/vfAuC+pRRFxjA
+         zCPglN+1zb5734xB/OUJbxFzbmX0He2Klbmp0nL9s9m4q21THsnyuomn6Mk23rii5lLG
+         WvadAX3CEz209ZSBhTxsmwRr64bMtyMkXn8S8qT31mSsnXdOssFyN85QaTGxLFFu/U0Z
+         Dote48J2WDj07hXUH0I0vItolS2kKHpUppPqlX1Uf3G8e8PDLm+4+d+paNOqvQjkU5DW
+         qzGg==
+X-Gm-Message-State: APjAAAXpBFZaWtvtAJNqgnpNhgqxV259JzQPxApWoMQ3G4yHn38Z7ymE
+        Mu1/tsWDo5Kc346pLsDcealx6zusn3yVe5rsaw==
+X-Google-Smtp-Source: APXvYqwkEJHqOLjuHTIoafDnOdIKrNbWPnbKSBkEO5P9hTVRtqu55CQkZC42IGzFpiT946+GSGCaYc2eG93E6sWtO0s=
+X-Received: by 2002:a9f:25e9:: with SMTP id 96mr57807432uaf.95.1564494616946;
+ Tue, 30 Jul 2019 06:50:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190730122534.30687-1-rdong.ge@gmail.com> <20190730123542.zrsrfvcy7t2n3d4g@breakpoint.cc>
+In-Reply-To: <20190730123542.zrsrfvcy7t2n3d4g@breakpoint.cc>
+From:   Rundong Ge <rdong.ge@gmail.com>
+Date:   Tue, 30 Jul 2019 21:50:05 +0800
+Message-ID: <CAN1LvyqtbzycEggoCXaBu3Zf_jebTWLBXm3js6+r60274a61Tg@mail.gmail.com>
+Subject: Re: [PATCH] bridge:fragmented packets dropped by bridge
+To:     Florian Westphal <fw@strlen.de>
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        kadlec@netfilter.org, Roopa Prabhu <roopa@cumulusnetworks.com>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, nikolay@cumulusnetworks.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 09:34:28AM +0200, Arnd Bergmann wrote:
-> Upon a second look, I think the issue is that the "Z" is an input argument
-> when it should be an output. clang decides that it can make a copy of the
-> input and pass that into the inline asm. This is not the most efficient
-> way, but it seems entirely correct according to the constraints.
+> How can a bridge forward a frame from A/B to mtu1300?
+It is free for user to set different MTU for bridge ports. In our case
+only tcp traffic between A/B and mtu 1300, and mss negotiation can
+make packets less than 1300.
 
-Most dcb* (and all icb*) do not change the memory pointed to.  The
-memory is an input here, logically as well, and that is obvious.
+> What happens without netfilter or non-fragmented packets?
+Without br_netfilter it works fine, there is no defragmentation and
+refragmentation, fragmented packets will egress directly.
 
-> Changing it to an output "=Z" constraint seems to make it work:
-> 
-> https://godbolt.org/z/FwEqHf
-> 
-> Clang still doesn't use the optimum form, but it passes the correct pointer.
-
-As I said many times already, LLVM does not seem to treat all asm
-operands as lvalues.  That is a bug.  And it is critical for memory
-operands for example, as should be obvious if you look at at for a few
-seconds (you pass *that* memory, not a copy of it).  The thing you pass
-has an identity.  It's an lvalue.  This is true for *all* inline asm
-operands, not just output operands and memory operands, but it is most
-obvious there.
-
-Or, LLVM might have a bug elsewhere.
-
-Either way, the asm is fine, and it has worked fine in GCC since
-forever.  Changing this constraint to be an output constraint would
-just be obfuscation (we could change *all* operands to *everything* to
-be inout ("+") constraints, and it won't affect correctness, just the
-reader's sanity).
-
-
-Segher
+Florian Westphal <fw@strlen.de> =E4=BA=8E2019=E5=B9=B47=E6=9C=8830=E6=97=A5=
+=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=888:35=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Rundong Ge <rdong.ge@gmail.com> wrote:
+> > Given following setup:
+> > -modprobe br_netfilter
+> > -echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+> > -brctl addbr br0
+> > -brctl addif br0 enp2s0
+> > -brctl addif br0 enp3s0
+> > -brctl addif br0 enp6s0
+> > -ifconfig enp2s0 mtu 1300
+> > -ifconfig enp3s0 mtu 1500
+> > -ifconfig enp6s0 mtu 1500
+> > -ifconfig br0 up
+> >
+> >                  multi-port
+> > mtu1500 - mtu1500|bridge|1500 - mtu1500
+> >   A                  |            B
+> >                    mtu1300
+>
+> How can a bridge forward a frame from A/B to mtu1300?
+>
+> > With netfilter defragmentation/conntrack enabled, fragmented
+> > packets from A will be defragmented in prerouting, and refragmented
+> > at postrouting.
+>
+> Yes, but I don't see how that relates to the problem at hand.
+>
+> > But in this scenario the bridge found the frag_max_size(1500) is
+> > larger than the dst mtu stored in the fake_rtable whitch is
+> > always equal to the bridge's mtu 1300, then packets will be dopped.
+>
+> What happens without netfilter or non-fragmented packets?
+>
+> > This modifies ip_skb_dst_mtu to use the out dev's mtu instead
+> > of bridge's mtu in bridge refragment.
+>
+> It seems quite a hack?  The above setup should use a router, not a bridge=
+.
