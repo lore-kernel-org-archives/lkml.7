@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD44C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B048CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66232206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78637208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:01:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="r21Nkm7a"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Veojztz1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731735AbfG3KBC (ORCPT
+        id S1731930AbfG3KBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 06:01:02 -0400
-Received: from mout.web.de ([212.227.17.11]:58055 "EHLO mout.web.de"
+        Tue, 30 Jul 2019 06:01:06 -0400
+Received: from mout.web.de ([212.227.17.12]:54015 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbfG3KBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 06:01:01 -0400
+        id S1727770AbfG3KBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 06:01:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1564480843;
+        s=dbaedf251592; t=1564480844;
         bh=EtuMB5xC3CZJDxVHY/O5OcOMAYvorEX1VzzjKU1EJ7A=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=r21Nkm7aQxlrQBybIHE3xkePnXrEJw20HIVMC8wDQIKgAgsrV1CSqLSXDb8tN5CXy
-         eKFsjgBH8tBv/rwPbZuNHrcaja2UmOCT5Ecsl9QuI4KRpo7mvq9pFK+wB0xgzxEl+V
-         GmLqdvYoBr3AuVe8Jv6d0XnfKqdus8frUGhj94e8=
+        b=Veojztz1Ev8zLpcBloYVB51ppw4eFxGzyJTy6w4TZFrLHOSLzaqBKi64qLWuibKrC
+         XhFq5U0k3qQYte7ZuPQ53RdLoAXW4ozV7bBu7mg0N15fomvNKx7v0W5TrAbB7mNohJ
+         QUPThwCwQtjzdydBAsaJYCLG0V6q3T1aoP4MDiUE=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.24.141]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Le4Lg-1iiG1u3H6S-00pvLy; Tue, 30
- Jul 2019 12:00:42 +0200
+Received: from [192.168.1.2] ([2.243.24.141]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LsQPU-1iLFUi1yfI-011zeH; Tue, 30
+ Jul 2019 12:00:44 +0200
 Subject: Re: [v5 2/3] treewide: Remove dev_err() usage after
  platform_get_irq()
 To:     Stephen Boyd <swboyd@chromium.org>,
@@ -94,7 +94,7 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <328b98da-7e76-145f-0684-a8623efe2cc4@web.de>
+Message-ID: <618a7f7c-c4f5-aaf3-a925-4357e9f56236@web.de>
 Date:   Tue, 30 Jul 2019 12:00:40 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
@@ -102,27 +102,27 @@ MIME-Version: 1.0
 In-Reply-To: <20190730053845.126834-3-swboyd@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Provags-ID: V03:K1:5PZ4f1YojEeMCv0NuBWZcPTI/kCpNB5Y3XcBefURvLSwl5c6Nhr
- p17G9N/xCUPPhYyRswqw8OacqPJkr27KEycSNBMmKGF5GNRSDXnpTgYckkRlU8V1Zpu61ti
- 37AnTYNV1ltxUptwtX11fag/HeEKFTydsg9IvJBj+hLteS2p3PKo8HFSgxn0SkB2UdnV2Eb
- W6q6YcWrTRDJRWqHw6vcw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gGGHj1oRDX8=:nq1W/Tv6iANrDRLtTqhrN2
- Vw1nxA6ajWyaL0UezK9HDJNZHk+UjQIJqFxmvMhZAfP0IDVolyOpTH+TnWQBci0mtlMJ7NR1g
- 011iVknUkB9Ft3bxiYYKanekx6S6+VgRYpLxuac56QMJX/j8YyuUFKufGaNNf9HCpxyePPsUy
- T927G6W+8iEaUHOSeD7tSzL53qyvCmx3LtpFgfJyzhCzyjF4SpKqnfLWL1ukTdOwir4oq987q
- hr0PjqtmPQ/VVEDQqWmIFMUqogddbH1gVGKwuaBSyxfeqGVrKtQD1YVcRBrHy9ftDwi4p2qkG
- gH0wqhIU+zEhgj7qjvb560Yt/rAHRKlAreCUgcv6zND1OrYyt+3c6JAW54jycqVSLHh23KW2g
- oG23youmykPt7Vqr6kAHOU9/aweEe8gX3L4dAu8GvmyeQ2s5jNzyrHchpo9AwbKiTTMUgB3Ol
- 6JNVoQNlg8O96or/oXDxTo9svf8t4xuwycbIqstjfAIa2QhgVk+sSlkYBBH17jgqGTr1sLNEQ
- ZasXfa3/NrNELrAkZSJ5J2AFFdCYMco7nKyDgKQ7Bde1twLhnRj8QNwCmj//4QNrfumOCNzVc
- VrC+qXRY/Vvp8oPua302rfQesRt9ajAYfoPUwU9OJL7FQV2+1xCfwp+iE+0dNAkck6NDFhCv+
- 2jcArLmBhs4mx2RthDbwpVYmAGNUhvHSHnu52m3LEdIISbFyGQiCi1HGWnRr6Xf1Ud05HY2Qm
- K4Xw0ZmSFS+5Y10kosZaYo2syj//WfbyDK5VSG0s4pn0XNHmVxISz5hF+vw7sLBvNZbph7cK0
- b4D1RYmJgvAGAHqqbDzCNYwxU00BftbB2jG+tWPify1ReUT96oZ5TOedaZZKjWOMJ4I2gQ2Hf
- AOhGrNCyQ7QgIC4hXFbngup6woGrxOQLC6B4IXGK7GkVscw9cujYssvkzH9zHcmTiUsm7KXjh
- gjWclTPnIPIbpMTTCpdwegLERfEYtfaKMqD/BdzO5gMuW0/B0Acbu0IHERSsB5hO3Bajy5SI0
- bKdH9LKRw2xLowiu8xS8SsIB03gFdy3/qD9SVmUoHzRYE2mZeCxRG9GwvYPDufranSXlIlEi9
- SF7uBl/iJKZBvOoSMWMc0Zb+A34ofhi24tk
+X-Provags-ID: V03:K1:iDekILvayeWfwQH7tDfGgp2eHlAVkNOZPgWDWpFODGPlazCtvh+
+ ExoLk81OyA47XW+fvZuV6dQIcxAHh89KbS4fvkXxO+MeIGYLAebDXGNBKSsXdvBPGTvsxuI
+ lapznyt9I4WYlFVgW5n7qPJwfqMP8tMXd3yYepgWIcrx9aQmfZ9QFnXIxv75+PFZbRjMly9
+ 3Atz9CG5Koq+ZtHVmyM1Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kvM6BW7wdh4=:IYolPJ1QzR6V/qcvf4kj7N
+ Wy/yOAxWn060EU8R+yJAYpjao0+UVLym57RYbqKgL5ECGbOwIRJa/XbV8oMTq/mMPn49DE8Sl
+ KLEFiYTKBh6aMzUOw7utmC2yaCs7/zyApxW9Vl5YKPEr9tyF7fE4ZrGtLRr/AL3mmzDv7fk3B
+ aS1Oift2pDBTTDoO4a/IEa1wq01WXaOM+GPPrEJsghWxtc++CBOV6DJXZQqBcLaunxgoMCVJs
+ wcKnB07PEUt+rQ6Sh9H0K7Phcexx+jo6y63I9UzwOc/XGY62gk+nifVXEKQlmVsKfAD2zcxGv
+ RX7GeEhLpPR2cpewz8uYQBHb4xOxHQFSpiZcmQDuPm0EJ1eGYGn2Cr8GeeRLt4A4LfNQk2w6F
+ mMNzIwiS1oBZ9R9vvRjyoaRz7ReVd8lJ5/Cl6JQOYgZDjeIocLaY9AT/HhQq4CJ/s7BlNEEGZ
+ ewGLBFYc3vxBecVqcMScF+jsi+BoQ6vduRwbTT4+Y1eiZK+W0lKVyCZ2qK7fM3/0pSLRL7ao9
+ CkAmDBF7QoxKxcLsLqoBUv5MXUIFndpiCM30jCqopuEHyQKG5b3Cq+RmW+02gsRRxkzXMv+kH
+ 5XvO2WBRWlgoADnJbHZ5BkSyWXX+52CbMdKJA0bq1K1uetdOEitOEzTO8TSEw/r49Aa/Y3ZP7
+ ewDEDUyoXii+k0274XrBgXA1UJsmGVbDEmvnfiJLxaa/Nyw9qZahFj0767WzszbjskFc/nWO3
+ DI5/Pe12yiRGC3A2tpy7LBZWJxO76Shk4GqFMHiLN0JNM9vglPMQQGcjnm30VIyhhBYfichPk
+ AudXmE7oUYR5Dp4/577hwwYbxZ5bIRyb1ctTPSBh8rwwhdnPmlQDJvkkmF/sgYr8DOCAlY6Fn
+ qtOhRWdb+ZbADYuJWdaoEuKVTwbTNYb0nzh5Z+DK7bJMBM7L67TTCBsru0/J3WKkrgAoSBy8B
+ AQ5TpMSnRUtRFzaeH8Qfj3jD3/lDNjrdMiuWgZIgA+6dMSKp8Yow1dGyMg0M6ySWC5dWHhbDN
+ uWUMq4iCAmGc7H9li9W6HVSuCJAgo6s/rWkIQMHnMBqXwIs5qegJ1+EV3ZxSlkdL2RHC74aeS
+ gi7WpnaejFLy+4AqymRPV5IbriyEpJrzXfV
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
