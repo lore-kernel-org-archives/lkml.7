@@ -2,109 +2,135 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4D7C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CDCC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4751F2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF9F5206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:19:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="2UBxR4XU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730750AbfG3NTB (ORCPT
+        id S1730787AbfG3NTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:19:01 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45750 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730717AbfG3NTA (ORCPT
+        Tue, 30 Jul 2019 09:19:40 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:53744 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730677AbfG3NTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:19:00 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so65730934wre.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 06:18:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4T+N5rDWzyUqBCwwe6XKAKGnNik0HfsnLC/oOFv9Yvo=;
-        b=LbEzsL+HUcbVMLLH5cuq8osREhv7Jqm+21to5L03A+k+robuL3vh1Nvv5Y5uW43df8
-         EelUIly/R604iITTLCT+GCUUDz7OS5vNMUPWocyZwJD2X6XYBfHtaxiTLmZAF7VwH4wS
-         91nnoN3UGhWkPSK4KvZXI6DBtXOk/nsYcGua+demvEfLlc7gNcHKBC3euCu7oITZUVk5
-         3/GN/bkIy7Ra0kTp8cMMk8leiStbI5INzIYnC2YqdQFM6bft9IO/StV4/FIJ3tLy0Ya1
-         bPIfZa5xq5+VNTZ5np9TBI7YUGeFpkcaXDF2mDB1c/SqKimkhvGQes3sszabAJyQQDmw
-         qBAw==
-X-Gm-Message-State: APjAAAXeM4JFWxMB2Vwdle4dxThArhQSElFK2dBk4eTKAwOOo2p/2Azk
-        EgAty9EEQRmZqXuEpcG/SLuppfi9t7Y=
-X-Google-Smtp-Source: APXvYqxH5jMUMQZRjTvBj61yj3IX+c8QpeNllhHi+YlYGKDbWnFDORisbT652uSyoJl02SGXzGJpZw==
-X-Received: by 2002:a5d:4212:: with SMTP id n18mr5731078wrq.261.1564492738582;
-        Tue, 30 Jul 2019 06:18:58 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:29d3:6123:6d5f:2c04? ([2001:b07:6468:f312:29d3:6123:6d5f:2c04])
-        by smtp.gmail.com with ESMTPSA id a8sm51401838wma.31.2019.07.30.06.18.56
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 06:18:57 -0700 (PDT)
-Subject: Re: [RFC PATCH 05/16] RISC-V: KVM: Implement VCPU interrupts and
- requests handling
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190729115544.17895-1-anup.patel@wdc.com>
- <20190729115544.17895-6-anup.patel@wdc.com>
- <9f9d09e5-49bc-f8e3-cfe1-bd5221e3b683@redhat.com>
- <CAAhSdy3JZVEEnPnssALaxvCsyznF=rt=7-d5J_OgQEJv6cPhxQ@mail.gmail.com>
- <66c4e468-7a69-31e7-778b-228908f0e737@redhat.com>
- <CAAhSdy3b-o6y1fsYi1iQcCN=9ZuC98TLCqjHCYAzOCx+N+_89w@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <828f01a9-2f11-34b6-7753-dc8fa7aa0d18@redhat.com>
-Date:   Tue, 30 Jul 2019 15:18:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 30 Jul 2019 09:19:40 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6UDHdG9009744;
+        Tue, 30 Jul 2019 09:18:17 -0400
+Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2054.outbound.protection.outlook.com [104.47.49.54])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2u2hg2s452-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jul 2019 09:18:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZDQ9W+ChQoSeB6QPdI7mQ8xwNdCH4A+RnmHaqdjU95CzYECq7ov8eCGxOGmdcYfFlXdlh8YGgh9V1A0ORHQvhO1+cSS8Dj9tt4Jvw0iUqCwTSvV3WDo8Nal6Q/fOb0tauGggiXymOepCRiaOLnqfCpOmlnsWPfe06rrBFOBjfXC74LcNAlMXi4iReKpmyQFAMh9tIU5EV6C363TmCDHGf33duIm31SL7AXjkyTJiMmY12Yjiv3OGZHynStxDB/W38uqVNJ4zMHoh+CIMnCpCPyqLiBVXCPXNi32lvtuUjXw6Ate4yZS47UrX7PDwC+FodnbFrZUlYqVW1nwcpds2QA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3vhIBzF7o9s9IV+oDAH/51sb9qmmAMyW8WmkcvxdtTQ=;
+ b=JebIo0AorH5paxdGA9AcVrfouZfGBdTWoBEUWTUeEl2RUUb1GrfkJf/N216F0wVCp8pEr/ys3xYr7/SeBrfkmE68mBRy4I2r5SJsXPeZhQ5FvLiDqVA49D0c71YfR6zISewr1QCpS2A5uG9NNHt9inYjLSToPF+1fMT7UZr8KRCZ+WNzmBo+vIaw0QSP27Rd6MNNQPQQeQeyOb69n35/DTba8mR3hLlUDW2slrsphydOnnzqQtdkloTher9peO2a39gc0Oo8oerblMBY0CR5xXxQGZJ+g85alOSIEo/hegHPbrlHwEC9aDU27MB8QdlL8KNtvK20WgoARqsofhZXZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=kernel.org
+ smtp.mailfrom=analog.com;dmarc=bestguesspass action=none
+ header.from=analog.com;dkim=none (message not signed);arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3vhIBzF7o9s9IV+oDAH/51sb9qmmAMyW8WmkcvxdtTQ=;
+ b=2UBxR4XUDBV/T9SW1m7cqzphHZ3rIvI4GYegAbNYMjpEPgdthTPJLRW1tLRghdB+/+RG16o8lkDrEOBBhEsRx2zPOgk6ef060MOP/4p6OpzIjBnjlHqa2ntQ0B32pmNRNu6sgv9BisXAnk+b7XAXUdAafUcGWXdUTJC6SCJRVRg=
+Received: from CY4PR03CA0004.namprd03.prod.outlook.com (2603:10b6:903:33::14)
+ by CY4PR03MB3141.namprd03.prod.outlook.com (2603:10b6:910:53::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2115.15; Tue, 30 Jul
+ 2019 13:18:14 +0000
+Received: from SN1NAM02FT031.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::209) by CY4PR03CA0004.outlook.office365.com
+ (2603:10b6:903:33::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2136.12 via Frontend
+ Transport; Tue, 30 Jul 2019 13:18:13 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ SN1NAM02FT031.mail.protection.outlook.com (10.152.72.116) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2115.10
+ via Frontend Transport; Tue, 30 Jul 2019 13:18:12 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x6UDIA6b025852
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 30 Jul 2019 06:18:10 -0700
+Received: from btogorean-pc.ad.analog.com (10.48.65.146) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 30 Jul 2019 09:18:09 -0400
+From:   Bogdan Togorean <bogdan.togorean@analog.com>
+To:     <dri-devel@lists.freedesktop.org>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
+        <a.hajda@samsung.com>, <Laurent.pinchart@ideasonboard.com>,
+        <sam@ravnborg.org>, <gregkh@linuxfoundation.org>,
+        <allison@lohutok.net>, <tglx@linutronix.de>,
+        <matt.redfearn@thinci.com>, <linux-kernel@vger.kernel.org>,
+        Bogdan Togorean <bogdan.togorean@analog.com>
+Subject: [PATCH 0/2] drm: bridge: adv7511: Add support For ADV7535
+Date:   Tue, 30 Jul 2019 16:17:34 +0300
+Message-ID: <20190730131736.30187-1-bogdan.togorean@analog.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <CAAhSdy3b-o6y1fsYi1iQcCN=9ZuC98TLCqjHCYAzOCx+N+_89w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(2980300002)(189003)(199004)(6916009)(48376002)(7416002)(36756003)(54906003)(336012)(305945005)(50466002)(356004)(6666004)(86362001)(44832011)(486006)(126002)(2616005)(476003)(2906002)(47776003)(426003)(106002)(8936002)(246002)(8676002)(26005)(498600001)(2351001)(51416003)(1076003)(186003)(4744005)(4326008)(107886003)(50226002)(70206006)(2870700001)(70586007)(7696005)(5660300002)(7636002)(16060500001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB3141;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 19383bb7-71dd-46e5-7553-08d714f05fe4
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:CY4PR03MB3141;
+X-MS-TrafficTypeDiagnostic: CY4PR03MB3141:
+X-Microsoft-Antispam-PRVS: <CY4PR03MB314179B8932E47F7E1ECCD089BDC0@CY4PR03MB3141.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-Forefront-PRVS: 0114FF88F6
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: zNNra4X1jUJ1sEpOCwNGytJ60YjErlxVDDa5tYd0VGEyb1tcRPWP9U4ODzFh0Ejqjy5vDl966oNxndKJXNejtgv1Bxnuj5w1cN7pAIPWSQ4FZXK9GbvSjpdO7lwzj6ZfySAICbeB80h+aAb99ZA6NSeLohZ8bEesIgrF+KctxmQSWjG6EtpDOAJZYhxf1pqFDX7sFp8v+JvTu16kC5jei/jngQIvjYjfJ5r3000GSKLyP79dsuhS81qjq7fOp4slzo7kAYT663JsFZbChowGg30y+hNmFYpinmhk/10fHdnaWUVPvXy5n3WxXPcvipZsJ1jP2xsdolrKd5/rf+Rx9v/g/bU8M4EgxFV/xEsnNa0PvASz3+Oet9sZRFoVkGCQFRFlCjbZt29EG3yGleSuBLY1Gy76Ct9CIXwOOyQveJc=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2019 13:18:12.4384
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19383bb7-71dd-46e5-7553-08d714f05fe4
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB3141
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-30_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=833 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907300141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/07/19 14:45, Anup Patel wrote:
-> Here's some text from RISC-V spec regarding SIP CSR:
-> "software interrupt-pending (SSIP) bit in the sip register. A pending
-> supervisor-level software interrupt can be cleared by writing 0 to the SSIP bit
-> in sip. Supervisor-level software interrupts are disabled when the SSIE bit in
-> the sie register is clear."
-> 
-> Without RISC-V hypervisor extension, the SIP is essentially a restricted
-> view of MIP CSR. Also as-per above, S-mode SW can only write 0 to SSIP
-> bit in SIP CSR whereas it can only be set by M-mode SW or some HW
-> mechanism (such as S-mode CLINT).
+This patch-set add support for ADV7535 part in ADV7511 driver.
 
-But that's not what the spec says.  It just says (just before the
-sentence you quoted):
+ADV7535 and ADV7533 are pin to pin compatible parts but ADV7535
+support TMDS clock upto 148.5Mhz and resolutions up to 1080p@60Hz.
 
-   A supervisor-level software interrupt is triggered on the current
-   hart by writing 1 to its supervisor software interrupt-pending (SSIP)
-   bit in the sip register.
+Bogdan Togorean (2):
+  dt-bindings: drm: bridge: adv7511: Add ADV7535 support
+  drm: bridge: adv7511: Add support for ADV7535
 
-and it's not written anywhere that S-mode SW cannot write 1.  In fact
-that text is even under sip, not under mip, so IMO there's no doubt that
-S-mode SW _can_ write 1, and the hypervisor must operate accordingly.
+ .../bindings/display/bridge/adi,adv7511.txt   | 23 +++++++-------
+ drivers/gpu/drm/bridge/adv7511/adv7511.h      |  2 ++
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c  | 31 ++++++++++++++-----
+ 3 files changed, 37 insertions(+), 19 deletions(-)
 
-In fact I'm sure that if Windows were ever ported to RISC-V, it would be
-very happy to use that feature.  On x86, Intel even accelerated it
-specifically for Microsoft. :)
+-- 
+2.22.0
 
-Paolo
