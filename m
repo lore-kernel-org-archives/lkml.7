@@ -2,197 +2,146 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC37C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667A7C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC6120651
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F432089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="f1cEUQin"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="bPxfmijn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731665AbfG3Jop (ORCPT
+        id S1731877AbfG3JpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:44:45 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:25682 "EHLO pegase1.c-s.fr"
+        Tue, 30 Jul 2019 05:45:02 -0400
+Received: from mout.web.de ([212.227.17.11]:43495 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727582AbfG3Joo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:44:44 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45yWqY4NmFz9vBLV;
-        Tue, 30 Jul 2019 11:44:41 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=f1cEUQin; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id iGCYl8cF8axD; Tue, 30 Jul 2019 11:44:41 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45yWqY370Rz9vBLN;
-        Tue, 30 Jul 2019 11:44:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1564479881; bh=VdYKK+YSpvMaj6YTHxEjAE3L6fR8opLRNMn0FGSQBcg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=f1cEUQinoonCEuYv57Lh3FcFKWxydZE4rtPElNT27QTsBUBPliVDKXNyy9cds+wmI
-         Vg4w95bSX+AzVtqqUvszg4k2OLt1q9JufqylY7weAM24O+yVOsGjOvg5IEtvY+from
-         nwIuRrfUDHV1LissnP93YcBRc7DjIx08t4xQ8psE=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 923DE8B803;
-        Tue, 30 Jul 2019 11:44:42 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id tsqn-8Xg7D6M; Tue, 30 Jul 2019 11:44:42 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 467628B801;
-        Tue, 30 Jul 2019 11:44:42 +0200 (CEST)
-Subject: Re: [PATCH v2 07/10] powerpc/fsl_booke/32: randomize the kernel image
- offset
-To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
-        keescook@chromium.org, kernel-hardening@lists.openwall.com
-Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
-        yebin10@huawei.com, thunder.leizhen@huawei.com,
-        jingxiangfeng@huawei.com, fanchengyang@huawei.com,
-        zhaohongjiang@huawei.com
-References: <20190730074225.39544-1-yanaijie@huawei.com>
- <20190730074225.39544-8-yanaijie@huawei.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <b41c4650-ef30-6f02-d5b3-bc95c5ad3ce0@c-s.fr>
-Date:   Tue, 30 Jul 2019 11:44:42 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        id S1727582AbfG3JpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 05:45:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1564479878;
+        bh=MY54GGbC141du76k5DNyzhowvZ4ieKymVNXH6luDQVs=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=bPxfmijnrVSQ/qVxRleJUN1DF2vfAQ26bNSDs7xGlnO71dF5UiLUVVoSJXzAx02TF
+         gH5W78RxtGYEOYRu0uQL5u/9AoUV6YgwtBdtjx2UYspykbYy6DgtwFx6yyC26AGPwI
+         ME9hWQbY77P9tC57BKZAbmsjEeaTwJ31EmQbDH6U=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.24.141]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LilNJ-1iVJns47u1-00cyuH; Tue, 30
+ Jul 2019 11:44:38 +0200
+Subject: Re: [PATCH v5 1/3] driver core: platform: Add an error message to
+ platform_get_irq*()
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-janitors@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20190730053845.126834-1-swboyd@chromium.org>
+ <20190730053845.126834-2-swboyd@chromium.org>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <314f06fe-fbc9-c2f5-72bf-657c04cce4b0@web.de>
+Date:   Tue, 30 Jul 2019 11:44:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190730074225.39544-8-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190730053845.126834-2-swboyd@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:GXxzrWFDRkIgIlgPCpsNHWvg1H+x1iJD1iZGZnDI6XEdgOrC6HW
+ ACnzPbsYyx8CuNQyxlVU649mny8ZpaJ1/HMcInaGsgb3WwJfuYIlRUSCxZvwqjL8dWdiT/S
+ Pz1rxVy484lxXnhSzTZyMOu68VwsjrnUtG+5e3Vpz/hOMtqwIeuKXOH3GL6WwIFmQKrIfDM
+ lboJBq8YPHQIBQPSiVjgg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:V0D0W2HJBto=:qe56jn5ZjC+qAozNfflu0F
+ sfbXSjqc0XLO4m76wJxFlg5rck3QHPy8nr+1ym0EIoqQ/AUKOqJgVuKd88KT4HR1OIgI5k4xt
+ bS8pDnlvIf9DflbXQUsAahk3CLO30l5yEevMsKTk96snr2IB1QIEfMaOuYmfh7pF3CEQ90rg4
+ rcdhw/KJ785XA8jrxrG2qFAbJy8LzwAp2d4DyRjcIRW6iawRGQ99M6zy43F7LXmA9TP23lM2Y
+ SV4Es0kXd70kB20HmglpBD18bD5/jefye95v6yMjz+AwwVC0vsgx+uMnpEVsna2iQCEJsZNbY
+ Z1oSDO80jOSff16yvg0m2IYwa28iiZClbHaYRNiiqtR10xfpFrJGLwPU9B4JTU/3N2aQT5WUW
+ xm17NvjnnlLsG2EJi0iiHbDBRZleW+ps65pZEg9J+oJuVwT80BEVzaSea2lDMyJCfjN8ELbxe
+ cmxfln5qXKkPwc60ALqmPcb3QyzVI3m62+H/u+L/zErDrKKX2E02tmgC/d5GjOsopZ7H5/bnY
+ xX70FoFoGxb2LVUGVS7YNiy4b8ZHI+OPAIjEBrR9tHqqVC8wlVcBwl+a9KtdYcZl0PFuUzIQ9
+ K40uJbheGLueCZIXI+BMER+y576UJjDa7TZzl3gWdJpysi/Z97RP6m1795pCY03ZmWBNPjzdd
+ V9E+4wHWZIQ1gAZMNUMtOc6JRvAZvWnQui6JWBz7Gl3s1GjZhsoJ18reevpLNfFsfq5RGRfvy
+ 5PlejcCkZTMr7lOp3Wt67v0K3xr4PqrbUeTuK/h4+Fzsax7BBevbaULCE1KqmuIPsr/wrt6/3
+ bL65h6kXvEDdhMk/UEbPGz/sm7LmETYfWxSvRB8xSbwzlnnMzIh+4Ho+/5h501A7y8PE4ULwe
+ RNKJrtQhPdiHyK9DTzM4xL9uOM7ify540JnW1FWs1A37LkbITqN35raV5bXv4yFVAJg1fI529
+ 1Os3+hjK4bK4BaTMdiLfDY3JDVAH+AIQ4b7XVUJYEVDxFC6yML78VHdCCv19W+qff1M9Zlip4
+ iiDBfqRomsX574EOS7WLw4nSpUMY3KaBq9YGCneciMARWpZZhF43s2BY3d+T4iCfd6dBSf/o1
+ FBUIetLQpZhBCPRDsUVXNZQBI0U8yEWRru0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+=E2=80=A6
+> +++ b/drivers/base/platform.c
+> @@ -99,12 +99,7 @@ void __iomem *devm_platform_ioremap_resource(struct p=
+latform_device *pdev,
+=E2=80=A6
+> -int platform_get_irq(struct platform_device *dev, unsigned int num)
+> +static int __platform_get_irq(struct platform_device *dev, unsigned int=
+ num)
+>  {
+=E2=80=A6
 
+I suggest to avoid the usage of double underscores in such identifiers.
+Will an other function name be more appropriate here?
 
-Le 30/07/2019 à 09:42, Jason Yan a écrit :
-> After we have the basic support of relocate the kernel in some
-> appropriate place, we can start to randomize the offset now.
-> 
-> Entropy is derived from the banner and timer, which will change every
-> build and boot. This not so much safe so additionally the bootloader may
-> pass entropy via the /chosen/kaslr-seed node in device tree.
-> 
-> We will use the first 512M of the low memory to randomize the kernel
-> image. The memory will be split in 64M zones. We will use the lower 8
-> bit of the entropy to decide the index of the 64M zone. Then we chose a
-> 16K aligned offset inside the 64M zone to put the kernel in.
-> 
->      KERNELBASE
-> 
->          |-->   64M   <--|
->          |               |
->          +---------------+    +----------------+---------------+
->          |               |....|    |kernel|    |               |
->          +---------------+    +----------------+---------------+
->          |                         |
->          |----->   offset    <-----|
-> 
->                                kimage_vaddr
-> 
-> We also check if we will overlap with some areas like the dtb area, the
-> initrd area or the crashkernel area. If we cannot find a proper area,
-> kaslr will be disabled and boot from the original kernel.
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> Cc: Diana Craciun <diana.craciun@nxp.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> ---
->   arch/powerpc/kernel/kaslr_booke.c | 334 +++++++++++++++++++++++++++++-
->   1 file changed, 332 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/kaslr_booke.c b/arch/powerpc/kernel/kaslr_booke.c
-> index 960bce4aa8b9..0bb02e45b928 100644
-> --- a/arch/powerpc/kernel/kaslr_booke.c
-> +++ b/arch/powerpc/kernel/kaslr_booke.c
-> @@ -23,6 +23,8 @@
->   #include <linux/delay.h>
->   #include <linux/highmem.h>
->   #include <linux/memblock.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/crash_core.h>
->   #include <asm/pgalloc.h>
->   #include <asm/prom.h>
->   #include <asm/io.h>
-> @@ -34,15 +36,341 @@
->   #include <asm/machdep.h>
->   #include <asm/setup.h>
->   #include <asm/paca.h>
-> +#include <asm/kdump.h>
->   #include <mm/mmu_decl.h>
-> +#include <generated/compile.h>
-> +#include <generated/utsrelease.h>
-> +
-> +#ifdef DEBUG
-> +#define DBG(fmt...) printk(KERN_ERR fmt)
-> +#else
-> +#define DBG(fmt...)
-> +#endif
-> +
-> +struct regions {
-> +	unsigned long pa_start;
-> +	unsigned long pa_end;
-> +	unsigned long kernel_size;
-> +	unsigned long dtb_start;
-> +	unsigned long dtb_end;
-> +	unsigned long initrd_start;
-> +	unsigned long initrd_end;
-> +	unsigned long crash_start;
-> +	unsigned long crash_end;
-> +	int reserved_mem;
-> +	int reserved_mem_addr_cells;
-> +	int reserved_mem_size_cells;
-> +};
->   
->   extern int is_second_reloc;
->   
-> +/* Simplified build-specific string for starting entropy. */
-> +static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
-> +		LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
-> +
-> +static __init void kaslr_get_cmdline(void *fdt)
-> +{
-> +	const char *cmdline = CONFIG_CMDLINE;
-> +	if (!IS_ENABLED(CONFIG_CMDLINE_FORCE)) {
-> +		int node;
-> +		const u8 *prop;
-> +		node = fdt_path_offset(fdt, "/chosen");
-> +		if (node < 0)
-> +			goto out;
-> +
-> +		prop = fdt_getprop(fdt, node, "bootargs", NULL);
-> +		if (!prop)
-> +			goto out;
-> +		cmdline = prop;
-> +	}
-> +out:
-> +	strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
-
-boot_command_line is set by early_init_devtree() in 
-arch/powerpc/kernel/prom.c
-Is that too late for you ?
-
-If so, what about calling early_init_dt_scan_chosen() instead of recoding ?
-
-Christophe
+Regards,
+Markus
