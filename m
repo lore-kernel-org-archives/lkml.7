@@ -2,122 +2,135 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C32EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516F9C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B7C2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2391C2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iUwi2yxD"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dPVIznaX";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PlMzf4+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfG3Ebr (ORCPT
+        id S1728482AbfG3Egi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 00:31:47 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37569 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728405AbfG3Ebr (ORCPT
+        Tue, 30 Jul 2019 00:36:38 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41196 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728454AbfG3Egh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 00:31:47 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b3so28383508plr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 21:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Jff1v1+xBPkVNib6smzi9or+Z5ivIfKl1/5fyTJeUXM=;
-        b=iUwi2yxDTTmnyE3W9f7x2PRFahy0EfU0FRkjor6FL8ZBn1HAc2NNHhXNQiP7DxiNXu
-         zexrCt1ieoP6GiruyGPiscfXflKZOURfcgJM0pwFS/XDldhQqEZTrJtDVEhimzEVxy8M
-         woNn/63idoITGhRZHnK2nEAbwDzdkrb5pqT2U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jff1v1+xBPkVNib6smzi9or+Z5ivIfKl1/5fyTJeUXM=;
-        b=Ke93GMqp3wDuKFEys4fjyTS30rBHT8B+UoCpQaDnBzL1rt8CZhenKjuR3psfTiMIqj
-         rW2avX0Jk5ag3PWwBQVePhoeT8aTmzb+s5wa4pbFRfm+cW603tNFXg6kDcTTvJrvqvdo
-         4QhSauUhJRsogzd+aoMNXUxFPfGwxx25BxkbNKl8A53PjVs5h0bnJRVjw4lS2PjCO2ka
-         uhkOOrJ1acNp9OWpz5hQPBxAKAJid6sMs4r75GKB7qusNUeqGiIGv06id9mnO1kljTxB
-         8qSyglH5FEEwONw6+Y6RUVCjJis96nKuKVMgm81wH0NNGphsysrYbEBmqgT5W7sRXM0D
-         FRlQ==
-X-Gm-Message-State: APjAAAXX3hXtclZhgYvUO8jL2Vfm6WQMY8NBnpXqMtgjroWbwXdSsnrz
-        lv3uujpl4il3r3Zuoex1JWjwBg==
-X-Google-Smtp-Source: APXvYqzLt+3JbxlxdApPdi1+DZco+EZiCDg4gvrywPkbPKK4SrOK6PKWeBkEZPzVR2ez5PRxBD9nvA==
-X-Received: by 2002:a17:902:f082:: with SMTP id go2mr118837503plb.25.1564461106724;
-        Mon, 29 Jul 2019 21:31:46 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v12sm54532952pjk.13.2019.07.29.21.31.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 21:31:45 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 21:31:44 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, arnd@arndb.de,
-        y2038@lists.linaro.org, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com
-Subject: Re: [PATCH 19/20] pstore: fs superblock limits
-Message-ID: <201907292129.AC796230@keescook>
-References: <20190730014924.2193-1-deepa.kernel@gmail.com>
- <20190730014924.2193-20-deepa.kernel@gmail.com>
+        Tue, 30 Jul 2019 00:36:37 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4E126605A5; Tue, 30 Jul 2019 04:36:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564461396;
+        bh=AgW8T/aFOLgGFp497+tsPv5AXD39QeiyHoimN2WKVE4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dPVIznaXzpPkaXTocG74aVUxQ+XzM8yeP4kHYLzdBIK8lDZHEks99KCvfqTP8hUsL
+         /JGqh72utOqTcB1oXL12CIqx5loQTe/4vPUfan60lARz7epIIUJSWHOKIQJhBtNLeX
+         WPcpRrqKQFwBc6jH0L8PRJpfK4TFbG5mMgyN4r4Y=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 924966021A;
+        Tue, 30 Jul 2019 04:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564461395;
+        bh=AgW8T/aFOLgGFp497+tsPv5AXD39QeiyHoimN2WKVE4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PlMzf4+nENUjFBIdUJU/p4cI6jhCwMJrLbp1LhEC/33eZ20pfcEnFWFMxYEAnRdKJ
+         C6NWipbd1AmXdfMYzUyq3ktTmIvfZdzg/UWbC4PUpDT9gov1CDvSue4qvu1YusM/y2
+         novZAhzDXI9bMsMGuuzKPthOh44gOTwDv4CmuU1M=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 924966021A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Tue, 30 Jul 2019 10:06:30 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Chao Yu <chao@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, stummala@codeaurora.org
+Subject: Re: [f2fs-dev] [PATCH] f2fs: Fix indefinite loop in f2fs_gc()
+Message-ID: <20190730043630.GG8289@codeaurora.org>
+References: <1564377626-12898-1-git-send-email-stummala@codeaurora.org>
+ <a5acb5cb-2e77-902f-0a5e-063f7cbd0643@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190730014924.2193-20-deepa.kernel@gmail.com>
+In-Reply-To: <a5acb5cb-2e77-902f-0a5e-063f7cbd0643@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 06:49:23PM -0700, Deepa Dinamani wrote:
-> Also update the gran since pstore has microsecond granularity.
+Hi Chao,
 
-So, I'm fine with this, but technically the granularity depends on the
-backend storage... many have no actual time keeping, though. My point is,
-pstore's timestamps are really mostly a lie, but the most common backend
-(ramoops) is seconds-granularity.
-
-So, I'm fine with this, but it's a lie but it's a lie that doesn't
-matter, so ...
-
-Acked-by: Kees Cook <keescook@chromium.org>
-
-I'm open to suggestions to improve it...
-
--Kees
-
+On Tue, Jul 30, 2019 at 12:00:45AM +0800, Chao Yu wrote:
+> Hi Sahitya,
 > 
-> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-> Cc: anton@enomsg.org
-> Cc: ccross@android.com
-> Cc: keescook@chromium.org
-> Cc: tony.luck@intel.com
-> ---
->  fs/pstore/inode.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> On 2019-7-29 13:20, Sahitya Tummala wrote:
+> > Policy - foreground GC, LFS mode and greedy GC mode.
+> > 
+> > Under this policy, f2fs_gc() loops forever to GC as it doesn't have
+> > enough free segements to proceed and thus it keeps calling gc_more
+> > for the same victim segment.  This can happen if the selected victim
+> > segment could not be GC'd due to failed blkaddr validity check i.e.
+> > is_alive() returns false for the blocks set in current validity map.
+> > 
+> > Fix this by not resetting the sbi->cur_victim_sec to NULL_SEGNO, when
+> > the segment selected could not be GC'd. This helps to select another
+> > segment for GC and thus helps to proceed forward with GC.
+> > 
+> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> > ---
+> >  fs/f2fs/gc.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> > index 8974672..7bbcc4a 100644
+> > --- a/fs/f2fs/gc.c
+> > +++ b/fs/f2fs/gc.c
+> > @@ -1303,7 +1303,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
+> >  		round++;
+> >  	}
+> >  
+> > -	if (gc_type == FG_GC)
+> > +	if (gc_type == FG_GC && seg_freed)
+> >  		sbi->cur_victim_sec = NULL_SEGNO;
 > 
-> diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-> index 89a80b568a17..ee752f9fda57 100644
-> --- a/fs/pstore/inode.c
-> +++ b/fs/pstore/inode.c
-> @@ -388,7 +388,9 @@ static int pstore_fill_super(struct super_block *sb, void *data, int silent)
->  	sb->s_blocksize_bits	= PAGE_SHIFT;
->  	sb->s_magic		= PSTOREFS_MAGIC;
->  	sb->s_op		= &pstore_ops;
-> -	sb->s_time_gran		= 1;
-> +	sb->s_time_gran         = NSEC_PER_USEC;
-> +	sb->s_time_min		= S64_MIN;
-> +	sb->s_time_max		= S64_MAX;
->  
->  	parse_options(data);
->  
-> -- 
-> 2.17.1
+> In some cases, we may remain last victim in sbi->cur_victim_sec, and jump out of
+> GC cycle, then SSR can skip the last victim due to sec_usage_check()...
 > 
+
+I see. I have a few questions on how to fix this issue. Please share your
+comments.
+
+1. Do you think the scenario described is valid? It happens rarely, not very
+easy to reproduce.  From the dumps, I see that only block is set as valid in
+the sentry->cur_valid_map for which I see that summary block check is_alive()
+could return false. As only one block is set as valid, chances are there it
+can be always selected as the victim by get_victim_by_default() under FG_GC.
+
+2. What are the possible scenarios where summary block check is_alive() could
+fail for a segment?
+
+3. How does GC handle such segments?
+
+Thanks,
+
+> Thanks,
+> 
+> >  
+> >  	if (sync)
+> > 
 
 -- 
-Kees Cook
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
