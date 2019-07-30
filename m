@@ -2,95 +2,109 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E00C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE720C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73E4206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7347206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731504AbfG3O7L (ORCPT
+        id S1731913AbfG3O7Q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 10:59:11 -0400
-Received: from mxout014.mail.hostpoint.ch ([217.26.49.174]:37936 "EHLO
-        mxout014.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728717AbfG3O7L (ORCPT
+        Tue, 30 Jul 2019 10:59:16 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:52307 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731589AbfG3O7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 10:59:11 -0400
-Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
-        by mxout014.mail.hostpoint.ch with esmtp (Exim 4.92 (FreeBSD))
-        (envelope-from <dev@pschenker.ch>)
-        id 1hsTP3-0005MR-4A; Tue, 30 Jul 2019 16:47:01 +0200
-Received: from [46.140.72.82] (helo=philippe-pc.toradex.int)
-        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.91 (FreeBSD))
-        (envelope-from <dev@pschenker.ch>)
-        id 1hsTP2-000Mva-V6; Tue, 30 Jul 2019 16:47:01 +0200
-X-Authenticated-Sender-Id: dev@pschenker.ch
-From:   Philippe Schenker <dev@pschenker.ch>
-To:     marcel.ziswiler@toradex.com, max.krummenacher@toradex.com,
-        stefan@agner.ch, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 09/22] ARM: dts: imx6qdl-colibri: add phy to fec
-Date:   Tue, 30 Jul 2019 16:46:36 +0200
-Message-Id: <20190730144649.19022-10-dev@pschenker.ch>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190730144649.19022-1-dev@pschenker.ch>
-References: <20190730144649.19022-1-dev@pschenker.ch>
+        Tue, 30 Jul 2019 10:59:15 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-62-zMYVNYknPF2PhZEH6HfzKw-1; Tue, 30 Jul 2019 15:59:12 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
+ 30 Jul 2019 15:59:12 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 30 Jul 2019 15:59:12 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Qian Cai' <cai@lca.pw>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "vyasevich@gmail.com" <vyasevich@gmail.com>,
+        "nhorman@tuxdriver.com" <nhorman@tuxdriver.com>,
+        "marcelo.leitner@gmail.com" <marcelo.leitner@gmail.com>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] net/socket: fix GCC8+ Wpacked-not-aligned warnings
+Thread-Topic: [PATCH v2] net/socket: fix GCC8+ Wpacked-not-aligned warnings
+Thread-Index: AQHVRuR2hmPxRDJks0KkKUnxQ8wAw6bjPw9w
+Date:   Tue, 30 Jul 2019 14:59:12 +0000
+Message-ID: <69c6beab2d734ed88ce31a6381f85420@AcuMS.aculab.com>
+References: <1564497488-3030-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1564497488-3030-1-git-send-email-cai@lca.pw>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: zMYVNYknPF2PhZEH6HfzKw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philippe Schenker <philippe.schenker@toradex.com>
+From: Qian Cai
+> Sent: 30 July 2019 15:38
+...
+> Use an implicit alignment for "struct __kernel_sockaddr_storage" so it
+> can keep the same alignments as a member in both packed and un-packed
+> structures without breaking UAPI.
+> 
+> Suggested-by: David Laight <David.Laight@ACULAB.COM>
+...
 
-Add the phy-node and mdio bus to the fec-node, represented as is on
-hardware.
-This commit includes micrel,led-mode that is set to the default
-value, prepared for someone who wants to change this.
+Although I suggested it needs a bit of tidy up.
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
----
+Add a comment maybe:
 
- arch/arm/boot/dts/imx6qdl-colibri.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+/* The definition uses anonymous union and struct in order to
+ * control the default alignment. */
 
-diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-index 1beac22266ed..019dda6b88ad 100644
---- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -140,7 +140,18 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rmii";
-+	phy-handle = <&ethphy>;
- 	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy: ethernet-phy@0 {
-+			reg = <0>;
-+			micrel,led-mode = <0>;
-+		};
-+	};
- };
- 
- &hdmi {
--- 
-2.22.0
+>  struct __kernel_sockaddr_storage {
+> -	__kernel_sa_family_t	ss_family;		/* address family */
+> -	/* Following field(s) are implementation specific */
+> -	char		__data[_K_SS_MAXSIZE - sizeof(unsigned short)];
+> +	union {
+> +		void *__align; /* implementation specific desired alignment */
+
+Move the 'void *' below the struct so the first member is the 'public one.
+
+> +		struct {
+> +			__kernel_sa_family_t	ss_family; /* address family */
+> +			/* Following field(s) are implementation specific */
+> +			char __data[_K_SS_MAXSIZE - sizeof(unsigned short)];
+>  				/* space to achieve desired size, */
+>  				/* _SS_MAXSIZE value minus size of ss_family */
+> -} __attribute__ ((aligned(_K_SS_ALIGNSIZE)));	/* force desired alignment */
+> +			};
+> +		};
+> +};
+> 
+>  #endif /* _UAPI_LINUX_SOCKET_H */
+> --
+> 1.8.3.1
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
