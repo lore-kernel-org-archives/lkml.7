@@ -2,153 +2,198 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8506FC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D99C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5926020657
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBD120657
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731807AbfG3PIH (ORCPT
+        id S1731986AbfG3PIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:08:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:50425 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfG3PIG (ORCPT
+        Tue, 30 Jul 2019 11:08:41 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39621 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfG3PIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:08:06 -0400
-Received: by mail-io1-f71.google.com with SMTP id m26so71773913ioh.17
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:08:06 -0700 (PDT)
+        Tue, 30 Jul 2019 11:08:40 -0400
+Received: by mail-qt1-f195.google.com with SMTP id l9so63318999qtu.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:08:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=iiV4JMEMqBTVZHkxXccUjnbePzc1Lr7GZ4Ely3PF0kQ=;
-        b=IY8TkeR9xcIayYqmww2SSCOTEdXP6/mBxvNuHgFk5C8CeTMv5tGf6Itfy5Rnny8kq+
-         Z9Pe8DvEKkkc3Beo4O5yEaudYLkh6mSyLzep01U3CpimgndMgS7s3+XYyJtMhaRiHeDu
-         V/bHNsBRZ4bWbEEpvPQ7JR8VCHdhXhOXCv2jwaXGDEeMfKFYC2lgk3bQTgWzSgwMWtTm
-         WIq9Z7iOZb5bQPcqjSG4Sc1eufVpUp2kjXQ3LnGQmUgGv2zA/A4PEGqvcO0p6/8tUJdl
-         WfMGHnFwlxnyFvoOib3Di1CVu81DG9b4GTFG5Ob9jhYZLBvm9uz4GVMobnmRzRGYG8a/
-         fDFw==
-X-Gm-Message-State: APjAAAVf0aw7tQohS6hHFbVVd1pL+vQQtn4AuvUNRE/WOJfcpyj/3brL
-        sQF2B9RdGfwB2YEsXTqz7KM/KNIu0squR0hyOuuNVzLB8H4B
-X-Google-Smtp-Source: APXvYqzZSliusSMGXyyV5CnNd1grb1nSEbpKy9m7x1oFZYmS+OcnmGrs2HiJhVZ8bt3NfFntt0EWwAd1AahY9fA1czuZOF7bfsG1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=HzqScm+MgZUE/z+FZh2jR3LjGduzejNoschvUbrV2xA=;
+        b=ljwocNfeQ+MJ47zWI+4U86faZkz8O5kZ3aWd1SLReVU493XLTYf8PHJ4tB1+TQQ1p5
+         +EmeVgzKMX9bk9c4irqMApYvbv8Uq7aWkqL+FpsyfcmGOOCd8fpyAhl5OQJA+9FlQcxd
+         3ObuhQPi5/D3Ddfj6qFS97ZS3Q8cqOLB/4nDgBQDhVAXOf8Ee2M2Qy5DdRrNb0Kc/Q5H
+         Gn2/v9BLT8gRuP/6xc1KQk1WyTsMt+NfOq0cPYC36xvDg+9B3OQat0UcnjHMQIG/y4Xb
+         NL6FISxXB7tFpR54lhwJDzYmCdiHqUkYl74wT+ZNHFV+nG4q/mm0U1T7QaUpyyRccecZ
+         kmKw==
+X-Gm-Message-State: APjAAAU1QkK3BvJprADGzvC7RWBKPmkxRtmdOh9RKE+I59rYB9QGVAX3
+        maN+O5C0IP0OJaJRSfrqqt9l0w==
+X-Google-Smtp-Source: APXvYqyAEcQ2rI90c7ov4XOcxi/h1Ciz83jV4TqK4E5vsU115tJuJqCFIr/5rf4KY/QKmO1zU9cv0g==
+X-Received: by 2002:ac8:2b14:: with SMTP id 20mr84731688qtu.295.1564499319358;
+        Tue, 30 Jul 2019 08:08:39 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id z1sm29387735qke.122.2019.07.30.08.08.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 08:08:38 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 11:08:30 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190730110633-mutt-send-email-mst@kernel.org>
+References: <5cc94f15-b229-a290-55f3-8295266edb2b@redhat.com>
+ <20190726082837-mutt-send-email-mst@kernel.org>
+ <ada10dc9-6cab-e189-5289-6f9d3ff8fed2@redhat.com>
+ <aaefa93e-a0de-1c55-feb0-509c87aae1f3@redhat.com>
+ <20190726094756-mutt-send-email-mst@kernel.org>
+ <0792ee09-b4b7-673c-2251-e5e0ce0fbe32@redhat.com>
+ <20190729045127-mutt-send-email-mst@kernel.org>
+ <4d43c094-44ed-dbac-b863-48fc3d754378@redhat.com>
+ <20190729104028-mutt-send-email-mst@kernel.org>
+ <96b1d67c-3a8d-1224-e9f0-5f7725a3dc10@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b206:: with SMTP id b6mr115926380iof.286.1564499285689;
- Tue, 30 Jul 2019 08:08:05 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 08:08:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002cd2b1058ee760fe@google.com>
-Subject: memory leak in pty_common_install
-From:   syzbot <syzbot+bdebcbf44250d75bdd82@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <96b1d67c-3a8d-1224-e9f0-5f7725a3dc10@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Jul 30, 2019 at 03:44:47PM +0800, Jason Wang wrote:
+> 
+> On 2019/7/29 下午10:44, Michael S. Tsirkin wrote:
+> > On Mon, Jul 29, 2019 at 10:24:43PM +0800, Jason Wang wrote:
+> > > On 2019/7/29 下午4:59, Michael S. Tsirkin wrote:
+> > > > On Mon, Jul 29, 2019 at 01:54:49PM +0800, Jason Wang wrote:
+> > > > > On 2019/7/26 下午9:49, Michael S. Tsirkin wrote:
+> > > > > > > > Ok, let me retry if necessary (but I do remember I end up with deadlocks
+> > > > > > > > last try).
+> > > > > > > Ok, I play a little with this. And it works so far. Will do more testing
+> > > > > > > tomorrow.
+> > > > > > > 
+> > > > > > > One reason could be I switch to use get_user_pages_fast() to
+> > > > > > > __get_user_pages_fast() which doesn't need mmap_sem.
+> > > > > > > 
+> > > > > > > Thanks
+> > > > > > OK that sounds good. If we also set a flag to make
+> > > > > > vhost_exceeds_weight exit, then I think it will be all good.
+> > > > > After some experiments, I came up two methods:
+> > > > > 
+> > > > > 1) switch to use vq->mutex, then we must take the vq lock during range
+> > > > > checking (but I don't see obvious slowdown for 16vcpus + 16queues). Setting
+> > > > > flags during weight check should work but it still can't address the worst
+> > > > > case: wait for the page to be swapped in. Is this acceptable?
+> > > > > 
+> > > > > 2) using current RCU but replace synchronize_rcu() with vhost_work_flush().
+> > > > > The worst case is the same as 1) but we can check range without holding any
+> > > > > locks.
+> > > > > 
+> > > > > Which one did you prefer?
+> > > > > 
+> > > > > Thanks
+> > > > I would rather we start with 1 and switch to 2 after we
+> > > > can show some gain.
+> > > > 
+> > > > But the worst case needs to be addressed.
+> > > 
+> > > Yes.
+> > > 
+> > > 
+> > > > How about sending a signal to
+> > > > the vhost thread?  We will need to fix up error handling (I think that
+> > > > at the moment it will error out in that case, handling this as EFAULT -
+> > > > and we don't want to drop packets if we can help it, and surely not
+> > > > enter any error states.  In particular it might be especially tricky if
+> > > > we wrote into userspace memory and are now trying to log the write.
+> > > > I guess we can disable the optimization if log is enabled?).
+> > > 
+> > > This may work but requires a lot of changes.
+> > I agree.
+> > 
+> > > And actually it's the price of
+> > > using vq mutex.
+> > Not sure what's meant here.
+> 
+> 
+> I mean if we use vq mutex, it means the critical section was increased and
+> we need to deal with swapping then.
+> 
+> 
+> > 
+> > > Actually, the critical section should be rather small, e.g
+> > > just inside memory accessors.
+> > Also true.
+> > 
+> > > I wonder whether or not just do synchronize our self like:
+> > > 
+> > > static void inline vhost_inc_vq_ref(struct vhost_virtqueue *vq)
+> > > {
+> > >          int ref = READ_ONCE(vq->ref);
+> > > 
+> > >          WRITE_ONCE(vq->ref, ref + 1);
+> > > smp_rmb();
+> > > }
+> > > 
+> > > static void inline vhost_dec_vq_ref(struct vhost_virtqueue *vq)
+> > > {
+> > >          int ref = READ_ONCE(vq->ref);
+> > > 
+> > > smp_wmb();
+> > >          WRITE_ONCE(vq->ref, ref - 1);
+> > > }
+> > > 
+> > > static void inline vhost_wait_for_ref(struct vhost_virtqueue *vq)
+> > > {
+> > >          while (READ_ONCE(vq->ref));
+> > > mb();
+> > > }
+> > Looks good but I'd like to think of a strategy/existing lock that let us
+> > block properly as opposed to spinning, that would be more friendly to
+> > e.g. the realtime patch.
+> 
+> 
+> Does it make sense to disable preemption in the critical section? Then we
+> don't need to block and we have a deterministic time spent on memory
+> accssors?
 
-syzbot found the following crash on:
+Hmm maybe. I'm getting really nervious at this point - we
+seem to be using every trick in the book.
 
-HEAD commit:    6789f873 Merge tag 'pm-5.3-rc2' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1696897c600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=339b6a6b3640d115
-dashboard link: https://syzkaller.appspot.com/bug?extid=bdebcbf44250d75bdd82
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=153d7544600000
+> 
+> > 
+> > > Or using smp_load_acquire()/smp_store_release() instead?
+> > > 
+> > > Thanks
+> > These are cheaper on x86, yes.
+> 
+> 
+> Will use this.
+> 
+> Thanks
+> 
+> 
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+bdebcbf44250d75bdd82@syzkaller.appspotmail.com
+This looks suspiciously like a seqlock though.
+Can that be used somehow?
 
-BUG: memory leak
-unreferenced object 0xffff88810d84d400 (size 512):
-   comm "syz-executor.5", pid 7522, jiffies 4294954305 (age 14.260s)
-   hex dump (first 32 bytes):
-     50 d4 84 0d 81 88 ff ff e0 ff ff ff 0f 00 00 00  P...............
-     10 d4 84 0d 81 88 ff ff 10 d4 84 0d 81 88 ff ff  ................
-   backtrace:
-     [<000000003d61da44>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000003d61da44>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<000000003d61da44>] slab_alloc mm/slab.c:3319 [inline]
-     [<000000003d61da44>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
-     [<00000000a6239e0a>] kmalloc include/linux/slab.h:552 [inline]
-     [<00000000a6239e0a>] pty_common_install+0x4e/0x2b0 drivers/tty/pty.c:391
-     [<00000000bd8cb19d>] pty_unix98_install+0x20/0x30 drivers/tty/pty.c:740
-     [<000000001b46b5e1>] tty_driver_install_tty drivers/tty/tty_io.c:1227  
-[inline]
-     [<000000001b46b5e1>] tty_init_dev drivers/tty/tty_io.c:1340 [inline]
-     [<000000001b46b5e1>] tty_init_dev+0x86/0x210 drivers/tty/tty_io.c:1317
-     [<00000000845ae712>] ptmx_open drivers/tty/pty.c:845 [inline]
-     [<00000000845ae712>] ptmx_open+0xba/0x1c0 drivers/tty/pty.c:811
-     [<000000007e87d771>] chrdev_open+0xe3/0x290 fs/char_dev.c:414
-     [<00000000bd556826>] do_dentry_open+0x199/0x4f0 fs/open.c:797
-     [<000000001ba9145b>] vfs_open+0x35/0x40 fs/open.c:906
-     [<00000000c0275eb4>] do_last fs/namei.c:3416 [inline]
-     [<00000000c0275eb4>] path_openat+0x854/0x1cd0 fs/namei.c:3533
-     [<00000000156ad8b1>] do_filp_open+0xaa/0x130 fs/namei.c:3563
-     [<00000000074d96c0>] do_sys_open+0x253/0x330 fs/open.c:1089
-     [<000000009f7fc64a>] __do_sys_openat fs/open.c:1116 [inline]
-     [<000000009f7fc64a>] __se_sys_openat fs/open.c:1110 [inline]
-     [<000000009f7fc64a>] __x64_sys_openat+0x24/0x30 fs/open.c:1110
-     [<000000005ca4479f>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<00000000e1f64b0f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88810e639800 (size 1024):
-   comm "syz-executor.5", pid 7522, jiffies 4294954305 (age 14.260s)
-   hex dump (first 32 bytes):
-     01 54 00 00 01 00 00 00 00 00 00 00 00 00 00 00  .T..............
-     00 83 fa 19 82 88 ff ff a0 7f 9b 83 ff ff ff ff  ................
-   backtrace:
-     [<000000003d61da44>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000003d61da44>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<000000003d61da44>] slab_alloc mm/slab.c:3319 [inline]
-     [<000000003d61da44>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
-     [<000000001cfffc30>] kmalloc include/linux/slab.h:552 [inline]
-     [<000000001cfffc30>] kzalloc include/linux/slab.h:748 [inline]
-     [<000000001cfffc30>] alloc_tty_struct+0x3f/0x290  
-drivers/tty/tty_io.c:2981
-     [<000000001946a70c>] pty_common_install+0xac/0x2b0 drivers/tty/pty.c:399
-     [<00000000bd8cb19d>] pty_unix98_install+0x20/0x30 drivers/tty/pty.c:740
-     [<000000001b46b5e1>] tty_driver_install_tty drivers/tty/tty_io.c:1227  
-[inline]
-     [<000000001b46b5e1>] tty_init_dev drivers/tty/tty_io.c:1340 [inline]
-     [<000000001b46b5e1>] tty_init_dev+0x86/0x210 drivers/tty/tty_io.c:1317
-     [<00000000845ae712>] ptmx_open drivers/tty/pty.c:845 [inline]
-     [<00000000845ae712>] ptmx_open+0xba/0x1c0 drivers/tty/pty.c:811
-     [<000000007e87d771>] chrdev_open+0xe3/0x290 fs/char_dev.c:414
-     [<00000000bd556826>] do_dentry_open+0x199/0x4f0 fs/open.c:797
-     [<000000001ba9145b>] vfs_open+0x35/0x40 fs/open.c:906
-     [<00000000c0275eb4>] do_last fs/namei.c:3416 [inline]
-     [<00000000c0275eb4>] path_openat+0x854/0x1cd0 fs/namei.c:3533
-     [<00000000156ad8b1>] do_filp_open+0xaa/0x130 fs/namei.c:3563
-     [<00000000074d96c0>] do_sys_open+0x253/0x330 fs/open.c:1089
-     [<000000009f7fc64a>] __do_sys_openat fs/open.c:1116 [inline]
-     [<000000009f7fc64a>] __se_sys_openat fs/open.c:1110 [inline]
-     [<000000009f7fc64a>] __x64_sys_openat+0x24/0x30 fs/open.c:1110
-     [<000000005ca4479f>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<00000000e1f64b0f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
