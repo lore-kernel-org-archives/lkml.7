@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B339EC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51751C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881CB208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29107208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c9/kS111"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TlcSYsi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfG3SRH (ORCPT
+        id S1729012AbfG3SRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:17:07 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43941 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388132AbfG3SQn (ORCPT
+        Tue, 30 Jul 2019 14:17:11 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46700 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388066AbfG3SQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:16:43 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r22so2876955pgk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:42 -0700 (PDT)
+        Tue, 30 Jul 2019 14:16:45 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c3so7122435pfa.13
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fKD21YltjNdX0Gh4aRiK3v6esh13LM/jUbhsmCEcsM8=;
-        b=c9/kS111G3SGImYr1U5vCbj0hdX0U7JXwROeG49nc6dkg0afxl5NMuC6U0VYyvNoml
-         IQ7k9VCSv8yu7OhA1vsV/1QXI1xTj1+8lh0VVirk0n2tUisVVdmz9ZNIWsz5X55idcjN
-         hYzGHEpH+7gqW/uQVu/s2qHD1YFhx1L5qIWS0=
+        bh=+82S8/9l3RlSCvnKeKawflqrH/StvaK39xoOnKGt6wU=;
+        b=TlcSYsi7glyOH7X4H9JlbNDkm8XjBQAstYeWbgqw07zas2P03f2K8Fjku1aCMmICrP
+         I/C/tHGKoIOIBF7EgAlxUMLYRlZ6t7WXDgkenvI4mrfT0xj76QqFx55XnQa+kJAf2quY
+         JbDflPAIZvaWBK9jq09BWz9zZL2Y3ZafI6Q3A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fKD21YltjNdX0Gh4aRiK3v6esh13LM/jUbhsmCEcsM8=;
-        b=CKqyr31NsGbvdR/hshrqMUqcTXZ95LbiIle5XG6uSpMPhpjiJxyT/X1laHYAgbQd6g
-         xmQZZoLhTCWOYWpiw+mly1WLqjbWN7uZevI3aMgvIlXVT6oFDA+lBA7AknEd7ungGrUD
-         GFwXfJmO5wwoZ1+9rpeekLGLFHUJEBhgrWuqjHpsKg6vBR0iCMAOtrAfJUjsL8pHL8j4
-         EZfpEU6Porg8YihjvGP6nXjgQPpIl6VCXtvTrBVXc0a0H8iTz9aLhnO2cTZWf7fifmDU
-         7h7NIikoSDVRyg0xwLQTBt+M43xxDUTEcqNKxYAeqUwDBGAgDXzN6fArGTafRZvK/n/s
-         UV1w==
-X-Gm-Message-State: APjAAAVwD+DWl5Hb68pAeJQoXI0LPGkM/IaVTH9Qre/a2eM6cvOfQDrU
-        Xgz2RTuyh78ZVJJqW40nMHv6j6UpNC8eSg==
-X-Google-Smtp-Source: APXvYqzToMhXlwFnTe0eItZa7Mbn4k5gYXMT9SLGPEuDAtawXB9pVcnXtqUyvvp+gcIgurPoOgRswQ==
-X-Received: by 2002:a65:4844:: with SMTP id i4mr111825638pgs.113.1564510602339;
-        Tue, 30 Jul 2019 11:16:42 -0700 (PDT)
+        bh=+82S8/9l3RlSCvnKeKawflqrH/StvaK39xoOnKGt6wU=;
+        b=fgGyArfJHlz91EycrnIM04JBJX9n/vfsmQgmZvYuvIcKoEM37BuyheJH4yYaJhuB5O
+         7RV695tS19hCwYRHS1S3e10yfXJ4IZenLVOPlYY7VELm0JZsKeNORMZcjUEfGLEb9ozD
+         xqeiTjBaRCf0W27FG2FdKxcge6ndetX765nBnRdS/mb97czGzfrkMXFJFSQE0br0MPQu
+         dj9mEFrK/qNubz/LmQCAUxFKPleVrM4V8vgisGRaticf57qnYEaYfVKCemsS0hbSnPMe
+         F0WM2DMf/lisPwWdPDpvpVROjqKCuuFo0DYh/juFUmHlVocLtHnj9zuV+6JwEuH4jesh
+         VwYw==
+X-Gm-Message-State: APjAAAV9GMKXLeDOMmatos//+CYcPpXJxkuUcTydFBUnthMUS/s7Sm3a
+        w1YSbOhyUufLHPo/AV3tHWra5owdQh+YLw==
+X-Google-Smtp-Source: APXvYqzspcViBxAdQFIJUu2zDdjB8LRveAOvdGlL903eu8SOsqoKLVYBqb+YpIQB9b+wpB2mcyLdYg==
+X-Received: by 2002:a63:8a49:: with SMTP id y70mr15165970pgd.271.1564510604947;
+        Tue, 30 Jul 2019 11:16:44 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.41
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.44
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 11:16:41 -0700 (PDT)
+        Tue, 30 Jul 2019 11:16:44 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -62,9 +62,9 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "Darren Hart (VMware)" <dvhart@infradead.org>,
         Roman Kiryanov <rkir@google.com>,
         Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH v6 52/57] platform/x86: intel_pmc_ipc: Remove dev_err() usage after platform_get_irq()
-Date:   Tue, 30 Jul 2019 11:15:52 -0700
-Message-Id: <20190730181557.90391-53-swboyd@chromium.org>
+Subject: [PATCH v6 55/57] platform/x86: intel_int0002_vgpio: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:55 -0700
+Message-Id: <20190730181557.90391-56-swboyd@chromium.org>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
 References: <20190730181557.90391-1-swboyd@chromium.org>
@@ -123,25 +123,25 @@ Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
 Please apply directly to subsystem trees
 
- drivers/platform/x86/intel_pmc_ipc.c | 4 +---
+ drivers/platform/x86/intel_int0002_vgpio.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 55037ff258f8..5c1da2bb1435 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -936,10 +936,8 @@ static int ipc_plat_probe(struct platform_device *pdev)
- 	spin_lock_init(&ipcdev.gcr_lock);
+diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+index d9542c661ddc..4f3f30152a27 100644
+--- a/drivers/platform/x86/intel_int0002_vgpio.c
++++ b/drivers/platform/x86/intel_int0002_vgpio.c
+@@ -166,10 +166,8 @@ static int int0002_probe(struct platform_device *pdev)
+ 		return -ENODEV;
  
- 	ipcdev.irq = platform_get_irq(pdev, 0);
--	if (ipcdev.irq < 0) {
--		dev_err(&pdev->dev, "Failed to get irq\n");
-+	if (ipcdev.irq < 0)
- 		return -EINVAL;
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "Error getting IRQ: %d\n", irq);
++	if (irq < 0)
+ 		return irq;
 -	}
  
- 	ret = ipc_plat_get_res(pdev);
- 	if (ret) {
+ 	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+ 	if (!chip)
 -- 
 Sent by a computer through tubes
 
