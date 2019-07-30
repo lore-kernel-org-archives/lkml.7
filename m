@@ -7,61 +7,60 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142AEC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6313C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB01120C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A74F20C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hROCUSUA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aRQ+kcxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387763AbfG3SSb (ORCPT
+        id S2388042AbfG3SQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:18:31 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39192 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388046AbfG3SQc (ORCPT
+        Tue, 30 Jul 2019 14:16:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39600 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387432AbfG3SQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:16:32 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f17so26270431pfn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:31 -0700 (PDT)
+        Tue, 30 Jul 2019 14:16:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so30476784pgi.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XTLaosyoqzCcWrscKTb+G2WqCKPqrc+O6Jsxt+wg5Oc=;
-        b=hROCUSUAICU4ySTuieMSmi8VrJWcPrS1+o8O2BfXsNuFwRVr9+iExeWmw64ZE4lKDZ
-         WPM/SLNJfX4xHbkAKKxxZlYBNuDKTTqWntK7zqFHE5AJRKB8AzsQCgYLfzjbFrwmVJvM
-         9Vbsrfs37OpxUlM1n24KID23GNcEgEzboPs7Q=
+        bh=2KtwSRIbO6QW1fCt0Ff/bOukvJcYpl7E88tyv175JYo=;
+        b=aRQ+kcxN22tM47SoDkbLmRiqPa2VggkWwmFKZSOIijBCTAAzR/9/jnhQ3S2rs/hROm
+         kBA9D2mpwDXCYLwmGxaqFqv7f4XoF8aAooe3eDfyqvBTIscwxyMlrLpuKJXyC49DOvge
+         CIzYUcrjnq7+IGAN4EU0hRfGBrS3VGitvd7nE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XTLaosyoqzCcWrscKTb+G2WqCKPqrc+O6Jsxt+wg5Oc=;
-        b=QJ/PBtTz6WrIUflxd3G6sKmKxlK7NW9ObFtqO6jTTR4HUKYp1HqhJwNLXvPqR+IGbC
-         gEmE8+ugtqEhDRp2+B012jcqiSHfPsW4V+AwL8Tjiq8ZgvoSgtQRm6hK0svH2xUAx3fv
-         oS73GNmlelsZSesm7CiMKhbeMvC8TrG/n9/9tCisG84zjIxvXMR2AHEfpt6yrUzP+GaT
-         wFcbOJjDgNbIx1ev3OM5fngiCcV6kaZ1GK6qBjKpRlxUt21ocndX5xWTwa7wdHJ4b8fu
-         0rlFTd0lubPS/+5u2Sf6afG5Uwa1MVnCxQHjN8lVY3VhYnBwMZRGeAZYuN0mKe7s6b+w
-         e6iA==
-X-Gm-Message-State: APjAAAUhNXsFAkfVQrle+/V5/JWhqPGD8pi+EdGVY0ZFoR5npdaXsSWt
-        Jr8wfL7KzCMpCOKdbgj1o7CsHevz4fIx4A==
-X-Google-Smtp-Source: APXvYqzQSs9m0BRQ3h662PZWxePXJe4jVR7JM2JInhtaXxMG3/cRTUC5apiYzKTSUK6jxva9ql4aNw==
-X-Received: by 2002:a63:506:: with SMTP id 6mr108698278pgf.434.1564510590797;
-        Tue, 30 Jul 2019 11:16:30 -0700 (PDT)
+        bh=2KtwSRIbO6QW1fCt0Ff/bOukvJcYpl7E88tyv175JYo=;
+        b=c1ZZ1tzQL11Xb2uixkzCG1yYdxJLODlsmoINTjh5eU8jKSgTfbvMdQhe7X3L41yoGp
+         qHbFgQd+raVonwNek2Vj5+R+bJxjtteDod0zFv6kxkiJGbtdpeXUEGvNRVj+wpNuOov0
+         yAP/ZIEb0ieJeEv4VIAlF94en+QFmC+wH0c/ujvX2X4DMn9MUlotMZtRwmyyk0AVqEnQ
+         w1W1XDszYTDwA6flNvlz9fsjO2XrME2Zu9bliv2Uxs+qwEVckP7wQRmixgD4JK60iNGm
+         5At2P71DePMeTjVEalaPx7k6SuSUmUGQh4Oru2BYw5VoFKOxWjgSNg/uqPw+JHmcFK7t
+         Tm/A==
+X-Gm-Message-State: APjAAAXbdXi/1xnaVTPvgZUxTTgc3t0krbt+7hBFQn1EZcIoIDRsMgrV
+        sxThcR9sWmO8GjZ0X2bJJgb1X5Zixug=
+X-Google-Smtp-Source: APXvYqxh/QBqL0ZFtQjel2WLJJtHFFSNwgwYRCtpFDok/0ec8i/VSYQ/49MPYY0gbJK8DwD99RSBww==
+X-Received: by 2002:a63:4522:: with SMTP id s34mr109187680pga.362.1564510579680;
+        Tue, 30 Jul 2019 11:16:19 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.30
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.19
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 11:16:30 -0700 (PDT)
+        Tue, 30 Jul 2019 11:16:19 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org,
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v6 39/57] rtc: Remove dev_err() usage after platform_get_irq()
-Date:   Tue, 30 Jul 2019 11:15:39 -0700
-Message-Id: <20190730181557.90391-40-swboyd@chromium.org>
+Subject: [PATCH v6 25/57] media: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:25 -0700
+Message-Id: <20190730181557.90391-26-swboyd@chromium.org>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
 References: <20190730181557.90391-1-swboyd@chromium.org>
@@ -107,506 +106,313 @@ if ( \( ret < 0 \| ret <= 0 \) )
 While we're here, remove braces on if statements that only have one
 statement (manually).
 
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
 Please apply directly to subsystem trees
 
- drivers/rtc/rtc-88pm80x.c    | 1 -
- drivers/rtc/rtc-88pm860x.c   | 4 +---
- drivers/rtc/rtc-ac100.c      | 4 +---
- drivers/rtc/rtc-armada38x.c  | 5 +----
- drivers/rtc/rtc-asm9260.c    | 4 +---
- drivers/rtc/rtc-at91rm9200.c | 4 +---
- drivers/rtc/rtc-at91sam9.c   | 4 +---
- drivers/rtc/rtc-bd70528.c    | 5 +----
- drivers/rtc/rtc-davinci.c    | 4 +---
- drivers/rtc/rtc-jz4740.c     | 4 +---
- drivers/rtc/rtc-max77686.c   | 5 +----
- drivers/rtc/rtc-mt7622.c     | 1 -
- drivers/rtc/rtc-pic32.c      | 4 +---
- drivers/rtc/rtc-pm8xxx.c     | 4 +---
- drivers/rtc/rtc-puv3.c       | 8 ++------
- drivers/rtc/rtc-pxa.c        | 8 ++------
- drivers/rtc/rtc-rk808.c      | 6 +-----
- drivers/rtc/rtc-s3c.c        | 8 ++------
- drivers/rtc/rtc-sc27xx.c     | 4 +---
- drivers/rtc/rtc-spear.c      | 4 +---
- drivers/rtc/rtc-stm32.c      | 1 -
- drivers/rtc/rtc-sun6i.c      | 4 +---
- drivers/rtc/rtc-sunxi.c      | 4 +---
- drivers/rtc/rtc-tegra.c      | 4 +---
- drivers/rtc/rtc-vt8500.c     | 4 +---
- drivers/rtc/rtc-xgene.c      | 4 +---
- drivers/rtc/rtc-zynqmp.c     | 8 ++------
- 27 files changed, 28 insertions(+), 92 deletions(-)
+ drivers/media/platform/am437x/am437x-vpfe.c           | 1 -
+ drivers/media/platform/atmel/atmel-sama5d2-isc.c      | 7 ++-----
+ drivers/media/platform/exynos4-is/mipi-csis.c         | 4 +---
+ drivers/media/platform/imx-pxp.c                      | 4 +---
+ drivers/media/platform/omap3isp/isp.c                 | 1 -
+ drivers/media/platform/renesas-ceu.c                  | 4 +---
+ drivers/media/platform/rockchip/rga/rga.c             | 1 -
+ drivers/media/platform/s3c-camif/camif-core.c         | 4 +---
+ drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c | 8 ++------
+ drivers/media/platform/sti/hva/hva-hw.c               | 8 ++------
+ drivers/media/platform/stm32/stm32-dcmi.c             | 5 +----
+ drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c    | 7 ++-----
+ drivers/media/rc/img-ir/img-ir-core.c                 | 4 +---
+ drivers/media/rc/ir-hix5hd2.c                         | 4 +---
+ drivers/media/rc/meson-ir.c                           | 4 +---
+ drivers/media/rc/mtk-cir.c                            | 4 +---
+ drivers/media/rc/sunxi-cir.c                          | 1 -
+ 17 files changed, 17 insertions(+), 54 deletions(-)
 
-diff --git a/drivers/rtc/rtc-88pm80x.c b/drivers/rtc/rtc-88pm80x.c
-index e4d5a19fd1c9..9aa4a59dbf47 100644
---- a/drivers/rtc/rtc-88pm80x.c
-+++ b/drivers/rtc/rtc-88pm80x.c
-@@ -264,7 +264,6 @@ static int pm80x_rtc_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	info->irq = platform_get_irq(pdev, 0);
- 	if (info->irq < 0) {
--		dev_err(&pdev->dev, "No IRQ resource!\n");
- 		ret = -EINVAL;
- 		goto out;
- 	}
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index 434285f495e0..4743b16a8d84 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -328,10 +328,8 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
- 	if (!info)
- 		return -ENOMEM;
- 	info->irq = platform_get_irq(pdev, 0);
--	if (info->irq < 0) {
--		dev_err(&pdev->dev, "No IRQ resource!\n");
-+	if (info->irq < 0)
- 		return info->irq;
--	}
- 
- 	info->chip = chip;
- 	info->i2c = (chip->id == CHIP_PM8607) ? chip->client : chip->companion;
-diff --git a/drivers/rtc/rtc-ac100.c b/drivers/rtc/rtc-ac100.c
-index 2e5a8b15b222..a4dcf2950396 100644
---- a/drivers/rtc/rtc-ac100.c
-+++ b/drivers/rtc/rtc-ac100.c
-@@ -578,10 +578,8 @@ static int ac100_rtc_probe(struct platform_device *pdev)
- 	chip->regmap = ac100->regmap;
- 
- 	chip->irq = platform_get_irq(pdev, 0);
--	if (chip->irq < 0) {
--		dev_err(&pdev->dev, "No IRQ resource\n");
-+	if (chip->irq < 0)
- 		return chip->irq;
--	}
- 
- 	chip->rtc = devm_rtc_allocate_device(&pdev->dev);
- 	if (IS_ERR(chip->rtc))
-diff --git a/drivers/rtc/rtc-armada38x.c b/drivers/rtc/rtc-armada38x.c
-index 19d6980e90fb..8e8b8079b60a 100644
---- a/drivers/rtc/rtc-armada38x.c
-+++ b/drivers/rtc/rtc-armada38x.c
-@@ -530,11 +530,8 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
- 		return PTR_ERR(rtc->regs_soc);
- 
- 	rtc->irq = platform_get_irq(pdev, 0);
--
--	if (rtc->irq < 0) {
--		dev_err(&pdev->dev, "no irq\n");
-+	if (rtc->irq < 0)
- 		return rtc->irq;
--	}
- 
- 	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
- 	if (IS_ERR(rtc->rtc_dev))
-diff --git a/drivers/rtc/rtc-asm9260.c b/drivers/rtc/rtc-asm9260.c
-index d45a44936308..10413d803caa 100644
---- a/drivers/rtc/rtc-asm9260.c
-+++ b/drivers/rtc/rtc-asm9260.c
-@@ -257,10 +257,8 @@ static int asm9260_rtc_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, priv);
- 
- 	irq_alarm = platform_get_irq(pdev, 0);
--	if (irq_alarm < 0) {
--		dev_err(dev, "No alarm IRQ resource defined\n");
-+	if (irq_alarm < 0)
- 		return irq_alarm;
--	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	priv->iobase = devm_ioremap_resource(dev, res);
-diff --git a/drivers/rtc/rtc-at91rm9200.c b/drivers/rtc/rtc-at91rm9200.c
-index 82a54e93ff04..d119c6e6353e 100644
---- a/drivers/rtc/rtc-at91rm9200.c
-+++ b/drivers/rtc/rtc-at91rm9200.c
-@@ -378,10 +378,8 @@ static int __init at91_rtc_probe(struct platform_device *pdev)
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "no irq resource defined\n");
-+	if (irq < 0)
- 		return -ENXIO;
--	}
- 
- 	at91_rtc_regs = devm_ioremap(&pdev->dev, regs->start,
- 				     resource_size(regs));
-diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-index 4daf3789b978..bb3ba7bfe6a5 100644
---- a/drivers/rtc/rtc-at91sam9.c
-+++ b/drivers/rtc/rtc-at91sam9.c
-@@ -342,10 +342,8 @@ static int at91_rtc_probe(struct platform_device *pdev)
- 	struct of_phandle_args args;
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "failed to get interrupt resource\n");
-+	if (irq < 0)
- 		return irq;
--	}
- 
- 	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
- 	if (!rtc)
-diff --git a/drivers/rtc/rtc-bd70528.c b/drivers/rtc/rtc-bd70528.c
-index f9bdd555e1a2..3e745c05bc22 100644
---- a/drivers/rtc/rtc-bd70528.c
-+++ b/drivers/rtc/rtc-bd70528.c
-@@ -416,11 +416,8 @@ static int bd70528_probe(struct platform_device *pdev)
- 	bd_rtc->dev = &pdev->dev;
- 
- 	irq = platform_get_irq_byname(pdev, "bd70528-rtc-alm");
--
--	if (irq < 0) {
--		dev_err(&pdev->dev, "Failed to get irq\n");
-+	if (irq < 0)
- 		return irq;
--	}
- 
- 	platform_set_drvdata(pdev, bd_rtc);
- 
-diff --git a/drivers/rtc/rtc-davinci.c b/drivers/rtc/rtc-davinci.c
-index fcb71bf4d492..d8e0db2e7fc6 100644
---- a/drivers/rtc/rtc-davinci.c
-+++ b/drivers/rtc/rtc-davinci.c
-@@ -477,10 +477,8 @@ static int __init davinci_rtc_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	davinci_rtc->irq = platform_get_irq(pdev, 0);
--	if (davinci_rtc->irq < 0) {
--		dev_err(dev, "no RTC irq\n");
-+	if (davinci_rtc->irq < 0)
- 		return davinci_rtc->irq;
--	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	davinci_rtc->base = devm_ioremap_resource(dev, res);
-diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
-index 9e7b3a04debc..3ec6bb230cd5 100644
---- a/drivers/rtc/rtc-jz4740.c
-+++ b/drivers/rtc/rtc-jz4740.c
-@@ -323,10 +323,8 @@ static int jz4740_rtc_probe(struct platform_device *pdev)
- 		rtc->type = id->driver_data;
- 
- 	rtc->irq = platform_get_irq(pdev, 0);
--	if (rtc->irq < 0) {
--		dev_err(&pdev->dev, "Failed to get platform irq\n");
-+	if (rtc->irq < 0)
- 		return -ENOENT;
--	}
- 
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	rtc->base = devm_ioremap_resource(&pdev->dev, mem);
-diff --git a/drivers/rtc/rtc-max77686.c b/drivers/rtc/rtc-max77686.c
-index 4aff349ae301..a6135d8258d9 100644
---- a/drivers/rtc/rtc-max77686.c
-+++ b/drivers/rtc/rtc-max77686.c
-@@ -673,11 +673,8 @@ static int max77686_init_rtc_regmap(struct max77686_rtc_info *info)
- 		struct platform_device *pdev = to_platform_device(info->dev);
- 
- 		info->rtc_irq = platform_get_irq(pdev, 0);
--		if (info->rtc_irq < 0) {
--			dev_err(info->dev, "Failed to get rtc interrupts: %d\n",
--				info->rtc_irq);
-+		if (info->rtc_irq < 0)
- 			return info->rtc_irq;
--		}
- 	} else {
- 		info->rtc_irq =  parent_i2c->irq;
- 	}
-diff --git a/drivers/rtc/rtc-mt7622.c b/drivers/rtc/rtc-mt7622.c
-index 82b0816ec6c1..16bd26b5aa6f 100644
---- a/drivers/rtc/rtc-mt7622.c
-+++ b/drivers/rtc/rtc-mt7622.c
-@@ -329,7 +329,6 @@ static int mtk_rtc_probe(struct platform_device *pdev)
- 
- 	hw->irq = platform_get_irq(pdev, 0);
- 	if (hw->irq < 0) {
--		dev_err(&pdev->dev, "No IRQ resource\n");
- 		ret = hw->irq;
- 		goto err;
- 	}
-diff --git a/drivers/rtc/rtc-pic32.c b/drivers/rtc/rtc-pic32.c
-index 1c4de6e90da0..17653ed52ebb 100644
---- a/drivers/rtc/rtc-pic32.c
-+++ b/drivers/rtc/rtc-pic32.c
-@@ -308,10 +308,8 @@ static int pic32_rtc_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, pdata);
- 
- 	pdata->alarm_irq = platform_get_irq(pdev, 0);
--	if (pdata->alarm_irq < 0) {
--		dev_err(&pdev->dev, "no irq for alarm\n");
-+	if (pdata->alarm_irq < 0)
- 		return pdata->alarm_irq;
--	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	pdata->reg_base = devm_ioremap_resource(&pdev->dev, res);
-diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
-index 9f9839c47e2f..f5a30e0f16c2 100644
---- a/drivers/rtc/rtc-pm8xxx.c
-+++ b/drivers/rtc/rtc-pm8xxx.c
-@@ -468,10 +468,8 @@ static int pm8xxx_rtc_probe(struct platform_device *pdev)
- 	}
- 
- 	rtc_dd->rtc_alarm_irq = platform_get_irq(pdev, 0);
--	if (rtc_dd->rtc_alarm_irq < 0) {
--		dev_err(&pdev->dev, "Alarm IRQ resource absent!\n");
-+	if (rtc_dd->rtc_alarm_irq < 0)
- 		return -ENXIO;
--	}
- 
- 	rtc_dd->allow_set_time = of_property_read_bool(pdev->dev.of_node,
- 						      "allow-set-time");
-diff --git a/drivers/rtc/rtc-puv3.c b/drivers/rtc/rtc-puv3.c
-index 63b9e73fb97d..56a7cf1547a7 100644
---- a/drivers/rtc/rtc-puv3.c
-+++ b/drivers/rtc/rtc-puv3.c
-@@ -186,16 +186,12 @@ static int puv3_rtc_probe(struct platform_device *pdev)
- 
- 	/* find the IRQs */
- 	puv3_rtc_tickno = platform_get_irq(pdev, 1);
--	if (puv3_rtc_tickno < 0) {
--		dev_err(&pdev->dev, "no irq for rtc tick\n");
-+	if (puv3_rtc_tickno < 0)
- 		return -ENOENT;
--	}
- 
- 	puv3_rtc_alarmno = platform_get_irq(pdev, 0);
--	if (puv3_rtc_alarmno < 0) {
--		dev_err(&pdev->dev, "no irq for alarm\n");
-+	if (puv3_rtc_alarmno < 0)
- 		return -ENOENT;
--	}
- 
- 	dev_dbg(&pdev->dev, "PKUnity_rtc: tick irq %d, alarm irq %d\n",
- 		 puv3_rtc_tickno, puv3_rtc_alarmno);
-diff --git a/drivers/rtc/rtc-pxa.c b/drivers/rtc/rtc-pxa.c
-index a7827fe7fb7b..d2f1d8f754bf 100644
---- a/drivers/rtc/rtc-pxa.c
-+++ b/drivers/rtc/rtc-pxa.c
-@@ -324,15 +324,11 @@ static int __init pxa_rtc_probe(struct platform_device *pdev)
- 	}
- 
- 	sa1100_rtc->irq_1hz = platform_get_irq(pdev, 0);
--	if (sa1100_rtc->irq_1hz < 0) {
--		dev_err(dev, "No 1Hz IRQ resource defined\n");
-+	if (sa1100_rtc->irq_1hz < 0)
- 		return -ENXIO;
--	}
- 	sa1100_rtc->irq_alarm = platform_get_irq(pdev, 1);
--	if (sa1100_rtc->irq_alarm < 0) {
--		dev_err(dev, "No alarm IRQ resource defined\n");
-+	if (sa1100_rtc->irq_alarm < 0)
- 		return -ENXIO;
--	}
- 
- 	pxa_rtc->base = devm_ioremap(dev, pxa_rtc->ress->start,
- 				resource_size(pxa_rtc->ress));
-diff --git a/drivers/rtc/rtc-rk808.c b/drivers/rtc/rtc-rk808.c
-index c34540baa12a..c0334c602e88 100644
---- a/drivers/rtc/rtc-rk808.c
-+++ b/drivers/rtc/rtc-rk808.c
-@@ -434,12 +434,8 @@ static int rk808_rtc_probe(struct platform_device *pdev)
- 	rk808_rtc->rtc->ops = &rk808_rtc_ops;
- 
- 	rk808_rtc->irq = platform_get_irq(pdev, 0);
--	if (rk808_rtc->irq < 0) {
--		if (rk808_rtc->irq != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "Wake up is not possible as irq = %d\n",
--				rk808_rtc->irq);
-+	if (rk808_rtc->irq < 0)
- 		return rk808_rtc->irq;
--	}
- 
- 	/* request alarm irq of rk808 */
- 	ret = devm_request_threaded_irq(&pdev->dev, rk808_rtc->irq, NULL,
-diff --git a/drivers/rtc/rtc-s3c.c b/drivers/rtc/rtc-s3c.c
-index 74bf6473a05d..7801249c254b 100644
---- a/drivers/rtc/rtc-s3c.c
-+++ b/drivers/rtc/rtc-s3c.c
-@@ -453,10 +453,8 @@ static int s3c_rtc_probe(struct platform_device *pdev)
- 
- 	/* find the IRQs */
- 	info->irq_tick = platform_get_irq(pdev, 1);
--	if (info->irq_tick < 0) {
--		dev_err(&pdev->dev, "no irq for rtc tick\n");
-+	if (info->irq_tick < 0)
- 		return info->irq_tick;
--	}
- 
- 	info->dev = &pdev->dev;
- 	info->data = of_device_get_match_data(&pdev->dev);
-@@ -470,10 +468,8 @@ static int s3c_rtc_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, info);
- 
- 	info->irq_alarm = platform_get_irq(pdev, 0);
--	if (info->irq_alarm < 0) {
--		dev_err(&pdev->dev, "no irq for alarm\n");
-+	if (info->irq_alarm < 0)
- 		return info->irq_alarm;
--	}
- 
- 	dev_dbg(&pdev->dev, "s3c2410_rtc: tick irq %d, alarm irq %d\n",
- 		info->irq_tick, info->irq_alarm);
-diff --git a/drivers/rtc/rtc-sc27xx.c b/drivers/rtc/rtc-sc27xx.c
-index b4eb3b3c6c2c..698e1e51efca 100644
---- a/drivers/rtc/rtc-sc27xx.c
-+++ b/drivers/rtc/rtc-sc27xx.c
-@@ -614,10 +614,8 @@ static int sprd_rtc_probe(struct platform_device *pdev)
- 	}
- 
- 	rtc->irq = platform_get_irq(pdev, 0);
--	if (rtc->irq < 0) {
--		dev_err(&pdev->dev, "failed to get RTC irq number\n");
-+	if (rtc->irq < 0)
- 		return rtc->irq;
--	}
- 
- 	rtc->rtc = devm_rtc_allocate_device(&pdev->dev);
- 	if (IS_ERR(rtc->rtc))
-diff --git a/drivers/rtc/rtc-spear.c b/drivers/rtc/rtc-spear.c
-index 0567944fd4f8..9f23b24f466c 100644
---- a/drivers/rtc/rtc-spear.c
-+++ b/drivers/rtc/rtc-spear.c
-@@ -358,10 +358,8 @@ static int spear_rtc_probe(struct platform_device *pdev)
- 
- 	/* alarm irqs */
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "no update irq?\n");
-+	if (irq < 0)
- 		return irq;
--	}
- 
- 	status = devm_request_irq(&pdev->dev, irq, spear_rtc_irq, 0, pdev->name,
- 			config);
-diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-index 773a1990b93f..2999e33a7e37 100644
---- a/drivers/rtc/rtc-stm32.c
-+++ b/drivers/rtc/rtc-stm32.c
-@@ -776,7 +776,6 @@ static int stm32_rtc_probe(struct platform_device *pdev)
- 
- 	rtc->irq_alarm = platform_get_irq(pdev, 0);
- 	if (rtc->irq_alarm <= 0) {
--		dev_err(&pdev->dev, "no alarm irq\n");
- 		ret = rtc->irq_alarm;
- 		goto err;
- 	}
-diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-index c0e75c373605..dbd676db431e 100644
---- a/drivers/rtc/rtc-sun6i.c
-+++ b/drivers/rtc/rtc-sun6i.c
-@@ -610,10 +610,8 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
- 	chip->dev = &pdev->dev;
- 
- 	chip->irq = platform_get_irq(pdev, 0);
--	if (chip->irq < 0) {
--		dev_err(&pdev->dev, "No IRQ resource\n");
-+	if (chip->irq < 0)
- 		return chip->irq;
--	}
- 
- 	ret = devm_request_irq(&pdev->dev, chip->irq, sun6i_rtc_alarmirq,
- 			       0, dev_name(&pdev->dev), chip);
-diff --git a/drivers/rtc/rtc-sunxi.c b/drivers/rtc/rtc-sunxi.c
-index 6eeabb81106f..0bb69a7f9e46 100644
---- a/drivers/rtc/rtc-sunxi.c
-+++ b/drivers/rtc/rtc-sunxi.c
-@@ -442,10 +442,8 @@ static int sunxi_rtc_probe(struct platform_device *pdev)
- 		return PTR_ERR(chip->base);
- 
- 	chip->irq = platform_get_irq(pdev, 0);
--	if (chip->irq < 0) {
--		dev_err(&pdev->dev, "No IRQ resource\n");
-+	if (chip->irq < 0)
- 		return chip->irq;
--	}
- 	ret = devm_request_irq(&pdev->dev, chip->irq, sunxi_rtc_alarmirq,
- 			0, dev_name(&pdev->dev), chip);
- 	if (ret) {
-diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
-index 8fa1b3febf69..14bf835229e6 100644
---- a/drivers/rtc/rtc-tegra.c
-+++ b/drivers/rtc/rtc-tegra.c
-@@ -290,10 +290,8 @@ static int tegra_rtc_probe(struct platform_device *pdev)
- 		return PTR_ERR(info->base);
+diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+index fe7b937eb5f2..c7109ba35ebf 100644
+--- a/drivers/media/platform/am437x/am437x-vpfe.c
++++ b/drivers/media/platform/am437x/am437x-vpfe.c
+@@ -2557,7 +2557,6 @@ static int vpfe_probe(struct platform_device *pdev)
  
  	ret = platform_get_irq(pdev, 0);
--	if (ret <= 0) {
--		dev_err(&pdev->dev, "failed to get platform IRQ: %d\n", ret);
-+	if (ret <= 0)
- 		return ret;
--	}
- 
- 	info->irq = ret;
- 
-diff --git a/drivers/rtc/rtc-vt8500.c b/drivers/rtc/rtc-vt8500.c
-index f59d232810de..d5d14cf86e0d 100644
---- a/drivers/rtc/rtc-vt8500.c
-+++ b/drivers/rtc/rtc-vt8500.c
-@@ -212,10 +212,8 @@ static int vt8500_rtc_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, vt8500_rtc);
- 
- 	vt8500_rtc->irq_alarm = platform_get_irq(pdev, 0);
--	if (vt8500_rtc->irq_alarm < 0) {
--		dev_err(&pdev->dev, "No alarm IRQ resource defined\n");
-+	if (vt8500_rtc->irq_alarm < 0)
- 		return vt8500_rtc->irq_alarm;
--	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	vt8500_rtc->regbase = devm_ioremap_resource(&pdev->dev, res);
-diff --git a/drivers/rtc/rtc-xgene.c b/drivers/rtc/rtc-xgene.c
-index 9888383f0088..9683fbf7c78d 100644
---- a/drivers/rtc/rtc-xgene.c
-+++ b/drivers/rtc/rtc-xgene.c
-@@ -157,10 +157,8 @@ static int xgene_rtc_probe(struct platform_device *pdev)
- 		return PTR_ERR(pdata->rtc);
+ 	if (ret <= 0) {
+-		dev_err(&pdev->dev, "No IRQ resource\n");
+ 		ret = -ENODEV;
+ 		goto probe_out_cleanup;
+ 	}
+diff --git a/drivers/media/platform/atmel/atmel-sama5d2-isc.c b/drivers/media/platform/atmel/atmel-sama5d2-isc.c
+index 266df14da2d5..78381651238d 100644
+--- a/drivers/media/platform/atmel/atmel-sama5d2-isc.c
++++ b/drivers/media/platform/atmel/atmel-sama5d2-isc.c
+@@ -160,11 +160,8 @@ static int atmel_isc_probe(struct platform_device *pdev)
+ 	}
  
  	irq = platform_get_irq(pdev, 0);
 -	if (irq < 0) {
--		dev_err(&pdev->dev, "No IRQ resource\n");
+-		ret = irq;
+-		dev_err(dev, "failed to get irq: %d\n", ret);
+-		return ret;
+-	}
++	if (irq < 0)
++		return irq;
+ 
+ 	ret = devm_request_irq(dev, irq, isc_interrupt, 0,
+ 			       ATMEL_ISC_NAME, isc);
+diff --git a/drivers/media/platform/exynos4-is/mipi-csis.c b/drivers/media/platform/exynos4-is/mipi-csis.c
+index 3e9ac6066cf6..b9f1cc42b0ab 100644
+--- a/drivers/media/platform/exynos4-is/mipi-csis.c
++++ b/drivers/media/platform/exynos4-is/mipi-csis.c
+@@ -803,10 +803,8 @@ static int s5pcsis_probe(struct platform_device *pdev)
+ 		return PTR_ERR(state->regs);
+ 
+ 	state->irq = platform_get_irq(pdev, 0);
+-	if (state->irq < 0) {
+-		dev_err(dev, "Failed to get irq\n");
++	if (state->irq < 0)
+ 		return state->irq;
+-	}
+ 
+ 	for (i = 0; i < CSIS_NUM_SUPPLIES; i++)
+ 		state->supplies[i].supply = csis_supply_name[i];
+diff --git a/drivers/media/platform/imx-pxp.c b/drivers/media/platform/imx-pxp.c
+index 8e7ef23b9a7e..38d942322302 100644
+--- a/drivers/media/platform/imx-pxp.c
++++ b/drivers/media/platform/imx-pxp.c
+@@ -1661,10 +1661,8 @@ static int pxp_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "Failed to get irq resource: %d\n", irq);
 +	if (irq < 0)
  		return irq;
 -	}
- 	ret = devm_request_irq(&pdev->dev, irq, xgene_rtc_interrupt, 0,
- 			       dev_name(&pdev->dev), pdata);
- 	if (ret) {
-diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
-index 00639594de0c..2c762757fb54 100644
---- a/drivers/rtc/rtc-zynqmp.c
-+++ b/drivers/rtc/rtc-zynqmp.c
-@@ -218,10 +218,8 @@ static int xlnx_rtc_probe(struct platform_device *pdev)
- 		return PTR_ERR(xrtcdev->reg_base);
  
- 	xrtcdev->alarm_irq = platform_get_irq_byname(pdev, "alarm");
--	if (xrtcdev->alarm_irq < 0) {
--		dev_err(&pdev->dev, "no irq resource\n");
-+	if (xrtcdev->alarm_irq < 0)
- 		return xrtcdev->alarm_irq;
--	}
- 	ret = devm_request_irq(&pdev->dev, xrtcdev->alarm_irq,
- 			       xlnx_rtc_interrupt, 0,
- 			       dev_name(&pdev->dev), xrtcdev);
-@@ -231,10 +229,8 @@ static int xlnx_rtc_probe(struct platform_device *pdev)
+ 	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, pxp_irq_handler,
+ 			IRQF_ONESHOT, dev_name(&pdev->dev), dev);
+diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+index 83216fc7156b..649c5c0bbd39 100644
+--- a/drivers/media/platform/omap3isp/isp.c
++++ b/drivers/media/platform/omap3isp/isp.c
+@@ -2324,7 +2324,6 @@ static int isp_probe(struct platform_device *pdev)
+ 	/* Interrupt */
+ 	ret = platform_get_irq(pdev, 0);
+ 	if (ret <= 0) {
+-		dev_err(isp->dev, "No IRQ resource\n");
+ 		ret = -ENODEV;
+ 		goto error_iommu;
+ 	}
+diff --git a/drivers/media/platform/renesas-ceu.c b/drivers/media/platform/renesas-ceu.c
+index 57d0c0f9fa4b..197b3991330d 100644
+--- a/drivers/media/platform/renesas-ceu.c
++++ b/drivers/media/platform/renesas-ceu.c
+@@ -1659,10 +1659,8 @@ static int ceu_probe(struct platform_device *pdev)
  	}
  
- 	xrtcdev->sec_irq = platform_get_irq_byname(pdev, "sec");
--	if (xrtcdev->sec_irq < 0) {
--		dev_err(&pdev->dev, "no irq resource\n");
-+	if (xrtcdev->sec_irq < 0)
- 		return xrtcdev->sec_irq;
+ 	ret = platform_get_irq(pdev, 0);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to get irq: %d\n", ret);
++	if (ret < 0)
+ 		goto error_free_ceudev;
 -	}
- 	ret = devm_request_irq(&pdev->dev, xrtcdev->sec_irq,
- 			       xlnx_rtc_interrupt, 0,
- 			       dev_name(&pdev->dev), xrtcdev);
+ 	irq = ret;
+ 
+ 	ret = devm_request_irq(dev, irq, ceu_irq,
+diff --git a/drivers/media/platform/rockchip/rga/rga.c b/drivers/media/platform/rockchip/rga/rga.c
+index 5283d4533fa0..e9ff12b6b5bb 100644
+--- a/drivers/media/platform/rockchip/rga/rga.c
++++ b/drivers/media/platform/rockchip/rga/rga.c
+@@ -831,7 +831,6 @@ static int rga_probe(struct platform_device *pdev)
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+-		dev_err(rga->dev, "failed to get irq\n");
+ 		ret = irq;
+ 		goto err_put_clk;
+ 	}
+diff --git a/drivers/media/platform/s3c-camif/camif-core.c b/drivers/media/platform/s3c-camif/camif-core.c
+index b05ce0149ca1..b2d2098c01dd 100644
+--- a/drivers/media/platform/s3c-camif/camif-core.c
++++ b/drivers/media/platform/s3c-camif/camif-core.c
+@@ -386,10 +386,8 @@ static int camif_request_irqs(struct platform_device *pdev,
+ 		init_waitqueue_head(&vp->irq_queue);
+ 
+ 		irq = platform_get_irq(pdev, i);
+-		if (irq <= 0) {
+-			dev_err(&pdev->dev, "failed to get IRQ %d\n", i);
++		if (irq <= 0)
+ 			return -ENXIO;
+-		}
+ 
+ 		ret = devm_request_irq(&pdev->dev, irq, s3c_camif_irq_handler,
+ 				       0, dev_name(&pdev->dev), vp);
+diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
+index 3c05b3dc49ec..5baada4f65e5 100644
+--- a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
++++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
+@@ -693,16 +693,12 @@ static int c8sectpfe_probe(struct platform_device *pdev)
+ 	fei->sram_size = resource_size(res);
+ 
+ 	fei->idle_irq = platform_get_irq_byname(pdev, "c8sectpfe-idle-irq");
+-	if (fei->idle_irq < 0) {
+-		dev_err(dev, "Can't get c8sectpfe-idle-irq\n");
++	if (fei->idle_irq < 0)
+ 		return fei->idle_irq;
+-	}
+ 
+ 	fei->error_irq = platform_get_irq_byname(pdev, "c8sectpfe-error-irq");
+-	if (fei->error_irq < 0) {
+-		dev_err(dev, "Can't get c8sectpfe-error-irq\n");
++	if (fei->error_irq < 0)
+ 		return fei->error_irq;
+-	}
+ 
+ 	platform_set_drvdata(pdev, fei);
+ 
+diff --git a/drivers/media/platform/sti/hva/hva-hw.c b/drivers/media/platform/sti/hva/hva-hw.c
+index 7917fd2c4bd4..401aaafa1710 100644
+--- a/drivers/media/platform/sti/hva/hva-hw.c
++++ b/drivers/media/platform/sti/hva/hva-hw.c
+@@ -341,10 +341,8 @@ int hva_hw_probe(struct platform_device *pdev, struct hva_dev *hva)
+ 
+ 	/* get status interruption resource */
+ 	ret  = platform_get_irq(pdev, 0);
+-	if (ret < 0) {
+-		dev_err(dev, "%s     failed to get status IRQ\n", HVA_PREFIX);
++	if (ret < 0)
+ 		goto err_clk;
+-	}
+ 	hva->irq_its = ret;
+ 
+ 	ret = devm_request_threaded_irq(dev, hva->irq_its, hva_hw_its_interrupt,
+@@ -360,10 +358,8 @@ int hva_hw_probe(struct platform_device *pdev, struct hva_dev *hva)
+ 
+ 	/* get error interruption resource */
+ 	ret = platform_get_irq(pdev, 1);
+-	if (ret < 0) {
+-		dev_err(dev, "%s     failed to get error IRQ\n", HVA_PREFIX);
++	if (ret < 0)
+ 		goto err_clk;
+-	}
+ 	hva->irq_err = ret;
+ 
+ 	ret = devm_request_threaded_irq(dev, hva->irq_err, hva_hw_err_interrupt,
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index d855e9c09c08..672a53195b56 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -1699,11 +1699,8 @@ static int dcmi_probe(struct platform_device *pdev)
+ 	dcmi->bus.data_shift = ep.bus.parallel.data_shift;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq <= 0) {
+-		if (irq != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "Could not get irq\n");
++	if (irq <= 0)
+ 		return irq ? irq : -ENXIO;
+-	}
+ 
+ 	dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!dcmi->res) {
+diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+index 6e0e894154f4..055eb0b8e396 100644
+--- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
++++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+@@ -866,11 +866,8 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
+ 	}
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "No csi IRQ specified\n");
+-		ret = -ENXIO;
+-		return ret;
+-	}
++	if (irq < 0)
++		return -ENXIO;
+ 
+ 	ret = devm_request_irq(&pdev->dev, irq, sun6i_csi_isr, 0, MODULE_NAME,
+ 			       sdev);
+diff --git a/drivers/media/rc/img-ir/img-ir-core.c b/drivers/media/rc/img-ir/img-ir-core.c
+index 7e457f26a595..094aa6a06315 100644
+--- a/drivers/media/rc/img-ir/img-ir-core.c
++++ b/drivers/media/rc/img-ir/img-ir-core.c
+@@ -81,10 +81,8 @@ static int img_ir_probe(struct platform_device *pdev)
+ 
+ 	/* Get resources from platform device */
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "cannot find IRQ resource\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	/* Private driver data */
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+diff --git a/drivers/media/rc/ir-hix5hd2.c b/drivers/media/rc/ir-hix5hd2.c
+index 85561f6555a2..32ccefeff57d 100644
+--- a/drivers/media/rc/ir-hix5hd2.c
++++ b/drivers/media/rc/ir-hix5hd2.c
+@@ -232,10 +232,8 @@ static int hix5hd2_ir_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->base);
+ 
+ 	priv->irq = platform_get_irq(pdev, 0);
+-	if (priv->irq < 0) {
+-		dev_err(dev, "irq can not get\n");
++	if (priv->irq < 0)
+ 		return priv->irq;
+-	}
+ 
+ 	rdev = rc_allocate_device(RC_DRIVER_IR_RAW);
+ 	if (!rdev)
+diff --git a/drivers/media/rc/meson-ir.c b/drivers/media/rc/meson-ir.c
+index 72a7bbbf6b1f..51c6dd3406a0 100644
+--- a/drivers/media/rc/meson-ir.c
++++ b/drivers/media/rc/meson-ir.c
+@@ -117,10 +117,8 @@ static int meson_ir_probe(struct platform_device *pdev)
+ 		return PTR_ERR(ir->reg);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "no irq resource\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	ir->rc = devm_rc_allocate_device(dev, RC_DRIVER_IR_RAW);
+ 	if (!ir->rc) {
+diff --git a/drivers/media/rc/mtk-cir.c b/drivers/media/rc/mtk-cir.c
+index 50fb0aebb8d4..4507f729a656 100644
+--- a/drivers/media/rc/mtk-cir.c
++++ b/drivers/media/rc/mtk-cir.c
+@@ -353,10 +353,8 @@ static int mtk_ir_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, ir);
+ 
+ 	ir->irq = platform_get_irq(pdev, 0);
+-	if (ir->irq < 0) {
+-		dev_err(dev, "no irq resource\n");
++	if (ir->irq < 0)
+ 		return -ENODEV;
+-	}
+ 
+ 	if (clk_prepare_enable(ir->clk)) {
+ 		dev_err(dev, "try to enable ir_clk failed\n");
+diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
+index aa719d0ae6b0..905e4cc382e9 100644
+--- a/drivers/media/rc/sunxi-cir.c
++++ b/drivers/media/rc/sunxi-cir.c
+@@ -233,7 +233,6 @@ static int sunxi_ir_probe(struct platform_device *pdev)
+ 	/* IRQ */
+ 	ir->irq = platform_get_irq(pdev, 0);
+ 	if (ir->irq < 0) {
+-		dev_err(dev, "no irq resource\n");
+ 		ret = ir->irq;
+ 		goto exit_free_dev;
+ 	}
 -- 
 Sent by a computer through tubes
 
