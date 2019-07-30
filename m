@@ -2,148 +2,150 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA48C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D3DC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D15D206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D969020C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564484631;
+	bh=m7dX//3pP3+FR/k30u2LZ08eMNQLWPNMDC/X3b/BoIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ke3daQlPMzs3GAmbsHrr85BFxhwwabkytNVnMX4oAzh0/6SfjicD+Sg/441VsxKwe
+	 o5slJdN4v+dDsiRTll/pn0fkYQ27WKUY1kxuF5ucVNumnTtZJjHBpkybFaI5Ic0SFF
+	 BEYHx36Hd/4ZmLyuRapkPCexbCO600wZU7c2yNK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbfG3LDh (ORCPT
+        id S1729996AbfG3LDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:03:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:59290 "EHLO foss.arm.com"
+        Tue, 30 Jul 2019 07:03:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfG3LDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:03:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 929AE344;
-        Tue, 30 Jul 2019 04:03:36 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD0F93F575;
-        Tue, 30 Jul 2019 04:03:35 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Refactor snapshot vs nocow writers locking
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Nikolay Borisov <nborisov@suse.com>, linux-btrfs@vger.kernel.org,
-        paulmck@linux.ibm.com, andrea.parri@amarulasolutions.com,
-        linux-kernel@vger.kernel.org
-References: <20190719083949.5351-1-nborisov@suse.com>
- <ed015bb1-490e-7102-d172-73c1d069476c@arm.com>
- <20190729153319.GH2368@arrakis.emea.arm.com>
- <60eda0ab-08b3-de82-5b06-98386ee1928f@arm.com>
-Message-ID: <69ef76a2-ebd6-956e-c611-2e742606ed95@arm.com>
-Date:   Tue, 30 Jul 2019 12:03:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1725974AbfG3LDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:03:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C5A4206E0;
+        Tue, 30 Jul 2019 11:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564484629;
+        bh=m7dX//3pP3+FR/k30u2LZ08eMNQLWPNMDC/X3b/BoIk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KMur5BSVhiHRRxRO7wuNTmwbmOspluKLLcMqQiSBI6R7I/hFrZiXflMDNkswhbTtv
+         EtfxkIXJJq6sth6CVf9ItRiCuP0D4xoZNWRDgBMa+C9ci6Q/RzCOpg0pkrmiDgRQ+R
+         3Gg+K/+v70+FPzWyiJ5B9GhEpGfyM7rsXoIoSgX0=
+Date:   Tue, 30 Jul 2019 13:03:15 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, rafael@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-i2c@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Wolfram Sang <wsa@the-dreams.de>, Alan Tull <atull@kernel.org>,
+        Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>, Mark Brown <broonie@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Jiri Slaby <jslaby@suse.com>
+Subject: Re: [PATCH v3 2/7] drivers: Introduce device lookup variants by
+ of_node
+Message-ID: <20190730110315.GA31631@kroah.com>
+References: <20190723221838.12024-1-suzuki.poulose@arm.com>
+ <20190723221838.12024-3-suzuki.poulose@arm.com>
+ <20190725135402.GL23883@dell>
 MIME-Version: 1.0
-In-Reply-To: <60eda0ab-08b3-de82-5b06-98386ee1928f@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725135402.GL23883@dell>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2019 17:32, Valentin Schneider wrote:
-> On 29/07/2019 16:33, Catalin Marinas wrote:
-[...]
->> I'd say that's one of the pitfalls of PlusCal. The above is executed
->> atomically, so you'd have the lock_state read and updated in the same
->> action. Looking at the C patches, there is an
->> atomic_read(&lock->readers) followed by a
->> percpu_counter_inc(&lock->writers). Between these two, you can have
->> "readers" becoming non-zero via a different CPU.
->>
->> My suggestion would be to use procedures with labels to express the
->> non-atomicity of such sequences.
->>
+On Thu, Jul 25, 2019 at 02:54:02PM +0100, Lee Jones wrote:
+> On Tue, 23 Jul 2019, Suzuki K Poulose wrote:
 > 
+> > Introduce wrappers for {bus/driver/class}_find_device() to
+> > locate devices by its of_node.
+> > 
+> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: David Airlie <airlied@linux.ie>
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Florian Fainelli <f.fainelli@gmail.com>
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Cc: Heiko Stuebner <heiko@sntech.de>
+> > Cc: Liam Girdwood <lgirdwood@gmail.com>
+> > Cc: linux-i2c@vger.kernel.org
+> > Cc: linux-rockchip@lists.infradead.org
+> > Cc: linux-spi@vger.kernel.org
+> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > Cc: Takashi Iwai <tiwai@suse.com>
+> > Cc: Wolfram Sang <wsa@the-dreams.de>
+> > Cc: Alan Tull <atull@kernel.org>
+> > Cc: Moritz Fischer <mdf@kernel.org>
+> > Cc: linux-fpga@vger.kernel.org
+> > Cc: Peter Rosin <peda@axentia.se>
+> > Cc: Mark Brown <broonie@kernel.org>
+> > Cc: Florian Fainelli <f.fainelli@gmail.com>
+> > Cc: Heiner Kallweit <hkallweit1@gmail.com>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Andrew Lunn <andrew@lunn.ch>
+> > Cc: Liam Girdwood <lgirdwood@gmail.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Cc: Lee Jones <lee.jones@linaro.org>
+> > Cc: Thor Thayer <thor.thayer@linux.intel.com>
+> > Cc: Jiri Slaby <jslaby@suse.com>
+> > Cc: Mark Brown <broonie@kernel.org>
+> > Cc: Andrew Lunn <andrew@lunn.ch>
+> > Cc: Peter Rosin <peda@axentia.se>
+> > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > ---
+> >  - Dropped the reviewed-by tags from Thor, Mark, Andrew and Peter as the
+> >    patches are mereged, though there are no functional changes.
+> > ---
+> >  drivers/amba/tegra-ahb.c              | 11 +-------
+> >  drivers/fpga/fpga-bridge.c            |  8 +-----
+> >  drivers/fpga/fpga-mgr.c               |  8 +-----
+> >  drivers/gpu/drm/drm_mipi_dsi.c        |  7 +----
+> >  drivers/i2c/i2c-core-of.c             |  7 +----
+> >  drivers/mfd/altera-sysmgr.c           | 14 ++--------
+> 
+> For my own reference:
+>   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> 
+> What's the merge plan for this patch?
+> 
+> Is anyone prepared to create an immutable branch for us to pull from?
+> I'm happy to do it if no one else steps up.
 
-FYI, with a very simple and stupid modification of the spec:
+I'll take it, and create a branch for everyone to pull from.
 
------>8-----
-macro ReadUnlock()
-{
-    reader_count := reader_count - 1;
-    \* Condition variable signal is "implicit" here
-}
+thanks,
 
-macro WriteUnlock()
-{
-    writer_count := writer_count - 1;
-    \* Ditto on the cond var
-}
-
-procedure ReadLock()
-{
-add:
-    reader_count := reader_count + 1;
-lock:
-    await writer_count = 0;
-    return;
-}
-
-procedure WriteLock()
-{
-add:
-    writer_count := writer_count + 1;
-lock:
-    await reader_count = 0;
-    return;
-};
------8<-----
-
-it's quite easy to trigger the case Paul pointed out in [1]:
-
------>8-----
-Error: Deadlock reached.
-Error: The behavior up to this point is:
-State 1: <Initial predicate>
-/\ stack = (<<reader, 1>> :> <<>> @@ <<writer, 1>> :> <<>>)
-/\ pc = (<<reader, 1>> :> "loop" @@ <<writer, 1>> :> "loop_")
-/\ writer_count = 0
-/\ reader_count = 0
-/\ lock_state = "idle"
-
-State 2: <loop_ line 159, col 16 to line 164, col 72 of module specs>
-/\ stack = ( <<reader, 1>> :> <<>> @@
-  <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
-/\ pc = (<<reader, 1>> :> "loop" @@ <<writer, 1>> :> "add")
-/\ writer_count = 0
-/\ reader_count = 0
-/\ lock_state = "idle"
-
-State 3: <add line 146, col 14 to line 149, col 63 of module specs>
-/\ stack = ( <<reader, 1>> :> <<>> @@
-  <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
-/\ pc = (<<reader, 1>> :> "loop" @@ <<writer, 1>> :> "lock")
-/\ writer_count = 1
-/\ reader_count = 0
-/\ lock_state = "idle"
-
-State 4: <loop line 179, col 15 to line 184, col 71 of module specs>
-/\ stack = ( <<reader, 1>> :> <<[pc |-> "read_cs", procedure |-> "ReadLock"]>> @@
-  <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
-/\ pc = (<<reader, 1>> :> "add_" @@ <<writer, 1>> :> "lock")
-/\ writer_count = 1
-/\ reader_count = 0
-/\ lock_state = "idle"
-
-State 5: <add_ line 133, col 15 to line 136, col 64 of module specs>
-/\ stack = ( <<reader, 1>> :> <<[pc |-> "read_cs", procedure |-> "ReadLock"]>> @@
-  <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
-/\ pc = (<<reader, 1>> :> "lock_" @@ <<writer, 1>> :> "lock")
-/\ writer_count = 1
-/\ reader_count = 1
-/\ lock_state = "idle"
------8<-----
-
-Which I think is pretty cool considering the effort that was required
-(read: not much).
-
-[1]: https://lore.kernel.org/lkml/20190607105251.GB28207@linux.ibm.com/
+greg k-h
