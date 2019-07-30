@@ -2,61 +2,61 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B556BC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBC9C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 868E8208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F5B208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adZyrNzX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlqFb134"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732997AbfG3QdB (ORCPT
+        id S1733017AbfG3QdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:33:01 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46916 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732910AbfG3Qco (ORCPT
+        Tue, 30 Jul 2019 12:33:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35823 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732924AbfG3Qcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:32:44 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z1so66453135wru.13;
-        Tue, 30 Jul 2019 09:32:42 -0700 (PDT)
+        Tue, 30 Jul 2019 12:32:46 -0400
+Received: by mail-wm1-f65.google.com with SMTP id l2so57214847wmg.0;
+        Tue, 30 Jul 2019 09:32:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=N4cjr07AsirEz91eg9mFm8o6OseSrE7ayitU1YySAxU=;
-        b=adZyrNzXUPH6z65oVJ2iq2t4BMP5bIIVNTRVWLaTw+Wuq7M6NSo2zrbkofCsehR4oT
-         1fW8zX+pI2p0doHQ8moz3SSd4ScZXdBF0cC2NWxWAdX7zo9FUyCTR8U4owXw642Da6wv
-         hTpGE0mDjratFeWcMuqlDcM6Mdq+c2P7X2/EIVnpp5BE41kBeRzuPLb5Dd4gIGibhRwN
-         FL/TG1aQ+ExLnOUqbno/9tZZXm5Mi912EcNYNx3sZQFImLNgi932He5jgmcy+1mUiwH/
-         QzgjCfEXSkGpMTl/JlNSWKy54xS6Yk9RLW2TQyGP6k2+2UP4I6pWC3NANZlbhx4iSKdm
-         EiBg==
+        bh=hKvLl5MtLqHMnv3zCjcaW8MF73v11AH4bgm8S8ldXCE=;
+        b=GlqFb134XfxnMkEh6uLn1kRhDbMEnXJfanH+X3B32Z4zKb0sE8jm/rxkuSYxWHisOi
+         OU3o1DyNgJk7/7GgUrWw5IhJtxiwz0Y2iiK/0eY7zdagnniETk2BjXEGHS/yR1kMuaWv
+         4ULJmslxpRwhmDfifIuTY7KyhK9ByrMfKd9Shhor0iFBaiYVotkTN//Ns7JYzgvhvj6y
+         VitepvML8Gwaj5g9DLkZd4hfgCV0JQ6TnThaJ0wB9sADjyqQLmHgmd226tt4ZNqtflnS
+         8jzr1iOqhxicgKU5SD8/Rwt3B3CVao2lNUUr0NUSamKRp8o0dApg04ulG7OZzkjSHj8q
+         /2OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=N4cjr07AsirEz91eg9mFm8o6OseSrE7ayitU1YySAxU=;
-        b=LnMNkUVuq9cNjfzxi94u5VMRe49rW2DYy0dBhzxURl6Mu48sy9iPiK/kw41KIiGbwv
-         OJzYfdRWEL9g3IS8ybw9e+c9sXI8G1lZRun8k6HDpVEV+GqgZEosAqR/5gQ27bSofdva
-         X2wdGEKdVTfjc8rL3lAxXp/1/82KU0ljALt8fPnDEgvpWI1WbGKmWohjv7D8RwIwLupl
-         NS9wIS5vOr7tkloRPej3IpADiuSxHGY7lqJ7+qqYKal8SiG8VEvKhKcSqTiSaqFXe4+v
-         hv/yPL0YmV+UCU7gzaoLz5cQMEzb2gxKHhM5jvbVCx9r2qPEFOFr8WkX1mJsi359Rr2T
-         RnQA==
-X-Gm-Message-State: APjAAAW/sZQAvdgcExQO3mGSECWYKUMzcEpHzm/LfLyJ7PpKQuEF2W6K
-        yZ6ClROq7DtG7PqPFQpWWpU=
-X-Google-Smtp-Source: APXvYqzBNTWBRAmBYoyVRsTlnA0EiMpuZZ5pGyv/H1nkJ2W314/JYJ1iZhIz/i4c5qfWNrga+gAhTA==
-X-Received: by 2002:adf:dd0f:: with SMTP id a15mr40300335wrm.265.1564504361969;
-        Tue, 30 Jul 2019 09:32:41 -0700 (PDT)
+        bh=hKvLl5MtLqHMnv3zCjcaW8MF73v11AH4bgm8S8ldXCE=;
+        b=qfkRlbqDaNpF83miNLFcOGuviPmFmAuT15ClTPwhi3afJ/i/U91R9hNblKs7f5OkPI
+         N+sHTByAQQUzO7LeHzloZIk33DwLMU+r5oiyyycRutjDmKfYSlU8yrGMHMip05pCLAkf
+         kRMOrqRZEqNDHd8+Pno01SJszwZi+6n0DL7V7O2OG6b+7qWy3wkbwjObEbUqMclhDsc4
+         ZFu97k84drx0Nsy8AanuC5LESDYUtIqEV2YPyXSc//icvQs5+OMFH0pikB6BNNiwagfE
+         ZSU5JkytdejTIC4SumMHfSDXxaryvYvP8WZCb4gYYDiFC+JSoGXfe4z15CZtPJF0XBMG
+         DyKQ==
+X-Gm-Message-State: APjAAAVsitiXWJ/gforVcxJIYPU/Fd5IGzHDWV8bvnf7XmM8phoj+U5k
+        pvPm+JE+qJza9060qpDS3YK3B8EN
+X-Google-Smtp-Source: APXvYqy7ZambOH2FqJffPbsZIhK05NktYW91mK2UAxhPST/+7yvKY9FJpMgpADfq2QZ6C86Eb63VQQ==
+X-Received: by 2002:a1c:6a11:: with SMTP id f17mr98670207wmc.110.1564504364538;
+        Tue, 30 Jul 2019 09:32:44 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id c65sm64835175wma.44.2019.07.30.09.32.40
+        by smtp.gmail.com with ESMTPSA id c65sm64835175wma.44.2019.07.30.09.32.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 09:32:41 -0700 (PDT)
+        Tue, 30 Jul 2019 09:32:44 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 18/20] PM / devfreq: tegra30: Define ACTMON_DEV_CTRL_STOP
-Date:   Tue, 30 Jul 2019 19:22:34 +0300
-Message-Id: <20190730162236.6063-19-digetx@gmail.com>
+Subject: [PATCH v5 20/20] PM / devfreq: tegra20/30: Add Dmitry as a maintainer
+Date:   Tue, 30 Jul 2019 19:22:36 +0300
+Message-Id: <20190730162236.6063-21-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730162236.6063-1-digetx@gmail.com>
 References: <20190730162236.6063-1-digetx@gmail.com>
@@ -79,37 +79,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add verbose definition for the client's device control register value that
-makes ACTMON to stop monitoring of the device.
+I was contributing to the NVIDIA Tegra20+ devfreq drivers recently and
+want to help keep them working and evolving in the future.
 
-Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 3543fba74b52..8adc0ff48b45 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -35,6 +35,8 @@
- #define ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN		BIT(30)
- #define ACTMON_DEV_CTRL_ENB					BIT(31)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cf2225b161f0..49010404fdea 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10420,6 +10420,15 @@ F:	include/linux/memblock.h
+ F:	mm/memblock.c
+ F:	Documentation/core-api/boot-time-mm.rst
  
-+#define ACTMON_DEV_CTRL_STOP					0x00000000
++MEMORY FREQUENCY SCALING DRIVERS FOR NVIDIA TEGRA
++M:	Dmitry Osipenko <digetx@gmail.com>
++L:	linux-pm@vger.kernel.org
++L:	linux-tegra@vger.kernel.org
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
++S:	Maintained
++F:	drivers/devfreq/tegra20-devfreq.c
++F:	drivers/devfreq/tegra30-devfreq.c
 +
- #define ACTMON_DEV_UPPER_WMARK					0x4
- #define ACTMON_DEV_LOWER_WMARK					0x8
- #define ACTMON_DEV_INIT_AVG					0xc
-@@ -714,7 +716,7 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
- 
- static void tegra_actmon_stop_device(struct tegra_devfreq_device *dev)
- {
--	device_writel(dev, 0x00000000, ACTMON_DEV_CTRL);
-+	device_writel(dev, ACTMON_DEV_CTRL_STOP, ACTMON_DEV_CTRL);
- 	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
- }
- 
+ MEMORY MANAGEMENT
+ L:	linux-mm@kvack.org
+ W:	http://www.linux-mm.org
 -- 
 2.22.0
 
