@@ -2,170 +2,108 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA1BC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0DDC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24FA22089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC2F20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfG3DI4 convert rfc822-to-8bit (ORCPT
+        id S1728277AbfG3DMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:08:56 -0400
-Received: from mga18.intel.com ([134.134.136.126]:16036 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbfG3DIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 23:08:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 20:08:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,325,1559545200"; 
-   d="scan'208";a="346861983"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by orsmga005.jf.intel.com with ESMTP; 29 Jul 2019 20:08:52 -0700
-Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 29 Jul 2019 20:08:52 -0700
-Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
- FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 29 Jul 2019 20:08:51 -0700
-Received: from shsmsx105.ccr.corp.intel.com ([169.254.11.15]) by
- shsmsx102.ccr.corp.intel.com ([169.254.2.19]) with mapi id 14.03.0439.000;
- Tue, 30 Jul 2019 11:08:49 +0800
-From:   "Zhao, Yan Y" <yan.y.zhao@intel.com>
-To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>
-CC:     David Airlie <airlied@linux.ie>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Mon, 29 Jul 2019 23:12:10 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:55102 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbfG3DMJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:12:09 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x6U3BePq012141, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x6U3BePq012141
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 30 Jul 2019 11:11:41 +0800
+Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
+ RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Tue, 30 Jul
+ 2019 11:11:40 +0800
+From:   Tony Chuang <yhchuang@realtek.com>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        David Laight <David.Laight@aculab.com>
+CC:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Daniel Vetter" <daniel@ffwll.ch>,
-        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>
-Subject: RE: [PATCH] drm/i915/gvt: remove duplicate entry of trace
-Thread-Topic: [PATCH] drm/i915/gvt: remove duplicate entry of trace
-Thread-Index: AQHVIM5kvexPfpkDmUCNSg2o5koBYqbixmwQ
-Date:   Tue, 30 Jul 2019 03:08:49 +0000
-Message-ID: <F22B14EC3CFBB843AD3E03B6B78F2C6A4B8CB34E@SHSMSX105.ccr.corp.intel.com>
-References: <20190526075633.GA9245@hari-Inspiron-1545>
- <20190612032236.GH9684@zhen-hp.sh.intel.com>
-In-Reply-To: <20190612032236.GH9684@zhen-hp.sh.intel.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
+        "linux@endlessm.com" <linux@endlessm.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] rtw88: pci: Use general byte arrays as the elements of RX ring
+Thread-Topic: [PATCH] rtw88: pci: Use general byte arrays as the elements of
+ RX ring
+Thread-Index: AQHVQsDFA5h+OZuaBU+XsMB5k0fq7qbaiPcAgAFfSQCAADO7gIAABNsAgAZbryA=
+Date:   Tue, 30 Jul 2019 03:11:39 +0000
+Message-ID: <F7CD281DE3E379468C6D07993EA72F84D1881C54@RTITMBSVM04.realtek.com.tw>
+References: <20190725080925.6575-1-jian-hong@endlessm.com>
+ <06d713fff7434dfb9ccab32c2e2112e2@AcuMS.aculab.com>
+ <CAPpJ_ecAAw=1X=7+MOw-VVH0ZKBr6rcRub6JnEqgNbZ6Hxt=ag@mail.gmail.com>
+ <c2cdffd30923459e8773379fc2927e1d@AcuMS.aculab.com>
+ <CAPpJ_eey7+KCMFj2YVQD8ziWR_xf-==k9MYb49-32Z5E6vTdHA@mail.gmail.com>
+In-Reply-To: <CAPpJ_eey7+KCMFj2YVQD8ziWR_xf-==k9MYb49-32Z5E6vTdHA@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiM2Q5NmYwODMtYmQ2NS00NDVjLWJkNGQtNGRjYzFlMWY4ZjZiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVVFxRnF6Tjd0TkFUXC9PRk0wMUlRVHkxc0VSUEIyTUxEZzVFMk9OM09QUjlzMDloZERFQmJLak9RREROQmhydVcifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+x-originating-ip: [172.21.68.183]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Yan Zhao <yan.y.zhao@intel.com>
-
-> -----Original Message-----
-> From: intel-gvt-dev [mailto:intel-gvt-dev-bounces@lists.freedesktop.org] On
-> Behalf Of Zhenyu Wang
-> Sent: Wednesday, June 12, 2019 11:23 AM
-> To: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> Cc: David Airlie <airlied@linux.ie>; intel-gfx@lists.freedesktop.org; Joonas
-> Lahtinen <joonas.lahtinen@linux.intel.com>; linux-kernel@vger.kernel.org; Jani
-> Nikula <jani.nikula@linux.intel.com>; dri-devel@lists.freedesktop.org; Daniel
-> Vetter <daniel@ffwll.ch>; Vivi, Rodrigo <rodrigo.vivi@intel.com>; intel-gvt-
-> dev@lists.freedesktop.org; Wang, Zhi A <zhi.a.wang@intel.com>
-> Subject: Re: [PATCH] drm/i915/gvt: remove duplicate entry of trace
-> 
-> On 2019.05.26 13:26:33 +0530, Hariprasad Kelam wrote:
-> > Remove duplicate include of trace.h
-> >
-> > Issue identified by includecheck
-> >
-> > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> > ---
-> >  drivers/gpu/drm/i915/gvt/trace_points.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/i915/gvt/trace_points.c
-> > b/drivers/gpu/drm/i915/gvt/trace_points.c
-> > index a3deed69..569f5e3 100644
-> > --- a/drivers/gpu/drm/i915/gvt/trace_points.c
-> > +++ b/drivers/gpu/drm/i915/gvt/trace_points.c
-> > @@ -32,5 +32,4 @@
-> >
-> >  #ifndef __CHECKER__
-> >  #define CREATE_TRACE_POINTS
-> > -#include "trace.h"
-> >  #endif
-> > --
-> 
-> This actually caused build issue like
-> ERROR: "__tracepoint_gma_index" [drivers/gpu/drm/i915/i915.ko] undefined!
-> ERROR: "__tracepoint_render_mmio" [drivers/gpu/drm/i915/i915.ko] undefined!
-> ERROR: "__tracepoint_gvt_command" [drivers/gpu/drm/i915/i915.ko]
-> undefined!
-> ERROR: "__tracepoint_spt_guest_change" [drivers/gpu/drm/i915/i915.ko]
-> undefined!
-> ERROR: "__tracepoint_gma_translate" [drivers/gpu/drm/i915/i915.ko]
-> undefined!
-> ERROR: "__tracepoint_spt_alloc" [drivers/gpu/drm/i915/i915.ko] undefined!
-> ERROR: "__tracepoint_spt_change" [drivers/gpu/drm/i915/i915.ko] undefined!
-> ERROR: "__tracepoint_oos_sync" [drivers/gpu/drm/i915/i915.ko] undefined!
-> ERROR: "__tracepoint_write_ir" [drivers/gpu/drm/i915/i915.ko] undefined!
-> ERROR: "__tracepoint_propagate_event" [drivers/gpu/drm/i915/i915.ko]
-> undefined!
-> ERROR: "__tracepoint_inject_msi" [drivers/gpu/drm/i915/i915.ko] undefined!
-> ERROR: "__tracepoint_spt_refcount" [drivers/gpu/drm/i915/i915.ko] undefined!
-> ERROR: "__tracepoint_spt_free" [drivers/gpu/drm/i915/i915.ko] undefined!
-> ERROR: "__tracepoint_oos_change" [drivers/gpu/drm/i915/i915.ko] undefined!
-> scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-> 
-> Looks we need fix like below.
-> 
-> Subject: [PATCH] drm/i915/gvt: remove duplicate include of trace.h
-> 
-> This removes duplicate include of trace.h. Found by Hariprasad Kelam with
-> includecheck.
-> 
-> Reported-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-> ---
->  drivers/gpu/drm/i915/gvt/trace_points.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/gvt/trace_points.c
-> b/drivers/gpu/drm/i915/gvt/trace_points.c
-> index a3deed692b9c..fe552e877e09 100644
-> --- a/drivers/gpu/drm/i915/gvt/trace_points.c
-> +++ b/drivers/gpu/drm/i915/gvt/trace_points.c
-> @@ -28,8 +28,6 @@
->   *
->   */
-> 
-> -#include "trace.h"
-> -
->  #ifndef __CHECKER__
->  #define CREATE_TRACE_POINTS
->  #include "trace.h"
-> --
-> 2.20.1
-> 
-> --
-> Open Source Technology Center, Intel ltd.
-> 
-> $gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+PiA+ID4gPiBXaGlsZSBhbGxvY2F0aW5nIGFsbCA1MTIgYnVmZmVycyBpbiBvbmUgYmxvY2sgKGp1
+c3Qgb3ZlciA0TUIpDQo+ID4gPiA+IGlzIHByb2JhYmx5IG5vdCBhIGdvb2QgaWRlYSwgeW91IG1h
+eSBuZWVkIHRvIGFsbG9jYXRlZCAoYW5kIGRtYSBtYXApDQo+ID4gPiA+IHRoZW4gaW4gZ3JvdXBz
+Lg0KPiA+ID4NCj4gPiA+IFRoYW5rcyBmb3IgcmV2aWV3aW5nLiAgQnV0IGdvdCBxdWVzdGlvbnMg
+aGVyZSB0byBkb3VibGUgY29uZmlybSB0aGUNCj4gaWRlYS4NCj4gPiA+IEFjY29yZGluZyB0byBv
+cmlnaW5hbCBjb2RlLCBpdCBhbGxvY2F0ZXMgNTEyIHNrYnMgZm9yIFJYIHJpbmcgYW5kIGRtYQ0K
+PiA+ID4gbWFwcGluZyBvbmUgYnkgb25lLiAgU28sIHRoZSBuZXcgY29kZSBhbGxvY2F0ZXMgbWVt
+b3J5IGJ1ZmZlciA1MTINCj4gPiA+IHRpbWVzIHRvIGdldCA1MTIgYnVmZmVyIGFycmF5cy4gIFdp
+bGwgdGhlIDUxMiBidWZmZXJzIGFycmF5cyBiZSBpbiBvbmUNCj4gPiA+IGJsb2NrPyAgRG8geW91
+IG1lYW4gYWdncmVnYXRlIHRoZSBidWZmZXJzIGFzIGEgc2NhdHRlcmxpc3QgYW5kIHVzZQ0KPiA+
+ID4gZG1hX21hcF9zZz8NCj4gPg0KPiA+IElmIHlvdSBtYWxsb2MgYSBidWZmZXIgb2Ygc2l6ZSAo
+ODE5MiszMikgdGhlIGFsbG9jYXRvciB3aWxsIGVpdGhlcg0KPiA+IHJvdW5kIGl0IHVwIHRvIGEg
+d2hvbGUgbnVtYmVyIG9mIChvZnRlbiA0aykgcGFnZXMgb3IgdG8gYSBwb3dlciBvZg0KPiA+IDIg
+b2YgcGFnZXMgLSBzbyBlaXRoZXIgMTJrIG9mIDE2ay4NCj4gPiBJIHRoaW5rIHRoZSBMaW51eCBh
+bGxvY2F0b3IgZG9lcyB0aGUgbGF0dGVyLg0KPiA+IFNvbWUgb2YgdGhlIGFsbG9jYXRvcnMgYWxz
+byAnc3RlYWwnIGEgYml0IGZyb20gdGhlIGZyb250IG9mIHRoZSBidWZmZXINCj4gPiBmb3IgJ3Jl
+ZCB0YXBlJy4NCj4gPg0KPiA+IE9UT0ggbWFsbG9jIHRoZSBzcGFjZSAxNSBidWZmZXJzIGFuZCB0
+aGUgYWxsb2NhdG9yIHdpbGwgcm91bmQgdGhlDQo+ID4gMTUqKDgxOTIgKyAzMikgdXAgdG8gMzIq
+NGsgLSBhbmQgeW91IHdhc3RlIHVuZGVyIDhrIGFjcm9zcyBhbGwgdGhlDQo+ID4gYnVmZmVycy4N
+Cj4gPg0KPiA+IFlvdSB0aGVuIGRtYV9tYXAgdGhlIGxhcmdlIGJ1ZmZlciBhbmQgc3BsaXQgaW50
+byB0aGUgYWN0dWFsIHJ4IGJ1ZmZlcnMuDQo+ID4gUmVwZWF0IHVudGlsIHlvdSd2ZSBmaWxsZWQg
+dGhlIGVudGlyZSByaW5nLg0KPiA+IFRoZSBvbmx5IGNvbXBsaWNhdGlvbiBpcyByZW1lbWJlcmlu
+ZyB0aGUgYmFzZSBhZGRyZXNzIChhbmQgc2l6ZSkgZm9yDQo+ID4gdGhlIGRtYV91bm1hcCBhbmQg
+ZnJlZS4NCj4gPiBBbHRob3VnaCB0aGVyZSBpcyBwbGVudHkgb2YgcGFkZGluZyB0byBleHRlbmQg
+dGhlIGJ1ZmZlciBzdHJ1Y3R1cmUNCj4gPiBzaWduaWZpY2FudGx5IHdpdGhvdXQgdXNpbmcgbW9y
+ZSBtZW1vcnkuDQo+ID4gQWxsb2NhdGUgaW4gMTUncyBhbmQgeW91IChwcm9iYWJseSkgaGF2ZSA1
+MTIgYnl0ZXMgcGVyIGJ1ZmZlci4NCj4gPiBBbGxvY2F0ZSBpbiAzMSdzIGFuZCB5b3UgaGF2ZSAy
+NTYgYnl0ZXMuDQo+ID4NCj4gPiBUaGUgcHJvYmxlbSBpcyB0aGF0IGxhcmdlciBhbGxvY2F0ZXMg
+YXJlIG1vcmUgbGlrZWx5IHRvIGZhaWwNCj4gPiAoZXNwZWNpYWxseSBpZiB0aGUgc3lzdGVtIGhh
+cyBiZWVuIHJ1bm5pbmcgZm9yIHNvbWUgdGltZSkuDQo+ID4gU28geW91IGFsbW9zdCBjZXJ0YWlu
+bHkgd2FudCB0byBiZSBhYmxlIHRvIGZhbGwgYmFjayB0byBzbWFsbGVyDQo+ID4gYWxsb2NhdGVz
+IGV2ZW4gdGhvdWdoIHRoZXkgdXNlIG1vcmUgbWVtb3J5Lg0KPiA+DQo+ID4gSSBhbHNvIHdvbmRl
+ciBpZiB5b3UgYWN0dWFsbHkgbmVlZCA1MTIgOGsgcnggYnVmZmVycyB0byBjb3Zlcg0KPiA+IGlu
+dGVycnVwdCBsYXRlbmN5Pw0KPiA+IEkndmUgbm90IGRvbmUgYW55IG1lYXN1cmVtZW50cyBmb3Ig
+MjAgeWVhcnMhDQo+IA0KPiBUaGFua3MgZm9yIHRoZSBleHBsYW5hdGlvbi4NCj4gSSBhbSBub3Qg
+c3VyZSB0aGUgY29tYmluYXRpb24gb2YgNTEyIDhrIFJYIGJ1ZmZlcnMuICBNYXliZSBSZWFsdGVr
+DQo+IGZvbGtzIGNhbiBnaXZlIHVzIHNvbWUgaWRlYS4NCj4gVG9ueSBDaHVhbmcgYW55IGNvbW1l
+bnQ/DQo+IA0KPiBKaWFuLUhvbmcgUGFuDQo+IA0KDQo1MTIgUlggYnVmZmVycyBpcyBub3QgbmVj
+ZXNzYXJ5IEkgdGhpbmsuIEJ1dCBJIGhhdmVuJ3QgaGFkIGEgY2hhbmNlIHRvDQp0ZXN0IGlmIHJl
+ZHVjZSB0aGUgbnVtYmVyIG9mIFJYIFNLQnMgY291bGQgYWZmZWN0IHRoZSBsYXRlbmN5Lg0KSSBj
+YW4gcnVuIHNvbWUgdGhyb3VnaHB1dCB0ZXN0cyBhbmQgdGhlbiBkZWNpZGUgYSBtaW5pbXVtIG51
+bWJlcnMNCnRoYXQgUlggcmluZyByZXF1aXJlcy4gT3IgaWYgeW91IGNhbiB0cnkgaXQuDQoNClRo
+YW5rcy4NCllhbi1Ic3Vhbg0K
