@@ -2,154 +2,106 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B91C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F6DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0E2206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E602064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfG3Fve (ORCPT
+        id S1727708AbfG3FwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 01:51:34 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:35851 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfG3Fve (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 01:51:34 -0400
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 18BD71BF20B;
-        Tue, 30 Jul 2019 05:51:25 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH v5 00/14] Provide generic top-down mmap layout functions
-Date:   Tue, 30 Jul 2019 01:50:59 -0400
-Message-Id: <20190730055113.23635-1-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
+        Tue, 30 Jul 2019 01:52:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51842 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726169AbfG3FwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 01:52:03 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7C74259455;
+        Tue, 30 Jul 2019 05:52:03 +0000 (UTC)
+Received: from rt4.app.eng.rdu2.redhat.com (rt4.app.eng.rdu2.redhat.com [10.10.161.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 476045DAA4;
+        Tue, 30 Jul 2019 05:52:03 +0000 (UTC)
+Received: from rt4.app.eng.rdu2.redhat.com (localhost [127.0.0.1])
+        by rt4.app.eng.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id x6U5q270005348;
+        Tue, 30 Jul 2019 01:52:02 -0400
+Received: (from apache@localhost)
+        by rt4.app.eng.rdu2.redhat.com (8.14.4/8.14.4/Submit) id x6U5q1aH005347;
+        Tue, 30 Jul 2019 01:52:01 -0400
+From:   Red Hat Product Security <secalert@redhat.com>
+X-PGP-Public-Key: https://www.redhat.com/security/650d5882.txt
+Subject: [engineering.redhat.com #494735] Re: [PATCH] nbd_genl_status: null check for nla_nest_start
+Reply-To: secalert@redhat.com
+In-Reply-To: <20190729164226.22632-1-navid.emamdoost@gmail.com>
+References: <RT-Ticket-494735@engineering.redhat.com>
+ <20190729130912.7imtg3hfnvb4lt2y@MacBook-Pro-91.local>
+ <20190729164226.22632-1-navid.emamdoost@gmail.com>
+Message-ID: <rt-4.0.13-5201-1564465920-1304.494735-5-0@engineering.redhat.com>
+X-RT-Loop-Prevention: engineering.redhat.com
+RT-Ticket: engineering.redhat.com #494735
+Managed-BY: RT 4.0.13 (http://www.bestpractical.com/rt/)
+RT-Originator: darunesh@redhat.com
+To:     navid.emamdoost@gmail.com
+CC:     axboe@kernel.dk, emamd001@umn.edu, josef@toxicpanda.com,
+        kjlu@umn.edu, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        smccaman@umn.edu
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+X-RT-Original-Encoding: utf-8
+Date:   Tue, 30 Jul 2019 01:52:01 -0400
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 30 Jul 2019 05:52:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series introduces generic functions to make top-down mmap layout
-easily accessible to architectures, in particular riscv which was
-the initial goal of this series.
-The generic implementation was taken from arm64 and used successively
-by arm, mips and finally riscv.
+Hi Navid,
 
-Note that in addition the series fixes 2 issues:
-- stack randomization was taken into account even if not necessary.
-- [1] fixed an issue with mmap base which did not take into account
-  randomization but did not report it to arm and mips, so by moving
-  arm64 into a generic library, this problem is now fixed for both
-  architectures.
+Thank you for you report. I have forwarded this to our analysis team. Once I'll
+get an update on your reported vulnerability and it's patched I'll let you
+know.
+Please let me know if you have any questions or concerns.
 
-This work is an effort to factorize architecture functions to avoid
-code duplication and oversights as in [1].
+On Mon Jul 29 12:42:56 2019, navid.emamdoost@gmail.com wrote:
+> nla_nest_start may fail and return NULL. The check is inserted, and
+> errno is selected based on other call sites within the same source
+> code.
+> Update: removed extra new line.
+>
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+> drivers/block/nbd.c | 5 +++++
+> 1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index 9bcde2325893..2410812d1e82 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -2149,6 +2149,11 @@ static int nbd_genl_status(struct sk_buff *skb,
+> struct genl_info *info)
+> }
+>
+> dev_list = nla_nest_start_noflag(reply, NBD_ATTR_DEVICE_LIST);
+> + if (!dev_list) {
+> + ret = -EMSGSIZE;
+> + goto out;
+> + }
+> +
+> if (index == -1) {
+> ret = idr_for_each(&nbd_index_idr, &status_cb, reply);
+> if (ret) {
 
-[1]: https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1429066.html
 
-Changes in v5:
-  - Fix [PATCH 11/14]
-  - Rebase on top of v5.3rc2 and commit
-    "riscv: kbuild: add virtual memory system selection"
-  - [PATCH 14/14] now takes into account the various virtual memory systems
-
-Changes in v4:
-  - Make ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT select ARCH_HAS_ELF_RANDOMIZE
-    by default as suggested by Kees,
-  - ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT depends on MMU and defines the
-    functions needed by ARCH_HAS_ELF_RANDOMIZE => architectures that use
-    the generic mmap topdown functions cannot have ARCH_HAS_ELF_RANDOMIZE
-    selected without MMU, but I think it's ok since randomization without
-    MMU does not add much security anyway.
-  - There is no common API to determine if a process is 32b, so I came up with
-    !IS_ENABLED(CONFIG_64BIT) || is_compat_task() in [PATCH v4 12/14].
-  - Mention in the change log that x86 already takes care of not offseting mmap
-    base address if the task does not want randomization.
-  - Re-introduce a comment that should not have been removed.
-  - Add Reviewed/Acked-By from Paul, Christoph and Kees, thank you for that.
-  - I tried to minimize the changes from the commits in v3 in order to make
-    easier the review of the v4, the commits changed or added are:
-    - [PATCH v4 5/14]
-    - [PATCH v4 8/14]
-    - [PATCH v4 11/14]
-    - [PATCH v4 12/14]
-    - [PATCH v4 13/14]
-
-Changes in v3:
-  - Split into small patches to ease review as suggested by Christoph
-    Hellwig and Kees Cook
-  - Move help text of new config as a comment, as suggested by Christoph
-  - Make new config depend on MMU, as suggested by Christoph
-
-Changes in v2 as suggested by Christoph Hellwig:
-  - Preparatory patch that moves randomize_stack_top
-  - Fix duplicate config in riscv
-  - Align #if defined on next line => this gives rise to a checkpatch
-    warning. I found this pattern all around the tree, in the same proportion
-    as the previous pattern which was less pretty:
-    git grep -C 1 -n -P "^#if defined.+\|\|.*\\\\$"
-
-Alexandre Ghiti (14):
-  mm, fs: Move randomize_stack_top from fs to mm
-  arm64: Make use of is_compat_task instead of hardcoding this test
-  arm64: Consider stack randomization for mmap base only when necessary
-  arm64, mm: Move generic mmap layout functions to mm
-  arm64, mm: Make randomization selected by generic topdown mmap layout
-  arm: Properly account for stack randomization and stack guard gap
-  arm: Use STACK_TOP when computing mmap base address
-  arm: Use generic mmap top-down layout and brk randomization
-  mips: Properly account for stack randomization and stack guard gap
-  mips: Use STACK_TOP when computing mmap base address
-  mips: Adjust brk randomization offset to fit generic version
-  mips: Replace arch specific way to determine 32bit task with generic
-    version
-  mips: Use generic mmap top-down layout and brk randomization
-  riscv: Make mmap allocation top-down by default
-
- arch/Kconfig                       |  11 +++
- arch/arm/Kconfig                   |   2 +-
- arch/arm/include/asm/processor.h   |   2 -
- arch/arm/kernel/process.c          |   5 --
- arch/arm/mm/mmap.c                 |  52 --------------
- arch/arm64/Kconfig                 |   2 +-
- arch/arm64/include/asm/processor.h |   2 -
- arch/arm64/kernel/process.c        |   8 ---
- arch/arm64/mm/mmap.c               |  72 -------------------
- arch/mips/Kconfig                  |   2 +-
- arch/mips/include/asm/processor.h  |   5 --
- arch/mips/mm/mmap.c                |  84 ----------------------
- arch/riscv/Kconfig                 |  13 ++++
- fs/binfmt_elf.c                    |  20 ------
- include/linux/mm.h                 |   2 +
- kernel/sysctl.c                    |   6 +-
- mm/util.c                          | 107 ++++++++++++++++++++++++++++-
- 17 files changed, 139 insertions(+), 256 deletions(-)
-
--- 
-2.20.1
+--
+Best Regards,
+Dhananjay Arunesh, Red Hat Product Security
+7F45 FDD1 BB92 2DA8 CD05 F034 9B3D 8FE3 50EC 5D74
 
