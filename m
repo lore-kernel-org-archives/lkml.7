@@ -2,114 +2,310 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF60C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE922C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8A920693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA68520693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:15:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mp5BN0E6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730382AbfG3CPK (ORCPT
+        id S1731123AbfG3CPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:15:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729164AbfG3CPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:15:09 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 208772064C;
-        Tue, 30 Jul 2019 02:15:08 +0000 (UTC)
-Date:   Mon, 29 Jul 2019 22:15:06 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Eiichi Tsukata <devel@etsukata.com>
-Cc:     joel@joelfernandes.org, paulmck@linux.vnet.ibm.com,
-        tglx@linutronix.de, peterz@infradead.org, mingo@redhat.com,
-        fweisbec@gmail.com, luto@amacapital.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Prevent RCU EQS breakage in preemptirq events
-Message-ID: <20190729221506.1aed7dfc@oasis.local.home>
-In-Reply-To: <2ceec933-503e-5d58-60b4-85b491b017d4@etsukata.com>
-References: <20190729010734.3352-1-devel@etsukata.com>
-        <20190729112126.6554b141@gandalf.local.home>
-        <2ceec933-503e-5d58-60b4-85b491b017d4@etsukata.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 29 Jul 2019 22:15:51 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42068 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730481AbfG3CPv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 22:15:51 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so28960924pff.9;
+        Mon, 29 Jul 2019 19:15:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7mVc3FHf9lbiZFRinrco4upcwRY0rhMFqs7bl6W7dgo=;
+        b=Mp5BN0E6mU9E5mKatvwD5fi7X+PeAZze2NC0l5eieJmP8IRKVJZeSjO5toAuPZbMVl
+         y1Y9gShrJhF7x74w2RrHkyO2nClA5H/nC8T3VobzpcK2nosnMOpDPUih0XSGN60VEKDx
+         zgi6W+12P0Oipe1F1q7b9ymh1Zz8Ft0hC9BFinyyszDOcPwGjqKfRRTn60c6vuysZpth
+         3XXRjSc0uJHN6m7kRgV7Aw0hqik5k8e3OgORzf4JEUWAvJ7F6UN+ujZPV5otmY8RCUdI
+         7dS2Y7VEzOmdtXbRWWIQ4OPjD6KbJLnmDLMELit3xk22TWvDj91pHWyt8W+WLJEa3Abj
+         Kwow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7mVc3FHf9lbiZFRinrco4upcwRY0rhMFqs7bl6W7dgo=;
+        b=LnyD0/haOpGGS8VN1JCzugXWrKdVCpUJJqwDH3Vdwk0AsiOQ21Nwhd8EyRb7q0Ru+n
+         Bc/Lb4OkH4uEZU8PDPppzu2DMC1ucPq6xpzOsuZU8M1e7UNVuFL+3FxydxZYuBsCOgw/
+         072ZtdtwPdGZ0igoZCtd+QFDvI4MtXIrBUgO94qkRMAkBhGH1BOm4oj+tqLD1KKmS/ay
+         lyYaJXrYjG1e2d0GthUmwl+ExZ4p5Mpy6bKc8nEMoz6wtixSX6YWIr+xP5Iz1y46QcR7
+         SqSbaukUyLwdKYafU4tkYgGtuN5/Fl0Yvv2gMppnwJR1maMIPnsurLHlZQSmoL923Jft
+         vUbQ==
+X-Gm-Message-State: APjAAAUNA9t/PL8ckkhpfJSo30cW5djQoTRBGtf7IsVtFf4hOy+pcQwx
+        0bbDlM4LTZHSO1e8qQpgBDM=
+X-Google-Smtp-Source: APXvYqxW1tfaC3ldmkhaNM76awxXyWJgwD8IWqtUZWPy32HLQm1y9DeygvanVcUYeGtccRxuYvPBJQ==
+X-Received: by 2002:a63:2b8e:: with SMTP id r136mr73243802pgr.216.1564452950448;
+        Mon, 29 Jul 2019 19:15:50 -0700 (PDT)
+Received: from localhost.localdomain (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id x13sm66561133pfn.6.2019.07.29.19.15.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 19:15:49 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+To:     linux@roeck-us.net
+Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, andrianov@ispras.ru,
+        Mark Balantzyan <mbalant3@gmail.com>
+Subject: [PATCH 1/4] watchdog device drivers:pc87413_wdt:Rewriting of pc87413_wdt driver to utilize common watchdog interface
+Date:   Mon, 29 Jul 2019 19:15:37 -0700
+Message-Id: <20190730021540.66579-1-mbalant3@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019 11:00:42 +0900
-Eiichi Tsukata <devel@etsukata.com> wrote:
+There is a potential for the variable swc_base_addr in the call chain of the
+driver initialization function (init) to be used before initialization. This
+brought up the need for, by rewriting the driver to use the common watchdog
+interface, ensuring to have all resources in place. This patch addresses this
+need by rewriting into common watchdog interface utilization for the driver.
 
-> Thanks for comments.
-> 
-> On 2019/07/30 0:21, Steven Rostedt wrote:
-> > On Mon, 29 Jul 2019 10:07:34 +0900
-> > Eiichi Tsukata <devel@etsukata.com> wrote:
-> >   
-> >> If context tracking is enabled, causing page fault in preemptirq
-> >> irq_enable or irq_disable events triggers the following RCU EQS warning.
-> >>
-> >> Reproducer:
-> >>
-> >>   // CONFIG_PREEMPTIRQ_EVENTS=y
-> >>   // CONFIG_CONTEXT_TRACKING=y
-> >>   // CONFIG_RCU_EQS_DEBUG=y
-> >>   # echo 1 > events/preemptirq/irq_disable/enable
-> >>   # echo 1 > options/userstacktrace  
-> > 
-> > So the problem is only with userstacktrace enabled?  
-> 
-> It can happen when tracing code causes page fault in preemptirq events.
-> For example, the following perf command also hit the warning:
-> 
->   # perf record -e 'preemptirq:irq_enable' -g ls
+Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
+---
+ drivers/media/pci/tw686x/Kconfig |  1 +
+ drivers/watchdog/pc87413_wdt.c   | 92 +++++++++++++++-----------------
+ 2 files changed, 45 insertions(+), 48 deletions(-)
 
-Again,
-
-That's not a irq trace event issue, that's a stack trace issue.
-
-> 
-> 
-> >>  
-> >>  __visible void trace_hardirqs_on_caller(unsigned long caller_addr)
-> >>  {
-> >> +	enum ctx_state prev_state;
-> >> +
-> >>  	if (this_cpu_read(tracing_irq_cpu)) {
-> >> -		if (!in_nmi())
-> >> +		if (!in_nmi()) {  
-> > 
-> > This is a very high fast path (for tracing irqs off and such). Instead
-> > of adding a check here for a case that is seldom used (userstacktrace
-> > and tracing irqs on/off). Move this to surround the userstack trace
-> > code.
-> > 
-> > -- Steve  
-> 
-> If the problem was only with userstacktrace, it will be reasonable to
-> surround only the userstack unwinder. But the situation is similar to
-> the previous "tracing vs CR2" case. As Peter taught me in
-> https://lore.kernel.org/lkml/20190708074823.GV3402@hirez.programming.kicks-ass.net/
-> there are some other codes likely to to user access.
-> So I surround preemptirq events earlier.
-
-I disagree. The issue is with the attached callbacks that call
-something (a stack unwinder) that can fault.
-
-This is called whenever irqs are disabled. I say we surround the
-culprit (the stack unwinder or stack trace) and not punish the irq
-enable/disable events.
-
-So NAK on this patch.
-
--- Steve
+diff --git a/drivers/media/pci/tw686x/Kconfig b/drivers/media/pci/tw686x/Kconfig
+index da8bfee7..079d7464 100644
+--- a/drivers/media/pci/tw686x/Kconfig
++++ b/drivers/media/pci/tw686x/Kconfig
+@@ -5,6 +5,7 @@ config VIDEO_TW686X
+ 	select VIDEOBUF2_DMA_CONTIG
+ 	select VIDEOBUF2_DMA_SG
+ 	select SND_PCM
++	select WATCHDOG_CORE
+ 	help
+ 	  Support for Intersil/Techwell TW686x-based frame grabber cards.
+ 
+diff --git a/drivers/watchdog/pc87413_wdt.c b/drivers/watchdog/pc87413_wdt.c
+index 06a892e3..4c330ee5 100644
+--- a/drivers/watchdog/pc87413_wdt.c
++++ b/drivers/watchdog/pc87413_wdt.c
+@@ -22,12 +22,10 @@
+ 
+ #include <linux/module.h>
+ #include <linux/types.h>
+-#include <linux/miscdevice.h>
+ #include <linux/watchdog.h>
+ #include <linux/ioport.h>
+ #include <linux/delay.h>
+ #include <linux/notifier.h>
+-#include <linux/fs.h>
+ #include <linux/reboot.h>
+ #include <linux/init.h>
+ #include <linux/spinlock.h>
+@@ -65,7 +63,6 @@ static char expect_close;		/* is the close expected? */
+ 
+ static DEFINE_SPINLOCK(io_lock);	/* to guard us from io races */
+ 
+-static bool nowayout = WATCHDOG_NOWAYOUT;
+ 
+ /* -- Low level function ----------------------------------------*/
+ 
+@@ -216,9 +213,9 @@ static inline void pc87413_disable_sw_wd_trg(void)
+ 
+ /* -- Higher level functions ------------------------------------*/
+ 
+-/* Enable the watchdog */
++/* Enable/start the watchdog */
+ 
+-static void pc87413_enable(void)
++static void pc87413_start(void)
+ {
+ 	spin_lock(&io_lock);
+ 
+@@ -231,9 +228,9 @@ static void pc87413_enable(void)
+ 	spin_unlock(&io_lock);
+ }
+ 
+-/* Disable the watchdog */
++/* Disable/stop the watchdog */
+ 
+-static void pc87413_disable(void)
++static void pc87413_stop(void)
+ {
+ 	spin_lock(&io_lock);
+ 
+@@ -245,9 +242,9 @@ static void pc87413_disable(void)
+ 	spin_unlock(&io_lock);
+ }
+ 
+-/* Refresh the watchdog */
++/* Refresh/keepalive the watchdog */
+ 
+-static void pc87413_refresh(void)
++static void pc87413_keepalive(struct watchdog_device *wdd)
+ {
+ 	spin_lock(&io_lock);
+ 
+@@ -260,6 +257,8 @@ static void pc87413_refresh(void)
+ 	pc87413_enable_sw_wd_trg();
+ 
+ 	spin_unlock(&io_lock);
++
++	return 0;
+ }
+ 
+ /* -- File operations -------------------------------------------*/
+@@ -278,9 +277,6 @@ static int pc87413_open(struct inode *inode, struct file *file)
+ 	if (test_and_set_bit(0, &timer_enabled))
+ 		return -EBUSY;
+ 
+-	if (nowayout)
+-		__module_get(THIS_MODULE);
+-
+ 	/* Reload and activate timer */
+ 	pc87413_refresh();
+ 
+@@ -331,7 +327,6 @@ static int pc87413_status(void)
+ 
+ /**
+  *	pc87413_write:
+- *	@file: file handle to the watchdog
+  *	@data: data buffer to write
+  *	@len: length in bytes
+  *	@ppos: pointer to the position to write. No seeks allowed
+@@ -345,26 +340,25 @@ static ssize_t pc87413_write(struct file *file, const char __user *data,
+ {
+ 	/* See if we got the magic character 'V' and reload the timer */
+ 	if (len) {
+-		if (!nowayout) {
+-			size_t i;
+-
+-			/* reset expect flag */
+-			expect_close = 0;
+-
+-			/* scan to see whether or not we got the
+-			   magic character */
+-			for (i = 0; i != len; i++) {
+-				char c;
+-				if (get_user(c, data + i))
+-					return -EFAULT;
+-				if (c == 'V')
+-					expect_close = 42;
+-			}
++		size_t i;
++
++		/* reset expect flag */
++		expect_close = 0;
++
++		/* scan to see whether or not we got the
++		   magic character */
++		for (i = 0; i != len; i++) {
++			char c;
++			if (get_user(c, data + i))
++				return -EFAULT;
++			if (c == 'V')
++				expect_close = 42;
+ 		}
++	}
+ 
+ 		/* someone wrote to us, we should reload the timer */
+-		pc87413_refresh();
+-	}
++	pc87413_refresh();
++	
+ 	return len;
+ }
+ 
+@@ -417,7 +411,7 @@ static long pc87413_ioctl(struct file *file, unsigned int cmd,
+ 			retval = 0;
+ 		}
+ 		if (options & WDIOS_ENABLECARD) {
+-			pc87413_enable();
++			pc87413_start();
+ 			retval = 0;
+ 		}
+ 		return retval;
+@@ -466,31 +460,32 @@ static int pc87413_notify_sys(struct notifier_block *this,
+ {
+ 	if (code == SYS_DOWN || code == SYS_HALT)
+ 		/* Turn the card off */
+-		pc87413_disable();
++		pc87413_stop();
+ 	return NOTIFY_DONE;
+ }
+ 
+ /* -- Module's structures ---------------------------------------*/
+ 
+-static const struct file_operations pc87413_fops = {
+-	.owner		= THIS_MODULE,
+-	.llseek		= no_llseek,
+-	.write		= pc87413_write,
+-	.unlocked_ioctl	= pc87413_ioctl,
+-	.open		= pc87413_open,
+-	.release	= pc87413_release,
+-};
+ 
+-static struct notifier_block pc87413_notifier = {
++static struct notifier_block pc87413wdt_notifier = {
+ 	.notifier_call  = pc87413_notify_sys,
+ };
+ 
+-static struct miscdevice pc87413_miscdev = {
+-	.minor          = WATCHDOG_MINOR,
+-	.name           = "watchdog",
+-	.fops           = &pc87413_fops,
++static struct watchdog_ops pc87413wdt_ops = {
++       .owner = THIS_MODULE,
++       .start = pc87413wdt_start,
++       .stop = pc87413wdt_stop,
++       .ping = pc87413wdt_keepalive,
++       .set_timeout = pc87413wdt_set_heartbeat,
++};
++
++static struct watchdog_device pc87413wdt_wdd = {
++       	.info = &pc87413wdt_ident,
++       	.ops = &pc87413wdt_ops,
++	.status = WATCHDOG_NOWAYOUT_INIT_STATUS
+ };
+ 
++
+ /* -- Module init functions -------------------------------------*/
+ 
+ /**
+@@ -515,7 +510,7 @@ static int __init pc87413_init(void)
+ 	if (ret != 0)
+ 		pr_err("cannot register reboot notifier (err=%d)\n", ret);
+ 
+-	ret = misc_register(&pc87413_miscdev);
++	ret = watchdog_register_device(&pc87413wdt_wdd);
+ 	if (ret != 0) {
+ 		pr_err("cannot register miscdev on minor=%d (err=%d)\n",
+ 		       WATCHDOG_MINOR, ret);
+@@ -533,13 +528,14 @@ static int __init pc87413_init(void)
+ 		goto misc_unreg;
+ 	}
+ 
+-	pc87413_enable();
++	pc87413_start();
+ 
+ 	release_region(io, 2);
++	pc87413_keepalive(&pc87413wdt_wdd);
+ 	return 0;
+ 
+ misc_unreg:
+-	misc_deregister(&pc87413_miscdev);
++	watchdog_unregister_device(&pc87413wdt_wdd)
+ reboot_unreg:
+ 	unregister_reboot_notifier(&pc87413_notifier);
+ 	release_region(io, 2);
+-- 
+2.17.1
 
