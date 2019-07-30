@@ -2,60 +2,60 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676BAC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE64C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3802E20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF60820693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:52:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="Mj/6QwoE"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="RAtHM/md"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731923AbfG3Pwg (ORCPT
+        id S1732679AbfG3Pwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:52:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:32978 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727392AbfG3Pwg (ORCPT
+        Tue, 30 Jul 2019 11:52:41 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35475 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732073AbfG3Pwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:52:36 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so30062231pfq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:52:35 -0700 (PDT)
+        Tue, 30 Jul 2019 11:52:40 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s1so23977472pgr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5nROKYMlxUSQXPN0RUQKtMMM6F4C3uP2jlfRem/QuiY=;
-        b=Mj/6QwoEkcNtMeypMi+v/jC3QqdPjicd27n8XIW2v59C9n/47WcgoL0k3FKs1s8Clm
-         dQiNZTzApteVC/fO/B7/qW/9GmUHzZODlFq+KLGCLjpX/XGaVfk3Cy/dnYcAulRghZ1a
-         tPZ3sQAExYcWjPBC7JhInnR+lgljIV0LcHKsutbvMvHYy5La3SiAPht3ibz6W7ihbFK8
-         qNWe9Q7agHz0to/y/1LfjZU1hHoXd/YoANapZAQAyMX09PGv7TkLGjpdl1ruFrfEFZOV
-         t6gDcaQAIFtDUs4Ioc1BccSWNoC6cLi1nDZh8RaAwPtaMIwx2eJObkJkW/ByNJ1qNwAl
-         7J6w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RtTBSxKVGkXm5joRk17n+qSFBzsiaHvI4NuQZRyF/Fg=;
+        b=RAtHM/md668sWkFc+1tpmyHKAutDo90221bbOJHgQzdqiv2i8Qpgivpck0tm/vR2xx
+         AMtMtoCtb4vybHpgtEgX8CdC5v+KNmiFZTiH2GCFAAhBiPR8rHX5JWlAgUcXPjyHiLte
+         Cbl9BHaalOZmEcCJLLs/82N+YFfrcMV9PD1v13OFG0ooS5mGJ90iCwl50WQz9ZNaNM3y
+         UyQ+/R8yn7p2FXwN78kDjWVNHZanqrHwrneE4TFz1ircTL9AZ4O544XjlPCBzfy2Q1xx
+         PasayHDr9hJbEHp8gB5RoJeH/t9c0yftEx+5A25D56T7yHyA7AFtXBmkvF2Hp8x18oRH
+         GJcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5nROKYMlxUSQXPN0RUQKtMMM6F4C3uP2jlfRem/QuiY=;
-        b=Y6PGA9nHl7DJ/PoKGj8I4mTPQrHXphhaqlDIWLovZR2/1Fa/VUAK26As6sGkZ1+iOP
-         nBZhdwu6qWvq4HM1ET9fgEbJ9rONCHowNx7+SPezWFp77sGQgnqzQMHk1bZfrBi3wogc
-         iDZmwUxhOv+fSwBE14pPH/pgByKEkNsx73ZU5UPBiY5OqFMDq6HhPUsAZJO/l2I8Dwy6
-         QHA7blD+mqk+FzgJ2BFcxv4nfKfMqNY6YN5sDzgWJLUY2iMIZjF6/5ZgpDBLEC6+Popy
-         asQ0JonjSbhp970i3Zjcnn6tCMVDG0rLScP8IDI5PlTX9fW6QuZT7BigBXAvUM/djwcd
-         Yl9Q==
-X-Gm-Message-State: APjAAAXD+pYK12xiHmGLGmJnBWo+XELzw2nRnbDZyoE3mc9KdH395veE
-        TaIgMQSn8CoZ3V9JMsHOdF7KZg67un4=
-X-Google-Smtp-Source: APXvYqyEmCTaVLfsMONuV6ABrTwjdCMUF6yVY+j8EXIWHssId7BHMydcV6xnYjJlijRKaGjiNrY/YQ==
-X-Received: by 2002:aa7:8b51:: with SMTP id i17mr43148183pfd.33.1564501954793;
-        Tue, 30 Jul 2019 08:52:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RtTBSxKVGkXm5joRk17n+qSFBzsiaHvI4NuQZRyF/Fg=;
+        b=WYubwJNDH2VmNQKea0dG2pBsY2VSKETfN73pPvKvlNT8YZD0doDryiG/jAFLpf3jEu
+         CiCw/F0XUoH6FxS4l90Mu9F5ahrusa9Gw8F69hgbwh+0pLK0EsIFxR75113bsNQY51E9
+         ja/Rs5fgVyyApb9mDymnN6TcI611rw3n0SYTZGVaWDpGl2Us9lDQYd2OMQSleBWvhMEj
+         n6N6vjNhXthQCODqBGFFjytLWG4KCMVyxzgAGfIMYV0/SQlX3hfPV4bqh2cqOuy+68ZR
+         ydmL9Sj0hPkdI1Fb/wAOvxFs4PvU3VUPBgUC+mYCC5/0I8/50H4gNPU2otRI6wF3OcBm
+         ITZg==
+X-Gm-Message-State: APjAAAV3oo7hQo1aup2osWHO/tTvqpFImbw0QwCq5zjbI2KmjWnQ42UQ
+        eul0/5TWwOCZD/n42/IvL/zAIzdWVAs=
+X-Google-Smtp-Source: APXvYqxAFfBtlg1l2w4yWmER2V4Yrtdm7GslobdW/IsitUtrmmRIm+xDh33YMdU7xsBgQFXk5teSzw==
+X-Received: by 2002:a65:4489:: with SMTP id l9mr112861883pgq.207.1564501959699;
+        Tue, 30 Jul 2019 08:52:39 -0700 (PDT)
 Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.gmail.com with ESMTPSA id q1sm76758814pfg.84.2019.07.30.08.52.33
+        by smtp.gmail.com with ESMTPSA id q1sm76758814pfg.84.2019.07.30.08.52.38
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 08:52:34 -0700 (PDT)
+        Tue, 30 Jul 2019 08:52:39 -0700 (PDT)
 From:   Mark Salyzyn <salyzyn@android.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
@@ -67,10 +67,12 @@ Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Stephen Smalley <sds@tycho.nsa.gov>,
         linux-unionfs@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH v11 0/4] overlayfs override_creds=off
-Date:   Tue, 30 Jul 2019 08:52:21 -0700
-Message-Id: <20190730155227.41468-1-salyzyn@android.com>
+Subject: [PATCH v11 1/4] overlayfs: check CAP_DAC_READ_SEARCH before issuing exportfs_decode_fh
+Date:   Tue, 30 Jul 2019 08:52:22 -0700
+Message-Id: <20190730155227.41468-2-salyzyn@android.com>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+In-Reply-To: <20190730155227.41468-1-salyzyn@android.com>
+References: <20190730155227.41468-1-salyzyn@android.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,34 +80,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch series:
-
-overlayfs: check CAP_DAC_READ_SEARCH before issuing exportfs_decode_fh
-fs: __vfs_getxattr nesting paradigm
-overlayfs: internal getxattr operations without sepolicy checking
-overlayfs: override_creds=off option bypass creator_cred
-
-The first three patches address fundamental security issues that should
-be solved regardless of the override_creds=off feature.
-on them).
-
-The fourth adds the feature depends on these other fixes.
-
-By default, all access to the upper, lower and work directories is the
-recorded mounter's MAC and DAC credentials.  The incoming accesses are
-checked against the caller's credentials.
-
-If the principles of least privilege are applied for sepolicy, the
-mounter's credentials might not overlap the credentials of the caller's
-when accessing the overlayfs filesystem.  For example, a file that a
-lower DAC privileged caller can execute, is MAC denied to the
-generally higher DAC privileged mounter, to prevent an attack vector.
-
-We add the option to turn off override_creds in the mount options; all
-subsequent operations after mount on the filesystem will be only the
-caller's credentials.  The module boolean parameter and mount option
-override_creds is also added as a presence check for this "feature",
-existence of /sys/module/overlay/parameters/overlay_creds
+Assumption never checked, should fail if the mounter creds are not
+sufficient.
 
 Signed-off-by: Mark Salyzyn <salyzyn@android.com>
 Cc: Miklos Szeredi <miklos@szeredi.hu>
@@ -118,42 +94,44 @@ Cc: Stephen Smalley <sds@tycho.nsa.gov>
 Cc: linux-unionfs@vger.kernel.org
 Cc: linux-doc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-
+Cc: kernel-team@android.com
 ---
-v11:
-- Squish out v10 introduced patch 2 and 3 in the series,
-  then and use per-thread flag instead for nesting.
-- Switch name to ovl_do_vds_getxattr for __vds_getxattr wrapper.
-- Add sb argument to ovl_revert_creds to match future work.
+v11 - Rebase
 
 v10:
-- Return NULL on CAP_DAC_READ_SEARCH
-- Add __get xattr method to solve sepolicy logging issue
-- Drop unnecessary sys_admin sepolicy checking for administrative
-  driver internal xattr functions.
+- return NULL rather than ERR_PTR(-EPERM)
+- did _not_ add it ovl_can_decode_fh() because of changes since last
+  review, suspect needs to be added to ovl_lower_uuid_ok()?
+
+v8 + v9:
+- rebase
+
+v7:
+- This time for realz
 
 v6:
-- Drop CONFIG_OVERLAY_FS_OVERRIDE_CREDS.
-- Do better with the documentation, drop rationalizations.
-- pr_warn message adjusted to report consequences.
+- rebase
 
 v5:
-- beefed up the caveats in the Documentation
-- Is dependent on
-  "overlayfs: check CAP_DAC_READ_SEARCH before issuing exportfs_decode_fh"
-  "overlayfs: check CAP_MKNOD before issuing vfs_whiteout"
-- Added prwarn when override_creds=off
+- dependency of "overlayfs: override_creds=off option bypass creator_cred"
+---
+ fs/overlayfs/namei.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-v4:
-- spelling and grammar errors in text
+diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
+index e9717c2f7d45..9702f0d5309d 100644
+--- a/fs/overlayfs/namei.c
++++ b/fs/overlayfs/namei.c
+@@ -161,6 +161,9 @@ struct dentry *ovl_decode_real_fh(struct ovl_fh *fh, struct vfsmount *mnt,
+ 	if (!uuid_equal(&fh->uuid, &mnt->mnt_sb->s_uuid))
+ 		return NULL;
+ 
++	if (!capable(CAP_DAC_READ_SEARCH))
++		return NULL;
++
+ 	bytes = (fh->len - offsetof(struct ovl_fh, fid));
+ 	real = exportfs_decode_fh(mnt, (struct fid *)fh->fid,
+ 				  bytes >> 2, (int)fh->type,
+-- 
+2.22.0.770.g0f2c4a37fd-goog
 
-v3:
-- Change name from caller_credentials / creator_credentials to the
-  boolean override_creds.
-- Changed from creator to mounter credentials.
-- Updated and fortified the documentation.
-- Added CONFIG_OVERLAY_FS_OVERRIDE_CREDS
-
-v2:
-- Forward port changed attr to stat, resulting in a build error.
-- altered commit message.
