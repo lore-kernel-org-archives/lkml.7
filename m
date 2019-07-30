@@ -2,97 +2,140 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDBEC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559EDC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F999206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131AD206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:30:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1aV4lQCW"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CMJOvTwd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfG3Q34 (ORCPT
+        id S1731249AbfG3QaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:29:56 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59886 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbfG3Q3z (ORCPT
+        Tue, 30 Jul 2019 12:30:21 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:39695 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbfG3QaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:29:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=zGVc/pyY2Km9LX6V8SnBhWdxyvSk4iYd46CX7MaxL3Q=; b=1aV4lQCWTmXBt4QcQjDXfTMiZ
-        Wr0I/mX++WkGkzyNfbVhdjUHzy9CPYAyQJbEnFJx6sBwusmKgo2EJA2w51dH4KC3O3uHiiWGuWrQZ
-        nQanZdrwUV8UzKDMHW5n7CvjWVRNgIhQc1odz/mGtd0bqwDC6rzo9fWH2GdDcb3E+zfhVd1cGMbYH
-        oGabreNrHpY4CwHEJD2Cw8K3AD/Nz6OH7QVV5PYg5jY6OLKmyeomV2tmfbrBmBEh/hcuQI0I6+LnD
-        RxvmkmvysPFD0KRJOswc3oDPff+LOdVTBDDCPJN1dd64tqmD21vV/PeRj36DZ5jIdgit47+QkiKvO
-        wmWrBidrg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsV0I-00019U-F3; Tue, 30 Jul 2019 16:29:34 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2A9852029FD58; Tue, 30 Jul 2019 18:29:33 +0200 (CEST)
-Date:   Tue, 30 Jul 2019 18:29:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rik van Riel <riel@surriel.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, pjt@google.com,
-        dietmar.eggemann@arm.com, mingo@redhat.com,
-        morten.rasmussen@arm.com, tglx@linutronix.de,
-        mgorman@techsingularity.net, vincent.guittot@linaro.org
-Subject: Re: [PATCH RFC v3 0/14] sched,fair: flatten CPU controller runqueues
-Message-ID: <20190730162933.GW31398@hirez.programming.kicks-ass.net>
-References: <20190722173348.9241-1-riel@surriel.com>
+        Tue, 30 Jul 2019 12:30:21 -0400
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x6UGU4IO020919;
+        Wed, 31 Jul 2019 01:30:04 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x6UGU4IO020919
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564504205;
+        bh=deEeiknpVEJHhu6POdmodbTCpbJqhNZXh+u7IBm1me8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CMJOvTwdI+WZmQ0j1Lr8co4V99LWTLSfKq10KH0QvsrQdeEmyYlcguVLC96J3hwJG
+         fWSCpFYQtlsAWVSfWa2bPFe8y2D45b0iqpT5IThac5R96/ymjyO2lgAmuh8mU8OTOz
+         +Evp/SC2jl39Ob50nLQN28Fg+bjh7zQH3tv5OBskxFar9od6kUj5RC8KlCAqXHq/gM
+         VA+yP8ia/01lROlxxqFFejrHRwrCzHJLjL3IMpqtRF3NyUsGWkn/atgouyKpXn5usF
+         sKAP2oLfiE7iIRcjgA52wSqUDQuYq5Tj3tHOUT3CtqIRYYqQQtaw3+YQN42j/UP/Ad
+         Cx47djzPy6PKA==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id m8so43989493vsj.0;
+        Tue, 30 Jul 2019 09:30:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAXgAenOGGCtzWXZBXBr6s5SHTg2xHXtuGKOnbtF12YJB2VCyj5Z
+        9U+Ihe3hR97pxwSlCauSmVuS7q6G8LZ+ja0Qs+U=
+X-Google-Smtp-Source: APXvYqzsLAzQi8QjYxsC9kzAbo65xczrjMlJAwBpr3yC2oxpGh3Zay09658qMGYvyb6AXEAG0peXUQasA+Rkj+7zfrk=
+X-Received: by 2002:a67:8e0a:: with SMTP id q10mr49990008vsd.215.1564504203698;
+ Tue, 30 Jul 2019 09:30:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722173348.9241-1-riel@surriel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190714152817.24693-1-efremov@linux.com> <20190729141801.31333-1-efremov@linux.com>
+ <20190730082618.5bb5edf3@canb.auug.org.au> <1b6f749c-2a25-219a-3eb3-0f2c7a542426@linux.com>
+In-Reply-To: <1b6f749c-2a25-219a-3eb3-0f2c7a542426@linux.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 31 Jul 2019 01:29:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATnC6eVmahn=44F-j3Uf-x+cUWuP0q7QuP800biL9QJiA@mail.gmail.com>
+Message-ID: <CAK7LNATnC6eVmahn=44F-j3Uf-x+cUWuP0q7QuP800biL9QJiA@mail.gmail.com>
+Subject: Re: [PATCH v3] modpost: check for static EXPORT_SYMBOL* functions
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 01:33:34PM -0400, Rik van Riel wrote:
-> Plan for the CONFIG_CFS_BANDWIDTH reimplementation:
-> - When a cgroup gets throttled, mark the cgroup and its children
->   as throttled.
-> - When pick_next_entity finds a task that is on a throttled cgroup,
->   stash it on the cgroup runqueue (which is not used for runnable
->   tasks any more). Leave the vruntime unchanged, and adjust that
->   runqueue's vruntime to be that of the left-most task.
+On Tue, Jul 30, 2019 at 4:00 PM Denis Efremov <efremov@linux.com> wrote:
+>
+> On 30.07.2019 01:26, Stephen Rothwell wrote:
+> > Hi Denis,
+> >
+> > On Mon, 29 Jul 2019 17:18:01 +0300 Denis Efremov <efremov@linux.com> wrote:
+> >>
+> >> This patch adds a check to warn about static EXPORT_SYMBOL* functions
+> >> during the modpost. In most of the cases, a static symbol marked for
+> >> exporting is an odd combination that should be fixed either by deleting
+> >> the exporting mark or by removing the static attribute and adding the
+> >> appropriate declaration to headers.
+> >
+> > OK, this is now in linux-next and I am getting what look like false
+> > positives :-(
+> >
+> > My powerpc builds produce these:
+> >
+> > WARNING: "ahci_em_messages" [vmlinux] is the static EXPORT_SYMBOL_GPL
+> > WARNING: "ftrace_set_clr_event" [vmlinux] is the static EXPORT_SYMBOL_GPL
+> > WARNING: "empty_zero_page" [vmlinux] is the static EXPORT_SYMBOL
+> > WARNING: "jiffies" [vmlinux] is the static EXPORT_SYMBOL
+> >
+> > empty_zero_page (at least) is not static.  It is defined in assembler ...
+>
+> This could be fixed either by adding the type, for example:
+> --- a/arch/x86/kernel/head_64.S
+> +++ b/arch/x86/kernel/head_64.S
+> @@ -478,6 +478,7 @@ EXPORT_SYMBOL(phys_base)
+>
+>          __PAGE_ALIGNED_BSS
+>   NEXT_PAGE(empty_zero_page)
+> +.type empty_zero_page, STT_OBJECT
+>          .skip PAGE_SIZE
+>   EXPORT_SYMBOL(empty_zero_page)
 
-and ignore such tasks for the load-balancer; I suppose
-
-> - When a cgroup gets unthrottled, and has tasks on it, place it on
->   a vruntime ordered heap separate from the main runqueue.
-
-and expose said heap to the load-balancer..
-
-Now, I suppose you do this because merging heaps is easier than merging
-RB trees? (not in complexity iirc, but probably in code)
-
-> - Have pick_next_task_fair grab one task off that heap every time it
->   is called, and the min vruntime of that heap is lower than the
->   vruntime of the CPU's cfs_rq (or the CPU has no other runnable tasks).
-
-That's like a smeared out merge :-) But since the other tasks kept on
-running, this CPUs vruntime will be (much) advanced vs those throttled
-tasks and we'll most likely end up picking them all before we pick a
-'normal' task.
-
-> - Place that selected task on the CPU's cfs_rq, renormalizing its
->   vruntime with the GENTLE_FAIR_SLEEPERS logic. That should help
->   interleave the already runnable tasks with the recently unthrottled
->   group, and prevent thundering herd issues.
-> - If the group gets throttled again before all of its task had a chance
->   to run, vruntime sorting ensures all the tasks in the throttled cgroup
->   get a chance to run over time.
+This would require us to fix-up
+all assembly files, wouldn't it?
 
 
+> Or by updating the check in the patch:
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -1988,7 +1988,9 @@ static void read_symbols(const char *modname)
+>                  unsigned char bind = ELF_ST_BIND(sym->st_info);
+>                  unsigned char type = ELF_ST_TYPE(sym->st_info);
+>
+> -               if (type == STT_OBJECT || type == STT_FUNC) {
+> +               if (type == STT_OBJECT ||
+> +                   type == STT_FUNC ||
+> +                   type == STT_NOTYPE) {
+>
+> Do I need to resend the whole patch or create new "patch-on-patch"?
+
+I prefer this, but why do you need to check type?
+
+Doesn't this work?
+
+for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
+        unsigned char bind = ELF_ST_BIND(sym->st_info);
+
+        struct symbol *s = find_symbol(remove_dot(info.strtab +
+                                                  sym->st_name));
+
+        if (s && (bind == STB_GLOBAL || bind == STB_WEAK))
+                s->is_static = 0;
+}
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
