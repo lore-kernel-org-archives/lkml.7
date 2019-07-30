@@ -2,81 +2,66 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058B4C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D65C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2F120644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 876392089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:30:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="u+YNmT48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfG3N34 (ORCPT
+        id S1730651AbfG3Nab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:29:56 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41004 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfG3N3z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:29:55 -0400
-Received: by mail-qk1-f196.google.com with SMTP id v22so46568314qkj.8;
-        Tue, 30 Jul 2019 06:29:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eAg4Am9X4yo26M1BZarqg6D+4kRvHZB3qRHqer+jaXM=;
-        b=FwOzihKo4iQq27B05NpZE8zc1p9tjiU9Z7fGQX6O8Y7Horj6yjOg61r1CpEI4QsD5B
-         w2HcBhS7ws6aJfYExKD91krl1j86x5D91OEq4wbO0uLq5qOBKh0+3KnoXyfBgWbiqU1+
-         ufZOxnQhL2qwcvSxd2nLurVUNKv77Z5RrvKnGstpOAZY3o2eCKxEELBePdy6wnXQuBpI
-         56mPVGF1jg8mEE8ond1kAyV+LRZVcVfz51SEz2vl518NLCsyVEcpaXM3h8cG1/fXehuo
-         7ySC8VxLSA5oRPS+HfoCCVdan6QZVjSTNPwj2Y/DSG3bldP87B552P4IP1nhk3U2TTdz
-         7O0w==
-X-Gm-Message-State: APjAAAVZd5T/sPD/AqqIIeDtBM1yhkN94wEsOTLDXf8BI29Fl31VoaVF
-        QaAHiir/l7+3jKZyUYNg4o6t5i8sbkUsObMONa0bCtKd
-X-Google-Smtp-Source: APXvYqyxtFUvmdvb26Ngz9rBg9K5p3xBe/SoFc4hciPltmdnSmvl/LpUwagyRclAJwfu9ZQGiLRooWXyG4QSGZRe6eA=
-X-Received: by 2002:a37:4ac3:: with SMTP id x186mr74039470qka.138.1564493394364;
- Tue, 30 Jul 2019 06:29:54 -0700 (PDT)
+        Tue, 30 Jul 2019 09:30:31 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47656 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfG3Nab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 09:30:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=tZfqFV1mC7mjoGwJp7O3BavJOel8ZxAd9ytjtyhys4s=; b=u+YNmT48vGmDMbMfOWrSeCDUfD
+        enHCxebeZ9BjoW3i24I+yk2UQIfTK0zmG8k+4p3IjwODwuD+Cr/I3puGYpT/koy87J8QqGf2Rxo0y
+        XP7Sjce4ycQUzjQ4l/SuLMNH+0svT/neij9rv8TKuj+SNiWoMJ2P3KFOIRaYViNkrLU4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hsSCz-0007gW-0u; Tue, 30 Jul 2019 15:30:29 +0200
+Date:   Tue, 30 Jul 2019 15:30:29 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Hubert Feurstein <h.feurstein@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] net: phy: fixed_phy: print gpio error only if gpio node
+ is present
+Message-ID: <20190730133029.GC28552@lunn.ch>
+References: <20190730094623.31640-1-h.feurstein@gmail.com>
 MIME-Version: 1.0
-References: <1564488945-20149-1-git-send-email-guoren@kernel.org>
-In-Reply-To: <1564488945-20149-1-git-send-email-guoren@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 30 Jul 2019 15:29:38 +0200
-Message-ID: <CAK8P3a03tXXHQ00QEGg=7p17mmseuJqRhuumWKzS8dCYvXHkBg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] csky: Fixup dma_rmb/wmb synchronization problem
-To:     Guo Ren <guoren@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-csky@vger.kernel.org, feng_shizhu@dahuatech.com,
-        zhang_jian5@dahuatech.com, zheng_xingjian@dahuatech.com,
-        zhu_peng@dahuatech.com, Guo Ren <ren_guo@c-sky.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730094623.31640-1-h.feurstein@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 2:15 PM <guoren@kernel.org> wrote:
->
-> From: Guo Ren <ren_guo@c-sky.com>
->
-> If arch didn't define dma_r/wmb(), linux will use w/rmb instead. Csky
-> use bar.xxx to implement mb() and that will cause problem when sync data
-> with dma device, becasue bar.xxx couldn't guarantee bus transactions
-> finished at outside bus level. We must use sync.s instead of bar.xxx for
-> dma data synchronization and it will guarantee retirement after getting
-> the bus bresponse.
->
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+On Tue, Jul 30, 2019 at 11:46:23AM +0200, Hubert Feurstein wrote:
+> It is perfectly ok to not have an gpio attached to the fixed-link node. So
+> the driver should not throw an error message when the gpio is missing.
+> 
+> Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
 
-This change looks good to me, but I think your regular barriers
-(mb, rmb, wmb) are still wrong: These are meant to be the superset
-of dma_{r,w}mb and smp_{,r,w}mb, and synchronize
-against both SMP and DMA interactions.
+Fixes: 5468e82f7034 ("net: phy: fixed-phy: Drop GPIO from fixed_phy_add()")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-I suspect you can drop the '.s' for non-SMP builds. What I don't
-see is whether you might need to add '.i' for dma_wmb() or
-dma_rmb().
-
-       Arnd
+    Andrew
