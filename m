@@ -2,129 +2,84 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4217C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F188EC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13242089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C952087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:36:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbfG3Hew (ORCPT
+        id S1730583AbfG3HgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:34:52 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:9778 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730505AbfG3Her (ORCPT
+        Tue, 30 Jul 2019 03:36:25 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43342 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfG3HgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:34:47 -0400
-X-UUID: 6b1d64c0bf184c6ea38655de0b27de8f-20190730
-X-UUID: 6b1d64c0bf184c6ea38655de0b27de8f-20190730
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 627788076; Tue, 30 Jul 2019 15:34:37 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 30 Jul 2019 15:34:35 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 30 Jul 2019 15:34:34 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Mathias Nyman <mathias.nyman@intel.com>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        Daniel Kurtz <djkurtz@chromium.org>
-Subject: [PATCH v2 2/2] usb: xhci-mtk: add an optional xhci_ck clock
-Date:   Tue, 30 Jul 2019 15:34:16 +0800
-Message-ID: <1564472056-27875-2-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1564472056-27875-1-git-send-email-chunfeng.yun@mediatek.com>
-References: <1564472056-27875-1-git-send-email-chunfeng.yun@mediatek.com>
+        Tue, 30 Jul 2019 03:36:25 -0400
+Received: by mail-qt1-f196.google.com with SMTP id w17so17757351qto.10;
+        Tue, 30 Jul 2019 00:36:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KfrVJyXLBlSE9J2lD7NyucDQMOlxGjPdY+ssj9/d310=;
+        b=ekg/TIdh/5CdjTpsKc8y61wYzehVJwT+LlG8dPrqCiCjB3VyDdJzW0PjSoD8TE0GSS
+         TvocylAHjmGHvNpJ/TQxJudjfsAyPjsz3Gue57NEXpKP325F9eq6cf02WD5uQKRqF4s5
+         6Vz99UKj+7/6RbZGAGVMANWyufR8ahxfROVYAi4IP1G7/AGSyPuZpTa3nbUby4Jhxmd2
+         ku7zkfb8QnZuQEXR+hGCiL+XPKJ4uUpyG4UPVXCKOAowGP++agQ0cmKnbn0b4+bv1Jhe
+         uteqf6aSKsYiTF5+klK/e1oO8vH61TZJg9TxiMxnsxBVAJHNkfCCdV3ZtDpgTO1BJ6Ge
+         D/Pw==
+X-Gm-Message-State: APjAAAWReeNUa2eXbv+a+f6lXNafhqiHOPMW5Cd6mtdQ6boGSvJNTX90
+        hDEcQU6K/MS8bYiAe8v5EW9GOUhO8YL0s/lBa/k=
+X-Google-Smtp-Source: APXvYqxMF2mFh+jvacCLXH4Q8wX+v35Rhqc4s/okUitEq0NfFz96icl/A98K5zPxFiZM3Zjr3+btQsm5HWzBXkh4esI=
+X-Received: by 2002:aed:3e7c:: with SMTP id m57mr80607136qtf.204.1564472184297;
+ Tue, 30 Jul 2019 00:36:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 998F519EA2138EAC381088B851B099251395E0C2BF0920608CE3B7EF1E8F2F682000:8
-X-MTK:  N
+References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-20-deepa.kernel@gmail.com>
+ <201907292129.AC796230@keescook>
+In-Reply-To: <201907292129.AC796230@keescook>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 30 Jul 2019 09:36:08 +0200
+Message-ID: <CAK8P3a2rWEciT=PegCYUww-n-3smQHNjvW4duBqoS2PLSGdhYw@mail.gmail.com>
+Subject: Re: [PATCH 19/20] pstore: fs superblock limits
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some SoCs may have an optional clock xhci_ck (125M or 200M), it
-usually uses the same PLL as sys_ck, so support it.
+On Tue, Jul 30, 2019 at 6:31 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Jul 29, 2019 at 06:49:23PM -0700, Deepa Dinamani wrote:
+> > Also update the gran since pstore has microsecond granularity.
+>
+> So, I'm fine with this, but technically the granularity depends on the
+> backend storage... many have no actual time keeping, though. My point is,
+> pstore's timestamps are really mostly a lie, but the most common backend
+> (ramoops) is seconds-granularity.
+>
+> So, I'm fine with this, but it's a lie but it's a lie that doesn't
+> matter, so ...
+>
+> Acked-by: Kees Cook <keescook@chromium.org>
+>
+> I'm open to suggestions to improve it...
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v2 no changes
----
- drivers/usb/host/xhci-mtk.c | 13 +++++++++++++
- drivers/usb/host/xhci-mtk.h |  1 +
- 2 files changed, 14 insertions(+)
+If we don't care about using sub-second granularity, then setting it
+to one second unconditionally here will make it always use that and
+report it correctly.
 
-diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index 026fe18972d3..b18a6baef204 100644
---- a/drivers/usb/host/xhci-mtk.c
-+++ b/drivers/usb/host/xhci-mtk.c
-@@ -216,6 +216,10 @@ static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
- 		return PTR_ERR(mtk->sys_clk);
- 	}
- 
-+	mtk->xhci_clk = devm_clk_get_optional(dev, "xhci_ck");
-+	if (IS_ERR(mtk->xhci_clk))
-+		return PTR_ERR(mtk->xhci_clk);
-+
- 	mtk->ref_clk = devm_clk_get_optional(dev, "ref_ck");
- 	if (IS_ERR(mtk->ref_clk))
- 		return PTR_ERR(mtk->ref_clk);
-@@ -244,6 +248,12 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
- 		goto sys_clk_err;
- 	}
- 
-+	ret = clk_prepare_enable(mtk->xhci_clk);
-+	if (ret) {
-+		dev_err(mtk->dev, "failed to enable xhci_clk\n");
-+		goto xhci_clk_err;
-+	}
-+
- 	ret = clk_prepare_enable(mtk->mcu_clk);
- 	if (ret) {
- 		dev_err(mtk->dev, "failed to enable mcu_clk\n");
-@@ -261,6 +271,8 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
- dma_clk_err:
- 	clk_disable_unprepare(mtk->mcu_clk);
- mcu_clk_err:
-+	clk_disable_unprepare(mtk->xhci_clk);
-+xhci_clk_err:
- 	clk_disable_unprepare(mtk->sys_clk);
- sys_clk_err:
- 	clk_disable_unprepare(mtk->ref_clk);
-@@ -272,6 +284,7 @@ static void xhci_mtk_clks_disable(struct xhci_hcd_mtk *mtk)
- {
- 	clk_disable_unprepare(mtk->dma_clk);
- 	clk_disable_unprepare(mtk->mcu_clk);
-+	clk_disable_unprepare(mtk->xhci_clk);
- 	clk_disable_unprepare(mtk->sys_clk);
- 	clk_disable_unprepare(mtk->ref_clk);
- }
-diff --git a/drivers/usb/host/xhci-mtk.h b/drivers/usb/host/xhci-mtk.h
-index 8be8c5f7ff62..5ac458b7d2e0 100644
---- a/drivers/usb/host/xhci-mtk.h
-+++ b/drivers/usb/host/xhci-mtk.h
-@@ -139,6 +139,7 @@ struct xhci_hcd_mtk {
- 	struct regulator *vusb33;
- 	struct regulator *vbus;
- 	struct clk *sys_clk;	/* sys and mac clock */
-+	struct clk *xhci_clk;
- 	struct clk *ref_clk;
- 	struct clk *mcu_clk;
- 	struct clk *dma_clk;
--- 
-2.21.0
-
+       Arnd
