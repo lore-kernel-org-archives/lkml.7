@@ -7,61 +7,59 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CEAC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DADC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 854AE208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B1A2208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NK10/uJH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EUVUdN1/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388307AbfG3STu (ORCPT
+        id S2388227AbfG3STx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:19:50 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37863 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387553AbfG3SQT (ORCPT
+        Tue, 30 Jul 2019 14:19:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33870 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387897AbfG3SQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:16:19 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i70so19737018pgd.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:18 -0700 (PDT)
+        Tue, 30 Jul 2019 14:16:18 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b13so30263553pfo.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1vWUmpmVNnICz7TB6lvEdzPoKbI3ZZ7sRmOecFANbCU=;
-        b=NK10/uJHFuNKun4KjPHLULC6X4ualJpqBM9mz8GSXrdEW9Cgf/lNAvKR0d1OQJnyhP
-         OXpojQEShlYHOYhMb9JmeIIjih2TamlZoJ57uvUkjitw9VB8vK2wUa0063KOJ0Cki+OA
-         7QTI4jLIVeuwwzkk1NyVi4bB72/kvTdVJzDEM=
+        bh=kDBEcnQJfsnw+mnIW0/b6FtORHu9LZqCk2VAafP4T0g=;
+        b=EUVUdN1/7hvdK11XyCYMXsZEejo/CxmxXn4Y/wTf8+Uo7K6CAROlOtgLd26sAATKoV
+         e1DcUT64uWeNCTsKxI1u9N29+I/X3eZBnaEEAVaDt0qCDVj7HgGZDC0k3TqWVlyMgQ+5
+         yzTpfG4SOA1+CX3MBN4/B1TJpa8VV1k5EozbE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1vWUmpmVNnICz7TB6lvEdzPoKbI3ZZ7sRmOecFANbCU=;
-        b=cQ+huJbYkLBLb43qgnSLbHt/7J+M/KsZ0/WciDDoZKiXdJcuao5gFiZdz5hVsJzxHF
-         WugPXQlULzvCqWnNiuikJpq5NRhIEX2XyAoOwzLuN4eVYLn7N+3CDhn1giGo7ws07aNx
-         qRPadlKbn7reyFygb81y7QI4UFtvHy3Ua60aL3kRcNJ2GVAxmkeDjQZ+FbEZ9Qfq/7gn
-         UkXWlpFnbVjcjv7n65r4GZtfKjhttNNuD6ZfKWzz47xhqRfiDqcxJFyOD59bBS/yhhKS
-         SZZ+M6lSLBiGOwdRwCKtfQnQB9VKen5F7crk82uw0WbodWJMw1niqsmq4v15OlQF0i6I
-         lvcg==
-X-Gm-Message-State: APjAAAUsY2IkwVva3IW9MC6fsTuwtVWX6xBgdXoCIJSITSJeNLQ4L5jf
-        CZpMv1DRGzri9jCXqCWq8oJepq6Ct2k=
-X-Google-Smtp-Source: APXvYqw4JRt6DjkgPPL4ADGLOngkuxFcm49Yqtodpx4qAk6+AZL5RD+TGGuAtPdzkd51R9TAMCRyNw==
-X-Received: by 2002:a17:90a:5288:: with SMTP id w8mr119352919pjh.61.1564510578193;
-        Tue, 30 Jul 2019 11:16:18 -0700 (PDT)
+        bh=kDBEcnQJfsnw+mnIW0/b6FtORHu9LZqCk2VAafP4T0g=;
+        b=JcFNXnW14Fns6z3v0wPqqTe8a+Qinvvypthe3nU3vZFiNg2l5sbp1OVKGcefPbOdfO
+         66CNU96xPyjuiteDEBbpS1Hp4nqDQTkq6m3IFFezwD0Ccdu5cxMIWQ3FSY1i4BkpQ/6S
+         tQ4FXNjB9cIXm5bIsd+LJ6RLILNdAc9e8HpYOmQhrSJ9HTrz31Hu1RriIbrjJJWHH5qU
+         dMC9cepRvRhlvzWkFTybCBLNr3427ytF9YjrYTBq+TwKQ7dKfqjLsH4c3E85TrTcSsDe
+         EM3es3YLb6WWRn2fF1Xb+AS3EnSFA6rkHvXiCL9t4UdHB4ppwu16WS8EvPi5KUkTHc9f
+         Rn2Q==
+X-Gm-Message-State: APjAAAVL8rkqZWZCbPJ8I/oriO4bnCkV75p+KxQjHKSrSLkFIhjW9TuR
+        TaR0WoenpdNQFfXQLg8DYXJm5isAtAo=
+X-Google-Smtp-Source: APXvYqzu0Xs5GSslsQNll4ElHggYuH6Nv74MqChqVeexVNeRIb/yb4UL4y72L4llU+NELMP+k/XYFw==
+X-Received: by 2002:a17:90a:9903:: with SMTP id b3mr117381729pjp.80.1564510577354;
+        Tue, 30 Jul 2019 11:16:17 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.17
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.16
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
         Tue, 30 Jul 2019 11:16:17 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v6 23/57] irqchip: Remove dev_err() usage after platform_get_irq()
-Date:   Tue, 30 Jul 2019 11:15:23 -0700
-Message-Id: <20190730181557.90391-24-swboyd@chromium.org>
+Subject: [PATCH v6 22/57] iommu: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:22 -0700
+Message-Id: <20190730181557.90391-23-swboyd@chromium.org>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
 References: <20190730181557.90391-1-swboyd@chromium.org>
@@ -107,80 +105,63 @@ if ( \( ret < 0 \| ret <= 0 \) )
 While we're here, remove braces on if statements that only have one
 statement (manually).
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux-foundation.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
 Please apply directly to subsystem trees
 
- drivers/irqchip/irq-imgpdc.c        | 8 ++------
- drivers/irqchip/irq-keystone.c      | 4 +---
- drivers/irqchip/qcom-irq-combiner.c | 4 +---
- 3 files changed, 4 insertions(+), 12 deletions(-)
+ drivers/iommu/exynos-iommu.c | 4 +---
+ drivers/iommu/msm_iommu.c    | 1 -
+ drivers/iommu/qcom_iommu.c   | 4 +---
+ 3 files changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/irqchip/irq-imgpdc.c b/drivers/irqchip/irq-imgpdc.c
-index d00489a4b54f..698d07f48fed 100644
---- a/drivers/irqchip/irq-imgpdc.c
-+++ b/drivers/irqchip/irq-imgpdc.c
-@@ -362,10 +362,8 @@ static int pdc_intc_probe(struct platform_device *pdev)
- 	}
- 	for (i = 0; i < priv->nr_perips; ++i) {
- 		irq = platform_get_irq(pdev, 1 + i);
--		if (irq < 0) {
--			dev_err(&pdev->dev, "cannot find perip IRQ #%u\n", i);
-+		if (irq < 0)
- 			return irq;
--		}
- 		priv->perip_irqs[i] = irq;
- 	}
- 	/* check if too many were provided */
-@@ -376,10 +374,8 @@ static int pdc_intc_probe(struct platform_device *pdev)
+diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+index b0c1e5f9daae..1934c16a5abc 100644
+--- a/drivers/iommu/exynos-iommu.c
++++ b/drivers/iommu/exynos-iommu.c
+@@ -583,10 +583,8 @@ static int __init exynos_sysmmu_probe(struct platform_device *pdev)
+ 		return PTR_ERR(data->sfrbase);
  
- 	/* Get syswake IRQ number */
  	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "cannot find syswake IRQ\n");
-+	if (irq < 0)
+-	if (irq <= 0) {
+-		dev_err(dev, "Unable to find IRQ resource\n");
++	if (irq <= 0)
  		return irq;
 -	}
- 	priv->syswake_irq = irq;
  
- 	/* Set up an IRQ domain */
-diff --git a/drivers/irqchip/irq-keystone.c b/drivers/irqchip/irq-keystone.c
-index efbcf8435185..8118ebe80b09 100644
---- a/drivers/irqchip/irq-keystone.c
-+++ b/drivers/irqchip/irq-keystone.c
-@@ -164,10 +164,8 @@ static int keystone_irq_probe(struct platform_device *pdev)
+ 	ret = devm_request_irq(dev, irq, exynos_sysmmu_irq, 0,
+ 				dev_name(dev), data);
+diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
+index b25e2eb9e038..3df9266abe65 100644
+--- a/drivers/iommu/msm_iommu.c
++++ b/drivers/iommu/msm_iommu.c
+@@ -750,7 +750,6 @@ static int msm_iommu_probe(struct platform_device *pdev)
+ 
+ 	iommu->irq = platform_get_irq(pdev, 0);
+ 	if (iommu->irq < 0) {
+-		dev_err(iommu->dev, "could not get iommu irq\n");
+ 		ret = -ENODEV;
+ 		goto fail;
  	}
+diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
+index 34d0b9783b3e..fb45486c6d14 100644
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -696,10 +696,8 @@ static int qcom_iommu_ctx_probe(struct platform_device *pdev)
+ 		return PTR_ERR(ctx->base);
  
- 	kirq->irq = platform_get_irq(pdev, 0);
--	if (kirq->irq < 0) {
--		dev_err(dev, "no irq resource %d\n", kirq->irq);
-+	if (kirq->irq < 0)
- 		return kirq->irq;
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "failed to get irq\n");
++	if (irq < 0)
+ 		return -ENODEV;
 -	}
  
- 	kirq->dev = dev;
- 	kirq->mask = ~0x0;
-diff --git a/drivers/irqchip/qcom-irq-combiner.c b/drivers/irqchip/qcom-irq-combiner.c
-index d88e993aa66d..abfe59284ff2 100644
---- a/drivers/irqchip/qcom-irq-combiner.c
-+++ b/drivers/irqchip/qcom-irq-combiner.c
-@@ -248,10 +248,8 @@ static int __init combiner_probe(struct platform_device *pdev)
- 		return err;
- 
- 	combiner->parent_irq = platform_get_irq(pdev, 0);
--	if (combiner->parent_irq <= 0) {
--		dev_err(&pdev->dev, "Error getting IRQ resource\n");
-+	if (combiner->parent_irq <= 0)
- 		return -EPROBE_DEFER;
--	}
- 
- 	combiner->domain = irq_domain_create_linear(pdev->dev.fwnode, combiner->nirqs,
- 						    &domain_ops, combiner);
+ 	/* clear IRQs before registering fault handler, just in case the
+ 	 * boot-loader left us a surprise:
 -- 
 Sent by a computer through tubes
 
