@@ -2,132 +2,151 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66559C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3608020679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:38:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0EFIzRf"
+	by mail.kernel.org (Postfix) with ESMTP id 39DB621773
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731792AbfG3Ji2 (ORCPT
+        id S1731799AbfG3Jiy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:38:28 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34696 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728830AbfG3Ji1 (ORCPT
+        Tue, 30 Jul 2019 05:38:54 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:52875 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfG3Jix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:38:27 -0400
-Received: by mail-io1-f68.google.com with SMTP id k8so126642137iot.1;
-        Tue, 30 Jul 2019 02:38:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ou13JSb7APrBhtuQv/5kmhMM+zV7koQaR2bgg5AZQlY=;
-        b=j0EFIzRfAw0lRTK+yYPE5ulbxWukeaSAp3cdW3OtkvwySlKqShPEX+esUskyEmaz91
-         smWqM1KuHFepV/SlIWOSjqsSdg8Rx2XmuuZpOHigBAW4QSrFVXmG7MdUVnC6R9ajU2hm
-         xm15gw005bdAhMxcfib8hbYxQCjB7VN7JpsJ94/H0hBwuKq/94Av/hGYlmwDR0GJvrEI
-         Zl60nLCHPxaRhKZmHADpAje0zxwvLZx/J8L99Ybb886lm1oPeQxkk9KtTFwsj/jRh7zE
-         tWatY/3twGR0P+54g2zzWwAK/Iz5zfAqGrFuLR2sUEL4/fHqysGsmSGKYK1dOCJ3nW0G
-         TeUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ou13JSb7APrBhtuQv/5kmhMM+zV7koQaR2bgg5AZQlY=;
-        b=Y7lKTsJDyBa1QlcMkslkasyaY5LhfA1oDvCsNxCnSLxkyV3AgEoZl2jkg7MP5QDMEp
-         UXuOxk5Vd7T6ZNVdvpMyEgoCa81OrACqqwGob3tyYtj0N5GE5vo1tIhJoW2aWjNQvITH
-         grGmFTIAVErnezdS0fgHF9bOfSGM0d8I+6pnUH14IL+P6Atd7FXhD4OpIOWoWZxY7pVa
-         M2Vkypyvrg0AA8kQ+0pn8WbswoEXyVxSKafKjLJdyEZFkNjZGfKvgvULStwaGsvp1jsb
-         Mf0p0KEJ1POZcSKcVXhs+P5DYsbV/7WYXvBnvO6k//dNCeElbxHAB+5BYxAMkzeHdwdN
-         2YZA==
-X-Gm-Message-State: APjAAAUKlUmRl25Uy5oiaeDvscNmdfmEBDvdu39dpTnrazFU08TgNYSM
-        ptr+OFtgSnC7mGuviRSKtzSpaLRuXrvGJbWq7Ss=
-X-Google-Smtp-Source: APXvYqwl+CcolgEuiHDJ5d3iGImkrYA0AzcC+jBZlbomvM4WeZ0E72xKKPGki6Miq7I+qMQaYqL0tAiTMKCmbUnR/FY=
-X-Received: by 2002:a5e:d817:: with SMTP id l23mr6112819iok.282.1564479506244;
- Tue, 30 Jul 2019 02:38:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190724094306.1866-1-baijiaju1990@gmail.com>
-In-Reply-To: <20190724094306.1866-1-baijiaju1990@gmail.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Tue, 30 Jul 2019 11:41:20 +0200
-Message-ID: <CAOi1vP8Q=fYZWv9qFZcyBdKV1VYq_yr3qWyAb44W=jHZ6zfYrA@mail.gmail.com>
-Subject: Re: [PATCH] net: ceph: Fix a possible null-pointer dereference in ceph_crypto_key_destroy()
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 30 Jul 2019 05:38:53 -0400
+Received: from marcel-macbook.fritz.box (p5B3D2BA7.dip0.t-ipconnect.de [91.61.43.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 5501ECECFE;
+        Tue, 30 Jul 2019 11:47:30 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] Bluetooth: btusb: Fix suspend issue for Realtek
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190726115208.GA8152@toshiba>
+Date:   Tue, 30 Jul 2019 11:38:51 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Max Chou <max.chou@realtek.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <C646B2DB-2CC8-4C03-8AAE-7494DD8A3099@holtmann.org>
+References: <20190726115208.GA8152@toshiba>
+To:     Alex Lu <alex_lu@realsil.com.cn>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 11:43 AM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
->
-> In set_secret(), key->tfm is assigned to NULL on line 55, and then
-> ceph_crypto_key_destroy(key) is executed.
->
-> ceph_crypto_key_destroy(key)
->     crypto_free_sync_skcipher(key->tfm)
->         crypto_skcipher_tfm(tfm)
->             return &tfm->base;
->
-> Thus, a possible null-pointer dereference may occur.
->
-> To fix this bug, key->tfm is checked before calling
-> crypto_free_sync_skcipher().
->
-> This bug is found by a static analysis tool STCheck written by us.
->
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Hi Alex,
+
+> From the perspective of controller, global suspend means there is no
+> SET_FEATURE (DEVICE_REMOTE_WAKEUP) and controller would drop the
+> firmware. It would consume less power. So we should not send this kind
+> of SET_FEATURE when host goes to suspend state.
+> Otherwise, when making device enter selective suspend, host should send
+> SET_FEATURE to make sure the firmware remains.
+> 
+> Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
 > ---
->  net/ceph/crypto.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/net/ceph/crypto.c b/net/ceph/crypto.c
-> index 5d6724cee38f..ac28463bcfd8 100644
-> --- a/net/ceph/crypto.c
-> +++ b/net/ceph/crypto.c
-> @@ -136,7 +136,8 @@ void ceph_crypto_key_destroy(struct ceph_crypto_key *key)
->         if (key) {
->                 kfree(key->key);
->                 key->key = NULL;
-> -               crypto_free_sync_skcipher(key->tfm);
-> +               if (key->tfm)
-> +                       crypto_free_sync_skcipher(key->tfm);
->                 key->tfm = NULL;
->         }
->  }
+> drivers/bluetooth/btusb.c | 40 +++++++++++++++++++++++++++++++++++----
+> 1 file changed, 36 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index 50aed5259c2b..69f6b4208901 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -426,6 +426,7 @@ static const struct dmi_system_id btusb_needs_reset_resume_table[] = {
+> #define BTUSB_DIAG_RUNNING	10
+> #define BTUSB_OOB_WAKE_ENABLED	11
+> #define BTUSB_HW_RESET_ACTIVE	12
+> +#define BTUSB_QUIRK_SUSPEND	13
 
-Hi Jia-Ju,
+I think this name is not really descriptive. What about BTUSB_SUSPEND_DISABLE or BTUSB_WAKEUP_DISABLE or BTUSB_REMOTE_WAKEUP or something that is rather clear.
 
-Yeah, looks like the only reason this continued to work after
-69d6302b65a8 ("libceph: Remove VLA usage of skcipher") is because
-crypto_sync_skcipher is a trivial wrapper around crypto_skcipher
-added just for type checking AFAICT.
+> 
+> struct btusb_data {
+> 	struct hci_dev       *hdev;
+> @@ -1165,6 +1166,15 @@ static int btusb_open(struct hci_dev *hdev)
+> 	 */
+> 	device_wakeup_enable(&data->udev->dev);
+> 
+> +	/* Disable device remote wakeup when host is suspended
+> +	 * For Realtek chips, global suspend without
+> +	 * SET_FEATURE (DEVICE_REMOTE_WAKEUP) can save more power in device.
+> +	 */
+> +#ifdef CONFIG_BT_HCIBTUSB_RTL
+> +	if (test_bit(BTUSB_QUIRK_SUSPEND, &data->flags))
+> +		device_wakeup_disable(&data->udev->dev);
+> +#endif
+> +
 
-struct crypto_sync_skcipher {
-    struct crypto_skcipher base;
-};
+I have no idea what the #ifdef does here. Limiting it to HCIBTUSB_RTL seems pointless.
 
-Before that ceph_crypto_key_destroy() used crypto_free_skcipher(),
-which is safe to call on a NULL tfm.
+> 	if (test_and_set_bit(BTUSB_INTR_RUNNING, &data->flags))
+> 		goto done;
+> 
+> @@ -1227,6 +1237,13 @@ static int btusb_close(struct hci_dev *hdev)
+> 		goto failed;
+> 
+> 	data->intf->needs_remote_wakeup = 0;
+> +
+> +	/* Enable remote wake up for auto-suspend */
+> +#ifdef CONFIG_BT_HCIBTUSB_RTL
+> +	if (test_bit(BTUSB_QUIRK_SUSPEND, &data->flags))
+> +		data->intf->needs_remote_wakeup = 1;
+> +#endif
+> +
 
-Applied with a slight modification -- I moved key->tfm = NULL under
-the new if and amended the changelog.
+Same comment as above. No need for the #ifdef.
 
-https://github.com/ceph/ceph-client/commit/b3d79916ff99074d289d66f1643b423ae0008c50
+> 	device_wakeup_disable(&data->udev->dev);
+> 	usb_autopm_put_interface(data->intf);
+> 
+> @@ -3185,11 +3202,11 @@ static int btusb_probe(struct usb_interface *intf,
+> 	if (id->driver_info & BTUSB_REALTEK) {
+> 		hdev->setup = btrtl_setup_realtek;
+> 
+> -		/* Realtek devices lose their updated firmware over suspend,
+> -		 * but the USB hub doesn't notice any status change.
+> -		 * Explicitly request a device reset on resume.
+> +		/* Realtek devices lose their updated firmware over global
+> +		 * suspend that means host doesn't send SET_FEATURE
+> +		 * (DEVICE_REMOTE_WAKEUP)
+> 		 */
+> -		interface_to_usbdev(intf)->quirks |= USB_QUIRK_RESET_RESUME;
+> +		set_bit(BTUSB_QUIRK_SUSPEND, &data->flags);
+> 	}
+> #endif
+> 
+> @@ -3363,6 +3380,21 @@ static int btusb_suspend(struct usb_interface *intf, pm_message_t message)
+> 		enable_irq(data->oob_wake_irq);
+> 	}
+> 
+> +#ifdef CONFIG_BT_HCIBTUSB_RTL
+> +	/* For global suspend, Realtek devices lose the loaded fw
+> +	 * in them. But for autosuspend, firmware should remain.
+> +	 * Actually, it depends on whether the usb host sends
+> +	 * set feature (enable wakeup) or not.
+> +	 */
+> +	if (test_bit(BTUSB_QUIRK_SUSPEND, &data->flags)) {
+> +		if (PMSG_IS_AUTO(message) &&
+> +		    device_can_wakeup(&data->udev->dev))
+> +			data->udev->do_remote_wakeup = 1;
+> +		else if (!PMSG_IS_AUTO(message))
+> +			data->udev->reset_resume = 1;
+> +	}
+> +#endif
+> +
 
-Thanks,
+The #ifdef is also not needed here.
 
-                Ilya
+Regards
+
+Marcel
+
