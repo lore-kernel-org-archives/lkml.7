@@ -2,169 +2,192 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C7BC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BC0C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BACB20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBBF520693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrckOx3I"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AnI1bx/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfG3S2H (ORCPT
+        id S1729714AbfG3S2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:28:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38594 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfG3S2H (ORCPT
+        Tue, 30 Jul 2019 14:28:11 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:40351 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfG3S2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:28:07 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s15so36167834wmj.3;
-        Tue, 30 Jul 2019 11:28:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wvsOsY5CLQsky8uz4ClfHVAjHjhjUTEeWUp/GJcH9vg=;
-        b=rrckOx3Ihb+ID9d4P65+Fyq+4f0d0RK+viITtEC/PCnIRlbUYceRhBOVpLCZEV//zb
-         y6hTtV2C9CMqNsjje6RId2eo8D5fq4iq8TW0qR5cWN3+VMJSPvthhpDvoCxsbzPqK+rV
-         7LlHLYu/9J3Fs3ej8sCF3XhoqF3dMRSJ6rbQHzcGjjkNly36gQ8WUg7EC2YxAN2zscM6
-         +I7OBL2/87MTAIrAF4X+BRRPp0aNzsEZlgqRlyWVlTjyUMCkpnHqWjiBk9yJTewEouiY
-         BSQBfz0bMPXWS3pgzBIHY4HxzRZJk5eaMqlw7v28M1gkIpwrTnKkMDSyMYGihCMw5svS
-         jGpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wvsOsY5CLQsky8uz4ClfHVAjHjhjUTEeWUp/GJcH9vg=;
-        b=Ss/MxwEbsFaNt/NeziGxTysXKuQpbmMEdY8qiJglWzLF0CHB6Ff1fz3FLarUX5h8qY
-         RCuhAXXobsxd/F3sQ65DyPbk/bF28Yi659h/80YQT4muDMfe2LgXh7UXohQbMZZLl8rE
-         LkfGUfou/1FB90AD0x8RoeLx1wcwi+wd23GfHzOJvFfHp2jkYlRo2RWg1wkaOW8j4xuW
-         qYvdQgFD0dIK1APzL8LQAoyOsMnePEtwgIQURFivp/mRc+M38TaWYCl/ZTF1koDULcLr
-         5k/p01J7pIRQpsOPrO1O6SDRJJlu7Pom4FvKyGZ/tk1einRkT+9ROOwU7Jy2JXSadt/j
-         X8IA==
-X-Gm-Message-State: APjAAAVv71KNsoEIk04U/fBJhNund6BCj7brsrJG3XKlkDEstNX9yaf1
-        wmLlYo8rKj/13Kkhw6CaGFI=
-X-Google-Smtp-Source: APXvYqwn6kyl9fuKU9XTfrr8jZzivv/H5Z7x6p9WbogCsbSL5AnBIA5zWpXTjxtjUjpzWKZCagASaw==
-X-Received: by 2002:a7b:cf0b:: with SMTP id l11mr111949106wmg.143.1564511283748;
-        Tue, 30 Jul 2019 11:28:03 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id v204sm69670944wma.20.2019.07.30.11.28.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 11:28:02 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 11:28:01 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Qian Cai <cai@lca.pw>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.14 054/293] sched/fair: Fix "runnable_avg_yN_inv" not
- used warnings
-Message-ID: <20190730182801.GA94301@archlinux-threadripper>
-References: <20190729190820.321094988@linuxfoundation.org>
- <20190729190828.058944959@linuxfoundation.org>
+        Tue, 30 Jul 2019 14:28:08 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIRueh3330138
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 30 Jul 2019 11:27:56 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIRueh3330138
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564511277;
+        bh=dxJbtl4/otJ2aQWWJR0CyGiTiB2QSntuTNV6GbD5jeI=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=AnI1bx/dO9IxBczSj2/iQMsNQ4ED54UOcW7lZXdELBt8R+vw/JxnX9E6TXWOJ00mj
+         /qLNPGo0nsfFfi++CcFp6EjSr6M2MfCYEngNEog0MRTWuDd3mDn77Y7nS1owagVfb4
+         8dUb5DLybu2PQN8LP+RCd9UHfDY/ABBgiHgw15mHcNM1W3wEplDKIIu3yMCs+YhGfT
+         zkK9zD88DiD51XPIphPHaGYdLEA/qWK1UG+LhhCzcu4gK6z9621CDZz6ep4OrJCjFo
+         mVKtTZeyznz1L8wi3sYx+wKbHj2sfNy1xOZFQ68YwY8XJZlZX87u5qdx0T8TDwvZBr
+         GLUnzuP/G87Nw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIRtd93330134;
+        Tue, 30 Jul 2019 11:27:55 -0700
+Date:   Tue, 30 Jul 2019 11:27:55 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-959b83c769389b24d64759f60e64c4c62620ff02@git.kernel.org>
+Cc:     jolsa@kernel.org, acme@redhat.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mpetlan@redhat.com,
+        tglx@linutronix.de, alexey.budankov@linux.intel.com,
+        mingo@kernel.org, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+        peterz@infradead.org
+Reply-To: alexey.budankov@linux.intel.com, ak@linux.intel.com,
+          alexander.shishkin@linux.intel.com, peterz@infradead.org,
+          namhyung@kernel.org, mingo@kernel.org, tglx@linutronix.de,
+          mpetlan@redhat.com, jolsa@kernel.org, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, acme@redhat.com
+In-Reply-To: <20190721112506.12306-29-jolsa@kernel.org>
+References: <20190721112506.12306-29-jolsa@kernel.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] libperf: Add perf_cpu_map struct
+Git-Commit-ID: 959b83c769389b24d64759f60e64c4c62620ff02
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190729190828.058944959@linuxfoundation.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 09:19:05PM +0200, Greg Kroah-Hartman wrote:
-> [ Upstream commit 509466b7d480bc5d22e90b9fbe6122ae0e2fbe39 ]
-> 
-> runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
-> included in several other places because they need other macros all
-> came from kernel/sched/sched-pelt.h which was generated by
-> Documentation/scheduler/sched-pelt. As the result, it causes compilation
-> a lot of warnings,
-> 
->   kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
->   kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
->   kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
->   ...
-> 
-> Silence it by appending the __maybe_unused attribute for it, so all
-> generated variables and macros can still be kept in the same file.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Link: https://lkml.kernel.org/r/1559596304-31581-1-git-send-email-cai@lca.pw
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  Documentation/scheduler/sched-pelt.c | 3 ++-
->  kernel/sched/sched-pelt.h            | 2 +-
->  2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
-> index e4219139386a..7238b355919c 100644
-> --- a/Documentation/scheduler/sched-pelt.c
-> +++ b/Documentation/scheduler/sched-pelt.c
-> @@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
->  	int i;
->  	unsigned int x;
->  
-> -	printf("static const u32 runnable_avg_yN_inv[] = {");
-> +	/* To silence -Wunused-but-set-variable warnings. */
-> +	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
->  	for (i = 0; i < HALFLIFE; i++) {
->  		x = ((1UL<<32)-1)*pow(y, i);
->  
-> diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
-> index a26473674fb7..c529706bed11 100644
-> --- a/kernel/sched/sched-pelt.h
-> +++ b/kernel/sched/sched-pelt.h
-> @@ -1,7 +1,7 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
->  
-> -static const u32 runnable_avg_yN_inv[] = {
-> +static const u32 runnable_avg_yN_inv[] __maybe_unused = {
->  	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
->  	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
->  	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
-> -- 
-> 2.20.1
-> 
-> 
-> 
+Commit-ID:  959b83c769389b24d64759f60e64c4c62620ff02
+Gitweb:     https://git.kernel.org/tip/959b83c769389b24d64759f60e64c4c62620ff02
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Sun, 21 Jul 2019 13:24:15 +0200
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 29 Jul 2019 18:34:44 -0300
 
-This patch does nothing in 4.14. There is no kernel/sched/pelt.c.
+libperf: Add perf_cpu_map struct
 
-$ fd pelt
-kernel/sched/sched-pelt.h
-Documentation/scheduler/sched-pelt.c
+Add perf_cpu_map struct to libperf.
 
-runnable_avg_yN_inv is only used in one location in 4.14.134, in fair.c
-behind CONFIG_SMP, which is also the guard that includes sched-pelt.h.
+It's added as a declaration into:
 
-$ rg --no-heading -g '!Documentation' runnable_avg_yN_inv
-kernel/sched/sched-pelt.h:4:static const u32 runnable_avg_yN_inv[] = {
-kernel/sched/fair.c:2849:       val = mul_u64_u32_shr(val, runnable_avg_yN_inv[local_n], 32);
+  include/perf/cpumap.h
 
-$ rg --no-heading -B 2 "sched-pelt.h"
-kernel/sched/fair.c-707-#ifdef CONFIG_SMP
-kernel/sched/fair.c-708-
-kernel/sched/fair.c:709:#include "sched-pelt.h"
+which will be included by users.
 
-I see no way for the warnings in this patch to occur here, making it
-pointless. I get two trivial conflicts in my msm-4.14 tree from this
-patch that I would like to avoid dealing with.
+The perf_cpu_map struct definition is added into:
 
-Please consider dropping this patch, thanks!
-Nathan
+  include/internal/cpumap.h
+
+which is not to be included by users, but shared within perf and
+libperf.
+
+We tried the total separation of the perf_cpu_map struct in libperf, but
+it lead to complications and much bigger changes in perf code, so we
+decided to share the declaration.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190721112506.12306-29-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/lib/Build                     |  1 +
+ tools/perf/lib/cpumap.c                  |  5 +++++
+ tools/perf/lib/include/internal/cpumap.h | 13 +++++++++++++
+ tools/perf/lib/include/perf/cpumap.h     |  7 +++++++
+ tools/perf/util/cpumap.h                 |  7 +------
+ 5 files changed, 27 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/lib/Build b/tools/perf/lib/Build
+index 5196958cec01..195b274db49a 100644
+--- a/tools/perf/lib/Build
++++ b/tools/perf/lib/Build
+@@ -1 +1,2 @@
+ libperf-y += core.o
++libperf-y += cpumap.o
+diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+new file mode 100644
+index 000000000000..86a199c26f20
+--- /dev/null
++++ b/tools/perf/lib/cpumap.c
+@@ -0,0 +1,5 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <perf/cpumap.h>
++#include <stdlib.h>
++#include <linux/refcount.h>
++#include <internal/cpumap.h>
+diff --git a/tools/perf/lib/include/internal/cpumap.h b/tools/perf/lib/include/internal/cpumap.h
+new file mode 100644
+index 000000000000..53ce95374b05
+--- /dev/null
++++ b/tools/perf/lib/include/internal/cpumap.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LIBPERF_INTERNAL_CPUMAP_H
++#define __LIBPERF_INTERNAL_CPUMAP_H
++
++#include <linux/refcount.h>
++
++struct perf_cpu_map {
++	refcount_t	refcnt;
++	int		nr;
++	int		map[];
++};
++
++#endif /* __LIBPERF_INTERNAL_CPUMAP_H */
+diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
+new file mode 100644
+index 000000000000..8355d3ce7d0c
+--- /dev/null
++++ b/tools/perf/lib/include/perf/cpumap.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LIBPERF_CPUMAP_H
++#define __LIBPERF_CPUMAP_H
++
++struct perf_cpu_map;
++
++#endif /* __LIBPERF_CPUMAP_H */
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index 22729beae959..c2ba9ae195f7 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -5,16 +5,11 @@
+ #include <stdio.h>
+ #include <stdbool.h>
+ #include <linux/refcount.h>
++#include <internal/cpumap.h>
+ 
+ #include "perf.h"
+ #include "util/debug.h"
+ 
+-struct perf_cpu_map {
+-	refcount_t refcnt;
+-	int nr;
+-	int map[];
+-};
+-
+ struct perf_cpu_map *cpu_map__new(const char *cpu_list);
+ struct perf_cpu_map *cpu_map__empty_new(int nr);
+ struct perf_cpu_map *cpu_map__dummy_new(void);
