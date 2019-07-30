@@ -2,116 +2,134 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36430C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE67C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC5F20C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9946206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:15:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="xNCb+F5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfG3GM3 (ORCPT
+        id S1728334AbfG3GP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 02:12:29 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:40455 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfG3GM3 (ORCPT
+        Tue, 30 Jul 2019 02:15:29 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33318 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfG3GP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 02:12:29 -0400
-Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8126E240007;
-        Tue, 30 Jul 2019 06:12:20 +0000 (UTC)
-Subject: Re: [PATCH RESEND 0/8] Fix mmap base in bottom-up mmap
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org
-References: <20190620050328.8942-1-alex@ghiti.fr>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-Message-ID: <175168c1-d25f-7a93-e19b-dbb6ae6289e1@ghiti.fr>
-Date:   Tue, 30 Jul 2019 08:12:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Jul 2019 02:15:29 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so29268344pfq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 23:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fossix-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rNAxrgF/Fu2C1YjiAQFHjU/OuPjgdh3QklL9HCBzlDY=;
+        b=xNCb+F5o5GHCQCrM8iOOY1BhPmfzlYKhXwLaVOogMTRTbqN9gxVZHQyulEnhhat4a4
+         f47JE66kNAf/5kbl2NNf0hVXlLNeW0nZe1e+m9QsvVCCGLyLm+i6zyYBqmdO2sv7egkr
+         vlWWpmNb75RZH+Adr1aXek/QkxusTn++zc0t2fY2O0oVz8wqg57r+PehmG9r9ue+vhBf
+         ZGNIpm1ZNqB7NGqAXaqP/KsyVkV5GYLWB6Xem4/bZPuwqkm2b5zqhaQQlC31YcdDJoCg
+         WcJYPYuEKJmpdgDYVz91m++XkmnHaeVOgHnJkukKkx9RopME4jnECIJZUsKZgcwadcRW
+         5j8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rNAxrgF/Fu2C1YjiAQFHjU/OuPjgdh3QklL9HCBzlDY=;
+        b=VAKLLffnGOgw0Zhvhtgwk/kAaJBnKLs0M+QNk75Ll9efuZeWXA1Fw4LiqlzcvYlrJ+
+         Guo9f6qm0JBtVwG2NtVHqy6g8s0oKP9fZ3XFe9JtvOh2Y+tGmS+04EPnFwOpPKPKj4dQ
+         uheBp+kFWFcptLX3R4fm+Bn7YBKfNpZzE+cVzlIqT/vqUwXku809JE33gojrO7RpJ5hB
+         reY/LKTzVDm04Y9Ieets6ooAGuLhqjdDYFthJtVEW6aANqw0DYPnk6KflM7d/LCz6u4k
+         +yNGbKhW5PAEda3QE2zCPk6pX1PyL4tRo/puqG2eJuz3EBq/yn/Qm/YV+9zYyDaHerJl
+         64aQ==
+X-Gm-Message-State: APjAAAV5ogtDJ5u+DXcQ7cYqDlM70iIGdlvTCdy1XG9rFwhZ3XRhvx1A
+        U+zcrmzhEoMTRrWWB3ARo9A=
+X-Google-Smtp-Source: APXvYqyoiWtADy9CcJl1VAChZXBghswzTu6lkR4mHm6guZDMcfVZvrxW0rb62/4LylUnq96aE3/6tA==
+X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr116106529pjb.20.1564467328367;
+        Mon, 29 Jul 2019 23:15:28 -0700 (PDT)
+Received: from santosiv.in.ibm.com ([129.41.84.67])
+        by smtp.gmail.com with ESMTPSA id z24sm111999393pfr.51.2019.07.29.23.15.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 23:15:27 -0700 (PDT)
+From:   Santosh Sivaraj <santosh@fossix.org>
+To:     x86@kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH] x86/mce: Remove redundant irq work
+Date:   Tue, 30 Jul 2019 11:45:20 +0530
+Message-Id: <20190730061520.19953-1-santosh@fossix.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190620050328.8942-1-alex@ghiti.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/20/19 7:03 AM, Alexandre Ghiti wrote:
-> This series fixes the fallback of the top-down mmap: in case of
-> failure, a bottom-up scheme can be tried as a last resort between
-> the top-down mmap base and the stack, hoping for a large unused stack
-> limit.
->
-> Lots of architectures and even mm code start this fallback
-> at TASK_UNMAPPED_BASE, which is useless since the top-down scheme
-> already failed on the whole address space: instead, simply use
-> mmap_base.
->
-> Along the way, it allows to get rid of of mmap_legacy_base and
-> mmap_compat_legacy_base from mm_struct.
->
-> Note that arm and mips already implement this behaviour.
->
-> Alexandre Ghiti (8):
->    s390: Start fallback of top-down mmap at mm->mmap_base
->    sh: Start fallback of top-down mmap at mm->mmap_base
->    sparc: Start fallback of top-down mmap at mm->mmap_base
->    x86, hugetlbpage: Start fallback of top-down mmap at mm->mmap_base
->    mm: Start fallback top-down mmap at mm->mmap_base
->    parisc: Use mmap_base, not mmap_legacy_base, as low_limit for
->      bottom-up mmap
->    x86: Use mmap_*base, not mmap_*legacy_base, as low_limit for bottom-up
->      mmap
->    mm: Remove mmap_legacy_base and mmap_compat_legacy_code fields from
->      mm_struct
->
->   arch/parisc/kernel/sys_parisc.c  |  8 +++-----
->   arch/s390/mm/mmap.c              |  2 +-
->   arch/sh/mm/mmap.c                |  2 +-
->   arch/sparc/kernel/sys_sparc_64.c |  2 +-
->   arch/sparc/mm/hugetlbpage.c      |  2 +-
->   arch/x86/include/asm/elf.h       |  2 +-
->   arch/x86/kernel/sys_x86_64.c     |  4 ++--
->   arch/x86/mm/hugetlbpage.c        |  7 ++++---
->   arch/x86/mm/mmap.c               | 20 +++++++++-----------
->   include/linux/mm_types.h         |  2 --
->   mm/debug.c                       |  4 ++--
->   mm/mmap.c                        |  2 +-
->   12 files changed, 26 insertions(+), 31 deletions(-)
->
+IRQ work currently only does a schedule work to process the mce
+events. Since irq work does no other function, remove it.
 
-Hi everyone,
+Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+---
+ arch/x86/kernel/cpu/mce/core.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-This is just a preparatory series for the merging of x86 mmap top-down 
-functions with
-the generic ones (those should get into v5.3), if you could take some 
-time to take a look,
-that would be great :)
-
-Thanks,
-
-Alex
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 743370ee4983..658da808c031 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -119,7 +119,7 @@ DEFINE_PER_CPU(mce_banks_t, mce_poll_banks) = {
+ mce_banks_t mce_banks_ce_disabled;
+ 
+ static struct work_struct mce_work;
+-static struct irq_work mce_irq_work;
++static void mce_schedule_work(void);
+ 
+ static void (*quirk_no_way_out)(int bank, struct mce *m, struct pt_regs *regs);
+ 
+@@ -154,7 +154,7 @@ EXPORT_PER_CPU_SYMBOL_GPL(injectm);
+ void mce_log(struct mce *m)
+ {
+ 	if (!mce_gen_pool_add(m))
+-		irq_work_queue(&mce_irq_work);
++		mce_schedule_work();
+ }
+ 
+ void mce_inject_log(struct mce *m)
+@@ -472,11 +472,6 @@ static void mce_schedule_work(void)
+ 		schedule_work(&mce_work);
+ }
+ 
+-static void mce_irq_work_cb(struct irq_work *entry)
+-{
+-	mce_schedule_work();
+-}
+-
+ /*
+  * Check if the address reported by the CPU is in a format we can parse.
+  * It would be possible to add code for most other cases, but all would
+@@ -1333,7 +1328,7 @@ void do_machine_check(struct pt_regs *regs, long error_code)
+ 		mce_panic("Fatal machine check on current CPU", &m, msg);
+ 
+ 	if (worst > 0)
+-		irq_work_queue(&mce_irq_work);
++		mce_schedule_work();
+ 
+ 	mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
+ 
+@@ -1984,7 +1979,6 @@ int __init mcheck_init(void)
+ 	mcheck_vendor_init_severity();
+ 
+ 	INIT_WORK(&mce_work, mce_gen_pool_process);
+-	init_irq_work(&mce_irq_work, mce_irq_work_cb);
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
 
