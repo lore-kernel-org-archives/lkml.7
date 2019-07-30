@@ -2,154 +2,114 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6A7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D8AC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDA920651
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4A0208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730351AbfG3OOx (ORCPT
+        id S1730710AbfG3OO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 10:14:53 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40422 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727338AbfG3OOx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 10:14:53 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 06DF828A5E8
-Received: by earth.universe (Postfix, from userid 1000)
-        id 27ED63C0943; Tue, 30 Jul 2019 16:14:48 +0200 (CEST)
-Date:   Tue, 30 Jul 2019 16:14:48 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.2 048/215] drm/omap: dont check dispc timings for DSI
-Message-ID: <20190730141448.hvmkffa4s23pweci@earth.universe>
-References: <20190729190739.971253303@linuxfoundation.org>
- <20190729190748.832081009@linuxfoundation.org>
- <20190730113751.GB21815@amd>
+        Tue, 30 Jul 2019 10:14:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52988 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727338AbfG3OO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 10:14:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B182FADDC;
+        Tue, 30 Jul 2019 14:14:57 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 0AE211E440D; Tue, 30 Jul 2019 16:14:57 +0200 (CEST)
+Date:   Tue, 30 Jul 2019 16:14:57 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 1/2] mm/filemap: don't initiate writeback if mapping has
+ no dirty pages
+Message-ID: <20190730141457.GE28829@quack2.suse.cz>
+References: <156378816804.1087.8607636317907921438.stgit@buzz>
+ <20190722175230.d357d52c3e86dc87efbd4243@linux-foundation.org>
+ <bdc6c53d-a7bb-dcc4-20ba-6c7fa5c57dbd@yandex-team.ru>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2voqpcm7kqxghyvb"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190730113751.GB21815@amd>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <bdc6c53d-a7bb-dcc4-20ba-6c7fa5c57dbd@yandex-team.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 23-07-19 11:16:51, Konstantin Khlebnikov wrote:
+> On 23.07.2019 3:52, Andrew Morton wrote:
+> > 
+> > (cc linux-fsdevel and Jan)
 
---2voqpcm7kqxghyvb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for CC Andrew.
 
-Hi,
+> > On Mon, 22 Jul 2019 12:36:08 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+> > 
+> > > Functions like filemap_write_and_wait_range() should do nothing if inode
+> > > has no dirty pages or pages currently under writeback. But they anyway
+> > > construct struct writeback_control and this does some atomic operations
+> > > if CONFIG_CGROUP_WRITEBACK=y - on fast path it locks inode->i_lock and
+> > > updates state of writeback ownership, on slow path might be more work.
+> > > Current this path is safely avoided only when inode mapping has no pages.
+> > > 
+> > > For example generic_file_read_iter() calls filemap_write_and_wait_range()
+> > > at each O_DIRECT read - pretty hot path.
 
-On Tue, Jul 30, 2019 at 01:37:51PM +0200, Pavel Machek wrote:
-> On Mon 2019-07-29 21:20:44, Greg Kroah-Hartman wrote:
-> > [ Upstream commit ad9df7d91b4a6e8f4b20c2bf539ac09b3b2ad6eb ]
-> >=20
-> > While most display types only forward their VM to the DISPC, this
-> > is not true for DSI. DSI calculates the VM for DISPC based on its
-> > own, but it's not identical. Actually the DSI VM is not even a valid
-> > DISPC VM making this check fail. Let's restore the old behaviour
-> > and avoid checking the DISPC VM for DSI here.
-> >=20
-> > Fixes: 7c27fa57ef31 ("drm/omap: Call dispc timings check operation dire=
-ctly")
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > Tested-by: Tony Lindgren <tony@atomide.com>
-> > Tested-by: Pavel Machek <pavel@ucw.cz>
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
->=20
-> Not sure if this is good idea for stable. IIRC there's series of
-> patches to enable display on droid4 (etc), which is useful, but this
-> patch is not going to do any good on its own.
+Yes, but in common case mapping_needs_writeback() is false for files you do
+direct IO to (exactly the case with no pages in the mapping). So you
+shouldn't see the overhead at all. So which case you really care about?
 
-It does not hurt to have it. I know that some people have out of
-tree omapdrm DSI drivers and those also need this regression fix.
+> > > This patch skips starting new writeback if mapping has no dirty tags set.
+> > > If writeback is already in progress filemap_write_and_wait_range() will
+> > > wait for it.
+> > > 
+> > > ...
+> > > 
+> > > --- a/mm/filemap.c
+> > > +++ b/mm/filemap.c
+> > > @@ -408,7 +408,8 @@ int __filemap_fdatawrite_range(struct address_space *mapping, loff_t start,
+> > >   		.range_end = end,
+> > >   	};
+> > > -	if (!mapping_cap_writeback_dirty(mapping))
+> > > +	if (!mapping_cap_writeback_dirty(mapping) ||
+> > > +	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
+> > >   		return 0;
+> > >   	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
+> > 
+> > How does this play with tagged_writepages?  We assume that no tagging
+> > has been performed by any __filemap_fdatawrite_range() caller?
+> > 
+> 
+> Checking also PAGECACHE_TAG_TOWRITE is cheap but seems redundant.
+> 
+> To-write tags are supposed to be a subset of dirty tags:
+> to-write is set only when dirty is set and cleared after starting writeback.
+> 
+> Special case set_page_writeback_keepwrite() which does not clear to-write
+> should be for dirty page thus dirty tag is not going to be cleared either.
+> Ext4 calls it after redirty_page_for_writepage()
+> XFS even without clear_page_dirty_for_io()
+> 
+> Anyway to-write tag without dirty tag or at clear page is confusing.
 
--- Sebastian
+Yeah, TOWRITE tag is intended to be internal to writepages logic so your
+patch is fine in that regard. Overall the patch looks good to me so I'm
+just wondering a bit about the motivation...
 
->=20
-> 								Pavel
->=20
-> >  drivers/gpu/drm/omapdrm/omap_crtc.c | 18 ++++++++++++++----
-> >  1 file changed, 14 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omap=
-drm/omap_crtc.c
-> > index 8712af79a49c..4c43dd282acc 100644
-> > --- a/drivers/gpu/drm/omapdrm/omap_crtc.c
-> > +++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
-> > @@ -384,10 +384,20 @@ static enum drm_mode_status omap_crtc_mode_valid(=
-struct drm_crtc *crtc,
-> >  	int r;
-> > =20
-> >  	drm_display_mode_to_videomode(mode, &vm);
-> > -	r =3D priv->dispc_ops->mgr_check_timings(priv->dispc, omap_crtc->chan=
-nel,
-> > -					       &vm);
-> > -	if (r)
-> > -		return r;
-> > +
-> > +	/*
-> > +	 * DSI might not call this, since the supplied mode is not a
-> > +	 * valid DISPC mode. DSI will calculate and configure the
-> > +	 * proper DISPC mode later.
-> > +	 */
-> > +	if (omap_crtc->pipe->output->next =3D=3D NULL ||
-> > +	    omap_crtc->pipe->output->next->type !=3D OMAP_DISPLAY_TYPE_DSI) {
-> > +		r =3D priv->dispc_ops->mgr_check_timings(priv->dispc,
-> > +						       omap_crtc->channel,
-> > +						       &vm);
-> > +		if (r)
-> > +			return r;
-> > +	}
-> > =20
-> >  	/* Check for bandwidth limit */
-> >  	if (priv->max_bandwidth) {
->=20
-> --=20
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/b=
-log.html
-
-
-
---2voqpcm7kqxghyvb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1AUNQACgkQ2O7X88g7
-+poS5g//YmueoR3bKp2q+77bUwb7W+OhoUliO31RrKvQ/d5HaNu1HwV9XqUJ9QrB
-ujOV8iozVKup60KZDYSuQ2L3CAocmeIx3dTl4BfWENnhJlBGb3yZF8W9JkC+dKiq
-rIFvgSZZh+Jvyt1SffYG+TW9xEK7jTBDAnu0UgR6JU/79RRBrBA6lvNkYrNojV4o
-DBGUaepe0wR/im0xGxlJYVuwruvDOKD8BRrV1V1JajctFx/pZOGZLX4qjgtQnPG1
-dxp5i7l9j8LKpBwD6SrXg1hJr/e6H+n9Sh04iEVy7WRrZSSEL/UlX+CO/d0LVR3R
-mOJcK9bC687HvGovK57Ru9BgObeypGQoLbUn1nU3O9A2jNiLyi5zTTzBrFqPuIhv
-AaqoYAmnM0Nr3Hb6UJg2dvpGW4HgTu4mgsS1CFv7w/Ca4jE7PSv2we3t9C7T+rUe
-jnRF6Ar27dI5TePYAhX2OpA34oEKgDOcJcO6hrrDeoTJfc73dKm4/ZdKT1V5NvLr
-C5pVCsXXqaMM0w1XJlGWskC0e2I0WBarGroA/JXfia7HZOgN5uqlAyFHF9Vf1zKG
-tH+pDSW2BzK9wQmvdkjyL/RmAE7ehwOIY3bU2wvrz5vTfH0TSbzIBitml7u5iT8Q
-8oy8QOK3uo/ikKESp/2x5cRnJ8YSHcSct2itlXVAkpkxhBDTSLg=
-=8pit
------END PGP SIGNATURE-----
-
---2voqpcm7kqxghyvb--
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
