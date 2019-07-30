@@ -2,81 +2,138 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB25C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334DDC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D172087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564526182;
-	bh=pBZlE6TKHTNpaSnKT2xBOqnrpLRxD4BputMpN6MCdcA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M6cPNsICXeWjG2mmyNdgamPO/pAtAVsgZRCxeJwZ9cOAxR2Cg65kuzCGnr5P3aImq
-	 /Xv+8x0e2oVjoh1oC8whJPIbbxX/04N5sFJn7S3c4bzVvjFaSAl1gTuWutKrNN8XTp
-	 rEkXONXkak/EvdywaP1UZvW5inqrJ/QOSbOJFfdA=
+	by mail.kernel.org (Postfix) with ESMTP id 066CF206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbfG3WgV (ORCPT
+        id S1729302AbfG3WiM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 18:36:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58346 "EHLO mail.kernel.org"
+        Tue, 30 Jul 2019 18:38:12 -0400
+Received: from mgw-02.mpynet.fi ([82.197.21.91]:56930 "EHLO mgw-02.mpynet.fi"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729250AbfG3WgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 18:36:20 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9047206E0;
-        Tue, 30 Jul 2019 22:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564526179;
-        bh=pBZlE6TKHTNpaSnKT2xBOqnrpLRxD4BputMpN6MCdcA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B4h6YrEZ98gJeVQSy+GjtmSA4aXzmqQPkrvsFj6ehO3wknimcuBAocoO7KtW5s8FP
-         8iOb5hGRIa3niv82H+q2r1I503S1vXByrMdryQ4P9zqhHZaWZjX65TnkWwrVTm2ORn
-         b00m0rEYlJtVKqy+LEq72/iQaH5Vs2LjtnxMyZwU=
-Date:   Tue, 30 Jul 2019 18:36:18 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
-Subject: Re: [PATCH 1/2] hv_balloon: Use a static page for the balloon_up
- send buffer
-Message-ID: <20190730223618.GK29162@sasha-vm>
-References: <1560537692-37400-1-git-send-email-decui@microsoft.com>
+        id S1726847AbfG3WiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 18:38:12 -0400
+X-Greylist: delayed 485 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Jul 2019 18:38:10 EDT
+Received: from pps.filterd (mgw-02.mpynet.fi [127.0.0.1])
+        by mgw-02.mpynet.fi (8.16.0.27/8.16.0.27) with SMTP id x6UMSZio119596;
+        Wed, 31 Jul 2019 01:28:35 +0300
+Received: from ex13.tuxera.com (ex13.tuxera.com [178.16.184.72])
+        by mgw-02.mpynet.fi with ESMTP id 2u0a9uvs4r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 31 Jul 2019 01:28:34 +0300
+Received: from tuxera-exch.ad.tuxera.com (10.20.48.11) by
+ tuxera-exch.ad.tuxera.com (10.20.48.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 31 Jul 2019 01:28:34 +0300
+Received: from tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789]) by
+ tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789%12]) with mapi id
+ 15.00.1395.000; Wed, 31 Jul 2019 01:28:34 +0300
+From:   Anton Altaparmakov <anton@tuxera.com>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+CC:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "y2038 Mailman List" <y2038@lists.linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        stoph Hellwig <hch@lst.de>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Joel Becker <jlbec@evilplan.org>,
+        Richard Weinberger <richard@nod.at>, Tejun Heo <tj@kernel.org>,
+        "yuchao0@huawei.com" <yuchao0@huawei.com>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-ntfs-dev@lists.sourceforge.net" 
+        <linux-ntfs-dev@lists.sourceforge.net>,
+        linux-mtd <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH 03/20] timestamp_truncate: Replace users of
+ timespec64_trunc
+Thread-Topic: [PATCH 03/20] timestamp_truncate: Replace users of
+ timespec64_trunc
+Thread-Index: AQHVRrCO7mUMDQahbUu7RSH43rBZCqbjOCQAgABUboA=
+Date:   Tue, 30 Jul 2019 22:28:33 +0000
+Message-ID: <5340224D-5625-48A6-909E-70B24D2084BC@tuxera.com>
+References: <20190730014924.2193-1-deepa.kernel@gmail.com>
+ <20190730014924.2193-4-deepa.kernel@gmail.com>
+ <87d0hsapwr.fsf@mail.parknet.co.jp>
+ <CABeXuvqgaxDSR8N_D1Tdw06g_5PGinZS--6nx-bPtAWP4v+mwg@mail.gmail.com>
+In-Reply-To: <CABeXuvqgaxDSR8N_D1Tdw06g_5PGinZS--6nx-bPtAWP4v+mwg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [86.151.122.143]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <92684FF0F17B42478243313B03823A34@tuxera.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1560537692-37400-1-git-send-email-decui@microsoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-30_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=800
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907300224
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 06:42:17PM +0000, Dexuan Cui wrote:
->It's unnecessary to dynamically allocate the buffer.
->
->Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Hi Deepa,
 
-I've queued these up for hyperv-next, thanks!
+> On 30 Jul 2019, at 18:26, Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> 
+> On Tue, Jul 30, 2019 at 1:27 AM OGAWA Hirofumi
+> <hirofumi@mail.parknet.co.jp> wrote:
+>> 
+>> Deepa Dinamani <deepa.kernel@gmail.com> writes:
+>> 
+>>> diff --git a/fs/fat/misc.c b/fs/fat/misc.c
+>>> index 1e08bd54c5fb..53bb7c6bf993 100644
+>>> --- a/fs/fat/misc.c
+>>> +++ b/fs/fat/misc.c
+>>> @@ -307,8 +307,9 @@ int fat_truncate_time(struct inode *inode, struct timespec64 *now, int flags)
+>>>              inode->i_atime = (struct timespec64){ seconds, 0 };
+>>>      }
+>>>      if (flags & S_CTIME) {
+>>> -             if (sbi->options.isvfat)
+>>> -                     inode->i_ctime = timespec64_trunc(*now, 10000000);
+>>> +             if (sbi->options.isvfat) {
+>>> +                     inode->i_ctime = timestamp_truncate(*now, inode);
+>>> +             }
+>>>              else
+>>>                      inode->i_ctime = fat_timespec64_trunc_2secs(*now);
+>>>      }
+>> 
+>> Looks like broken. It changed to sb->s_time_gran from 10000000, and
+>> changed coding style.
+> 
+> This is using a new api: timestamp_truncate(). granularity is gotten
+> by inode->sb->s_time_gran. See Patch [2/20]:
+> https://lkml.org/lkml/2019/7/29/1853
+> 
+> So this is not broken if fat is filling in the right granularity in the sb.
 
---
-Thanks,
-Sasha
+It is broken for FAT because FAT has different granularities for different timestamps so it cannot put the correct value in the sb as that only allows one granularity.  Your patch is totally broken for fat as it would be immediately obvious if you spent a few minutes looking at the code...
+
+Best regards,
+
+	Anton
+
+> 
+> -Deepa
+
+
+-- 
+Anton Altaparmakov <anton at tuxera.com> (replace at with @)
+Lead in File System Development, Tuxera Inc., http://www.tuxera.com/
+Linux NTFS maintainer
+
