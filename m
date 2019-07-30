@@ -2,347 +2,182 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1484BC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37249C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CABC720693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C49020693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uss5jxGp"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="xR1buKxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731339AbfG3Cd7 (ORCPT
+        id S1731351AbfG3Cem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:33:59 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33781 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731050AbfG3Cd7 (ORCPT
+        Mon, 29 Jul 2019 22:34:42 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38799 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731341AbfG3Cem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:33:59 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f20so19984720pgj.0;
-        Mon, 29 Jul 2019 19:33:58 -0700 (PDT)
+        Mon, 29 Jul 2019 22:34:42 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s15so33822819wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 19:34:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Nq0J2JqzlqU5rINfBTmGOBDYOMBziZfb48fgEbRncqI=;
-        b=uss5jxGpbsVXYKanwWibGb1XvKagCL4xhUPu0u7OBcApk1VlDKmhHLqlKs2iAypRGu
-         VntnlDq4K0xzU2qi2LJcOva70MYIaDpMNBhGNpDc9NCgX7cDVzOfJnLcgOhBHkkd8KDA
-         6uiyFdzrJNlRDY9n/o0BlExMWohPt0ftD/Jr46G1tEmwirTwjHGPgxzQSzPf8PR+uM6T
-         BV7JNt1wlOaP8hTX3ovgCOIgUgAPlbzwt7H9GavzQvbQ8ZU8dH5cnf0Cx8xf7j5G1zih
-         VPWFjSsKiy7qfJQhc7dANxQmvel2gQcdxmupj1KCEti5LwVF0EBVEqfIRfDhrpL+82jt
-         Palg==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=KXaoPbrQR8cOY5xonhHKs7ogV9g+KKiBGCtdfBnXIps=;
+        b=xR1buKxFHC0Ubt/ueUgau0i3OVjchdiaRtL/HXgzdhTf3GxYPAuByUABbqIUdX9CHO
+         WlxxxdvqpyPWTiTttbdGIHYR2dYcnnenzozkng6PJ2U6FIW7+ZZURcSyAVkM/6t8dFWf
+         8PTTJ3yzVfNEgxhTtA4Mp/MF5Z4b1tZAfAuhtuETVUNcPAtBg7mYyvFlZ3+p8+UoKo0Y
+         REt/MGwcGK2tc2mQM1FOYiROMEdfPQQVaFWlZ5T7b+pPmQZLSxCQoUf0dkO3yjveozJa
+         QIGIRGQ66OLYTsblwdav/XiDj+vz2nj9R8T8sIsK4b/zNx7dr6tP/J6yS5jnoaIpzmNS
+         j7ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Nq0J2JqzlqU5rINfBTmGOBDYOMBziZfb48fgEbRncqI=;
-        b=OvNzm1y9YBtVOwI5tBPHCGZ5NLeRXaCNxR0QI38TwoSCB8tOsZPg9bT4CNQeBKAaH5
-         N/XS1s4qGMgocwaZegPs38cw+RuLRw1txBpGhBouOj82NMuNfAHfbmbz2NdjZJEEJc/e
-         xWWjgt8XkUfT8BBS5r2KPfknUVID+hK0P6vtu0VbnCulpiNGXi3hh33eaOdYdBcRp+uu
-         ERS8tDO4HwNIiFpfHY8toAw7MT8Qd99oYomQ3+d0pc7Nlp+2UdUTY8TQRO4YjlCF3Kmi
-         1O44k2Mi//+YYPxsei4qY9WyiNphXNNktqR533l1zD41ORkvP5aXFjIma2E1CW+twnQK
-         dVhw==
-X-Gm-Message-State: APjAAAUIxVpgL/qYLTyGnIeZjTr7j/RKw6RCIeabsvzAFTF1V+9s6Zjw
-        t3qmJF7kX2OHxnVoo/gU7AA=
-X-Google-Smtp-Source: APXvYqwWTKsDJDWZAU5EMuc1wcqzLpJSBn06I1BTQsVo2dpxCv4oROk5QLIxDgGQNmtoyChZXQN0qA==
-X-Received: by 2002:a17:90a:b903:: with SMTP id p3mr113062236pjr.79.1564454038064;
-        Mon, 29 Jul 2019 19:33:58 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l31sm105806396pgm.63.2019.07.29.19.33.57
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=KXaoPbrQR8cOY5xonhHKs7ogV9g+KKiBGCtdfBnXIps=;
+        b=R8j/4kxA5uZKyi3X4wgYeipt+PO0yyAv/LSLHHPZWo5+WRr5qlNSVacvybU9cTyuJQ
+         yc7rDTua/UKg6vGK6y71xob2VzT7nyad6CQE6Rs97vZgWG8oj5p6xemCA7tG4/iyCsK8
+         24JdtB/AH4ZZqzJg01lPDkDAgSLZPB7kTRK9k/I1yhR4pUACyHKzknhzgVhoMWVIJYer
+         KQnaPdayMrj/26Ei469umQ8KdepXCtcMZM1jDD7ILGtwm1wsPH9MDbiCIbdPh+hcnhoQ
+         b7VKUsMuxFk+FOAHCmJzf1xvDL+v9RXDa5QQ5iQfrkOlgyTiQ1Lgw44E/Qv2M4xQeRNK
+         rdlg==
+X-Gm-Message-State: APjAAAVcdvnIAdQCG6rcHxmENdGuLLby28uIu/GqcCPdYi3dVV0+fJiL
+        PsudE8mXvLuSWjcGqFwbOYU=
+X-Google-Smtp-Source: APXvYqypftDUNx8st82aK4dw1bMbg4A99G1C5vmNK3sMd9EDAfkwgxv9Spu5UTrgFmr5v0FOmsvmSQ==
+X-Received: by 2002:a7b:c4c1:: with SMTP id g1mr6832114wmk.14.1564454080143;
+        Mon, 29 Jul 2019 19:34:40 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id c1sm145051435wrh.1.2019.07.29.19.34.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 19:33:57 -0700 (PDT)
-Subject: Re: [PATCH 1/4] watchdog device drivers:pc87413_wdt:Rewriting of
- pc87413_wdt driver to utilize common watchdog interface
-To:     Mark Balantzyan <mbalant3@gmail.com>
-Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, andrianov@ispras.ru
-References: <20190730021540.66579-1-mbalant3@gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <bb4747b4-6560-a039-4152-b6ffc22971b4@roeck-us.net>
-Date:   Mon, 29 Jul 2019 19:33:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 29 Jul 2019 19:34:39 -0700 (PDT)
+Message-ID: <5d3facbf.1c69fb81.f6d50.d89a@mx.google.com>
+Date:   Mon, 29 Jul 2019 19:34:39 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190730021540.66579-1-mbalant3@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Kernel: v4.19.62-114-g0c75526c53c7
+X-Kernelci-Branch: linux-4.19.y
+X-Kernelci-Report-Type: boot
+In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
+References: <20190729190655.455345569@linuxfoundation.org>
+Subject: Re: [PATCH 4.19 000/113] 4.19.63-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/19 7:15 PM, Mark Balantzyan wrote:
-> There is a potential for the variable swc_base_addr in the call chain of the
-> driver initialization function (init) to be used before initialization. This
-> brought up the need for, by rewriting the driver to use the common watchdog
-> interface, ensuring to have all resources in place. This patch addresses this
-> need by rewriting into common watchdog interface utilization for the driver.
-> 
+stable-rc/linux-4.19.y boot: 111 boots: 1 failed, 70 passed with 40 offline=
+ (v4.19.62-114-g0c75526c53c7)
 
-First, those four patches should be just one. Splitting them into four just makes
-review more difficult.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.19.y/kernel/v4.19.62-114-g0c75526c53c7/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
+y/kernel/v4.19.62-114-g0c75526c53c7/
 
-Second, the potential race is not the key change, even though it may have
-triggered it. Just describe the change, ie the rework to the watchdog API.
+Tree: stable-rc
+Branch: linux-4.19.y
+Git Describe: v4.19.62-114-g0c75526c53c7
+Git Commit: 0c75526c53c7c911b415119a86ace13c9d3e1724
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 64 unique boards, 26 SoC families, 17 builds out of 206
 
-Then add that this also resolves a race condition.
+Boot Failure Detected:
 
-Also see inline.
+arc:
+    hsdk_defconfig:
+        gcc-8:
+            hsdk: 1 failed lab
 
-Thanks,
-Guenter
+Offline Platforms:
 
+arm64:
 
-> Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
-> ---
->   drivers/media/pci/tw686x/Kconfig |  1 +
->   drivers/watchdog/pc87413_wdt.c   | 92 +++++++++++++++-----------------
->   2 files changed, 45 insertions(+), 48 deletions(-)
-> 
-> diff --git a/drivers/media/pci/tw686x/Kconfig b/drivers/media/pci/tw686x/Kconfig
-> index da8bfee7..079d7464 100644
-> --- a/drivers/media/pci/tw686x/Kconfig
-> +++ b/drivers/media/pci/tw686x/Kconfig
-> @@ -5,6 +5,7 @@ config VIDEO_TW686X
->   	select VIDEOBUF2_DMA_CONTIG
->   	select VIDEOBUF2_DMA_SG
->   	select SND_PCM
-> +	select WATCHDOG_CORE
->   	help
->   	  Support for Intersil/Techwell TW686x-based frame grabber cards.
->   
-> diff --git a/drivers/watchdog/pc87413_wdt.c b/drivers/watchdog/pc87413_wdt.c
-> index 06a892e3..4c330ee5 100644
-> --- a/drivers/watchdog/pc87413_wdt.c
-> +++ b/drivers/watchdog/pc87413_wdt.c
-> @@ -22,12 +22,10 @@
->   
->   #include <linux/module.h>
->   #include <linux/types.h>
-> -#include <linux/miscdevice.h>
->   #include <linux/watchdog.h>
->   #include <linux/ioport.h>
->   #include <linux/delay.h>
->   #include <linux/notifier.h>
-> -#include <linux/fs.h>
->   #include <linux/reboot.h>
->   #include <linux/init.h>
->   #include <linux/spinlock.h>
-> @@ -65,7 +63,6 @@ static char expect_close;		/* is the close expected? */
->   
->   static DEFINE_SPINLOCK(io_lock);	/* to guard us from io races */
->   
-> -static bool nowayout = WATCHDOG_NOWAYOUT;
->   
->   /* -- Low level function ----------------------------------------*/
->   
-> @@ -216,9 +213,9 @@ static inline void pc87413_disable_sw_wd_trg(void)
->   
->   /* -- Higher level functions ------------------------------------*/
->   
-> -/* Enable the watchdog */
-> +/* Enable/start the watchdog */
->   
-> -static void pc87413_enable(void)
-> +static void pc87413_start(void)
->   {
->   	spin_lock(&io_lock);
->   
-> @@ -231,9 +228,9 @@ static void pc87413_enable(void)
->   	spin_unlock(&io_lock);
->   }
->   
-> -/* Disable the watchdog */
-> +/* Disable/stop the watchdog */
->   
-> -static void pc87413_disable(void)
-> +static void pc87413_stop(void)
->   {
->   	spin_lock(&io_lock);
->   
-> @@ -245,9 +242,9 @@ static void pc87413_disable(void)
->   	spin_unlock(&io_lock);
->   }
->   
-> -/* Refresh the watchdog */
-> +/* Refresh/keepalive the watchdog */
->   
-> -static void pc87413_refresh(void)
-> +static void pc87413_keepalive(struct watchdog_device *wdd)
->   {
->   	spin_lock(&io_lock);
->   
-> @@ -260,6 +257,8 @@ static void pc87413_refresh(void)
->   	pc87413_enable_sw_wd_trg();
->   
->   	spin_unlock(&io_lock);
-> +
-> +	return 0;
->   }
->   
->   /* -- File operations -------------------------------------------*/
-> @@ -278,9 +277,6 @@ static int pc87413_open(struct inode *inode, struct file *file)
->   	if (test_and_set_bit(0, &timer_enabled))
->   		return -EBUSY;
->   
-> -	if (nowayout)
-> -		__module_get(THIS_MODULE);
-> -
->   	/* Reload and activate timer */
->   	pc87413_refresh();
->   
-> @@ -331,7 +327,6 @@ static int pc87413_status(void)
->   
->   /**
->    *	pc87413_write:
-> - *	@file: file handle to the watchdog
->    *	@data: data buffer to write
->    *	@len: length in bytes
->    *	@ppos: pointer to the position to write. No seeks allowed
-> @@ -345,26 +340,25 @@ static ssize_t pc87413_write(struct file *file, const char __user *data,
->   {
->   	/* See if we got the magic character 'V' and reload the timer */
->   	if (len) {
-> -		if (!nowayout) {
-> -			size_t i;
-> -
-> -			/* reset expect flag */
-> -			expect_close = 0;
-> -
-> -			/* scan to see whether or not we got the
-> -			   magic character */
-> -			for (i = 0; i != len; i++) {
-> -				char c;
-> -				if (get_user(c, data + i))
-> -					return -EFAULT;
-> -				if (c == 'V')
-> -					expect_close = 42;
-> -			}
-> +		size_t i;
-> +
-> +		/* reset expect flag */
-> +		expect_close = 0;
-> +
-> +		/* scan to see whether or not we got the
-> +		   magic character */
-> +		for (i = 0; i != len; i++) {
-> +			char c;
-> +			if (get_user(c, data + i))
-> +				return -EFAULT;
-> +			if (c == 'V')
-> +				expect_close = 42;
->   		}
-> +	}
->   
->   		/* someone wrote to us, we should reload the timer */
-> -		pc87413_refresh();
-> -	}
-> +	pc87413_refresh();
-> +	
->   	return len;
->   }
->   
-> @@ -417,7 +411,7 @@ static long pc87413_ioctl(struct file *file, unsigned int cmd,
->   			retval = 0;
->   		}
->   		if (options & WDIOS_ENABLECARD) {
-> -			pc87413_enable();
-> +			pc87413_start();
+    defconfig:
+        gcc-8
+            meson-axg-s400: 1 offline lab
+            meson-gxbb-odroidc2: 1 offline lab
+            meson-gxl-s905d-p230: 1 offline lab
+            meson-gxl-s905x-libretech-cc: 1 offline lab
+            meson-gxl-s905x-nexbox-a95x: 1 offline lab
+            meson-gxl-s905x-p212: 1 offline lab
+            meson-gxm-nexbox-a1: 1 offline lab
+            rk3399-firefly: 1 offline lab
+            sun50i-a64-pine64-plus: 1 offline lab
 
-This is where things get confusing. This function is removed in the next patch.
-Plus, it should be removed here, as you remove pc87413_fops below.
+mips:
 
-Why bother changing it only to remove it later ?
+    pistachio_defconfig:
+        gcc-8
+            pistachio_marduk: 1 offline lab
 
->   			retval = 0;
->   		}
->   		return retval;
-> @@ -466,31 +460,32 @@ static int pc87413_notify_sys(struct notifier_block *this,
->   {
->   	if (code == SYS_DOWN || code == SYS_HALT)
->   		/* Turn the card off */
-> -		pc87413_disable();
-> +		pc87413_stop();
+arm:
 
-This can be accomplished by calling watchdog_stop_on_reboot() in the probe
-function.
+    exynos_defconfig:
+        gcc-8
+            exynos5250-arndale: 1 offline lab
+            exynos5420-arndale-octa: 1 offline lab
+            exynos5800-peach-pi: 1 offline lab
 
->   	return NOTIFY_DONE;
->   }
->   
->   /* -- Module's structures ---------------------------------------*/
->   
-> -static const struct file_operations pc87413_fops = {
-> -	.owner		= THIS_MODULE,
-> -	.llseek		= no_llseek,
-> -	.write		= pc87413_write,
-> -	.unlocked_ioctl	= pc87413_ioctl,
-> -	.open		= pc87413_open,
-> -	.release	= pc87413_release,
-> -};
->   
-> -static struct notifier_block pc87413_notifier = {
-> +static struct notifier_block pc87413wdt_notifier = {
->   	.notifier_call  = pc87413_notify_sys,
->   };
->   
-> -static struct miscdevice pc87413_miscdev = {
-> -	.minor          = WATCHDOG_MINOR,
-> -	.name           = "watchdog",
-> -	.fops           = &pc87413_fops,
-> +static struct watchdog_ops pc87413wdt_ops = {
-> +       .owner = THIS_MODULE,
-> +       .start = pc87413wdt_start,
-> +       .stop = pc87413wdt_stop,
-> +       .ping = pc87413wdt_keepalive,
-> +       .set_timeout = pc87413wdt_set_heartbeat,
-> +};
-> +
-> +static struct watchdog_device pc87413wdt_wdd = {
-> +       	.info = &pc87413wdt_ident,
-> +       	.ops = &pc87413wdt_ops,
-> +	.status = WATCHDOG_NOWAYOUT_INIT_STATUS
->   };
->   
-> +
->   /* -- Module init functions -------------------------------------*/
->   
->   /**
-> @@ -515,7 +510,7 @@ static int __init pc87413_init(void)
->   	if (ret != 0)
->   		pr_err("cannot register reboot notifier (err=%d)\n", ret);
->   
-> -	ret = misc_register(&pc87413_miscdev);
-> +	ret = watchdog_register_device(&pc87413wdt_wdd);
->   	if (ret != 0) {
->   		pr_err("cannot register miscdev on minor=%d (err=%d)\n",
->   		       WATCHDOG_MINOR, ret);
-> @@ -533,13 +528,14 @@ static int __init pc87413_init(void)
->   		goto misc_unreg;
->   	}
->   
-> -	pc87413_enable();
-> +	pc87413_start();
+    multi_v7_defconfig:
+        gcc-8
+            exynos5250-arndale: 1 offline lab
+            exynos5420-arndale-octa: 1 offline lab
+            exynos5800-peach-pi: 1 offline lab
+            imx6dl-wandboard_dual: 1 offline lab
+            imx6dl-wandboard_solo: 1 offline lab
+            imx6q-wandboard: 1 offline lab
+            imx7s-warp: 1 offline lab
+            meson8b-odroidc1: 1 offline lab
+            omap3-beagle: 1 offline lab
+            omap4-panda: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+            stih410-b2120: 1 offline lab
+            sun4i-a10-cubieboard: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+            vf610-colibri-eval-v3: 1 offline lab
 
-You should drop this; it doesn't make sense to start the watchdog here.
+    omap2plus_defconfig:
+        gcc-8
+            omap3-beagle: 1 offline lab
+            omap4-panda: 1 offline lab
 
->   
->   	release_region(io, 2);
-> +	pc87413_keepalive(&pc87413wdt_wdd);
->   	return 0;
->   
->   misc_unreg:
-> -	misc_deregister(&pc87413_miscdev);
-> +	watchdog_unregister_device(&pc87413wdt_wdd)
->   reboot_unreg:
->   	unregister_reboot_notifier(&pc87413_notifier);
->   	release_region(io, 2);
-> 
+    qcom_defconfig:
+        gcc-8
+            qcom-apq8064-ifc6410: 1 offline lab
 
+    davinci_all_defconfig:
+        gcc-8
+            da850-evm: 1 offline lab
+            dm365evm,legacy: 1 offline lab
+
+    imx_v6_v7_defconfig:
+        gcc-8
+            imx6dl-wandboard_dual: 1 offline lab
+            imx6dl-wandboard_solo: 1 offline lab
+            imx6q-wandboard: 1 offline lab
+            imx7s-warp: 1 offline lab
+            vf610-colibri-eval-v3: 1 offline lab
+
+    sunxi_defconfig:
+        gcc-8
+            sun4i-a10-cubieboard: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
