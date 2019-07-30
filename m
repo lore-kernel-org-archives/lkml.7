@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3A1C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382EAC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C03206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE3F206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbfG3M2K (ORCPT
+        id S1729526AbfG3M2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 08:28:10 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:38937 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbfG3M2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Jul 2019 08:28:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id y13so71198069iol.6
+Received: from mail-io1-f70.google.com ([209.85.166.70]:37867 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbfG3M2H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 08:28:07 -0400
+Received: by mail-io1-f70.google.com with SMTP id v3so71274423ios.4
         for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 05:28:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=UF+ZT7hkzsQOSIm9ZfReLBGT0sRMnBnJ9BkNk0fgMtk=;
-        b=gFiWiNdJevNA2lVbU+j7rARzqG6yBXBNa9aL5nSwa3mTd1cDW8rNAV3fy3ELwrUX16
-         WfCI3jGD1gGJT5OyJuPud7lMyLYKfZBxcZRzYXtEKurlSF0iaBo2gRos4i0iSJDWrYl5
-         y7NJ6ggEenUrnbS+a8e2ERaUjWXi7HmBgECl28eQais1JNqtAAX36YXD1piUg+39h8DW
-         izDLBhhL7FFQPXrh4SHf1Mv/cHnnExgqjwin/rJmvDcmDx+mNSlHMFP9Q9f5/azbJQBP
-         21ExArpda5qjZuZCDeyXviLS3LH2R+8+Olp7gWwepWiHXE7YL0Xj71JMy8gok4z603Wm
-         mASw==
-X-Gm-Message-State: APjAAAUbfQa9LYd9dH5+H3JKdeg91M0nOlDapzgBYV6IqCTuMC3oxHQc
-        9+tZ+I+Kct3lZqlORIXyiAKgFwBuA3fYagWmXQ0ntVqr0/6n
-X-Google-Smtp-Source: APXvYqwylNdmLYou55ilmwLxDi//dWkQA/2GdAbuEf8sWkR2fpjRhH0kg4zKEtf78oXPD6M0flpqNynFwWxuxZd0tmIROr31LSch
+        bh=hZMo4mC2RIyBYAfOxySX5UABZRRMH2Q/dZ4zcgNImT8=;
+        b=TM7kMBsa2Al+Iabfpy4yMNq0Om099ldQuHM8ubSLBUFPyLlFVd+R+WvnvWo36BDbfh
+         T26o5J22dCMR2J6AIr/WCQeL/dzyJCw52fzka7GMa1W6r0yKWp/mj6GJmrOs3x9cQ7hf
+         HZtcg2QmqzabcXFplCP2uNq/nkyGW53C6VqndzxZx9k5K8L9ukCQp6/uFoavOvH8aiuS
+         WNdcLcQhOF4Vmz1ZxTsmtpz9PalwVjkDbbKu+qxL53Epjz1hc1jrdfALoFXnYxKjUugS
+         q2Qp+J1+U8dbW5WbOvQqeHdFrVqG6unnDxuri6kJVJ7m0tRirRReytMzLMcCklAIQDFK
+         LfSA==
+X-Gm-Message-State: APjAAAUhkcHXHBsD2bnU1fE3m3Fwy4G2wKOpfl2yf5Mw93waJugeB/YS
+        V15FS2GTMYKjnslPAv/3A8EJOZ4Iubld/VDcVRN2KibJcOZ+
+X-Google-Smtp-Source: APXvYqz9DN92bNusuAriRi22SyjDQxEx6rnZguhdzOOVXYpum2QebL80O/zC1jM1YPGv5w4HsMU3xQqZxOd+TwmYrgIkwg9N2DQI
 MIME-Version: 1.0
-X-Received: by 2002:a02:aa1d:: with SMTP id r29mr48117747jam.127.1564489687097;
- Tue, 30 Jul 2019 05:28:07 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 05:28:07 -0700
+X-Received: by 2002:a05:6602:114:: with SMTP id s20mr62738414iot.122.1564489686756;
+ Tue, 30 Jul 2019 05:28:06 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 05:28:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000de921058ee524e1@google.com>
-Subject: KASAN: user-memory-access Read in hidraw_ioctl
-From:   syzbot <syzbot+5a8c44432a51154ff6d5@syzkaller.appspotmail.com>
+Message-ID: <00000000000008b8c6058ee52407@google.com>
+Subject: KASAN: slab-out-of-bounds Read in hidraw_ioctl
+From:   syzbot <syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com>
 To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
         jikos@kernel.org, linux-input@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
@@ -61,34 +61,32 @@ syzbot found the following crash on:
 
 HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=13c21ab4600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15e293c8600000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-dashboard link: https://syzkaller.appspot.com/bug?extid=5a8c44432a51154ff6d5
+dashboard link: https://syzkaller.appspot.com/bug?extid=5a6c4ec678a0c6ee84ba
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+5a8c44432a51154ff6d5@syzkaller.appspotmail.com
+Reported-by: syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com
 
 ==================================================================
-BUG: KASAN: user-memory-access in _copy_to_user+0x124/0x150  
-lib/usercopy.c:27
-Read of size 148 at addr 0000100000000000 by task syz-executor.2/19576
+BUG: KASAN: slab-out-of-bounds in strlen+0x79/0x90 lib/string.c:525
+Read of size 1 at addr ffff8881ca981f10 by task syz-executor.4/7644
 
-CPU: 1 PID: 19576 Comm: syz-executor.2 Not tainted 5.3.0-rc2+ #23
+CPU: 1 PID: 7644 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #23
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0xca/0x13e lib/dump_stack.c:113
-  __kasan_report.cold+0x5/0x33 mm/kasan/report.c:486
+  print_address_description+0x6a/0x32c mm/kasan/report.c:351
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
   kasan_report+0xe/0x12 mm/kasan/common.c:612
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x128/0x190 mm/kasan/generic.c:192
-  _copy_to_user+0x124/0x150 lib/usercopy.c:27
-  copy_to_user include/linux/uaccess.h:152 [inline]
-  hidraw_ioctl+0x39c/0xae0 drivers/hid/hidraw.c:392
+  strlen+0x79/0x90 lib/string.c:525
+  strlen include/linux/string.h:281 [inline]
+  hidraw_ioctl+0x245/0xae0 drivers/hid/hidraw.c:446
   vfs_ioctl fs/ioctl.c:46 [inline]
   file_ioctl fs/ioctl.c:509 [inline]
   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
@@ -102,12 +100,68 @@ RIP: 0033:0x459829
 Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
 ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f6587cfbc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RSP: 002b:00007fed5bb22c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
 RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 0000000020005640 RSI: 0000000090044802 RDI: 0000000000000004
-RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6587cfc6d4
-R13: 00000000004c21db R14: 00000000004d5540 R15: 00000000ffffffff
+RDX: 0000000020000180 RSI: 0000000080404805 RDI: 0000000000000003
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fed5bb236d4
+R13: 00000000004c21c6 R14: 00000000004d5528 R15: 00000000ffffffff
+
+Allocated by task 1607:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:487 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
+  kmalloc include/linux/slab.h:552 [inline]
+  syslog_print kernel/printk/printk.c:1346 [inline]
+  do_syslog kernel/printk/printk.c:1519 [inline]
+  do_syslog+0x540/0x1380 kernel/printk/printk.c:1493
+  kmsg_read+0x8a/0xb0 fs/proc/kmsg.c:40
+  proc_reg_read+0x1c1/0x280 fs/proc/inode.c:223
+  __vfs_read+0x76/0x100 fs/read_write.c:425
+  vfs_read+0x1ea/0x430 fs/read_write.c:461
+  ksys_read+0x127/0x250 fs/read_write.c:587
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 1607:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
+  slab_free_hook mm/slub.c:1423 [inline]
+  slab_free_freelist_hook mm/slub.c:1470 [inline]
+  slab_free mm/slub.c:3012 [inline]
+  kfree+0xe4/0x2f0 mm/slub.c:3953
+  syslog_print kernel/printk/printk.c:1405 [inline]
+  do_syslog kernel/printk/printk.c:1519 [inline]
+  do_syslog+0x1098/0x1380 kernel/printk/printk.c:1493
+  kmsg_read+0x8a/0xb0 fs/proc/kmsg.c:40
+  proc_reg_read+0x1c1/0x280 fs/proc/inode.c:223
+  __vfs_read+0x76/0x100 fs/read_write.c:425
+  vfs_read+0x1ea/0x430 fs/read_write.c:461
+  ksys_read+0x127/0x250 fs/read_write.c:587
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881ca981b00
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 16 bytes to the right of
+  1024-byte region [ffff8881ca981b00, ffff8881ca981f00)
+The buggy address belongs to the page:
+page:ffffea00072a6000 refcount:1 mapcount:0 mapping:ffff8881da002280  
+index:0x0 compound_mapcount: 0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da002280
+raw: 0000000000000000 00000000000e000e 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881ca981e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881ca981e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8881ca981f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                          ^
+  ffff8881ca981f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881ca982000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
 ==================================================================
 
 
