@@ -2,64 +2,90 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3092C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52DEC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF53206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3CB9206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="qCC56rGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729354AbfG3HAB (ORCPT
+        id S1729390AbfG3HAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:00:01 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42428 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727453AbfG3HAB (ORCPT
+        Tue, 30 Jul 2019 03:00:18 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:33650 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728673AbfG3HAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:00:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x1so14546445wrr.9;
-        Mon, 29 Jul 2019 23:59:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JE7kx2iX5slOmbDpS9tRcc6buuuGUkhZXzUOl8pd6t0=;
-        b=D5e3cRz+VK0ioIpA8syxWkRs/Q2i3rnwVd3i4x2WuA8t5oJV8DoFEVluUEs1SXm3mD
-         hEMEXN9Ko5GCu/8CheHW/rEeeH1voi0Wu6Qy2vRlGxjW43YKOWOtSf+v4MhN9KK1IS1F
-         9KFnIUbOOC7OIrKbm1WyMZGevsZrj9adxGDVlPdQLC97HDLbZg8RmMYYlPWmNM/K3QRS
-         iH+4vEPqKCWz3c1WfRej6MPqikBeJuek1DIJYpxRttqJBqwczJj6x1tnCHHbwM6NMQiU
-         VbziQ7VVbcaZmYcZfI4lrnkjnZDArspDmBkcZmB4jMStebNjaT9PjLQbqPi/Aj2xzTzp
-         q/FQ==
-X-Gm-Message-State: APjAAAUkgQye6eHS3gAQLc9ilKrnxXlMi3wfIDChNViRKTZYtn6TBVmW
-        9d7/upXD2CEAOcLkKLTFRZCj4vh4jWI=
-X-Google-Smtp-Source: APXvYqxPjH5qmMeDEp6RD1kqPY35v3O3HX+Qo+VfHllrE8p5WR101dWEEWtDfNXOkQ/YEN2e1CmqyQ==
-X-Received: by 2002:a5d:54c7:: with SMTP id x7mr96052874wrv.39.1564469998600;
-        Mon, 29 Jul 2019 23:59:58 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id f204sm96203686wme.18.2019.07.29.23.59.57
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 23:59:58 -0700 (PDT)
-Subject: Re: [PATCH v3] modpost: check for static EXPORT_SYMBOL* functions
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190714152817.24693-1-efremov@linux.com>
- <20190729141801.31333-1-efremov@linux.com>
- <20190730082618.5bb5edf3@canb.auug.org.au>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <1b6f749c-2a25-219a-3eb3-0f2c7a542426@linux.com>
-Date:   Tue, 30 Jul 2019 09:59:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 30 Jul 2019 03:00:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1564470017; x=1596006017;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=6yX5wo1SMWNdvTLLZ4kGJt2N9VK/hrcTYoYK9A/+LG0=;
+  b=qCC56rGfb1GOhqj48wIpcB7sZhk4KihSK9MTfvEp4DFTJEm2nKB7JirY
+   A+ZT5D31S3JZrrz+EkZCVHLwlptNJEuuBuf2Y8gt6ujxhHfEBgfd0kYzT
+   YtSJSCg8ZKrffzcFhCYR/Ypng5ZsNGsAOeWicop4Hp3AH4bW+ZJU3ahQF
+   mdoPxa4an3Nb5VBjO18optwTy4UF5Ov89QJtFr6XX5vlCq9u43g25cNQZ
+   y7FzJ62tgcEzn/USDmNVTClyhdsrf22mKpLEQ1juQG8/nq0k7jnbSZacR
+   ZNo3AEvB13qAnFPxE0NDoEygqhfAS24kW0gRu8z5gLAxDhW5ALz5Rh1sH
+   Q==;
+IronPort-SDR: WE4K9dwGMNU8/J3rFFhy5c6WITPTrKQEqjVGrtN1IGqAuuL/7ohk8zj0dt6dcpQh0sB4PH72OD
+ cqDlj0qEUw3ny1uCApcwOQ5YGN/JqqISbJNaM8uGn1ENVmZgoyCN0cr8nvY2j2cFgrugc/nr3I
+ L63FfpfyeMyYXNkYrcU6OYrlTHtTxfx+TYVAl5s+vQ374hC3QXSpHt4N8U62D60xRJvc97ijn4
+ zzHlFtyJIHQH/ueUpfSccwARTZ62b3/UsfIeI+9eIqb0v1Dspg6xWRtW3G/vf45rHaiHQOzZ9/
+ q7A=
+X-IronPort-AV: E=Sophos;i="5.64,325,1559491200"; 
+   d="scan'208";a="114456997"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Jul 2019 15:00:17 +0800
+IronPort-SDR: /QWI+yFcZ0rmgrhKzyaUKAxecyhx6rlLS9zDK+jVfV2Ur085+At+ld04SJShKi9+Xb+zxh0S7D
+ pEsv13dWfGT7hPlN1hLRf14IIujJoCGQbhUaKylgYuTPgVtDUAr7qi/C4J3JKvtAg5yMdXBzwA
+ O9X5cEHbbf20DW/l6g9nojv0yFoJ6fo4xgm7Avbdmv1/53PXeTWOFKyWV+bnFGZ+l3UZAUs4+W
+ 7ILDLn24sZOja9ptQ+hpUyO5fkstDY0Zfg1aOim4RDGMKxa+s1NI9IGM30lkLxQdkM1nLLULdS
+ 6WOdx8q6kT8rQ3S7M9JYhsx+
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP; 29 Jul 2019 23:58:20 -0700
+IronPort-SDR: PCZNYufBvpE+xMfNsmNx/TlpTDwjyYVkZ4LeoaSFcTvmUrDclh9vepYujrd287BTmiIXHyFXpE
+ H6Ff+uC+5bOpDPx7+TzSF+LmE85iKM7xEHaitIoCAqKGwNPrvMiyD2YFvyXyUSLiIzCKyM1HJU
+ cE60SHu5w4JUL7ne/ZpqwyqVc37bNuM/Ba5fo8CVnLgDiYzsZLk1h/pK8gjIVnnRbAwm67UT/1
+ ds4vVY+wFANqtZOJCkKS4VJ95y2fx4ACxcqAknOYi3LHM7PSBDYqH3u99x3HWGa7TJvyDWr/zk
+ Wfw=
+Received: from unknown (HELO [10.225.104.231]) ([10.225.104.231])
+  by uls-op-cesaip01.wdc.com with ESMTP; 30 Jul 2019 00:00:16 -0700
+Subject: Re: [RFC PATCH 13/16] RISC-V: KVM: Add timer functionality
+To:     Andreas Schwab <schwab@suse.de>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>
+References: <20190729115544.17895-1-anup.patel@wdc.com>
+ <20190729115544.17895-14-anup.patel@wdc.com> <mvmpnlsc39p.fsf@suse.de>
+ <d26a4582fad27d0f475cf8bca4d3e6c49987d37d.camel@wdc.com>
+ <mvma7cwaubk.fsf@suse.de>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <ce9e762d-5b70-0092-d21c-3d9be8fa2a69@wdc.com>
+Date:   Tue, 30 Jul 2019 00:00:15 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190730082618.5bb5edf3@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <mvma7cwaubk.fsf@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,52 +93,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.07.2019 01:26, Stephen Rothwell wrote:
-> Hi Denis,
+On 7/29/19 11:51 PM, Andreas Schwab wrote:
+> On Jul 29 2019, Atish Patra <Atish.Patra@wdc.com> wrote:
 > 
-> On Mon, 29 Jul 2019 17:18:01 +0300 Denis Efremov <efremov@linux.com> wrote:
+>> Strange. We never saw this error.
+> 
+> It is part of CONFIG_KERNEL_HEADER_TEST.  Everyone developing a driver
+> should enable it.
+> 
+>> #include <linux/types.h>
 >>
->> This patch adds a check to warn about static EXPORT_SYMBOL* functions
->> during the modpost. In most of the cases, a static symbol marked for
->> exporting is an odd combination that should be fixed either by deleting
->> the exporting mark or by removing the static attribute and adding the
->> appropriate declaration to headers.
+>> Can you try it at your end and confirm please ?
 > 
-> OK, this is now in linux-next and I am getting what look like false
-> positives :-(
+> Confirmed.
 > 
-> My powerpc builds produce these:
+
+Thanks. I will update the patch in v2.
+
+> Andreas.
 > 
-> WARNING: "ahci_em_messages" [vmlinux] is the static EXPORT_SYMBOL_GPL
-> WARNING: "ftrace_set_clr_event" [vmlinux] is the static EXPORT_SYMBOL_GPL
-> WARNING: "empty_zero_page" [vmlinux] is the static EXPORT_SYMBOL
-> WARNING: "jiffies" [vmlinux] is the static EXPORT_SYMBOL
-> 
-> empty_zero_page (at least) is not static.  It is defined in assembler ...
 
-This could be fixed either by adding the type, for example:
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -478,6 +478,7 @@ EXPORT_SYMBOL(phys_base)
 
-         __PAGE_ALIGNED_BSS
-  NEXT_PAGE(empty_zero_page)
-+.type empty_zero_page, STT_OBJECT
-         .skip PAGE_SIZE
-  EXPORT_SYMBOL(empty_zero_page)
-
-Or by updating the check in the patch:
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -1988,7 +1988,9 @@ static void read_symbols(const char *modname)
-                 unsigned char bind = ELF_ST_BIND(sym->st_info);
-                 unsigned char type = ELF_ST_TYPE(sym->st_info);
-
--               if (type == STT_OBJECT || type == STT_FUNC) {
-+               if (type == STT_OBJECT ||
-+                   type == STT_FUNC ||
-+                   type == STT_NOTYPE) {
-
-Do I need to resend the whole patch or create new "patch-on-patch"?
-
-Denis
+-- 
+Regards,
+Atish
