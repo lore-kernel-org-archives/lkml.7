@@ -2,107 +2,135 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFCCC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48060C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3178D208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:48:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564501698;
-	bh=u8G3uu/YLVUjZICLkZ9ngEhNPuxZKK87scZFtu1ZmgY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=R9LAI3IiNvciDHwyRSK2AtxEuS3Ax8VB5Gmc7Q028q21IUgX2Xe+lyyr+IAumaxw6
-	 fJVthHWUO6s2P/9q5iWrizIjd6vkHsEx3vJVpHBxVWBrNUu/XP077WaPwcNJKFL0fh
-	 I8hNgazqF3xb1NLXKxeKO/ACnz/Tzo7n3Ux10TuY=
+	by mail.kernel.org (Postfix) with ESMTP id 1F5C3206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730501AbfG3PsR (ORCPT
+        id S1730790AbfG3Ps6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:48:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfG3PsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:48:17 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3900F208E3;
-        Tue, 30 Jul 2019 15:48:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564501696;
-        bh=u8G3uu/YLVUjZICLkZ9ngEhNPuxZKK87scZFtu1ZmgY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=i1Lsevi8fySkHyU5LXwS5gZUwf3cfIKuX2KQHwjdzh8snOZu8xwAQ1Wk+8+fvpbdC
-         jBuXYUTXy+spMjRuWnCiD5B1+46Kha3w/JXnCYstU7g9vMl1ZrLWov5rLxjmUn8USg
-         3Ar6lwmN8o1Fe4irwWkiObgVm27qZRJGEXDTv/Yk=
-Received: by mail-wm1-f46.google.com with SMTP id s3so57627350wms.2;
-        Tue, 30 Jul 2019 08:48:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAUOUyXnBSVUBofNXekrQp5yclIW1m9drkl6066UfqqIf+Z6xhqy
-        MC/zy1pzeJ0AGdEmaOVQuyqBzdBy2krf3/r4JBY=
-X-Google-Smtp-Source: APXvYqzy094AIRwYpa7T0yizmHQReD9dLlNYBxyC0FmWxogigflCzHYWW1iUGyikNSAoRQRF4+oKPDeKtgn4z6mdlL4=
-X-Received: by 2002:a05:600c:20c3:: with SMTP id y3mr108901006wmm.3.1564501694671;
- Tue, 30 Jul 2019 08:48:14 -0700 (PDT)
+        Tue, 30 Jul 2019 11:48:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50654 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725974AbfG3Ps5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 11:48:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7F5EEB024;
+        Tue, 30 Jul 2019 15:48:55 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 039991E435C; Tue, 30 Jul 2019 17:48:55 +0200 (CEST)
+Date:   Tue, 30 Jul 2019 17:48:54 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm/filemap: don't initiate writeback if mapping has
+ no dirty pages
+Message-ID: <20190730154854.GG28829@quack2.suse.cz>
+References: <156378816804.1087.8607636317907921438.stgit@buzz>
+ <20190722175230.d357d52c3e86dc87efbd4243@linux-foundation.org>
+ <bdc6c53d-a7bb-dcc4-20ba-6c7fa5c57dbd@yandex-team.ru>
+ <20190730141457.GE28829@quack2.suse.cz>
+ <51ba7304-06bd-a50d-cb14-6dc41b92fab5@yandex-team.ru>
 MIME-Version: 1.0
-References: <1564488945-20149-1-git-send-email-guoren@kernel.org>
- <1564488945-20149-4-git-send-email-guoren@kernel.org> <CAK8P3a0v3oVS5cCkORxA7na+VE7ofTQRxiv5o5xNf5v=esnN9A@mail.gmail.com>
- <CAJF2gTQC0e3zGxtCdwvZpen=Gj8CtgjNYCuy3hSupDXt3KM0Zg@mail.gmail.com> <CAK8P3a0miz=yghtqK+1=1APGf4R1-NW64TJTtGiO5pOPBQNgKg@mail.gmail.com>
-In-Reply-To: <CAK8P3a0miz=yghtqK+1=1APGf4R1-NW64TJTtGiO5pOPBQNgKg@mail.gmail.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Tue, 30 Jul 2019 23:48:03 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRf1461+9HgqSPh5UEoVz7J_je3yeg=jji6myE0OKKcKg@mail.gmail.com>
-Message-ID: <CAJF2gTRf1461+9HgqSPh5UEoVz7J_je3yeg=jji6myE0OKKcKg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] csky: Add dma_inv_range for DMA_FROM_DEVICE
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-csky@vger.kernel.org, feng_shizhu@dahuatech.com,
-        zhang_jian5@dahuatech.com, zheng_xingjian@dahuatech.com,
-        zhu_peng@dahuatech.com, Guo Ren <ren_guo@c-sky.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51ba7304-06bd-a50d-cb14-6dc41b92fab5@yandex-team.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thx Arnd,
+On Tue 30-07-19 17:57:18, Konstantin Khlebnikov wrote:
+> On 30.07.2019 17:14, Jan Kara wrote:
+> > On Tue 23-07-19 11:16:51, Konstantin Khlebnikov wrote:
+> > > On 23.07.2019 3:52, Andrew Morton wrote:
+> > > > 
+> > > > (cc linux-fsdevel and Jan)
+> > 
+> > Thanks for CC Andrew.
+> > 
+> > > > On Mon, 22 Jul 2019 12:36:08 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+> > > > 
+> > > > > Functions like filemap_write_and_wait_range() should do nothing if inode
+> > > > > has no dirty pages or pages currently under writeback. But they anyway
+> > > > > construct struct writeback_control and this does some atomic operations
+> > > > > if CONFIG_CGROUP_WRITEBACK=y - on fast path it locks inode->i_lock and
+> > > > > updates state of writeback ownership, on slow path might be more work.
+> > > > > Current this path is safely avoided only when inode mapping has no pages.
+> > > > > 
+> > > > > For example generic_file_read_iter() calls filemap_write_and_wait_range()
+> > > > > at each O_DIRECT read - pretty hot path.
+> > 
+> > Yes, but in common case mapping_needs_writeback() is false for files you do
+> > direct IO to (exactly the case with no pages in the mapping). So you
+> > shouldn't see the overhead at all. So which case you really care about?
+> > 
+> > > > > This patch skips starting new writeback if mapping has no dirty tags set.
+> > > > > If writeback is already in progress filemap_write_and_wait_range() will
+> > > > > wait for it.
+> > > > > 
+> > > > > ...
+> > > > > 
+> > > > > --- a/mm/filemap.c
+> > > > > +++ b/mm/filemap.c
+> > > > > @@ -408,7 +408,8 @@ int __filemap_fdatawrite_range(struct address_space *mapping, loff_t start,
+> > > > >    		.range_end = end,
+> > > > >    	};
+> > > > > -	if (!mapping_cap_writeback_dirty(mapping))
+> > > > > +	if (!mapping_cap_writeback_dirty(mapping) ||
+> > > > > +	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
+> > > > >    		return 0;
+> > > > >    	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
+> > > > 
+> > > > How does this play with tagged_writepages?  We assume that no tagging
+> > > > has been performed by any __filemap_fdatawrite_range() caller?
+> > > > 
+> > > 
+> > > Checking also PAGECACHE_TAG_TOWRITE is cheap but seems redundant.
+> > > 
+> > > To-write tags are supposed to be a subset of dirty tags:
+> > > to-write is set only when dirty is set and cleared after starting writeback.
+> > > 
+> > > Special case set_page_writeback_keepwrite() which does not clear to-write
+> > > should be for dirty page thus dirty tag is not going to be cleared either.
+> > > Ext4 calls it after redirty_page_for_writepage()
+> > > XFS even without clear_page_dirty_for_io()
+> > > 
+> > > Anyway to-write tag without dirty tag or at clear page is confusing.
+> > 
+> > Yeah, TOWRITE tag is intended to be internal to writepages logic so your
+> > patch is fine in that regard. Overall the patch looks good to me so I'm
+> > just wondering a bit about the motivation...
+> 
+> In our case file mixes cached pages and O_DIRECT read. Kind of database
+> were index header is memory mapped while the rest data read via O_DIRECT.
+> I suppose for sharing index between multiple instances.
 
-On Tue, Jul 30, 2019 at 11:22 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Jul 30, 2019 at 5:11 PM Guo Ren <guoren@kernel.org> wrote:
-> > > > diff --git a/arch/csky/mm/dma-mapping.c b/arch/csky/mm/dma-mapping.c
-> > > >                 cache_op(paddr, size, dma_wb_range);
-> > > >                 break;
-> > > >         case DMA_FROM_DEVICE:
-> > > > +               cache_op(paddr, size, dma_inv_range);
-> > > > +               break;
-> > > >         case DMA_BIDIRECTIONAL:
-> > > >                 cache_op(paddr, size, dma_wbinv_range);
-> > > >                 break;
-> > >
-> > > When syncing 'for_cpu', you should not need to write back, because
-> > > there won't be any dirty cache lines.
-> >
-> > I just follow the dma_data_direction param, seems dir param and
-> > function are a little bit duplicated. And our cpu won't clear clean
-> > cache line into memory, so dma_wb_page won't cause problem.
-> > Seems arch_sync_dma_for_cpu with dir=DMA_TO_DEVICE is
-> > self-contradictory.
->
-> Right, you generally don't need to do cache management for that
-> combination.
->
-> There might be other things to do here though, e.g. with a strict
-> iommu implementation one could tear down the i/o page table
-> entry to prevent the device from accessing a buffer while that is
-> owned by the cpu.
-Tear down i/o page table shouldn't be put here and it's for map/unmap().
-And I think arch_sync_dma_for_cpu/device should only do cache issues.
+OK, that has always been a bit problematic but you're not the first one to
+have such design ;). So feel free to add:
 
---
-Best Regards
- Guo Ren
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-ML: https://lore.kernel.org/linux-csky/
+to your patch.
+
+> On this path we also hit this bug:
+> https://lore.kernel.org/lkml/156355839560.2063.5265687291430814589.stgit@buzz/
+> so that's why I've started looking into this code.
+
+I see. OK.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
