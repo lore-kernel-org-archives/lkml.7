@@ -7,66 +7,64 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4991C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07A0C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1A82087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3E72087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hk0Bac0a"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NEHgj6CU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388347AbfG3TN2 (ORCPT
+        id S1728558AbfG3TNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 15:13:28 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45429 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388264AbfG3TNZ (ORCPT
+        Tue, 30 Jul 2019 15:13:37 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37698 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388320AbfG3TN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 15:13:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r1so30327122pfq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 12:13:24 -0700 (PDT)
+        Tue, 30 Jul 2019 15:13:27 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b3so29294621plr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 12:13:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aCFi9VKfA/regOH6ME0h7V2OJPrhlZ4OE3HFuZl/Mr4=;
-        b=hk0Bac0aiWQasaW/82OqlXyeS+zRRbeGWMF9iYoYCCjmyk5hKfhbErMAfoM104i7Br
-         TdpwZFEl9pU+frxz1cazoSP6L1BNAC+8jncLJVwuFEsDynqzb3OP7vNis0EU/ikkPW8m
-         /LeN2upB3IFugt/kUzhj6IfHluZI3rXDFFkRA=
+        bh=djb+K5YV06tE6CuanEg0CCbjMrpDNzEbnLAfye7ZkSY=;
+        b=NEHgj6CUyhuGNXZT844G24GmkoVlxjwnp/ZZK+KeYPZYfnl+y2UvSztPruWijQ4cSI
+         kBY38ehlnCl9JH9OOX/JsC03zQgxQlLzWzBZnYs6E5MkdIvE+bVThcfwBcwDd1fydiyS
+         XhhW1KJvnX2Qrszc09rMS6Fb8iqbbIIl1pYec=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aCFi9VKfA/regOH6ME0h7V2OJPrhlZ4OE3HFuZl/Mr4=;
-        b=LxYznkYhsYURI7Gr7kA7OCQGQ86v/MM0SiYU2AFWtT6YACaha4Nw2W3bfB4FUVdUMo
-         5nWmZDbdgznIGT3L0lN+OI+5EPQQIqPSkOAM0hM0Y36flM8FSkXpRHAVHEMabdAfizkg
-         6JYzL4EejFVUivEmQ8zfhB1cxSyHZQoXw8GET5Xnv4q2IPZBoyrwLfmEzpdlICVAzxI3
-         7nJabwACSH1+QmriAJSiWRFqR1YXlExzHQcoflHlI7eqcpBbg2YnAiVdt+eidT9OUMWF
-         gPwK8bVUE2LIZVM0FK+tmaBogrFKWRemo5ae6eVIJ2eNYmeSjC1+4Sis5uH7CzBmURU1
-         DJMw==
-X-Gm-Message-State: APjAAAV1RdPL8qvzXip/yJfpaM2WcA/thNqba50ADEw/ikZ6uVUXYnYw
-        eEgreNJJQpzl1qAAIjD495z4mw==
-X-Google-Smtp-Source: APXvYqyTpbQ7f3xITrwKbyFWcIPqfOysYAwjkN9vIf84u+eLPDg/LwjNFZLDtMcMgZUrWQ+iiuxmZg==
-X-Received: by 2002:a65:57ca:: with SMTP id q10mr113599135pgr.52.1564514003446;
-        Tue, 30 Jul 2019 12:13:23 -0700 (PDT)
+        bh=djb+K5YV06tE6CuanEg0CCbjMrpDNzEbnLAfye7ZkSY=;
+        b=l1npUPsvYeCBncVcWS3uV5I7OBLKyp2VMwTOoar3nw4pD1k5fNNiD9Sp9ExDnDQfxb
+         apXkpleqmfccJdXTjMSC01EGm5KUkh9QHGsZRHSJZUOM8PbXtiJi6GO1iRSwwSQPvw4r
+         oScLc6gigNAAZpjHkhepdy5Jn95OGmIbbzExre/f6YlEtU09D8OrHydT2ncD4JJ2gLH6
+         EPZEGP1MsN/MjKS8mRLg5jFlnvANOgvldWeTsGgn1vRzVII6LdqJ5moHspfeyGQwDy7f
+         Y6+jJsgAmgCHb7n9MtTrTnaog4VUT7GKArFMXooTJxef3yEVADReGTWsRXM4aKfRSCbW
+         S+ig==
+X-Gm-Message-State: APjAAAVR8bNRzxbdv8Cuwd1unydt44J2DUS06UN130jOR41YtppiVHO7
+        7zlcMbDNKUWB6rFJhBzHgV0k9w==
+X-Google-Smtp-Source: APXvYqx7PDw4+udfJ0/X/aulEp6speZuvn3qPpw/ORb5g1xlvlm+szU4lbJM3sBZ+Qyz/KRfApdJug==
+X-Received: by 2002:a17:902:42a5:: with SMTP id h34mr120262792pld.16.1564514006452;
+        Tue, 30 Jul 2019 12:13:26 -0700 (PDT)
 Received: from skynet.sea.corp.google.com ([2620:0:1008:1100:c4b5:ec23:d87b:d6d3])
-        by smtp.gmail.com with ESMTPSA id n89sm84649540pjc.0.2019.07.30.12.13.22
+        by smtp.gmail.com with ESMTPSA id n89sm84649540pjc.0.2019.07.30.12.13.25
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 12:13:23 -0700 (PDT)
+        Tue, 30 Jul 2019 12:13:26 -0700 (PDT)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
 Cc:     kristen@linux.intel.com, keescook@chromium.org,
         Thomas Garnier <thgarnie@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v9 09/11] x86/power/64: Adapt assembly for PIE support
-Date:   Tue, 30 Jul 2019 12:12:53 -0700
-Message-Id: <20190730191303.206365-10-thgarnie@chromium.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        Nadav Amit <namit@vmware.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 11/11] x86/alternatives: Adapt assembly for PIE support
+Date:   Tue, 30 Jul 2019 12:12:55 -0700
+Message-Id: <20190730191303.206365-12-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
 In-Reply-To: <20190730191303.206365-1-thgarnie@chromium.org>
 References: <20190730191303.206365-1-thgarnie@chromium.org>
@@ -77,42 +75,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the assembly code to use only relative references of symbols for the
-kernel to be PIE compatible.
+Change the assembly options to work with pointers instead of integers.
 
 Position Independent Executable (PIE) support will allow to extend the
 KASLR randomization range below 0xffffffff80000000.
 
 Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/power/hibernate_asm_64.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/alternative.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/power/hibernate_asm_64.S b/arch/x86/power/hibernate_asm_64.S
-index a4d5eb0a7ece..796cd19d575b 100644
---- a/arch/x86/power/hibernate_asm_64.S
-+++ b/arch/x86/power/hibernate_asm_64.S
-@@ -23,7 +23,7 @@
- #include <asm/frame.h>
+diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
+index 094fbc9c0b1c..28a838106e5f 100644
+--- a/arch/x86/include/asm/alternative.h
++++ b/arch/x86/include/asm/alternative.h
+@@ -243,7 +243,7 @@ static inline int alternatives_text_reserved(void *start, void *end)
+ /* Like alternative_io, but for replacing a direct call with another one. */
+ #define alternative_call(oldfunc, newfunc, feature, output, input...)	\
+ 	asm volatile (ALTERNATIVE("call %P[old]", "call %P[new]", feature) \
+-		: output : [old] "i" (oldfunc), [new] "i" (newfunc), ## input)
++		: output : [old] "X" (oldfunc), [new] "X" (newfunc), ## input)
  
- ENTRY(swsusp_arch_suspend)
--	movq	$saved_context, %rax
-+	leaq	saved_context(%rip), %rax
- 	movq	%rsp, pt_regs_sp(%rax)
- 	movq	%rbp, pt_regs_bp(%rax)
- 	movq	%rsi, pt_regs_si(%rax)
-@@ -114,7 +114,7 @@ ENTRY(restore_registers)
- 	movq	%rax, %cr4;  # turn PGE back on
+ /*
+  * Like alternative_call, but there are two features and respective functions.
+@@ -256,8 +256,8 @@ static inline int alternatives_text_reserved(void *start, void *end)
+ 	asm volatile (ALTERNATIVE_2("call %P[old]", "call %P[new1]", feature1,\
+ 		"call %P[new2]", feature2)				      \
+ 		: output, ASM_CALL_CONSTRAINT				      \
+-		: [old] "i" (oldfunc), [new1] "i" (newfunc1),		      \
+-		  [new2] "i" (newfunc2), ## input)
++		: [old] "X" (oldfunc), [new1] "X" (newfunc1),		      \
++		  [new2] "X" (newfunc2), ## input)
  
- 	/* We don't restore %rax, it must be 0 anyway */
--	movq	$saved_context, %rax
-+	leaq	saved_context(%rip), %rax
- 	movq	pt_regs_sp(%rax), %rsp
- 	movq	pt_regs_bp(%rax), %rbp
- 	movq	pt_regs_si(%rax), %rsi
+ /*
+  * use this macro(s) if you need more than one output parameter
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
