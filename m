@@ -2,170 +2,69 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CDDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492ADC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955B32087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1973E2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:31:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="aec8Tnjw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbfG3Lai (ORCPT
+        id S1730237AbfG3Lb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:30:38 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20371 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730101AbfG3Lai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:30:38 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 04:30:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,326,1559545200"; 
-   d="scan'208";a="190841166"
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 30 Jul 2019 04:30:33 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 30 Jul 2019 14:30:33 +0300
-Date:   Tue, 30 Jul 2019 14:30:33 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/2] gpiolib: add support for fetching descriptors from
- static properties
-Message-ID: <20190730113033.GJ28600@kuha.fi.intel.com>
-References: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
- <20190713075259.243565-3-dmitry.torokhov@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190713075259.243565-3-dmitry.torokhov@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Tue, 30 Jul 2019 07:31:27 -0400
+Received: from sender-pp-o92.zoho.com ([135.84.80.237]:25419 "EHLO
+        sender-pp-o92.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728412AbfG3Lb1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:31:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1564486255; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=UXTFKv7gVDhrNdY67mJtbrMMkEhYjxYh61cPUe5L98eVx82cFDkMmQ7ZWkQG2IWVcitwRCIawLITEvBvXK/gFoaf4ylUFpwYLLC6ngFrrTpjGTRASfEsy3TUDXogbBKPW7I6wTrMAG39buq0uoaSIurF/oinWo1+0LC5ywHHkIs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1564486255; h=Cc:Date:From:Message-ID:Subject:To:ARC-Authentication-Results; 
+        bh=WBUlw9utVZTw5p7WLkBvmTODJB01FKCSNEFTLWHE3XA=; 
+        b=OqlPhgBrKNlb0IPkis/wdQgbBnAQ8qacvov3nnzUEY28FfDg/Iy+YAcJd0W2ltBzdfPVPUwS8lDl9vupIzQWx0cpLhw1oj98XP4WRnFK8Rr/da7pKkjPUAigorvdOwWWUkYuDiJbbem8xIEsmOXOzEyrrBva3MvsyEXrq7Q8GGs=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=FxnLbGs98Tq7O/iVNcxOziWe7JS1AejpMjYToYj7h9UDl1S1CrsnoRFUPrJBIRj2S4Gg98kNgoA3
+    1xvF4VDAe7XR7BpDEAY1JQfd+EA62nPCYh14VKSa7TgrXqRrIgj9  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1564486255;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id; l=64;
+        bh=WBUlw9utVZTw5p7WLkBvmTODJB01FKCSNEFTLWHE3XA=;
+        b=aec8TnjwV2nL3MMIFaU3YbtJQABi/qCk7nFX9y/kOCRn/7M8ytbqX4SrRW21V4e3
+        7WCJA09frtsXkelfe3+YGOc15SrQNDBaXyfItIDQXagQPes84POhgfegiPJg6mP8uZC
+        Fj8MKUsgFjxJbPl8AHnzlF1VV/RKcqPghaXI0hME=
+Received: from localhost.localdomain (171.221.113.137 [171.221.113.137]) by mx.zohomail.com
+        with SMTPS id 1564486252526388.69305994190245; Tue, 30 Jul 2019 04:30:52 -0700 (PDT)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, ralf@linux-mips.org,
+        paul@crapouillou.net, paul.burton@mips.com, jhogan@kernel.org,
+        fancer.lancer@gmail.com, chenhc@lemote.com, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, armijn@tjaldur.nl, syq@debian.org,
+        jiaxun.yang@flygoat.com
+Subject: Add Ingenic X1000 system type.
+Date:   Tue, 30 Jul 2019 19:30:10 +0800
+Message-Id: <1564486211-2699-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+Add X1000 system type for cat /proc/cpuinfo to give out X1000.
 
-On Sat, Jul 13, 2019 at 12:52:59AM -0700, Dmitry Torokhov wrote:
-> Now that static device properties understand notion of child nodes, let's
-> teach gpiolib to tie such children and machine GPIO descriptor tables.
-> We will continue using a single table for entire device, but instead of
-> using connection ID as a lookup key in the GPIO descriptor table directly,
-> we will perform additional translation: fwnode_get_named_gpiod() when
-> dealing with property_set-backed fwnodes will try parsing string property
-> with name matching connection ID and use result of the lookup as the key in
-> the table:
-> 
-> static const struct property_entry dev_child1_props[] __initconst = {
-> 	...
-> 	PROPERTY_ENTRY_STRING("gpios",		"child-1-gpios"),
-> 	{ }
-> };
-> 
-> static struct gpiod_lookup_table dev_gpiod_table = {
-> 	.dev_id = "some-device",
-> 	.table = {
-> 		...
-> 		GPIO_LOOKUP_IDX("B", 1, "child-1-gpios", 1, GPIO_ACTIVE_LOW),
-> 		...
-> 	},
-> };
 
-We don't need struct gpiod_lookup_table anymore. We can mimic DT with
-the software nodes now that we have those "reference properties". A
-gpio reference with the software nodes would look something like this:
-
-        enum {
-                GPIO_CONTROLLER,
-                MY_DEVICE
-        };
-
-        static const struct software_node nodes[];
-
-        static const struct software_node_ref_args reset_gpio_ref = {
-                .node = &nodes[GPIO_CONTROLLER],
-                .nargs = 2,
-                .args = {
-                        14,                     /* line number */
-                        GPIO_ACTIVE_HIGH        /* flags */
-                }
-        };
-
-        static const struct software_node_reference my_refs[] = {
-                { "reset-gpios", 1, &reset_gpio_ref }
-        };
-
-        /* Optionally, we could support gpiochip finding by name... */
-        static const struct property_entry my_props[] = {
-                PROPERTY_ENTRY_STRING("gpio-controller", "name_of_the_controller")
-        };
-
-        static const struct software_node nodes[] = {
-                [GPIO_CONTROLLER]       = { "gpio_controller" },
-                [MY_DEVICE]             = { "my_device", NULL, my_props, my_refs }
-        };
-
-        void my_init(void)
-        {
-                ...
-                ret = software_node_register_nodes(nodes);
-                ...
-        }
-
-In gpiolib we should now be able to access that reference with
-fwnode_property_get_references_args():
-
-        static int gpiochip_match_fwnode(struct gpio_chip *chip, void *fwnode)
-        {
-                /* The fwnode member needs to be added to struct gpio_chip */
-                return chip->fwnode == fwnode;
-        }
-
-        static struct gpio_desc *gpiod_find(struct device *dev,
-                                            const char *con_id,
-                                            unsigned int idx,
-                                            unsigned long flags)
-        {
-                struct fwnode_reference_args args;
-                struct gpio_chip *chip;
-                struct gpio_desc *desc;
-                const char *name;
-                int ret;
-
-                ret = fwnode_property_get_refernce_args(dev_fwnode(dev), con_id,
-                                                        NULL, idx, &args);
-                ...
-
-                /* Let's find the gpiochip */
-                chip = gpiochip_find(args.fwnode, gpiochip_match_fwnode);
-                ...
-
-                /* Or optionally with find_chip_by_name() */
-                //ret = device_property_read_string(dev, "gpio-controller", &name);
-                ...
-                //chip = find_chip_by_name(name);
-                ...
-
-                /* I'm assuming hwnum is the same as line number? */
-                desc = gpiochip_get_desc(chip, args.args[0]);
-                *flags = args.args[1];
-
-                return desc;
-        }
-
-The above is just an example, but I'm pretty sure that something like
-it (with a little bit of tuning) is all that we need.
-
-thanks,
-
--- 
-heikki
