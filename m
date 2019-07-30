@@ -2,58 +2,60 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C33C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4705EC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC6420882
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4A720679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tBV0OSKU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0LyAi4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbfG3JuF (ORCPT
+        id S1732126AbfG3JuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:50:05 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35712 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727770AbfG3JuE (ORCPT
+        Tue, 30 Jul 2019 05:50:09 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39485 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727770AbfG3JuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:50:04 -0400
-Received: by mail-qk1-f195.google.com with SMTP id r21so46162628qke.2;
-        Tue, 30 Jul 2019 02:50:04 -0700 (PDT)
+        Tue, 30 Jul 2019 05:50:06 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w190so46086697qkc.6;
+        Tue, 30 Jul 2019 02:50:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Q1N8QIjRCQVvQCWPk5TXtEOdMdSZgm2VIBTcTaRGuaQ=;
-        b=tBV0OSKUjbGcVEybvEEXJbS+xtRtKj+ThiR3p6SLTOq1UmTRsuSkL8C0xJUh3xNuUM
-         yikq5vG8VuybYVMT0jmA9wDMYlxJLMSXsdKOxkzUwxvZXKLdv7d5IziFjzbgNpIVN1ff
-         utPBeFqzm1BLHgEaqmC5pBsjNoJlK0MVXD5PHn8lyX7KdVRguZ+JoaWTTAr63Bo3jjgU
-         cN8EHhOq4082O7xnwS2TzHpQaNPquiB4f4cLI702PhbFp/lFroJqj4Wf3srwFX2JfaWS
-         UYLozUYy6zZ28Sn79shH7AKUWmXQRBE4bxY71hztOtXYWDFTyDCHofJ5YivbaFnsMgTM
-         fGFg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=wh9GNZHIrnhtg59P3tkMjaDgU4oFVpFt+1AhQYmKxJY=;
+        b=S0LyAi4bvR+Ah/ZuP0WNt+qmK13B7S/0LDux7Y9b6NYcQT3N/T6y98rRm6z44Pn56u
+         5x/9/0hjXbtYEbAfQu4Tj+CVz6/frS5mBKMKCk1G0VOn8SUNO8UW6jtxzgAYX0OziImD
+         xitMhTzEwH8eJJs056g0MHW9Zw571845WVKTyFYrdTCwDU19E/6dRDrS1K1qHFdvkYJ1
+         c2e8HzHrLi/lbHiGyRcDugETo5XtUDPk6mAhZ1y6q1ASeC2zmM1KcEuDVOSGbZtq8LKS
+         XeatS3B6XSQnpip1VqRTn7EDfRkETEYTi1UbHVyZTmSLmhMgb09Dao+A64+Jc9QzwhXT
+         UYng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Q1N8QIjRCQVvQCWPk5TXtEOdMdSZgm2VIBTcTaRGuaQ=;
-        b=IeMOeXtqQyIqjFlm6w2fVsjkY7mVTgOn5bE2/IlqEC14rCl8CONDwdg09nALt/Wgkf
-         /f5i/e5m3lMVu6XQayjuzWl1q33WRZ0ZBnJ2jcFTVTD0D4uRGy45OclykZjnljtuhTtI
-         XgAD2XrMvrS84mIJ9xzb2CIY4yuO+cK2PHEjcmT36UzmdXnlWLlgsrenV/0KYBtheRQZ
-         bhWNTHf2zRXvv7ZwzhwVZqwiv1N67MF3e7CDCdNkowrMqE8Ex/bDzBFPiGIzpFCP3bRN
-         8xuHV+XSjJWcwXgvwPXwBhudlBZf/P6MbR6zc6N28OkmNvAVKI5loFy2KtRratNPxpos
-         IxLw==
-X-Gm-Message-State: APjAAAUP80l8Yp14jJAcYZdfiZnrBJqHfH+9c2ZjFppjXKP6/Q9F2hDE
-        SB/Eshc53XrNFr2fmr/PzbI=
-X-Google-Smtp-Source: APXvYqyQkhjaWwuoTireCkhChIt3cJL2odow9d/c5cI6mdhcnnLYbd4Z8s9b332F3kQn3GONmpoh2w==
-X-Received: by 2002:a37:4e92:: with SMTP id c140mr69434079qkb.48.1564480203629;
-        Tue, 30 Jul 2019 02:50:03 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=wh9GNZHIrnhtg59P3tkMjaDgU4oFVpFt+1AhQYmKxJY=;
+        b=Q9ptxri3VU/U3RfWP90z4UeNffuHA9H0DWvBTinvfIhQLi1AKrVnxNqUH7ntOS/2rC
+         u5a+cqskpplH0wRzT+d5GsiU0BxH1huGKptGULSR/+UcLfpj3X9JPx0kDC7+vCECuMcz
+         hglB/Ua7JeY4NDbJedjuLI2nf9MY+ELxdiaY9sY9sPPht1TgvgYSQnU7RqfVqyX5z8SO
+         MJJHAHawjQqSQ6xC5P4oXzhs3CEx5l39O8nViPQzDnxU1Wo+5orohnZ2uO0NqkY5JuxC
+         0680VwO5swapD+joJxF4vdGd/bLjWfT2bNUcZ0TJfD4J+/UCu0qDrvGlzPXuHmMk1ipZ
+         EwoQ==
+X-Gm-Message-State: APjAAAUcADZnv4g7spr2yxXV2Y7lhmlKqrXew4yyra4Z/2duv4EvK/f0
+        603luB157KqwYWULctCpy/c=
+X-Google-Smtp-Source: APXvYqy3btStKIOM4W5XLPSWRxkXeZEVtQwFTAdkep0oSzZm81lp6S9vf0bgrX4NUhc2w1F2L/E3bg==
+X-Received: by 2002:a37:6858:: with SMTP id d85mr24831807qkc.126.1564480205254;
+        Tue, 30 Jul 2019 02:50:05 -0700 (PDT)
 Received: from AzureHyper-V.3xjlci4r0w3u5g13o212qxlisd.bx.internal.cloudapp.net ([13.68.195.119])
-        by smtp.gmail.com with ESMTPSA id d9sm28198078qke.136.2019.07.30.02.50.02
+        by smtp.gmail.com with ESMTPSA id d9sm28198078qke.136.2019.07.30.02.50.04
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 02:50:03 -0700 (PDT)
+        Tue, 30 Jul 2019 02:50:04 -0700 (PDT)
 From:   Himadri Pandya <himadrispandya@gmail.com>
 X-Google-Original-From: Himadri Pandya <himadri18.07@gmail.com>
 To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
@@ -62,33 +64,105 @@ To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
 Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Himadri Pandya <himadri18.07@gmail.com>
-Subject: [PATCH 0/2] Drivers: hv: Remove dependencies on guest page size
-Date:   Tue, 30 Jul 2019 09:49:42 +0000
-Message-Id: <20190730094944.96007-1-himadri18.07@gmail.com>
+Subject: [PATCH 2/2] Drivers: hv: vmbus: Remove dependencies on guest page size
+Date:   Tue, 30 Jul 2019 09:49:44 +0000
+Message-Id: <20190730094944.96007-3-himadri18.07@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190730094944.96007-1-himadri18.07@gmail.com>
+References: <20190730094944.96007-1-himadri18.07@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hyper-V assumes page size to be 4KB. This might not be the case on ARM64
-architecture. The first patch in this patchset introduces a hyer-v
-specific function for allocating a zeroed page which can have a
-different implementation on ARM64 to address the issue of different
-guest and host page sizes. The second patch removes dependencies on
-guest page size in vmbus by using hyper-v specific page symbol and
-functions. 
+Hyper-V assumes page size to be 4K. This might not be the case for ARM64
+architecture. Hence use hyper-v page size and page allocation function
+to avoid conflicts between different host and guest page size on ARM64.
 
-Himadri Pandya (2):
-  x86: hv: Add function to allocate zeroed page for Hyper-V
-  Drivers: hv: vmbus: Remove dependencies on guest page size
+Signed-off-by: Himadri Pandya <himadri18.07@gmail.com>
+---
+ drivers/hv/connection.c | 14 +++++++-------
+ drivers/hv/vmbus_drv.c  |  6 +++---
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
- arch/x86/hyperv/hv_init.c       |  8 ++++++++
- arch/x86/include/asm/mshyperv.h |  1 +
- drivers/hv/connection.c         | 14 +++++++-------
- drivers/hv/vmbus_drv.c          |  6 +++---
- 4 files changed, 19 insertions(+), 10 deletions(-)
-
+diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+index 09829e15d4a0..dcb8f6a8c08c 100644
+--- a/drivers/hv/connection.c
++++ b/drivers/hv/connection.c
+@@ -202,7 +202,7 @@ int vmbus_connect(void)
+ 	 * abstraction stuff
+ 	 */
+ 	vmbus_connection.int_page =
+-	(void *)__get_free_pages(GFP_KERNEL|__GFP_ZERO, 0);
++	(void *)hv_alloc_hyperv_zeroed_page();
+ 	if (vmbus_connection.int_page == NULL) {
+ 		ret = -ENOMEM;
+ 		goto cleanup;
+@@ -211,14 +211,14 @@ int vmbus_connect(void)
+ 	vmbus_connection.recv_int_page = vmbus_connection.int_page;
+ 	vmbus_connection.send_int_page =
+ 		(void *)((unsigned long)vmbus_connection.int_page +
+-			(PAGE_SIZE >> 1));
++			(HV_HYP_PAGE_SIZE >> 1));
+ 
+ 	/*
+ 	 * Setup the monitor notification facility. The 1st page for
+ 	 * parent->child and the 2nd page for child->parent
+ 	 */
+-	vmbus_connection.monitor_pages[0] = (void *)__get_free_pages((GFP_KERNEL|__GFP_ZERO), 0);
+-	vmbus_connection.monitor_pages[1] = (void *)__get_free_pages((GFP_KERNEL|__GFP_ZERO), 0);
++	vmbus_connection.monitor_pages[0] = (void *)hv_alloc_hyperv_zeroed_page();
++	vmbus_connection.monitor_pages[1] = (void *)hv_alloc_hyperv_zeroed_page();
+ 	if ((vmbus_connection.monitor_pages[0] == NULL) ||
+ 	    (vmbus_connection.monitor_pages[1] == NULL)) {
+ 		ret = -ENOMEM;
+@@ -291,12 +291,12 @@ void vmbus_disconnect(void)
+ 		destroy_workqueue(vmbus_connection.work_queue);
+ 
+ 	if (vmbus_connection.int_page) {
+-		free_pages((unsigned long)vmbus_connection.int_page, 0);
++		hv_free_hyperv_page((unsigned long)vmbus_connection.int_page);
+ 		vmbus_connection.int_page = NULL;
+ 	}
+ 
+-	free_pages((unsigned long)vmbus_connection.monitor_pages[0], 0);
+-	free_pages((unsigned long)vmbus_connection.monitor_pages[1], 0);
++	hv_free_hyperv_page((unsigned long)vmbus_connection.monitor_pages[0]);
++	hv_free_hyperv_page((unsigned long)vmbus_connection.monitor_pages[1]);
+ 	vmbus_connection.monitor_pages[0] = NULL;
+ 	vmbus_connection.monitor_pages[1] = NULL;
+ }
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index ebd35fc35290..2ee388a23c8f 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1186,7 +1186,7 @@ static void hv_kmsg_dump(struct kmsg_dumper *dumper,
+ 	 * Write dump contents to the page. No need to synchronize; panic should
+ 	 * be single-threaded.
+ 	 */
+-	kmsg_dump_get_buffer(dumper, true, hv_panic_page, PAGE_SIZE,
++	kmsg_dump_get_buffer(dumper, true, hv_panic_page, HV_HYP_PAGE_SIZE,
+ 			     &bytes_written);
+ 	if (bytes_written)
+ 		hyperv_report_panic_msg(panic_pa, bytes_written);
+@@ -1290,7 +1290,7 @@ static int vmbus_bus_init(void)
+ 		 */
+ 		hv_get_crash_ctl(hyperv_crash_ctl);
+ 		if (hyperv_crash_ctl & HV_CRASH_CTL_CRASH_NOTIFY_MSG) {
+-			hv_panic_page = (void *)get_zeroed_page(GFP_KERNEL);
++			hv_panic_page = (void *)hv_alloc_hyperv_zeroed_page();
+ 			if (hv_panic_page) {
+ 				ret = kmsg_dump_register(&hv_kmsg_dumper);
+ 				if (ret)
+@@ -1319,7 +1319,7 @@ static int vmbus_bus_init(void)
+ 	hv_remove_vmbus_irq();
+ 
+ 	bus_unregister(&hv_bus);
+-	free_page((unsigned long)hv_panic_page);
++	hv_free_hyperv_page((unsigned long)hv_panic_page);
+ 	unregister_sysctl_table(hv_ctl_table_hdr);
+ 	hv_ctl_table_hdr = NULL;
+ 	return ret;
 -- 
 2.17.1
 
