@@ -2,390 +2,192 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B045C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAB7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48566208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9509621726
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:59:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bo05xnrh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LryUJ6aR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbfG3Q7F (ORCPT
+        id S1730348AbfG3Q7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:59:05 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55853 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729862AbfG3Q6X (ORCPT
+        Tue, 30 Jul 2019 12:59:06 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33144 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730291AbfG3Q7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:58:23 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a15so57843418wmj.5;
-        Tue, 30 Jul 2019 09:58:21 -0700 (PDT)
+        Tue, 30 Jul 2019 12:59:05 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so30158679pfq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 09:59:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cnCxwqTHr5LnZc3sSxZvj1DXF8TWuXVnhz4pj3u71sE=;
-        b=Bo05xnrhFxFAelyzK/YsleC1UhWcA5XMDmAIlEtnCLJlPtuWLRlCEY8irKLEx/j1gB
-         5mAC3XdP6UowyrPza0SAhQc0ShICxNUXyZEjS6XUeruZ+TBH27tsX1BdbSPslAXBp09b
-         l6T8aH8pIvF8kYaD225ycMOQewq6BDYytzgOEzMxEvXXxpHus9tr/AqJ2V88gzHEYRvS
-         35YTCBU3l5b5t6RgiwpV2HcxTZNlEypBPhc1B8fyOF58AJikynD0BkUZhNw8s+x3v6dk
-         40SpFFWo9Sm0VRwgWyJSaOkZILan38Kz1mO85fS/aeStbLz4WNdEGi/hXKTOOsXf9iXS
-         SXmA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=bK/1HycOLv3l9GCBdqh/WjUXYJexoV9pk+GHZt0C6Ac=;
+        b=LryUJ6aR7Ls6umLU2c0xaqBjg/o/MzlTj4417kiyq2roWEma7geN5mJxbuY/Jf00J9
+         ktrdn0veTtvRLSkVpejjZUu/t5eUplpSPRh1QDfv9AutCkxbFMK72eZNn3kz68DJjXW1
+         Gt4mGQFiQJb6WpCh9bTjCWVu+/2JSOQkJxIvY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cnCxwqTHr5LnZc3sSxZvj1DXF8TWuXVnhz4pj3u71sE=;
-        b=pkUZME7syYxpTgPmh/O28MdsmMRSRQ4hppiwNFvN+fkzjYwUm8821h4wdXYCyWBPmc
-         PMgKQ/UAJSr/J4tiYWkYCUbX4EYRDBZJIhyIKh2vq+6ZMYn5o6+H+19FlmVywzlI34LT
-         5TYIw4m6THNmRiA1QSLKC26MLiNv5SH5K19xzp8tW37eIzn5d2daxg/9H5fcVBs7N4JR
-         vZhdiGgy5fV9iC1b4G5SFo1JrBO2qsZJQDPaOv/VnS8NKrkaHN9IE8nPLOe3V+/T/ZMi
-         xRpzYEon8Ts1fI8mpO1fSooJBgPjufGqHfMBdO8W/r+5TSshRwGTgvskGNF2N4ciKf4+
-         u/rg==
-X-Gm-Message-State: APjAAAXCcySPfKEBAMPgm25b1xI639GiwCcOwnNmZEvT8N9tcPaJ575e
-        z8myiYqe12sx7W8YCzaY4rA=
-X-Google-Smtp-Source: APXvYqzCgf3J5GOpqDDo0HouP10Wwe87tELPx/l1eFX/U0EonDGQHwsbjjeQC53caCENJKTM2cmdYg==
-X-Received: by 2002:a1c:7c11:: with SMTP id x17mr39450605wmc.22.1564505900690;
-        Tue, 30 Jul 2019 09:58:20 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id r5sm70845040wmh.35.2019.07.30.09.58.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 09:58:20 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v9 09/15] dt-bindings: memory: tegra30: Convert to Tegra124 YAML
-Date:   Tue, 30 Jul 2019 19:56:12 +0300
-Message-Id: <20190730165618.10122-10-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190730165618.10122-1-digetx@gmail.com>
-References: <20190730165618.10122-1-digetx@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=bK/1HycOLv3l9GCBdqh/WjUXYJexoV9pk+GHZt0C6Ac=;
+        b=MGRxeGlMmWxwX4qM5sfzTOQPg7HP6sDh2p6+PZOvTujGiqsIC2NQuHIN6VeYgT/P/k
+         A1UPePnu81nPodUfZht+duFCKK9V1FrZeoN5LXn80u6ZN/OyKxdQGJr8lLT+nhuKwgDS
+         +wRLUYOm1UzzPUilR6yA19l9oOVOEGhkuycluyF2FdQWCzg2zRSn1lNgV7N3FLvGDKOC
+         fdBBCbCtOhxHDFlShzXBOF0GxYhDhjoqUBxSFLSqLez9yeSuhUUh5u0uXdXlB4BuaYAf
+         OrOHC0E8b7BtXMehz5QedE+ShDVqzTtKrN/SC063UcaftSYOGRQlCtOrvrXQTPkO+aW3
+         hvdA==
+X-Gm-Message-State: APjAAAUt6Jre51l3rnegeymaqJbzx18Ycg25d3BO3OoKv2+gIk5OEhxs
+        /9q0BBewWupFJE+vM/vu8s9BKg==
+X-Google-Smtp-Source: APXvYqxNp3jr+v7rzXATnUZUI4gIf9Q+cHqz9XXDLwNPmn4kf37JvaS/4SqJ2FDMXdo0AkhOW8TXhQ==
+X-Received: by 2002:a62:e901:: with SMTP id j1mr43659303pfh.189.1564505944415;
+        Tue, 30 Jul 2019 09:59:04 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y194sm38405468pfg.116.2019.07.30.09.59.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jul 2019 09:59:03 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 09:59:02 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/net: Mark expected switch fall-throughs
+Message-ID: <201907300959.12D21B6F09@keescook>
+References: <20190730001715.GA20706@embeddedor>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190730001715.GA20706@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Tegra30 binding will actually differ from the Tegra124 a tad, in
-particular the EMEM configuration description. Hence rename the binding
-to Tegra124 during of the conversion to YAML.
+On Mon, Jul 29, 2019 at 07:17:15PM -0500, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following warnings (Building: s390):
+> 
+> drivers/s390/net/ctcm_fsms.c: In function ‘ctcmpc_chx_attnbusy’:
+> drivers/s390/net/ctcm_fsms.c:1703:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (grp->changed_side == 1) {
+>       ^
+> drivers/s390/net/ctcm_fsms.c:1707:2: note: here
+>   case MPCG_STATE_XID0IOWAIX:
+>   ^~~~
+> 
+> drivers/s390/net/ctcm_mpc.c: In function ‘ctc_mpc_alloc_channel’:
+> drivers/s390/net/ctcm_mpc.c:358:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (callback)
+>       ^
+> drivers/s390/net/ctcm_mpc.c:360:2: note: here
+>   case MPCG_STATE_XID0IOWAIT:
+>   ^~~~
+> 
+> drivers/s390/net/ctcm_mpc.c: In function ‘mpc_action_timeout’:
+> drivers/s390/net/ctcm_mpc.c:1469:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if ((fsm_getstate(rch->fsm) == CH_XID0_PENDING) &&
+>       ^
+> drivers/s390/net/ctcm_mpc.c:1472:2: note: here
+>   default:
+>   ^~~~~~~
+> drivers/s390/net/ctcm_mpc.c: In function ‘mpc_send_qllc_discontact’:
+> drivers/s390/net/ctcm_mpc.c:2087:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (grp->estconnfunc) {
+>       ^
+> drivers/s390/net/ctcm_mpc.c:2092:2: note: here
+>   case MPCG_STATE_FLOWC:
+>   ^~~~
+> 
+> drivers/s390/net/qeth_l2_main.c: In function ‘qeth_l2_process_inbound_buffer’:
+> drivers/s390/net/qeth_l2_main.c:328:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     if (IS_OSN(card)) {
+>        ^
+> drivers/s390/net/qeth_l2_main.c:337:3: note: here
+>    default:
+>    ^~~~~~~
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- .../nvidia,tegra124-mc.yaml                   | 158 ++++++++++++++++++
- .../memory-controllers/nvidia,tegra30-mc.txt  | 123 --------------
- 2 files changed, 158 insertions(+), 123 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
- delete mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
-new file mode 100644
-index 000000000000..2e2a116f1911
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
-@@ -0,0 +1,158 @@
-+# SPDX-License-Identifier: (GPL-2.0)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/memory-controllers/nvidia,tegra124-mc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NVIDIA Tegra124 SoC Memory Controller
-+
-+maintainers:
-+  - Jon Hunter <jonathanh@nvidia.com>
-+  - Thierry Reding <thierry.reding@gmail.com>
-+
-+description: |
-+  Tegra124 SoC features a hybrid 2x32-bit / 1x64-bit memory controller.
-+  These are interleaved to provide high performance with the load shared across
-+  two memory channels. The Tegra124 Memory Controller handles memory requests
-+  from internal clients and arbitrates among them to allocate memory bandwidth
-+  for DDR3L and LPDDR3 SDRAMs.
-+
-+properties:
-+  compatible:
-+    const: nvidia,tegra124-mc
-+
-+  reg:
-+    maxItems: 1
-+    description:
-+      Physical base address.
-+
-+  clocks:
-+    maxItems: 1
-+    description:
-+      Memory Controller clock.
-+
-+  clock-names:
-+    items:
-+      - const: mc
-+
-+  interrupts:
-+    maxItems: 1
-+    description:
-+      Memory Controller interrupt.
-+
-+  "#reset-cells":
-+    const: 1
-+
-+  "#iommu-cells":
-+    const: 1
-+
-+patternProperties:
-+  "^emc-timings-[0-9]+$":
-+    type: object
-+    properties:
-+      nvidia,ram-code:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Value of RAM_CODE this timing set is used for.
-+
-+    patternProperties:
-+      "^timing-[0-9]+$":
-+        type: object
-+        properties:
-+          clock-frequency:
-+            description:
-+              Memory clock rate in Hz.
-+            minimum: 1000000
-+            maximum: 1066000000
-+
-+          nvidia,emem-configuration:
-+            $ref: /schemas/types.yaml#/definitions/uint32-array
-+            description: |
-+              Values to be written to the EMEM register block. See section
-+              "15.6.1 MC Registers" in the TRM.
-+            items:
-+              - description: MC_EMEM_ARB_CFG
-+              - description: MC_EMEM_ARB_OUTSTANDING_REQ
-+              - description: MC_EMEM_ARB_TIMING_RCD
-+              - description: MC_EMEM_ARB_TIMING_RP
-+              - description: MC_EMEM_ARB_TIMING_RC
-+              - description: MC_EMEM_ARB_TIMING_RAS
-+              - description: MC_EMEM_ARB_TIMING_FAW
-+              - description: MC_EMEM_ARB_TIMING_RRD
-+              - description: MC_EMEM_ARB_TIMING_RAP2PRE
-+              - description: MC_EMEM_ARB_TIMING_WAP2PRE
-+              - description: MC_EMEM_ARB_TIMING_R2R
-+              - description: MC_EMEM_ARB_TIMING_W2W
-+              - description: MC_EMEM_ARB_TIMING_R2W
-+              - description: MC_EMEM_ARB_TIMING_W2R
-+              - description: MC_EMEM_ARB_DA_TURNS
-+              - description: MC_EMEM_ARB_DA_COVERS
-+              - description: MC_EMEM_ARB_MISC0
-+              - description: MC_EMEM_ARB_MISC1
-+              - description: MC_EMEM_ARB_RING1_THROTTLE
-+
-+        required:
-+          - clock-frequency
-+          - nvidia,emem-configuration
-+
-+        additionalProperties: false
-+
-+    required:
-+      - nvidia,ram-code
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - "#reset-cells"
-+  - "#iommu-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    memory-controller@70019000 {
-+        compatible = "nvidia,tegra124-mc";
-+        reg = <0x0 0x70019000 0x0 0x1000>;
-+        clocks = <&tegra_car 32>;
-+        clock-names = "mc";
-+
-+        interrupts = <0 77 4>;
-+
-+        #iommu-cells = <1>;
-+        #reset-cells = <1>;
-+
-+        emc-timings-3 {
-+            nvidia,ram-code = <3>;
-+
-+            timing-12750000 {
-+                clock-frequency = <12750000>;
-+
-+                nvidia,emem-configuration = <
-+                    0x40040001 /* MC_EMEM_ARB_CFG */
-+                    0x8000000a /* MC_EMEM_ARB_OUTSTANDING_REQ */
-+                    0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
-+                    0x00000001 /* MC_EMEM_ARB_TIMING_RP */
-+                    0x00000002 /* MC_EMEM_ARB_TIMING_RC */
-+                    0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
-+                    0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
-+                    0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
-+                    0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
-+                    0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
-+                    0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
-+                    0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
-+                    0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
-+                    0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
-+                    0x06030203 /* MC_EMEM_ARB_DA_TURNS */
-+                    0x000a0402 /* MC_EMEM_ARB_DA_COVERS */
-+                    0x77e30303 /* MC_EMEM_ARB_MISC0 */
-+                    0x70000f03 /* MC_EMEM_ARB_MISC1 */
-+                    0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
-+                >;
-+            };
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt
-deleted file mode 100644
-index a878b5908a4d..000000000000
---- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt
-+++ /dev/null
-@@ -1,123 +0,0 @@
--NVIDIA Tegra Memory Controller device tree bindings
--===================================================
--
--memory-controller node
------------------------
--
--Required properties:
--- compatible: Should be "nvidia,tegra<chip>-mc"
--- reg: Physical base address and length of the controller's registers.
--- clocks: Must contain an entry for each entry in clock-names.
--  See ../clocks/clock-bindings.txt for details.
--- clock-names: Must include the following entries:
--  - mc: the module's clock input
--- interrupts: The interrupt outputs from the controller.
--- #reset-cells : Should be 1. This cell represents memory client module ID.
--  The assignments may be found in header file <dt-bindings/memory/tegra30-mc.h>
--  or in the TRM documentation.
--
--Required properties for Tegra30, Tegra114, Tegra124, Tegra132 and Tegra210:
--- #iommu-cells: Should be 1. The single cell of the IOMMU specifier defines
--  the SWGROUP of the master.
--
--This device implements an IOMMU that complies with the generic IOMMU binding.
--See ../iommu/iommu.txt for details.
--
--emc-timings subnode
---------------------
--
--The node should contain a "emc-timings" subnode for each supported RAM type (see field RAM_CODE in
--register PMC_STRAPPING_OPT_A).
--
--Required properties for "emc-timings" nodes :
--- nvidia,ram-code : Should contain the value of RAM_CODE this timing set is used for.
--
--timing subnode
----------------
--
--Each "emc-timings" node should contain a subnode for every supported EMC clock rate.
--
--Required properties for timing nodes :
--- clock-frequency : Should contain the memory clock rate in Hz.
--- nvidia,emem-configuration : Values to be written to the EMEM register block. For the Tegra124 SoC
--(see section "15.6.1 MC Registers" in the TRM), these are the registers whose values need to be
--specified, according to the board documentation:
--
--	MC_EMEM_ARB_CFG
--	MC_EMEM_ARB_OUTSTANDING_REQ
--	MC_EMEM_ARB_TIMING_RCD
--	MC_EMEM_ARB_TIMING_RP
--	MC_EMEM_ARB_TIMING_RC
--	MC_EMEM_ARB_TIMING_RAS
--	MC_EMEM_ARB_TIMING_FAW
--	MC_EMEM_ARB_TIMING_RRD
--	MC_EMEM_ARB_TIMING_RAP2PRE
--	MC_EMEM_ARB_TIMING_WAP2PRE
--	MC_EMEM_ARB_TIMING_R2R
--	MC_EMEM_ARB_TIMING_W2W
--	MC_EMEM_ARB_TIMING_R2W
--	MC_EMEM_ARB_TIMING_W2R
--	MC_EMEM_ARB_DA_TURNS
--	MC_EMEM_ARB_DA_COVERS
--	MC_EMEM_ARB_MISC0
--	MC_EMEM_ARB_MISC1
--	MC_EMEM_ARB_RING1_THROTTLE
--
--Example SoC include file:
--
--/ {
--	mc: memory-controller@70019000 {
--		compatible = "nvidia,tegra124-mc";
--		reg = <0x0 0x70019000 0x0 0x1000>;
--		clocks = <&tegra_car TEGRA124_CLK_MC>;
--		clock-names = "mc";
--
--		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
--
--		#iommu-cells = <1>;
--		#reset-cells = <1>;
--	};
--
--	sdhci@700b0000 {
--		compatible = "nvidia,tegra124-sdhci";
--		...
--		iommus = <&mc TEGRA_SWGROUP_SDMMC1A>;
--		resets = <&mc TEGRA124_MC_RESET_SDMMC1>;
--	};
--};
--
--Example board file:
--
--/ {
--	memory-controller@70019000 {
--		emc-timings-3 {
--			nvidia,ram-code = <3>;
--
--			timing-12750000 {
--				clock-frequency = <12750000>;
--
--				nvidia,emem-configuration = <
--					0x40040001 /* MC_EMEM_ARB_CFG */
--					0x8000000a /* MC_EMEM_ARB_OUTSTANDING_REQ */
--					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
--					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
--					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
--					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
--					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
--					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
--					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
--					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
--					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
--					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
--					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
--					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
--					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
--					0x000a0402 /* MC_EMEM_ARB_DA_COVERS */
--					0x77e30303 /* MC_EMEM_ARB_MISC0 */
--					0x70000f03 /* MC_EMEM_ARB_MISC1 */
--					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
--				>;
--			};
--		};
--	};
--};
+-Kees
+
+> ---
+>  drivers/s390/net/ctcm_fsms.c    | 1 +
+>  drivers/s390/net/ctcm_mpc.c     | 3 +++
+>  drivers/s390/net/qeth_l2_main.c | 2 +-
+>  3 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/s390/net/ctcm_fsms.c b/drivers/s390/net/ctcm_fsms.c
+> index 1b4ee570b712..4a8a5373cb35 100644
+> --- a/drivers/s390/net/ctcm_fsms.c
+> +++ b/drivers/s390/net/ctcm_fsms.c
+> @@ -1704,6 +1704,7 @@ static void ctcmpc_chx_attnbusy(fsm_instance *fsm, int event, void *arg)
+>  			grp->changed_side = 2;
+>  			break;
+>  		}
+> +		/* Else, fall through */
+>  	case MPCG_STATE_XID0IOWAIX:
+>  	case MPCG_STATE_XID7INITW:
+>  	case MPCG_STATE_XID7INITX:
+> diff --git a/drivers/s390/net/ctcm_mpc.c b/drivers/s390/net/ctcm_mpc.c
+> index e02f295d38a9..1534420a0243 100644
+> --- a/drivers/s390/net/ctcm_mpc.c
+> +++ b/drivers/s390/net/ctcm_mpc.c
+> @@ -357,6 +357,7 @@ int ctc_mpc_alloc_channel(int port_num, void (*callback)(int, int))
+>  		/*fsm_newstate(grp->fsm, MPCG_STATE_XID2INITW);*/
+>  		if (callback)
+>  			grp->send_qllc_disc = 1;
+> +		/* Else, fall through */
+>  	case MPCG_STATE_XID0IOWAIT:
+>  		fsm_deltimer(&grp->timer);
+>  		grp->outstanding_xid2 = 0;
+> @@ -1469,6 +1470,7 @@ static void mpc_action_timeout(fsm_instance *fi, int event, void *arg)
+>  		if ((fsm_getstate(rch->fsm) == CH_XID0_PENDING) &&
+>  		   (fsm_getstate(wch->fsm) == CH_XID0_PENDING))
+>  			break;
+> +		/* Else, fall through */
+>  	default:
+>  		fsm_event(grp->fsm, MPCG_EVENT_INOP, dev);
+>  	}
+> @@ -2089,6 +2091,7 @@ static int mpc_send_qllc_discontact(struct net_device *dev)
+>  			grp->estconnfunc = NULL;
+>  			break;
+>  		}
+> +		/* Else, fall through */
+>  	case MPCG_STATE_FLOWC:
+>  	case MPCG_STATE_READY:
+>  		grp->send_qllc_disc = 2;
+> diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+> index fd64bc3f4062..cbead3d1b2fd 100644
+> --- a/drivers/s390/net/qeth_l2_main.c
+> +++ b/drivers/s390/net/qeth_l2_main.c
+> @@ -333,7 +333,7 @@ static int qeth_l2_process_inbound_buffer(struct qeth_card *card,
+>  				card->osn_info.data_cb(skb);
+>  				break;
+>  			}
+> -			/* else unknown */
+> +			/* Else, fall through */
+>  		default:
+>  			dev_kfree_skb_any(skb);
+>  			QETH_CARD_TEXT(card, 3, "inbunkno");
+> -- 
+> 2.22.0
+> 
+
 -- 
-2.22.0
-
+Kees Cook
