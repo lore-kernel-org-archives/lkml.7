@@ -5,64 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11491C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E958C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCDFA216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264E6216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJ/pOTcX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHhbTm1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbfG3BuF (ORCPT
+        id S1730817AbfG3BuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:50:05 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36533 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730780AbfG3Bt7 (ORCPT
+        Mon, 29 Jul 2019 21:50:16 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42081 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730780AbfG3BuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:49:59 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l21so29163037pgm.3;
-        Mon, 29 Jul 2019 18:49:59 -0700 (PDT)
+        Mon, 29 Jul 2019 21:50:15 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t132so29155270pgb.9;
+        Mon, 29 Jul 2019 18:50:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xC2OMhdvxaLcA9We7nJNC9uJnugsrezxvB9jzWvgvfs=;
-        b=ZJ/pOTcX70i3pJxOfMJ0R187ZTJcXEXsQOkZLMvoUDkHfEzOQD0CbPWvV6rIQSQso/
-         J/4DvvhcXqcFuvNZ0QIE3LCvefC42aYyCRlJOylUU7na5VdgFiDnUZjn0QekEuHMUYzB
-         FvIR7w48Y3O3lfURiBHAcS20jIE8rH1eE03AuDGI6g63Zhuky1g0wWAs4EpjHU42BKUd
-         gNFCefrxVGaQ6oBI0uGmP1vD/mcPIS3rSCRNVGnJxtwyV7WB1++jAmiwHWxQx1567OdQ
-         NaWwVs1Zbr9Jdzjr3gasypWX2zMNphChaearxJf7PNHKGut45z0UsUGtAWOJ1B8/YJP/
-         L+HA==
+        bh=L/HD57pd50ajIUsHODxhnXGWHejzLDOdwJEP3n72SQw=;
+        b=QHhbTm1TZgOm6WvfrheJvUVNeDXD58E3pX5WUEvt1BP91bmPiq5Zxlwe0W7TOYXoCN
+         MkNfx9qLLj8fyaP3b7IF4i6G6Mkgb23PHdlgaNIJRlu3NM6Es13SefEmhkB3J1UfIWGK
+         soB7NWNFa20U8NYgNzlRF3WMC88RtL7qe0bTbQ1cvIhorC2b8kqE/RY85zKTkCEyBsQh
+         BdKev0yI9rY4xF4cPnJ6NS8ZwaRWLLgKzkuAdtPNzcv+sltC90b1jYaaBMcLW3gtpjT0
+         lcILku6POE4fQfSb3rTDmKTDv0Qjk9tMvj5rB3uc2hsoyfEIeJojb/BRzbD01DDJWzF+
+         eymA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=xC2OMhdvxaLcA9We7nJNC9uJnugsrezxvB9jzWvgvfs=;
-        b=nOrnNGEFQwlukfnC1zkbf8cWEFDNnpj0eaYtxGujicdZmeTIN/02bX5L+bX0e43wuG
-         tkqR6DjN2QlXCLJHtHPZSv76eoHx+/gmjKN4EPvHBxKp9sXwNiPQku4OfLU8rFNhkOiJ
-         qp0E97FAgiOnn9FBHGO9xORZF7CJcQmwfudhwuyYt4YD5ZAzZ/0LaJ7b7/ldb0V6DBfW
-         Z7GyD0qm6KVS71lFT1xNvSBYIDeVRKjvVc6N5wE2u6FBq0uG2iJsY+2SXqtFDOFTSrFN
-         9S0Cn7oIIdLTAdAfq4XOuYuuxjI1OnGzL4JqjGnl6CKfPcIO9u+OERFo/Iy383Sc7LZm
-         L+iw==
-X-Gm-Message-State: APjAAAVkEyneJcgbh3OfbMrznkiI0rtYLnnmjJ26IKa6sM1mrQ/V5xYa
-        VhWsXYHVk9SlMaA9wYCffH4=
-X-Google-Smtp-Source: APXvYqwjN90VyCjAvq+0tZfhUxx2OyOgUKS5+4BbB5flOCXXyElRWY0uJnx0fdtJok+5LyYc/20JQg==
-X-Received: by 2002:a63:f13:: with SMTP id e19mr106525919pgl.132.1564451399146;
-        Mon, 29 Jul 2019 18:49:59 -0700 (PDT)
+        bh=L/HD57pd50ajIUsHODxhnXGWHejzLDOdwJEP3n72SQw=;
+        b=YzRX245zKwrpmiC8BjRA6gw0c5ekbiCgFAFfjBzA8vh+BXXFL1Fb/RSQGOVo0TSjtg
+         aqAO+cnH/aGEe0bsGt93cokZZ7igb+56qYSDzHk9f1cPVsaDYdrN53OeTX+rYRgRfqM6
+         QvFh8HgYcl578MWQrbFOYfXNKeDLyvgTBVy8hf/UdqjLJfH5yyhn50mBKLQAg1g/cIac
+         iwPLZpb2PzPM1Adx3RAzav0M4kaXy+Cf3ahVOX1/sTHYRQHYFaP0KArcH0hYv2CMMyDI
+         apJwgPV3CKNfiw5RWF0mZ0GISpBel33MuHpg3L7e+mhAQQeXWki66vqIorRofL/PI6nU
+         JVcA==
+X-Gm-Message-State: APjAAAVZvNW3G/bSmSMo7SIfupuicUM8IWxTGL/ObdHd4oPETcN6jxyc
+        cGT7TBsnbSPXQT5v8GLiris=
+X-Google-Smtp-Source: APXvYqymlfxXZkLKDbtTqqG4gNF0mEEFbRBNU2budVpRI6cIsHbCtGHUYAgZi7Jxv18tF300c570QQ==
+X-Received: by 2002:a17:90a:bd0b:: with SMTP id y11mr109382806pjr.141.1564451414701;
+        Mon, 29 Jul 2019 18:50:14 -0700 (PDT)
 Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.49.58
+        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.50.13
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 18:49:58 -0700 (PDT)
+        Mon, 29 Jul 2019 18:50:14 -0700 (PDT)
 From:   Deepa Dinamani <deepa.kernel@gmail.com>
 To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, arnd@arndb.de,
-        y2038@lists.linaro.org
-Subject: [PATCH 02/20] vfs: Add timestamp_truncate() api
-Date:   Mon, 29 Jul 2019 18:49:06 -0700
-Message-Id: <20190730014924.2193-3-deepa.kernel@gmail.com>
+        y2038@lists.linaro.org, adrian.hunter@intel.com, anton@tuxera.com,
+        dedekind1@gmail.com, gregkh@linuxfoundation.org, hch@lst.de,
+        hirofumi@mail.parknet.co.jp, jaegeuk@kernel.org,
+        jlbec@evilplan.org, richard@nod.at, tj@kernel.org,
+        yuchao0@huawei.com, linux-f2fs-devel@lists.sourceforge.net,
+        linux-ntfs-dev@lists.sourceforge.net, linux-mtd@lists.infradead.org
+Subject: [PATCH 03/20] timestamp_truncate: Replace users of timespec64_trunc
+Date:   Mon, 29 Jul 2019 18:49:07 -0700
+Message-Id: <20190730014924.2193-4-deepa.kernel@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190730014924.2193-1-deepa.kernel@gmail.com>
 References: <20190730014924.2193-1-deepa.kernel@gmail.com>
@@ -71,87 +76,239 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-timespec_trunc() function is used to truncate a
-filesystem timestamp to the right granularity.
-But, the function does not clamp tv_sec part of the
-timestamps according to the filesystem timestamp limits.
+Update the inode timestamp updates to use timestamp_truncate()
+instead of timespec64_trunc().
 
-The replacement api: timestamp_truncate() also alters the
-signature of the function to accommodate filesystem
-timestamp clamping according to flesystem limits.
+The change was mostly generated by the following coccinelle
+script.
 
-Note that the tv_nsec part is set to 0 if tv_sec is not within
-the range supported for the filesystem.
+virtual context
+virtual patch
+
+@r1 depends on patch forall@
+struct inode *inode;
+identifier i_xtime =~ "^i_[acm]time$";
+expression e;
+@@
+
+inode->i_xtime =
+- timespec64_trunc(
++ timestamp_truncate(
+...,
+- e);
++ inode);
 
 Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: adrian.hunter@intel.com
+Cc: anton@tuxera.com
+Cc: dedekind1@gmail.com
+Cc: gregkh@linuxfoundation.org
+Cc: hch@lst.de
+Cc: hirofumi@mail.parknet.co.jp
+Cc: jaegeuk@kernel.org
+Cc: jlbec@evilplan.org
+Cc: richard@nod.at
+Cc: tj@kernel.org
+Cc: yuchao0@huawei.com
+Cc: linux-f2fs-devel@lists.sourceforge.net
+Cc: linux-ntfs-dev@lists.sourceforge.net
+Cc: linux-mtd@lists.infradead.org
 ---
- fs/inode.c         | 33 ++++++++++++++++++++++++++++++++-
- include/linux/fs.h |  2 ++
- 2 files changed, 34 insertions(+), 1 deletion(-)
+ fs/attr.c           | 21 ++++++++++++---------
+ fs/configfs/inode.c | 12 ++++++------
+ fs/f2fs/file.c      | 21 ++++++++++++---------
+ fs/fat/misc.c       |  5 +++--
+ fs/kernfs/inode.c   |  6 +++---
+ fs/ntfs/inode.c     | 21 ++++++++++++---------
+ fs/ubifs/file.c     | 21 ++++++++++++---------
+ 7 files changed, 60 insertions(+), 47 deletions(-)
 
-diff --git a/fs/inode.c b/fs/inode.c
-index 5f5431ec3d62..0fb1f0fb296a 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -2166,6 +2166,37 @@ struct timespec64 timespec64_trunc(struct timespec64 t, unsigned gran)
- }
- EXPORT_SYMBOL(timespec64_trunc);
+diff --git a/fs/attr.c b/fs/attr.c
+index d22e8187477f..df28035aa23e 100644
+--- a/fs/attr.c
++++ b/fs/attr.c
+@@ -183,15 +183,18 @@ void setattr_copy(struct inode *inode, const struct iattr *attr)
+ 		inode->i_uid = attr->ia_uid;
+ 	if (ia_valid & ATTR_GID)
+ 		inode->i_gid = attr->ia_gid;
+-	if (ia_valid & ATTR_ATIME)
+-		inode->i_atime = timespec64_trunc(attr->ia_atime,
+-						  inode->i_sb->s_time_gran);
+-	if (ia_valid & ATTR_MTIME)
+-		inode->i_mtime = timespec64_trunc(attr->ia_mtime,
+-						  inode->i_sb->s_time_gran);
+-	if (ia_valid & ATTR_CTIME)
+-		inode->i_ctime = timespec64_trunc(attr->ia_ctime,
+-						  inode->i_sb->s_time_gran);
++	if (ia_valid & ATTR_ATIME) {
++		inode->i_atime = timestamp_truncate(attr->ia_atime,
++						  inode);
++	}
++	if (ia_valid & ATTR_MTIME) {
++		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
++						  inode);
++	}
++	if (ia_valid & ATTR_CTIME) {
++		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
++						  inode);
++	}
+ 	if (ia_valid & ATTR_MODE) {
+ 		umode_t mode = attr->ia_mode;
  
-+/**
-+ * timestamp_truncate - Truncate timespec to a granularity
-+ * @t: Timespec
-+ * @inode: inode being updated
-+ *
-+ * Truncate a timespec to the granularity supported by the fs
-+ * containing the inode. Always rounds down. gran must
-+ * not be 0 nor greater than a second (NSEC_PER_SEC, or 10^9 ns).
-+ */
-+struct timespec64 timestamp_truncate(struct timespec64 t, struct inode *inode)
-+{
-+	struct super_block *sb = inode->i_sb;
-+	unsigned int gran = sb->s_time_gran;
-+
-+	t.tv_sec = clamp(t.tv_sec, sb->s_time_min, sb->s_time_max);
-+	if (unlikely(t.tv_sec == sb->s_time_max || t.tv_sec == sb->s_time_min))
-+		t.tv_nsec = 0;
-+
-+	/* Avoid division in the common cases 1 ns and 1 s. */
-+	if (gran == 1)
-+		; /* nothing */
-+	else if (gran == NSEC_PER_SEC)
-+		t.tv_nsec = 0;
-+	else if (gran > 1 && gran < NSEC_PER_SEC)
-+		t.tv_nsec -= t.tv_nsec % gran;
-+	else
-+		WARN(1, "invalid file time granularity: %u", gran);
-+	return t;
-+}
-+EXPORT_SYMBOL(timestamp_truncate);
-+
- /**
-  * current_time - Return FS time
-  * @inode: inode.
-@@ -2187,6 +2218,6 @@ struct timespec64 current_time(struct inode *inode)
- 		return now;
+diff --git a/fs/configfs/inode.c b/fs/configfs/inode.c
+index ab0284321912..884dcf06cfbe 100644
+--- a/fs/configfs/inode.c
++++ b/fs/configfs/inode.c
+@@ -76,14 +76,14 @@ int configfs_setattr(struct dentry * dentry, struct iattr * iattr)
+ 	if (ia_valid & ATTR_GID)
+ 		sd_iattr->ia_gid = iattr->ia_gid;
+ 	if (ia_valid & ATTR_ATIME)
+-		sd_iattr->ia_atime = timespec64_trunc(iattr->ia_atime,
+-						      inode->i_sb->s_time_gran);
++		sd_iattr->ia_atime = timestamp_truncate(iattr->ia_atime,
++						      inode);
+ 	if (ia_valid & ATTR_MTIME)
+-		sd_iattr->ia_mtime = timespec64_trunc(iattr->ia_mtime,
+-						      inode->i_sb->s_time_gran);
++		sd_iattr->ia_mtime = timestamp_truncate(iattr->ia_mtime,
++						      inode);
+ 	if (ia_valid & ATTR_CTIME)
+-		sd_iattr->ia_ctime = timespec64_trunc(iattr->ia_ctime,
+-						      inode->i_sb->s_time_gran);
++		sd_iattr->ia_ctime = timestamp_truncate(iattr->ia_ctime,
++						      inode);
+ 	if (ia_valid & ATTR_MODE) {
+ 		umode_t mode = iattr->ia_mode;
+ 
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 45b45f37d347..faf1e160961b 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -744,15 +744,18 @@ static void __setattr_copy(struct inode *inode, const struct iattr *attr)
+ 		inode->i_uid = attr->ia_uid;
+ 	if (ia_valid & ATTR_GID)
+ 		inode->i_gid = attr->ia_gid;
+-	if (ia_valid & ATTR_ATIME)
+-		inode->i_atime = timespec64_trunc(attr->ia_atime,
+-						  inode->i_sb->s_time_gran);
+-	if (ia_valid & ATTR_MTIME)
+-		inode->i_mtime = timespec64_trunc(attr->ia_mtime,
+-						  inode->i_sb->s_time_gran);
+-	if (ia_valid & ATTR_CTIME)
+-		inode->i_ctime = timespec64_trunc(attr->ia_ctime,
+-						  inode->i_sb->s_time_gran);
++	if (ia_valid & ATTR_ATIME) {
++		inode->i_atime = timestamp_truncate(attr->ia_atime,
++						  inode);
++	}
++	if (ia_valid & ATTR_MTIME) {
++		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
++						  inode);
++	}
++	if (ia_valid & ATTR_CTIME) {
++		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
++						  inode);
++	}
+ 	if (ia_valid & ATTR_MODE) {
+ 		umode_t mode = attr->ia_mode;
+ 
+diff --git a/fs/fat/misc.c b/fs/fat/misc.c
+index 1e08bd54c5fb..53bb7c6bf993 100644
+--- a/fs/fat/misc.c
++++ b/fs/fat/misc.c
+@@ -307,8 +307,9 @@ int fat_truncate_time(struct inode *inode, struct timespec64 *now, int flags)
+ 		inode->i_atime = (struct timespec64){ seconds, 0 };
  	}
- 
--	return timespec64_trunc(now, inode->i_sb->s_time_gran);
-+	return timestamp_truncate(now, inode);
+ 	if (flags & S_CTIME) {
+-		if (sbi->options.isvfat)
+-			inode->i_ctime = timespec64_trunc(*now, 10000000);
++		if (sbi->options.isvfat) {
++			inode->i_ctime = timestamp_truncate(*now, inode);
++		}
+ 		else
+ 			inode->i_ctime = fat_timespec64_trunc_2secs(*now);
+ 	}
+diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
+index f3f3984cce80..892a58cfe7a1 100644
+--- a/fs/kernfs/inode.c
++++ b/fs/kernfs/inode.c
+@@ -161,9 +161,9 @@ static inline void set_inode_attr(struct inode *inode,
+ 	struct super_block *sb = inode->i_sb;
+ 	inode->i_uid = attrs->ia_uid;
+ 	inode->i_gid = attrs->ia_gid;
+-	inode->i_atime = timespec64_trunc(attrs->ia_atime, sb->s_time_gran);
+-	inode->i_mtime = timespec64_trunc(attrs->ia_mtime, sb->s_time_gran);
+-	inode->i_ctime = timespec64_trunc(attrs->ia_ctime, sb->s_time_gran);
++	inode->i_atime = timestamp_truncate(attrs->ia_atime, inode);
++	inode->i_mtime = timestamp_truncate(attrs->ia_mtime, inode);
++	inode->i_ctime = timestamp_truncate(attrs->ia_ctime, inode);
  }
- EXPORT_SYMBOL(current_time);
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e9d04e4e5628..fdfe51d096fa 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -726,6 +726,8 @@ struct inode {
- 	void			*i_private; /* fs or device private pointer */
- } __randomize_layout;
  
-+struct timespec64 timestamp_truncate(struct timespec64 t, struct inode *inode);
-+
- static inline unsigned int i_blocksize(const struct inode *node)
- {
- 	return (1 << node->i_blkbits);
+ static void kernfs_refresh_inode(struct kernfs_node *kn, struct inode *inode)
+diff --git a/fs/ntfs/inode.c b/fs/ntfs/inode.c
+index 8baa34baf548..6c7388430ad3 100644
+--- a/fs/ntfs/inode.c
++++ b/fs/ntfs/inode.c
+@@ -2899,15 +2899,18 @@ int ntfs_setattr(struct dentry *dentry, struct iattr *attr)
+ 			ia_valid |= ATTR_MTIME | ATTR_CTIME;
+ 		}
+ 	}
+-	if (ia_valid & ATTR_ATIME)
+-		vi->i_atime = timespec64_trunc(attr->ia_atime,
+-					       vi->i_sb->s_time_gran);
+-	if (ia_valid & ATTR_MTIME)
+-		vi->i_mtime = timespec64_trunc(attr->ia_mtime,
+-					       vi->i_sb->s_time_gran);
+-	if (ia_valid & ATTR_CTIME)
+-		vi->i_ctime = timespec64_trunc(attr->ia_ctime,
+-					       vi->i_sb->s_time_gran);
++	if (ia_valid & ATTR_ATIME) {
++		vi->i_atime = timestamp_truncate(attr->ia_atime,
++					       vi);
++	}
++	if (ia_valid & ATTR_MTIME) {
++		vi->i_mtime = timestamp_truncate(attr->ia_mtime,
++					       vi);
++	}
++	if (ia_valid & ATTR_CTIME) {
++		vi->i_ctime = timestamp_truncate(attr->ia_ctime,
++					       vi);
++	}
+ 	mark_inode_dirty(vi);
+ out:
+ 	return err;
+diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+index 400970d740bb..cd52585c8f4f 100644
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -1078,15 +1078,18 @@ static void do_attr_changes(struct inode *inode, const struct iattr *attr)
+ 		inode->i_uid = attr->ia_uid;
+ 	if (attr->ia_valid & ATTR_GID)
+ 		inode->i_gid = attr->ia_gid;
+-	if (attr->ia_valid & ATTR_ATIME)
+-		inode->i_atime = timespec64_trunc(attr->ia_atime,
+-						  inode->i_sb->s_time_gran);
+-	if (attr->ia_valid & ATTR_MTIME)
+-		inode->i_mtime = timespec64_trunc(attr->ia_mtime,
+-						  inode->i_sb->s_time_gran);
+-	if (attr->ia_valid & ATTR_CTIME)
+-		inode->i_ctime = timespec64_trunc(attr->ia_ctime,
+-						  inode->i_sb->s_time_gran);
++	if (attr->ia_valid & ATTR_ATIME) {
++		inode->i_atime = timestamp_truncate(attr->ia_atime,
++						  inode);
++	}
++	if (attr->ia_valid & ATTR_MTIME) {
++		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
++						  inode);
++	}
++	if (attr->ia_valid & ATTR_CTIME) {
++		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
++						  inode);
++	}
+ 	if (attr->ia_valid & ATTR_MODE) {
+ 		umode_t mode = attr->ia_mode;
+ 
 -- 
 2.17.1
 
