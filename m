@@ -2,200 +2,232 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C397C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0B2C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3452D20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307F3206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:32:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXRFi9Xs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbfG3BbZ (ORCPT
+        id S1730515AbfG3Bct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:31:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3237 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729473AbfG3BbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:31:24 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9DA0B8677B88E1F2180E;
-        Tue, 30 Jul 2019 09:31:21 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Jul 2019
- 09:31:20 +0800
-Subject: Re: [PATCH stable 4.9] tcp: reset sk_send_head in
- tcp_write_queue_purge
-To:     Sasha Levin <sashal@kernel.org>
-References: <20190729132108.162320-1-maowenan@huawei.com>
- <20190729153218.GA29162@sasha-vm>
-CC:     <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <29c1ee9c-4a5d-4f61-f526-85980185f0bd@huawei.com>
-Date:   Tue, 30 Jul 2019 09:31:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Mon, 29 Jul 2019 21:32:49 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46419 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729473AbfG3Bcs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 21:32:48 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d4so61093668edr.13;
+        Mon, 29 Jul 2019 18:32:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Ftzg7THfmAK8OMfuBiBZ76IWfuhIkncq/8zqyt2pEg=;
+        b=cXRFi9Xs7adSiJ9+x1QqPHr3kKXJq+4QwiXeWuiyGUhnfzD7x+Xlf0nf9LePdzzpGs
+         jrC6UqK1Lv2A/GJU9u3Iht8ecKAJsFH7QHSUgHUb1S6BqFK6TBOgQsokgu/bkgPHVO8D
+         1Vlfqy4gYXJeZLbqtDztUyVuGbQsX5xB3nbC8wPz9HJcGCep1oP6xlihpg7SCnuAf984
+         0p+//YdZ1pxoUiIQNDSSary8lO5mxtN/n/PgX2rveV0WR5miFbnL2eo3VJu4qzGuVUSd
+         NR69lE0abWNwaprvqo769kpvEOOawbYdxvQi0DkDbPdk0EOdYMOq6+FE23Z0vRkMMqRW
+         wPvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Ftzg7THfmAK8OMfuBiBZ76IWfuhIkncq/8zqyt2pEg=;
+        b=iDOBA7ldoFb+ftvUDySyd7V4qTYYG5pgZpPtYuRFxfrqOLLoAVciPgp4nwZWpyimmM
+         Jn+9CGVz1WMhxiKdf8Lh3+arKj3PmINXWnXQXyiZcGAahw+cSxqfkosIfNVNDvgP15U9
+         vHHMtOhhB154esNCSAYgopi0pOFg9TirihW7+8rP8tcD+iJklrLQiDkvrBfU2ulhrwxA
+         ima5uYHHQcZWMOsN+brKG34KgACRwFr7SzA3cPhF7/KWpK1DizdTeS9Q6+Pu7SZ2tMp6
+         CKlev6c0j2/04BVWlKbNA0F2W5VKmSn1jKP6Lp3hq15+lUe2exqHEFhWOZlsqTGcOoeq
+         txzw==
+X-Gm-Message-State: APjAAAXMk1Uj3/CvnO+efOFNcuHxaGOEZ9+kWYwc5fso/0LH9nFKI3BL
+        dZq4ax0IC87RfUB1G1aHy1Ib73lF8UFUntAPtbg=
+X-Google-Smtp-Source: APXvYqwt/QDnB9rTcjd7QhYqNNd2VrJcFwWAxBLPBnlVoaUa9E+8qUS6lr2o3cQ+y2MNazuIPOMHiQ8/FdFxQAC3UU4=
+X-Received: by 2002:a50:ba19:: with SMTP id g25mr98971820edc.123.1564450366223;
+ Mon, 29 Jul 2019 18:32:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190729153218.GA29162@sasha-vm>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+References: <20190730002549.86824-1-taoren@fb.com>
+In-Reply-To: <20190730002549.86824-1-taoren@fb.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 30 Jul 2019 04:32:35 +0300
+Message-ID: <CA+h21hq1+E6-ScFx425hXwTPTZHTVZbBuAm7RROFZTBOFvD8vQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 2/2] net: phy: broadcom: add 1000Base-X support
+ for BCM54616S
+To:     Tao Ren <taoren@fb.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Tao,
 
+On Tue, 30 Jul 2019 at 03:31, Tao Ren <taoren@fb.com> wrote:
+>
+> Configure the BCM54616S for 1000Base-X mode when "brcm-phy-mode-1000bx"
+> is set in device tree. This is needed when the PHY is used for fiber and
+> backplane connections.
+>
+> The patch is inspired by commit cd9af3dac6d1 ("PHYLIB: Add 1000Base-X
+> support for Broadcom bcm5482").
 
-On 2019/7/29 23:32, Sasha Levin wrote:
-> On Mon, Jul 29, 2019 at 09:21:08PM +0800, Mao Wenan wrote:
->> From: Soheil Hassas Yeganeh <soheil@google.com>
->>
->> tcp_write_queue_purge clears all the SKBs in the write queue
->> but does not reset the sk_send_head. As a result, we can have
->> a NULL pointer dereference anywhere that we use tcp_send_head
->> instead of the tcp_write_queue_tail.
->>
->> For example, after a27fd7a8ed38 (tcp: purge write queue upon RST),
->> we can purge the write queue on RST. Prior to
->> 75c119afe14f (tcp: implement rb-tree based retransmit queue),
->> tcp_push will only check tcp_send_head and then accesses
->> tcp_write_queue_tail to send the actual SKB. As a result, it will
->> dereference a NULL pointer.
->>
->> This has been reported twice for 4.14 where we don't have
->> 75c119afe14f:
->>
->> By Timofey Titovets:
->>
->> [  422.081094] BUG: unable to handle kernel NULL pointer dereference
->> at 0000000000000038
->> [  422.081254] IP: tcp_push+0x42/0x110
->> [  422.081314] PGD 0 P4D 0
->> [  422.081364] Oops: 0002 [#1] SMP PTI
->>
->> By Yongjian Xu:
->>
->> BUG: unable to handle kernel NULL pointer dereference at 0000000000000038
->> IP: tcp_push+0x48/0x120
->> PGD 80000007ff77b067 P4D 80000007ff77b067 PUD 7fd989067 PMD 0
->> Oops: 0002 [#18] SMP PTI
->> Modules linked in: tcp_diag inet_diag tcp_bbr sch_fq iTCO_wdt
->> iTCO_vendor_support pcspkr ixgbe mdio i2c_i801 lpc_ich joydev input_leds shpchp
->> e1000e igb dca ptp pps_core hwmon mei_me mei ipmi_si ipmi_msghandler sg ses
->> scsi_transport_sas enclosure ext4 jbd2 mbcache sd_mod ahci libahci megaraid_sas
->> wmi ast ttm dm_mirror dm_region_hash dm_log dm_mod dax
->> CPU: 6 PID: 14156 Comm: [ET_NET 6] Tainted: G D 4.14.26-1.el6.x86_64 #1
->> Hardware name: LENOVO ThinkServer RD440 /ThinkServer RD440, BIOS A0TS80A
->> 09/22/2014
->> task: ffff8807d78d8140 task.stack: ffffc9000e944000
->> RIP: 0010:tcp_push+0x48/0x120
->> RSP: 0018:ffffc9000e947a88 EFLAGS: 00010246
->> RAX: 00000000000005b4 RBX: ffff880f7cce9c00 RCX: 0000000000000000
->> RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff8807d00f5000
->> RBP: ffffc9000e947aa8 R08: 0000000000001c84 R09: 0000000000000000
->> R10: ffff8807d00f5158 R11: 0000000000000000 R12: ffff8807d00f5000
->> R13: 0000000000000020 R14: 00000000000256d4 R15: 0000000000000000
->> FS: 00007f5916de9700(0000) GS:ffff88107fd00000(0000) knlGS:0000000000000000
->> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 0000000000000038 CR3: 00000007f8226004 CR4: 00000000001606e0
->> Call Trace:
->> tcp_sendmsg_locked+0x33d/0xe50
->> tcp_sendmsg+0x37/0x60
->> inet_sendmsg+0x39/0xc0
->> sock_sendmsg+0x49/0x60
->> sock_write_iter+0xb6/0x100
->> do_iter_readv_writev+0xec/0x130
->> ? rw_verify_area+0x49/0xb0
->> do_iter_write+0x97/0xd0
->> vfs_writev+0x7e/0xe0
->> ? __wake_up_common_lock+0x80/0xa0
->> ? __fget_light+0x2c/0x70
->> ? __do_page_fault+0x1e7/0x530
->> do_writev+0x60/0xf0
->> ? inet_shutdown+0xac/0x110
->> SyS_writev+0x10/0x20
->> do_syscall_64+0x6f/0x140
->> ? prepare_exit_to_usermode+0x8b/0xa0
->> entry_SYSCALL_64_after_hwframe+0x3d/0xa2
->> RIP: 0033:0x3135ce0c57
->> RSP: 002b:00007f5916de4b00 EFLAGS: 00000293 ORIG_RAX: 0000000000000014
->> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000003135ce0c57
->> RDX: 0000000000000002 RSI: 00007f5916de4b90 RDI: 000000000000606f
->> RBP: 0000000000000000 R08: 0000000000000000 R09: 00007f5916de8c38
->> R10: 0000000000000000 R11: 0000000000000293 R12: 00000000000464cc
->> R13: 00007f5916de8c30 R14: 00007f58d8bef080 R15: 0000000000000002
->> Code: 48 8b 97 60 01 00 00 4c 8d 97 58 01 00 00 41 b9 00 00 00 00 41 89 f3 4c 39
->> d2 49 0f 44 d1 41 81 e3 00 80 00 00 0f 85 b0 00 00 00 <80> 4a 38 08 44 8b 8f 74
->> 06 00 00 44 89 8f 7c 06 00 00 83 e6 01
->> RIP: tcp_push+0x48/0x120 RSP: ffffc9000e947a88
->> CR2: 0000000000000038
->> ---[ end trace 8d545c2e93515549 ]---
->>
->> There is other scenario which found in stable 4.4:
->> Allocated:
->> [<ffffffff82f380a6>] __alloc_skb+0xe6/0x600 net/core/skbuff.c:218
->> [<ffffffff832466c3>] alloc_skb_fclone include/linux/skbuff.h:856 [inline]
->> [<ffffffff832466c3>] sk_stream_alloc_skb+0xa3/0x5d0 net/ipv4/tcp.c:833
->> [<ffffffff83249164>] tcp_sendmsg+0xd34/0x2b00 net/ipv4/tcp.c:1178
->> [<ffffffff83300ef3>] inet_sendmsg+0x203/0x4d0 net/ipv4/af_inet.c:755
->> Freed:
->> [<ffffffff82f372fd>] __kfree_skb+0x1d/0x20 net/core/skbuff.c:676
->> [<ffffffff83288834>] sk_wmem_free_skb include/net/sock.h:1447 [inline]
->> [<ffffffff83288834>] tcp_write_queue_purge include/net/tcp.h:1460 [inline]
->> [<ffffffff83288834>] tcp_connect_init net/ipv4/tcp_output.c:3122 [inline]
->> [<ffffffff83288834>] tcp_connect+0xb24/0x30c0 net/ipv4/tcp_output.c:3261
->> [<ffffffff8329b991>] tcp_v4_connect+0xf31/0x1890 net/ipv4/tcp_ipv4.c:246
->>
->> BUG: KASAN: use-after-free in tcp_skb_pcount include/net/tcp.h:796 [inline]
->> BUG: KASAN: use-after-free in tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
->> BUG: KASAN: use-after-free in tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
->> [<ffffffff81515cd5>] kasan_report.cold.7+0x175/0x2f7 mm/kasan/report.c:408
->> [<ffffffff814f9784>] __asan_report_load2_noabort+0x14/0x20 mm/kasan/report.c:427
->> [<ffffffff83286582>] tcp_skb_pcount include/net/tcp.h:796 [inline]
->> [<ffffffff83286582>] tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
->> [<ffffffff83286582>] tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
->> [<ffffffff83287a40>] __tcp_push_pending_frames+0xa0/0x290 net/ipv4/tcp_output.c:2307
->>
->> stable 4.4 and stable 4.9 don't have the commit abb4a8b870b5 ("tcp: purge write queue upon RST")
->> which is referred in dbbf2d1e4077,
->> in tcp_connect_init, it calls tcp_write_queue_purge, and does not reset sk_send_head, then UAF.
->>
->> stable 4.14 have the commit abb4a8b870b5 ("tcp: purge write queue upon RST"),
->> in tcp_reset, it calls tcp_write_queue_purge(sk), and does not reset sk_send_head, then UAF.
->>
->> So this patch can be used to fix stable 4.4 and 4.9.
->>
->> Fixes: a27fd7a8ed38 (tcp: purge write queue upon RST)
->> Reported-by: Timofey Titovets <nefelim4ag@gmail.com>
->> Reported-by: Yongjian Xu <yongjianchn@gmail.com>
->> Signed-off-by: Eric Dumazet <edumazet@google.com>
->> Signed-off-by: Soheil Hassas Yeganeh <soheil@google.com>
->> Tested-by: Yongjian Xu <yongjianchn@gmail.com>
->>
->> Signed-off-by: David S. Miller <davem@davemloft.net>
->> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> 
-> So the "Fixes:" commit in the commit message is wrong? What's the actual
-> commit that this fixes?
+As far as I can see, for the commit you referenced,
+PHY_BCM_FLAGS_MODE_1000BX is referenced from nowhere in the entire
+mainline kernel:
+https://elixir.bootlin.com/linux/latest/ident/PHY_BCM_FLAGS_MODE_1000BX
+(it is supposed to be put by the MAC driver in phydev->dev_flags prior
+to calling phy_connect). But I don't see the point to this - can't you
+check for phydev->interface == PHY_INTERFACE_MODE_1000BASEX?
+This has the advantage that no MAC driver will need to know that it's
+talking to a Broadcom PHY. Additionally, no custom DT bindings are
+needed.
+Also, for backplane connections you probably want 1000Base-KX which
+has its own AN/LT, not plain 1000Base-X.
 
-Upstream commit is 7f582b248d0a ("tcp: purge write queue in tcp_connect_init()")
-linux-4.4.y
-Fixes: 5bbe138a250e ("tcp: purge write queue in tcp_connect_init()")
-linux-4.9.y
-Fixes: 74a4c09d4b05 ("tcp: purge write queue in tcp_connect_init()")
-linux-4.14.y
-Fixes: a27fd7a8ed38 ("tcp: purge write queue upon RST")
+>
+> Signed-off-by: Tao Ren <taoren@fb.com>
+> ---
+>  drivers/net/phy/broadcom.c | 58 +++++++++++++++++++++++++++++++++++---
+>  include/linux/brcmphy.h    |  4 +--
+>  2 files changed, 56 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
+> index 2b4e41a9d35a..6c22ac3a844b 100644
+> --- a/drivers/net/phy/broadcom.c
+> +++ b/drivers/net/phy/broadcom.c
+> @@ -383,9 +383,9 @@ static int bcm5482_config_init(struct phy_device *phydev)
+>                 /*
+>                  * Select 1000BASE-X register set (primary SerDes)
+>                  */
+> -               reg = bcm_phy_read_shadow(phydev, BCM5482_SHD_MODE);
+> -               bcm_phy_write_shadow(phydev, BCM5482_SHD_MODE,
+> -                                    reg | BCM5482_SHD_MODE_1000BX);
+> +               reg = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
+> +               bcm_phy_write_shadow(phydev, BCM54XX_SHD_MODE,
+> +                                    reg | BCM54XX_SHD_MODE_1000BX);
+>
+>                 /*
+>                  * LED1=ACTIVITYLED, LED3=LINKSPD[2]
+> @@ -451,6 +451,34 @@ static int bcm5481_config_aneg(struct phy_device *phydev)
+>         return ret;
+>  }
+>
+> +static int bcm54616s_config_init(struct phy_device *phydev)
+> +{
+> +       int err, reg;
+> +       struct device_node *np = phydev->mdio.dev.of_node;
+> +
+> +       err = bcm54xx_config_init(phydev);
+> +
+> +       if (of_property_read_bool(np, "brcm-phy-mode-1000bx")) {
+> +               /* Select 1000BASE-X register set. */
+> +               reg = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
+> +               bcm_phy_write_shadow(phydev, BCM54XX_SHD_MODE,
+> +                                    reg | BCM54XX_SHD_MODE_1000BX);
+> +
+> +               /* Auto-negotiation doesn't seem to work quite right
+> +                * in this mode, so we disable it and force it to the
+> +                * right speed/duplex setting.  Only 'link status'
+> +                * is important.
+> +                */
+> +               phydev->autoneg = AUTONEG_DISABLE;
+> +               phydev->speed = SPEED_1000;
+> +               phydev->duplex = DUPLEX_FULL;
+> +
 
-> 
-> -- 
-> Thanks,
-> Sasha
-> 
-> .
-> 
+1000Base-X AN does not include speed negotiation, so hardcoding
+SPEED_1000 is probably correct.
+What is wrong with the AN of duplex settings?
 
+> +               phydev->dev_flags |= PHY_BCM_FLAGS_MODE_1000BX;
+> +       }
+> +
+> +       return err;
+> +}
+> +
+>  static int bcm54616s_config_aneg(struct phy_device *phydev)
+>  {
+>         int ret;
+> @@ -464,6 +492,27 @@ static int bcm54616s_config_aneg(struct phy_device *phydev)
+>         return ret;
+>  }
+>
+> +static int bcm54616s_read_status(struct phy_device *phydev)
+> +{
+> +       int ret;
+> +
+> +       ret = genphy_read_status(phydev);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       if (phydev->dev_flags & PHY_BCM_FLAGS_MODE_1000BX) {
+> +               /* Only link status matters for 1000Base-X mode, so force
+> +                * 1000 Mbit/s full-duplex status.
+> +                */
+> +               if (phydev->link) {
+> +                       phydev->speed = SPEED_1000;
+> +                       phydev->duplex = DUPLEX_FULL;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int brcm_phy_setbits(struct phy_device *phydev, int reg, int set)
+>  {
+>         int val;
+> @@ -651,8 +700,9 @@ static struct phy_driver broadcom_drivers[] = {
+>         .phy_id_mask    = 0xfffffff0,
+>         .name           = "Broadcom BCM54616S",
+>         .features       = PHY_GBIT_FEATURES,
+> -       .config_init    = bcm54xx_config_init,
+> +       .config_init    = bcm54616s_config_init,
+>         .config_aneg    = bcm54616s_config_aneg,
+> +       .read_status    = bcm54616s_read_status,
+>         .ack_interrupt  = bcm_phy_ack_intr,
+>         .config_intr    = bcm_phy_config_intr,
+>  }, {
+> diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
+> index 6db2d9a6e503..82030155558c 100644
+> --- a/include/linux/brcmphy.h
+> +++ b/include/linux/brcmphy.h
+> @@ -200,8 +200,8 @@
+>  #define BCM5482_SHD_SSD                0x14    /* 10100: Secondary SerDes control */
+>  #define BCM5482_SHD_SSD_LEDM   0x0008  /* SSD LED Mode enable */
+>  #define BCM5482_SHD_SSD_EN     0x0001  /* SSD enable */
+> -#define BCM5482_SHD_MODE       0x1f    /* 11111: Mode Control Register */
+> -#define BCM5482_SHD_MODE_1000BX        0x0001  /* Enable 1000BASE-X registers */
+> +#define BCM54XX_SHD_MODE       0x1f    /* 11111: Mode Control Register */
+> +#define BCM54XX_SHD_MODE_1000BX        0x0001  /* Enable 1000BASE-X registers */
+
+These registers are also present on my BCM5464, probably safe to
+assume they're generic for the entire family.
+So if you make the registers definitions common, you can probably make
+the 1000Base-X configuration common as well.
+
+>
+>
+>  /*
+> --
+> 2.17.1
+>
+
+Regards,
+-Vladimir
