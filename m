@@ -2,142 +2,103 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00350C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C3AC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA42220665
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:52:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iuQpUu6a"
+	by mail.kernel.org (Postfix) with ESMTP id 871F120665
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfG3OwS (ORCPT
+        id S1729283AbfG3Ozn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 10:52:18 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40249 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfG3OwS (ORCPT
+        Tue, 30 Jul 2019 10:55:43 -0400
+Received: from mxout017.mail.hostpoint.ch ([217.26.49.177]:29888 "EHLO
+        mxout017.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727129AbfG3Ozn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 10:52:18 -0400
-Received: by mail-lf1-f66.google.com with SMTP id b17so44958096lff.7;
-        Tue, 30 Jul 2019 07:52:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vLDKuH+/Y6R1wGAQGSCIi/9agKk/j9gR7pNqj2Ro2Ic=;
-        b=iuQpUu6a8JnbGLjoBITZrEilnUrTWiH26PXOZvr0eJQhTGXYXPQKMEzNw2wB2Zdhwg
-         O1s79fuH/+qKj9qM+F5N7WUORuY3bi2XPxK5gT8Guf2uZd9D6oyAtYDwhskz/FMsfn6o
-         lKk6nD1IBmzrEbMo1z8fbSNSoKGZUfXjLfcnm5mKawQB8u+vap+bsQ1AUfdjGTiXN2ty
-         tL6eFXIjDfZ571OcOPQwvXVAUX+46G+xpgSdufwNKOjBmDF3XP8A7mx0CfXSR6UXqbUn
-         dguHNLtM+ir+qgid1b0WJ9SI3b8hxcX2P6U5NkAvYIDJKRzUwkVnKHJszs5C7d/SjcoV
-         C0AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vLDKuH+/Y6R1wGAQGSCIi/9agKk/j9gR7pNqj2Ro2Ic=;
-        b=NGKkLnA3hd2NE4ghB6+4hIJSTtb9cJr6cmxiq2kByYTcHaMMPuXfTna4e9gbFu71KV
-         0+2i8dk7lLBpKWbif4YO2GlQZDEHSmzC5x/AXN9o1R6D+DA3j16adeONyzHjihQl3Ate
-         vXyUXu/Nk2VT/F9WV0kk5Rx1b3dOBo/b8mQOGnf+KkkfF754NYokhQsrG46G0FsFS6af
-         5FxhCh10lwiGL7r59EDa4u/OfcxWvWN5XXVhr6S9EgvZzJJK9/2CWxKGXzYs4n+9AIsI
-         VR4Z1TrlLrMbpzCfl8JMkC8D6kAsneqVk+f5H7jzUzH4WDAjJx0bIu48WODzUb193Bjt
-         +YOQ==
-X-Gm-Message-State: APjAAAURGDLiJx2rt9SaVWaZH/4vSPhunCbqFT8Yw94P4XM0Vxd03yba
-        AK0mT27eiIhOokDDR+0ITTbx7mM9Yt3W/8VirXQQyg==
-X-Google-Smtp-Source: APXvYqwtNV8PHczquSPB8e+BmF7PEr+3WvMBui8pMbhp0rAOkLkZq6TteMkvwzTbZj0eIDgOEAic/3pWWOYVMC6LbUU=
-X-Received: by 2002:a19:c1cc:: with SMTP id r195mr53854149lff.95.1564498336043;
- Tue, 30 Jul 2019 07:52:16 -0700 (PDT)
+        Tue, 30 Jul 2019 10:55:43 -0400
+X-Greylist: delayed 525 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Jul 2019 10:55:42 EDT
+Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
+        by mxout017.mail.hostpoint.ch with esmtp (Exim 4.92 (FreeBSD))
+        (envelope-from <dev@pschenker.ch>)
+        id 1hsTXQ-000EH5-6y; Tue, 30 Jul 2019 16:55:40 +0200
+Received: from [46.140.72.82] (helo=philippe-pc.toradex.int)
+        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.91 (FreeBSD))
+        (envelope-from <dev@pschenker.ch>)
+        id 1hsTP3-000Mva-I9; Tue, 30 Jul 2019 16:47:01 +0200
+X-Authenticated-Sender-Id: dev@pschenker.ch
+From:   Philippe Schenker <dev@pschenker.ch>
+To:     marcel.ziswiler@toradex.com, max.krummenacher@toradex.com,
+        stefan@agner.ch, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH 10/22] ARM: dts: imx6qdl-colibri: Add missing pin declaration in iomuxc
+Date:   Tue, 30 Jul 2019 16:46:37 +0200
+Message-Id: <20190730144649.19022-11-dev@pschenker.ch>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190730144649.19022-1-dev@pschenker.ch>
+References: <20190730144649.19022-1-dev@pschenker.ch>
 MIME-Version: 1.0
-References: <20190215024830.GA26477@jordon-HP-15-Notebook-PC>
- <20190728180611.GA20589@mail-itl> <CAFqt6zaMDnpB-RuapQAyYAub1t7oSdHH_pTD=f5k-s327ZvqMA@mail.gmail.com>
- <CAFqt6zY+07JBxAVfMqb+X78mXwFOj2VBh0nbR2tGnQOP9RrNkQ@mail.gmail.com>
- <20190729133642.GQ1250@mail-itl> <CAFqt6zZN+6r6wYJY+f15JAjj8dY+o30w_+EWH9Vy2kUXCKSBog@mail.gmail.com>
- <bf02becc-9db0-bb78-8efc-9e25cc115237@oracle.com> <20190730142233.GR1250@mail-itl>
-In-Reply-To: <20190730142233.GR1250@mail-itl>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 30 Jul 2019 20:22:02 +0530
-Message-ID: <CAFqt6zZOymx8RH75F69exukLYcGd45xpUHkRHK8nYXpwF8co6g@mail.gmail.com>
-Subject: Re: [Xen-devel] [PATCH v4 8/9] xen/gntdev.c: Convert to use vm_map_pages()
-To:     =?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Juergen Gross <jgross@suse.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        robin.murphy@arm.com, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 7:52 PM Marek Marczykowski-G=C3=B3recki
-<marmarek@invisiblethingslab.com> wrote:
->
-> On Tue, Jul 30, 2019 at 10:05:42AM -0400, Boris Ostrovsky wrote:
-> > On 7/30/19 2:03 AM, Souptick Joarder wrote:
-> > > On Mon, Jul 29, 2019 at 7:06 PM Marek Marczykowski-G=C3=B3recki
-> > > <marmarek@invisiblethingslab.com> wrote:
-> > >> On Mon, Jul 29, 2019 at 02:02:54PM +0530, Souptick Joarder wrote:
-> > >>> On Mon, Jul 29, 2019 at 1:35 PM Souptick Joarder <jrdr.linux@gmail.=
-com> wrote:
-> > >>>> On Sun, Jul 28, 2019 at 11:36 PM Marek Marczykowski-G=C3=B3recki
-> > >>>> <marmarek@invisiblethingslab.com> wrote:
-> > >>>>> On Fri, Feb 15, 2019 at 08:18:31AM +0530, Souptick Joarder wrote:
-> > >>>>>> Convert to use vm_map_pages() to map range of kernel
-> > >>>>>> memory to user vma.
-> > >>>>>>
-> > >>>>>> map->count is passed to vm_map_pages() and internal API
-> > >>>>>> verify map->count against count ( count =3D vma_pages(vma))
-> > >>>>>> for page array boundary overrun condition.
-> > >>>>> This commit breaks gntdev driver. If vma->vm_pgoff > 0, vm_map_pa=
-ges
-> > >>>>> will:
-> > >>>>>  - use map->pages starting at vma->vm_pgoff instead of 0
-> > >>>> The actual code ignores vma->vm_pgoff > 0 scenario and mapped
-> > >>>> the entire map->pages[i]. Why the entire map->pages[i] needs to be=
- mapped
-> > >>>> if vma->vm_pgoff > 0 (in original code) ?
-> > >> vma->vm_pgoff is used as index passed to gntdev_find_map_index. It's
-> > >> basically (ab)using this parameter for "which grant reference to map=
-".
-> > >>
-> > >>>> are you referring to set vma->vm_pgoff =3D 0 irrespective of value=
- passed
-> > >>>> from user space ? If yes, using vm_map_pages_zero() is an alternat=
-e
-> > >>>> option.
-> > >> Yes, that should work.
-> > > I prefer to use vm_map_pages_zero() to resolve both the issues. Alter=
-natively
-> > > the patch can be reverted as you suggested. Let me know you opinion a=
-nd wait
-> > > for feedback from others.
-> > >
-> > > Boris, would you like to give any feedback ?
-> >
-> > vm_map_pages_zero() looks good to me. Marek, does it work for you?
->
-> Yes, replacing vm_map_pages() with vm_map_pages_zero() fixes the
-> problem for me.
+From: Philippe Schenker <philippe.schenker@toradex.com>
 
-Marek, I can send a patch for the same if you are ok.
-We need to cc stable as this changes are available in 5.2.4.
+This adds the muxing for the optional pins usb-oc (overcurrent) and
+usb-id.
 
->
-> --
-> Best Regards,
-> Marek Marczykowski-G=C3=B3recki
-> Invisible Things Lab
-> A: Because it messes up the order in which people normally read text.
-> Q: Why is top-posting such a bad thing?
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
+
+ arch/arm/boot/dts/imx6qdl-colibri.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+index 019dda6b88ad..9a63debab0b5 100644
+--- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+@@ -615,6 +615,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_usbh_oc_1: usbh_oc-1 {
++		fsl,pins = <
++			/* USBH_OC */
++			MX6QDL_PAD_EIM_D30__GPIO3_IO30		0x1b0b0
++		>;
++	};
++
+ 	pinctrl_spdif: spdifgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_GPIO_17__SPDIF_OUT 0x1b0b0
+@@ -681,6 +688,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_usbc_id_1: usbc_id-1 {
++		fsl,pins = <
++			/* USBC_ID */
++			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x1b0b0
++		>;
++	};
++
+ 	pinctrl_usdhc1: usdhc1grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_SD1_CMD__SD1_CMD	0x17071
+-- 
+2.22.0
+
