@@ -2,75 +2,105 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88530C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDC8C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D06820679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564514540;
-	bh=8Mp1ZpFhLYa4PCKDKvKs2UH6Ndtv2RBDlqpJAwfjEkU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O0Lwuq8m93AG4EMvkNPs80NPh6enrQ1PnNUK5bQeKQ/9FgkqUYPQ74KscU8QCfUx8
-	 fqt0dWpBHDgJ0V0NMR1igb8MZG4wywHO739hDtHV3s1HBmBoepNTjYvyHTozhoMh1G
-	 fj4j/CNbXXXN7J/4i3UsUPXAJgaAR4oU0FrIm4D0=
+	by mail.kernel.org (Postfix) with ESMTP id 9F3512067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388253AbfG3TWT (ORCPT
+        id S1728651AbfG3TZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 15:22:19 -0400
-Received: from mga05.intel.com ([192.55.52.43]:43559 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387863AbfG3TWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 15:22:18 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 12:22:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,327,1559545200"; 
-   d="scan'208";a="173805048"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga007.fm.intel.com with ESMTP; 30 Jul 2019 12:22:17 -0700
-Date:   Tue, 30 Jul 2019 13:19:34 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Mario.Limonciello@dell.com, rjw@rjwysocki.net,
-        keith.busch@intel.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rajatja@google.com
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-Message-ID: <20190730191934.GD13948@localhost.localdomain>
-References: <2332799.izEFUvJP67@kreacher>
- <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
- <47415939.KV5G6iaeJG@kreacher>
- <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
+        Tue, 30 Jul 2019 15:25:49 -0400
+Received: from atlmailgw1.ami.com ([63.147.10.40]:47963 "EHLO
+        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfG3TZs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 15:25:48 -0400
+X-AuditID: ac1060b2-3fdff70000003a7d-40-5d4099bccabf
+Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
+        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id C0.6E.14973.CB9904D5; Tue, 30 Jul 2019 15:25:49 -0400 (EDT)
+Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
+ atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 30 Jul 2019 15:25:47 -0400
+From:   Hongwei Zhang <hongweiz@ami.com>
+To:     Andrew Jeffery <andrew@aj.id.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>,
+        <devicetree@vger.kernel.org>, <linux-aspeed@lists.ozlabs.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [v5 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
+Date:   Tue, 30 Jul 2019 15:25:37 -0400
+Message-ID: <1564514737-4638-1-git-send-email-hongweiz@ami.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1563564291-9692-2-git-send-email-hongweiz@ami.com>
+References: <1563564291-9692-2-git-send-email-hongweiz@ami.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: text/plain
+X-Originating-IP: [172.16.98.93]
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKLMWRmVeSWpSXmKPExsWyRiBhgu7emQ6xBoe2s1vsusxh8WXuKRaL
+        +UfOsVr8Pv+X2WLKn+VMFpseX2O1aF59jtli8/w/jBaXd81hs1h6/SKTReveI+wO3B5X23ex
+        e6yZt4bR4/2NVnaPix+PMXtsWtXJ5nHn2h42j81L6j3Oz1jI6PF5k1wAZxSXTUpqTmZZapG+
+        XQJXxpPbDxkLnvJUvJr5nKWBcT1XFyMnh4SAicSdr61sXYxcHEICu5gktq+ewg7hHGaUePRr
+        KiNIFZuAmsTezXOYQGwRgTyJw+vfsoIUMQucYpKYsa+TFSQhLGAnsX72MWYQm0VAVWLT8s1g
+        zbwC9hKHt6xgg1gnJ3HzXCdYDaeAg8Tzy11A2ziAttlLrG4ShygXlDg58wkLiM0sICFx8MUL
+        sHIhAVmJW4ceM0GMUZB43veYZQKjwCwkLbOQtCxgZFrFKJRYkpObmJmTXm6ol5ibqZecn7uJ
+        ERIVm3Ywtlw0P8TIxMF4iFGCg1lJhHexuH2sEG9KYmVValF+fFFpTmrxIUZpDhYlcd6Va77F
+        CAmkJ5akZqemFqQWwWSZODilGhgT9ku+CJGXXdVbJtz580GtjNLRVUcruy2vNFusMj41ufj/
+        nPL3O8T+NCVcSPvQxKtyXfvK2UiFS9un6vrtNDY+kRjevcamj1137rHgS2siZrJU17j53G57
+        rrnp22K2N8bCXgESNyOlHT/f4wrgXbn1XlfCs9dt26xeps7peFXEtuVV6c81lppKLMUZiYZa
+        zEXFiQBMtJWHeAIAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 02:50:01AM +0800, Kai-Heng Feng wrote:
+Hello Linus and Andrew,
+
+Thanks for your detailed comments, I just submitted v6 of our update:
+_http://patchwork.ozlabs.org/cover/1139035/
+_http://patchwork.ozlabs.org/patch/1139038/
+_http://patchwork.ozlabs.org/patch/1139040/
+
+please ignore my previous patches sent on 07/28, they does not have proper serial
+title and one of the patch is missing.
+
+--Hongwei
+
+> From:	Linus Walleij <linus.walleij@linaro.org>
+> Sent:	Monday, July 29, 2019 5:57 PM
+> To:	Andrew Jeffery
+> Cc:	Hongwei Zhang; open list:GPIO SUBSYSTEM; Joel Stanley; open list:OPEN FIRMWARE AND 
+> FLATTENED DEVICE TREE BINDINGS; linux-aspeed; Bartosz Golaszewski; Rob Herring; Mark Rutland; 
+> linux-kernel@vger.kernel.org; Linux ARM
+> Subject:	Re: [v5 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
 > 
-> Just did a quick test, this patch regress SK Hynix BC501, the SoC stays at
-> PC3 once the patch is applied.
-
-Okay, I'm afraid device/platform quirks may be required unless there are
-any other ideas out there.
-
-I'm not a big fan of adding more params to this driver. Those are
-global to the module, so that couldn't really handle a platform with
-two different devices that want different behavior.
+> On Mon, Jul 29, 2019 at 2:19 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> 
+> > The behaviour is to periodically emit the state of all enabled GPIOs 
+> > (i.e. the ngpios value), one per bus clock cycle. There's no explicit 
+> > addressing scheme, the protocol encodes the value for a given GPIO by 
+> > its position in the data stream relative to a pulse on the "load data"
+> > (LD) line, whose envelope covers the clock cycle for the last GPIO in 
+> > the sequence. Similar to SPI the bus has both out and in lines, which 
+> > cater to output/input GPIOs.
+> >
+> > A rough timing diagram for a 16-GPIO configuration looks like what 
+> > I've pasted here:
+> >
+> > https://gist.github.com/amboar/c9543af1957854474b8c05ab357f0675
+> 
+> OK that is complex. I agree we need to keep this driver together.
+> 
+> Yours,
+> Linus Walleij
