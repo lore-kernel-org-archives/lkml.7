@@ -2,96 +2,75 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DDDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88530C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5653820693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D06820679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564514540;
+	bh=8Mp1ZpFhLYa4PCKDKvKs2UH6Ndtv2RBDlqpJAwfjEkU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O0Lwuq8m93AG4EMvkNPs80NPh6enrQ1PnNUK5bQeKQ/9FgkqUYPQ74KscU8QCfUx8
+	 fqt0dWpBHDgJ0V0NMR1igb8MZG4wywHO739hDtHV3s1HBmBoepNTjYvyHTozhoMh1G
+	 fj4j/CNbXXXN7J/4i3UsUPXAJgaAR4oU0FrIm4D0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388179AbfG3TUf (ORCPT
+        id S2388253AbfG3TWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 15:20:35 -0400
-Received: from os.inf.tu-dresden.de ([141.76.48.99]:44104 "EHLO
-        os.inf.tu-dresden.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388061AbfG3TUe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 15:20:34 -0400
-Received: from [176.12.107.132] (helo=[10.101.1.222])
-        by os.inf.tu-dresden.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (Exim 4.92.1)
-        id 1hsXfj-0002ks-Rk; Tue, 30 Jul 2019 21:20:31 +0200
-Subject: Re: [PATCH 10/10] Replace tasklets with workqueues
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Moni Shoua <monis@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
- <20190722151426.5266-11-mplaneta@os.inf.tu-dresden.de>
- <20190722153205.GG7607@ziepe.ca>
- <21a4daf9-c77e-ec80-9da0-78ab512d248d@os.inf.tu-dresden.de>
- <20190725185006.GD7467@ziepe.ca>
-From:   Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-Message-ID: <385139f2-0d31-1148-95c0-a6e6768ab413@os.inf.tu-dresden.de>
-Date:   Tue, 30 Jul 2019 21:20:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 30 Jul 2019 15:22:19 -0400
+Received: from mga05.intel.com ([192.55.52.43]:43559 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387863AbfG3TWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 15:22:18 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 12:22:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,327,1559545200"; 
+   d="scan'208";a="173805048"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Jul 2019 12:22:17 -0700
+Date:   Tue, 30 Jul 2019 13:19:34 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Mario.Limonciello@dell.com, rjw@rjwysocki.net,
+        keith.busch@intel.com, hch@lst.de, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rajatja@google.com
+Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+ suspend" has problems
+Message-ID: <20190730191934.GD13948@localhost.localdomain>
+References: <2332799.izEFUvJP67@kreacher>
+ <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
+ <47415939.KV5G6iaeJG@kreacher>
+ <20190730144134.GA12844@localhost.localdomain>
+ <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20190725185006.GD7467@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 25/07/2019 20:50, Jason Gunthorpe wrote:
-> On Thu, Jul 25, 2019 at 04:36:20PM +0200, Maksym Planeta wrote:
->> Is this one better?
->>
->> Replace tasklets with workqueues in rxe driver. The reason for this
->> replacement is that tasklets are supposed to run atomically, although the
->> actual code may block.
->>
->> Modify the SKB destructor for outgoing SKB's to schedule QP tasks only if
->> the QP is not destroyed itself.
->>
->> Add a variable "pending_skb_down" to ensure that reference counting for a QP
->> is decremented only when QP access related to this skb is over.
->>
->> Separate part of pool element cleanup code to allow this code to be called
->> in the very end of cleanup, even if some of cleanup is scheduled for
->> asynchronous execution. Example, when it was happening is destructor for a
->> QP.
->>
->> Disallow calling of task functions "directly". This allows to simplify logic
->> inside rxe_task.c
->>
->> Schedule rxe_qp_do_cleanup onto high-priority system workqueue, because this
->> function can be scheduled from normal system workqueue.
->>
->> Before destroying a QP, wait until all references to this QP are gone.
->> Previously the problem was that outgoing SKBs could be freed after the QP
->> these SKBs refer to is destroyed.
->>
->> Add blocking rxe_run_task to replace __rxe_do_task that was calling task
->> function directly.
+On Wed, Jul 31, 2019 at 02:50:01AM +0800, Kai-Heng Feng wrote:
 > 
-> Mostly but it would also be good to describe the use after free and
-> races more specifically
-> 
+> Just did a quick test, this patch regress SK Hynix BC501, the SoC stays at
+> PC3 once the patch is applied.
 
-These situations are described in the cover letter (PATCH 00/10). Do you 
-need a more detailed description than that?
+Okay, I'm afraid device/platform quirks may be required unless there are
+any other ideas out there.
 
-> Jason
-> 
-
--- 
-Regards,
-Maksym Planeta
+I'm not a big fan of adding more params to this driver. Those are
+global to the module, so that couldn't really handle a platform with
+two different devices that want different behavior.
