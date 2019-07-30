@@ -2,251 +2,157 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE5EC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA209C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74A7205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98575205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:19:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cuH0cvj7"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="mVuF5qbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbfG3WSX (ORCPT
+        id S1729127AbfG3WTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 18:18:23 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36731 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727221AbfG3WSX (ORCPT
+        Tue, 30 Jul 2019 18:19:21 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:34401 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728918AbfG3WTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 18:18:23 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l21so30765647pgm.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 15:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sxiBOB7zsr4sYYglcbcr65xES486R1b5ubVrYLCx9MI=;
-        b=cuH0cvj7FQ+GpEQKL8ugXdx3wyPTXJSpKN9VZSQy/NOZUhCpj/MnEoPIYQWDumfepk
-         SXkr29or2GlRyB6D4kGxSM5fqCA0aYmYiF/zHTR6cQuZg5AWtLGfuH6/GuQcHnzL+LZq
-         eG4FGz9exx6D+FI7ZOtIl1H9t+gUwZ+JC/XcU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sxiBOB7zsr4sYYglcbcr65xES486R1b5ubVrYLCx9MI=;
-        b=mG9p8UV8gl4nsyHJARavVHf9jSTKtpT8G9SBAj6wDZc5x3qRD8Iqv2sO4ABfGFwdAn
-         amOUZ+QXXsr4o1W8ztGTSgtPpTHGONgwfJJ0D8fQvqi6WXON4m+womLF2DSOnnv+Qi6t
-         ShDGWasNab+NT5Obnk3qzbKRRBCviCRMAWfDQgWinWzCBwvnqGIajNOHb3EouzVMPWmD
-         ZRWBVffwrp7xQAbvs+/5+aN5MHJkVk9dqn0vhtJSF8RKow/Y1ytiUXl2XxoKmTp9GT2m
-         GkyfoTH8ZwkVFT+THJ0bHg/e78btTAz0wxaGEfE4HwfIcYAOGVaFhIlaqNS004KAg0pG
-         nATw==
-X-Gm-Message-State: APjAAAWqdn036mcqb1b7SzjKU1q4AlWwNqzSpNmYkQGl0nrx6la3Bp2B
-        Se+MBN1r6uMrSQ/s8E1G3UtsoA==
-X-Google-Smtp-Source: APXvYqwqDLmwcsVdJQqAK5+voPBrSQMRxT/BTbm6YQUKW/crdO6p9v7vxNjvrFFCLR1wwUrOngXA+g==
-X-Received: by 2002:a63:dd16:: with SMTP id t22mr79512317pgg.140.1564525102190;
-        Tue, 30 Jul 2019 15:18:22 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id u7sm58455696pfm.96.2019.07.30.15.18.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 15:18:21 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] arm64: debug: Make 'btc' and similar work in kdb
-Date:   Tue, 30 Jul 2019 15:18:00 -0700
-Message-Id: <20190730221800.28326-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+        Tue, 30 Jul 2019 18:19:21 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UMJ9xv3399847
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 30 Jul 2019 15:19:09 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UMJ9xv3399847
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564525150;
+        bh=eL+e5SoaMdtM0OEPI9mHFiwK0PstnWou0bKlFZPZJXg=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=mVuF5qbEf86ibP66yYF7lR3dUTyziuQeoAvEfDP8VampyjxKH0Bhpq/MIzWjs3+TO
+         a4qhWDA0hBedfQ7YWTR2Sb/5qdSVnBPF7QgSbGN2/ntX1CJVABwNKiksig7jwWomZl
+         bKbbqK466XB2/a5PYsLcjuABgE+ZlkkkwfUJt5qvvCIXvZDo8opnVtEKLIjvBJ/vtW
+         RdmlFk0qFpbvs0gTcnRAe9eGlxdKbdq3CQUHVRTNfVWbcSkkQPfpuat8Oqf4TEC3/A
+         sLZB6sevidKtngDSz6nRxSUWzJN24Uu59niUi3N0z5cx1MmchFWaEG7QbUIqqjvso8
+         ucMmSM7g4G7Mw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UMJ9ud3399844;
+        Tue, 30 Jul 2019 15:19:09 -0700
+Date:   Tue, 30 Jul 2019 15:19:09 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-a9446a906f52292c52ecbd5be78eaa4d8395756c@git.kernel.org>
+Cc:     luto@kernel.org, linux-kernel@vger.kernel.org,
+        vincenzo.frascino@arm.com, tglx@linutronix.de, mingo@kernel.org,
+        hpa@zytor.com
+Reply-To: hpa@zytor.com, luto@kernel.org, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, vincenzo.frascino@arm.com, mingo@kernel.org
+In-Reply-To: <20190728131648.587523358@linutronix.de>
+References: <20190728131648.587523358@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/urgent] lib/vdso/32: Remove inconsistent NULL pointer
+ checks
+Git-Commit-ID: a9446a906f52292c52ecbd5be78eaa4d8395756c
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In kdb when you do 'btc' (back trace on CPU) it doesn't give you the
-right info.  This can be seen by this:
+Commit-ID:  a9446a906f52292c52ecbd5be78eaa4d8395756c
+Gitweb:     https://git.kernel.org/tip/a9446a906f52292c52ecbd5be78eaa4d8395756c
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Sun, 28 Jul 2019 15:12:52 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 31 Jul 2019 00:09:09 +0200
 
- echo SOFTLOCKUP > /sys/kernel/debug/provoke-crash/DIRECT
- # wait 2 seconds
- <sysrq>g
+lib/vdso/32: Remove inconsistent NULL pointer checks
 
-Here's what I see now on rk3399-gru-kevin.  I see the stack crawl for
-the CPU that handled the sysrq but everything else just shows me stuck
-in __switch_to() which is bogus:
+The 32bit variants of vdso_clock_gettime()/getres() have a NULL pointer
+check for the timespec pointer. That's inconsistent vs. 64bit.
 
-======
+But the vdso implementation will never be consistent versus the syscall
+because the only case which it can handle is NULL. Any other invalid
+pointer will cause a segfault. So special casing NULL is not really useful.
 
-[0]kdb> btc
-btc: cpu status: Currently on cpu 0
-Available cpus: 0, 1-3(I), 4, 5(I)
-Stack traceback for pid 0
-0xffffff801101a9c0        0        0  1    0   R  0xffffff801101b3b0 *swapper/0
-Call trace:
- dump_backtrace+0x0/0x138
- ...
- kgdb_compiled_brk_fn+0x34/0x44
- ...
- sysrq_handle_dbg+0x34/0x5c
-Stack traceback for pid 0
-0xffffffc0f175a040        0        0  1    1   I  0xffffffc0f175aa30  swapper/1
-Call trace:
- __switch_to+0x1e4/0x240
- 0xffffffc0f65616c0
-Stack traceback for pid 0
-0xffffffc0f175d040        0        0  1    2   I  0xffffffc0f175da30  swapper/2
-Call trace:
- __switch_to+0x1e4/0x240
- 0xffffffc0f65806c0
-Stack traceback for pid 0
-0xffffffc0f175b040        0        0  1    3   I  0xffffffc0f175ba30  swapper/3
-Call trace:
- __switch_to+0x1e4/0x240
- 0xffffffc0f659f6c0
-Stack traceback for pid 1474
-0xffffffc0dde8b040     1474      727  1    4   R  0xffffffc0dde8ba30  bash
-Call trace:
- __switch_to+0x1e4/0x240
- __schedule+0x464/0x618
- 0xffffffc0dde8b040
-Stack traceback for pid 0
-0xffffffc0f17b0040        0        0  1    5   I  0xffffffc0f17b0a30  swapper/5
-Call trace:
- __switch_to+0x1e4/0x240
- 0xffffffc0f65dd6c0
+Remove it along with the superflouos syscall fallback invocation as that
+will return -EFAULT anyway. That also gets rid of the dubious typecast
+which only works because the pointer is NULL.
 
-===
+Fixes: 00b26474c2f1 ("lib/vdso: Provide generic VDSO implementation")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/20190728131648.587523358@linutronix.de
 
-The problem is that 'btc' eventually boils down to
-  show_stack(task_struct, NULL);
-
-...and show_stack() doesn't work for "running" CPUs because their
-registers haven't been stashed.
-
-On x86 things might work better (I haven't tested) because kdb has a
-special case for x86 in kdb_show_stack() where it passes the stack
-pointer to show_stack().  This wouldn't work on arm64 where the stack
-crawling function seems needs the "fp" and "pc", not the "sp" which is
-presumably why arm64's show_stack() function totally ignores the "sp"
-parameter.
-
-NOTE: we _can_ get a good stack dump for all the cpus if we manually
-switch each one to the kdb master and do a back trace.  AKA:
-  cpu 4
-  bt
-...will give the expected trace.  That's because now arm64's
-dump_backtrace will now see that "tsk == current" and go through a
-different path.
-
-In this patch I fix the problems by stashing the "pt_regs" into the
-"cpu_context" when a CPU enters the debugger.  Now all the normal stack
-crawling code will be able to find it.  This is possible because:
-* When a task is "running" nobody else is using the "cpu_context"
-* The task isn't really "running" (it's in the debugger) so there are
-  actually some sane registers to save.
-
-This patch works without any extra kgdb API changes by just
-implementing the weak kgdb_call_nmi_hook().  I don't try to address
-the existing caveat in kgdb_call_nmi_hook() around pt_regs, so I copy
-the comment from the generic code.
-
-After this patch the same test shows much more sane stack crawls.  The
-idle tasks now show:
-
-Stack traceback for pid 0
-0xffffffc0f175b040        0        0  1    3   I  0xffffffc0f175ba30  swapper/3
-Call trace:
- cpuidle_enter_state+0x284/0x428
- cpuidle_enter+0x38/0x4c
- do_idle+0x168/0x29c
- cpu_startup_entry+0x24/0x28
- secondary_start_kernel+0x140/0x14c
-
-...and the locked task:
-
-Stack traceback for pid 1603
-0xffffffc0d98c7040     1603      724  1    4   R  0xffffffc0d98c7a30  bash
-Call trace:
- lkdtm_SOFTLOCKUP+0x1c/0x24
- lkdtm_do_action+0x24/0x44
- direct_entry+0x130/0x178
- full_proxy_write+0x60/0xb4
- __vfs_write+0x54/0x18c
- vfs_write+0xcc/0x174
- ksys_write+0x7c/0xe4
- __arm64_sys_write+0x20/0x2c
- el0_svc_common+0x9c/0x14c
- el0_svc_compat_handler+0x28/0x34
- el0_svc_compat+0x8/0x10
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
+ lib/vdso/gettimeofday.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
- arch/arm64/kernel/kgdb.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index 43119922341f..b666210fbc75 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -148,6 +148,45 @@ sleeping_thread_to_gdb_regs(unsigned long *gdb_regs, struct task_struct *task)
- 	gdb_regs[32] = cpu_context->pc;
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index 2d1c1f241fd9..e28f5a607a5f 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -115,9 +115,6 @@ __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
+ 	struct __kernel_timespec ts;
+ 	int ret;
+ 
+-	if (res == NULL)
+-		goto fallback;
+-
+ 	ret = __cvdso_clock_gettime(clock, &ts);
+ 
+ 	if (ret == 0) {
+@@ -126,9 +123,6 @@ __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
+ 	}
+ 
+ 	return ret;
+-
+-fallback:
+-	return clock_gettime_fallback(clock, (struct __kernel_timespec *)res);
  }
  
-+void kgdb_call_nmi_hook(void *ignored)
-+{
-+	struct pt_regs *regs;
-+
-+	/*
-+	 * NOTE: get_irq_regs() is supposed to get the registers from
-+	 * before the IPI interrupt happened and so is supposed to
-+	 * show where the processor was.  In some situations it's
-+	 * possible we might be called without an IPI, so it might be
-+	 * safer to figure out how to make kgdb_breakpoint() work
-+	 * properly here.
-+	 */
-+	regs = get_irq_regs();
-+
-+	/*
-+	 * Some commands (like 'btc') assume that they can find info about
-+	 * a task in the 'cpu_context'.  Unfortunately that's only valid
-+	 * for sleeping tasks.  ...but let's make it work anyway by just
-+	 * writing the registers to the right place.  This is safe because
-+	 * nobody else is using the 'cpu_context' for a running task.
-+	 */
-+	current->thread.cpu_context.x19 = regs->regs[19];
-+	current->thread.cpu_context.x20 = regs->regs[20];
-+	current->thread.cpu_context.x21 = regs->regs[21];
-+	current->thread.cpu_context.x22 = regs->regs[22];
-+	current->thread.cpu_context.x23 = regs->regs[23];
-+	current->thread.cpu_context.x24 = regs->regs[24];
-+	current->thread.cpu_context.x25 = regs->regs[25];
-+	current->thread.cpu_context.x26 = regs->regs[26];
-+	current->thread.cpu_context.x27 = regs->regs[27];
-+	current->thread.cpu_context.x28 = regs->regs[28];
-+	current->thread.cpu_context.fp = regs->regs[29];
-+
-+	current->thread.cpu_context.sp = regs->sp;
-+	current->thread.cpu_context.pc = regs->pc;
-+
-+	kgdb_nmicallback(raw_smp_processor_id(), regs);
-+}
-+
- void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc)
- {
- 	regs->pc = pc;
--- 
-2.22.0.709.g102302147b-goog
-
+ static __maybe_unused int
+@@ -204,10 +198,8 @@ int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
+ 		goto fallback;
+ 	}
+ 
+-	if (res) {
+-		res->tv_sec = 0;
+-		res->tv_nsec = ns;
+-	}
++	res->tv_sec = 0;
++	res->tv_nsec = ns;
+ 
+ 	return 0;
+ 
+@@ -221,9 +213,6 @@ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
+ 	struct __kernel_timespec ts;
+ 	int ret;
+ 
+-	if (res == NULL)
+-		goto fallback;
+-
+ 	ret = __cvdso_clock_getres(clock, &ts);
+ 
+ 	if (ret == 0) {
+@@ -232,8 +221,5 @@ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
+ 	}
+ 
+ 	return ret;
+-
+-fallback:
+-	return clock_getres_fallback(clock, (struct __kernel_timespec *)res);
+ }
+ #endif /* VDSO_HAS_CLOCK_GETRES */
