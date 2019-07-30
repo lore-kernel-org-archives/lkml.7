@@ -2,129 +2,167 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F5EC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB080C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1768206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rd3g0H7r"
+	by mail.kernel.org (Postfix) with ESMTP id 987492171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbfG3M2B (ORCPT
+        id S1729274AbfG3M2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 08:28:01 -0400
-Received: from mail-eopbgr10064.outbound.protection.outlook.com ([40.107.1.64]:62511
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726167AbfG3M2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 08:28:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j4CDS7NQuNYaC50HyQfSGEZZfxoSTRTcWVO8yoWPfr1Mdl/UFBcAsUgQybYmW5G7SihllJykFhwRmv/48bqDcXh9AqMpBE8UWfdBzUkqd+aK1QojPwneT/ug1XiblMjtfdNJ9VH/RZl+wfHuZRthiOqg48zqMhTRS+OdIFme+im7g1IfMKHQJ6hefk+TNpjX6m+PRIwGh2q+X6EGTZOQ6cDMixqSm+NMtAdcrene9VK10SSXIW3GqEbScA7Spgv8Ke/nuShNoWU8UhDC+mVer0s3lztZoNIxH7YJuHw2Tq2GVQZMkq2Wh+8Bwu2Bz3Ad4CakAVV8Q9CneR/QJ4PszA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XwoxgYJDfCkn2n8/y2mCQ+M7ba+48jQyrxholrGcctU=;
- b=KQJD5ul+QC1wNQYchKzxF1U/qMqH9xVoJCu5Xn08vK05sYUJicTMkCMs/5xVtb2++YMMHDfnpAUVqBFsgRW37Z1h2+VlzZzxv/JqxhQQ/75m7nqEdyDxFe7btyyBW1ajIxLXqW2KbFgcVieMtvlmYYpzS5kDdA/vXNtFP3tX9fDewwZoU1F6eGgddgGa6O+iTbHMgX1QXeHaz0AbF5f+Ez71A2TTQJ3OEbW+37toOUa5HUzMtecxAN0cTOWjlpZCPju7tmoK7dLE7IsHxtkEpRQVog5kfKFJfIjW2vX7fXKAi2VjWjSBqBze3T6eWrxN2RnOtjcTZbD1EHmu01hlpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XwoxgYJDfCkn2n8/y2mCQ+M7ba+48jQyrxholrGcctU=;
- b=rd3g0H7rTgmdBA/+yL2dDDBwURzJmESdL66JU8CC63VlftvNZD/VUWjXlRl2y6fp+MQipo2EsPvHSy7qdsvhujglK5E8fPBkB3iYsShtHJo3dqr9U7umewjq6VCYNnUk4iaPLeFeM1qhfXm+/u6tomvJxhFh5RaAcxNvsIwVKmY=
-Received: from VI1PR04MB4445.eurprd04.prod.outlook.com (20.177.55.161) by
- VI1PR04MB4112.eurprd04.prod.outlook.com (52.133.14.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Tue, 30 Jul 2019 12:27:56 +0000
-Received: from VI1PR04MB4445.eurprd04.prod.outlook.com
- ([fe80::8d42:8283:ede8:9abf]) by VI1PR04MB4445.eurprd04.prod.outlook.com
- ([fe80::8d42:8283:ede8:9abf%7]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
- 12:27:56 +0000
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v4 10/14] crypto: caam - fix MDHA key derivation for
- certain user key lengths
-Thread-Topic: [PATCH v4 10/14] crypto: caam - fix MDHA key derivation for
- certain user key lengths
-Thread-Index: AQHVRsbnGt/UawgfPUat+h6bvvIJAw==
-Date:   Tue, 30 Jul 2019 12:27:56 +0000
-Message-ID: <VI1PR04MB4445047FD7ABADD93F3D70338CDC0@VI1PR04MB4445.eurprd04.prod.outlook.com>
-References: <1564484805-28735-1-git-send-email-iuliana.prodan@nxp.com>
- <1564484805-28735-11-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=iuliana.prodan@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0a43c3b2-a8d2-48e7-b857-08d714e95a11
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4112;
-x-ms-traffictypediagnostic: VI1PR04MB4112:
-x-microsoft-antispam-prvs: <VI1PR04MB4112D27F3B78C43C81A5DD3C8CDC0@VI1PR04MB4112.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0114FF88F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(366004)(39860400002)(396003)(189003)(199004)(6506007)(64756008)(4326008)(446003)(52536014)(71200400001)(71190400001)(256004)(486006)(66476007)(86362001)(7736002)(229853002)(66946007)(53546011)(478600001)(76116006)(305945005)(91956017)(68736007)(66446008)(66556008)(6246003)(74316002)(6436002)(5660300002)(3846002)(4744005)(6116002)(2906002)(76176011)(53936002)(66066001)(7696005)(55016002)(14454004)(8676002)(8936002)(110136005)(9686003)(25786009)(44832011)(54906003)(81166006)(81156014)(102836004)(186003)(316002)(476003)(33656002)(26005)(99286004)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4112;H:VI1PR04MB4445.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Uo9ZZkubFo3LrqPUi60Af05Nji716AHwFaQocKQOL3OgDebrlIRxhwXi7oZKMy3X9AGmc9mtY5ZLuupBJyyR+qgoruTs2TgMHUHD9SoNKxYRG0aLK21Qs+AKFoKDEIV88oyYgT7yoi+lWsBZgnzP2ncqRsAXBSUSYAnOSlLB4MxNggtiZW2adB/wDhJOeglRUvFsMjiAjhCcYu2LPN7yvFsZrcbVCE9QxJA6IwlFudfHy1BS/j6zKZ9diiXg7T+/QIgMlTeWTOSihNZlIVX7M8fKEF51LlEdHv1s7KMP8fLPk8qWEFqk2NketH1vvZvSPQ9LK+BiIJLmh8aEOrB1zmwPfNqYYkE4cMW8lz7qMbhv4akD+CBadfiKUFxfQwp+L+LK4qTiIWOUAzBKqeQGJJQO+cG5Wlh7q2Wqtu3zxaU=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 30 Jul 2019 08:28:08 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:49667 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfG3M2H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 08:28:07 -0400
+Received: by mail-io1-f70.google.com with SMTP id x24so71223784ioh.16
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 05:28:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=L9VDO7k+iRFcfA0LsLudhEzOy80xKWBjmcwwT9POA1k=;
+        b=Ja+ASPEyWSgMfBbblFFJEoeEdDPwNTHZLDNP/3ZED8gBYSOyNPA+5ZrTWsh/sIH2zP
+         WS2bjH6O++z/xNyZjX/MyTcscHCPfHrrb/JtmLrPpHR62bd31Y0rFzeKzaWbfm94EtUd
+         edodYOboVl1SzRxhNkGyE/VmDz6JGfAPHCx0RpZdI+zmsmzfWg4Gra4CwoeJQLp/04f6
+         Nph6RX7EHTRYENzeFoqmMIv0OR/tnUSglFavuNDOsMDwJg9+bkjhn576JVR2DhuoWt8f
+         /pHyN9kj/yOZH1JUQ8oy5JnZUlbrsCTOLrFXwYKG/kHyzCn+vQgfR/+G39hi7pdqoVnU
+         cWmQ==
+X-Gm-Message-State: APjAAAUc29fWo1KVlxnQVSJnmwhvHeCduQggNbVFIvpZA23oYGGVKLCF
+        ws+wZ+ykao4uk3/AFo6wYJKsA6C61Tb+uZgFdZG0SjolB6IR
+X-Google-Smtp-Source: APXvYqymlyyGjismM+I+jA3PAHPvP5wzUb7rQzYTiPSyzpdY6PrkW80JZitI24HsII5qgiqUf/asr81QibXFTKR1iIJypo7eG6V3
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a43c3b2-a8d2-48e7-b857-08d714e95a11
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 12:27:56.5431
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iuliana.prodan@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4112
+X-Received: by 2002:a02:300b:: with SMTP id q11mr121392732jaq.54.1564489686557;
+ Tue, 30 Jul 2019 05:28:06 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 05:28:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000005ae9c058ee5245c@google.com>
+Subject: WARNING in mxl111sf_ctrl_msg
+From:   syzbot <syzbot+48eb85867b8a4c16adf0@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, mkrufky@linuxtv.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/2019 2:06 PM, Iuliana Prodan wrote:=0A=
-> From: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-> =0A=
-> Fuzz testing uncovered an issue when |user key| > |derived key|.=0A=
-> Derived key generation has to be fixed in two cases:=0A=
-> =0A=
-> 1. Era >=3D 6 (DKP is available)=0A=
-> DKP cannot be used with immediate input key if |user key| > |derived key|=
-,=0A=
-> since the resulting descriptor (after DKP execution) would be invalid -=
-=0A=
-> having a few bytes from user key left in descriptor buffer=0A=
-> as incorrect opcodes.=0A=
-> =0A=
-> Fix DKP usage both in standalone hmac and in authenc algorithms.=0A=
-> For authenc the logic is simplified, by always storing both virtual=0A=
-> and dma key addresses.=0A=
-> =0A=
-> 2. Era < 6=0A=
-> The same case (|user key| > |derived key|) fails when DKP=0A=
-> is not available.=0A=
-> Make sure gen_split_key() dma maps max(|user key|, |derived key|),=0A=
-> since this is an in-place (bidirectional) operation.=0A=
-> =0A=
-> Signed-off-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-> ---=0A=
-Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Iulia=0A=
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=11a7957c600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
+dashboard link: https://syzkaller.appspot.com/bug?extid=48eb85867b8a4c16adf0
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11ac50f8600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1718c75c600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+48eb85867b8a4c16adf0@syzkaller.appspotmail.com
+
+usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the  
+software demuxer
+dvbdev: DVB: registering new adapter (Hauppauge 126xxx ATSC+)
+usb 1-1: media controller created
+dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
+usb 1-1: selecting invalid altsetting 1
+set interface failed
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(lock->magic != lock)
+WARNING: CPU: 0 PID: 12 at kernel/locking/mutex.c:912 __mutex_lock_common  
+kernel/locking/mutex.c:912 [inline]
+WARNING: CPU: 0 PID: 12 at kernel/locking/mutex.c:912  
+__mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc2+ #23
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x2a3/0x6da kernel/panic.c:219
+  __warn.cold+0x20/0x4a kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
+RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:912 [inline]
+RIP: 0010:__mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
+Code: d2 0f 85 f6 05 00 00 44 8b 05 bb 99 0a 02 45 85 c0 0f 85 0a f4 ff ff  
+48 c7 c6 00 87 a6 85 48 c7 c7 a0 84 a6 85 e8 f4 24 b8 fb <0f> 0b e9 f0 f3  
+ff ff 65 48 8b 1c 25 00 ef 01 00 be 08 00 00 00 48
+RSP: 0018:ffff8881da206f40 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff812830fd RDI: ffffed103b440dda
+RBP: ffff8881da2070b0 R08: ffff8881da1f1800 R09: fffffbfff0d5eb25
+R10: fffffbfff0d5eb24 R11: ffffffff86af5923 R12: 0000000000000000
+R13: dffffc0000000000 R14: ffff8881d2ee6ec8 R15: ffff8881d2ee6ec8
+  mxl111sf_ctrl_msg+0xb8/0x210 drivers/media/usb/dvb-usb-v2/mxl111sf.c:66
+  mxl111sf_write_reg+0x8b/0x120 drivers/media/usb/dvb-usb-v2/mxl111sf.c:123
+  mxl1x1sf_soft_reset+0x6b/0x190  
+drivers/media/usb/dvb-usb-v2/mxl111sf-phy.c:47
+  mxl111sf_lgdt3305_frontend_attach.constprop.0+0x23e/0x790  
+drivers/media/usb/dvb-usb-v2/mxl111sf.c:447
+  mxl111sf_frontend_attach_atsc_mh+0x13/0x70  
+drivers/media/usb/dvb-usb-v2/mxl111sf.c:984
+  dvb_usbv2_adapter_frontend_init  
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:641 [inline]
+  dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804  
+[inline]
+  dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
+  dvb_usbv2_probe.cold+0x1e04/0x2567  
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x650 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:882
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2114
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x650 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:882
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2114
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
