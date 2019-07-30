@@ -2,141 +2,185 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4722C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CEAC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9807A216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854AE208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KW3zzfXR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NK10/uJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbfG3STo (ORCPT
+        id S2388307AbfG3STu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:19:44 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42733 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388010AbfG3STj (ORCPT
+        Tue, 30 Jul 2019 14:19:50 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37863 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387553AbfG3SQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:19:39 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIJQ2f3326935
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:19:27 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIJQ2f3326935
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564510767;
-        bh=VPrKE2Yp6oop93/YFTtaKPWE1BHVl2rneqEANP5wpcQ=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=KW3zzfXR2TplH843zz4BfK+T7tfwT1jMgxzt9Q6SAwDmktANPny5Hra9O1APQJuCL
-         mA3VT+frMjUupCSX9LePlfU2dJKd3Bcw762oDikAonr1k6EU3u/wgNBNVNd2MUj6oL
-         qQxQ/DkGLFdH40BIyUG1VFXzojf1Y68/ZH7ZY9GIHhcf5QV4aco4av8kDv4txfllhv
-         /DZCBCU5vfgKr2aYFLjym6kdLgVdnErkA8ijgBEV+rxjlfIXEgqbAgPZfgxlGYsTRt
-         HHygUU6qBx+lz9AQx+wh/LkaIk+LlfRYAs2RO1eHzidL2qYDzsmBB8F5Hq52CIMwKG
-         QKPf9PS/J7weA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIJQFd3326932;
-        Tue, 30 Jul 2019 11:19:26 -0700
-Date:   Tue, 30 Jul 2019 11:19:26 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-24e376b24582648d363df4e0a6bcc2ffcecd211e@git.kernel.org>
-Cc:     ak@linux.intel.com, jolsa@kernel.org, hpa@zytor.com,
-        alexey.budankov@linux.intel.com, tglx@linutronix.de,
-        mingo@kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com,
-        alexander.shishkin@linux.intel.com, mpetlan@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org
-Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com,
-          alexander.shishkin@linux.intel.com,
-          alexey.budankov@linux.intel.com, tglx@linutronix.de,
-          namhyung@kernel.org, peterz@infradead.org, mpetlan@redhat.com,
-          ak@linux.intel.com, hpa@zytor.com, jolsa@kernel.org
-In-Reply-To: <20190721112506.12306-18-jolsa@kernel.org>
-References: <20190721112506.12306-18-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf evsel: Rename perf_evsel__apply_filter() to
- evsel__apply_filter()
-Git-Commit-ID: 24e376b24582648d363df4e0a6bcc2ffcecd211e
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 14:16:19 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i70so19737018pgd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1vWUmpmVNnICz7TB6lvEdzPoKbI3ZZ7sRmOecFANbCU=;
+        b=NK10/uJHFuNKun4KjPHLULC6X4ualJpqBM9mz8GSXrdEW9Cgf/lNAvKR0d1OQJnyhP
+         OXpojQEShlYHOYhMb9JmeIIjih2TamlZoJ57uvUkjitw9VB8vK2wUa0063KOJ0Cki+OA
+         7QTI4jLIVeuwwzkk1NyVi4bB72/kvTdVJzDEM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1vWUmpmVNnICz7TB6lvEdzPoKbI3ZZ7sRmOecFANbCU=;
+        b=cQ+huJbYkLBLb43qgnSLbHt/7J+M/KsZ0/WciDDoZKiXdJcuao5gFiZdz5hVsJzxHF
+         WugPXQlULzvCqWnNiuikJpq5NRhIEX2XyAoOwzLuN4eVYLn7N+3CDhn1giGo7ws07aNx
+         qRPadlKbn7reyFygb81y7QI4UFtvHy3Ua60aL3kRcNJ2GVAxmkeDjQZ+FbEZ9Qfq/7gn
+         UkXWlpFnbVjcjv7n65r4GZtfKjhttNNuD6ZfKWzz47xhqRfiDqcxJFyOD59bBS/yhhKS
+         SZZ+M6lSLBiGOwdRwCKtfQnQB9VKen5F7crk82uw0WbodWJMw1niqsmq4v15OlQF0i6I
+         lvcg==
+X-Gm-Message-State: APjAAAUsY2IkwVva3IW9MC6fsTuwtVWX6xBgdXoCIJSITSJeNLQ4L5jf
+        CZpMv1DRGzri9jCXqCWq8oJepq6Ct2k=
+X-Google-Smtp-Source: APXvYqw4JRt6DjkgPPL4ADGLOngkuxFcm49Yqtodpx4qAk6+AZL5RD+TGGuAtPdzkd51R9TAMCRyNw==
+X-Received: by 2002:a17:90a:5288:: with SMTP id w8mr119352919pjh.61.1564510578193;
+        Tue, 30 Jul 2019 11:16:18 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 11:16:17 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v6 23/57] irqchip: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:23 -0700
+Message-Id: <20190730181557.90391-24-swboyd@chromium.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
+References: <20190730181557.90391-1-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  24e376b24582648d363df4e0a6bcc2ffcecd211e
-Gitweb:     https://git.kernel.org/tip/24e376b24582648d363df4e0a6bcc2ffcecd211e
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:24:04 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:43 -0300
+We don't need dev_err() messages when platform_get_irq() fails now that
+platform_get_irq() prints an error message itself when something goes
+wrong. Let's remove these prints with a simple semantic patch.
 
-perf evsel: Rename perf_evsel__apply_filter() to evsel__apply_filter()
+// <smpl>
+@@
+expression ret;
+struct platform_device *E;
+@@
 
-Rename perf_evsel__apply_filter() to evsel__apply_filter(), so we don't
-have a name clash when we add perf_evsel__apply_filter() in libperf.
+ret =
+(
+platform_get_irq(E, ...)
+|
+platform_get_irq_byname(E, ...)
+);
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-18-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+if ( \( ret < 0 \| ret <= 0 \) )
+{
+(
+-if (ret != -EPROBE_DEFER)
+-{ ...
+-dev_err(...);
+-... }
+|
+...
+-dev_err(...);
+)
+...
+}
+// </smpl>
+
+While we're here, remove braces on if statements that only have one
+statement (manually).
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- tools/perf/util/evlist.c | 2 +-
- tools/perf/util/evsel.c  | 2 +-
- tools/perf/util/evsel.h  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 9461583c53d9..e71c3cc93924 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1158,7 +1158,7 @@ int perf_evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel)
- 		 * filters only work for tracepoint event, which doesn't have cpu limit.
- 		 * So evlist and evsel should always be same.
- 		 */
--		err = perf_evsel__apply_filter(evsel, evsel->filter);
-+		err = evsel__apply_filter(evsel, evsel->filter);
- 		if (err) {
- 			*err_evsel = evsel;
- 			break;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 855d286298eb..5aeb7260c8e1 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1187,7 +1187,7 @@ static int perf_evsel__run_ioctl(struct evsel *evsel,
- 	return 0;
- }
+Please apply directly to subsystem trees
+
+ drivers/irqchip/irq-imgpdc.c        | 8 ++------
+ drivers/irqchip/irq-keystone.c      | 4 +---
+ drivers/irqchip/qcom-irq-combiner.c | 4 +---
+ 3 files changed, 4 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/irqchip/irq-imgpdc.c b/drivers/irqchip/irq-imgpdc.c
+index d00489a4b54f..698d07f48fed 100644
+--- a/drivers/irqchip/irq-imgpdc.c
++++ b/drivers/irqchip/irq-imgpdc.c
+@@ -362,10 +362,8 @@ static int pdc_intc_probe(struct platform_device *pdev)
+ 	}
+ 	for (i = 0; i < priv->nr_perips; ++i) {
+ 		irq = platform_get_irq(pdev, 1 + i);
+-		if (irq < 0) {
+-			dev_err(&pdev->dev, "cannot find perip IRQ #%u\n", i);
++		if (irq < 0)
+ 			return irq;
+-		}
+ 		priv->perip_irqs[i] = irq;
+ 	}
+ 	/* check if too many were provided */
+@@ -376,10 +374,8 @@ static int pdc_intc_probe(struct platform_device *pdev)
  
--int perf_evsel__apply_filter(struct evsel *evsel, const char *filter)
-+int evsel__apply_filter(struct evsel *evsel, const char *filter)
- {
- 	return perf_evsel__run_ioctl(evsel,
- 				     PERF_EVENT_IOC_SET_FILTER,
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index c338ce14e8aa..35f7e7ff3c5e 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -294,7 +294,7 @@ int perf_evsel__set_filter(struct evsel *evsel, const char *filter);
- int perf_evsel__append_tp_filter(struct evsel *evsel, const char *filter);
- int perf_evsel__append_addr_filter(struct evsel *evsel,
- 				   const char *filter);
--int perf_evsel__apply_filter(struct evsel *evsel, const char *filter);
-+int evsel__apply_filter(struct evsel *evsel, const char *filter);
- int evsel__enable(struct evsel *evsel);
- int evsel__disable(struct evsel *evsel);
+ 	/* Get syswake IRQ number */
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "cannot find syswake IRQ\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 	priv->syswake_irq = irq;
  
+ 	/* Set up an IRQ domain */
+diff --git a/drivers/irqchip/irq-keystone.c b/drivers/irqchip/irq-keystone.c
+index efbcf8435185..8118ebe80b09 100644
+--- a/drivers/irqchip/irq-keystone.c
++++ b/drivers/irqchip/irq-keystone.c
+@@ -164,10 +164,8 @@ static int keystone_irq_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	kirq->irq = platform_get_irq(pdev, 0);
+-	if (kirq->irq < 0) {
+-		dev_err(dev, "no irq resource %d\n", kirq->irq);
++	if (kirq->irq < 0)
+ 		return kirq->irq;
+-	}
+ 
+ 	kirq->dev = dev;
+ 	kirq->mask = ~0x0;
+diff --git a/drivers/irqchip/qcom-irq-combiner.c b/drivers/irqchip/qcom-irq-combiner.c
+index d88e993aa66d..abfe59284ff2 100644
+--- a/drivers/irqchip/qcom-irq-combiner.c
++++ b/drivers/irqchip/qcom-irq-combiner.c
+@@ -248,10 +248,8 @@ static int __init combiner_probe(struct platform_device *pdev)
+ 		return err;
+ 
+ 	combiner->parent_irq = platform_get_irq(pdev, 0);
+-	if (combiner->parent_irq <= 0) {
+-		dev_err(&pdev->dev, "Error getting IRQ resource\n");
++	if (combiner->parent_irq <= 0)
+ 		return -EPROBE_DEFER;
+-	}
+ 
+ 	combiner->domain = irq_domain_create_linear(pdev->dev.fwnode, combiner->nirqs,
+ 						    &domain_ops, combiner);
+-- 
+Sent by a computer through tubes
+
