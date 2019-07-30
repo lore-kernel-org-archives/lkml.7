@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370C0C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD9EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F21E208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AAE2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krpSGAIl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msT8UaDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbfG3RKa (ORCPT
+        id S1730564AbfG3RK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:10:30 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40845 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730434AbfG3RKY (ORCPT
+        Tue, 30 Jul 2019 13:10:29 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45938 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730074AbfG3RKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:10:24 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so57368092wmj.5;
-        Tue, 30 Jul 2019 10:10:23 -0700 (PDT)
+        Tue, 30 Jul 2019 13:10:23 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so66586147wre.12;
+        Tue, 30 Jul 2019 10:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9sbsaF7E0TrDeiv6pReKgq+pMBX4p8SmM9uYJr655g4=;
-        b=krpSGAIlChVcjlUuj3EF9XDg3prNLpG+C+OGiZNzymZi9ZqV82bfPGcwmqvFnc3+ju
-         zCWn11U8+25sjpM2WtTOwm/zZ167E/bKomEKYArY3EzEJW+HvesYCzR6jjMP9ypBk2Pm
-         JZwi7z4OpiwPnhhW75XMUG+WbfzIP6NvlDc7NQK3ne4ljopH+g+rJK60PgUYa1U/X22p
-         F5+8tynsG5zC0QvrnDKUJqLB3+AJsgds3kWkoAH1f/qp3uRy98yWSObB/rMy4BbgPOIt
-         rvb9Yq5fnwmTGk7N9fwGYSADg+mhY+mbXJ1JzTN31AEcqb07PgKFF9mJ/D9LlnlTjj6u
-         ku1A==
+        bh=oG72JYs8D99uhUm5H/8cmgUmTEFAp8bLzuwQQLvaPEc=;
+        b=msT8UaDPxHL7k4vTcFYH8UmTrtZtTqnDR8sc/6k7qxtO9OxBJEJOwctfdst/feUBs2
+         Iwb/dF+1zXd2fEn/AH1+r5qmcZ4RnmZNJJLJbzaO1Am0n6RctRjOjRreHrZnEvRWVGDc
+         zlqL0ao8eGz1wujhYT/MrsExCoSjLzQOc5UWXDry1QKdQmwJNw7Rr3uNf/NtCEYbbuq2
+         SwSCNk88DUiV/50mMCEG1a3pi6quU9G6imI7HZYdwE9YqE9sNiP2SEveESwcuMILu/Kb
+         19pDUpaSnB4Vl02ygD80NLsHq8BX7oeMEtZ/f79aaOwXk+29rub2oE3FOL16eZFgpFi3
+         jKvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9sbsaF7E0TrDeiv6pReKgq+pMBX4p8SmM9uYJr655g4=;
-        b=HetkST78uG3wd+GcbboEb6wG0x6FLFoja9ov6EEi2Am9Vg2rmjO1TZBgWroCtBW6on
-         sxrX1jc+yMzSLiPDvbW6DIrskzd72pa7aF0l1X7byIBDepWDDOf1V0+neLFkiozKGuYP
-         YckoyeqF/9EsyRvFpP82e4FCtIgGStiR7mUkTYvt3cLCKlQqB0dxSiKD3yB1fSf2WW3b
-         pvR/dFzGxD0ovDeIFFY75DeAFWW7q9KX4WJgr9ktIcY6juEWbSLZBEY5MmCPyKkov306
-         ynFfH0z2vMiGV1PyRKvUvpt1VgTlgju96wAiILeI7uq1ORZZIxO136A2SpPkyzZk2QXZ
-         zngg==
-X-Gm-Message-State: APjAAAXg/umMNSG5HhwaTDHe2t67BE5N8uhsU5dOJNO3Foe2ItjpQJem
-        x2shL8SzmXN2XrfHFipSy7M=
-X-Google-Smtp-Source: APXvYqwo0XTcvNSkF5Ae3SJz5WKhJIWn0FKkSYOSylnFOXzO08y++ztwmKLzBsZKxOM6/2hzjnGkcQ==
-X-Received: by 2002:a1c:c706:: with SMTP id x6mr103932234wmf.162.1564506622730;
-        Tue, 30 Jul 2019 10:10:22 -0700 (PDT)
+        bh=oG72JYs8D99uhUm5H/8cmgUmTEFAp8bLzuwQQLvaPEc=;
+        b=LBxSyObrXRTwjbwUJo4x52BHyXAs/XbKxFKNIhsNPRiLPRykLZT9q1LGPZedecpVzc
+         BiLZsaHCFNa/JZCFQ3PbOWei7gpGs8xiCTT8EGcK8buc2MrDObJOHBULpq2mRwbnJjCj
+         jXfASpKPTtiuCV6YCbOAdXkXRaaUAzOoPjCP1vrRh0WYRQRHOViU54ub8jBKM4S95uVq
+         RHMNLaLAjHYw5TkQyicP9WTfg0myfDUyiASMB6sqhN4fKxxMm9fOEG+/zOmrOs4viLd7
+         ZA/Bz7/EyYfi+VWyeB7No1pTT5SobLvKl2PTco8BvLowOcAj9bOdIQDbCSSXpQ/v909D
+         E2Kg==
+X-Gm-Message-State: APjAAAUx9lvzrt3CiRgA10aKKPRuy6rBepMCWlYIjGQCdNigml6v40Yz
+        1CrCvmM97hQ3anbSPr5tEyA=
+X-Google-Smtp-Source: APXvYqyH7w4AEuh5fJ+nXr1bskVAySZyQBcPNIxwxziZapMpcFYxnTTVwEx/VIdl06Z/AfvNqT4b1A==
+X-Received: by 2002:adf:eb4e:: with SMTP id u14mr128554493wrn.168.1564506621515;
+        Tue, 30 Jul 2019 10:10:21 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id i13sm58897736wrr.73.2019.07.30.10.10.21
+        by smtp.gmail.com with ESMTPSA id i13sm58897736wrr.73.2019.07.30.10.10.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 10:10:22 -0700 (PDT)
+        Tue, 30 Jul 2019 10:10:21 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 13/13] ARM: tegra: Enable Tegra cpuidle driver in tegra_defconfig
-Date:   Tue, 30 Jul 2019 20:09:55 +0300
-Message-Id: <20190730170955.11987-14-digetx@gmail.com>
+Subject: [PATCH v4 12/13] ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
+Date:   Tue, 30 Jul 2019 20:09:54 +0300
+Message-Id: <20190730170955.11987-13-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730170955.11987-1-digetx@gmail.com>
 References: <20190730170955.11987-1-digetx@gmail.com>
@@ -83,20 +83,20 @@ it is now a proper platform driver.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/configs/tegra_defconfig | 1 +
+ arch/arm/configs/multi_v7_defconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
-index 8f5c6a5b444c..9a2f11a780a8 100644
---- a/arch/arm/configs/tegra_defconfig
-+++ b/arch/arm/configs/tegra_defconfig
-@@ -25,6 +25,7 @@ CONFIG_CPU_FREQ=y
- CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
- CONFIG_CPUFREQ_DT=y
- CONFIG_CPU_IDLE=y
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index b0a05683f17a..e07c138453ab 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -108,6 +108,7 @@ CONFIG_CPU_IDLE=y
+ CONFIG_ARM_CPUIDLE=y
+ CONFIG_ARM_ZYNQ_CPUIDLE=y
+ CONFIG_ARM_EXYNOS_CPUIDLE=y
 +CONFIG_ARM_TEGRA_CPUIDLE=y
- CONFIG_VFP=y
- CONFIG_NEON=y
+ CONFIG_KERNEL_MODE_NEON=y
+ CONFIG_RASPBERRYPI_FIRMWARE=y
  CONFIG_TRUSTED_FOUNDATIONS=y
 -- 
 2.22.0
