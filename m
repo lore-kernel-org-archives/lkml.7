@@ -2,125 +2,95 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFFAC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67E6C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57AF420644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D7620644
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:09:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KHlH7ioN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfG3QIj (ORCPT
+        id S1730538AbfG3QJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:08:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:35178 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727698AbfG3QIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:08:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F244528;
-        Tue, 30 Jul 2019 09:08:37 -0700 (PDT)
-Received: from [10.1.194.23] (unknown [10.1.194.23])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECDAB3F694;
-        Tue, 30 Jul 2019 09:08:36 -0700 (PDT)
-Subject: Re: [PATCH 5/5] sched/deadline: Use return value of SCHED_WARN_ON()
- in bw accounting
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     luca abeni <luca.abeni@santannapisa.it>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <Valentin.Schneider@arm.com>,
-        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
-References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
- <20190726082756.5525-6-dietmar.eggemann@arm.com>
- <20190726121819.32be6fb1@sweethome>
- <20190729165434.GO31398@hirez.programming.kicks-ass.net>
- <a12e2330-50d4-b31f-14b5-5b386252d418@arm.com>
- <20190730082316.GK31381@hirez.programming.kicks-ass.net>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <7da6555c-baff-39df-b562-2510566ba4bf@arm.com>
-Date:   Tue, 30 Jul 2019 17:08:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 30 Jul 2019 12:09:02 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43194 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbfG3QJC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 12:09:02 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6UG3hdu000753;
+        Tue, 30 Jul 2019 16:08:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=oLw5J2eruM1dv+opvKWd2QA5hlfKsVrUXpjMXfm7MdU=;
+ b=KHlH7ioNf4bHxA7+xhxahq5TF4s7gAhC2tACNkDMFeINlOamRF1LFtl281kI7vXkX72d
+ D468cfTGEk5deOeoCiGKKXbRl/63vz963O9L6tdxc90Ua5kXhOkO9wmGIG1OXp8fQHsa
+ AYqLAailqmXyYsCaYUMQ31OSaC0HFfbricxE6PZjWYgz9EjQ13hibpmLOjlItutju9qp
+ g80AaX2zglsaLxIbadb0AR1fbiZQpMlhQMPWztTSZbE82BpyCvQUuvefqHO5xx0JR9XY
+ +q/TVr/1MRBdt+MVfyZpOZrHoLD3XND9FcL/ea8/Ptk+9qfC4eOAmiDQGuA3RfgT+oZB lg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2u0e1tqqw9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 16:08:41 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6UG7aLU097161;
+        Tue, 30 Jul 2019 16:08:40 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2u0bqu8u58-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 16:08:40 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6UG8cQL003029;
+        Tue, 30 Jul 2019 16:08:38 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 30 Jul 2019 09:08:37 -0700
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <qla2xxx-upstream@qlogic.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH v2 -next] scsi: qla2xxx: Remove unnecessary null check
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190711140908.26896-1-yuehaibing@huawei.com>
+        <20190711141317.52192-1-yuehaibing@huawei.com>
+Date:   Tue, 30 Jul 2019 12:08:35 -0400
+In-Reply-To: <20190711141317.52192-1-yuehaibing@huawei.com>
+        (yuehaibing@huawei.com's message of "Thu, 11 Jul 2019 22:13:17 +0800")
+Message-ID: <yq1d0hro67w.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190730082316.GK31381@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=963
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907300167
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907300166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/19 9:23 AM, Peter Zijlstra wrote:
-> On Mon, Jul 29, 2019 at 05:59:04PM +0100, Dietmar Eggemann wrote:
->> On 7/29/19 5:54 PM, Peter Zijlstra wrote:
->>> On Fri, Jul 26, 2019 at 12:18:19PM +0200, luca abeni wrote:
->>>> Hi Dietmar,
->>>>
->>>> On Fri, 26 Jul 2019 09:27:56 +0100
->>>> Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->>>>
->>>>> To make the decision whether to set rq or running bw to 0 in underflow
->>>>> case use the return value of SCHED_WARN_ON() rather than an extra if
->>>>> condition.
->>>>
->>>> I think I tried this at some point, but if I remember well this
->>>> solution does not work correctly when SCHED_DEBUG is not enabled.
->>>
->>> Well, it 'works' in so far that it compiles. But it might not be what
->>> one expects. That is, for !SCHED_DEBUG the return value is an
->>> unconditional false.
->>>
->>> In this case I think that's fine, the WARN _should_ not be happending.
->>
->> But there is commit 6d3aed3d ("sched/debug: Fix SCHED_WARN_ON() to
->> return a value on !CONFIG_SCHED_DEBUG as well")?
->>
->> But it doesn't work with !CONFIG_SCHED_DEBUG
->>
->> What compiles and work is (at least on Arm64).
->>
->> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
->> index 4012f98b9d26..494a767a4091 100644
->> --- a/kernel/sched/sched.h
->> +++ b/kernel/sched/sched.h
->> @@ -78,7 +78,7 @@
->>  #ifdef CONFIG_SCHED_DEBUG
->>  # define SCHED_WARN_ON(x)      WARN_ONCE(x, #x)
->>  #else
->> -# define SCHED_WARN_ON(x)      ({ (void)(x), 0; })
->> +# define SCHED_WARN_ON(x)      ({ (void)(x), x; })
-> 
-> Why doesn't the ,0 compile? That should work just fine. The thing is,
-> the two existing users:
-> 
-> kernel/sched/fair.c:            if (SCHED_WARN_ON(!se->on_rq))
-> kernel/sched/fair.c:            if (SCHED_WARN_ON(!se->on_rq))
-> 
-> seem to compile just fine with it.
 
-You're right, compiling is not an issue. But it looks like the code does
-different things depending on CONFIG_SCHED_DEBUG.
+YueHaibing,
 
-E.g. in set_last_buddy() we would return if '!se->on_rq' with
-CONFIG_SCHED_DEBUG and continue the for_each_sched_entity() with
-!CONFIG_SCHED_DEBUG.
+> A null check before dma_pool_destroy is redundant,
+> so remove it. This is detected by coccinelle.
 
-IMHO, this forced Luca e.g. in __sub_running_bw() to code:
+Applied to 5.4/scsi-queue. Thanks!
 
-SCHED_WARN_ON(dl_rq->running_bw > old);
-if (dl_rq->running_bw > old)
-    dl_rq->running_bw = 0;
-
-and not:
-
-if (SCHED_WARN_ON(dl_rq->running_bw > old))
-    dl_rq->running_bw = 0;
-
-I experimented with '# define SCHED_WARN_ON(x) ({ (void)(x), x; })' and
-in this case code inside an 'if (SCHED_WARN_ON(cond))' is also executed
-with !CONFIG_SCHED_DEBUG.
+-- 
+Martin K. Petersen	Oracle Linux Engineering
