@@ -2,77 +2,140 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C487C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02716C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50AF82089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE089206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:57:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="X73C+VCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbfG3Nzi (ORCPT
+        id S1728443AbfG3N5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:55:38 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3225 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725871AbfG3Nzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:55:37 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E803C32C4CC4C3C17D3C;
-        Tue, 30 Jul 2019 21:55:32 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Jul 2019
- 21:55:23 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <willy@infradead.org>,
-        <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] staging/octeon: Fix build error without CONFIG_NETDEVICES
-Date:   Tue, 30 Jul 2019 21:53:45 +0800
-Message-ID: <20190730135345.42760-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Tue, 30 Jul 2019 09:57:37 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:52326 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725871AbfG3N5h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 09:57:37 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EEE85C01EC;
+        Tue, 30 Jul 2019 13:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1564495056; bh=+Frtc0dG6BHyi2YIPiv1kiBX3xPQtzw2fnWMGHBYnQU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=X73C+VCdT/Ev8CiZNgGQDfGtPAtpuQJMuBI/h3MHAWEFTOAj/pjdWdTfXxa1dRqIL
+         8nC6Ymu0Tn882kLdhCHjBQOsN1avF6ajt/K8wsGFruGajkqEzCH8JnW+XE2am3CExL
+         GF7NNmU4V0N0QOCj5l5sIsxZktNvKU9xs+3M15gBr/BhgkhnusjDCXcA70Z1RwOPOL
+         AjJIPc1lFmZuNTol9YAXGyKVYqyb/BwYxOL//EvFZjM15/pGMb7XTWA2eqTWGHrQU2
+         N3Rpchhz7bKHMXnIHgnIcN0Li579OaCSW0LS3mFsAHpcF5V8VoXCoHPuNWLP4BZMB+
+         zWEnSkh3OZjhg==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id E0BECA0057;
+        Tue, 30 Jul 2019 13:57:28 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH net] net: stmmac: Sync RX Buffer upon allocation
+Date:   Tue, 30 Jul 2019 15:57:16 +0200
+Message-Id: <3601e3ae4357d48b3294f42781d0f19095d1b00e.1564479382.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While do COMPILE_TEST build without CONFIG_NETDEVICES,
-we get Kconfig warning:
+With recent changes that introduced support for Page Pool in stmmac, Jon
+reported that NFS boot was no longer working on an ARM64 based platform
+that had the IP behind an IOMMU.
 
-WARNING: unmet direct dependencies detected for PHYLIB
-  Depends on [n]: NETDEVICES [=n]
-  Selected by [y]:
-  - OCTEON_ETHERNET [=y] && STAGING [=y] && (CAVIUM_OCTEON_SOC && NETDEVICES [=n] || COMPILE_TEST [=y])
+As Page Pool API does not guarantee DMA syncing because of the use of
+DMA_ATTR_SKIP_CPU_SYNC flag, we have to explicit sync the whole buffer upon
+re-allocation because we are always re-using same pages.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 171a9bae68c7 ("staging/octeon: Allow test build on !MIPS")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+In fact, ARM64 code invalidates the DMA area upon two situations [1]:
+	- sync_single_for_cpu(): Invalidates if direction != DMA_TO_DEVICE
+	- sync_single_for_device(): Invalidates if direction == DMA_FROM_DEVICE
+
+So, as we must invalidate both the current RX buffer and the newly allocated
+buffer we propose this fix.
+
+[1] arch/arm64/mm/cache.S
+
+Reported-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Fixes: 2af6106ae949 ("net: stmmac: Introducing support for Page Pool")
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 ---
- drivers/staging/octeon/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Jon Hunter <jonathanh@nvidia.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/octeon/Kconfig b/drivers/staging/octeon/Kconfig
-index 5b39946..5319909 100644
---- a/drivers/staging/octeon/Kconfig
-+++ b/drivers/staging/octeon/Kconfig
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- config OCTEON_ETHERNET
- 	tristate "Cavium Networks Octeon Ethernet support"
--	depends on CAVIUM_OCTEON_SOC && NETDEVICES || COMPILE_TEST
-+	depends on CAVIUM_OCTEON_SOC || COMPILE_TEST
-+	depends on NETDEVICES
- 	select PHYLIB
- 	select MDIO_OCTEON
- 	help
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 98b1a5c6d537..9a4a56ad35cd 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3271,9 +3271,11 @@ static inline int stmmac_rx_threshold_count(struct stmmac_rx_queue *rx_q)
+ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
+ {
+ 	struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
+-	int dirty = stmmac_rx_dirty(priv, queue);
++	int len, dirty = stmmac_rx_dirty(priv, queue);
+ 	unsigned int entry = rx_q->dirty_rx;
+ 
++	len = DIV_ROUND_UP(priv->dma_buf_sz, PAGE_SIZE) * PAGE_SIZE;
++
+ 	while (dirty-- > 0) {
+ 		struct stmmac_rx_buffer *buf = &rx_q->buf_pool[entry];
+ 		struct dma_desc *p;
+@@ -3291,6 +3293,13 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
+ 		}
+ 
+ 		buf->addr = page_pool_get_dma_addr(buf->page);
++
++		/* Sync whole allocation to device. This will invalidate old
++		 * data.
++		 */
++		dma_sync_single_for_device(priv->device, buf->addr, len,
++					   DMA_FROM_DEVICE);
++
+ 		stmmac_set_desc_addr(priv, p, buf->addr);
+ 		stmmac_refill_desc3(priv, rx_q, p);
+ 
+@@ -3425,8 +3434,6 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			skb_copy_to_linear_data(skb, page_address(buf->page),
+ 						frame_len);
+ 			skb_put(skb, frame_len);
+-			dma_sync_single_for_device(priv->device, buf->addr,
+-						   frame_len, DMA_FROM_DEVICE);
+ 
+ 			if (netif_msg_pktdata(priv)) {
+ 				netdev_dbg(priv->dev, "frame received (%dbytes)",
 -- 
 2.7.4
-
 
