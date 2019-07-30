@@ -2,93 +2,88 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5F9C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EE3C7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9587820679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:48:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZmjX1L6N"
+	by mail.kernel.org (Postfix) with ESMTP id 6373520679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731486AbfG3CsA (ORCPT
+        id S1731502AbfG3Ctm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:48:00 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44727 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730760AbfG3CsA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:48:00 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so29229286pgl.11;
-        Mon, 29 Jul 2019 19:47:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=jWYfU1jYaSGV+LhFx50XtpqiC0SX7hxlhvxRl9ry8HQ=;
-        b=ZmjX1L6NHGq2f58VCh7Txf7lstlKz0iKTs3lzK/qU96oWtimllm+Kzv5X2ITSzVG8T
-         kgg22W1+enEkeaSm7VSlHRZB4pOzDuUXbavZDG2tIXaGkGzzuUabVirM/hOkqcqhKmpu
-         Qq9sTmUYMS6hgM1v37xxCb68CaGEHTdlS8UWns4ZfIUQnw3nqqDROQWLJU4fJynQKA1w
-         iJPGg8PwXJd8RzsxTvDJ4KEr0qYhWTEN//2WnV4NZeuSwmFhQ/wxhKrtXOxQH63oZZN4
-         lPuV4j6D/8KfAeEfQb4ehM8T0orezaK1X5qpgpYryorDnSn3ALih9rnaI/y82ywYKiht
-         2dgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=jWYfU1jYaSGV+LhFx50XtpqiC0SX7hxlhvxRl9ry8HQ=;
-        b=m9p1UdQTVTBJQfGxBCfPnI8iw70RQ8wwmtMC7Mdt8ryhTRSIkC7AMTHntwFTbK53VD
-         L8Taa2xCMI5b5j9J4mLevX4lvO58EDDqaDbzcLpEOK2tDQr4hbCMV/AQvR1memy263SU
-         MR9DY0Et0PN69p1ygrZ21qMWTWVCwhdsvQHFemoQyNA6s470O6ewVM1xyEuqx89dKSVI
-         nCDhx1IZmR/gIrLlho/pPVivncsOWNkXHNod5oPLL+Xg4F6Sw5IFuUXAOX7uPLNVZvMF
-         8P9H3BHeIpGGRK9eiuC8za9KnI4gsdeKalaoQVf8283FsiWLO+Ag0QxJ0dbi7Pa2O5yF
-         zicg==
-X-Gm-Message-State: APjAAAVMOnQwJEITAZ954KYt+3C409OeX4jwQ8EgiueSE5HSQG3oa5tf
-        Lw5rdOi4J9+YoA8qwNNmiMI=
-X-Google-Smtp-Source: APXvYqzkkNOkfXWo0GWINXk3JSea3VolpDz5dDOF8pQFVnABSddbUpbTyLpGOQSZwkWspIeieuMGXw==
-X-Received: by 2002:a17:90a:1ac5:: with SMTP id p63mr112799476pjp.25.1564454879392;
-        Mon, 29 Jul 2019 19:47:59 -0700 (PDT)
-Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
-        by smtp.gmail.com with ESMTPSA id u7sm56813510pgr.94.2019.07.29.19.47.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 19:47:58 -0700 (PDT)
-From:   Mark Balantzyan <mbalant3@gmail.com>
-X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
-Date:   Mon, 29 Jul 2019 19:47:54 -0700 (PDT)
-To:     Guenter Roeck <linux@roeck-us.net>
-cc:     Mark Balantzyan <mbalant3@gmail.com>, wim@linux-watchdog.org,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        andrianov@ispras.ru
-Subject: Re: [PATCH 1/4] watchdog device drivers:pc87413_wdt:Rewriting of
- pc87413_wdt driver to utilize common watchdog interface
-In-Reply-To: <792afc6c-f705-a048-4e6d-81d00754c0ea@roeck-us.net>
-Message-ID: <alpine.DEB.2.21.1907291947330.103354@mbalantz-desktop>
-References: <20190730021540.66579-1-mbalant3@gmail.com> <792afc6c-f705-a048-4e6d-81d00754c0ea@roeck-us.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 29 Jul 2019 22:49:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:43707 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730760AbfG3Ctl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 22:49:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 19:49:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,325,1559545200"; 
+   d="scan'208";a="346858151"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga005.jf.intel.com with ESMTP; 29 Jul 2019 19:49:41 -0700
+Date:   Mon, 29 Jul 2019 19:49:40 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-sgx@vger.kernel.org
+Subject: Re: [RFC PATCH 08/21] KVM: x86: Add kvm_x86_ops hook to short
+ circuit emulation
+Message-ID: <20190730024940.GL21120@linux.intel.com>
+References: <20190727055214.9282-1-sean.j.christopherson@intel.com>
+ <20190727055214.9282-9-sean.j.christopherson@intel.com>
+ <CALCETrU_51Ae=F9HzUwsUuSkJ1or63p_eG+f3uKkBqFx=bheUA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1861962599-1564454878=:103354"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrU_51Ae=F9HzUwsUuSkJ1or63p_eG+f3uKkBqFx=bheUA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sat, Jul 27, 2019 at 10:38:03AM -0700, Andy Lutomirski wrote:
+> On Fri, Jul 26, 2019 at 10:52 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > Similar to the existing AMD #NPF case where emulation of the current
+> > instruction is not possible due to lack of information, virtualization
+> > of Intel SGX will introduce a scenario where emulation is not possible
+> > due to the VMExit occurring in an SGX enclave.  And again similar to
+> > the AMD case, emulation can be initiated by kvm_mmu_page_fault(), i.e.
+> > outside of the control of the vendor-specific code.
+> >
+> > While the cause and architecturally visible behavior of the two cases
+> > is different,  e.g. Intel SGX will inject a #UD whereas AMD #NPF is a
+> > clean resume or complete shutdown, the impact on the common emulation
+> > code is identical: KVM must stop emulation immediately and resume the
+> > guest.
+> >
+> > Replace the exisiting need_emulation_on_page_fault() with a more generic
+> > is_emulatable() kvm_x86_ops callback, which is called unconditionally
+> > by x86_emulate_instruction().
+> >
+> 
+> Having recently noticed that emulate_ud() is broken when the guest's
+> TF is set, I suppose I should ask: does your new code function
+> sensibly when TF is set?
 
---8323329-1861962599-1564454878=:103354
-Content-Type: text/plain; format=flowed; charset=ISO-8859-7
-Content-Transfer-Encoding: 8BIT
-
-Yes, each time I go through an edit I discover something I missed,
-apologies. Will be working on it for a bit, currently getting compile time
-errors. Just letting you know and it¢s good we¢re checking :-)
-
-Thank you,
-Mark
-
---8323329-1861962599-1564454878=:103354--
+Barring a VMX fault injection interaction I'm not thinking of, yes.  The
+SGX reaction to the #UD VM-Exit is to inject a #UD and resume the guest,
+pending breakpoints shouldn't be affected in any way (unless some other
+part of KVM mucks with them, e.g. when guest single-stepping is enabled).
