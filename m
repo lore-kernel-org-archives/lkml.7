@@ -2,128 +2,89 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08360C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD783C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A352089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:10:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSvTYAuF"
+	by mail.kernel.org (Postfix) with ESMTP id AE06820679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732465AbfG3KKX (ORCPT
+        id S1732478AbfG3KLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 06:10:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44221 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbfG3KKX (ORCPT
+        Tue, 30 Jul 2019 06:11:10 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:42105 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfG3KLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 06:10:23 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p17so65083441wrf.11;
-        Tue, 30 Jul 2019 03:10:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M6bqb+lWrb/E2mkcX84w3humgmw2uZSZn3Vj/9n2zYU=;
-        b=QSvTYAuFIUhIwAXJ70hsr7X8I6ildM6Tnm6Br7Uc6Bp3eJJyf9gcoW9EZd/MBcDLFc
-         mkJxF2BhWKGCRmJgMw7SFfryNoin18VjUlMgxXF2RiVzC8Hee5nuN+jLhwY2MHRy9g8p
-         b9VpF38H26y0Jdsg4lqkiLWYaVsyZfEeMpg3fG9qn0AsThOa4LVd9TanogZbRZ1liGDA
-         bJ+srI0Ah1uR1PYHb7sdhPNXkNUdqaKonwWHOP5xPjgUC6I1lyTnzrNeFH6Rc1lF/rim
-         jMCnFS1x5qVGua4h8f56T05Lymm+fDBzo4cHu2u0YdKnqQZ960B3bYsReLZxwUoKHsvG
-         f2Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M6bqb+lWrb/E2mkcX84w3humgmw2uZSZn3Vj/9n2zYU=;
-        b=eVB499JLY3lk2dw3Oqv/JhcwY2hHyWVQOnIvNYLD1gYxjS6heLEcyayRVd0wWI3TJw
-         h6rTOwAWQ+dWBwQNTMZmYgJYYD7rufVyCDVbOUKE2gVwovuLi+LAAkMOlKi7vKy6CLwD
-         xKBq2W8wT7TdeVzVt6TATNXQECKjGGa6+b80qvbiVtU4ObPUnqGdl4sVpXJ3CxFMUg9e
-         FQlqCBkWEtBiJ1ifzt+zkpPFdTIXnlGy7wwAgHEdx3JcsZ2ScjMrnoyP/jQgYbxqLspc
-         O+kJgh5bfh/iTmM6Wdn2Lqk/3JywOwuP+DpJmoJLX0LJO4eHsQO35Ll6kabNQlA5dHI+
-         CI5A==
-X-Gm-Message-State: APjAAAWPOSx6eUVC558HCAe5rMGZHOE3OMBHO3YrtS/WvmkS94cKv9i9
-        7+rdb+EZRCpKDS9N+nSpwj5bOep9
-X-Google-Smtp-Source: APXvYqySczK9ebtVgbcnbN7oerzvLPLtKYJlQx0kZCinuEwbgzkuk8ZNCsinu59oTKo6DTkIw4WrcQ==
-X-Received: by 2002:adf:c613:: with SMTP id n19mr70043516wrg.109.1564481421014;
-        Tue, 30 Jul 2019 03:10:21 -0700 (PDT)
-Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
-        by smtp.gmail.com with ESMTPSA id 17sm55090119wmx.47.2019.07.30.03.10.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 03:10:20 -0700 (PDT)
-From:   Hubert Feurstein <h.feurstein@gmail.com>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH] net: dsa: mv88e6xxx: extend PTP gettime function to read system clock
-Date:   Tue, 30 Jul 2019 12:10:07 +0200
-Message-Id: <20190730101007.344-1-h.feurstein@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Tue, 30 Jul 2019 06:11:10 -0400
+Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id f1d19142855f53dd; Tue, 30 Jul 2019 12:11:08 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] cpuidle: teo: Get rid of redundant check in teo_update()
+Date:   Tue, 30 Jul 2019 12:11:08 +0200
+Message-ID: <2331986.krM4XTe0ch@kreacher>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for the PTP_SYS_OFFSET_EXTENDED ioctl.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
+Notice that setting measured_us to UINT_MAX in teo_update() earlier
+doesn't change the behavior of the following code, so do that and
+eliminate a redundant check used for setting measured_us to UINT_MAX.
+
+This change is not expected to alter functionality.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/net/dsa/mv88e6xxx/ptp.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/cpuidle/governors/teo.c |   16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/ptp.c b/drivers/net/dsa/mv88e6xxx/ptp.c
-index 51cdf4712517..1ff983376f95 100644
---- a/drivers/net/dsa/mv88e6xxx/ptp.c
-+++ b/drivers/net/dsa/mv88e6xxx/ptp.c
-@@ -230,14 +230,17 @@ static int mv88e6xxx_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
- 	return 0;
- }
+Index: linux-pm/drivers/cpuidle/governors/teo.c
+===================================================================
+--- linux-pm.orig/drivers/cpuidle/governors/teo.c
++++ linux-pm/drivers/cpuidle/governors/teo.c
+@@ -125,10 +125,11 @@ static void teo_update(struct cpuidle_dr
  
--static int mv88e6xxx_ptp_gettime(struct ptp_clock_info *ptp,
--				 struct timespec64 *ts)
-+static int mv88e6xxx_ptp_gettimex(struct ptp_clock_info *ptp,
-+				  struct timespec64 *ts,
-+				  struct ptp_system_timestamp *sts)
- {
- 	struct mv88e6xxx_chip *chip = ptp_to_chip(ptp);
- 	u64 ns;
+ 	if (cpu_data->time_span_ns >= cpu_data->sleep_length_ns) {
+ 		/*
+-		 * One of the safety nets has triggered or this was a timer
+-		 * wakeup (or equivalent).
++		 * One of the safety nets has triggered or the wakeup was close
++		 * enough to the closest timer event expected at the idle state
++		 * selection time to be discarded.
+ 		 */
+-		measured_us = sleep_length_us;
++		measured_us = UINT_MAX;
+ 	} else {
+ 		unsigned int lat = drv->states[cpu_data->last_state].exit_latency;
  
- 	mv88e6xxx_reg_lock(chip);
-+	ptp_read_system_prets(sts);
- 	ns = timecounter_read(&chip->tstamp_tc);
-+	ptp_read_system_postts(sts);
- 	mv88e6xxx_reg_unlock(chip);
+@@ -189,15 +190,6 @@ static void teo_update(struct cpuidle_dr
+ 	}
  
- 	*ts = ns_to_timespec64(ns);
-@@ -386,7 +389,7 @@ static void mv88e6xxx_ptp_overflow_check(struct work_struct *work)
- 	struct mv88e6xxx_chip *chip = dw_overflow_to_chip(dw);
- 	struct timespec64 ts;
- 
--	mv88e6xxx_ptp_gettime(&chip->ptp_clock_info, &ts);
-+	mv88e6xxx_ptp_gettimex(&chip->ptp_clock_info, &ts, NULL);
- 
- 	schedule_delayed_work(&chip->overflow_work,
- 			      MV88E6XXX_TAI_OVERFLOW_PERIOD);
-@@ -444,7 +447,7 @@ int mv88e6xxx_ptp_setup(struct mv88e6xxx_chip *chip)
- 	chip->ptp_clock_info.max_adj    = MV88E6XXX_MAX_ADJ_PPB;
- 	chip->ptp_clock_info.adjfine	= mv88e6xxx_ptp_adjfine;
- 	chip->ptp_clock_info.adjtime	= mv88e6xxx_ptp_adjtime;
--	chip->ptp_clock_info.gettime64	= mv88e6xxx_ptp_gettime;
-+	chip->ptp_clock_info.gettimex64	= mv88e6xxx_ptp_gettimex;
- 	chip->ptp_clock_info.settime64	= mv88e6xxx_ptp_settime;
- 	chip->ptp_clock_info.enable	= ptp_ops->ptp_enable;
- 	chip->ptp_clock_info.verify	= ptp_ops->ptp_verify;
--- 
-2.22.0
+ 	/*
+-	 * If the total time span between idle state selection and the "reflect"
+-	 * callback is greater than or equal to the sleep length determined at
+-	 * the idle state selection time, the wakeup is likely to be due to a
+-	 * timer event.
+-	 */
+-	if (cpu_data->time_span_ns >= cpu_data->sleep_length_ns)
+-		measured_us = UINT_MAX;
+-
+-	/*
+ 	 * Save idle duration values corresponding to non-timer wakeups for
+ 	 * pattern detection.
+ 	 */
+
+
 
