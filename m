@@ -2,319 +2,198 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340FCC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05EFC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD7E720693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DUKZmHoi"
+	by mail.kernel.org (Postfix) with ESMTP id C1B64208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbfG3SP7 (ORCPT
+        id S1728653AbfG3SQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:15:59 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50063 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfG3SP6 (ORCPT
+        Tue, 30 Jul 2019 14:16:01 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34813 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbfG3SP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:15:58 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIFkVv3326129
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:15:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIFkVv3326129
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564510547;
-        bh=rWWuZWd+gCCf/y+2pz4EwVs65ydrzSEpjWQkKKSo/JY=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=DUKZmHoiGf7J3+au+6s663ZGn++1UH4MtIDvEzt4masCO1WxgdcBfDMhJttAcBBLv
-         fqqLq0x8mgS1sZykqeI+HbbMtfge9nJAE0dY2fvldA+8P/nKp0oePCmHlScWM1OnUj
-         sAYfiyVn6FkVenAXz7LN7fKS+3ViEoUcdYJKcUvHgvdGVRTR11n4F42ltl6YCy8Exr
-         43kjENBHAOashLZFmPznXniXi0ASx5fkcKXHRZ9RMXeoT/1ibWroFeCeRukNZaGTh5
-         T6XcuCjeBGRcVYJTMSThFfdcKYTXZDN8MEbIrscqtC5bg9Eiwg7fg2qZ6Cx72LR0aV
-         gnLKDRijfIC0g==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIFjJ53326126;
-        Tue, 30 Jul 2019 11:15:45 -0700
-Date:   Tue, 30 Jul 2019 11:15:45 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-a1cf3a75d3317ed893d453c222d220ca4d5f4c4e@git.kernel.org>
-Cc:     peterz@infradead.org, acme@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        alexey.budankov@linux.intel.com, mpetlan@redhat.com,
-        ak@linux.intel.com, hpa@zytor.com, jolsa@kernel.org,
-        mingo@kernel.org, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org
-Reply-To: alexey.budankov@linux.intel.com, mpetlan@redhat.com,
-          linux-kernel@vger.kernel.org, peterz@infradead.org,
-          acme@redhat.com, tglx@linutronix.de,
-          alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-          hpa@zytor.com, ak@linux.intel.com, mingo@kernel.org,
-          jolsa@kernel.org
-In-Reply-To: <20190721112506.12306-13-jolsa@kernel.org>
-References: <20190721112506.12306-13-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf evlist: Rename perf_evlist__add() to
- evlist__add()
-Git-Commit-ID: a1cf3a75d3317ed893d453c222d220ca4d5f4c4e
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 14:15:59 -0400
+Received: by mail-wm1-f68.google.com with SMTP id w9so45841371wmd.1;
+        Tue, 30 Jul 2019 11:15:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4op4WRhPdkD/9TU23YWYe9Lz+UwxrV5bf6YuYJBYGKU=;
+        b=J73vSv5wNyisKtAgCp4LZLbYBZGViwRAOi5cUxd70vO1YkT7G5V2qVvJe/pltvOUVz
+         AqcOPvtlxHpXUDSsbe9C73uzZrbjMiIwutHnHO2HyQFPwZVMQvzCdzl+1cUxF0DxJ4iG
+         tCxNhv+d7WzXV22/M6g6Eo/IXaYtc+/O+SaV/vlN7Qf2IkoIUNNshhpaThF+kevSOJGK
+         wPEgETvvPZ/dXr8COBHavV3CidjznyqhGEALNRBx6YEqqvJtdl64B6ODQ8/q74cwNPoA
+         xtX7j+p7BMmF98ngxdHdU6L3oaeX3jKT0oR0P7U9v5STK24PjEJLxmUpbg2+n1YnvFKH
+         F8uw==
+X-Gm-Message-State: APjAAAX9tbU/yTmskO4aU9Jub+QF4cDsliNmEdzKdnqjZ6yhyLeQn61O
+        fz6BaCzeJQHJ3txO7Fz020TeTIvw
+X-Google-Smtp-Source: APXvYqwI3b2sP9K4kR6r9LV9enTjKY+gIvygfzOPSMEn73IonY84EeKh0JXGv/8gZA4/spRzQM+7jA==
+X-Received: by 2002:a7b:c748:: with SMTP id w8mr32051525wmk.36.1564510558030;
+        Tue, 30 Jul 2019 11:15:58 -0700 (PDT)
+Received: from [192.168.1.105] ([194.135.60.194])
+        by smtp.gmail.com with ESMTPSA id i12sm78179177wrx.61.2019.07.30.11.15.57
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 11:15:57 -0700 (PDT)
+Subject: Re: [PATCH v4] modpost: check for static EXPORT_SYMBOL* functions
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190714152817.24693-1-efremov@linux.com>
+ <20190730181146.6507-1-efremov@linux.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <e206f4ff-1fbe-68e4-3614-85f4cbc0223f@linux.com>
+Date:   Tue, 30 Jul 2019 21:15:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <20190730181146.6507-1-efremov@linux.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a1cf3a75d3317ed893d453c222d220ca4d5f4c4e
-Gitweb:     https://git.kernel.org/tip/a1cf3a75d3317ed893d453c222d220ca4d5f4c4e
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:23:59 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:43 -0300
+Changes in v1:
+1. Fixed indentations.
+2. Removed lkml links from the description of the commit.
+Changes in v2:
+1. Changed the 'n' variable type in the main function from size_t to
+    int.
+Changes in v3:
+1. Changed warning message from "%s is the static EXPORT_*" to
+    "%s a static ..."
+2. Improved the commit description from "approx. 1 min" to
+    "less than a minute". Thanks Stephen Rothwell for additional
+    measurements.
+Changes in v4:
+1. Dropped ELF_ST_TYPE check. This fixes false-positives detected by
+    Stephen Rothwell.
+2. Moved ELF_ST_BIND check before the call to find_symbol. Thanks
+    Masahiro Yamada for suggesting it.
 
-perf evlist: Rename perf_evlist__add() to evlist__add()
+Denis
 
-Rename perf_evlist__add() to evlist__add(), so we don't have a name
-clash when we add perf_evlist__add() in libperf.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-13-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c                  | 12 ++++++------
- tools/perf/tests/mmap-basic.c               |  2 +-
- tools/perf/tests/openat-syscall-tp-fields.c |  2 +-
- tools/perf/tests/sw-clock.c                 |  2 +-
- tools/perf/util/evlist.c                    | 16 ++++++++--------
- tools/perf/util/evlist.h                    |  2 +-
- tools/perf/util/header.c                    |  4 ++--
- tools/perf/util/python.c                    |  2 +-
- 8 files changed, 21 insertions(+), 21 deletions(-)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index c5eb47f4e42e..89ae4737ef74 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2616,7 +2616,7 @@ static int trace__record(struct trace *trace, int argc, const char **argv)
- 
- static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
- 
--static bool perf_evlist__add_vfs_getname(struct evlist *evlist)
-+static bool evlist__add_vfs_getname(struct evlist *evlist)
- {
- 	bool found = false;
- 	struct evsel *evsel, *tmp;
-@@ -2719,8 +2719,8 @@ static int trace__add_syscall_newtp(struct trace *trace)
- 	perf_evsel__config_callchain(sys_enter, &trace->opts, &callchain_param);
- 	perf_evsel__config_callchain(sys_exit, &trace->opts, &callchain_param);
- 
--	perf_evlist__add(evlist, sys_enter);
--	perf_evlist__add(evlist, sys_exit);
-+	evlist__add(evlist, sys_enter);
-+	evlist__add(evlist, sys_exit);
- 
- 	if (callchain_param.enabled && !trace->kernel_syscallchains) {
- 		/*
-@@ -3264,7 +3264,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 			goto out_error_raw_syscalls;
- 
- 		if (trace->trace_syscalls)
--			trace->vfs_getname = perf_evlist__add_vfs_getname(evlist);
-+			trace->vfs_getname = evlist__add_vfs_getname(evlist);
- 	}
- 
- 	if ((trace->trace_pgfaults & TRACE_PFMAJ)) {
-@@ -3272,7 +3272,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 		if (pgfault_maj == NULL)
- 			goto out_error_mem;
- 		perf_evsel__config_callchain(pgfault_maj, &trace->opts, &callchain_param);
--		perf_evlist__add(evlist, pgfault_maj);
-+		evlist__add(evlist, pgfault_maj);
- 	}
- 
- 	if ((trace->trace_pgfaults & TRACE_PFMIN)) {
-@@ -3280,7 +3280,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 		if (pgfault_min == NULL)
- 			goto out_error_mem;
- 		perf_evsel__config_callchain(pgfault_min, &trace->opts, &callchain_param);
--		perf_evlist__add(evlist, pgfault_min);
-+		evlist__add(evlist, pgfault_min);
- 	}
- 
- 	if (trace->sched &&
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index 7f96bb72f7e5..16b8a4e5de8f 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -82,7 +82,7 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
- 		evsels[i]->attr.wakeup_events = 1;
- 		perf_evsel__set_sample_id(evsels[i], false);
- 
--		perf_evlist__add(evlist, evsels[i]);
-+		evlist__add(evlist, evsels[i]);
- 
- 		if (perf_evsel__open(evsels[i], cpus, threads) < 0) {
- 			pr_debug("failed to open counter: %s, "
-diff --git a/tools/perf/tests/openat-syscall-tp-fields.c b/tools/perf/tests/openat-syscall-tp-fields.c
-index 0263420f4495..f822c3c181f3 100644
---- a/tools/perf/tests/openat-syscall-tp-fields.c
-+++ b/tools/perf/tests/openat-syscall-tp-fields.c
-@@ -48,7 +48,7 @@ int test__syscall_openat_tp_fields(struct test *test __maybe_unused, int subtest
- 		goto out_delete_evlist;
- 	}
- 
--	perf_evlist__add(evlist, evsel);
-+	evlist__add(evlist, evsel);
- 
- 	err = perf_evlist__create_maps(evlist, &opts.target);
- 	if (err < 0) {
-diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
-index 247d3734686e..3ab11291174c 100644
---- a/tools/perf/tests/sw-clock.c
-+++ b/tools/perf/tests/sw-clock.c
-@@ -54,7 +54,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
- 		pr_debug("perf_evsel__new\n");
- 		goto out_delete_evlist;
- 	}
--	perf_evlist__add(evlist, evsel);
-+	evlist__add(evlist, evsel);
- 
- 	cpus = cpu_map__dummy_new();
- 	threads = thread_map__new_by_tid(getpid());
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 986d20c15778..7741e12bdcb0 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -177,7 +177,7 @@ static void perf_evlist__propagate_maps(struct evlist *evlist)
- 		__perf_evlist__propagate_maps(evlist, evsel);
- }
- 
--void perf_evlist__add(struct evlist *evlist, struct evsel *entry)
-+void evlist__add(struct evlist *evlist, struct evsel *entry)
- {
- 	entry->evlist = evlist;
- 	list_add_tail(&entry->node, &evlist->entries);
-@@ -204,7 +204,7 @@ void perf_evlist__splice_list_tail(struct evlist *evlist,
- 
- 	__evlist__for_each_entry_safe(list, temp, evsel) {
- 		list_del_init(&evsel->node);
--		perf_evlist__add(evlist, evsel);
-+		evlist__add(evlist, evsel);
- 	}
- }
- 
-@@ -237,7 +237,7 @@ int __perf_evlist__add_default(struct evlist *evlist, bool precise)
- 	if (evsel == NULL)
- 		return -ENOMEM;
- 
--	perf_evlist__add(evlist, evsel);
-+	evlist__add(evlist, evsel);
- 	return 0;
- }
- 
-@@ -253,11 +253,11 @@ int perf_evlist__add_dummy(struct evlist *evlist)
- 	if (evsel == NULL)
- 		return -ENOMEM;
- 
--	perf_evlist__add(evlist, evsel);
-+	evlist__add(evlist, evsel);
- 	return 0;
- }
- 
--static int perf_evlist__add_attrs(struct evlist *evlist,
-+static int evlist__add_attrs(struct evlist *evlist,
- 				  struct perf_event_attr *attrs, size_t nr_attrs)
- {
- 	struct evsel *evsel, *n;
-@@ -289,7 +289,7 @@ int __perf_evlist__add_default_attrs(struct evlist *evlist,
- 	for (i = 0; i < nr_attrs; i++)
- 		event_attr_init(attrs + i);
- 
--	return perf_evlist__add_attrs(evlist, attrs, nr_attrs);
-+	return evlist__add_attrs(evlist, attrs, nr_attrs);
- }
- 
- struct evsel *
-@@ -330,7 +330,7 @@ int perf_evlist__add_newtp(struct evlist *evlist,
- 		return -1;
- 
- 	evsel->handler = handler;
--	perf_evlist__add(evlist, evsel);
-+	evlist__add(evlist, evsel);
- 	return 0;
- }
- 
-@@ -1854,7 +1854,7 @@ int perf_evlist__add_sb_event(struct evlist **evlist,
- 
- 	evsel->side_band.cb = cb;
- 	evsel->side_band.data = data;
--	perf_evlist__add(*evlist, evsel);
-+	evlist__add(*evlist, evsel);
- 	return 0;
- 
- out_err:
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 12a5fd6972df..d52b29a1d852 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -73,7 +73,7 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
- void perf_evlist__exit(struct evlist *evlist);
- void evlist__delete(struct evlist *evlist);
- 
--void perf_evlist__add(struct evlist *evlist, struct evsel *entry);
-+void evlist__add(struct evlist *evlist, struct evsel *entry);
- void perf_evlist__remove(struct evlist *evlist, struct evsel *evsel);
- 
- int __perf_evlist__add_default(struct evlist *evlist, bool precise);
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 7760ddc4bc18..5e0093251f26 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3593,7 +3593,7 @@ int perf_session__read_header(struct perf_session *session)
- 		 * Do it before so that if perf_evsel__alloc_id fails, this
- 		 * entry gets purged too at evlist__delete().
- 		 */
--		perf_evlist__add(session->evlist, evsel);
-+		evlist__add(session->evlist, evsel);
- 
- 		nr_ids = f_attr.ids.size / sizeof(u64);
- 		/*
-@@ -4025,7 +4025,7 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
- 	if (evsel == NULL)
- 		return -ENOMEM;
- 
--	perf_evlist__add(evlist, evsel);
-+	evlist__add(evlist, evsel);
- 
- 	ids = event->header.size;
- 	ids -= (void *)&event->attr.id - (void *)event;
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index ade4e85c6d81..48c951a4a76b 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -974,7 +974,7 @@ static PyObject *pyrf_evlist__add(struct pyrf_evlist *pevlist,
- 	Py_INCREF(pevsel);
- 	evsel = &((struct pyrf_evsel *)pevsel)->evsel;
- 	evsel->idx = evlist->nr_entries;
--	perf_evlist__add(evlist, evsel);
-+	evlist__add(evlist, evsel);
- 
- 	return Py_BuildValue("i", evlist->nr_entries);
- }
+On 30.07.2019 21:11, Denis Efremov wrote:
+> This patch adds a check to warn about static EXPORT_SYMBOL* functions
+> during the modpost. In most of the cases, a static symbol marked for
+> exporting is an odd combination that should be fixed either by deleting
+> the exporting mark or by removing the static attribute and adding the
+> appropriate declaration to headers.
+> 
+> This check could help to detect the following problems:
+> 1. 550113d4e9f5 ("i2c: add newly exported functions to the header, too")
+> 2. 54638c6eaf44 ("net: phy: make exported variables non-static")
+> 3. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
+> 4. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
+> 5. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
+> 6. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
+> 7. 14b4c48bb1ce ("gve: Remove the exporting of gve_probe")
+> 8. 9b79ee9773a8 ("scsi: libsas: remove the exporting of sas_wait_eh")
+> 9. ...
+> 
+> Build time impact, allmodconfig, Dell XPS 15 9570 (measurements 3x):
+> $ make mrproper; make allmodconfig; time make -j12; \
+>    git checkout HEAD~1; \
+>    make mrproper; make allmodconfig; time make -j12
+> 1.
+>     (with patch) 17635,94s user 1895,54s system 1085% cpu 29:59,22 total
+>     (w/o  patch) 17275,42s user 1803,87s system 1112% cpu 28:35,66 total
+> 2.
+>     (with patch) 17369,51s user 1763,28s system 1111% cpu 28:41,47 total
+>     (w/o  patch) 16880,50s user 1670,93s system 1113% cpu 27:46,56 total
+> 3.
+>     (with patch) 17937,88s user 1842,53s system 1109% cpu 29:42,26 total
+>     (w/o  patch) 17267,55s user 1725,09s system 1111% cpu 28:28,17 total
+> 
+> The check adds less than a minute to a usual build.
+> 
+> Acked-by: Emil Velikov <emil.l.velikov@gmail.com>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+>   scripts/mod/modpost.c | 31 +++++++++++++++++++++++++++++++
+>   1 file changed, 31 insertions(+)
+> 
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index f277e116e0eb..3e6d36ddfcdf 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -169,6 +169,7 @@ struct symbol {
+>   	unsigned int kernel:1;     /* 1 if symbol is from kernel
+>   				    *  (only for external modules) **/
+>   	unsigned int preloaded:1;  /* 1 if symbol from Module.symvers, or crc */
+> +	unsigned int is_static:1;  /* 1 if symbol is not global */
+>   	enum export  export;       /* Type of export */
+>   	char name[0];
+>   };
+> @@ -201,6 +202,7 @@ static struct symbol *alloc_symbol(const char *name, unsigned int weak,
+>   	strcpy(s->name, name);
+>   	s->weak = weak;
+>   	s->next = next;
+> +	s->is_static = 1;
+>   	return s;
+>   }
+>   
+> @@ -1980,6 +1982,21 @@ static void read_symbols(const char *modname)
+>   		handle_modversions(mod, &info, sym, symname);
+>   		handle_moddevtable(mod, &info, sym, symname);
+>   	}
+> +
+> +	// check for static EXPORT_SYMBOL_* functions && global vars
+> +	for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
+> +		unsigned char bind = ELF_ST_BIND(sym->st_info);
+> +
+> +		if (bind == STB_GLOBAL || bind == STB_WEAK) {
+> +			struct symbol *s =
+> +				find_symbol(remove_dot(info.strtab +
+> +						       sym->st_name));
+> +
+> +			if (s)
+> +				s->is_static = 0;
+> +		}
+> +	}
+> +
+>   	if (!is_vmlinux(modname) || vmlinux_section_warnings)
+>   		check_sec_ref(mod, modname, &info);
+>   
+> @@ -2425,6 +2442,7 @@ int main(int argc, char **argv)
+>   	char *dump_write = NULL, *files_source = NULL;
+>   	int opt;
+>   	int err;
+> +	int n;
+>   	struct ext_sym_list *extsym_iter;
+>   	struct ext_sym_list *extsym_start = NULL;
+>   
+> @@ -2520,6 +2538,19 @@ int main(int argc, char **argv)
+>   	if (sec_mismatch_count && sec_mismatch_fatal)
+>   		fatal("modpost: Section mismatches detected.\n"
+>   		      "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
+> +	for (n = 0; n < SYMBOL_HASH_SIZE; n++) {
+> +		struct symbol *s = symbolhash[n];
+> +
+> +		while (s) {
+> +			if (s->is_static)
+> +				warn("\"%s\" [%s] is a static %s\n",
+> +				     s->name, s->module->name,
+> +				     export_str(s->export));
+> +
+> +			s = s->next;
+> +		}
+> +	}
+> +
+>   	free(buf.p);
+>   
+>   	return err;
+> 
