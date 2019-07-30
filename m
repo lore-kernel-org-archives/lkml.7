@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B352AC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42224C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 911FC208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6BD20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388447AbfG3Spm (ORCPT
+        id S2388461AbfG3Spv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:45:42 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42852 "EHLO
+        Tue, 30 Jul 2019 14:45:51 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42866 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387744AbfG3Spk (ORCPT
+        with ESMTP id S2387744AbfG3Spt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:45:40 -0400
+        Tue, 30 Jul 2019 14:45:49 -0400
 Received: from floko.floko.floko (unknown [IPv6:2804:431:c7f1:ce2f:ec1:e6e6:2e9f:e76e])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 975A328B911;
-        Tue, 30 Jul 2019 19:45:33 +0100 (BST)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id F1A9128B920;
+        Tue, 30 Jul 2019 19:45:38 +0100 (BST)
 From:   Helen Koike <helen.koike@collabora.com>
 To:     linux-rockchip@lists.infradead.org
 Cc:     devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
@@ -36,11 +36,10 @@ Cc:     devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
         sakari.ailus@linux.intel.com, kernel@collabora.com,
         ezequiel@collabora.com, linux-media@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
-        Rob Herring <robh@kernel.org>,
         Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v8 11/14] dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
-Date:   Tue, 30 Jul 2019 15:42:53 -0300
-Message-Id: <20190730184256.30338-12-helen.koike@collabora.com>
+Subject: [PATCH v8 12/14] arm64: dts: rockchip: add isp0 node for rk3399
+Date:   Tue, 30 Jul 2019 15:42:54 -0300
+Message-Id: <20190730184256.30338-13-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730184256.30338-1-helen.koike@collabora.com>
 References: <20190730184256.30338-1-helen.koike@collabora.com>
@@ -51,12 +50,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Chen <jacob2.chen@rock-chips.com>
+From: Shunqian Zheng <zhengsq@rock-chips.com>
 
-Add DT bindings documentation for Rockchip MIPI D-PHY RX
+rk3399 have two ISP, but we havn't test isp1, so just add isp0 at present.
 
+Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
 Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 [update for upstream]
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
@@ -64,56 +63,48 @@ Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
 Changes in v8: None
 Changes in v7:
-- updated doc with new design and tested example
+- add phy properties
+- add ports
 
- .../bindings/media/rockchip-mipi-dphy.txt     | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 25 ++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-new file mode 100644
-index 000000000000..2305d44d92db
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-@@ -0,0 +1,38 @@
-+Rockchip SoC MIPI RX D-PHY
-+-------------------------------------------------------------
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index cede1ad81be2..776d2bd48c06 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1698,6 +1698,31 @@
+ 		status = "disabled";
+ 	};
+ 
++	isp0: isp0@ff910000 {
++		compatible = "rockchip,rk3399-cif-isp";
++		reg = <0x0 0xff910000 0x0 0x4000>;
++		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru SCLK_ISP0>,
++			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
++			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
++		clock-names = "clk_isp",
++			      "aclk_isp", "aclk_isp_wrap",
++			      "hclk_isp", "hclk_isp_wrap";
++		power-domains = <&power RK3399_PD_ISP0>;
++		iommus = <&isp0_mmu>;
++		phys = <&mipi_dphy_rx0>;
++		phy-names = "dphy";
 +
-+Required properties:
-+- compatible: value should be one of the following
-+	"rockchip,rk3288-mipi-dphy"
-+	"rockchip,rk3399-mipi-dphy"
-+- clocks : list of clock specifiers, corresponding to entries in
-+	clock-names property;
-+- clock-names: required clock name.
-+- #phy-cells: Number of cells in a PHY specifier; Should be 0.
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+MIPI RX D-PHY use registers in "general register files", it
-+should be a child of the GRF.
-+
-+Optional properties:
-+- reg: offset and length of the register set for the device.
-+- rockchip,grf: MIPI TX1RX1 D-PHY not only has its own register but also
-+		the GRF, so it is only necessary for MIPI TX1RX1 D-PHY.
-+
-+Device node example
-+-------------------
-+
-+grf: syscon@ff770000 {
-+	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-+
-+...
-+
-+	dphy: mipi-dphy {
-+		compatible = "rockchip,rk3399-mipi-dphy";
-+		clocks = <&cru SCLK_MIPIDPHY_REF>,
-+			<&cru SCLK_DPHY_RX0_CFG>,
-+			<&cru PCLK_VIO_GRF>;
-+		clock-names = "dphy-ref", "dphy-cfg", "grf";
-+		power-domains = <&power RK3399_PD_VIO>;
-+		#phy-cells = <0>;
++			port@0 {
++				reg = <0>;
++			};
++		};
 +	};
-+};
++
+ 	isp0_mmu: iommu@ff914000 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
 -- 
 2.22.0
 
