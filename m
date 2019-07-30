@@ -2,353 +2,212 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B862C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3A5C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC3C206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4341A205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:08:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QpZtbDm5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388012AbfG3WGx (ORCPT
+        id S2388040AbfG3WI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 18:06:53 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44510 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387994AbfG3WGw (ORCPT
+        Tue, 30 Jul 2019 18:08:26 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37607 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388017AbfG3WIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 18:06:52 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id DA02128B70F
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     tglx@linutronix.de
-Cc:     mingo@redhat.com, peterz@infradead.org, dvhart@infradead.org,
-        linux-kernel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel@collabora.com, Zebediah Figura <z.figura12@gmail.com>,
-        Steven Noonan <steven@valvesoftware.com>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>
-Subject: [PATCH RFC 2/2] futex: Implement mechanism to wait on any of several futexes
-Date:   Tue, 30 Jul 2019 18:06:02 -0400
-Message-Id: <20190730220602.28781-2-krisman@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190730220602.28781-1-krisman@collabora.com>
-References: <20190730220602.28781-1-krisman@collabora.com>
+        Tue, 30 Jul 2019 18:08:25 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UM7O7l3397620
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 30 Jul 2019 15:07:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UM7O7l3397620
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564524445;
+        bh=rMVyzwby2dJLMkp3euakC/pPTa7nG7wh4ryLVe7XIx0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=QpZtbDm5mrFjKlHnda02ILpGx7J/IxTPbo/QkFuDzdsoL0P6jfpsfLF5iY3/8poP9
+         ppPMeerPybdpvLGIfVWD62jgh47mAmoRUpOgyIDLF6Xr8UZKnYaUdRe71fmJBhWQkW
+         UBy7d8qyxi/dhC1vEUvMd8THiTXlYrTvNh+Kls8bZZM3xyKZc/W/i8WFXb19waKn7R
+         7cLHl1cciuOofTutyGSWd1u21jTlgUt3Vaqt2jIkOyhHZnhuSG4Lpx668s87Ne3Dtt
+         0JDj2QCBCAW21IvaFLvoPHWcGQdlhDAV/yoNlE+TMh5TUE+Dj53uYH/yPiThmEIdt6
+         L8rgL0JfVqGGg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UM7Ouj3397617;
+        Tue, 30 Jul 2019 15:07:24 -0700
+Date:   Tue, 30 Jul 2019 15:07:24 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-b74494872555d1f7888dfd9225700a363f4a84fc@git.kernel.org>
+Cc:     mingo@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        hpa@zytor.com, tglx@linutronix.de, linux-kernel@vger.kernel.org
+Reply-To: hpa@zytor.com, rostedt@goodmis.org, tglx@linutronix.de,
+          linux-kernel@vger.kernel.org, mingo@kernel.org,
+          peterz@infradead.org
+In-Reply-To: <20190726185752.791885290@linutronix.de>
+References: <20190726185752.791885290@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] hrtimer: Remove task argument from
+ hrtimer_init_sleeper()
+Git-Commit-ID: b74494872555d1f7888dfd9225700a363f4a84fc
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a new futex operation, called FUTEX_WAIT_MULTIPLE, which allows
-a thread to wait on several futexes at the same time, and be awoken by
-any of them.  In a sense, it implements one of the features that was
-supported by pooling on the old FUTEX_FD interface.
+Commit-ID:  b74494872555d1f7888dfd9225700a363f4a84fc
+Gitweb:     https://git.kernel.org/tip/b74494872555d1f7888dfd9225700a363f4a84fc
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Fri, 26 Jul 2019 20:30:49 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Tue, 30 Jul 2019 23:57:51 +0200
 
-My use case for this operation lies in Wine, where we want to implement
-a similar interface available in Windows, used mainly for event
-handling.  The wine folks have an implementation that uses eventfd, but
-it suffers from FD exhaustion (I was told they have application that go
-to the order of multi-milion FDs), and higher CPU utilization.
+hrtimer: Remove task argument from hrtimer_init_sleeper()
 
-In time, we are also proposing modifications to glibc and libpthread to
-make this feature available for Linux native multithreaded applications
-using libpthread, which can benefit from the behavior of waiting on any
-of a group of futexes.
+All callers hand in 'current' and that's the only task pointer which
+actually makes sense. Remove the task argument and set current in the
+function.
 
-In particular, using futexes in our Wine use case reduced the CPU
-utilization by 4% for the game Beat Saber and by 1.5% for the game
-Shadow of Tomb Raider, both running over Proton (a wine based solution
-for Windows emulation), when compared to the eventfd interface. This
-implementation also doesn't rely of file descriptors, so it doesn't risk
-overflowing the resource.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190726185752.791885290@linutronix.de
 
-Technically, the existing FUTEX_WAIT implementation can be easily
-reworked by using do_futex_wait_multiple with a count of one, and I
-have a patch showing how it works.  I'm not proposing it, since
-futex is such a tricky code, that I'd be more confortable to have
-FUTEX_WAIT_MULTIPLE running upstream for a couple development cycles,
-before considering modifying FUTEX_WAIT.
-
-From an implementation perspective, the futex list is passed as an array
-of (pointer,value,bitset) to the kernel, which will enqueue all of them
-and sleep if none was already triggered. It returns a hint of which
-futex caused the wake up event to userspace, but the hint doesn't
-guarantee that is the only futex triggered.  Before calling the syscall
-again, userspace should traverse the list, trying to re-acquire any of
-the other futexes, to prevent an immediate -EWOULDBLOCK return code from
-the kernel.
-
-This was tested using three mechanisms:
-
-1) By reimplementing FUTEX_WAIT in terms of FUTEX_WAIT_MULTIPLE and
-running the unmodified tools/testing/selftests/futex and a full linux
-distro on top of this kernel.
-
-2) By an example code that exercises the FUTEX_WAIT_MULTIPLE path on a
-multi-threaded, event-handling setup.
-
-3) By running the Wine fsync implementation and executing multi-threaded
-applications, in particular the modern games mentioned above, on top of
-this implementation.
-
-Signed-off-by: Zebediah Figura <z.figura12@gmail.com>
-Signed-off-by: Steven Noonan <steven@valvesoftware.com>
-Signed-off-by: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
 ---
- include/uapi/linux/futex.h |   7 ++
- kernel/futex.c             | 161 ++++++++++++++++++++++++++++++++++++-
- 2 files changed, 164 insertions(+), 4 deletions(-)
+ block/blk-mq.c                 | 2 +-
+ drivers/staging/android/vsoc.c | 2 +-
+ include/linux/hrtimer.h        | 3 +--
+ include/linux/wait.h           | 2 +-
+ kernel/futex.c                 | 2 +-
+ kernel/time/hrtimer.c          | 8 ++++----
+ net/core/pktgen.c              | 2 +-
+ 7 files changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/include/uapi/linux/futex.h b/include/uapi/linux/futex.h
-index a89eb0accd5e..2401c4cf5095 100644
---- a/include/uapi/linux/futex.h
-+++ b/include/uapi/linux/futex.h
-@@ -21,6 +21,7 @@
- #define FUTEX_WAKE_BITSET	10
- #define FUTEX_WAIT_REQUEUE_PI	11
- #define FUTEX_CMP_REQUEUE_PI	12
-+#define FUTEX_WAIT_MULTIPLE	13
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index b038ec680e84..5f647cb8c695 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3418,7 +3418,7 @@ static bool blk_mq_poll_hybrid_sleep(struct request_queue *q,
+ 	hrtimer_init_on_stack(&hs.timer, CLOCK_MONOTONIC, mode);
+ 	hrtimer_set_expires(&hs.timer, kt);
  
- #define FUTEX_PRIVATE_FLAG	128
- #define FUTEX_CLOCK_REALTIME	256
-@@ -150,4 +151,10 @@ struct robust_list_head {
-   (((op & 0xf) << 28) | ((cmp & 0xf) << 24)		\
-    | ((oparg & 0xfff) << 12) | (cmparg & 0xfff))
+-	hrtimer_init_sleeper(&hs, current);
++	hrtimer_init_sleeper(&hs);
+ 	do {
+ 		if (blk_mq_rq_state(rq) == MQ_RQ_COMPLETE)
+ 			break;
+diff --git a/drivers/staging/android/vsoc.c b/drivers/staging/android/vsoc.c
+index 00a1ec7b9154..ce480bcf20d2 100644
+--- a/drivers/staging/android/vsoc.c
++++ b/drivers/staging/android/vsoc.c
+@@ -442,7 +442,7 @@ static int handle_vsoc_cond_wait(struct file *filp, struct vsoc_cond_wait *arg)
+ 		hrtimer_set_expires_range_ns(&to->timer, wake_time,
+ 					     current->timer_slack_ns);
  
-+struct futex_wait_block {
-+	__u32 __user *uaddr;
-+	__u32 val;
-+	__u32 bitset;
-+};
-+
- #endif /* _UAPI_LINUX_FUTEX_H */
+-		hrtimer_init_sleeper(to, current);
++		hrtimer_init_sleeper(to);
+ 	}
+ 
+ 	while (1) {
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index 4971100a8cab..3c74f89367c4 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -463,8 +463,7 @@ extern long hrtimer_nanosleep(const struct timespec64 *rqtp,
+ 			      const enum hrtimer_mode mode,
+ 			      const clockid_t clockid);
+ 
+-extern void hrtimer_init_sleeper(struct hrtimer_sleeper *sl,
+-				 struct task_struct *tsk);
++extern void hrtimer_init_sleeper(struct hrtimer_sleeper *sl);
+ 
+ extern int schedule_hrtimeout_range(ktime_t *expires, u64 delta,
+ 						const enum hrtimer_mode mode);
+diff --git a/include/linux/wait.h b/include/linux/wait.h
+index b6f77cf60dd7..d57832774ca6 100644
+--- a/include/linux/wait.h
++++ b/include/linux/wait.h
+@@ -489,7 +489,7 @@ do {										\
+ 	struct hrtimer_sleeper __t;						\
+ 										\
+ 	hrtimer_init_on_stack(&__t.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);	\
+-	hrtimer_init_sleeper(&__t, current);					\
++	hrtimer_init_sleeper(&__t);						\
+ 	if ((timeout) != KTIME_MAX)						\
+ 		hrtimer_start_range_ns(&__t.timer, timeout,			\
+ 				       current->timer_slack_ns,			\
 diff --git a/kernel/futex.c b/kernel/futex.c
-index 91f3db335c57..2623e8f152cd 100644
+index 6d50728ef2e7..5e9842ea4012 100644
 --- a/kernel/futex.c
 +++ b/kernel/futex.c
-@@ -183,6 +183,7 @@ static int  __read_mostly futex_cmpxchg_enabled;
- #endif
- #define FLAGS_CLOCKRT		0x02
- #define FLAGS_HAS_TIMEOUT	0x04
-+#define FLAGS_WAKE_MULTIPLE	0x08
+@@ -490,7 +490,7 @@ futex_setup_timer(ktime_t *time, struct hrtimer_sleeper *timeout,
+ 	hrtimer_init_on_stack(&timeout->timer, (flags & FLAGS_CLOCKRT) ?
+ 			      CLOCK_REALTIME : CLOCK_MONOTONIC,
+ 			      HRTIMER_MODE_ABS);
+-	hrtimer_init_sleeper(timeout, current);
++	hrtimer_init_sleeper(timeout);
  
- /*
-  * Priority Inheritance state:
-@@ -2720,6 +2721,150 @@ static int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
- 	return ret;
+ 	/*
+ 	 * If range_ns is 0, calling hrtimer_set_expires_range_ns() is
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 5ee77f1a8a92..de895d86800c 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1639,10 +1639,10 @@ static enum hrtimer_restart hrtimer_wakeup(struct hrtimer *timer)
+ 	return HRTIMER_NORESTART;
  }
  
-+static int do_futex_wait_multiple(struct futex_wait_block *wb,
-+				  u32 count, unsigned int flags,
-+				  ktime_t *abs_time)
-+{
-+
-+	struct hrtimer_sleeper timeout, *to;
-+	struct futex_hash_bucket *hb;
-+	struct futex_q *qs = NULL;
-+	int ret;
-+	int i;
-+
-+	qs = kcalloc(count, sizeof(struct futex_q), GFP_KERNEL);
-+	if (!qs)
-+		return -ENOMEM;
-+
-+	to = futex_setup_timer(abs_time, &timeout, flags,
-+			       current->timer_slack_ns);
-+ retry:
-+	for (i = 0; i < count; i++) {
-+		qs[i].key = FUTEX_KEY_INIT;
-+		qs[i].bitset = wb[i].bitset;
-+
-+		ret = get_futex_key(wb[i].uaddr, flags & FLAGS_SHARED,
-+				    &qs[i].key, FUTEX_READ);
-+		if (unlikely(ret != 0)) {
-+			for (--i; i >= 0; i--)
-+				put_futex_key(&qs[i].key);
-+			goto out;
-+		}
-+	}
-+
-+	set_current_state(TASK_INTERRUPTIBLE);
-+
-+	for (i = 0; i < count; i++) {
-+		ret = __futex_wait_setup(wb[i].uaddr, wb[i].val,
-+					 flags, &qs[i], &hb);
-+		if (ret) {
-+			/* Drop the failed key directly.  keys 0..(i-1)
-+			 * will be put by unqueue_me.
-+			 */
-+			put_futex_key(&qs[i].key);
-+
-+			/* Undo the partial work we did. */
-+			for (--i; i >= 0; i--)
-+				unqueue_me(&qs[i]);
-+
-+			__set_current_state(TASK_RUNNING);
-+			if (ret > 0)
-+				goto retry;
-+			goto out;
-+		}
-+
-+		/* We can't hold to the bucket lock when dealing with
-+		 * the next futex. Queue ourselves now so we can unlock
-+		 * it before moving on.
-+		 */
-+		queue_me(&qs[i], hb);
-+	}
-+
-+	if (to)
-+		hrtimer_start_expires(&to->timer, HRTIMER_MODE_ABS);
-+
-+	/* There is no easy to way to check if we are wake already on
-+	 * multiple futexes without waking through each one of them.  So
-+	 * just sleep and let the scheduler handle it.
-+	 */
-+	if (!to || to->task)
-+		freezable_schedule();
-+
-+	__set_current_state(TASK_RUNNING);
-+
-+	ret = -ETIMEDOUT;
-+	/* If we were woken (and unqueued), we succeeded. */
-+	for (i = 0; i < count; i++)
-+		if (!unqueue_me(&qs[i]))
-+			ret = i;
-+
-+	/* Succeed wakeup */
-+	if (ret >= 0)
-+		goto out;
-+
-+	/* Woken by triggered timeout */
-+	if (to && !to->task)
-+		goto out;
-+
-+	/*
-+	 * We expect signal_pending(current), but we might be the
-+	 * victim of a spurious wakeup as well.
-+	 */
-+	if (!signal_pending(current))
-+		goto retry;
-+
-+	ret = -ERESTARTSYS;
-+	if (!abs_time)
-+		goto out;
-+
-+	ret = -ERESTART_RESTARTBLOCK;
-+ out:
-+	if (to) {
-+		hrtimer_cancel(&to->timer);
-+		destroy_hrtimer_on_stack(&to->timer);
-+	}
-+
-+	kfree(qs);
-+	return ret;
-+}
-+
-+static int futex_wait_multiple(u32 __user *uaddr, unsigned int flags,
-+			       u32 count, ktime_t *abs_time)
-+{
-+	struct futex_wait_block *wb;
-+	struct restart_block *restart;
-+	int ret;
-+
-+	if (!count)
-+		return -EINVAL;
-+
-+	wb = kcalloc(count, sizeof(struct futex_wait_block), GFP_KERNEL);
-+	if (!wb)
-+		return -ENOMEM;
-+
-+	if (copy_from_user(wb, uaddr,
-+			   count * sizeof(struct futex_wait_block))) {
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+
-+	ret = do_futex_wait_multiple(wb, count, flags, abs_time);
-+
-+	if (ret == -ERESTART_RESTARTBLOCK) {
-+		restart = &current->restart_block;
-+		restart->fn = futex_wait_restart;
-+		restart->futex.uaddr = uaddr;
-+		restart->futex.val = count;
-+		restart->futex.time = *abs_time;
-+		restart->futex.flags = (flags | FLAGS_HAS_TIMEOUT |
-+					FLAGS_WAKE_MULTIPLE);
-+	}
-+
-+out:
-+	kfree(wb);
-+	return ret;
-+}
-+
- static int futex_wait(u32 __user *uaddr, unsigned int flags, u32 val,
- 		      ktime_t *abs_time, u32 bitset)
+-void hrtimer_init_sleeper(struct hrtimer_sleeper *sl, struct task_struct *task)
++void hrtimer_init_sleeper(struct hrtimer_sleeper *sl)
  {
-@@ -2797,6 +2942,10 @@ static long futex_wait_restart(struct restart_block *restart)
- 	}
- 	restart->fn = do_no_restart_syscall;
- 
-+	if (restart->futex.flags & FLAGS_WAKE_MULTIPLE)
-+		return (long)futex_wait_multiple(uaddr, restart->futex.flags,
-+						 restart->futex.val, tp);
-+
- 	return (long)futex_wait(uaddr, restart->futex.flags,
- 				restart->futex.val, tp, restart->futex.bitset);
+ 	sl->timer.function = hrtimer_wakeup;
+-	sl->task = task;
++	sl->task = current;
  }
-@@ -3680,6 +3829,8 @@ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
- 					     uaddr2);
- 	case FUTEX_CMP_REQUEUE_PI:
- 		return futex_requeue(uaddr, flags, uaddr2, val, val2, &val3, 1);
-+	case FUTEX_WAIT_MULTIPLE:
-+		return futex_wait_multiple(uaddr, flags, val, timeout);
- 	}
- 	return -ENOSYS;
- }
-@@ -3696,7 +3847,8 @@ SYSCALL_DEFINE6(futex, u32 __user *, uaddr, int, op, u32, val,
+ EXPORT_SYMBOL_GPL(hrtimer_init_sleeper);
  
- 	if (utime && (cmd == FUTEX_WAIT || cmd == FUTEX_LOCK_PI ||
- 		      cmd == FUTEX_WAIT_BITSET ||
--		      cmd == FUTEX_WAIT_REQUEUE_PI)) {
-+		      cmd == FUTEX_WAIT_REQUEUE_PI ||
-+		      cmd == FUTEX_WAIT_MULTIPLE)) {
- 		if (unlikely(should_fail_futex(!(op & FUTEX_PRIVATE_FLAG))))
- 			return -EFAULT;
- 		if (get_timespec64(&ts, utime))
-@@ -3705,7 +3857,7 @@ SYSCALL_DEFINE6(futex, u32 __user *, uaddr, int, op, u32, val,
- 			return -EINVAL;
+@@ -1669,7 +1669,7 @@ static int __sched do_nanosleep(struct hrtimer_sleeper *t, enum hrtimer_mode mod
+ {
+ 	struct restart_block *restart;
  
- 		t = timespec64_to_ktime(ts);
--		if (cmd == FUTEX_WAIT)
-+		if (cmd == FUTEX_WAIT || cmd == FUTEX_WAIT_MULTIPLE)
- 			t = ktime_add_safe(ktime_get(), t);
- 		tp = &t;
- 	}
-@@ -3889,14 +4041,15 @@ SYSCALL_DEFINE6(futex_time32, u32 __user *, uaddr, int, op, u32, val,
+-	hrtimer_init_sleeper(t, current);
++	hrtimer_init_sleeper(t);
  
- 	if (utime && (cmd == FUTEX_WAIT || cmd == FUTEX_LOCK_PI ||
- 		      cmd == FUTEX_WAIT_BITSET ||
--		      cmd == FUTEX_WAIT_REQUEUE_PI)) {
-+		      cmd == FUTEX_WAIT_REQUEUE_PI ||
-+		      cmd == FUTEX_WAIT_MULTIPLE)) {
- 		if (get_old_timespec32(&ts, utime))
- 			return -EFAULT;
- 		if (!timespec64_valid(&ts))
- 			return -EINVAL;
+ 	do {
+ 		set_current_state(TASK_INTERRUPTIBLE);
+@@ -1930,7 +1930,7 @@ schedule_hrtimeout_range_clock(ktime_t *expires, u64 delta,
+ 	hrtimer_init_on_stack(&t.timer, clock_id, mode);
+ 	hrtimer_set_expires_range_ns(&t.timer, *expires, delta);
  
- 		t = timespec64_to_ktime(ts);
--		if (cmd == FUTEX_WAIT)
-+		if (cmd == FUTEX_WAIT || cmd == FUTEX_WAIT_MULTIPLE)
- 			t = ktime_add_safe(ktime_get(), t);
- 		tp = &t;
- 	}
--- 
-2.20.1
-
+-	hrtimer_init_sleeper(&t, current);
++	hrtimer_init_sleeper(&t);
+ 
+ 	hrtimer_start_expires(&t.timer, mode);
+ 
+diff --git a/net/core/pktgen.c b/net/core/pktgen.c
+index bb9915291644..7f3cf2381f27 100644
+--- a/net/core/pktgen.c
++++ b/net/core/pktgen.c
+@@ -2171,7 +2171,7 @@ static void spin(struct pktgen_dev *pkt_dev, ktime_t spin_until)
+ 		} while (ktime_compare(end_time, spin_until) < 0);
+ 	} else {
+ 		/* see do_nanosleep */
+-		hrtimer_init_sleeper(&t, current);
++		hrtimer_init_sleeper(&t);
+ 		do {
+ 			set_current_state(TASK_INTERRUPTIBLE);
+ 			hrtimer_start_expires(&t.timer, HRTIMER_MODE_ABS);
