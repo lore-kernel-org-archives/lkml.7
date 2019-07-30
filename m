@@ -2,141 +2,133 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C47C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2A7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0080216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8FE216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="woXdxnVN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVdhesQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbfG3Bt5 (ORCPT
+        id S1730791AbfG3BuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:49:57 -0400
-Received: from gateway30.websitewelcome.com ([192.185.148.2]:31268 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730736AbfG3Btr (ORCPT
+        Mon, 29 Jul 2019 21:50:00 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37621 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730747AbfG3Bt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:49:47 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 135482EA4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 20:49:46 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id sHGshkSpX4FKpsHGshuErR; Mon, 29 Jul 2019 20:49:46 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=THMhZ3Z9UJJLl14GwuPwJ19Y8ZFPT6dx5E0Ehq+rKsk=; b=woXdxnVNQCm+KQCOv+3gvr4h7D
-        6d4HVNgIHdRa43w/l7B3jIgUjpKSz6SBRm15c29pVGlCR6fwZ41WLTXkfEZOObhXKE7O79DiPFJ49
-        3cYYXGFmc/r3Agl6S48wB7SbjFfIwjCYLJXgSjKpNbidaA1CDcaWyKSjykwwneaOgW3P2F+LPoZGk
-        paap30gIBvJ9EbKG2siWyQC2ctXSFKq9IkY1acbAbFT1XChWs4n0K89seG+8sxEzOTvAJEzFgquHw
-        GCWB/4FTHLImorxUQ1mHMU8wpauRWabn/BWFPKE43IupzPv85nGioNW11g7BqJ2fyQrc/iB/DbKxp
-        UL/H3d/Q==;
-Received: from [187.192.11.120] (port=37264 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hsHGq-003dAx-V6; Mon, 29 Jul 2019 20:49:45 -0500
-Date:   Mon, 29 Jul 2019 20:49:44 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] ALSA: sparc: Mark expected switch fall-throughs
-Message-ID: <20190730014944.GA31900@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hsHGq-003dAx-V6
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:37264
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Mon, 29 Jul 2019 21:49:56 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i70so18423536pgd.4;
+        Mon, 29 Jul 2019 18:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=V4wnsfYPepTL7VBOARGQ5lE67wVPMfBHpDaxjDrhUgM=;
+        b=mVdhesQ5tNEtX68BtA01z6uL9oklDDFPLHcdyLXmewL2G4JMAlvC3Eoxkfa9wfAtLn
+         hiIaDaFDX2XbDozc5yxoEv50CHGrstA6AfHc87jWXVa2DjUe3vodAws1Cu1zELgQzmhH
+         1wfGKeH3BAF6Mw0lGuy5kiW85z+yDR7tuIq/OMfAOh9nVh8us5pbq2r6EFiZQtSC1Etj
+         4e0ECOXlx/Z2ZAhsqxi1MW77jCXGkDFzXBcpUQ1Oy9ig5X2acoaKEeyHZQAo82BiVuqT
+         YAD1Jdx9uHgNqcZFzJ4Zo7Ed/Druaq8pjr+vqRwhCExYwhhVttP3ynRpDHoe1HFVY2xk
+         FYiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=V4wnsfYPepTL7VBOARGQ5lE67wVPMfBHpDaxjDrhUgM=;
+        b=IsMKdLArXVkRJCYbMjlol8r3dbVBy5VI+oyKg/5LUZRueu8SEl7jWdn5Xc/tXM+q0J
+         e3JMyoICWJa7l6vRzM7Hdiuns+3KSSvD7hYxf7xpzUyBpxAZDYXdFeK/zhmqfeDkrhxt
+         f0D0y1U/5g62O1d/hA9QC+1+0irw1mfjSh9fA+EUWsqaOK8T2ZuI2ZCr1vYqnGHKn8sC
+         AR662yEtaG93+8cT853GUv0LZG81V6+iIxOTCI1n8Ud7qTnpUFmUI4dWcaRdJSbvm+uJ
+         ZMgGMlNFd1QWpWnY/d37oUDa0ou9aml65DTRAYC3KgSNJ9Iu0ztm8BPvwXso01O5myuv
+         Q5eA==
+X-Gm-Message-State: APjAAAUKwaGIEpPWNVoofV3okLm8Hy5cfcSL1YXNWp5kc4pPnxpW4IGV
+        lYj8cj6UIGD3WyauRyyKLAA=
+X-Google-Smtp-Source: APXvYqwOOY3NE1Y6XzD7xAqTtYd6ktSggeGAcDfSNL+1v5GlW484jITFkK4C+CN26zJOQTOzp9qUow==
+X-Received: by 2002:a62:b408:: with SMTP id h8mr38574910pfn.46.1564451395352;
+        Mon, 29 Jul 2019 18:49:55 -0700 (PDT)
+Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
+        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.49.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 18:49:54 -0700 (PDT)
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, arnd@arndb.de,
+        y2038@lists.linaro.org
+Subject: [PATCH 01/20] vfs: Add file timestamp range support
+Date:   Mon, 29 Jul 2019 18:49:05 -0700
+Message-Id: <20190730014924.2193-2-deepa.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190730014924.2193-1-deepa.kernel@gmail.com>
+References: <20190730014924.2193-1-deepa.kernel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+Add fields to the superblock to track the min and max
+timestamps supported by filesystems.
 
-This patch fixes the following warnings (Building: sparc64):
+Initially, when a superblock is allocated, initialize
+it to the max and min values the fields can hold.
+Individual filesystems override these to match their
+actual limits.
 
-sound/sparc/dbri.c: In function ‘reverse_bytes’:
-sound/sparc/dbri.c:582:5: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   b = ((b & 0xffff0000) >> 16) | ((b & 0x0000ffff) << 16);
-   ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sound/sparc/dbri.c:583:2: note: here
-  case 16:
-  ^~~~
-sound/sparc/dbri.c:584:5: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   b = ((b & 0xff00ff00) >> 8) | ((b & 0x00ff00ff) << 8);
-   ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sound/sparc/dbri.c:585:2: note: here
-  case 8:
-  ^~~~
-sound/sparc/dbri.c:586:5: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   b = ((b & 0xf0f0f0f0) >> 4) | ((b & 0x0f0f0f0f) << 4);
-   ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sound/sparc/dbri.c:587:2: note: here
-  case 4:
-  ^~~~
-sound/sparc/dbri.c:588:5: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   b = ((b & 0xcccccccc) >> 2) | ((b & 0x33333333) << 2);
-   ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sound/sparc/dbri.c:589:2: note: here
-  case 2:
-  ^~~~
+Pseudo filesystems are assumed to always support the
+min and max allowable values for the fields.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
 ---
- sound/sparc/dbri.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/super.c             | 2 ++
+ include/linux/fs.h     | 3 +++
+ include/linux/time64.h | 2 ++
+ 3 files changed, 7 insertions(+)
 
-diff --git a/sound/sparc/dbri.c b/sound/sparc/dbri.c
-index 010113156239..6e065d44060e 100644
---- a/sound/sparc/dbri.c
-+++ b/sound/sparc/dbri.c
-@@ -580,12 +580,16 @@ static __u32 reverse_bytes(__u32 b, int len)
- 	switch (len) {
- 	case 32:
- 		b = ((b & 0xffff0000) >> 16) | ((b & 0x0000ffff) << 16);
-+		/* fall through */
- 	case 16:
- 		b = ((b & 0xff00ff00) >> 8) | ((b & 0x00ff00ff) << 8);
-+		/* fall through */
- 	case 8:
- 		b = ((b & 0xf0f0f0f0) >> 4) | ((b & 0x0f0f0f0f) << 4);
-+		/* fall through */
- 	case 4:
- 		b = ((b & 0xcccccccc) >> 2) | ((b & 0x33333333) << 2);
-+		/* fall through */
- 	case 2:
- 		b = ((b & 0xaaaaaaaa) >> 1) | ((b & 0x55555555) << 1);
- 	case 1:
+diff --git a/fs/super.c b/fs/super.c
+index 2739f57515f8..e5835c38d336 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -257,6 +257,8 @@ static struct super_block *alloc_super(struct file_system_type *type, int flags,
+ 	s->s_maxbytes = MAX_NON_LFS;
+ 	s->s_op = &default_op;
+ 	s->s_time_gran = 1000000000;
++	s->s_time_min = TIME64_MIN;
++	s->s_time_max = TIME64_MAX;
+ 	s->cleancache_poolid = CLEANCACHE_NO_POOL;
+ 
+ 	s->s_shrink.seeks = DEFAULT_SEEKS;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index f1a6ca872943..e9d04e4e5628 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1448,6 +1448,9 @@ struct super_block {
+ 
+ 	/* Granularity of c/m/atime in ns (cannot be worse than a second) */
+ 	u32			s_time_gran;
++	/* Time limits for c/m/atime in seconds */
++	time64_t		   s_time_min;
++	time64_t		   s_time_max;
+ #ifdef CONFIG_FSNOTIFY
+ 	__u32			s_fsnotify_mask;
+ 	struct fsnotify_mark_connector __rcu	*s_fsnotify_marks;
+diff --git a/include/linux/time64.h b/include/linux/time64.h
+index a620ee610b9f..19125489ae94 100644
+--- a/include/linux/time64.h
++++ b/include/linux/time64.h
+@@ -30,6 +30,8 @@ struct itimerspec64 {
+ 
+ /* Located here for timespec[64]_valid_strict */
+ #define TIME64_MAX			((s64)~((u64)1 << 63))
++#define TIME64_MIN			(-TIME64_MAX - 1)
++
+ #define KTIME_MAX			((s64)~((u64)1 << 63))
+ #define KTIME_SEC_MAX			(KTIME_MAX / NSEC_PER_SEC)
+ 
 -- 
-2.22.0
+2.17.1
 
