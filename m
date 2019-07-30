@@ -3,122 +3,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE743C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6B1C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E03206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9065A206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:50:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbbXElZc"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="0GHJfGDW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfG3NuS (ORCPT
+        id S1727869AbfG3Nu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:50:18 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:41184 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfG3NuS (ORCPT
+        Tue, 30 Jul 2019 09:50:29 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34878 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbfG3Nu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:50:18 -0400
-Received: by mail-ua1-f65.google.com with SMTP id 34so25465464uar.8;
-        Tue, 30 Jul 2019 06:50:17 -0700 (PDT)
+        Tue, 30 Jul 2019 09:50:29 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y4so65887083wrm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 06:50:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4+QxDKECEbt2nsi9n15vlp6tEfk79Z3ydNqFgvycDug=;
-        b=lbbXElZcWDWcO7idRfKRT150JkbaE34ZAm5/7WQDWq5VmH58byLnlTttxLjULzGnHi
-         juIjzfAjttSH+39RkV37/FitX0rPvUZjgqNlP8vrm00v0kNql78LyEheKW1AkIAmz4Hr
-         etUy5fge2yzDyv/fLs3IIaWr4M7LBfGOQVr8BtCESNX+Do6SoDJ2tS0KgeYravub+ozp
-         yHOS4INVM3CYGw8okECC5dy8I41Sk1AAsWaLM2PXz3FctBuH69ARB5Ddof1scefU7Gy3
-         TODHQ18+YhCJHQC2eSWwGl8MvutnGGuJaIIW9IOdwVbIQkc2oZQz5ap0aAEhFV5qTgRj
-         CuAg==
+         :cc;
+        bh=X7iKvPV9LFHWqoOOGTIb4owz/JIo887EqlnJgr1d4nw=;
+        b=0GHJfGDW2+1fTzradLIxRNe68wCgVz7Su5dFoY1O20icu9FNPAkVtC6+y4atcRMxME
+         LcAnnmyGc8smLgt4iLpxEspPujnp8HMheOwuMHP0pAMcloddLv1fs/DRKKFhRC2ac+Ne
+         VW8ZbKiyM1GJPZezCkfglkHLjjVVNUQ8+LRo4iXCMgoKbb/f6yj1572GFFG1AzE+0QXF
+         8S3O8nLPsanoO2A4C3oQBXFbiXfh5I7Wg5MAYYFo02lBtkJ+KR/UKV1UCkz9CUGqD5Kn
+         x63CLAJYfZv61CF/+8VNBKxdFlwgE2WSAx/lyEkviTmfkW5V/lsduqB+wK24KIfF4388
+         X5Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4+QxDKECEbt2nsi9n15vlp6tEfk79Z3ydNqFgvycDug=;
-        b=bCkG3t0qhhGwo5nOfK7XhY3XEnWBObuO5n/TsGojmBZDy4REDTO5o0rQxEsXOmKrbF
-         cU7swAePAy/LRxb/cTYyRVbKqyyfwDtHNQzeSr/+xC/F+emFKB0K5B/vfAuC+pRRFxjA
-         zCPglN+1zb5734xB/OUJbxFzbmX0He2Klbmp0nL9s9m4q21THsnyuomn6Mk23rii5lLG
-         WvadAX3CEz209ZSBhTxsmwRr64bMtyMkXn8S8qT31mSsnXdOssFyN85QaTGxLFFu/U0Z
-         Dote48J2WDj07hXUH0I0vItolS2kKHpUppPqlX1Uf3G8e8PDLm+4+d+paNOqvQjkU5DW
-         qzGg==
-X-Gm-Message-State: APjAAAXpBFZaWtvtAJNqgnpNhgqxV259JzQPxApWoMQ3G4yHn38Z7ymE
-        Mu1/tsWDo5Kc346pLsDcealx6zusn3yVe5rsaw==
-X-Google-Smtp-Source: APXvYqwkEJHqOLjuHTIoafDnOdIKrNbWPnbKSBkEO5P9hTVRtqu55CQkZC42IGzFpiT946+GSGCaYc2eG93E6sWtO0s=
-X-Received: by 2002:a9f:25e9:: with SMTP id 96mr57807432uaf.95.1564494616946;
- Tue, 30 Jul 2019 06:50:16 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=X7iKvPV9LFHWqoOOGTIb4owz/JIo887EqlnJgr1d4nw=;
+        b=nsaWyrozx34YstCmw6zc39tCzbVhE7FOo/7LpoCz9fJ59PapY5tx/vypVbrGqelvF1
+         SzdYN5bnKekY/wNKQiO9eiwwvahXsvVwKzCrImIjAey7lToVkqR1aGY1JFuxkZiOdrSr
+         FbAk9Zs0cAX1uZSwpgoW73Y715rboh3OWXpJauKpYSXJrYFC/5PEeY3xWwKOmAihODGr
+         c0b1iZKtwPEBeAznwJgZm4NNoNjWxUpD5eJRoJnkTYbMFHLTq0fbPVOXU/UWtfntwBvB
+         O1r1Di8DCmDnsHdHpOLw9hi5pr9AB2k5R7ukE57/64UROSJh/iCrDWt0OT3aYWMAmXHo
+         RKzg==
+X-Gm-Message-State: APjAAAWYUVH1KEnTuUVyMLNbMQMwmWh/AzPatOgx0FPaWOiZCWKw+ONE
+        QbrLvq7HmAld17dXzhXB1pccJB+UimB4H2LNMRI=
+X-Google-Smtp-Source: APXvYqzRXwAqxGGy/gS1AN6Q4wfcCCsKG4LotfmFtE/HfO4p62K/RIkYnvqqEzbqc7z86kGIdpo2P3e9L0EefFqpksc=
+X-Received: by 2002:a5d:6b11:: with SMTP id v17mr50794346wrw.323.1564494627045;
+ Tue, 30 Jul 2019 06:50:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190730122534.30687-1-rdong.ge@gmail.com> <20190730123542.zrsrfvcy7t2n3d4g@breakpoint.cc>
-In-Reply-To: <20190730123542.zrsrfvcy7t2n3d4g@breakpoint.cc>
-From:   Rundong Ge <rdong.ge@gmail.com>
-Date:   Tue, 30 Jul 2019 21:50:05 +0800
-Message-ID: <CAN1LvyqtbzycEggoCXaBu3Zf_jebTWLBXm3js6+r60274a61Tg@mail.gmail.com>
-Subject: Re: [PATCH] bridge:fragmented packets dropped by bridge
-To:     Florian Westphal <fw@strlen.de>
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        kadlec@netfilter.org, Roopa Prabhu <roopa@cumulusnetworks.com>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org, nikolay@cumulusnetworks.com,
-        linux-kernel@vger.kernel.org
+References: <20190729115544.17895-1-anup.patel@wdc.com> <72e9f668-f496-3fca-a1a8-a3c3122a3fd9@redhat.com>
+ <CAAhSdy3Z6d2phRGo20eNWfa4onFwFtsOUPM+OCD465y0tvQ5wg@mail.gmail.com> <965cffdb-86e2-b422-9c23-345c7100fd88@redhat.com>
+In-Reply-To: <965cffdb-86e2-b422-9c23-345c7100fd88@redhat.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 30 Jul 2019 19:20:15 +0530
+Message-ID: <CAAhSdy0Sy9YV5ymdFk0URLY4GvOkWaWOpC_Dju+1ada_yc=Pmw@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/16] KVM RISC-V Support
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> How can a bridge forward a frame from A/B to mtu1300?
-It is free for user to set different MTU for bridge ports. In our case
-only tcp traffic between A/B and mtu 1300, and mss negotiation can
-make packets less than 1300.
-
-> What happens without netfilter or non-fragmented packets?
-Without br_netfilter it works fine, there is no defragmentation and
-refragmentation, fragmented packets will egress directly.
-
-Florian Westphal <fw@strlen.de> =E4=BA=8E2019=E5=B9=B47=E6=9C=8830=E6=97=A5=
-=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=888:35=E5=86=99=E9=81=93=EF=BC=9A
+On Tue, Jul 30, 2019 at 5:03 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
 >
-> Rundong Ge <rdong.ge@gmail.com> wrote:
-> > Given following setup:
-> > -modprobe br_netfilter
-> > -echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
-> > -brctl addbr br0
-> > -brctl addif br0 enp2s0
-> > -brctl addif br0 enp3s0
-> > -brctl addif br0 enp6s0
-> > -ifconfig enp2s0 mtu 1300
-> > -ifconfig enp3s0 mtu 1500
-> > -ifconfig enp6s0 mtu 1500
-> > -ifconfig br0 up
+> On 30/07/19 07:26, Anup Patel wrote:
+> > Here's a brief TODO list which we want to immediately work upon after this
+> > series:
+> > 1. Handle trap from unpriv access in SBI v0.1 emulation
+> > 2. In-kernel PLIC emulation
+> > 3. SBI v0.2 emulation in-kernel
+> > 4. SBI v0.2 hart hotplug emulation in-kernel
+> > 5. ..... and so on .....
 > >
-> >                  multi-port
-> > mtu1500 - mtu1500|bridge|1500 - mtu1500
-> >   A                  |            B
-> >                    mtu1300
+> > We will include above TODO list in v2 series cover letter as well.
 >
-> How can a bridge forward a frame from A/B to mtu1300?
+> I guess I gave you a bunch of extra items in today's more thorough
+> review. :)
+
+Thanks, your review comments are very useful. We will address all
+of them.
+
 >
-> > With netfilter defragmentation/conntrack enabled, fragmented
-> > packets from A will be defragmented in prerouting, and refragmented
-> > at postrouting.
+> BTW, since IPIs are handled in the SBI I wouldn't bother with in-kernel
+> PLIC emulation unless you can demonstrate performance improvements (for
+> example due to irqfd).  In fact, it may be more interesting to add
+
+I thought VHOST requires irqfd and we would certainly endup providing
+in-kernel PLIC emulation to support VHOST.
+
+> plumbing for userspace handling of selected SBI calls (in addition to
+> get/putchar, sbi_system_reset and sbi_hart_down look like good
+> candidates in SBI v0.2).
+
+The get/putchar SBI v0.1 calls won't be encouraged going forward because
+we already have earlycon implmentation in-place and Guest kernel can directly
+write to UART registers for earlyprints.
+
+If we still wanted to implement get/putchar calls then we would need a RISC-V
+specific exit reason in KVM. We have tried to avoid RISC-V specific IOCTLs
+or exit reason in this series.
+
 >
-> Yes, but I don't see how that relates to the problem at hand.
+> > We were thinking to keep KVM RISC-V disabled by default (i.e. keep it
+> > experimental) until we have validated it on some FPGA or real HW. For now,
+> > users can explicitly enable it and play-around on QEMU emulation. I hope
+> > this is fine with most people ?
 >
-> > But in this scenario the bridge found the frag_max_size(1500) is
-> > larger than the dst mtu stored in the fake_rtable whitch is
-> > always equal to the bridge's mtu 1300, then packets will be dopped.
+> That's certainly okay with me.
 >
-> What happens without netfilter or non-fragmented packets?
->
-> > This modifies ip_skb_dst_mtu to use the out dev's mtu instead
-> > of bridge's mtu in bridge refragment.
->
-> It seems quite a hack?  The above setup should use a router, not a bridge=
-.
+
+Thanks,
+Anup
