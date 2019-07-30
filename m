@@ -2,125 +2,89 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB79AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1FDC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D2C2064C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2326720578
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:21:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmZD631c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afk/T4FZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbfG3CSL (ORCPT
+        id S1731195AbfG3CVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:18:11 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33700 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730481AbfG3CSL (ORCPT
+        Mon, 29 Jul 2019 22:21:38 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44289 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729020AbfG3CVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:18:11 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q20so64606634otl.0;
-        Mon, 29 Jul 2019 19:18:10 -0700 (PDT)
+        Mon, 29 Jul 2019 22:21:38 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so29199335pgl.11;
+        Mon, 29 Jul 2019 19:21:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eT2pD5eKBMx5gGTM/NsO7JF/ZYMOot8wTiCyMk+wWBg=;
-        b=rmZD631c3zb9t37DEReR0m+DgU4V6ZollHW2wnFI1NyISMUcIdtkksOmIcmGPxMtaq
-         4xtZ0xtypLnOkX62UMC1Xcx02LLuvbAWfkrSapRzU3mlDsK1RiHzvBieMW+X5ttZ/RpF
-         FE6++BN88pAbV0gsO5fw3Q8LN5tZfL8X68/FbUbvxrAaFqq467XmnmAuAKhpS96vFDR8
-         sLtnyIFg6kr5pAs+3pmY5uJF3tTl/Ntju7JGRAERgggL7kRdQ/1qdD93rpg8L8UPBbf+
-         Ol/px6I5F7TK06c5MhuFy68gIvzs8cqR3Z8oENBFakoxF0LjXzUOe1WmmcPuNO5bt1bA
-         UJdQ==
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=0MOGeuua5cDgk1wyC8caLbfQOiznE0pJ1lOBP7T+nyQ=;
+        b=afk/T4FZVHCkLSM8QM6uwClRhAGo4uj5u76cdwhohU0BjXIz+etBByLUd199bvLGZy
+         MUnl6g7vMha0S0+Ys5j2BTAtxyWmr7BzGAzy9ABU3qKfzNe6LiI7kN3p+oWwh+Mv0CvK
+         pfCJ/forSbJk2e5flf8AZ7O2eb/fssFTc9ljkjPWDpolPCsoWmLnASEK0G3a4NOpcQ90
+         WF1TdmXRPPNKvRY47lwYpI5Fy7PCsOmw0Ha05PA07025uBVjQ9JjDJ6HGPC1OKPjHh2g
+         IAmLRBOcJxJjp2fXGA4CVlDljs9IcWwKMA/d1q51EgcvLxbc5JxQKhzOij+IGO5IUFp6
+         NIVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eT2pD5eKBMx5gGTM/NsO7JF/ZYMOot8wTiCyMk+wWBg=;
-        b=uTaM7cT8h3DTHdzmeIWNZx2owTbWypmpPtNAxAhdIXcKe5zNGVgySPrT3XKYB+XjaE
-         v1od5K+IUgk2pNhQMxsxZtaBW9CLTY9ja9nW/xtsYfi4gzf+x/zzMpgqnQDTaWjWFzym
-         fRL/DhrPalwoS5+WXfd47g3gpi+xsuvpg8KxyKARjhzY3JTAWiQYLlp+zFnwFthrXxVM
-         bTchoOG8sY1qk8uwwd6Zz7spwwdbg290wVD6I8Gk9R1wZv5B0GWxZmpBNPmY79m0XGMz
-         2hW20Jni6Cs/gr1yAF5UG/kbv1oDPHyMEfhzzPk27cmygxRVnu3mCC5BAqZ2vEP9CtgO
-         QLig==
-X-Gm-Message-State: APjAAAV7rzWgD3yznXY15H+yQlXUQFoH2onbs3HkiPioAzZ2hWkseFeE
-        9J78x0rluhye6RDhP91SXQy1rFbIRkNOmncSaRs=
-X-Google-Smtp-Source: APXvYqyMQKZMpF1kw4G8VsqHgyMUcb+C/7YHXkVtxVIOSct89bGJlyUWASr7+1L2U+PjU9MPMhOMDgp2QzhoiFNqTAo=
-X-Received: by 2002:a9d:62c4:: with SMTP id z4mr79917934otk.56.1564453089852;
- Mon, 29 Jul 2019 19:18:09 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=0MOGeuua5cDgk1wyC8caLbfQOiznE0pJ1lOBP7T+nyQ=;
+        b=VtIDF4sgL77nyvP9Pg1tKOj+Mrs70ftOn09LnvBYj2n0rMMG4G7kzg68QV9oDiOXnr
+         bkslwoap3LQrEyyO6KQ6ni3RojkGgUA2mhUqmSu7BBhU5l73LpnM3tDv3GiKdKr3zTgS
+         2GFbxvR0fmxXZmbF9A9kgF6mxFjX5Nqriqft6yMaQyZbyZxfiN0ZNtsdIBzEB+6QOuhi
+         gyOrgmH2Gmb2DuljxKZue5PzqEvRdiHI1hPvIGu3WRVcevx9OeoXNnOnpvWTwENfn/++
+         zHS8FfmGPKiisIiSg1CzzJ21Uc+JYAZdsWvztRWqupJRko6Xfak6atgxmHusPwkMslBR
+         Igbw==
+X-Gm-Message-State: APjAAAUs7zeXfBjoV0ugZI3EGy+EKoExVvP1WRoSPpoGG56/fE1u2Fqn
+        iN4ebHsCiHcfWygP0No0i2M=
+X-Google-Smtp-Source: APXvYqzmHNiAf2mn+7lldUmTRjWDG/BtWOcSnyVMvKF79mbdzG1o8SibKedPpOXVp/snpkVbjxKOyg==
+X-Received: by 2002:a17:90b:8cd:: with SMTP id ds13mr109026438pjb.141.1564453297954;
+        Mon, 29 Jul 2019 19:21:37 -0700 (PDT)
+Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id x9sm39958232pgp.75.2019.07.29.19.21.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 19:21:37 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
+Date:   Mon, 29 Jul 2019 19:21:33 -0700 (PDT)
+To:     Guenter Roeck <linux@roeck-us.net>
+cc:     Mark Balantzyan <mbalant3@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, wim@linux-watchdog.org
+Subject: Re: [PATCH] watchdog device drivers:pc87413_wdt: Rewriting of
+ pc87413_wdt driver to utilize common watchdog interface (fwd)
+In-Reply-To: <c28680b5-d262-97ae-5bdc-5cce9169e2da@roeck-us.net>
+Message-ID: <alpine.DEB.2.21.1907291917540.67851@mbalantz-desktop>
+References: <alpine.DEB.2.21.1907291614270.2893@mbalantz-desktop> <8e159e06-023e-6e20-ced5-3a645c0a1242@roeck-us.net> <alpine.DEB.2.21.1907291732130.20898@mbalantz-desktop> <c28680b5-d262-97ae-5bdc-5cce9169e2da@roeck-us.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <1564121727-30020-1-git-send-email-wanpengli@tencent.com> <20190729175044.GI21120@linux.intel.com>
-In-Reply-To: <20190729175044.GI21120@linux.intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 30 Jul 2019 10:17:58 +0800
-Message-ID: <CANRm+CwL7ZsMS7DyA-vwbj00x3gRvTHLgbfYj0TdeEa1vmi-kw@mail.gmail.com>
-Subject: Re: [PATCH RESEND] KVM: X86: Use IPI shorthands in kvm guest when support
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nadav Amit <namit@vmware.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019 at 01:50, Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Fri, Jul 26, 2019 at 02:15:27PM +0800, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > IPI shorthand is supported now by linux apic/x2apic driver, switch to
-> > IPI shorthand for all excluding self and all including self destination
-> > shorthand in kvm guest, to avoid splitting the target mask into servera=
-l
-> > PV IPI hypercalls.
-> >
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Cc: Nadav Amit <namit@vmware.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > Note: rebase against tip tree's x86/apic branch
-> >
-> >  arch/x86/kernel/kvm.c | 14 ++++++++++++--
-> >  1 file changed, 12 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> > index b7f34fe..87b73b8 100644
-> > --- a/arch/x86/kernel/kvm.c
-> > +++ b/arch/x86/kernel/kvm.c
-> > @@ -34,7 +34,9 @@
-> >  #include <asm/hypervisor.h>
-> >  #include <asm/tlb.h>
-> >
-> > +static struct apic orig_apic;
->
-> Copying the entire struct apic to snapshot two functions is funky,
-> explicitly capturing the two functions would be more intuitive.
->
-> Tangentially related, kvm_setup_pv_ipi() can be annotated __init,
-> which means the function snapshots can be __ro_after_init.
->
-> That being said, can't we just remove kvm_send_ipi_all() and
-> kvm_send_ipi_allbutself()?  AFAICT, the variations that lead to shorthand
-> are only used when apic_use_ipi_shorthand is true.  If that isn't the
-> case, fixing the callers in the APIC code seems like the correct thing to
-> do.
+Hi all, Guenter,
 
-The callers in the APIC codes have already done this, so I just remove
-the two hooks in v2.
+Sure, it'd be great to work on ib700, doing both, if we may. I feel it's 
+worth a shot in case somebody out there has the hardware to test the 
+pc87413_wdt driver, though I'm doing my best building the individual 
+module and checking for compilation errors (as best I can).
 
-Regards,
-Wanpeng Li
+I just sent off via git send-email a quad-chain of patches for the driver.
+
+Thanks + regards,
+Mark
+
