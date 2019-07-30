@@ -2,94 +2,148 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DA7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA48C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1280206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D15D206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:03:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbfG3LDH (ORCPT
+        id S1729956AbfG3LDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:03:07 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:51554 "EHLO inva021.nxp.com"
+        Tue, 30 Jul 2019 07:03:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:59290 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfG3LDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:03:07 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 99F9E20065E;
-        Tue, 30 Jul 2019 13:03:05 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8DE20200186;
-        Tue, 30 Jul 2019 13:03:05 +0200 (CEST)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E711204D6;
-        Tue, 30 Jul 2019 13:03:05 +0200 (CEST)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>
-Subject: [PATCH v3] crypto: gcm - restrict assoclen for rfc4543
-Date:   Tue, 30 Jul 2019 13:54:37 +0300
-Message-Id: <1564484077-27727-1-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725974AbfG3LDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:03:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 929AE344;
+        Tue, 30 Jul 2019 04:03:36 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD0F93F575;
+        Tue, 30 Jul 2019 04:03:35 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Refactor snapshot vs nocow writers locking
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Nikolay Borisov <nborisov@suse.com>, linux-btrfs@vger.kernel.org,
+        paulmck@linux.ibm.com, andrea.parri@amarulasolutions.com,
+        linux-kernel@vger.kernel.org
+References: <20190719083949.5351-1-nborisov@suse.com>
+ <ed015bb1-490e-7102-d172-73c1d069476c@arm.com>
+ <20190729153319.GH2368@arrakis.emea.arm.com>
+ <60eda0ab-08b3-de82-5b06-98386ee1928f@arm.com>
+Message-ID: <69ef76a2-ebd6-956e-c611-2e742606ed95@arm.com>
+Date:   Tue, 30 Jul 2019 12:03:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <60eda0ab-08b3-de82-5b06-98386ee1928f@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on seqiv, IPsec ESP and rfc4543/rfc4106 the assoclen can be 16 or
-20 bytes.
+On 29/07/2019 17:32, Valentin Schneider wrote:
+> On 29/07/2019 16:33, Catalin Marinas wrote:
+[...]
+>> I'd say that's one of the pitfalls of PlusCal. The above is executed
+>> atomically, so you'd have the lock_state read and updated in the same
+>> action. Looking at the C patches, there is an
+>> atomic_read(&lock->readers) followed by a
+>> percpu_counter_inc(&lock->writers). Between these two, you can have
+>> "readers" becoming non-zero via a different CPU.
+>>
+>> My suggestion would be to use procedures with labels to express the
+>> non-atomicity of such sequences.
+>>
+> 
 
-From esp4/esp6, assoclen is sizeof IP Header. This includes spi, seq_no
-and extended seq_no, that is 8 or 12 bytes.
-In seqiv, to asscolen is added the IV size (8 bytes).
-Therefore, the assoclen, for rfc4543, should be restricted to 16 or 20
-bytes, as for rfc4106.
+FYI, with a very simple and stupid modification of the spec:
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
----
-Changes since v2:
-- use, newly renamed, helper functions added in crypto API, in series:
-https://patchwork.kernel.org/project/linux-crypto/list/?series=152649
+----->8-----
+macro ReadUnlock()
+{
+    reader_count := reader_count - 1;
+    \* Condition variable signal is "implicit" here
+}
 
- crypto/gcm.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+macro WriteUnlock()
+{
+    writer_count := writer_count - 1;
+    \* Ditto on the cond var
+}
 
-diff --git a/crypto/gcm.c b/crypto/gcm.c
-index 2f3b50f..7eb5ced 100644
---- a/crypto/gcm.c
-+++ b/crypto/gcm.c
-@@ -1034,11 +1034,23 @@ static int crypto_rfc4543_copy_src_to_dst(struct aead_request *req, bool enc)
- 
- static int crypto_rfc4543_encrypt(struct aead_request *req)
- {
-+	int err;
-+
-+	err = crypto_ipsec_check_assoclen(req->assoclen);
-+	if (err)
-+		return err;
-+
- 	return crypto_rfc4543_crypt(req, true);
- }
- 
- static int crypto_rfc4543_decrypt(struct aead_request *req)
- {
-+	int err;
-+
-+	err = crypto_ipsec_check_assoclen(req->assoclen);
-+	if (err)
-+		return err;
-+
- 	return crypto_rfc4543_crypt(req, false);
- }
- 
--- 
-2.1.0
+procedure ReadLock()
+{
+add:
+    reader_count := reader_count + 1;
+lock:
+    await writer_count = 0;
+    return;
+}
 
+procedure WriteLock()
+{
+add:
+    writer_count := writer_count + 1;
+lock:
+    await reader_count = 0;
+    return;
+};
+-----8<-----
+
+it's quite easy to trigger the case Paul pointed out in [1]:
+
+----->8-----
+Error: Deadlock reached.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ stack = (<<reader, 1>> :> <<>> @@ <<writer, 1>> :> <<>>)
+/\ pc = (<<reader, 1>> :> "loop" @@ <<writer, 1>> :> "loop_")
+/\ writer_count = 0
+/\ reader_count = 0
+/\ lock_state = "idle"
+
+State 2: <loop_ line 159, col 16 to line 164, col 72 of module specs>
+/\ stack = ( <<reader, 1>> :> <<>> @@
+  <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
+/\ pc = (<<reader, 1>> :> "loop" @@ <<writer, 1>> :> "add")
+/\ writer_count = 0
+/\ reader_count = 0
+/\ lock_state = "idle"
+
+State 3: <add line 146, col 14 to line 149, col 63 of module specs>
+/\ stack = ( <<reader, 1>> :> <<>> @@
+  <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
+/\ pc = (<<reader, 1>> :> "loop" @@ <<writer, 1>> :> "lock")
+/\ writer_count = 1
+/\ reader_count = 0
+/\ lock_state = "idle"
+
+State 4: <loop line 179, col 15 to line 184, col 71 of module specs>
+/\ stack = ( <<reader, 1>> :> <<[pc |-> "read_cs", procedure |-> "ReadLock"]>> @@
+  <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
+/\ pc = (<<reader, 1>> :> "add_" @@ <<writer, 1>> :> "lock")
+/\ writer_count = 1
+/\ reader_count = 0
+/\ lock_state = "idle"
+
+State 5: <add_ line 133, col 15 to line 136, col 64 of module specs>
+/\ stack = ( <<reader, 1>> :> <<[pc |-> "read_cs", procedure |-> "ReadLock"]>> @@
+  <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
+/\ pc = (<<reader, 1>> :> "lock_" @@ <<writer, 1>> :> "lock")
+/\ writer_count = 1
+/\ reader_count = 1
+/\ lock_state = "idle"
+-----8<-----
+
+Which I think is pretty cool considering the effort that was required
+(read: not much).
+
+[1]: https://lore.kernel.org/lkml/20190607105251.GB28207@linux.ibm.com/
