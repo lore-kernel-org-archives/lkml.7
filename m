@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11487C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91754C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE56120651
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D26C20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVvW4a6i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqAfxiem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732056AbfG3Jrs (ORCPT
+        id S1731979AbfG3Jrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:47:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34960 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732023AbfG3Jrk (ORCPT
+        Tue, 30 Jul 2019 05:47:37 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36603 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731964AbfG3Jrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:47:40 -0400
-Received: by mail-wm1-f68.google.com with SMTP id l2so55996583wmg.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 02:47:39 -0700 (PDT)
+        Tue, 30 Jul 2019 05:47:35 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n4so65099721wrs.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 02:47:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=QTZpfFP32dnAGItmxBOardVOn42TY42mRMk+drGaVn4=;
-        b=BVvW4a6ifO1WrOs0QEp6CIWxZ130ZGKsrs02OxsdDTIE/F+sfhKBzOSKxiHE5uL8O0
-         Gl0HDx4JQTu5NncL+0Xyto9tadMuKQkJwN8Gm9IKdHAXn1tSTb9n5xLqO1UYUysBd/C6
-         j1CKPLcx7YwAeIJnuYx4Hh3uaF85D3F1G14BKmgGL0rO1ixTchkyUzM6qnchelrGw5O0
-         QzEWrWH9JI5cPjO0V9bkCzaqR5wYYVVb1//i6HHEZcYSk0/aSqA2i+3yy4FoFv4j1yxo
-         li64CXAMc3COuaesGxx5wEvbeIEPY8xmpi9JXDjopjoFAn9MQBBiskKgCDLdj+wzwRmV
-         vkCA==
+        bh=ANM4/Zd8QIP1dzOfHKiDuUC79smC88C4XTPFEhIROxM=;
+        b=eqAfxiem3ogDGvKAo9etBm7g6c7HbeT0GJdPC+AkY/dqIxnKC/qmxbm8ljy97WXyDB
+         uatToE1f5hnYmItmR5EvFN+No3NU+vLjWIxfl+upXA6xqEjMtKHNa1U0EfzOaP00lkfm
+         NT958XuKBel6VAOEJ0RKikooRozV/xu56Pt+yUU8IafmoH5sL22zltnIhUcORZdcPhcW
+         IPqZ6Kh1oxrFXal53u4Q+VFpzoDlPZESV+cRVmbL4uQ/AQxfy9lrz4ktzuVvVyVm6Olw
+         HGkj6OjgaA6/n6ktH6czfE1jUaHjmU24NfJbd9KgU5EM6rhqReArX2UUHu8ZAJ0xsfwC
+         HP6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=QTZpfFP32dnAGItmxBOardVOn42TY42mRMk+drGaVn4=;
-        b=h4xNeuoE5Zq/E1K+mLM8XY5bHsVrr/Z6NOzUKuNLSB52CyfB4gLqldi1vdSMTThqRd
-         ojT7A7pi1+1uAWyu0kpJw6HP1FheOIMH86SwmxE+gGSphb4Y5/adX4bg4JGOxwVOYqEg
-         z8FQSCle06ylPUEJY4bExRJcgbEmRmL672ROAhj0YifURlSSOkJ5Z6HzcnE+a76i/kbn
-         0codfxNZEUzyQg9+RdPRjdXwOo6PFcq4Yw9LHlBhLCrNxLEu+dCYn7aOg7GBBeKbkNPM
-         GGwsmOTkr0Go/FGy4UuuJXpge6shpLn9Jx5VzK0L9fU6kPtMIZqlv1wXh0bGPxTLAbit
-         ZsPg==
-X-Gm-Message-State: APjAAAU9lKhREW3vce9/m0IKrGbtcKbJPluLZuNqy/yuRUD+tHiDMxmb
-        URQDvybWxS1v5kxHTfQt6HeY4ZaFS7Q=
-X-Google-Smtp-Source: APXvYqwGeH9ixwlmYz/4fs8+SjqO0SQrAEO30d0qpaJclL6mJKG2CbZ0p+nxpXQtPWXXPV1gVXPjFg==
-X-Received: by 2002:a7b:c0c6:: with SMTP id s6mr29957297wmh.115.1564480057511;
-        Tue, 30 Jul 2019 02:47:37 -0700 (PDT)
+        bh=ANM4/Zd8QIP1dzOfHKiDuUC79smC88C4XTPFEhIROxM=;
+        b=fQ9GYph29NcBsCjapL2WXIqE4pyV/IG6lwW5cMqYSOMx4Mah6BbqMrzbkVZddOsMKg
+         Y0UQR3KXyVLqcurrOjf5/+mYOGp4qdRGeuwNSa7wQnBwXyRn6PG27A5IsgauHuQEtr23
+         44rjZ2pZQ1g35sZZKeS5vbaMnl9l03cazxRHb5LIpNO4MZfuLT3LSCMIm71u/7AnXJ9e
+         ohq3lgVley63RqlD9uB57dwlEVSBIeOgo10e2suSCJXhb8eEV4nDSyspxDI7PA49nCJ/
+         W6ehqT754y89uQReAi3xjqgJFGAP+D5ucQsGPClOc5mKwSAp+AXq5togh029QnJe9Qr7
+         nV3Q==
+X-Gm-Message-State: APjAAAU5hU5cGuEbhuorctFTw4mzPO2jKVdq+iOnK0I1Ri/3BaloK4V/
+        pvJZX/rnnjWuo4ZGjGi2aicgoXtMzE8=
+X-Google-Smtp-Source: APXvYqzGeFdrHQ7JXe+MbNyD49YNYTXq2YlUXCrgxJNKps7JemZhZwVyuO4kWMLUvhspLwn25oeM1Q==
+X-Received: by 2002:a5d:67cd:: with SMTP id n13mr5410355wrw.138.1564480053204;
+        Tue, 30 Jul 2019 02:47:33 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id k124sm105967360wmk.47.2019.07.30.02.47.36
+        by smtp.gmail.com with ESMTPSA id k124sm105967360wmk.47.2019.07.30.02.47.32
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 02:47:36 -0700 (PDT)
+        Tue, 30 Jul 2019 02:47:32 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
         ttayar@habana.ai, gregkh@linuxfoundation.org
-Subject: [PATCH v2 7/7] habanalabs: create two char devices per ASIC
-Date:   Tue, 30 Jul 2019 12:47:24 +0300
-Message-Id: <20190730094724.18691-8-oded.gabbay@gmail.com>
+Subject: [PATCH v2 4/7] habanalabs: rename user_ctx as compute_ctx
+Date:   Tue, 30 Jul 2019 12:47:21 +0300
+Message-Id: <20190730094724.18691-5-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190730094724.18691-1-oded.gabbay@gmail.com>
 References: <20190730094724.18691-1-oded.gabbay@gmail.com>
@@ -70,447 +70,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch changes the driver to create two char devices for each ASIC
-it discovers. This is done to allow system/monitoring applications to
-query the device for stats, information, idle state and more, while also
-allowing the deep-learning application to send work to the ASIC.
+This patch renames the "user_ctx" field in the device structure to
+"compute_ctx". This better reflects the meaning of this context.
 
-One char device is the original device, hlX. IOCTL calls through this
-device file can perform any task on the device (compute, memory, queries).
-The open function for this device will fail if it was called before but
-the file-descriptor it created was not completely released yet (the
-release callback function is not called from the kernel until all
-instances of that FD are closed). The driver needs to keep this behavior
-to support backward compatibility with existing userspace, which count
-that the open will fail if the device is "occupied".
-
-The second char device is called "hl_controlDx", where x is the minor
-number of the original char device + 64 (HL_CONTROL_MINOR). Applications
-that open this device can only call the INFO IOCTL. There is no limitation
-on the number of applications opening this device.
+In addition, we also check in the ctx_fini() that the debug mode should be
+disabled only if the context being destroyed is the compute context. This
+has no effect right now as we only have a single process and a single
+context, but this makes the code more ready for multiple process support.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/device.c           | 50 +++++++++++-
- drivers/misc/habanalabs/habanalabs.h       | 18 +++-
- drivers/misc/habanalabs/habanalabs_drv.c   | 49 +++++++++++
- drivers/misc/habanalabs/habanalabs_ioctl.c | 95 +++++++++++++++-------
- 4 files changed, 180 insertions(+), 32 deletions(-)
+ drivers/misc/habanalabs/context.c    | 13 ++++++++-----
+ drivers/misc/habanalabs/debugfs.c    |  4 ++--
+ drivers/misc/habanalabs/device.c     | 14 +++++++-------
+ drivers/misc/habanalabs/habanalabs.h |  9 ++++-----
+ 4 files changed, 21 insertions(+), 19 deletions(-)
 
+diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
+index 1d8390418234..bc0dec57a983 100644
+--- a/drivers/misc/habanalabs/context.c
++++ b/drivers/misc/habanalabs/context.c
+@@ -26,12 +26,13 @@ static void hl_ctx_fini(struct hl_ctx *ctx)
+ 		dma_fence_put(ctx->cs_pending[i]);
+ 
+ 	if (ctx->asid != HL_KERNEL_ASID_ID) {
+-		/*
+-		 * The engines are stopped as there is no executing CS, but the
++		/* The engines are stopped as there is no executing CS, but the
+ 		 * Coresight might be still working by accessing addresses
+ 		 * related to the stopped engines. Hence stop it explicitly.
++		 * Stop only if this is the compute context, as there can be
++		 * only one compute context
+ 		 */
+-		if (hdev->in_debug)
++		if ((hdev->in_debug) && (hdev->compute_ctx == ctx))
+ 			hl_device_set_debug_mode(hdev, false);
+ 
+ 		hl_vm_ctx_fini(ctx);
+@@ -85,9 +86,11 @@ int hl_ctx_create(struct hl_device *hdev, struct hl_fpriv *hpriv)
+ 	hl_hpriv_get(hpriv);
+ 	ctx->hpriv = hpriv;
+ 
+-	/* TODO: remove for multiple contexts */
++	/* TODO: remove for multiple contexts per process */
+ 	hpriv->ctx = ctx;
+-	hdev->user_ctx = ctx;
++
++	/* TODO: remove the following line for multiple process support */
++	hdev->compute_ctx = ctx;
+ 
+ 	return 0;
+ 
+diff --git a/drivers/misc/habanalabs/debugfs.c b/drivers/misc/habanalabs/debugfs.c
+index 18e499c900c7..2b9bc1c41d40 100644
+--- a/drivers/misc/habanalabs/debugfs.c
++++ b/drivers/misc/habanalabs/debugfs.c
+@@ -370,7 +370,7 @@ static int mmu_show(struct seq_file *s, void *data)
+ 	if (dev_entry->mmu_asid == HL_KERNEL_ASID_ID)
+ 		ctx = hdev->kernel_ctx;
+ 	else
+-		ctx = hdev->user_ctx;
++		ctx = hdev->compute_ctx;
+ 
+ 	if (!ctx) {
+ 		dev_err(hdev->dev, "no ctx available\n");
+@@ -533,7 +533,7 @@ static bool hl_is_device_va(struct hl_device *hdev, u64 addr)
+ static int device_va_to_pa(struct hl_device *hdev, u64 virt_addr,
+ 				u64 *phys_addr)
+ {
+-	struct hl_ctx *ctx = hdev->user_ctx;
++	struct hl_ctx *ctx = hdev->compute_ctx;
+ 	u64 hop_addr, hop_pte_addr, hop_pte;
+ 	u64 offset_mask = HOP4_MASK | OFFSET_MASK;
+ 	int rc = 0;
 diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index 60c779648f92..6aef23a8d2ee 100644
+index d1bc8f4ed5bb..ca166abee7b5 100644
 --- a/drivers/misc/habanalabs/device.c
 +++ b/drivers/misc/habanalabs/device.c
-@@ -95,6 +95,24 @@ static int hl_device_release(struct inode *inode, struct file *filp)
- 	return 0;
+@@ -59,7 +59,7 @@ static void hpriv_release(struct kref *ref)
+ 	atomic_dec(&hdev->fd_open_cnt);
+ 
+ 	/* This allows a new user context to open the device */
+-	hdev->user_ctx = NULL;
++	hdev->compute_ctx = NULL;
  }
  
-+static int hl_device_release_ctrl(struct inode *inode, struct file *filp)
-+{
-+	struct hl_fpriv *hpriv = filp->private_data;
-+	struct hl_device *hdev;
-+
-+	filp->private_data = NULL;
-+
-+	hdev = hpriv->hdev;
-+
-+	mutex_lock(&hdev->fpriv_list_lock);
-+	list_del(&hpriv->dev_node);
-+	mutex_unlock(&hdev->fpriv_list_lock);
-+
-+	kfree(hpriv);
-+
-+	return 0;
-+}
-+
- /*
-  * hl_mmap - mmap function for habanalabs device
-  *
-@@ -125,6 +143,14 @@ static const struct file_operations hl_ops = {
- 	.compat_ioctl = hl_ioctl
- };
+ void hl_hpriv_get(struct hl_fpriv *hpriv)
+@@ -590,7 +590,7 @@ static void device_kill_open_processes(struct hl_device *hdev)
+ 	}
  
-+static const struct file_operations hl_ctrl_ops = {
-+	.owner = THIS_MODULE,
-+	.open = hl_device_open_ctrl,
-+	.release = hl_device_release_ctrl,
-+	.unlocked_ioctl = hl_ioctl_control,
-+	.compat_ioctl = hl_ioctl_control
-+};
-+
- /*
-  * device_setup_cdev - setup cdev and device for habanalabs device
-  *
-@@ -885,10 +911,27 @@ int hl_device_init(struct hl_device *hdev, struct class *hclass)
- 	if (rc)
- 		goto out_disabled;
+ 	if (atomic_read(&hdev->fd_open_cnt)) {
+-		task = get_pid_task(hdev->user_ctx->hpriv->taskpid,
++		task = get_pid_task(hdev->compute_ctx->hpriv->taskpid,
+ 					PIDTYPE_PID);
+ 		if (task) {
+ 			dev_info(hdev->dev, "Killing user processes\n");
+@@ -760,9 +760,9 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
+ 		hl_cq_reset(hdev, &hdev->completion_queue[i]);
  
-+	hdev->id_control = hdev->id + HL_CONTROL_MINOR;
-+
-+	name = kasprintf(GFP_KERNEL, "hl_controlD%d", hdev->id_control);
-+	if (!name) {
-+		rc = -ENOMEM;
-+		goto release_device;
-+	}
-+
-+	/* Create control device */
-+	rc = device_setup_cdev(hdev, hclass, hdev->id_control, &hl_ctrl_ops,
-+				name, &hdev->cdev_ctrl, &hdev->dev_ctrl);
-+
-+	kfree(name);
-+
-+	if (rc)
-+		goto release_device;
-+
- 	/* Initialize ASIC function pointers and perform early init */
- 	rc = device_early_init(hdev);
- 	if (rc)
--		goto release_device;
-+		goto release_control_device;
+ 	/* Make sure the context switch phase will run again */
+-	if (hdev->user_ctx) {
+-		atomic_set(&hdev->user_ctx->thread_ctx_switch_token, 1);
+-		hdev->user_ctx->thread_ctx_switch_wait_token = 0;
++	if (hdev->compute_ctx) {
++		atomic_set(&hdev->compute_ctx->thread_ctx_switch_token, 1);
++		hdev->compute_ctx->thread_ctx_switch_wait_token = 0;
+ 	}
  
- 	/*
- 	 * Start calling ASIC initialization. First S/W then H/W and finally
-@@ -1064,6 +1107,9 @@ int hl_device_init(struct hl_device *hdev, struct class *hclass)
- 	hdev->asic_funcs->sw_fini(hdev);
- early_fini:
- 	device_early_fini(hdev);
-+release_control_device:
-+	device_destroy(hclass, hdev->dev_ctrl->devt);
-+	cdev_del(&hdev->cdev_ctrl);
- release_device:
- 	device_destroy(hclass, hdev->dev->devt);
- 	cdev_del(&hdev->cdev);
-@@ -1179,6 +1225,8 @@ void hl_device_fini(struct hl_device *hdev)
- 	device_early_fini(hdev);
+ 	/* Finished tear-down, starting to re-initialize */
+@@ -793,7 +793,7 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
+ 			goto out_err;
+ 		}
  
- 	/* Hide device from user */
-+	device_destroy(hdev->dev_ctrl->class, hdev->dev_ctrl->devt);
-+	cdev_del(&hdev->cdev_ctrl);
- 	device_destroy(hdev->dev->class, hdev->dev->devt);
- 	cdev_del(&hdev->cdev);
+-		hdev->user_ctx = NULL;
++		hdev->compute_ctx = NULL;
  
+ 		rc = hl_ctx_init(hdev, hdev->kernel_ctx, true);
+ 		if (rc) {
+@@ -970,7 +970,7 @@ int hl_device_init(struct hl_device *hdev, struct class *hclass)
+ 		goto mmu_fini;
+ 	}
+ 
+-	hdev->user_ctx = NULL;
++	hdev->compute_ctx = NULL;
+ 
+ 	rc = hl_ctx_init(hdev, hdev->kernel_ctx, true);
+ 	if (rc) {
 diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index f2ca06b2c155..c0dc4c8e1b7d 100644
+index e41800e68578..53f6b238e6f2 100644
 --- a/drivers/misc/habanalabs/habanalabs.h
 +++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -51,6 +51,8 @@
- /* MMU */
- #define MMU_HASH_TABLE_BITS		7 /* 1 << 7 buckets */
- 
-+#define HL_CONTROL_MINOR		64
-+
- /**
-  * struct pgt_info - MMU hop page info.
-  * @node: hash linked-list node for the pgts shadow hash of pgts.
-@@ -912,6 +914,7 @@ struct hl_debug_params {
-  * @dev_node: node in the device list of file private data
-  * @refcount: number of related contexts.
-  * @restore_phase_mutex: lock for context switch and restore phase.
-+ * @is_control: true for control device, false otherwise
-  */
- struct hl_fpriv {
+@@ -905,7 +905,7 @@ struct hl_debug_params {
+  * @hdev: habanalabs device structure.
+  * @filp: pointer to the given file structure.
+  * @taskpid: current process ID.
+- * @ctx: current executing context.
++ * @ctx: current executing context. TODO: remove for multiple ctx per process
+  * @ctx_mgr: context manager to handle multiple context for this FD.
+  * @cb_mgr: command buffer manager to handle multiple buffers for this FD.
+  * @debugfs_list: list of relevant ASIC debugfs.
+@@ -916,7 +916,7 @@ struct hl_fpriv {
  	struct hl_device	*hdev;
-@@ -924,6 +927,7 @@ struct hl_fpriv {
- 	struct list_head	dev_node;
- 	struct kref		refcount;
- 	struct mutex		restore_phase_mutex;
-+	u8			is_control;
- };
+ 	struct file		*filp;
+ 	struct pid		*taskpid;
+-	struct hl_ctx		*ctx; /* TODO: remove for multiple ctx */
++	struct hl_ctx		*ctx;
+ 	struct hl_ctx_mgr	ctx_mgr;
+ 	struct hl_cb_mgr	cb_mgr;
+ 	struct list_head	debugfs_list;
+@@ -1182,7 +1182,7 @@ struct hl_device_reset_work {
+  * @hl_debugfs: device's debugfs manager.
+  * @cb_pool: list of preallocated CBs.
+  * @cb_pool_lock: protects the CB pool.
+- * @user_ctx: current user context executing.
++ * @compute_ctx: current compute context executing.
+  * @dram_used_mem: current DRAM memory consumption.
+  * @timeout_jiffies: device CS timeout value.
+  * @max_power: the max power of the device, as configured by the sysadmin. This
+@@ -1259,8 +1259,7 @@ struct hl_device {
+ 	struct list_head		cb_pool;
+ 	spinlock_t			cb_pool_lock;
  
+-	/* TODO: remove user_ctx for multiple process support */
+-	struct hl_ctx			*user_ctx;
++	struct hl_ctx			*compute_ctx;
  
-@@ -1010,9 +1014,9 @@ struct hl_dbg_device_entry {
-  */
- 
- /* Theoretical limit only. A single host can only contain up to 4 or 8 PCIe
-- * x16 cards. In extereme cases, there are hosts that can accommodate 16 cards
-+ * x16 cards. In extreme cases, there are hosts that can accommodate 16 cards.
-  */
--#define HL_MAX_MINORS	256
-+#define HL_MAX_MINORS	HL_CONTROL_MINOR
- 
- /*
-  * Registers read & write functions.
-@@ -1143,7 +1147,9 @@ struct hl_device_reset_work {
-  * @pcie_bar: array of available PCIe bars.
-  * @rmmio: configuration area address on SRAM.
-  * @cdev: related char device.
-- * @dev: realted kernel basic device structure.
-+ * @cdev_ctrl: char device for control operations only (INFO IOCTL)
-+ * @dev: related kernel basic device structure.
-+ * @dev_ctrl: related kernel device structure for the control device
-  * @work_freq: delayed work to lower device frequency if possible.
-  * @work_heartbeat: delayed work for ArmCP is-alive check.
-  * @asic_name: ASIC specific nmae.
-@@ -1196,6 +1202,7 @@ struct hl_device_reset_work {
-  * @soft_reset_cnt: number of soft reset since KMD loading.
-  * @hard_reset_cnt: number of hard reset since KMD loading.
-  * @id: device minor.
-+ * @id_control: minor of the control device
-  * @disabled: is device disabled.
-  * @late_init_done: is late init stage was done during initialization.
-  * @hwmon_initialized: is H/W monitor sensors was initialized.
-@@ -1217,7 +1224,9 @@ struct hl_device {
- 	void __iomem			*pcie_bar[6];
- 	void __iomem			*rmmio;
- 	struct cdev			cdev;
-+	struct cdev			cdev_ctrl;
- 	struct device			*dev;
-+	struct device			*dev_ctrl;
- 	struct delayed_work		work_freq;
- 	struct delayed_work		work_heartbeat;
- 	char				asic_name[16];
-@@ -1271,6 +1280,7 @@ struct hl_device {
- 	u32				soft_reset_cnt;
- 	u32				hard_reset_cnt;
- 	u16				id;
-+	u16				id_control;
- 	u8				disabled;
- 	u8				late_init_done;
- 	u8				hwmon_initialized;
-@@ -1376,6 +1386,7 @@ static inline bool hl_mem_area_crosses_range(u64 address, u32 size,
- }
- 
- int hl_device_open(struct inode *inode, struct file *filp);
-+int hl_device_open_ctrl(struct inode *inode, struct file *filp);
- bool hl_device_disabled_or_in_reset(struct hl_device *hdev);
- enum hl_device_status hl_device_status(struct hl_device *hdev);
- int hl_device_set_debug_mode(struct hl_device *hdev, bool enable);
-@@ -1615,6 +1626,7 @@ static inline void hl_debugfs_remove_ctx_mem_hash(struct hl_device *hdev,
- 
- /* IOCTLs */
- long hl_ioctl(struct file *filep, unsigned int cmd, unsigned long arg);
-+long hl_ioctl_control(struct file *filep, unsigned int cmd, unsigned long arg);
- int hl_cb_ioctl(struct hl_fpriv *hpriv, void *data);
- int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data);
- int hl_cs_wait_ioctl(struct hl_fpriv *hpriv, void *data);
-diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
-index 802c6ca7c604..da3360ef6204 100644
---- a/drivers/misc/habanalabs/habanalabs_drv.c
-+++ b/drivers/misc/habanalabs/habanalabs_drv.c
-@@ -170,6 +170,55 @@ int hl_device_open(struct inode *inode, struct file *filp)
- 	return rc;
- }
- 
-+int hl_device_open_ctrl(struct inode *inode, struct file *filp)
-+{
-+	struct hl_device *hdev;
-+	struct hl_fpriv *hpriv;
-+	int rc;
-+
-+	mutex_lock(&hl_devs_idr_lock);
-+	hdev = idr_find(&hl_devs_idr, iminor(inode) - HL_CONTROL_MINOR);
-+	mutex_unlock(&hl_devs_idr_lock);
-+
-+	if (!hdev) {
-+		pr_err("Couldn't find device %d:%d\n",
-+			imajor(inode), iminor(inode));
-+		return -ENXIO;
-+	}
-+
-+	hpriv = kzalloc(sizeof(*hpriv), GFP_KERNEL);
-+	if (!hpriv)
-+		return -ENOMEM;
-+
-+	mutex_lock(&hdev->fpriv_list_lock);
-+
-+	if (hl_device_disabled_or_in_reset(hdev)) {
-+		dev_err_ratelimited(hdev->dev_ctrl,
-+			"Can't open %s because it is disabled or in reset\n",
-+			dev_name(hdev->dev_ctrl));
-+		rc = -EPERM;
-+		goto out_err;
-+	}
-+
-+	list_add(&hpriv->dev_node, &hdev->fpriv_list);
-+	mutex_unlock(&hdev->fpriv_list_lock);
-+
-+	hpriv->hdev = hdev;
-+	filp->private_data = hpriv;
-+	hpriv->filp = filp;
-+	hpriv->is_control = true;
-+	nonseekable_open(inode, filp);
-+
-+	hpriv->taskpid = find_get_pid(current->pid);
-+
-+	return 0;
-+
-+out_err:
-+	mutex_unlock(&hdev->fpriv_list_lock);
-+	kfree(hpriv);
-+	return rc;
-+}
-+
- static void set_driver_behavior_per_device(struct hl_device *hdev)
- {
- 	hdev->mmu_enable = 1;
-diff --git a/drivers/misc/habanalabs/habanalabs_ioctl.c b/drivers/misc/habanalabs/habanalabs_ioctl.c
-index c9a4799eb251..ce0cd93a8421 100644
---- a/drivers/misc/habanalabs/habanalabs_ioctl.c
-+++ b/drivers/misc/habanalabs/habanalabs_ioctl.c
-@@ -194,7 +194,8 @@ static int debug_coresight(struct hl_device *hdev, struct hl_debug_args *args)
- 	return rc;
- }
- 
--static int hl_info_ioctl(struct hl_fpriv *hpriv, void *data)
-+static int _hl_info_ioctl(struct hl_fpriv *hpriv, void *data,
-+				struct device *dev)
- {
- 	struct hl_info_args *args = data;
- 	struct hl_device *hdev = hpriv->hdev;
-@@ -205,7 +206,7 @@ static int hl_info_ioctl(struct hl_fpriv *hpriv, void *data)
- 		return device_status_info(hdev, args);
- 
- 	if (hl_device_disabled_or_in_reset(hdev)) {
--		dev_warn_ratelimited(hdev->dev,
-+		dev_warn_ratelimited(dev,
- 			"Device is %s. Can't execute INFO IOCTL\n",
- 			atomic_read(&hdev->in_reset) ? "in_reset" : "disabled");
- 		return -EBUSY;
-@@ -229,7 +230,7 @@ static int hl_info_ioctl(struct hl_fpriv *hpriv, void *data)
- 		break;
- 
- 	default:
--		dev_err(hdev->dev, "Invalid request %d\n", args->op);
-+		dev_err(dev, "Invalid request %d\n", args->op);
- 		rc = -ENOTTY;
- 		break;
- 	}
-@@ -237,6 +238,16 @@ static int hl_info_ioctl(struct hl_fpriv *hpriv, void *data)
- 	return rc;
- }
- 
-+static int hl_info_ioctl(struct hl_fpriv *hpriv, void *data)
-+{
-+	return _hl_info_ioctl(hpriv, data, hpriv->hdev->dev);
-+}
-+
-+static int hl_info_ioctl_control(struct hl_fpriv *hpriv, void *data)
-+{
-+	return _hl_info_ioctl(hpriv, data, hpriv->hdev->dev_ctrl);
-+}
-+
- static int hl_debug_ioctl(struct hl_fpriv *hpriv, void *data)
- {
- 	struct hl_debug_args *args = data;
-@@ -291,52 +302,45 @@ static const struct hl_ioctl_desc hl_ioctls[] = {
- 	HL_IOCTL_DEF(HL_IOCTL_DEBUG, hl_debug_ioctl)
- };
- 
--#define HL_CORE_IOCTL_COUNT	ARRAY_SIZE(hl_ioctls)
-+static const struct hl_ioctl_desc hl_ioctls_control[] = {
-+	HL_IOCTL_DEF(HL_IOCTL_INFO, hl_info_ioctl_control)
-+};
- 
--long hl_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
-+long _hl_ioctl(struct file *filep, unsigned int cmd, unsigned long arg,
-+		const struct hl_ioctl_desc *ioctl, struct device *dev)
- {
- 	struct hl_fpriv *hpriv = filep->private_data;
- 	struct hl_device *hdev = hpriv->hdev;
--	hl_ioctl_t *func;
--	const struct hl_ioctl_desc *ioctl = NULL;
- 	unsigned int nr = _IOC_NR(cmd);
- 	char stack_kdata[128] = {0};
- 	char *kdata = NULL;
- 	unsigned int usize, asize;
-+	hl_ioctl_t *func;
-+	u32 hl_size;
- 	int retcode;
- 
- 	if (hdev->hard_reset_pending) {
--		dev_crit_ratelimited(hdev->dev,
-+		dev_crit_ratelimited(hdev->dev_ctrl,
- 			"Device HARD reset pending! Please close FD\n");
- 		return -ENODEV;
- 	}
- 
--	if ((nr >= HL_COMMAND_START) && (nr < HL_COMMAND_END)) {
--		u32 hl_size;
--
--		ioctl = &hl_ioctls[nr];
--
--		hl_size = _IOC_SIZE(ioctl->cmd);
--		usize = asize = _IOC_SIZE(cmd);
--		if (hl_size > asize)
--			asize = hl_size;
--
--		cmd = ioctl->cmd;
--	} else {
--		dev_err(hdev->dev, "invalid ioctl: pid=%d, nr=0x%02x\n",
--			task_pid_nr(current), nr);
--		return -ENOTTY;
--	}
--
- 	/* Do not trust userspace, use our own definition */
- 	func = ioctl->func;
- 
- 	if (unlikely(!func)) {
--		dev_dbg(hdev->dev, "no function\n");
-+		dev_dbg(dev, "no function\n");
- 		retcode = -ENOTTY;
- 		goto out_err;
- 	}
- 
-+	hl_size = _IOC_SIZE(ioctl->cmd);
-+	usize = asize = _IOC_SIZE(cmd);
-+	if (hl_size > asize)
-+		asize = hl_size;
-+
-+	cmd = ioctl->cmd;
-+
- 	if (cmd & (IOC_IN | IOC_OUT)) {
- 		if (asize <= sizeof(stack_kdata)) {
- 			kdata = stack_kdata;
-@@ -366,8 +370,7 @@ long hl_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
- 
- out_err:
- 	if (retcode)
--		dev_dbg(hdev->dev,
--			"error in ioctl: pid=%d, cmd=0x%02x, nr=0x%02x\n",
-+		dev_dbg(dev, "error in ioctl: pid=%d, cmd=0x%02x, nr=0x%02x\n",
- 			  task_pid_nr(current), cmd, nr);
- 
- 	if (kdata != stack_kdata)
-@@ -375,3 +378,39 @@ long hl_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
- 
- 	return retcode;
- }
-+
-+long hl_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
-+{
-+	struct hl_fpriv *hpriv = filep->private_data;
-+	struct hl_device *hdev = hpriv->hdev;
-+	const struct hl_ioctl_desc *ioctl = NULL;
-+	unsigned int nr = _IOC_NR(cmd);
-+
-+	if ((nr >= HL_COMMAND_START) && (nr < HL_COMMAND_END)) {
-+		ioctl = &hl_ioctls[nr];
-+	} else {
-+		dev_err(hdev->dev, "invalid ioctl: pid=%d, nr=0x%02x\n",
-+			task_pid_nr(current), nr);
-+		return -ENOTTY;
-+	}
-+
-+	return _hl_ioctl(filep, cmd, arg, ioctl, hdev->dev);
-+}
-+
-+long hl_ioctl_control(struct file *filep, unsigned int cmd, unsigned long arg)
-+{
-+	struct hl_fpriv *hpriv = filep->private_data;
-+	struct hl_device *hdev = hpriv->hdev;
-+	const struct hl_ioctl_desc *ioctl = NULL;
-+	unsigned int nr = _IOC_NR(cmd);
-+
-+	if (nr == _IOC_NR(HL_IOCTL_INFO)) {
-+		ioctl = &hl_ioctls_control[nr];
-+	} else {
-+		dev_err(hdev->dev_ctrl, "invalid ioctl: pid=%d, nr=0x%02x\n",
-+			task_pid_nr(current), nr);
-+		return -ENOTTY;
-+	}
-+
-+	return _hl_ioctl(filep, cmd, arg, ioctl, hdev->dev_ctrl);
-+}
+ 	atomic64_t			dram_used_mem;
+ 	u64				timeout_jiffies;
 -- 
 2.17.1
 
