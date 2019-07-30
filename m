@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC33C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C17AC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B26E206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12275206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B52Y6ecY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UjPcaR49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732821AbfG3Qc0 (ORCPT
+        id S1732838AbfG3Qca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:32:26 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38848 "EHLO
+        Tue, 30 Jul 2019 12:32:30 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40452 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731235AbfG3QcW (ORCPT
+        with ESMTP id S1725871AbfG3QcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:32:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g17so66483537wrr.5;
-        Tue, 30 Jul 2019 09:32:20 -0700 (PDT)
+        Tue, 30 Jul 2019 12:32:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r1so66466211wrl.7;
+        Tue, 30 Jul 2019 09:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vAb/Wbf6jN1XW90qv7LwGWyr9ST9lsuKJ6ZQmhSvlSc=;
-        b=B52Y6ecYwJ01MrPj5v1iQKo+08trN8HAitRyDdmF2eAeduJVshReg8PtQ1vLiEnyzz
-         eeblqXSX9dvocNnfWLW+xQlWbeqGTSWQJPHkX56IzGecCNoFfvpsiKoyGfVkKWc9WQiD
-         InPKWczClbZG3zyJtSxFuAR4nUxCC056S7h8ZG4mEg1K3CLvbNCsnHos+rC0ghNCARaO
-         zWu6VeG89edOTp+oahNKF/lfcYLtK8S8tVCdp+YmpJ6JKyyDWdyo4yok/tyr6PbaIqIP
-         G/rtO0b2dCCK0t7zlugrq4Y9ct1/2ePtUX4DYjN0dhb+ZmH1iXwmPazp9Q9a0julPj9M
-         m5sQ==
+        bh=1OA59L/PDO/fIoCl0NQYE6ljbPRlOkug9V9TGpbxlIc=;
+        b=UjPcaR49D0raHN5n5LpUrIqLVIYxGuUgcwKIDR20hVmAi42K9J3Teum4Dv8hqXp4tT
+         sXOgPorkDuBqQmL7Yd44zH02PTJrqOu7El6TvYdo8KaOBvf1Qa9MIghdVG4OtX1st45d
+         U2bP4rcMIten7LhVc7K6cy5G8rMFJy3w5U4dprMmCMGXfjPEVK/4QFwgr9dTLBoMElbq
+         Tpa5+m03HzVrT1bM2I7m9+wv+D9Fz52UeeF9i6kIocwZKlAjbhLNenr86ggWwM6AJKoW
+         UD+xuD+s6viJQiekJKb8f08MrYVnJzGzjq747zXbfzfBXE8vAxrvjPjsUPDojTbentmc
+         aLJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vAb/Wbf6jN1XW90qv7LwGWyr9ST9lsuKJ6ZQmhSvlSc=;
-        b=S0ms+tOiNuZGGhfl9Z4Lo0YIJyWopiKQsM5gb95r/HEK3+uUw+jx1Rnz7+SPzbPp/B
-         DbuGsQ40Uy44jh2R73M2fQjerMCGtSKe0kPbwMibkhyFynvBTQ+Y1H8wSm5yQAau3clM
-         62Ef+56gje4sSx6431jk99kKOsKELfi9F69y02eTWKu/wepveWJt0joLya0YwvppIUJm
-         qmL4xRP8YrZuNRdkA+gYHgmY053tR7O2zv480wwANhHU5L7/WoMjXd7zHEVCmShv88rX
-         M0burzOzbBPQVtwbdxB+N+jCiTkPUdRI8VrOqmbtge+ILivqfeALuMnJC04dbdKt9niO
-         hS3g==
-X-Gm-Message-State: APjAAAVTFQ9ooELM1sRTw7vmdftHYjiFVTyawQ9fDxR5CQvWBRiK09f9
-        lwFV70vvbbIjuuulaqaoDgM=
-X-Google-Smtp-Source: APXvYqz9QrAYsJsoZlzHjSb/eLW603ZuvezVphBqMkwt5SXjHAVKaSjp0aWaacXrI+0gT5y0RMczIQ==
-X-Received: by 2002:a5d:6a84:: with SMTP id s4mr51092367wru.125.1564504340045;
-        Tue, 30 Jul 2019 09:32:20 -0700 (PDT)
+        bh=1OA59L/PDO/fIoCl0NQYE6ljbPRlOkug9V9TGpbxlIc=;
+        b=XQPnX1+BYb4OC08bytCwkAwokaaUiHyhpMaVVsLgZax4DcRs8lSIgHGNWObNGtq0/7
+         OK/vR+J0kEDc4mzeF7U6E7EioZxkd4YAhTQf5icJGzdFERO8qVMKAefhO3Mbhhfs7Z48
+         tUI94U4NhsXJjMgB1A4MBdxngUTf55sSpb8vDdVFxl3vo3olYAJnfVAKQTPX3eDtLxTk
+         gbbrCR2M5S4n4CyUZ/Bm1slXI3V7GDRVffyyMLzakq52UkKaUlmzjjcaCK3DPNI/r3lM
+         BuQCAbUjNNVOpHBYdprKmrvBqAldhT0J0jC2JjUXJk+yvJcKaOAPGjZEuzRnlixe5+Dm
+         wGig==
+X-Gm-Message-State: APjAAAXGWX7drDkAasrVPL/246iUmTKDTc5/Tq1+Lh43mv+D9J2NXqtu
+        vzFtjubGgJkMYSTnkYk9swE=
+X-Google-Smtp-Source: APXvYqy55VJPIwBbpJxEJ+BkBJhd8VlXEglnPIl5cXskz3bIVLr622tIHUGMZfgTFWN6OuXcGhe+2w==
+X-Received: by 2002:adf:dd0f:: with SMTP id a15mr40299198wrm.265.1564504342627;
+        Tue, 30 Jul 2019 09:32:22 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id c65sm64835175wma.44.2019.07.30.09.32.18
+        by smtp.gmail.com with ESMTPSA id c65sm64835175wma.44.2019.07.30.09.32.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 09:32:19 -0700 (PDT)
+        Tue, 30 Jul 2019 09:32:22 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 01/20] PM / devfreq: tegra30: Change irq type to unsigned int
-Date:   Tue, 30 Jul 2019 19:22:17 +0300
-Message-Id: <20190730162236.6063-2-digetx@gmail.com>
+Subject: [PATCH v5 03/20] PM / devfreq: tegra30: Handle possible round-rate error
+Date:   Tue, 30 Jul 2019 19:22:19 +0300
+Message-Id: <20190730162236.6063-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730162236.6063-1-digetx@gmail.com>
 References: <20190730162236.6063-1-digetx@gmail.com>
@@ -79,47 +79,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IRQ numbers are always positive, hence the corresponding variable should
-be unsigned to keep types consistent. This is a minor change that cleans
-up code a tad more.
+The EMC clock rate rounding technically could fail, hence let's handle
+the error cases properly.
 
-Suggested-by: Thierry Reding <thierry.reding@gmail.com>
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/devfreq/tegra30-devfreq.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index a6ba75f4106d..a27300f40b0b 100644
+index 8be6a33beb9c..bfee9d43de1e 100644
 --- a/drivers/devfreq/tegra30-devfreq.c
 +++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -160,7 +160,7 @@ struct tegra_devfreq {
+@@ -592,8 +592,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+ 	struct tegra_devfreq_device *dev;
+ 	struct tegra_devfreq *tegra;
+ 	struct devfreq *devfreq;
+-	unsigned long rate;
+ 	unsigned int i;
++	long rate;
+ 	int err;
  
- 	struct tegra_devfreq_device devices[ARRAY_SIZE(actmon_device_configs)];
+ 	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
+@@ -650,8 +650,14 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
  
--	int irq;
-+	unsigned int		irq;
- };
+ 	reset_control_deassert(tegra->reset);
  
- struct tegra_actmon_emc_ratio {
-@@ -618,12 +618,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 		return PTR_ERR(tegra->emc_clock);
- 	}
+-	tegra->max_freq = clk_round_rate(tegra->emc_clock, ULONG_MAX) / KHZ;
++	rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
++	if (rate < 0) {
++		dev_err(&pdev->dev, "Failed to round clock rate: %ld\n", rate);
++		return rate;
++	}
++
+ 	tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
++	tegra->max_freq = rate / KHZ;
  
--	tegra->irq = platform_get_irq(pdev, 0);
--	if (tegra->irq < 0) {
--		err = tegra->irq;
-+	err = platform_get_irq(pdev, 0);
-+	if (err < 0) {
- 		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
- 		return err;
- 	}
-+	tegra->irq = err;
+ 	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
+ 		dev = tegra->devices + i;
+@@ -662,6 +668,13 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+ 	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
+ 		rate = clk_round_rate(tegra->emc_clock, rate);
  
- 	reset_control_assert(tegra->reset);
- 
++		if (rate < 0) {
++			dev_err(&pdev->dev,
++				"Failed to round clock rate: %ld\n", rate);
++			err = rate;
++			goto remove_opps;
++		}
++
+ 		err = dev_pm_opp_add(&pdev->dev, rate, 0);
+ 		if (err) {
+ 			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
 -- 
 2.22.0
 
