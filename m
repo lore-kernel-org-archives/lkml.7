@@ -2,138 +2,275 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503A9C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEBCC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28417208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C09208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NYl99vyA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+3HNWsr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbfG3Q6c (ORCPT
+        id S1730259AbfG3Q64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:58:32 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41004 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729922AbfG3Q6Z (ORCPT
+        Tue, 30 Jul 2019 12:58:56 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35432 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729965AbfG3Q6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:58:25 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m9so29022158pls.8
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 09:58:24 -0700 (PDT)
+        Tue, 30 Jul 2019 12:58:31 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y4so66582597wrm.2;
+        Tue, 30 Jul 2019 09:58:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=jqpmDskC1TX3bDYKWtDCT3o+UHu1vSyRRlAS80boooA=;
-        b=NYl99vyAT2g2qXKQ/ttxv6aK/4pI+Jl+Rn3x41C+8nOthzPscIoxz6kHmXyo684aqG
-         rb/0K0XKFlgYoF+kY7SOO8gNgdlwyN4HM3Sr/Il3Cc81/9hBsWfLxJ3iCYgJPxoT4CkQ
-         pH7WKK76bW5K7Dey9WO+grzz2tU/TbIwhooDY=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZWQH59p1BAhtVxgjPSmUyGH/iZiK4gbSDXkFIng0cVs=;
+        b=P+3HNWsr+m/ftVLVO1dz1uXoXDvRuOu3uq6j+K347Y1hu090sNzOjfra10Ov4u2B+G
+         dXwV8PDbcVt3jllyDV6IH/XFOlOs5jNfwri1pWqxD+cH6XBvj5D/hwEtrQoYoYX7VL+R
+         XjW/lhr5mVRUlMpaxL0J1lARkWglG40T5Ex9z6mRLNPCbNVho5aE3iXYWsWwT/U3hMyc
+         YRf7nmiYg4DcKNatWNHwvpepiEolZB6JCTNDU5GvAW4QxrwVbc8fW3UTBIvWsdkLp01/
+         sNIMJISOjtTr3MBDm04+5nckfiARNcnbGINdroq14Xs24/Dz4DZXqNyJJNwTlrNYkgAe
+         m2gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=jqpmDskC1TX3bDYKWtDCT3o+UHu1vSyRRlAS80boooA=;
-        b=dB55XDSMJ/wpdlHDnNTQRbirbAuIJuoFDk1NWHRCPU/Qm2HrJTpe09GufaUxgsTLYV
-         NtWUQUGwm/EicP8vg+Z23jJ4Mq258ILmpUyJWJ2GLFP5B9KmqfhzSZiy9NuEdnaOrR2V
-         PSmTXmK23BeTBJWO5S2zv6rSp4jgMqPz5mzM/Hue/9dLQ+wznoAgZatjYEHPAZaTSS0X
-         dacnNLR2NENebcCzGcV4llyMoHf66uwjC/glX5qH99zAyXtzf0gOtKtT6b6ofa2LYNab
-         QBCz1I0uXZ8hLGLF470taYZUxtD9wQUUIFKElJtgbtEtp1GgRX1KunVE1jAqTO/OnF0G
-         7f0g==
-X-Gm-Message-State: APjAAAUuQ8mO+U43LEPK1aKRr+CQP08DUStGT2R/DyuxhKMUTpWCTv7A
-        2tb1+87KUty65QglmGLoURwqkg==
-X-Google-Smtp-Source: APXvYqy+gf0+nnb94maI7cm2nLvFWTuE6F7PLqZv3vnkSk94sQZV8oHEN6i6kMXftvAY1TByP9u8+g==
-X-Received: by 2002:a17:902:724:: with SMTP id 33mr113301701pli.49.1564505904179;
-        Tue, 30 Jul 2019 09:58:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h6sm62711549pfb.20.2019.07.30.09.58.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jul 2019 09:58:23 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 09:58:22 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HSI: ssi_protocol: Mark expected switch fall-throughs
-Message-ID: <201907300958.6BA873C4E@keescook>
-References: <20190729224519.GA23078@embeddedor>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZWQH59p1BAhtVxgjPSmUyGH/iZiK4gbSDXkFIng0cVs=;
+        b=FltNoqzSVzMpShKh53paBNh/tZ3ql2N9oKymwk5fdm5zL/HhXcg4s89SY8Lt2q0ygC
+         UWNkADsmd+ZklGdFI0nOdlFKfIMch/LbQuyMRElWe0GuAi/xMLktpAIQB90Axeo7qAET
+         YArRK2CYtcf+zdUcKo74K1/LHStn+A8LZDzHjVY8kLhwe/MjFueNYbqIzdwx7eHchy+s
+         Q/QlYvZxdZXNYNZMOxwATsr1bdxwOHCFCwhpaZirVuFFCIVt7qBkNhRJeVr32inPYgAp
+         AWUIcRY5iN96ZjI8yNWKvgxkahCA76c2qPN2HcgV692nr+J12PTCZfYGkeuGVFwvwKn0
+         VvTw==
+X-Gm-Message-State: APjAAAVIQOKnBLwHw/uObNMiuLmSlLA4JTEjWbUTFtf+pTgQR0XcEHxs
+        KYnP3nh5RNnlEzy3oFOH22Q=
+X-Google-Smtp-Source: APXvYqwRrEGjNdV+jFeLa0ewFGNOy3UkiM8ZnLkCJ+VxwFJHxWUuULS46ujbKnA0WPOkAtBxr+QIRg==
+X-Received: by 2002:a5d:4e02:: with SMTP id p2mr19169346wrt.182.1564505908510;
+        Tue, 30 Jul 2019 09:58:28 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.gmail.com with ESMTPSA id r5sm70845040wmh.35.2019.07.30.09.58.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 09:58:28 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 14/15] memory: tegra: Consolidate registers definition into common header
+Date:   Tue, 30 Jul 2019 19:56:17 +0300
+Message-Id: <20190730165618.10122-15-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190730165618.10122-1-digetx@gmail.com>
+References: <20190730165618.10122-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190729224519.GA23078@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 05:45:19PM -0500, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warning (Building: arm):
-> 
-> drivers/hsi/clients/ssi_protocol.c: In function ‘ssip_set_rxstate’:
-> drivers/hsi/clients/ssi_protocol.c:291:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (atomic_read(&ssi->tx_usecnt))
->       ^
-> drivers/hsi/clients/ssi_protocol.c:294:2: note: here
->   case RECEIVING:
->   ^~~~
-> 
-> drivers/hsi/clients/ssi_protocol.c: In function ‘ssip_keep_alive’:
-> drivers/hsi/clients/ssi_protocol.c:466:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     if (atomic_read(&ssi->tx_usecnt) == 0)
->        ^
-> drivers/hsi/clients/ssi_protocol.c:472:3: note: here
->    case SEND_IDLE:
->    ^~~~
-> 
-> Notice that, in this particular case, the code comment is
-> modified in accordance with what GCC is expecting to find.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+The Memory Controller registers definition is sparse and duplicated,
+let's consolidate everything into a common place for consistency.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/memory/tegra/mc.c       | 30 -------------------
+ drivers/memory/tegra/mc.h       | 52 +++++++++++++++++++++++++++++----
+ drivers/memory/tegra/tegra124.c | 20 -------------
+ drivers/memory/tegra/tegra30.c  | 19 ------------
+ 4 files changed, 47 insertions(+), 74 deletions(-)
 
--Kees
-
-> ---
->  drivers/hsi/clients/ssi_protocol.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hsi/clients/ssi_protocol.c b/drivers/hsi/clients/ssi_protocol.c
-> index 9aeed98b87a1..504d00ec1ea7 100644
-> --- a/drivers/hsi/clients/ssi_protocol.c
-> +++ b/drivers/hsi/clients/ssi_protocol.c
-> @@ -290,7 +290,7 @@ static void ssip_set_rxstate(struct ssi_protocol *ssi, unsigned int state)
->  		/* CMT speech workaround */
->  		if (atomic_read(&ssi->tx_usecnt))
->  			break;
-> -		/* Otherwise fall through */
-> +		/* Else, fall through */
->  	case RECEIVING:
->  		mod_timer(&ssi->keep_alive, jiffies +
->  						msecs_to_jiffies(SSIP_KATOUT));
-> @@ -465,9 +465,10 @@ static void ssip_keep_alive(struct timer_list *t)
->  		case SEND_READY:
->  			if (atomic_read(&ssi->tx_usecnt) == 0)
->  				break;
-> +			/* Fall through */
->  			/*
-> -			 * Fall through. Workaround for cmt-speech
-> -			 * in that case we relay on audio timers.
-> +			 * Workaround for cmt-speech in that case
-> +			 * we relay on audio timers.
->  			 */
->  		case SEND_IDLE:
->  			spin_unlock(&ssi->lock);
-> -- 
-> 2.22.0
-> 
-
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index 1bad7f238881..955f1d3f6b6a 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -18,36 +18,6 @@
+ 
+ #include "mc.h"
+ 
+-#define MC_INTSTATUS 0x000
+-
+-#define MC_INTMASK 0x004
+-
+-#define MC_ERR_STATUS 0x08
+-#define  MC_ERR_STATUS_TYPE_SHIFT 28
+-#define  MC_ERR_STATUS_TYPE_INVALID_SMMU_PAGE (6 << MC_ERR_STATUS_TYPE_SHIFT)
+-#define  MC_ERR_STATUS_TYPE_MASK (0x7 << MC_ERR_STATUS_TYPE_SHIFT)
+-#define  MC_ERR_STATUS_READABLE (1 << 27)
+-#define  MC_ERR_STATUS_WRITABLE (1 << 26)
+-#define  MC_ERR_STATUS_NONSECURE (1 << 25)
+-#define  MC_ERR_STATUS_ADR_HI_SHIFT 20
+-#define  MC_ERR_STATUS_ADR_HI_MASK 0x3
+-#define  MC_ERR_STATUS_SECURITY (1 << 17)
+-#define  MC_ERR_STATUS_RW (1 << 16)
+-
+-#define MC_ERR_ADR 0x0c
+-
+-#define MC_GART_ERROR_REQ		0x30
+-#define MC_DECERR_EMEM_OTHERS_STATUS	0x58
+-#define MC_SECURITY_VIOLATION_STATUS	0x74
+-
+-#define MC_EMEM_ARB_CFG 0x90
+-#define  MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE(x)	(((x) & 0x1ff) << 0)
+-#define  MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE_MASK	0x1ff
+-#define MC_EMEM_ARB_MISC0 0xd8
+-
+-#define MC_EMEM_ADR_CFG 0x54
+-#define MC_EMEM_ADR_CFG_EMEM_NUMDEV BIT(0)
+-
+ static const struct of_device_id tegra_mc_of_match[] = {
+ #ifdef CONFIG_ARCH_TEGRA_2x_SOC
+ 	{ .compatible = "nvidia,tegra20-mc-gart", .data = &tegra20_mc_soc },
+diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+index cd52628c2b96..957c6eb74ff9 100644
+--- a/drivers/memory/tegra/mc.h
++++ b/drivers/memory/tegra/mc.h
+@@ -12,6 +12,37 @@
+ 
+ #include <soc/tegra/mc.h>
+ 
++#define MC_INTSTATUS					0x00
++#define MC_INTMASK					0x04
++#define MC_ERR_STATUS					0x08
++#define MC_ERR_ADR					0x0c
++#define MC_GART_ERROR_REQ				0x30
++#define MC_EMEM_ADR_CFG					0x54
++#define MC_DECERR_EMEM_OTHERS_STATUS			0x58
++#define MC_SECURITY_VIOLATION_STATUS			0x74
++#define MC_EMEM_ARB_CFG					0x90
++#define MC_EMEM_ARB_OUTSTANDING_REQ			0x94
++#define MC_EMEM_ARB_TIMING_RCD				0x98
++#define MC_EMEM_ARB_TIMING_RP				0x9c
++#define MC_EMEM_ARB_TIMING_RC				0xa0
++#define MC_EMEM_ARB_TIMING_RAS				0xa4
++#define MC_EMEM_ARB_TIMING_FAW				0xa8
++#define MC_EMEM_ARB_TIMING_RRD				0xac
++#define MC_EMEM_ARB_TIMING_RAP2PRE			0xb0
++#define MC_EMEM_ARB_TIMING_WAP2PRE			0xb4
++#define MC_EMEM_ARB_TIMING_R2R				0xb8
++#define MC_EMEM_ARB_TIMING_W2W				0xbc
++#define MC_EMEM_ARB_TIMING_R2W				0xc0
++#define MC_EMEM_ARB_TIMING_W2R				0xc4
++#define MC_EMEM_ARB_DA_TURNS				0xd0
++#define MC_EMEM_ARB_DA_COVERS				0xd4
++#define MC_EMEM_ARB_MISC0				0xd8
++#define MC_EMEM_ARB_MISC1				0xdc
++#define MC_EMEM_ARB_RING1_THROTTLE			0xe0
++#define MC_EMEM_ARB_OVERRIDE				0xe8
++#define MC_TIMING_CONTROL_DBG				0xf8
++#define MC_TIMING_CONTROL				0xfc
++
+ #define MC_INT_DECERR_MTS				BIT(16)
+ #define MC_INT_SECERR_SEC				BIT(13)
+ #define MC_INT_DECERR_VPR				BIT(12)
+@@ -22,17 +53,28 @@
+ #define MC_INT_INVALID_GART_PAGE			BIT(7)
+ #define MC_INT_DECERR_EMEM				BIT(6)
+ 
+-#define MC_EMEM_ARB_OUTSTANDING_REQ			0x94
++#define MC_ERR_STATUS_TYPE_SHIFT			28
++#define MC_ERR_STATUS_TYPE_INVALID_SMMU_PAGE		(0x6 << 28)
++#define MC_ERR_STATUS_TYPE_MASK				(0x7 << 28)
++#define MC_ERR_STATUS_READABLE				BIT(27)
++#define MC_ERR_STATUS_WRITABLE				BIT(26)
++#define MC_ERR_STATUS_NONSECURE				BIT(25)
++#define MC_ERR_STATUS_ADR_HI_SHIFT			20
++#define MC_ERR_STATUS_ADR_HI_MASK			0x3
++#define MC_ERR_STATUS_SECURITY				BIT(17)
++#define MC_ERR_STATUS_RW				BIT(16)
++
++#define MC_EMEM_ADR_CFG_EMEM_NUMDEV			BIT(0)
++
++#define MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE(x)		((x) & 0x1ff)
++#define MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE_MASK		0x1ff
++
+ #define MC_EMEM_ARB_OUTSTANDING_REQ_MAX_MASK		0x1ff
+ #define MC_EMEM_ARB_OUTSTANDING_REQ_HOLDOFF_OVERRIDE	BIT(30)
+ #define MC_EMEM_ARB_OUTSTANDING_REQ_LIMIT_ENABLE	BIT(31)
+ 
+-#define MC_EMEM_ARB_OVERRIDE				0xe8
+ #define MC_EMEM_ARB_OVERRIDE_EACK_MASK			0x3
+ 
+-#define MC_TIMING_CONTROL_DBG				0xf8
+-
+-#define MC_TIMING_CONTROL				0xfc
+ #define MC_TIMING_UPDATE				BIT(0)
+ 
+ static inline u32 mc_readl(struct tegra_mc *mc, unsigned long offset)
+diff --git a/drivers/memory/tegra/tegra124.c b/drivers/memory/tegra/tegra124.c
+index 5d0ccb2be206..4d80c81a4581 100644
+--- a/drivers/memory/tegra/tegra124.c
++++ b/drivers/memory/tegra/tegra124.c
+@@ -10,26 +10,6 @@
+ 
+ #include "mc.h"
+ 
+-#define MC_EMEM_ARB_CFG				0x90
+-#define MC_EMEM_ARB_OUTSTANDING_REQ		0x94
+-#define MC_EMEM_ARB_TIMING_RCD			0x98
+-#define MC_EMEM_ARB_TIMING_RP			0x9c
+-#define MC_EMEM_ARB_TIMING_RC			0xa0
+-#define MC_EMEM_ARB_TIMING_RAS			0xa4
+-#define MC_EMEM_ARB_TIMING_FAW			0xa8
+-#define MC_EMEM_ARB_TIMING_RRD			0xac
+-#define MC_EMEM_ARB_TIMING_RAP2PRE		0xb0
+-#define MC_EMEM_ARB_TIMING_WAP2PRE		0xb4
+-#define MC_EMEM_ARB_TIMING_R2R			0xb8
+-#define MC_EMEM_ARB_TIMING_W2W			0xbc
+-#define MC_EMEM_ARB_TIMING_R2W			0xc0
+-#define MC_EMEM_ARB_TIMING_W2R			0xc4
+-#define MC_EMEM_ARB_DA_TURNS			0xd0
+-#define MC_EMEM_ARB_DA_COVERS			0xd4
+-#define MC_EMEM_ARB_MISC0			0xd8
+-#define MC_EMEM_ARB_MISC1			0xdc
+-#define MC_EMEM_ARB_RING1_THROTTLE		0xe0
+-
+ static const struct tegra_mc_client tegra124_mc_clients[] = {
+ 	{
+ 		.id = 0x00,
+diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra30.c
+index b1226d3f067f..fdc0b342cf80 100644
+--- a/drivers/memory/tegra/tegra30.c
++++ b/drivers/memory/tegra/tegra30.c
+@@ -10,25 +10,6 @@
+ 
+ #include "mc.h"
+ 
+-#define MC_EMEM_ARB_CFG				0x90
+-#define MC_EMEM_ARB_OUTSTANDING_REQ		0x94
+-#define MC_EMEM_ARB_TIMING_RCD			0x98
+-#define MC_EMEM_ARB_TIMING_RP			0x9c
+-#define MC_EMEM_ARB_TIMING_RC			0xa0
+-#define MC_EMEM_ARB_TIMING_RAS			0xa4
+-#define MC_EMEM_ARB_TIMING_FAW			0xa8
+-#define MC_EMEM_ARB_TIMING_RRD			0xac
+-#define MC_EMEM_ARB_TIMING_RAP2PRE		0xb0
+-#define MC_EMEM_ARB_TIMING_WAP2PRE		0xb4
+-#define MC_EMEM_ARB_TIMING_R2R			0xb8
+-#define MC_EMEM_ARB_TIMING_W2W			0xbc
+-#define MC_EMEM_ARB_TIMING_R2W			0xc0
+-#define MC_EMEM_ARB_TIMING_W2R			0xc4
+-#define MC_EMEM_ARB_DA_TURNS			0xd0
+-#define MC_EMEM_ARB_DA_COVERS			0xd4
+-#define MC_EMEM_ARB_MISC0			0xd8
+-#define MC_EMEM_ARB_RING1_THROTTLE		0xe0
+-
+ static const unsigned long tegra30_mc_emem_regs[] = {
+ 	MC_EMEM_ARB_CFG,
+ 	MC_EMEM_ARB_OUTSTANDING_REQ,
 -- 
-Kees Cook
+2.22.0
+
