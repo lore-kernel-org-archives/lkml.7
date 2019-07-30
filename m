@@ -2,135 +2,169 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834B8C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31ABFC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5225A2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:29:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3J6fSLg"
+	by mail.kernel.org (Postfix) with ESMTP id 0D5E72067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388450AbfG3T3k (ORCPT
+        id S1729423AbfG3TaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 15:29:40 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39316 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727169AbfG3T3i (ORCPT
+        Tue, 30 Jul 2019 15:30:09 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:37817 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728677AbfG3TaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 15:29:38 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f17so26363299pfn.6;
-        Tue, 30 Jul 2019 12:29:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Y+Z4pnc0JucsBU6cBRK5vZR18lsIs+7jdcMlSRJldAM=;
-        b=J3J6fSLgyRAglDa91wM/WVpOub0dsDIGNqdsu1Tea+QoDMMw2jma8/oHcfiQ674cxV
-         SGM7oWPI9HxiZD/zSFxrolfjn7ArdtnRmmMU+e9BgYatHIQBpxtcR++ss8iB6UHaq69T
-         0ANSCqVVCNzXEKPO5jeo3kbhlSzMhZJipJNOmcNRU2FeHa4Ugjn2ZFEVEw2zF1xI/YMu
-         os/CS4b8e8cLNF43RyPEXshPbDam8jORD/qqygREThewtg1ghM/f8AKfNYZLkXDfVs1+
-         NVSlY+R1xu/gK7xGenjd36jma6jr6N2VOXQ4GT+0j1PHdAdwqbJT+tk4SvWjJE8b/NHo
-         hd9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Y+Z4pnc0JucsBU6cBRK5vZR18lsIs+7jdcMlSRJldAM=;
-        b=RDu5znhBvXJIjkE8Ie0OBJTNNJYdCVvssOE8LM+KMv4G5TQJ5HnLxYR9WBTBtST+Ov
-         2iV80V186lochZghik2koEG6gvKwSZCh70NzvFinKROH93e6YlsOG5TI7xIzdi8XKVK9
-         aOPtFF5k1CL13Slv/edRwkCby1+cfvhNlOS9PSVXR4G/Wz1JoP9ECHbAP/Ze9Ha6PB4b
-         ug6xbGySM9fumttiD85fEEeqzcWB+dhDVAJ7ub1U4WP02OA0zN3IlPFK3qQgZueMAHkn
-         Kymeve+fatgj4fGnsxbypV3cJYHyAo2RDstHuNnmA6e868x8RbweWlThpVhxn63dc34m
-         DllQ==
-X-Gm-Message-State: APjAAAX0yfw2+Dtvi+4Il+IhxuLgSQsHGtMkaGgBCaPyXDXXgIBvJJ9/
-        aXd9ijQCqFgDY5ofUP2nq58=
-X-Google-Smtp-Source: APXvYqzjX6/N73oQ92lnyuPiSRKxYuv2wQ9u6FtCOsJTd7+yl6rJuIeKSmKph3ilFfN340WUgdjYKw==
-X-Received: by 2002:aa7:8817:: with SMTP id c23mr43961590pfo.146.1564514978219;
-        Tue, 30 Jul 2019 12:29:38 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([106.51.16.0])
-        by smtp.gmail.com with ESMTPSA id o32sm62411228pje.9.2019.07.30.12.29.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 30 Jul 2019 12:29:37 -0700 (PDT)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     FlorianSchandinat@gmx.de, b.zolnierkie@samsung.com
-Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH] video: fbdev:via: Remove dead code
-Date:   Wed, 31 Jul 2019 01:03:20 +0530
-Message-Id: <1564515200-5020-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 30 Jul 2019 15:30:08 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mvs2R-1iC0D41RtH-00su5I; Tue, 30 Jul 2019 21:29:49 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Phillip Potter <phil@philpotter.co.uk>
+Subject: [PATCH v5 10/29] compat_ioctl: add compat_ptr_ioctl()
+Date:   Tue, 30 Jul 2019 21:25:21 +0200
+Message-Id: <20190730192552.4014288-11-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190730192552.4014288-1-arnd@arndb.de>
+References: <20190730192552.4014288-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:oaGT+dgCZ7eW61FvI0TZ9DdaBUodVzKQE6fy+DvsydsjtaA9t5t
+ YNnIgO4VmLAEqquIOxEvpgquoRzqJpizCxZLxmHRWNeM82CA74cvT8w4AqLlGT2jwBI2T41
+ 9zXvcLKmuHlP0UV9NQfQRrVJ7XM9SRVtuvqO8+DHZpMZJB36p/mrh7jnkrETr//v+3RYnxW
+ bcsdG1mf3FtsarekW2Dsw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3P75hwXu32Y=:yg4yB85JnCIIeA3T5b7w+z
+ 6edHtMRI89PheXd23dSpuey5gLS/R1d2ABuxzHKIwHjEhrFYDahUTXurS8tMXtubp9Y+EMfDa
+ O/WyXfyNDKIqf+1SyfAkVR8qJpOg260mRzQBVSNoPb0pTO5f2rmRltb+tVDR0IRgtD0Hw7OwM
+ 4THx1WA1mjP9gXRp1yTZ2agisqmmhMYrXZtpewerRiL3kPC75uSBfLxhhTz31JNtVVBsfENQn
+ 7sO2iYl0U28Uw8YQkGSRw3sL+3YjRlQeE7tHjW+fg0vzVfSnBGWlcXgfGGqL0vn8MzJTd3c+x
+ l18NehHDl1xDZE3+eOLtPwyEsFh7cGk/pa/kiK2DzsoasnRo3hT9pEf00MyfVBmXVroK+UHzQ
+ phV2wnJdmv+VaCew4+UB3umKmMbcZtVy989/CFjTXeYT+f8aAbQLPA+rRm9YpeXd211906qvS
+ rNkFoRMRsZWqMGiT5I4+R8/30DHI+W9683aWBb95oXm0iVkBv0O3NqhMiPUaanDOnKhshNiWj
+ LflYrLMjDaVuVCUOOqXd/hRL5g5op6Q/nAUbLYwZix7XTce480XJZlCuhAwTRpR/RIkjtWOee
+ TN2PQ1PYgH7mm53aF6Fk+ske/686btFFgeJhPKueLW7L4vse0dey3vesME7UrbK7yy6ArTSjC
+ gOj3z4V1pI1J6Pho3O8VSXxSOKI82ota2xMpDjOr4Y4SmEmkZ445sUuQEv/gdQrrvYSxTz9zz
+ sNiXQB23GT/IK2Y1LyUUyZHHE1gCwquDBjZFkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is dead code since 3.15. If there is no plan to use
-it further, this can be removed forever.
+Many drivers have ioctl() handlers that are completely compatible between
+32-bit and 64-bit architectures, except for the argument that is passed
+down from user space and may have to be passed through compat_ptr()
+in order to become a valid 64-bit pointer.
 
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Using ".compat_ptr = compat_ptr_ioctl" in file operations should let
+us simplify a lot of those drivers to avoid #ifdef checks, and convert
+additional drivers that don't have proper compat handling yet.
+
+On most architectures, the compat_ptr_ioctl() just passes all arguments
+to the corresponding ->ioctl handler. The exception is arch/s390, where
+compat_ptr() clears the top bit of a 32-bit pointer value, so user space
+pointers to the second 2GB alias the first 2GB, as is the case for native
+32-bit s390 user space.
+
+The compat_ptr_ioctl() function must therefore be used only with
+ioctl functions that either ignore the argument or pass a pointer to a
+compatible data type.
+
+If any ioctl command handled by fops->unlocked_ioctl passes a plain
+integer instead of a pointer, or any of the passed data types is
+incompatible between 32-bit and 64-bit architectures, a proper handler
+is required instead of compat_ptr_ioctl.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/video/fbdev/via/via-core.c | 43 --------------------------------------
- 1 file changed, 43 deletions(-)
+v3: add a better description
+v2: use compat_ptr_ioctl instead of generic_compat_ioctl_ptrarg,
+as suggested by Al Viro
+---
+ fs/ioctl.c         | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/fs.h |  7 +++++++
+ 2 files changed, 42 insertions(+)
 
-diff --git a/drivers/video/fbdev/via/via-core.c b/drivers/video/fbdev/via/via-core.c
-index e2b2062..ffa2ca2 100644
---- a/drivers/video/fbdev/via/via-core.c
-+++ b/drivers/video/fbdev/via/via-core.c
-@@ -221,49 +221,6 @@ void viafb_release_dma(void)
+diff --git a/fs/ioctl.c b/fs/ioctl.c
+index 9d26251f34a9..812061ba667a 100644
+--- a/fs/ioctl.c
++++ b/fs/ioctl.c
+@@ -8,6 +8,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/mm.h>
+ #include <linux/capability.h>
++#include <linux/compat.h>
+ #include <linux/file.h>
+ #include <linux/fs.h>
+ #include <linux/security.h>
+@@ -748,3 +749,37 @@ SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, arg)
+ {
+ 	return ksys_ioctl(fd, cmd, arg);
  }
- EXPORT_SYMBOL_GPL(viafb_release_dma);
++
++#ifdef CONFIG_COMPAT
++/**
++ * compat_ptr_ioctl - generic implementation of .compat_ioctl file operation
++ *
++ * This is not normally called as a function, but instead set in struct
++ * file_operations as
++ *
++ *     .compat_ioctl = compat_ptr_ioctl,
++ *
++ * On most architectures, the compat_ptr_ioctl() just passes all arguments
++ * to the corresponding ->ioctl handler. The exception is arch/s390, where
++ * compat_ptr() clears the top bit of a 32-bit pointer value, so user space
++ * pointers to the second 2GB alias the first 2GB, as is the case for
++ * native 32-bit s390 user space.
++ *
++ * The compat_ptr_ioctl() function must therefore be used only with ioctl
++ * functions that either ignore the argument or pass a pointer to a
++ * compatible data type.
++ *
++ * If any ioctl command handled by fops->unlocked_ioctl passes a plain
++ * integer instead of a pointer, or any of the passed data types
++ * is incompatible between 32-bit and 64-bit architectures, a proper
++ * handler is required instead of compat_ptr_ioctl.
++ */
++long compat_ptr_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++{
++	if (!file->f_op->unlocked_ioctl)
++		return -ENOIOCTLCMD;
++
++	return file->f_op->unlocked_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
++}
++EXPORT_SYMBOL(compat_ptr_ioctl);
++#endif
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 56b8e358af5c..07b032e58032 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1702,6 +1702,13 @@ int vfs_mkobj(struct dentry *, umode_t,
  
--
--#if 0
--/*
-- * Copy a single buffer from FB memory, synchronously.  This code works
-- * but is not currently used.
-- */
--void viafb_dma_copy_out(unsigned int offset, dma_addr_t paddr, int len)
--{
--	unsigned long flags;
--	int csr;
--
--	mutex_lock(&viafb_dma_lock);
--	init_completion(&viafb_dma_completion);
--	/*
--	 * Program the controller.
--	 */
--	spin_lock_irqsave(&global_dev.reg_lock, flags);
--	viafb_mmio_write(VDMA_CSR0, VDMA_C_ENABLE|VDMA_C_DONE);
--	/* Enable ints; must happen after CSR0 write! */
--	viafb_mmio_write(VDMA_MR0, VDMA_MR_TDIE);
--	viafb_mmio_write(VDMA_MARL0, (int) (paddr & 0xfffffff0));
--	viafb_mmio_write(VDMA_MARH0, (int) ((paddr >> 28) & 0xfff));
--	/* Data sheet suggests DAR0 should be <<4, but it lies */
--	viafb_mmio_write(VDMA_DAR0, offset);
--	viafb_mmio_write(VDMA_DQWCR0, len >> 4);
--	viafb_mmio_write(VDMA_TMR0, 0);
--	viafb_mmio_write(VDMA_DPRL0, 0);
--	viafb_mmio_write(VDMA_DPRH0, 0);
--	viafb_mmio_write(VDMA_PMR0, 0);
--	csr = viafb_mmio_read(VDMA_CSR0);
--	viafb_mmio_write(VDMA_CSR0, VDMA_C_ENABLE|VDMA_C_START);
--	spin_unlock_irqrestore(&global_dev.reg_lock, flags);
--	/*
--	 * Now we just wait until the interrupt handler says
--	 * we're done.
--	 */
--	wait_for_completion_interruptible(&viafb_dma_completion);
--	viafb_mmio_write(VDMA_MR0, 0); /* Reset int enable */
--	mutex_unlock(&viafb_dma_lock);
--}
--EXPORT_SYMBOL_GPL(viafb_dma_copy_out);
--#endif
--
+ extern long vfs_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
+ 
++#ifdef CONFIG_COMPAT
++extern long compat_ptr_ioctl(struct file *file, unsigned int cmd,
++					unsigned long arg);
++#else
++#define compat_ptr_ioctl NULL
++#endif
++
  /*
-  * Do a scatter/gather DMA copy from FB memory.  You must have done
-  * a successful call to viafb_request_dma() first.
+  * VFS file helper functions.
+  */
 -- 
-1.9.1
+2.20.0
 
