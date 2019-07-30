@@ -2,79 +2,135 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BD1C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384A2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFCB32087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012522087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HRkCSNBy"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XM26NBcT";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LPtChlWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729764AbfG3KuJ (ORCPT
+        id S1729815AbfG3KuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 06:50:09 -0400
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:33590 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729651AbfG3KuJ (ORCPT
+        Tue, 30 Jul 2019 06:50:15 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59830 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729654AbfG3KuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 06:50:09 -0400
-Received: by mail-lf1-f41.google.com with SMTP id x3so44470119lfc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 03:50:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=F31cQ0ne3p3xFuaSlxROjZYeTvKp+9tCo1IZnDyB5kc=;
-        b=HRkCSNByu31f39s+lOU22nTucb6QbcbWxwwj2ZbJu2tlOmUkF6O1+iJIl6/diz7cjg
-         VJ144Pqm1gbPTn1+ZPtAKLEjE7uhacH6kI7XZaj5nsEooGsiyEsFUT2qdQqLNRMurpZA
-         NGSIC3XDmnQdAJOWMInyzabVKWoeGcS/K3+4nJ7RcucAwhGOpxPVD2pZfD4+1slua4f4
-         ZwN9ay3V3Jgh6yIYHl+k6FMe66BVMzDCRsvS7wpUqsXSaswZbsSls5E28EfPSZEO6wcN
-         LfzadRc9jB/AVts4r+OUvrgBhohfoKa+tsEuimsamKkhxylbovNJwMwJmdclpDIuTMj0
-         lMjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=F31cQ0ne3p3xFuaSlxROjZYeTvKp+9tCo1IZnDyB5kc=;
-        b=XOrdzzSRie6kl9EhKM/3qst4r5q6dQcjsCmTNpP5+wEP2Hylp7rpKMKin6hbW3jghb
-         koelaazqFHgPz/159ErYceuLRUAcaIVLNDQqqOaunZzbrU+9WkZctmSs0hHcOMKxzEEL
-         jWN7K6qEscTxmKp7Fo8OI7OmOGxl1JRXH9tTZDlK3X61N+ayuv49PBvuNG9uMW67C/V6
-         FSqfL1Xg0CUBzMfksm7dDS4C3hn+neLtpS2UKabDyiP0cdXDHTcl8qUw0vwSYkDFLRlE
-         AMtwF2efDtPZLHsNkUPhQ4onzeZ+1GT1/Mg52BvSrlkCJFLRXDYZ93HjU9RtHp5EcjCX
-         GGyw==
-X-Gm-Message-State: APjAAAUKo5JgOYokWRH55afzjXvFtv0lX3CfBKjcH0j58VUkWMhyaGVJ
-        owniGIpdB74vDrdLCU449BmsDABwfGyXFcbzmYrfOA==
-X-Google-Smtp-Source: APXvYqy3j01W1DiK77paO5P6wAyETN2Q1v+EqaF8qkc9KhP+lBvg1oeHOI1YhDj6KVh1ScwmIbAm5j/jergMRP5DZrE=
-X-Received: by 2002:a19:ed0c:: with SMTP id y12mr246679lfy.191.1564483806778;
- Tue, 30 Jul 2019 03:50:06 -0700 (PDT)
+        Tue, 30 Jul 2019 06:50:14 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3BF34602AE; Tue, 30 Jul 2019 10:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564483813;
+        bh=+38mSgtNrHMOEj2u+X8QzEM2e+ZEFZCoBdmlqto1Vo4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XM26NBcTqaldIgG3hSOe769SIfH2RgNHY2IhVylrQlHp0coA5d0L3tBO/ndivPYSv
+         hs7Sahg6r+eCjsrXyiZwlEGZeyqO+nhWDkmQN1MCPTr1CeuRDRJFqd5qRlN8zxOAF/
+         75VkcAbMi+BWZsKtFAAPjHwvjm3cv7KMYCpSySnc=
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 140CA602AE;
+        Tue, 30 Jul 2019 10:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564483812;
+        bh=+38mSgtNrHMOEj2u+X8QzEM2e+ZEFZCoBdmlqto1Vo4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LPtChlWo9Nsg3dBjNg0AHiAdNWM9epRApgvWSfcYSjbe7mKaOtneTLK/2pHH3lrBZ
+         1b4Od9bA8kPv0skxHC10CkLGQdYOlMGWGZ31h9wUSla7w1Puq9CKWVGe2pEfixSLFC
+         HmkudXP/O0BTxuL5Kp/HniVimA/TduJ+JVOUfzms=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 140CA602AE
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v1 2/3] clk: qcom: rcg2: Add support for hardware control
+ mode
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1557339895-21952-1-git-send-email-tdas@codeaurora.org>
+ <1557339895-21952-3-git-send-email-tdas@codeaurora.org>
+ <20190715225219.B684820665@mail.kernel.org>
+ <916e2fb3-98b9-c4e3-50e0-3581a41609d6@codeaurora.org>
+ <20190716231845.832F82064B@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <2bb31636-e7de-50e6-b4fb-826b6e7e7c04@codeaurora.org>
+Date:   Tue, 30 Jul 2019 16:20:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 30 Jul 2019 16:19:55 +0530
-Message-ID: <CA+G9fYtWFhak1_N1sAJk=HGo+yzYvrU9DDfZRV_3a8C9JUMT0Q@mail.gmail.com>
-Subject: linux-next 20190730: undefined reference to `gpiod_get_from_of_node'
-To:     Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        open list <linux-kernel@vger.kernel.org>,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190716231845.832F82064B@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Today's linux next 20190730 build broken for x86_64 and i386.
+Hello Stephen,
 
-drivers/gpio/gpiolib-devres.o: In function `devm_gpiod_get_from_of_node':
-gpiolib-devres.c:(.text+0x203): undefined reference to `gpiod_get_from_of_node'
-Makefile:1063: recipe for target 'vmlinux' failed
-make[1]: *** [vmlinux] Error 1
+On 7/17/2019 4:48 AM, Stephen Boyd wrote:
+> Quoting Taniya Das (2019-07-15 21:19:02)
+>> Hello Stephen,
+>>
+>> Thanks for your review.
+>>
+>> On 7/16/2019 4:22 AM, Stephen Boyd wrote:
+>>> Quoting Taniya Das (2019-05-08 11:24:54)
+>>>> diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+>>>> index 57dbac9..5bb6d45 100644
+>>>> --- a/drivers/clk/qcom/clk-rcg2.c
+>>>> +++ b/drivers/clk/qcom/clk-rcg2.c
+>>>> @@ -289,6 +289,9 @@ static int __clk_rcg2_configure(struct clk_rcg2 *rcg, const struct freq_tbl *f)
+>>>>           cfg |= rcg->parent_map[index].cfg << CFG_SRC_SEL_SHIFT;
+>>>>           if (rcg->mnd_width && f->n && (f->m != f->n))
+>>>>                   cfg |= CFG_MODE_DUAL_EDGE;
+>>>> +       if (rcg->flags & HW_CLK_CTRL_MODE)
+>>>> +               cfg |= CFG_HW_CLK_CTRL_MASK;
+>>>> +
+>>>
+>>> Above this we have commit bdc3bbdd40ba ("clk: qcom: Clear hardware clock
+>>> control bit of RCG") that clears this bit. Is it possible to always set
+>>> this bit and then have an override flag used in sdm845 that says to
+>>> _not_ set this bit? Presumably on earlier platforms writing the bit is a
+>>> no-op so it's safe to write the bit on those platforms.
+>>>
+>>> This way, if it's going to be the default we can avoid setting the flag
+>>> and only set the flag on older platforms where it shouldn't be done for
+>>> some reason.
+>>>
+>>
+>> Not all the subsystem clock controllers might have this hardware control
+>> bit set from design. Thus we want to set them based on the flag.
+> 
+> Yes but what's the percentage of clks that are going to set this flag
+> vs. not set this flag? If that is low right now then it's fine but if it
+> eventually becomes the standard mechanism it will be easier to opt-out
+> of the feature if necessary instead of opt-in.
+> 
 
-Full build log link,
-https://ci.linaro.org/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/574/consoleText
+Currently all the RCGs in GCC need to clear the bit and few RCGs from
+the other CCs(DISPCC/VIDEOCC) where the bit is not set from HW requires 
+this bit to be set. Thus we want to use this flag mechanism to have the 
+flexibility to set.
 
-Best regards
-Naresh Kamboju
+Once it is a standard we could cleanup to remove this.
+
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
