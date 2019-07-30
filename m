@@ -2,162 +2,120 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0412DC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33968C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C814620651
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058DE20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:09:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdOm9udM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbfG3OI0 (ORCPT
+        id S1730071AbfG3OJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 10:08:26 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37323 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729854AbfG3OI0 (ORCPT
+        Tue, 30 Jul 2019 10:09:13 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42183 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728769AbfG3OJM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 10:08:26 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f17so56765578wme.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 07:08:24 -0700 (PDT)
+        Tue, 30 Jul 2019 10:09:12 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay6so28986243plb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 07:09:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iHPjJv58lVrwg6giII+qHzNEmZDa61eVgrDBDTfVpak=;
+        b=DdOm9udMcvmHE1orqtO9n8OFxskdl64iuJYu39Q4KZGHk7TxeaFSHHo5oAOAnKsDQ/
+         uyYD/z6srPTl76pLYkMNZzqSiZNA5BQNK80x6W+xatQTOp9+rFNHzUC3xD1RLv3MllTB
+         UQO7t0pK8xTLfOvjgveY+Y8Nha7eatlICV/JNUes1eHgClxqfjTT5kvUgodj/99R2h+l
+         SFL//S4cyP8O8vrw/MXjX/SG+hjEE0QSMUyLCYOmao9iR3FZ3jkxETwVhJMOnXJiPn1b
+         WjgFyfQ/KuV+pWCnOlO3OmflAIf2nsnfJyjBb3Ywd4oeiVoCqnwTJnsA4JLKOf2jQBjV
+         RgrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZH4+xww8GjJmr2iRqeXFgV0mXUwPu2r7QQVWlvDHaVk=;
-        b=pDl9dwevfHew4K9YjpD0C6jkFiCwYE5fjegworuBtrqY3la+P16+Z/BweAqyq0qCFn
-         bw6XqfBV1waIRDGdjpffa3xV/P7iB9resi5YB2LqDGinR7ELuldPm7WZeXFLBT0lFpot
-         KhpR6ITzBTk+vhGVia9C9GRJigaNzkxqGJDvK3wuNchYmz0ir4OV5Oak2Z/COMrAq+w5
-         uQJ34nz0p9gOYhJjMuUi8x5D/oGTZzzs0q8UTO+QWfE2g1IhjGBCFUFR4VfJ0EPNuB25
-         fsKI/hpvulqAAK8Z+YZ7t7Wn16nYK5dgQxVaS3vybn+oKLw5EKdSsdUpAN3E37KRdyOp
-         ExWg==
-X-Gm-Message-State: APjAAAWIazkgH2BQsMa0XfPkToLTn1XFst9DojNXmCJjOnorbRbEjlgU
-        79HrnZd7ElCWtKX2TwSBKqXr32gbZhs=
-X-Google-Smtp-Source: APXvYqz76P7zjl5qWfhGVUvy62IrTslgJOlgUHf8WXPi8LxP5z5ObP6+fp6h+josSRdGuBLS/01xpg==
-X-Received: by 2002:a1c:a514:: with SMTP id o20mr108471635wme.149.1564495704002;
-        Tue, 30 Jul 2019 07:08:24 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id m24sm39374446wmi.39.2019.07.30.07.08.22
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 07:08:23 -0700 (PDT)
-Subject: Re: [RFC PATCH 05/16] RISC-V: KVM: Implement VCPU interrupts and
- requests handling
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190729115544.17895-1-anup.patel@wdc.com>
- <20190729115544.17895-6-anup.patel@wdc.com>
- <9f9d09e5-49bc-f8e3-cfe1-bd5221e3b683@redhat.com>
- <CAAhSdy3JZVEEnPnssALaxvCsyznF=rt=7-d5J_OgQEJv6cPhxQ@mail.gmail.com>
- <66c4e468-7a69-31e7-778b-228908f0e737@redhat.com>
- <CAAhSdy3b-o6y1fsYi1iQcCN=9ZuC98TLCqjHCYAzOCx+N+_89w@mail.gmail.com>
- <828f01a9-2f11-34b6-7753-dc8fa7aa0d18@redhat.com>
- <CAAhSdy19_dEL7e_sEFYi-hXvhVerm_cr3BdZ-TRw0aTTL-O9ZQ@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <816c70e7-0ea3-1dde-510e-f1d5c6a02dd5@redhat.com>
-Date:   Tue, 30 Jul 2019 16:08:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        bh=iHPjJv58lVrwg6giII+qHzNEmZDa61eVgrDBDTfVpak=;
+        b=ks0Ne0DeyxgDkWP2mW0t/pE3hCG5/5wBehdGl9vXnI8SFkqp1nzVUtLCKQA+U57cyi
+         Tv4abboDXJrRw8bbhjIM4fcUEc1BsMf3QdbJhnI+BGQUt4/6kxuCRB1l3rol/XsZOLF0
+         B7B5Lp2/LEi/6Yj/mXWVjcJNU7Y1gdY5t96vSRD7oWW8/48HjOpKFxnxi63ysi6qzifA
+         oUyh6xJwe0O/QFdb3FzbxZPtNXjCm8CB5kZ9zKohGgTsTuRS0hEVk/oyGL2u+qLO3MrM
+         GMFDd6WNhgPPLd5LMX8dqrwY8ZmKtSotrcx5JvT+KXRdLr6W07jl3utS9QhrkMpfVpFv
+         suTQ==
+X-Gm-Message-State: APjAAAW7yUxIoAvFmEw023pG5CP6JERKlauBjJsx1jPQ4yT+MK303b2P
+        OE29i5cPa3sccUxZKfSbaOE=
+X-Google-Smtp-Source: APXvYqyxL7Y2isD78hMwUqEvNi8sdW0nlyiV+/7D6/s+DZLzlJjBKPg28SY5TV/ONjYI6VgK/6AuvA==
+X-Received: by 2002:a17:902:e40f:: with SMTP id ci15mr115822673plb.103.1564495752244;
+        Tue, 30 Jul 2019 07:09:12 -0700 (PDT)
+Received: from localhost.localdomain ([149.28.153.17])
+        by smtp.gmail.com with ESMTPSA id w16sm78941293pfj.85.2019.07.30.07.09.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 07:09:11 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH] fgraph: Remove redundant ftrace_graph_notrace_addr() test
+Date:   Tue, 30 Jul 2019 22:08:50 +0800
+Message-Id: <20190730140850.7927-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAAhSdy19_dEL7e_sEFYi-hXvhVerm_cr3BdZ-TRw0aTTL-O9ZQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/07/19 15:35, Anup Patel wrote:
-> On Tue, Jul 30, 2019 at 6:48 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->> On 30/07/19 14:45, Anup Patel wrote:
->>> Here's some text from RISC-V spec regarding SIP CSR:
->>> "software interrupt-pending (SSIP) bit in the sip register. A pending
->>> supervisor-level software interrupt can be cleared by writing 0 to the SSIP bit
->>> in sip. Supervisor-level software interrupts are disabled when the SSIE bit in
->>> the sie register is clear."
->>>
->>> Without RISC-V hypervisor extension, the SIP is essentially a restricted
->>> view of MIP CSR. Also as-per above, S-mode SW can only write 0 to SSIP
->>> bit in SIP CSR whereas it can only be set by M-mode SW or some HW
->>> mechanism (such as S-mode CLINT).
->>
->> But that's not what the spec says.  It just says (just before the
->> sentence you quoted):
->>
->>    A supervisor-level software interrupt is triggered on the current
->>    hart by writing 1 to its supervisor software interrupt-pending (SSIP)
->>    bit in the sip register.
-> 
-> Unfortunately, this statement does not state who is allowed to write 1
-> in SIP.SSIP bit.
+We already have tested it before. The second one should be removed.
+With this change, the performance should have little improvement.
 
-If it doesn't state who is allowed to write 1, whoever has access to sip
-can.
+Fixes: 9cd2992f2d6c ("fgraph: Have set_graph_notrace only affect function_graph tracer")
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+---
+ kernel/trace/trace_functions_graph.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-> I quoted MIP CSR documentation to highlight the fact that only M-mode
-> SW can set SSIP bit.
-> 
-> In fact, I had same understanding as you have regarding SSIP bit
-> until we had MSIP issue in OpenSBI.
-> (https://github.com/riscv/opensbi/issues/128)
->
->> and it's not written anywhere that S-mode SW cannot write 1.  In fact
->> that text is even under sip, not under mip, so IMO there's no doubt that
->> S-mode SW _can_ write 1, and the hypervisor must operate accordingly.
-> 
-> Without hypervisor support, SIP CSR is nothing but a restricted view of
-> MIP CSR thats why MIP CSR documentation applies here.
-
-But the privileged spec says mip.MSIP is read-only, it cannot be cleared
-(as in the above OpenSBI issue).  So mip.MSIP and sip.SSIP are already
-different in that respect, and I don't see how the spec says that S-mode
-SW cannot set sip.SSIP.
-
-(As an aside, why would M-mode even bother using sip and not mip to
-write 1 to SSIP?).
-
-> I think this discussion deserves a Github issue on RISC-V ISA manual.
-
-Perhaps, but I think it makes more sense this way.  The question remains
-of why M-mode is not allowed to write to MSIP/MEIP/MTIP.  My guess is
-that then MSIP/MEIP/MTIP are simply a read-only view of an external pin,
-so it simplifies hardware a tiny bit by forcing acks to go through the
-MMIO registers.
-
-> If my interpretation is incorrect then it would be really strange that
-> HART in S-mode SW can inject IPI to itself by writing 1 to SIP.SSIP bit.
-
-Well, it can be useful, for example Windows does it when interrupt
-handlers want to schedule some work to happen out of interrupt context.
- Going through SBI would be unpleasant if it causes an HS-mode trap.
-
-Paolo
-
->>
->> In fact I'm sure that if Windows were ever ported to RISC-V, it would be
->> very happy to use that feature.  On x86, Intel even accelerated it
->> specifically for Microsoft. :)
-> 
-> That would be indeed very strange usage.  :)
-> 
-> Regards,
-> Anup
-> 
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 69ebf3c2f1b5..78af97163147 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -137,6 +137,13 @@ int trace_graph_entry(struct ftrace_graph_ent *trace)
+ 	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT))
+ 		return 0;
+ 
++	/*
++	 * Do not trace a function if it's filtered by set_graph_notrace.
++	 * Make the index of ret stack negative to indicate that it should
++	 * ignore further functions.  But it needs its own ret stack entry
++	 * to recover the original index in order to continue tracing after
++	 * returning from the function.
++	 */
+ 	if (ftrace_graph_notrace_addr(trace->func)) {
+ 		trace_recursion_set(TRACE_GRAPH_NOTRACE_BIT);
+ 		/*
+@@ -155,16 +162,6 @@ int trace_graph_entry(struct ftrace_graph_ent *trace)
+ 	if (ftrace_graph_ignore_irqs())
+ 		return 0;
+ 
+-	/*
+-	 * Do not trace a function if it's filtered by set_graph_notrace.
+-	 * Make the index of ret stack negative to indicate that it should
+-	 * ignore further functions.  But it needs its own ret stack entry
+-	 * to recover the original index in order to continue tracing after
+-	 * returning from the function.
+-	 */
+-	if (ftrace_graph_notrace_addr(trace->func))
+-		return 1;
+-
+ 	/*
+ 	 * Stop here if tracing_threshold is set. We only write function return
+ 	 * events to the ring buffer.
+-- 
+2.20.1
 
