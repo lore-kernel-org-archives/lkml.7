@@ -2,278 +2,66 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84551C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEDCC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB7D20651
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D709D206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:37:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="R6k+ycnN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbfG3NhC (ORCPT
+        id S1731190AbfG3Nhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:37:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:32820 "EHLO foss.arm.com"
+        Tue, 30 Jul 2019 09:37:32 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47702 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbfG3NhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:37:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D84B028;
-        Tue, 30 Jul 2019 06:37:00 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0729D3F694;
-        Tue, 30 Jul 2019 06:36:59 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Refactor snapshot vs nocow writers locking
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Nikolay Borisov <nborisov@suse.com>, linux-btrfs@vger.kernel.org,
-        paulmck@linux.ibm.com, andrea.parri@amarulasolutions.com,
-        linux-kernel@vger.kernel.org
-References: <20190719083949.5351-1-nborisov@suse.com>
- <ed015bb1-490e-7102-d172-73c1d069476c@arm.com>
- <20190729153319.GH2368@arrakis.emea.arm.com>
- <60eda0ab-08b3-de82-5b06-98386ee1928f@arm.com>
- <69ef76a2-ebd6-956e-c611-2e742606ed95@arm.com>
-Message-ID: <2dcaf81c-f0d3-409e-cb29-733d8b3b4cc9@arm.com>
-Date:   Tue, 30 Jul 2019 14:36:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1725793AbfG3Nhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 09:37:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=00RmNAb/n2jprPrBpuchRHXCWQrxaSH+iEhQsGGChHQ=; b=R6k+ycnNKgE5OySMmyghm7qtzB
+        q6baP6N6VJ79n01ot2L8GBNgpbSjI/K9TDyQPrn0qRbCb0rN4K8Q87RAbExnm8NZNENDcUf/HxTin
+        iromtqWPrtzQeU/vC3W541uk0s7roNGBnS3wIH/hRRDCTQLHDYn7LxafBRMznvT8wMpY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hsSJm-0007nG-Km; Tue, 30 Jul 2019 15:37:30 +0200
+Date:   Tue, 30 Jul 2019 15:37:30 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Hubert Feurstein <h.feurstein@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH 2/4] dt-bindings: net: dsa: marvell: add 6220 model to
+ the 6250 family
+Message-ID: <20190730133730.GF28552@lunn.ch>
+References: <20190730100429.32479-1-h.feurstein@gmail.com>
+ <20190730100429.32479-3-h.feurstein@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <69ef76a2-ebd6-956e-c611-2e742606ed95@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730100429.32479-3-h.feurstein@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And with a more accurate spec (appended at the end of this email):
+On Tue, Jul 30, 2019 at 12:04:27PM +0200, Hubert Feurstein wrote:
+> The MV88E6220 is part of the MV88E6250 family.
+> 
+> Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
 
-    Model checking completed. No error has been found.
-      Estimates of the probability that TLC did not check all reachable states
-      because two distinct states had the same fingerprint:
-      calculated (optimistic):  val = 8.6E-8
-      based on the actual fingerprints:  val = 9.8E-9
-    3100306 states generated, 651251 distinct states found, 0 states left on queue.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-IOW, it seems fine in regards to the defined properties + the deadlock
-check.
-
-The EventuallyRead liveness property shows that a waiting reader will
-always eventually get the lock (no reader starvation), of course assuming
-no lock-user blocks in its critical section (i.e. no stuttering steps).
-
-It doesn't hold for writers - they can be starved by a never-ending stream
-of readers. IOW
-
-  \* Eventually one writer gets the lock
-  <> \E writer \in WRITERS: pc[writer] = "write_cs"
-
-can be disproven by some behaviours. However,
-
-  \* No writer ever gets the lock
-  [] \A writer \in WRITERS: pc[writer] # "write_cs"
-
-can be disproven as well - there are *some* paths that allow writers to
-get the lock. I haven't found a neater way to check that other than by
-having a "debug" property that I don't include in the full-fledged check.
-
-
-
-Note that the entire content of a label is considered atomic by TLC. From
-the point of view of that spec:
-
-Read lock:
-- reader count increment is atomic
-- writer count read is atomic
-
-Read unlock:
-- reader count decrement is atomic
-(The model's writer counter read is in the same atomic block as the
-reader count decrement, but it's only used for updating a model-internal
-variable, so I'm not including it here)
-
-Write lock:
-- write count increment is atomic
-- reader count read is atomic
-- writer count decrement is atomic
-
-Write unlock:
-- writer count increment is atomic
-(ditto on the reader counter read)
-
-This doesn't help for the placement of memory barriers, but from an
-algorithm point of view that seems to be holding up.
-
-
-
-Here's the actual spec (if I keep this up I'll get a git tree going...)
----------------------------------------------------------------------------
-specs.tla:
-
----- MODULE specs ----
-EXTENDS Integers, Sequences, FiniteSets, TLC
-
-CONSTANTS
-    NR_WRITERS,
-    NR_READERS,
-    WRITER_TASK,
-    READER_TASK
-
-WRITERS == {WRITER_TASK} \X (1..NR_WRITERS)
-READERS == {READER_TASK} \X (1..NR_READERS)
-THREADS == WRITERS \union READERS
-
-(*--algorithm DRW {
-
-variables
-    lock_state = "idle",
-    reader_count = 0,
-    writer_count = 0
-
-define {
-
-LOCK_STATES == {"idle", "write_locked", "read_locked"}
-
-(* Safety invariants *)
-TypeCheck ==
-    /\ lock_state \in LOCK_STATES
-    /\ reader_count \in (0..NR_READERS)
-    /\ writer_count \in (0..NR_WRITERS)
-
-(* Ensure critical section exclusiveness *)
-Exclusion ==
-    /\ \E writer \in WRITERS: pc[writer] = "write_cs" =>
-        \A reader \in READERS: pc[reader] # "read_cs"
-    /\ \E reader \in READERS: pc[reader] = "read_cs" =>
-        \A writer \in WRITERS: pc[writer] # "write_cs"
-
-(* Ensure the lock state is sane *)
-LockState ==
-    /\ lock_state = "idle" =>
-        (* Not much can be said about the counts - the whole range is valid *)
-        /\ \A writer \in WRITERS: pc[writer] # "write_cs"
-        /\ \A reader \in READERS: pc[reader] # "read_cs"
-    /\ lock_state = "read_locked" =>
-        (* Some readers can still be in the locking procedure, just make sure  *)
-	(* all readers in their critical section are accounted for *)
-        reader_count >= Cardinality({r \in READERS: pc[r] = "read_cs"})
-    /\ lock_state = "write_locked" =>
-        (* Ditto for writers *)
-        writer_count >= Cardinality({w \in WRITERS: pc[w] = "write_cs"})
-
-(* Liveness properties *)
-
-(* A waiting reader *always* eventually gets the lock *)
-EventuallyRead ==
-    reader_count > 0 /\ lock_state # "read_locked" ~>
-        lock_state = "read_locked"
-
-(* A waiting writer *can* eventually get the lock *)
-EventuallyWrite ==
-    (* TODO: find a way to express that this can be false in some behaviours *)
-    (*       but has to be true in > 0 behaviours *)
-    TRUE
-}
-
-macro ReadUnlock()
-{
-    reader_count := reader_count - 1;
-    \* Condition variable signal is "implicit" here
-    if (reader_count = 0) {
-        lock_state := "idle";
-    };
-}
-
-macro WriteUnlock()
-{
-    writer_count := writer_count - 1;
-    \* Ditto on the cond var
-    if (writer_count = 0) {
-        lock_state := "idle";
-    };
-}
-
-procedure ReadLock()
-{
-add:
-    reader_count := reader_count + 1;
-lock:
-    await writer_count = 0;
-    lock_state := "read_locked";
-    return;
-}
-
-procedure WriteLock()
-variables rc;
-{
-loop:
-    while (TRUE) {
-        writer_count := writer_count + 1;
-get_readers:
-        rc := reader_count;
-check_readers:
-        if (rc > 0) {
-            writer_count := writer_count - 1;
-wait:
-            await reader_count = 0;
-        } else {
-            goto locked;
-        };
-    };
-
-locked:
-    lock_state := "write_locked";
-    return;
-};
-
-fair process(writer \in WRITERS)
-{
-loop:
-    while (TRUE) {
-        call WriteLock();
-write_cs:
-        skip;
-unlock:
-        WriteUnlock();
-    };
-}
-
-fair process(reader \in READERS)
-{
-loop:
-    while (TRUE) {
-        call ReadLock();
-read_cs:
-        skip;
-unlock:
-        ReadUnlock();
-    };
-
-}
-
-}*)
-====
-
-specs.cfg:
-
-SPECIFICATION Spec
-\* Add statements after this line.
-
-CONSTANTS
-	NR_READERS = 3
-	NR_WRITERS = 3
-	READER_TASK = reader
-	WRITER_TASK = writer
-
-INVARIANTS
-	TypeCheck
-	LockState
-	Exclusion
-
-PROPERTIES
-	EventuallyRead
-	EventuallyWrite
+    Andrew
