@@ -2,180 +2,100 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E4AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435DCC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689622064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C472064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:28:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PpasndDW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfG3G1Z (ORCPT
+        id S1729087AbfG3G2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 02:27:25 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:33527 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728981AbfG3G1Z (ORCPT
+        Tue, 30 Jul 2019 02:28:52 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43228 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728981AbfG3G2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 02:27:25 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Allan.Nielsen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="Allan.Nielsen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: J0cATDpZs7qRKgH9tpimCyLWaFwhPVNUT87pe13JM204EJlK7fa9U14roaUwlzPyPnfbmDiA3C
- zOFyxfROpZcyfJEqO+BuEV62VtyYpFPMmRttElC+t4jpYwwXcyP2wQjI+cLu0rmoZ5PiT/MMbg
- KZ/20nF3B3dDMpFjv7hjZibyqOtlQFflpDnWJeV8u/KjrjzAzQxxSBGS2K01dacqGzrciSWzFU
- BcJ6zQFD3t1rmQscvog+mNlvG8BltCVusUKeMqdzo9cNiMYISTpnZm1eb8uDCgwosKqFcvIMvU
- FE0=
-X-IronPort-AV: E=Sophos;i="5.64,325,1559545200"; 
-   d="scan'208";a="42450189"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Jul 2019 23:27:24 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 29 Jul 2019 23:27:23 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 29 Jul 2019 23:27:23 -0700
-Date:   Tue, 30 Jul 2019 08:27:22 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Ido Schimmel <idosch@idosch.org>
-CC:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
-        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
+        Tue, 30 Jul 2019 02:28:51 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6U6SnuI045723;
+        Tue, 30 Jul 2019 01:28:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564468129;
+        bh=PLsC8/r/ZZEgAbNdLAv4EtCcWJ7e6fBvFcibZ2kPfTU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=PpasndDWg0rr4B2SEIKXGNzQlkWnHMz6YikArudSUz1MLjK9tKRJqN1684l5tyTs0
+         h9OAn2SGkrP97ZFZ3EFtMe0uyldYBuUZJqPA00Gmy7i/wJ6x8xz0+4/brmOAb30agC
+         L6i0VXr89Gzke4aBF5+47UxqnkIZIglziteZp//c=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6U6SnVP081171
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Jul 2019 01:28:49 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
+ Jul 2019 01:28:48 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 30 Jul 2019 01:28:48 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6U6Sk8j101709;
+        Tue, 30 Jul 2019 01:28:46 -0500
+Subject: Re: [PATCH] gpu: drm/tilcdc: Fix switch case fallthrough
+To:     Keerthy <j-keerthy@ti.com>, <jsarha@ti.com>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <t-kristo@ti.com>,
         <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-Message-ID: <20190730062721.p4vrxo5sxbtulkrx@lx-anielsen.microsemi.net>
-References: <20190726120214.c26oj5vks7g5ntwu@soft-dev3.microsemi.net>
- <b755f613-e6d8-a2e6-16cd-6f13ec0a6ddc@cumulusnetworks.com>
- <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
- <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
- <20190729131420.tqukz55tz26jkg73@lx-anielsen.microsemi.net>
- <3cc69103-d194-2eca-e7dd-e2fa6a730223@cumulusnetworks.com>
- <20190729135205.oiuthcyesal4b4ct@lx-anielsen.microsemi.net>
- <e4cd0db9-695a-82a7-7dc0-623ded66a4e5@cumulusnetworks.com>
- <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
- <20190729175136.GA28572@splinter>
+References: <20190717050946.18488-1-j-keerthy@ti.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <f378f2dc-6a74-35cc-a380-2eba0ebcf004@ti.com>
+Date:   Tue, 30 Jul 2019 09:28:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190729175136.GA28572@splinter>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190717050946.18488-1-j-keerthy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 07/29/2019 20:51, Ido Schimmel wrote:
-> Can you please clarify what you're trying to achieve? I just read the
-> thread again and my impression is that you're trying to locally receive
-> packets with a certain link layer multicast address.
-Yes. The thread is also a bit confusing because we half way through realized
-that we misunderstood how the multicast packets should be handled (sorry about
-that). To begin with we had a driver where multicast packets was only copied to
-the CPU if someone needed it. Andrew and Nikolay made us aware that this is not
-how other drivers are doing it, so we changed the driver to include the CPU in
-the default multicast flood-mask.
-
-This changes the objective a bit. To begin with we needed to get more packets to
-the CPU (which could have been done using tc ingress rules and a trap action).
-
-Now after we changed the driver, we realized that we need something to limit the
-flooding of certain L2 multicast packets. This is the new problem we are trying
-to solve!
-
-Example: Say we have a bridge with 4 slave interfaces, then we want to install a
-forwarding rule saying that packets to a given L2-multicast MAC address, should
-only be flooded to 2 of the 4 ports.
-
-(instead of adding rules to get certain packets to the CPU, we are now adding
-other rules to prevent other packets from going to the CPU and other ports where
-they are not needed/wanted).
-
-This is exactly the same thing as IGMP snooping does dynamically, but only for
-IP multicast.
-
-The "bridge mdb" allow users to manually/static add/del a port to a multicast
-group, but still it operates on IP multicast address (not L2 multicast
-addresses).
-
-> Nik suggested SIOCADDMULTI.
-It is not clear to me how this should be used to limit the flooding, maybe we
-can make some hacks, but as far as I understand the intend of this is maintain
-the list of addresses an interface should receive. I'm not sure this should
-influence how for forwarding decisions are being made.
-
-> and I suggested a tc filter to get the packet to the CPU.
-The TC solution is a good solution to the original problem where wanted to copy
-more frames to the CPU. But we were convinced that this is not the right
-approach, and that the CPU by default should receive all multicast packets, and
-we should instead try to find a way to limit the flooding of certain frames as
-an optimization.
-
-> If you now want to limit the ports to which this packet is flooded, then
-> you can use tc filters in *software*:
+On 17/07/2019 08:09, Keerthy wrote:
+> Fix the below build warning/Error
 > 
-> # tc qdisc add dev eth2 clsact
-> # tc filter add dev eth2 egress pref 1 flower skip_hw \
-> 	dst_mac 01:21:6C:00:00:01 action drop
-Yes. This can work in the SW bridge.
+> drivers/gpu/drm/tilcdc/tilcdc_crtc.c: In function ‘tilcdc_crtc_set_mode’:
+> drivers/gpu/drm/tilcdc/tilcdc_crtc.c:384:8: error: this statement may fall
+> through [-Werror=implicit-fallthrough=]
+>      reg |= LCDC_V2_TFT_24BPP_UNPACK;
+>      ~~~~^~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/tilcdc/tilcdc_crtc.c:386:3: note: here
+>     case DRM_FORMAT_BGR888:
+>     ^~~~
+> cc1: all warnings being treated as errors
+> make[5]: *** [drivers/gpu/drm/tilcdc/tilcdc_crtc.o] Error 1
+> make[4]: *** [drivers/gpu/drm/tilcdc] Error 2
+> make[4]: *** Waiting for unfinished jobs....
+> 
+> Fixes: f6382f186d2982750 ("drm/tilcdc: Add tilcdc_crtc_mode_set_nofb()")
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>   drivers/gpu/drm/tilcdc/tilcdc_crtc.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 
-> If you want to forward the packet in hardware and locally receive it,
-> you can chain several mirred action and then a trap action.
-I'm not I fully understand how this should be done, but it does sound like it
-becomes quite complicated. Also, as far as I understand it will mean that we
-will be using TCAM/ACL resources to do something that could have been done with
-a simple MAC entry.
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-> Both options avoid HW egress ACLs which your design does not support.
-True, but what is wrong with expanding the functionality of the normal
-forwarding/MAC operations to allow multiple destinations?
-
-It is not an uncommon feature (I just browsed the manual of some common L2
-switches and they all has this feature).
-
-It seems to fit nicely into the existing user-interface:
-
-bridge fdb add    01:21:6C:00:00:01 port eth0
-bridge fdb append 01:21:6C:00:00:01 port eth1
-
-It seems that it can be added to the existing implementation with out adding
-significant complexity.
-
-It will be easy to offload in HW.
-
-I do not believe that it will be a performance issue, if this is a concern then
-we may have to do a bit of benchmarking, or we can make it a configuration
-option.
-
-Long story short, we (Horatiu and I) learned a lot from the discussion here, and
-I think we should try do a new patch with the learning we got. Then it is easier
-to see what it actually means to the exiting code, complexity, exiting drivers,
-performance, default behavioral, backwards compatibly, and other valid concerns.
-
-If the patch is no good, and cannot be fixed, then we will go back and look
-further into alternative solutions.
+  Tomi
 
 -- 
-/Allan
-
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
