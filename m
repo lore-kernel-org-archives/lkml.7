@@ -2,130 +2,287 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C87C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6446DC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57CAD216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C342217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g7phrpEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729626AbfG3Q6J (ORCPT
+        id S1729671AbfG3Q6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:58:09 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:40258 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729490AbfG3Q6G (ORCPT
+        Tue, 30 Jul 2019 12:58:13 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44507 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729534AbfG3Q6K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:58:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id v11so72072908iop.7
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 09:58:06 -0700 (PDT)
+        Tue, 30 Jul 2019 12:58:10 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p17so66545299wrf.11;
+        Tue, 30 Jul 2019 09:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pe4ec5pV2/b2/7JNDbkQKJQUgbbpMxpp1q9fFRXxlfQ=;
+        b=g7phrpEs7w53BKnjWJiCPbEXKW5SDseHRxlS2KAHp63a9C/947Zk8KB9t1u16dPEt3
+         Q98DKWk/7uFCEHWU+k5zHCq6lnvw7xVH7hOlVAF+GXI37Cd7s5YJQuwKId15MA5YlxI3
+         l2UoJBdePJ0RqmdbU2WbWF2foNMeulIKMI2znn9EOs/2I0MBTXEODZSr4p+Hj61eew9z
+         imS/CPeQ8rERThJeuiUKCtuOGkNq8WrdsT3VIJYnE5lxpvL2jKhx8iBtW3WhPrkTcy1I
+         folMDPkcNY+W6FIH+Gb1TqnvLnErJWo3s1TDyBEyli0xhweSgvdWzr1ghIaeR09UnYYg
+         SQYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=mSxvpAdL6N4fH/Hu5gQqP4xurABkshFnMu5lEyO1QyQ=;
-        b=pm2JsL+VIox33R/CUyTvYc7v01K/0ifweLujGAthvb/ik+2QWgN1h2DO7K9AJeUFFH
-         zoIghpri4x9eKBPNA7jLE+2QKbVWPtbaSzMjf2EMagNwj9fag7y0CjqsZ5LOjSKheXlq
-         ytqCvCW3rnObgYJt3Hmm1RC6nKEZ6FXdrgybE009Glrk2eFXCpdyB/fj/FO178SK3pc+
-         lmxsXDH5+eplmLdGm7RAoaBubrIcW0GFMCTYP41l0Hu8AePPVmLyz79gL80xz/6SdpLh
-         XPTKad3UM7nHEiVb5+qn787RWbW+73b4oaUBPtkqAvq8ayMd/CjXQ/1VjiUxQMsE0YxS
-         ptyw==
-X-Gm-Message-State: APjAAAW2arffzrLzEhuyuSeuOux6gRSMJIdFLa7gjcfcM/fkEB1nUd/N
-        5uX7jDKeIBCF2LoSeTOt8MycPyzqj56rBYZ0yOuAUd8xcgqp
-X-Google-Smtp-Source: APXvYqxXG/IlT4HYMEvfo7WVTd5GOs1Vz/yiR1XopLuL+fw5tEIeYsJjbyfDleGdhO2NdW9dOeI5rsKKxAAKnzI+bU3dgFtKwST4
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pe4ec5pV2/b2/7JNDbkQKJQUgbbpMxpp1q9fFRXxlfQ=;
+        b=Q9lkMJVcDk5d11mqRBLz9ilDH/2E2sAcU5tdpHlELSrvkJcxVk6/L5Oc+q1DLH7eBl
+         aLMnkiFTxD76B15hBPBjZ7ga+jRG8P5hbURgxUHhheOIFhjNPxJL60vs3O9QDNcDM/O/
+         L0QObl+Gb1sjLTerbCiwAVWX9Qr6AVb6QQH+7aVenm0dx3D6wQKCHInNBCh35/iq6HHf
+         45V1P7k1XxKDWALkWe7ncrLjkRDqq4gw3WGPpH40YeBS41iwgplg5ABG+wlT/Ka1gTCe
+         vzIiYOPVlkSMG9o35A3oPHd2klx28zOHsynyac9NiEG3xon8qBCY2OPqBJTuVufSb5Se
+         623w==
+X-Gm-Message-State: APjAAAX5zta6A1dSawOo4Kc3cHt/PZEqzWmX98Mh+nTCdb9F8gWC/ueb
+        pxKtpJWeup3Xhm5qjoXp2gA=
+X-Google-Smtp-Source: APXvYqxlpwBOOMhrRXpGocplLegHrlc83BpiIUuWi/XrGpdq8cx9SKpL+OcuRepHz/k3GIHTJVXAKA==
+X-Received: by 2002:adf:e841:: with SMTP id d1mr16256586wrn.204.1564505887813;
+        Tue, 30 Jul 2019 09:58:07 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.gmail.com with ESMTPSA id r5sm70845040wmh.35.2019.07.30.09.58.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 09:58:07 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 00/15] memory: tegra: Introduce Tegra30 EMC driver
+Date:   Tue, 30 Jul 2019 19:56:03 +0300
+Message-Id: <20190730165618.10122-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-Received: by 2002:a5e:9e03:: with SMTP id i3mr37411748ioq.66.1564505885712;
- Tue, 30 Jul 2019 09:58:05 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 09:58:05 -0700
-In-Reply-To: <000000000000161dc3058ed0777c@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000912b79058ee8e939@google.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb
-From:   syzbot <syzbot+a7a6b9c609b9457c62c6@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, oneukum@suse.com,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hello,
 
-HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=10619cec600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-dashboard link: https://syzkaller.appspot.com/bug?extid=a7a6b9c609b9457c62c6
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10606c42600000
+This series introduces driver for the External Memory Controller (EMC)
+found on Tegra30 chips, it controls the external DRAM on the board. The
+purpose of this driver is to program memory timing for external memory on
+the EMC clock rate change. The driver was tested using the ACTMON devfreq
+driver that performs memory frequency scaling based on memory-usage load.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a7a6b9c609b9457c62c6@syzkaller.appspotmail.com
+Changelog:
 
-------------[ cut here ]------------
-usb 2-1: BOGUS urb xfer, pipe 2 != type 2
-WARNING: CPU: 1 PID: 7429 at drivers/usb/core/urb.c:477  
-usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 7429 Comm: syz-executor.1 Not tainted 5.3.0-rc2+ #23
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x2a3/0x6da kernel/panic.c:219
-  __warn.cold+0x20/0x4a kernel/panic.c:576
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
-RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Code: 4d 85 ed 74 2c e8 38 e8 ed fd 4c 89 f7 e8 70 dc 1a ff 41 89 d8 44 89  
-e1 4c 89 ea 48 89 c6 48 c7 c7 60 cc f8 85 e8 4d b9 c3 fd <0f> 0b e9 20 f4  
-ff ff e8 0c e8 ed fd 4c 89 f2 48 b8 00 00 00 00 00
-RSP: 0018:ffff8881cef0f9d0 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff812830fd RDI: ffffed1039de1f2c
-RBP: 0000000000000000 R08: ffff8881c853e000 R09: fffffbfff115e1a2
-R10: fffffbfff115e1a1 R11: ffffffff88af0d0f R12: 0000000000000002
-R13: ffff8881d976b0a8 R14: ffff8881d0e02b20 R15: ffff8881d1720600
-  usb_start_wait_urb+0x108/0x2b0 drivers/usb/core/message.c:57
-  usb_internal_control_msg drivers/usb/core/message.c:101 [inline]
-  usb_control_msg+0x31c/0x4a0 drivers/usb/core/message.c:152
-  usbhid_set_raw_report drivers/hid/usbhid/hid-core.c:917 [inline]
-  usbhid_raw_request+0x21f/0x640 drivers/hid/usbhid/hid-core.c:1265
-  hid_hw_raw_request include/linux/hid.h:1079 [inline]
-  hidraw_send_report+0x296/0x500 drivers/hid/hidraw.c:151
-  hidraw_ioctl+0x5b4/0xae0 drivers/hid/hidraw.c:421
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
-  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f6a91f44c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 0000000020000240 RSI: 00000000c0404806 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6a91f456d4
-R13: 00000000004c22c3 R14: 00000000004d5688 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+v9: - Fixed memory corruption bug that was uncovered after introducing
+      some extra optimizations to the devfreq driver that allows CPU
+      to stay longer in the LP2 cpuidle state. The corruption is caused by
+      a very late AUTO-REFRESH re-enabling due to a possible schedule on
+      waiting for clk-change completion, the re-enabling is now a part of
+      "EMC exec-after-clkchange" hardware sequence.
+
+    - Added "type: object" to T124 MC YAML, that was missed in v8 by accident.
+
+v8: - Added two new patches:
+
+        memory: tegra20-emc: Increase handshake timeout
+        memory: tegra20-emc: wait_for_completion_timeout() doesn't return error
+
+      Turned out that memory-clk handshake may take much more time under
+      some circumstances. The second patch is a minor cleanup. The same
+      changes are also applied to the Terga30 EMC driver addition-patch.
+
+      The pattern-properties of YAML bindings gained "type: object", for
+      consistency.
+
+v7: - Addressed review comments that were made by Rob Herring to v6 by
+      removing old Terga30 Memory Controller binding once it's converted
+      to YAML, by using explicit patterns for the sub-nodes and specifying
+      min/max clock rates in the YAML.
+
+    - Two patches that were added in v6 are removed from the series:
+
+        clk: tegra20: emc: Add tegra20_clk_emc_on_pllp()
+        ARM: tegra30: cpuidle: Don't enter LP2 on CPU0 when EMC runs off PLLP
+
+      Because the problem with the PLLP is resolved now, turned out it was
+      a bug in the CPU-suspend code.
+
+    - The "Introduce Tegra30 EMC driver" patch got a fix for the "Same Freq"
+      bit typo, it's a bit 27 and not 16.
+
+v6: - Tegra124 Memory Controller binding factored out into standalone
+      binding because it requires to specify MC_EMEM_ARB_MISC1 for EMEM
+      programming, which is not required for Tegra30. This makes the
+      upstream MC registers specification to match downstream exactly,
+      easing porting of boards memory timings configuration to upstream.
+
+    - Tegra30/124 Memory Controller binding converted to YAML.
+
+    - Tegra30 External Memory Controller binding now is in YAML format.
+
+    - Added workaround for hanging during LP2 when EMC runs off PLLP on
+      Tegra30 in this new patches:
+
+        clk: tegra20: emc: Add tegra20_clk_emc_on_pllp()
+        ARM: tegra30: cpuidle: Don't enter LP2 on CPU0 when EMC runs off PLLP
+
+    - Added info message to the Tegra20/30 EMC drivers, telling about
+      RAM code and a number of available timings:
+
+        memory: tegra20-emc: Print a brief info message about the timings
+
+v5: - Addressed review comments that were made by Thierry Reding to v4 by
+      adding appropriate copyrights to the source code headers and making
+      Tegra30 EMC driver to use common Tegra20 CLK API directly instead
+      of having a dummy-proxy functions specifically for Tegra30.
+
+    - Addressed review comments that were made by Stephen Boyd to v4 by
+      rewording commit message of the "Add custom EMC clock implementation"
+      patch and adding clarifying comment (to that patch as well) which
+      tells why EMC is a critical clock.
+
+    - Added suspend-resume to Tegra30 EMC driver to error out if EMC driver
+      is in a "bad state" as it will likely cause a hang on entering suspend.
+
+    - Dropped patch "tegra20-emc: Replace clk_get_sys with devm_clk_get"
+      because the replaced clocks are actually should be removed altogether
+      in the "Drop setting EMC rate to max on probe" patch and that was
+      missed by an accident.
+
+    - Added "tegra20-emc: Pre-configure debug register" patch which ensures
+      that inappropriate HW debug features are disabled at a probe time.
+      The same change is also made in the "Introduce Tegra30 EMC driver"
+      patch.
+
+    - Added ACKs to the patches from Peter De Schrijver that he gave to v4
+      since all of the v5 changes are actually very minor.
+
+v4: - Addressed review comments that were made by Peter De Schrijver to v3
+      by adding fence_udelay() after writes in the "Add custom EMC clock
+      implementation" patch.
+
+    - Added two new minor patches:
+
+        memory: tegra: Ensure timing control debug features are disabled
+        memory: tegra: Consolidate registers definition into one place
+
+      The first one is needed to ensure that EMC driver will work
+      properly regardless of hardware configuration left after boot.
+      The second patch is just a minor code cleanup.
+
+    - The "Introduce Tegra30 EMC driver" got also few very minor changes.
+      Now every possible error case is handled, nothing is ignored.
+      The EMC_DBG register is explicitly initialized during probe to be
+      on the safe side.
+
+v3: - Addressed review comments that were made by Stephen Boyd to v2 by
+      adding explicit typing for the callback variable, by including
+      "clk-provider.h" directly in the code and by dropping __clk_lookup
+      usage where possible.
+
+    - Added more patches into this series:
+
+        memory: tegra20-emc: Drop setting EMC rate to max on probe
+        memory: tegra20-emc: Adapt for clock driver changes
+        memory: tegra20-emc: Include io.h instead of iopoll.h
+        memory: tegra20-emc: Replace clk_get_sys with devm_clk_get
+
+      Initially I was going to include these patches into other patchset,
+      but changed my mind after rearranging things a tad. The "Adapt for
+      clock driver changes" patch is directly related to the clock changes
+      done in the first patch of this series, the rest are minor cleanups
+      that are fine to include here as well.
+
+    - Added some more words to the commit message of "Add binding for NVIDIA
+      Tegra30 External Memory Controller" patch, clarifying why common DDR
+      timing device-tree form isn't suitable for Tegra30.
+
+    - The Tegra30 EMC driver now explicitly selects the registers access
+      mode (EMC_DBG mux), not relying on the setting left from bootloader.
+
+v2: - Added support for changing MC clock diver configuration based on
+      Memory Controller (MC) configuration which is part of the memory
+      timing.
+
+    - Merged the "Add custom EMC clock implementation" patch into this
+      series because the "Introduce Tegra30 EMC driver" patch directly
+      depends on it. Please note that Tegra20 EMC driver will need to be
+      adapted for the clock changes as well, I'll send out the Tegra20
+      patches after this series will be applied because of some other
+      dependencies (devfreq) and because the temporary breakage won't
+      be critical (driver will just error out on probe).
+
+    - EMC driver now performs MC configuration validation by checking
+      that the number of MC / EMC timings matches and that the timings
+      rate is the same.
+
+    - EMC driver now supports timings that want to change the MC clock
+      configuration.
+
+    - Other minor prettifying changes of the code.
+
+Dmitry Osipenko (15):
+  clk: tegra20/30: Add custom EMC clock implementation
+  memory: tegra20-emc: Drop setting EMC rate to max on probe
+  memory: tegra20-emc: Adapt for clock driver changes
+  memory: tegra20-emc: Include io.h instead of iopoll.h
+  memory: tegra20-emc: Pre-configure debug register
+  memory: tegra20-emc: Print a brief info message about the timings
+  memory: tegra20-emc: Increase handshake timeout
+  memory: tegra20-emc: wait_for_completion_timeout() doesn't return
+    error
+  dt-bindings: memory: tegra30: Convert to Tegra124 YAML
+  dt-bindings: memory: Add binding for NVIDIA Tegra30 Memory Controller
+  dt-bindings: memory: Add binding for NVIDIA Tegra30 External Memory
+    Controller
+  memory: tegra: Introduce Tegra30 EMC driver
+  memory: tegra: Ensure timing control debug features are disabled
+  memory: tegra: Consolidate registers definition into common header
+  ARM: dts: tegra30: Add External Memory Controller node
+
+ .../nvidia,tegra124-mc.yaml                   |  158 +++
+ .../nvidia,tegra30-emc.yaml                   |  341 +++++
+ .../memory-controllers/nvidia,tegra30-mc.txt  |  123 --
+ .../memory-controllers/nvidia,tegra30-mc.yaml |  173 +++
+ arch/arm/boot/dts/tegra30.dtsi                |    9 +
+ drivers/clk/tegra/Makefile                    |    2 +
+ drivers/clk/tegra/clk-tegra20-emc.c           |  293 ++++
+ drivers/clk/tegra/clk-tegra20.c               |   55 +-
+ drivers/clk/tegra/clk-tegra30.c               |   38 +-
+ drivers/clk/tegra/clk.h                       |    3 +
+ drivers/memory/tegra/Kconfig                  |   10 +
+ drivers/memory/tegra/Makefile                 |    1 +
+ drivers/memory/tegra/mc.c                     |   42 +-
+ drivers/memory/tegra/mc.h                     |   74 +-
+ drivers/memory/tegra/tegra124.c               |   20 -
+ drivers/memory/tegra/tegra20-emc.c            |  134 +-
+ drivers/memory/tegra/tegra30-emc.c            | 1229 +++++++++++++++++
+ drivers/memory/tegra/tegra30.c                |   23 +
+ include/linux/clk/tegra.h                     |   11 +
+ include/soc/tegra/mc.h                        |    2 +-
+ 20 files changed, 2428 insertions(+), 313 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
+ create mode 100644 drivers/clk/tegra/clk-tegra20-emc.c
+ create mode 100644 drivers/memory/tegra/tegra30-emc.c
+
+-- 
+2.22.0
 
