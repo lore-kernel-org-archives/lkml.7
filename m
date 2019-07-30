@@ -2,126 +2,103 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB48C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F3BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34479206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F408206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:01:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DYScE28+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730988AbfG3PAy convert rfc822-to-8bit (ORCPT
+        id S1731339AbfG3PBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:00:54 -0400
-Received: from mail.cloudbasesolutions.com ([91.232.152.5]:56946 "EHLO
-        mail.cloudbasesolutions.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729745AbfG3PAx (ORCPT
+        Tue, 30 Jul 2019 11:01:00 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59104 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729745AbfG3PBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:00:53 -0400
-X-Greylist: delayed 432 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Jul 2019 11:00:51 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.cloudbasesolutions.com (Postfix) with ESMTP id 9FC34401AC;
-        Tue, 30 Jul 2019 17:53:37 +0300 (EEST)
-X-Virus-Scanned: amavisd-new at cloudbasesolutions.com
-Received: from mail.cloudbasesolutions.com ([127.0.0.1])
-        by localhost (mail.cloudbasesolutions.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id c3lqKTaK6aff; Tue, 30 Jul 2019 17:53:37 +0300 (EEST)
-Received: from mail.cloudbasesolutions.com (unknown [10.77.78.3])
-        by mail.cloudbasesolutions.com (Postfix) with ESMTP id 16E333FB5C;
-        Tue, 30 Jul 2019 17:53:36 +0300 (EEST)
-Received: from CBSEX1.cloudbase.local ([10.77.78.3]) by CBSEX1.cloudbase.local
- ([10.77.78.3]) with mapi id 14.03.0468.000; Tue, 30 Jul 2019 17:53:36 +0300
-From:   Adrian Vladu <avladu@cloudbasesolutions.com>
-To:     Sasha Levin <sashal@kernel.org>, Dexuan Cui <decui@microsoft.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "KY Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Alessandro Pilotti <apilotti@cloudbasesolutions.com>
-Subject: RE: [PATCH v2] hv: tools: fixed Python pep8/flake8 warnings for
- lsvmbus
-Thread-Topic: [PATCH v2] hv: tools: fixed Python pep8/flake8 warnings for
- lsvmbus
-Thread-Index: AQHVBDHgWNITe/5yDUiixarWB+egkaZe6YqAgALjioCAgfdowA==
-Date:   Tue, 30 Jul 2019 14:53:35 +0000
-Message-ID: <F5008595B06C564AB347C30B4FDE4BC559697F85@CBSEX1.cloudbase.local>
-References: <20190506172737.18122-1-avladu@cloudbasesolutions.com>
- <20190506173331.18906-1-avladu@cloudbasesolutions.com>
- <PU1P153MB016957AD2B1C356FA1BFB1A8BF310@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190509010941.GT1747@sasha-vm>
-In-Reply-To: <20190509010941.GT1747@sasha-vm>
-Accept-Language: en-GB, ro-RO, it-IT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.77.78.1]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 30 Jul 2019 11:01:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=65E/ZXh4vz3P8VI73lH3jp+lf5tDRwhBiGW2ssQEd30=; b=DYScE28+ygzReT+7bGbOKgUdOU
+        BOwaFKuzKMd3f4dbnOlK0j1lR3bL9dT9mTbZzDJBgda9gxTFrnQnyJW4aNulFaY9ijZTnrXxxznv8
+        M1rsVPuV9q5f/pwMXr0ypqlI6C5aMwfCz130GlZalVg34IS8dGKu6Yn0zjV8Pj0GTVqxnVgr/sZ27
+        jFzIrFzqK5t/wQhrRjoFv57qxShs332W4Ax8QX4hr7E2eg5MCbljO2cDviT2oy0wdVQ4gCUeXDxIP
+        5NAFKs+zOXOtrKR+KZQ9yaZwIELUBohrgSVuLM6NYXVhlBFqgnoF2H9l+b4WJJMfaMPG8rgr24Yyw
+        sn02Uvqg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsTcW-0000Ic-JY; Tue, 30 Jul 2019 15:00:56 +0000
+Subject: Re: linux-next: Tree for Jul 30 (drivers/net/phy/mdio-octeon.c: i386)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        David Daney <david.daney@cavium.com>
+References: <20190730151527.08f611b8@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <5db8f58b-3f20-a7ba-fcae-18dd0aa7df50@infradead.org>
+Date:   Tue, 30 Jul 2019 08:00:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20190730151527.08f611b8@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-There were two patches you have queued for hyperv-fixes a while ago, but I don't see them anymore in the hyperv-fixes tree:
-https://lore.kernel.org/patchwork/patch/1070848/
-https://lore.kernel.org/patchwork/patch/1070806/
-
-I have checked them and they can still be applied successfully on the latest master tree.
-Please let me know if I need to make some amends to get them merged.
-
-Much appreciated,
-Adrian Vladu
-
-> -----Original Message-----
-> From: Sasha Levin <sashal@kernel.org>
-> Sent: Thursday, May 9, 2019 4:10 AM
-> To: Dexuan Cui <decui@microsoft.com>
-> Cc: Adrian Vladu <avladu@cloudbasesolutions.com>; linux-
-> kernel@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> Alessandro Pilotti <apilotti@cloudbasesolutions.com>
-> Subject: Re: [PATCH v2] hv: tools: fixed Python pep8/flake8 warnings for
-> lsvmbus
+On 7/29/19 10:15 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> On Tue, May 07, 2019 at 05:02:47AM +0000, Dexuan Cui wrote:
-> >> From: Adrian Vladu <avladu@cloudbasesolutions.com>
-> >> Sent: Monday, May 6, 2019 10:34 AM
-> >> To: linux-kernel@vger.kernel.org
-> >> Cc: Adrian Vladu <avladu@cloudbasesolutions.com>; KY Srinivasan
-> >> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Stephen
-> >> Hemminger <sthemmin@microsoft.com>; Sasha Levin <sashal@kernel.org>;
-> >> Dexuan Cui <decui@microsoft.com>; Alessandro Pilotti
-> >> <apilotti@cloudbasesolutions.com>
-> >> Subject: [PATCH v2] hv: tools: fixed Python pep8/flake8 warnings for lsvmbus
-> >>
-> >> Fixed pep8/flake8 python style code for lsvmbus tool.
-> >>
-> >> The TAB indentation was on purpose ignored (pep8 rule W191) to make
-> >> sure the code is complying with the Linux code guideline.
-> >> The following command do not show any warnings now:
-> >> pep8 --ignore=W191 lsvmbus
-> >> flake8 --ignore=W191 lsvmbus
-> >>
-> >> Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
-> >>
-> >> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> >> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> >> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> >> Cc: Sasha Levin <sashal@kernel.org>
-> >> Cc: Dexuan Cui <decui@microsoft.com>
-> >> Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
-> [...]
-> >Looks good to me. Thanks, Adrian!
-> >
-> >Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> Changes since 20190729:
 > 
-> Queued for hyperv-fixes, thanks!
-> 
-> --
-> Thanks,
-> Sasha
+
+on i386:
+
+../drivers/net/phy/mdio-octeon.c: In function ‘octeon_mdiobus_probe’:
+../drivers/net/phy/mdio-octeon.c:48:3: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+   (u64)devm_ioremap(&pdev->dev, mdio_phys, regsize);
+   ^
+In file included from ../drivers/net/phy/mdio-octeon.c:14:0:
+../drivers/net/phy/mdio-cavium.h:111:36: error: implicit declaration of function ‘writeq’; did you mean ‘writel’? [-Werror=implicit-function-declaration]
+ #define oct_mdio_writeq(val, addr) writeq(val, (void *)addr)
+                                    ^
+../drivers/net/phy/mdio-octeon.c:56:2: note: in expansion of macro ‘oct_mdio_writeq’
+  oct_mdio_writeq(smi_en.u64, bus->register_base + SMI_EN);
+  ^~~~~~~~~~~~~~~
+../drivers/net/phy/mdio-cavium.h:111:48: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+ #define oct_mdio_writeq(val, addr) writeq(val, (void *)addr)
+                                                ^
+../drivers/net/phy/mdio-octeon.c:56:2: note: in expansion of macro ‘oct_mdio_writeq’
+  oct_mdio_writeq(smi_en.u64, bus->register_base + SMI_EN);
+  ^~~~~~~~~~~~~~~
+../drivers/net/phy/mdio-cavium.h:111:48: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+ #define oct_mdio_writeq(val, addr) writeq(val, (void *)addr)
+                                                ^
+../drivers/net/phy/mdio-octeon.c:77:2: note: in expansion of macro ‘oct_mdio_writeq’
+  oct_mdio_writeq(smi_en.u64, bus->register_base + SMI_EN);
+  ^~~~~~~~~~~~~~~
+../drivers/net/phy/mdio-octeon.c: In function ‘octeon_mdiobus_remove’:
+../drivers/net/phy/mdio-cavium.h:111:48: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+ #define oct_mdio_writeq(val, addr) writeq(val, (void *)addr)
+                                                ^
+../drivers/net/phy/mdio-octeon.c:91:2: note: in expansion of macro ‘oct_mdio_writeq’
+  oct_mdio_writeq(smi_en.u64, bus->register_base + SMI_EN);
+  ^~~~~~~~~~~~~~~
+
+
+
+-- 
+~Randy
