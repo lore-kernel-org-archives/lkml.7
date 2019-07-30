@@ -2,308 +2,251 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C7CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE5EC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3C4205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74A7205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:18:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="G+comeNK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cuH0cvj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbfG3WSN (ORCPT
+        id S1729102AbfG3WSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 18:18:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39319 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727221AbfG3WSN (ORCPT
+        Tue, 30 Jul 2019 18:18:23 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36731 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727221AbfG3WSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 18:18:13 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UMHxeE3399120
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 15:17:59 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UMHxeE3399120
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564525080;
-        bh=iiNEPskYdYKDKlFQchkiTySJ6c4eKafSq31HvYmt2Ns=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=G+comeNKf07N5TOdWoAmnAmNHFSJRJ0qlqJqt/D8N/066/W+RM2VYnTmbHJi0qZnz
-         Ge2yGOd8qvARwsRxvxQ7RxBb0uc7eeAGxkUoFn+LiVzi2KgzIRDmVD3YDcWNIPsIKZ
-         hcfIrti7DeDn5HR3vWi01G+4i7Su3VHPnksCqbNpmjvFUcqxLBGUbmwPf8zIRHl21a
-         3ADP+RKDRuCQ2HhiiMeDoDYhqZLkPsmt8ACLNJHK7DM7oFFXlLLdb7kXwXNLb9ILVo
-         +swoXXvG2Sc4YmoxiE4TcWsVBdE0RB/0VH0t8ZZ/NWrhh/zGTcxVyH/ywaTK9zCWXS
-         RmcD3VSVPcwsA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UMHwvT3399115;
-        Tue, 30 Jul 2019 15:17:58 -0700
-Date:   Tue, 30 Jul 2019 15:17:58 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Anna-Maria Gleixner <tipbot@zytor.com>
-Message-ID: <tip-51503daaaacd6118d627a0c1b5829191d4fa6f16@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
-        anna-maria@linutronix.de, tglx@linutronix.de,
-        bigeasy@linutronix.de, peterz@infradead.org
-Reply-To: linux-kernel@vger.kernel.org, mingo@kernel.org,
-          tglx@linutronix.de, anna-maria@linutronix.de, hpa@zytor.com,
-          peterz@infradead.org, bigeasy@linutronix.de
-In-Reply-To: <20190726185753.832418500@linutronix.de>
-References: <20190726185753.832418500@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] timers: Prepare support for PREEMPT_RT
-Git-Commit-ID: 51503daaaacd6118d627a0c1b5829191d4fa6f16
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 18:18:23 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so30765647pgm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 15:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sxiBOB7zsr4sYYglcbcr65xES486R1b5ubVrYLCx9MI=;
+        b=cuH0cvj7FQ+GpEQKL8ugXdx3wyPTXJSpKN9VZSQy/NOZUhCpj/MnEoPIYQWDumfepk
+         SXkr29or2GlRyB6D4kGxSM5fqCA0aYmYiF/zHTR6cQuZg5AWtLGfuH6/GuQcHnzL+LZq
+         eG4FGz9exx6D+FI7ZOtIl1H9t+gUwZ+JC/XcU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sxiBOB7zsr4sYYglcbcr65xES486R1b5ubVrYLCx9MI=;
+        b=mG9p8UV8gl4nsyHJARavVHf9jSTKtpT8G9SBAj6wDZc5x3qRD8Iqv2sO4ABfGFwdAn
+         amOUZ+QXXsr4o1W8ztGTSgtPpTHGONgwfJJ0D8fQvqi6WXON4m+womLF2DSOnnv+Qi6t
+         ShDGWasNab+NT5Obnk3qzbKRRBCviCRMAWfDQgWinWzCBwvnqGIajNOHb3EouzVMPWmD
+         ZRWBVffwrp7xQAbvs+/5+aN5MHJkVk9dqn0vhtJSF8RKow/Y1ytiUXl2XxoKmTp9GT2m
+         GkyfoTH8ZwkVFT+THJ0bHg/e78btTAz0wxaGEfE4HwfIcYAOGVaFhIlaqNS004KAg0pG
+         nATw==
+X-Gm-Message-State: APjAAAWqdn036mcqb1b7SzjKU1q4AlWwNqzSpNmYkQGl0nrx6la3Bp2B
+        Se+MBN1r6uMrSQ/s8E1G3UtsoA==
+X-Google-Smtp-Source: APXvYqwqDLmwcsVdJQqAK5+voPBrSQMRxT/BTbm6YQUKW/crdO6p9v7vxNjvrFFCLR1wwUrOngXA+g==
+X-Received: by 2002:a63:dd16:: with SMTP id t22mr79512317pgg.140.1564525102190;
+        Tue, 30 Jul 2019 15:18:22 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id u7sm58455696pfm.96.2019.07.30.15.18.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 15:18:21 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] arm64: debug: Make 'btc' and similar work in kdb
+Date:   Tue, 30 Jul 2019 15:18:00 -0700
+Message-Id: <20190730221800.28326-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  51503daaaacd6118d627a0c1b5829191d4fa6f16
-Gitweb:     https://git.kernel.org/tip/51503daaaacd6118d627a0c1b5829191d4fa6f16
-Author:     Anna-Maria Gleixner <anna-maria@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 20:31:00 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Tue, 30 Jul 2019 23:57:57 +0200
+In kdb when you do 'btc' (back trace on CPU) it doesn't give you the
+right info.  This can be seen by this:
 
-timers: Prepare support for PREEMPT_RT
+ echo SOFTLOCKUP > /sys/kernel/debug/provoke-crash/DIRECT
+ # wait 2 seconds
+ <sysrq>g
 
-When PREEMPT_RT is enabled, the soft interrupt thread can be preempted.  If
-the soft interrupt thread is preempted in the middle of a timer callback,
-then calling del_timer_sync() can lead to two issues:
+Here's what I see now on rk3399-gru-kevin.  I see the stack crawl for
+the CPU that handled the sysrq but everything else just shows me stuck
+in __switch_to() which is bogus:
 
-  - If the caller is on a remote CPU then it has to spin wait for the timer
-    handler to complete. This can result in unbound priority inversion.
+======
 
-  - If the caller originates from the task which preempted the timer
-    handler on the same CPU, then spin waiting for the timer handler to
-    complete is never going to end.
+[0]kdb> btc
+btc: cpu status: Currently on cpu 0
+Available cpus: 0, 1-3(I), 4, 5(I)
+Stack traceback for pid 0
+0xffffff801101a9c0        0        0  1    0   R  0xffffff801101b3b0 *swapper/0
+Call trace:
+ dump_backtrace+0x0/0x138
+ ...
+ kgdb_compiled_brk_fn+0x34/0x44
+ ...
+ sysrq_handle_dbg+0x34/0x5c
+Stack traceback for pid 0
+0xffffffc0f175a040        0        0  1    1   I  0xffffffc0f175aa30  swapper/1
+Call trace:
+ __switch_to+0x1e4/0x240
+ 0xffffffc0f65616c0
+Stack traceback for pid 0
+0xffffffc0f175d040        0        0  1    2   I  0xffffffc0f175da30  swapper/2
+Call trace:
+ __switch_to+0x1e4/0x240
+ 0xffffffc0f65806c0
+Stack traceback for pid 0
+0xffffffc0f175b040        0        0  1    3   I  0xffffffc0f175ba30  swapper/3
+Call trace:
+ __switch_to+0x1e4/0x240
+ 0xffffffc0f659f6c0
+Stack traceback for pid 1474
+0xffffffc0dde8b040     1474      727  1    4   R  0xffffffc0dde8ba30  bash
+Call trace:
+ __switch_to+0x1e4/0x240
+ __schedule+0x464/0x618
+ 0xffffffc0dde8b040
+Stack traceback for pid 0
+0xffffffc0f17b0040        0        0  1    5   I  0xffffffc0f17b0a30  swapper/5
+Call trace:
+ __switch_to+0x1e4/0x240
+ 0xffffffc0f65dd6c0
 
-To avoid these issues, add a new lock to the timer base which is held
-around the execution of the timer callbacks. If del_timer_sync() detects
-that the timer callback is currently running, it blocks on the expiry
-lock. When the callback is finished, the expiry lock is dropped by the
-softirq thread which wakes up the waiter and the system makes progress.
+===
 
-This addresses both the priority inversion and the life lock issues.
+The problem is that 'btc' eventually boils down to
+  show_stack(task_struct, NULL);
 
-This mechanism is not used for timers which are marked IRQSAFE as for those
-preemption is disabled accross the callback and therefore this situation
-cannot happen. The callbacks for such timers need to be individually
-audited for RT compliance.
+...and show_stack() doesn't work for "running" CPUs because their
+registers haven't been stashed.
 
-The same issue can happen in virtual machines when the vCPU which runs a
-timer callback is scheduled out. If a second vCPU of the same guest calls
-del_timer_sync() it will spin wait for the other vCPU to be scheduled back
-in. The expiry lock mechanism would avoid that. It'd be trivial to enable
-this when paravirt spinlocks are enabled in a guest, but it's not clear
-whether this is an actual problem in the wild, so for now it's an RT only
-mechanism.
+On x86 things might work better (I haven't tested) because kdb has a
+special case for x86 in kdb_show_stack() where it passes the stack
+pointer to show_stack().  This wouldn't work on arm64 where the stack
+crawling function seems needs the "fp" and "pc", not the "sp" which is
+presumably why arm64's show_stack() function totally ignores the "sp"
+parameter.
 
-As the softirq thread can be preempted with PREEMPT_RT=y, the SMP variant
-of del_timer_sync() needs to be used on UP as well.
+NOTE: we _can_ get a good stack dump for all the cpus if we manually
+switch each one to the kdb master and do a back trace.  AKA:
+  cpu 4
+  bt
+...will give the expected trace.  That's because now arm64's
+dump_backtrace will now see that "tsk == current" and go through a
+different path.
 
-[ tglx: Refactored it for mainline ]
+In this patch I fix the problems by stashing the "pt_regs" into the
+"cpu_context" when a CPU enters the debugger.  Now all the normal stack
+crawling code will be able to find it.  This is possible because:
+* When a task is "running" nobody else is using the "cpu_context"
+* The task isn't really "running" (it's in the debugger) so there are
+  actually some sane registers to save.
 
-Signed-off-by: Anna-Maria Gleixner <anna-maria@linutronix.de>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190726185753.832418500@linutronix.de
+This patch works without any extra kgdb API changes by just
+implementing the weak kgdb_call_nmi_hook().  I don't try to address
+the existing caveat in kgdb_call_nmi_hook() around pt_regs, so I copy
+the comment from the generic code.
 
+After this patch the same test shows much more sane stack crawls.  The
+idle tasks now show:
+
+Stack traceback for pid 0
+0xffffffc0f175b040        0        0  1    3   I  0xffffffc0f175ba30  swapper/3
+Call trace:
+ cpuidle_enter_state+0x284/0x428
+ cpuidle_enter+0x38/0x4c
+ do_idle+0x168/0x29c
+ cpu_startup_entry+0x24/0x28
+ secondary_start_kernel+0x140/0x14c
+
+...and the locked task:
+
+Stack traceback for pid 1603
+0xffffffc0d98c7040     1603      724  1    4   R  0xffffffc0d98c7a30  bash
+Call trace:
+ lkdtm_SOFTLOCKUP+0x1c/0x24
+ lkdtm_do_action+0x24/0x44
+ direct_entry+0x130/0x178
+ full_proxy_write+0x60/0xb4
+ __vfs_write+0x54/0x18c
+ vfs_write+0xcc/0x174
+ ksys_write+0x7c/0xe4
+ __arm64_sys_write+0x20/0x2c
+ el0_svc_common+0x9c/0x14c
+ el0_svc_compat_handler+0x28/0x34
+ el0_svc_compat+0x8/0x10
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- include/linux/timer.h |   2 +-
- kernel/time/timer.c   | 103 ++++++++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 96 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 282e4f2a532a..1e6650ed066d 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -183,7 +183,7 @@ extern void add_timer(struct timer_list *timer);
- 
- extern int try_to_del_timer_sync(struct timer_list *timer);
- 
--#ifdef CONFIG_SMP
-+#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT)
-   extern int del_timer_sync(struct timer_list *timer);
- #else
- # define del_timer_sync(t)		del_timer(t)
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 343c7ba33b1c..673c6a0f0c45 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -196,6 +196,10 @@ EXPORT_SYMBOL(jiffies_64);
- struct timer_base {
- 	raw_spinlock_t		lock;
- 	struct timer_list	*running_timer;
-+#ifdef CONFIG_PREEMPT_RT
-+	spinlock_t		expiry_lock;
-+	atomic_t		timer_waiters;
-+#endif
- 	unsigned long		clk;
- 	unsigned long		next_expiry;
- 	unsigned int		cpu;
-@@ -1227,7 +1231,78 @@ int try_to_del_timer_sync(struct timer_list *timer)
+ arch/arm64/kernel/kgdb.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
+index 43119922341f..b666210fbc75 100644
+--- a/arch/arm64/kernel/kgdb.c
++++ b/arch/arm64/kernel/kgdb.c
+@@ -148,6 +148,45 @@ sleeping_thread_to_gdb_regs(unsigned long *gdb_regs, struct task_struct *task)
+ 	gdb_regs[32] = cpu_context->pc;
  }
- EXPORT_SYMBOL(try_to_del_timer_sync);
  
--#ifdef CONFIG_SMP
-+#ifdef CONFIG_PREEMPT_RT
-+static __init void timer_base_init_expiry_lock(struct timer_base *base)
++void kgdb_call_nmi_hook(void *ignored)
 +{
-+	spin_lock_init(&base->expiry_lock);
++	struct pt_regs *regs;
++
++	/*
++	 * NOTE: get_irq_regs() is supposed to get the registers from
++	 * before the IPI interrupt happened and so is supposed to
++	 * show where the processor was.  In some situations it's
++	 * possible we might be called without an IPI, so it might be
++	 * safer to figure out how to make kgdb_breakpoint() work
++	 * properly here.
++	 */
++	regs = get_irq_regs();
++
++	/*
++	 * Some commands (like 'btc') assume that they can find info about
++	 * a task in the 'cpu_context'.  Unfortunately that's only valid
++	 * for sleeping tasks.  ...but let's make it work anyway by just
++	 * writing the registers to the right place.  This is safe because
++	 * nobody else is using the 'cpu_context' for a running task.
++	 */
++	current->thread.cpu_context.x19 = regs->regs[19];
++	current->thread.cpu_context.x20 = regs->regs[20];
++	current->thread.cpu_context.x21 = regs->regs[21];
++	current->thread.cpu_context.x22 = regs->regs[22];
++	current->thread.cpu_context.x23 = regs->regs[23];
++	current->thread.cpu_context.x24 = regs->regs[24];
++	current->thread.cpu_context.x25 = regs->regs[25];
++	current->thread.cpu_context.x26 = regs->regs[26];
++	current->thread.cpu_context.x27 = regs->regs[27];
++	current->thread.cpu_context.x28 = regs->regs[28];
++	current->thread.cpu_context.fp = regs->regs[29];
++
++	current->thread.cpu_context.sp = regs->sp;
++	current->thread.cpu_context.pc = regs->pc;
++
++	kgdb_nmicallback(raw_smp_processor_id(), regs);
 +}
 +
-+static inline void timer_base_lock_expiry(struct timer_base *base)
-+{
-+	spin_lock(&base->expiry_lock);
-+}
-+
-+static inline void timer_base_unlock_expiry(struct timer_base *base)
-+{
-+	spin_unlock(&base->expiry_lock);
-+}
-+
-+/*
-+ * The counterpart to del_timer_wait_running().
-+ *
-+ * If there is a waiter for base->expiry_lock, then it was waiting for the
-+ * timer callback to finish. Drop expiry_lock and reaquire it. That allows
-+ * the waiter to acquire the lock and make progress.
-+ */
-+static void timer_sync_wait_running(struct timer_base *base)
-+{
-+	if (atomic_read(&base->timer_waiters)) {
-+		spin_unlock(&base->expiry_lock);
-+		spin_lock(&base->expiry_lock);
-+	}
-+}
-+
-+/*
-+ * This function is called on PREEMPT_RT kernels when the fast path
-+ * deletion of a timer failed because the timer callback function was
-+ * running.
-+ *
-+ * This prevents priority inversion, if the softirq thread on a remote CPU
-+ * got preempted, and it prevents a life lock when the task which tries to
-+ * delete a timer preempted the softirq thread running the timer callback
-+ * function.
-+ */
-+static void del_timer_wait_running(struct timer_list *timer)
-+{
-+	u32 tf;
-+
-+	tf = READ_ONCE(timer->flags);
-+	if (!(tf & TIMER_MIGRATING)) {
-+		struct timer_base *base = get_timer_base(tf);
-+
-+		/*
-+		 * Mark the base as contended and grab the expiry lock,
-+		 * which is held by the softirq across the timer
-+		 * callback. Drop the lock immediately so the softirq can
-+		 * expire the next timer. In theory the timer could already
-+		 * be running again, but that's more than unlikely and just
-+		 * causes another wait loop.
-+		 */
-+		atomic_inc(&base->timer_waiters);
-+		spin_lock_bh(&base->expiry_lock);
-+		atomic_dec(&base->timer_waiters);
-+		spin_unlock_bh(&base->expiry_lock);
-+	}
-+}
-+#else
-+static inline void timer_base_init_expiry_lock(struct timer_base *base) { }
-+static inline void timer_base_lock_expiry(struct timer_base *base) { }
-+static inline void timer_base_unlock_expiry(struct timer_base *base) { }
-+static inline void timer_sync_wait_running(struct timer_base *base) { }
-+static inline void del_timer_wait_running(struct timer_list *timer) { }
-+#endif
-+
-+#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT)
- /**
-  * del_timer_sync - deactivate a timer and wait for the handler to finish.
-  * @timer: the timer to be deactivated
-@@ -1266,6 +1341,8 @@ EXPORT_SYMBOL(try_to_del_timer_sync);
-  */
- int del_timer_sync(struct timer_list *timer)
+ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc)
  {
-+	int ret;
-+
- #ifdef CONFIG_LOCKDEP
- 	unsigned long flags;
- 
-@@ -1283,12 +1360,17 @@ int del_timer_sync(struct timer_list *timer)
- 	 * could lead to deadlock.
- 	 */
- 	WARN_ON(in_irq() && !(timer->flags & TIMER_IRQSAFE));
--	for (;;) {
--		int ret = try_to_del_timer_sync(timer);
--		if (ret >= 0)
--			return ret;
--		cpu_relax();
--	}
-+
-+	do {
-+		ret = try_to_del_timer_sync(timer);
-+
-+		if (unlikely(ret < 0)) {
-+			del_timer_wait_running(timer);
-+			cpu_relax();
-+		}
-+	} while (ret < 0);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(del_timer_sync);
- #endif
-@@ -1360,10 +1442,13 @@ static void expire_timers(struct timer_base *base, struct hlist_head *head)
- 		if (timer->flags & TIMER_IRQSAFE) {
- 			raw_spin_unlock(&base->lock);
- 			call_timer_fn(timer, fn, baseclk);
-+			base->running_timer = NULL;
- 			raw_spin_lock(&base->lock);
- 		} else {
- 			raw_spin_unlock_irq(&base->lock);
- 			call_timer_fn(timer, fn, baseclk);
-+			base->running_timer = NULL;
-+			timer_sync_wait_running(base);
- 			raw_spin_lock_irq(&base->lock);
- 		}
- 	}
-@@ -1658,6 +1743,7 @@ static inline void __run_timers(struct timer_base *base)
- 	if (!time_after_eq(jiffies, base->clk))
- 		return;
- 
-+	timer_base_lock_expiry(base);
- 	raw_spin_lock_irq(&base->lock);
- 
- 	/*
-@@ -1684,8 +1770,8 @@ static inline void __run_timers(struct timer_base *base)
- 		while (levels--)
- 			expire_timers(base, heads + levels);
- 	}
--	base->running_timer = NULL;
- 	raw_spin_unlock_irq(&base->lock);
-+	timer_base_unlock_expiry(base);
- }
- 
- /*
-@@ -1930,6 +2016,7 @@ static void __init init_timer_cpu(int cpu)
- 		base->cpu = cpu;
- 		raw_spin_lock_init(&base->lock);
- 		base->clk = jiffies;
-+		timer_base_init_expiry_lock(base);
- 	}
- }
- 
+ 	regs->pc = pc;
+-- 
+2.22.0.709.g102302147b-goog
+
