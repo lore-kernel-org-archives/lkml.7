@@ -2,112 +2,84 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3FAC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E7BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFAA2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="baF0RKwT"
+	by mail.kernel.org (Postfix) with ESMTP id C58AF2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbfG3MJo (ORCPT
+        id S1729984AbfG3MKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 08:09:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60076 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfG3MJo (ORCPT
+        Tue, 30 Jul 2019 08:10:08 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:44311 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbfG3MKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 08:09:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=eRpWKW7gLROmOjbwkP88njPjYWqjaFOZOs22bzkiPOs=; b=baF0RKwT0FNJW3MqdNL4/geCuW
-        qbk6m5ow0a/Mzl/KZm+2LUBCvGd+QFKYCYVjawnLgITwQ28fONgeHjLtRBAa14c53KHP54uc6KHhf
-        AqiwGY8/5QQNvZGYL/5m82pV4Y1BRsMis5Y8IomyiRlf+wd5MoDNEGQcuAr3m2qcWu9Z9GMDxIuFH
-        Slzo+unOJs3ofV5hlodv85oeWjcpiMEsB5cnvU8Zye9UkmcfZHJPHpuVHv2EWmHUAq/lAW9yAyL15
-        WOSPHW+PULgoW5/WCkhRyc/6Wk2mF4mVDyvVKZbMZX5h+MMhubX5DHQuhlmuAQyE7/ceP/q1T5xEu
-        Jr49+eXw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsQwn-0002Fj-Ao; Tue, 30 Jul 2019 12:09:41 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1428D2029FD58; Tue, 30 Jul 2019 14:09:39 +0200 (CEST)
-Date:   Tue, 30 Jul 2019 14:09:39 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] KVM: Disable wake-affine vCPU process to mitigate lock
- holder preemption
-Message-ID: <20190730120939.GM31381@hirez.programming.kicks-ass.net>
-References: <1564479235-25074-1-git-send-email-wanpengli@tencent.com>
+        Tue, 30 Jul 2019 08:10:08 -0400
+Received: from [167.98.27.226] (helo=ct-lt-1124.office.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1hsQwp-0003E4-GQ; Tue, 30 Jul 2019 13:09:43 +0100
+From:   Thomas Preston <thomas.preston@codethink.co.uk>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Kirill Marinushkin <kmarinushkin@birdec.tech>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Annaliese McDermond <nh6z@nh6z.net>,
+        Thomas Preston <thomas.preston@codethink.co.uk>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] ASoC: Codecs: Add TDA7802 codec
+Date:   Tue, 30 Jul 2019 13:09:34 +0100
+Message-Id: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1564479235-25074-1-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 05:33:55PM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Wake-affine is a feature inside scheduler which we attempt to make processes 
-> running closely, it gains benefit mostly from cache-hit. When waker tries 
-> to wakup wakee, it needs to select cpu to run wakee, wake affine heuristic 
-> mays select the cpu which waker is running on currently instead of the prev 
-> cpu which wakee was last time running. 
-> 
-> However, in multiple VMs over-subscribe virtualization scenario, it increases 
-> the probability to incur vCPU stacking which means that the sibling vCPUs from 
-> the same VM will be stacked on one pCPU. I test three 80 vCPUs VMs running on 
-> one 80 pCPUs Skylake server(PLE is supported), the ebizzy score can increase 17% 
-> after disabling wake-affine for vCPU process. 
-> 
-> When qemu/other vCPU inject virtual interrupt to guest through waking up one 
-> sleeping vCPU, it increases the probability to stack vCPUs/qemu by scheduler
-> wake-affine. vCPU stacking issue can greately inceases the lock synchronization 
-> latency in a virtualized environment. This patch disables wake-affine vCPU 
-> process to mitigtate lock holder preemption.
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  include/linux/sched.h | 1 +
->  kernel/sched/fair.c   | 3 +++
->  virt/kvm/kvm_main.c   | 1 +
->  3 files changed, 5 insertions(+)
+Hi,
+This patch series adds a driver for the ST TDA7802 amplifier.
 
-> index 036be95..18eb1fa 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5428,6 +5428,9 @@ static int wake_wide(struct task_struct *p)
->  	unsigned int slave = p->wakee_flips;
->  	int factor = this_cpu_read(sd_llc_size);
->  
-> +	if (unlikely(p->flags & PF_NO_WAKE_AFFINE))
-> +		return 1;
-> +
->  	if (master < slave)
->  		swap(master, slave);
->  	if (slave < factor || master < slave * factor)
+Thank you Mark Brown, Charles Keepax, Cezary Rojewski and Kirill
+Marinushkin for your time and useful feedback (on IRC too). Sorry for
+taking so long in getting back to you, there were quite a lot of
+changes!
 
-I intensely dislike how you misrepresent this patch as a KVM patch.
+Please let me know if there's anything else which needs changing.
 
-Also the above is very much not the right place, even if this PF_flag
-were to live.
+Many thanks,
+Thomas
+
+Thomas Preston (3):
+  dt-bindings: ASoC: Add TDA7802 amplifier
+  ASoC: Add codec driver for ST TDA7802
+  ASoC: TDA7802: Add turn-on diagnostic routine
+
+ .../devicetree/bindings/sound/tda7802.txt     |  26 +
+ sound/soc/codecs/Kconfig                      |   6 +
+ sound/soc/codecs/Makefile                     |   2 +
+ sound/soc/codecs/tda7802.c                    | 693 ++++++++++++++++++
+ 4 files changed, 727 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tda7802.txt
+ create mode 100644 sound/soc/codecs/tda7802.c
+
+-- 
+2.21.0
+
