@@ -2,149 +2,149 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A271EC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEB0C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7708D20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFABA204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXb1XEzw"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GCPvlON+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730236AbfG3SlZ (ORCPT
+        id S1730257AbfG3Sl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:41:25 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40845 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfG3SlY (ORCPT
+        Tue, 30 Jul 2019 14:41:59 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:34373 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfG3Sl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:41:24 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w10so30516900pgj.7;
-        Tue, 30 Jul 2019 11:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PVgHHfw8283w1UDYfT80DWnZOItPSgOPx68g/r5d7hQ=;
-        b=UXb1XEzwQ4FhS7roeMM8Wx/ECYXxRVmaXou0vbqI/o/pifDl6IfTG8Y6vFJ225b2i6
-         f6Wlizk14eGiE7TQSYxqk5WuFrEGVXZVfWaJX4am2gWLxTpCq7BsYPFt/5LW12ZIGm3c
-         FvsEZbYBKNFuwh3zAJA38tslp1lajzKddbZl8g7cs2JL1ERCtJRv8MebhY6SZJkNpxdu
-         U40Ib5WYNBSJB+D79Rzj/i9xpMKItghTR2nG1fIeLy9Ruwios0URvQNvOflz9kfSTqNT
-         2ZogTW52qmeO4A+m+y91msP76RF0/TbICGWUVWiXYALyBwvsGjOzBeeAQ1+r6jyAcHWA
-         ETEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PVgHHfw8283w1UDYfT80DWnZOItPSgOPx68g/r5d7hQ=;
-        b=SRhL+n6AAxtJuLlYukiM5RJLPXzZO03mLlVIuxPDtxJFug2TG13/ka1J95GGpnR778
-         ab0sZK4Z5VUcMalE+KZYh+cq94XCUaW3uK2Ef03lPh4AVDWzKRE2LllH/MvWnRV1LyFg
-         886RF0caDol/QggV2dkj34+v8ypbYAGXey30/47luBIKmh1W4+xx+xCUe3QKSZrNV+ws
-         vkeFYFIfyRiMOkqjLB/PRDeSrBrEIMIEhUxxxPb5qjdyHL0ru6TjJVgYb5umQ53OmoKI
-         i5DpdRF+DWEz28ATJBxoy57NIDq3DFKSNAZpZXrohl1p8giN5hC9NihUFeWu2F5ydW+C
-         TwEw==
-X-Gm-Message-State: APjAAAWswsORfaMs2GY86D20023yjdptLLJSeqkF0zFg3FT+DpeJsJof
-        J5vzNG2C5JMl+LmEKvsoiTE=
-X-Google-Smtp-Source: APXvYqzBk2/TjQ2t871qrxhbKFunvN7/VGZ75ZVMjl2UbEEJaEYS44nmRG20XxYi5+wtSmfYiTuUlw==
-X-Received: by 2002:a65:5c4b:: with SMTP id v11mr67619457pgr.62.1564512084206;
-        Tue, 30 Jul 2019 11:41:24 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z6sm36592223pgk.18.2019.07.30.11.41.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 11:41:23 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 11:41:21 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 48/57] watchdog: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190730184121.GA32293@roeck-us.net>
-References: <20190730181557.90391-1-swboyd@chromium.org>
- <20190730181557.90391-49-swboyd@chromium.org>
+        Tue, 30 Jul 2019 14:41:59 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIflnr3332410
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 30 Jul 2019 11:41:48 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIflnr3332410
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564512108;
+        bh=0rdS9t2ruUTTjNMLZBRqXP40Hz26l8NmxiTNHfzXIgI=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=GCPvlON+FxqdoEOXTG4dsbkdtWLBauS2AOQCUxPuuCvYH84X6tS56eO4tSJYWQF9U
+         kkwElHBkkwkIyp8PwNRFxyZ0ads7dhB7gmAX5DkyCcbW85S3jGbFRVAsK/Q7lGQPNG
+         NNFDDHg9H8/DBmYfNFldzvfOJN7+ArB5lMTQkgjrws9XIjhHOaJP2jo7vtYGqMxvHI
+         bpOaEQpy6mUtBYnHjt53wnBNru6UTJNOdD//b5L/yMkB7WIAMG2MnFk6N3VKbwZnbv
+         vY7nLYxZ2cJ1HZwCX24F4NIUxtybeC+pdHDZbrxvyohu4V5IfXRSIzx2whOhClVPjP
+         xMSKEA5iYWsQA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIflnY3332407;
+        Tue, 30 Jul 2019 11:41:47 -0700
+Date:   Tue, 30 Jul 2019 11:41:47 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-63bd5dfa69658c459d08a6ee6bfebbd4a91cf24d@git.kernel.org>
+Cc:     alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, peterz@infradead.org, hpa@zytor.com,
+        alexey.budankov@linux.intel.com, ak@linux.intel.com,
+        namhyung@kernel.org, acme@redhat.com, jolsa@kernel.org,
+        mpetlan@redhat.com, tglx@linutronix.de
+Reply-To: acme@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
+          mpetlan@redhat.com, tglx@linutronix.de, mingo@kernel.org,
+          alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+          alexey.budankov@linux.intel.com, hpa@zytor.com,
+          peterz@infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190721112506.12306-47-jolsa@kernel.org>
+References: <20190721112506.12306-47-jolsa@kernel.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] libperf: Add perf_evsel__new() function
+Git-Commit-ID: 63bd5dfa69658c459d08a6ee6bfebbd4a91cf24d
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190730181557.90391-49-swboyd@chromium.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:15:48AM -0700, Stephen Boyd wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
-> 
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
-> 
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
-> 
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
-> 
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
-> 
-> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-watchdog@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Commit-ID:  63bd5dfa69658c459d08a6ee6bfebbd4a91cf24d
+Gitweb:     https://git.kernel.org/tip/63bd5dfa69658c459d08a6ee6bfebbd4a91cf24d
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Sun, 21 Jul 2019 13:24:33 +0200
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 29 Jul 2019 18:34:45 -0300
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+libperf: Add perf_evsel__new() function
 
-> ---
-> 
-> Please apply directly to subsystem trees
-> 
->  drivers/watchdog/sprd_wdt.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/watchdog/sprd_wdt.c b/drivers/watchdog/sprd_wdt.c
-> index edba4e278685..0bb17b046140 100644
-> --- a/drivers/watchdog/sprd_wdt.c
-> +++ b/drivers/watchdog/sprd_wdt.c
-> @@ -284,10 +284,8 @@ static int sprd_wdt_probe(struct platform_device *pdev)
->  	}
->  
->  	wdt->irq = platform_get_irq(pdev, 0);
-> -	if (wdt->irq < 0) {
-> -		dev_err(dev, "failed to get IRQ resource\n");
-> +	if (wdt->irq < 0)
->  		return wdt->irq;
-> -	}
->  
->  	ret = devm_request_irq(dev, wdt->irq, sprd_wdt_isr, IRQF_NO_SUSPEND,
->  			       "sprd-wdt", (void *)wdt);
-> -- 
-> Sent by a computer through tubes
-> 
+Add a perf_evsel__new() function to create and init a perf_evsel struct
+dynamicaly.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190721112506.12306-47-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/lib/evsel.c              | 11 +++++++++++
+ tools/perf/lib/include/perf/evsel.h |  1 +
+ tools/perf/lib/libperf.map          |  1 +
+ 3 files changed, 13 insertions(+)
+
+diff --git a/tools/perf/lib/evsel.c b/tools/perf/lib/evsel.c
+index 17cba35becc7..8e91738c5c38 100644
+--- a/tools/perf/lib/evsel.c
++++ b/tools/perf/lib/evsel.c
+@@ -2,9 +2,20 @@
+ #include <perf/evsel.h>
+ #include <linux/list.h>
+ #include <internal/evsel.h>
++#include <linux/zalloc.h>
+ 
+ void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr)
+ {
+ 	INIT_LIST_HEAD(&evsel->node);
+ 	evsel->attr = *attr;
+ }
++
++struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr)
++{
++	struct perf_evsel *evsel = zalloc(sizeof(*evsel));
++
++	if (evsel != NULL)
++		perf_evsel__init(evsel, attr);
++
++	return evsel;
++}
+diff --git a/tools/perf/lib/include/perf/evsel.h b/tools/perf/lib/include/perf/evsel.h
+index 295583b89f46..21b66fc1937f 100644
+--- a/tools/perf/lib/include/perf/evsel.h
++++ b/tools/perf/lib/include/perf/evsel.h
+@@ -9,5 +9,6 @@ struct perf_event_attr;
+ 
+ LIBPERF_API void perf_evsel__init(struct perf_evsel *evsel,
+ 				  struct perf_event_attr *attr);
++LIBPERF_API struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr);
+ 
+ #endif /* __LIBPERF_EVSEL_H */
+diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
+index 5e685d6c7a95..e3eac9b60726 100644
+--- a/tools/perf/lib/libperf.map
++++ b/tools/perf/lib/libperf.map
+@@ -11,6 +11,7 @@ LIBPERF_0.0.1 {
+ 		perf_thread_map__comm;
+ 		perf_thread_map__get;
+ 		perf_thread_map__put;
++		perf_evsel__new;
+ 		perf_evsel__init;
+ 		perf_evlist__new;
+ 		perf_evlist__init;
