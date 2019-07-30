@@ -2,85 +2,170 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82212C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA1BC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631FD20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24FA22089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfG3DIx (ORCPT
+        id S1727794AbfG3DI4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:08:53 -0400
-Received: from mga03.intel.com ([134.134.136.65]:15685 "EHLO mga03.intel.com"
+        Mon, 29 Jul 2019 23:08:56 -0400
+Received: from mga18.intel.com ([134.134.136.126]:16036 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfG3DIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 23:08:52 -0400
-X-Amp-Result: UNSCANNABLE
+        id S1726281AbfG3DIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:08:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 20:08:51 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 20:08:52 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,325,1559545200"; 
-   d="scan'208";a="179599286"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 Jul 2019 20:08:51 -0700
-Date:   Mon, 29 Jul 2019 20:08:51 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [RFC PATCH 08/21] KVM: x86: Add kvm_x86_ops hook to short
- circuit emulation
-Message-ID: <20190730030850.GM21120@linux.intel.com>
-References: <20190727055214.9282-1-sean.j.christopherson@intel.com>
- <20190727055214.9282-9-sean.j.christopherson@intel.com>
+   d="scan'208";a="346861983"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by orsmga005.jf.intel.com with ESMTP; 29 Jul 2019 20:08:52 -0700
+Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 29 Jul 2019 20:08:52 -0700
+Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
+ FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 29 Jul 2019 20:08:51 -0700
+Received: from shsmsx105.ccr.corp.intel.com ([169.254.11.15]) by
+ shsmsx102.ccr.corp.intel.com ([169.254.2.19]) with mapi id 14.03.0439.000;
+ Tue, 30 Jul 2019 11:08:49 +0800
+From:   "Zhao, Yan Y" <yan.y.zhao@intel.com>
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>
+CC:     David Airlie <airlied@linux.ie>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>
+Subject: RE: [PATCH] drm/i915/gvt: remove duplicate entry of trace
+Thread-Topic: [PATCH] drm/i915/gvt: remove duplicate entry of trace
+Thread-Index: AQHVIM5kvexPfpkDmUCNSg2o5koBYqbixmwQ
+Date:   Tue, 30 Jul 2019 03:08:49 +0000
+Message-ID: <F22B14EC3CFBB843AD3E03B6B78F2C6A4B8CB34E@SHSMSX105.ccr.corp.intel.com>
+References: <20190526075633.GA9245@hari-Inspiron-1545>
+ <20190612032236.GH9684@zhen-hp.sh.intel.com>
+In-Reply-To: <20190612032236.GH9684@zhen-hp.sh.intel.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiM2Q5NmYwODMtYmQ2NS00NDVjLWJkNGQtNGRjYzFlMWY4ZjZiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVVFxRnF6Tjd0TkFUXC9PRk0wMUlRVHkxc0VSUEIyTUxEZzVFMk9OM09QUjlzMDloZERFQmJLak9RREROQmhydVcifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190727055214.9282-9-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 10:52:01PM -0700, Sean Christopherson wrote:
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 48c865a4e5dd..0fb8b60eb136 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -7115,10 +7115,25 @@ static int nested_enable_evmcs(struct kvm_vcpu *vcpu,
->  	return -ENODEV;
->  }
->  
-> -static bool svm_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
-> +static bool svm_is_emulatable(struct kvm_vcpu *vcpu, void *insn, int insn_len)
->  {
->  	bool is_user, smap;
->  
-> +	if (likely(!insn || insn_len))
-> +		return true;
-> +
-> +	/*
-> +	 * Under certain conditions insn_len may be zero on #NPF.  This can
-> +	 * happen if a guest gets a page-fault on data access but the HW table
-> +	 * walker is not able to read the instruction page (e.g instruction
-> +	 * page is not present in memory). In those cases we simply restart the
-> +	 * guest, with the exception of AMD Erratum 1096 which is unrecoverable.
-> +	 */
-> +	if (unlikely(insn && !insn_len)) {
-> +		if (!kvm_x86_ops->need_emulation_on_page_fault(vcpu))
-> +			return 1;
-> +	}
+Reviewed-by: Yan Zhao <yan.y.zhao@intel.com>
 
-Doh, obviously forgot to compile for SVM when rebasing.
+> -----Original Message-----
+> From: intel-gvt-dev [mailto:intel-gvt-dev-bounces@lists.freedesktop.org] On
+> Behalf Of Zhenyu Wang
+> Sent: Wednesday, June 12, 2019 11:23 AM
+> To: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> Cc: David Airlie <airlied@linux.ie>; intel-gfx@lists.freedesktop.org; Joonas
+> Lahtinen <joonas.lahtinen@linux.intel.com>; linux-kernel@vger.kernel.org; Jani
+> Nikula <jani.nikula@linux.intel.com>; dri-devel@lists.freedesktop.org; Daniel
+> Vetter <daniel@ffwll.ch>; Vivi, Rodrigo <rodrigo.vivi@intel.com>; intel-gvt-
+> dev@lists.freedesktop.org; Wang, Zhi A <zhi.a.wang@intel.com>
+> Subject: Re: [PATCH] drm/i915/gvt: remove duplicate entry of trace
+> 
+> On 2019.05.26 13:26:33 +0530, Hariprasad Kelam wrote:
+> > Remove duplicate include of trace.h
+> >
+> > Issue identified by includecheck
+> >
+> > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> > ---
+> >  drivers/gpu/drm/i915/gvt/trace_points.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/i915/gvt/trace_points.c
+> > b/drivers/gpu/drm/i915/gvt/trace_points.c
+> > index a3deed69..569f5e3 100644
+> > --- a/drivers/gpu/drm/i915/gvt/trace_points.c
+> > +++ b/drivers/gpu/drm/i915/gvt/trace_points.c
+> > @@ -32,5 +32,4 @@
+> >
+> >  #ifndef __CHECKER__
+> >  #define CREATE_TRACE_POINTS
+> > -#include "trace.h"
+> >  #endif
+> > --
+> 
+> This actually caused build issue like
+> ERROR: "__tracepoint_gma_index" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_render_mmio" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_gvt_command" [drivers/gpu/drm/i915/i915.ko]
+> undefined!
+> ERROR: "__tracepoint_spt_guest_change" [drivers/gpu/drm/i915/i915.ko]
+> undefined!
+> ERROR: "__tracepoint_gma_translate" [drivers/gpu/drm/i915/i915.ko]
+> undefined!
+> ERROR: "__tracepoint_spt_alloc" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_spt_change" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_oos_sync" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_write_ir" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_propagate_event" [drivers/gpu/drm/i915/i915.ko]
+> undefined!
+> ERROR: "__tracepoint_inject_msi" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_spt_refcount" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_spt_free" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_oos_change" [drivers/gpu/drm/i915/i915.ko] undefined!
+> scripts/Makefile.modpost:91: recipe for target '__modpost' failed
+> 
+> Looks we need fix like below.
+> 
+> Subject: [PATCH] drm/i915/gvt: remove duplicate include of trace.h
+> 
+> This removes duplicate include of trace.h. Found by Hariprasad Kelam with
+> includecheck.
+> 
+> Reported-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+> ---
+>  drivers/gpu/drm/i915/gvt/trace_points.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/gvt/trace_points.c
+> b/drivers/gpu/drm/i915/gvt/trace_points.c
+> index a3deed692b9c..fe552e877e09 100644
+> --- a/drivers/gpu/drm/i915/gvt/trace_points.c
+> +++ b/drivers/gpu/drm/i915/gvt/trace_points.c
+> @@ -28,8 +28,6 @@
+>   *
+>   */
+> 
+> -#include "trace.h"
+> -
+>  #ifndef __CHECKER__
+>  #define CREATE_TRACE_POINTS
+>  #include "trace.h"
+> --
+> 2.20.1
+> 
+> --
+> Open Source Technology Center, Intel ltd.
+> 
+> $gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
