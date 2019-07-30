@@ -2,121 +2,74 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA37C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10EBC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F132087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837142067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:12:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="qPiiN0Qp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y32wwVnv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbfG3VKV (ORCPT
+        id S2387611AbfG3VMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 17:10:21 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:40823 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfG3VKV (ORCPT
+        Tue, 30 Jul 2019 17:12:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56302 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387589AbfG3VMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 17:10:21 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 510E0891D6
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 09:10:16 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1564521016;
-        bh=0Z+XLHEs3tpnU67EfTU8KrstZnQvSsRUwQwRt1ZFcpc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=qPiiN0Qp1mjg9BYADu41zkSiOz4X5c5m5q2Hbmeevb+jb0IK91cbgQIXT4vsRYebw
-         FC+TiAKLOCWUvRyla/Yar2NkdOiuCvIMoXuAPiwxy2eIaxrS/na4eKA5vqQeudzWjA
-         T+lr7CHZ0YadtguEPKHB2vPDifRRRuwW+gVdSs5kqL+RhRyGb9+6dVLdKQvCtpnnwy
-         6JIk0gj+Nn2Fb5UfY3QiLPR/NJUnD5MbQEh0yLC5xfyhHM5T9twa7b5cKcyCmEcSvs
-         pVA1YR1+4KGiVhvl5fbwzFm+HKWl92ojyMkDz0VLXvkdt53NM+stvNj+RGwzekjX3R
-         73cCr7LstpkZA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d40b2370001>; Wed, 31 Jul 2019 09:10:15 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Wed, 31 Jul 2019 09:10:15 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Wed, 31 Jul 2019 09:10:15 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] powerpc: Support CMDLINE_EXTEND
-Thread-Topic: [PATCH] powerpc: Support CMDLINE_EXTEND
-Thread-Index: AQHVQeFH9dM2UcWg8kibPPBr3exODabh/KaAgADsyoA=
-Date:   Tue, 30 Jul 2019 21:10:15 +0000
-Message-ID: <1564521015.6123.11.camel@alliedtelesis.co.nz>
-References: <20190724053303.24317-1-chris.packham@alliedtelesis.co.nz>
-         <59674457-eda5-fe3b-65e0-29c20102fe4d@c-s.fr>
-In-Reply-To: <59674457-eda5-fe3b-65e0-29c20102fe4d@c-s.fr>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <55D24E6294C00F46945DD7FD181941E6@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Tue, 30 Jul 2019 17:12:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AGT1mgQtN5O2bIid/hu8bvBZ4cnh5dILbEAlwsJ2UQI=; b=Y32wwVnvQptTDs1tFyneR3G+v
+        mM09R9HulyVgjPBUUvr8xYdw0iAywC8XTUoto27LWdETdu6cMXiIEYMe6HAQN/M6gAQ/g2Cbg0yQn
+        3fpFyyN23da2X4h3s6VHWClcpcdb//FHKWbceFK9m2xYm3qMoZrWqsXMCr49TGeDnr4W4PLH9dTan
+        SaLXDygYI/LTJprMuzBRgf1b65Jdq6py0lYFyIqDC5qTvndXNd6MonX3+Ce0RwLXGoEx7Lptycoph
+        L+ayjFvfARUkUtE9FuBke2CMMTzM19vXEJoEO2SWaqSEcu7Lk5tIISOeM9i3F1mZVFuhvjUD/rKCw
+        86w0BqZoQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsZQQ-00076B-UB; Tue, 30 Jul 2019 21:12:50 +0000
+Date:   Tue, 30 Jul 2019 14:12:50 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        Tri Vo <trong@android.com>, linux-doc@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] idr: Document calling context for IDA APIs mustn't use
+ locks
+Message-ID: <20190730211250.GD4700@bombadil.infradead.org>
+References: <20190730210752.157700-1-swboyd@chromium.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730210752.157700-1-swboyd@chromium.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2hyaXN0b3BoZSwNCg0KT24gVHVlLCAyMDE5LTA3LTMwIGF0IDA5OjAyICswMjAwLCBDaHJp
-c3RvcGhlIExlcm95IHdyb3RlOg0KPiANCj4gTGUgMjQvMDcvMjAxOSDDoCAwNzozMywgQ2hyaXMg
-UGFja2hhbSBhIMOpY3JpdMKgOg0KPiA+IA0KPiA+IERldmljZSB0cmVlIGF3YXJlIHBsYXRmb3Jt
-cyBjYW4gbWFrZSB1c2Ugb2YgQ01ETElORV9FWFRFTkQgdG8NCj4gPiBleHRlbmQgdGhlDQo+ID4g
-a2VybmVsIGNvbW1hbmQgbGluZSBwcm92aWRlZCBieSB0aGUgYm9vdGxvYWRlci4gVGhpcyBpcw0K
-PiA+IHBhcnRpY3VsYXJseQ0KPiA+IHVzZWZ1bCB0byBzZXQgcGFyYW1ldGVycyBmb3IgYnVpbHQt
-aW4gbW9kdWxlcyB0aGF0IHdvdWxkIG90aGVyd2lzZQ0KPiA+IGJlDQo+ID4gZG9uZSBhdCBtb2R1
-bGUgaW5zZXJ0aW9uLiBBZGQgc3VwcG9ydCBmb3IgdGhpcyBpbiB0aGUgcG93ZXJwYw0KPiA+IGFy
-Y2hpdGVjdHVyZS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQYWNraGFtIDxjaHJp
-cy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+ID4gLS0tDQo+ID4gwqAgYXJjaC9wb3dl
-cnBjL0tjb25maWcgfCAxMiArKysrKysrKysrKysNCj4gSSB0aGluayB5b3UgYWxzbyBoYXZlIHRv
-IGltcGxlbWVudCBzb21lIHN0dWZmIGluDQo+IGVhcmx5X2NtZGxpbmVfcGFyc2UoKcKgDQo+IGlu
-IGFyY2gvcG93ZXJwYy9rZXJuZWwvcHJvbV9pbml0LmMNCg0KSSBteSBjYXNlIEkgZGlkbid0IG5l
-ZWQgdG8gc2luY2UgdGhlIGdlbmVyaWMgY29kZSBpbsKgZHJpdmVycy9vZi9mZHQuYw0KZGlkIHdo
-YXQgSSBuZWVkLiBGb3IgZWFybHkgb3B0aW9ucyBvciBwbGF0Zm9ybXMgdGhhdCBkb24ndCB1c2Ug
-YSBkZXZpY2UNCnRyZWUgdGhlbiBJIGNhbiBzZWUgd2h5IEknZCBuZWVkIHRoZSB1cGRhdGUgdG8g
-dXBkYXRlIHRvIHByb21faW5pdC4NCg0KPiANCj4gTWF5YmUgbG9vayBhdCBodHRwczovL3BhdGNo
-d29yay5vemxhYnMub3JnL3BhdGNoLzEwNzQxMjYvDQo+IA0KDQpEbyB5b3UgbWluZCBpZiBJIHRh
-a2UgdGhpcyBhbmQgZm9sZCBpdCBpbnRvIGEgdjIgb2YgbXkgcGF0Y2g/IEFueQ0KcGFydGljdWxh
-ciByZWFzb24gaXQgZGlkbid0IGdldCBwaWNrZWQgdXAgaW4gQXByaWw/DQoNCj4gQ2hyaXN0b3Bo
-ZQ0KPiANCj4gPiANCj4gPiDCoCAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKQ0KPiA+
-IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvS2NvbmZpZyBiL2FyY2gvcG93ZXJwYy9L
-Y29uZmlnDQo+ID4gaW5kZXggZDhkY2Q4ODIwMzY5Li5jZDliMzk3NGFhMzYgMTAwNjQ0DQo+ID4g
-LS0tIGEvYXJjaC9wb3dlcnBjL0tjb25maWcNCj4gPiArKysgYi9hcmNoL3Bvd2VycGMvS2NvbmZp
-Zw0KPiA+IEBAIC04NTEsNiArODUxLDExIEBAIGNvbmZpZyBDTURMSU5FDQo+ID4gwqDCoAnCoMKg
-c29tZSBjb21tYW5kLWxpbmUgb3B0aW9ucyBhdCBidWlsZCB0aW1lIGJ5IGVudGVyaW5nDQo+ID4g
-dGhlbSBoZXJlLsKgwqBJbg0KPiA+IMKgwqAJwqDCoG1vc3QgY2FzZXMgeW91IHdpbGwgbmVlZCB0
-byBzcGVjaWZ5IHRoZSByb290IGRldmljZQ0KPiA+IGhlcmUuDQo+ID4gwqDCoA0KPiA+ICtjaG9p
-Y2UNCj4gPiArCXByb21wdCAiS2VybmVsIGNvbW1hbmQgbGluZSB0eXBlIiBpZiBDTURMSU5FICE9
-ICIiDQo+ID4gKwlkZWZhdWx0IENNRExJTkVfRk9SQ0UNCj4gPiArCWRlcGVuZHMgb24gQ01ETElO
-RV9CT09MDQo+ID4gKw0KPiA+IMKgIGNvbmZpZyBDTURMSU5FX0ZPUkNFDQo+ID4gwqDCoAlib29s
-ICJBbHdheXMgdXNlIHRoZSBkZWZhdWx0IGtlcm5lbCBjb21tYW5kIHN0cmluZyINCj4gPiDCoMKg
-CWRlcGVuZHMgb24gQ01ETElORV9CT09MDQo+ID4gQEAgLTg2MCw2ICs4NjUsMTMgQEAgY29uZmln
-IENNRExJTkVfRk9SQ0UNCj4gPiDCoMKgCcKgwqBUaGlzIGlzIHVzZWZ1bCBpZiB5b3UgY2Fubm90
-IG9yIGRvbid0IHdhbnQgdG8gY2hhbmdlDQo+ID4gdGhlDQo+ID4gwqDCoAnCoMKgY29tbWFuZC1s
-aW5lIG9wdGlvbnMgeW91ciBib290IGxvYWRlciBwYXNzZXMgdG8gdGhlDQo+ID4ga2VybmVsLg0K
-PiA+IMKgwqANCj4gPiArY29uZmlnIENNRExJTkVfRVhURU5EDQo+ID4gKwlib29sICJFeHRlbmQg
-Ym9vdGxvYWRlciBrZXJuZWwgYXJndW1lbnRzIg0KPiA+ICsJaGVscA0KPiA+ICsJwqDCoFRoZSBj
-b21tYW5kLWxpbmUgYXJndW1lbnRzIHByb3ZpZGVkIGJ5IHRoZSBib290IGxvYWRlcg0KPiA+IHdp
-bGwgYmUNCj4gPiArCcKgwqBhcHBlbmRlZCB0byB0aGUgZGVmYXVsdCBrZXJuZWwgY29tbWFuZCBz
-dHJpbmcuDQo+ID4gK2VuZGNob2ljZQ0KPiA+ICsNCj4gPiDCoCBjb25maWcgRVhUUkFfVEFSR0VU
-Uw0KPiA+IMKgwqAJc3RyaW5nICJBZGRpdGlvbmFsIGRlZmF1bHQgaW1hZ2UgdHlwZXMiDQo+ID4g
-wqDCoAloZWxwDQo+ID4g
+On Tue, Jul 30, 2019 at 02:07:52PM -0700, Stephen Boyd wrote:
+> The documentation for these functions indicates that callers don't need
+> to hold a lock while calling them, but that documentation is only in one
+> place under "IDA Usage". Let's state the same information on each IDA
+> function so that it's clear what the calling context requires.
+> Furthermore, let's document ida_simple_get() with the same information
+> so that callers know how this API works.
+
+I don't want people to use ida_simple_get() any more.  Use ida_alloc()
+instead.
+
+> - * Context: Any context.
+> + * Context: Any context. It is safe to call this function without
+> + * synchronisation in your code.
+
+I prefer "without locking" to "without synchronisation" ...
+
