@@ -2,151 +2,149 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F938C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CC7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219F3206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A23206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="gQug1WvV"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="yUwRjwpt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387738AbfG3SDG (ORCPT
+        id S2387762AbfG3SDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:03:06 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:48030 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387722AbfG3SDF (ORCPT
+        Tue, 30 Jul 2019 14:03:18 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:50885 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387722AbfG3SDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:03:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1564509783; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Xx9v2bvdhkwqBeJF1UPfxb804gp20xzTw1fS+vRh8dQ=;
-        b=gQug1WvVy6t6iHG5FWnzCIrJFs1D2WI0sR9kTMAiotBbnsjN+3Re1/1OLwdW7vZNWHlLAI
-        kk8eaMt+FNAFQWdYThZzKvnkL+BSDf4jr2BJE39/YyQWN9vvs9i1Ku3CQbEXZw+XSpj7p6
-        a0pcPgJUI3usTor5MYhBYkyv13uXlls=
-Date:   Tue, 30 Jul 2019 14:02:47 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] MIPS: Ingenic: Fix bugs when detecting X1000's
- parameters.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org,
-        malat@debian.org, chenhc@lemote.com, tglx@linutronix.de,
-        allison@lohutok.net, syq@debian.org, jiaxun.yang@flygoat.com
-Message-Id: <1564509767.15799.0@crapouillou.net>
-In-Reply-To: <1564498510-3751-2-git-send-email-zhouyanjie@zoho.com>
-References: <1564498510-3751-1-git-send-email-zhouyanjie@zoho.com>
-        <1564498510-3751-2-git-send-email-zhouyanjie@zoho.com>
+        Tue, 30 Jul 2019 14:03:17 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UI38iM3322443
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 30 Jul 2019 11:03:08 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UI38iM3322443
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564509789;
+        bh=sNIiMsVBy5wdV6wrM2imJtCcq+XLNAhmQRImeAQBIUs=;
+        h=Date:From:Cc:Reply-To:To:Subject:From;
+        b=yUwRjwptEKaoitJk12aj5Ym32yyNWVbaq8fpf7Ia0EtRXzoVRloLAze/kIrvE9XaH
+         IY4CT/15pCiOF1zYaawXvkP35vAv3oQgpAXSV2sZYMPG2srVffQqoMsu13jMDp5bHR
+         5g5XJZIu1sJensJdc/LP+NEhWw2EUVNN8XCIteQsNry7XE+ApwJ41gZ4G5qVT9i2TQ
+         cf+4nDKKArnaqAjgjxddWEVmDTH52MhwT1yALPQJMz4BbVoFNIeqRdIyVhGt96x2mQ
+         PUExiuOnYq6m4aWARKAvbSPG6LDo4U9qlRLWKBX18Onntoliwxy3lsNGTDpTvgn261
+         XQw/yuwE4iVEQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UI37ZY3322438;
+        Tue, 30 Jul 2019 11:03:07 -0700
+Date:   Tue, 30 Jul 2019 11:03:07 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-6hh2rl27uri6gsxhmk6q3hx5@git.kernel.org>
+Cc:     acme@redhat.com, linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        mingo@kernel.org, lclaudio@redhat.com, jolsa@kernel.org,
+        adrian.hunter@intel.com, namhyung@kernel.org, hpa@zytor.com
+Reply-To: namhyung@kernel.org, hpa@zytor.com, tglx@linutronix.de,
+          mingo@kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com,
+          adrian.hunter@intel.com, jolsa@kernel.org, lclaudio@redhat.com
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf trace beauty: Add BPF augmenter for the
+ 'rename' syscall
+Git-Commit-ID: cfa9ac73d6f9790f569959a729cbc9d52bff4270
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+Commit-ID:  cfa9ac73d6f9790f569959a729cbc9d52bff4270
+Gitweb:     https://git.kernel.org/tip/cfa9ac73d6f9790f569959a729cbc9d52bff4270
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Wed, 17 Jul 2019 11:47:37 -0300
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 29 Jul 2019 18:34:42 -0300
 
+perf trace beauty: Add BPF augmenter for the 'rename' syscall
 
+I.e. two strings:
 
-Le mar. 30 juil. 2019 =E0 10:55, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=E9crit :
-> 1.fix bugs when detecting L2 cache sets value.
-> 2.fix bugs when detecting L2 cache ways value.
-> 3.fix bugs when calculate bogoMips and loops_per_jiffy.
->=20
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> ---
->  arch/mips/kernel/cpu-probe.c |  7 ++++++-
->  arch/mips/mm/sc-mips.c       | 18 +++++++++++++++---
->  2 files changed, 21 insertions(+), 4 deletions(-)
->=20
-> diff --git a/arch/mips/kernel/cpu-probe.c=20
-> b/arch/mips/kernel/cpu-probe.c
-> index eb527a1..a914435 100644
-> --- a/arch/mips/kernel/cpu-probe.c
-> +++ b/arch/mips/kernel/cpu-probe.c
-> @@ -1960,11 +1960,16 @@ static inline void cpu_probe_ingenic(struct=20
-> cpuinfo_mips *c, unsigned int cpu)
->  	c->options &=3D ~MIPS_CPU_COUNTER;
->  	BUG_ON(!__builtin_constant_p(cpu_has_counter) || cpu_has_counter);
->  	switch (c->processor_id & PRID_IMP_MASK) {
-> -	case PRID_IMP_XBURST:
-> +	case PRID_IMP_XBURST: {
-> +		unsigned int config7;
->  		c->cputype =3D CPU_XBURST;
->  		c->writecombine =3D _CACHE_UNCACHED_ACCELERATED;
->  		__cpu_name[cpu] =3D "Ingenic XBurst";
-> +		config7 =3D read_c0_config7();
-> +		config7 |=3D (1 << 4);
-> +		write_c0_config7(config7);
+  # perf trace -e rename
+  systemd/1 rename("/run/systemd/units/.#invocation:dnf-makecache.service970761b7f2840dcc", "/run/systemd/units/invocation:dnf-makecache.service") = 0
+  systemd-journa/715 rename("/run/systemd/journal/streams/.#9:17539785BJDblc", "/run/systemd/journal/streams/9:17539785") = 0
+  mv/1936 rename("/tmp/build/perf/fd/.array.o.tmp", "/tmp/build/perf/fd/.array.o.cmd") = 0
+  sh/1949 rename("/tmp/build/perf/.cpu.o.tmp", "/tmp/build/perf/.cpu.o.cmd") = 0
+  mv/1954 rename("/tmp/build/perf/fs/.tracing_path.o.tmp", "/tmp/build/perf/fs/.tracing_path.o.cmd") = 0
+  mv/1963 rename("/tmp/build/perf/common-cmds.h+", "/tmp/build/perf/common-cmds.h") = 0
+  :1975/1975 rename("/tmp/build/perf/.exec-cmd.o.tmp", "/tmp/build/perf/.exec-cmd.o.cmd") = 0
+  mv/1979 rename("/tmp/build/perf/fs/.fs.o.tmp", "/tmp/build/perf/fs/.fs.o.cmd") = 0
+  mv/2005 rename("/tmp/build/perf/.debug.o.tmp", "/tmp/build/perf/.debug.o.cmd") = 0
+  mv/2012 rename("/tmp/build/perf/.str_error_r.o.tmp", "/tmp/build/perf/.str_error_r.o.cmd") = 0
+  mv/2019 rename("/tmp/build/perf/.help.o.tmp", "/tmp/build/perf/.help.o.cmd") = 0
+  mv/2031 rename("/tmp/build/perf/.trace-seq.o.tmp", "/tmp/build/perf/.trace-seq.o.cmd") = 0
+  make/2038  ... [continued]: rename())             = 0
+  :2038/2038 rename("/tmp/build/perf/.event-plugin.o.tmp", "/tmp/build/perf/.event-plugin.o.cmd") ...
+  ar/2035 rename("/tmp/build/perf/stzwBX3a", "/tmp/build/perf/libapi.a") = 0
+  mv/2051 rename("/tmp/build/perf/.parse-utils.o.tmp", "/tmp/build/perf/.parse-utils.o.cmd") = 0
+  mv/2069 rename("/tmp/build/perf/.subcmd-config.o.tmp", "/tmp/build/perf/.subcmd-config.o.cmd") = 0
+  make/2080 rename("/tmp/build/perf/.parse-filter.o.tmp", "/tmp/build/perf/.parse-filter.o.cmd") = 0
+  mv/2099 rename("/tmp/build/perf/.pager.o.tmp", "/tmp/build/perf/.pager.o.cmd") = 0
+  :2124/2124 rename("/tmp/build/perf/.sigchain.o.tmp", "/tmp/build/perf/.sigchain.o.cmd") = 0
+  make/2140 rename("/tmp/build/perf/.event-parse.o.tmp", "/tmp/build/perf/.event-parse.o.cmd") = 0
+  mv/2164 rename("/tmp/build/perf/.kbuffer-parse.o.tmp", "/tmp/build/perf/.kbuffer-parse.o.cmd") = 0
+  sh/2174 rename("/tmp/build/perf/.run-command.o.tmp", "/tmp/build/perf/.run-command.o.cmd") = 0
+  mv/2190 rename("/tmp/build/perf/.tep_strerror.o.tmp", "/tmp/build/perf/.tep_strerror.o.cmd") = 0
+  :2261/2261 rename("/tmp/build/perf/.event-parse-api.o.tmp", "/tmp/build/perf/.event-parse-api.o.cmd") = 0
+  :2480/2480 rename("/tmp/build/perf/stLv3kG2", "/tmp/build/perf/libtraceevent.a") = 0
+  ^C#
 
-If you add __BUILD_SET_C0(config7) in arch/mips/include/asm/mipsregs.h
-(search for this macro) then you can call directly=20
-set_c0_config7(BIT(4)).
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-6hh2rl27uri6gsxhmk6q3hx5@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/examples/bpf/augmented_raw_syscalls.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-It's preferred to use the BIT(x) macro instead of the (1 << x)=20
-construct.
-
-Finally, what does that bit do? I can't find it any documentation about
-it. Please add a comment describing what it does.
-
-
->  		break;
-> +	}
->  	default:
->  		panic("Unknown Ingenic Processor ID!");
->  		break;
-> diff --git a/arch/mips/mm/sc-mips.c b/arch/mips/mm/sc-mips.c
-> index 9385ddb..ed953d4 100644
-> --- a/arch/mips/mm/sc-mips.c
-> +++ b/arch/mips/mm/sc-mips.c
-> @@ -215,6 +215,14 @@ static inline int __init mips_sc_probe(void)
->  	else
->  		return 0;
->=20
-> +	/*
-> +	 * According to config2 it would be 512-sets, but that is=20
-> contradicted
-> +	 * by all documentation.
-> +	 */
-> +	if (current_cpu_type() =3D=3D CPU_XBURST &&
-> +				mips_machtype =3D=3D MACH_INGENIC_X1000)
-> +		c->scache.sets =3D 256;
-> +
->  	tmp =3D (config2 >> 0) & 0x0f;
->  	if (tmp <=3D 7)
->  		c->scache.ways =3D tmp + 1;
-> @@ -225,9 +233,13 @@ static inline int __init mips_sc_probe(void)
->  	 * According to config2 it would be 5-ways, but that is contradicted
->  	 * by all documentation.
->  	 */
-> -	if (current_cpu_type() =3D=3D CPU_XBURST &&
-> -				mips_machtype =3D=3D MACH_INGENIC_JZ4770)
-> -		c->scache.ways =3D 4;
-> +	if (current_cpu_type() =3D=3D CPU_XBURST) {
-> +		switch (mips_machtype) {
-> +		case MACH_INGENIC_JZ4770:
-> +		case MACH_INGENIC_X1000:
-> +			c->scache.ways =3D 4;
-> +		}
-> +	}
->=20
->  	c->scache.waysize =3D c->scache.sets * c->scache.linesz;
->  	c->scache.waybit =3D __ffs(c->scache.waysize);
-> --
-> 2.7.4
->=20
->=20
-
-=
-
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index 9c2228b01ee6..79787cf4fce9 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -197,6 +197,25 @@ int sys_enter_openat(struct syscall_enter_args *args)
+ 	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
+ }
+ 
++SEC("!syscalls:sys_enter_rename")
++int sys_enter_rename(struct syscall_enter_args *args)
++{
++	int key = 0;
++	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
++	const void *oldpath_arg = (const void *)args->args[0],
++		   *newpath_arg = (const void *)args->args[1];
++	unsigned int len = sizeof(augmented_args->args), oldpath_len;
++
++        if (augmented_args == NULL)
++                return 1; /* Failure: don't filter */
++
++	oldpath_len = augmented_filename__read(&augmented_args->filename, oldpath_arg, sizeof(augmented_args->filename.value));
++	len += oldpath_len + augmented_filename__read((void *)(&augmented_args->filename) + oldpath_len, newpath_arg, sizeof(augmented_args->filename.value));
++
++	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
++}
++
+ SEC("!syscalls:sys_enter_renameat")
+ int sys_enter_renameat(struct syscall_enter_args *args)
+ {
