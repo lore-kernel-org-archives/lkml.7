@@ -2,117 +2,60 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B45C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71952C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993D4216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:49:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="KTqftNq8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="djkIkPrh"
+	by mail.kernel.org (Postfix) with ESMTP id 3AC312171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbfG3AtW (ORCPT
+        id S1730342AbfG3Avm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 20:49:22 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:60889 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729305AbfG3AtW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 20:49:22 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C6A5B1A2A;
-        Mon, 29 Jul 2019 20:49:20 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Mon, 29 Jul 2019 20:49:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=//bxTzdJC6FYnJ8JJ3y1ukSH+wo3cLC
-        gVozwEDo36T8=; b=KTqftNq8QYCQrXig/XsbbLgZ+zHHDICl8jZvk56hbsWDrhf
-        obn4v89riiZNIuHDriC2ksPJ1b89rg3r9tWlTC3CH6Wzdg851fBGd/VvD4MKUDB2
-        CU8tdDpEhpcbX6icG3lj2WHUq4I5Qgn3lNFce8Prfk3v1uRKpjyzi0iwU+KXEPvf
-        H6kBw7CxhM1mKD+MGBXqWOI7Sqtk7rm5owKYbM9FDy1bkdNTNaK0D8nYJQVq7QgZ
-        qP+0yodv1KDJm5lOYVs8aacal/oEQCyVRcarx5n//9Elrt3z5v2KLuXOEVGEO9kE
-        x4OnynpvS5X3PsaUn+9Pgvapb+XtrkCXGt8ONlw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=//bxTz
-        dJC6FYnJ8JJ3y1ukSH+wo3cLCgVozwEDo36T8=; b=djkIkPrhfyXdLZ3+GsUGa1
-        /RABVspqJfLNY9ryyUmcobbeZrhGHtUlY08s0vC24nafuma6QpiY4SPlR+zoczcp
-        ZZtguclDJ2oDwILiXKmgmd36kUG52pR9wWCpA6XZTMNuP/sroSo+x40J/RuTc13q
-        X433pCqKlw9yslnaqdFOo8bVFbms0y2lywfOOVKfu8ysYyQcgWx8v0Orxaz8vcgZ
-        bLwY9EjfmC/vArkv3dKw7pK5Hz9gKm45s/EMWA58sXEdub3xCbOXuyNjEL/gFvEj
-        uTpno0xlEjddNbjpSqE7UzD1PsQoDHtu64nt3OO3VadW4veicLKRBVJzEPnAVjSA
-        ==
-X-ME-Sender: <xms:DpQ_XQPshh0cN23kN-QCdar2PN5kSloCkmm9b8tAHhYtKdeIH-MSew>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledvgdefkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:DpQ_XSe6CDqdG2n77zuDVY-UjeveM3u_44GJGJ5RNeYKcLOMV_soWg>
-    <xmx:DpQ_XcWbDF7yzfysgOZsh8znG6OtrPetjaH8Cqch7TT8eOof5yrSFQ>
-    <xmx:DpQ_XXodf1DbKrpF942pr1YAphj03s-CzJArNsqqYxzOhVlDHzt34A>
-    <xmx:EJQ_XY5NdW9HEjfe7q7hFGK0QBZbWXqKxONinXKZviq_f7o7vI0M2g>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id D66A4E00A2; Mon, 29 Jul 2019 20:49:18 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-736-gdfb8e44-fmstable-20190718v2
-Mime-Version: 1.0
-Message-Id: <1f5d34ef-ab30-4678-a44a-bdeefc41489e@www.fastmail.com>
-In-Reply-To: <CACRpkdZVVgqdt=+YYEauChoxjqKk6=LNKzj-40u3CFLxJr0D7Q@mail.gmail.com>
-References: <20190726053959.2003-1-andrew@aj.id.au>
- <CACRpkdZVVgqdt=+YYEauChoxjqKk6=LNKzj-40u3CFLxJr0D7Q@mail.gmail.com>
-Date:   Tue, 30 Jul 2019 10:19:38 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Adriana Kobylak" <anoo@us.ibm.com>,
-        "Alexander A. Filippov" <a.filippov@yadro.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        =?UTF-8?Q?YangBrianC=2EW_=E6=A5=8A=E5=98=89=E5=81=89_TAO?= 
-        <yang.brianc.w@inventec.com>, "Corey Minyard" <minyard@acm.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
-        "John Wang" <wangzqbj@inspur.com>,
-        "Ken Chen" <chen.kenyy@inventec.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net,
-        "Patrick Venture" <venture@google.com>,
-        "Stefan M Schaeckeler" <sschaeck@cisco.com>,
-        "Tao Ren" <taoren@fb.com>, "Xo Wang" <xow@google.com>,
-        yao.yuan@linaro.org
-Subject: Re: [RFC-ish PATCH 00/17] Clean up ASPEED devicetree warnings
-Content-Type: text/plain
+        Mon, 29 Jul 2019 20:51:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727723AbfG3Avl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 20:51:41 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20A0820651;
+        Tue, 30 Jul 2019 00:51:40 +0000 (UTC)
+Date:   Mon, 29 Jul 2019 20:51:38 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, Joe Jin <joe.jin@oracle.com>,
+        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>
+Subject: Re: [PATCH 7/7] tracing: Un-export ftrace_set_clr_event
+Message-ID: <20190729205138.689864d2@gandalf.local.home>
+In-Reply-To: <1564444954-28685-8-git-send-email-divya.indi@oracle.com>
+References: <1564444954-28685-1-git-send-email-divya.indi@oracle.com>
+        <1564444954-28685-8-git-send-email-divya.indi@oracle.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 29 Jul 2019 17:02:34 -0700
+Divya Indi <divya.indi@oracle.com> wrote:
 
+> Use "trace_array_set_clr_event" to enable/disable events to a trace
+> array from other kernel modules/components.
+> Hence, we no longer need to have ftrace_set_clr_event as an exported API.
 
-On Tue, 30 Jul 2019, at 07:25, Linus Walleij wrote:
-> On Fri, Jul 26, 2019 at 7:40 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+Hmm, this simply reverts patch 1. Why have patch 1 and this patch in
+the first place?
+
+-- Steve
+
 > 
-> > The aim of this series is to minimise/eliminate all the warnings from the
-> > ASPEED devicetrees. It mostly achieves its goal, as outlined below.
-> 
-> I suppose it will all be merged in  the Aspeed tree?
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yeah, if you're happy for that. Thanks.
-
-Andrew
+> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+> Reviewed-By: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
