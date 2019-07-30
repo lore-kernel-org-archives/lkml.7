@@ -2,128 +2,169 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97651C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C7BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745742064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BACB20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:28:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrckOx3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbfG3S1g (ORCPT
+        id S1729671AbfG3S2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:27:36 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:32838 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727948AbfG3S1f (ORCPT
+        Tue, 30 Jul 2019 14:28:07 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38594 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfG3S2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:27:35 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1hsWqI-0000go-Lu; Tue, 30 Jul 2019 14:27:22 -0400
-Message-ID: <d38c5d5b5adfc9b9b4f386f912daa8c581ec6328.camel@surriel.com>
-Subject: Re: [PATCH RFC v3 0/14] sched,fair: flatten CPU controller runqueues
-From:   Rik van Riel <riel@surriel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, pjt@google.com,
-        dietmar.eggemann@arm.com, mingo@redhat.com,
-        morten.rasmussen@arm.com, tglx@linutronix.de,
-        mgorman@techsingularity.net, vincent.guittot@linaro.org
-Date:   Tue, 30 Jul 2019 14:27:22 -0400
-In-Reply-To: <20190730162933.GW31398@hirez.programming.kicks-ass.net>
-References: <20190722173348.9241-1-riel@surriel.com>
-         <20190730162933.GW31398@hirez.programming.kicks-ass.net>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-w+XrJxZWZMVSU7Dom0r+"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 30 Jul 2019 14:28:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s15so36167834wmj.3;
+        Tue, 30 Jul 2019 11:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wvsOsY5CLQsky8uz4ClfHVAjHjhjUTEeWUp/GJcH9vg=;
+        b=rrckOx3Ihb+ID9d4P65+Fyq+4f0d0RK+viITtEC/PCnIRlbUYceRhBOVpLCZEV//zb
+         y6hTtV2C9CMqNsjje6RId2eo8D5fq4iq8TW0qR5cWN3+VMJSPvthhpDvoCxsbzPqK+rV
+         7LlHLYu/9J3Fs3ej8sCF3XhoqF3dMRSJ6rbQHzcGjjkNly36gQ8WUg7EC2YxAN2zscM6
+         +I7OBL2/87MTAIrAF4X+BRRPp0aNzsEZlgqRlyWVlTjyUMCkpnHqWjiBk9yJTewEouiY
+         BSQBfz0bMPXWS3pgzBIHY4HxzRZJk5eaMqlw7v28M1gkIpwrTnKkMDSyMYGihCMw5svS
+         jGpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wvsOsY5CLQsky8uz4ClfHVAjHjhjUTEeWUp/GJcH9vg=;
+        b=Ss/MxwEbsFaNt/NeziGxTysXKuQpbmMEdY8qiJglWzLF0CHB6Ff1fz3FLarUX5h8qY
+         RCuhAXXobsxd/F3sQ65DyPbk/bF28Yi659h/80YQT4muDMfe2LgXh7UXohQbMZZLl8rE
+         LkfGUfou/1FB90AD0x8RoeLx1wcwi+wd23GfHzOJvFfHp2jkYlRo2RWg1wkaOW8j4xuW
+         qYvdQgFD0dIK1APzL8LQAoyOsMnePEtwgIQURFivp/mRc+M38TaWYCl/ZTF1koDULcLr
+         5k/p01J7pIRQpsOPrO1O6SDRJJlu7Pom4FvKyGZ/tk1einRkT+9ROOwU7Jy2JXSadt/j
+         X8IA==
+X-Gm-Message-State: APjAAAVv71KNsoEIk04U/fBJhNund6BCj7brsrJG3XKlkDEstNX9yaf1
+        wmLlYo8rKj/13Kkhw6CaGFI=
+X-Google-Smtp-Source: APXvYqwn6kyl9fuKU9XTfrr8jZzivv/H5Z7x6p9WbogCsbSL5AnBIA5zWpXTjxtjUjpzWKZCagASaw==
+X-Received: by 2002:a7b:cf0b:: with SMTP id l11mr111949106wmg.143.1564511283748;
+        Tue, 30 Jul 2019 11:28:03 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id v204sm69670944wma.20.2019.07.30.11.28.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 11:28:02 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 11:28:01 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Qian Cai <cai@lca.pw>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.14 054/293] sched/fair: Fix "runnable_avg_yN_inv" not
+ used warnings
+Message-ID: <20190730182801.GA94301@archlinux-threadripper>
+References: <20190729190820.321094988@linuxfoundation.org>
+ <20190729190828.058944959@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729190828.058944959@linuxfoundation.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 29, 2019 at 09:19:05PM +0200, Greg Kroah-Hartman wrote:
+> [ Upstream commit 509466b7d480bc5d22e90b9fbe6122ae0e2fbe39 ]
+> 
+> runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
+> included in several other places because they need other macros all
+> came from kernel/sched/sched-pelt.h which was generated by
+> Documentation/scheduler/sched-pelt. As the result, it causes compilation
+> a lot of warnings,
+> 
+>   kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+>   kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+>   kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+>   ...
+> 
+> Silence it by appending the __maybe_unused attribute for it, so all
+> generated variables and macros can still be kept in the same file.
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Link: https://lkml.kernel.org/r/1559596304-31581-1-git-send-email-cai@lca.pw
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  Documentation/scheduler/sched-pelt.c | 3 ++-
+>  kernel/sched/sched-pelt.h            | 2 +-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
+> index e4219139386a..7238b355919c 100644
+> --- a/Documentation/scheduler/sched-pelt.c
+> +++ b/Documentation/scheduler/sched-pelt.c
+> @@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
+>  	int i;
+>  	unsigned int x;
+>  
+> -	printf("static const u32 runnable_avg_yN_inv[] = {");
+> +	/* To silence -Wunused-but-set-variable warnings. */
+> +	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
+>  	for (i = 0; i < HALFLIFE; i++) {
+>  		x = ((1UL<<32)-1)*pow(y, i);
+>  
+> diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
+> index a26473674fb7..c529706bed11 100644
+> --- a/kernel/sched/sched-pelt.h
+> +++ b/kernel/sched/sched-pelt.h
+> @@ -1,7 +1,7 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
+>  
+> -static const u32 runnable_avg_yN_inv[] = {
+> +static const u32 runnable_avg_yN_inv[] __maybe_unused = {
+>  	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
+>  	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
+>  	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
+> -- 
+> 2.20.1
+> 
+> 
+> 
 
---=-w+XrJxZWZMVSU7Dom0r+
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This patch does nothing in 4.14. There is no kernel/sched/pelt.c.
 
-On Tue, 2019-07-30 at 18:29 +0200, Peter Zijlstra wrote:
-> On Mon, Jul 22, 2019 at 01:33:34PM -0400, Rik van Riel wrote:
-> > Plan for the CONFIG_CFS_BANDWIDTH reimplementation:
-> > - When a cgroup gets throttled, mark the cgroup and its children
-> >   as throttled.
-> > - When pick_next_entity finds a task that is on a throttled cgroup,
-> >   stash it on the cgroup runqueue (which is not used for runnable
-> >   tasks any more). Leave the vruntime unchanged, and adjust that
-> >   runqueue's vruntime to be that of the left-most task.
->=20
-> and ignore such tasks for the load-balancer; I suppose
+$ fd pelt
+kernel/sched/sched-pelt.h
+Documentation/scheduler/sched-pelt.c
 
-Good point. I suppose we need to find a lazy way of doing
-this, too...
+runnable_avg_yN_inv is only used in one location in 4.14.134, in fair.c
+behind CONFIG_SMP, which is also the guard that includes sched-pelt.h.
 
-> > - When a cgroup gets unthrottled, and has tasks on it, place it on
-> >   a vruntime ordered heap separate from the main runqueue.
->=20
-> and expose said heap to the load-balancer..
->=20
-> Now, I suppose you do this because merging heaps is easier than
-> merging
-> RB trees? (not in complexity iirc, but probably in code)
->=20
-> > - Have pick_next_task_fair grab one task off that heap every time
-> > it
-> >   is called, and the min vruntime of that heap is lower than the
-> >   vruntime of the CPU's cfs_rq (or the CPU has no other runnable
-> > tasks).
->=20
-> That's like a smeared out merge :-) But since the other tasks kept on
-> running, this CPUs vruntime will be (much) advanced vs those
-> throttled
-> tasks and we'll most likely end up picking them all before we pick a
-> 'normal' task.
+$ rg --no-heading -g '!Documentation' runnable_avg_yN_inv
+kernel/sched/sched-pelt.h:4:static const u32 runnable_avg_yN_inv[] = {
+kernel/sched/fair.c:2849:       val = mul_u64_u32_shr(val, runnable_avg_yN_inv[local_n], 32);
 
-The GENTLE_FAIR_SLEEPERS code should place the vruntime
-of newly unthrottled tasks to the right of that of the
-current top task on the runqueue, to prevent thundering
-herd effects (and the throttled group immediately going
-over its quota again, while causing bad latency for others).
+$ rg --no-heading -B 2 "sched-pelt.h"
+kernel/sched/fair.c-707-#ifdef CONFIG_SMP
+kernel/sched/fair.c-708-
+kernel/sched/fair.c:709:#include "sched-pelt.h"
 
-> > - Place that selected task on the CPU's cfs_rq, renormalizing its
-> >   vruntime with the GENTLE_FAIR_SLEEPERS logic. That should help
-> >   interleave the already runnable tasks with the recently
-> > unthrottled
-> >   group, and prevent thundering herd issues.
-> > - If the group gets throttled again before all of its task had a
-> > chance
-> >   to run, vruntime sorting ensures all the tasks in the throttled
-> > cgroup
-> >   get a chance to run over time.
->=20
->=20
---=20
-All Rights Reversed.
+I see no way for the warnings in this patch to occur here, making it
+pointless. I get two trivial conflicts in my msm-4.14 tree from this
+patch that I would like to avoid dealing with.
 
---=-w+XrJxZWZMVSU7Dom0r+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl1AjAoACgkQznnekoTE
-3oN7bgf+MY2UaY9JEX5tYWJt1qyr3gnTvUVp9YZnbcH/BllW6+etzLkgj4inKUzd
-NKOQXFnm+VNCQ4DMHxgAKL03EqoR45bvryo0Il4Fvk9QiS1T13KJvKtIZ/MA35Hq
-wgBqk6/M/teBQ+hFschJa4kgAJH6YoNYgi+8nVPVgOyiy9ktWD9yiggJSiqau1Zj
-5X6nAxtJD//nhMIIN7YfaP3244gyQqFV87LJiuAJPUBrz4BsHlAkGb/Xq7tJQrwa
-ROwDOiqXFUh6VwOvu3M/hcSxWrBfOcJvsJGkjZmwhWH2eb0rYwPwrOIV6VbXZTYx
-EK/hpWWG0J52GXdsLdsLRGNtwb7G1g==
-=7eJP
------END PGP SIGNATURE-----
-
---=-w+XrJxZWZMVSU7Dom0r+--
-
+Please consider dropping this patch, thanks!
+Nathan
