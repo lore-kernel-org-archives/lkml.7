@@ -2,141 +2,76 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E7AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F5AC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319FE206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A6F206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730642AbfG3Otz (ORCPT
+        id S1731560AbfG3OuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 10:49:55 -0400
-Received: from mga12.intel.com ([192.55.52.136]:28859 "EHLO mga12.intel.com"
+        Tue, 30 Jul 2019 10:50:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48100 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728722AbfG3Oty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 10:49:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 07:49:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,327,1559545200"; 
-   d="scan'208";a="323228335"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.145.48]) ([10.249.145.48])
-  by orsmga004.jf.intel.com with ESMTP; 30 Jul 2019 07:49:51 -0700
-Subject: Re: [PATCH 1/2] drivers: base: swnode: link devices to software nodes
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
- <20190713075259.243565-2-dmitry.torokhov@gmail.com>
- <20190729120715.GA28600@kuha.fi.intel.com> <20190729131532.GA1201@penguin>
- <20190730115247.GK28600@kuha.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <e36fb47b-2969-5f53-97d4-8e94b4c98283@intel.com>
-Date:   Tue, 30 Jul 2019 16:49:50 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728722AbfG3OuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 10:50:12 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C911E3082E69;
+        Tue, 30 Jul 2019 14:50:12 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 08D9B60BE5;
+        Tue, 30 Jul 2019 14:50:11 +0000 (UTC)
+Subject: [PATCH net 0/2] rxrpc: Fixes
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 30 Jul 2019 15:50:11 +0100
+Message-ID: <156449821120.9558.2821927090314866621.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-In-Reply-To: <20190730115247.GK28600@kuha.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 30 Jul 2019 14:50:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/2019 1:52 PM, Heikki Krogerus wrote:
-> On Mon, Jul 29, 2019 at 03:15:32PM +0200, Dmitry Torokhov wrote:
->> On Mon, Jul 29, 2019 at 03:07:15PM +0300, Heikki Krogerus wrote:
->>> On Sat, Jul 13, 2019 at 12:52:58AM -0700, Dmitry Torokhov wrote:
->>>> It is helpful to know what device, if any, a software node is tied to, so
->>>> let's store a pointer to the device in software node structure. Note that
->>>> children software nodes will inherit their parent's device pointer, so we
->>>> do not have to traverse hierarchy to see what device the [sub]tree belongs
->>>> to.
->>>>
->>>> We will be using the device pointer to locate GPIO lookup tables for
->>>> devices with static properties.
->>>>
->>>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->>>> ---
->>>>   drivers/base/property.c  |  1 +
->>>>   drivers/base/swnode.c    | 35 ++++++++++++++++++++++++++++++++++-
->>>>   include/linux/property.h |  5 +++++
->>>>   3 files changed, 40 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/base/property.c b/drivers/base/property.c
->>>> index 348b37e64944..3bc93d4b35c4 100644
->>>> --- a/drivers/base/property.c
->>>> +++ b/drivers/base/property.c
->>>> @@ -527,6 +527,7 @@ int device_add_properties(struct device *dev,
->>>>   	if (IS_ERR(fwnode))
->>>>   		return PTR_ERR(fwnode);
->>>>   
->>>> +	software_node_link_device(fwnode, dev);
->>>>   	set_secondary_fwnode(dev, fwnode);
->>>>   	return 0;
->>>>   }
->>>> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
->>>> index 7fc5a18e02ad..fd12eea539b6 100644
->>>> --- a/drivers/base/swnode.c
->>>> +++ b/drivers/base/swnode.c
->>>> @@ -24,6 +24,9 @@ struct software_node {
->>>>   
->>>>   	/* properties */
->>>>   	const struct property_entry *properties;
->>>> +
->>>> +	/* device this node is associated with */
->>>> +	struct device *dev;
->>>>   };
->>> Let's not do that! The nodes can be, and in many cases are, associated
->>> with multiple devices.
->> They do? Where? I see that set of properties can be shared between
->> several devices, but when we instantiate SW node we create a new
->> instance for device. This is also how ACPI and OF properties work; they
->> not shared between devices (or, rather, the kernel creates distinct _and
->> single_ devices for instance of ACPI or OF node). I do not think we want
->> swnodes work differently from the other firmware nodes.
-> Having multiple devices linked to a single node is quite normal. Most
-> multifunctional devices will share a single node. The USB port devices
-> will share their node (if they have one) with any device that is
-> attached to them. Etc.
->
-> If you want to check how this works with ACPI, then find
-> "physical_node" named files from sysfs. The ACPI node folders in sysfs
-> have symlinks named "physical_node<n>" for every device they are bind
-> to. The first one is named just "physical_node", the second
-> "physical_node1", the third "physical_node2", and so on.
->
->>> Every device is already linked with the software node kobject, so
->>> isn't it possible to simply walk trough those links in order to check
->>> the devices associated with the node?
->> No, we need to know the exact instance of a device, not a set of
->> devices, because even though some properties can be shared, others can
->> not. For example, even if 2 exactly same touch controllers in the system
->> have "reset-gpios" property, they won't be the same GPIO for the both of
->> them.
-> I don't think I completely understand the use case you had in mind for
-> this API, but since you planned to use it with the GPIO lookup tables,
-> I'm going to assume it's not needed after all. Let's replace those
-> with the references instead like I proposed in my reply to the 2/2
-> patch.
->
-> Linking a single device with a node like that is in any case not
-> acceptable nor possible.
->
-I think I need to withdraw my ACK here at this point.
 
+Here are a couple of fixes for rxrpc:
+
+ (1) Fix a potential deadlock in the peer keepalive dispatcher.
+
+ (2) Fix a missing notification when a UDP sendmsg error occurs in rxrpc.
+
+
+The patches are tagged here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+	rxrpc-fixes-20190730
+
+and can also be found on the following branch:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-fixes
+
+David
+---
+David Howells (2):
+      rxrpc: Fix potential deadlock
+      rxrpc: Fix the lack of notification when sendmsg() fails on a DATA packet
+
+
+ net/rxrpc/ar-internal.h |    1 +
+ net/rxrpc/peer_event.c  |    2 +-
+ net/rxrpc/peer_object.c |   18 ++++++++++++++++++
+ net/rxrpc/sendmsg.c     |    1 +
+ 4 files changed, 21 insertions(+), 1 deletion(-)
 
