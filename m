@@ -2,107 +2,147 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB67C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9886C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B71208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DAC2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="gkX79G8W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rksr4Dju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731304AbfG3Rg4 (ORCPT
+        id S1731334AbfG3Rjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:36:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46489 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfG3Rg4 (ORCPT
+        Tue, 30 Jul 2019 13:39:53 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35180 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731313AbfG3Rjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:36:56 -0400
-Received: by mail-io1-f65.google.com with SMTP id i10so16692048iol.13
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 10:36:55 -0700 (PDT)
+        Tue, 30 Jul 2019 13:39:53 -0400
+Received: by mail-io1-f67.google.com with SMTP id m24so130086599ioo.2;
+        Tue, 30 Jul 2019 10:39:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0rwxjGQ0F8+7/JgSl5zAGXkF4+sYHbKb6y6qDK+alhg=;
-        b=gkX79G8WWxMhmbnVBy82sigtuXRk0mxE6VY3CsMNdf5hT4coRD9fU36W4Q45ae3vKn
-         wWiCeYclztjJMcNPuwJtWCVG4w6TRVOiefRLI7sW7m+4X8Or3HAISRpS0F4oNbdy9oYQ
-         AIqiKw111Uuzr4T+4G4vo3v1PwrqoUXL1mTzRgiEGcS6op7+kjA18WWMkn36Svh140cn
-         Iw2AlgNooDknvK7v+YyuAuKw8zJvOjF0a7tS1crKGFwDMPNxyipry5MFiPZcbmYnwaOh
-         az9phnFnGdZqn4tu1h4e+btID5+QINSV9vYgtYM4voOzIEjcPkWQk4l9IsX24ROaHtt0
-         2R+Q==
+        bh=uwRGpPyO4rj41OhPrKgAKlV9LI4f1AOpgovGm7Ses18=;
+        b=rksr4DjuGP0oernMgWLZxy30LGhFuhay1j1vOnOeicZjBWcqFJ+Nx6MfuUboj9QxPu
+         +s3KqxCVZ6YCOwjMF6XAnU9scY8hJk64AiBY3aRG7qoKqJ43hiim+myQHFw1xdWZkquA
+         j1S872SkhWEOxZ3WTO7SNFLVuh/RjTE+Dsg0DhnZMk0BtQ4l3EshZBGWijHr2OGFB4lv
+         XodPLoOau1Z4SFA3GBfBRUiM4EGWadAnYO/oQaSDTIwMJHiGxAYIFQiwUyjXot/4VEm1
+         JmGcG67m/98CXLV7fQSflRRr6EVkcNirxk4Ndfr17ug481gcd4md+nZyTaBTNiZXLGvg
+         Zfgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0rwxjGQ0F8+7/JgSl5zAGXkF4+sYHbKb6y6qDK+alhg=;
-        b=bgQ8wOXZRwPdvSs5zLfZ4mPbg1h+QFJeN2gK433/XRW4CNil2WSpewgXOCg7RtJk9z
-         pv9DAdzCayLvcBl8LwrUhcpvXZWZFbnwd0OhKZoP/zoFR6aRTa+Pxk7R39ANtqDic5m4
-         QunB59c+ZU5ucA4DrOAG5UyhzC901PP0+TkFtvTpMZYZJsldZqQElEvhb3gB2XR97fuT
-         aVajtlqP2+tronjzby/bm/aoWCQjraZuGECHGWWMYl3UMzZnbRp9p7GkRQHyv8OYaxh/
-         QFkCECchP72sfok6eoh8NX5aZzehzDOSi7Hag1VEaRxFLJSdHef6boPsu2I3o+KWX0Ke
-         cClA==
-X-Gm-Message-State: APjAAAXKmGJo3ZviTe2DdlkLWmc641YL2xzHpXELFqTYrlvAZBmoJn6H
-        enZBbGFEw4rQmgzbcQReVxnBc4AHGk/v9eAvRZo=
-X-Google-Smtp-Source: APXvYqyXcQAC/AoZ3rJhI5Ac31OagN0p/mkM1JieiGm/GnkuFYYiAYIVYKqyvOPcCeHt0rAKPHGJW51Y1rGcRrDR2PE=
-X-Received: by 2002:a5d:915a:: with SMTP id y26mr108937727ioq.207.1564508214873;
- Tue, 30 Jul 2019 10:36:54 -0700 (PDT)
+        bh=uwRGpPyO4rj41OhPrKgAKlV9LI4f1AOpgovGm7Ses18=;
+        b=ZSxplPujgNu9gGh6f2A92+izWesCU4TaSMoIFwidmMBoP7QcrS/q57hKfJyIDAQ1y1
+         Mzu/9bpv7LhhKoIp6uv3SgGOWOnxtO34X2XbaU1cMs3iAOUCr7ACO/97r/mxPyF7Yf2x
+         Jp1fdbXWSh8mDnn2DiH8OOsMgKc7V4KWIWj2wcQ8RzfWHBBYvk4r4/lAyoZ5iN1uJYsW
+         8/kN4y0SetOYojqw1w0LrsDZjsx+jLIN3vz1oRUfe2xJqv056XLi1DNgTS2161kY6/eJ
+         TC3jKpKWY37nCtMtjeYahz0xpMg4X9vs1N/9z6eYYyEOieRbcSsV9XG6S2nONoJUvvy0
+         hn4Q==
+X-Gm-Message-State: APjAAAWjsdgzgIKuWih9855DYOSPlaQyudcNNI7hefdx9GCL4iAmeE3r
+        vijNCZwtPyTAmkF8HOYXvkxhKutN2g92hCE3GsM=
+X-Google-Smtp-Source: APXvYqzQMO3eczgpJRVOn78BhEOjZ3P9FqbQh5qXdx89yHk8g5EM3UU/ffKu0D3Gu1LNA9EcmgC8ssuM8FznO9tZjCo=
+X-Received: by 2002:a6b:ed09:: with SMTP id n9mr36647545iog.153.1564508392466;
+ Tue, 30 Jul 2019 10:39:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190729135505.15394-1-patrice.chotard@st.com>
-In-Reply-To: <20190729135505.15394-1-patrice.chotard@st.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Tue, 30 Jul 2019 19:36:43 +0200
-Message-ID: <CAOesGMg-3xt2qjjZ569pUE+d6tn7nz264AN9ARkBT_Ej4TFC2A@mail.gmail.com>
-Subject: Re: ARM: multi_v7_defconfig: Enable SPI_STM32_QSPI support
-To:     Patrice CHOTARD <patrice.chotard@st.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-13-deepa.kernel@gmail.com>
+ <878ssfc1id.fsf@mail.parknet.co.jp>
+In-Reply-To: <878ssfc1id.fsf@mail.parknet.co.jp>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Tue, 30 Jul 2019 10:39:41 -0700
+Message-ID: <CABeXuvoZCqGLaiOrf+qrg8pYNYnrY5qzDnwGpnuV+jh3jNvhjw@mail.gmail.com>
+Subject: Re: [PATCH 12/20] fs: fat: Initialize filesystem timestamp ranges
+To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        y2038 Mailman List <y2038@lists.linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Patrice,
+On Tue, Jul 30, 2019 at 2:31 AM OGAWA Hirofumi
+<hirofumi@mail.parknet.co.jp> wrote:
+>
+> Deepa Dinamani <deepa.kernel@gmail.com> writes:
+>
+> > +/* DOS dates from 1980/1/1 through 2107/12/31 */
+> > +#define FAT_DATE_MIN (0<<9 | 1<<5 | 1)
+> > +#define FAT_DATE_MAX (127<<9 | 12<<5 | 31)
+> > +#define FAT_TIME_MAX (23<<11 | 59<<5 | 29)
+> > +
+> >  /*
+> >   * A deserialized copy of the on-disk structure laid out in struct
+> >   * fat_boot_sector.
+> > @@ -1605,6 +1610,7 @@ int fat_fill_super(struct super_block *sb, void *data, int silent, int isvfat,
+> >       int debug;
+> >       long error;
+> >       char buf[50];
+> > +     struct timespec64 ts;
+> >
+> >       /*
+> >        * GFP_KERNEL is ok here, because while we do hold the
+> > @@ -1698,6 +1704,12 @@ int fat_fill_super(struct super_block *sb, void *data, int silent, int isvfat,
+> >       sbi->free_clus_valid = 0;
+> >       sbi->prev_free = FAT_START_ENT;
+> >       sb->s_maxbytes = 0xffffffff;
+> > +     fat_time_fat2unix(sbi, &ts, 0, cpu_to_le16(FAT_DATE_MIN), 0);
+> > +     sb->s_time_min = ts.tv_sec;
+> > +
+> > +     fat_time_fat2unix(sbi, &ts, cpu_to_le16(FAT_TIME_MAX),
+> > +                       cpu_to_le16(FAT_DATE_MAX), 0);
+> > +     sb->s_time_max = ts.tv_sec;
+>
+> At least, it is wrong to call fat_time_fat2unix() before setup parameters
+> in sbi.
 
-If you cc soc@kernel.org on patches you want us to apply, you'll get
-them automatically tracked by patchwork.
+All the parameters that fat_time_fat2unix() cares in sbi is accessed through
 
+static inline int fat_tz_offset(struct msdos_sb_info *sbi)
+{
+    return (sbi->options.tz_set ?
+           -sbi->options.time_offset :
+           sys_tz.tz_minuteswest) * SECS_PER_MIN;
+}
 
--Olof
+Both the sbi fields sbi->options.tz_set and sbi->options.time_offset
+are set by the call to parse_options(). And, parse_options() is called
+before the calls to fat_time_fat2unix().:
 
-On Mon, Jul 29, 2019 at 3:55 PM <patrice.chotard@st.com> wrote:
->
-> From: Patrice Chotard <patrice.chotard@st.com>
->
-> Enable support for QSPI block on STM32 SoCs.
->
-> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-> ---
->  arch/arm/configs/multi_v7_defconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> index 6a40bc2ef271..78d1d93298af 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -403,6 +403,7 @@ CONFIG_SPI_SH_MSIOF=m
->  CONFIG_SPI_SH_HSPI=y
->  CONFIG_SPI_SIRF=y
->  CONFIG_SPI_STM32=m
-> +CONFIG_SPI_STM32_QSPI=m
->  CONFIG_SPI_SUN4I=y
->  CONFIG_SPI_SUN6I=y
->  CONFIG_SPI_TEGRA114=y
-> --
-> 2.17.1
->
+int fat_fill_super(struct super_block *sb, void *data, int silent, int isvfat,
+           void (*setup)(struct super_block *))
+{
+     <snip>
+
+    error = parse_options(sb, data, isvfat, silent, &debug, &sbi->options);
+    if (error)
+        goto out_fail;
+
+   <snip>
+
+    sbi->prev_free = FAT_START_ENT;
+    sb->s_maxbytes = 0xffffffff;
+    fat_time_fat2unix(sbi, &ts, 0, cpu_to_le16(FAT_DATE_MIN), 0);
+    sb->s_time_min = ts.tv_sec;
+
+    fat_time_fat2unix(sbi, &ts, cpu_to_le16(FAT_TIME_MAX),
+              cpu_to_le16(FAT_DATE_MAX), 0);
+    sb->s_time_max = ts.tv_sec;
+
+   <snip>
+}
+
+I do not see what the problem is.
+
+-Deepa
