@@ -2,141 +2,178 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517BFC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79961C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2725F20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E8420693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbfG3LHo (ORCPT
+        id S1730747AbfG3LHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:07:44 -0400
-Received: from mga11.intel.com ([192.55.52.93]:57603 "EHLO mga11.intel.com"
+        Tue, 30 Jul 2019 07:07:49 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:55574 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730639AbfG3LHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:07:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 04:07:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,326,1559545200"; 
-   d="scan'208";a="371502145"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Jul 2019 04:07:32 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hsPyc-000293-LK; Tue, 30 Jul 2019 14:07:30 +0300
-Date:   Tue, 30 Jul 2019 14:07:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Salvatore Bellizzi <salvatore.bellizzi@linux.seppia.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        egranata@chromium.org, egranata@google.com,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        linux-acpi@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] driver core: platform: return -ENXIO for missing GpioInt
-Message-ID: <20190730110730.GK23480@smile.fi.intel.com>
-References: <20190729204954.25510-1-briannorris@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729204954.25510-1-briannorris@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1730260AbfG3LGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:06:53 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3318A20067F;
+        Tue, 30 Jul 2019 13:06:51 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 265D120066A;
+        Tue, 30 Jul 2019 13:06:51 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B6331204D6;
+        Tue, 30 Jul 2019 13:06:50 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH v4 05/14] crypto: caam - check authsize
+Date:   Tue, 30 Jul 2019 14:06:36 +0300
+Message-Id: <1564484805-28735-6-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1564484805-28735-1-git-send-email-iuliana.prodan@nxp.com>
+References: <1564484805-28735-1-git-send-email-iuliana.prodan@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 01:49:54PM -0700, Brian Norris wrote:
-> Commit daaef255dc96 ("driver: platform: Support parsing GpioInt 0 in
-> platform_get_irq()") broke the Embedded Controller driver on most LPC
-> Chromebooks (i.e., most x86 Chromebooks), because cros_ec_lpc expects
-> platform_get_irq() to return -ENXIO for non-existent IRQs.
-> Unfortunately, acpi_dev_gpio_irq_get() doesn't follow this convention
-> and returns -ENOENT instead. So we get this error from cros_ec_lpc:
-> 
->    couldn't retrieve IRQ number (-2)
-> 
-> I see a variety of drivers that treat -ENXIO specially, so rather than
-> fix all of them, let's fix up the API to restore its previous behavior.
-> 
-> I reported this on v2 of this patch:
-> 
-> https://lore.kernel.org/lkml/20190220180538.GA42642@google.com/
-> 
-> but apparently the patch had already been merged before v3 got sent out:
-> 
-> https://lore.kernel.org/lkml/20190221193429.161300-1-egranata@chromium.org/
-> 
-> and the result is that the bug landed and remains unfixed.
-> 
-> I differ from the v3 patch by:
->  * allowing for ret==0, even though acpi_dev_gpio_irq_get() specifically
->    documents (and enforces) that 0 is not a valid return value (noted on
->    the v3 review)
->  * adding a small comment
+Check authsize to solve the extra tests that expect -EINVAL to be
+returned when the authentication tag size is not valid.
 
-Thank you for fixing this.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Validated authsize for GCM, RFC4106 and RFC4543.
 
-> 
-> Reported-by: Brian Norris <briannorris@chromium.org>
-> Reported-by: Salvatore Bellizzi <salvatore.bellizzi@linux.seppia.net>
-> Cc: Enrico Granata <egranata@chromium.org>
-> Cc: <stable@vger.kernel.org>
-> Fixes: daaef255dc96 ("driver: platform: Support parsing GpioInt 0 in platform_get_irq()")
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
-> Side note: it might have helped alleviate some of this pain if there
-> were email notifications to the mailing list when a patch gets applied.
-> I didn't realize (and I'm not sure if Enrico did) that v2 was already
-> merged by the time I noted its mistakes. If I had known, I would have
-> suggested a follow-up patch, not a v3.
-> 
-> I know some maintainers' "tip bots" do this, but not all apparently.
-> 
->  drivers/base/platform.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 506a0175a5a7..ec974ba9c0c4 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -157,8 +157,13 @@ int platform_get_irq(struct platform_device *dev, unsigned int num)
->  	 * the device will only expose one IRQ, and this fallback
->  	 * allows a common code path across either kind of resource.
->  	 */
-> -	if (num == 0 && has_acpi_companion(&dev->dev))
-> -		return acpi_dev_gpio_irq_get(ACPI_COMPANION(&dev->dev), num);
-> +	if (num == 0 && has_acpi_companion(&dev->dev)) {
-> +		int ret = acpi_dev_gpio_irq_get(ACPI_COMPANION(&dev->dev), num);
-> +
-> +		/* Our callers expect -ENXIO for missing IRQs. */
-> +		if (ret >= 0 || ret == -EPROBE_DEFER)
-> +			return ret;
-> +	}
->  
->  	return -ENXIO;
->  #endif
-> -- 
-> 2.22.0.709.g102302147b-goog
-> 
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
+---
+ drivers/crypto/caam/caamalg.c     | 13 +++++++++++++
+ drivers/crypto/caam/caamalg_qi.c  | 13 +++++++++++++
+ drivers/crypto/caam/caamalg_qi2.c | 13 +++++++++++++
+ 3 files changed, 39 insertions(+)
 
+diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+index bb38f31..0461bf3 100644
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -376,6 +376,11 @@ static int gcm_set_sh_desc(struct crypto_aead *aead)
+ static int gcm_setauthsize(struct crypto_aead *authenc, unsigned int authsize)
+ {
+ 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
++	int err;
++
++	err = crypto_gcm_check_authsize(authsize);
++	if (err)
++		return err;
+ 
+ 	ctx->authsize = authsize;
+ 	gcm_set_sh_desc(authenc);
+@@ -439,6 +444,11 @@ static int rfc4106_setauthsize(struct crypto_aead *authenc,
+ 			       unsigned int authsize)
+ {
+ 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
++	int err;
++
++	err = crypto_rfc4106_check_authsize(authsize);
++	if (err)
++		return err;
+ 
+ 	ctx->authsize = authsize;
+ 	rfc4106_set_sh_desc(authenc);
+@@ -503,6 +513,9 @@ static int rfc4543_setauthsize(struct crypto_aead *authenc,
+ {
+ 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
+ 
++	if (authsize != 16)
++		return -EINVAL;
++
+ 	ctx->authsize = authsize;
+ 	rfc4543_set_sh_desc(authenc);
+ 
+diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
+index b9c8581..8011a2a 100644
+--- a/drivers/crypto/caam/caamalg_qi.c
++++ b/drivers/crypto/caam/caamalg_qi.c
+@@ -371,6 +371,11 @@ static int gcm_set_sh_desc(struct crypto_aead *aead)
+ static int gcm_setauthsize(struct crypto_aead *authenc, unsigned int authsize)
+ {
+ 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
++	int err;
++
++	err = crypto_gcm_check_authsize(authsize);
++	if (err)
++		return err;
+ 
+ 	ctx->authsize = authsize;
+ 	gcm_set_sh_desc(authenc);
+@@ -472,6 +477,11 @@ static int rfc4106_setauthsize(struct crypto_aead *authenc,
+ 			       unsigned int authsize)
+ {
+ 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
++	int err;
++
++	err = crypto_rfc4106_check_authsize(authsize);
++	if (err)
++		return err;
+ 
+ 	ctx->authsize = authsize;
+ 	rfc4106_set_sh_desc(authenc);
+@@ -578,6 +588,9 @@ static int rfc4543_setauthsize(struct crypto_aead *authenc,
+ {
+ 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
+ 
++	if (authsize != 16)
++		return -EINVAL;
++
+ 	ctx->authsize = authsize;
+ 	rfc4543_set_sh_desc(authenc);
+ 
+diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
+index 0b672f93..e351ff2 100644
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -719,6 +719,11 @@ static int gcm_set_sh_desc(struct crypto_aead *aead)
+ static int gcm_setauthsize(struct crypto_aead *authenc, unsigned int authsize)
+ {
+ 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
++	int err;
++
++	err = crypto_gcm_check_authsize(authsize);
++	if (err)
++		return err;
+ 
+ 	ctx->authsize = authsize;
+ 	gcm_set_sh_desc(authenc);
+@@ -811,6 +816,11 @@ static int rfc4106_setauthsize(struct crypto_aead *authenc,
+ 			       unsigned int authsize)
+ {
+ 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
++	int err;
++
++	err = crypto_rfc4106_check_authsize(authsize);
++	if (err)
++		return err;
+ 
+ 	ctx->authsize = authsize;
+ 	rfc4106_set_sh_desc(authenc);
+@@ -910,6 +920,9 @@ static int rfc4543_setauthsize(struct crypto_aead *authenc,
+ {
+ 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
+ 
++	if (authsize != 16)
++		return -EINVAL;
++
+ 	ctx->authsize = authsize;
+ 	rfc4543_set_sh_desc(authenc);
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.1.0
 
