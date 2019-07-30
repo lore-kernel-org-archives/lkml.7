@@ -2,238 +2,267 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF27C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86936C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9842F208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E01C208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:18:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="f68eZCcO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WTPQ4SjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387694AbfG3SSS (ORCPT
+        id S2388019AbfG3SQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:18:18 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46533 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729160AbfG3SSL (ORCPT
+        Tue, 30 Jul 2019 14:16:35 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40021 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387939AbfG3SQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:18:11 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIHw4m3326404
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:17:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIHw4m3326404
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564510679;
-        bh=ET6K1jG5TCHqj2/cbkRQGBp30EitV7XrqE0z3OlVrt0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=f68eZCcOeowJQFzmmu4bihumnj1vKW9cw8HZVJdGNRqEvpCIqESls1FwTrT0OdRO1
-         wwDo+hA/QJR5FlEi7JFoAEFyVaBsc1hc/Up5j8C07ymrE2l+gyW7Pu20fzlcb0145s
-         tPnsHhBnAayUuYFNw8mXQ9vpYYsaZrQhhwiJZaGI3/2/eiiOaXi+hlaq1sPTZ+RBvG
-         mM41fnYHkHbPk+WfWtELE7QobCPouO2FYplG/i5rKpri1/a1nJFNK33PO07wezpofR
-         zylhKA8EdCF7Ogp2sE09pAW+kViwpLJRPoYRZGsqKe3sqXnyG2NCPFTpNAxie+f7nD
-         +rSRNNdfCY8mA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIHwnU3326401;
-        Tue, 30 Jul 2019 11:17:58 -0700
-Date:   Tue, 30 Jul 2019 11:17:58 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-ec7f24ef44fc5a4eb5cb71658c33db538ed66003@git.kernel.org>
-Cc:     peterz@infradead.org, mpetlan@redhat.com,
-        alexey.budankov@linux.intel.com, hpa@zytor.com, acme@redhat.com,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        mingo@kernel.org, namhyung@kernel.org, ak@linux.intel.com
-Reply-To: tglx@linutronix.de, acme@redhat.com, mingo@kernel.org,
-          hpa@zytor.com, jolsa@kernel.org, mpetlan@redhat.com,
-          alexey.budankov@linux.intel.com, peterz@infradead.org,
-          alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-          namhyung@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20190721112506.12306-16-jolsa@kernel.org>
-References: <20190721112506.12306-16-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf evsel: Rename perf_evsel__enable() to
- evsel__enable()
-Git-Commit-ID: ec7f24ef44fc5a4eb5cb71658c33db538ed66003
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 14:16:22 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p184so30255676pfp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dwX6Q3petjt7ZHxXHJxp143s71CD7WUkzNEZtVWduK0=;
+        b=WTPQ4SjIDQc7S5fxLNjZEL8vhGML5akjZ79EhRwpnAwq++KnpnzLADN8z1MfRuE+Wa
+         0A0f27jMKdtozURfODEAXfhCXJvIhS62w4M1SMor6Wqfl5AzuEJuNc4mF5dJxpBD+ktZ
+         3sAWYXcpMnNZuKUToYIhV1TdOPaaYsuJRdZ8s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dwX6Q3petjt7ZHxXHJxp143s71CD7WUkzNEZtVWduK0=;
+        b=a79WyhUpXd9C+KhWKg13wBS52g16FlpbIPVHo0CUMXoZV1+c8cWj/uYXs2FXLxSi1H
+         pXoDEbke7xm7eG8Pa7CJNjuUOSefnOBhBju1HyHLeU6xeeH2u4/BJf0/4qELozNBG9Rf
+         ZKz+Ucan4nncNr2Of/O3+9hBSamadXX2m9B0oticXpcuMaT1evzdDDHZZRO5MterPiId
+         1aPbaVsNp8kS4Sa8V43jZsOWPHfrSM9l3OCHdndRZB/14sxdI9/wACFvpcFGjHqo1aS+
+         /l6aG/gtfqLLMVJ80ivMmzDzbCcnGvewCL61REHmleyQrqQDwXLvKRae1Qa3xHcWzYrp
+         smrA==
+X-Gm-Message-State: APjAAAWVeHtqfC6DAwc4lzs15uVR3GNrYS3ViaGUi+s5kRj7FmwAlfTl
+        148hTxiHfVm3DFj6BNdYQJ94UuaJK3E=
+X-Google-Smtp-Source: APXvYqwL4b6ZNTaezqxxCk/3M3n2NXZXHjxCxKd02HRT48oxIoFWo4TjBBEb2lKuD3hHRWRGRFEHbQ==
+X-Received: by 2002:a62:6dc2:: with SMTP id i185mr43778140pfc.40.1564510581377;
+        Tue, 30 Jul 2019 11:16:21 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 11:16:21 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v6 27/57] mfd: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:27 -0700
+Message-Id: <20190730181557.90391-28-swboyd@chromium.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
+References: <20190730181557.90391-1-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ec7f24ef44fc5a4eb5cb71658c33db538ed66003
-Gitweb:     https://git.kernel.org/tip/ec7f24ef44fc5a4eb5cb71658c33db538ed66003
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:24:02 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:43 -0300
+We don't need dev_err() messages when platform_get_irq() fails now that
+platform_get_irq() prints an error message itself when something goes
+wrong. Let's remove these prints with a simple semantic patch.
 
-perf evsel: Rename perf_evsel__enable() to evsel__enable()
+// <smpl>
+@@
+expression ret;
+struct platform_device *E;
+@@
 
-Rename perf_evsel__enable() to evsel__enable(), so we don't have a name
-clash when we add perf_evsel__enable() in libperf.
+ret =
+(
+platform_get_irq(E, ...)
+|
+platform_get_irq_byname(E, ...)
+);
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-16-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+if ( \( ret < 0 \| ret <= 0 \) )
+{
+(
+-if (ret != -EPROBE_DEFER)
+-{ ...
+-dev_err(...);
+-... }
+|
+...
+-dev_err(...);
+)
+...
+}
+// </smpl>
+
+While we're here, remove braces on if statements that only have one
+statement (manually).
+
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- tools/perf/arch/arm/util/cs-etm.c    | 2 +-
- tools/perf/arch/x86/util/intel-bts.c | 2 +-
- tools/perf/arch/x86/util/intel-pt.c  | 2 +-
- tools/perf/tests/event-times.c       | 6 +++---
- tools/perf/tests/switch-tracking.c   | 2 +-
- tools/perf/util/evlist.c             | 4 ++--
- tools/perf/util/evsel.c              | 2 +-
- tools/perf/util/evsel.h              | 2 +-
- 8 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 91c64daa4487..4b70b9504603 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -834,7 +834,7 @@ static int cs_etm_snapshot_finish(struct auxtrace_record *itr)
+Please apply directly to subsystem trees
+
+ drivers/mfd/ab8500-debugfs.c       |  8 ++------
+ drivers/mfd/db8500-prcmu.c         |  4 +---
+ drivers/mfd/fsl-imx25-tsadc.c      |  4 +---
+ drivers/mfd/intel_soc_pmic_bxtwc.c |  4 +---
+ drivers/mfd/jz4740-adc.c           | 11 +++--------
+ drivers/mfd/qcom_rpm.c             | 12 +++---------
+ drivers/mfd/sm501.c                |  4 +---
+ 7 files changed, 12 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/mfd/ab8500-debugfs.c b/drivers/mfd/ab8500-debugfs.c
+index d24c6ecccb88..e44a582050f2 100644
+--- a/drivers/mfd/ab8500-debugfs.c
++++ b/drivers/mfd/ab8500-debugfs.c
+@@ -2682,16 +2682,12 @@ static int ab8500_debug_probe(struct platform_device *plf)
+ 	irq_ab8500 = res->start;
  
- 	evlist__for_each_entry(ptr->evlist, evsel) {
- 		if (evsel->attr.type == ptr->cs_etm_pmu->type)
--			return perf_evsel__enable(evsel);
-+			return evsel__enable(evsel);
- 	}
- 	return -EINVAL;
- }
-diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-index c845531d383a..d27832fcb34c 100644
---- a/tools/perf/arch/x86/util/intel-bts.c
-+++ b/tools/perf/arch/x86/util/intel-bts.c
-@@ -330,7 +330,7 @@ static int intel_bts_snapshot_finish(struct auxtrace_record *itr)
+ 	irq_first = platform_get_irq_byname(plf, "IRQ_FIRST");
+-	if (irq_first < 0) {
+-		dev_err(&plf->dev, "First irq not found, err %d\n", irq_first);
++	if (irq_first < 0)
+ 		return irq_first;
+-	}
  
- 	evlist__for_each_entry(btsr->evlist, evsel) {
- 		if (evsel->attr.type == btsr->intel_bts_pmu->type)
--			return perf_evsel__enable(evsel);
-+			return evsel__enable(evsel);
- 	}
- 	return -EINVAL;
- }
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index e4dfe8c3d5c3..e3dacb2bf01b 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -801,7 +801,7 @@ static int intel_pt_snapshot_finish(struct auxtrace_record *itr)
+ 	irq_last = platform_get_irq_byname(plf, "IRQ_LAST");
+-	if (irq_last < 0) {
+-		dev_err(&plf->dev, "Last irq not found, err %d\n", irq_last);
++	if (irq_last < 0)
+ 		return irq_last;
+-	}
  
- 	evlist__for_each_entry(ptr->evlist, evsel) {
- 		if (evsel->attr.type == ptr->intel_pt_pmu->type)
--			return perf_evsel__enable(evsel);
-+			return evsel__enable(evsel);
- 	}
- 	return -EINVAL;
- }
-diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
-index 0f74ca103c41..6f9995df2c27 100644
---- a/tools/perf/tests/event-times.c
-+++ b/tools/perf/tests/event-times.c
-@@ -77,7 +77,7 @@ static int attach__current_disabled(struct evlist *evlist)
- 	}
+ 	ab8500_dir = debugfs_create_dir(AB8500_NAME_STRING, NULL);
+ 	if (!ab8500_dir)
+diff --git a/drivers/mfd/db8500-prcmu.c b/drivers/mfd/db8500-prcmu.c
+index 3f21e26b8d36..2f4c9c9ed80f 100644
+--- a/drivers/mfd/db8500-prcmu.c
++++ b/drivers/mfd/db8500-prcmu.c
+@@ -3128,10 +3128,8 @@ static int db8500_prcmu_probe(struct platform_device *pdev)
+ 	writel(ALL_MBOX_BITS, PRCM_ARM_IT1_CLR);
  
- 	thread_map__put(threads);
--	return perf_evsel__enable(evsel) == 0 ? TEST_OK : TEST_FAIL;
-+	return evsel__enable(evsel) == 0 ? TEST_OK : TEST_FAIL;
- }
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq <= 0) {
+-		dev_err(&pdev->dev, "no prcmu irq provided\n");
++	if (irq <= 0)
+ 		return irq;
+-	}
  
- static int attach__current_enabled(struct evlist *evlist)
-@@ -104,7 +104,7 @@ static int detach__disable(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__last(evlist);
+ 	err = request_threaded_irq(irq, prcmu_irq_handler,
+ 	        prcmu_irq_thread_fn, IRQF_NO_SUSPEND, "prcmu", NULL);
+diff --git a/drivers/mfd/fsl-imx25-tsadc.c b/drivers/mfd/fsl-imx25-tsadc.c
+index 20791cab7263..a016b39fe9b0 100644
+--- a/drivers/mfd/fsl-imx25-tsadc.c
++++ b/drivers/mfd/fsl-imx25-tsadc.c
+@@ -69,10 +69,8 @@ static int mx25_tsadc_setup_irq(struct platform_device *pdev,
+ 	int irq;
  
--	return perf_evsel__enable(evsel);
-+	return evsel__enable(evsel);
- }
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq <= 0) {
+-		dev_err(dev, "Failed to get irq\n");
++	if (irq <= 0)
+ 		return irq;
+-	}
  
- static int attach__cpu_disabled(struct evlist *evlist)
-@@ -133,7 +133,7 @@ static int attach__cpu_disabled(struct evlist *evlist)
- 	}
+ 	tsadc->domain = irq_domain_add_simple(np, 2, 0, &mx25_tsadc_domain_ops,
+ 					      tsadc);
+diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
+index 6310c3bdb991..739cfb5b69fe 100644
+--- a/drivers/mfd/intel_soc_pmic_bxtwc.c
++++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
+@@ -450,10 +450,8 @@ static int bxtwc_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
- 	cpu_map__put(cpus);
--	return perf_evsel__enable(evsel);
-+	return evsel__enable(evsel);
- }
+ 	ret = platform_get_irq(pdev, 0);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "Invalid IRQ\n");
++	if (ret < 0)
+ 		return ret;
+-	}
+ 	pmic->irq = ret;
  
- static int attach__cpu_enabled(struct evlist *evlist)
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index ac5da4fd222f..acc4b5ff0cea 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -509,7 +509,7 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
- 		goto out_err;
- 	}
+ 	dev_set_drvdata(&pdev->dev, pmic);
+diff --git a/drivers/mfd/jz4740-adc.c b/drivers/mfd/jz4740-adc.c
+index 082f16917519..18344cd08ede 100644
+--- a/drivers/mfd/jz4740-adc.c
++++ b/drivers/mfd/jz4740-adc.c
+@@ -208,17 +208,12 @@ static int jz4740_adc_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
--	err = perf_evsel__enable(cycles_evsel);
-+	err = evsel__enable(cycles_evsel);
- 	if (err) {
- 		pr_debug("perf_evlist__disable_event failed!\n");
- 		goto out_err;
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 4627cc47de3e..e87c43e339d0 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -363,7 +363,7 @@ void perf_evlist__enable(struct evlist *evlist)
- 	evlist__for_each_entry(evlist, pos) {
- 		if (!perf_evsel__is_group_leader(pos) || !pos->fd)
- 			continue;
--		perf_evsel__enable(pos);
-+		evsel__enable(pos);
- 	}
+ 	adc->irq = platform_get_irq(pdev, 0);
+-	if (adc->irq < 0) {
+-		ret = adc->irq;
+-		dev_err(&pdev->dev, "Failed to get platform irq: %d\n", ret);
+-		return ret;
+-	}
++	if (adc->irq < 0)
++		return adc->irq;
  
- 	evlist->enabled = true;
-@@ -1927,7 +1927,7 @@ int perf_evlist__start_sb_thread(struct evlist *evlist,
- 		goto out_delete_evlist;
+ 	irq_base = platform_get_irq(pdev, 1);
+-	if (irq_base < 0) {
+-		dev_err(&pdev->dev, "Failed to get irq base: %d\n", irq_base);
++	if (irq_base < 0)
+ 		return irq_base;
+-	}
  
- 	evlist__for_each_entry(evlist, counter) {
--		if (perf_evsel__enable(counter))
-+		if (evsel__enable(counter))
- 			goto out_delete_evlist;
- 	}
+ 	mem_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!mem_base) {
+diff --git a/drivers/mfd/qcom_rpm.c b/drivers/mfd/qcom_rpm.c
+index 4d7e9008628c..71bc34b74bc9 100644
+--- a/drivers/mfd/qcom_rpm.c
++++ b/drivers/mfd/qcom_rpm.c
+@@ -561,22 +561,16 @@ static int qcom_rpm_probe(struct platform_device *pdev)
+ 	clk_prepare_enable(rpm->ramclk); /* Accepts NULL */
  
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index f365d0685268..7adae1736191 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1234,7 +1234,7 @@ int perf_evsel__append_addr_filter(struct evsel *evsel, const char *filter)
- 	return perf_evsel__append_filter(evsel, "%s,%s", filter);
- }
+ 	irq_ack = platform_get_irq_byname(pdev, "ack");
+-	if (irq_ack < 0) {
+-		dev_err(&pdev->dev, "required ack interrupt missing\n");
++	if (irq_ack < 0)
+ 		return irq_ack;
+-	}
  
--int perf_evsel__enable(struct evsel *evsel)
-+int evsel__enable(struct evsel *evsel)
- {
- 	int err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0);
+ 	irq_err = platform_get_irq_byname(pdev, "err");
+-	if (irq_err < 0) {
+-		dev_err(&pdev->dev, "required err interrupt missing\n");
++	if (irq_err < 0)
+ 		return irq_err;
+-	}
  
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index d43409bb07c5..fa26c583a606 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -295,7 +295,7 @@ int perf_evsel__append_tp_filter(struct evsel *evsel, const char *filter);
- int perf_evsel__append_addr_filter(struct evsel *evsel,
- 				   const char *filter);
- int perf_evsel__apply_filter(struct evsel *evsel, const char *filter);
--int perf_evsel__enable(struct evsel *evsel);
-+int evsel__enable(struct evsel *evsel);
- int perf_evsel__disable(struct evsel *evsel);
+ 	irq_wakeup = platform_get_irq_byname(pdev, "wakeup");
+-	if (irq_wakeup < 0) {
+-		dev_err(&pdev->dev, "required wakeup interrupt missing\n");
++	if (irq_wakeup < 0)
+ 		return irq_wakeup;
+-	}
  
- int perf_evsel__open_per_cpu(struct evsel *evsel,
+ 	match = of_match_device(qcom_rpm_of_match, &pdev->dev);
+ 	if (!match)
+diff --git a/drivers/mfd/sm501.c b/drivers/mfd/sm501.c
+index 9b9b06d36cb1..d5e34a5eb250 100644
+--- a/drivers/mfd/sm501.c
++++ b/drivers/mfd/sm501.c
+@@ -1394,10 +1394,8 @@ static int sm501_plat_probe(struct platform_device *dev)
+ 	sm->platdata = dev_get_platdata(&dev->dev);
+ 
+ 	ret = platform_get_irq(dev, 0);
+-	if (ret < 0) {
+-		dev_err(&dev->dev, "failed to get irq resource\n");
++	if (ret < 0)
+ 		goto err_res;
+-	}
+ 	sm->irq = ret;
+ 
+ 	sm->io_res = platform_get_resource(dev, IORESOURCE_MEM, 1);
+-- 
+Sent by a computer through tubes
+
