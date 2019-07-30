@@ -2,92 +2,135 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB484C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680ABC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78398206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30ADE2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:26:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="YXd7kBZw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EsXmEMrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfG3ETt (ORCPT
+        id S1726992AbfG3E0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 00:19:49 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38443 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfG3ETt (ORCPT
+        Tue, 30 Jul 2019 00:26:22 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38323 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfG3E0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 00:19:49 -0400
-Received: by mail-lf1-f68.google.com with SMTP id h28so43618587lfj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 21:19:48 -0700 (PDT)
+        Tue, 30 Jul 2019 00:26:22 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f5so20523832pgu.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 21:26:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nQ683IxaS2cCdEC0NtzNiRTRgopPEXo2ky8LcnAwTHI=;
-        b=YXd7kBZwL28XEpjz/Z3rtR2dIB0OAidqsAOvHtlQRogEYM6NC2ckM1jSIgsGWoCMGZ
-         X4kEVhO2JN9T8BnkvbQGc0ZIxFAWD/Nx5DfQ/vkzYSAz1D/KaNnTbs6puGB0gjop/fW4
-         d2bo9BqeIyQDhBhh030hPqWlNYWaRdg2iUgXQ=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+uAEwHCS/q5YqbTZfM9UhcffVFTLKHWKlvMKu9AlaN4=;
+        b=EsXmEMrAKLXYhP9zY31O+/h2ZdkuRU0uxUsvt12z/dYH/onDFgVEw8/psz+asNdBYU
+         nFXBcaiag1L68Tv6zpHm7dfIu0NIX/b28PPUvE9EqMHFn//8WEUWABDEeEqYk5Fghedc
+         pEQppssDC1/AlpgweEINkqIDwRAPLQbsEmQA0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nQ683IxaS2cCdEC0NtzNiRTRgopPEXo2ky8LcnAwTHI=;
-        b=qQGhoJj14lARMHmLBeJbWdXAl8fWi9ibhp36i9isgy+tFsQHuqhjhOS3YHjCtnhajj
-         yDIphJisMBBauWgQp2o2SDkKsXNLJ/uugSvqNjSJH3S5ORYvCb7ltX9WmJOkwioTYM2/
-         hi0hZHuU5Kf4LHh+2OfvptLxTcETgblpI79tvcPV3GvomMSgZ1OKQVuujwih0qA2ugwH
-         TWj5HgwU6Fny5yVu+qGYhTajKAvhsQhbbwFJgi0q3r1uwTC7SL/GRTgphHypVyLhx/Na
-         +JLlbB2Ccy/qoDFgT9pjabPrF23keA05IfwVN2Wd41IsouzLUtdB/cLGn7KVUV//docE
-         GJfg==
-X-Gm-Message-State: APjAAAW67Ti+GqGvw/rixF82t8ojpV6IPB1cijfpt/gotJ5oKady8VzY
-        3OPRAl8k6xrB93MZdsWRGBJ+UXPT0rxgGn9TOPTFDw==
-X-Google-Smtp-Source: APXvYqyUBssSkjnT2gtitHVrncu9TYw17XAlBxT/191uCUb+ZIoGAc3Hg6SlZoNfJX9WbRCy4CNt44rlrHF1KrhAnJM=
-X-Received: by 2002:a19:8c06:: with SMTP id o6mr53293760lfd.176.1564460387288;
- Mon, 29 Jul 2019 21:19:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+uAEwHCS/q5YqbTZfM9UhcffVFTLKHWKlvMKu9AlaN4=;
+        b=SMn4Ns2StDV6UVNneNmLfoyNTGcVL75TUKaZxS+fiYzOk0RjPmdzoteoAjnnR1OGQl
+         HHuSDU6bcdPgki+Fq0ZHGJl5leSl2tzGSw4LAolRkWalwBtAra7JxijOzMJVsMYv9bWL
+         KNYQcA4tUDduC49hrsIZMOG+UTlOO6So3UrChhYxXLsPrDtJ9QBbAcWRezWYOUb4BPgr
+         xzHmIdsGBkbNDNorYwBBu8W0kaAO+9dMvnmwbA/es2L6yTzumyYVexJJJmbklVSYIZ7N
+         DSf8LZUkKDeQpz5uzbq5/DERyXRg2xinJZ6/iYHxkQp4yWYpoqCXK8sq9YK6cCEpZiic
+         m4IQ==
+X-Gm-Message-State: APjAAAWGW8tj1fxtdQbLQVeKTRQhrvdMsrMq3EfS0o9qPfzrOrR8apar
+        MyBuSauqKEKmuhTzpzA2OtnzbQ==
+X-Google-Smtp-Source: APXvYqw2DLcYsS+Y/kRsFOifnzk248iODzBuup35eBpVU/fNRfatgN+BuHFV6EhGR/gtK8Sdcr0WOg==
+X-Received: by 2002:a62:174a:: with SMTP id 71mr41180815pfx.140.1564460781249;
+        Mon, 29 Jul 2019 21:26:21 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w22sm67693578pfi.175.2019.07.29.21.26.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jul 2019 21:26:20 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 21:26:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 01/12] rdmacg: Replace strncmp with str_has_prefix
+Message-ID: <201907292117.DA40CA7D@keescook>
+References: <20190729151346.9280-1-hslester96@gmail.com>
 MIME-Version: 1.0
-References: <20190729010734.3352-1-devel@etsukata.com> <20190729112126.6554b141@gandalf.local.home>
- <2ceec933-503e-5d58-60b4-85b491b017d4@etsukata.com> <20190729221506.1aed7dfc@oasis.local.home>
-In-Reply-To: <20190729221506.1aed7dfc@oasis.local.home>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Tue, 30 Jul 2019 00:19:36 -0400
-Message-ID: <CAEXW_YT_vh1iGOwXdymzPO4-k59=+tqQCWHHokv+Kfif5GHypw@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Prevent RCU EQS breakage in preemptirq events
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Eiichi Tsukata <devel@etsukata.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Glexiner <tglx@linutronix.de>,
-        Peter Zilstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Luto <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729151346.9280-1-hslester96@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:15 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-[snip]
-> > If the problem was only with userstacktrace, it will be reasonable to
-> > surround only the userstack unwinder. But the situation is similar to
-> > the previous "tracing vs CR2" case. As Peter taught me in
-> > https://lore.kernel.org/lkml/20190708074823.GV3402@hirez.programming.kicks-ass.net/
-> > there are some other codes likely to to user access.
-> > So I surround preemptirq events earlier.
->
-> I disagree. The issue is with the attached callbacks that call
-> something (a stack unwinder) that can fault.
->
-> This is called whenever irqs are disabled. I say we surround the
-> culprit (the stack unwinder or stack trace) and not punish the irq
-> enable/disable events.
+On Mon, Jul 29, 2019 at 11:13:46PM +0800, Chuhong Yuan wrote:
+> strncmp(str, const, len) is error-prone.
+> We had better use newly introduced
+> str_has_prefix() instead of it.
 
-I agree with everything Steve said.
+Wait, stop. :) After Laura called my attention to your conversion series,
+mpe pointed out that str_has_prefix() is almost redundant to strstarts()
+(from 2009), and the latter has many more users. Let's fix strstarts()
+match str_has_prefix()'s return behavior (all the existing callers are
+doing boolean tests, so the change in return value won't matter), and
+then we can continue with this replacement. (And add some documentation
+to Documenation/process/deprecated.rst along with a checkpatch.pl test
+maybe too?)
 
-thanks,
+Actually I'd focus first on the actually broken cases first (sizeof()
+without the "-1", etc):
 
- - Joel
+$ git grep strncmp.*sizeof | grep -v -- '-' | wc -l
+17
+
+I expect the "copy/paste" changes could just be a Coccinelle script that
+Linus could run to fix all the cases (and should be added to the kernel
+source's list of Coccinelle scripts). Especially since the bulk of the
+usage pattern are doing literals like this:
+
+arch/alpha/kernel/setup.c:   if (strncmp(p, "mem=", 4) == 0) {
+
+$ git grep -E 'strncmp.*(sizeof|, *[0-9]*)' | wc -l
+2565
+
+And some cases are weirdly backwards:
+
+tools/perf/util/callchain.c:  if (!strncmp(tok, "none", strlen(tok))) {
+
+-Kees
+
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  kernel/cgroup/rdma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/cgroup/rdma.c b/kernel/cgroup/rdma.c
+> index ae042c347c64..fd12a227f8e4 100644
+> --- a/kernel/cgroup/rdma.c
+> +++ b/kernel/cgroup/rdma.c
+> @@ -379,7 +379,7 @@ static int parse_resource(char *c, int *intval)
+>  			return -EINVAL;
+>  		return i;
+>  	}
+> -	if (strncmp(value, RDMACG_MAX_STR, len) == 0) {
+> +	if (str_has_prefix(value, RDMACG_MAX_STR)) {
+>  		*intval = S32_MAX;
+>  		return i;
+>  	}
+> -- 
+> 2.20.1
+> 
+
+-- 
+Kees Cook
