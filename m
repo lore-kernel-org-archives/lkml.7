@@ -2,135 +2,98 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48060C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D60C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5C3206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF786206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:49:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYVSFu6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbfG3Ps6 (ORCPT
+        id S1732579AbfG3PtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:48:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50654 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725974AbfG3Ps5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:48:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7F5EEB024;
-        Tue, 30 Jul 2019 15:48:55 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 039991E435C; Tue, 30 Jul 2019 17:48:55 +0200 (CEST)
-Date:   Tue, 30 Jul 2019 17:48:54 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm/filemap: don't initiate writeback if mapping has
- no dirty pages
-Message-ID: <20190730154854.GG28829@quack2.suse.cz>
-References: <156378816804.1087.8607636317907921438.stgit@buzz>
- <20190722175230.d357d52c3e86dc87efbd4243@linux-foundation.org>
- <bdc6c53d-a7bb-dcc4-20ba-6c7fa5c57dbd@yandex-team.ru>
- <20190730141457.GE28829@quack2.suse.cz>
- <51ba7304-06bd-a50d-cb14-6dc41b92fab5@yandex-team.ru>
+        Tue, 30 Jul 2019 11:49:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40627 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728874AbfG3PtJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 11:49:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p184so30048377pfp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:49:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=43Zzz7LDd7UVoaQey8hQ90fg18MtS6aSB7Sxnrox+yo=;
+        b=XYVSFu6II2aBDHgCkklPATMigNKxVdX5hsABv9qco4xcXRUO5H1NfhNMqScJ2S3vOV
+         rDN3+QjWKTzv+sLY6CKLUCwOhn4T27//DHgfh4jwubFLko0w8AhUllRAzf6eBiPbOLik
+         0OO8Tdlev9i60cz12tGqeKdWhqiCR4pec7uqoWRg89UFy/LuaJ6Pw6w65mIn8XpJ3GXg
+         oAOMNJN8FkZUt9r/2hbckySe8tEwJxozKR2R8RT/TVNlPUjUFZO6z0dg2tB/H4N0X/WU
+         uNPbYRP5LlevI1hWa/75T18uRIG+jSI9KDe9tsAlVs+lAwXizR2aB7hxII58zhRuKZfe
+         x1ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=43Zzz7LDd7UVoaQey8hQ90fg18MtS6aSB7Sxnrox+yo=;
+        b=bEF8sg5myleXoS5CPkynZojgQFaIaji8ZhKuM81YQWxWifX1nOibqFGxQ1ZwnGEi8l
+         +Z/16I4xgmUeVBNctzXdXmC/+ZSQbvb8ax7X/ABtcC4cP8CWb2XQHjgIc4+zA8eE90hQ
+         9DoelO4K8Qh8srbplcEQ97BX7tXdIGVOrbRliJs3ZVVfNA6cu0TIoc9muSahK3Lm1lVe
+         f3BMLJ/LcCKxIYNggbabHxZuoQqEgHnsL/Welo077hYjFczERWBs9DckvBvdAhcnV1N4
+         LQLmX1eJcitMUkfCd86o0bHgf1pDsC2TjN6JtKC81RQHoaBTU43ayUyb3WNbWZnbvnAJ
+         hLkQ==
+X-Gm-Message-State: APjAAAUzC+j8TQAhaDDAdf8Jy/u9QcHqDidSNzWkrFobgZ+UBQd7la+9
+        V504M2/FeQSubCfbN/2khZn1ccEx
+X-Google-Smtp-Source: APXvYqxNBAFY8CKbzGQKaZUyBaeqeFmtEyI64K+kkg8zg2UN3DZaSo1UW5eHEZs7+nYcHqr/c2wOpA==
+X-Received: by 2002:aa7:81d4:: with SMTP id c20mr42810553pfn.235.1564501748648;
+        Tue, 30 Jul 2019 08:49:08 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p187sm103274235pfg.89.2019.07.30.08.49.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 08:49:07 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 08:49:06 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc:     uclinux-h8-devel@lists.sourceforge.jp, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] h8300: Add missing symbol "BOOT_LINK_OFFSET"
+Message-ID: <20190730154906.GA18870@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <51ba7304-06bd-a50d-cb14-6dc41b92fab5@yandex-team.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 30-07-19 17:57:18, Konstantin Khlebnikov wrote:
-> On 30.07.2019 17:14, Jan Kara wrote:
-> > On Tue 23-07-19 11:16:51, Konstantin Khlebnikov wrote:
-> > > On 23.07.2019 3:52, Andrew Morton wrote:
-> > > > 
-> > > > (cc linux-fsdevel and Jan)
-> > 
-> > Thanks for CC Andrew.
-> > 
-> > > > On Mon, 22 Jul 2019 12:36:08 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
-> > > > 
-> > > > > Functions like filemap_write_and_wait_range() should do nothing if inode
-> > > > > has no dirty pages or pages currently under writeback. But they anyway
-> > > > > construct struct writeback_control and this does some atomic operations
-> > > > > if CONFIG_CGROUP_WRITEBACK=y - on fast path it locks inode->i_lock and
-> > > > > updates state of writeback ownership, on slow path might be more work.
-> > > > > Current this path is safely avoided only when inode mapping has no pages.
-> > > > > 
-> > > > > For example generic_file_read_iter() calls filemap_write_and_wait_range()
-> > > > > at each O_DIRECT read - pretty hot path.
-> > 
-> > Yes, but in common case mapping_needs_writeback() is false for files you do
-> > direct IO to (exactly the case with no pages in the mapping). So you
-> > shouldn't see the overhead at all. So which case you really care about?
-> > 
-> > > > > This patch skips starting new writeback if mapping has no dirty tags set.
-> > > > > If writeback is already in progress filemap_write_and_wait_range() will
-> > > > > wait for it.
-> > > > > 
-> > > > > ...
-> > > > > 
-> > > > > --- a/mm/filemap.c
-> > > > > +++ b/mm/filemap.c
-> > > > > @@ -408,7 +408,8 @@ int __filemap_fdatawrite_range(struct address_space *mapping, loff_t start,
-> > > > >    		.range_end = end,
-> > > > >    	};
-> > > > > -	if (!mapping_cap_writeback_dirty(mapping))
-> > > > > +	if (!mapping_cap_writeback_dirty(mapping) ||
-> > > > > +	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
-> > > > >    		return 0;
-> > > > >    	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
-> > > > 
-> > > > How does this play with tagged_writepages?  We assume that no tagging
-> > > > has been performed by any __filemap_fdatawrite_range() caller?
-> > > > 
-> > > 
-> > > Checking also PAGECACHE_TAG_TOWRITE is cheap but seems redundant.
-> > > 
-> > > To-write tags are supposed to be a subset of dirty tags:
-> > > to-write is set only when dirty is set and cleared after starting writeback.
-> > > 
-> > > Special case set_page_writeback_keepwrite() which does not clear to-write
-> > > should be for dirty page thus dirty tag is not going to be cleared either.
-> > > Ext4 calls it after redirty_page_for_writepage()
-> > > XFS even without clear_page_dirty_for_io()
-> > > 
-> > > Anyway to-write tag without dirty tag or at clear page is confusing.
-> > 
-> > Yeah, TOWRITE tag is intended to be internal to writepages logic so your
-> > patch is fine in that regard. Overall the patch looks good to me so I'm
-> > just wondering a bit about the motivation...
+On Wed, Jul 17, 2019 at 10:55:00PM +0900, Yoshinori Sato wrote:
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> ---
+>  arch/h8300/Kconfig | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> In our case file mixes cached pages and O_DIRECT read. Kind of database
-> were index header is memory mapped while the rest data read via O_DIRECT.
-> I suppose for sharing index between multiple instances.
+> diff --git a/arch/h8300/Kconfig b/arch/h8300/Kconfig
+> index ecfc4b4b6373..6974513b1ae9 100644
+> --- a/arch/h8300/Kconfig
+> +++ b/arch/h8300/Kconfig
+> @@ -45,4 +45,7 @@ config NR_CPUS
+>  	int
+>  	default 1
+>  
+> +config BOOT_LINK_OFFSET
+> +	hex	"zImage link offset"
+> +
 
-OK, that has always been a bit problematic but you're not the first one to
-have such design ;). So feel free to add:
+"hex" requires a default value. The above declaration generates
+"CONFIG_BOOT_LINK_OFFSET=" in the configuration file, which is invalid
+and can not be fixed with "make ARCH=h8300 olddefconfig". This in turn
+results in "make" requesting a value when it encounters the symbol,
+meaning that automated builds of h8300 images are no longer possible,
+at least not without workarounds.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-to your patch.
-
-> On this path we also hit this bug:
-> https://lore.kernel.org/lkml/156355839560.2063.5265687291430814589.stgit@buzz/
-> so that's why I've started looking into this code.
-
-I see. OK.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Guenter
