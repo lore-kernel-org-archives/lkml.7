@@ -5,64 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EB2C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F9AC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6472089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA522089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G96811NZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LtjcNupM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbfG3SUS (ORCPT
+        id S1729457AbfG3SU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:20:18 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36268 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728908AbfG3SQL (ORCPT
+        Tue, 30 Jul 2019 14:20:26 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44409 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728824AbfG3SQI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:16:11 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r7so30265393pfl.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:11 -0700 (PDT)
+        Tue, 30 Jul 2019 14:16:08 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t16so30229479pfe.11
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=E+MiLS+xhjrkSb6B0r1a1/QGKNXodQxyYWlsCL6Y4A4=;
-        b=G96811NZowBWx8RM/8lPqU0uWnzoV43lyEhEiNDC0B8Ntygzpg57aZQieTSTQPjbXc
-         jwoQ8euvvqXmq+10x180vCL7O299Dl8mj60LA7ya5Zo4b/p6YLPXYGgk8b4PQbjxNGKy
-         BB3zQ98TWq99wGSkt3z/iLzylpg7+dRw7u2NQ=
+        bh=aSRdspc9UmTVqUtM/LVhQfTdfVvsFdhNYRk7pu3nDM4=;
+        b=LtjcNupM/HRKM4JoaldcQRTyS2bM2yL9wvKeOG/reX4s7oliVrhZ3wp4wzfzbR4jpA
+         A1CKU4sjWJkHVuwwi/hdtmK5ZPXBxh2NJotGUASyjHj8HoyAh2bkC1ois2SudhmvMElY
+         Y3kLvEzuSI7mA8c4hRjPsl+5oO787lm80ulgc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=E+MiLS+xhjrkSb6B0r1a1/QGKNXodQxyYWlsCL6Y4A4=;
-        b=Kt3bcMEKKVsy/mkC3tPVOYc1WsKF2nNGukGuHR8oHstzsvBoFx1EdIfWcqhimgKJ8H
-         wg4JmFFiuagNJANwGSMC/Z5ewo/2wZUdH8y1NcwEPEQzTBuPAxvmumIiXUJozJZVOTz/
-         rNhM/7DEAuR3iskqDZage8iNUZVJQkAtdRMqeGPLviJeWPG8WhSeUnWcUsg1hrUJoKQq
-         1EmZjF3RlCkAZfok9Z4K1mM3SkW1m6BRUYmhOC6xPTyNLhXdK8meauUw4ZUzui/8qOBJ
-         reW6ntBs64jOVia3eGri4kjeSrgWQWid+rsVDAoj3nu5kUHxDFG3f7fp9Eay0enb3umB
-         ppWw==
-X-Gm-Message-State: APjAAAWZKb3Fq4VEVRSBw6pY2qfvgc2TShG8z5funucV9uAfNvcKy6v0
-        C/7g3KCUTwC6kstgr1ajxXAlCobE6ns=
-X-Google-Smtp-Source: APXvYqzbrY/tkzXZgdp9CMLN1AYx+zVWfEtA8YA9y8O02ruiBFQxYiMzRzG8nCy5OiSmhBfC0UU7Cg==
-X-Received: by 2002:a17:90a:9301:: with SMTP id p1mr117756399pjo.22.1564510570617;
-        Tue, 30 Jul 2019 11:16:10 -0700 (PDT)
+        bh=aSRdspc9UmTVqUtM/LVhQfTdfVvsFdhNYRk7pu3nDM4=;
+        b=ZB7Hab5b9kWM4na5ydN83A4St5QX/4o9jwd/icMHJRuddS+/9LGdAOpbcY7luU6pvm
+         OvXNM31Z/v8GEM9sOJ6VDDjk2WGtkm5xyhNm0OiqvrQXSQZxnnJl8AknhKtQFy+txYeI
+         RHSm6OJftNYFEiRoG0f9Yhv019eFZHSk4meFaNfftGOKrbHXbG618BP+Z/D+DxRjTRQy
+         YxfeQrfntdRdAt0HQIPo4GTFBhzeXKjOuMzHY9uqf9nlCuKC2vC40UxcJzlbfbRzOCSS
+         UvdVbRiCBosKyGHQj+JcXGnuFkmPUDVty4LhzcVzvXZTcRNN0YvBu+k6Z/aUaiAHLnjd
+         E6/g==
+X-Gm-Message-State: APjAAAUstg1UPYB6Jyo5Hjq07kulBiRkNAF/Fk7E3RfA7/8QwsGHGSeK
+        Jj7yfywpWcsZwj1SNPtA4eA6JeJYTAQ=
+X-Google-Smtp-Source: APXvYqzl9TiZn1sx5mDRdicXU56NYnmqpjlBsgZoexEMD31JECB2BpobzlnsLFpDz+nGfBgNtl06Yw==
+X-Received: by 2002:a65:57ca:: with SMTP id q10mr113397707pgr.52.1564510566934;
+        Tue, 30 Jul 2019 11:16:06 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.09
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.06
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 11:16:09 -0700 (PDT)
+        Tue, 30 Jul 2019 11:16:06 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH v6 13/57] firmware: Remove dev_err() usage after platform_get_irq()
-Date:   Tue, 30 Jul 2019 11:15:13 -0700
-Message-Id: <20190730181557.90391-14-swboyd@chromium.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v6 09/57] devfreq: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:09 -0700
+Message-Id: <20190730181557.90391-10-swboyd@chromium.org>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
 References: <20190730181557.90391-1-swboyd@chromium.org>
@@ -108,48 +107,35 @@ if ( \( ret < 0 \| ret <= 0 \) )
 While we're here, remove braces on if statements that only have one
 statement (manually).
 
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: linux-pm@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
 Please apply directly to subsystem trees
 
- drivers/firmware/tegra/bpmp-tegra210.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/devfreq/tegra-devfreq.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/tegra/bpmp-tegra210.c b/drivers/firmware/tegra/bpmp-tegra210.c
-index ae15940a078e..890186abeac0 100644
---- a/drivers/firmware/tegra/bpmp-tegra210.c
-+++ b/drivers/firmware/tegra/bpmp-tegra210.c
-@@ -202,10 +202,8 @@ static int tegra210_bpmp_init(struct tegra_bpmp *bpmp)
+diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
+index 35c38aad8b4f..ffd17aba7533 100644
+--- a/drivers/devfreq/tegra-devfreq.c
++++ b/drivers/devfreq/tegra-devfreq.c
+@@ -674,10 +674,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
  	}
  
- 	err = platform_get_irq_byname(pdev, "tx");
--	if (err < 0) {
--		dev_err(&pdev->dev, "failed to get TX IRQ: %d\n", err);
-+	if (err < 0)
- 		return err;
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", irq);
++	if (irq < 0)
+ 		return irq;
 -	}
  
- 	priv->tx_irq_data = irq_get_irq_data(err);
- 	if (!priv->tx_irq_data) {
-@@ -214,10 +212,8 @@ static int tegra210_bpmp_init(struct tegra_bpmp *bpmp)
- 	}
+ 	platform_set_drvdata(pdev, tegra);
  
- 	err = platform_get_irq_byname(pdev, "rx");
--	if (err < 0) {
--		dev_err(&pdev->dev, "failed to get rx IRQ: %d\n", err);
-+	if (err < 0)
- 		return err;
--	}
- 
- 	err = devm_request_irq(&pdev->dev, err, rx_irq,
- 			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), bpmp);
 -- 
 Sent by a computer through tubes
 
