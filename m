@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16913C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1DBC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDADB216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14ECC21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455426;
-	bh=M5XEr0dqw/nUhoTlq67JgVnvePrWQBTKeglRxeN69WM=;
+	s=default; t=1564455431;
+	bh=q1DbIInn9askfcnlT4d9h4V4aMp7JEtDvvjVLjwdUHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2OjJaKCsqSZAyBcvcJk99gBdraW8TlLqRITpDaqlkEySgGc5OYBFjvQUXeYjCSUBT
-	 5HQsd48xUv79jdi2G0pLTqkahk+2SQOilEngJInLRpA8xcrjYQygdhBYFYdN/xkCEt
-	 7s3mLMJbPe8vMW5qgW5hxEMcnyymO9re3+JWgMu8=
+	b=vcega/K2N3qFMrvO+59y1UIcRsuwMGGdevcoROeoz5Vlnqmdltp1s1ZNpodJ+7oj1
+	 Ecumdv1YR9QCMOLOCJBpxHr3VIEEnrnvoCmO+Mt6VmxeHRvoSUT7jckhPG013fQlc4
+	 ZvIdWKP3pJYWh013bQz0cjuiADxhnObHpBiDQk64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731685AbfG3C5F (ORCPT
+        id S1731703AbfG3C5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:57:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46540 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 22:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731661AbfG3C5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:57:00 -0400
+        id S1731680AbfG3C5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 22:57:05 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59CC82070B;
-        Tue, 30 Jul 2019 02:56:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AD70217D4;
+        Tue, 30 Jul 2019 02:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455418;
-        bh=M5XEr0dqw/nUhoTlq67JgVnvePrWQBTKeglRxeN69WM=;
+        s=default; t=1564455424;
+        bh=q1DbIInn9askfcnlT4d9h4V4aMp7JEtDvvjVLjwdUHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xBa1/nhxhDVHTYchY4Ke3FYVSkGuyj0Nec6VwSI1gxZmgkU669M5rDlaUzsYklRFW
-         OM/X/hoqc7H2YfDY8OwbhoISQRiKc5fsFxoE+9Lsnv58i2kLywvTnF9e8gVi8fqtN4
-         SzzAJMwT2MaLTY4gMQRdjH79XnMmq6hABXLZ/rMY=
+        b=qmINq78uN2lpU/QajnUEV3DfkumSkrX2iTm5jJALzZ8za9pQ6BXOMV2aP8gcyrBRZ
+         QTH8n0Fwf8RhgYmSsZGJBv5G2/hHjLlHMllE9FYNhdFc+/YXKKKK4jYuOdkl/IeP+s
+         f5FOSphejMQ4utBW8jKim0NtUN4D6Gzhq5lR/LdA=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 013/107] perf augmented_raw_syscalls: Support copying two string syscall args
-Date:   Mon, 29 Jul 2019 23:54:36 -0300
-Message-Id: <20190730025610.22603-14-acme@kernel.org>
+Subject: [PATCH 015/107] perf augmented_raw_syscalls: Rename augmented_args_filename to augmented_args_payload
+Date:   Mon, 29 Jul 2019 23:54:38 -0300
+Message-Id: <20190730025610.22603-16-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
@@ -65,83 +65,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Starting with the renameat and renameat2 syscall, that both receive as
-second and fourth parameters a pathname:
-
-  # perf trace -e rename* mv one ANOTHER
-  LLVM: dumping /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  mv: cannot stat 'one': No such file or directory
-  renameat2(AT_FDCWD, "one", AT_FDCWD, "ANOTHER", RENAME_NOREPLACE) = -1 ENOENT (No such file or directory)
-  #
-
-Since the per CPU scratch buffer map has space for two maximum sized
-pathnames, the verifier is satisfied that there will be no overrun.
+It'll get other stuff in there than just filenames, starting with
+sockaddr for 'connect' and 'bind'.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-x2uboyg5kx2wqeru288209b6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-bsexidtsn91ehdpzcd6n5fm9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c                    |  2 ++
- .../examples/bpf/augmented_raw_syscalls.c     | 20 +++++++++++++++++++
- 2 files changed, 22 insertions(+)
+ .../examples/bpf/augmented_raw_syscalls.c     | 22 ++++++++++---------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index a681b8c2ee4e..c64f7c99db15 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -873,9 +873,11 @@ static struct syscall_fmt {
- 	{ .name	    = "recvmsg",
- 	  .arg = { [2] = { .scnprintf = SCA_MSG_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "renameat",
-+	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_renameat", },
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* olddirfd */ },
- 		   [2] = { .scnprintf = SCA_FDAT, /* newdirfd */ }, }, },
- 	{ .name	    = "renameat2",
-+	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_renameat", },
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* olddirfd */ },
- 		   [2] = { .scnprintf = SCA_FDAT, /* newdirfd */ },
- 		   [4] = { .scnprintf = SCA_RENAMEAT2_FLAGS, /* flags */ }, }, },
 diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index ce308b9a317c..df52d92e1c69 100644
+index df52d92e1c69..77bb6a0edce3 100644
 --- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
 +++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -70,6 +70,7 @@ pid_filter(pids_filtered);
- struct augmented_args_filename {
+@@ -67,13 +67,15 @@ struct augmented_filename {
+ 
+ pid_filter(pids_filtered);
+ 
+-struct augmented_args_filename {
++struct augmented_args_payload {
         struct syscall_enter_args args;
-        struct augmented_filename filename;
-+       struct augmented_filename filename2;
+-       struct augmented_filename filename;
+-       struct augmented_filename filename2;
++       struct {
++	       struct augmented_filename filename;
++	       struct augmented_filename filename2;
++       };
  };
  
- bpf_map(augmented_filename_map, PERCPU_ARRAY, int, struct augmented_args_filename, 1);
-@@ -148,6 +149,25 @@ int sys_enter_openat(struct syscall_enter_args *args)
- 	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
- }
+-bpf_map(augmented_filename_map, PERCPU_ARRAY, int, struct augmented_args_filename, 1);
++bpf_map(augmented_args_tmp, PERCPU_ARRAY, int, struct augmented_args_payload, 1);
  
-+SEC("!syscalls:sys_enter_renameat")
-+int sys_enter_renameat(struct syscall_enter_args *args)
-+{
-+	int key = 0;
-+	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-+	const void *oldpath_arg = (const void *)args->args[1],
-+		   *newpath_arg = (const void *)args->args[3];
-+	unsigned int len = sizeof(augmented_args->args), oldpath_len;
-+
-+        if (augmented_args == NULL)
-+                return 1; /* Failure: don't filter */
-+
-+	oldpath_len = augmented_filename__read(&augmented_args->filename, oldpath_arg, sizeof(augmented_args->filename.value));
-+	len += oldpath_len + augmented_filename__read((void *)(&augmented_args->filename) + oldpath_len, newpath_arg, sizeof(augmented_args->filename.value));
-+
-+	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
-+	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
-+}
-+
+ static inline
+ unsigned int augmented_filename__read(struct augmented_filename *augmented_filename,
+@@ -111,7 +113,7 @@ int syscall_unaugmented(struct syscall_enter_args *args)
+ 
+ /*
+  * This will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
+- * augmented_filename_map what was read by that raw_syscalls:sys_enter and go
++ * augmented_args_tmp what was read by that raw_syscalls:sys_enter and go
+  * on from there, reading the first syscall arg as a string, i.e. open's
+  * filename.
+  */
+@@ -119,7 +121,7 @@ SEC("!syscalls:sys_enter_open")
+ int sys_enter_open(struct syscall_enter_args *args)
+ {
+ 	int key = 0;
+-	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
++	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
+ 	const void *filename_arg = (const void *)args->args[0];
+ 	unsigned int len = sizeof(augmented_args->args);
+ 
+@@ -136,7 +138,7 @@ SEC("!syscalls:sys_enter_openat")
+ int sys_enter_openat(struct syscall_enter_args *args)
+ {
+ 	int key = 0;
+-	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
++	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
+ 	const void *filename_arg = (const void *)args->args[1];
+ 	unsigned int len = sizeof(augmented_args->args);
+ 
+@@ -153,7 +155,7 @@ SEC("!syscalls:sys_enter_renameat")
+ int sys_enter_renameat(struct syscall_enter_args *args)
+ {
+ 	int key = 0;
+-	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
++	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
+ 	const void *oldpath_arg = (const void *)args->args[1],
+ 		   *newpath_arg = (const void *)args->args[3];
+ 	unsigned int len = sizeof(augmented_args->args), oldpath_len;
+@@ -171,7 +173,7 @@ int sys_enter_renameat(struct syscall_enter_args *args)
  SEC("raw_syscalls:sys_enter")
  int sys_enter(struct syscall_enter_args *args)
  {
+-	struct augmented_args_filename *augmented_args;
++	struct augmented_args_payload *augmented_args;
+ 	/*
+ 	 * We start len, the amount of data that will be in the perf ring
+ 	 * buffer, if this is not filtered out by one of pid_filter__has(),
+@@ -185,7 +187,7 @@ int sys_enter(struct syscall_enter_args *args)
+ 	struct syscall *syscall;
+ 	int key = 0;
+ 
+-        augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
++        augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
+         if (augmented_args == NULL)
+                 return 1;
+ 
 -- 
 2.21.0
 
