@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791A7C433FF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42FBC7618E
 	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D572089E
+	by mail.kernel.org (Postfix) with ESMTP id 72D29208E3
 	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbfG3ExU (ORCPT
+        id S1728848AbfG3ExZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 00:53:20 -0400
+        Tue, 30 Jul 2019 00:53:25 -0400
 Received: from mga04.intel.com ([192.55.52.120]:50253 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbfG3ExU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 00:53:20 -0400
+        id S1728401AbfG3ExX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 00:53:23 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 21:53:19 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 21:53:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,325,1559545200"; 
-   d="scan'208";a="183007130"
+   d="scan'208";a="183007146"
 Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 29 Jul 2019 21:53:15 -0700
+  by orsmga002.jf.intel.com with ESMTP; 29 Jul 2019 21:53:19 -0700
 From:   Lu Baolu <baolu.lu@linux.intel.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Joerg Roedel <joro@8bytes.org>,
@@ -47,11 +47,10 @@ Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, alan.cox@intel.com,
         Stefano Stabellini <sstabellini@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v6 1/8] iommu/vt-d: Don't switch off swiotlb if use direct dma
-Date:   Tue, 30 Jul 2019 12:52:22 +0800
-Message-Id: <20190730045229.3826-2-baolu.lu@linux.intel.com>
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v6 2/8] PCI: Add dev_is_untrusted helper
+Date:   Tue, 30 Jul 2019 12:52:23 +0800
+Message-Id: <20190730045229.3826-3-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190730045229.3826-1-baolu.lu@linux.intel.com>
 References: <20190730045229.3826-1-baolu.lu@linux.intel.com>
@@ -60,43 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The direct dma implementation depends on swiotlb. Hence, don't
-switch off swiotlb since direct dma interfaces are used in this
-driver.
+There are several places in the kernel where it is necessary to
+check whether a device is a pci untrusted device. Add a helper
+to simplify the callers.
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
 Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/iommu/intel-iommu.c | 6 ------
- 1 file changed, 6 deletions(-)
+ include/linux/pci.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index bdaed2da8a55..8064af607d3b 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -4568,9 +4568,6 @@ static int __init platform_optin_force_iommu(void)
- 		iommu_identity_mapping |= IDENTMAP_ALL;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 9e700d9f9f28..960352a75a10 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1029,6 +1029,7 @@ void pcibios_setup_bridge(struct pci_bus *bus, unsigned long type);
+ void pci_sort_breadthfirst(void);
+ #define dev_is_pci(d) ((d)->bus == &pci_bus_type)
+ #define dev_is_pf(d) ((dev_is_pci(d) ? to_pci_dev(d)->is_physfn : false))
++#define dev_is_untrusted(d) ((dev_is_pci(d) ? to_pci_dev(d)->untrusted : false))
  
- 	dmar_disabled = 0;
--#if defined(CONFIG_X86) && defined(CONFIG_SWIOTLB)
--	swiotlb = 0;
--#endif
- 	no_iommu = 0;
+ /* Generic PCI functions exported to card drivers */
  
- 	return 1;
-@@ -4709,9 +4706,6 @@ int __init intel_iommu_init(void)
- 	}
- 	up_write(&dmar_global_lock);
+@@ -1766,6 +1767,7 @@ static inline struct pci_dev *pci_dev_get(struct pci_dev *dev) { return NULL; }
  
--#if defined(CONFIG_X86) && defined(CONFIG_SWIOTLB)
--	swiotlb = 0;
--#endif
- 	dma_ops = &intel_dma_ops;
- 
- 	init_iommu_pm_ops();
+ #define dev_is_pci(d) (false)
+ #define dev_is_pf(d) (false)
++#define dev_is_untrusted(d) (false)
+ static inline bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags)
+ { return false; }
+ static inline int pci_irqd_intx_xlate(struct irq_domain *d,
 -- 
 2.17.1
 
