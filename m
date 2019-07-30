@@ -2,98 +2,349 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D60C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC809C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF786206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:49:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYVSFu6I"
+	by mail.kernel.org (Postfix) with ESMTP id C09FC2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732579AbfG3PtJ (ORCPT
+        id S1732604AbfG3Pts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:49:09 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40627 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728874AbfG3PtJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:49:09 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p184so30048377pfp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:49:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=43Zzz7LDd7UVoaQey8hQ90fg18MtS6aSB7Sxnrox+yo=;
-        b=XYVSFu6II2aBDHgCkklPATMigNKxVdX5hsABv9qco4xcXRUO5H1NfhNMqScJ2S3vOV
-         rDN3+QjWKTzv+sLY6CKLUCwOhn4T27//DHgfh4jwubFLko0w8AhUllRAzf6eBiPbOLik
-         0OO8Tdlev9i60cz12tGqeKdWhqiCR4pec7uqoWRg89UFy/LuaJ6Pw6w65mIn8XpJ3GXg
-         oAOMNJN8FkZUt9r/2hbckySe8tEwJxozKR2R8RT/TVNlPUjUFZO6z0dg2tB/H4N0X/WU
-         uNPbYRP5LlevI1hWa/75T18uRIG+jSI9KDe9tsAlVs+lAwXizR2aB7hxII58zhRuKZfe
-         x1ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=43Zzz7LDd7UVoaQey8hQ90fg18MtS6aSB7Sxnrox+yo=;
-        b=bEF8sg5myleXoS5CPkynZojgQFaIaji8ZhKuM81YQWxWifX1nOibqFGxQ1ZwnGEi8l
-         +Z/16I4xgmUeVBNctzXdXmC/+ZSQbvb8ax7X/ABtcC4cP8CWb2XQHjgIc4+zA8eE90hQ
-         9DoelO4K8Qh8srbplcEQ97BX7tXdIGVOrbRliJs3ZVVfNA6cu0TIoc9muSahK3Lm1lVe
-         f3BMLJ/LcCKxIYNggbabHxZuoQqEgHnsL/Welo077hYjFczERWBs9DckvBvdAhcnV1N4
-         LQLmX1eJcitMUkfCd86o0bHgf1pDsC2TjN6JtKC81RQHoaBTU43ayUyb3WNbWZnbvnAJ
-         hLkQ==
-X-Gm-Message-State: APjAAAUzC+j8TQAhaDDAdf8Jy/u9QcHqDidSNzWkrFobgZ+UBQd7la+9
-        V504M2/FeQSubCfbN/2khZn1ccEx
-X-Google-Smtp-Source: APXvYqxNBAFY8CKbzGQKaZUyBaeqeFmtEyI64K+kkg8zg2UN3DZaSo1UW5eHEZs7+nYcHqr/c2wOpA==
-X-Received: by 2002:aa7:81d4:: with SMTP id c20mr42810553pfn.235.1564501748648;
-        Tue, 30 Jul 2019 08:49:08 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p187sm103274235pfg.89.2019.07.30.08.49.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 08:49:07 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 08:49:06 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc:     uclinux-h8-devel@lists.sourceforge.jp, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] h8300: Add missing symbol "BOOT_LINK_OFFSET"
-Message-ID: <20190730154906.GA18870@roeck-us.net>
+        Tue, 30 Jul 2019 11:49:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:34928 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727774AbfG3Pts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 11:49:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB33D28;
+        Tue, 30 Jul 2019 08:49:46 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61CD43F694;
+        Tue, 30 Jul 2019 08:49:44 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 16:49:39 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
+Message-ID: <20190730154939.GA367@e121166-lin.cambridge.arm.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-13-vidyas@nvidia.com>
+ <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
+ <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
+ <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
+ <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
+ <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
+ <be6367bc-08a0-762a-aae8-b3f0376d0e9a@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <be6367bc-08a0-762a-aae8-b3f0376d0e9a@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 10:55:00PM +0900, Yoshinori Sato wrote:
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  arch/h8300/Kconfig | 3 +++
->  1 file changed, 3 insertions(+)
+On Tue, Jul 23, 2019 at 08:14:08PM +0530, Vidya Sagar wrote:
+> On 7/16/2019 4:52 PM, Lorenzo Pieralisi wrote:
+> > On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
+> > 
+> > [...]
+> > 
+> > > > > > > +static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
+> > > > > > > +					  bool enable)
+> > > > > > > +{
+> > > > > > > +	struct mrq_uphy_response resp;
+> > > > > > > +	struct tegra_bpmp_message msg;
+> > > > > > > +	struct mrq_uphy_request req;
+> > > > > > > +	int err;
+> > > > > > > +
+> > > > > > > +	if (pcie->cid == 5)
+> > > > > > > +		return 0;
+> > > > > > 
+> > > > > > What's wrong with cid == 5 ? Explain please.
+> > > > > Controller with ID=5 doesn't need any programming to enable it which is
+> > > > > done here through calling firmware API.
+> > > > > 
+> > > > > > 
+> > > > > > > +	memset(&req, 0, sizeof(req));
+> > > > > > > +	memset(&resp, 0, sizeof(resp));
+> > > > > > > +
+> > > > > > > +	req.cmd = CMD_UPHY_PCIE_CONTROLLER_STATE;
+> > > > > > > +	req.controller_state.pcie_controller = pcie->cid;
+> > > > > > > +	req.controller_state.enable = enable;
+> > > > > > > +
+> > > > > > > +	memset(&msg, 0, sizeof(msg));
+> > > > > > > +	msg.mrq = MRQ_UPHY;
+> > > > > > > +	msg.tx.data = &req;
+> > > > > > > +	msg.tx.size = sizeof(req);
+> > > > > > > +	msg.rx.data = &resp;
+> > > > > > > +	msg.rx.size = sizeof(resp);
+> > > > > > > +
+> > > > > > > +	if (irqs_disabled())
+> > > > > > 
+> > > > > > Can you explain to me what this check is meant to achieve please ?
+> > > > > Firmware interface provides different APIs to be called when there are
+> > > > > no interrupts enabled in the system (noirq context) and otherwise
+> > > > > hence checking that situation here and calling appropriate API.
+> > > > 
+> > > > That's what I am questioning. Being called from {suspend/resume}_noirq()
+> > > > callbacks (if that's the code path this check caters for) does not mean
+> > > > irqs_disabled() == true.
+> > > Agree.
+> > > Actually, I got a hint of having this check from the following.
+> > > Both tegra_bpmp_transfer_atomic() and tegra_bpmp_transfer() are indirectly
+> > > called by APIs registered with .master_xfer() and .master_xfer_atomic() hooks of
+> > > struct i2c_algorithm and the decision to call which one of these is made using the
+> > > following check in i2c-core.h file.
+> > > static inline bool i2c_in_atomic_xfer_mode(void)
+> > > {
+> > > 	return system_state > SYSTEM_RUNNING && irqs_disabled();
+> > > }
+> > > I think I should use this condition as is IIUC.
+> > > Please let me know if there are any concerns with this.
+> > 
+> > It is not a concern, it is just that I don't understand how this code
+> > can be called with IRQs disabled, if you can give me an execution path I
+> > am happy to leave the check there. On top of that, when called from
+> > suspend NOIRQ context, it is likely to use the blocking API (because
+> > IRQs aren't disabled at CPU level) behind which there is most certainly
+> > an IRQ required to wake the thread up and if the IRQ in question was
+> > disabled in the suspend NOIRQ phase this code is likely to deadlock.
+> > 
+> > I want to make sure we can justify adding this check, I do not
+> > want to add it because we think it can be needed when it may not
+> > be needed at all (and it gets copy and pasted over and over again
+> > in other drivers).
+> I had a discussion internally about this and the prescribed usage of these APIs
+> seem to be that
+> use tegra_bpmp_transfer() in .probe() and other paths where interrupts are
+> enabled as this API needs interrupts to be enabled for its working.
+> Use tegra_bpmp_transfer_atomic() surrounded by local_irq_save()/local_irq_restore()
+> in other paths where interrupt servicing is disabled.
+
+Why tegra_bpmp_transfer_atomic() needs IRQs to be disabled ? And why
+is it needed in this piece of code where IRQs are _never_ disabled
+at CPU level ?
+
+IRQs are enabled when you call a suspend_noirq() callback, so the
+blocking API can be used as long as the IRQ descriptor backing
+the IRQ that will wake-up the blocked call is marked as
+IRQF_NO_SUSPEND.
+
+The problem is not IRQs enabled/disabled at CPU level, the problem is
+the IRQ descriptor of the IRQ required to handle the blocking BPMP call,
+mark it as IRQF_NO_SUSPEND and remove the tegra_bpmp_transfer_atomic()
+call from this code (or please give me a concrete example pinpointing
+why it is needed).
+
+Thanks,
+Lorenzo
+
+> I'll go ahead and make next patch series with this if this looks fine to you.
 > 
-> diff --git a/arch/h8300/Kconfig b/arch/h8300/Kconfig
-> index ecfc4b4b6373..6974513b1ae9 100644
-> --- a/arch/h8300/Kconfig
-> +++ b/arch/h8300/Kconfig
-> @@ -45,4 +45,7 @@ config NR_CPUS
->  	int
->  	default 1
->  
-> +config BOOT_LINK_OFFSET
-> +	hex	"zImage link offset"
-> +
-
-"hex" requires a default value. The above declaration generates
-"CONFIG_BOOT_LINK_OFFSET=" in the configuration file, which is invalid
-and can not be fixed with "make ARCH=h8300 olddefconfig". This in turn
-results in "make" requesting a value when it encounters the symbol,
-meaning that automated builds of h8300 images are no longer possible,
-at least not without workarounds.
-
-Guenter
+> > 
+> > > > Actually, if tegra_bpmp_transfer() requires IRQs to be enabled you may
+> > > > even end up in a situation where that blocking call does not wake up
+> > > > because the IRQ in question was disabled in the NOIRQ suspend/resume
+> > > > phase.
+> > > > 
+> > > > [...]
+> > > > 
+> > > > > > > +static int tegra_pcie_dw_probe(struct platform_device *pdev)
+> > > > > > > +{
+> > > > > > > +	const struct tegra_pcie_soc *data;
+> > > > > > > +	struct device *dev = &pdev->dev;
+> > > > > > > +	struct resource *atu_dma_res;
+> > > > > > > +	struct tegra_pcie_dw *pcie;
+> > > > > > > +	struct resource *dbi_res;
+> > > > > > > +	struct pcie_port *pp;
+> > > > > > > +	struct dw_pcie *pci;
+> > > > > > > +	struct phy **phys;
+> > > > > > > +	char *name;
+> > > > > > > +	int ret;
+> > > > > > > +	u32 i;
+> > > > > > > +
+> > > > > > > +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> > > > > > > +	if (!pcie)
+> > > > > > > +		return -ENOMEM;
+> > > > > > > +
+> > > > > > > +	pci = &pcie->pci;
+> > > > > > > +	pci->dev = &pdev->dev;
+> > > > > > > +	pci->ops = &tegra_dw_pcie_ops;
+> > > > > > > +	pp = &pci->pp;
+> > > > > > > +	pcie->dev = &pdev->dev;
+> > > > > > > +
+> > > > > > > +	data = (struct tegra_pcie_soc *)of_device_get_match_data(dev);
+> > > > > > > +	if (!data)
+> > > > > > > +		return -EINVAL;
+> > > > > > > +	pcie->mode = (enum dw_pcie_device_mode)data->mode;
+> > > > > > > +
+> > > > > > > +	ret = tegra_pcie_dw_parse_dt(pcie);
+> > > > > > > +	if (ret < 0) {
+> > > > > > > +		dev_err(dev, "Failed to parse device tree: %d\n", ret);
+> > > > > > > +		return ret;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
+> > > > > > > +	if (IS_ERR(pcie->pex_ctl_supply)) {
+> > > > > > > +		dev_err(dev, "Failed to get regulator: %ld\n",
+> > > > > > > +			PTR_ERR(pcie->pex_ctl_supply));
+> > > > > > > +		return PTR_ERR(pcie->pex_ctl_supply);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pcie->core_clk = devm_clk_get(dev, "core");
+> > > > > > > +	if (IS_ERR(pcie->core_clk)) {
+> > > > > > > +		dev_err(dev, "Failed to get core clock: %ld\n",
+> > > > > > > +			PTR_ERR(pcie->core_clk));
+> > > > > > > +		return PTR_ERR(pcie->core_clk);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pcie->appl_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > > > > > > +						      "appl");
+> > > > > > > +	if (!pcie->appl_res) {
+> > > > > > > +		dev_err(dev, "Failed to find \"appl\" region\n");
+> > > > > > > +		return PTR_ERR(pcie->appl_res);
+> > > > > > > +	}
+> > > > > > > +	pcie->appl_base = devm_ioremap_resource(dev, pcie->appl_res);
+> > > > > > > +	if (IS_ERR(pcie->appl_base))
+> > > > > > > +		return PTR_ERR(pcie->appl_base);
+> > > > > > > +
+> > > > > > > +	pcie->core_apb_rst = devm_reset_control_get(dev, "apb");
+> > > > > > > +	if (IS_ERR(pcie->core_apb_rst)) {
+> > > > > > > +		dev_err(dev, "Failed to get APB reset: %ld\n",
+> > > > > > > +			PTR_ERR(pcie->core_apb_rst));
+> > > > > > > +		return PTR_ERR(pcie->core_apb_rst);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	phys = devm_kcalloc(dev, pcie->phy_count, sizeof(*phys), GFP_KERNEL);
+> > > > > > > +	if (!phys)
+> > > > > > > +		return PTR_ERR(phys);
+> > > > > > > +
+> > > > > > > +	for (i = 0; i < pcie->phy_count; i++) {
+> > > > > > > +		name = kasprintf(GFP_KERNEL, "p2u-%u", i);
+> > > > > > > +		if (!name) {
+> > > > > > > +			dev_err(dev, "Failed to create P2U string\n");
+> > > > > > > +			return -ENOMEM;
+> > > > > > > +		}
+> > > > > > > +		phys[i] = devm_phy_get(dev, name);
+> > > > > > > +		kfree(name);
+> > > > > > > +		if (IS_ERR(phys[i])) {
+> > > > > > > +			ret = PTR_ERR(phys[i]);
+> > > > > > > +			dev_err(dev, "Failed to get PHY: %d\n", ret);
+> > > > > > > +			return ret;
+> > > > > > > +		}
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pcie->phys = phys;
+> > > > > > > +
+> > > > > > > +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> > > > > > > +	if (!dbi_res) {
+> > > > > > > +		dev_err(dev, "Failed to find \"dbi\" region\n");
+> > > > > > > +		return PTR_ERR(dbi_res);
+> > > > > > > +	}
+> > > > > > > +	pcie->dbi_res = dbi_res;
+> > > > > > > +
+> > > > > > > +	pci->dbi_base = devm_ioremap_resource(dev, dbi_res);
+> > > > > > > +	if (IS_ERR(pci->dbi_base))
+> > > > > > > +		return PTR_ERR(pci->dbi_base);
+> > > > > > > +
+> > > > > > > +	/* Tegra HW locates DBI2 at a fixed offset from DBI */
+> > > > > > > +	pci->dbi_base2 = pci->dbi_base + 0x1000;
+> > > > > > > +
+> > > > > > > +	atu_dma_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > > > > > > +						   "atu_dma");
+> > > > > > > +	if (!atu_dma_res) {
+> > > > > > > +		dev_err(dev, "Failed to find \"atu_dma\" region\n");
+> > > > > > > +		return PTR_ERR(atu_dma_res);
+> > > > > > > +	}
+> > > > > > > +	pcie->atu_dma_res = atu_dma_res;
+> > > > > > > +	pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
+> > > > > > > +	if (IS_ERR(pci->atu_base))
+> > > > > > > +		return PTR_ERR(pci->atu_base);
+> > > > > > > +
+> > > > > > > +	pcie->core_rst = devm_reset_control_get(dev, "core");
+> > > > > > > +	if (IS_ERR(pcie->core_rst)) {
+> > > > > > > +		dev_err(dev, "Failed to get core reset: %ld\n",
+> > > > > > > +			PTR_ERR(pcie->core_rst));
+> > > > > > > +		return PTR_ERR(pcie->core_rst);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pp->irq = platform_get_irq_byname(pdev, "intr");
+> > > > > > > +	if (!pp->irq) {
+> > > > > > > +		dev_err(dev, "Failed to get \"intr\" interrupt\n");
+> > > > > > > +		return -ENODEV;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	ret = devm_request_irq(dev, pp->irq, tegra_pcie_irq_handler,
+> > > > > > > +			       IRQF_SHARED, "tegra-pcie-intr", pcie);
+> > > > > > > +	if (ret) {
+> > > > > > > +		dev_err(dev, "Failed to request IRQ %d: %d\n", pp->irq, ret);
+> > > > > > > +		return ret;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pcie->bpmp = tegra_bpmp_get(dev);
+> > > > > > > +	if (IS_ERR(pcie->bpmp))
+> > > > > > > +		return PTR_ERR(pcie->bpmp);
+> > > > > > > +
+> > > > > > > +	platform_set_drvdata(pdev, pcie);
+> > > > > > > +
+> > > > > > > +	if (pcie->mode == DW_PCIE_RC_TYPE) {
+> > > > > > > +		ret = tegra_pcie_config_rp(pcie);
+> > > > > > > +		if (ret && ret != -ENOMEDIUM)
+> > > > > > > +			goto fail;
+> > > > > > > +		else
+> > > > > > > +			return 0;
+> > > > > > 
+> > > > > > So if the link is not up we still go ahead and make probe
+> > > > > > succeed. What for ?
+> > > > > We may need root port to be available to support hot-plugging of
+> > > > > endpoint devices, so, we don't fail the probe.
+> > > > 
+> > > > We need it or we don't. If you do support hotplugging of endpoint
+> > > > devices point me at the code, otherwise link up failure means
+> > > > failure to probe.
+> > > Currently hotplugging of endpoint is not supported, but it is one of
+> > > the use cases that we may add support for in future.
+> > 
+> > You should elaborate on this, I do not understand what you mean,
+> > either the root port(s) supports hotplug or it does not.
+> > 
+> > > But, why should we fail probe if link up doesn't happen? As such,
+> > > nothing went wrong in terms of root port initialization right?  I
+> > > checked other DWC based implementations and following are not failing
+> > > the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c, pcie-histb.c,
+> > > pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c, pci-imx6.c,
+> > > pci-keystone.c, pci-layerscape.c
+> > > 
+> > > Although following do fail the probe if link is not up.  pcie-qcom.c,
+> > > pcie-uniphier.c, pci-meson.c
+> > > 
+> > > So, to me, it looks more like a choice we can make whether to fail the
+> > > probe or not and in this case we are choosing not to fail.
+> > 
+> > I disagree. I had an offline chat with Bjorn and whether link-up should
+> > fail the probe or not depends on whether the root port(s) is hotplug
+> > capable or not and this in turn relies on the root port "Slot
+> > implemented" bit in the PCI Express capabilities register.
+> > 
+> > It is a choice but it should be based on evidence.
+> > 
+> > Lorenzo
+> With Bjorn's latest comment on top of this, I think we are good not to fail
+> the probe here.
+> 
+> - Vidya Sagar
+> > 
+> 
