@@ -2,295 +2,268 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09047C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28BFC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49CC20651
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 787F520665
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbfG3Iab (ORCPT
+        id S1730725AbfG3IdM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:30:31 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:58017 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfG3Iab (ORCPT
+        Tue, 30 Jul 2019 04:33:12 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34255 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729283AbfG3IdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:30:31 -0400
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Allan.Nielsen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="Allan.Nielsen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: pRWuIcMYNI9kxr9spr/rUssDColbQVXVWFvUP2xo+Wdul5InP6E9p+qa7cwq2xpCr4PbjgYIhr
- qjaPzi5iC13m+VEIuxm+zk1kMux2j9JSBTC72gu0LAeUV/BJJcV/PazitdZWrKI+3bRGa8KAZS
- SmNQc0oaBvMiwk13XMctiiwkdAgZAJtRZDEftFCKso8TqkzqwMhjjDtgudcj6upUsIjPBO4HTN
- Bzm1Te46khGuTj6lanrf+DuBuFumH9imWy8zEi5LY93ibvT2NKS5FflNVVsmvD2qosr4mQru6N
- D48=
-X-IronPort-AV: E=Sophos;i="5.64,326,1559545200"; 
-   d="scan'208";a="41659951"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Jul 2019 01:30:31 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
- chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 30 Jul 2019 01:30:29 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Tue, 30 Jul 2019 01:30:28 -0700
-Date:   Tue, 30 Jul 2019 10:30:28 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Ido Schimmel <idosch@idosch.org>
-CC:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
-        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-Message-ID: <20190730083027.biuzy7h5dbq7pik3@lx-anielsen.microsemi.net>
-References: <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
- <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
- <20190729131420.tqukz55tz26jkg73@lx-anielsen.microsemi.net>
- <3cc69103-d194-2eca-e7dd-e2fa6a730223@cumulusnetworks.com>
- <20190729135205.oiuthcyesal4b4ct@lx-anielsen.microsemi.net>
- <e4cd0db9-695a-82a7-7dc0-623ded66a4e5@cumulusnetworks.com>
- <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
- <20190729175136.GA28572@splinter>
- <20190730062721.p4vrxo5sxbtulkrx@lx-anielsen.microsemi.net>
- <20190730070626.GA508@splinter>
+        Tue, 30 Jul 2019 04:33:11 -0400
+Received: by mail-ed1-f67.google.com with SMTP id s49so26968211edb.1;
+        Tue, 30 Jul 2019 01:33:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Q84VjJRDJ4OplkCoHhwYo8/gOcoNfhF91Mul/YA2O6A=;
+        b=dX7TiSuRTkdoICkGDXTIkRUiokG9IdMUAp0tE7fXbPH8M5WPmPz007DpPpndieZI4A
+         TfcsyY7RpXcOJq9HR9+Xmcr9kwHrzEsHTl4rWDSVywVhXY6Ni9Bmz50cxxMaLvAg2BVZ
+         pNefM1lxKMm22JwPv2KfDlm5q5Ow5VMyihWGhiPDupHD7Q2FMmp+QV5FTkvx4fjG2xON
+         FJDgZzZmyexKSj9YDBkYCf8zNEAxX9dt/UOioFd0gQi0+0zOxUbmPHcgBLFmFDRj3+en
+         XBPUiVFbmsMZaN9dbO0CHelrvw2SCKVg193WEaB7Z3DGj1dNcgfZKucMY8fOaoKSkJCq
+         0uVA==
+X-Gm-Message-State: APjAAAVUCsZkD25vKTZJKIGDhZQgqz1vvqPacOWUlj2UhUQbj2bOjP/i
+        HT4q7X91ZENoDPyofu4Av8VYPwDTPSo=
+X-Google-Smtp-Source: APXvYqzcur+qsv4fySmXJ6Fh+6dVDIu6zINrTMeLarEZAVBAE62jSh3ijh2z0tNkHM/OpXA3zURH6w==
+X-Received: by 2002:a50:8a04:: with SMTP id i4mr100107817edi.301.1564475588252;
+        Tue, 30 Jul 2019 01:33:08 -0700 (PDT)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com. [209.85.128.45])
+        by smtp.gmail.com with ESMTPSA id pv18sm11776409ejb.14.2019.07.30.01.33.07
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 01:33:08 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id a15so56259271wmj.5;
+        Tue, 30 Jul 2019 01:33:07 -0700 (PDT)
+X-Received: by 2002:a7b:c051:: with SMTP id u17mr101736986wmc.25.1564475587103;
+ Tue, 30 Jul 2019 01:33:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190730070626.GA508@splinter>
-User-Agent: NeoMutt/20180716
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <173825848.1FZsmuHfpq@jernej-laptop> <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
+ <2452836.v7ux4bnEjb@jernej-laptop> <20190730080900.hhxrqun7vk4nsj2h@pengutronix.de>
+In-Reply-To: <20190730080900.hhxrqun7vk4nsj2h@pengutronix.de>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Tue, 30 Jul 2019 16:32:53 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65jFdFZGLti4_B=2QPbtrj1b8wh63R5G3NpY_ndpJoV5g@mail.gmail.com>
+Message-ID: <CAGb2v65jFdFZGLti4_B=2QPbtrj1b8wh63R5G3NpY_ndpJoV5g@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 07/30/2019 10:06, Ido Schimmel wrote:
-> On Tue, Jul 30, 2019 at 08:27:22AM +0200, Allan W. Nielsen wrote:
-> > The 07/29/2019 20:51, Ido Schimmel wrote:
-> > > Can you please clarify what you're trying to achieve? I just read the
-> > > thread again and my impression is that you're trying to locally receive
-> > > packets with a certain link layer multicast address.
-> > Yes. The thread is also a bit confusing because we half way through realized
-> > that we misunderstood how the multicast packets should be handled (sorry about
-> > that). To begin with we had a driver where multicast packets was only copied to
-> > the CPU if someone needed it. Andrew and Nikolay made us aware that this is not
-> > how other drivers are doing it, so we changed the driver to include the CPU in
-> > the default multicast flood-mask.
-> OK, so what prevents you from removing all other ports from the
-> flood-mask and letting the CPU handle the flooding? Then you can install
-> software tc filters to limit the flooding.
-I do not have the bandwidth to forward the multicast traffic in the CPU.
+On Tue, Jul 30, 2019 at 4:09 PM Uwe Kleine-König
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Rob and Frank,
+>
+> Maxime and Jernej on one side and me on the other cannot agree about a
+> detail in the change to the bindings here. I'm trying to objectively
+> summarize the situation for you to help deciding what is the right thing
+> to do here.
+>
+> TLDR: The sun4i pwm driver is extended to support a new variant of that
+> device on the H6 SoC. Compared to the earlier supported variants
+> allwinner,sun50i-h6-pwm on H6 needs to handle a reset controller and an
+> additional clock.
+>
+> The two positions are:
+>
+>  - We need a new compatible because only then the driver and/or the dt
+>    schema checker can check that each "allwinner,sun50i-h6-pwm" device
+>    has a reset property and a "bus" clock; and the earlier variants
+>    don't.
+>
+>  - The driver can be simpler and the device specific knowledge is only
+>    in a single place (the dt) if the device tree is considered valid and
+>    a reset property and "bus" clock is used iff it's provided in the
+>    device tree without additional comparison for the compatible.
+>
+> Now our arguments seem to go in circles and Jernej was interested in
+> your position. That's something I agree with ;-) Can you please share
+> your view?
+>
+> Find below some context about the arguments.
 
-It will also cause enormous latency on the forwarding of L2 multicast packets.
+A bit more context on the failure modes:
 
-> > This changes the objective a bit. To begin with we needed to get more packets to
-> > the CPU (which could have been done using tc ingress rules and a trap action).
-> > 
-> > Now after we changed the driver, we realized that we need something to limit the
-> > flooding of certain L2 multicast packets. This is the new problem we are trying
-> > to solve!
-> > 
-> > Example: Say we have a bridge with 4 slave interfaces, then we want to install a
-> > forwarding rule saying that packets to a given L2-multicast MAC address, should
-> > only be flooded to 2 of the 4 ports.
-> > 
-> > (instead of adding rules to get certain packets to the CPU, we are now adding
-> > other rules to prevent other packets from going to the CPU and other ports where
-> > they are not needed/wanted).
-> > 
-> > This is exactly the same thing as IGMP snooping does dynamically, but only for
-> > IP multicast.
-> > 
-> > The "bridge mdb" allow users to manually/static add/del a port to a multicast
-> > group, but still it operates on IP multicast address (not L2 multicast
-> > addresses).
-> > 
-> > > Nik suggested SIOCADDMULTI.
-> > It is not clear to me how this should be used to limit the flooding, maybe we
-> > can make some hacks, but as far as I understand the intend of this is maintain
-> > the list of addresses an interface should receive. I'm not sure this should
-> > influence how for forwarding decisions are being made.
-> > 
-> > > and I suggested a tc filter to get the packet to the CPU.
-> > The TC solution is a good solution to the original problem where wanted to copy
-> > more frames to the CPU. But we were convinced that this is not the right
-> > approach, and that the CPU by default should receive all multicast packets, and
-> > we should instead try to find a way to limit the flooding of certain frames as
-> > an optimization.
-> 
-> This can still work. In Linux, ingress tc filters are executed before the
-> bridge's Rx handler. The same happens in every sane HW. Ingress ACL is
-> performed before L2 forwarding. Assuming you have eth0-eth3 bridged and
-> you want to prevent packets with DMAC 01:21:6C:00:00:01 from egressing
-> eth2:
-> 
-> # tc filter add dev eth0 ingress pref 1 flower skip_sw \
-> 	dst_mac 01:21:6C:00:00:01 action trap
-> # tc filter add dev eth2 egress pref 1 flower skip_hw \
-> 	dst_mac 01:21:6C:00:00:01 action drop
-> 
-> The first filter is only present in HW ('skip_sw') and should result in
-> your HW passing you the sole copy of the packet.
-Agree.
+If the reset control is missing, anything done to hardware will be
+silently ignored, since any writes to the registers are ignored.
 
-> The second filter is only present in SW ('skip_hw', not using HW egress
-> ACL that you don't have) and drops the packet after it was flooded by
-> the SW bridge.
-Agree.
+On the other hand, if the bus clock is missing and otherwise not enabled,
+accessing the device's registers could actually stall the whole system.
 
-> As I mentioned earlier, you can install the filter once in your HW and
-> share it between different ports using a shared block. This means you
-> only consume one TCAM entry.
-> 
-> Note that this allows you to keep flooding all other multicast packets
-> in HW.
-Yes, but the frames we want to limit the flood-mask on are the exact frames
-which occurs at a very high rate, and where latency is important.
+ChenYu
 
-I really do not consider it as an option to forward this in SW, when it is
-something that can easily be offloaded in HW.
-
-> > > If you now want to limit the ports to which this packet is flooded, then
-> > > you can use tc filters in *software*:
-> > > 
-> > > # tc qdisc add dev eth2 clsact
-> > > # tc filter add dev eth2 egress pref 1 flower skip_hw \
-> > > 	dst_mac 01:21:6C:00:00:01 action drop
-> > Yes. This can work in the SW bridge.
-> > 
-> > > If you want to forward the packet in hardware and locally receive it,
-> > > you can chain several mirred action and then a trap action.
-> > I'm not I fully understand how this should be done, but it does sound like it
-> > becomes quite complicated. Also, as far as I understand it will mean that we
-> > will be using TCAM/ACL resources to do something that could have been done with
-> > a simple MAC entry.
-> > 
-> > > Both options avoid HW egress ACLs which your design does not support.
-> > True, but what is wrong with expanding the functionality of the normal
-> > forwarding/MAC operations to allow multiple destinations?
-> > 
-> > It is not an uncommon feature (I just browsed the manual of some common L2
-> > switches and they all has this feature).
-> > 
-> > It seems to fit nicely into the existing user-interface:
-> > 
-> > bridge fdb add    01:21:6C:00:00:01 port eth0
-> > bridge fdb append 01:21:6C:00:00:01 port eth1
-> 
-> Wouldn't it be better to instead extend the MDB entries so that they are
-> either keyed by IP or MAC? I believe FDB should remain as unicast-only.
-
-You might be right, it was not clear to me which of the two would fit the
-purpose best.
-
-From a user-space iproute2 perspective I prefer using the "bridge fdb" command
-as it already supports the needed syntax, and I do not think it will be too
-pretty if we squeeze this into the "bridge mdb" command syntax.
-
-But that does not mean that it need to go into the FDB database in the
-implementation.
-
-Last evening when I looked at it again, I was considering keeping the
-net_bridge_fdb_entry structure as is, and add a new hashtable with the
-following:
-
-struct net_bridge_fdbmc_entry {
-	struct rhash_head		rhnode;
-	struct net_bridge_fdbmc_ports   *dst;
-
-	struct net_bridge_fdb_key	key;
-	struct hlist_node		fdb_node;
-	unsigned char			offloaded:1;
-
-	struct rcu_head			rcu;
-};
-
-If we go with this approach then we can look at the MAC address and see if it is
-a unicast which will cause a lookup in the fdb, l3-multicast (33:33:* or
-01:00:5e:*) which will cause a lookup in the mdb, or finally a fdbmc which will
-need to do a lookup in this new hashtable.
-
-Alternative it would be like this:
-
-struct net_bridge_fdb_entry {
-	struct rhash_head		rhnode;
-	union net_bridge_port_or_list	*dst;
-
-	struct net_bridge_fdb_key	key;
-	struct hlist_node		fdb_node;
-	unsigned char			is_local:1,
-					is_static:1,
-					is_sticky:1,
-					added_by_user:1,
-					added_by_external_learn:1,
-					offloaded:1;
-					multi_dst:1;
-
-	/* write-heavy members should not affect lookups */
-	unsigned long			updated ____cacheline_aligned_in_smp;
-	unsigned long			used;
-
-	struct rcu_head			rcu;
-};
-
-Both solutions should require fairly few changes, and should not cause any
-measurable performance hit.
-
-Making it fit into the net_bridge_mdb_entry seems to be harder.
-
-> As a bonus, existing drivers could benefit from it, as MDB entries are already
-> notified by MAC.
-Not sure I follow. When FDB entries are added, it also generates notification
-events.
-
-> > It seems that it can be added to the existing implementation with out adding
-> > significant complexity.
-> > 
-> > It will be easy to offload in HW.
-> > 
-> > I do not believe that it will be a performance issue, if this is a concern then
-> > we may have to do a bit of benchmarking, or we can make it a configuration
-> > option.
-> > 
-> > Long story short, we (Horatiu and I) learned a lot from the discussion here, and
-> > I think we should try do a new patch with the learning we got. Then it is easier
-> > to see what it actually means to the exiting code, complexity, exiting drivers,
-> > performance, default behavioral, backwards compatibly, and other valid concerns.
-> > 
-> > If the patch is no good, and cannot be fixed, then we will go back and look
-> > further into alternative solutions.
-> Overall, I tend to agree with Nik. I think your use case is too specific
-> to justify the amount of changes you want to make in the bridge driver.
-> We also provided other alternatives. That being said, you're more than
-> welcome to send the patches and we can continue the discussion then.
-Okay, good to know. I'm not sure I agree that the alternative solutions really
-solves the issue this is trying to solve, nor do I agree that this is specific
-to our needs.
-
-But lets take a look at a new patch, and see what is the amount of changes we
-are talking about. Without having the patch it is really hard to know for sure.
-
--- 
-/Allan
-
+> Best regards
+> Uwe
+>
+> On Tue, Jul 30, 2019 at 12:04:47AM +0200, Jernej Škrabec wrote:
+> > Dne ponedeljek, 29. julij 2019 ob 20:51:08 CEST je Uwe Kleine-König
+> > napisal(a):
+> > > On Mon, Jul 29, 2019 at 08:46:25PM +0200, Jernej Škrabec wrote:
+> > > > Dne ponedeljek, 29. julij 2019 ob 20:40:41 CEST je Uwe Kleine-König
+> > > > napisal(a):
+> > > > > On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej Škrabec wrote:
+> > > > > > Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König
+> > > > > > napisal(a):
+> > > > > > > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
+> > > > > > > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
+> > > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > > > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
+> > > > > > > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König
+> > > > > > > > > > napisal(a):
+> > > > > > > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
+> > > > > > > > > > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > > > > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > > > > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
+> > > > > > > > > > > > sun4i_pwm_single_bypass = {>
+> > > > > > > > > > > >
+> > > > > > > > > > > >   .npwm = 1,
+> > > > > > > > > > > >
+> > > > > > > > > > > >  };
+> > > > > > > > > > > >
+> > > > > > > > > > > > +static const struct sun4i_pwm_data
+> > > > > > > > > > > > sun50i_pwm_dual_bypass_clk_rst
+> > > > > > > > > > > > = {
+> > > > > > > > > > > > + .has_bus_clock = true,
+> > > > > > > > > > > > + .has_prescaler_bypass = true,
+> > > > > > > > > > > > + .has_reset = true,
+> > > > > > > > > > > > + .npwm = 2,
+> > > > > > > > > > > > +};
+> > > > > > > > > > > > +
+> > > > > > > > > > > >
+> > > > > > > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
+> > > > > > > > > > > >
+> > > > > > > > > > > >   {
+> > > > > > > > > > > >
+> > > > > > > > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
+> > > > > > > > > > > >
+> > > > > > > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
+> > > > > > > > > > > > sun4i_pwm_dt_ids[] =
+> > > > > > > > > > > > {
+> > > > > > > > > > > >
+> > > > > > > > > > > >   }, {
+> > > > > > > > > > > >
+> > > > > > > > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
+> > > > > > > > > > > >           .data = &sun4i_pwm_single_bypass,
+> > > > > > > > > > > >
+> > > > > > > > > > > > + }, {
+> > > > > > > > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
+> > > > > > > > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
+> > > > > > > > > > >
+> > > > > > > > > > > If you follow my suggestion for the two previous patches,
+>
+> (i.e. use devm_clk_get_optional instead of using devm_clk_get iff the
+> compatible is allwinner,sun50i-h6-pwm; analogous for the reset
+> controller.)
+>
+> > > > > > > > > > > you can just use:
+> > > > > > > > > > >
+> > > > > > > > > > >     compatible = "allwinner,sun50i-h6-pwm", "allwinner,sun5i-a10s-pwm";
+> > > > > > > > > > >
+> > > > > > > > > > > and drop this patch.
+> > > > > > > > > >
+> > > > > > > > > > Maxime found out that it's not compatible with A10s due to difference
+> > > > > > > > > > in bypass bit, but yes, I know what you mean.
+> > > > > > > > > >
+> > > > > > > > > > Since H6 requires reset line and bus clock to be specified, it's not
+> > > > > > > > > > compatible from DT binding side. New yaml based binding must somehow
+> > > > > > > > > > know that in order to be able to validate DT node, so it needs
+> > > > > > > > > > standalone compatible. However, depending on conclusions of other
+> > > > > > > > > > discussions, this new compatible can be associated with already
+> > > > > > > > > > available quirks structure or have it's own.
+> > > > > > > > >
+> > > > > > > > > I cannot follow. You should be able to specify in the binding that the
+> > > > > > > > > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
+> > > > > > > > > without a reset line and bus clock also verifies, but this doesn't
+> > > > > > > > > really hurt (and who knows, maybe the next allwinner chip needs exactly this).
+> > > > > > > >
+> > > > > > > > It is not optional. It will not work if either the clocks or reset controls
+> > > > > > > > are missing. How would these be optional anyway? Either it's connected and
+> > > > > > > > thus required, or it's not and therefore should be omitted from the description.
+> > > > > > >
+> > > > > > > [Just arguing about the clock here, the argumentation is analogous for
+> > > > > > > the reset control.]
+> > > > > > >
+> > > > > > > From the driver's perspective it's optional: There are devices with and
+> > > > > > > without a bus clock. This doesn't mean that you can just ignore this
+> > > > > > > clock if it's specified. It's optional in the sense "If dt doesn't
+> > > > > > > specify it, then assume this is a device that doesn't have it and so you
+> > > > > > > don't need to handle it." but not in the sense "it doesn't matter if
+> > > > > > > you handle it or not.".
+> > > > > > >
+> > > > > > > Other than that I'm on your side. So for example I think it's not
+> > > > > > > optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
+> > > > > > > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
+> > > > > > > because this hides exactly the kind of problem you point out here.
+> > > > > >
+> > > > > > I think there's misunderstanding. I only argued that we can't use
+> > > > > >
+> > > > > > compatible = "allwinner,sun50i-h6-pwm", "allwinner,sun5i-a10s-pwm";
+> > > > > >
+> > > > > > as you suggested and only
+> > > > > >
+> > > > > > compatible = "allwinner,sun50i-h6-pwm";
+> > > > > >
+> > > > > > will work. Not because of driver itself (it can still use _optional()
+> > > > > > variants), but because of DT binding, which should be able to validate H6
+> > > > > > PWM node - reset and bus clock references are required in this case.
+> > > > >
+> > > > > I think I understood. In my eyes there is no need to let validation of
+> > > > > the DT bindings catch a missing "optional" property that is needed on
+> > > > > H6.
+> > > > >
+> > > > > You have to draw the line somewhere which information the driver has
+> > > > > hard-coded and what is only provided by the device tree and just assumed
+> > > > > to be correct by the driver. You argue the driver should know that
+> > > >
+> > > > No, in this thread I argue that DT validation tool, executed by
+> > > >
+> > > > make ARCH=arm64 dtbs_check
+> > > >
+> > > > should catch that. This is not a driver, but DT binding described in YAML.
+> > >
+> > > The argumentation is the same. dtbs_check doesn't notice if the base
+> > > address of your "allwinner,sun50i-h6-pwm" device is wrong. So why should
+> > > it catch a missing reset controller phandle?
+> >
+> > Of course checking actual values of node properties doesn't make sense in
+> > dtbs_check, otherwise we would have million DT bindings. If you have 10 copies
+> > of the same IP core, of course you would use same compatible, but actual
+> > register ranges, interrupts, etc. would be different in DT nodes.
+> >
+> > At this point I would make same argument as were made before, but there is no
+> > point going in circles. I'm interested what have DT maintainers to say.
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-König            |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190730080900.hhxrqun7vk4nsj2h%40pengutronix.de.
