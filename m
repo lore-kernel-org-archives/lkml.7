@@ -2,110 +2,141 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3599C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB12C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E06620679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A06D20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:01:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="L0KSw+K5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZbeCYiF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbfG3W6S (ORCPT
+        id S1726844AbfG3XBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 18:58:18 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34747 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfG3W6S (ORCPT
+        Tue, 30 Jul 2019 19:01:09 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35551 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfG3XBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 18:58:18 -0400
-Received: by mail-oi1-f196.google.com with SMTP id l12so49191919oil.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 15:58:17 -0700 (PDT)
+        Tue, 30 Jul 2019 19:01:08 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s1so24511544pgr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 16:01:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=KRfm4hy/MFFKWXNiJL6XJ0vTMvcV92W3VJ5w2T3yK6g=;
-        b=L0KSw+K5lAXwUtfMvGFW5PkwM8L11L2y2HxjIx8uYFJhZLKHIBlKDAf4psYNcAGptC
-         gXLfJVKL1zNxuKUm06qIPL4NOwBw3rloNIKDInPPfSLNYAljCfQr3UHzq3yxzsdbRCek
-         V7f6gH93h7HkZFYo/FmnRzaaHRLNlz73DVfXhHFr7Zs9FanPepkowJ6YfynVUNrbWXy9
-         d5nkiHQYL/FSrdx7IQZRm6xx+RefyEDTQQvxR5dXyKZEVsmCFUTRAtPvNHN9VPkIyTUP
-         jElCnqkx23aAjsutHRY3h47swJFOeOIrarkF3xA1LqlZZmWJt7TrAExruQIM4oIqX3hz
-         CPMw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QkytYeH7M66nBAoxCQa0bNBGsymk7oY3s7W/ud/aulQ=;
+        b=lZbeCYiFHn/t0t6F+ChT5unZY+5uTZKrCGEloLfqvJgD+wwHI7PM6JvcurR3hXG0Yg
+         FMyzS5zW3wvGb777PQdA0k1hEHTHyqRgLpfFbmW4JVAnjrPaoPAEeXmDM58BkL8XK+hW
+         iCIuaoLH7nMJLLtfhpc0edA6bMMyhCI3DycK/lsZZMyh4E1cxu9gTvcEorjrYA4GRRrq
+         4DN1fYDeJ4v6M16KMwtAs4FJa9BE5ha1Qbku48nNtZiy7QxrvrFzs8ASeloSiz8j6jxq
+         9JU8uwsvKDTAXzHxc8WM3Y2jpnwxZoLmw5yzswesSEUt4z03NbPtksue8thNq0HpmxCN
+         4omw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=KRfm4hy/MFFKWXNiJL6XJ0vTMvcV92W3VJ5w2T3yK6g=;
-        b=ka1nQcn7M1FGWob17w9ziqTPv+V3UNp03kO5KO4+IbvjtEF9uovQpA1o9fbCRkTM9B
-         UpnEij3GUTHSYpM60oEN3F267WydNZU7ugY/9ZTtVY23WuhVB07/6A9UJyt64l5Xtzc4
-         ySmYHBWp+f9xIjbNS26XUNa1HxPO+pygry9vkEXUu6tqPwNDfLJ99vPxaPJKe8gibFUR
-         m7/5jyKysTrUkJ903eOMooK1G/sTwkHAzW3LNDga4QRE5tUO1OezsbCnkh+A298saHA8
-         eIuYq9fLoumU2d8LsidI/qi51zd1tC1gEvP1outlH6XSuYiI6Ct1E94kdmK9LlvPWnxU
-         33dw==
-X-Gm-Message-State: APjAAAWj17ZyTNHGklvhOzCVHey+7QqRt9p9yGPEYJTj52RC14gvleq3
-        rlsGx6W2fMY1tWF2J7XLdxYowJMAsP0=
-X-Google-Smtp-Source: APXvYqwYd9jZsg3WAi0A/1dLmsXwqtOlVeJq5lzjxtkCxX24GZiBqPoOrUl3Ao3GWeR/60TVSnsOyA==
-X-Received: by 2002:aca:b208:: with SMTP id b8mr36981187oif.98.1564527497206;
-        Tue, 30 Jul 2019 15:58:17 -0700 (PDT)
-Received: from localhost ([2600:100e:b005:6ca0:a8bb:e820:e6d3:8809])
-        by smtp.gmail.com with ESMTPSA id b21sm23167935otp.80.2019.07.30.15.58.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QkytYeH7M66nBAoxCQa0bNBGsymk7oY3s7W/ud/aulQ=;
+        b=ACTdwmVAXauDnjyGshZXvrPZ5v8SgMm8J1a5hZWC9TGVShGfxkeA67ZbOkAgUTSuCY
+         cskeP+pN/YHuS3hfJWLGdOuuh8fFZvsniYFAc+dlmw4iZR3EBOFySUn1cnlMz/LrLLG8
+         SxN4e5j3Fi5Bz995Kg5m3nID0ZwEJvYyxTQtLOILgSuubnspdgwvVM4K/SRZXWi8kO8I
+         DoGA+phUv6TBCKFRqNExuytTvyPF/5xtdB79pXhuE4gXeFqm4ksHxnFf3ZbWqok/gGWp
+         PsgWFguJoI5DWIzoAnub6a7pGaCatfV/28oZWoKP+MjbZmTN7zXqiP1r4v41uERYrWTo
+         13/g==
+X-Gm-Message-State: APjAAAXNEJUCNdZ8gATIdbh8r0LSYjQxhiPYJtoP/9g+O1ZxC55qsGuw
+        vrtfsHZ2B+F7IhUK4NJhRHc=
+X-Google-Smtp-Source: APXvYqxZB4H2ozpiUg+eNXM9lA/nk8Bx4kCAQNMkihvOXk6znIkuChUDwYlzk05yBdkdNw5K835/HQ==
+X-Received: by 2002:a62:87c8:: with SMTP id i191mr44314801pfe.133.1564527668085;
+        Tue, 30 Jul 2019 16:01:08 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id q22sm60432615pgh.49.2019.07.30.16.01.07
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 15:58:16 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 15:58:13 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Anup Patel <anup@brainfault.org>
-cc:     Anup Patel <Anup.Patel@wdc.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Alan Kao <alankao@andestech.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Johan Hovold <johan@kernel.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>
-Subject: Re: [PATCH 3/4] RISC-V: Support case insensitive ISA string
- parsing.
-In-Reply-To: <CAAhSdy1pqZP+M27idvfOB8eB8zhPD_7hx9S60FpOmWRHs-R2qg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1907301544560.4874@viisi.sifive.com>
-References: <20190726194638.8068-1-atish.patra@wdc.com> <20190726194638.8068-3-atish.patra@wdc.com> <alpine.DEB.2.21.9999.1907261346560.26670@viisi.sifive.com> <a8a6be2c-2dcb-fe58-2c32-e3baa357819c@wdc.com> <alpine.DEB.2.21.9999.1907261625220.26670@viisi.sifive.com>
- <MN2PR04MB6061790AFE4E0AAA838678028DC30@MN2PR04MB6061.namprd04.prod.outlook.com> <alpine.DEB.2.21.9999.1907270043190.26998@viisi.sifive.com> <CAAhSdy0Eycc0ORSnh6LJeC_D_x9yLOkoc7OkPNuN6qOcZEGVWg@mail.gmail.com> <alpine.DEB.2.21.9999.1907270108420.26998@viisi.sifive.com>
- <CAAhSdy1pqZP+M27idvfOB8eB8zhPD_7hx9S60FpOmWRHs-R2qg@mail.gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Tue, 30 Jul 2019 16:01:07 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm: add cache support for arm64
+Date:   Tue, 30 Jul 2019 15:58:46 -0700
+Message-Id: <20190730225852.30319-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 27 Jul 2019, Anup Patel wrote:
+From: Rob Clark <robdclark@chromium.org>
 
-> On Sat, Jul 27, 2019 at 1:46 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> >
-> > On Sat, 27 Jul 2019, Anup Patel wrote:
-> >
-> > > If your only objection is uppercase letter not agreeing with YMAL 
-> > > schema then why not fix the YMAL schema to have regex for RISC-V ISA 
-> > > string?
-> >
-> > I don't agree with you that the specification compels software to 
-> > accept arbitrary case combinations in the riscv,isa DT string.
-> 
-> DT describes HW and HW follows RISC-V spec.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+Not sure about 32b arm, but at least for aarch64 this is relatively
+easy.  So lets at least enable for arm64.
 
-The RISC-V specification doesn't specify anything about how the DT data is 
-to describe the hardware.
+ drivers/gpu/drm/drm_cache.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
-> Enforcing software choices in DT YMAL schema is not correct approach.
+diff --git a/drivers/gpu/drm/drm_cache.c b/drivers/gpu/drm/drm_cache.c
+index 3bd76e918b5d..90105c637797 100644
+--- a/drivers/gpu/drm/drm_cache.c
++++ b/drivers/gpu/drm/drm_cache.c
+@@ -69,6 +69,14 @@ static void drm_cache_flush_clflush(struct page *pages[],
+ }
+ #endif
+ 
++#if defined(__powerpc__)
++static void __flush_dcache_area(void *addr, size_t len)
++{
++	flush_dcache_range((unsigned long)addr,
++			   (unsigned long)addr + PAGE_SIZE);
++}
++#endif
++
+ /**
+  * drm_clflush_pages - Flush dcache lines of a set of pages.
+  * @pages: List of pages to be flushed.
+@@ -90,7 +98,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
+ 	if (wbinvd_on_all_cpus())
+ 		pr_err("Timed out waiting for cache flush\n");
+ 
+-#elif defined(__powerpc__)
++#elif defined(__powerpc__) || defined(CONFIG_ARM64)
+ 	unsigned long i;
+ 	for (i = 0; i < num_pages; i++) {
+ 		struct page *page = pages[i];
+@@ -100,8 +108,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
+ 			continue;
+ 
+ 		page_virtual = kmap_atomic(page);
+-		flush_dcache_range((unsigned long)page_virtual,
+-				   (unsigned long)page_virtual + PAGE_SIZE);
++		__flush_dcache_area(page_virtual, PAGE_SIZE);
+ 		kunmap_atomic(page_virtual);
+ 	}
+ #else
+@@ -135,6 +142,13 @@ drm_clflush_sg(struct sg_table *st)
+ 
+ 	if (wbinvd_on_all_cpus())
+ 		pr_err("Timed out waiting for cache flush\n");
++#elif defined(CONFIG_ARM64)
++	struct sg_page_iter sg_iter;
++
++	for_each_sg_page(st->sgl, &sg_iter, st->nents, 0) {
++		struct page *p = sg_page_iter_page(&sg_iter);
++		drm_clflush_pages(&p, 1);
++	}
+ #else
+ 	pr_err("Architecture has no drm_cache.c support\n");
+ 	WARN_ON_ONCE(1);
+-- 
+2.21.0
 
-That's the point of the DT YAML schemas.
-
-
-- Paul
