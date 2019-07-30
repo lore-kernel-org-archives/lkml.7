@@ -2,95 +2,184 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A706C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0153C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217612087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832A22087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:07:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BK1+NHtg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387542AbfG3VFv (ORCPT
+        id S2387564AbfG3VHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 17:05:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42060 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387515AbfG3VFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 17:05:51 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4E9BF308AA11;
-        Tue, 30 Jul 2019 21:05:51 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7AA7E60BEC;
-        Tue, 30 Jul 2019 21:05:49 +0000 (UTC)
-Subject: Re: [PATCH v3] sched/core: Don't use dying mm as active_mm of
- kthreads
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Rik van Riel <riel@surriel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>
-References: <20190729210728.21634-1-longman@redhat.com>
- <ec9effc07a94b28ecf364de40dee183bcfb146fc.camel@surriel.com>
- <3e2ff4c9-c51f-8512-5051-5841131f4acb@redhat.com>
- <20190730072439.GL9330@dhcp22.suse.cz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <31cea85f-8d8e-a701-db75-fe1ec67d6c29@redhat.com>
-Date:   Tue, 30 Jul 2019 17:05:48 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 30 Jul 2019 17:07:55 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35059 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387511AbfG3VHy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 17:07:54 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s1so24387741pgr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 14:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TQmtlWm+E4Ht8KJWS3CIc6OxhoEnlgrUfo3WZfK6Cgk=;
+        b=BK1+NHtgcxXYd9svHIXl4oaEdad9kLD6Mbaabj6IKd0mKnQP6iz6av6uLftJ2EfIp0
+         IHgcwqlVAm+LY5PT9XIJCbo8J+roHxXbYtrRLXGVk4QUPtLMvLyx3EfA6kqObonleANQ
+         62sPbi3KvkPvCNl2xCTmsiLcUj1NUjRd9goIQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TQmtlWm+E4Ht8KJWS3CIc6OxhoEnlgrUfo3WZfK6Cgk=;
+        b=FKJlsj1JjW8tzDX2nGXfpoyDdK5UASmQ659yH+E7IVPmQNINFi3nI1vCKgCZONQWcZ
+         kNrtwi2BUYjHwdSK72TnhYO3KIxPEPLX3IzyWaoJDok6otRN9fqhjeB6qd0k+C8Gtvr4
+         UWanyJpzWv8SeVZjausVcLJh+itkn6Mnv5gWLatwLGZWNyCeSWmwZ3pPsiE2fX7ebrdX
+         aNs8Ekk+QK1kndXpxoK4or/Oleu6/0SzJzfJqzb8zBp/6TZCl5ROUV+q49b7x53Yhybf
+         gErOo6/yxBJkd3D240vaZQ9BdUqoBl2W1QCiZ9OJzYvoDrB6/GJu1h+KGDJXtrBzAhWu
+         9uIQ==
+X-Gm-Message-State: APjAAAWg98mM4w/U4VL6gZcHCVEd63IR0zRgU2zr/rLY7iOcRfPUJ9IQ
+        Lh7nvWQJBJQF6QsJKCW7lEyb5g==
+X-Google-Smtp-Source: APXvYqyrYFXubXrdWWyteW8t45F3qq8NknERY3imh1RniTNQgWLo48CyG109AH2gQQ7FnJTccgLJCg==
+X-Received: by 2002:a17:90a:8b98:: with SMTP id z24mr120053812pjn.77.1564520873658;
+        Tue, 30 Jul 2019 14:07:53 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id q1sm77273595pfg.84.2019.07.30.14.07.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 14:07:52 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        Tri Vo <trong@android.com>, linux-doc@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH] idr: Document calling context for IDA APIs mustn't use locks
+Date:   Tue, 30 Jul 2019 14:07:52 -0700
+Message-Id: <20190730210752.157700-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 MIME-Version: 1.0
-In-Reply-To: <20190730072439.GL9330@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 30 Jul 2019 21:05:51 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/19 3:24 AM, Michal Hocko wrote:
-> On Mon 29-07-19 17:42:20, Waiman Long wrote:
->> On 7/29/19 5:21 PM, Rik van Riel wrote:
->>> On Mon, 2019-07-29 at 17:07 -0400, Waiman Long wrote:
->>>> It was found that a dying mm_struct where the owning task has exited
->>>> can stay on as active_mm of kernel threads as long as no other user
->>>> tasks run on those CPUs that use it as active_mm. This prolongs the
->>>> life time of dying mm holding up some resources that cannot be freed
->>>> on a mostly idle system.
->>> On what kernels does this happen?
->>>
->>> Don't we explicitly flush all lazy TLB CPUs at exit
->>> time, when we are about to free page tables?
->> There are still a couple of calls that will be done until mm_count
->> reaches 0:
->>
->> - mm_free_pgd(mm);
->> - destroy_context(mm);
->> - mmu_notifier_mm_destroy(mm);
->> - check_mm(mm);
->> - put_user_ns(mm->user_ns);
->>
->> These are not big items, but holding it off for a long time is still not
->> a good thing.
-> It would be helpful to give a ball park estimation of how much that
-> actually is. If we are talking about few pages worth of pages per idle
-> cpu in the worst case then I am not sure we want to find an elaborate
-> way around that. We are quite likely having more in per-cpu caches in
-> different subsystems already. It is also quite likely that large
-> machines with many CPUs will have a lot of memory as well.
+The documentation for these functions indicates that callers don't need
+to hold a lock while calling them, but that documentation is only in one
+place under "IDA Usage". Let's state the same information on each IDA
+function so that it's clear what the calling context requires.
+Furthermore, let's document ida_simple_get() with the same information
+so that callers know how this API works.
 
-I think they are relatively small. So I am not going to pursue it
-further at this point.
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Tri Vo <trong@android.com>
+Cc: linux-doc@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
 
-Cheers,
-Longman
+See Greg's comment[1] for the reason why this patch is created.
+
+[1] https://lkml.kernel.org/r/20190730064657.GA1213@kroah.com
+
+ include/linux/idr.h | 23 ++++++++++++++++++++---
+ lib/idr.c           |  9 ++++++---
+ 2 files changed, 26 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/idr.h b/include/linux/idr.h
+index 4ec8986e5dfb..b591ecbba3f4 100644
+--- a/include/linux/idr.h
++++ b/include/linux/idr.h
+@@ -263,7 +263,8 @@ void ida_destroy(struct ida *ida);
+  *
+  * Allocate an ID between 0 and %INT_MAX, inclusive.
+  *
+- * Context: Any context.
++ * Context: Any context. It is safe to call this function without
++ * synchronisation in your code.
+  * Return: The allocated ID, or %-ENOMEM if memory could not be allocated,
+  * or %-ENOSPC if there are no free IDs.
+  */
+@@ -280,7 +281,8 @@ static inline int ida_alloc(struct ida *ida, gfp_t gfp)
+  *
+  * Allocate an ID between @min and %INT_MAX, inclusive.
+  *
+- * Context: Any context.
++ * Context: Any context. It is safe to call this function without
++ * synchronisation in your code.
+  * Return: The allocated ID, or %-ENOMEM if memory could not be allocated,
+  * or %-ENOSPC if there are no free IDs.
+  */
+@@ -297,7 +299,8 @@ static inline int ida_alloc_min(struct ida *ida, unsigned int min, gfp_t gfp)
+  *
+  * Allocate an ID between 0 and @max, inclusive.
+  *
+- * Context: Any context.
++ * Context: Any context. It is safe to call this function without
++ * synchronisation in your code.
+  * Return: The allocated ID, or %-ENOMEM if memory could not be allocated,
+  * or %-ENOSPC if there are no free IDs.
+  */
+@@ -311,6 +314,20 @@ static inline void ida_init(struct ida *ida)
+ 	xa_init_flags(&ida->xa, IDA_INIT_FLAGS);
+ }
+ 
++/**
++ * ida_simple_get() - Allocate an unused ID between (start, end].
++ * @ida: IDA handle.
++ * @start: ID to start from (inclusive)
++ * @end: ID to stop at (exclusive). Use 0 to indicate %INT_MAX.
++ * @gfp: Memory allocation flags.
++ *
++ * Allocate an ID between (start, end].
++ *
++ * Context: Any context. It is safe to call this function without
++ * synchronisation in your code.
++ * Return: The allocated ID, or %-ENOMEM if memory could not be allocated,
++ * or %-ENOSPC if there are no free IDs.
++ */
+ #define ida_simple_get(ida, start, end, gfp)	\
+ 			ida_alloc_range(ida, start, (end) - 1, gfp)
+ #define ida_simple_remove(ida, id)	ida_free(ida, id)
+diff --git a/lib/idr.c b/lib/idr.c
+index 66a374892482..e8a5f47c0c78 100644
+--- a/lib/idr.c
++++ b/lib/idr.c
+@@ -381,7 +381,8 @@ EXPORT_SYMBOL(idr_replace);
+  * Allocate an ID between @min and @max, inclusive.  The allocated ID will
+  * not exceed %INT_MAX, even if @max is larger.
+  *
+- * Context: Any context.
++ * Context: Any context. It is safe to call this function without
++ * synchronisation in your code.
+  * Return: The allocated ID, or %-ENOMEM if memory could not be allocated,
+  * or %-ENOSPC if there are no free IDs.
+  */
+@@ -488,7 +489,8 @@ EXPORT_SYMBOL(ida_alloc_range);
+  * @ida: IDA handle.
+  * @id: Previously allocated ID.
+  *
+- * Context: Any context.
++ * Context: Any context. It is safe to call this function without
++ * synchronisation in your code.
+  */
+ void ida_free(struct ida *ida, unsigned int id)
+ {
+@@ -540,7 +542,8 @@ EXPORT_SYMBOL(ida_free);
+  * or freed.  If the IDA is already empty, there is no need to call this
+  * function.
+  *
+- * Context: Any context.
++ * Context: Any context. It is safe to call this function without
++ * synchronisation in your code.
+  */
+ void ida_destroy(struct ida *ida)
+ {
+-- 
+Sent by a computer through tubes
 
