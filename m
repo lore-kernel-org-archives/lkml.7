@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4583FC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFD7C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDF421726
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8552B21726
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6RjBpHb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEiA+6DX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730933AbfG3Buo (ORCPT
+        id S1730944AbfG3Bur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:50:44 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39276 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730879AbfG3Bue (ORCPT
+        Mon, 29 Jul 2019 21:50:47 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40770 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730848AbfG3Bug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:50:34 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so28260793pls.6;
-        Mon, 29 Jul 2019 18:50:33 -0700 (PDT)
+        Mon, 29 Jul 2019 21:50:36 -0400
+Received: by mail-pf1-f195.google.com with SMTP id p184so28939008pfp.7;
+        Mon, 29 Jul 2019 18:50:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Q65KxpxSvZWWFfdRJC2De6rWD4axz3O/fUFw710DcxY=;
-        b=o6RjBpHbSKI6NJ/u5O4m0uEaVg9AQ64I8+mF+jnHsHBxSHRwcniiguLAnigIBOxPKt
-         ZbX5wAEFE2LXx3Gx9JBT7C+MaKtmtwRG80CTUTT/QloCY4i/Az2UA9zjFp2O5wW5/m4k
-         QujryVdAfNVofLgvDZHUQnwSvGD5btbK7RdUyKPh9fi+b4gT8tDdUIsWQHZdcJrEmOxH
-         BhgEE9a/hDUTak2wkcG8vAvVfV2aSlyTWgecQEaqqV1e5ctIdLJb/d88nuuorGukwz9f
-         WxvBi9FNi/iTpqpGSQg83iExL4Wxzb3rAyuD2/Kyy/kYNRtVnYCAAQtPVHu/Ye1q2X2f
-         quWA==
+        bh=Yus3UESewstQeP6xBqn0c8tU9AnJsLA523aHx91as5s=;
+        b=SEiA+6DXUY8nU4JxxRcvILAhfCyQ812nRVCkzqt6XOkyQhJUxSD9nZOCDqD09aXxnP
+         8R9W+2OaX65xIoHL7hc89glmAE+6JmpxEhamDtnMtuxBqI41Ve4dY8vwevEuvYidaP5H
+         dVdhr9c2V45rbKJF8LjovcLCNUc8ix+/hS+hN8isukEoIIjSR6KxuQvBwB/pOAOQa7g7
+         kypBuCvFNYFZV8nOxcjFPButxRxD4V3m/kwIF0gdHPMDjcCD+eluBD7penp75YA/GaeC
+         3fTE8s3nUCTR/b403KpScgWpdbP11kRswyt/ElBYo5dd1JjF8qR7vzPU4iPwKETBehhK
+         nsxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Q65KxpxSvZWWFfdRJC2De6rWD4axz3O/fUFw710DcxY=;
-        b=ODA0RwOrGxlq2ujgZ5HO2QdBzJyujgjylflOxXyXxEuOBkG8dqHEePpv1c4uDk1kp1
-         C1YeEts1IDfG5GkYN22v3+gvl1mjt5nwLqQGjVycFNJYhOyYtuTS62gsJo9Qwvxqldzu
-         p6qJrhOSowtfRMe/M2x5RqFsDikFP2dWIDrzG5dJ6eNpyci8+tDoa+S58LRbEtfFYVk2
-         CeRJreNokNdrgYmLQjaYS7bWtZb5VeuFFjwN3jk9WELZK1rsorFXA9SE9u2WvtJ4g0lt
-         4AXkbLKuZDTHjjNzUcwJqqwFWIJARgT7vWdRfkNfy1T7DTPSZ+i+WpuQOemEobyGbHaU
-         5m1Q==
-X-Gm-Message-State: APjAAAWV++10b30UPiCAWxQ3PACT3bC/lk54FvKeLu/eakRybt22DSHD
-        r08b05qRfLv5GhSIVOsznHnbeOBSf94=
-X-Google-Smtp-Source: APXvYqyEpkzMvJTCDY9XVuVH5i9haT6A0BQ+SZpJBIVq1q/uWQbyyODfynIElCuCYC8tz3iQJ6G77Q==
-X-Received: by 2002:a17:902:e20c:: with SMTP id ce12mr116675854plb.130.1564451433161;
-        Mon, 29 Jul 2019 18:50:33 -0700 (PDT)
+        bh=Yus3UESewstQeP6xBqn0c8tU9AnJsLA523aHx91as5s=;
+        b=OW1o94OoznGeDYbHFbc5NU0/wbNt7hYTuZGRryDjiinG5P0Uw+h4qnJ09f6JBGS/sS
+         /UqPfoGYNsOlCrToU6VnUg5nhMGV2bUjZq2qZLNqrYPPcJwxkSnIa3wrMmBbnx1701+0
+         x8GOVRDp9fi8T+ku5njVkpHJoCliOU1nwVX0dTj38LyKpk9MTpfynLSSB09Q3WdxWlqQ
+         GqRO69RN/uu7JRQg+eSTAPPd1DsHU8VhYQE6m5jp4aBJEstHoOeJ1eZWoUDoSwCdioRB
+         Zom5FQz1Uj5/bSlXAePctzhxMAKBvzbrWFuuzCja9SavJC8c90UBlY967Rf6BjHMan6K
+         3YfQ==
+X-Gm-Message-State: APjAAAWaY3CfyUfnc+E/a91bShwRWttqaBvN4AJVw7FRzCLLXnx8Oe7a
+        F2XVUZKTK0YvMlghHIszK8M=
+X-Google-Smtp-Source: APXvYqy5JQbCWDUYQpBFr2nhGCvc2pEAyEn23IjvOJzC/OFOcCnF/y/pvQmApBMVM5vLDLwlxUTQbA==
+X-Received: by 2002:a62:27c2:: with SMTP id n185mr30133871pfn.79.1564451435056;
+        Mon, 29 Jul 2019 18:50:35 -0700 (PDT)
 Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.50.32
+        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.50.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 18:50:32 -0700 (PDT)
+        Mon, 29 Jul 2019 18:50:34 -0700 (PDT)
 From:   Deepa Dinamani <deepa.kernel@gmail.com>
 To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, arnd@arndb.de,
-        y2038@lists.linaro.org, hirofumi@mail.parknet.co.jp
-Subject: [PATCH 12/20] fs: fat: Initialize filesystem timestamp ranges
-Date:   Mon, 29 Jul 2019 18:49:16 -0700
-Message-Id: <20190730014924.2193-13-deepa.kernel@gmail.com>
+        y2038@lists.linaro.org, hch@infradead.org
+Subject: [PATCH 14/20] fs: sysv: Initialize filesystem timestamp ranges
+Date:   Mon, 29 Jul 2019 18:49:18 -0700
+Message-Id: <20190730014924.2193-15-deepa.kernel@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190730014924.2193-1-deepa.kernel@gmail.com>
 References: <20190730014924.2193-1-deepa.kernel@gmail.com>
@@ -75,53 +75,35 @@ Fill in the appropriate limits to avoid inconsistencies
 in the vfs cached inode times when timestamps are
 outside the permitted range.
 
-Some FAT variants indicate that the years after 2099 are not supported.
-Since commit 7decd1cb0305 ("fat: Fix and cleanup timestamp conversion"),
-we support the full range of years that can be represented, up to 2107.
-
 Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: hirofumi@mail.parknet.co.jp
+Cc: hch@infradead.org
 ---
- fs/fat/inode.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ fs/sysv/super.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/fat/inode.c b/fs/fat/inode.c
-index 05689198f5af..5f04c5c810fb 100644
---- a/fs/fat/inode.c
-+++ b/fs/fat/inode.c
-@@ -31,6 +31,11 @@
+diff --git a/fs/sysv/super.c b/fs/sysv/super.c
+index d788b1daa7eb..cc8e2ed155c8 100644
+--- a/fs/sysv/super.c
++++ b/fs/sysv/super.c
+@@ -368,7 +368,8 @@ static int sysv_fill_super(struct super_block *sb, void *data, int silent)
+ 	sbi->s_block_base = 0;
+ 	mutex_init(&sbi->s_lock);
+ 	sb->s_fs_info = sbi;
+-
++	sb->s_time_min = 0;
++	sb->s_time_max = U32_MAX;
+ 	sb_set_blocksize(sb, BLOCK_SIZE);
  
- #define KB_IN_SECTORS 2
+ 	for (i = 0; i < ARRAY_SIZE(flavours) && !size; i++) {
+@@ -487,6 +488,8 @@ static int v7_fill_super(struct super_block *sb, void *data, int silent)
+ 	sbi->s_type = FSTYPE_V7;
+ 	mutex_init(&sbi->s_lock);
+ 	sb->s_fs_info = sbi;
++	sb->s_time_min = 0;
++	sb->s_time_max = U32_MAX;
+ 	
+ 	sb_set_blocksize(sb, 512);
  
-+/* DOS dates from 1980/1/1 through 2107/12/31 */
-+#define FAT_DATE_MIN (0<<9 | 1<<5 | 1)
-+#define FAT_DATE_MAX (127<<9 | 12<<5 | 31)
-+#define FAT_TIME_MAX (23<<11 | 59<<5 | 29)
-+
- /*
-  * A deserialized copy of the on-disk structure laid out in struct
-  * fat_boot_sector.
-@@ -1605,6 +1610,7 @@ int fat_fill_super(struct super_block *sb, void *data, int silent, int isvfat,
- 	int debug;
- 	long error;
- 	char buf[50];
-+	struct timespec64 ts;
- 
- 	/*
- 	 * GFP_KERNEL is ok here, because while we do hold the
-@@ -1698,6 +1704,12 @@ int fat_fill_super(struct super_block *sb, void *data, int silent, int isvfat,
- 	sbi->free_clus_valid = 0;
- 	sbi->prev_free = FAT_START_ENT;
- 	sb->s_maxbytes = 0xffffffff;
-+	fat_time_fat2unix(sbi, &ts, 0, cpu_to_le16(FAT_DATE_MIN), 0);
-+	sb->s_time_min = ts.tv_sec;
-+
-+	fat_time_fat2unix(sbi, &ts, cpu_to_le16(FAT_TIME_MAX),
-+			  cpu_to_le16(FAT_DATE_MAX), 0);
-+	sb->s_time_max = ts.tv_sec;
- 
- 	if (!sbi->fat_length && bpb.fat32_length) {
- 		struct fat_boot_fsinfo *fsinfo;
 -- 
 2.17.1
 
