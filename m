@@ -2,122 +2,92 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2225C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E7BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D77206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DAB216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:12:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DYsUPdWe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eDldZPKC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729279AbfG3RMk (ORCPT
+        id S1729589AbfG3RMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:12:40 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45081 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728171AbfG3RMk (ORCPT
+        Tue, 30 Jul 2019 13:12:50 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38952 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfG3RMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:12:40 -0400
-Received: by mail-io1-f68.google.com with SMTP id g20so129837853ioc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 10:12:39 -0700 (PDT)
+        Tue, 30 Jul 2019 13:12:49 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b7so29193807pls.6;
+        Tue, 30 Jul 2019 10:12:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uuAqgyT6yUGUSgvAqjMSwXgUBYtT9/ywKvmMd+QhrUc=;
-        b=DYsUPdWeuQrPbbz9oLqVvUmGB+DaxrosWoXWRGuCdXj+qtefg3ZZspGjqhJTixu63l
-         rkrIUmmRWFN399cgEvl/4HAUWOL8XRFBm8sulgIyl6opVRvEBVud8kS6Ru7IhTB8yFP/
-         Y7fkABV2R0pcejAjxhiUnk55iWM07b6H6XPR7PloZWZUSuxfyoH09p1pH/fQY8UvI1L4
-         NHG4JghhOEzWWouLO9eBzrWUG2OU0UtrbGMbxJBPzp20mMXyNrPo3my1rmD3Bi2zXLON
-         vbmefLdM/DyIPZKkqV5y5TTN5/kG7wsOSiRADjHifnjunaB6ro+Ww1c3pbzTi/pWpj7I
-         6iUg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AgS4ynwzpDjtajjWiM+sdCsk6/EASz43HKfRtrvW7tE=;
+        b=eDldZPKC31mSktAn9ciKe8sqvOTKt3/jHQeCn69PY+dRj1L6chlFIXBxNLCZm39Oth
+         Z44bFNepTXBwjKJlHJLeXfIJtz0fmZPr3HeYtwyybktAt/J/xkij3avn6rLpcZ67dZ46
+         uO/mKFCo56+2mbKwFjD8jR743Qg1G8v3YQX56tQKjOnQW4AycxDTJo6RH4rOesU5WU5j
+         Za1/Il63NNYYo9/35jNgAVSnVvQSDDRMcFXFc1tKMQLWtL/51vbAep06xJZSNmZ7uifA
+         c+ZIxorOaVIDRX65sq+/cawTtvUHQWKuvQLoRAuWCsMm5rL8Gg/60FWv3ZcJKTYeqbdx
+         6yDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uuAqgyT6yUGUSgvAqjMSwXgUBYtT9/ywKvmMd+QhrUc=;
-        b=ovRbOFtR5UcRx943fVYVWoZyLP5T3+ogpU+orN5ZIDKamv3gvYqbvvkn2vRpwGk/sB
-         fgXf2sYEMpcSh9Candjy257gR7TrNeeQXvda4YDvAGOMSgrt6xtNFPOh0WENc3hX50wI
-         OcX2K6aoSdCqdc31lNT66zyTKcK391nEYJlGMfR9+2HuRJMkhycnlNv7obM+WIuNkLZF
-         etqqT5H4trNDIZ9kLQ397RSZR2SmVNQteR5Mw9H92UuVRFtFMrkeWhKnkKXndINmyly/
-         1hKscA9He5jPDTW5t2hcXnm4TbX9UtYH2hN7KJvftWzviinfm0gJLVRKcHF1pzijD3rc
-         OtsA==
-X-Gm-Message-State: APjAAAUPY+OW6SwlLlXddDvKZphGN8HUT5eYXiuhCcU52OqAAllOKaJP
-        9bv7YNtctoGFune3GCE4wKhso3MM5WrkuIRVKGQXEQ==
-X-Google-Smtp-Source: APXvYqy58T24UQZphReS7BNOZhjEUh5NvaXraVCRspRWDO98XJTHfekYk3nbBfMR4/vvpVuKc0QKQ4XDhBmtNHGd1K4=
-X-Received: by 2002:a6b:2c96:: with SMTP id s144mr106481800ios.57.1564506759148;
- Tue, 30 Jul 2019 10:12:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AgS4ynwzpDjtajjWiM+sdCsk6/EASz43HKfRtrvW7tE=;
+        b=UYZD7Jvffyw0GclJwTsk6bFRS1kllvwD+Q0CHs4gg6pTydfcGSdFP/yty1YOyn2ya+
+         EnULxlFTS3oytXV+6NOmmC/GLOHdwrtFIBwBxz55tpRurwHoxMUfLfWF53rqplVIaK7K
+         lO9kyW1iBldHDH8K+lQr8Zs3umsKgUd/5lNaw98aV7qfz+P5Ck7tfOnwX880uF9j6oos
+         2Dc+I1WD+nfZ9WN9k2QZtUBJtpTTYhCBp0Ka5MvGKpi50Am9jkjG2CV0wtRT+16GdSjO
+         0lVxb1XID4S0l/flv3VfGyTriTUEbM8zjLOQLXqS4hFZbgsYqZq5tVr+N5z3slTgmRmd
+         1G5g==
+X-Gm-Message-State: APjAAAU3ktOIW4nHU8z1oXdBb0yIa8P9hBILpKaapGGmdRinrZbwmMUU
+        DQ2ZujikHU9FDyylfkKh+fc=
+X-Google-Smtp-Source: APXvYqxkeg1kov+b6Jk2q5IzqV3W/CHgXCi6ZltPwHGrICXAnXgUx8aChbb5lWYuzFKYIRAfA9W7+w==
+X-Received: by 2002:a17:902:e287:: with SMTP id cf7mr115326891plb.32.1564506769087;
+        Tue, 30 Jul 2019 10:12:49 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id e10sm67474212pfi.173.2019.07.30.10.12.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 10:12:48 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 10:12:46 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Hubert Feurstein <h.feurstein@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH 4/4] net: dsa: mv88e6xxx: add PTP support for MV88E6250
+ family
+Message-ID: <20190730171246.GB1251@localhost>
+References: <20190730100429.32479-1-h.feurstein@gmail.com>
+ <20190730100429.32479-5-h.feurstein@gmail.com>
+ <20190730160032.GA1251@localhost>
+ <CAFfN3gUCqGuC7WB_UjYYNt+VWGfEBsdfgvPBqxoJi_xitH=yog@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190729170035.GB26214@xps15> <20190730093733.31861-1-suzuki.poulose@arm.com>
-In-Reply-To: <20190730093733.31861-1-suzuki.poulose@arm.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Tue, 30 Jul 2019 11:12:28 -0600
-Message-ID: <CANLsYkxN+SqZwEueL06agr1ppASKsf94fsU9Mw0LwOK1qOwh5Q@mail.gmail.com>
-Subject: Re: [PATCH 2/5] [UPDATED] coresight: Convert pr_warn to dev_warn for
- obsolete bindings
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFfN3gUCqGuC7WB_UjYYNt+VWGfEBsdfgvPBqxoJi_xitH=yog@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019 at 03:37, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> We warn the users of obsolete bindings in the DT for coresight replicator
-> and funnel drivers. However we use pr_warn_once() which doesn't give a clue
-> about which device it is bound to. Let us use dev_warn_once() to give the
-> context.
->
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->
-> Changes since previous version:
->  - Update replicator driver too.
-> ---
->  drivers/hwtracing/coresight/coresight-funnel.c     | 2 +-
->  drivers/hwtracing/coresight/coresight-replicator.c | 3 ++-
->  2 files changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
-> index fa97cb9ab4f9..84ca30f4e5ec 100644
-> --- a/drivers/hwtracing/coresight/coresight-funnel.c
-> +++ b/drivers/hwtracing/coresight/coresight-funnel.c
-> @@ -192,7 +192,7 @@ static int funnel_probe(struct device *dev, struct resource *res)
->
->         if (is_of_node(dev_fwnode(dev)) &&
->             of_device_is_compatible(dev->of_node, "arm,coresight-funnel"))
-> -               pr_warn_once("Uses OBSOLETE CoreSight funnel binding\n");
-> +               dev_warn_once(dev, "Uses OBSOLETE CoreSight funnel binding\n");
->
->         desc.name = coresight_alloc_device_name(&funnel_devs, dev);
->         if (!desc.name)
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-> index b7d6d59d56db..b29ba640eb25 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -184,7 +184,8 @@ static int replicator_probe(struct device *dev, struct resource *res)
->
->         if (is_of_node(dev_fwnode(dev)) &&
->             of_device_is_compatible(dev->of_node, "arm,coresight-replicator"))
-> -               pr_warn_once("Uses OBSOLETE CoreSight replicator binding\n");
-> +               dev_warn_once(dev,
-> +                             "Uses OBSOLETE CoreSight replicator binding\n");
+On Tue, Jul 30, 2019 at 06:20:00PM +0200, Hubert Feurstein wrote:
+> > Please don't re-write this logic.  It is written like that for a reason.
+> I used the sja1105_ptp.c as a reference. So it is also wrong there.
 
-Applied - thanks
-Mathieu
+I'll let that driver's author worry about that.
 
->
->         desc.name = coresight_alloc_device_name(&replicator_devs, dev);
->         if (!desc.name)
-> --
-> 2.21.0
->
+Thanks,
+Richard
+
