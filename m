@@ -2,81 +2,176 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A755C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A89C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D3A205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC33D2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:52:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="s9tQPhZI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbfG3Xs3 (ORCPT
+        id S1727958AbfG3XwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 19:48:29 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:59543 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726096AbfG3Xs3 (ORCPT
+        Tue, 30 Jul 2019 19:52:16 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.114]:21445 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726798AbfG3XwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 19:48:29 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id D6D2543FD26;
-        Wed, 31 Jul 2019 09:48:24 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hsbps-0002Ap-Ua; Wed, 31 Jul 2019 09:47:16 +1000
-Date:   Wed, 31 Jul 2019 09:47:16 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Andreas Dilger <adilger@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>
-Subject: Re: [PATCH] ext4: Fix deadlock on page reclaim
-Message-ID: <20190730234716.GY7689@dread.disaster.area>
-References: <20190725093358.30679-1-damien.lemoal@wdc.com>
- <20190725115442.GA15733@infradead.org>
- <20190726224423.GE7777@dread.disaster.area>
- <20190726225508.GA13729@mit.edu>
- <BYAPR04MB58162929012135E47C68923AE7C30@BYAPR04MB5816.namprd04.prod.outlook.com>
- <3D2360FA-AD48-48AE-B1CE-D1CF58C1B8AB@dilger.ca>
- <BYAPR04MB5816BD641DF55A93986DF826E7DC0@BYAPR04MB5816.namprd04.prod.outlook.com>
+        Tue, 30 Jul 2019 19:52:16 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 8E6BE12D34
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 18:52:14 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id sbughepWddnCesbugh7yiC; Tue, 30 Jul 2019 18:52:14 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/ukpMDk0wz5CKxDvTagctdZtNe0/IpirBbr6dKugnM8=; b=s9tQPhZIjt4WV11f3iLv3viKaM
+        3bhni4I9Xcealg6Ws/572HxaDn4LeG4l5N+qESUHYUtLAEv6BGzvULAHVBIJkPdMXrHmAWDNMtkOr
+        6IqULw1YzDY2h5m3Ygx6YW0Pf1NCkJrrBOAmCPywN8Gx8UErb+HJyMQAUMS+9YIC1uZkcoUmZkgxd
+        9lPEpeu2Xg8KOrvQtjNgk3COVcXO5aDhw/IpXXLQ4wR0Tx2873vJrgrRv8pbMl7scO6mNWz0BiqNs
+        yA1JADgLSc+LCBtcDirWfqOpU8Ehy8IvJfcMzvbY6mLoqVnaQCHscweUnLaetUzO4UIY8XIUcBMKQ
+        auXcd++w==;
+Received: from [187.192.11.120] (port=58536 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hsbug-002CWg-56; Tue, 30 Jul 2019 18:52:14 -0500
+To:     Tony Luck <tony.luck@intel.com>, Doug Ledford <dledford@redhat.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190730202407.31046-1-tony.luck@intel.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] IB/core: Add mitigation for Spectre V1
+Message-ID: <95f5cf70-1a1d-f48c-efac-f389360f585e@embeddedor.com>
+Date:   Tue, 30 Jul 2019 18:52:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR04MB5816BD641DF55A93986DF826E7DC0@BYAPR04MB5816.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=7-415B0cAAAA:8 a=csMc22W9G3xQcTkcgCcA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190730202407.31046-1-tony.luck@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hsbug-002CWg-56
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:58536
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 02:06:33AM +0000, Damien Le Moal wrote:
-> If we had a pread_nofs()/pwrite_nofs(), that would work. Or we could define a
-> RWF_NORECLAIM flag for pwritev2()/preadv2(). This last one could actually be the
-> cleanest approach.
 
-Clean, yes, but I'm not sure we want to expose kernel memory reclaim
-capabilities to userspace... It would be misleading, too, because we
-still want to allow reclaim to occur, just not have reclaim recurse
-into other filesystems....
 
-Cheers,
+On 7/30/19 3:24 PM, Tony Luck wrote:
+> Some processors may mispredict an array bounds check and
+> speculatively access memory that they should not. With
+> a user supplied array index we like to play things safe
+> by masking the value with the array size before it is
+> used as an index.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+> 
+> [I don't have h/w, so just compile tested]
+> 
+>  drivers/infiniband/core/user_mad.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
+> index 9f8a48016b41..fdce254e4f65 100644
+> --- a/drivers/infiniband/core/user_mad.c
+> +++ b/drivers/infiniband/core/user_mad.c
+> @@ -49,6 +49,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/semaphore.h>
+>  #include <linux/slab.h>
+> +#include <linux/nospec.h>
+>  
+>  #include <linux/uaccess.h>
+>  
+> @@ -888,6 +889,7 @@ static int ib_umad_unreg_agent(struct ib_umad_file *file, u32 __user *arg)
+>  	mutex_lock(&file->port->file_mutex);
+>  	mutex_lock(&file->mutex);
+>  
+> +	id = array_index_nospec(id, IB_UMAD_MAX_AGENTS);
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+This is wrong. This prevents the below condition id >= IB_UMAD_MAX_AGENTS
+from ever being true. And I don't think this is what you want.
+
+>  	if (id >= IB_UMAD_MAX_AGENTS || !__get_agent(file, id)) {
+>  		ret = -EINVAL;
+>  		goto out;
+> 
+
+--
+Gustavo
