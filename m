@@ -2,144 +2,127 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9317C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C77C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97BD920693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4792087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qaxgPyuH"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="M54UzvXv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfG3Ux0 (ORCPT
+        id S1728537AbfG3Uxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:53:26 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44578 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbfG3Ux0 (ORCPT
+        Tue, 30 Jul 2019 16:53:30 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34201 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfG3Ux2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:53:26 -0400
-Received: by mail-lf1-f67.google.com with SMTP id r15so28761325lfm.11;
-        Tue, 30 Jul 2019 13:53:24 -0700 (PDT)
+        Tue, 30 Jul 2019 16:53:28 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so24451074pgc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 13:53:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jclYugzhKXhlJk5pUhgZFfSAA+o8PyYYOEPmXaFzQW0=;
-        b=qaxgPyuHjV8eQsxdgIXD6wSNKdaV7/pZgBLwWou4xmbqtxd22n3RB6hJz1KSiu5xjE
-         8UHPBLHvHKLP7q8bZyn+tmK4I/4UbgvCxL5fxdwaI7Unom7vdlBrqnG4HVHFJse72zYZ
-         3/GVsiQCC0s/AjkKO61Yfl4e3sykcWMgze90gIJCDiNDG+q8cWZpXRc6PZMtJzidX0ND
-         b4JPeaOPnBxjx9NWxcsIqLEgdEPqeXYhmEM5lnkp+jAs3fq5TNul0KPlGCVgaIm6DLKc
-         wA3IM5hNgTn9JQwHv+jGH2Eq7VyN78RUn8myQ3d13Am56YVRvLGcXRMPzzR3eGU+5mjc
-         SWBw==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RGi8YSyqfGHFxZ4qxqzTrqnfCbtBm7VBWTegRdqBqJA=;
+        b=M54UzvXvvuwPcYffLeUbPfMGWrV7EgGeFXXZay6Jp7eWsxe24wEwnNq3h0IqfHEPtt
+         j97FjJBplbL+HW2M+qoa/c/X8iqJ15uDqlq7DKkAkn23eP257BlqCsKNGjDp2oFfYRYG
+         FeERJlxkUNpwBIJarL248E21HoCUXOTs58nds=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jclYugzhKXhlJk5pUhgZFfSAA+o8PyYYOEPmXaFzQW0=;
-        b=GqsDpju4pECa9TBaGvu+6P4EtbIUBoSgo1ojvusXkSVK2YlavHmjN1Jd4zuYC0QANO
-         tW/MRt+FL0Uwymyz3xTYV+KAu9rrk6Ii3veKvqvpvjDTaq1CbKRiyRqgSsCF4dQMDuNJ
-         6qnUUbL35uJwBSSA2t3/FCfoRal7GOBj8Phz7SlTgWGEkcbZ4OxI0HdBa4rm1BLbHjwW
-         1ErZiY/0pZ8nAHj0IJG/O2UBKrjAtybvAsLM39B8gTS4uGG1s+cIwF5Rk0DiI9jxf/NV
-         6a/HZ7dLqPF8v2Ahf4UChvSCKJDiyFSjfD3rbOhPs5t5jgOxp3ieuGC5eLU4zYLOniKu
-         q3rA==
-X-Gm-Message-State: APjAAAXBtwOqcGFo1Gd4KFNNHvEFB5q/hWJR6pR+wI+saL8oE80svnFe
-        isq+r7nLwO+bD3tglikxIO6JADwFDxTbXNaZPTA=
-X-Google-Smtp-Source: APXvYqxLZbcQkNGLt2aGD4ZsshnY4scI1t46ayvot4F2God2/3h/JlTnUrnkZHuI2ef6+Z6FMDVVioV953qAvR1vzWQ=
-X-Received: by 2002:a05:6512:29a:: with SMTP id j26mr24102009lfp.44.1564520003726;
- Tue, 30 Jul 2019 13:53:23 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RGi8YSyqfGHFxZ4qxqzTrqnfCbtBm7VBWTegRdqBqJA=;
+        b=YUhPM3UZX5vG3EZVeB8J1zwiwAVyFyodanWztx/BSADMEFSA+UU03L/GRE1sjzS4Cx
+         J9Z/Vqltcntgy9EOBetXD8EoS2WwzqpvPgd4tCKfiLJcjk5HkvFUCN8MtQDTopAZxMST
+         bJwO0PdtpV8k1HCfiVXgZ8j+lLK7DJC2TbRv4v4IKKXygEbzoo18W7OP8YMGmmLqDrUz
+         dviVf/SwWwbko4TLO1jF12Vk4drwyfUnsRMv7ketBlWYQi5pmc/MvEx0i/zf731DsTOh
+         5HKg5FDQqcOCqC2bhzZKwfzb2t6qWOzF06Jq6iLKMSJyUlc4/uT5+FE2GamRZ7+rsPeK
+         b3bw==
+X-Gm-Message-State: APjAAAXhC44sMtE3sjpNSB/NVaj+KsDb75TOgZDbshbecVfOProweMp3
+        96jkQa3xzq0JR7OJ9ceDhx7Wag==
+X-Google-Smtp-Source: APXvYqzh+qauyPlzUnXvJLah95lGU4CLhUnpH5T201YFRASrlH3tCF34TwBU9lCOYSYPr9aw5WG+fg==
+X-Received: by 2002:a17:90a:d998:: with SMTP id d24mr91210113pjv.89.1564520007294;
+        Tue, 30 Jul 2019 13:53:27 -0700 (PDT)
+Received: from [10.136.8.239] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id z4sm55247034pgp.80.2019.07.30.13.53.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 13:53:26 -0700 (PDT)
+Subject: Re: [PATCH v1 1/1] i2c: iproc: Fix i2c master read more than 63 bytes
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>
+References: <1563956907-21255-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <8b8d83ce-70ba-eacd-7ea3-6f8425f1e0fc@broadcom.com>
+Date:   Tue, 30 Jul 2019 13:53:24 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190730144649.19022-1-dev@pschenker.ch> <20190730144649.19022-15-dev@pschenker.ch>
-In-Reply-To: <20190730144649.19022-15-dev@pschenker.ch>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 30 Jul 2019 17:53:28 -0300
-Message-ID: <CAOMZO5BtXFR7kDuiHedsDA0AaNZqsO_L2x9d3u9ZuULkovChoQ@mail.gmail.com>
-Subject: Re: [PATCH 14/22] ARM: dts: apalis-imx6: Add some example I2C devices
-To:     Philippe Schenker <dev@pschenker.ch>
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Stefan Agner <stefan@agner.ch>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1563956907-21255-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:57 AM Philippe Schenker <dev@pschenker.ch> wrote:
+Hi Rayagonda,
 
->  &backlight {
-> @@ -204,6 +228,77 @@
->   */
->  &i2c3 {
->         status = "okay";
+On 7/24/2019 1:28 AM, Rayagonda Kokatanur wrote:
+> Use SMBUS_MASTER_DATA_READ.MASTER_RD_STATUS bit to check for RX
+> FIFO empty condition because SMBUS_MASTER_FIFO_CONTROL.MASTER_RX_PKT_COUNT
+> is not updated for read >= 64 bytes. This fixes the issue when trying to
+> read from the I2C slave more than 63 bytes.
+> 
+> Fixes: c24b8d574b7c ("i2c: iproc: Extend I2C read up to 255 bytes")
+> 
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> ---
+>  drivers/i2c/busses/i2c-bcm-iproc.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+> index 2c7f145..d7fd76b 100644
+> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
+> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+> @@ -392,16 +392,18 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
+>  static void bcm_iproc_i2c_read_valid_bytes(struct bcm_iproc_i2c_dev *iproc_i2c)
+>  {
+>  	struct i2c_msg *msg = iproc_i2c->msg;
+> +	uint32_t val;
+>  
+>  	/* Read valid data from RX FIFO */
+>  	while (iproc_i2c->rx_bytes < msg->len) {
+> -		if (!((iproc_i2c_rd_reg(iproc_i2c, M_FIFO_CTRL_OFFSET) >> M_FIFO_RX_CNT_SHIFT)
+> -		      & M_FIFO_RX_CNT_MASK))
+> +		val = iproc_i2c_rd_reg(iproc_i2c, M_RX_OFFSET);
 > +
-> +       adv7280: adv7280@21 {
-> +               compatible = "adv7280";
-> +               reg = <0x21>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_ipu1_csi0 &pinctrl_cam_mclk>;
-> +               clocks = <&clks 200>;
+> +		/* rx fifo empty */
+> +		if (!((val >> M_RX_STATUS_SHIFT) & M_RX_STATUS_MASK))
+>  			break;
+>  
+>  		msg->buf[iproc_i2c->rx_bytes] =
+> -			(iproc_i2c_rd_reg(iproc_i2c, M_RX_OFFSET) >>
+> -			M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
+> +			(val >> M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
+>  		iproc_i2c->rx_bytes++;
+>  	}
+>  }
+> 
 
-Please replace this 200 with a proper clock label.
+Thanks for the fix. This fix looks good to me!
 
-> +               clock-names = "csi_mclk";
-> +               DOVDD-supply = <&reg_3p3v>;
-> +               AVDD-supply = <&reg_3p3v>;
-> +               DVDD-supply = <&reg_3p3v>;
-> +               PVDD-supply = <&reg_3p3v>;
-> +               csi_id = <0>;
-
-This is not a valid property upstream.
-
-It seems you just ported it from a downstream vendor kernel. Please
-make sure you test with the dt-bindings from mainline.
-
-> +               mclk = <24000000>;
-> +               mclk_source = <1>;
-> +               status = "okay";
-> +       };
-> +
-> +       /* Video ADC on Analog Camera Module */
-> +       adv7180: adv7180@21 {
-> +               compatible = "adv,adv7180";
-> +               reg = <0x21>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_ipu1_csi0 &pinctrl_cam_mclk>;
-> +               clocks = <&clks 200>;
-
-clock label, please.
-
-> +               clock-names = "csi_mclk";
-> +               DOVDD-supply = <&reg_3p3v>; /* 3.3v */
-> +               AVDD-supply = <&reg_3p3v>;  /* 1.8v */
-> +               DVDD-supply = <&reg_3p3v>;  /* 1.8v */
-> +               PVDD-supply = <&reg_3p3v>;  /* 1.8v */
-> +               csi_id = <0>;
-
-Same here
-
-> +               mclk = <24000000>;
-> +               mclk_source = <1>;
-> +               cvbs = <1>;
-> +               status = "disabled";
-> +       };
-> +
-> +       max9526: max9526@20 {
-> +               compatible = "maxim,max9526";
-
-This is not documented in mainline.
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
