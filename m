@@ -2,327 +2,87 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B676EC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B1DC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8511A20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8415B2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564517375;
+	bh=owhaHAi8Q+HEfzaC8fznNFazW35t/rwFZdtzy8W8OpU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sz3ChVIOeNw/tnYn9f2tVWndAjFpWfuDiHu8GFUz2U9HoL9idBl+Nwm6Ti1GJuR6D
+	 QhNvsEZeaj98c/b5l6oNExkQ4EZVlBjMiZ1q+eP1jgV/vknT0tnQOJx6SQiO7pOr7Q
+	 lQUtp6jJ/vTglZFICHjfUvM+YLL4lCEA3EXne2Y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfG3UEQ (ORCPT
+        id S1727854AbfG3UJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:04:16 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:33557 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfG3UEP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:04:15 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MkHEN-1icrZu462r-00khlH; Tue, 30 Jul 2019 22:02:40 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Takashi Iwai <tiwai@suse.de>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-um@lists.infradead.org,
-        alsa-devel@alsa-project.org
-Subject: [PATCH v5 22/29] compat_ioctl: remove translation for sound ioctls
-Date:   Tue, 30 Jul 2019 22:01:27 +0200
-Message-Id: <20190730200145.1081541-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190730200145.1081541-1-arnd@arndb.de>
-References: <20190730192552.4014288-1-arnd@arndb.de>
- <20190730200145.1081541-1-arnd@arndb.de>
+        Tue, 30 Jul 2019 16:09:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726174AbfG3UJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 16:09:34 -0400
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C57F22089E
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 20:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564517373;
+        bh=owhaHAi8Q+HEfzaC8fznNFazW35t/rwFZdtzy8W8OpU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SbUIVUvERGICwyRwzMme97c6NNtZVOw6nH0CKo1Anov6gTOZ/+GwZA89o5mYv0LmB
+         BjuLlrdkgXd0k0sFd+2FUyY30jhlb8p/pV3kx7jFvabreyppC31UqTcDE7PMWylldZ
+         LVDN2Ndud+aPf6cjVAIkTCt8I0OE7nC0GWtBvXFo=
+Received: by mail-wr1-f51.google.com with SMTP id 31so67139740wrm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 13:09:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAXI1VKPlkF3hOPNYUQzmx2hwmZifoCf6yH38O5z2MWX+HsTBplu
+        M9XvGG/zRl8G0213nuz/9kdGZDO5RXUPx6sZvungqw==
+X-Google-Smtp-Source: APXvYqzgab40lz1+/BiKkPmDAG4zmFHV8d0sHXwJQ99NZz81h6SDKNg/C2IKSpBGgEg8meiI0Xx98tApM9DV01WDKnw=
+X-Received: by 2002:adf:cf02:: with SMTP id o2mr109678011wrj.352.1564517371335;
+ Tue, 30 Jul 2019 13:09:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:aXuX/8NsPMKeoKYlMNR2z5RGjKSqpECweZBiZM22EkHNIB+YNJK
- roZEQcRNgJFeE3COiMXAG752jJ7Pwegcj3a7bNuW9t0iID15W4PMdy5aOFboGkTUFwVOdJQ
- Il/pk0cihQRrOYDfnQBRLIDw8tu0syZ6MhHaFXgI2jQEAPc6Kcs3pEKVG6gGepFanMSFDe3
- 2efnh7Np0LQTMNOU6T2fA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UwsMkfuEPjA=:HR5uCP3YcqZMWFruxX6YKi
- +I/1bNNN41LFMB5/SJOdzqhwU++iMD2dtgolrbhebpUDccoMGEnt2RzxbS5EMBZAzAEqio8cl
- Dkme+UOM0lqDYXk6w7f9dNpUnb9y8hF+13x5kwcOk67aYKYK540wWUU/cBlCFRRNxkFf2/jCv
- rLeQ/My+2vo47X0XswCHFhuTdsubEt/yAXvczvMOju6HgdVldmBWega5iz7riv3l9tBvOSxRp
- izyXWrN1fVAtwyU57Dl2ZK2wm52NYxrpKiWt39SqPnpvcx6pyQJS7UhGiZmWMgabTjGkbx17f
- /+DGDI09Fs2Vo5CjoagE9xl88huB2o/+W7WKgptZ24L3npd49KSnaGpk4LPi7Qa2X7MxX1XFO
- EiEebqL9s7SRWGyY2FJoPqSyqHDWSmtoRD32pcfPwHsXyujraQls5iWZU5FJgam3/s2tFFuik
- w/dVa+vLCc59mGVv0i/E4+MvLzwnJcLGxEE6uwgc0ceOzTi0+NUO5oBUoaqZyU67d+18/IR36
- 1bn384YqdWGPzppPeL28uWd5Cptr8ZB8mcVGaQs/2/Q8A3HJtRJsm7nyYHkvhLeYy2BTzsTHb
- kHMlUi0pNK6RmoLoazKLEfGF/TiRt67SN54CtSb43riZUxiBbZ6RqJslUdpGcH1nWT5kIEQXR
- bTigYzwsKQwA96EndRMl0UzR4SEEGKIVUr+sLc+r8gEtfVaL8lMTIc3NRDp9wfZ4JvOnWUwH+
- Kr8tS9gDlLKDiMCfPxcRPlo+dqMzMhtR+zOOcA==
+References: <20190728131251.622415456@linutronix.de> <20190728131648.786513965@linutronix.de>
+ <20190729144831.GA21120@linux.intel.com> <alpine.DEB.2.21.1907301134470.1738@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1907301134470.1738@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 30 Jul 2019 13:09:20 -0700
+X-Gmail-Original-Message-ID: <CALCETrXmu8BtZ47AE-qo2bax9n1PyOM90yLSjkzE6rekbxv9zQ@mail.gmail.com>
+Message-ID: <CALCETrXmu8BtZ47AE-qo2bax9n1PyOM90yLSjkzE6rekbxv9zQ@mail.gmail.com>
+Subject: Re: [patch V2 3/5] lib/vdso/32: Provide legacy syscall fallbacks
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Bolle <pebolle@tiscali.nl>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SNDCTL_* and SOUND_* commands are the old OSS user interface.
+On Tue, Jul 30, 2019 at 2:39 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> To address the regression which causes seccomp to deny applications the
+> access to clock_gettime64() and clock_getres64() syscalls because they
+> are not enabled in the existing filters.
+>
+> That trips over the fact that 32bit VDSOs use the new clock_gettime64() and
+> clock_getres64() syscalls in the fallback path.
+>
+> Add a conditional to invoke the 32bit legacy fallback syscalls instead of
+> the new 64bit variants. The conditional can go away once all architectures
+> are converted.
+>
 
-I checked all the sound ioctl commands listed in fs/compat_ioctl.c
-to see if we still need the translation handlers. Here is what I
-found:
+I haven't surveyed all the architectures, but once everything is
+converted, shouldn't we use the 32-bit fallback for exactly the same
+set of architectures that want clock_gettime32 at all in the vdso?
 
-- sound/oss/ is (almost) gone from the kernel, this is what actually
-  needed all the translations
-- The ALSA emulation for OSS correctly handles all compat_ioctl
-  commands already.
-- sound/oss/dmasound/ is the last holdout of the original OSS code,
-  this is only used on arch/m68k, which has no 64-bit mode and
-  hence needs no compat handlers
-- arch/um/drivers/hostaudio_kern.c may run in 64-bit mode with
-  32-bit x86 user space underneath it. This rare corner case is
-  the only one that still needs the compat handlers.
-
-By adding a simple redirect of .compat_ioctl to .unlocked_ioctl in the
-UML driver, we can remove all the COMPATIBLE_IOCTL() annotations without
-a change in functionality. For completeness, I'm adding the same thing
-to the dmasound file, knowing that it makes no difference.
-
-The compat_ioctl list contains one comment about SNDCTL_DSP_MAPINBUF and
-SNDCTL_DSP_MAPOUTBUF, which actually would need a translation handler
-if implemented. However, the native implementation just returns -EINVAL,
-so we don't care.
-
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/um/drivers/hostaudio_kern.c   |   1 +
- fs/compat_ioctl.c                  | 158 -----------------------------
- sound/core/oss/pcm_oss.c           |   4 +
- sound/oss/dmasound/dmasound_core.c |   2 +
- 4 files changed, 7 insertions(+), 158 deletions(-)
-
-diff --git a/arch/um/drivers/hostaudio_kern.c b/arch/um/drivers/hostaudio_kern.c
-index 7f9dbdbc4eb7..1bf139c3727a 100644
---- a/arch/um/drivers/hostaudio_kern.c
-+++ b/arch/um/drivers/hostaudio_kern.c
-@@ -298,6 +298,7 @@ static const struct file_operations hostaudio_fops = {
- 	.write          = hostaudio_write,
- 	.poll           = hostaudio_poll,
- 	.unlocked_ioctl	= hostaudio_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
- 	.mmap           = NULL,
- 	.open           = hostaudio_open,
- 	.release        = hostaudio_release,
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index 03da7934a351..33f732979f45 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -51,8 +51,6 @@
- #include <linux/uaccess.h>
- #include <linux/watchdog.h>
- 
--#include <linux/soundcard.h>
--
- #include <linux/hiddev.h>
- 
- 
-@@ -458,162 +456,6 @@ COMPATIBLE_IOCTL(PPPIOCDISCONN)
- COMPATIBLE_IOCTL(PPPIOCATTCHAN)
- COMPATIBLE_IOCTL(PPPIOCGCHAN)
- COMPATIBLE_IOCTL(PPPIOCGL2TPSTATS)
--/* Big A */
--/* sparc only */
--/* Big Q for sound/OSS */
--COMPATIBLE_IOCTL(SNDCTL_SEQ_RESET)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_SYNC)
--COMPATIBLE_IOCTL(SNDCTL_SYNTH_INFO)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_CTRLRATE)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_GETOUTCOUNT)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_GETINCOUNT)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_PERCMODE)
--COMPATIBLE_IOCTL(SNDCTL_FM_LOAD_INSTR)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_TESTMIDI)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_RESETSAMPLES)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_NRSYNTHS)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_NRMIDIS)
--COMPATIBLE_IOCTL(SNDCTL_MIDI_INFO)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_THRESHOLD)
--COMPATIBLE_IOCTL(SNDCTL_SYNTH_MEMAVL)
--COMPATIBLE_IOCTL(SNDCTL_FM_4OP_ENABLE)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_PANIC)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_OUTOFBAND)
--COMPATIBLE_IOCTL(SNDCTL_SEQ_GETTIME)
--COMPATIBLE_IOCTL(SNDCTL_SYNTH_ID)
--COMPATIBLE_IOCTL(SNDCTL_SYNTH_CONTROL)
--COMPATIBLE_IOCTL(SNDCTL_SYNTH_REMOVESAMPLE)
--/* Big T for sound/OSS */
--COMPATIBLE_IOCTL(SNDCTL_TMR_TIMEBASE)
--COMPATIBLE_IOCTL(SNDCTL_TMR_START)
--COMPATIBLE_IOCTL(SNDCTL_TMR_STOP)
--COMPATIBLE_IOCTL(SNDCTL_TMR_CONTINUE)
--COMPATIBLE_IOCTL(SNDCTL_TMR_TEMPO)
--COMPATIBLE_IOCTL(SNDCTL_TMR_SOURCE)
--COMPATIBLE_IOCTL(SNDCTL_TMR_METRONOME)
--COMPATIBLE_IOCTL(SNDCTL_TMR_SELECT)
--/* Little m for sound/OSS */
--COMPATIBLE_IOCTL(SNDCTL_MIDI_PRETIME)
--COMPATIBLE_IOCTL(SNDCTL_MIDI_MPUMODE)
--COMPATIBLE_IOCTL(SNDCTL_MIDI_MPUCMD)
--/* Big P for sound/OSS */
--COMPATIBLE_IOCTL(SNDCTL_DSP_RESET)
--COMPATIBLE_IOCTL(SNDCTL_DSP_SYNC)
--COMPATIBLE_IOCTL(SNDCTL_DSP_SPEED)
--COMPATIBLE_IOCTL(SNDCTL_DSP_STEREO)
--COMPATIBLE_IOCTL(SNDCTL_DSP_GETBLKSIZE)
--COMPATIBLE_IOCTL(SNDCTL_DSP_CHANNELS)
--COMPATIBLE_IOCTL(SOUND_PCM_WRITE_FILTER)
--COMPATIBLE_IOCTL(SNDCTL_DSP_POST)
--COMPATIBLE_IOCTL(SNDCTL_DSP_SUBDIVIDE)
--COMPATIBLE_IOCTL(SNDCTL_DSP_SETFRAGMENT)
--COMPATIBLE_IOCTL(SNDCTL_DSP_GETFMTS)
--COMPATIBLE_IOCTL(SNDCTL_DSP_SETFMT)
--COMPATIBLE_IOCTL(SNDCTL_DSP_GETOSPACE)
--COMPATIBLE_IOCTL(SNDCTL_DSP_GETISPACE)
--COMPATIBLE_IOCTL(SNDCTL_DSP_NONBLOCK)
--COMPATIBLE_IOCTL(SNDCTL_DSP_GETCAPS)
--COMPATIBLE_IOCTL(SNDCTL_DSP_GETTRIGGER)
--COMPATIBLE_IOCTL(SNDCTL_DSP_SETTRIGGER)
--COMPATIBLE_IOCTL(SNDCTL_DSP_GETIPTR)
--COMPATIBLE_IOCTL(SNDCTL_DSP_GETOPTR)
--/* SNDCTL_DSP_MAPINBUF,  XXX needs translation */
--/* SNDCTL_DSP_MAPOUTBUF,  XXX needs translation */
--COMPATIBLE_IOCTL(SNDCTL_DSP_SETSYNCRO)
--COMPATIBLE_IOCTL(SNDCTL_DSP_SETDUPLEX)
--COMPATIBLE_IOCTL(SNDCTL_DSP_GETODELAY)
--COMPATIBLE_IOCTL(SNDCTL_DSP_PROFILE)
--COMPATIBLE_IOCTL(SOUND_PCM_READ_RATE)
--COMPATIBLE_IOCTL(SOUND_PCM_READ_CHANNELS)
--COMPATIBLE_IOCTL(SOUND_PCM_READ_BITS)
--COMPATIBLE_IOCTL(SOUND_PCM_READ_FILTER)
--/* Big C for sound/OSS */
--COMPATIBLE_IOCTL(SNDCTL_COPR_RESET)
--COMPATIBLE_IOCTL(SNDCTL_COPR_LOAD)
--COMPATIBLE_IOCTL(SNDCTL_COPR_RDATA)
--COMPATIBLE_IOCTL(SNDCTL_COPR_RCODE)
--COMPATIBLE_IOCTL(SNDCTL_COPR_WDATA)
--COMPATIBLE_IOCTL(SNDCTL_COPR_WCODE)
--COMPATIBLE_IOCTL(SNDCTL_COPR_RUN)
--COMPATIBLE_IOCTL(SNDCTL_COPR_HALT)
--COMPATIBLE_IOCTL(SNDCTL_COPR_SENDMSG)
--COMPATIBLE_IOCTL(SNDCTL_COPR_RCVMSG)
--/* Big M for sound/OSS */
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_VOLUME)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_BASS)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_TREBLE)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_SYNTH)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_PCM)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_SPEAKER)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_LINE)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_MIC)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_CD)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_IMIX)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_ALTPCM)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_RECLEV)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_IGAIN)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_OGAIN)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_LINE1)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_LINE2)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_LINE3)
--COMPATIBLE_IOCTL(MIXER_READ(SOUND_MIXER_DIGITAL1))
--COMPATIBLE_IOCTL(MIXER_READ(SOUND_MIXER_DIGITAL2))
--COMPATIBLE_IOCTL(MIXER_READ(SOUND_MIXER_DIGITAL3))
--COMPATIBLE_IOCTL(MIXER_READ(SOUND_MIXER_PHONEIN))
--COMPATIBLE_IOCTL(MIXER_READ(SOUND_MIXER_PHONEOUT))
--COMPATIBLE_IOCTL(MIXER_READ(SOUND_MIXER_VIDEO))
--COMPATIBLE_IOCTL(MIXER_READ(SOUND_MIXER_RADIO))
--COMPATIBLE_IOCTL(MIXER_READ(SOUND_MIXER_MONITOR))
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_MUTE)
--/* SOUND_MIXER_READ_ENHANCE,  same value as READ_MUTE */
--/* SOUND_MIXER_READ_LOUD,  same value as READ_MUTE */
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_RECSRC)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_DEVMASK)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_RECMASK)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_STEREODEVS)
--COMPATIBLE_IOCTL(SOUND_MIXER_READ_CAPS)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_VOLUME)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_BASS)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_TREBLE)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_SYNTH)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_PCM)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_SPEAKER)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_LINE)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_MIC)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_CD)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_IMIX)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_ALTPCM)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_RECLEV)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_IGAIN)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_OGAIN)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_LINE1)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_LINE2)
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_LINE3)
--COMPATIBLE_IOCTL(MIXER_WRITE(SOUND_MIXER_DIGITAL1))
--COMPATIBLE_IOCTL(MIXER_WRITE(SOUND_MIXER_DIGITAL2))
--COMPATIBLE_IOCTL(MIXER_WRITE(SOUND_MIXER_DIGITAL3))
--COMPATIBLE_IOCTL(MIXER_WRITE(SOUND_MIXER_PHONEIN))
--COMPATIBLE_IOCTL(MIXER_WRITE(SOUND_MIXER_PHONEOUT))
--COMPATIBLE_IOCTL(MIXER_WRITE(SOUND_MIXER_VIDEO))
--COMPATIBLE_IOCTL(MIXER_WRITE(SOUND_MIXER_RADIO))
--COMPATIBLE_IOCTL(MIXER_WRITE(SOUND_MIXER_MONITOR))
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_MUTE)
--/* SOUND_MIXER_WRITE_ENHANCE,  same value as WRITE_MUTE */
--/* SOUND_MIXER_WRITE_LOUD,  same value as WRITE_MUTE */
--COMPATIBLE_IOCTL(SOUND_MIXER_WRITE_RECSRC)
--COMPATIBLE_IOCTL(SOUND_MIXER_INFO)
--COMPATIBLE_IOCTL(SOUND_OLD_MIXER_INFO)
--COMPATIBLE_IOCTL(SOUND_MIXER_ACCESS)
--COMPATIBLE_IOCTL(SOUND_MIXER_AGC)
--COMPATIBLE_IOCTL(SOUND_MIXER_3DSE)
--COMPATIBLE_IOCTL(SOUND_MIXER_PRIVATE1)
--COMPATIBLE_IOCTL(SOUND_MIXER_PRIVATE2)
--COMPATIBLE_IOCTL(SOUND_MIXER_PRIVATE3)
--COMPATIBLE_IOCTL(SOUND_MIXER_PRIVATE4)
--COMPATIBLE_IOCTL(SOUND_MIXER_PRIVATE5)
--COMPATIBLE_IOCTL(SOUND_MIXER_GETLEVELS)
--COMPATIBLE_IOCTL(SOUND_MIXER_SETLEVELS)
--COMPATIBLE_IOCTL(OSS_GETVERSION)
- /* Raw devices */
- COMPATIBLE_IOCTL(RAW_SETBIND)
- COMPATIBLE_IOCTL(RAW_GETBIND)
-diff --git a/sound/core/oss/pcm_oss.c b/sound/core/oss/pcm_oss.c
-index f57c610d7523..13db77771f0f 100644
---- a/sound/core/oss/pcm_oss.c
-+++ b/sound/core/oss/pcm_oss.c
-@@ -2717,6 +2717,10 @@ static long snd_pcm_oss_ioctl(struct file *file, unsigned int cmd, unsigned long
- static long snd_pcm_oss_ioctl_compat(struct file *file, unsigned int cmd,
- 				     unsigned long arg)
- {
-+	/*
-+	 * Everything is compatbile except SNDCTL_DSP_MAPINBUF/SNDCTL_DSP_MAPOUTBUF,
-+	 * which are not implemented for the native case either
-+	 */
- 	return snd_pcm_oss_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
- }
- #else
-diff --git a/sound/oss/dmasound/dmasound_core.c b/sound/oss/dmasound/dmasound_core.c
-index fc9bcd47d6a4..f802ea331e24 100644
---- a/sound/oss/dmasound/dmasound_core.c
-+++ b/sound/oss/dmasound/dmasound_core.c
-@@ -384,6 +384,7 @@ static const struct file_operations mixer_fops =
- 	.owner		= THIS_MODULE,
- 	.llseek		= no_llseek,
- 	.unlocked_ioctl	= mixer_unlocked_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
- 	.open		= mixer_open,
- 	.release	= mixer_release,
- };
-@@ -1167,6 +1168,7 @@ static const struct file_operations sq_fops =
- 	.write		= sq_write,
- 	.poll		= sq_poll,
- 	.unlocked_ioctl	= sq_unlocked_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
- 	.open		= sq_open,
- 	.release	= sq_release,
- };
--- 
-2.20.0
-
+--Andy
