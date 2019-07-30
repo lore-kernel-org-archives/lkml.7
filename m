@@ -2,268 +2,361 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28BFC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F3AC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787F520665
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E96206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:37:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WAef+TBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730725AbfG3IdM convert rfc822-to-8bit (ORCPT
+        id S1730921AbfG3Ihv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:33:12 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34255 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729283AbfG3IdL (ORCPT
+        Tue, 30 Jul 2019 04:37:51 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44923 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbfG3Ihv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:33:11 -0400
-Received: by mail-ed1-f67.google.com with SMTP id s49so26968211edb.1;
-        Tue, 30 Jul 2019 01:33:09 -0700 (PDT)
+        Tue, 30 Jul 2019 04:37:51 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p17so64753234wrf.11
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 01:37:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=suXKnHbhHZc+njEGPUuwld4hD75sxIfXNLOtC4f4vMk=;
+        b=WAef+TBHHXmbDvSkkhwdEbkiU8EgTl5LL9ynnKa4uBqhurYYLeejpaee64FMBWuWZ3
+         rbFdwHH6/c+0RVYGAJBN6C5NePIeuNBPn+UBxpieyKFbsG2Ii0eV/KNv5xsSXY46P6tW
+         JnYGMvBvp7s73yqYdhf+i9WVFaIr3P/uP7rU32DiJK/PXgGdcaEvgS0vTfYoGlXoxxAI
+         0M5/U8aBHEcQcHiCcqTN4VkxzrpS3jCXK3Uhs02nmQnebEJPWiWscHCv26vNrX7rK0fK
+         bYVRYiDx0VxMye563gJU2MGPDknafsBcCNFs3okeCCRKXGnJQOYoy72r9gSThkr9b2hz
+         NO4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Q84VjJRDJ4OplkCoHhwYo8/gOcoNfhF91Mul/YA2O6A=;
-        b=dX7TiSuRTkdoICkGDXTIkRUiokG9IdMUAp0tE7fXbPH8M5WPmPz007DpPpndieZI4A
-         TfcsyY7RpXcOJq9HR9+Xmcr9kwHrzEsHTl4rWDSVywVhXY6Ni9Bmz50cxxMaLvAg2BVZ
-         pNefM1lxKMm22JwPv2KfDlm5q5Ow5VMyihWGhiPDupHD7Q2FMmp+QV5FTkvx4fjG2xON
-         FJDgZzZmyexKSj9YDBkYCf8zNEAxX9dt/UOioFd0gQi0+0zOxUbmPHcgBLFmFDRj3+en
-         XBPUiVFbmsMZaN9dbO0CHelrvw2SCKVg193WEaB7Z3DGj1dNcgfZKucMY8fOaoKSkJCq
-         0uVA==
-X-Gm-Message-State: APjAAAVUCsZkD25vKTZJKIGDhZQgqz1vvqPacOWUlj2UhUQbj2bOjP/i
-        HT4q7X91ZENoDPyofu4Av8VYPwDTPSo=
-X-Google-Smtp-Source: APXvYqzcur+qsv4fySmXJ6Fh+6dVDIu6zINrTMeLarEZAVBAE62jSh3ijh2z0tNkHM/OpXA3zURH6w==
-X-Received: by 2002:a50:8a04:: with SMTP id i4mr100107817edi.301.1564475588252;
-        Tue, 30 Jul 2019 01:33:08 -0700 (PDT)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com. [209.85.128.45])
-        by smtp.gmail.com with ESMTPSA id pv18sm11776409ejb.14.2019.07.30.01.33.07
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 01:33:08 -0700 (PDT)
-Received: by mail-wm1-f45.google.com with SMTP id a15so56259271wmj.5;
-        Tue, 30 Jul 2019 01:33:07 -0700 (PDT)
-X-Received: by 2002:a7b:c051:: with SMTP id u17mr101736986wmc.25.1564475587103;
- Tue, 30 Jul 2019 01:33:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=suXKnHbhHZc+njEGPUuwld4hD75sxIfXNLOtC4f4vMk=;
+        b=a7VhYsuMvMSCMPf8MDX+SiurG1lSEo4OhddY1H1b4KLkMbljSSRriMcI2ohcJaDWDk
+         IIO/Are4mucOYNOOnodUfZzZp083otOdCP/i43oAAY8JQEEn5fTcNKwE/HVkJQpni5W6
+         7oXhzODtHkzAqjkJdo96Z4mMs08udWlzfKY5Ll7yRlSHRD7P1YCTO1/VPlOVr5pJ3qjH
+         wZO9BJcGBGV5uqtSS/Ec3FvJlGtaEt616VTjvifc5gbn6l+FaHX+B9Ca3ULdjaOirPTY
+         S71FxKMz1+Z5icC4RBqj5szvtsdaf67iQyBBLRx4fcQxmzbFR7dY2fqIN1k8WdvHunaI
+         stdQ==
+X-Gm-Message-State: APjAAAVOYoTIEtlz9ayL4ya1KrfOFO09e5ac/tqi8idbuf+8I6Y4lnFd
+        81ZTv6Ug27Y3uaaC4DUPV50n7Q==
+X-Google-Smtp-Source: APXvYqy0Fw9+nDmXFM4QD0+LGZSGBlZb90GhsgIqF8cB27dJMzeh2QBrBviB3FWRQm/fkblVYh4b4A==
+X-Received: by 2002:adf:f8cf:: with SMTP id f15mr5483263wrq.333.1564475868470;
+        Tue, 30 Jul 2019 01:37:48 -0700 (PDT)
+Received: from localhost ([2a01:e34:eeb6:4690:ecfa:1144:aa53:4a82])
+        by smtp.gmail.com with ESMTPSA id y18sm60800679wmi.23.2019.07.30.01.37.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 01:37:47 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/4] clk: meson: g12a: add notifiers to handle cpu clock change
+In-Reply-To: <20190729131656.7308-4-narmstrong@baylibre.com>
+References: <20190729131656.7308-1-narmstrong@baylibre.com> <20190729131656.7308-4-narmstrong@baylibre.com>
+Date:   Tue, 30 Jul 2019 10:37:46 +0200
+Message-ID: <1j36in3okl.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <173825848.1FZsmuHfpq@jernej-laptop> <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
- <2452836.v7ux4bnEjb@jernej-laptop> <20190730080900.hhxrqun7vk4nsj2h@pengutronix.de>
-In-Reply-To: <20190730080900.hhxrqun7vk4nsj2h@pengutronix.de>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 30 Jul 2019 16:32:53 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65jFdFZGLti4_B=2QPbtrj1b8wh63R5G3NpY_ndpJoV5g@mail.gmail.com>
-Message-ID: <CAGb2v65jFdFZGLti4_B=2QPbtrj1b8wh63R5G3NpY_ndpJoV5g@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 4:09 PM Uwe Kleine-König
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello Rob and Frank,
->
-> Maxime and Jernej on one side and me on the other cannot agree about a
-> detail in the change to the bindings here. I'm trying to objectively
-> summarize the situation for you to help deciding what is the right thing
-> to do here.
->
-> TLDR: The sun4i pwm driver is extended to support a new variant of that
-> device on the H6 SoC. Compared to the earlier supported variants
-> allwinner,sun50i-h6-pwm on H6 needs to handle a reset controller and an
-> additional clock.
->
-> The two positions are:
->
->  - We need a new compatible because only then the driver and/or the dt
->    schema checker can check that each "allwinner,sun50i-h6-pwm" device
->    has a reset property and a "bus" clock; and the earlier variants
->    don't.
->
->  - The driver can be simpler and the device specific knowledge is only
->    in a single place (the dt) if the device tree is considered valid and
->    a reset property and "bus" clock is used iff it's provided in the
->    device tree without additional comparison for the compatible.
->
-> Now our arguments seem to go in circles and Jernej was interested in
-> your position. That's something I agree with ;-) Can you please share
-> your view?
->
-> Find below some context about the arguments.
+On Mon 29 Jul 2019 at 15:16, Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-A bit more context on the failure modes:
+> In order to implement clock switching for the CLKID_CPU_CLK and
+> CLKID_CPUB_CLK, notifiers are added on specific points of the
+> clock tree :
+>
+> cpu_clk / cpub_clk
+> |   \- cpu_clk_dyn
+> |      |  \- cpu_clk_premux0
+> |      |        |- cpu_clk_postmux0
+> |      |        |    |- cpu_clk_dyn0_div
+> |      |        |    \- xtal/fclk_div2/fclk_div3
+> |      |        \- xtal/fclk_div2/fclk_div3
+> |      \- cpu_clk_premux1
+> |            |- cpu_clk_postmux1
+> |            |    |- cpu_clk_dyn1_div
+> |            |    \- xtal/fclk_div2/fclk_div3
+> |            \- xtal/fclk_div2/fclk_div3
+> \ sys_pll / sys1_pll
+>
+> This for each cluster, a single one for G12A, two for G12B.
+>
+> Each cpu_clk_premux1 tree is marked as read-only and CLK_SET_RATE_NO_REPARENT,
+> to be used as "parking" clock in a safe clock frequency.
+>
+> A notifier is added on each cpu_clk_premux0 to detech when CCF want to
+> change the frequency of the cpu_clk_dyn tree.
+> In this notifier, the cpu_clk_premux1 tree is configured to use the xtal
+> clock and then the cpu_clk_dyn is switch to cpu_clk_premux1 while CCF
+> updates the cpu_clk_premux0 tree.
+>
+> A notifier is added on each sys_pll/sys1_pll to detect when CCF wants to
+> change the PLL clock source of the cpu_clk.
+> In this notifier, the cpu_clk is switched to cpu_clk_dyn while CCF
+> updates the sys_pll/sys1_pll frequency.
+>
+> A third small notifier is added on each cpu_clk / cpub_clk and cpu_clk_dyn,
+> add a small delay at PRE_RATE_CHANGE/POST_RATE_CHANGE to let the other
+> notofiers change propagate before changing the cpu_clk_premux0 and sys_pll
+> clock trees.
+>
+> This notifier set permits switching the cpu_clk / cpub_clk without any
+> glitches and using a safe parking clock while switching between sub-GHz
+> clocks using the cpu_clk_dyn tree.
+>
+> This setup has been tested and validated on the Amlogic G12A and G12B
+> SoCs running the arm64 cpuburn at [1] and cycling between all the possible
+> cpufreq translations of each cluster and checking the final frequency using
+> the clock-measurer, script at [2].
+>
+> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+> [2] https://gist.github.com/superna9999/d4de964dbc0f84b7d527e1df2ddea25f
+> ---
+>  drivers/clk/meson/g12a.c | 567 +++++++++++++++++++++++++++++++++++----
+>  1 file changed, 521 insertions(+), 46 deletions(-)
+>
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index e4957fd9f91f..23162310c7ee 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/init.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/clk.h>
+>  
+>  #include "clk-mpll.h"
+>  #include "clk-pll.h"
+> @@ -88,16 +89,9 @@ static struct clk_regmap g12a_fixed_pll = {
+>  	},
+>  };
+>  
+> -/*
+> - * Internal sys pll emulation configuration parameters
+> - */
+> -static const struct reg_sequence g12a_sys_init_regs[] = {
+> -	{ .reg = HHI_SYS_PLL_CNTL1,	.def = 0x00000000 },
+> -	{ .reg = HHI_SYS_PLL_CNTL2,	.def = 0x00000000 },
+> -	{ .reg = HHI_SYS_PLL_CNTL3,	.def = 0x48681c00 },
+> -	{ .reg = HHI_SYS_PLL_CNTL4,	.def = 0x88770290 },
+> -	{ .reg = HHI_SYS_PLL_CNTL5,	.def = 0x39272000 },
+> -	{ .reg = HHI_SYS_PLL_CNTL6,	.def = 0x56540000 },
+> +static const struct pll_mult_range g12a_sys_pll_mult_range = {
+> +	.min = 128,
+> +	.max = 250,
+>  };
 
-If the reset control is missing, anything done to hardware will be
-silently ignored, since any writes to the registers are ignored.
+The init sequence is removed, I suppose you were concerned about
+glitching the clock on startup ?
 
-On the other hand, if the bus clock is missing and otherwise not enabled,
-accessing the device's registers could actually stall the whole system.
+Without the init sequence, it will inherit whatever is left by the
+bootloader. We have seen in the past that this is not desirable.
 
-ChenYu
+I'm mostly concerned about CNTL3 to CNTL6. Should we apply the sequence
+on .set_rate() instead ? It should be safe then ?
 
-> Best regards
-> Uwe
 >
-> On Tue, Jul 30, 2019 at 12:04:47AM +0200, Jernej Škrabec wrote:
-> > Dne ponedeljek, 29. julij 2019 ob 20:51:08 CEST je Uwe Kleine-König
-> > napisal(a):
-> > > On Mon, Jul 29, 2019 at 08:46:25PM +0200, Jernej Škrabec wrote:
-> > > > Dne ponedeljek, 29. julij 2019 ob 20:40:41 CEST je Uwe Kleine-König
-> > > > napisal(a):
-> > > > > On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej Škrabec wrote:
-> > > > > > Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König
-> > > > > > napisal(a):
-> > > > > > > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
-> > > > > > > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
-> > > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > > > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
-> > > > > > > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König
-> > > > > > > > > > napisal(a):
-> > > > > > > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
-> > > > > > > > > > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > > > > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > > > > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
-> > > > > > > > > > > > sun4i_pwm_single_bypass = {>
-> > > > > > > > > > > >
-> > > > > > > > > > > >   .npwm = 1,
-> > > > > > > > > > > >
-> > > > > > > > > > > >  };
-> > > > > > > > > > > >
-> > > > > > > > > > > > +static const struct sun4i_pwm_data
-> > > > > > > > > > > > sun50i_pwm_dual_bypass_clk_rst
-> > > > > > > > > > > > = {
-> > > > > > > > > > > > + .has_bus_clock = true,
-> > > > > > > > > > > > + .has_prescaler_bypass = true,
-> > > > > > > > > > > > + .has_reset = true,
-> > > > > > > > > > > > + .npwm = 2,
-> > > > > > > > > > > > +};
-> > > > > > > > > > > > +
-> > > > > > > > > > > >
-> > > > > > > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
-> > > > > > > > > > > >
-> > > > > > > > > > > >   {
-> > > > > > > > > > > >
-> > > > > > > > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
-> > > > > > > > > > > >
-> > > > > > > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
-> > > > > > > > > > > > sun4i_pwm_dt_ids[] =
-> > > > > > > > > > > > {
-> > > > > > > > > > > >
-> > > > > > > > > > > >   }, {
-> > > > > > > > > > > >
-> > > > > > > > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
-> > > > > > > > > > > >           .data = &sun4i_pwm_single_bypass,
-> > > > > > > > > > > >
-> > > > > > > > > > > > + }, {
-> > > > > > > > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
-> > > > > > > > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
-> > > > > > > > > > >
-> > > > > > > > > > > If you follow my suggestion for the two previous patches,
->
-> (i.e. use devm_clk_get_optional instead of using devm_clk_get iff the
-> compatible is allwinner,sun50i-h6-pwm; analogous for the reset
-> controller.)
->
-> > > > > > > > > > > you can just use:
-> > > > > > > > > > >
-> > > > > > > > > > >     compatible = "allwinner,sun50i-h6-pwm", "allwinner,sun5i-a10s-pwm";
-> > > > > > > > > > >
-> > > > > > > > > > > and drop this patch.
-> > > > > > > > > >
-> > > > > > > > > > Maxime found out that it's not compatible with A10s due to difference
-> > > > > > > > > > in bypass bit, but yes, I know what you mean.
-> > > > > > > > > >
-> > > > > > > > > > Since H6 requires reset line and bus clock to be specified, it's not
-> > > > > > > > > > compatible from DT binding side. New yaml based binding must somehow
-> > > > > > > > > > know that in order to be able to validate DT node, so it needs
-> > > > > > > > > > standalone compatible. However, depending on conclusions of other
-> > > > > > > > > > discussions, this new compatible can be associated with already
-> > > > > > > > > > available quirks structure or have it's own.
-> > > > > > > > >
-> > > > > > > > > I cannot follow. You should be able to specify in the binding that the
-> > > > > > > > > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
-> > > > > > > > > without a reset line and bus clock also verifies, but this doesn't
-> > > > > > > > > really hurt (and who knows, maybe the next allwinner chip needs exactly this).
-> > > > > > > >
-> > > > > > > > It is not optional. It will not work if either the clocks or reset controls
-> > > > > > > > are missing. How would these be optional anyway? Either it's connected and
-> > > > > > > > thus required, or it's not and therefore should be omitted from the description.
-> > > > > > >
-> > > > > > > [Just arguing about the clock here, the argumentation is analogous for
-> > > > > > > the reset control.]
-> > > > > > >
-> > > > > > > From the driver's perspective it's optional: There are devices with and
-> > > > > > > without a bus clock. This doesn't mean that you can just ignore this
-> > > > > > > clock if it's specified. It's optional in the sense "If dt doesn't
-> > > > > > > specify it, then assume this is a device that doesn't have it and so you
-> > > > > > > don't need to handle it." but not in the sense "it doesn't matter if
-> > > > > > > you handle it or not.".
-> > > > > > >
-> > > > > > > Other than that I'm on your side. So for example I think it's not
-> > > > > > > optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
-> > > > > > > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
-> > > > > > > because this hides exactly the kind of problem you point out here.
-> > > > > >
-> > > > > > I think there's misunderstanding. I only argued that we can't use
-> > > > > >
-> > > > > > compatible = "allwinner,sun50i-h6-pwm", "allwinner,sun5i-a10s-pwm";
-> > > > > >
-> > > > > > as you suggested and only
-> > > > > >
-> > > > > > compatible = "allwinner,sun50i-h6-pwm";
-> > > > > >
-> > > > > > will work. Not because of driver itself (it can still use _optional()
-> > > > > > variants), but because of DT binding, which should be able to validate H6
-> > > > > > PWM node - reset and bus clock references are required in this case.
-> > > > >
-> > > > > I think I understood. In my eyes there is no need to let validation of
-> > > > > the DT bindings catch a missing "optional" property that is needed on
-> > > > > H6.
-> > > > >
-> > > > > You have to draw the line somewhere which information the driver has
-> > > > > hard-coded and what is only provided by the device tree and just assumed
-> > > > > to be correct by the driver. You argue the driver should know that
-> > > >
-> > > > No, in this thread I argue that DT validation tool, executed by
-> > > >
-> > > > make ARCH=arm64 dtbs_check
-> > > >
-> > > > should catch that. This is not a driver, but DT binding described in YAML.
-> > >
-> > > The argumentation is the same. dtbs_check doesn't notice if the base
-> > > address of your "allwinner,sun50i-h6-pwm" device is wrong. So why should
-> > > it catch a missing reset controller phandle?
-> >
-> > Of course checking actual values of node properties doesn't make sense in
-> > dtbs_check, otherwise we would have million DT bindings. If you have 10 copies
-> > of the same IP core, of course you would use same compatible, but actual
-> > register ranges, interrupts, etc. would be different in DT nodes.
-> >
-> > At this point I would make same argument as were made before, but there is no
-> > point going in circles. I'm interested what have DT maintainers to say.
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-König            |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190730080900.hhxrqun7vk4nsj2h%40pengutronix.de.
+
+[...]
+
+>  
+> @@ -364,16 +366,50 @@ static struct clk_regmap g12a_cpu_clk_premux1 = {
+>  	},
+>  	.hw.init = &(struct clk_init_data){
+>  		.name = "cpu_clk_dyn1_sel",
+> -		.ops = &clk_regmap_mux_ro_ops,
+> +		.ops = &clk_regmap_mux_ops,
+>  		.parent_data = (const struct clk_parent_data []) {
+>  			{ .fw_name = "xtal", },
+>  			{ .hw = &g12a_fclk_div2.hw },
+>  			{ .hw = &g12a_fclk_div3.hw },
+>  		},
+>  		.num_parents = 3,
+> +		/* This sub-tree is used a parking clock */
+> +		.flags = CLK_SET_RATE_NO_REPARENT
+>  	},
+>  };
+>  
+> +#define SYS_CPU_DYN_ENABLE	BIT(26)
+> +
+> +/* This divider uses bit 26 to take change in account */
+> +static int g12a_cpu_clk_mux0_div_set_rate(struct clk_hw *hw, unsigned long rate,
+> +					  unsigned long parent_rate)
+> +{
+> +	struct clk_regmap *clk = to_clk_regmap(hw);
+> +	struct clk_regmap_div_data *div = clk_get_regmap_div_data(clk);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret = divider_get_val(rate, parent_rate, div->table, div->width,
+> +			      div->flags);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	val = (unsigned int)ret << div->shift;
+> +
+> +	regmap_update_bits(clk->map, HHI_SYS_CPU_CLK_CNTL0,
+> +			   SYS_CPU_DYN_ENABLE, SYS_CPU_DYN_ENABLE);
+> +
+> +	return regmap_update_bits(clk->map, div->offset,
+> +				  clk_div_mask(div->width) << div->shift |
+> +				  SYS_CPU_DYN_ENABLE, val);
+> +};
+> +
+> +const struct clk_ops g12a_cpu_clk_mux0_div_ops = {
+> +	.recalc_rate = clk_regmap_div_recalc_rate,
+> +	.round_rate = clk_regmap_div_round_rate,
+> +	.set_rate = g12a_cpu_clk_mux0_div_set_rate,
+> +};
+
+I would prefer if we could keep the clock drivers and clock controllers
+separated.
+
+Could you move the above above in another file ?
+
+> +
+
+[...]
+
+>  
+> +/* This divider uses bit 26 to take change in account */
+> +static int g12b_cpub_clk_mux0_div_set_rate(struct clk_hw *hw,
+> +					   unsigned long rate,
+> +					   unsigned long parent_rate)
+> +{
+> +	struct clk_regmap *clk = to_clk_regmap(hw);
+> +	struct clk_regmap_div_data *div = clk_get_regmap_div_data(clk);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret = divider_get_val(rate, parent_rate, div->table, div->width,
+> +			      div->flags);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	val = (unsigned int)ret << div->shift;
+> +
+> +	regmap_update_bits(clk->map, HHI_SYS_CPUB_CLK_CNTL,
+
+Unless I missed something, this function is same as the g12a with the
+exception of the register address.
+
+It seems this clock could have its own clock type and its own data
+structure to store the 'dyn enable' register parameter.
+
+> +			   SYS_CPU_DYN_ENABLE, SYS_CPU_DYN_ENABLE);
+> +
+> +	return regmap_update_bits(clk->map, div->offset,
+> +				  clk_div_mask(div->width) << div->shift |
+> +				  SYS_CPU_DYN_ENABLE, val);
+> +};
+> +
+> +static const struct clk_ops g12b_cpub_clk_mux0_div_ops = {
+> +	.recalc_rate = clk_regmap_div_recalc_rate,
+> +	.round_rate = clk_regmap_div_round_rate,
+> +	.set_rate = g12b_cpub_clk_mux0_div_set_rate,
+> +};
+> +
+
+[...]
+
+> +
+> +static int g12a_cpu_clk_postmux_notifier_cb(struct notifier_block *nb,
+> +					    unsigned long event, void *data)
+> +{
+> +	struct g12a_cpu_clk_postmux_nb_data *nb_data =
+> +		container_of(nb, struct g12a_cpu_clk_postmux_nb_data, nb);
+> +
+> +	switch (event) {
+> +	case PRE_RATE_CHANGE:
+> +		/*
+> +		 * This notifier means cpu_clk_postmux0 clock will be changed
+> +		 * to feed cpu_clk, this is the current path :
+> +		 * cpu_clk
+> +		 *    \- cpu_clk_dyn
+> +		 *          \- cpu_clk_postmux0
+> +		 *                \- cpu_clk_muxX_div
+> +		 *                      \- cpu_clk_premux0
+> +		 *				\- fclk_div3 or fclk_div2
+> +		 *		OR
+> +		 *                \- cpu_clk_premux0
+> +		 *			\- fclk_div3 or fclk_div2
+> +		 */
+> +
+> +		/* Setup cpu_clk_premux1 to xtal */
+> +		clk_hw_set_parent(nb_data->cpu_clk_premux1,
+> +				  nb_data->xtal);
+> +
+> +		/* Setup cpu_clk_postmux1 to bypass divider */
+> +		clk_hw_set_parent(nb_data->cpu_clk_postmux1,
+> +				  nb_data->cpu_clk_premux1);
+> +
+> +		/* Switch to parking clk on cpu_clk_postmux1 */
+> +		clk_hw_set_parent(nb_data->cpu_clk_dyn,
+> +				  nb_data->cpu_clk_postmux1);
+> +
+> +		/*
+> +		 * Now, cpu_clk is 24MHz in the current path :
+> +		 * cpu_clk
+> +		 *    \- cpu_clk_dyn
+> +		 *          \- cpu_clk_postmux1
+> +		 *                \- cpu_clk_premux1
+> +		 *                      \- xtal
+> +		 */
+> +
+> +		udelay(100);
+
+Just curious about the this 100us delay. It seems fairly long, even at
+24MHz. In your stress tests, have you tried shorter delays ? 10us maybe ?
+
+> +
+> +		return NOTIFY_OK;
+> +
+> +	case POST_RATE_CHANGE:
+> +		/*
+> +		 * The cpu_clk_postmux0 has ben updated, now switch back
+> +		 * cpu_clk_dyn to cpu_clk_postmux0 and take the changes
+> +		 * in account.
+> +		 */
+> +
+> +		/* Configure cpu_clk_dyn back to cpu_clk_postmux0 */
+> +		clk_hw_set_parent(nb_data->cpu_clk_dyn,
+> +				  nb_data->cpu_clk_postmux0);
+> +
+> +		/*
+> +		 * new path :
+> +		 * cpu_clk
+> +		 *    \- cpu_clk_dyn
+> +		 *          \- cpu_clk_postmux0
+> +		 *                \- cpu_clk_muxX_div
+> +		 *                      \- cpu_clk_premux0
+> +		 *				\- fclk_div3 or fclk_div2
+> +		 *		OR
+> +		 *                \- cpu_clk_premux0
+> +		 *			\- fclk_div3 or fclk_div2
+> +		 */
+> +
+> +		udelay(100);
+> +
+> +		return NOTIFY_OK;
+> +
+> +	default:
+> +		return NOTIFY_DONE;
+> +	}
+> +}
+> +
