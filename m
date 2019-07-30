@@ -2,180 +2,101 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879D0C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC279C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B4E206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lu+QHcKv"
+	by mail.kernel.org (Postfix) with ESMTP id BDA4320693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730279AbfG3P5k (ORCPT
+        id S1730329AbfG3P6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:57:40 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44101 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728473AbfG3P5j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:57:39 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so30284773pgl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0NaHg6fB++B/oHrlKTF/AWvpclA/KtptWNPlOhBEu0o=;
-        b=Lu+QHcKvJFzvOTTexit555M/XSXUkUQWT4tD6loMbFW02HG3mm7Zs1//fQzFpVqBxB
-         TOvar4APtgDLa56xMWhJ7fpm55CeJvQJjnPYnCGx7yWRBukGV4kBaVFvXyz7DbfVVohu
-         Etqw72cR1ojoy/xR0jSeLs1blUsnbTzo2yArSTe5II8GX1E+fxQLAjhnmJHumrG0VeGk
-         x8ahn5IG13WFE2JVJjoeTdZ5h3haNI3AZYQMMTYfXwgdLZBsVn2YKJ3YWlcRt92WcJc0
-         lBrqce6vxVx4l4fRmJkdSY2/qyqswMaomb2QDo0zInJD43Xf3E7kr83k0HlcGbyHbzvC
-         yGzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0NaHg6fB++B/oHrlKTF/AWvpclA/KtptWNPlOhBEu0o=;
-        b=Ozhlja8k3NjcrAm3NLdFEUNp0qKjV+kpwa3t1mEuOfoEU24oB3M4n9ARSdMbhc8B7T
-         TaA7KJg64iDbg7LIrG35d1R2BhOMJsYDpOBaT1tThcfvx2hHsQYnQ0L7WXWpSirl+ZBX
-         F6eFz1mF27dn5KB+vja2uz5groCbSS+J42Ezuf+0yXMrff6BC/MR5GlSsnMU7BN9XN18
-         0PFRQlaj5QDa+6XbIT1h0UrCkSZGN5WhVVVlrqctF5gtsY9ELd10TZi1MustETpbNjm1
-         mYG613loi9yRJV6sZ1kEC/F0URG5bPMOYqD/1O8sPTp04oUy2uDk07UCunj2/9AUhlRH
-         B9Bg==
-X-Gm-Message-State: APjAAAX0RwnA9H+YSQ0uyg70MdQbdTQpDKHg0qc1poSgY8jRsVR1hUGo
-        k3BpO2Nm1C1BxIr5DcOsiPA=
-X-Google-Smtp-Source: APXvYqwlESv9JHKTlgYzRIqCFokW2Dyl8C4s4ykXe1hm7/Bz13AOFDGIyTvXlC4SDq2abAZNZ3Vscg==
-X-Received: by 2002:a63:c009:: with SMTP id h9mr82211318pgg.166.1564502259001;
-        Tue, 30 Jul 2019 08:57:39 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h1sm82959155pfg.55.2019.07.30.08.57.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 08:57:38 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 08:57:37 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-watchdog@cger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Marking legacy watchdog drivers as deprecated / obsolete
-Message-ID: <20190730155737.GA22593@roeck-us.net>
-References: <20190729220720.GB5712@roeck-us.net>
- <CAK8P3a16dON3g-BzUOrdHu3ryCD+FyJn29EwcT_aQAdj-jvFnA@mail.gmail.com>
+        Tue, 30 Jul 2019 11:58:16 -0400
+Received: from mga07.intel.com ([134.134.136.100]:55522 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728759AbfG3P6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 11:58:16 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 08:58:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,327,1559545200"; 
+   d="scan'208";a="255645883"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga001.jf.intel.com with ESMTP; 30 Jul 2019 08:58:11 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hsUVt-0005F7-JJ; Tue, 30 Jul 2019 18:58:09 +0300
+Date:   Tue, 30 Jul 2019 18:58:09 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-pm@vger.kernel.org,
+        tiwai@suse.de, gregkh@linuxfoundation.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 17/40] soundwire: bus: use
+ runtime_pm_get_sync/pm when enabled
+Message-ID: <20190730155809.GS23480@smile.fi.intel.com>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-18-pierre-louis.bossart@linux.intel.com>
+ <45a912c5-134b-8642-70ef-8c1060389300@linux.intel.com>
+ <20190726190823.GD9224@smile.fi.intel.com>
+ <5a16d9e6-0a9c-a0a8-3b11-d046247f3879@linux.intel.com>
+ <20190730112157.GM23480@smile.fi.intel.com>
+ <a1b383b3-7846-3545-38a5-beece3e52849@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a16dON3g-BzUOrdHu3ryCD+FyJn29EwcT_aQAdj-jvFnA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <a1b383b3-7846-3545-38a5-beece3e52849@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 10:00:36AM +0200, Arnd Bergmann wrote:
-> On Tue, Jul 30, 2019 at 12:07 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> >
-> > Hi,
-> >
-> > we have recently seen a number of changes to legacy watchdog drivers,
-> > mostly surrounding the coding style used some 10+ years ago, but also
-> > fixing minor formatting or coding problems found by static analyzers.
-> > This slowly rises above the level of background noise.
-> >
-> > Would it be acceptable to mark all those drivers as deprecated/obsolete,
-> > warn users that the driver should be converted to use the watchdog
-> > subsystem, and that it will otherwise be removed in a later Linux kernel
-> > version ? This would give us an idea which drivers are still in use,
-> > and it would enable us to remove the remaining drivers maybe 5 or 6
-> > releases for now.
-> >
-> > Thoughts ?
+On Tue, Jul 30, 2019 at 07:57:46AM -0500, Pierre-Louis Bossart wrote:
+> On 7/30/19 6:21 AM, Andy Shevchenko wrote:
+> > On Mon, Jul 29, 2019 at 05:07:39PM -0500, Pierre-Louis Bossart wrote:
+> > > On 7/26/19 2:08 PM, Andy Shevchenko wrote:
+> > > > On Fri, Jul 26, 2019 at 01:08:57PM -0500, Pierre-Louis Bossart wrote:
+> > 
+> > > > > -	if (ret < 0)
+> > > > > +	if (ret < 0 && ret != -EACCES)
+> > > > 
+> > > > ...and here, the pm_runtime_put_noidle() call is missed.
+> > > 
+> > > yes but in the example you provided, they actually do more work than just
+> > > decrement the device usage counter:
+> > 
+> > In their case they would like to do that. You decide what is appropriate call
+> > in your case.
+> > 
+> > My point is, that reference counter in case of error handling should be
+> > returned back to its value.
 > 
-> I don't think an automated approach across 61 drivers is likely to work
-> well. About half of the drivers appear to be for specific SoCs, and
-> removing the watchdog driver while keeping the rest of the SoC support
-> would not be helpful, it  just means we break one of the drivers for the
-> last remaining users of an old SoC the next time they try to upgrade to
-> a new kernel.
+> Agree on the reference count.
+> I am however not clear on the next step and 'what is appropriate'.
 > 
+> If pm_runtime_get_sync() failed, then technically the device was not resumed
 
-The primary goal would be to identify drivers still in use, and to trigger
-efforts to convert those drivers to the new infrastructure. Removal of
-obsolete / unused drivers would be a separate decision, to be made at some
-point in the future, and individually for each driver. I specifically wasn't
-trying to suggest auto-removal.
+Not so straight. It depends on reference count. It might be true (most cases
+I think), or not true, if device had been resumed previously by other call.
 
-Guenter
+> so marking it as last_busy+autosuspend, or using a plain vanilla put() will
+> not result in any action. I must be missing something here.
 
-> It would probably be helpful to go through the list and see if any of
-> the drivers
-> are for platforms that are already gone. FWIW, here is the list of drivers that
-> have their own .ioctl() method, taken from a patch I'm sending soon
-> to add a .compat_ioctl handler:
-> 
-> arch/powerpc/platforms/52xx/mpc52xx_gpt.c
-> arch/um/drivers/harddog_kern.c
-> drivers/char/ipmi/ipmi_watchdog.c
-> drivers/hwmon/fschmd.c
-> drivers/rtc/rtc-ds1374.c
-> drivers/watchdog/acquirewdt.c
-> drivers/watchdog/advantechwdt.c
-> drivers/watchdog/alim1535_wdt.c
-> drivers/watchdog/alim7101_wdt.c
-> drivers/watchdog/ar7_wdt.c
-> drivers/watchdog/at91rm9200_wdt.c
-> drivers/watchdog/ath79_wdt.c
-> drivers/watchdog/bcm63xx_wdt.c
-> drivers/watchdog/cpu5wdt.c
-> drivers/watchdog/eurotechwdt.c
-> drivers/watchdog/f71808e_wdt.c
-> drivers/watchdog/gef_wdt.c
-> drivers/watchdog/geodewdt.c
-> drivers/watchdog/ib700wdt.c
-> drivers/watchdog/ibmasr.c
-> drivers/watchdog/indydog.c
-> drivers/watchdog/intel_scu_watchdog.c
-> drivers/watchdog/iop_wdt.c
-> drivers/watchdog/it8712f_wdt.c
-> drivers/watchdog/ixp4xx_wdt.c
-> drivers/watchdog/ks8695_wdt.c
-> drivers/watchdog/m54xx_wdt.c
-> drivers/watchdog/machzwd.c
-> drivers/watchdog/mixcomwd.c
-> drivers/watchdog/mtx-1_wdt.c
-> drivers/watchdog/mv64x60_wdt.c
-> drivers/watchdog/nuc900_wdt.c
-> drivers/watchdog/nv_tco.c
-> drivers/watchdog/pc87413_wdt.c
-> drivers/watchdog/pcwd.c
-> drivers/watchdog/pcwd_pci.c
-> drivers/watchdog/pcwd_usb.c
-> drivers/watchdog/pika_wdt.c
-> drivers/watchdog/pnx833x_wdt.c
-> drivers/watchdog/rc32434_wdt.c
-> drivers/watchdog/rdc321x_wdt.c
-> drivers/watchdog/riowd.c
-> drivers/watchdog/sa1100_wdt.c
-> drivers/watchdog/sb_wdog.c
-> drivers/watchdog/sbc60xxwdt.c
-> drivers/watchdog/sbc7240_wdt.c
-> drivers/watchdog/sbc_epx_c3.c
-> drivers/watchdog/sbc_fitpc2_wdt.c
-> drivers/watchdog/sc1200wdt.c
-> drivers/watchdog/sc520_wdt.c
-> drivers/watchdog/sch311x_wdt.c
-> drivers/watchdog/scx200_wdt.c
-> drivers/watchdog/smsc37b787_wdt.c
-> drivers/watchdog/w83877f_wdt.c
-> drivers/watchdog/w83977f_wdt.c
-> drivers/watchdog/wafer5823wdt.c
-> drivers/watchdog/wdrtas.c
-> drivers/watchdog/wdt.c
-> drivers/watchdog/wdt285.c
-> drivers/watchdog/wdt977.c
-> drivers/watchdog/wdt_pci.c
-> 
->       Arnd
+put_noidle(). Because if it failed on the first call and was resumed, put()
+will try to shut it down (since reference count goes to no-user base).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
