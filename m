@@ -2,69 +2,114 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E8FC41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFEFC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45B75206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C00206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:08:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgerthkR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfG3RHw (ORCPT
+        id S1729190AbfG3RIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:07:52 -0400
-Received: from gate.crashing.org ([63.228.1.57]:41566 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728647AbfG3RHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:07:51 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6UH7TlS016550;
-        Tue, 30 Jul 2019 12:07:29 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6UH7SxN016549;
-        Tue, 30 Jul 2019 12:07:28 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Tue, 30 Jul 2019 12:07:28 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] powerpc: workaround clang codegen bug in dcbz
-Message-ID: <20190730170728.GQ31406@gate.crashing.org>
-References: <20190729202542.205309-1-ndesaulniers@google.com> <20190729203246.GA117371@archlinux-threadripper> <20190729215200.GN31406@gate.crashing.org> <CAK8P3a1GQSyCj1L8fFG4Pah8dr5Lanw=1yuimX1o+53ARzOX+Q@mail.gmail.com> <20190730134856.GO31406@gate.crashing.org> <CAK8P3a2755_6xq453C2AePLW8BeQk_Jg=HfjB_F-zyVMnQDfdg@mail.gmail.com> <20190730161637.GP31406@gate.crashing.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Tue, 30 Jul 2019 13:08:13 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35971 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728647AbfG3RIN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 13:08:13 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so30171998pfl.3;
+        Tue, 30 Jul 2019 10:08:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=nnvZBnEEdZuLp4XlEeG764rYU22mYDAA8+9O3TP4fyY=;
+        b=JgerthkRz1vAlzzQycx9Yqri53uzEMIO9AzXm3UeSE3VNjX+4hCtqgLF+2JZh3MGOn
+         U7qjCCT8HA7RWoYyMKcMJQdYc4X+ORGNJgK5HQaIRxHvLpXH509q3AWM3dZC/wEZ1xkJ
+         tLY27naCHkt7Kf6XoYDL10tYlx2JU5vGiRd/vNHl0t6TQmty0Hgq8W8C5W61KzGoETVH
+         gEkY0B0eDDAFl2A9xK/DycMUwnQP9o7h9/nbxHDKuym5gwYYF1RWq/iVZT4ogb1+55Sa
+         0XmgfwNhDePlrjKRfNDMpHc/2Z4dMv+dMvsAnwT5u5q/MNq4h8SoTxITc6IE+PmjXHEN
+         5g+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=nnvZBnEEdZuLp4XlEeG764rYU22mYDAA8+9O3TP4fyY=;
+        b=BG5WShxKKpjfQBuBGKpnA10WO4ob811pWVSpQgiEY1rdSkkdBRB8dX9m8VMPEE1Pk1
+         tKfXLPpBV3X+dxfXUwWJbqIOCtvfzKYJi2M8gcwP3nwnpoVbnvg5qc4rxFxSoRXAknzN
+         YCMBvYRfrmkPKuONSFE1NKJTj4jAbuZSD5tBPtUXNlNglDhqutpmg2hpkdIlqjjvaBgn
+         qVYTRYmmfGGYf6FUuZ9UyGmpv90c0myMtNe9NUSvzu5H61dcsqPGAUKCZYJPlqJw14Di
+         7mQd4Ubgs9XByi+Nf3mq387DOhenDTeJC0EqiHpS/HrjCmB/ETfEMtgyt0gi2c+9XJE1
+         Ai/g==
+X-Gm-Message-State: APjAAAVWpwruuE91U8ofkeFqPNvlcy+nny5YmQWrXwOtlOSswryyUhCE
+        WahOoXiN3jnH/mlNTydbfbU=
+X-Google-Smtp-Source: APXvYqzGPYxStVf6hwBkFBp+5QiileRkDsIvuod93h13BkdRX8kRcoQm4LQFWfjVnSvfq1iOY9Db2w==
+X-Received: by 2002:a17:90a:a404:: with SMTP id y4mr122045239pjp.58.1564506492564;
+        Tue, 30 Jul 2019 10:08:12 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r6sm147906900pjb.22.2019.07.30.10.08.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 10:08:12 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 10:08:11 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Jim Cromie <jim.cromie@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] watchdog: scx200_wdt: Mark expected switch fall-through
+Message-ID: <20190730170811.GA20680@roeck-us.net>
+References: <20190729200602.GA6854@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190730161637.GP31406@gate.crashing.org>
-User-Agent: Mutt/1.4.2.3i
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190729200602.GA6854@embeddedor>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:16:37AM -0500, Segher Boessenkool wrote:
-> in_le32 and friends?  Yeah, huh.  If LLVM copies that to the stack as
-> well, its (not byte reversing) read will be atomic just fine, so things
-> will still work correctly.
+On Mon, Jul 29, 2019 at 03:06:02PM -0500, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
 > 
-> The things defined with DEF_MMIO_IN_D (instead of DEF_MMIO_IN_X) do not
-> look like they will work correctly if an update form address is chosen,
-> but that won't happen because the constraint is "m" instead of "m<>",
-> making the %Un pretty useless (it will always be the empty string).
+> This patch fixes the following warning (Building: i386):
+> 
+> drivers/watchdog/scx200_wdt.c: In function ‘scx200_wdt_ioctl’:
+> drivers/watchdog/scx200_wdt.c:188:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    scx200_wdt_ping();
+>    ^~~~~~~~~~~~~~~~~
+> drivers/watchdog/scx200_wdt.c:189:2: note: here
+>   case WDIOC_GETTIMEOUT:
+>   ^~~~
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Btw, this is true since GCC 4.8; before 4.8, plain "m" *could* have an
-automodify (autoinc, autodec, etc.) side effect.  What is the minimum
-GCC version required, these days?
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-https://gcc.gnu.org/PR44492
-https://gcc.gnu.org/r161328
-
-
-Segher
+> ---
+>  drivers/watchdog/scx200_wdt.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/watchdog/scx200_wdt.c b/drivers/watchdog/scx200_wdt.c
+> index efd7996694de..46268309ee9b 100644
+> --- a/drivers/watchdog/scx200_wdt.c
+> +++ b/drivers/watchdog/scx200_wdt.c
+> @@ -186,6 +186,7 @@ static long scx200_wdt_ioctl(struct file *file, unsigned int cmd,
+>  		margin = new_margin;
+>  		scx200_wdt_update_margin();
+>  		scx200_wdt_ping();
+> +		/* Fall through */
+>  	case WDIOC_GETTIMEOUT:
+>  		if (put_user(margin, p))
+>  			return -EFAULT;
