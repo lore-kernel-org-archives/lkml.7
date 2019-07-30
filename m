@@ -2,179 +2,233 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFB0C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C54C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADF620693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4372120693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:50:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="S2RikUcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388421AbfG3SuK (ORCPT
+        id S2388479AbfG3SuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:50:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47182 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388056AbfG3SuJ (ORCPT
+        Tue, 30 Jul 2019 14:50:11 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39887 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388418AbfG3SuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:50:09 -0400
-Received: from mail-pl1-f200.google.com ([209.85.214.200])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hsXCI-0008Q5-O6
-        for linux-kernel@vger.kernel.org; Tue, 30 Jul 2019 18:50:06 +0000
-Received: by mail-pl1-f200.google.com with SMTP id g18so35837480plj.19
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:50:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=8AX9oe3ZacxjT4EiPIUnCdg/jOWgIIX7DxG+k/pFbS8=;
-        b=lL1qS6aD+30s/o8taL9axehgYi0B+Y1iekfC9eXrTmSjrTNPj1ApbCHEpcYBBJcC9C
-         w3k6BS+dGs+PBfaMOwlEmMWUKuaFQwyNoKhD+M4fPRgC/bRu4ic8pxk7CekBxdT1d4Ot
-         1akODstW4RS1wsagyzuKGDOCs8Pdb2qUOBfsQpTWrPeEikhWLqin/hZJH9mqQYLCmMuo
-         a+wuhVCHFcP8dvppjZ9PV2qp6Xy3EgOJYYV4kMNR2L+FyU+8Irub1wnBqPu9WSGXsssA
-         q72tX4M9iZrDBua9EI/OP6uJdW8mrGKg2c5Ex/WNMOOtsupAXNzFk9qzmGUdx2tmsOZr
-         vk7g==
-X-Gm-Message-State: APjAAAVKFrscDwPj59iSdKZDm4rwKjl1u7SaW4EaHEOATe2rgMQKFV5a
-        E0dc1yviUR3g8uqnVnQPn+XZU4xt4k0nBto4aaRg0mjkAo38YVM4LICdKbPCndxEP838AMY3n8t
-        KfqtzCfwOdFBPD5h2/H8Ub0GhF9hF1yPqutc5bMoT1g==
-X-Received: by 2002:a17:902:6b81:: with SMTP id p1mr113381986plk.91.1564512605415;
-        Tue, 30 Jul 2019 11:50:05 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxvCU5ize3AwSJB2TM51RQU/Q2wBF3GrSjiotc5LGGtRBCPjWjkrkKo6GCfdHilGoejjSBy7g==
-X-Received: by 2002:a17:902:6b81:: with SMTP id p1mr113381952plk.91.1564512605139;
-        Tue, 30 Jul 2019 11:50:05 -0700 (PDT)
-Received: from 2001-b011-380f-37d3-91ca-5fad-3233-fb26.dynamic-ip6.hinet.net (2001-b011-380f-37d3-91ca-5fad-3233-fb26.dynamic-ip6.hinet.net. [2001:b011:380f:37d3:91ca:5fad:3233:fb26])
-        by smtp.gmail.com with ESMTPSA id h1sm88791118pfo.152.2019.07.30.11.50.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 11:50:04 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
-Date:   Wed, 31 Jul 2019 02:50:01 +0800
-Cc:     Keith Busch <kbusch@kernel.org>, rjw@rjwysocki.net,
-        keith.busch@intel.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rajatja@google.com
-Content-Transfer-Encoding: 7bit
-Message-Id: <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
-References: <2332799.izEFUvJP67@kreacher>
- <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
- <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
-To:     Mario.Limonciello@dell.com
-X-Mailer: Apple Mail (2.3445.104.11)
+        Tue, 30 Jul 2019 14:50:10 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UInwsJ3335515
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 30 Jul 2019 11:49:58 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UInwsJ3335515
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564512599;
+        bh=WXjuyk2IY+kTbglEz6/IJipMdwmqlisUECfmvP6aZLM=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=S2RikUcXsOn1cdXjtPqslFaLxJbS52ibV9tTnvsIXs1OArwJBM8ri9seSqJ796uHS
+         SY3JOzf6/DmMSHR09t567pJcgm/NtISNkvmbSdQJJyBUtGzkn5ZZiH8e9a35b9frqB
+         Djb4zlpA6A3YrDpEl6JZwo77k9krTHR7pERoAzH7Ne3RS+9bI+EuskhbaALrplXolj
+         UfC0VNWt8X1sXKAaBEaPXboxva5NYAovfMP1WSz4wtqS+WfuEKLHHaBCGsVtlHN8Pc
+         swYZ58qBGMWErZkyb7L9w4V3yb0JFVlfRxRtEWZbKuMDQXB4z7swGxOiFPbrOha9ky
+         3f28CHn3y5bGQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UInupF3335511;
+        Tue, 30 Jul 2019 11:49:56 -0700
+Date:   Tue, 30 Jul 2019 11:49:56 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-4b247fa7314ce48282f3da400a9ffb7f3fd3f863@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, alexey.budankov@linux.intel.com,
+        namhyung@kernel.org, mpetlan@redhat.com, mingo@kernel.org,
+        tglx@linutronix.de, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, acme@redhat.com, ak@linux.intel.com,
+        peterz@infradead.org, hpa@zytor.com
+Reply-To: linux-kernel@vger.kernel.org, alexey.budankov@linux.intel.com,
+          namhyung@kernel.org, mpetlan@redhat.com, mingo@kernel.org,
+          alexander.shishkin@linux.intel.com, tglx@linutronix.de,
+          acme@redhat.com, jolsa@kernel.org, peterz@infradead.org,
+          ak@linux.intel.com, hpa@zytor.com
+In-Reply-To: <20190721112506.12306-58-jolsa@kernel.org>
+References: <20190721112506.12306-58-jolsa@kernel.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] libperf: Adopt xyarray class from perf
+Git-Commit-ID: 4b247fa7314ce48282f3da400a9ffb7f3fd3f863
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 01:14, <Mario.Limonciello@dell.com> <Mario.Limonciello@dell.com> wrote:
+Commit-ID:  4b247fa7314ce48282f3da400a9ffb7f3fd3f863
+Gitweb:     https://git.kernel.org/tip/4b247fa7314ce48282f3da400a9ffb7f3fd3f863
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Sun, 21 Jul 2019 13:24:44 +0200
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 29 Jul 2019 18:34:45 -0300
 
->> -----Original Message-----
->> From: Keith Busch <kbusch@kernel.org>
->> Sent: Tuesday, July 30, 2019 9:42 AM
->> To: Rafael J. Wysocki
->> Cc: Busch, Keith; Limonciello, Mario; Kai-Heng Feng; Christoph Hellwig;  
->> Sagi
->> Grimberg; linux-nvme; Linux PM; Linux Kernel Mailing List; Rajat Jain
->> Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state  
->> for
->> suspend" has problems
->>
->>
->> [EXTERNAL EMAIL]
->>
->> On Tue, Jul 30, 2019 at 03:45:31AM -0700, Rafael J. Wysocki wrote:
->>> So I can reproduce this problem with plain 5.3-rc1 and the patch below  
->>> fixes it.
->>>
->>> Also Mario reports that the same patch needs to be applied for his 9380  
->>> to
->> reach
->>> SLP_S0 after some additional changes under testing/review now, so here it
->> goes.
->>> [The changes mentioned above are in the pm-s2idle-testing branch in the
->>>  linux-pm.git tree at kernel.org.]
->>>
->>> ---
->>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>> Subject: [PATCH] nvme-pci: Do not prevent PCI bus-level PM from being  
->>> used
->>>
->>> One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
->>> host managed power state for suspend") was adding a pci_save_state()
->>> call to nvme_suspend() in order to prevent the PCI bus-level PM from
->>> being applied to the suspended NVMe devices, but that causes the NVMe
->>> drive (PC401 NVMe SK hynix 256GB) in my Dell XPS13 9380 to prevent
->>> the SoC from reaching package idle states deeper than PC3, which is
->>> way insufficient for system suspend.
->>>
->>> Fix this issue by removing the pci_save_state() call in question.
->>
->> I'm okay with the patch if we can get confirmation this doesn't break
->> any previously tested devices. I recall we add the pci_save_state() in
->> the first place specifically to prevent PCI D3 since that was reported
->> to break some devices' low power settings. Kai-Heng or Mario, any input
->> here?
->
-> It's entirely possible that in fixing the shutdown/flush/send NVME power  
-> state command
-> that D3 will be OK now but it will take some time to double check across  
-> the variety of disks that
-> we tested before.
+libperf: Adopt xyarray class from perf
 
-Just did a quick test, this patch regress SK Hynix BC501, the SoC stays at  
-PC3 once the patch is applied.
+Move the xyarray class from perf to libperf, because it's going to be
+used in both.
 
-Kai-Heng
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190721112506.12306-58-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-top.c                            | 1 -
+ tools/perf/lib/Build                                | 1 +
+ tools/perf/{util => lib/include/internal}/xyarray.h | 6 +++---
+ tools/perf/{util => lib}/xyarray.c                  | 4 ++--
+ tools/perf/util/Build                               | 1 -
+ tools/perf/util/counts.h                            | 2 +-
+ tools/perf/util/evsel.h                             | 2 +-
+ tools/perf/util/python-ext-sources                  | 1 -
+ tools/perf/util/stat.h                              | 1 -
+ 9 files changed, 8 insertions(+), 11 deletions(-)
 
->
-> What's kernel policy in terms of adding a module parameter and removing  
-> it later?  My gut
-> reaction is I'd like to see that behind a module parameter and if we see  
-> that all the disks
-> are actually OK we can potentially rip it out in a future release.  Also  
-> gives us a knob for easier
-> wider testing outside of the 4 of us.
->
->>> Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for  
->>> suspend")
->>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>> ---
->>>  drivers/nvme/host/pci.c |    8 +-------
->>>  1 file changed, 1 insertion(+), 7 deletions(-)
->>>
->>> Index: linux-pm/drivers/nvme/host/pci.c
->> ==============================================================
->> =====
->>> --- linux-pm.orig/drivers/nvme/host/pci.c
->>> +++ linux-pm/drivers/nvme/host/pci.c
->>> @@ -2897,14 +2897,8 @@ static int nvme_suspend(struct device *d
->>>  		nvme_dev_disable(ndev, true);
->>>  		ctrl->npss = 0;
->>>  		ret = 0;
->>> -		goto unfreeze;
->>>  	}
->>> -	/*
->>> -	 * A saved state prevents pci pm from generically controlling the
->>> -	 * device's power. If we're using protocol specific settings, we don't
->>> -	 * want pci interfering.
->>> -	 */
->>> -	pci_save_state(pdev);
->>> +
->>>  unfreeze:
->>>  	nvme_unfreeze(ctrl);
->>>  	return ret;
-
-
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index c69ddc67c672..1a4615a5f6c9 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -38,7 +38,6 @@
+ #include <subcmd/parse-options.h>
+ #include "util/parse-events.h"
+ #include "util/cpumap.h"
+-#include "util/xyarray.h"
+ #include "util/sort.h"
+ #include "util/string2.h"
+ #include "util/term.h"
+diff --git a/tools/perf/lib/Build b/tools/perf/lib/Build
+index faf64db13e37..4f78ec0b4e10 100644
+--- a/tools/perf/lib/Build
++++ b/tools/perf/lib/Build
+@@ -4,6 +4,7 @@ libperf-y += threadmap.o
+ libperf-y += evsel.o
+ libperf-y += evlist.o
+ libperf-y += zalloc.o
++libperf-y += xyarray.o
+ 
+ $(OUTPUT)zalloc.o: ../../lib/zalloc.c FORCE
+ 	$(call rule_mkdir)
+diff --git a/tools/perf/util/xyarray.h b/tools/perf/lib/include/internal/xyarray.h
+similarity index 84%
+rename from tools/perf/util/xyarray.h
+rename to tools/perf/lib/include/internal/xyarray.h
+index 7ffe562e7ae7..3bf70e4d474c 100644
+--- a/tools/perf/util/xyarray.h
++++ b/tools/perf/lib/include/internal/xyarray.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _PERF_XYARRAY_H_
+-#define _PERF_XYARRAY_H_ 1
++#ifndef __LIBPERF_INTERNAL_XYARRAY_H
++#define __LIBPERF_INTERNAL_XYARRAY_H
+ 
+ #include <sys/types.h>
+ 
+@@ -32,4 +32,4 @@ static inline int xyarray__max_x(struct xyarray *xy)
+ 	return xy->max_x;
+ }
+ 
+-#endif /* _PERF_XYARRAY_H_ */
++#endif /* __LIBPERF_INTERNAL_XYARRAY_H */
+diff --git a/tools/perf/util/xyarray.c b/tools/perf/lib/xyarray.c
+similarity index 95%
+copy from tools/perf/util/xyarray.c
+copy to tools/perf/lib/xyarray.c
+index 86889ebc3514..dcd901d154bb 100644
+--- a/tools/perf/util/xyarray.c
++++ b/tools/perf/lib/xyarray.c
+@@ -1,8 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include "xyarray.h"
++#include <internal/xyarray.h>
++#include <linux/zalloc.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <linux/zalloc.h>
+ 
+ struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size)
+ {
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 08f670d21615..7abf05131889 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -69,7 +69,6 @@ perf-y += svghelper.o
+ perf-y += sort.o
+ perf-y += hist.o
+ perf-y += util.o
+-perf-y += xyarray.o
+ perf-y += cpumap.o
+ perf-y += cputopo.o
+ perf-y += cgroup.o
+diff --git a/tools/perf/util/counts.h b/tools/perf/util/counts.h
+index 0f0cb2d8f70d..bbfac9ecf642 100644
+--- a/tools/perf/util/counts.h
++++ b/tools/perf/util/counts.h
+@@ -2,7 +2,7 @@
+ #ifndef __PERF_COUNTS_H
+ #define __PERF_COUNTS_H
+ 
+-#include "xyarray.h"
++#include <internal/xyarray.h>
+ 
+ struct perf_counts_values {
+ 	union {
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 57b5523b480c..1f9f66fe43f4 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -8,7 +8,7 @@
+ #include <linux/perf_event.h>
+ #include <linux/types.h>
+ #include <internal/evsel.h>
+-#include "xyarray.h"
++#include <internal/xyarray.h>
+ #include "symbol_conf.h"
+ #include "cpumap.h"
+ #include "counts.h"
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index 2237bac9fadb..235bd9803390 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -20,7 +20,6 @@ util/namespaces.c
+ ../lib/vsprintf.c
+ util/thread_map.c
+ util/util.c
+-util/xyarray.c
+ util/cgroup.c
+ util/parse-branch-options.c
+ util/rblist.c
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 95b4de7a9d51..bcb376e1b3a7 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -8,7 +8,6 @@
+ #include <sys/time.h>
+ #include <sys/resource.h>
+ #include <sys/wait.h>
+-#include "xyarray.h"
+ #include "rblist.h"
+ #include "perf.h"
+ #include "event.h"
