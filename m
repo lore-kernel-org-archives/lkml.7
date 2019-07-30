@@ -2,115 +2,95 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F39FC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C6CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 452A2206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C704206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:56:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mOA8h2YE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+ntVxr3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbfG3DwV (ORCPT
+        id S1728370AbfG3D4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:52:21 -0400
-Received: from ozlabs.org ([203.11.71.1]:52099 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727723AbfG3DwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 23:52:20 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45yN0x37Bgz9s00;
-        Tue, 30 Jul 2019 13:52:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564458737;
-        bh=dWBzTOstxnGf0i1iA4cytgbhW712K6RXIKTK2bgne5Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mOA8h2YErFyu7VBfA3ctEJKG8aP8YRArOZurTaoqt7ttxwPL0DOU/F8YZeDNvYBtd
-         Dsup+WEGEu3PP2DvpQMQ1l+cOr4b4ZZ7iHtWmfR79uCK/QLoXrWhoQvJ1hNTrnjzIh
-         fvWpCcLSNw2hg7x6TFYUJlRuWrwYJblG9XFAbdK6/5VE/ayRj+9hVK4SO0Z1PlHAD8
-         nW/wFTxa0QxEFMIaeuvwpJcxY5j57TRG71D7DcElWiWrNttPb4DK52sv69nHS5Rojq
-         O3QEQlu8XG2H7PbsgZGgb+g1KysW/DUaxdB+hAy0m2kWlOiGbPsurl5sWAAsT4PFHr
-         1Gz0VliKwRMjQ==
-Date:   Tue, 30 Jul 2019 13:52:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org
-Subject: Re: linux-next: build warnings after merge of the keys tree
-Message-ID: <20190730135216.377a16d5@canb.auug.org.au>
-In-Reply-To: <20190730034704.GA1966@sol.localdomain>
-References: <20190730123042.1f17cdd4@canb.auug.org.au>
-        <20190730034704.GA1966@sol.localdomain>
+        Mon, 29 Jul 2019 23:56:31 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40522 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfG3D4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:56:30 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b17so43650738lff.7;
+        Mon, 29 Jul 2019 20:56:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=53o7yb2lde/U7HEY2EiQ3SDljF6junXae0FASrSnDQU=;
+        b=O+ntVxr3LzZJCCMpnzX9A8b3UZd9nQatTasdMI5cI2rBpR5kUCH3eMSVsjBwN1aY/M
+         khKOiN2rSKkyEQsisPxlNp9H1Gypz2Vx71EKHEWbAQO3VFFbkbJvNSliVtBioSELoklt
+         ZN6tqgUv2PIACskU9OGwM9q2xtg8jnDKNfeR4uRkeU0RoKRKropxeJoae2YtVsMjitjU
+         G20jLSHTpHovu9KkWjgbe8pBzV8wxlAFxBBAS1vj1wcwaE1V7KP/05yOdS2HMaq05XTz
+         1/g0UnX/DaPfudzLsY5kFFgZlE1UHj3sMX9Iuv7crhVXJOtrnDvqOp9CuQnyFXgYt6Ne
+         Y8tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=53o7yb2lde/U7HEY2EiQ3SDljF6junXae0FASrSnDQU=;
+        b=O+yUlk89tImjFGab4PV1NygM1QHFJcC53W+As0b5NXrQMP2EUzs+o9PGhN+R3oXAIC
+         BCoBg2U3UDMcf9tKUH6VnRcczOZugB/RNvu+IRak6/HLvfdxs/K6d3MZMJtfaF+X63x1
+         fNInCRtrddRuIoJvXLxamDVWe1RODxiM7TWFlT8dXurmwRG3dvJzPjtYzGHeY+MsLBMI
+         PfRbBRh6LuEUfWfwnoZ+W7CVkfGqhl4xbm3KpUYHdv2YE0DZJdz7V4WrcY/WIHJg1DHP
+         xPsaJv+jHCMHFvorMNKJ+BJQRVo7dDHsa+eQVN1cwjEoSrOtLlTNQml5mUc+IZVfrOH2
+         tWUA==
+X-Gm-Message-State: APjAAAWGQ5/DIP5aq4pfZpSIeSF+ovWS1EuxHAua/SewqPjOyDriHLTc
+        S423Rj7VLgVSvqMGAxqFbB3rh2XFqLNsk0XdiDw=
+X-Google-Smtp-Source: APXvYqz+hYmOjR1Q1FPSHEsNxBWcPa6R8P/w6lkdcVuTC5EHaVjHD41jQKSp06Sb288wCdnNJBU41kRPwCRaMehGWZY=
+X-Received: by 2002:a19:5044:: with SMTP id z4mr51453777lfj.80.1564458988449;
+ Mon, 29 Jul 2019 20:56:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pz/0EQPg5Bro5FDVtffXc5m";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190729083915.4855-1-Anson.Huang@nxp.com> <20190729083915.4855-4-Anson.Huang@nxp.com>
+ <CAOMZO5AgP0BrHyFKz78rsEz1XQMgSNzMmtTV6Q+GYtCGBiFMEQ@mail.gmail.com> <DB3PR0402MB39161F938C25012015B9739CF5DC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB39161F938C25012015B9739CF5DC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 30 Jul 2019 00:56:33 -0300
+Message-ID: <CAOMZO5D33zPEu8zkq-KYvDv4Xzd8OoshSbzOCrBw1hwwJr-qNg@mail.gmail.com>
+Subject: Re: [PATCH V2 4/4] thermal: qoriq: Add clock operations
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "rui.zhang" <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/pz/0EQPg5Bro5FDVtffXc5m
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Anson,
 
-Hi Eric,
+On Tue, Jul 30, 2019 at 12:00 AM Anson Huang <anson.huang@nxp.com> wrote:
 
-On Mon, 29 Jul 2019 20:47:04 -0700 Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Tue, Jul 30, 2019 at 12:30:42PM +1000, Stephen Rothwell wrote:
-> > +static struct key_acl fsverity_acl =3D {
-> > +	.usage	=3D REFCOUNT_INIT(1),
-> > +	.possessor_viewable =3D true, =20
->=20
-> I don't think .possessor_viewable should be set here, since there's no
-> KEY_POSSESSOR_ACE(KEY_ACE_VIEW) in the ACL.  David, this bool is supposed=
- to
-> mean such an entry is present, right?  Is it really necessary, since it's
-> redundant with the ACL itself?
+> Shawn already applied the patch, and Abel has the AHB clock patch to fix that,
+> so just wait for the AHB clock patch in instead of revert the TMU clock patch?
 
-OK, I can take that out of the patch for tomorrow.
+Sorry, I don't understand Abel's patch as there is not a proper
+description of what it tries to fix.
 
-> Otherwise this looks good, thanks Stephen.  I'll want to remove a few of =
-these
-> permissions in a separate patch later, but for now we can just keep it
-> equivalent to the original code as you've done.
+If I understand correctly Abel's patch is not the proper fix and the
+real fix for the kernel TMU hang in linux-next is to manage the TMU
+clock inside the TMU driver, like you did in this patch.
 
-Thanks for the review.
-
-> We'll have the same problem in fs/crypto/ in a week or two if/when I apply
-> another patch series.  For that one I'll send you a merge resolution so y=
-ou
-> don't have to do it yourself...
-
-That will be great, thanks.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/pz/0EQPg5Bro5FDVtffXc5m
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0/vvAACgkQAVBC80lX
-0Gxv3wf+OkCUtz8STSIUcFmQ7bpkopnYRpQOOUQfrUv48mAsFvT1y18ykC1U/dRh
-Ukfl0lLZvqQgwWKBTSOjPj1KSgemYTqa54L7I41N6M1FAd7QVex3R0aAu89FLByp
-jY69OpZjtiEFjst2zO/FO0jIAbt5bWrINwLJ75J/pwFLqN4ZifDwkBm4Z3kNntKc
-7LgyWXZ9EnoUapU1j+eP/TlpZSp7E63itvOrXdvmpKzVDOwgt8HjYPJQqVIGx7iF
-4xr/pJYJo8rskEByhC9SQk8mJRGJmGnnSM4NN/Bvv55w7oJKLxXTfK9XMj+hGvNn
-o1e8IX8TWHJGL4xYkacHch5Qys7JgA==
-=lCUr
------END PGP SIGNATURE-----
-
---Sig_/pz/0EQPg5Bro5FDVtffXc5m--
+To avoid a revert one possible solution would be to send only this one
+as a fix for 5.3. You can point that it Fixes the commit that adds
+i.MX8M support for the TMU driver.
