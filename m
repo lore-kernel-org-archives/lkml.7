@@ -7,61 +7,59 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9630FC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F004C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC922064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411E62064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HzhzU7pW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ltdGp0n/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388110AbfG3SQj (ORCPT
+        id S2388160AbfG3SQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:16:39 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41613 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388039AbfG3SQb (ORCPT
+        Tue, 30 Jul 2019 14:16:45 -0400
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:33971 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388066AbfG3SQe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:16:31 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x15so20131230pgg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:30 -0700 (PDT)
+        Tue, 30 Jul 2019 14:16:34 -0400
+Received: by mail-pf1-f173.google.com with SMTP id b13so30263934pfo.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=R+LwxKh+rGV2TldYFaibsGc6jv64xvgd6qWUW7IJGL4=;
-        b=HzhzU7pWiJQ2/6+p2YWgzzRKNpggqYFIfL605hH5WJwJLsgD7Ez+gO9WjqY+/SZNCh
-         T8nZ/Jq8szKWQP0fpYpxOA/mwARN+o0iWnqFKKxI7Qv0+pc6INWmzOQQuxkkJMUbKC8Y
-         kNEPco6aVNnwmUazs+zmmcTNBV6vYXml1F/XA=
+        bh=LY1WwoQKlA0oziJ9kjjyUXkW+p97jOQ5086OAuAZECQ=;
+        b=ltdGp0n/hOTbii9iXo9JRwLODulU135U1oqgBZgsM5F8NH7mxvHpZAbQ5aX/M21n2c
+         9zcLQHPsbYmk3NEb/WB84XD/PdXySxlwRgANBgnlXQ1DOf67lmFoLJFG1UCcLeoyBBiC
+         Mf1+Y5iExsn9vJOWD3DnggnyK9WPiBcUm2/04=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=R+LwxKh+rGV2TldYFaibsGc6jv64xvgd6qWUW7IJGL4=;
-        b=XQXlKOWf7gbEgykt4v5DT5pWZKeSjbeLj7wSOxM7u3rlQkam9RGpdNxwXxNJswZPWF
-         qtuR9uCCfVp9i2lsPFx5FosvVXW9n7BupwbLHRe1v7l1GO7ex1XUQ3cRTrVNItlDu1aG
-         KSYGZOoPK2MlGFL1KZCNIN+dopteSCAxBGZA4AOOQkZncwmoA7a/24KG9nWGD5CfaDM6
-         nBFwvrCLYAWAH5lVADT7b+SN3TlVBHOR5pphWgDtQmwiI3+tHnJ2iQWaZlfkPYOIVwd5
-         KokuIDzErTLPPMQEZfZOx5Bzcyp9FYA2cMz2hQiuTu24cj2IaxB/u8AoG6MsENbsiJD7
-         umKg==
-X-Gm-Message-State: APjAAAWJ21NbGDdIBtwfKI5CbsPymZnO9Jc/u6NnaUEQ9IJ0ESDxqtZP
-        PxgSUOOwcgV6gymVfZ7Qk7bR+Y9esRKNsQ==
-X-Google-Smtp-Source: APXvYqwlugLrblhpkKg5MgH82DH3I2ZfTTIFs4nYin9BP3UU2LX7voVgbAYYN2JbqVBDzMxKaeAoGw==
-X-Received: by 2002:a62:642:: with SMTP id 63mr43464543pfg.257.1564510589976;
-        Tue, 30 Jul 2019 11:16:29 -0700 (PDT)
+        bh=LY1WwoQKlA0oziJ9kjjyUXkW+p97jOQ5086OAuAZECQ=;
+        b=Yw6KcoL4Uzo2ibiQQN0oEAIzm5zOONbREVQNyognhA+kfNhvgiy/Nfi2omOIj40ji0
+         Jy3cjDLZ/cYWeMALhU6NVejejoTSV5PBZ6H3lNf8ju8M/l1lmPcmlhfG4zSpCKA+ZSoQ
+         xr7Z/URvFVa9Tggk+nabimnVhcV7Iw5e0/gAmQLpsyqhT/5gYzxQqkxp9KxTvHddFJLZ
+         dg5CE3v0wMQLJjiyDMe52rmRpY4l2RGcd9FLoqsN88SHErik8Ih33a8jDDneGsIOMePe
+         LF11dDn7ibox+UExB+rtM8cD5pNqrQaCdOKnlpoc0EbLsCeuHkHqbKQttARSu+3p+0LH
+         UCDA==
+X-Gm-Message-State: APjAAAUVBaJsQ5IiJwKU/emBIqJoM9GzQrHIpzM1F0CNfV08jmU+mp2O
+        f6IQOHQSS4EPYqXu9MCTnZxxC6SWTJOwoQ==
+X-Google-Smtp-Source: APXvYqzj1c9dVdUvFCpAR/vStlaxFMtTXEqTwndnMRN3UqiYF6seJokLOmyHO1pZlXVedVhtr0R0jQ==
+X-Received: by 2002:aa7:843c:: with SMTP id q28mr43863220pfn.152.1564510593350;
+        Tue, 30 Jul 2019 11:16:33 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.29
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.32
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 11:16:29 -0700 (PDT)
+        Tue, 30 Jul 2019 11:16:33 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v6 38/57] remoteproc: Remove dev_err() usage after platform_get_irq()
-Date:   Tue, 30 Jul 2019 11:15:38 -0700
-Message-Id: <20190730181557.90391-39-swboyd@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Subject: [PATCH v6 42/57] staging: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:42 -0700
+Message-Id: <20190730181557.90391-43-swboyd@chromium.org>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
 References: <20190730181557.90391-1-swboyd@chromium.org>
@@ -107,136 +105,255 @@ if ( \( ret < 0 \| ret <= 0 \) )
 While we're here, remove braces on if statements that only have one
 statement (manually).
 
-Cc: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: linux-remoteproc@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devel@driverdev.osuosl.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
 Please apply directly to subsystem trees
 
- drivers/remoteproc/da8xx_remoteproc.c    |  4 +--
- drivers/remoteproc/keystone_remoteproc.c |  4 ---
- drivers/remoteproc/qcom_q6v5.c           | 35 ++++--------------------
- 3 files changed, 6 insertions(+), 37 deletions(-)
+ drivers/staging/emxx_udc/emxx_udc.c                          | 4 +---
+ drivers/staging/goldfish/goldfish_audio.c                    | 4 +---
+ drivers/staging/media/allegro-dvt/allegro-core.c             | 4 +---
+ drivers/staging/media/hantro/hantro_drv.c                    | 4 +---
+ drivers/staging/media/imx/imx7-media-csi.c                   | 4 +---
+ drivers/staging/media/imx/imx7-mipi-csis.c                   | 4 +---
+ drivers/staging/media/meson/vdec/esparser.c                  | 4 +---
+ drivers/staging/media/omap4iss/iss.c                         | 1 -
+ drivers/staging/media/sunxi/cedrus/cedrus_hw.c               | 5 +----
+ drivers/staging/most/dim2/dim2.c                             | 2 --
+ drivers/staging/mt7621-dma/mtk-hsdma.c                       | 4 +---
+ drivers/staging/nvec/nvec.c                                  | 4 +---
+ drivers/staging/ralink-gdma/ralink-gdma.c                    | 4 +---
+ .../vc04_services/interface/vchiq_arm/vchiq_2835_arm.c       | 4 +---
+ 14 files changed, 12 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
-index b2c7af323ed1..98e0be9476a4 100644
---- a/drivers/remoteproc/da8xx_remoteproc.c
-+++ b/drivers/remoteproc/da8xx_remoteproc.c
-@@ -249,10 +249,8 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
- 	int ret;
+diff --git a/drivers/staging/emxx_udc/emxx_udc.c b/drivers/staging/emxx_udc/emxx_udc.c
+index 4f3c2c13a225..489cde4e915e 100644
+--- a/drivers/staging/emxx_udc/emxx_udc.c
++++ b/drivers/staging/emxx_udc/emxx_udc.c
+@@ -3094,10 +3094,8 @@ static int nbu2ss_drv_probe(struct platform_device *pdev)
+ 		return PTR_ERR(mmio_base);
  
  	irq = platform_get_irq(pdev, 0);
 -	if (irq < 0) {
--		dev_err(dev, "platform_get_irq(pdev, 0) error: %d\n", irq);
+-		dev_err(&pdev->dev, "failed to get IRQ\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 	status = devm_request_irq(&pdev->dev, irq, _nbu2ss_udc_irq,
+ 				  0, driver_name, udc);
+ 
+diff --git a/drivers/staging/goldfish/goldfish_audio.c b/drivers/staging/goldfish/goldfish_audio.c
+index 24a738238f9f..0c65a0121dde 100644
+--- a/drivers/staging/goldfish/goldfish_audio.c
++++ b/drivers/staging/goldfish/goldfish_audio.c
+@@ -302,10 +302,8 @@ static int goldfish_audio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	data->irq = platform_get_irq(pdev, 0);
+-	if (data->irq < 0) {
+-		dev_err(&pdev->dev, "platform_get_irq failed\n");
++	if (data->irq < 0)
+ 		return -ENODEV;
+-	}
+ 	data->buffer_virt = dmam_alloc_coherent(&pdev->dev,
+ 						COMBINED_BUFFER_SIZE,
+ 						&buf_addr, GFP_KERNEL);
+diff --git a/drivers/staging/media/allegro-dvt/allegro-core.c b/drivers/staging/media/allegro-dvt/allegro-core.c
+index f050c7347fd5..6f0cd0784786 100644
+--- a/drivers/staging/media/allegro-dvt/allegro-core.c
++++ b/drivers/staging/media/allegro-dvt/allegro-core.c
+@@ -2947,10 +2947,8 @@ static int allegro_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "failed to get irq resource\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 	ret = devm_request_threaded_irq(&pdev->dev, irq,
+ 					allegro_hardirq,
+ 					allegro_irq_thread,
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index c3665f0e87a2..4a7afad2af92 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -733,10 +733,8 @@ static int hantro_probe(struct platform_device *pdev)
+ 			continue;
+ 
+ 		irq = platform_get_irq_byname(vpu->pdev, irq_name);
+-		if (irq <= 0) {
+-			dev_err(vpu->dev, "Could not get %s IRQ.\n", irq_name);
++		if (irq <= 0)
+ 			return -ENXIO;
+-		}
+ 
+ 		ret = devm_request_irq(vpu->dev, irq,
+ 				       vpu->variant->irqs[i].handler, 0,
+diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+index 500b4c08d967..d7d38dd9f168 100644
+--- a/drivers/staging/media/imx/imx7-media-csi.c
++++ b/drivers/staging/media/imx/imx7-media-csi.c
+@@ -1194,10 +1194,8 @@ static int imx7_csi_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	csi->irq = platform_get_irq(pdev, 0);
+-	if (csi->irq < 0) {
+-		dev_err(dev, "Missing platform resources data\n");
++	if (csi->irq < 0)
+ 		return csi->irq;
+-	}
+ 
+ 	csi->regbase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(csi->regbase))
+diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+index d1cdf011c8f1..73d8354e618c 100644
+--- a/drivers/staging/media/imx/imx7-mipi-csis.c
++++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+@@ -975,10 +975,8 @@ static int mipi_csis_probe(struct platform_device *pdev)
+ 		return PTR_ERR(state->regs);
+ 
+ 	state->irq = platform_get_irq(pdev, 0);
+-	if (state->irq < 0) {
+-		dev_err(dev, "Failed to get irq\n");
++	if (state->irq < 0)
+ 		return state->irq;
+-	}
+ 
+ 	ret = mipi_csis_clk_get(state);
+ 	if (ret < 0)
+diff --git a/drivers/staging/media/meson/vdec/esparser.c b/drivers/staging/media/meson/vdec/esparser.c
+index 3a21a8cec799..95102a4bdc62 100644
+--- a/drivers/staging/media/meson/vdec/esparser.c
++++ b/drivers/staging/media/meson/vdec/esparser.c
+@@ -301,10 +301,8 @@ int esparser_init(struct platform_device *pdev, struct amvdec_core *core)
+ 	int irq;
+ 
+ 	irq = platform_get_irq_byname(pdev, "esparser");
+-	if (irq < 0) {
+-		dev_err(dev, "Failed getting ESPARSER IRQ from dtb\n");
 +	if (irq < 0)
  		return irq;
 -	}
  
- 	irq_data = irq_get_irq_data(irq);
- 	if (!irq_data) {
-diff --git a/drivers/remoteproc/keystone_remoteproc.c b/drivers/remoteproc/keystone_remoteproc.c
-index 4cb44017af8a..5c4658f00b3d 100644
---- a/drivers/remoteproc/keystone_remoteproc.c
-+++ b/drivers/remoteproc/keystone_remoteproc.c
-@@ -424,16 +424,12 @@ static int keystone_rproc_probe(struct platform_device *pdev)
- 	ksproc->irq_ring = platform_get_irq_byname(pdev, "vring");
- 	if (ksproc->irq_ring < 0) {
- 		ret = ksproc->irq_ring;
--		dev_err(dev, "failed to get vring interrupt, status = %d\n",
--			ret);
- 		goto disable_clk;
+ 	ret = devm_request_irq(dev, irq, esparser_isr, IRQF_SHARED,
+ 			       "esparserirq", core);
+diff --git a/drivers/staging/media/omap4iss/iss.c b/drivers/staging/media/omap4iss/iss.c
+index c8be1db532ab..1a966cb2f3a6 100644
+--- a/drivers/staging/media/omap4iss/iss.c
++++ b/drivers/staging/media/omap4iss/iss.c
+@@ -1276,7 +1276,6 @@ static int iss_probe(struct platform_device *pdev)
+ 	/* Interrupt */
+ 	ret = platform_get_irq(pdev, 0);
+ 	if (ret <= 0) {
+-		dev_err(iss->dev, "No IRQ resource\n");
+ 		ret = -ENODEV;
+ 		goto error_iss;
  	}
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+index c34aec7c6e40..9ce3a65903c5 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+@@ -160,11 +160,8 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
+ 	dev->capabilities = variant->capabilities;
  
- 	ksproc->irq_fault = platform_get_irq_byname(pdev, "exception");
- 	if (ksproc->irq_fault < 0) {
- 		ret = ksproc->irq_fault;
--		dev_err(dev, "failed to get exception interrupt, status = %d\n",
--			ret);
- 		goto disable_clk;
+ 	irq_dec = platform_get_irq(dev->pdev, 0);
+-	if (irq_dec <= 0) {
+-		dev_err(dev->dev, "Failed to get IRQ\n");
+-
++	if (irq_dec <= 0)
+ 		return irq_dec;
+-	}
+ 	ret = devm_request_irq(dev->dev, irq_dec, cedrus_irq,
+ 			       0, dev_name(dev->dev), dev);
+ 	if (ret) {
+diff --git a/drivers/staging/most/dim2/dim2.c b/drivers/staging/most/dim2/dim2.c
+index 31fbc1a75b06..c8bec3c34c2c 100644
+--- a/drivers/staging/most/dim2/dim2.c
++++ b/drivers/staging/most/dim2/dim2.c
+@@ -797,7 +797,6 @@ static int dim2_probe(struct platform_device *pdev)
+ 
+ 	irq = platform_get_irq(pdev, AHB0_INT_IDX);
+ 	if (irq < 0) {
+-		dev_err(&pdev->dev, "failed to get ahb0_int irq: %d\n", irq);
+ 		ret = irq;
+ 		goto err_shutdown_dim;
  	}
+@@ -811,7 +810,6 @@ static int dim2_probe(struct platform_device *pdev)
  
-diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
-index 0d33e3079f0d..cb0f4a0be032 100644
---- a/drivers/remoteproc/qcom_q6v5.c
-+++ b/drivers/remoteproc/qcom_q6v5.c
-@@ -187,13 +187,8 @@ int qcom_q6v5_init(struct qcom_q6v5 *q6v5, struct platform_device *pdev,
- 	init_completion(&q6v5->stop_done);
+ 	irq = platform_get_irq(pdev, MLB_INT_IDX);
+ 	if (irq < 0) {
+-		dev_err(&pdev->dev, "failed to get mlb_int irq: %d\n", irq);
+ 		ret = irq;
+ 		goto err_shutdown_dim;
+ 	}
+diff --git a/drivers/staging/mt7621-dma/mtk-hsdma.c b/drivers/staging/mt7621-dma/mtk-hsdma.c
+index 60db06768c8a..d964642d95a3 100644
+--- a/drivers/staging/mt7621-dma/mtk-hsdma.c
++++ b/drivers/staging/mt7621-dma/mtk-hsdma.c
+@@ -675,10 +675,8 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
+ 	tasklet_init(&hsdma->task, mtk_hsdma_tasklet, (unsigned long)hsdma);
  
- 	q6v5->wdog_irq = platform_get_irq_byname(pdev, "wdog");
--	if (q6v5->wdog_irq < 0) {
--		if (q6v5->wdog_irq != -EPROBE_DEFER)
--			dev_err(&pdev->dev,
--				"failed to retrieve wdog IRQ: %d\n",
--				q6v5->wdog_irq);
-+	if (q6v5->wdog_irq < 0)
- 		return q6v5->wdog_irq;
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "failed to get irq\n");
++	if (irq < 0)
+ 		return -EINVAL;
+-	}
+ 	ret = devm_request_irq(&pdev->dev, irq, mtk_hsdma_irq,
+ 			       0, dev_name(&pdev->dev), hsdma);
+ 	if (ret) {
+diff --git a/drivers/staging/nvec/nvec.c b/drivers/staging/nvec/nvec.c
+index 08027a36e0bc..1cbd7b71fc38 100644
+--- a/drivers/staging/nvec/nvec.c
++++ b/drivers/staging/nvec/nvec.c
+@@ -796,10 +796,8 @@ static int tegra_nvec_probe(struct platform_device *pdev)
+ 		return PTR_ERR(base);
+ 
+ 	nvec->irq = platform_get_irq(pdev, 0);
+-	if (nvec->irq < 0) {
+-		dev_err(dev, "no irq resource?\n");
++	if (nvec->irq < 0)
+ 		return -ENODEV;
 -	}
  
- 	ret = devm_request_threaded_irq(&pdev->dev, q6v5->wdog_irq,
- 					NULL, q6v5_wdog_interrupt,
-@@ -205,13 +200,8 @@ int qcom_q6v5_init(struct qcom_q6v5 *q6v5, struct platform_device *pdev,
- 	}
+ 	i2c_clk = devm_clk_get(dev, "div-clk");
+ 	if (IS_ERR(i2c_clk)) {
+diff --git a/drivers/staging/ralink-gdma/ralink-gdma.c b/drivers/staging/ralink-gdma/ralink-gdma.c
+index 5854551d0a52..900424db9b97 100644
+--- a/drivers/staging/ralink-gdma/ralink-gdma.c
++++ b/drivers/staging/ralink-gdma/ralink-gdma.c
+@@ -826,10 +826,8 @@ static int gdma_dma_probe(struct platform_device *pdev)
+ 	tasklet_init(&dma_dev->task, gdma_dma_tasklet, (unsigned long)dma_dev);
  
- 	q6v5->fatal_irq = platform_get_irq_byname(pdev, "fatal");
--	if (q6v5->fatal_irq < 0) {
--		if (q6v5->fatal_irq != -EPROBE_DEFER)
--			dev_err(&pdev->dev,
--				"failed to retrieve fatal IRQ: %d\n",
--				q6v5->fatal_irq);
-+	if (q6v5->fatal_irq < 0)
- 		return q6v5->fatal_irq;
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "failed to get irq\n");
++	if (irq < 0)
+ 		return -EINVAL;
+-	}
+ 	ret = devm_request_irq(&pdev->dev, irq, gdma_dma_irq,
+ 			       0, dev_name(&pdev->dev), dma_dev);
+ 	if (ret) {
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+index 61c69f353cdb..8dc730cfe7a6 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+@@ -141,10 +141,8 @@ int vchiq_platform_init(struct platform_device *pdev, struct vchiq_state *state)
+ 		return PTR_ERR(g_regs);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq <= 0) {
+-		dev_err(dev, "failed to get IRQ\n");
++	if (irq <= 0)
+ 		return irq;
 -	}
  
- 	ret = devm_request_threaded_irq(&pdev->dev, q6v5->fatal_irq,
- 					NULL, q6v5_fatal_interrupt,
-@@ -223,13 +213,8 @@ int qcom_q6v5_init(struct qcom_q6v5 *q6v5, struct platform_device *pdev,
- 	}
- 
- 	q6v5->ready_irq = platform_get_irq_byname(pdev, "ready");
--	if (q6v5->ready_irq < 0) {
--		if (q6v5->ready_irq != -EPROBE_DEFER)
--			dev_err(&pdev->dev,
--				"failed to retrieve ready IRQ: %d\n",
--				q6v5->ready_irq);
-+	if (q6v5->ready_irq < 0)
- 		return q6v5->ready_irq;
--	}
- 
- 	ret = devm_request_threaded_irq(&pdev->dev, q6v5->ready_irq,
- 					NULL, q6v5_ready_interrupt,
-@@ -241,13 +226,8 @@ int qcom_q6v5_init(struct qcom_q6v5 *q6v5, struct platform_device *pdev,
- 	}
- 
- 	q6v5->handover_irq = platform_get_irq_byname(pdev, "handover");
--	if (q6v5->handover_irq < 0) {
--		if (q6v5->handover_irq != -EPROBE_DEFER)
--			dev_err(&pdev->dev,
--				"failed to retrieve handover IRQ: %d\n",
--				q6v5->handover_irq);
-+	if (q6v5->handover_irq < 0)
- 		return q6v5->handover_irq;
--	}
- 
- 	ret = devm_request_threaded_irq(&pdev->dev, q6v5->handover_irq,
- 					NULL, q6v5_handover_interrupt,
-@@ -260,13 +240,8 @@ int qcom_q6v5_init(struct qcom_q6v5 *q6v5, struct platform_device *pdev,
- 	disable_irq(q6v5->handover_irq);
- 
- 	q6v5->stop_irq = platform_get_irq_byname(pdev, "stop-ack");
--	if (q6v5->stop_irq < 0) {
--		if (q6v5->stop_irq != -EPROBE_DEFER)
--			dev_err(&pdev->dev,
--				"failed to retrieve stop-ack IRQ: %d\n",
--				q6v5->stop_irq);
-+	if (q6v5->stop_irq < 0)
- 		return q6v5->stop_irq;
--	}
- 
- 	ret = devm_request_threaded_irq(&pdev->dev, q6v5->stop_irq,
- 					NULL, q6v5_stop_interrupt,
+ 	err = devm_request_irq(dev, irq, vchiq_doorbell_irq, IRQF_IRQPOLL,
+ 			       "VCHIQ doorbell", state);
 -- 
 Sent by a computer through tubes
 
