@@ -2,156 +2,109 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D287EC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7648FC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55FC20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455859;
-	bh=akX8pTRSgtWmvSY+wS4yy14rnr2wZfN2n3Sc5ej76tw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PTDB6uYnZsBQSLVfFQ9P7QraHYzoXuQF1G6nZvTlD+gQtRJE67j0FPmK1yKs251ML
-	 zx60EQcQxUZ9cp2q9IYxazuM2+SN/REWXjpcsg5f7pdPGw8iwhwETAyeADd0C9Pazy
-	 pkNHhb0lNcLZTPdJe8vrI/IPg4/a6nRjFz+AQA/8=
+	by mail.kernel.org (Postfix) with ESMTP id 4E6F0206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVBvxgZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731644AbfG3C4y (ORCPT
+        id S1730174AbfG3DEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:56:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731618AbfG3C4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:56:50 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F335206DD;
-        Tue, 30 Jul 2019 02:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455410;
-        bh=akX8pTRSgtWmvSY+wS4yy14rnr2wZfN2n3Sc5ej76tw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YoZe4XaA+nDT0Lmgk66TJ+/JXsKlT62O6q11BxuVuSg/BVqIqEPW8Vo0rwBTW3QmR
-         phIOzJnWrsH2m7AZBKmVsymbjlE+4iwzrTuQRypgemO5Upxzk4oIFfTBtyXzYWeoOA
-         z58wPlGMCxwhpEVSXinIMe6HdBE4vtC1EYVR6HfY=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>
-Subject: [PATCH 010/107] perf trace: Handle raw_syscalls:sys_enter just like the BPF_OUTPUT augmented event
-Date:   Mon, 29 Jul 2019 23:54:33 -0300
-Message-Id: <20190730025610.22603-11-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
-References: <20190730025610.22603-1-acme@kernel.org>
+        Mon, 29 Jul 2019 23:04:21 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41546 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbfG3DES (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:04:18 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x15so18903723pgg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 20:04:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=gD5mfEMWuXarGCctKEueAm1TQYwfzvdTbbmFFyNOtWo=;
+        b=UVBvxgZ6r/zLyKNUUmC7qzvDk5EBxkpH1aC3y+kIo97u1sg42yewB7FkZdIpZMqvpS
+         QIB4TpEnF3SyEtGHbXb/AB4jlJ9mRLrxHLY5bz5G9UFc70g+I+IJA+g1/ySrcOw/pfWt
+         tzD7FDrpyDosPIvxQacedkrga26Bv7MfrsThJiWoy5ymskilTpMy8SO2zzUd7beqKfsl
+         u4Bbb9PSRp/zymco+TgOhWf3RH0SNTve4sqmjJQ8YX7KeQehRXgKMlEsLB5DVtQL2FOR
+         sfTCYP4R/1c2eDlXt/0WCDtWBVhW7r29c2S1WcHEstdLYrR/syUqDu72U6O9LfaWd3Qt
+         0WkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=gD5mfEMWuXarGCctKEueAm1TQYwfzvdTbbmFFyNOtWo=;
+        b=jr2YxxwkZB144QFs+EM7HhCpaGkjj2wW9umSfAv7QGoMM6MfirOQcodRh0agiJTKJj
+         EliL/kx5uJ1TNFu6LxkSjJf3ELh8xy4Umh6Rn2fqYoKFoZp/3DzrHTkTiaKmNEBsVjNI
+         2HrnPi6OTx+ZgF2VgSZa43VDG6EbyHsnM9c4amBDKpZw8UTLyQ4ydVhd7riRvUpY33jp
+         SuFRPhNa1y4grVCMf+cJg//cRMYWUOLewVmsaFcSzDugseWGfG+m2rkz4/Ek7hMmJaeE
+         VC5tL7zPVID9B0Qj3N0h9Nq1PntR138mnSlWc1e+MXezn2J97z7xDIyJzqfov51ry6z/
+         04eQ==
+X-Gm-Message-State: APjAAAXnyrmAYaFkycbmNgiA3687iBEKXplkwbgEaut1kLCdzPgRNaTZ
+        P8U1VozEsNTxV/bV2yPqTJ8=
+X-Google-Smtp-Source: APXvYqzdWv0EJeJ8yPP/yNdZlsxyvWTQ6kqL8q4wcSPSHXHBf6Lp1lQKBVsPsqDq/ZrNU2RgtE/OJA==
+X-Received: by 2002:a17:90a:1aa4:: with SMTP id p33mr116749314pjp.27.1564455858074;
+        Mon, 29 Jul 2019 20:04:18 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id n185sm45771965pga.16.2019.07.29.20.04.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 20:04:17 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 08:34:11 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeeeun Evans <jeeeunevans@gmail.com>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        hdegoede@redhat.com, Larry.Finger@lwfinger.net
+Subject: [PATCH] staging: rtl8723bs: core: Remove Macro
+ "IS_MAC_ADDRESS_BROADCAST"
+Message-ID: <20190730030411.GA6140@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Remove unused macro IS_MAC_ADDRESS_BROADCAST. In future if one wants use
+it ,use generic API "is_broadcast_ether_addr"
 
-So, we use a PERF_COUNT_SW_BPF_OUTPUT to output the augmented sys_enter
-payload, i.e. to output more than just the raw syscall args, and if
-something goes wrong when handling an unfiltered syscall, we bail out
-and just return 1 in the bpf program associated with
-raw_syscalls:sys_enter, meaning, don't filter that tracepoint, in which
-case what will appear in the perf ring buffer isn't the BPF_OUTPUT
-event, but the original raw_syscalls:sys_enter event with its normal
-payload.
-
-Now that we're switching to using a bpf_tail_call +
-BPF_MAP_TYPE_PROG_ARRAY we're going to use this in the common case, so a
-bug where raw_syscalls:sys_enter wasn't being handled by
-trace__sys_enter() surfaced and for  that case, instead of using the
-strace-like augmenter (trace__sys_enter()), we continued to use the
-normal generic tracepoint handler:
-
-  (gdb) p evsel
-  $2 = (struct perf_evsel *) 0xc03e40
-  (gdb) p evsel->name
-  $3 = 0xbc56c0 "raw_syscalls:sys_enter"
-  (gdb) p ((struct perf_evsel *) 0xc03e40)->name
-  $4 = 0xbc56c0 "raw_syscalls:sys_enter"
-  (gdb) p ((struct perf_evsel *) 0xc03e40)->handler
-  $5 = (void *) 0x495eb3 <trace__event_handler>
-
-This resulted in this:
-
-     0.027 raw_syscalls:sys_enter:NR 12 (0, 7fcfcac64c9b, 4d, 7fcfcac64c9b, 7fcfcac6ce00, 19)
-     ... [continued]: brk())                = 0x563b88677000
-
-I.e. only the sys_exit tracepoint was being properly handled, but since
-the sys_enter went to the generic trace__event_handler() we printed it
-using libtraceevent's formatter instead of 'perf trace's strace-like
-one.
-
-Fix it by setting trace__sys_enter() as the handler for
-raw_syscalls:sys_enter and setup the tp_field tracepoint field
-accessors.
-
-Now, to test it we just make raw_syscalls:sys_enter return 1 right after
-checking if the pid is filtered, making it not use
-bpf_perf_output_event() but rather ask for the tracepoint not to be
-filtered and the result is the expected one:
-
-  brk(NULL)                               = 0x556f42d6e000
-
-I.e. raw_syscalls:sys_enter returns 1, gets handled by
-trace__sys_enter() and gets it combined with the raw_syscalls:sys_exit
-in a strace-like way.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-0mkocgk31nmy0odknegcby4z@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- tools/perf/builtin-trace.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/staging/rtl8723bs/core/rtw_ioctl_set.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index fb8b8e78d7b5..872c9cc982a5 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4128,7 +4128,22 @@ int cmd_trace(int argc, const char **argv)
- 				if (perf_evsel__init_augmented_syscall_tp(augmented, evsel) ||
- 				    perf_evsel__init_augmented_syscall_tp_args(augmented))
- 					goto out;
-+				/*
-+				 * Augmented is __augmented_syscalls__ BPF_OUTPUT event
-+				 * Above we made sure we can get from the payload the tp fields
-+				 * that we get from syscalls:sys_enter tracefs format file.
-+				 */
- 				augmented->handler = trace__sys_enter;
-+				/*
-+				 * Now we do the same for the *syscalls:sys_enter event so that
-+				 * if we handle it directly, i.e. if the BPF prog returns 0 so
-+				 * as not to filter it, then we'll handle it just like we would
-+				 * for the BPF_OUTPUT one:
-+				 */
-+				if (perf_evsel__init_augmented_syscall_tp(evsel, evsel) ||
-+				    perf_evsel__init_augmented_syscall_tp_args(evsel))
-+					goto out;
-+				evsel->handler = trace__sys_enter;
- 			}
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c b/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
+index 8eb0ff5..eb08569 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
+@@ -9,13 +9,6 @@
+ #include <drv_types.h>
+ #include <rtw_debug.h>
  
- 			if (strstarts(perf_evsel__name(evsel), "syscalls:sys_exit_")) {
+-#define IS_MAC_ADDRESS_BROADCAST(addr) \
+-(\
+-	((addr[0] == 0xff) && (addr[1] == 0xff) && \
+-		(addr[2] == 0xff) && (addr[3] == 0xff) && \
+-		(addr[4] == 0xff) && (addr[5] == 0xff))  ? true : false \
+-)
+-
+ u8 rtw_validate_bssid(u8 *bssid)
+ {
+ 	u8 ret = true;
 -- 
-2.21.0
+2.7.4
 
