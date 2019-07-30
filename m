@@ -7,62 +7,70 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76F4C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBE2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970AA2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F8AF2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:17:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BmGCMhMr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nn4jyTto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388177AbfG3SQs (ORCPT
+        id S1729022AbfG3SR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:16:48 -0400
-Received: from mail-pg1-f180.google.com ([209.85.215.180]:43291 "EHLO
-        mail-pg1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388082AbfG3SQg (ORCPT
+        Tue, 30 Jul 2019 14:17:26 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38595 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387519AbfG3SQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:16:36 -0400
-Received: by mail-pg1-f180.google.com with SMTP id r22so2876814pgk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:36 -0700 (PDT)
+        Tue, 30 Jul 2019 14:16:47 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f5so21657993pgu.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=K5gRGcWyOXjbGvRD/Ia/ZjoEGmB7+jcrN43v6hTE2Yg=;
-        b=BmGCMhMr3htSVdCqe4DcrO/jLeaUhev2FI768Zzu7ocmA58O6mCm8OuKSHpoERKYFH
-         zh+o3Ch8+lbpGv1psYEFLvsHKkh5VrDsPtruV7orMHSXrF4CiPGyVaf8E5N/vmAKvMA0
-         Q0oW7U4es72VRlSz3SEvU3+zRkCF3/fI8WFg8=
+        bh=drpvbwUEmUOqA3rSa/EHTjOXz8bDuvvIlVQlOazqbgk=;
+        b=nn4jyTtoTH9EMFWnV9qKEVgmKzU6j7rTN7ZN81N8sybrrR929M2kyR8mWylfC5gGIf
+         bu5GBll3oHbvOyBmuQu+k7OVAvIQlaQ3I2+3kCQhOQlP61Y+XxlbSeyZi1Az2wTEt7aW
+         jzN6RM4Zk6JorcmqOmzg2N6UBzSygP63SU10I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=K5gRGcWyOXjbGvRD/Ia/ZjoEGmB7+jcrN43v6hTE2Yg=;
-        b=M/G60QD094QKnA0BCoLqnrUA+cjtNzKeXP8NiUwUbKQfncQBnyPPZm662fKPdhFns0
-         WFUOTVzcD3mAl8JrZLV0NOvVEfUtj2vV3xpA3i9IDKJtfw7SbclHvruH/X3b7YYMO8ro
-         1hWsgkAv18MWBPwto/kjUcEVuDgaOpyQ/44yleZ0GbFWotgTigmJwSNteecEX1t2i2f8
-         MyCi6e5LSDviAiVByJ0i4C6IF8n2DAPpdTbvPZ7Pd+O7fk3WOHZW4BE0zJwqodaLQiTY
-         dyPloCFPsKcBO6JwDq9LZUkxIt7Yf22o1hIWJzQ7XmRdxqFK9WdXEP2lXvd/0vS8lx7m
-         QvNw==
-X-Gm-Message-State: APjAAAWQXKtD90kaPMoQ3kdSdR4fGo4lVmVvnmgm3fgPBFR3oQYgWzW8
-        jVH7P+EtOnSzdxP7OhZPQSuc/ugEo2ByWA==
-X-Google-Smtp-Source: APXvYqzebXxvxd/GTr2c5CRuMcT9T2IW7k8OMb0r9zVlbWH0p/V4EwDcjQ1YOYAU0IBs47wx/VIpvA==
-X-Received: by 2002:a17:90b:f12:: with SMTP id br18mr113290820pjb.127.1564510595565;
-        Tue, 30 Jul 2019 11:16:35 -0700 (PDT)
+        bh=drpvbwUEmUOqA3rSa/EHTjOXz8bDuvvIlVQlOazqbgk=;
+        b=k43jvlZmotbr0kaZnOo9CzfnkHJfA+jDZn3gXDUG1l34rbSrvbdWVpyw9S/NQ3lQiK
+         2GBAhHAQMZGptfCimHf0dOk1xqBSwXyM3psPX6Y3Ap0YcshkaqZpXVsL3bZpaZnIUo5M
+         HuVMjANiPTjso6O//V28g5wgS9NCq1otvFqZLd8fiqoohJAmyoyfnQKZDCA89wKAIZ8q
+         9J0SPVORPznpVCYWDG6s01/HSSslABVIOFgN6+bLr8lHhQNcNm/TQdPDHwEH3zJQHmDo
+         VWsZzID3oDBYUejCuStQrcDtrpnLCOQb6nodPr7GvoFPi/RkXI3gwpNqb5Z6lo7tK2KV
+         pVQw==
+X-Gm-Message-State: APjAAAU9x14tqkjIRxDk5E8tKD8fwwd9DZA5+HOBQQHQEg9AslWg7hKI
+        2LUASpaAtcLerx5EY3Qy0IaIeF/RuqgkUw==
+X-Google-Smtp-Source: APXvYqxN5aOtZPn1fNcdcsOE/IvEp6rYADNvu5y7Uo8PjkknLasyDwZtavI+yaiFRABIEE/tUaqmHA==
+X-Received: by 2002:a63:e54f:: with SMTP id z15mr109671681pgj.4.1564510606703;
+        Tue, 30 Jul 2019 11:16:46 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.34
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.45
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 11:16:35 -0700 (PDT)
+        Tue, 30 Jul 2019 11:16:46 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v6 45/57] uio: Remove dev_err() usage after platform_get_irq()
-Date:   Tue, 30 Jul 2019 11:15:45 -0700
-Message-Id: <20190730181557.90391-46-swboyd@chromium.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH v6 57/57] ALSA: x86: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:57 -0700
+Message-Id: <20190730181557.90391-58-swboyd@chromium.org>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
 References: <20190730181557.90391-1-swboyd@chromium.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -104,32 +112,39 @@ if ( \( ret < 0 \| ret <= 0 \) )
 While we're here, remove braces on if statements that only have one
 statement (manually).
 
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Ville Syrjälä" <ville.syrjala@linux.intel.com>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: alsa-devel@alsa-project.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
 Please apply directly to subsystem trees
 
- drivers/uio/uio_dmem_genirq.c | 4 +---
+ sound/x86/intel_hdmi_audio.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
-index f32cef94aa82..ebcf1434e296 100644
---- a/drivers/uio/uio_dmem_genirq.c
-+++ b/drivers/uio/uio_dmem_genirq.c
-@@ -200,10 +200,8 @@ static int uio_dmem_genirq_probe(struct platform_device *pdev)
+diff --git a/sound/x86/intel_hdmi_audio.c b/sound/x86/intel_hdmi_audio.c
+index 5fd4e32247a6..cd389d21219a 100644
+--- a/sound/x86/intel_hdmi_audio.c
++++ b/sound/x86/intel_hdmi_audio.c
+@@ -1708,10 +1708,8 @@ static int hdmi_lpe_audio_probe(struct platform_device *pdev)
  
- 	if (!uioinfo->irq) {
- 		ret = platform_get_irq(pdev, 0);
--		if (ret < 0) {
--			dev_err(&pdev->dev, "failed to get IRQ\n");
-+		if (ret < 0)
- 			goto bad1;
--		}
- 		uioinfo->irq = ret;
- 	}
- 	uiomem = &uioinfo->mem[0];
+ 	/* get resources */
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "Could not get irq resource: %d\n", irq);
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	res_mmio = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res_mmio) {
 -- 
 Sent by a computer through tubes
 
