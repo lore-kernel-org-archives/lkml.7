@@ -2,177 +2,140 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A629C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1BCC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88632089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FD02089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Fh2jPihT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bc/+oZMv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbfG3SU3 (ORCPT
+        id S1729505AbfG3SUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:20:29 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54025 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729415AbfG3SU0 (ORCPT
+        Tue, 30 Jul 2019 14:20:34 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35877 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728796AbfG3SQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:20:26 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIKE7D3327091
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:20:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIKE7D3327091
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564510815;
-        bh=IyGSCTQjOMP0dyD72UQSVjRFtqr3vZse+I55qYaueJc=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Fh2jPihT3WVRvNE67E24/9daF9CYIpwlcrS7cOr5a45KoKjo23qJFj++Nk8xy9zow
-         DpOdCKy80JX7gJy/9OikLSfEEK0aBfg4VwgvOLjLl6DNp4oTMLRRdDRZOGgK7mfXwn
-         02EDlfQKV4Nh9lnLZFf2bx1SiKaaL1NWqmIukWBqkxBIsTVmaIZD6Gfv893LWVX/hg
-         UPb1OmS2ZF54tbB33hZn5SoOSwTE2V1b8snGK0D1t1uJkoJlmKtxUXrvZejSEhMOL7
-         M9rJkL9/Ty5aDobhCK1SgRaYgdLnczNc8QM5amrOpuSXXWOgBTDv7dKQXzuaH6xtwt
-         e43Ssxc0UnLCw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIKEmq3327088;
-        Tue, 30 Jul 2019 11:20:14 -0700
-Date:   Tue, 30 Jul 2019 11:20:14 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-b49aca3e9ce60d00e5bf0694b2ff4c2cd40809e5@git.kernel.org>
-Cc:     mpetlan@redhat.com, ak@linux.intel.com, namhyung@kernel.org,
-        peterz@infradead.org, acme@redhat.com, tglx@linutronix.de,
-        mingo@kernel.org, alexey.budankov@linux.intel.com, hpa@zytor.com,
-        alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org
-Reply-To: alexey.budankov@linux.intel.com, mpetlan@redhat.com,
-          mingo@kernel.org, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, jolsa@kernel.org,
-          namhyung@kernel.org, ak@linux.intel.com, hpa@zytor.com,
-          acme@redhat.com, alexander.shishkin@linux.intel.com,
-          peterz@infradead.org
-In-Reply-To: <20190721112506.12306-19-jolsa@kernel.org>
-References: <20190721112506.12306-19-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf evsel: Rename perf_evsel__cpus() to
- evsel__cpus()
-Git-Commit-ID: b49aca3e9ce60d00e5bf0694b2ff4c2cd40809e5
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 14:16:07 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so30473948pgm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AnIbmF0DkTbEo16MtEelTJ0IlXSRPL3zBEaTrVKwVpc=;
+        b=Bc/+oZMvGC17mgUvCSzMoq7W1yBPnUA9duyYAZIEfa/5CpTcVk4zUfykTeRg56aUen
+         KaZxGdoJtCJJ+sxGX+krfVhcc9oYp/pTwn3Wq4kIIO4C4ySXwBrN6XMM8mlxislT+xFk
+         wsxrriBgOG0NE0wIsMPu54IBmBiCL9wmvRxXE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AnIbmF0DkTbEo16MtEelTJ0IlXSRPL3zBEaTrVKwVpc=;
+        b=mqRRXDdMuCU0PuWF7YGALAxbxGBS5PDb7TuI50ozsikOQJ6YJ37vv4FfgIz14vBxNU
+         AjjTzxW5KBqoD1a4MOVZQATRVz3GQ2qhsXTek3xwibRJIjiFZSQBvGuxIJ1I3lGCA7Dr
+         PWFsqyFlxYqxKZtALk4CvKcDCgOOasszUfgDd9HwIDKZ9hwm7A0Xy7KrWzzBwMxfjW7U
+         Nl0cd94kNIjQDxkDdtPNMU/x19ptJGfJwXFgqjpY5uiUeFPtwVvkt/i6fEmW9xxt7BE8
+         ItvdvE9SG9ogk5gnxIIlTw+fomezeMeopcGM9RVXBnOJdxQv8IVnT/fGkhLQoa/9mBrn
+         yedg==
+X-Gm-Message-State: APjAAAV+quHpqwcqdodQeFwpP1kxuRUTKSJbrf2UC6dDsCa/Mm+nKRdP
+        yVbn9sGEIFj5QYBJ9XO5VDfjjbRHjVA=
+X-Google-Smtp-Source: APXvYqwrfkKZHf0lYgTSeGboE6lSa2KEHmp7pBUfC7k8Zgh0gfBfg7UhYbBO4fXcdBc9UP/r9DtKfQ==
+X-Received: by 2002:a63:3148:: with SMTP id x69mr23475727pgx.300.1564510566154;
+        Tue, 30 Jul 2019 11:16:06 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 11:16:05 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v6 08/57] MIPS: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:08 -0700
+Message-Id: <20190730181557.90391-9-swboyd@chromium.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
+References: <20190730181557.90391-1-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  b49aca3e9ce60d00e5bf0694b2ff4c2cd40809e5
-Gitweb:     https://git.kernel.org/tip/b49aca3e9ce60d00e5bf0694b2ff4c2cd40809e5
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:24:05 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:43 -0300
+We don't need dev_err() messages when platform_get_irq() fails now that
+platform_get_irq() prints an error message itself when something goes
+wrong. Let's remove these prints with a simple semantic patch.
 
-perf evsel: Rename perf_evsel__cpus() to evsel__cpus()
+// <smpl>
+@@
+expression ret;
+struct platform_device *E;
+@@
 
-Rename perf_evsel__cpus() to evsel__cpus(), so we don't have a name
-clash when we add perf_evsel__cpus() in libperf.
+ret =
+(
+platform_get_irq(E, ...)
+|
+platform_get_irq_byname(E, ...)
+);
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-19-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+if ( \( ret < 0 \| ret <= 0 \) )
+{
+(
+-if (ret != -EPROBE_DEFER)
+-{ ...
+-dev_err(...);
+-... }
+|
+...
+-dev_err(...);
+)
+...
+}
+// </smpl>
+
+While we're here, remove braces on if statements that only have one
+statement (manually).
+
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- tools/perf/util/evsel.h        | 4 ++--
- tools/perf/util/stat-display.c | 6 +++---
- tools/perf/util/stat.c         | 4 ++--
- 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 35f7e7ff3c5e..5fec1ca64f58 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -197,14 +197,14 @@ struct target;
- struct thread_map;
- struct record_opts;
- 
--static inline struct perf_cpu_map *perf_evsel__cpus(struct evsel *evsel)
-+static inline struct perf_cpu_map *evsel__cpus(struct evsel *evsel)
- {
- 	return evsel->cpus;
- }
- 
- static inline int perf_evsel__nr_cpus(struct evsel *evsel)
- {
--	return perf_evsel__cpus(evsel)->nr;
-+	return evsel__cpus(evsel)->nr;
- }
- 
- void perf_counts_values__scale(struct perf_counts_values *count,
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index cdfceb5b4d72..f7666d2e6e0c 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -109,7 +109,7 @@ static void aggr_printout(struct perf_stat_config *config,
- 		} else {
- 			fprintf(config->output, "CPU%*d%s ",
- 				config->csv_output ? 0 : -5,
--				perf_evsel__cpus(evsel)->map[id],
-+				evsel__cpus(evsel)->map[id],
- 				config->csv_sep);
- 		}
- 		break;
-@@ -325,7 +325,7 @@ static int first_shadow_cpu(struct perf_stat_config *config,
- 		return 0;
- 
- 	for (i = 0; i < perf_evsel__nr_cpus(evsel); i++) {
--		int cpu2 = perf_evsel__cpus(evsel)->map[i];
-+		int cpu2 = evsel__cpus(evsel)->map[i];
- 
- 		if (config->aggr_get_id(config, evlist->cpus, cpu2) == id)
- 			return cpu2;
-@@ -593,7 +593,7 @@ static void aggr_cb(struct perf_stat_config *config,
- 	for (cpu = 0; cpu < perf_evsel__nr_cpus(counter); cpu++) {
- 		struct perf_counts_values *counts;
- 
--		s2 = config->aggr_get_id(config, perf_evsel__cpus(counter), cpu);
-+		s2 = config->aggr_get_id(config, evsel__cpus(counter), cpu);
- 		if (s2 != ad->id)
- 			continue;
- 		if (first)
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index efd934ec02c3..63f7815ceb4f 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -215,7 +215,7 @@ static int check_per_pkg(struct evsel *counter,
- 			 struct perf_counts_values *vals, int cpu, bool *skip)
- {
- 	unsigned long *mask = counter->per_pkg_mask;
--	struct perf_cpu_map *cpus = perf_evsel__cpus(counter);
-+	struct perf_cpu_map *cpus = evsel__cpus(counter);
- 	int s;
- 
- 	*skip = false;
-@@ -483,7 +483,7 @@ int create_perf_stat_counter(struct evsel *evsel,
+Please apply directly to subsystem trees
+
+ arch/mips/ralink/timer.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/arch/mips/ralink/timer.c b/arch/mips/ralink/timer.c
+index 0ad8ff2e4f6e..652424d8ed51 100644
+--- a/arch/mips/ralink/timer.c
++++ b/arch/mips/ralink/timer.c
+@@ -106,10 +106,8 @@ static int rt_timer_probe(struct platform_device *pdev)
  	}
  
- 	if (target__has_cpu(target) && !target__has_per_thread(target))
--		return perf_evsel__open_per_cpu(evsel, perf_evsel__cpus(evsel));
-+		return perf_evsel__open_per_cpu(evsel, evsel__cpus(evsel));
+ 	rt->irq = platform_get_irq(pdev, 0);
+-	if (rt->irq < 0) {
+-		dev_err(&pdev->dev, "failed to load irq\n");
++	if (rt->irq < 0)
+ 		return rt->irq;
+-	}
  
- 	return perf_evsel__open_per_thread(evsel, evsel->threads);
- }
+ 	rt->membase = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(rt->membase))
+-- 
+Sent by a computer through tubes
+
