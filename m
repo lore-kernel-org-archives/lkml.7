@@ -2,238 +2,98 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63615C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA63C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218D0208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C5F20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:11:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rxPQWpq1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730912AbfG3IJJ (ORCPT
+        id S1730272AbfG3ILk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:09:09 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40045 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728892AbfG3IJI (ORCPT
+        Tue, 30 Jul 2019 04:11:40 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55952 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726870AbfG3ILk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:09:08 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hsNBu-0006rg-0n; Tue, 30 Jul 2019 10:09:02 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hsNBs-0002oA-5x; Tue, 30 Jul 2019 10:09:00 +0200
-Date:   Tue, 30 Jul 2019 10:09:00 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
-Message-ID: <20190730080900.hhxrqun7vk4nsj2h@pengutronix.de>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <173825848.1FZsmuHfpq@jernej-laptop>
- <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
- <2452836.v7ux4bnEjb@jernej-laptop>
+        Tue, 30 Jul 2019 04:11:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lqG3hFLeHki6KlZNi6gozV3r9j/aZGFzc0fdJeJSVQ8=; b=rxPQWpq1LSCp6jnJK/v6L8dDR
+        SkDfaijqdixP9Xmv7Riil22otsXN/ASK8qonDt1a1WnmCwcZFzOTSgAbcTOGAJ/q0YjwnjWVOAN4J
+        aQItm82TxPGN0WVkOpGnPl0gdgabuNsroTPsKVPIGkdefwHCL43Mywg9MUHzTccgCcvBp/fp4Tg4Y
+        yb89urip9Lk2Qp+GyN86WBbHtK6btdzda9xLD4lNnQyxBqeCeVecQ6vHWKegBrGJD6R9nuf6igjct
+        DKTn0E8lGqly9r6I8JgKv/fXzc1I4FI5mzOw56W98AiFk6F9PGvDdRWJkXs8fM1iS6LW9Cqh9J+Sr
+        mV+nqySTw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsNEB-0005KX-Sn; Tue, 30 Jul 2019 08:11:24 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A37B120D27EAA; Tue, 30 Jul 2019 10:11:22 +0200 (CEST)
+Date:   Tue, 30 Jul 2019 10:11:22 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     mingo@redhat.com, lizefan@huawei.com, hannes@cmpxchg.org,
+        axboe@kernel.dk, dennis@kernel.org, dennisszhou@gmail.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Nick Kralevich <nnk@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/1] psi: do not require setsched permission from the
+ trigger creator
+Message-ID: <20190730081122.GH31381@hirez.programming.kicks-ass.net>
+References: <20190730013310.162367-1-surenb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2452836.v7ux4bnEjb@jernej-laptop>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190730013310.162367-1-surenb@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Rob and Frank,
-
-Maxime and Jernej on one side and me on the other cannot agree about a
-detail in the change to the bindings here. I'm trying to objectively
-summarize the situation for you to help deciding what is the right thing
-to do here.
-
-TLDR: The sun4i pwm driver is extended to support a new variant of that
-device on the H6 SoC. Compared to the earlier supported variants
-allwinner,sun50i-h6-pwm on H6 needs to handle a reset controller and an
-additional clock. 
-
-The two positions are:
-
- - We need a new compatible because only then the driver and/or the dt
-   schema checker can check that each "allwinner,sun50i-h6-pwm" device
-   has a reset property and a "bus" clock; and the earlier variants
-   don't.
-
- - The driver can be simpler and the device specific knowledge is only
-   in a single place (the dt) if the device tree is considered valid and
-   a reset property and "bus" clock is used iff it's provided in the
-   device tree without additional comparison for the compatible.
-
-Now our arguments seem to go in circles and Jernej was interested in
-your position. That's something I agree with ;-) Can you please share
-your view?
-
-Find below some context about the arguments.
-
-Best regards
-Uwe
-
-On Tue, Jul 30, 2019 at 12:04:47AM +0200, Jernej Škrabec wrote:
-> Dne ponedeljek, 29. julij 2019 ob 20:51:08 CEST je Uwe Kleine-König 
-> napisal(a):
-> > On Mon, Jul 29, 2019 at 08:46:25PM +0200, Jernej Škrabec wrote:
-> > > Dne ponedeljek, 29. julij 2019 ob 20:40:41 CEST je Uwe Kleine-König
-> > > napisal(a):
-> > > > On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej Škrabec wrote:
-> > > > > Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-König
-> > > > > napisal(a):
-> > > > > > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
-> > > > > > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-König
-> > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej Škrabec wrote:
-> > > > > > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-König
-> > > > > > > > > napisal(a):
-> > > > > > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
-> > > > > > > > > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > > > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > > > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
-> > > > > > > > > > > sun4i_pwm_single_bypass = {>
-> > > > > > > > > > > 
-> > > > > > > > > > >   .npwm = 1,
-> > > > > > > > > > >  
-> > > > > > > > > > >  };
-> > > > > > > > > > > 
-> > > > > > > > > > > +static const struct sun4i_pwm_data
-> > > > > > > > > > > sun50i_pwm_dual_bypass_clk_rst
-> > > > > > > > > > > = {
-> > > > > > > > > > > + .has_bus_clock = true,
-> > > > > > > > > > > + .has_prescaler_bypass = true,
-> > > > > > > > > > > + .has_reset = true,
-> > > > > > > > > > > + .npwm = 2,
-> > > > > > > > > > > +};
-> > > > > > > > > > > +
-> > > > > > > > > > > 
-> > > > > > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] = {
-> > > > > > > > > > >  
-> > > > > > > > > > >   {
-> > > > > > > > > > >   
-> > > > > > > > > > >           .compatible = "allwinner,sun4i-a10-pwm",
-> > > > > > > > > > > 
-> > > > > > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
-> > > > > > > > > > > sun4i_pwm_dt_ids[] =
-> > > > > > > > > > > {
-> > > > > > > > > > > 
-> > > > > > > > > > >   }, {
-> > > > > > > > > > >   
-> > > > > > > > > > >           .compatible = "allwinner,sun8i-h3-pwm",
-> > > > > > > > > > >           .data = &sun4i_pwm_single_bypass,
-> > > > > > > > > > > 
-> > > > > > > > > > > + }, {
-> > > > > > > > > > > +         .compatible = "allwinner,sun50i-h6-pwm",
-> > > > > > > > > > > +         .data = &sun50i_pwm_dual_bypass_clk_rst,
-> > > > > > > > > > 
-> > > > > > > > > > If you follow my suggestion for the two previous patches,
-
-(i.e. use devm_clk_get_optional instead of using devm_clk_get iff the
-compatible is allwinner,sun50i-h6-pwm; analogous for the reset
-controller.)
-
-> > > > > > > > > > you can just use:
-> > > > > > > > > >
-> > > > > > > > > >     compatible = "allwinner,sun50i-h6-pwm", "allwinner,sun5i-a10s-pwm";
-> > > > > > > > > > 
-> > > > > > > > > > and drop this patch.
-> > > > > > > > > 
-> > > > > > > > > Maxime found out that it's not compatible with A10s due to difference
-> > > > > > > > > in bypass bit, but yes, I know what you mean.
-> > > > > > > > > 
-> > > > > > > > > Since H6 requires reset line and bus clock to be specified, it's not
-> > > > > > > > > compatible from DT binding side. New yaml based binding must somehow
-> > > > > > > > > know that in order to be able to validate DT node, so it needs
-> > > > > > > > > standalone compatible. However, depending on conclusions of other
-> > > > > > > > > discussions, this new compatible can be associated with already
-> > > > > > > > > available quirks structure or have it's own.
-> > > > > > > > 
-> > > > > > > > I cannot follow. You should be able to specify in the binding that the
-> > > > > > > > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
-> > > > > > > > without a reset line and bus clock also verifies, but this doesn't
-> > > > > > > > really hurt (and who knows, maybe the next allwinner chip needs exactly this).
-> > > > > > > 
-> > > > > > > It is not optional. It will not work if either the clocks or reset controls
-> > > > > > > are missing. How would these be optional anyway? Either it's connected and
-> > > > > > > thus required, or it's not and therefore should be omitted from the description.
-> > > > > > 
-> > > > > > [Just arguing about the clock here, the argumentation is analogous for
-> > > > > > the reset control.]
-> > > > > > 
-> > > > > > From the driver's perspective it's optional: There are devices with and
-> > > > > > without a bus clock. This doesn't mean that you can just ignore this
-> > > > > > clock if it's specified. It's optional in the sense "If dt doesn't
-> > > > > > specify it, then assume this is a device that doesn't have it and so you
-> > > > > > don't need to handle it." but not in the sense "it doesn't matter if
-> > > > > > you handle it or not.".
-> > > > > > 
-> > > > > > Other than that I'm on your side. So for example I think it's not
-> > > > > > optimal that gpiod_get_optional returns NULL if GPIOLIB=n or that
-> > > > > > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=n
-> > > > > > because this hides exactly the kind of problem you point out here.
-> > > > > 
-> > > > > I think there's misunderstanding. I only argued that we can't use
-> > > > > 
-> > > > > compatible = "allwinner,sun50i-h6-pwm", "allwinner,sun5i-a10s-pwm";
-> > > > > 
-> > > > > as you suggested and only
-> > > > > 
-> > > > > compatible = "allwinner,sun50i-h6-pwm";
-> > > > > 
-> > > > > will work. Not because of driver itself (it can still use _optional()
-> > > > > variants), but because of DT binding, which should be able to validate H6
-> > > > > PWM node - reset and bus clock references are required in this case.
-> > > > 
-> > > > I think I understood. In my eyes there is no need to let validation of
-> > > > the DT bindings catch a missing "optional" property that is needed on
-> > > > H6.
-> > > > 
-> > > > You have to draw the line somewhere which information the driver has
-> > > > hard-coded and what is only provided by the device tree and just assumed
-> > > > to be correct by the driver. You argue the driver should know that
-> > > 
-> > > No, in this thread I argue that DT validation tool, executed by
-> > > 
-> > > make ARCH=arm64 dtbs_check
-> > > 
-> > > should catch that. This is not a driver, but DT binding described in YAML.
-> > 
-> > The argumentation is the same. dtbs_check doesn't notice if the base
-> > address of your "allwinner,sun50i-h6-pwm" device is wrong. So why should
-> > it catch a missing reset controller phandle?
+On Mon, Jul 29, 2019 at 06:33:10PM -0700, Suren Baghdasaryan wrote:
+> When a process creates a new trigger by writing into /proc/pressure/*
+> files, permissions to write such a file should be used to determine whether
+> the process is allowed to do so or not. Current implementation would also
+> require such a process to have setsched capability. Setting of psi trigger
+> thread's scheduling policy is an implementation detail and should not be
+> exposed to the user level. Remove the permission check by using _nocheck
+> version of the function.
 > 
-> Of course checking actual values of node properties doesn't make sense in 
-> dtbs_check, otherwise we would have million DT bindings. If you have 10 copies 
-> of the same IP core, of course you would use same compatible, but actual 
-> register ranges, interrupts, etc. would be different in DT nodes.
+> Suggested-by: Nick Kralevich <nnk@google.com>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> ---
+>  kernel/sched/psi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> At this point I would make same argument as were made before, but there is no 
-> point going in circles. I'm interested what have DT maintainers to say.
+> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> index 7acc632c3b82..ed9a1d573cb1 100644
+> --- a/kernel/sched/psi.c
+> +++ b/kernel/sched/psi.c
+> @@ -1061,7 +1061,7 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
+>  			mutex_unlock(&group->trigger_lock);
+>  			return ERR_CAST(kworker);
+>  		}
+> -		sched_setscheduler(kworker->task, SCHED_FIFO, &param);
+> +		sched_setscheduler_nocheck(kworker->task, SCHED_FIFO, &param);
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+ARGGH, wtf is there a FIFO-99!! thread here at all !?
+
+>  		kthread_init_delayed_work(&group->poll_work,
+>  				psi_poll_work);
+>  		rcu_assign_pointer(group->poll_kworker, kworker);
+> -- 
+> 2.22.0.709.g102302147b-goog
+> 
