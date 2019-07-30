@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DA7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7AAC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 382C6217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A2620578
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455626;
-	bh=nM3OKcDcLtjGq2riIhP0b9VfCdXQd7QG70nfOPnM2WE=;
+	s=default; t=1564455629;
+	bh=wocKGREWVWBKwkTkN4LM9HXvszSXVw05wSfU9re+BRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cdYt77MOrNCutcKf7xDJ3QTVVQcgGMnv/nqC0i6qL+qGhL2FgJXKP3W8j6JU33l1u
-	 JdLzrxD3h2Xcx7KE2Y7TXG2F+73O5yIGt8XJo5fOTiohi4mxWTSAkbGByZPEN7kgua
-	 y73oa01Hh6ggrfrOFUTHzSgo+6PVa0LGD9n10Mp8=
+	b=zB3ISZBTFu3aibrMlRLzrAVL8qtPGQ5Man5ZzEHhiT7mqOTsEhj5Pcg2SslQF4pyN
+	 Oa1VsKs1vXm+Lv6Mr68XqOm70JLBX90OBeUTbqK7StGCExkCngGZ+CAS+KxAdffoqa
+	 wtLFBIcXnXZIBePvrPJGCSf20LvSvEy+tYTY61CY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732391AbfG3DAZ (ORCPT
+        id S1732404AbfG3DA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:00:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49658 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 23:00:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732374AbfG3DAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 23:00:19 -0400
+        id S1732383AbfG3DAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:00:23 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2F162171F;
-        Tue, 30 Jul 2019 03:00:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5051A216C8;
+        Tue, 30 Jul 2019 03:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455618;
-        bh=nM3OKcDcLtjGq2riIhP0b9VfCdXQd7QG70nfOPnM2WE=;
+        s=default; t=1564455622;
+        bh=wocKGREWVWBKwkTkN4LM9HXvszSXVw05wSfU9re+BRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DNIzWXCiUQt7FMszPBS0GtW7jdO5x8peGp9NV8MiW/CIeNlfrMaNL0rJtew3grsmW
-         wf1oFNxi9ZDtLy7SpZxz4fXB4dMZpeuRYK82iami+e5KsC2RFrvHSGuzXVh3CuAiuU
-         AhcOzxWd+1kGwQOCOXQwy1WFoGbYnMBiUnOWslnQ=
+        b=UJLaJVNwBPk+j/KapS8DzetjRL3lty/mOQ7hYi0Vi8m1RfimVIlV+WcveVR+bayJ5
+         cAI+gMsGs9h0zB2ynk9bGDVDhI4a6v09oDGf8DJYPUCenqyuLDQgc8w9CpM5XRV7Bw
+         zYAOb8APhjmbOEbLBoXYQlQvJ8HbEHzB/9x1vZt8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 071/107] libperf: Move zalloc.o into libperf
-Date:   Mon, 29 Jul 2019 23:55:34 -0300
-Message-Id: <20190730025610.22603-72-acme@kernel.org>
+Subject: [PATCH 072/107] libperf: Add perf_evlist__new() function
+Date:   Mon, 29 Jul 2019 23:55:35 -0300
+Message-Id: <20190730025610.22603-73-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
@@ -66,7 +66,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-We need it in both perf and libperf, thus moving it to libperf.
+Add perf_evlist__new() function to create and init a perf_evlist struct
+dynamicaly.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -75,59 +76,63 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-45-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-46-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/Build               | 5 +++++
- tools/perf/util/Build              | 5 -----
- tools/perf/util/python-ext-sources | 1 -
- 3 files changed, 5 insertions(+), 6 deletions(-)
+ tools/perf/lib/evlist.c              | 11 +++++++++++
+ tools/perf/lib/include/perf/evlist.h |  1 +
+ tools/perf/lib/libperf.map           |  1 +
+ 3 files changed, 13 insertions(+)
 
-diff --git a/tools/perf/lib/Build b/tools/perf/lib/Build
-index b27c1543b046..faf64db13e37 100644
---- a/tools/perf/lib/Build
-+++ b/tools/perf/lib/Build
-@@ -3,3 +3,8 @@ libperf-y += cpumap.o
- libperf-y += threadmap.o
- libperf-y += evsel.o
- libperf-y += evlist.o
-+libperf-y += zalloc.o
+diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+index 1b27fd2de9b9..0517deb4cb1c 100644
+--- a/tools/perf/lib/evlist.c
++++ b/tools/perf/lib/evlist.c
+@@ -3,6 +3,7 @@
+ #include <linux/list.h>
+ #include <internal/evlist.h>
+ #include <internal/evsel.h>
++#include <linux/zalloc.h>
+ 
+ void perf_evlist__init(struct perf_evlist *evlist)
+ {
+@@ -23,3 +24,13 @@ void perf_evlist__remove(struct perf_evlist *evlist,
+ 	list_del_init(&evsel->node);
+ 	evlist->nr_entries -= 1;
+ }
 +
-+$(OUTPUT)zalloc.o: ../../lib/zalloc.c FORCE
-+	$(call rule_mkdir)
-+	$(call if_changed_dep,cc_o_c)
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 14f812bb07a7..08f670d21615 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -26,7 +26,6 @@ perf-y += rbtree.o
- perf-y += libstring.o
- perf-y += bitmap.o
- perf-y += hweight.o
--perf-y += zalloc.o
- perf-y += smt.o
- perf-y += strbuf.o
- perf-y += string.o
-@@ -243,7 +242,3 @@ $(OUTPUT)util/hweight.o: ../lib/hweight.c FORCE
- $(OUTPUT)util/vsprintf.o: ../lib/vsprintf.c FORCE
- 	$(call rule_mkdir)
- 	$(call if_changed_dep,cc_o_c)
--
--$(OUTPUT)util/zalloc.o: ../lib/zalloc.c FORCE
--	$(call rule_mkdir)
--	$(call if_changed_dep,cc_o_c)
-diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-index ceb8afdf9a89..2237bac9fadb 100644
---- a/tools/perf/util/python-ext-sources
-+++ b/tools/perf/util/python-ext-sources
-@@ -18,7 +18,6 @@ util/namespaces.c
- ../lib/hweight.c
- ../lib/string.c
- ../lib/vsprintf.c
--../lib/zalloc.c
- util/thread_map.c
- util/util.c
- util/xyarray.c
++struct perf_evlist *perf_evlist__new(void)
++{
++	struct perf_evlist *evlist = zalloc(sizeof(*evlist));
++
++	if (evlist != NULL)
++		perf_evlist__init(evlist);
++
++	return evlist;
++}
+diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
+index e0c87995c6ff..7255a60869a1 100644
+--- a/tools/perf/lib/include/perf/evlist.h
++++ b/tools/perf/lib/include/perf/evlist.h
+@@ -12,5 +12,6 @@ LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
+ 				  struct perf_evsel *evsel);
+ LIBPERF_API void perf_evlist__remove(struct perf_evlist *evlist,
+ 				     struct perf_evsel *evsel);
++LIBPERF_API struct perf_evlist *perf_evlist__new(void);
+ 
+ #endif /* __LIBPERF_EVLIST_H */
+diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
+index e38473a8f32f..5e685d6c7a95 100644
+--- a/tools/perf/lib/libperf.map
++++ b/tools/perf/lib/libperf.map
+@@ -12,6 +12,7 @@ LIBPERF_0.0.1 {
+ 		perf_thread_map__get;
+ 		perf_thread_map__put;
+ 		perf_evsel__init;
++		perf_evlist__new;
+ 		perf_evlist__init;
+ 		perf_evlist__add;
+ 		perf_evlist__remove;
 -- 
 2.21.0
 
