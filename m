@@ -2,140 +2,75 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E279C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF77C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7387F2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:41:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="PDCa/6/+"
+	by mail.kernel.org (Postfix) with ESMTP id E5DE22087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731437AbfG3RlV (ORCPT
+        id S1731460AbfG3Rlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:41:21 -0400
-Received: from sender-pp-o92.zoho.com ([135.84.80.237]:25401 "EHLO
-        sender-pp-o92.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfG3RlQ (ORCPT
+        Tue, 30 Jul 2019 13:41:37 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:52644 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfG3Rlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:41:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1564508422; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=du1Elyexm7ALYNjVm2ylWhySii8zUx7LoPwc2ifiFchS7A9hsjpQRY5aLGvh62Rk3631ueJ0SvFhJVFBf6f8L5zbev+04v8W/QcSDi4bPHZh+zpL9fjZFDEfdI/Ng9L7w34BGfv1peLKKNWXzK07rPIghSp9/Eewj07WHUP2U/A=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1564508422; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=728HodtxlQspuSWgc0WI2C4ZB/XnFKgXz7EKp0oAYhw=; 
-        b=noUnok43K/jGVu//UsP1+FRgFXEnB3PrwyMwBP173Gc/rOKxUcyGb7Zcstqk6vsdjCUDzuoUDGbnZnfSh33OxlXncQGKIYBAew2qYGdLv4MV73vIegYi9USmxUEQXS7SuAarA7Q/NP7LXK2lAizKvcYnmIoJ9ji8mnoscrTxJSw=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=k9Mkye7d4RBrUeacHCGizzV6cKDVvaXSAs8ErlpQz/n2THTM3gwDa04+Wpzw9rs6OJhhBZKFBrCv
-    jK9lNC8xiEGg/8iTAJtCLeYhpBdCh9GX5piwRt2sXnMJzucPgLKO  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1564508422;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=2231; bh=728HodtxlQspuSWgc0WI2C4ZB/XnFKgXz7EKp0oAYhw=;
-        b=PDCa/6/+P25Vb2iXqAfxpxF+ISNuxUF4Da8ly34ghulpmXWh1k8YfpN5OA5tEIKP
-        hmFqEOQEvNfG+k4KG8xo/coR26+VJKteF7w+abMPSmQS6tk+az8KeSUMY7A0+cVN/4D
-        DorXm91bZgtfFr/XqoF9UAYDPhYJTWk6mqMIRkB8=
-Received: from localhost.localdomain (171.221.113.137 [171.221.113.137]) by mx.zohomail.com
-        with SMTPS id 156450842112058.53911824379736; Tue, 30 Jul 2019 10:40:21 -0700 (PDT)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, ralf@linux-mips.org,
-        paul@crapouillou.net, paul.burton@mips.com, jhogan@kernel.org,
-        malat@debian.org, chenhc@lemote.com, tglx@linutronix.de,
-        allison@lohutok.net, syq@debian.org, jiaxun.yang@flygoat.com
-Subject: [PATCH] MIPS: Ingenic: Fix bugs when detecting X1000's parameters.
-Date:   Tue, 30 Jul 2019 22:55:10 +0800
-Message-Id: <1564498510-3751-2-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564498510-3751-1-git-send-email-zhouyanjie@zoho.com>
-References: <1564498510-3751-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Tue, 30 Jul 2019 13:41:36 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A73501265A210;
+        Tue, 30 Jul 2019 10:41:35 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 10:41:35 -0700 (PDT)
+Message-Id: <20190730.104135.1391040196178361165.davem@davemloft.net>
+To:     netdev@vger.kernel.org, daniel@iogearbox.net
+CC:     linux-wireless@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, lwn@lwn.net
+Subject: [FINAL REMINDER!!] LPC 2019 Networking Track CFP
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 30 Jul 2019 10:41:35 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1.fix bugs when detecting L2 cache sets value.
-2.fix bugs when detecting L2 cache ways value.
-3.fix bugs when calculate bogoMips and loops_per_jiffy.
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
- arch/mips/kernel/cpu-probe.c |  7 ++++++-
- arch/mips/mm/sc-mips.c       | 18 +++++++++++++++---
- 2 files changed, 21 insertions(+), 4 deletions(-)
+The deadline is this Friday, please get your proposals in as soon as
+possible and do not procrastinate.  The deadline absolutely cannot be
+extended.
 
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index eb527a1..a914435 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -1960,11 +1960,16 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
- 	c->options &= ~MIPS_CPU_COUNTER;
- 	BUG_ON(!__builtin_constant_p(cpu_has_counter) || cpu_has_counter);
- 	switch (c->processor_id & PRID_IMP_MASK) {
--	case PRID_IMP_XBURST:
-+	case PRID_IMP_XBURST: {
-+		unsigned int config7;
- 		c->cputype = CPU_XBURST;
- 		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
- 		__cpu_name[cpu] = "Ingenic XBurst";
-+		config7 = read_c0_config7();
-+		config7 |= (1 << 4);
-+		write_c0_config7(config7);
- 		break;
-+	}
- 	default:
- 		panic("Unknown Ingenic Processor ID!");
- 		break;
-diff --git a/arch/mips/mm/sc-mips.c b/arch/mips/mm/sc-mips.c
-index 9385ddb..ed953d4 100644
---- a/arch/mips/mm/sc-mips.c
-+++ b/arch/mips/mm/sc-mips.c
-@@ -215,6 +215,14 @@ static inline int __init mips_sc_probe(void)
- 	else
- 		return 0;
- 
-+	/*
-+	 * According to config2 it would be 512-sets, but that is contradicted
-+	 * by all documentation.
-+	 */
-+	if (current_cpu_type() == CPU_XBURST &&
-+				mips_machtype == MACH_INGENIC_X1000)
-+		c->scache.sets = 256;
-+
- 	tmp = (config2 >> 0) & 0x0f;
- 	if (tmp <= 7)
- 		c->scache.ways = tmp + 1;
-@@ -225,9 +233,13 @@ static inline int __init mips_sc_probe(void)
- 	 * According to config2 it would be 5-ways, but that is contradicted
- 	 * by all documentation.
- 	 */
--	if (current_cpu_type() == CPU_XBURST &&
--				mips_machtype == MACH_INGENIC_JZ4770)
--		c->scache.ways = 4;
-+	if (current_cpu_type() == CPU_XBURST) {
-+		switch (mips_machtype) {
-+		case MACH_INGENIC_JZ4770:
-+		case MACH_INGENIC_X1000:
-+			c->scache.ways = 4;
-+		}
-+	}
- 
- 	c->scache.waysize = c->scache.sets * c->scache.linesz;
- 	c->scache.waybit = __ffs(c->scache.waysize);
--- 
-2.7.4
+This is a call for proposals for the 3 day networking track at the
+Linux Plumbers Conference in Lisbon, which will be happening on
+September 9th-11th, 2019.
 
+We are seeking talks of 40 minutes in length (including Q & A),
+optionally accompanied by papers of 2 to 10 pages in length.  The
+papers, while not required, are very strongly encouraged by the
+committee.  The submitters intention to provide a paper will be taken
+into consideration as a criteria when deciding which proposals to
+accept.
 
+Any kind of advanced networking-related topic will be considered.
+
+Please submit your proposals on the LPC website at:
+
+	https://www.linuxplumbersconf.org/event/4/abstracts/#submit-abstract
+
+And be sure to select "Networking Summit Track" in the Track pulldown
+menu.
+
+Proposals must be submitted by August 2nd, and submitters will be
+notified of acceptance by August 9th.
+
+Final slides and papers (as PDF) are due on September 2nd.
+
+Looking forward to seeing you all in Lisbon in September!
