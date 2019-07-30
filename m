@@ -2,109 +2,134 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF52C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619A2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03AB1208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 344C7206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GSBRgNvp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HhkLI3mn"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PKv1GtQs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbfG3RyX (ORCPT
+        id S2387468AbfG3Ry7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:54:23 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58972 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387450AbfG3RyW (ORCPT
+        Tue, 30 Jul 2019 13:54:59 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51387 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfG3Ry5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:54:22 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 18C1660735; Tue, 30 Jul 2019 17:54:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564509261;
-        bh=SiHOslm33TKp3uM0b2CsOrfbOok3Z7O03LFNxQsXv/M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GSBRgNvpCIyCxN55XaPtvtff/kLeu4W3oYvjPtFdbS8ojNyO5XbaucHuwWQgg9Rt+
-         GyKh2zM6uHvFWkUk2vAKXRAc8oQHDWxUZ4PAA99UmU+MNRIIRVgjSdZD80pNzjZvXe
-         9j1lpOFee2Ivi2O7lZBD+bgT6c/Xxs+jkicD/uyQ=
-Received: from isaacm-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: isaacm@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F3F9C60364;
-        Tue, 30 Jul 2019 17:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564509260;
-        bh=SiHOslm33TKp3uM0b2CsOrfbOok3Z7O03LFNxQsXv/M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HhkLI3mnLCUAvo6B+gyuVgHIEoUFryU4bKpFS+qp4AwVZ3Ac7QNXZRSylqSO8lK/A
-         eLdYQt8nc/CJHzTfrqDVNiWy31besAPLEAzMofVSM3pmOcpq8yuyZHvmdrrfe/nYEd
-         g2Obgc+iVNjkBmpW/KOjhrJEY0XM3t+pA7ZtTxKk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F3F9C60364
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=isaacm@codeaurora.org
-From:   "Isaac J. Manjarres" <isaacm@codeaurora.org>
-To:     keescook@chromium.org, crecklin@redhat.com
-Cc:     "Isaac J. Manjarres" <isaacm@codeaurora.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        eberman@codeaurora.org, stable@vger.kernel.org
-Subject: [PATCH] mm/usercopy: Use memory range to be accessed for wraparound check
-Date:   Tue, 30 Jul 2019 10:54:13 -0700
-Message-Id: <1564509253-23287-1-git-send-email-isaacm@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 30 Jul 2019 13:54:57 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UHsooW3320933
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 30 Jul 2019 10:54:50 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UHsooW3320933
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564509291;
+        bh=G54+OAPEE9fldhCjiqee2BL6P9a1CRZgZySzYQuRExo=;
+        h=Date:From:Cc:Reply-To:To:Subject:From;
+        b=PKv1GtQsVPMg8aMaeQYjBmEugAjFzWUU4UnNwVEYo+iPyItaBc0cKk3kta3TmT2kV
+         uHg4cOmFzsZ+Z25yaxYV+JMqg/Ab4irCkIQiCT/64soLF77Z8zc0rUOltA7PnBDI93
+         eJg/aoI/f1E84mkyqNUeieNbVjTZXdPbPiYcFRjd0Rwxb7dtzDKfy0pIjFHJKaKaHt
+         1A3PLEx7SwB64rkJp0H4caavwbKzZPAeivN4+xsVbvLOuLG1HJFuexZd1eqj1oIyJV
+         E15QvwfAQAfgqNOyjzc++arpMS5P/vygBcggU7oJ97VmqS53YKenPy9/4jtMiSy+xL
+         p2tC5dk3oMufA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UHsn113320930;
+        Tue, 30 Jul 2019 10:54:49 -0700
+Date:   Tue, 30 Jul 2019 10:54:49 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-yf3kbzirqrukd3fb2sp5qx4p@git.kernel.org>
+Cc:     hpa@zytor.com, mingo@kernel.org, namhyung@kernel.org,
+        acme@redhat.com, linux-kernel@vger.kernel.org,
+        adrian.hunter@intel.com, jolsa@kernel.org, lclaudio@redhat.com,
+        tglx@linutronix.de
+Reply-To: adrian.hunter@intel.com, jolsa@kernel.org, lclaudio@redhat.com,
+          tglx@linutronix.de, hpa@zytor.com, acme@redhat.com,
+          namhyung@kernel.org, mingo@kernel.org,
+          linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf augmented_raw_syscalls: Add handler for
+ "openat"
+Git-Commit-ID: 236dd5838871024d58d354ff8d0dab00ee59a867
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, when checking to see if accessing n bytes starting at
-address "ptr" will cause a wraparound in the memory addresses,
-the check in check_bogus_address() adds an extra byte, which is
-incorrect, as the range of addresses that will be accessed is
-[ptr, ptr + (n - 1)].
+Commit-ID:  236dd5838871024d58d354ff8d0dab00ee59a867
+Gitweb:     https://git.kernel.org/tip/236dd5838871024d58d354ff8d0dab00ee59a867
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Tue, 16 Jul 2019 12:31:10 -0300
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 29 Jul 2019 18:34:41 -0300
 
-This can lead to incorrectly detecting a wraparound in the
-memory address, when trying to read 4 KB from memory that is
-mapped to the the last possible page in the virtual address
-space, when in fact, accessing that range of memory would not
-cause a wraparound to occur.
+perf augmented_raw_syscalls: Add handler for "openat"
 
-Use the memory range that will actually be accessed when
-considering if accessing a certain amount of bytes will cause
-the memory address to wrap around.
+I.e. for a syscall that has its second argument being a string, its
+difficult these days to find 'open' being used in the wild :-)
 
-Fixes: f5509cc18daa ("mm: Hardened usercopy")
-Co-developed-by: Prasad Sodagudi <psodagud@codeaurora.org>
-Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-Cc: stable@vger.kernel.org
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-yf3kbzirqrukd3fb2sp5qx4p@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- mm/usercopy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-trace.c                       |  1 +
+ tools/perf/examples/bpf/augmented_raw_syscalls.c | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/mm/usercopy.c b/mm/usercopy.c
-index 2a09796..98e92486 100644
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -147,7 +147,7 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
- 				       bool to_user)
- {
- 	/* Reject if object wraps past end of memory. */
--	if (ptr + n < ptr)
-+	if (ptr + (n - 1) < ptr)
- 		usercopy_abort("wrapped address", NULL, to_user, 0, ptr + n);
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 872c9cc982a5..a681b8c2ee4e 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -836,6 +836,7 @@ static struct syscall_fmt {
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
+ 		   [2] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "openat",
++	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_openat", },
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
+ 		   [2] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "perf_event_open",
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index c66474a6ccf4..661936f90fe0 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -131,6 +131,23 @@ int sys_enter_open(struct syscall_enter_args *args)
+ 	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
+ }
  
- 	/* Reject if NULL or ZERO-allocation. */
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
++SEC("!syscalls:sys_enter_openat")
++int sys_enter_openat(struct syscall_enter_args *args)
++{
++	int key = 0;
++	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
++	const void *filename_arg = (const void *)args->args[1];
++	unsigned int len = sizeof(augmented_args->args);
++
++        if (augmented_args == NULL)
++                return 1; /* Failure: don't filter */
++
++	len += augmented_filename__read(&augmented_args->filename, filename_arg, sizeof(augmented_args->filename.value));
++
++	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
++}
++
+ SEC("raw_syscalls:sys_enter")
+ int sys_enter(struct syscall_enter_args *args)
+ {
