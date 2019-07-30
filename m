@@ -2,114 +2,86 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF51C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F327C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758E420882
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:23:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NzOWXb0f"
+	by mail.kernel.org (Postfix) with ESMTP id 45D5620651
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730510AbfG3IXV (ORCPT
+        id S1730473AbfG3I1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:23:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49650 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728901AbfG3IXU (ORCPT
+        Tue, 30 Jul 2019 04:27:07 -0400
+Received: from mail.parknet.co.jp ([210.171.160.6]:55358 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727617AbfG3I1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:23:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=He46g3kl1/1+f74+KD+yC+jjKaZnawdh3B/wdfYNbj8=; b=NzOWXb0f5m8dKQbCqbMySPnBq
-        uLhqkEdK8OOdPIsk6kG4QVH++UodNpFAwa8OjrmlafwmYcWrNsHtBBDFAGrkfZi1/bvnGuQg5EUx3
-        VMEGkXzsUBVcYymFWu7dJcqcrxfDZlLOf3qBKaAV05z+Go8GTyqBlgVzXi9qdBfTqhNnbIjxJ6Bvu
-        8M7WuJyYUWtJUbAxKjMQcUJQvDaHMEE/8/BYzFuYX1Am1IIF6oHcDBJltUVb1gLRuEL/Au1a6YyPU
-        WXt2mdCJWER/TrLuTJSNNqDiBUiH4DE3edwA/P/3Q1vwPoscAJjiSLfL+IVnFN8pOJHqPzvW+p4Zk
-        MxuF3ONgg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsNPi-00089P-0A; Tue, 30 Jul 2019 08:23:18 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6BC3120D27EAD; Tue, 30 Jul 2019 10:23:16 +0200 (CEST)
-Date:   Tue, 30 Jul 2019 10:23:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     luca abeni <luca.abeni@santannapisa.it>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <Valentin.Schneider@arm.com>,
-        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] sched/deadline: Use return value of SCHED_WARN_ON()
- in bw accounting
-Message-ID: <20190730082316.GK31381@hirez.programming.kicks-ass.net>
-References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
- <20190726082756.5525-6-dietmar.eggemann@arm.com>
- <20190726121819.32be6fb1@sweethome>
- <20190729165434.GO31398@hirez.programming.kicks-ass.net>
- <a12e2330-50d4-b31f-14b5-5b386252d418@arm.com>
+        Tue, 30 Jul 2019 04:27:06 -0400
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 9A60115F924;
+        Tue, 30 Jul 2019 17:27:05 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-12) with ESMTPS id x6U8R47a029798
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Tue, 30 Jul 2019 17:27:05 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-12) with ESMTPS id x6U8R4HR032190
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Tue, 30 Jul 2019 17:27:04 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id x6U8R0Qq032189;
+        Tue, 30 Jul 2019 17:27:00 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, arnd@arndb.de,
+        y2038@lists.linaro.org, adrian.hunter@intel.com, anton@tuxera.com,
+        dedekind1@gmail.com, gregkh@linuxfoundation.org, hch@lst.de,
+        jaegeuk@kernel.org, jlbec@evilplan.org, richard@nod.at,
+        tj@kernel.org, yuchao0@huawei.com,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-ntfs-dev@lists.sourceforge.net, linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 03/20] timestamp_truncate: Replace users of
+ timespec64_trunc
+References: <20190730014924.2193-1-deepa.kernel@gmail.com>
+        <20190730014924.2193-4-deepa.kernel@gmail.com>
+Date:   Tue, 30 Jul 2019 17:27:00 +0900
+In-Reply-To: <20190730014924.2193-4-deepa.kernel@gmail.com> (Deepa Dinamani's
+        message of "Mon, 29 Jul 2019 18:49:07 -0700")
+Message-ID: <87d0hsapwr.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a12e2330-50d4-b31f-14b5-5b386252d418@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 05:59:04PM +0100, Dietmar Eggemann wrote:
-> On 7/29/19 5:54 PM, Peter Zijlstra wrote:
-> > On Fri, Jul 26, 2019 at 12:18:19PM +0200, luca abeni wrote:
-> >> Hi Dietmar,
-> >>
-> >> On Fri, 26 Jul 2019 09:27:56 +0100
-> >> Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> >>
-> >>> To make the decision whether to set rq or running bw to 0 in underflow
-> >>> case use the return value of SCHED_WARN_ON() rather than an extra if
-> >>> condition.
-> >>
-> >> I think I tried this at some point, but if I remember well this
-> >> solution does not work correctly when SCHED_DEBUG is not enabled.
-> > 
-> > Well, it 'works' in so far that it compiles. But it might not be what
-> > one expects. That is, for !SCHED_DEBUG the return value is an
-> > unconditional false.
-> > 
-> > In this case I think that's fine, the WARN _should_ not be happending.
-> 
-> But there is commit 6d3aed3d ("sched/debug: Fix SCHED_WARN_ON() to
-> return a value on !CONFIG_SCHED_DEBUG as well")?
-> 
-> But it doesn't work with !CONFIG_SCHED_DEBUG
-> 
-> What compiles and work is (at least on Arm64).
-> 
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 4012f98b9d26..494a767a4091 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -78,7 +78,7 @@
->  #ifdef CONFIG_SCHED_DEBUG
->  # define SCHED_WARN_ON(x)      WARN_ONCE(x, #x)
->  #else
-> -# define SCHED_WARN_ON(x)      ({ (void)(x), 0; })
-> +# define SCHED_WARN_ON(x)      ({ (void)(x), x; })
+Deepa Dinamani <deepa.kernel@gmail.com> writes:
 
-Why doesn't the ,0 compile? That should work just fine. The thing is,
-the two existing users:
+> diff --git a/fs/fat/misc.c b/fs/fat/misc.c
+> index 1e08bd54c5fb..53bb7c6bf993 100644
+> --- a/fs/fat/misc.c
+> +++ b/fs/fat/misc.c
+> @@ -307,8 +307,9 @@ int fat_truncate_time(struct inode *inode, struct timespec64 *now, int flags)
+>  		inode->i_atime = (struct timespec64){ seconds, 0 };
+>  	}
+>  	if (flags & S_CTIME) {
+> -		if (sbi->options.isvfat)
+> -			inode->i_ctime = timespec64_trunc(*now, 10000000);
+> +		if (sbi->options.isvfat) {
+> +			inode->i_ctime = timestamp_truncate(*now, inode);
+> +		}
+>  		else
+>  			inode->i_ctime = fat_timespec64_trunc_2secs(*now);
+>  	}
 
-kernel/sched/fair.c:            if (SCHED_WARN_ON(!se->on_rq))
-kernel/sched/fair.c:            if (SCHED_WARN_ON(!se->on_rq))
+Looks like broken. It changed to sb->s_time_gran from 10000000, and
+changed coding style.
 
-seem to compile just fine with it.
+Thanks.
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
