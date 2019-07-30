@@ -2,112 +2,113 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8256C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 212B9C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A39C3206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED16C2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:52:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbfG3Vsz (ORCPT
+        id S2387852AbfG3Vwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 17:48:55 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:42451 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387819AbfG3Vsy (ORCPT
+        Tue, 30 Jul 2019 17:52:38 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45987 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728479AbfG3Vwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 17:48:54 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45yqv75F8Cz1rBnG;
-        Tue, 30 Jul 2019 23:48:51 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45yqv740QBz1qqkQ;
-        Tue, 30 Jul 2019 23:48:51 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id H5W5SgB4fodb; Tue, 30 Jul 2019 23:48:50 +0200 (CEST)
-X-Auth-Info: llMVCs5jRc9iyn3ETV/87/IBYSMF0oXRV1DQb9JCjHk=
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue, 30 Jul 2019 23:48:50 +0200 (CEST)
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v2] ARM: dts: vf610-bk4: Fix qspi node description
-Date:   Tue, 30 Jul 2019 23:48:33 +0200
-Message-Id: <20190730214833.30659-1-lukma@denx.de>
-X-Mailer: git-send-email 2.11.0
+        Tue, 30 Jul 2019 17:52:37 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 87BF280250; Tue, 30 Jul 2019 23:52:22 +0200 (CEST)
+Date:   Tue, 30 Jul 2019 23:52:33 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        jacek.anaszewski@gmail.com, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: Re: Backlight in motorola Droid 4
+Message-ID: <20190730215233.GB9405@amd>
+References: <20181219162626.12297-1-dmurphy@ti.com>
+ <20190722205921.GA24787@amd>
+ <b8fbc94f-c087-2c9d-4532-ea423f1626e6@ti.com>
+ <20190724124530.GA30211@amd>
+ <ca69f627-96e2-f982-3a29-18b0127ac6e5@ti.com>
+ <edde330e-516b-ecaa-4139-0bfa766a9c08@ti.com>
+ <20190729220030.GA20100@amd>
+ <ff91f577-98ad-d27b-02c2-6ed495cf4a38@ti.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="OwLcNYc0lM97+oe1"
+Content-Disposition: inline
+In-Reply-To: <ff91f577-98ad-d27b-02c2-6ed495cf4a38@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before this change the device tree description of qspi node for
-second memory on BK4 board was wrong (applicable to old, removed
-fsl-quadspi.c driver).
 
-As a result this memory was not recognized correctly when used
-with the new spi-fsl-qspi.c driver.
+--OwLcNYc0lM97+oe1
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-From the dt-bindings:
+Hi!
 
-"Required SPI slave node properties:
-  - reg: There are two buses (A and B) with two chip selects each.
-This encodes to which bus and CS the flash is connected:
-<0>: Bus A, CS 0
-<1>: Bus A, CS 1
-<2>: Bus B, CS 0
-<3>: Bus B, CS 1"
+> >>>Looking at the rest of the code.
+> >>>
+> >>>The DT doc indicated that this was a required child property so this is
+> >>>why it
+> >>>
+> >>>errors out.
+> >>>
+> >>>Dan
+> >>>
+> >>><snip>
+> >>>
+> >>Did you want me to fix up the LM3532 and send the patch?
+> >If you could do that, that would be nice :-).
+>=20
+> Ok I am working on this.
 
-According to above with new driver the second SPI-NOR memory shall
-have reg=<2> as it is connected to Bus B, CS 0.
+Thanks!
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Suggested-by: Fabio Estevam <festevam@gmail.com>
-Fixes: a67d2c52a82f ("ARM: dts: Add support for Liebherr's BK4 device
-(vf610 based)")
+> Is Droid4 supposed to boot off of mainline?=A0 I see blogs stating it
+>  should
 
----
-Changes for v2:
-- Add proper Suggested-by tag as Fabio was the one who pointed out the
-  the issue with wrong reg number assignment for the second SPI-NOR memory
-- Add Fixes: tag, so the patch could be added to LTS kernels
-- Fix the subject line to more appropriate
----
- arch/arm/boot/dts/vf610-bk4.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> but the device locks up when it jumps to the kernel 5.3-rc1.
 
-diff --git a/arch/arm/boot/dts/vf610-bk4.dts b/arch/arm/boot/dts/vf610-bk4.dts
-index 3fa0cbe456db..0f3870d3b099 100644
---- a/arch/arm/boot/dts/vf610-bk4.dts
-+++ b/arch/arm/boot/dts/vf610-bk4.dts
-@@ -246,13 +246,13 @@
- 		reg = <0>;
- 	};
- 
--	n25q128a13_2: flash@1 {
-+	n25q128a13_2: flash@2 {
- 		compatible = "n25q128a13", "jedec,spi-nor";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		spi-max-frequency = <66000000>;
- 		spi-rx-bus-width = <2>;
--		reg = <1>;
-+		reg = <2>;
- 	};
- };
- 
--- 
-2.11.0
+It should, but I'm not sure if video will work for you. -next may be
+better target.
 
+If you have different board with lm3532, it may make sense to use that.
+
+> Unless I need to update my kexec or boot.cfg file but I cannot find any up
+> to date info on that.
+
+I don't know what boot.cfg is. I'm using safestrap to dual-boot
+between Android and mainline.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--OwLcNYc0lM97+oe1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1AvCEACgkQMOfwapXb+vIU0ACfVbS3WrpVraASIUWPfLIZLo5r
+ZpwAmwfCSRWvlx5KpSt4NYmWE8RoNk2i
+=saCx
+-----END PGP SIGNATURE-----
+
+--OwLcNYc0lM97+oe1--
