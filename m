@@ -2,116 +2,118 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12892C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592FAC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE052087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:14:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564474461;
-	bh=ag7RLjHCXMfUGjpSus0nvTkEpPZCaEx3QNbC7mm6+N4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a8IcucQpVC89ZXcYi4tunYe+B2DbXy/JuLgMfsuHghRdPXMUjpE9ZUUHPmo2gHt+p
-	 Dx1p/8Ac6AMmo+Ln57yiVuxejWb53uD3ZlZGDCPPtvf+G01dsSGu/QveiU1mEgrrd5
-	 thv+P2nSCBgGojRndJ6enH0cMw94TazH7dYcGPSo=
+	by mail.kernel.org (Postfix) with ESMTP id 395AE2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfG3IOU (ORCPT
+        id S1728728AbfG3IPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:14:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36754 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726535AbfG3IOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:14:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 59F32ABE9;
-        Tue, 30 Jul 2019 08:14:18 +0000 (UTC)
-Date:   Tue, 30 Jul 2019 10:14:15 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Hoan Tran OS <hoan@os.amperecomputing.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Open Source Submission <patches@amperecomputing.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "willy@infradead.org" <willy@infradead.org>
-Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20190730081415.GN9330@dhcp22.suse.cz>
-References: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
- <20190712070247.GM29483@dhcp22.suse.cz>
- <586ae736-a429-cf94-1520-1a94ffadad88@os.amperecomputing.com>
- <20190712121223.GR29483@dhcp22.suse.cz>
- <20190712143730.au3662g4ua2tjudu@willie-the-truck>
- <20190712150007.GU29483@dhcp22.suse.cz>
- <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
+        Tue, 30 Jul 2019 04:15:47 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:51953 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727789AbfG3IPq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 04:15:46 -0400
+Received: from [IPv6:2001:983:e9a7:1:3159:f139:4aff:7185] ([IPv6:2001:983:e9a7:1:3159:f139:4aff:7185])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id sNIGhAzQaqTdhsNIIhlAOr; Tue, 30 Jul 2019 10:15:41 +0200
+Subject: Re: [PATCH] media input infrastructure:tw686x: Fix of
+ possibleinconsistent memory deallocation and/or race condition by
+ implementation of custom video_device_release function in tw686x driver
+To:     Mark Balantzyan <mbalant3@gmail.com>, ezequiel@vanguardiasur.com.ar
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <alpine.DEB.2.21.1907291256080.16959@mbalantz-desktop>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <40d14e23-636e-ed8a-6608-99427f5b8169@xs4all.nl>
+Date:   Tue, 30 Jul 2019 10:15:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.1907291256080.16959@mbalantz-desktop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfPqNhh2qVlJuZ2GmaH9XhGYKqumkyFarMB2ZiQRDm683SEAP533sV503AxCaD7YHeXDagHkODd+NotO33NqwPYWJ64aPeWhqhc9YpdcvoRIrwRSaE7e6
+ zSGlL3E/tPmj3drXRzjZgCv6s+WNZ8M1KwhzZkrYXxATKUG4s2Sy7qbEAYUy5IklMMBVmKpoSCcp7a+3EYhD4sDodMDEubReyeJvD+31fC8shw+gdW5VyPri
+ 4b9H1xgYMzoxLqF2E8lTM9HT0WeWVacV/FFhO7q/3hfxnYuIE+5Wkqfk6U8qK3KrEDhhbZtVZaKaCCyGVI2rZSlhbs2fWvk3YLfgloAaBzyFhMnlaruKHVdT
+ PnaBI2B5vxMzxQzf2KZcyvdkFbaZr5j628+/i0bANEe1iNVDiTw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Sorry for a late reply]
+Hi Mark,
 
-On Mon 15-07-19 17:55:07, Hoan Tran OS wrote:
-> Hi,
+Please, please read this first before posting patches:
+
+https://kernelnewbies.org/FirstKernelPatch
+
+And don't use insanely long subject lines in your email.
+
+This patch is nonsense. As said before, you need to override the release() callback
+of struct video_device with a tw686x-specific function that frees the dma memory and
+calls video_device_release() at the end to free the struct video_device itself.
+
+This release() callback is called by the V4L2 framework when the last user of the
+device closes its filehandle, so that's a good point to free all the memory. Doing
+it earlier (as the current code does) runs the risk that someone might still access
+that memory, and you don't want that.
+
+Regards,
+
+	Hans
+
+On 7/29/19 10:09 PM, Mark Balantzyan wrote:
 > 
-> On 7/12/19 10:00 PM, Michal Hocko wrote:
-[...]
-> > Hmm, I thought this was selectable. But I am obviously wrong here.
-> > Looking more closely, it seems that this is indeed only about
-> > __early_pfn_to_nid and as such not something that should add a config
-> > symbol. This should have been called out in the changelog though.
+> Possible inconsistent memory deallocation and/or race conditions were detected specifically with respect to remaining open handles to the video device handled by the tw686x driver. This patch
+> addresses this by implementing a revised independent instance of the video_device_release function to free the remaining resources and memory where the last open handle(s) is/were closed.
 > 
-> Yes, do you have any other comments about my patch?
-
-Not really. Just make sure to explicitly state that
-CONFIG_NODES_SPAN_OTHER_NODES is only about __early_pfn_to_nid and that
-doesn't really deserve it's own config and can be pulled under NUMA.
-
-> > Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
-> > bucket? Do we have any NUMA architecture that doesn't enable it?
-> > 
+> Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
 > 
-> As I checked with arch Kconfig files, there are 2 architectures, riscv 
-> and microblaze, do not support NUMA but enable this config.
+> ---
 > 
-> And 1 architecture, alpha, supports NUMA but does not enable this config.
+>  drivers/media/pci/tw686x/tw686x-video.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/pci/tw686x/tw686x-video.c b/drivers/media/pci/tw686x/tw686x-video.c
+> index 3a06c000..29e10c85 100644
+> --- a/drivers/media/pci/tw686x/tw686x-video.c
+> +++ b/drivers/media/pci/tw686x/tw686x-video.c
+> @@ -1151,18 +1151,25 @@ void tw686x_video_irq(struct tw686x_dev *dev, unsigned long requests,
+>      }
+>  }
+> 
+> +void video_device_release(tw686x_dev *dev) {
+> +    for (int pb = 0; pb < 2; pb++) {
+> +        dev->dma_ops->free(dev->video_channels,pb);
+> +    }
+> +    kfree(dev);
+> +}
+> +
+>  void tw686x_video_free(struct tw686x_dev *dev)
+>  {
+> -    unsigned int ch, pb;
+> +    unsigned int ch;
+> 
+>      for (ch = 0; ch < max_channels(dev); ch++) {
+>          struct tw686x_video_channel *vc = &dev->video_channels[ch];
+> 
+>          video_unregister_device(vc->device);
+> 
+> -        if (dev->dma_ops->free)
+> -            for (pb = 0; pb < 2; pb++)
+> -                dev->dma_ops->free(vc, pb);
+> +        if (dev->dma_ops->free) {
+> +            video_device_release(dev);
+> +        }
+>      }
+>  }
+> 
 
-Care to have a look and clean this up please?
-
--- 
-Michal Hocko
-SUSE Labs
