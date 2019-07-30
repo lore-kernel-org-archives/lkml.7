@@ -2,94 +2,109 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51310C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62757C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B689206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3376A206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:45:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJkMeQcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbfG3Nnm (ORCPT
+        id S1731182AbfG3NpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:43:42 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45241 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfG3Nni (ORCPT
+        Tue, 30 Jul 2019 09:45:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36277 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfG3NpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:43:38 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x22so58110265qtp.12;
-        Tue, 30 Jul 2019 06:43:37 -0700 (PDT)
+        Tue, 30 Jul 2019 09:45:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id o9so24546748iom.3;
+        Tue, 30 Jul 2019 06:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6RTHpENjgGcT8n7j+cscZh1Hx+zz2xzTQGyqiFTLqBA=;
+        b=YJkMeQcWNgcV5b9gw9EbJVWAWxthAnkH+/mH/F/ILz8lIDE8pGtYLGtN4F2haS2hsF
+         y9dQUWDEl6U3dxV3RZ/Qp+Vuu1jGBYJ8vdli9ZFb2Ewx1waN0hUQj539dZLGlS8L+ng6
+         zRIh0h+ieTLzGrd0U63IZ634sXeIndQbwedCTAAdZ7YXdOc9q4lGSkRJ27tIQxMm33Qr
+         AiZRlMhCLtEE2+UHyOydLWLC4B1Yha9ETZiWXDky9syIL57MwY/LcO5nXMBAa17RYlbh
+         cDrmsZR2kpI4RCedyW9RQiowz3FUnX6RAPFbK0xpRl1kdn+Gzgrng82tzSYAC2Snlat/
+         DiUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HUMgES4eSdx7Gb1wHf4vgNUcT1viL6l/JJUreDv7DAI=;
-        b=rvgYy2Z0k649zlfGfNIVsM/rbnnF6m3wP1uGvhhhuDcf8C0DW014P0oGFSAfJWaHxR
-         DREOPuw6Ow6640D3q4IUeohjLMGw0R0OU2QNfvRD8ovgvaMcCCzUnlRhILWarpsQSs1n
-         8FUib1Iu+8Vbbyou77raJqQbcHcEBR6JufQlmabd0PF7tQErv2ecT9DUbWQsMtCU8nDB
-         KgDMdVWA5BrNB2xnEBAmEmBmojXs+icMAKYq1W6c3KVgzHjJcH0NtiTV5ardV1rI4L4E
-         3CD+b5vlueGnN/JzUu+xPj7J6MVBlOCVo2pWi1gmnEebN/ERh48ayO7Zoy0XaLZO31sP
-         WZMw==
-X-Gm-Message-State: APjAAAVuUf77BZ77JAjX9/CleFtVULpFHCxa627p1LKRMgE47RAc6Ssq
-        AAaScmiazxls44yg7wSYV8IGmtvpnI/dStM8tCs=
-X-Google-Smtp-Source: APXvYqzk4myI3khjNxlQnHaI9ZcgvMI5FOmQpZ2ORwmh2H4e5fyHlvNQY96ZcLDUkT4i2hDktBvBnnKAR3H1vEsYzAU=
-X-Received: by 2002:ac8:f99:: with SMTP id b25mr73930879qtk.142.1564494217063;
- Tue, 30 Jul 2019 06:43:37 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6RTHpENjgGcT8n7j+cscZh1Hx+zz2xzTQGyqiFTLqBA=;
+        b=ITT02ikf1l6aKz4Yvb7gFzzieqtM8E1eVnJdNlEVrvdv3n6W+8bPYPlHzvlGvqKpQ9
+         bmgC8FQgwuWANmffEybLn7RPnT7/BD90n9xymhJRE1DIeaxdrg5MkXbzawkNUs/TMqcH
+         IKHQS6X3gHTEvGVhX44pLG2xHQ4r0nCz71o8k956E1FKPfqSdu+xhJnp04KmTkThcabe
+         /dfAdlBZJdKQaUlE+vZ1EQ3B1z8AZ47NQPkQZrYEWE9UkLcCblsOc9Lip4FjWNc65hKT
+         G7A82vISX/Ae21LvN6By89TLjfGtjQBhok1+Vw8FK4rBIYJdQ+oB786++Hc8fBY3El7U
+         0zww==
+X-Gm-Message-State: APjAAAWqpxwL47Es4j1ObB9LlcQ+J6liKDyqafrnuYMOSb1Dvkxt/og6
+        L0BV+fpQ4fFMZfxqLeBuvSEPrwouERs=
+X-Google-Smtp-Source: APXvYqxszlTQxzY4NG08MHIjZ8Yt5xXid6uHqwTFG5wNg6lt0Gh3KRmNuPR7nn4ixo2I59NotGzZLQ==
+X-Received: by 2002:a02:1c0a:: with SMTP id c10mr123387725jac.69.1564494314225;
+        Tue, 30 Jul 2019 06:45:14 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:48fd:47f6:b7d0:19dc? ([2601:282:800:fd80:48fd:47f6:b7d0:19dc])
+        by smtp.googlemail.com with ESMTPSA id n7sm50370331ioo.79.2019.07.30.06.45.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 06:45:13 -0700 (PDT)
+Subject: Re: [PATCH net v2] net: ipv6: Fix a bug in ndisc_send_ns when netdev
+ only has a global address
+To:     Su Yanjun <suyj.fnst@cn.fujitsu.com>, davem@davemloft.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1564454115-66184-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <ca410806-2d2d-4297-7da6-57b782a5b9fc@gmail.com>
+Date:   Tue, 30 Jul 2019 07:45:08 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <1564488945-20149-1-git-send-email-guoren@kernel.org> <1564488945-20149-4-git-send-email-guoren@kernel.org>
-In-Reply-To: <1564488945-20149-4-git-send-email-guoren@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 30 Jul 2019 15:43:20 +0200
-Message-ID: <CAK8P3a0v3oVS5cCkORxA7na+VE7ofTQRxiv5o5xNf5v=esnN9A@mail.gmail.com>
-Subject: Re: [PATCH 4/4] csky: Add dma_inv_range for DMA_FROM_DEVICE
-To:     Guo Ren <guoren@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-csky@vger.kernel.org, feng_shizhu@dahuatech.com,
-        zhang_jian5@dahuatech.com, zheng_xingjian@dahuatech.com,
-        zhu_peng@dahuatech.com, Guo Ren <ren_guo@c-sky.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1564454115-66184-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 2:16 PM <guoren@kernel.org> wrote:
-> From: Guo Ren <ren_guo@c-sky.com>
+On 7/29/19 8:35 PM, Su Yanjun wrote:
+> diff --git a/net/ipv6/ndisc.c b/net/ipv6/ndisc.c
+> index 083cc1c..156c027 100644
+> --- a/net/ipv6/ndisc.c
+> +++ b/net/ipv6/ndisc.c
+> @@ -603,11 +603,14 @@ void ndisc_send_ns(struct net_device *dev, const struct in6_addr *solicit,
+>  	int inc_opt = dev->addr_len;
+>  	int optlen = 0;
+>  	struct nd_msg *msg;
+> +	u32 banned_flags = IFA_F_TENTATIVE | IFA_F_OPTIMISTIC;
+>  
+>  	if (!saddr) {
 
-> diff --git a/arch/csky/mm/dma-mapping.c b/arch/csky/mm/dma-mapping.c
-> index 3f1ff9d..d8f0f81 100644
-> --- a/arch/csky/mm/dma-mapping.c
-> +++ b/arch/csky/mm/dma-mapping.c
-> @@ -72,6 +72,8 @@ void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
->                 cache_op(paddr, size, dma_wb_range);
->                 break;
->         case DMA_FROM_DEVICE:
-> +               cache_op(paddr, size, dma_inv_range);
-> +               break;
->         case DMA_BIDIRECTIONAL:
->                 cache_op(paddr, size, dma_wbinv_range);
->                 break;
-> @@ -88,6 +90,8 @@ void arch_sync_dma_for_cpu(struct device *dev, phys_addr_t paddr,
->                 cache_op(paddr, size, dma_wb_range);
->                 break;
->         case DMA_FROM_DEVICE:
-> +               cache_op(paddr, size, dma_inv_range);
-> +               break;
->         case DMA_BIDIRECTIONAL:
->                 cache_op(paddr, size, dma_wbinv_range);
->                 break;
+banned_flags should be declared here, under !saddr since that is the
+scope of its use.
 
-When syncing 'for_cpu', you should not need to write back, because
-there won't be any dirty cache lines.
 
-If you have a CPU core that does not do speculative loads, you also don't
-need to invalidate here, because you have already done that in the
-_for_device() case, the only reason to invalidate the CPU cache
-again is if a speculative load created a stale cache line that now
-shadows the data received from the device.
+> -		if (ipv6_get_lladdr(dev, &addr_buf,
+> -				   (IFA_F_TENTATIVE|IFA_F_OPTIMISTIC)))
+> -			return;
+> +		if (ipv6_get_lladdr(dev, &addr_buf, banned_flags)) {
+> +			/* try global address */
+> +			if (ipv6_get_addr(dev, &addr_buf, banned_flags))
+> +				return;
+> +		}
+>  		saddr = &addr_buf;
+>  	}
+>  
+> 
 
-        Arnd
