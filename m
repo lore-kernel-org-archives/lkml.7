@@ -2,81 +2,77 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24DDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D6DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9339A20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 632B621726
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564519183;
-	bh=vQ0yXgsk5R7VRRm/u9DR3xe8ZYV0cmB6Ik506qa+PHI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=M/9/PKxLGgIGAReG1IGJIbMjJ8cc0Vt5eMyY9HM5WSpzHWsuJWD52cpPOptE8liyH
-	 39+n/nryndEfMbmceaMAycbAEQ+sCIQExyz4V4dVBsDEdBjRVjAc06Ij3dDCmcYCbd
-	 FwYc0YuSvxLCBYQ5GB7ClkgkKH8wkI5JHMx5meVQ=
+	s=default; t=1564519220;
+	bh=rxzvltql7wVZw/jwNUEDC1Qb9+r4GqOzZran/66ezKg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=dkCL35aK9LQ9/IWeJIcsYZRkblGtAnIL4URvQovT2mAHhDLXknZtQgxKF8nnh1/R6
+	 k/Yo2SVqr5peRbKH0Ecvo8ua8m+arvWQVN1zGm4agXAg3atRxmLJByVjTH4q+UKi5+
+	 to6ot5Msh7/njwdz1ySIWPIwSpLBl5wL6TBNFbI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbfG3Ujm convert rfc822-to-8bit (ORCPT
+        id S1728404AbfG3UkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:39:42 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:52034 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728305AbfG3Ujl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:39:41 -0400
-Received: from X1 (unknown [76.191.170.112])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id AB48A311D;
-        Tue, 30 Jul 2019 20:39:40 +0000 (UTC)
-Date:   Tue, 30 Jul 2019 13:39:39 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2] mm: kmemleak: Use mempool allocations for kmemleak
- objects
-Message-Id: <20190730133939.2840b742408336e2a0a9f573@linux-foundation.org>
-In-Reply-To: <1564518157.11067.34.camel@lca.pw>
-References: <20190727132334.9184-1-catalin.marinas@arm.com>
-        <20190730125743.113e59a9c449847d7f6ae7c3@linux-foundation.org>
-        <1564518157.11067.34.camel@lca.pw>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        Tue, 30 Jul 2019 16:40:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728305AbfG3UkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 16:40:18 -0400
+Subject: Re: [GIT PULL] Please pull hmm changes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564519218;
+        bh=rxzvltql7wVZw/jwNUEDC1Qb9+r4GqOzZran/66ezKg=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=kCpNm0q+triJorfoXGYTORFoq/HS39NKRUfUtHqV0M0bRJcVPyTpWj6wG4Bc+zMPL
+         iPZF7bfHnLxay59cZ/uuXJuXD1Oxxoc21SG2T3x8f1Alv0WDzhgnRN9sa7ObvZdPn/
+         xvFeYcKzbG0K102nvvGz5KUQ1Ccb0UsnoeL0IHP0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190730115831.GA15720@ziepe.ca>
+References: <20190730115831.GA15720@ziepe.ca>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190730115831.GA15720@ziepe.ca>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
+ tags/for-linus-hmm
+X-PR-Tracked-Commit-Id: de4ee728465f7c0c29241550e083139b2ce9159c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 515f12b9eeed35250d793b7c874707c33f7f6e05
+Message-Id: <156451921813.18459.2711445926920761419.pr-tracker-bot@kernel.org>
+Date:   Tue, 30 Jul 2019 20:40:18 +0000
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019 16:22:37 -0400 Qian Cai <cai@lca.pw> wrote:
+The pull request you sent on Tue, 30 Jul 2019 11:58:37 +0000:
 
-> On Tue, 2019-07-30 at 12:57 -0700, Andrew Morton wrote:
-> > On Sat, 27 Jul 2019 14:23:33 +0100 Catalin Marinas <catalin.marinas@arm.com>
-> > wrote:
-> > 
-> > > Add mempool allocations for struct kmemleak_object and
-> > > kmemleak_scan_area as slightly more resilient than kmem_cache_alloc()
-> > > under memory pressure. Additionally, mask out all the gfp flags passed
-> > > to kmemleak other than GFP_KERNEL|GFP_ATOMIC.
-> > > 
-> > > A boot-time tuning parameter (kmemleak.mempool) is added to allow a
-> > > different minimum pool size (defaulting to NR_CPUS * 4).
-> > 
-> > Why would anyone ever want to alter this?  Is there some particular
-> > misbehaviour which this will improve?  If so, what is it?
-> 
-> So it can tolerant different systems and workloads. For example, there are some
-> machines with slow disk and fast CPUs. When they are under memory pressure, it
-> could take a long time to swap before the OOM kicks in to free up some memory.
-> As the results, it needs a large mempool for kmemleak or suffering from higher
-> chance of a kmemleak metadata allocation failure.
+> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus-hmm
 
-This sort of thing should be in the changelog and in the user-facing
-documentation please.  Also, we should document the user-visible
-effects of this failure so that users can determine whether this tunable
-will help them.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/515f12b9eeed35250d793b7c874707c33f7f6e05
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
