@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EA1C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51999C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0FA92070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0136C2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455615;
-	bh=RsWVOmBFSnU1tRFHtX3fSopiK+7PTdewrOls9NEVP08=;
+	s=default; t=1564455620;
+	bh=rdoD45RHOtHrJRBgrlSMfcsGEJ/Xjz687jGnT/b02B8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J71zvh+q3OBkOfB6QXDVVbrLpAJ9CUHIu+rAUu873FrtCWO/IBa+xCPr71W3cD/gq
-	 u5IzSB6hQpBJJjiV06l9oRnbLf8wOqMwUae5TKjJ5IwgqUvR1D6lN8g1UDRRFa0wVV
-	 efmSv4zh24K9zjvyONtEvntNzue+frKrYNjW7Ig8=
+	b=EdbE1d5DR8fxLCa/VckD3l56eMWUiI/qgK1fMwaMZD31lt06hfIVpfuJIT+6Qj9+2
+	 fpABCxGLmiWwoIduCjq/nf/ylITGGGUmY5gCgLydIldwvSadiG8BDrwvfp1Pm1gexL
+	 n2HMcUUUWiVXhe7fgL8BKNWHmPWiZXySd6fOYIbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732364AbfG3DAN (ORCPT
+        id S1732373AbfG3DAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:00:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49490 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 23:00:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729313AbfG3DAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 23:00:08 -0400
+        id S1729313AbfG3DAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:00:17 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6462171F;
-        Tue, 30 Jul 2019 03:00:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0042C2184D;
+        Tue, 30 Jul 2019 03:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455607;
-        bh=RsWVOmBFSnU1tRFHtX3fSopiK+7PTdewrOls9NEVP08=;
+        s=default; t=1564455615;
+        bh=rdoD45RHOtHrJRBgrlSMfcsGEJ/Xjz687jGnT/b02B8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z6DCJHWNz/LLMmfvCOervkAWOsN/9mWeMsgT815OgWxj3tYQ2/+mv1j7H23+uURk8
-         Q4MszaqjU4qnr5bJ1ZFoypuVIvKWUkAQrKsjSRsXDEf8xY5w2PW/rZFY34dlhBWxPx
-         WGKGBGN7wbgSG9jW6Kj92rJj7PWog4cwL4EFhcok=
+        b=sYSm0IXmEeE40iNMaFIEtGS27q1jS4g98udU8dX9Xe74v6Nt62nsvxPFSSQ7r7TVj
+         MrIE8cRAmZ6Sur1Be3NutI3vVFrHTvSEdMWcxEFleMOFfQI8skjgX7Zs6zZcflYFqD
+         H30Y7uAeyiucDz2FgYmuojPSf73zatHzuUaGkyjk=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 068/107] libperf: Add nr_entries to struct perf_evlist
-Date:   Mon, 29 Jul 2019 23:55:31 -0300
-Message-Id: <20190730025610.22603-69-acme@kernel.org>
+Subject: [PATCH 070/107] libperf: Add perf_cpu_map__new()/perf_cpu_map__read() functions
+Date:   Mon, 29 Jul 2019 23:55:33 -0300
+Message-Id: <20190730025610.22603-71-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
@@ -66,12 +66,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move nr_entries count from 'struct perf' to into perf_evlist struct.
+Moving the following functions from tools/perf:
+
+  cpu_map__new()
+  cpu_map__read()
+
+to libperf with the following names:
+
+  perf_cpu_map__new()
+  perf_cpu_map__read()
 
 Committer notes:
 
-Fix tools/perf/arch/s390/util/auxtrace.c case. And also the comment in
-tools/perf/util/annotate.h.
+Fixed up this one:
+
+  tools/perf/arch/arm/util/cs-etm.c
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -80,834 +89,1217 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-42-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-44-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/util/auxtrace.c     |  2 +-
- tools/perf/builtin-record.c              |  4 +-
- tools/perf/builtin-stat.c                |  4 +-
- tools/perf/builtin-top.c                 | 12 ++--
- tools/perf/builtin-trace.c               |  4 +-
- tools/perf/lib/evlist.c                  |  3 +
- tools/perf/lib/include/internal/evlist.h |  1 +
- tools/perf/tests/parse-events.c          | 76 ++++++++++++------------
- tools/perf/ui/browsers/annotate.c        |  2 +-
- tools/perf/ui/browsers/hists.c           |  2 +-
- tools/perf/util/annotate.c               |  2 +-
- tools/perf/util/annotate.h               |  2 +-
- tools/perf/util/evlist.c                 | 26 ++++----
- tools/perf/util/evlist.h                 |  1 -
- tools/perf/util/header.c                 |  4 +-
- tools/perf/util/parse-events.c           |  4 +-
- tools/perf/util/python.c                 |  8 +--
- tools/perf/util/record.c                 |  2 +-
- tools/perf/util/sort.c                   |  2 +-
- tools/perf/util/top.c                    |  2 +-
- 20 files changed, 83 insertions(+), 80 deletions(-)
+ tools/perf/arch/arm/util/cs-etm.c            |   6 +-
+ tools/perf/arch/x86/tests/perf-time-to-tsc.c |   3 +-
+ tools/perf/bench/epoll-ctl.c                 |   3 +-
+ tools/perf/bench/epoll-wait.c                |   3 +-
+ tools/perf/bench/futex-hash.c                |   3 +-
+ tools/perf/bench/futex-lock-pi.c             |   3 +-
+ tools/perf/bench/futex-requeue.c             |   3 +-
+ tools/perf/bench/futex-wake-parallel.c       |   2 +-
+ tools/perf/bench/futex-wake.c                |   3 +-
+ tools/perf/builtin-ftrace.c                  |   2 +-
+ tools/perf/builtin-sched.c                   |   4 +-
+ tools/perf/lib/cpumap.c                      | 184 +++++++++++++++++++
+ tools/perf/lib/include/internal/cpumap.h     |   4 +
+ tools/perf/lib/include/perf/cpumap.h         |   3 +
+ tools/perf/lib/libperf.map                   |   2 +
+ tools/perf/tests/bitmap.c                    |   3 +-
+ tools/perf/tests/code-reading.c              |   5 +-
+ tools/perf/tests/cpumap.c                    |   7 +-
+ tools/perf/tests/event-times.c               |   9 +-
+ tools/perf/tests/event_update.c              |   3 +-
+ tools/perf/tests/keep-tracking.c             |   3 +-
+ tools/perf/tests/mem2node.c                  |   3 +-
+ tools/perf/tests/mmap-basic.c                |   3 +-
+ tools/perf/tests/openat-syscall-all-cpus.c   |   2 +-
+ tools/perf/tests/switch-tracking.c           |   5 +-
+ tools/perf/tests/topology.c                  |   3 +-
+ tools/perf/util/cpumap.c                     | 181 +-----------------
+ tools/perf/util/cpumap.h                     |   2 -
+ tools/perf/util/cputopo.c                    |   5 +-
+ tools/perf/util/evlist.c                     |   5 +-
+ tools/perf/util/header.c                     |   3 +-
+ tools/perf/util/parse-events.c               |   3 +-
+ tools/perf/util/pmu.c                        |   3 +-
+ tools/perf/util/python.c                     |   3 +-
+ tools/perf/util/record.c                     |   7 +-
+ tools/perf/util/session.c                    |   3 +-
+ tools/perf/util/svghelper.c                  |   3 +-
+ 37 files changed, 265 insertions(+), 227 deletions(-)
 
-diff --git a/tools/perf/arch/s390/util/auxtrace.c b/tools/perf/arch/s390/util/auxtrace.c
-index 833f60fa9c5a..480ada281bdb 100644
---- a/tools/perf/arch/s390/util/auxtrace.c
-+++ b/tools/perf/arch/s390/util/auxtrace.c
-@@ -90,7 +90,7 @@ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
- 	int diagnose = 0;
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index f5aafdec7f50..c25bc1528b96 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -156,7 +156,7 @@ static int cs_etm_set_option(struct auxtrace_record *itr,
+ {
+ 	int i, err = -EINVAL;
+ 	struct perf_cpu_map *event_cpus = evsel->evlist->cpus;
+-	struct perf_cpu_map *online_cpus = cpu_map__new(NULL);
++	struct perf_cpu_map *online_cpus = perf_cpu_map__new(NULL);
  
- 	*err = 0;
--	if (evlist->nr_entries == 0)
-+	if (evlist->core.nr_entries == 0)
- 		return NULL;
+ 	/* Set option of each CPU we have */
+ 	for (i = 0; i < cpu__max_cpu(); i++) {
+@@ -490,7 +490,7 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+ 	int i;
+ 	int etmv3 = 0, etmv4 = 0;
+ 	struct perf_cpu_map *event_cpus = evlist->cpus;
+-	struct perf_cpu_map *online_cpus = cpu_map__new(NULL);
++	struct perf_cpu_map *online_cpus = perf_cpu_map__new(NULL);
  
- 	evlist__for_each_entry(evlist, pos) {
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 17bb0a536da3..778e46417f6b 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1375,7 +1375,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	 * because we synthesize event name through the pipe
- 	 * and need the id for that.
- 	 */
--	if (data->is_pipe && rec->evlist->nr_entries == 1)
-+	if (data->is_pipe && rec->evlist->core.nr_entries == 1)
- 		rec->opts.sample_id = true;
+ 	/* cpu map is not empty, we have specific CPUs to work with */
+ 	if (!cpu_map__empty(event_cpus)) {
+@@ -637,7 +637,7 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
+ 	u64 nr_cpu, type;
+ 	struct perf_cpu_map *cpu_map;
+ 	struct perf_cpu_map *event_cpus = session->evlist->cpus;
+-	struct perf_cpu_map *online_cpus = cpu_map__new(NULL);
++	struct perf_cpu_map *online_cpus = perf_cpu_map__new(NULL);
+ 	struct cs_etm_recording *ptr =
+ 			container_of(itr, struct cs_etm_recording, itr);
+ 	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
+diff --git a/tools/perf/arch/x86/tests/perf-time-to-tsc.c b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
+index 07129e007eb0..261bdd680651 100644
+--- a/tools/perf/arch/x86/tests/perf-time-to-tsc.c
++++ b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
+@@ -5,6 +5,7 @@
+ #include <unistd.h>
+ #include <linux/types.h>
+ #include <sys/prctl.h>
++#include <perf/cpumap.h>
  
- 	if (record__open(rec) != 0) {
-@@ -2386,7 +2386,7 @@ int cmd_record(int argc, const char **argv)
- 	if (record.opts.overwrite)
- 		record.opts.tail_synthesize = true;
+ #include "parse-events.h"
+ #include "evlist.h"
+@@ -65,7 +66,7 @@ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest __maybe
+ 	threads = thread_map__new(-1, getpid(), UINT_MAX);
+ 	CHECK_NOT_NULL__(threads);
  
--	if (rec->evlist->nr_entries == 0 &&
-+	if (rec->evlist->core.nr_entries == 0 &&
- 	    __perf_evlist__add_default(rec->evlist, !record.opts.no_samples) < 0) {
- 		pr_err("Not enough memory for event selector list\n");
- 		goto out;
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 39bd73d0e06e..3ba184f2e64f 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1366,7 +1366,7 @@ static int add_default_attributes(void)
- 		free(str);
+-	cpus = cpu_map__new(NULL);
++	cpus = perf_cpu_map__new(NULL);
+ 	CHECK_NOT_NULL__(cpus);
+ 
+ 	evlist = evlist__new();
+diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
+index 1fd724f1d48b..84658d45f349 100644
+--- a/tools/perf/bench/epoll-ctl.c
++++ b/tools/perf/bench/epoll-ctl.c
+@@ -20,6 +20,7 @@
+ #include <sys/resource.h>
+ #include <sys/epoll.h>
+ #include <sys/eventfd.h>
++#include <perf/cpumap.h>
+ 
+ #include "../util/stat.h"
+ #include <subcmd/parse-options.h>
+@@ -315,7 +316,7 @@ int bench_epoll_ctl(int argc, const char **argv)
+ 	act.sa_sigaction = toggle_done;
+ 	sigaction(SIGINT, &act, NULL);
+ 
+-	cpu = cpu_map__new(NULL);
++	cpu = perf_cpu_map__new(NULL);
+ 	if (!cpu)
+ 		goto errmem;
+ 
+diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+index 79a254fff2d1..c27a65639cfb 100644
+--- a/tools/perf/bench/epoll-wait.c
++++ b/tools/perf/bench/epoll-wait.c
+@@ -75,6 +75,7 @@
+ #include <sys/epoll.h>
+ #include <sys/eventfd.h>
+ #include <sys/types.h>
++#include <perf/cpumap.h>
+ 
+ #include "../util/stat.h"
+ #include <subcmd/parse-options.h>
+@@ -429,7 +430,7 @@ int bench_epoll_wait(int argc, const char **argv)
+ 	act.sa_sigaction = toggle_done;
+ 	sigaction(SIGINT, &act, NULL);
+ 
+-	cpu = cpu_map__new(NULL);
++	cpu = perf_cpu_map__new(NULL);
+ 	if (!cpu)
+ 		goto errmem;
+ 
+diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
+index b4fea8e3a368..80e138904c66 100644
+--- a/tools/perf/bench/futex-hash.c
++++ b/tools/perf/bench/futex-hash.c
+@@ -20,6 +20,7 @@
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+ #include <sys/time.h>
++#include <perf/cpumap.h>
+ 
+ #include "../util/stat.h"
+ #include <subcmd/parse-options.h>
+@@ -132,7 +133,7 @@ int bench_futex_hash(int argc, const char **argv)
+ 		exit(EXIT_FAILURE);
  	}
  
--	if (!evsel_list->nr_entries) {
-+	if (!evsel_list->core.nr_entries) {
- 		if (target__has_cpu(&target))
- 			default_attrs0[0].config = PERF_COUNT_SW_CPU_CLOCK;
+-	cpu = cpu_map__new(NULL);
++	cpu = perf_cpu_map__new(NULL);
+ 	if (!cpu)
+ 		goto errmem;
  
-@@ -1683,7 +1683,7 @@ static void setup_system_wide(int forks)
- 				return;
- 		}
- 
--		if (evsel_list->nr_entries)
-+		if (evsel_list->core.nr_entries)
- 			target.system_wide = true;
- 	}
- }
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index b103f1ba01cb..3291eff13e28 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -129,7 +129,7 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- 	notes = symbol__annotation(sym);
- 	pthread_mutex_lock(&notes->lock);
- 
--	if (!symbol__hists(sym, top->evlist->nr_entries)) {
-+	if (!symbol__hists(sym, top->evlist->core.nr_entries)) {
- 		pthread_mutex_unlock(&notes->lock);
- 		pr_err("Not enough memory for annotating '%s' symbol!\n",
- 		       sym->name);
-@@ -404,7 +404,7 @@ static void perf_top__print_mapped_keys(struct perf_top *top)
- 	fprintf(stdout, "\t[d]     display refresh delay.             \t(%d)\n", top->delay_secs);
- 	fprintf(stdout, "\t[e]     display entries (lines).           \t(%d)\n", top->print_entries);
- 
--	if (top->evlist->nr_entries > 1)
-+	if (top->evlist->core.nr_entries > 1)
- 		fprintf(stdout, "\t[E]     active event counter.              \t(%s)\n", perf_evsel__name(top->sym_evsel));
- 
- 	fprintf(stdout, "\t[f]     profile display filter (count).    \t(%d)\n", top->count_filter);
-@@ -439,7 +439,7 @@ static int perf_top__key_mapped(struct perf_top *top, int c)
- 		case 'S':
- 			return 1;
- 		case 'E':
--			return top->evlist->nr_entries > 1 ? 1 : 0;
-+			return top->evlist->core.nr_entries > 1 ? 1 : 0;
- 		default:
- 			break;
- 	}
-@@ -485,7 +485,7 @@ static bool perf_top__handle_keypress(struct perf_top *top, int c)
- 			}
- 			break;
- 		case 'E':
--			if (top->evlist->nr_entries > 1) {
-+			if (top->evlist->core.nr_entries > 1) {
- 				/* Select 0 as the default event: */
- 				int counter = 0;
- 
-@@ -496,7 +496,7 @@ static bool perf_top__handle_keypress(struct perf_top *top, int c)
- 
- 				prompt_integer(&counter, "Enter details event counter");
- 
--				if (counter >= top->evlist->nr_entries) {
-+				if (counter >= top->evlist->core.nr_entries) {
- 					top->sym_evsel = perf_evlist__first(top->evlist);
- 					fprintf(stderr, "Sorry, no such event, using %s.\n", perf_evsel__name(top->sym_evsel));
- 					sleep(1);
-@@ -1536,7 +1536,7 @@ int cmd_top(int argc, const char **argv)
+diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
+index 596769924709..c5d6d0abbaa9 100644
+--- a/tools/perf/bench/futex-lock-pi.c
++++ b/tools/perf/bench/futex-lock-pi.c
+@@ -14,6 +14,7 @@
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+ #include <errno.h>
++#include <perf/cpumap.h>
+ #include "bench.h"
+ #include "futex.h"
+ #include "cpumap.h"
+@@ -156,7 +157,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
  	if (argc)
- 		usage_with_options(top_usage, options);
+ 		goto err;
  
--	if (!top.evlist->nr_entries &&
-+	if (!top.evlist->core.nr_entries &&
- 	    perf_evlist__add_default(top.evlist) < 0) {
- 		pr_err("Not enough memory for event selector list\n");
- 		goto out_delete_evlist;
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index bcd033e91de4..06fcd8b1f160 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4270,7 +4270,7 @@ int cmd_trace(int argc, const char **argv)
- 		symbol_conf.use_callchain = true;
+-	cpu = cpu_map__new(NULL);
++	cpu = perf_cpu_map__new(NULL);
+ 	if (!cpu)
+ 		err(EXIT_FAILURE, "calloc");
+ 
+diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requeue.c
+index 1fd32a4f9c14..75d3418c1a88 100644
+--- a/tools/perf/bench/futex-requeue.c
++++ b/tools/perf/bench/futex-requeue.c
+@@ -20,6 +20,7 @@
+ #include <linux/kernel.h>
+ #include <linux/time64.h>
+ #include <errno.h>
++#include <perf/cpumap.h>
+ #include "bench.h"
+ #include "futex.h"
+ #include "cpumap.h"
+@@ -123,7 +124,7 @@ int bench_futex_requeue(int argc, const char **argv)
+ 	if (argc)
+ 		goto err;
+ 
+-	cpu = cpu_map__new(NULL);
++	cpu = perf_cpu_map__new(NULL);
+ 	if (!cpu)
+ 		err(EXIT_FAILURE, "cpu_map__new");
+ 
+diff --git a/tools/perf/bench/futex-wake-parallel.c b/tools/perf/bench/futex-wake-parallel.c
+index 884c73e5bd1b..163fe16c275a 100644
+--- a/tools/perf/bench/futex-wake-parallel.c
++++ b/tools/perf/bench/futex-wake-parallel.c
+@@ -237,7 +237,7 @@ int bench_futex_wake_parallel(int argc, const char **argv)
+ 	act.sa_sigaction = toggle_done;
+ 	sigaction(SIGINT, &act, NULL);
+ 
+-	cpu = cpu_map__new(NULL);
++	cpu = perf_cpu_map__new(NULL);
+ 	if (!cpu)
+ 		err(EXIT_FAILURE, "calloc");
+ 
+diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
+index 2288fa8412ff..77dcdc13618a 100644
+--- a/tools/perf/bench/futex-wake.c
++++ b/tools/perf/bench/futex-wake.c
+@@ -20,6 +20,7 @@
+ #include <linux/kernel.h>
+ #include <linux/time64.h>
+ #include <errno.h>
++#include <perf/cpumap.h>
+ #include "bench.h"
+ #include "futex.h"
+ #include "cpumap.h"
+@@ -131,7 +132,7 @@ int bench_futex_wake(int argc, const char **argv)
+ 		exit(EXIT_FAILURE);
  	}
  
--	if (trace.evlist->nr_entries > 0) {
-+	if (trace.evlist->core.nr_entries > 0) {
- 		evlist__set_evsel_handler(trace.evlist, trace__event_handler);
- 		if (evlist__set_syscall_tp_fields(trace.evlist)) {
- 			perror("failed to set syscalls:* tracepoint fields");
-@@ -4368,7 +4368,7 @@ int cmd_trace(int argc, const char **argv)
- 		trace.summary = trace.summary_only;
+-	cpu = cpu_map__new(NULL);
++	cpu = perf_cpu_map__new(NULL);
+ 	if (!cpu)
+ 		err(EXIT_FAILURE, "calloc");
  
- 	if (!trace.trace_syscalls && !trace.trace_pgfaults &&
--	    trace.evlist->nr_entries == 0 /* Was --events used? */) {
-+	    trace.evlist->core.nr_entries == 0 /* Was --events used? */) {
- 		trace.trace_syscalls = true;
- 	}
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 6943352b8d94..77989254fdd8 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -202,7 +202,7 @@ static int set_tracing_cpu(struct perf_ftrace *ftrace)
  
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 023fe4b44131..1b27fd2de9b9 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -7,16 +7,19 @@
- void perf_evlist__init(struct perf_evlist *evlist)
+ static int reset_tracing_cpu(void)
  {
- 	INIT_LIST_HEAD(&evlist->entries);
-+	evlist->nr_entries = 0;
- }
- 
- void perf_evlist__add(struct perf_evlist *evlist,
- 		      struct perf_evsel *evsel)
- {
- 	list_add_tail(&evsel->node, &evlist->entries);
-+	evlist->nr_entries += 1;
- }
- 
- void perf_evlist__remove(struct perf_evlist *evlist,
- 			 struct perf_evsel *evsel)
- {
- 	list_del_init(&evsel->node);
-+	evlist->nr_entries -= 1;
- }
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index 7fbfe5716652..a12c712a9197 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -4,6 +4,7 @@
- 
- struct perf_evlist {
- 	struct list_head	entries;
-+	int			nr_entries;
- };
- 
- #endif /* __LIBPERF_INTERNAL_EVLIST_H */
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 2365dd655c88..878140501edf 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -48,7 +48,7 @@ static int test__checkevent_tracepoint(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong number of groups", 0 == evlist->nr_groups);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_TRACEPOINT == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong sample_type",
-@@ -61,7 +61,7 @@ static int test__checkevent_tracepoint_multi(struct evlist *evlist)
- {
- 	struct evsel *evsel;
- 
--	TEST_ASSERT_VAL("wrong number of entries", evlist->nr_entries > 1);
-+	TEST_ASSERT_VAL("wrong number of entries", evlist->core.nr_entries > 1);
- 	TEST_ASSERT_VAL("wrong number of groups", 0 == evlist->nr_groups);
- 
- 	evlist__for_each_entry(evlist, evsel) {
-@@ -79,7 +79,7 @@ static int test__checkevent_raw(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0x1a == evsel->attr.config);
- 	return 0;
-@@ -89,7 +89,7 @@ static int test__checkevent_numeric(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", 1 == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config", 1 == evsel->attr.config);
- 	return 0;
-@@ -99,7 +99,7 @@ static int test__checkevent_symbolic_name(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config",
- 			PERF_COUNT_HW_INSTRUCTIONS == evsel->attr.config);
-@@ -110,7 +110,7 @@ static int test__checkevent_symbolic_name_config(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config",
- 			PERF_COUNT_HW_CPU_CYCLES == evsel->attr.config);
-@@ -131,7 +131,7 @@ static int test__checkevent_symbolic_alias(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_SOFTWARE == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config",
- 			PERF_COUNT_SW_PAGE_FAULTS == evsel->attr.config);
-@@ -142,7 +142,7 @@ static int test__checkevent_genhw(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HW_CACHE == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config", (1 << 16) == evsel->attr.config);
- 	return 0;
-@@ -152,7 +152,7 @@ static int test__checkevent_breakpoint(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0 == evsel->attr.config);
- 	TEST_ASSERT_VAL("wrong bp_type", (HW_BREAKPOINT_R | HW_BREAKPOINT_W) ==
-@@ -166,7 +166,7 @@ static int test__checkevent_breakpoint_x(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0 == evsel->attr.config);
- 	TEST_ASSERT_VAL("wrong bp_type",
-@@ -179,7 +179,7 @@ static int test__checkevent_breakpoint_r(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type",
- 			PERF_TYPE_BREAKPOINT == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0 == evsel->attr.config);
-@@ -194,7 +194,7 @@ static int test__checkevent_breakpoint_w(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type",
- 			PERF_TYPE_BREAKPOINT == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0 == evsel->attr.config);
-@@ -209,7 +209,7 @@ static int test__checkevent_breakpoint_rw(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type",
- 			PERF_TYPE_BREAKPOINT == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0 == evsel->attr.config);
-@@ -237,7 +237,7 @@ test__checkevent_tracepoint_multi_modifier(struct evlist *evlist)
- {
- 	struct evsel *evsel;
- 
--	TEST_ASSERT_VAL("wrong number of entries", evlist->nr_entries > 1);
-+	TEST_ASSERT_VAL("wrong number of entries", evlist->core.nr_entries > 1);
- 
- 	evlist__for_each_entry(evlist, evsel) {
- 		TEST_ASSERT_VAL("wrong exclude_user",
-@@ -437,7 +437,7 @@ static int test__checkevent_pmu(struct evlist *evlist)
- 
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config",    10 == evsel->attr.config);
- 	TEST_ASSERT_VAL("wrong config1",    1 == evsel->attr.config1);
-@@ -455,7 +455,7 @@ static int test__checkevent_list(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 3 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 3 == evlist->core.nr_entries);
- 
- 	/* r1 */
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->attr.type);
-@@ -495,14 +495,14 @@ static int test__checkevent_pmu_name(struct evlist *evlist)
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
- 	/* cpu/config=1,name=krava/u */
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config",  1 == evsel->attr.config);
- 	TEST_ASSERT_VAL("wrong name", !strcmp(perf_evsel__name(evsel), "krava"));
- 
- 	/* cpu/config=2/u" */
- 	evsel = perf_evsel__next(evsel);
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config",  2 == evsel->attr.config);
- 	TEST_ASSERT_VAL("wrong name",
-@@ -516,7 +516,7 @@ static int test__checkevent_pmu_partial_time_callgraph(struct evlist *evlist)
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
- 	/* cpu/config=1,call-graph=fp,time,period=100000/ */
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config",  1 == evsel->attr.config);
- 	/*
-@@ -548,7 +548,7 @@ static int test__checkevent_pmu_events(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong exclude_user",
- 			!evsel->attr.exclude_user);
-@@ -567,7 +567,7 @@ static int test__checkevent_pmu_events_mix(struct evlist *evlist)
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
- 	/* pmu-event:u */
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong exclude_user",
- 			!evsel->attr.exclude_user);
- 	TEST_ASSERT_VAL("wrong exclude_kernel",
-@@ -578,7 +578,7 @@ static int test__checkevent_pmu_events_mix(struct evlist *evlist)
- 
- 	/* cpu/pmu-event/u*/
- 	evsel = perf_evsel__next(evsel);
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong exclude_user",
- 			!evsel->attr.exclude_user);
-@@ -638,7 +638,7 @@ static int test__group1(struct evlist *evlist)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->nr_groups);
- 
- 	/* instructions:k */
-@@ -680,7 +680,7 @@ static int test__group2(struct evlist *evlist)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 3 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 3 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->nr_groups);
- 
- 	/* faults + :ku modifier */
-@@ -735,7 +735,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 5 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 5 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong number of groups", 2 == evlist->nr_groups);
- 
- 	/* group1 syscalls:sys_enter_openat:H */
-@@ -827,7 +827,7 @@ static int test__group4(struct evlist *evlist __maybe_unused)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->nr_groups);
- 
- 	/* cycles:u + p */
-@@ -871,7 +871,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 5 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 5 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong number of groups", 2 == evlist->nr_groups);
- 
- 	/* cycles + G */
-@@ -957,7 +957,7 @@ static int test__group_gh1(struct evlist *evlist)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->nr_groups);
- 
- 	/* cycles + :H group modifier */
-@@ -997,7 +997,7 @@ static int test__group_gh2(struct evlist *evlist)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->nr_groups);
- 
- 	/* cycles + :G group modifier */
-@@ -1037,7 +1037,7 @@ static int test__group_gh3(struct evlist *evlist)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->nr_groups);
- 
- 	/* cycles:G + :u group modifier */
-@@ -1077,7 +1077,7 @@ static int test__group_gh4(struct evlist *evlist)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong number of groups", 1 == evlist->nr_groups);
- 
- 	/* cycles:G + :uG group modifier */
-@@ -1117,7 +1117,7 @@ static int test__leader_sample1(struct evlist *evlist)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 3 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 3 == evlist->core.nr_entries);
- 
- 	/* cycles - sampling group leader */
- 	evsel = leader = perf_evlist__first(evlist);
-@@ -1170,7 +1170,7 @@ static int test__leader_sample2(struct evlist *evlist __maybe_unused)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 
- 	/* instructions - sampling group leader */
- 	evsel = leader = perf_evlist__first(evlist);
-@@ -1222,7 +1222,7 @@ static int test__pinned_group(struct evlist *evlist)
- {
- 	struct evsel *evsel, *leader;
- 
--	TEST_ASSERT_VAL("wrong number of entries", 3 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 3 == evlist->core.nr_entries);
- 
- 	/* cycles - group leader */
- 	evsel = leader = perf_evlist__first(evlist);
-@@ -1253,7 +1253,7 @@ static int test__checkevent_breakpoint_len(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0 == evsel->attr.config);
- 	TEST_ASSERT_VAL("wrong bp_type", (HW_BREAKPOINT_R | HW_BREAKPOINT_W) ==
-@@ -1268,7 +1268,7 @@ static int test__checkevent_breakpoint_len_w(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0 == evsel->attr.config);
- 	TEST_ASSERT_VAL("wrong bp_type", HW_BREAKPOINT_W ==
-@@ -1296,7 +1296,7 @@ static int test__checkevent_precise_max_modifier(struct evlist *evlist)
- {
- 	struct evsel *evsel = perf_evlist__first(evlist);
- 
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->nr_entries);
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_SOFTWARE == evsel->attr.type);
- 	TEST_ASSERT_VAL("wrong config",
- 			PERF_COUNT_SW_TASK_CLOCK == evsel->attr.config);
-@@ -1425,7 +1425,7 @@ static int count_tracepoints(void)
- static int test__all_tracepoints(struct evlist *evlist)
- {
- 	TEST_ASSERT_VAL("wrong events count",
--			count_tracepoints() == evlist->nr_entries);
-+			count_tracepoints() == evlist->core.nr_entries);
- 
- 	return test__checkevent_tracepoint_multi(evlist);
- }
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 64cc650c4543..e633eb42550d 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -422,7 +422,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 	notes = symbol__annotation(dl->ops.target.sym);
- 	pthread_mutex_lock(&notes->lock);
- 
--	if (!symbol__hists(dl->ops.target.sym, evsel->evlist->nr_entries)) {
-+	if (!symbol__hists(dl->ops.target.sym, evsel->evlist->core.nr_entries)) {
- 		pthread_mutex_unlock(&notes->lock);
- 		ui__warning("Not enough memory for annotating '%s' symbol!\n",
- 			    dl->ops.target.sym->name);
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index ed5406ff9fe4..b195b1ba625b 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -3404,7 +3404,7 @@ int perf_evlist__tui_browse_hists(struct evlist *evlist, const char *help,
- 				  bool warn_lost_event,
- 				  struct annotation_options *annotation_opts)
- {
--	int nr_entries = evlist->nr_entries;
-+	int nr_entries = evlist->core.nr_entries;
- 
- single_entry:
- 	if (nr_entries == 1) {
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 6ea5d678a81c..d46f2ae2c695 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -936,7 +936,7 @@ static int symbol__inc_addr_samples(struct symbol *sym, struct map *map,
- 
- 	if (sym == NULL)
- 		return 0;
--	src = symbol__hists(sym, evsel->evlist->nr_entries);
-+	src = symbol__hists(sym, evsel->evlist->core.nr_entries);
- 	return (src) ?  __symbol__inc_addr_samples(sym, map, src, evsel->idx,
- 						   addr, sample) : 0;
- }
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 7c42f320efa2..d94be9140e31 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -245,7 +245,7 @@ struct cyc_hist {
- /** struct annotated_source - symbols with hits have this attached as in sannotation
-  *
-  * @histograms: Array of addr hit histograms per event being monitored
-- * nr_histograms: This may not be the same as evsel->evlist->nr_entries if
-+ * nr_histograms: This may not be the same as evsel->evlist->core.nr_entries if
-  * 		  we have more than a group in a evlist, where we will want
-  * 		  to see each group separately, that is why symbol__annotate2()
-  * 		  sets src->nr_histograms to evsel->nr_members.
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 9b0108c23010..ce9f52215d60 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -125,7 +125,7 @@ static void perf_evlist__purge(struct evlist *evlist)
- 		evsel__delete(pos);
- 	}
- 
--	evlist->nr_entries = 0;
-+	evlist->core.nr_entries = 0;
- }
- 
- void perf_evlist__exit(struct evlist *evlist)
-@@ -180,12 +180,13 @@ static void perf_evlist__propagate_maps(struct evlist *evlist)
- 
- void evlist__add(struct evlist *evlist, struct evsel *entry)
- {
--	perf_evlist__add(&evlist->core, &entry->core);
- 	entry->evlist = evlist;
--	entry->idx = evlist->nr_entries;
-+	entry->idx = evlist->core.nr_entries;
- 	entry->tracking = !entry->idx;
- 
--	if (!evlist->nr_entries++)
-+	perf_evlist__add(&evlist->core, &entry->core);
-+
-+	if (evlist->core.nr_entries == 1)
- 		perf_evlist__set_id_pos(evlist);
- 
- 	__perf_evlist__propagate_maps(evlist, entry);
-@@ -195,7 +196,6 @@ void evlist__remove(struct evlist *evlist, struct evsel *evsel)
- {
- 	evsel->evlist = NULL;
- 	perf_evlist__remove(&evlist->core, &evsel->core);
--	evlist->nr_entries -= 1;
- }
- 
- void perf_evlist__splice_list_tail(struct evlist *evlist,
-@@ -225,8 +225,8 @@ void __perf_evlist__set_leader(struct list_head *list)
- 
- void perf_evlist__set_leader(struct evlist *evlist)
- {
--	if (evlist->nr_entries) {
--		evlist->nr_groups = evlist->nr_entries > 1 ? 1 : 0;
-+	if (evlist->core.nr_entries) {
-+		evlist->nr_groups = evlist->core.nr_entries > 1 ? 1 : 0;
- 		__perf_evlist__set_leader(&evlist->core.entries);
- 	}
- }
-@@ -249,7 +249,7 @@ int perf_evlist__add_dummy(struct evlist *evlist)
- 		.config = PERF_COUNT_SW_DUMMY,
- 		.size	= sizeof(attr), /* to capture ABI version */
- 	};
--	struct evsel *evsel = perf_evsel__new_idx(&attr, evlist->nr_entries);
-+	struct evsel *evsel = perf_evsel__new_idx(&attr, evlist->core.nr_entries);
- 
- 	if (evsel == NULL)
- 		return -ENOMEM;
-@@ -266,7 +266,7 @@ static int evlist__add_attrs(struct evlist *evlist,
- 	size_t i;
- 
- 	for (i = 0; i < nr_attrs; i++) {
--		evsel = perf_evsel__new_idx(attrs + i, evlist->nr_entries + i);
-+		evsel = perf_evsel__new_idx(attrs + i, evlist->core.nr_entries + i);
- 		if (evsel == NULL)
- 			goto out_delete_partial_list;
- 		list_add_tail(&evsel->core.node, &head);
-@@ -581,7 +581,7 @@ struct evsel *perf_evlist__id2evsel(struct evlist *evlist, u64 id)
- {
- 	struct perf_sample_id *sid;
- 
--	if (evlist->nr_entries == 1 || !id)
-+	if (evlist->core.nr_entries == 1 || !id)
- 		return perf_evlist__first(evlist);
- 
- 	sid = perf_evlist__id2sid(evlist, id);
-@@ -639,7 +639,7 @@ struct evsel *perf_evlist__event2evsel(struct evlist *evlist,
- 	int hash;
- 	u64 id;
- 
--	if (evlist->nr_entries == 1)
-+	if (evlist->core.nr_entries == 1)
- 		return first;
- 
- 	if (!first->attr.sample_id_all &&
-@@ -1222,7 +1222,7 @@ bool perf_evlist__valid_sample_type(struct evlist *evlist)
- {
- 	struct evsel *pos;
- 
--	if (evlist->nr_entries == 1)
-+	if (evlist->core.nr_entries == 1)
- 		return true;
- 
- 	if (evlist->id_pos < 0 || evlist->is_pos < 0)
-@@ -1849,7 +1849,7 @@ int perf_evlist__add_sb_event(struct evlist **evlist,
- 		attr->sample_id_all = 1;
- 	}
- 
--	evsel = perf_evsel__new_idx(attr, (*evlist)->nr_entries);
-+	evsel = perf_evsel__new_idx(attr, (*evlist)->core.nr_entries);
- 	if (!evsel)
- 		goto out_err;
- 
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 7117378a08e3..17dd83021a79 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -28,7 +28,6 @@ struct record_opts;
- struct evlist {
- 	struct perf_evlist core;
- 	struct hlist_head heads[PERF_EVLIST__HLIST_SIZE];
--	int		 nr_entries;
- 	int		 nr_groups;
- 	int		 nr_mmaps;
- 	bool		 enabled;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 70ab6b8c715b..141de4425100 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -476,7 +476,7 @@ static int write_event_desc(struct feat_fd *ff,
- 	u32 nre, nri, sz;
+-	struct perf_cpu_map *cpumap = cpu_map__new(NULL);
++	struct perf_cpu_map *cpumap = perf_cpu_map__new(NULL);
  	int ret;
  
--	nre = evlist->nr_entries;
-+	nre = evlist->core.nr_entries;
+ 	ret = set_tracing_cpumask(cpumap);
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 897d11c8ca2e..0d6b4c3b1a51 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3183,7 +3183,7 @@ static int setup_map_cpus(struct perf_sched *sched)
+ 	if (!sched->map.cpus_str)
+ 		return 0;
  
- 	/*
- 	 * write number of events
-@@ -3100,7 +3100,7 @@ int perf_session__write_header(struct perf_session *session,
- 		.attr_size = sizeof(f_attr),
- 		.attrs = {
- 			.offset = attr_offset,
--			.size   = evlist->nr_entries * sizeof(f_attr),
-+			.size   = evlist->core.nr_entries * sizeof(f_attr),
- 		},
- 		.data = {
- 			.offset = header->data_offset,
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index a0b7d68d2f8e..10efc33c56a1 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1909,7 +1909,7 @@ int parse_events(struct evlist *evlist, const char *str,
+-	map = cpu_map__new(sched->map.cpus_str);
++	map = perf_cpu_map__new(sched->map.cpus_str);
+ 	if (!map) {
+ 		pr_err("failed to get cpus map from %s\n", sched->map.cpus_str);
+ 		return -1;
+@@ -3217,7 +3217,7 @@ static int setup_color_cpus(struct perf_sched *sched)
+ 	if (!sched->map.color_cpus_str)
+ 		return 0;
+ 
+-	map = cpu_map__new(sched->map.color_cpus_str);
++	map = perf_cpu_map__new(sched->map.color_cpus_str);
+ 	if (!map) {
+ 		pr_err("failed to get thread map from %s\n", sched->map.color_cpus_str);
+ 		return -1;
+diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+index f3cfb4c71106..a5d4f7ff7174 100644
+--- a/tools/perf/lib/cpumap.c
++++ b/tools/perf/lib/cpumap.c
+@@ -5,6 +5,10 @@
+ #include <internal/cpumap.h>
+ #include <asm/bug.h>
+ #include <stdio.h>
++#include <string.h>
++#include <unistd.h>
++#include <ctype.h>
++#include <limits.h>
+ 
+ struct perf_cpu_map *perf_cpu_map__dummy_new(void)
  {
- 	struct parse_events_state parse_state = {
- 		.list   = LIST_HEAD_INIT(parse_state.list),
--		.idx    = evlist->nr_entries,
-+		.idx    = evlist->core.nr_entries,
- 		.error  = err,
- 		.evlist = evlist,
- 	};
-@@ -2040,7 +2040,7 @@ foreach_evsel_in_last_glob(struct evlist *evlist,
- 	 *
- 	 * So no need to WARN here, let *func do this.
- 	 */
--	if (evlist->nr_entries > 0)
-+	if (evlist->core.nr_entries > 0)
- 		last = perf_evlist__last(evlist);
- 
- 	do {
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 19d2feee91d5..cf0a18d49018 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -973,10 +973,10 @@ static PyObject *pyrf_evlist__add(struct pyrf_evlist *pevlist,
- 
- 	Py_INCREF(pevsel);
- 	evsel = &((struct pyrf_evsel *)pevsel)->evsel;
--	evsel->idx = evlist->nr_entries;
-+	evsel->idx = evlist->core.nr_entries;
- 	evlist__add(evlist, evsel);
- 
--	return Py_BuildValue("i", evlist->nr_entries);
-+	return Py_BuildValue("i", evlist->core.nr_entries);
+@@ -40,3 +44,183 @@ void perf_cpu_map__put(struct perf_cpu_map *map)
+ 	if (map && refcount_dec_and_test(&map->refcnt))
+ 		cpu_map__delete(map);
  }
++
++static struct perf_cpu_map *cpu_map__default_new(void)
++{
++	struct perf_cpu_map *cpus;
++	int nr_cpus;
++
++	nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
++	if (nr_cpus < 0)
++		return NULL;
++
++	cpus = malloc(sizeof(*cpus) + nr_cpus * sizeof(int));
++	if (cpus != NULL) {
++		int i;
++
++		for (i = 0; i < nr_cpus; ++i)
++			cpus->map[i] = i;
++
++		cpus->nr = nr_cpus;
++		refcount_set(&cpus->refcnt, 1);
++	}
++
++	return cpus;
++}
++
++static struct perf_cpu_map *cpu_map__trim_new(int nr_cpus, int *tmp_cpus)
++{
++	size_t payload_size = nr_cpus * sizeof(int);
++	struct perf_cpu_map *cpus = malloc(sizeof(*cpus) + payload_size);
++
++	if (cpus != NULL) {
++		cpus->nr = nr_cpus;
++		memcpy(cpus->map, tmp_cpus, payload_size);
++		refcount_set(&cpus->refcnt, 1);
++	}
++
++	return cpus;
++}
++
++struct perf_cpu_map *perf_cpu_map__read(FILE *file)
++{
++	struct perf_cpu_map *cpus = NULL;
++	int nr_cpus = 0;
++	int *tmp_cpus = NULL, *tmp;
++	int max_entries = 0;
++	int n, cpu, prev;
++	char sep;
++
++	sep = 0;
++	prev = -1;
++	for (;;) {
++		n = fscanf(file, "%u%c", &cpu, &sep);
++		if (n <= 0)
++			break;
++		if (prev >= 0) {
++			int new_max = nr_cpus + cpu - prev - 1;
++
++			if (new_max >= max_entries) {
++				max_entries = new_max + MAX_NR_CPUS / 2;
++				tmp = realloc(tmp_cpus, max_entries * sizeof(int));
++				if (tmp == NULL)
++					goto out_free_tmp;
++				tmp_cpus = tmp;
++			}
++
++			while (++prev < cpu)
++				tmp_cpus[nr_cpus++] = prev;
++		}
++		if (nr_cpus == max_entries) {
++			max_entries += MAX_NR_CPUS;
++			tmp = realloc(tmp_cpus, max_entries * sizeof(int));
++			if (tmp == NULL)
++				goto out_free_tmp;
++			tmp_cpus = tmp;
++		}
++
++		tmp_cpus[nr_cpus++] = cpu;
++		if (n == 2 && sep == '-')
++			prev = cpu;
++		else
++			prev = -1;
++		if (n == 1 || sep == '\n')
++			break;
++	}
++
++	if (nr_cpus > 0)
++		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
++	else
++		cpus = cpu_map__default_new();
++out_free_tmp:
++	free(tmp_cpus);
++	return cpus;
++}
++
++static struct perf_cpu_map *cpu_map__read_all_cpu_map(void)
++{
++	struct perf_cpu_map *cpus = NULL;
++	FILE *onlnf;
++
++	onlnf = fopen("/sys/devices/system/cpu/online", "r");
++	if (!onlnf)
++		return cpu_map__default_new();
++
++	cpus = perf_cpu_map__read(onlnf);
++	fclose(onlnf);
++	return cpus;
++}
++
++struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
++{
++	struct perf_cpu_map *cpus = NULL;
++	unsigned long start_cpu, end_cpu = 0;
++	char *p = NULL;
++	int i, nr_cpus = 0;
++	int *tmp_cpus = NULL, *tmp;
++	int max_entries = 0;
++
++	if (!cpu_list)
++		return cpu_map__read_all_cpu_map();
++
++	/*
++	 * must handle the case of empty cpumap to cover
++	 * TOPOLOGY header for NUMA nodes with no CPU
++	 * ( e.g., because of CPU hotplug)
++	 */
++	if (!isdigit(*cpu_list) && *cpu_list != '\0')
++		goto out;
++
++	while (isdigit(*cpu_list)) {
++		p = NULL;
++		start_cpu = strtoul(cpu_list, &p, 0);
++		if (start_cpu >= INT_MAX
++		    || (*p != '\0' && *p != ',' && *p != '-'))
++			goto invalid;
++
++		if (*p == '-') {
++			cpu_list = ++p;
++			p = NULL;
++			end_cpu = strtoul(cpu_list, &p, 0);
++
++			if (end_cpu >= INT_MAX || (*p != '\0' && *p != ','))
++				goto invalid;
++
++			if (end_cpu < start_cpu)
++				goto invalid;
++		} else {
++			end_cpu = start_cpu;
++		}
++
++		for (; start_cpu <= end_cpu; start_cpu++) {
++			/* check for duplicates */
++			for (i = 0; i < nr_cpus; i++)
++				if (tmp_cpus[i] == (int)start_cpu)
++					goto invalid;
++
++			if (nr_cpus == max_entries) {
++				max_entries += MAX_NR_CPUS;
++				tmp = realloc(tmp_cpus, max_entries * sizeof(int));
++				if (tmp == NULL)
++					goto invalid;
++				tmp_cpus = tmp;
++			}
++			tmp_cpus[nr_cpus++] = (int)start_cpu;
++		}
++		if (*p)
++			++p;
++
++		cpu_list = p;
++	}
++
++	if (nr_cpus > 0)
++		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
++	else if (*cpu_list != '\0')
++		cpus = cpu_map__default_new();
++	else
++		cpus = perf_cpu_map__dummy_new();
++invalid:
++	free(tmp_cpus);
++out:
++	return cpus;
++}
+diff --git a/tools/perf/lib/include/internal/cpumap.h b/tools/perf/lib/include/internal/cpumap.h
+index 53ce95374b05..3306319f7df8 100644
+--- a/tools/perf/lib/include/internal/cpumap.h
++++ b/tools/perf/lib/include/internal/cpumap.h
+@@ -10,4 +10,8 @@ struct perf_cpu_map {
+ 	int		map[];
+ };
  
- static struct perf_mmap *get_md(struct evlist *evlist, int cpu)
-@@ -1112,7 +1112,7 @@ static Py_ssize_t pyrf_evlist__length(PyObject *obj)
++#ifndef MAX_NR_CPUS
++#define MAX_NR_CPUS	2048
++#endif
++
+ #endif /* __LIBPERF_INTERNAL_CPUMAP_H */
+diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
+index e16c2515a499..b4a9283a5dfa 100644
+--- a/tools/perf/lib/include/perf/cpumap.h
++++ b/tools/perf/lib/include/perf/cpumap.h
+@@ -3,10 +3,13 @@
+ #define __LIBPERF_CPUMAP_H
+ 
+ #include <perf/core.h>
++#include <stdio.h>
+ 
+ struct perf_cpu_map;
+ 
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
++LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
++LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
+ LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
+ 
+diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
+index 168339f89a2e..e38473a8f32f 100644
+--- a/tools/perf/lib/libperf.map
++++ b/tools/perf/lib/libperf.map
+@@ -4,6 +4,8 @@ LIBPERF_0.0.1 {
+ 		perf_cpu_map__dummy_new;
+ 		perf_cpu_map__get;
+ 		perf_cpu_map__put;
++		perf_cpu_map__new;
++		perf_cpu_map__read;
+ 		perf_thread_map__new_dummy;
+ 		perf_thread_map__set_pid;
+ 		perf_thread_map__comm;
+diff --git a/tools/perf/tests/bitmap.c b/tools/perf/tests/bitmap.c
+index 95304d29092e..db2aadff3708 100644
+--- a/tools/perf/tests/bitmap.c
++++ b/tools/perf/tests/bitmap.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/compiler.h>
+ #include <linux/bitmap.h>
++#include <perf/cpumap.h>
+ #include "tests.h"
+ #include "cpumap.h"
+ #include "debug.h"
+@@ -9,7 +10,7 @@
+ 
+ static unsigned long *get_bitmap(const char *str, int nbits)
  {
- 	struct pyrf_evlist *pevlist = (void *)obj;
+-	struct perf_cpu_map *map = cpu_map__new(str);
++	struct perf_cpu_map *map = perf_cpu_map__new(str);
+ 	unsigned long *bm = NULL;
+ 	int i;
  
--	return pevlist->evlist.nr_entries;
-+	return pevlist->evlist.core.nr_entries;
- }
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index 131bbeec62d2..bfaf22c2023c 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -8,6 +8,7 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <sys/param.h>
++#include <perf/cpumap.h>
  
- static PyObject *pyrf_evlist__item(PyObject *obj, Py_ssize_t i)
-@@ -1120,7 +1120,7 @@ static PyObject *pyrf_evlist__item(PyObject *obj, Py_ssize_t i)
- 	struct pyrf_evlist *pevlist = (void *)obj;
- 	struct evsel *pos;
- 
--	if (i >= pevlist->evlist.nr_entries)
-+	if (i >= pevlist->evlist.core.nr_entries)
- 		return NULL;
- 
- 	evlist__for_each_entry(&pevlist->evlist, pos) {
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index fecccfd71aa1..3d3d732498e1 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -166,7 +166,7 @@ void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 		 */
- 		use_sample_identifier = perf_can_sample_identifier();
- 		sample_id = true;
--	} else if (evlist->nr_entries > 1) {
-+	} else if (evlist->core.nr_entries > 1) {
- 		struct evsel *first = perf_evlist__first(evlist);
- 
- 		evlist__for_each_entry(evlist, evsel) {
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index d8e4392d6e18..fa3cc2112b82 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2323,7 +2323,7 @@ static struct evsel *find_evsel(struct evlist *evlist, char *event_name)
- 	if (event_name[0] == '%') {
- 		int nr = strtol(event_name+1, NULL, 0);
- 
--		if (nr > evlist->nr_entries)
-+		if (nr > evlist->core.nr_entries)
- 			return NULL;
- 
- 		evsel = perf_evlist__first(evlist);
-diff --git a/tools/perf/util/top.c b/tools/perf/util/top.c
-index 9f098db76e3c..3bbbdac2c550 100644
---- a/tools/perf/util/top.c
-+++ b/tools/perf/util/top.c
-@@ -70,7 +70,7 @@ size_t perf_top__header_snprintf(struct perf_top *top, char *bf, size_t size)
- 			       esamples_percent);
+ #include "parse-events.h"
+ #include "evlist.h"
+@@ -613,9 +614,9 @@ static int do_test_code_reading(bool try_kcore)
+ 		goto out_put;
  	}
  
--	if (top->evlist->nr_entries == 1) {
-+	if (top->evlist->core.nr_entries == 1) {
- 		struct evsel *first = perf_evlist__first(top->evlist);
- 		ret += SNPRINTF(bf + ret, size - ret, "%" PRIu64 "%s ",
- 				(uint64_t)first->attr.sample_period,
+-	cpus = cpu_map__new(NULL);
++	cpus = perf_cpu_map__new(NULL);
+ 	if (!cpus) {
+-		pr_debug("cpu_map__new failed\n");
++		pr_debug("perf_cpu_map__new failed\n");
+ 		goto out_put;
+ 	}
+ 
+diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+index 6c921087b0fe..b71fe09a8087 100644
+--- a/tools/perf/tests/cpumap.c
++++ b/tools/perf/tests/cpumap.c
+@@ -5,6 +5,7 @@
+ #include "event.h"
+ #include <string.h>
+ #include <linux/bitops.h>
++#include <perf/cpumap.h>
+ #include "debug.h"
+ 
+ struct machine;
+@@ -78,7 +79,7 @@ int test__cpu_map_synthesize(struct test *test __maybe_unused, int subtest __may
+ 	struct perf_cpu_map *cpus;
+ 
+ 	/* This one is better stores in mask. */
+-	cpus = cpu_map__new("0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19");
++	cpus = perf_cpu_map__new("0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19");
+ 
+ 	TEST_ASSERT_VAL("failed to synthesize map",
+ 		!perf_event__synthesize_cpu_map(NULL, cpus, process_event_mask, NULL));
+@@ -86,7 +87,7 @@ int test__cpu_map_synthesize(struct test *test __maybe_unused, int subtest __may
+ 	perf_cpu_map__put(cpus);
+ 
+ 	/* This one is better stores in cpu values. */
+-	cpus = cpu_map__new("1,256");
++	cpus = perf_cpu_map__new("1,256");
+ 
+ 	TEST_ASSERT_VAL("failed to synthesize map",
+ 		!perf_event__synthesize_cpu_map(NULL, cpus, process_event_cpus, NULL));
+@@ -97,7 +98,7 @@ int test__cpu_map_synthesize(struct test *test __maybe_unused, int subtest __may
+ 
+ static int cpu_map_print(const char *str)
+ {
+-	struct perf_cpu_map *map = cpu_map__new(str);
++	struct perf_cpu_map *map = perf_cpu_map__new(str);
+ 	char buf[100];
+ 
+ 	if (!map)
+diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
+index 165534f62036..00adba86403b 100644
+--- a/tools/perf/tests/event-times.c
++++ b/tools/perf/tests/event-times.c
+@@ -4,6 +4,7 @@
+ #include <inttypes.h>
+ #include <string.h>
+ #include <sys/wait.h>
++#include <perf/cpumap.h>
+ #include "tests.h"
+ #include "evlist.h"
+ #include "evsel.h"
+@@ -115,9 +116,9 @@ static int attach__cpu_disabled(struct evlist *evlist)
+ 
+ 	pr_debug("attaching to CPU 0 as enabled\n");
+ 
+-	cpus = cpu_map__new("0");
++	cpus = perf_cpu_map__new("0");
+ 	if (cpus == NULL) {
+-		pr_debug("failed to call cpu_map__new\n");
++		pr_debug("failed to call perf_cpu_map__new\n");
+ 		return -1;
+ 	}
+ 
+@@ -144,9 +145,9 @@ static int attach__cpu_enabled(struct evlist *evlist)
+ 
+ 	pr_debug("attaching to CPU 0 as enabled\n");
+ 
+-	cpus = cpu_map__new("0");
++	cpus = perf_cpu_map__new("0");
+ 	if (cpus == NULL) {
+-		pr_debug("failed to call cpu_map__new\n");
++		pr_debug("failed to call perf_cpu_map__new\n");
+ 		return -1;
+ 	}
+ 
+diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
+index 415d12e96834..2bc5145284c0 100644
+--- a/tools/perf/tests/event_update.c
++++ b/tools/perf/tests/event_update.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/compiler.h>
++#include <perf/cpumap.h>
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "machine.h"
+@@ -108,7 +109,7 @@ int test__event_update(struct test *test __maybe_unused, int subtest __maybe_unu
+ 	TEST_ASSERT_VAL("failed to synthesize attr update name",
+ 			!perf_event__synthesize_event_update_name(&tmp.tool, evsel, process_event_name));
+ 
+-	evsel->own_cpus = cpu_map__new("1,2,3");
++	evsel->own_cpus = perf_cpu_map__new("1,2,3");
+ 
+ 	TEST_ASSERT_VAL("failed to synthesize attr update cpus",
+ 			!perf_event__synthesize_event_update_cpus(&tmp.tool, evsel, process_event_cpus));
+diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
+index 4fc7b3b4e153..46478ba1ed16 100644
+--- a/tools/perf/tests/keep-tracking.c
++++ b/tools/perf/tests/keep-tracking.c
+@@ -2,6 +2,7 @@
+ #include <linux/types.h>
+ #include <unistd.h>
+ #include <sys/prctl.h>
++#include <perf/cpumap.h>
+ 
+ #include "parse-events.h"
+ #include "evlist.h"
+@@ -75,7 +76,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
+ 	threads = thread_map__new(-1, getpid(), UINT_MAX);
+ 	CHECK_NOT_NULL__(threads);
+ 
+-	cpus = cpu_map__new(NULL);
++	cpus = perf_cpu_map__new(NULL);
+ 	CHECK_NOT_NULL__(cpus);
+ 
+ 	evlist = evlist__new();
+diff --git a/tools/perf/tests/mem2node.c b/tools/perf/tests/mem2node.c
+index 6fe2c1e7918b..5ec193f7968d 100644
+--- a/tools/perf/tests/mem2node.c
++++ b/tools/perf/tests/mem2node.c
+@@ -2,6 +2,7 @@
+ #include <linux/compiler.h>
+ #include <linux/bitmap.h>
+ #include <linux/zalloc.h>
++#include <perf/cpumap.h>
+ #include "cpumap.h"
+ #include "mem2node.h"
+ #include "tests.h"
+@@ -19,7 +20,7 @@ static struct node {
+ 
+ static unsigned long *get_bitmap(const char *str, int nbits)
+ {
+-	struct perf_cpu_map *map = cpu_map__new(str);
++	struct perf_cpu_map *map = perf_cpu_map__new(str);
+ 	unsigned long *bm = NULL;
+ 	int i;
+ 
+diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+index 9d8eb43b12cb..aa792aebd7f0 100644
+--- a/tools/perf/tests/mmap-basic.c
++++ b/tools/perf/tests/mmap-basic.c
+@@ -3,6 +3,7 @@
+ #include <inttypes.h>
+ /* For the CLR_() macros */
+ #include <pthread.h>
++#include <perf/cpumap.h>
+ 
+ #include "evlist.h"
+ #include "evsel.h"
+@@ -46,7 +47,7 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
+ 		return -1;
+ 	}
+ 
+-	cpus = cpu_map__new(NULL);
++	cpus = perf_cpu_map__new(NULL);
+ 	if (cpus == NULL) {
+ 		pr_debug("cpu_map__new\n");
+ 		goto out_free_threads;
+diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
+index 674b0fa035ec..d161b1a78703 100644
+--- a/tools/perf/tests/openat-syscall-all-cpus.c
++++ b/tools/perf/tests/openat-syscall-all-cpus.c
+@@ -33,7 +33,7 @@ int test__openat_syscall_event_on_all_cpus(struct test *test __maybe_unused, int
+ 		return -1;
+ 	}
+ 
+-	cpus = cpu_map__new(NULL);
++	cpus = perf_cpu_map__new(NULL);
+ 	if (cpus == NULL) {
+ 		pr_debug("cpu_map__new\n");
+ 		goto out_thread_map_delete;
+diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
+index dd07acced4af..9e0bbea15005 100644
+--- a/tools/perf/tests/switch-tracking.c
++++ b/tools/perf/tests/switch-tracking.c
+@@ -5,6 +5,7 @@
+ #include <time.h>
+ #include <stdlib.h>
+ #include <linux/zalloc.h>
++#include <perf/cpumap.h>
+ 
+ #include "parse-events.h"
+ #include "evlist.h"
+@@ -341,9 +342,9 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
+ 		goto out_err;
+ 	}
+ 
+-	cpus = cpu_map__new(NULL);
++	cpus = perf_cpu_map__new(NULL);
+ 	if (!cpus) {
+-		pr_debug("cpu_map__new failed!\n");
++		pr_debug("perf_cpu_map__new failed!\n");
+ 		goto out_err;
+ 	}
+ 
+diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+index 1b57ded58d59..a4f9f5182b47 100644
+--- a/tools/perf/tests/topology.c
++++ b/tools/perf/tests/topology.c
+@@ -2,6 +2,7 @@
+ #include <string.h>
+ #include <stdlib.h>
+ #include <stdio.h>
++#include <perf/cpumap.h>
+ #include "tests.h"
+ #include "util.h"
+ #include "session.h"
+@@ -126,7 +127,7 @@ int test__session_topology(struct test *test __maybe_unused, int subtest __maybe
+ 	if (session_write_header(path))
+ 		goto free_path;
+ 
+-	map = cpu_map__new(NULL);
++	map = perf_cpu_map__new(NULL);
+ 	if (map == NULL) {
+ 		pr_debug("failed to get system cpumap\n");
+ 		goto free_path;
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 44082e5eabde..71d4d7b35a57 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -17,185 +17,6 @@ static int max_present_cpu_num;
+ static int max_node_num;
+ static int *cpunode_map;
+ 
+-static struct perf_cpu_map *cpu_map__default_new(void)
+-{
+-	struct perf_cpu_map *cpus;
+-	int nr_cpus;
+-
+-	nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
+-	if (nr_cpus < 0)
+-		return NULL;
+-
+-	cpus = malloc(sizeof(*cpus) + nr_cpus * sizeof(int));
+-	if (cpus != NULL) {
+-		int i;
+-		for (i = 0; i < nr_cpus; ++i)
+-			cpus->map[i] = i;
+-
+-		cpus->nr = nr_cpus;
+-		refcount_set(&cpus->refcnt, 1);
+-	}
+-
+-	return cpus;
+-}
+-
+-static struct perf_cpu_map *cpu_map__trim_new(int nr_cpus, int *tmp_cpus)
+-{
+-	size_t payload_size = nr_cpus * sizeof(int);
+-	struct perf_cpu_map *cpus = malloc(sizeof(*cpus) + payload_size);
+-
+-	if (cpus != NULL) {
+-		cpus->nr = nr_cpus;
+-		memcpy(cpus->map, tmp_cpus, payload_size);
+-		refcount_set(&cpus->refcnt, 1);
+-	}
+-
+-	return cpus;
+-}
+-
+-struct perf_cpu_map *cpu_map__read(FILE *file)
+-{
+-	struct perf_cpu_map *cpus = NULL;
+-	int nr_cpus = 0;
+-	int *tmp_cpus = NULL, *tmp;
+-	int max_entries = 0;
+-	int n, cpu, prev;
+-	char sep;
+-
+-	sep = 0;
+-	prev = -1;
+-	for (;;) {
+-		n = fscanf(file, "%u%c", &cpu, &sep);
+-		if (n <= 0)
+-			break;
+-		if (prev >= 0) {
+-			int new_max = nr_cpus + cpu - prev - 1;
+-
+-			if (new_max >= max_entries) {
+-				max_entries = new_max + MAX_NR_CPUS / 2;
+-				tmp = realloc(tmp_cpus, max_entries * sizeof(int));
+-				if (tmp == NULL)
+-					goto out_free_tmp;
+-				tmp_cpus = tmp;
+-			}
+-
+-			while (++prev < cpu)
+-				tmp_cpus[nr_cpus++] = prev;
+-		}
+-		if (nr_cpus == max_entries) {
+-			max_entries += MAX_NR_CPUS;
+-			tmp = realloc(tmp_cpus, max_entries * sizeof(int));
+-			if (tmp == NULL)
+-				goto out_free_tmp;
+-			tmp_cpus = tmp;
+-		}
+-
+-		tmp_cpus[nr_cpus++] = cpu;
+-		if (n == 2 && sep == '-')
+-			prev = cpu;
+-		else
+-			prev = -1;
+-		if (n == 1 || sep == '\n')
+-			break;
+-	}
+-
+-	if (nr_cpus > 0)
+-		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
+-	else
+-		cpus = cpu_map__default_new();
+-out_free_tmp:
+-	free(tmp_cpus);
+-	return cpus;
+-}
+-
+-static struct perf_cpu_map *cpu_map__read_all_cpu_map(void)
+-{
+-	struct perf_cpu_map *cpus = NULL;
+-	FILE *onlnf;
+-
+-	onlnf = fopen("/sys/devices/system/cpu/online", "r");
+-	if (!onlnf)
+-		return cpu_map__default_new();
+-
+-	cpus = cpu_map__read(onlnf);
+-	fclose(onlnf);
+-	return cpus;
+-}
+-
+-struct perf_cpu_map *cpu_map__new(const char *cpu_list)
+-{
+-	struct perf_cpu_map *cpus = NULL;
+-	unsigned long start_cpu, end_cpu = 0;
+-	char *p = NULL;
+-	int i, nr_cpus = 0;
+-	int *tmp_cpus = NULL, *tmp;
+-	int max_entries = 0;
+-
+-	if (!cpu_list)
+-		return cpu_map__read_all_cpu_map();
+-
+-	/*
+-	 * must handle the case of empty cpumap to cover
+-	 * TOPOLOGY header for NUMA nodes with no CPU
+-	 * ( e.g., because of CPU hotplug)
+-	 */
+-	if (!isdigit(*cpu_list) && *cpu_list != '\0')
+-		goto out;
+-
+-	while (isdigit(*cpu_list)) {
+-		p = NULL;
+-		start_cpu = strtoul(cpu_list, &p, 0);
+-		if (start_cpu >= INT_MAX
+-		    || (*p != '\0' && *p != ',' && *p != '-'))
+-			goto invalid;
+-
+-		if (*p == '-') {
+-			cpu_list = ++p;
+-			p = NULL;
+-			end_cpu = strtoul(cpu_list, &p, 0);
+-
+-			if (end_cpu >= INT_MAX || (*p != '\0' && *p != ','))
+-				goto invalid;
+-
+-			if (end_cpu < start_cpu)
+-				goto invalid;
+-		} else {
+-			end_cpu = start_cpu;
+-		}
+-
+-		for (; start_cpu <= end_cpu; start_cpu++) {
+-			/* check for duplicates */
+-			for (i = 0; i < nr_cpus; i++)
+-				if (tmp_cpus[i] == (int)start_cpu)
+-					goto invalid;
+-
+-			if (nr_cpus == max_entries) {
+-				max_entries += MAX_NR_CPUS;
+-				tmp = realloc(tmp_cpus, max_entries * sizeof(int));
+-				if (tmp == NULL)
+-					goto invalid;
+-				tmp_cpus = tmp;
+-			}
+-			tmp_cpus[nr_cpus++] = (int)start_cpu;
+-		}
+-		if (*p)
+-			++p;
+-
+-		cpu_list = p;
+-	}
+-
+-	if (nr_cpus > 0)
+-		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
+-	else if (*cpu_list != '\0')
+-		cpus = cpu_map__default_new();
+-	else
+-		cpus = perf_cpu_map__dummy_new();
+-invalid:
+-	free(tmp_cpus);
+-out:
+-	return cpus;
+-}
+-
+ static struct perf_cpu_map *cpu_map__from_entries(struct cpu_map_entries *cpus)
+ {
+ 	struct perf_cpu_map *map;
+@@ -751,7 +572,7 @@ const struct perf_cpu_map *cpu_map__online(void) /* thread unsafe */
+ 	static const struct perf_cpu_map *online = NULL;
+ 
+ 	if (!online)
+-		online = cpu_map__new(NULL); /* from /sys/devices/system/cpu/online */
++		online = perf_cpu_map__new(NULL); /* from /sys/devices/system/cpu/online */
+ 
+ 	return online;
+ }
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index b7af2cb68c19..a3d27f4131be 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -11,10 +11,8 @@
+ #include "perf.h"
+ #include "util/debug.h"
+ 
+-struct perf_cpu_map *cpu_map__new(const char *cpu_list);
+ struct perf_cpu_map *cpu_map__empty_new(int nr);
+ struct perf_cpu_map *cpu_map__new_data(struct cpu_map_data *data);
+-struct perf_cpu_map *cpu_map__read(FILE *file);
+ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size);
+ size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size);
+ size_t cpu_map__fprintf(struct perf_cpu_map *map, FILE *fp);
+diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
+index 0cd99c460cd4..4f70155eaf83 100644
+--- a/tools/perf/util/cputopo.c
++++ b/tools/perf/util/cputopo.c
+@@ -5,6 +5,7 @@
+ #include <stdlib.h>
+ #include <api/fs/fs.h>
+ #include <linux/zalloc.h>
++#include <perf/cpumap.h>
+ 
+ #include "cputopo.h"
+ #include "cpumap.h"
+@@ -182,7 +183,7 @@ struct cpu_topology *cpu_topology__new(void)
+ 	ncpus = cpu__max_present_cpu();
+ 
+ 	/* build online CPU map */
+-	map = cpu_map__new(NULL);
++	map = perf_cpu_map__new(NULL);
+ 	if (map == NULL) {
+ 		pr_debug("failed to get system cpumap\n");
+ 		return NULL;
+@@ -312,7 +313,7 @@ struct numa_topology *numa_topology__new(void)
+ 	if (c)
+ 		*c = '\0';
+ 
+-	node_map = cpu_map__new(buf);
++	node_map = perf_cpu_map__new(buf);
+ 	if (!node_map)
+ 		goto out;
+ 
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index ae75777a0ba4..67c67e9a38cd 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -34,6 +34,7 @@
+ #include <linux/err.h>
+ #include <linux/zalloc.h>
+ #include <perf/evlist.h>
++#include <perf/cpumap.h>
+ 
+ #ifdef LACKS_SIGQUEUE_PROTOTYPE
+ int sigqueue(pid_t pid, int sig, const union sigval value);
+@@ -1089,7 +1090,7 @@ int perf_evlist__create_maps(struct evlist *evlist, struct target *target)
+ 	if (target__uses_dummy_map(target))
+ 		cpus = perf_cpu_map__dummy_new();
+ 	else
+-		cpus = cpu_map__new(target->cpu_list);
++		cpus = perf_cpu_map__new(target->cpu_list);
+ 
+ 	if (!cpus)
+ 		goto out_delete_threads;
+@@ -1372,7 +1373,7 @@ static int perf_evlist__create_syswide_maps(struct evlist *evlist)
+ 	 * error, and we may not want to do that fallback to a
+ 	 * default cpu identity map :-\
+ 	 */
+-	cpus = cpu_map__new(NULL);
++	cpus = perf_cpu_map__new(NULL);
+ 	if (!cpus)
+ 		goto out;
+ 
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index d81afe56392c..fa914ba8cd56 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -20,6 +20,7 @@
+ #include <linux/time64.h>
+ #include <dirent.h>
+ #include <bpf/libbpf.h>
++#include <perf/cpumap.h>
+ 
+ #include "evlist.h"
+ #include "evsel.h"
+@@ -2348,7 +2349,7 @@ static int process_numa_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		if (!str)
+ 			goto error;
+ 
+-		n->map = cpu_map__new(str);
++		n->map = perf_cpu_map__new(str);
+ 		if (!n->map)
+ 			goto error;
+ 
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index ec7ce18b999a..db2460d6b625 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -24,6 +24,7 @@
+ #include "bpf-loader.h"
+ #include "debug.h"
+ #include <api/fs/tracing_path.h>
++#include <perf/cpumap.h>
+ #include "parse-events-bison.h"
+ #define YY_EXTRA_TYPE int
+ #include "parse-events-flex.h"
+@@ -323,7 +324,7 @@ __add_event(struct list_head *list, int *idx,
+ {
+ 	struct evsel *evsel;
+ 	struct perf_cpu_map *cpus = pmu ? pmu->cpus :
+-			       cpu_list ? cpu_map__new(cpu_list) : NULL;
++			       cpu_list ? perf_cpu_map__new(cpu_list) : NULL;
+ 
+ 	event_attr_init(attr);
+ 
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index d355f9506a1c..b7da21a7d627 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -15,6 +15,7 @@
+ #include <api/fs/fs.h>
+ #include <locale.h>
+ #include <regex.h>
++#include <perf/cpumap.h>
+ #include "pmu.h"
+ #include "parse-events.h"
+ #include "cpumap.h"
+@@ -581,7 +582,7 @@ static struct perf_cpu_map *__pmu_cpumask(const char *path)
+ 	if (!file)
+ 		return NULL;
+ 
+-	cpus = cpu_map__read(file);
++	cpus = perf_cpu_map__read(file);
+ 	fclose(file);
+ 	return cpus;
+ }
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 23a4fa13b92d..75ecc32a4427 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -4,6 +4,7 @@
+ #include <inttypes.h>
+ #include <poll.h>
+ #include <linux/err.h>
++#include <perf/cpumap.h>
+ #include "evlist.h"
+ #include "callchain.h"
+ #include "evsel.h"
+@@ -549,7 +550,7 @@ static int pyrf_cpu_map__init(struct pyrf_cpu_map *pcpus,
+ 					 kwlist, &cpustr))
+ 		return -1;
+ 
+-	pcpus->cpus = cpu_map__new(cpustr);
++	pcpus->cpus = perf_cpu_map__new(cpustr);
+ 	if (pcpus->cpus == NULL)
+ 		return -1;
+ 	return 0;
+diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+index 445788819969..03dcdb3f33a7 100644
+--- a/tools/perf/util/record.c
++++ b/tools/perf/util/record.c
+@@ -6,6 +6,7 @@
+ #include <errno.h>
+ #include <api/fs/fs.h>
+ #include <subcmd/parse-options.h>
++#include <perf/cpumap.h>
+ #include "util.h"
+ #include "cloexec.h"
+ 
+@@ -63,7 +64,7 @@ static bool perf_probe_api(setup_probe_fn_t fn)
+ 	struct perf_cpu_map *cpus;
+ 	int cpu, ret, i = 0;
+ 
+-	cpus = cpu_map__new(NULL);
++	cpus = perf_cpu_map__new(NULL);
+ 	if (!cpus)
+ 		return false;
+ 	cpu = cpus->map[0];
+@@ -118,7 +119,7 @@ bool perf_can_record_cpu_wide(void)
+ 	struct perf_cpu_map *cpus;
+ 	int cpu, fd;
+ 
+-	cpus = cpu_map__new(NULL);
++	cpus = perf_cpu_map__new(NULL);
+ 	if (!cpus)
+ 		return false;
+ 	cpu = cpus->map[0];
+@@ -275,7 +276,7 @@ bool perf_evlist__can_select_event(struct evlist *evlist, const char *str)
+ 	evsel = perf_evlist__last(temp_evlist);
+ 
+ 	if (!evlist || cpu_map__empty(evlist->cpus)) {
+-		struct perf_cpu_map *cpus = cpu_map__new(NULL);
++		struct perf_cpu_map *cpus = perf_cpu_map__new(NULL);
+ 
+ 		cpu =  cpus ? cpus->map[0] : 0;
+ 		perf_cpu_map__put(cpus);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 1f3dc7a8cee6..11e6093c941b 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -10,6 +10,7 @@
+ #include <unistd.h>
+ #include <sys/types.h>
+ #include <sys/mman.h>
++#include <perf/cpumap.h>
+ 
+ #include "evlist.h"
+ #include "evsel.h"
+@@ -2289,7 +2290,7 @@ int perf_session__cpu_bitmap(struct perf_session *session,
+ 		}
+ 	}
+ 
+-	map = cpu_map__new(cpu_list);
++	map = perf_cpu_map__new(cpu_list);
+ 	if (map == NULL) {
+ 		pr_err("Invalid cpu_list\n");
+ 		return -1;
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index a9ca5c4fffee..ae6a534a7a80 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -16,6 +16,7 @@
+ #include <linux/bitmap.h>
+ #include <linux/time64.h>
+ #include <linux/zalloc.h>
++#include <perf/cpumap.h>
+ 
+ #include "perf.h"
+ #include "svghelper.h"
+@@ -731,7 +732,7 @@ static int str_to_bitmap(char *s, cpumask_t *b)
+ 	struct perf_cpu_map *m;
+ 	int c;
+ 
+-	m = cpu_map__new(s);
++	m = perf_cpu_map__new(s);
+ 	if (!m)
+ 		return -1;
+ 
 -- 
 2.21.0
 
