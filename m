@@ -2,112 +2,218 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152F6C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D69C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFCB3206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4550720679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IQnc3HvK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmG+Y5P5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731404AbfG3Clv (ORCPT
+        id S1731427AbfG3CoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:41:51 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46196 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730921AbfG3Clv (ORCPT
+        Mon, 29 Jul 2019 22:44:03 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42885 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730921AbfG3CoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:41:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c3so5867088pfa.13
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 19:41:50 -0700 (PDT)
+        Mon, 29 Jul 2019 22:44:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id ay6so28299715plb.9;
+        Mon, 29 Jul 2019 19:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1tuCSroln1sKVEDl7Uz0luKkd7K+d2sop8UYdCF/zYY=;
-        b=IQnc3HvKS1AsZ44Uc7vJY8Yoc6tijURNF659ep/dp58zJ8fE/AmA9TswmEyJ0oXqxR
-         NoLJlABA1c1Ao64rG+GGvglsYT52yqNozLXyo1/5mqKhQB3hjSmVUmwQLUoRAOooL54v
-         a9DEvLlYAgcpe1xEmEJXDtSEXn97bEBJ46+55MUDD+f6rV5xt8cOc8GlcQBrqsm9G9zN
-         08IP2LGq67MhwZmQrugWYPNFhsOZnNI9tqDlW7DlgZrl9hX/c5zI/mkzm4waRHb/ChoW
-         SWWV8bknVIVIzrqfufaS3A0sMn1yTgfSovqumUhphpLvVYGnooP7MR6WFC2VXhr4JdyZ
-         s2tg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Lic9FsBbFIhilgJH9jdHsI1bCHTQauGCm3mQSU4XvTM=;
+        b=VmG+Y5P5Dh2me3MuRE5xoeE8+31ZRDRtvUDuryelSgr1QOdkF5UR4sfAhfawGrnF4o
+         5z+N42GmX4JOKqZ419NY+2NeE03748lWU8fiklu8RZ45CTP6kfm07+wnuBPZD0l/m5eZ
+         sj/oDPdL0HQ6u9F5Hg+63dtbGim4BW6TYSL7dMhLzzjxpFh+aeB4uJjvYW9ZLnsBn1Cy
+         S4n5cNVSOCaep4vWkFG9oDjODxzzuZwA+Rwztr0UpO+gASp2OxeVjMX2U1or+lSZLknx
+         AtwaNIAqMlMZm2/n9t8nvsT0txtyJvMaBHXwN6XKLSfsykgh1nxG6imehh5Pjy7OYhtV
+         6rtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1tuCSroln1sKVEDl7Uz0luKkd7K+d2sop8UYdCF/zYY=;
-        b=kz+4Xx/ujl6u3c0SZqwT2E31sRre6QMGarjrv3uCKoro8q8wc7BhcrFigmBN9epMMn
-         tXDqSQxKSHw2mjsoptJwhkuNbqKxJ113lFgunKyEy9HvwCibOP9a2teU3a5eh3z6vhMp
-         BcQAlBjTaO+6FMOklmN5AYA4vMcRntjmVM+upmZsLXH5nqERN8T7CSAEwrT/Vu60cfzh
-         EWpJdJ3LjrttYtGS4N7d2C9yqvSokFIJ8lNS+7VNw045/UHtVLUA+QOPiOrjENJI8qR7
-         4hpAtR8aBIF5oBx3qZvTEDMkigLTtV9s+j4/ZhTgtFUFr5JQDLVvfNOAYxdJSqVza7ys
-         wttA==
-X-Gm-Message-State: APjAAAWxV89Bk0qZc8owo3rw7yqZVleTlAKWG5I38+zrY3Yp5x06DyDx
-        jQnOId9tmuRAdi85IP5Xc9p89w==
-X-Google-Smtp-Source: APXvYqx0Fa+EaxN9mX1U8i4V7Dv4in3falhkaYUARqtPdbrvGfhz0ywhR8B2CjcMPHxNgT9FgEAmaw==
-X-Received: by 2002:aa7:8b10:: with SMTP id f16mr40191079pfd.44.1564454510323;
-        Mon, 29 Jul 2019 19:41:50 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id i198sm61607713pgd.44.2019.07.29.19.41.48
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Lic9FsBbFIhilgJH9jdHsI1bCHTQauGCm3mQSU4XvTM=;
+        b=MGCGuaf42flvV47oOQOprayfWaepHmMAz5AdtuIVy5/R/CBOl8p04A/aDV2M9c/3sN
+         sdgUyzNqIrkkUvVBM/obK/CEbvnVVg7VDH52JjoSZmCI7bSUGDn0ZARt/DpcCUP8iGIX
+         HTu+93xzhZ1/aYP11LKtHSEXXYz1ksYvgPVlNP6nj71/BqJ9RftLMOAYMRfJygSqyC3K
+         SRQV3LhGXsN/3474I0n1kBm0itbnj0XVWy34fKENhkh64dqjmdVrEBMn2nIB6n0d9HiV
+         ICdNS0ktwpiIt8CIhtcmBpHYKHAbC0p/7pdAwTgbQuEa+uUVO1FrcjcoRpBFDP4Hn6uP
+         ZKGQ==
+X-Gm-Message-State: APjAAAVCzmiabYYOl2MGCIYGXcTNA9KZwZhV4zzwd+Y7ZjjfLl2KqsZI
+        6tXTR12NMRq5tINPLqrNIz4=
+X-Google-Smtp-Source: APXvYqzNN+4+CjaPSeMWQ2/PLSQRyBZtcEjOJ6XJ3AsKOmbbAHM9cei4O5VqaExHC48K6xXqNKYu5w==
+X-Received: by 2002:a17:902:1107:: with SMTP id d7mr11773332pla.184.1564454641476;
+        Mon, 29 Jul 2019 19:44:01 -0700 (PDT)
+Received: from localhost.localdomain (220-128-162-163.HINET-IP.hinet.net. [220.128.162.163])
+        by smtp.googlemail.com with ESMTPSA id v185sm70944442pfb.14.2019.07.29.19.43.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 19:41:49 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 08:11:46 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] cpufreq: ti-cpufreq: Mark expected switch fall-through
-Message-ID: <20190730024146.46cqoyzxg6mjjc7k@vireshk-i7>
-References: <20190729224933.GA23686@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190729224933.GA23686@embeddedor>
-User-Agent: NeoMutt/20180716-391-311a52
+        Mon, 29 Jul 2019 19:44:01 -0700 (PDT)
+From:   Pei-Hsuan Hung <afcidk@gmail.com>
+Cc:     Pei-Hsuan Hung <afcidk@gmail.com>, trivial@kernel.org,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2] Fix typo reigster to register
+Date:   Tue, 30 Jul 2019 10:42:32 +0800
+Message-Id: <20190730024235.26273-1-afcidk@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <liviu.dudau@arm.com>
+References: <liviu.dudau@arm.com>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-07-19, 17:49, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warning (Building: arm):
-> 
-> drivers/cpufreq/ti-cpufreq.c: In function ‘dra7_efuse_xlate’:
-> drivers/cpufreq/ti-cpufreq.c:79:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
-> drivers/cpufreq/ti-cpufreq.c:80:2: note: here
->   case DRA7_EFUSE_HAS_OD_MPU_OPP:
->   ^~~~
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/cpufreq/ti-cpufreq.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
-> index 2ad1ae17932d..aeaa883a8c9d 100644
-> --- a/drivers/cpufreq/ti-cpufreq.c
-> +++ b/drivers/cpufreq/ti-cpufreq.c
-> @@ -77,6 +77,7 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
->  	case DRA7_EFUSE_HAS_ALL_MPU_OPP:
->  	case DRA7_EFUSE_HAS_HIGH_MPU_OPP:
->  		calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
-> +		/* Fall through */
->  	case DRA7_EFUSE_HAS_OD_MPU_OPP:
->  		calculated_efuse |= DRA7_EFUSE_OD_MPU_OPP;
->  	}
+Signed-off-by: Pei-Hsuan Hung <afcidk@gmail.com>
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Cc: trivial@kernel.org
+---
+Hi Liviu, thanks for your reply.
+This patch is generated by a script so at first I didn't notice there is
+also a typo in the word coefficient. I've fixed the typo in this
+version.
 
-Applied. Thanks.
+ arch/powerpc/kernel/eeh.c                           | 2 +-
+ arch/powerpc/platforms/cell/spufs/switch.c          | 4 ++--
+ drivers/extcon/extcon-rt8973a.c                     | 2 +-
+ drivers/gpu/drm/arm/malidp_regs.h                   | 2 +-
+ drivers/net/wireless/realtek/rtlwifi/rtl8192se/fw.h | 2 +-
+ drivers/scsi/lpfc/lpfc_hbadisc.c                    | 2 +-
+ fs/userfaultfd.c                                    | 2 +-
+ 7 files changed, 8 insertions(+), 8 deletions(-)
 
+diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
+index c0e4b73191f3..d75c9c24ec4d 100644
+--- a/arch/powerpc/kernel/eeh.c
++++ b/arch/powerpc/kernel/eeh.c
+@@ -1030,7 +1030,7 @@ int __init eeh_ops_register(struct eeh_ops *ops)
+ }
+ 
+ /**
+- * eeh_ops_unregister - Unreigster platform dependent EEH operations
++ * eeh_ops_unregister - Unregister platform dependent EEH operations
+  * @name: name of EEH platform operations
+  *
+  * Unregister the platform dependent EEH operation callback
+diff --git a/arch/powerpc/platforms/cell/spufs/switch.c b/arch/powerpc/platforms/cell/spufs/switch.c
+index 5c3f5d088c3b..9548a086937b 100644
+--- a/arch/powerpc/platforms/cell/spufs/switch.c
++++ b/arch/powerpc/platforms/cell/spufs/switch.c
+@@ -574,7 +574,7 @@ static inline void save_mfc_rag(struct spu_state *csa, struct spu *spu)
+ {
+ 	/* Save, Step 38:
+ 	 *     Save RA_GROUP_ID register and the
+-	 *     RA_ENABLE reigster in the CSA.
++	 *     RA_ENABLE register in the CSA.
+ 	 */
+ 	csa->priv1.resource_allocation_groupID_RW =
+ 		spu_resource_allocation_groupID_get(spu);
+@@ -1227,7 +1227,7 @@ static inline void restore_mfc_rag(struct spu_state *csa, struct spu *spu)
+ {
+ 	/* Restore, Step 29:
+ 	 *     Restore RA_GROUP_ID register and the
+-	 *     RA_ENABLE reigster from the CSA.
++	 *     RA_ENABLE register from the CSA.
+ 	 */
+ 	spu_resource_allocation_groupID_set(spu,
+ 			csa->priv1.resource_allocation_groupID_RW);
+diff --git a/drivers/extcon/extcon-rt8973a.c b/drivers/extcon/extcon-rt8973a.c
+index 40c07f4d656e..e75c03792398 100644
+--- a/drivers/extcon/extcon-rt8973a.c
++++ b/drivers/extcon/extcon-rt8973a.c
+@@ -270,7 +270,7 @@ static int rt8973a_muic_get_cable_type(struct rt8973a_muic_info *info)
+ 	}
+ 	cable_type = adc & RT8973A_REG_ADC_MASK;
+ 
+-	/* Read Device 1 reigster to identify correct cable type */
++	/* Read Device 1 register to identify correct cable type */
+ 	ret = regmap_read(info->regmap, RT8973A_REG_DEV1, &dev1);
+ 	if (ret) {
+ 		dev_err(info->dev, "failed to read DEV1 register\n");
+diff --git a/drivers/gpu/drm/arm/malidp_regs.h b/drivers/gpu/drm/arm/malidp_regs.h
+index 993031542fa1..9b4f95d8ccec 100644
+--- a/drivers/gpu/drm/arm/malidp_regs.h
++++ b/drivers/gpu/drm/arm/malidp_regs.h
+@@ -145,7 +145,7 @@
+ #define     MALIDP_SE_COEFFTAB_DATA_MASK	0x3fff
+ #define     MALIDP_SE_SET_COEFFTAB_DATA(x) \
+ 		((x) & MALIDP_SE_COEFFTAB_DATA_MASK)
+-/* Enhance coeffents reigster offset */
++/* Enhance coefficients register offset */
+ #define MALIDP_SE_IMAGE_ENH			0x3C
+ /* ENH_LIMITS offset 0x0 */
+ #define     MALIDP_SE_ENH_LOW_LEVEL		24
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192se/fw.h b/drivers/net/wireless/realtek/rtlwifi/rtl8192se/fw.h
+index 99c6f7eefd85..d03c8f12a15c 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192se/fw.h
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192se/fw.h
+@@ -58,7 +58,7 @@ struct fw_priv {
+ 	/* 0x81: PCI-AP, 01:PCIe, 02: 92S-U,
+ 	 * 0x82: USB-AP, 0x12: 72S-U, 03:SDIO */
+ 	u8 hci_sel;
+-	/* the same value as reigster value  */
++	/* the same value as register value  */
+ 	u8 chip_version;
+ 	/* customer  ID low byte */
+ 	u8 customer_id_0;
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 28ecaa7fc715..42b125602d72 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -6551,7 +6551,7 @@ lpfc_sli4_unregister_fcf(struct lpfc_hba *phba)
+  * lpfc_unregister_fcf_rescan - Unregister currently registered fcf and rescan
+  * @phba: Pointer to hba context object.
+  *
+- * This function unregisters the currently reigstered FCF. This function
++ * This function unregisters the currently registered FCF. This function
+  * also tries to find another FCF for discovery by rescan the HBA FCF table.
+  */
+ void
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index ccbdbd62f0d8..612dc1240f90 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -267,7 +267,7 @@ static inline bool userfaultfd_huge_must_wait(struct userfaultfd_ctx *ctx,
+ #endif /* CONFIG_HUGETLB_PAGE */
+ 
+ /*
+- * Verify the pagetables are still not ok after having reigstered into
++ * Verify the pagetables are still not ok after having registered into
+  * the fault_pending_wqh to avoid userland having to UFFDIO_WAKE any
+  * userfault that has already been resolved, if userfaultfd_read and
+  * UFFDIO_COPY|ZEROPAGE are being run simultaneously on two different
 -- 
-viresh
+2.17.1
+
