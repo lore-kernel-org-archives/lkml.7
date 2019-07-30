@@ -6,90 +6,82 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB0FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F12C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7624D206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D502206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731121AbfG3Isl (ORCPT
+        id S1731132AbfG3Is4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:48:41 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50336 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728432AbfG3Isl (ORCPT
+        Tue, 30 Jul 2019 04:48:56 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:15795 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728761AbfG3Isz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:48:41 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v15so56332195wml.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 01:48:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wubL2/vgzPA1pd7g/Ft25BpXcTqsyo1e/4gw/momGtU=;
-        b=QNSz0aojMPG/1QtkhZtvyLVaOttoKQe4O9vCNWYayU0EpJrw8WbWPtO5nRZ/5wvf4X
-         zonppnk6qv7rE6CfiGuJQu6NU4cvqjKE5KQRqNn9EzkDEsjvmHajt3h4vCTwSBNNWSVo
-         hHMTjtfeOol5VIyvEduXgdXeSF4aVxRAUVNtyjKTzO7h1mV1w2WwzGG+5tQqz77DTgCO
-         qVH+OIwofI0j+pQJCZUFnsySf/hRXCKL4jTEiQ5/ogRwZ89xeab/p+H2lGwHkmfFsl+S
-         h2/DksohNjyDwRR5jt3ta1+fhe1QVuw3rkyQ9iZWTy/U1hSbbjDD0qhcdTeIUGidM0GV
-         MUUw==
-X-Gm-Message-State: APjAAAUsquhY5Pwga3MrX/jJ2ZRLfDoQ9bpOJ0TRvMqZ8M4L8iOG1rx5
-        PG8j8l1jL728HkmxwgO4uKRAjkRKKfw=
-X-Google-Smtp-Source: APXvYqyiUPbNE/jZJSqWwOHETlXCAehk9SFPzETDwVZDm9bd+5/kuQgX8raiwe8ulQU1S0IqxtSatA==
-X-Received: by 2002:a7b:c0d0:: with SMTP id s16mr74366958wmh.141.1564476518833;
-        Tue, 30 Jul 2019 01:48:38 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:29d3:6123:6d5f:2c04? ([2001:b07:6468:f312:29d3:6123:6d5f:2c04])
-        by smtp.gmail.com with ESMTPSA id f3sm46989185wrt.56.2019.07.30.01.48.37
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 01:48:38 -0700 (PDT)
-Subject: Re: [RFC PATCH 04/16] RISC-V: KVM: Implement VCPU create, init and
- destroy functions
-To:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190729115544.17895-1-anup.patel@wdc.com>
- <20190729115544.17895-5-anup.patel@wdc.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <ade614ae-fcfe-35f2-0519-1df71d035bcd@redhat.com>
-Date:   Tue, 30 Jul 2019 10:48:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 30 Jul 2019 04:48:55 -0400
+X-IronPort-AV: E=Sophos;i="5.64,326,1559491200"; 
+   d="scan'208";a="72514925"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 30 Jul 2019 16:48:53 +0800
+Received: from G08CNEXCHPEKD02.g08.fujitsu.local (unknown [10.167.33.83])
+        by cn.fujitsu.com (Postfix) with ESMTP id C6B944CDE88A;
+        Tue, 30 Jul 2019 16:48:56 +0800 (CST)
+Received: from [10.167.215.46] (10.167.215.46) by
+ G08CNEXCHPEKD02.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ id 14.3.439.0; Tue, 30 Jul 2019 16:48:51 +0800
+Message-ID: <5D400472.3080701@cn.fujitsu.com>
+Date:   Tue, 30 Jul 2019 16:48:50 +0800
+From:   Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
 MIME-Version: 1.0
-In-Reply-To: <20190729115544.17895-5-anup.patel@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     <gorcunov@gmail.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] sys_prctl(): remove unsigned comparision with less
+ than zero
+References: <20190723094809.GE4832@uranus.lan>  <1563934308-20833-1-git-send-email-xuyang2018.jy@cn.fujitsu.com> <20190724191448.4db70a34f8b89bd8bdc085f5@linux-foundation.org> <5D391DC0.3050100@cn.fujitsu.com>
+In-Reply-To: <5D391DC0.3050100@cn.fujitsu.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.167.215.46]
+X-yoursite-MailScanner-ID: C6B944CDE88A.A0854
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: xuyang2018.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/19 13:56, Anup Patel wrote:
-> +	cntx->hstatus |= HSTATUS_SP2V;
-> +	cntx->hstatus |= HSTATUS_SP2P;
+on 2019/07/25 11:10, Yang Xu wrote:
 
-IIUC, cntx->hstatus's SP2P bit contains the guest's sstatus.SPP bit?  I
-suggest adding a comment here, and again providing a ONE_REG interface
-to sstatus so that the ABI is final before RISC-V KVM is merged.
+>>> --- a/kernel/sys.c
+>>> +++ b/kernel/sys.c
+>>> @@ -2372,7 +2372,7 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+>>>                error = current->timer_slack_ns;
+>>>            break;
+>>>        case PR_SET_TIMERSLACK:
+>>> -        if (arg2<= 0)
+>>> +        if (arg2 == 0)
+>>>                current->timer_slack_ns =
+>>>                        current->default_timer_slack_ns;
+>> A number of years ago Linus expressed approval of such comparisons with
+>> unsigned quantities.  He felt that it improves readability a little -
+>> the reader doesn't have to scroll back and check the type.
+> Hi Andrew
+>
+>     It sounds good. ButWe still have to look at the actual situation. In here, this comparisons with unsigned
+> quantities doesn't improvereadability. In turn, the code give user a wrongdescription  as man page said "
+> If arg2 is less than or equal to zero, the "current" timer slack is reset to the thread's default" timer slack value."
+> If we set -1 in user space, we pass it into kernel as ULONG_MAX, it will not use default timer_slack value.
+> Also, I guess that if value has no actual sense we can use this comparisons. In here, arg2 represents slack time.
+> time will never less than 0.
+> ps: whether we change or not change this comparisons, it doesn't affect logic. So if you think this patch is meaningless,
+> I will accept it.
+Hi Andrew
+   what do you think about it? update it or keep it.
 
-What happens if the guest executes SRET?  Is that EXC_SYSCALL in hedeleg?
+Thanks
+Yang Xu
 
-(BTW the name of SP2V and SP2P is horrible, I think HPV/HPP or HSPV/HSPP
-would have been clearer, but that's not your fault).
 
-Paolo
-
-> +	cntx->hstatus |= HSTATUS_SPV;
 
