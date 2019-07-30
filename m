@@ -2,200 +2,320 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680E7C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B566C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365B42087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2B42087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730161AbfG3H2J (ORCPT
+        id S1730477AbfG3Had (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:28:09 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:57993 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726432AbfG3H2J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:28:09 -0400
-Received: from [IPv6:2001:983:e9a7:1:3159:f139:4aff:7185] ([IPv6:2001:983:e9a7:1:3159:f139:4aff:7185])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id sMXyhAf44qTdhsMY0hku6b; Tue, 30 Jul 2019 09:28:06 +0200
-Subject: Re: [PATCH v7 0/4] HEVC/H.265 stateless support for V4L2 and Cedrus
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Tue, 30 Jul 2019 03:30:33 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51772 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726432AbfG3Hac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 03:30:32 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BC66B84379F6C465A5BD;
+        Tue, 30 Jul 2019 15:14:51 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 30 Jul
+ 2019 15:14:43 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-References: <20190725185602.22522-1-paul.kocialkowski@bootlin.com>
- <7fa38a2c-8e16-5e88-d073-1d04e9feaa84@xs4all.nl>
- <20190727095729.GD16618@aptenodytes>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <91a028b6-7f25-1a38-24e4-7dac02f34039@xs4all.nl>
-Date:   Tue, 30 Jul 2019 09:27:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "David Sterba" <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, "Jan Kara" <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v5 09/24] erofs: support tracepoint
+Date:   Tue, 30 Jul 2019 15:13:58 +0800
+Message-ID: <20190730071413.11871-10-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190730071413.11871-1-gaoxiang25@huawei.com>
+References: <20190730071413.11871-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190727095729.GD16618@aptenodytes>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBewvWgEAJTsxgAIAXc8MXzsbwCHZcetrXfelodGvcMlLjAVd+M527/5r1ztnEHKgPcpxLllIXbWjrfO+VGNfWJ6ucu0SF1oW9VMQj+NoFVrNBSn0YSI
- e59ZwMiWJYIWVSJBrnml1+TUjsSkKm76pi8t8YHKFUnOFTreq6ttLx+NfrNbWRd2W5oycM0uDQ4lXcxvhIscqJRJsRwEPFywPXSR9Cb4VFNfG8K0W3zWt/x5
- SwTXLDBJVr9ZxfvhIBPLXCNJJJbwT/q0q6R6Tw6aMPyT/6BtktNT/7VRQraPsih+v2wC8h5Mc7Z75wa2RcTWyAup3UdFnwbJb7gCOcUsbLkF9y2tnA3AgjsC
- MSgtE2IXQEJKSdOZiQiogH112pMlOGGlw0aqITtox0ZFyBef4dHfPMXXVdLfpiZ7iosjomRv1FtxzUBw+3SdA6KDAdv7p4IPkWlVTlCAjO5Rs+4GB8DWYUEH
- SUAcTlodpU/JntZfScP2IqQhYRRv7WAIn2cqf5Jf0OKyqWs7WhF2VHThABYeUq6Z+rpBat7/fyKWIt3WLHODJcA5pWbhiBHlLbQyXbVbsR2AYieMVCqdlaAS
- yHlpiV9goQtmh0X5UHMmkoMVPtEcbqCeFGvHK1SM6YztkBnnm4qe1XWoDVZxZSYsO2s/L7K9DBLL5qRgK+zdcbXul2daw84jZY6EKY+kUkNrYzctUA9GuUJW
- qV+bqda85SAxwOcr0BkmueUztL/+99C/dMCB2hRcrZgYqXBwhc1w4qHbecvXSrpgMqxZtpuRuSpS/0V5e6fOQaZNIBznBDbZdaSrIIIFYlFXf0g/ZDI4TwTR
- XQ5psPS3xvyPn1UTPqz1XdplOAiCrqLWU0jX6gaNuLIQcO1p5w8ViuFGRwny/WKyAgtBm7YdgTjiZQV3hdeojB+pMwXibgbQfxUTgKG74FHuLeV/68SQh7oL
- L/hWNQ==
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/19 11:57 AM, Paul Kocialkowski wrote:
-> Hi Hans,
-> 
-> On Fri 26 Jul 19, 10:33, Hans Verkuil wrote:
->> On 7/25/19 8:55 PM, Paul Kocialkowski wrote:
->>> HEVC/H.265 stateless support for V4L2 and Cedrus
->>>
->>> This is early support for HEVC/H.265 stateless decoding in V4L2,
->>> including both definitions and driver support for the Cedrus VPU
->>> driver, which concerns Allwinner devices.
->>>
->>> A specific pixel format is introduced for the HEVC slice format and
->>> controls are provided to pass the bitstream metadata to the decoder.
->>> Some bitstream extensions are intentionally not supported at this point.
->>>
->>> Since this is the first proposal for stateless HEVC/H.265 support in
->>> V4L2, reviews and comments about the controls definitions are
->>> particularly welcome.
->>>
->>> On the Cedrus side, the H.265 implementation covers frame pictures
->>> with both uni-directional and bi-direction prediction modes (P/B
->>> slices). Field pictures (interleaved), scaling lists and 10-bit output
->>> are not supported at this point.
->>>
->>> Changes since v6:
->>> * Rebased on latest media tree from Hans;
->>
->> Which tree is that? Or are you just referring our media_tree master
->> branch? (which isn't 'my' tree :-) )
-> 
-> I'm usually rebasing on the tree you use to send PRs to Mauro, at:
-> https://git.linuxtv.org/hverkuil/media_tree.git/
+Add basic tracepoints for ->readpage{,s}, ->lookup,
+->destroy_inode, fill_inode and map_blocks.
 
-There are lots of branches there, and none are stable branches.
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ include/trace/events/erofs.h | 241 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 241 insertions(+)
+ create mode 100644 include/trace/events/erofs.h
 
-Just base it on the master branch of git://linuxtv.org/media_tree.git.
-
-Regards,
-
-	Hans
-
-> 
-> which is usually the best up-to-date stateless codec support tree :)
-> 
-> Cheers,
-> 
-> Paul
-> 
->> Regards,
->>
->> 	Hans
->>
->>> * Reordered some fields to avoid holes and multi-padding;
->>> * Updated the documentation.
->>>
->>> Changes since v5:
->>> * Rebased atop latest next media tree;
->>> * Moved to flags instead of u8 fields;
->>> * Added padding to ensure 64-bit alignment
->>>   (tested with GDB on 32 and 64-bit architectures);
->>> * Reworked cedrus H.265 driver support a bit for flags;
->>> * Split off codec-specific control validation and init;
->>> * Added HEVC controls fields cleanup at std_validate to allow reliable
->>>   control comparison with memcmp;
->>> * Fixed various misc reported mistakes.
->>>
->>> Changes since v4:
->>> * Rebased atop latest H.254 series.
->>>
->>> Changes since v3:
->>> * Updated commit messages;
->>> * Updated CID base to avoid conflicts;
->>> * Used cpu_to_le32 for packed le32 data;
->>> * Fixed misc minor issues in the drive code;
->>> * Made it clear in the docs that the API will evolve;
->>> * Made the pixfmt private and split commits about it.
->>>
->>> Changes since v2:
->>> * Moved headers to non-public API;
->>> * Added H265 capability for A64 and H5;
->>> * Moved docs to ext-ctrls-codec.rst;
->>> * Mentionned sections of the spec in the docs;
->>> * Added padding to control structures for 32-bit alignment;
->>> * Made write function use void/size in bytes;
->>> * Reduced the number of arguments to helpers when possible;
->>> * Removed PHYS_OFFSET since we already set PFN_OFFSET;
->>> * Added comments where suggested;
->>> * Moved to timestamp for references instead of index;
->>> * Fixed some style issues reported by checkpatch.
->>>
->>> Changes since v1:
->>> * Added a H.265 capability to whitelist relevant platforms;
->>> * Switched over to tags instead of buffer indices in the DPB
->>> * Declared variable in their reduced scope as suggested;
->>> * Added the H.265/HEVC spec to the biblio;
->>> * Used in-doc references to the spec and the required APIs;
->>> * Removed debugging leftovers.
->>>
->>> Cheers!
->>>
->>> Paul Kocialkowski (4):
->>>   media: v4l2-ctrl: Add a comment on why we zero out compound controls
->>>     fields
->>>   media: v4l: Add definitions for the HEVC slice controls
->>>   media: pixfmt: Document the HEVC slice pixel format
->>>   media: cedrus: Add HEVC/H.265 decoding support
->>>
->>>  Documentation/media/uapi/v4l/biblio.rst       |   9 +
->>>  .../media/uapi/v4l/ext-ctrls-codec.rst        | 486 +++++++++++++-
->>>  .../media/uapi/v4l/pixfmt-compressed.rst      |  21 +
->>>  .../media/uapi/v4l/vidioc-queryctrl.rst       |  18 +
->>>  .../media/videodev2.h.rst.exceptions          |   3 +
->>>  drivers/media/v4l2-core/v4l2-ctrls.c          |  93 +++
->>>  drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
->>>  drivers/staging/media/sunxi/cedrus/Makefile   |   2 +-
->>>  drivers/staging/media/sunxi/cedrus/cedrus.c   |  31 +-
->>>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  18 +
->>>  .../staging/media/sunxi/cedrus/cedrus_dec.c   |   9 +
->>>  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 616 ++++++++++++++++++
->>>  .../staging/media/sunxi/cedrus/cedrus_hw.c    |   4 +
->>>  .../staging/media/sunxi/cedrus/cedrus_regs.h  | 271 ++++++++
->>>  .../staging/media/sunxi/cedrus/cedrus_video.c |  10 +
->>>  include/media/hevc-ctrls.h                    | 198 ++++++
->>>  include/media/v4l2-ctrls.h                    |   7 +
->>>  17 files changed, 1789 insertions(+), 8 deletions(-)
->>>  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h265.c
->>>  create mode 100644 include/media/hevc-ctrls.h
->>>
->>
-> 
+diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
+new file mode 100644
+index 000000000000..0c5847c54b60
+--- /dev/null
++++ b/include/trace/events/erofs.h
+@@ -0,0 +1,241 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM erofs
++
++#if !defined(_TRACE_EROFS_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_EROFS_H
++
++#include <linux/tracepoint.h>
++
++#define show_dev(dev)		MAJOR(dev), MINOR(dev)
++#define show_dev_nid(entry)	show_dev(entry->dev), entry->nid
++
++#define show_file_type(type)						\
++	__print_symbolic(type,						\
++		{ 0,		"FILE" },				\
++		{ 1,		"DIR" })
++
++#define show_map_flags(flags) __print_flags(flags, "|",	\
++	{ EROFS_GET_BLOCKS_RAW,	"RAW" })
++
++#define show_mflags(flags) __print_flags(flags, "",	\
++	{ EROFS_MAP_MAPPED,	"M" },			\
++	{ EROFS_MAP_META,	"I" })
++
++TRACE_EVENT(erofs_lookup,
++
++	TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
++
++	TP_ARGS(dir, dentry, flags),
++
++	TP_STRUCT__entry(
++		__field(dev_t,		dev	)
++		__field(erofs_nid_t,	nid	)
++		__field(const char *,	name	)
++		__field(unsigned int,	flags	)
++	),
++
++	TP_fast_assign(
++		__entry->dev	= dir->i_sb->s_dev;
++		__entry->nid	= EROFS_V(dir)->nid;
++		__entry->name	= dentry->d_name.name;
++		__entry->flags	= flags;
++	),
++
++	TP_printk("dev = (%d,%d), pnid = %llu, name:%s, flags:%x",
++		show_dev_nid(__entry),
++		__entry->name,
++		__entry->flags)
++);
++
++TRACE_EVENT(erofs_fill_inode,
++	TP_PROTO(struct inode *inode, int isdir),
++	TP_ARGS(inode, isdir),
++
++	TP_STRUCT__entry(
++		__field(dev_t,		dev	)
++		__field(erofs_nid_t,	nid	)
++		__field(erofs_blk_t,	blkaddr )
++		__field(unsigned int,	ofs	)
++		__field(int,		isdir	)
++	),
++
++	TP_fast_assign(
++		__entry->dev		= inode->i_sb->s_dev;
++		__entry->nid		= EROFS_V(inode)->nid;
++		__entry->blkaddr	= erofs_blknr(iloc(EROFS_I_SB(inode), __entry->nid));
++		__entry->ofs		= erofs_blkoff(iloc(EROFS_I_SB(inode), __entry->nid));
++		__entry->isdir		= isdir;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu, blkaddr %u ofs %u, isdir %d",
++		  show_dev_nid(__entry),
++		  __entry->blkaddr, __entry->ofs,
++		  __entry->isdir)
++);
++
++TRACE_EVENT(erofs_readpage,
++
++	TP_PROTO(struct page *page, bool raw),
++
++	TP_ARGS(page, raw),
++
++	TP_STRUCT__entry(
++		__field(dev_t,		dev	)
++		__field(erofs_nid_t,    nid     )
++		__field(int,		dir	)
++		__field(pgoff_t,	index	)
++		__field(int,		uptodate)
++		__field(bool,		raw	)
++	),
++
++	TP_fast_assign(
++		__entry->dev	= page->mapping->host->i_sb->s_dev;
++		__entry->nid	= EROFS_V(page->mapping->host)->nid;
++		__entry->dir	= S_ISDIR(page->mapping->host->i_mode);
++		__entry->index	= page->index;
++		__entry->uptodate = PageUptodate(page);
++		__entry->raw = raw;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu, %s, index = %lu, uptodate = %d "
++		"raw = %d",
++		show_dev_nid(__entry),
++		show_file_type(__entry->dir),
++		(unsigned long)__entry->index,
++		__entry->uptodate,
++		__entry->raw)
++);
++
++TRACE_EVENT(erofs_readpages,
++
++	TP_PROTO(struct inode *inode, struct page *page, unsigned int nrpage,
++		bool raw),
++
++	TP_ARGS(inode, page, nrpage, raw),
++
++	TP_STRUCT__entry(
++		__field(dev_t,		dev	)
++		__field(erofs_nid_t,	nid	)
++		__field(pgoff_t,	start	)
++		__field(unsigned int,	nrpage	)
++		__field(bool,		raw	)
++	),
++
++	TP_fast_assign(
++		__entry->dev	= inode->i_sb->s_dev;
++		__entry->nid	= EROFS_V(inode)->nid;
++		__entry->start	= page->index;
++		__entry->nrpage	= nrpage;
++		__entry->raw	= raw;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu, start = %lu nrpage = %u raw = %d",
++		show_dev_nid(__entry),
++		(unsigned long)__entry->start,
++		__entry->nrpage,
++		__entry->raw)
++);
++
++DECLARE_EVENT_CLASS(erofs__map_blocks_enter,
++	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
++		 unsigned int flags),
++
++	TP_ARGS(inode, map, flags),
++
++	TP_STRUCT__entry(
++		__field(	dev_t,		dev		)
++		__field(	erofs_nid_t,	nid		)
++		__field(	erofs_off_t,	la		)
++		__field(	u64,		llen		)
++		__field(	unsigned int,	flags		)
++	),
++
++	TP_fast_assign(
++		__entry->dev    = inode->i_sb->s_dev;
++		__entry->nid    = EROFS_V(inode)->nid;
++		__entry->la	= map->m_la;
++		__entry->llen	= map->m_llen;
++		__entry->flags	= flags;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu, la %llu llen %llu flags %s",
++		  show_dev_nid(__entry),
++		  __entry->la, __entry->llen,
++		  __entry->flags ? show_map_flags(__entry->flags) : "NULL")
++);
++
++DEFINE_EVENT(erofs__map_blocks_enter, erofs_map_blocks_flatmode_enter,
++	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
++		 unsigned flags),
++
++	TP_ARGS(inode, map, flags)
++);
++
++DECLARE_EVENT_CLASS(erofs__map_blocks_exit,
++	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
++		 unsigned int flags, int ret),
++
++	TP_ARGS(inode, map, flags, ret),
++
++	TP_STRUCT__entry(
++		__field(	dev_t,		dev		)
++		__field(	erofs_nid_t,	nid		)
++		__field(        unsigned int,   flags           )
++		__field(	erofs_off_t,	la		)
++		__field(	erofs_off_t,	pa		)
++		__field(	u64,		llen		)
++		__field(	u64,		plen		)
++		__field(        unsigned int,	mflags		)
++		__field(	int,		ret		)
++	),
++
++	TP_fast_assign(
++		__entry->dev    = inode->i_sb->s_dev;
++		__entry->nid    = EROFS_V(inode)->nid;
++		__entry->flags	= flags;
++		__entry->la	= map->m_la;
++		__entry->pa	= map->m_pa;
++		__entry->llen	= map->m_llen;
++		__entry->plen	= map->m_plen;
++		__entry->mflags	= map->m_flags;
++		__entry->ret	= ret;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu, flags %s "
++		  "la %llu pa %llu llen %llu plen %llu mflags %s ret %d",
++		  show_dev_nid(__entry),
++		  __entry->flags ? show_map_flags(__entry->flags) : "NULL",
++		  __entry->la, __entry->pa, __entry->llen, __entry->plen,
++		  show_mflags(__entry->mflags), __entry->ret)
++);
++
++DEFINE_EVENT(erofs__map_blocks_exit, erofs_map_blocks_flatmode_exit,
++	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
++		 unsigned flags, int ret),
++
++	TP_ARGS(inode, map, flags, ret)
++);
++
++TRACE_EVENT(erofs_destroy_inode,
++	TP_PROTO(struct inode *inode),
++
++	TP_ARGS(inode),
++
++	TP_STRUCT__entry(
++		__field(	dev_t,		dev		)
++		__field(	erofs_nid_t,	nid		)
++	),
++
++	TP_fast_assign(
++		__entry->dev	= inode->i_sb->s_dev;
++		__entry->nid	= EROFS_V(inode)->nid;
++	),
++
++	TP_printk("dev = (%d,%d), nid = %llu", show_dev_nid(__entry))
++);
++
++#endif /* _TRACE_EROFS_H */
++
++ /* This part must be outside protection */
++#include <trace/define_trace.h>
+-- 
+2.17.1
 
