@@ -2,38 +2,64 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01021C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD0FC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4D6D206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20982206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:15:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564503355;
+	bh=BfBzWlo3UNykmQF2mkx9T4Qu+R/YsHpAkw02FK/ARAw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qX+Mud143t4t90FgnASd1gkxueLCHpcPxz3b7pmMZYKTN1w1eOBxhMWGIH9btXu2U
+	 7OT6Fk7hOLfqn9szrZNg1SAZwVQ4AIgH4kQ9SLkGaENBYXKjXTtvsnLb6V9/B6l5iP
+	 dH0LtSAprgGw3J4FlMJNqT0BWW7rAo/y3ThfFK2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730919AbfG3QP3 (ORCPT
+        id S1731037AbfG3QPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729025AbfG3QP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:15:29 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 949F5206A2;
-        Tue, 30 Jul 2019 16:15:28 +0000 (UTC)
-Date:   Tue, 30 Jul 2019 12:15:27 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fgraph: Remove redundant ftrace_graph_notrace_addr()
- test
-Message-ID: <20190730121527.13f600f5@gandalf.local.home>
-In-Reply-To: <20190730140850.7927-1-changbin.du@gmail.com>
-References: <20190730140850.7927-1-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 30 Jul 2019 12:15:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56402 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729025AbfG3QPx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 12:15:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BfBzWlo3UNykmQF2mkx9T4Qu+R/YsHpAkw02FK/ARAw=; b=g7MEv5CvZSMTvgVln//QY5S9V
+        qGGr4i/FPIFNEOzfWJ/XnXL1awvbG7bUy0fiebgzLYNSaZfyCXMdVFIsmKQU43/KZEsObQwL8YVjt
+        Pe/LSSe2sJQkuPT7fkZRdF38y4NUnS33yriWDQ9pTVDfDb64LF6xLUSw0SP8ZxcH7PhWIrQTU1v3B
+        wkPvIpgnPXqcLtKk74dcXD92zD9SbWbDi5EqsOEw4GxCAky6ff8+6ojGZ7WmZpKmQxCdRHiqZtgkT
+        RBCoBCaKL/07qy7SgRtdPVNgUkWwvSjqUJlkETXvO5Wc0N0SQCcc4AgavheK4LmZMK6gvqb4PiACg
+        2lcUsstBw==;
+Received: from [177.157.101.143] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsUmx-0003iU-Ae; Tue, 30 Jul 2019 16:15:47 +0000
+Date:   Tue, 30 Jul 2019 13:15:41 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     <gtk_ruiwang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Longfei Wang <longfei.wang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: Re: media: mtk-vcodec: Handle H264 error bitstreams
+Message-ID: <20190730131541.40ce5ead@coco.lan>
+In-Reply-To: <20190726085433.15612-1-gtk_ruiwang@mediatek.com>
+References: <20190726085433.15612-1-gtk_ruiwang@mediatek.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -42,58 +68,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019 22:08:50 +0800
-Changbin Du <changbin.du@gmail.com> wrote:
+Em Fri, 26 Jul 2019 16:54:33 +0800
+<gtk_ruiwang@mediatek.com> escreveu:
 
-> We already have tested it before. The second one should be removed.
-> With this change, the performance should have little improvement.
-> 
-> Fixes: 9cd2992f2d6c ("fgraph: Have set_graph_notrace only affect function_graph tracer")
+> From: gtk_ruiwang <gtk_ruiwang@mediatek.com>
 
-Thanks! I think this should even be marked for stable. Not really a bad
-bug, but a bug none the less.
+...
 
--- Steve
+> Signed-off-by: gtk_ruiwang <gtk_ruiwang@mediatek.com>
 
+Please use your real name on your SOB and at the From: line.
 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  kernel/trace/trace_functions_graph.c | 17 +++++++----------
->  1 file changed, 7 insertions(+), 10 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-> index 69ebf3c2f1b5..78af97163147 100644
-> --- a/kernel/trace/trace_functions_graph.c
-> +++ b/kernel/trace/trace_functions_graph.c
-> @@ -137,6 +137,13 @@ int trace_graph_entry(struct ftrace_graph_ent *trace)
->  	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT))
->  		return 0;
->  
-> +	/*
-> +	 * Do not trace a function if it's filtered by set_graph_notrace.
-> +	 * Make the index of ret stack negative to indicate that it should
-> +	 * ignore further functions.  But it needs its own ret stack entry
-> +	 * to recover the original index in order to continue tracing after
-> +	 * returning from the function.
-> +	 */
->  	if (ftrace_graph_notrace_addr(trace->func)) {
->  		trace_recursion_set(TRACE_GRAPH_NOTRACE_BIT);
->  		/*
-> @@ -155,16 +162,6 @@ int trace_graph_entry(struct ftrace_graph_ent *trace)
->  	if (ftrace_graph_ignore_irqs())
->  		return 0;
->  
-> -	/*
-> -	 * Do not trace a function if it's filtered by set_graph_notrace.
-> -	 * Make the index of ret stack negative to indicate that it should
-> -	 * ignore further functions.  But it needs its own ret stack entry
-> -	 * to recover the original index in order to continue tracing after
-> -	 * returning from the function.
-> -	 */
-> -	if (ftrace_graph_notrace_addr(trace->func))
-> -		return 1;
-> -
->  	/*
->  	 * Stop here if tracing_threshold is set. We only write function return
->  	 * events to the ring buffer.
-
+Thanks,
+Mauro
