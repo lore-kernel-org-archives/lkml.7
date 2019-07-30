@@ -2,122 +2,136 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CFCC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF26C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E8C20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4289B20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:11:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564499504;
+	bh=kBZ37nlb4VhxPyIAOWHFVNI5VUA3imokEetW1pDJ2gg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=V33cD+5ViBJzPDmkG+JLpqkq1XY3YgJ+RjA5HJAxvBOVE5hQ1M8oDrcnwpudJ3v61
+	 uY8pmwHxw3Hym8OZ3KQSKGE3ZE/Oe3IUXuBRnQjaQlBOvYatTxjr9JAFdDCUb8THsm
+	 qLqlKBfInc4slqsFPbdRn35HTK40g+tJbglto/CE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732217AbfG3PLj (ORCPT
+        id S1732231AbfG3PLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 30 Jul 2019 11:11:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732206AbfG3PLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Jul 2019 11:11:39 -0400
-Received: from mxout014.mail.hostpoint.ch ([217.26.49.174]:40999 "EHLO
-        mxout014.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726602AbfG3PLi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:11:38 -0400
-Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
-        by mxout014.mail.hostpoint.ch with esmtp (Exim 4.92 (FreeBSD))
-        (envelope-from <dev@pschenker.ch>)
-        id 1hsTP2-0005MD-Fw; Tue, 30 Jul 2019 16:47:00 +0200
-Received: from [46.140.72.82] (helo=philippe-pc.toradex.int)
-        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.91 (FreeBSD))
-        (envelope-from <dev@pschenker.ch>)
-        id 1hsTP2-000Mva-92; Tue, 30 Jul 2019 16:47:00 +0200
-X-Authenticated-Sender-Id: dev@pschenker.ch
-From:   Philippe Schenker <dev@pschenker.ch>
-To:     marcel.ziswiler@toradex.com, max.krummenacher@toradex.com,
-        stefan@agner.ch, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 08/22] ARM: dts: imx7-colibri: Add touch controllers
-Date:   Tue, 30 Jul 2019 16:46:35 +0200
-Message-Id: <20190730144649.19022-9-dev@pschenker.ch>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190730144649.19022-1-dev@pschenker.ch>
-References: <20190730144649.19022-1-dev@pschenker.ch>
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 533B2208E4;
+        Tue, 30 Jul 2019 15:11:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564499498;
+        bh=kBZ37nlb4VhxPyIAOWHFVNI5VUA3imokEetW1pDJ2gg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Dm8kfwqHqlrXDnSiH+kDR8m3E9PUsQyxfvAX+y0cW/6ZlowXzwElyRMlMbYvN39Jn
+         bMnBSIHcz/vrJNnV35iZpxIUj3E73zZ05OdLaTgLuef9J8JF9elrFrAKUQQtNRrNQT
+         lda915zXunMZSBl/0Iplyiid+28DtyQrWP+wzyxc=
+Received: by mail-wr1-f54.google.com with SMTP id n4so66263410wrs.3;
+        Tue, 30 Jul 2019 08:11:38 -0700 (PDT)
+X-Gm-Message-State: APjAAAX8rwz7NK+xsbvwUJTbz4jrdCDmWcICn0vGZlg3A3laH3ZsZFKF
+        T3uV/uwLcsKH+EaUaZgKO8iHfPJT8ff/d0AjDtA=
+X-Google-Smtp-Source: APXvYqwbIAje/Evb2w8oDL9BHbfuCOSPBlw7Fw3pr5jC162KBu/yRlsMcLKz5p4CpZDNVLbYYiSo8/Ou7FvXYRg4gBw=
+X-Received: by 2002:adf:dc51:: with SMTP id m17mr25888475wrj.256.1564499496830;
+ Tue, 30 Jul 2019 08:11:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1564488945-20149-1-git-send-email-guoren@kernel.org>
+ <1564488945-20149-4-git-send-email-guoren@kernel.org> <CAK8P3a0v3oVS5cCkORxA7na+VE7ofTQRxiv5o5xNf5v=esnN9A@mail.gmail.com>
+In-Reply-To: <CAK8P3a0v3oVS5cCkORxA7na+VE7ofTQRxiv5o5xNf5v=esnN9A@mail.gmail.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Tue, 30 Jul 2019 23:11:25 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQC0e3zGxtCdwvZpen=Gj8CtgjNYCuy3hSupDXt3KM0Zg@mail.gmail.com>
+Message-ID: <CAJF2gTQC0e3zGxtCdwvZpen=Gj8CtgjNYCuy3hSupDXt3KM0Zg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] csky: Add dma_inv_range for DMA_FROM_DEVICE
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-csky@vger.kernel.org, feng_shizhu@dahuatech.com,
+        zhang_jian5@dahuatech.com, zheng_xingjian@dahuatech.com,
+        zhu_peng@dahuatech.com, Guo Ren <ren_guo@c-sky.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philippe Schenker <philippe.schenker@toradex.com>
+Thx Arnd,
 
-Add atmel mxt multitouch controller and TouchRevolution multitouch
-controller which are connected over an I2C bus.
+On Tue, Jul 30, 2019 at 9:43 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Tue, Jul 30, 2019 at 2:16 PM <guoren@kernel.org> wrote:
+> > From: Guo Ren <ren_guo@c-sky.com>
+>
+> > diff --git a/arch/csky/mm/dma-mapping.c b/arch/csky/mm/dma-mapping.c
+> > index 3f1ff9d..d8f0f81 100644
+> > --- a/arch/csky/mm/dma-mapping.c
+> > +++ b/arch/csky/mm/dma-mapping.c
+> > @@ -72,6 +72,8 @@ void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
+> >                 cache_op(paddr, size, dma_wb_range);
+> >                 break;
+> >         case DMA_FROM_DEVICE:
+> > +               cache_op(paddr, size, dma_inv_range);
+> > +               break;
+> >         case DMA_BIDIRECTIONAL:
+> >                 cache_op(paddr, size, dma_wbinv_range);
+> >                 break;
+> > @@ -88,6 +90,8 @@ void arch_sync_dma_for_cpu(struct device *dev, phys_addr_t paddr,
+> >                 cache_op(paddr, size, dma_wb_range);
+> >                 break;
+> >         case DMA_FROM_DEVICE:
+> > +               cache_op(paddr, size, dma_inv_range);
+> > +               break;
+> >         case DMA_BIDIRECTIONAL:
+> >                 cache_op(paddr, size, dma_wbinv_range);
+> >                 break;
+>
+> When syncing 'for_cpu', you should not need to write back, because
+> there won't be any dirty cache lines.
+I just follow the dma_data_direction param, seems dir param and
+function are a little bit duplicated. And our cpu won't clear clean
+cache line into memory, so dma_wb_page won't cause problem.
+Seems arch_sync_dma_for_cpu with dir=DMA_TO_DEVICE is self-contradictory.
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
----
+Do you want me modfiy like these:
+@@ -88,6 +90,8 @@ void arch_sync_dma_for_cpu(struct device *dev,
+phys_addr_t paddr,
+        case DMA_TO_DEVICE:
+        case DMA_FROM_DEVICE:
+        case DMA_BIDIRECTIONAL:
+               cache_op(paddr, size, dma_inv_range);
+               break;
 
- arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 37 +++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+@@ -72,6 +72,8 @@ void arch_sync_dma_for_device(struct device *dev,
+phys_addr_t paddr,
+        case DMA_TO_DEVICE:
+                cache_op(paddr, size, dma_wb_range);
+                break;
+        case DMA_FROM_DEVICE:
+        case DMA_BIDIRECTIONAL:
+                cache_op(paddr, size, dma_wbinv_range);
+                break;
 
-diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-index d4dbc4fc1adf..f6cbbe876532 100644
---- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-@@ -145,6 +145,34 @@
- &i2c4 {
- 	status = "okay";
- 
-+	/*
-+	 * the PCAPs use SODIMM 28/30, also used for PWM<B>, PWM<C>, aka pwm2,
-+	 * pwm3. so if you enable one of the PCAP controllers disable the pwms
-+	 */
-+	atmel_mxt_ts: atmel_mxt_ts@4a {
-+		compatible = "atmel,maxtouch";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpiotouch>;
-+		reg = <0x4a>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <9 IRQ_TYPE_EDGE_FALLING>; /* SODIMM 28 */
-+		reset-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>; /* SODIMM 30 */
-+		status = "disabled";
-+	};
-+
-+	touch: touchrevf0710a@10 {
-+		compatible = "touchrevolution,fusion-f0710a";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpiotouch>;
-+		reg = <0x10>;
-+			/* SODIMM 28, Pen down interrupt */
-+		gpios = <&gpio1 9 GPIO_ACTIVE_HIGH
-+			/* SODIMM 30, Reset interrupt */
-+			 &gpio1 10 GPIO_ACTIVE_LOW
-+			>;
-+		status = "disabled";
-+	};
-+
- 	/* M41T0M6 real time clock on carrier board */
- 	rtc: m41t0m6@68 {
- 		compatible = "st,m41t0";
-@@ -200,3 +228,12 @@
- 	vmmc-supply = <&reg_3v3>;
- 	status = "okay";
- };
-+
-+&iomuxc {
-+	pinctrl_gpiotouch: touchgpios {
-+		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO09__GPIO1_IO9		0x74
-+			MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x14
-+		>;
-+	};
-+};
+>
+> If you have a CPU core that does not do speculative loads, you also don't
+> need to invalidate here, because you have already done that in the
+> _for_device() case, the only reason to invalidate the CPU cache
+> again is if a speculative load created a stale cache line that now
+> shadows the data received from the device.
+Our CPU support speculative loads :)
+
 -- 
-2.22.0
+Best Regards
+ Guo Ren
 
+ML: https://lore.kernel.org/linux-csky/
