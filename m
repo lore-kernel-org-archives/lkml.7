@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55498C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A74C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A0E20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69405206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:44:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tj0gXvOU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNprjwcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731262AbfG3CoM (ORCPT
+        id S1731441AbfG3CoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:44:12 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35643 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730921AbfG3CoJ (ORCPT
+        Mon, 29 Jul 2019 22:44:21 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36253 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730921AbfG3CoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:44:09 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u14so29031168pfn.2;
-        Mon, 29 Jul 2019 19:44:08 -0700 (PDT)
+        Mon, 29 Jul 2019 22:44:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id r7so29012490pfl.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 19:44:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=P/oAL9ofxFqbhCpen6x+V4iB48WMRp4QBpRHUGHCpmA=;
-        b=Tj0gXvOUsDfjz4D5pRbR819A6O5NQZT+M5zPLp0+B66zRGysFaReydFyhXsh7lNNCr
-         wiafLBNNfPElcZQtSF70CKp0ubFEITO9XJpZ9YF4yFayQz8RC+GQeSSrj4+05iiPLmuK
-         2gr8rq3y18K+qg6MHC6RLmWEL6BxlELZNBZD7P+JaIgoahtkxbdK5uy7yxlERaZ2c1mO
-         om7/94MFbTVVazRljk0SsOm7z0brUjSuEdnDwjk2gp/7jNUQ1500q8bn3bPpp2fkmMvZ
-         SvszVfAxvpTD4qOf85rb7g4FV4m/VmMrw5qrrRZlLeTkpi7iCZWnKdRHNJZyMjY5YO6h
-         pwVw==
+        bh=fqzdvLOjix3ylHr5YHUpqrsLpQJqoNPYugVAgDYHQRg=;
+        b=ZNprjwcR8ZPESMHDjtZDx+jmV7BfMNzyfP5AuIEBjQQNiwzYumvw39qKO0AfReG5pc
+         tWF5SUtKe0NQS1Ori1DBwFwbPgzLUYr3bxWs+fz2g773fV+CK1Jn8QeIHhQJEFUifdoT
+         ju3MiewN6uO0p4nmyXDp05H9OBiHJy25hOxcl9AyUiXXL273Bwh9n6HhF/XXFnoQQES9
+         G345LDTWvIuje/K2sBGV9Jqj0VVDHhAusnVKWCX9lutmtv26e2+h62e9/xt+X5kFBI73
+         jpMJ3JlqHPo6qdHrv63H94VT6yNqWnsfYIeoBqqOf3dny+/6uYWq9qyabxRlKsCy4q9J
+         nNlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=P/oAL9ofxFqbhCpen6x+V4iB48WMRp4QBpRHUGHCpmA=;
-        b=qH553bvBGismMwr9vJ1pePcaePA6L/CALKkEBjK5UUHKc01iiUeN+et6YT+dbHn//L
-         GwowlDXUILyYO5zQTZCdxx8jP5SWq1GDg+z/1bQGoXy76I+sJLHbRuqStCe21yDVRufD
-         NkdKn4KOs+XtKuyWwT+dhzNspWRY7WT0QNh9F+046Qz+L09H56fEG7L0a+l4CyXgHmab
-         ymGlltEkgprP4guuym4Tb77NluwC2piU+3QAd2uz/vxXLpJU6kcil9jLCPOzG3FWLr8f
-         IwlLMNMswqvnE3Ldcu5skGf2YXvd2tUhp/VddQEW4YwltyifqGJIKz4j5+T22wMvikmd
-         Gvng==
-X-Gm-Message-State: APjAAAW49hgxbxBZro6OFf/lcOKW9OkTQyJMKrvZ7wj9SsNUnjTr2I0K
-        93SVUbTO3RePwUc26Gn+JWU=
-X-Google-Smtp-Source: APXvYqwCB7fPp1uuBktnCHfexv2TXgUVmtZxuoXTALSVRgKw9qhLBJ+hqNmOyzqZ8R6oPIJ21rQ03A==
-X-Received: by 2002:a17:90b:d82:: with SMTP id bg2mr72812664pjb.87.1564454648564;
-        Mon, 29 Jul 2019 19:44:08 -0700 (PDT)
+        bh=fqzdvLOjix3ylHr5YHUpqrsLpQJqoNPYugVAgDYHQRg=;
+        b=bBmocZXkuko//7OIsrTVqK7GEnzacR96PPAZ8VqsKuXloV9CQLnI1MM6YczoGynsFy
+         3vMgh2T215HzbdS855uWu4F90LUjWRWLHnRgCKhFHCx/xb4vcQfzzLys/H7pM/Aof+IW
+         FGO7lYZjSMdeRaumQ0gJ673sRaQxnkZRHGCPamg38tRuZFCshgatQyOSoRJ76anP0C4r
+         Ku8DfCLF0U3usuyGGC4+xp+Ml0JILgkGKesQ32vGHCe6c/su4RvsIFz8l5et7n62uZqN
+         1xZh6HMgllMFoNQP+bbw18u2ZIIVTJzQHyuz4djjWC4wQJJ42k3dpCGcVG7OeVaVejk+
+         pFKg==
+X-Gm-Message-State: APjAAAXGIIUsaBZDXeewz7Jr5N+Gn+Js4kYYT7k/NKtPe12C8H1w2dW9
+        VcEQgHg/fRio3StC0fMcY68=
+X-Google-Smtp-Source: APXvYqyzFnJ4gujcomwVjsA1MDd6VuJvq1Tdkw8bgWN1Me4lcTvXF0T33qN6dYwKCvSUwv1GPeoEtw==
+X-Received: by 2002:a17:90a:9f0b:: with SMTP id n11mr75786394pjp.98.1564454659910;
+        Mon, 29 Jul 2019 19:44:19 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id 67sm29330228pfd.177.2019.07.29.19.44.05
+        by smtp.gmail.com with ESMTPSA id n140sm65331184pfd.132.2019.07.29.19.44.17
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 19:44:07 -0700 (PDT)
+        Mon, 29 Jul 2019 19:44:19 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] alpha: Replace strncmp with str_has_prefix
-Date:   Tue, 30 Jul 2019 10:44:01 +0800
-Message-Id: <20190730024401.17152-1-hslester96@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] arm64: Replace strncmp with str_has_prefix
+Date:   Tue, 30 Jul 2019 10:44:15 +0800
+Message-Id: <20190730024415.17208-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,37 +82,36 @@ Here fix codes with the same pattern.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- arch/alpha/boot/tools/objstrip.c | 3 ++-
- arch/alpha/kernel/setup.c        | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/module-plts.c | 2 +-
+ arch/arm64/mm/numa.c            | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/alpha/boot/tools/objstrip.c b/arch/alpha/boot/tools/objstrip.c
-index 825a16f5f622..4738aaf76c3d 100644
---- a/arch/alpha/boot/tools/objstrip.c
-+++ b/arch/alpha/boot/tools/objstrip.c
-@@ -148,7 +148,8 @@ main (int argc, char *argv[])
- #ifdef __ELF__
-     elf = (struct elfhdr *) buf;
+diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-plts.c
+index 044c0ae4d6c8..b182442b87a3 100644
+--- a/arch/arm64/kernel/module-plts.c
++++ b/arch/arm64/kernel/module-plts.c
+@@ -302,7 +302,7 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 		/* sort by type, symbol index and addend */
+ 		sort(rels, numrels, sizeof(Elf64_Rela), cmp_rela, NULL);
  
--    if (elf->e_ident[0] == 0x7f && strncmp((char *)elf->e_ident + 1, "ELF", 3) == 0) {
-+	if (elf->e_ident[0] == 0x7f &&
-+		str_has_prefix((char *)elf->e_ident + 1, "ELF")) {
- 	if (elf->e_type != ET_EXEC) {
- 	    fprintf(stderr, "%s: %s is not an ELF executable\n",
- 		    prog_name, inname);
-diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
-index 5d4c76a77a9f..e82e45d5fd96 100644
---- a/arch/alpha/kernel/setup.c
-+++ b/arch/alpha/kernel/setup.c
-@@ -466,7 +466,7 @@ setup_arch(char **cmdline_p)
- #ifndef alpha_using_srm
- 	/* Assume that we've booted from SRM if we haven't booted from MILO.
- 	   Detect the later by looking for "MILO" in the system serial nr.  */
--	alpha_using_srm = strncmp((const char *)hwrpb->ssn, "MILO", 4) != 0;
-+	alpha_using_srm = !str_has_prefix((const char *)hwrpb->ssn, "MILO");
- #endif
- #ifndef alpha_using_qemu
- 	/* Similarly, look for QEMU.  */
+-		if (strncmp(secstrings + dstsec->sh_name, ".init", 5) != 0)
++		if (!str_has_prefix(secstrings + dstsec->sh_name, ".init"))
+ 			core_plts += count_plts(syms, rels, numrels,
+ 						sechdrs[i].sh_info, dstsec);
+ 		else
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 4f241cc7cc3b..4decf1659700 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -29,7 +29,7 @@ static __init int numa_parse_early_param(char *opt)
+ {
+ 	if (!opt)
+ 		return -EINVAL;
+-	if (!strncmp(opt, "off", 3))
++	if (str_has_prefix(opt, "off"))
+ 		numa_off = true;
+ 
+ 	return 0;
 -- 
 2.20.1
 
