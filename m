@@ -2,100 +2,157 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDA3C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B76C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB05206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:33:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HZV5K3sn"
+	by mail.kernel.org (Postfix) with ESMTP id 81D0D2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbfG3BdY (ORCPT
+        id S1730560AbfG3Be0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:33:24 -0400
-Received: from mail-vs1-f73.google.com ([209.85.217.73]:54351 "EHLO
-        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729221AbfG3BdY (ORCPT
+        Mon, 29 Jul 2019 21:34:26 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:25672 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729221AbfG3BeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:33:24 -0400
-Received: by mail-vs1-f73.google.com with SMTP id b188so16471859vsc.21
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 18:33:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Frj/SS/W3AFZFbyzaOV4LWLnrMlPxcryoFLQjik2HTI=;
-        b=HZV5K3snh9+hZYi0hyCp//JyWT/fXpO3R4ntivO3tTKVGtiJDw32+qKHYjRImOIIZW
-         VxTiXkHj+VspcOQwMQmsA2V4AKt/XjP3LHtr1xFiKnUbnM3QWXE/wSzzzjwb8HARp0NL
-         NnuTKiG3/MUCJOwH8yeiqO0PT9JR5nFtwF6U8A53/0E2cI+PwTcE9W+5puIoSJsXHcYY
-         pGpqdjgsz/Gm/zNNZuQ/PWKC68R/embIB/nPMOQPIpfTsQj4rmJs4brzVzJl1hn7d19A
-         ijF6rMV/AiriXix/ERN3pm4aTwkganjyHVi9+SBcKd4uYnPHslwXHHddmjlMGT2iycj7
-         WlvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Frj/SS/W3AFZFbyzaOV4LWLnrMlPxcryoFLQjik2HTI=;
-        b=dGyTAdGB2sjRCiaF0uiHtDB1ZduPGX7POREz1SjE2UVV2O6GfWCp8MdTGlZ6PCuqJF
-         3tmJfZuEN80mp6lGKWtwT/0r2IUvvOIw14jI3mszfG0sagaOmfzzlglD5Fn6w0GXJNbA
-         GTOoZFk8eaof46I0tmoP6mzWa8vk+kbk5DNh6yinaoAvHLPxdSYdDQnm8Zz1iC6pkMhn
-         hHNa08pnF9pOUkDH4x0nHFcvcvJFRAsF/Xf4ABxlWUd069E15D0K2eShghlbKY+/M7kC
-         dW5v58X3VIvojYU56dN8u5W2G1rh4++SNUbcLAGcrS6MWPkr6VToXwWuc+/ruUvzdwtQ
-         BAjQ==
-X-Gm-Message-State: APjAAAXTlSfgzZQ7BA4YNS3C9BBPUt1kTwSUesdl/TrWvbXWxl8Cdn+H
-        fOHE2DwCjUqRuY/EqJKEM2LJdMTvSgI=
-X-Google-Smtp-Source: APXvYqzqfX8t1uXNFJXNaDwGRiqkwrH6h4jiFWfc6T5iZhZ57KmlPWww1KkuiFIxc6pVEcoJJlMga4+hqnw=
-X-Received: by 2002:ab0:740e:: with SMTP id r14mr68442936uap.108.1564450403321;
- Mon, 29 Jul 2019 18:33:23 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 18:33:10 -0700
-Message-Id: <20190730013310.162367-1-surenb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH 1/1] psi: do not require setsched permission from the trigger creator
-From:   Suren Baghdasaryan <surenb@google.com>
-To:     mingo@redhat.com, peterz@infradead.org
-Cc:     lizefan@huawei.com, hannes@cmpxchg.org, axboe@kernel.dk,
-        dennis@kernel.org, dennisszhou@gmail.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Suren Baghdasaryan <surenb@google.com>,
-        Nick Kralevich <nnk@google.com>
+        Mon, 29 Jul 2019 21:34:25 -0400
+X-UUID: fa52ff4a3a274579b251fa276632f2cb-20190730
+X-UUID: fa52ff4a3a274579b251fa276632f2cb-20190730
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2079832734; Tue, 30 Jul 2019 09:34:16 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 30 Jul
+ 2019 09:34:13 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 30 Jul 2019 09:34:13 +0800
+Message-ID: <1564450453.24702.14.camel@mhfsdcap03>
+Subject: Re: [PATCH v3 1/2] dt-bindings: i3c: Document MediaTek I3C master
+ bindings
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     Rob Herring <robh@kernel.org>, <bbrezillon@kernel.org>,
+        <matthias.bgg@gmail.com>, <mark.rutland@arm.com>,
+        <linux-i3c@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
+        <liguo.zhang@mediatek.com>, <xinping.qian@mediatek.com>
+Date:   Tue, 30 Jul 2019 09:34:13 +0800
+In-Reply-To: <20190727111859.315994c3@collabora.com>
+References: <1562677762-24067-1-git-send-email-qii.wang@mediatek.com>
+         <1562677762-24067-2-git-send-email-qii.wang@mediatek.com>
+         <20190724202119.GA26566@bogus> <1564190613.24702.11.camel@mhfsdcap03>
+         <20190727111859.315994c3@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 91A1554D3BC24F029BD720EAFB2775A8A7F8762EFAD65B4F447638B10A285CF22000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a process creates a new trigger by writing into /proc/pressure/*
-files, permissions to write such a file should be used to determine whether
-the process is allowed to do so or not. Current implementation would also
-require such a process to have setsched capability. Setting of psi trigger
-thread's scheduling policy is an implementation detail and should not be
-exposed to the user level. Remove the permission check by using _nocheck
-version of the function.
+On Sat, 2019-07-27 at 11:18 +0200, Boris Brezillon wrote:
+> On Sat, 27 Jul 2019 09:23:33 +0800
+> Qii Wang <qii.wang@mediatek.com> wrote:
+> 
+> > On Wed, 2019-07-24 at 14:21 -0600, Rob Herring wrote:
+> > > On Tue, Jul 09, 2019 at 09:09:21PM +0800, Qii Wang wrote:  
+> > > > Document MediaTek I3C master DT bindings.
+> > > > 
+> > > > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> > > > ---
+> > > >  .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   48 ++++++++++++++++++++
+> > > >  1 file changed, 48 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > > > new file mode 100644
+> > > > index 0000000..d32eda6
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > > > @@ -0,0 +1,48 @@
+> > > > +Bindings for MediaTek I3C master block
+> > > > +=====================================
+> > > > +
+> > > > +Required properties:
+> > > > +--------------------
+> > > > +- compatible: shall be "mediatek,i3c-master"  
+> > > 
+> > > Needs to be SoC specific.
+> > >   
+> > 
+> > We hope that the SOCs will use the same driver and try to avoid big
+> > changes. If there are inevitable changes in the future, then we will
+> > modify the compatible to be SoC specific. cdns,i3c-master.txt is not SoC
+> > specific either.
+> 
+> The cadence case is a bit different I think. When the driver was
+> developed there was no SoC integrating this IP. I guess Mediatek knows
+> already which SoC(s) will embed the I3C master block.
+> 
 
-Suggested-by: Nick Kralevich <nnk@google.com>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
----
- kernel/sched/psi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ok, I will modify it as "mediatek,mt8183-i3c".
 
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 7acc632c3b82..ed9a1d573cb1 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -1061,7 +1061,7 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
- 			mutex_unlock(&group->trigger_lock);
- 			return ERR_CAST(kworker);
- 		}
--		sched_setscheduler(kworker->task, SCHED_FIFO, &param);
-+		sched_setscheduler_nocheck(kworker->task, SCHED_FIFO, &param);
- 		kthread_init_delayed_work(&group->poll_work,
- 				psi_poll_work);
- 		rcu_assign_pointer(group->poll_kworker, kworker);
--- 
-2.22.0.709.g102302147b-goog
+> > 
+> > > > +- reg: physical base address of the controller and apdma base, length of
+> > > > +  memory mapped region.
+> > > > +- reg-names: shall be "main" for master controller and "dma" for apdma.
+> > > > +- interrupts: the interrupt line connected to this I3C master.
+> > > > +- clocks: shall reference the i3c and apdma clocks.
+> > > > +- clock-names: shall include "main" and "dma".
+> > > > +
+> > > > +Mandatory properties defined by the generic binding (see
+> > > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> > > > +
+> > > > +- #address-cells: shall be set to 3
+> > > > +- #size-cells: shall be set to 0
+> > > > +
+> > > > +Optional properties defined by the generic binding (see
+> > > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> > > > +
+> > > > +- i2c-scl-hz
+> > > > +- i3c-scl-hz
+> > > > +
+> > > > +I3C device connected on the bus follow the generic description (see
+> > > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
+> > > > +
+> > > > +Example:
+> > > > +
+> > > > +	i3c0: i3c@1100d000 {
+> > > > +		compatible = "mediatek,i3c-master";
+> > > > +		reg = <0x1100d000 0x1000>,
+> > > > +		      <0x11000300 0x80>;
+> > > > +		reg-names = "main", "dma";
+> > > > +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
+> > > > +		clocks = <&infracfg CLK_INFRA_I3C0>,
+> > > > +			 <&infracfg CLK_INFRA_AP_DMA>;
+> > > > +		clock-names = "main", "dma";
+> > > > +		#address-cells = <3>;
+> > > > +		#size-cells = <0>;
+> > > > +		i2c-scl-hz = <100000>;
+> > > > +
+> > > > +		nunchuk: nunchuk@52 {
+> > > > +			compatible = "nintendo,nunchuk";
+> > > > +			reg = <0x52 0x0 0x10>;
+> > > > +		};
+> > > > +	};
+> > > > -- 
+> > > > 1.7.9.5
+> > > >   
+> > 
+> > 
+> 
+
 
