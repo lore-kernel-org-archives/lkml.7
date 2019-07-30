@@ -2,87 +2,75 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890E8C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EF5C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A362089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610D52087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbfG3MLv (ORCPT
+        id S1728820AbfG3MMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 08:11:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48816 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726869AbfG3MLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 08:11:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E9961AC8E;
-        Tue, 30 Jul 2019 12:11:48 +0000 (UTC)
-Subject: Re: [PATCH v2 0/2] Refactor snapshot vs nocow writers locking
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     andrea.parri@amarulasolutions.com, paulmck@linux.ibm.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190719083949.5351-1-nborisov@suse.com>
- <ed015bb1-490e-7102-d172-73c1d069476c@arm.com>
- <20190729153319.GH2368@arrakis.emea.arm.com>
- <60eda0ab-08b3-de82-5b06-98386ee1928f@arm.com>
- <69ef76a2-ebd6-956e-c611-2e742606ed95@arm.com>
-From:   Nikolay Borisov <nborisov@suse.com>
+        Tue, 30 Jul 2019 08:12:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37357 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfG3MMf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 08:12:35 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so40431165wrr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 05:12:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HhV8xTaSmerML9zVZ7qS6UxHrCqZLDARfYvjhVb7WHE=;
+        b=FJKHo5m5gRJi1175JXUzLw1YgvyyDGX95fa7KwAJFuN5g+fXJ2Bv1gX5x0JgCDU4z/
+         uYWRAx3tkpxG3AXYHHxPAI8KAJ1YqUOwlxHd0au+tup1re2vy1fq3GE6ukG2XZSK7flG
+         YBTtNJo+W7CvhiK9P+b/wYbYBSaFP0hzHtXn2b3jfx42s7jbQICs3+EyS+JE7TeHbvj8
+         bhTz42uRNnS5z6WEprHvzxYbEoAtaUT6a9wy8kJ5BpgvV1NW5Ia8EIzKci4K191d0Rqz
+         MBcGClWF6Qs9kYhvvviB5l1c6yL9hYV2Q6E/e9Nmduex/iZxeMpxfjSXeqcbcbe7vjEw
+         f92g==
+X-Gm-Message-State: APjAAAXrPVGNOo6Fkx2jE//NbnwJAhLlH2TE2GphQDBNV2nrfNGoLj1r
+        9hTZvQKtfpSAGyrruJe4WQpbYstjMHc=
+X-Google-Smtp-Source: APXvYqzLXsF6w2xUhox2ex1h6rvuDdDtF/ILVJYVETLp5rg3aTjB58ta3pfCc+xmAu/XbDqGhN+TTA==
+X-Received: by 2002:adf:8183:: with SMTP id 3mr128267214wra.181.1564488752845;
+        Tue, 30 Jul 2019 05:12:32 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:29d3:6123:6d5f:2c04? ([2001:b07:6468:f312:29d3:6123:6d5f:2c04])
+        by smtp.gmail.com with ESMTPSA id a8sm51199553wma.31.2019.07.30.05.12.31
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 05:12:32 -0700 (PDT)
+Subject: Re: [RFC PATCH 05/16] RISC-V: KVM: Implement VCPU interrupts and
+ requests handling
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190729115544.17895-1-anup.patel@wdc.com>
+ <20190729115544.17895-6-anup.patel@wdc.com>
+ <9f9d09e5-49bc-f8e3-cfe1-bd5221e3b683@redhat.com>
+ <CAAhSdy3JZVEEnPnssALaxvCsyznF=rt=7-d5J_OgQEJv6cPhxQ@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <356e1044-b676-1028-3b80-a922acfae5b2@suse.com>
-Date:   Tue, 30 Jul 2019 15:11:46 +0300
+Message-ID: <66c4e468-7a69-31e7-778b-228908f0e737@redhat.com>
+Date:   Tue, 30 Jul 2019 14:12:15 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <69ef76a2-ebd6-956e-c611-2e742606ed95@arm.com>
+In-Reply-To: <CAAhSdy3JZVEEnPnssALaxvCsyznF=rt=7-d5J_OgQEJv6cPhxQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -91,142 +79,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 30.07.19 г. 14:03 ч., Valentin Schneider wrote:
-> On 29/07/2019 17:32, Valentin Schneider wrote:
->> On 29/07/2019 16:33, Catalin Marinas wrote:
-> [...]
->>> I'd say that's one of the pitfalls of PlusCal. The above is executed
->>> atomically, so you'd have the lock_state read and updated in the same
->>> action. Looking at the C patches, there is an
->>> atomic_read(&lock->readers) followed by a
->>> percpu_counter_inc(&lock->writers). Between these two, you can have
->>> "readers" becoming non-zero via a different CPU.
->>>
->>> My suggestion would be to use procedures with labels to express the
->>> non-atomicity of such sequences.
->>>
+On 30/07/19 14:00, Anup Patel wrote:
+> On Tue, Jul 30, 2019 at 4:47 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
 >>
+>> First, something that is not clear to me: how do you deal with a guest
+>> writing 1 to VSIP.SSIP?  I think that could lead to lost interrupts if
+>> you have the following sequence
+>>
+>> 1) guest writes 1 to VSIP.SSIP
+>>
+>> 2) guest leaves VS-mode
+>>
+>> 3) host syncs VSIP
+>>
+>> 4) user mode triggers interrupt
+>>
+>> 5) host reenters guest
+>>
+>> 6) host moves irqs_pending to VSIP and clears VSIP.SSIP in the process
 > 
-> FYI, with a very simple and stupid modification of the spec:
+> This reasoning also apply to M-mode firmware (OpenSBI) providing timer
+> and IPI services to HS-mode software. We had some discussion around
+> it in a different context.
+> (Refer, https://github.com/riscv/opensbi/issues/128)
 > 
-> ----->8-----
-> macro ReadUnlock()
-> {
->     reader_count := reader_count - 1;
->     \* Condition variable signal is "implicit" here
-> }
-> 
-> macro WriteUnlock()
-> {
->     writer_count := writer_count - 1;
->     \* Ditto on the cond var
-> }
-> 
-> procedure ReadLock()
-> {
-> add:
->     reader_count := reader_count + 1;
-> lock:
->     await writer_count = 0;
->     return;
-> }
-> 
-> procedure WriteLock()
-> {
-> add:
->     writer_count := writer_count + 1;
-> lock:
->     await reader_count = 0;
->     return;
-> };
-> -----8<-----
-> 
-> it's quite easy to trigger the case Paul pointed out in [1]:
+> The thing is SIP CSR is supposed to be read-only for any S-mode SW. This
+> means HS-mode/VS-mode SW modifications to SIP CSR should have no
+> effect.
 
-Yes, however, there was a bug in the original posting, in that
-btrfs_drw_try_write_lock should have called btrfs_drw_write_unlock
-instead of btrfs_drw_read_unlock if it sees that readers incremented
-while it has already incremented its percpu counter.
+Is it?  The privileged specification says
 
-Additionally the implementation doesn't await with the respective
-variable incremented. Is there a way to express something along the
-lines of :
+  Interprocessor interrupts are sent to other harts by implementation-
+  specific means, which will ultimately cause the SSIP bit to be set in
+  the recipient hart’s sip register.
 
+  All bits besides SSIP in the sip register are read-only.
 
-> procedure WriteLock()
-> {
-> add:
->     writer_count := writer_count + 1;
-> lock:
->     await reader_count = 0;
+Meaning that sending an IPI to self by writing 1 to sip.SSIP is
+well-defined.  The same should be true of vsip.SSIP while in VS mode.
 
-If we are about to wait then also decrement writer_count?  I guess the
-correct way to specify it would be:
+> Do you still an issue here?
 
-procedure WriteLock()
- {
+Do you see any issues in the pseudocode I sent?  It gets away with the
+spinlock and request so it may be a good idea anyway. :)
 
-     writer_count := writer_count + 1;
-     await reader_count = 0;
-     return;
- };
+Paolo
 
-
-Because the implementation (by using barriers and percpu counters
-ensures all of this happens as one atomic step?) E.g. before going to
-sleep we decrement the write unlock.
-
->     return;
-> };
-
+> Regards,
+> Anup
 > 
-> ----->8-----
-> Error: Deadlock reached.
-> Error: The behavior up to this point is:
-> State 1: <Initial predicate>
-> /\ stack = (<<reader, 1>> :> <<>> @@ <<writer, 1>> :> <<>>)
-> /\ pc = (<<reader, 1>> :> "loop" @@ <<writer, 1>> :> "loop_")
-> /\ writer_count = 0
-> /\ reader_count = 0
-> /\ lock_state = "idle"
-> 
-> State 2: <loop_ line 159, col 16 to line 164, col 72 of module specs>
-> /\ stack = ( <<reader, 1>> :> <<>> @@
->   <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
-> /\ pc = (<<reader, 1>> :> "loop" @@ <<writer, 1>> :> "add")
-> /\ writer_count = 0
-> /\ reader_count = 0
-> /\ lock_state = "idle"
-> 
-> State 3: <add line 146, col 14 to line 149, col 63 of module specs>
-> /\ stack = ( <<reader, 1>> :> <<>> @@
->   <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
-> /\ pc = (<<reader, 1>> :> "loop" @@ <<writer, 1>> :> "lock")
-> /\ writer_count = 1
-> /\ reader_count = 0
-> /\ lock_state = "idle"
-> 
-> State 4: <loop line 179, col 15 to line 184, col 71 of module specs>
-> /\ stack = ( <<reader, 1>> :> <<[pc |-> "read_cs", procedure |-> "ReadLock"]>> @@
->   <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
-> /\ pc = (<<reader, 1>> :> "add_" @@ <<writer, 1>> :> "lock")
-> /\ writer_count = 1
-> /\ reader_count = 0
-> /\ lock_state = "idle"
-> 
-> State 5: <add_ line 133, col 15 to line 136, col 64 of module specs>
-> /\ stack = ( <<reader, 1>> :> <<[pc |-> "read_cs", procedure |-> "ReadLock"]>> @@
->   <<writer, 1>> :> <<[pc |-> "write_cs", procedure |-> "WriteLock"]>> )
-> /\ pc = (<<reader, 1>> :> "lock_" @@ <<writer, 1>> :> "lock")
-> /\ writer_count = 1
-> /\ reader_count = 1
-> /\ lock_state = "idle"
-> -----8<-----
-> 
-> Which I think is pretty cool considering the effort that was required
-> (read: not much).
-> 
-> [1]: https://lore.kernel.org/lkml/20190607105251.GB28207@linux.ibm.com/
-> 
+>>
+>> Perhaps irqs_pending needs to be split in two fields, irqs_pending and
+>> irqs_pending_mask, and then you can do this:
+>>
+>> /*
+>>  * irqs_pending and irqs_pending_mask have multiple-producer/single-
+>>  * consumer semantics; therefore bits can be set in the mask without
+>>  * a lock, but clearing the bits requires vcpu_lock.  Furthermore,
+>>  * consumers should never write to irqs_pending, and should not
+>>  * use bits of irqs_pending that weren't 1 in the mask.
+>>  */
+>>
+>> int kvm_riscv_vcpu_set_interrupt(struct kvm_vcpu *vcpu, unsigned int irq)
+>> {
+>>         ...
+>>         set_bit(irq, &vcpu->arch.irqs_pending);
+>>         smp_mb__before_atomic();
+>>         set_bit(irq, &vcpu->arch.irqs_pending_mask);
+>>         kvm_vcpu_kick(vcpu);
+>> }
+>>
+>> int kvm_riscv_vcpu_unset_interrupt(struct kvm_vcpu *vcpu, unsigned int irq)
+>> {
+>>         ...
+>>         clear_bit(irq, &vcpu->arch.irqs_pending);
+>>         smp_mb__before_atomic();
+>>         set_bit(irq, &vcpu->arch.irqs_pending_mask);
+>> }
+>>
+>> static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+>> {
+>>         ...
+>>         WRITE_ONCE(vcpu->arch.irqs_pending_mask, 0);
+>> }
+>>
+>> and kvm_riscv_vcpu_flush_interrupts can leave aside VSIP bits that
+>> aren't in vcpu->arch.irqs_pending_mask:
+>>
+>>         if (atomic_read(&vcpu->arch.irqs_pending_mask)) {
+>>                 u32 mask, val;
+>>
+>>                 mask = xchg_acquire(&vcpu->arch.irqs_pending_mask, 0);
+>>                 val = READ_ONCE(vcpu->arch.irqs_pending) & mask;
+>>
+>>                 vcpu->arch.guest_csr.vsip &= ~mask;
+>>                 vcpu->arch.guest_csr.vsip |= val;
+>>                 csr_write(CSR_VSIP, vsip);
+>>         }
+>>
+>> Also, the getter of CSR_VSIP should call
+>> kvm_riscv_vcpu_flush_interrupts, while the setter should clear
+>> irqs_pending_mask.
+>>
+>> On 29/07/19 13:56, Anup Patel wrote:
+>>> +     kvm_make_request(KVM_REQ_IRQ_PENDING, vcpu);
+>>> +     kvm_vcpu_kick(vcpu);
+>>
+>> The request is not needed as long as kvm_riscv_vcpu_flush_interrupts is
+>> called *after* smp_store_mb(vcpu->mode, IN_GUEST_MODE) in
+>> kvm_arch_vcpu_ioctl_run.  This is the "request-less vCPU kick" pattern
+>> in Documentation/virtual/kvm/vcpu-requests.rst.  The smp_store_mb then
+>> orders the write of IN_GUEST_MODE before the read of irqs_pending (or
+>> irqs_pending_mask in my proposal above); in the producers, there is a
+>> dual memory barrier in kvm_vcpu_exiting_guest_mode(), ordering the write
+>> of irqs_pending(_mask) before the read of vcpu->mode.
+>>
+>> Similar to other VS* CSRs, I'd rather have a ONE_REG interface for VSIE
+>> and VSIP from the beginning as well.  Note that the VSIP setter would
+>> clear irqs_pending_mask, while the getter would call
+>> kvm_riscv_vcpu_flush_interrupts before reading.  It's up to userspace to
+>> ensure that no interrupt injections happen between the calls to the
+>> getter and the setter.
+>>
+>> Paolo
+>>
+>>> +             csr_write(CSR_VSIP, vcpu->arch.irqs_pending);
+>>> +             vcpu->arch.guest_csr.vsip = vcpu->arch.irqs_pending;
+>>> +     }
+>>
+
