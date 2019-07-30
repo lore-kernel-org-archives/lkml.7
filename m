@@ -2,170 +2,176 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC70C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99EDC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D94B206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A7E2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:24:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="tw8voost"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="kkaSFmy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388122AbfG3WWW (ORCPT
+        id S2388142AbfG3WYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 18:22:22 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:53899 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387904AbfG3WWV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 18:22:21 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UMMAhZ3400365
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 15:22:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UMMAhZ3400365
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564525331;
-        bh=DnWhyBKaua3wh3UQ/jQ38IYE5gCixys6e9btLg496H0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=tw8voostHl3Us3vK6P6gYHnRXi1ish3ZWWzZeh5lG3gUrH+G9Z+zyGCjKtqSrskEP
-         ojRYHXTe0NawuCOWwb1szp4mrbCQsIHgoOXwXdoE0hkTCugdERv/TbL3jq5Eq65MVZ
-         hUS3QMTkDPFwxSupUUOgUedBLH5Zb95D3Tr7Un0R+4KD4rX9AhspN72lT/QYjOl/iB
-         8MuhPuO7q4UVvENHSbbJHH8I0cobmHcs7Kv8BTQ5FCWmvUfX+g1PgTPuLsLVpe3H6K
-         vhZaZ8cZniXzxQq770G0A3pI85g7NXxYWs82WUI88qecOC+ZfChQllBsAFiDEAE1MZ
-         9FHGX22KanXpQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UMMAJc3400362;
-        Tue, 30 Jul 2019 15:22:10 -0700
-Date:   Tue, 30 Jul 2019 15:22:10 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-33a58980ff3cc5dbf0bb1b325746ac69223eda0b@git.kernel.org>
-Cc:     pebolle@tiscali.nl, luto@kernel.org, hpa@zytor.com,
-        vincenzo.frascino@arm.com, tglx@linutronix.de,
-        sean.j.christopherson@intel.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Reply-To: pebolle@tiscali.nl, hpa@zytor.com, luto@kernel.org,
-          tglx@linutronix.de, vincenzo.frascino@arm.com,
-          sean.j.christopherson@intel.com, linux-kernel@vger.kernel.org,
-          mingo@kernel.org
-In-Reply-To: <20190728131648.971361611@linutronix.de>
-References: <20190728131648.971361611@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/urgent] arm64: compat: vdso: Use legacy syscalls as
- fallback
-Git-Commit-ID: 33a58980ff3cc5dbf0bb1b325746ac69223eda0b
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 18:24:06 -0400
+Received: from mail-eopbgr700104.outbound.protection.outlook.com ([40.107.70.104]:59661
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387473AbfG3WYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 18:24:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=egCXrqNiZ8igttAKc4CJkbmuSJDLlFU1CJBj74CqIE4DaRf6XCT+L+2zMS2o5XAJ9k95hFST9AoHuh8OA6tu9Ie2oTj/e9wure4fHr0OZS8WoGMjasIkTor9A+eRdCniV5PJRWQJ2odTgqC4nkTgHXIqg+C2vcjdaC1Ekgb4sLDsrfZ/r+bKfSJteMA15DXUKeWSWf05eHF5faDbK+VpEQoP2qn8KwSdDG4BpPXt2luxAzVT6mApaE+TO5HRHfFlFgOi4yIQ4g2pkzqvSubPz3CjaBtTOV9bVVl7LIW4qthzl56QupeRT31d8h850F3Fnr4XTIhmdAgxH9oEF5aAsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q69qMVLCI2+3TDFzc3i2iuupur4atNeSoClNARI7zOs=;
+ b=QkPew7AYvWU9+iwMuvFVV/cKgTJ3hzJz3aRydhgVhxo7Cp8RpCe8uET6RY5VrS7qMTz3Y7qqhGujv3SXSCIgzNtH3PeAirDJjWxHyfO+LgFWnccK+vSmUl9kqb3h4XZapJFn6to10USeK6koJMu2spSohihGJsD200JQSrsKFRw3kxu5MnvDyHwl7pzpEc85vyHb1SWqrmaM8XGNka/BhyiOHtsR24hZpyjzAkwDP5zM/viTk1rXH7rTRmcp4c+L6gbt8bP0/dA3als1Qjp3mmFa5C+/Y5J83RKlYlHxiEOvsrzaFgLCHI2XgIQwIG2Cnoi+k/R+w8H3feNoEHRIbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q69qMVLCI2+3TDFzc3i2iuupur4atNeSoClNARI7zOs=;
+ b=kkaSFmy6Rdh/0qwtVwRsxOeuJ72p2iZjnTggclih5BwNEy6r52EaR5oofg+WrSZlrkQF2oX8WXmql9k8D7RtFG5O8hZQj7+eSkKGSiGJ2cONJ65PtlRjnQXzZVIz6iYTkbMQqrvNFRV419IXZ74yHARmU/Jb53nfane+sm7AVwY=
+Received: from MWHPR21MB0784.namprd21.prod.outlook.com (10.173.51.150) by
+ MWHPR21MB0158.namprd21.prod.outlook.com (10.173.52.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.2; Tue, 30 Jul 2019 22:23:23 +0000
+Received: from MWHPR21MB0784.namprd21.prod.outlook.com
+ ([fe80::7de1:e6c1:296:4e82]) by MWHPR21MB0784.namprd21.prod.outlook.com
+ ([fe80::7de1:e6c1:296:4e82%5]) with mapi id 15.20.2157.001; Tue, 30 Jul 2019
+ 22:23:23 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/7] clocksource/drivers: Suspend/resume Hyper-V
+ clocksource for hibernation
+Thread-Topic: [PATCH 2/7] clocksource/drivers: Suspend/resume Hyper-V
+ clocksource for hibernation
+Thread-Index: AQHVNhdGDMbLoRwEBkehuKx5BQIVXabj3iaQ
+Date:   Tue, 30 Jul 2019 22:23:23 +0000
+Message-ID: <MWHPR21MB0784EBA3631A184D23CF6260D7DC0@MWHPR21MB0784.namprd21.prod.outlook.com>
+References: <1562650084-99874-1-git-send-email-decui@microsoft.com>
+ <1562650084-99874-3-git-send-email-decui@microsoft.com>
+In-Reply-To: <1562650084-99874-3-git-send-email-decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-30T22:23:21.8288497Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3fee455b-ec39-47b6-8293-ddce2c066310;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 053f08b3-b1cd-4023-f5b3-08d7153c88df
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MWHPR21MB0158;
+x-ms-traffictypediagnostic: MWHPR21MB0158:|MWHPR21MB0158:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR21MB0158F1390C79942F710EF892D7DC0@MWHPR21MB0158.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
+x-forefront-prvs: 0114FF88F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(136003)(396003)(376002)(39860400002)(199004)(189003)(55016002)(102836004)(2501003)(25786009)(76116006)(66066001)(4326008)(66446008)(7696005)(6116002)(74316002)(14444005)(8990500004)(1511001)(10090500001)(229853002)(305945005)(3846002)(256004)(66476007)(15650500001)(316002)(66556008)(110136005)(64756008)(5660300002)(14454004)(68736007)(86362001)(52536014)(9686003)(486006)(446003)(11346002)(76176011)(66946007)(478600001)(2906002)(99286004)(10290500003)(22452003)(33656002)(71190400001)(7736002)(81156014)(53936002)(6246003)(6506007)(186003)(8936002)(8676002)(2201001)(71200400001)(26005)(81166006)(476003)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR21MB0158;H:MWHPR21MB0784.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gNjFFKwuf5/VATx/SWkC3HkwIBzPj4rgaymWhXUC3Pmmz0GpHBe5Wc8DqZdxqRpuzYgZ3dr5u1VX8RejShKaEH6rSIyYTNMWxrfvJxukjecAuXmQmJ6oppGxpLV8U1jNg41OkaqAnqffypdfqBYJxtD/cMokCw0jPJEG1BqgLJ1XEr0/wRCnGxcEtqevI8KNQgp6YiHY7xm/6TrboLcvqMIa7RO+qaf9ds61isoe8Kq4Fvp4lOW+GRIjaeL8c+zucHPRJHNBtK7VJ8ibPj+D0Dv0Twc5RzPNdgE1RLAsZLLqUdW+1a3JPZPlXgIhef5RswpYF5Dz4DPrtTUmYVqBVbu28arVmkGBxiM3GiAz9dezoVyN6qWXTJTUqDj8UzZ5GsOjIJl5elZPCKbZSqXCpCRZxPMl3dBqEC9vriNfC50=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 053f08b3-b1cd-4023-f5b3-08d7153c88df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 22:23:23.3554
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +m6zZkvaacfGghCPTcNclEgr/6/ecMGRZorOZuw83r311bpXU6heDy75UJGX6mgOgeeQYl4ZB7Jz7HJkGT2WNTb08jAtmNx+5Yq0+2vxw3I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  33a58980ff3cc5dbf0bb1b325746ac69223eda0b
-Gitweb:     https://git.kernel.org/tip/33a58980ff3cc5dbf0bb1b325746ac69223eda0b
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 28 Jul 2019 15:12:56 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 31 Jul 2019 00:09:10 +0200
+From: Dexuan Cui <decui@microsoft.com> Sent: Monday, July 8, 2019 10:29 PM
+>=20
+> This is needed for hibernation, e.g. when we resume the old kernel, we ne=
+ed
+> to disable the "current" kernel's TSC page and then resume the old kernel=
+'s.
+>=20
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  drivers/clocksource/hyperv_timer.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>=20
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyp=
+erv_timer.c
+> index ba2c79e6..41c31a7 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -237,12 +237,37 @@ static u64 read_hv_clock_tsc(struct clocksource *ar=
+g)
+>  	return read_hv_sched_clock_tsc();
+>  }
+>=20
+> +static void suspend_hv_clock_tsc(struct clocksource *arg)
+> +{
+> +	u64 tsc_msr;
+> +
+> +	/* Disable the TSC page */
+> +	hv_get_reference_tsc(tsc_msr);
+> +	tsc_msr &=3D ~BIT_ULL(0);
+> +	hv_set_reference_tsc(tsc_msr);
+> +}
+> +
+> +
+> +static void resume_hv_clock_tsc(struct clocksource *arg)
+> +{
+> +	phys_addr_t phys_addr =3D page_to_phys(vmalloc_to_page(tsc_pg));
+> +	u64 tsc_msr;
+> +
+> +	/* Re-enable the TSC page */
+> +	hv_get_reference_tsc(tsc_msr);
+> +	tsc_msr &=3D GENMASK_ULL(11, 0);
+> +	tsc_msr |=3D BIT_ULL(0) | (u64)phys_addr;
+> +	hv_set_reference_tsc(tsc_msr);
+> +}
+> +
+>  static struct clocksource hyperv_cs_tsc =3D {
+>  	.name	=3D "hyperv_clocksource_tsc_page",
+>  	.rating	=3D 400,
+>  	.read	=3D read_hv_clock_tsc,
+>  	.mask	=3D CLOCKSOURCE_MASK(64),
+>  	.flags	=3D CLOCK_SOURCE_IS_CONTINUOUS,
+> +	.suspend=3D suspend_hv_clock_tsc,
+> +	.resume	=3D resume_hv_clock_tsc,
+>  };
+>  #endif
+>=20
+> --
+> 1.8.3.1
 
-arm64: compat: vdso: Use legacy syscalls as fallback
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-The generic VDSO implementation uses the Y2038 safe clock_gettime64() and
-clock_getres_time64() syscalls as fallback for 32bit VDSO. This breaks
-seccomp setups because these syscalls might be not (yet) allowed.
-
-Implement the 32bit variants which use the legacy syscalls and select the
-variant in the core library.
-
-The 64bit time variants are not removed because they are required for the
-time64 based vdso accessors.
-
-Fixes: 00b26474c2f1 ("lib/vdso: Provide generic VDSO implementation")
-Reported-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reported-by: Paul Bolle <pebolle@tiscali.nl>
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Link: https://lkml.kernel.org/r/20190728131648.971361611@linutronix.de
-
----
- arch/arm64/include/asm/vdso/compat_gettimeofday.h | 40 +++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-index f4812777f5c5..c50ee1b7d5cd 100644
---- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-@@ -16,6 +16,8 @@
- 
- #define VDSO_HAS_CLOCK_GETRES		1
- 
-+#define VDSO_HAS_32BIT_FALLBACK		1
-+
- static __always_inline
- int gettimeofday_fallback(struct __kernel_old_timeval *_tv,
- 			  struct timezone *_tz)
-@@ -51,6 +53,23 @@ long clock_gettime_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
- 	return ret;
- }
- 
-+static __always_inline
-+long clock_gettime32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-+{
-+	register struct old_timespec32 *ts asm("r1") = _ts;
-+	register clockid_t clkid asm("r0") = _clkid;
-+	register long ret asm ("r0");
-+	register long nr asm("r7") = __NR_compat_clock_gettime;
-+
-+	asm volatile(
-+	"	swi #0\n"
-+	: "=r" (ret)
-+	: "r" (clkid), "r" (ts), "r" (nr)
-+	: "memory");
-+
-+	return ret;
-+}
-+
- static __always_inline
- int clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
- {
-@@ -72,6 +91,27 @@ int clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
- 	return ret;
- }
- 
-+static __always_inline
-+int clock_getres32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-+{
-+	register struct old_timespec32 *ts asm("r1") = _ts;
-+	register clockid_t clkid asm("r0") = _clkid;
-+	register long ret asm ("r0");
-+	register long nr asm("r7") = __NR_compat_clock_getres;
-+
-+	/* The checks below are required for ABI consistency with arm */
-+	if ((_clkid >= MAX_CLOCKS) && (_ts == NULL))
-+		return -EINVAL;
-+
-+	asm volatile(
-+	"       swi #0\n"
-+	: "=r" (ret)
-+	: "r" (clkid), "r" (ts), "r" (nr)
-+	: "memory");
-+
-+	return ret;
-+}
-+
- static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
- {
- 	u64 res;
