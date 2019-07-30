@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D718C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760F0C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0458C217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1F421726
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOaRnw02"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VzijVnAM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730864AbfG3Bua (ORCPT
+        id S1730905AbfG3Bui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:50:30 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34278 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730844AbfG3Bu2 (ORCPT
+        Mon, 29 Jul 2019 21:50:38 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46338 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730861AbfG3Bua (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:50:28 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so22944751pgc.1;
-        Mon, 29 Jul 2019 18:50:27 -0700 (PDT)
+        Mon, 29 Jul 2019 21:50:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c3so5806993pfa.13;
+        Mon, 29 Jul 2019 18:50:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=i+LRMSNrj6ysytmm99Rc/BfD1o0cWeoJWbC6wV2pjKo=;
-        b=AOaRnw02TsiwbCxYhAlzGLg8nzDQpMpWKxAHBFB2a2RvzGYWBZFg5mRgPqCx4Vu/Ln
-         F7AFryz6gakJOc7pt1+Mezu2nTV+CoYiOL0kEEDEplGq85bmjpgLLccmlg+RkfTCu6vA
-         j2pCVHiq3XiXaquRa8YxS9yV/LSwebuWDnGqey3jTN7oa1PMiu5QXpqxjPR5zvMOg8hH
-         LAev1+8dhbQDkV1bVk7/YLZuJXDimbINKT82EOpErLSxfD/z9gYMmjcue8T+bzhmVtTr
-         DC5m/iDWQFAem/S70vYShqEKwYB81IyQocXsx9QoCdZfX8oI2+osvKNsj2t6+8Uh+4ky
-         im8w==
+        bh=rtfYQ+Fr6rn8tMWD9jomVyK2aw/48rQfrLzbB373D0w=;
+        b=VzijVnAMb26+mnUZVJWAQvsMW5OwVnBsB2HGhcI+BaJFihiv7fy/RAZEjj88lmWd2i
+         2cwtl7p8aJB/hgOaT3EBy0IHyWOMiAPVLBa1jmAp4z+hsyRy0gXr59wz4YbB0fFQ5hfE
+         Itj/SXB7EjUSvoB0mxK1aiStQEenb/tK1RwHh/V7sBB8X1H2Xthiaqzfpzd6CxqSJ2c+
+         4G+aiSEKSOMWwj4t6dr6HMxajpvcIf7Pb/DIO0t9MbJNfmAQ9t5/boG4vGDkogUTPanp
+         ddOycjrYvsR+vnGXjq9Q1q/OIQ4iNAa0xUqmBUjyoAsyg7Grj4Ao9TnymNj5mcSSTaJD
+         6a3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=i+LRMSNrj6ysytmm99Rc/BfD1o0cWeoJWbC6wV2pjKo=;
-        b=Ly8bwe+btewquGWf+6h6tkbJvPIp1+OnrrDpRS21jjiibwOS8/DJMs2MITkt2CLJsq
-         SOuh6Nb7N+WGYg7wTUhQ4/a2niv7KNY3ZfcUXhizWAyo3IrutQ6/n8vs5VCRkSpGh8AU
-         HG8XLAjo7qDSLrigGq7u3KnVa1BKYgLWJPB0JynFVS3kGSHS/X43iO1A1Ivv8/eT0c5b
-         BYtfgvLOGhXe61wsy0IC11qOAgm7EktchMJ/bJCNd0lkhaq3GFuq9c0gVak/jzpAZP+p
-         G7kyicLuPIGgIClOAgFpEw/2PhlTHdithobliDo3I0t1LJaN7nmk3skJs16NouBvkZM8
-         EFzw==
-X-Gm-Message-State: APjAAAWvDNFt6U2iZRpPKcWe/uOC13J2Zm2xS34OMKXfEe53hz2lSdHi
-        KyrvMd8vdAsdsWLkJFTL7cQ=
-X-Google-Smtp-Source: APXvYqzh6lY3nSUp4F9grKKAti8Q66DXm71R/Zu8sXqaO+Na/2RIljxHn26XwhCIyD2K77n58g3ICg==
-X-Received: by 2002:a63:b747:: with SMTP id w7mr53077423pgt.205.1564451427431;
-        Mon, 29 Jul 2019 18:50:27 -0700 (PDT)
+        bh=rtfYQ+Fr6rn8tMWD9jomVyK2aw/48rQfrLzbB373D0w=;
+        b=pf+UJwJ8sqCzSMituVewd1Jbebrn72vkKXlZs8YhpfrkIPsrgU20ybsbiH5KX6eChc
+         hhgqlnXlSEoifAKTgPIqnWqdWW/qtKQ85HO9avHoeRy9MBs/y/mi30pLIycVmOHUQnUy
+         GM94zPMWMAU0z6cxW02iWBPxy6ApUGdpB3Nj2Q/X/G0zVyE/mg9jdQ/mmpJGHM4brwlI
+         DAOp6OHPRxiaIdWpkwjHDduKqxdtlR9E1NUI9NO00oYZ2zRAgXVeoRQOBj47bQgRPeOq
+         ez2qGOZ2hLySN80S+wCeQ4PqIuq2UFDlodD94R4HJIw3EE/MvXMfhpjWhx9Tmh0Iy+EX
+         iy9g==
+X-Gm-Message-State: APjAAAUyBaKNnwoVkfXQePD7H+8vFyHXWz8arEUosjaX+uuiaOtqTDFY
+        0AIlQiYjD69mY93fmCqNOB0=
+X-Google-Smtp-Source: APXvYqwfwoV+k3jPwNM9uVpzpHuXPBoPSprQG+/gn8yAYSq3waSIrl+s19WGxiWLBVTtshsVUBmtxA==
+X-Received: by 2002:a65:41c6:: with SMTP id b6mr49714185pgq.269.1564451429776;
+        Mon, 29 Jul 2019 18:50:29 -0700 (PDT)
 Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.50.26
+        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.50.28
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 18:50:27 -0700 (PDT)
+        Mon, 29 Jul 2019 18:50:29 -0700 (PDT)
 From:   Deepa Dinamani <deepa.kernel@gmail.com>
 To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, arnd@arndb.de,
-        y2038@lists.linaro.org, ericvh@gmail.com, lucho@ionkov.net,
-        asmadeus@codewreck.org, v9fs-developer@lists.sourceforge.net
-Subject: [PATCH 07/20] 9p: Fill min and max timestamps in sb
-Date:   Mon, 29 Jul 2019 18:49:11 -0700
-Message-Id: <20190730014924.2193-8-deepa.kernel@gmail.com>
+        y2038@lists.linaro.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH 09/20] ext4: Initialize timestamps limits
+Date:   Mon, 29 Jul 2019 18:49:13 -0700
+Message-Id: <20190730014924.2193-10-deepa.kernel@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190730014924.2193-1-deepa.kernel@gmail.com>
 References: <20190730014924.2193-1-deepa.kernel@gmail.com>
@@ -72,42 +72,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct p9_wstat and struct p9_stat_dotl indicate that the
-wire transport uses u32 and u64 fields for timestamps.
-Fill in the appropriate limits to avoid inconsistencies in
-the vfs cached inode times when timestamps are outside the
-permitted range.
+ext4 has different overflow limits for max filesystem
+timestamps based on the extra bytes available.
 
-Note that the upper bound for V9FS_PROTO_2000L is retained as S64_MAX.
-This is because that is the upper bound supported by vfs.
+The timestamp limits are calculated according to the
+encoding table in
+a4dad1ae24f85i(ext4: Fix handling of extended tv_sec):
+
+* extra  msb of                         adjust for signed
+* epoch  32-bit                         32-bit tv_sec to
+* bits   time    decoded 64-bit tv_sec  64-bit tv_sec      valid time range
+* 0 0    1    -0x80000000..-0x00000001  0x000000000   1901-12-13..1969-12-31
+* 0 0    0    0x000000000..0x07fffffff  0x000000000   1970-01-01..2038-01-19
+* 0 1    1    0x080000000..0x0ffffffff  0x100000000   2038-01-19..2106-02-07
+* 0 1    0    0x100000000..0x17fffffff  0x100000000   2106-02-07..2174-02-25
+* 1 0    1    0x180000000..0x1ffffffff  0x200000000   2174-02-25..2242-03-16
+* 1 0    0    0x200000000..0x27fffffff  0x200000000   2242-03-16..2310-04-04
+* 1 1    1    0x280000000..0x2ffffffff  0x300000000   2310-04-04..2378-04-22
+* 1 1    0    0x300000000..0x37fffffff  0x300000000   2378-04-22..2446-05-10
+
+Note that the time limits are not correct for deletion times.
 
 Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: ericvh@gmail.com
-Cc: lucho@ionkov.net
-Cc: asmadeus@codewreck.org
-Cc: v9fs-developer@lists.sourceforge.net
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Cc: tytso@mit.edu
+Cc: adilger.kernel@dilger.ca
+Cc: linux-ext4@vger.kernel.org
 ---
- fs/9p/vfs_super.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/ext4/ext4.h  |  4 ++++
+ fs/ext4/super.c | 17 +++++++++++++++--
+ 2 files changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/fs/9p/vfs_super.c b/fs/9p/vfs_super.c
-index 08112fbcaece..ca243e658d71 100644
---- a/fs/9p/vfs_super.c
-+++ b/fs/9p/vfs_super.c
-@@ -69,8 +69,12 @@ v9fs_fill_super(struct super_block *sb, struct v9fs_session_info *v9ses,
- 	if (v9fs_proto_dotl(v9ses)) {
- 		sb->s_op = &v9fs_super_ops_dotl;
- 		sb->s_xattr = v9fs_xattr_handlers;
--	} else
-+	} else {
- 		sb->s_op = &v9fs_super_ops;
-+		sb->s_time_max = U32_MAX;
-+	}
-+
-+	sb->s_time_min = 0;
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 1cb67859e051..3f13cf12ae7f 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1631,6 +1631,10 @@ static inline void ext4_clear_state_flags(struct ext4_inode_info *ei)
  
- 	ret = super_setup_bdi(sb);
- 	if (ret)
+ #define EXT4_GOOD_OLD_INODE_SIZE 128
+ 
++#define EXT4_EXTRA_TIMESTAMP_MAX	(((s64)1 << 34) - 1  + S32_MIN)
++#define EXT4_NON_EXTRA_TIMESTAMP_MAX	S32_MAX
++#define EXT4_TIMESTAMP_MIN		S32_MIN
++
+ /*
+  * Feature set definitions
+  */
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 4079605d437a..3ea2d60f33aa 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4035,8 +4035,21 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 			       sbi->s_inode_size);
+ 			goto failed_mount;
+ 		}
+-		if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE)
+-			sb->s_time_gran = 1 << (EXT4_EPOCH_BITS - 2);
++		/*
++		 * i_atime_extra is the last extra field available for [acm]times in
++		 * struct ext4_inode. Checking for that field should suffice to ensure
++		 * we have extra space for all three.
++		 */
++		if (sbi->s_inode_size >= offsetof(struct ext4_inode, i_atime_extra) +
++			sizeof(((struct ext4_inode *)0)->i_atime_extra)) {
++			sb->s_time_gran = 1;
++			sb->s_time_max = EXT4_EXTRA_TIMESTAMP_MAX;
++		} else {
++			sb->s_time_gran = NSEC_PER_SEC;
++			sb->s_time_max = EXT4_NON_EXTRA_TIMESTAMP_MAX;
++		}
++
++		sb->s_time_min = EXT4_TIMESTAMP_MIN;
+ 	}
+ 
+ 	sbi->s_desc_size = le16_to_cpu(es->s_desc_size);
 -- 
 2.17.1
 
