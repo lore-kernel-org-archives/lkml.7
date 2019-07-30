@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C17AC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF53C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12275206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25866206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UjPcaR49"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAghT0ws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732838AbfG3Qca (ORCPT
+        id S1728217AbfG3Qce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:32:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40452 "EHLO
+        Tue, 30 Jul 2019 12:32:34 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45979 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfG3QcY (ORCPT
+        with ESMTP id S1732835AbfG3Qca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:32:24 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r1so66466211wrl.7;
-        Tue, 30 Jul 2019 09:32:23 -0700 (PDT)
+        Tue, 30 Jul 2019 12:32:30 -0400
+Received: by mail-wr1-f66.google.com with SMTP id f9so66460177wre.12;
+        Tue, 30 Jul 2019 09:32:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1OA59L/PDO/fIoCl0NQYE6ljbPRlOkug9V9TGpbxlIc=;
-        b=UjPcaR49D0raHN5n5LpUrIqLVIYxGuUgcwKIDR20hVmAi42K9J3Teum4Dv8hqXp4tT
-         sXOgPorkDuBqQmL7Yd44zH02PTJrqOu7El6TvYdo8KaOBvf1Qa9MIghdVG4OtX1st45d
-         U2bP4rcMIten7LhVc7K6cy5G8rMFJy3w5U4dprMmCMGXfjPEVK/4QFwgr9dTLBoMElbq
-         Tpa5+m03HzVrT1bM2I7m9+wv+D9Fz52UeeF9i6kIocwZKlAjbhLNenr86ggWwM6AJKoW
-         UD+xuD+s6viJQiekJKb8f08MrYVnJzGzjq747zXbfzfBXE8vAxrvjPjsUPDojTbentmc
-         aLJQ==
+        bh=8iZqkZqXjTfAXjJSJnLg5xR1FkU/5dVzGt00ebVBBCo=;
+        b=AAghT0wsfPhV/j6U/ghiBwRe0n/heMMEDTKhX2F4Ap9PQ0gtxj9cOQMPDtVpf1ZA/Y
+         krISxNXiKhB/09kR6KwRsOdNFTzIcf3UjK0jRxbHmy3fvqHoG5hp+gxz4B+mnY4IKcW3
+         jTy43gQNCP4Tdml8w/wbqZo5jKjqwBHV2pDkpuhXsjiwXWypGHf0IsafhHKAKneOTrDs
+         VSkA7xIUDqmMl9Babs+F8HtxIR2AFJhFKqd5J979soBf8Q8+3MTnkFuYYokY/4X50q2K
+         O0yupl8qcgZoBfAe2jx0SUzeRYngNIL0PhuDadvxR8YwGhx/oR9FGB+u45y32nW7Mp1r
+         /1xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1OA59L/PDO/fIoCl0NQYE6ljbPRlOkug9V9TGpbxlIc=;
-        b=XQPnX1+BYb4OC08bytCwkAwokaaUiHyhpMaVVsLgZax4DcRs8lSIgHGNWObNGtq0/7
-         OK/vR+J0kEDc4mzeF7U6E7EioZxkd4YAhTQf5icJGzdFERO8qVMKAefhO3Mbhhfs7Z48
-         tUI94U4NhsXJjMgB1A4MBdxngUTf55sSpb8vDdVFxl3vo3olYAJnfVAKQTPX3eDtLxTk
-         gbbrCR2M5S4n4CyUZ/Bm1slXI3V7GDRVffyyMLzakq52UkKaUlmzjjcaCK3DPNI/r3lM
-         BuQCAbUjNNVOpHBYdprKmrvBqAldhT0J0jC2JjUXJk+yvJcKaOAPGjZEuzRnlixe5+Dm
-         wGig==
-X-Gm-Message-State: APjAAAXGWX7drDkAasrVPL/246iUmTKDTc5/Tq1+Lh43mv+D9J2NXqtu
-        vzFtjubGgJkMYSTnkYk9swE=
-X-Google-Smtp-Source: APXvYqy55VJPIwBbpJxEJ+BkBJhd8VlXEglnPIl5cXskz3bIVLr622tIHUGMZfgTFWN6OuXcGhe+2w==
-X-Received: by 2002:adf:dd0f:: with SMTP id a15mr40299198wrm.265.1564504342627;
-        Tue, 30 Jul 2019 09:32:22 -0700 (PDT)
+        bh=8iZqkZqXjTfAXjJSJnLg5xR1FkU/5dVzGt00ebVBBCo=;
+        b=B0i39xTkpg2LJKgK5ft855jvBqJvSWNlL3myr4jMPSKeVohNc6qY6L3lAd78c4RpbO
+         RpJddkxfh8XG6akU+HmNnM5Jq6q0C5ac/sm5LOQSfu1RiNnfjuJQuQgYbnSYqdbBf5oR
+         Iqcuj6aZImD4vfmOUS2g9qx3cnwGeT77APu+LUT+GQj3veQuChqjiZMaKaNhxhc8yHbB
+         WZfW9JyN/Sd1M7sXR/uoOUOkL7356o1ePtn+L1UPYrFx0WwLme3wYBn367hLeuyEen7D
+         TQO/IeLbzi4UQlI4m1VEMFDFjH1vzm6sWZN+HgwBqpVbn36Zm5k8l1KC27fIo9qnEKeL
+         4z/Q==
+X-Gm-Message-State: APjAAAU1xzFcgIKaOKIflbCllQ0uj3QiCoW/f/c3OMqdo6OHwJxNuI3W
+        SHaO+y1Nir6xjHNTBm//lic=
+X-Google-Smtp-Source: APXvYqyEu3zYvYk5Z8X5j1eud/4T36h60HChVLwgzdl/ZXaiN1ilLV6HKBPnYOMEz55QfG+dw+3DXA==
+X-Received: by 2002:adf:e552:: with SMTP id z18mr131981622wrm.45.1564504349166;
+        Tue, 30 Jul 2019 09:32:29 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id c65sm64835175wma.44.2019.07.30.09.32.21
+        by smtp.gmail.com with ESMTPSA id c65sm64835175wma.44.2019.07.30.09.32.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 09:32:22 -0700 (PDT)
+        Tue, 30 Jul 2019 09:32:28 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 03/20] PM / devfreq: tegra30: Handle possible round-rate error
-Date:   Tue, 30 Jul 2019 19:22:19 +0300
-Message-Id: <20190730162236.6063-4-digetx@gmail.com>
+Subject: [PATCH v5 08/20] PM / devfreq: tegra30: Ensure that target freq won't overflow
+Date:   Tue, 30 Jul 2019 19:22:24 +0300
+Message-Id: <20190730162236.6063-9-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730162236.6063-1-digetx@gmail.com>
 References: <20190730162236.6063-1-digetx@gmail.com>
@@ -79,58 +79,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EMC clock rate rounding technically could fail, hence let's handle
-the error cases properly.
+We already had few integer overflow bugs, let's limit the freq for
+consistency.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/devfreq/tegra30-devfreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 8be6a33beb9c..bfee9d43de1e 100644
+index 70dce58212a4..ca499368ee81 100644
 --- a/drivers/devfreq/tegra30-devfreq.c
 +++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -592,8 +592,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 	struct tegra_devfreq_device *dev;
- 	struct tegra_devfreq *tegra;
- 	struct devfreq *devfreq;
--	unsigned long rate;
- 	unsigned int i;
-+	long rate;
- 	int err;
+@@ -430,7 +430,7 @@ static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
+ 	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD + dev->boost_freq;
+ 	target_freq = tegra_actmon_account_cpu_freq(tegra, dev, target_freq);
  
- 	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
-@@ -650,8 +650,14 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+-	return target_freq;
++	return min(target_freq, tegra->max_freq);
+ }
  
- 	reset_control_deassert(tegra->reset);
- 
--	tegra->max_freq = clk_round_rate(tegra->emc_clock, ULONG_MAX) / KHZ;
-+	rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
-+	if (rate < 0) {
-+		dev_err(&pdev->dev, "Failed to round clock rate: %ld\n", rate);
-+		return rate;
-+	}
-+
- 	tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
-+	tegra->max_freq = rate / KHZ;
- 
- 	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
- 		dev = tegra->devices + i;
-@@ -662,6 +668,13 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
- 		rate = clk_round_rate(tegra->emc_clock, rate);
- 
-+		if (rate < 0) {
-+			dev_err(&pdev->dev,
-+				"Failed to round clock rate: %ld\n", rate);
-+			err = rate;
-+			goto remove_opps;
-+		}
-+
- 		err = dev_pm_opp_add(&pdev->dev, rate, 0);
- 		if (err) {
- 			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
+ static irqreturn_t actmon_thread_isr(int irq, void *data)
 -- 
 2.22.0
 
