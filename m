@@ -2,173 +2,91 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B669C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00369C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87782087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C07EC208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbfG3U0Y (ORCPT
+        id S1728277AbfG3U3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:26:24 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:37955 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727579AbfG3U0Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:26:24 -0400
-Received: by mail-vs1-f65.google.com with SMTP id k9so44524634vso.5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 13:26:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=8d2fnAS3OQ8PaLiBpAHqC1O32vTJ8VVqG3Mu89Cd9xg=;
-        b=Wau2RAXwdBM1bkPTJWuXbM4MWOB5JrrgyAHPgE5CQaC47LuKA+/Rh+Cxo/htbZiEo7
-         9zVV0bw4v+xRzQCYGpovUknI0jqLmf1XTsyVEF57Ojg5Ngy7b0brO47GwZsKa3g5+BWy
-         bWP3btwrB9GkSulcbKHQySmlLmlHu4h/CxuzJ7g0V5O411z5Qv/MvnjMnCZgDHbHQ+SO
-         L7rvS2tEg3nYiqSHUYtAVFkg657OJDg/VcwanbikA1rFfXlWLYPox7QcsxIBT6P35g/Y
-         No/onxBoHK/0X6ZQ0z1fcuz+2uUo91xbgVNsAnerBfGUpBvGweYWWDdHchEqvS41CC+k
-         LgYA==
-X-Gm-Message-State: APjAAAWDz0bYwqp5JuA90u9WZcxEeeuyPnc7wssuOojHnNatrRkQj7hs
-        qxeHFASitvQ5P+1rVM7t1TvYqw==
-X-Google-Smtp-Source: APXvYqzyCo2qGnWyQ/ivv1uIJQf/Mt6X1RWsrcRtAPwyboCMGKiKHlKAesrmakCIGRcWn0A8Jr4gEw==
-X-Received: by 2002:a67:f495:: with SMTP id o21mr74811084vsn.54.1564518383217;
-        Tue, 30 Jul 2019 13:26:23 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id t200sm28124441vke.5.2019.07.30.13.26.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 13:26:22 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 16:26:17 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     =?utf-8?B?5p2O6I+y?= <lifei.shirley@bytedance.com>
-Cc:     virtio-dev@lists.oasis-open.org, linux-kernel@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        Pawel Moll <pawel.moll@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Fam Zheng <zhengfeiran@bytedance.com>
-Subject: Re: [External Email] Re: [PATCH v1 0/2] virtio-mmio: support
- multiple interrupt vectors
-Message-ID: <20190730162337-mutt-send-email-mst@kernel.org>
-References: <20190719133135.32418-1-lifei.shirley@bytedance.com>
- <20190719110852-mutt-send-email-mst@kernel.org>
- <CA+=e4K5rn7-avNT3e07dfXkh=ZO2+RvthjqW15gZv-uFYrCs3A@mail.gmail.com>
- <20190722043707-mutt-send-email-mst@kernel.org>
- <CA+=e4K7ViADDq84i6ve1+F1=CrgfQJrY-O8LeBVV7eP4gUg21Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+=e4K7ViADDq84i6ve1+F1=CrgfQJrY-O8LeBVV7eP4gUg21Q@mail.gmail.com>
+        Tue, 30 Jul 2019 16:29:16 -0400
+Received: from gate.crashing.org ([63.228.1.57]:45202 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728245AbfG3U3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 16:29:16 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6UKSwii027076;
+        Tue, 30 Jul 2019 15:28:58 -0500
+Message-ID: <2030a028664a9af9e96fffca3ab352faf1f739e5.camel@kernel.crashing.org>
+Subject: Re: [PATCH v3] nvme-pci: Support shared tags across queues for
+ Apple 2018 controllers
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul Pawlowski <paul@mrarm.io>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Date:   Tue, 30 Jul 2019 13:28:57 -0700
+In-Reply-To: <20190730153044.GA13948@localhost.localdomain>
+References: <b1f9bdf0294b8d87d292de3c7462c8e99551b02d.camel@kernel.crashing.org>
+         <20190730153044.GA13948@localhost.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 09:43:18PM +0800, 李菲 wrote:
-> On Mon, Jul 22, 2019 at 4:39 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Mon, Jul 22, 2019 at 11:22:02AM +0800, 李菲 wrote:
-> > > On Fri, Jul 19, 2019 at 11:14 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > >
-> > > > On Fri, Jul 19, 2019 at 09:31:33PM +0800, Fei Li wrote:
-> > > > > Hi,
-> > > > >
-> > > > > This patch series implements multiple interrupt vectors support for
-> > > > > virtio-mmio device. This is especially useful for multiqueue vhost-net
-> > > > > device when using firecracker micro-vms as the guest.
-> > > > >
-> > > > > Test result:
-> > > > > With 8 vcpus & 8 net queues set, one vhost-net device with 8 irqs can
-> > > > > receive 9 times more pps comparing with only one irq:
-> > > > > - 564830.38 rxpck/s for 8 irqs on
-> > > > > - 67665.06 rxpck/s for 1 irq on
-> > > > >
-> > > > > Please help to review, thanks!
-> > > > >
-> > > > > Have a nice day
-> > > > > Fei
-> > > >
-> > > >
-> > > > Interesting. The spec says though:
-> > > >
-> > > >         4.2.3.4
-> > > >         Notifications From The Device
-> > > >         The memory mapped virtio device is using a single, dedicated interrupt signal, which is asserted when at
-> > > >         least one of the bits described in the description of InterruptStatus is set. This is how the device sends a
-> > > >         used buffer notification or a configuration change notification to the device.
-> > > >
-> > > Yes, the spec needs to be updated if we want to use mult-irqs.
-> > > >
-> > > > So I'm guessing we need to change the host/guest interface?
-> > > Just to confirm, does the "the host/guest interface" you mentioned mean how to
-> > > pass the irq information from the user space tool to guest kernel?
-> > > In this patch, we do this by passing the [irq_start, irq_end]
-> > > interface via setting guest
-> > > kernel command line, that is done in vm_cmdline_set().
-> > > Also there is another way to do this: add two new registers describing irq info
-> > > (irq_start & irq_end OR irq_start & irq_numbers) to the virtio config space.
-> > >
-> > > Which one do you prefer?
-> >
-> > I'm not sure - so far irq was passed on the command line, right?
-> Yes.
-> >
-> > The first step in implementing any spec change would be to update qemu
-> > code to virtio 1. Which is not a huge project but so far no one
-> > bothered.
-> Emm, actually I only did the test with using firecracker to start a
-> micro-vm, but without qemu.
-> To be honest, the reason why implementing multi-irq on virtio-mmio is
-> mainly because the
-> current firecracker using virtio-mmio device and it has no pci thing,
-> thus no msi/msix to
-> handle the interruptions.
-> On the other hand, considering pci is well supported in qemu, I am
-> wondering whether we
-> still need this. If needed, we would like to do this. :)
+On Tue, 2019-07-30 at 09:30 -0600, Keith Busch wrote:
+> On Fri, Jul 19, 2019 at 03:31:02PM +1000, Benjamin Herrenschmidt wrote:
+> > From 8dcba2ef5b1466b023b88b4eca463b30de78d9eb Mon Sep 17 00:00:00 2001
+> > From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > Date: Fri, 19 Jul 2019 15:03:06 +1000
+> > Subject: 
+> > 
+> > Another issue with the Apple T2 based 2018 controllers seem to be
+> > that they blow up (and shut the machine down) if there's a tag
+> > collision between the IO queue and the Admin queue.
+> > 
+> > My suspicion is that they use our tags for their internal tracking
+> > and don't mix them with the queue id. They also seem to not like
+> > when tags go beyond the IO queue depth, ie 128 tags.
+> > 
+> > This adds a quirk that marks tags 0..31 of the IO queue reserved
+> > 
+> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > ---
 > 
-> Have a nice day, thanks
-> Fei
+> One problem is that we've an nvme parameter, io_queue_depth, that a user
+> could set to something less than 32, and then you won't be able to do
+> any IO. I'd recommend enforce the admin queue to QD1 for this device so
+> that you have more potential IO tags.
+
+So I had a look and it's not that trivial. I would have to change
+a few things that use constants for the admin queue depth, such as
+the AEN tag etc...
+
+For such a special case, I am tempted instead to do the much simpler:
+
+	if (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS) {
+		if (dev->q_depth < (NVME_AQ_DEPTH + 2))
+			dev->q_depth = NVME_AQ_DEPTH + 2;
+	}
+
+In nvme_pci_enable() next to the existing q_depth hackery for other
+controllers.
+
+Thoughts ?
+
+Cheers,
+Ben.
 
 
-Sergio Lopez is now working on updating mmio to v1 support in qemu.
-Maybe get in touch with him on how he looks at this extension.
-
-Not asking you to work on qemu, but it makes sense
-to get an ack for guest bits from another popular hypervisor.
-
-
-
-> >
-> >
-> > > > If true pls cc virtio-dev.
-> > > Sure.
-> > > >
-> > > > Also, do we need to update dt bindings documentation?
-> > > You mean the following doc? Sure. :)
-> > > https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/virtio/mmio.txt
-> > >
-> > > Thanks for the review!
-> > >
-> > > Have a nice day
-> > > Fei
-> > >
-> > >
-> > > >
-> > > > >
-> > > > > Fam Zheng (1):
-> > > > >   virtio-mmio: Process vrings more proactively
-> > > > >
-> > > > > Fei Li (1):
-> > > > >   virtio-mmio: support multiple interrupt vectors
-> > > > >
-> > > > >  drivers/virtio/virtio_mmio.c | 238 +++++++++++++++++++++++++++++++++++--------
-> > > > >  1 file changed, 196 insertions(+), 42 deletions(-)
-> > > > >
-> > > > > --
-> > > > > 2.11.0
