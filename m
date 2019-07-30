@@ -2,214 +2,186 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCDDC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2FBC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5153206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549D3205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:08:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ksm1hmjJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aswEem68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfG3HGb (ORCPT
+        id S1727026AbfG3HIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:06:31 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:48809 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726736AbfG3HGb (ORCPT
+        Tue, 30 Jul 2019 03:08:24 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34339 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfG3HIX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:06:31 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id CC441210D8;
-        Tue, 30 Jul 2019 03:06:29 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 30 Jul 2019 03:06:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=hdNVC4
-        8HSwrLeKagS8o1LvoZvG2m4JAu7E4slsc9mnQ=; b=Ksm1hmjJryH7wG44lWNn/t
-        QG1EYxG+r2Xs9HfNAj8UOHoA9hvXLKaXnXMROP60tkrYhiuIMB0FhUPPj5/wPuzK
-        +y3QfDqhnjp9MmXgKBLL+n9j1seSm22TzpGL0x3z7UfoT3pIA/P+rw0QSgH3nFGs
-        MP4fwqdPgFYXFMNcAiueQgrdagZDEmy7j64wyp3FFMHHZ8pXRHkrspLkoq549X+V
-        GiFjwuBQeP+/+jkoB42sYEH7HswPwx8fv7kJ6G/4uWUu3h64FtYIUvk6ITF9upgo
-        MMGP1+DHXAixwTtVgyJL0d2fmTmtE9nruAwLfWc01zwjqTmUzbLmk6zxPwDognxQ
-        ==
-X-ME-Sender: <xms:dew_XeoEds36CxyGYHRLSj1AExtwXm92lZSKjbzLJxajycayrW3hmQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledvgdduudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepkfguohcu
-    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecukfhppedule
-    efrdegjedrudeihedrvdehudenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghh
-    sehiughoshgthhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:dew_XSLq7D2c9mkMsOQHq7JMb5EPszk7vwGv_rLrEJ3yPacnONlaPg>
-    <xmx:dew_XSQOkbaUXo53Nq8vOMI6HNzXmNKWuPp2X4qimzqMDp2fiq8uoQ>
-    <xmx:dew_XSNrQBlfSmQJgxHosjmBuKDUlV2Scpz9eFysPFlfl5Qr0rU3-Q>
-    <xmx:dew_XfoXImRAx7L9IqYTFM0PnWmL_0Qm3ewiwE-BvVNShBPUichq2g>
-Received: from localhost (unknown [193.47.165.251])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A70DA380075;
-        Tue, 30 Jul 2019 03:06:28 -0400 (EDT)
-Date:   Tue, 30 Jul 2019 10:06:26 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
-Cc:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        roopa@cumulusnetworks.com, davem@davemloft.net,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-Message-ID: <20190730070626.GA508@splinter>
-References: <b755f613-e6d8-a2e6-16cd-6f13ec0a6ddc@cumulusnetworks.com>
- <20190729121409.wa47uelw5f6l4vs4@lx-anielsen.microsemi.net>
- <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
- <20190729131420.tqukz55tz26jkg73@lx-anielsen.microsemi.net>
- <3cc69103-d194-2eca-e7dd-e2fa6a730223@cumulusnetworks.com>
- <20190729135205.oiuthcyesal4b4ct@lx-anielsen.microsemi.net>
- <e4cd0db9-695a-82a7-7dc0-623ded66a4e5@cumulusnetworks.com>
- <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
- <20190729175136.GA28572@splinter>
- <20190730062721.p4vrxo5sxbtulkrx@lx-anielsen.microsemi.net>
+        Tue, 30 Jul 2019 03:08:23 -0400
+Received: by mail-pl1-f196.google.com with SMTP id i2so28539503plt.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 00:08:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=hQ/nGVg08UlzjZmMjcg4DzO30BY3YCIyVYTPkdiYhV8=;
+        b=aswEem68vIJpVv8I7Vodird6t8Ly3CsDS5y2jYafJE2w4hUqjTVH7ftkdy1kU5ohdo
+         uId+/5lFBGfit53zKkA/WlqNbAtOioouT3tPQ7N3Enq8JBvTv7uPkZ8fMwx18aT/sCfT
+         z+wpwUOcZfqlxy+Xgj3lZnkNwI88SLAJ6sHxco0twLsja1rmPftlj1MGDzmxM//51Hhk
+         Dz/EBn2pNWDJsn0AgxaZZpRi9JUn/XYuFGCwQFWh4HBCLS7DKk3g3h1LiGFOeSnnUds0
+         jn3xea7vNxNHiGZ8l7HUFQf1+7JfgJOjP3vsmxbHUEKPB4LnQP+hJjrZiyzM2WWm0lgk
+         q/lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=hQ/nGVg08UlzjZmMjcg4DzO30BY3YCIyVYTPkdiYhV8=;
+        b=fEqg0OtRcQrwevF4qHzbnRKSy9HmGfAace6/PYheUGqNQxFto+HyHTBGvCt8oEbAzD
+         AoOlVdhaO7X3NIro8UOhfEtX7NvEQDZJ3DbVsRYwh6QsDRjmgiNRSYdQAoUJAU0gUgRz
+         YTYtM3M6TwVZCMH+cj4faFBmUP0DuViTcEuKsPuG/s8DIdlHE85YsyjZmIMwpQHOK27J
+         MmnQWA3o2ek9chQOtFpVgUVqavvZ2bh/RdSXXW8o6sWDsRQsN0VYFD/rVJScvRHh/NXL
+         cFgVs5k16Tn2kGR7AfkxLDDhlBwaatKhrxe5220mwBD5HR5kU+/b/VjedByl5mnDJo+H
+         o/Bw==
+X-Gm-Message-State: APjAAAXh2HJ++ffxfgkfj+ZWm3uGrq9wDNknfPYhImGXxjVo7xjwN0CE
+        15cjS2th02vwDoNmyhI8h/4=
+X-Google-Smtp-Source: APXvYqzqtL2OYzfHNLoigrtAQfqQ3FO3Tc5ED3jBXVYqElY6ZnboiVlVBnjT1kgB7V6Zqk62L977Cg==
+X-Received: by 2002:a17:902:ba8b:: with SMTP id k11mr113629900pls.107.1564470502639;
+        Tue, 30 Jul 2019 00:08:22 -0700 (PDT)
+Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
+        by smtp.googlemail.com with ESMTPSA id x128sm100977705pfd.17.2019.07.30.00.08.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 00:08:21 -0700 (PDT)
+Message-ID: <6d3e860ba83bd7677cfba36f707874cc8fd8bf2b.camel@gmail.com>
+Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
+From:   Rashmica Gupta <rashmica.g@gmail.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>
+Cc:     akpm@linux-foundation.org, mhocko@suse.com,
+        dan.j.williams@intel.com, pasha.tatashin@soleen.com,
+        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
+        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Tue, 30 Jul 2019 17:08:15 +1000
+In-Reply-To: <b3fd1177-45ef-fd9e-78c8-d05138c647da@redhat.com>
+References: <20190625075227.15193-1-osalvador@suse.de>
+         <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
+         <20190626080249.GA30863@linux>
+         <2750c11a-524d-b248-060c-49e6b3eb8975@redhat.com>
+         <20190626081516.GC30863@linux>
+         <887b902e-063d-a857-d472-f6f69d954378@redhat.com>
+         <9143f64391d11aa0f1988e78be9de7ff56e4b30b.camel@gmail.com>
+         <0cd2c142-66ba-5b6d-bc9d-fe68c1c65c77@redhat.com>
+         <b7de7d9d84e9dd47358a254d36f6a24dd48da963.camel@gmail.com>
+         <b3fd1177-45ef-fd9e-78c8-d05138c647da@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730062721.p4vrxo5sxbtulkrx@lx-anielsen.microsemi.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 08:27:22AM +0200, Allan W. Nielsen wrote:
-> The 07/29/2019 20:51, Ido Schimmel wrote:
-> > Can you please clarify what you're trying to achieve? I just read the
-> > thread again and my impression is that you're trying to locally receive
-> > packets with a certain link layer multicast address.
-> Yes. The thread is also a bit confusing because we half way through realized
-> that we misunderstood how the multicast packets should be handled (sorry about
-> that). To begin with we had a driver where multicast packets was only copied to
-> the CPU if someone needed it. Andrew and Nikolay made us aware that this is not
-> how other drivers are doing it, so we changed the driver to include the CPU in
-> the default multicast flood-mask.
-
-OK, so what prevents you from removing all other ports from the
-flood-mask and letting the CPU handle the flooding? Then you can install
-software tc filters to limit the flooding.
-
-> This changes the objective a bit. To begin with we needed to get more packets to
-> the CPU (which could have been done using tc ingress rules and a trap action).
-> 
-> Now after we changed the driver, we realized that we need something to limit the
-> flooding of certain L2 multicast packets. This is the new problem we are trying
-> to solve!
-> 
-> Example: Say we have a bridge with 4 slave interfaces, then we want to install a
-> forwarding rule saying that packets to a given L2-multicast MAC address, should
-> only be flooded to 2 of the 4 ports.
-> 
-> (instead of adding rules to get certain packets to the CPU, we are now adding
-> other rules to prevent other packets from going to the CPU and other ports where
-> they are not needed/wanted).
-> 
-> This is exactly the same thing as IGMP snooping does dynamically, but only for
-> IP multicast.
-> 
-> The "bridge mdb" allow users to manually/static add/del a port to a multicast
-> group, but still it operates on IP multicast address (not L2 multicast
-> addresses).
-> 
-> > Nik suggested SIOCADDMULTI.
-> It is not clear to me how this should be used to limit the flooding, maybe we
-> can make some hacks, but as far as I understand the intend of this is maintain
-> the list of addresses an interface should receive. I'm not sure this should
-> influence how for forwarding decisions are being made.
-> 
-> > and I suggested a tc filter to get the packet to the CPU.
-> The TC solution is a good solution to the original problem where wanted to copy
-> more frames to the CPU. But we were convinced that this is not the right
-> approach, and that the CPU by default should receive all multicast packets, and
-> we should instead try to find a way to limit the flooding of certain frames as
-> an optimization.
-
-This can still work. In Linux, ingress tc filters are executed before the
-bridge's Rx handler. The same happens in every sane HW. Ingress ACL is
-performed before L2 forwarding. Assuming you have eth0-eth3 bridged and
-you want to prevent packets with DMAC 01:21:6C:00:00:01 from egressing
-eth2:
-
-# tc filter add dev eth0 ingress pref 1 flower skip_sw \
-	dst_mac 01:21:6C:00:00:01 action trap
-# tc filter add dev eth2 egress pref 1 flower skip_hw \
-	dst_mac 01:21:6C:00:00:01 action drop
-
-The first filter is only present in HW ('skip_sw') and should result in
-your HW passing you the sole copy of the packet.
-
-The second filter is only present in SW ('skip_hw', not using HW egress
-ACL that you don't have) and drops the packet after it was flooded by
-the SW bridge.
-
-As I mentioned earlier, you can install the filter once in your HW and
-share it between different ports using a shared block. This means you
-only consume one TCAM entry.
-
-Note that this allows you to keep flooding all other multicast packets
-in HW.
-
-> > If you now want to limit the ports to which this packet is flooded, then
-> > you can use tc filters in *software*:
+On Mon, 2019-07-29 at 10:06 +0200, David Hildenbrand wrote:
+> > > Of course, other interfaces might make sense.
+> > > 
+> > > You can then start using these memory blocks and hinder them from
+> > > getting onlined (as a safety net) via memory notifiers.
+> > > 
+> > > That would at least avoid you having to call
+> > > add_memory/remove_memory/offline_pages/device_online/modifying
+> > > memblock
+> > > states manually.
 > > 
-> > # tc qdisc add dev eth2 clsact
-> > # tc filter add dev eth2 egress pref 1 flower skip_hw \
-> > 	dst_mac 01:21:6C:00:00:01 action drop
-> Yes. This can work in the SW bridge.
+> > I see what you're saying and that definitely sounds safer.
+> > 
+> > We would still need to call remove_memory and add_memory from
+> > memtrace
+> > as
+> > just offlining memory doesn't remove it from the linear page tables
+> > (if 
+> > it's still in the page tables then hardware can prefetch it and if
+> > hardware tracing is using it then the box checkstops).
 > 
-> > If you want to forward the packet in hardware and locally receive it,
-> > you can chain several mirred action and then a trap action.
-> I'm not I fully understand how this should be done, but it does sound like it
-> becomes quite complicated. Also, as far as I understand it will mean that we
-> will be using TCAM/ACL resources to do something that could have been done with
-> a simple MAC entry.
-> 
-> > Both options avoid HW egress ACLs which your design does not support.
-> True, but what is wrong with expanding the functionality of the normal
-> forwarding/MAC operations to allow multiple destinations?
-> 
-> It is not an uncommon feature (I just browsed the manual of some common L2
-> switches and they all has this feature).
-> 
-> It seems to fit nicely into the existing user-interface:
-> 
-> bridge fdb add    01:21:6C:00:00:01 port eth0
-> bridge fdb append 01:21:6C:00:00:01 port eth1
+> That prefetching part is interesting (and nasty as well). If we could
+> at
+> least get rid of the manual onlining/offlining, I would be able to
+> sleep
+> better at night ;) One step at a time.
+>
 
-Wouldn't it be better to instead extend the MDB entries so that they are
-either keyed by IP or MAC? I believe FDB should remain as unicast-only.
-As a bonus, existing drivers could benefit from it, as MDB entries are
-already notified by MAC.
+Ok, I'll get to that soon :)
 
+> > > (binding the memory block devices to a driver would be nicer, but
+> > > the
+> > > infrastructure is not really there yet - we have no such drivers
+> > > in
+> > > place yet)
+> > > 
+> > > > I don't know the mm code nor how the notifiers work very well
+> > > > so I
+> > > > can't quite see how the above would work. I'm assuming memtrace
+> > > > would
+> > > > register a hotplug notifier and when memory is offlined from
+> > > > userspace,
+> > > > the callback func in memtrace would be called if the priority
+> > > > was
+> > > > high
+> > > > enough? But how do we know that the memory being offlined is
+> > > > intended
+> > > > for usto touch? Is there a way to offline memory from userspace
+> > > > not
+> > > > using sysfs or have I missed something in the sysfs interface?
+> > > 
+> > > The notifier would really only be used to hinder onlining as a
+> > > safety
+> > > net. User space prepares (offlines) the memory blocks and then
+> > > tells
+> > > the
+> > > drivers which memory blocks to use.
+> > > 
+> > > > On a second read, perhaps you are assuming that memtrace is
+> > > > used
+> > > > after
+> > > > adding new memory at runtime? If so, that is not the case. If
+> > > > not,
+> > > > then
+> > > > would you be able to clarify what I'm not seeing?
+> > > 
+> > > The main problem I see is that you are calling
+> > > add_memory/remove_memory() on memory your device driver doesn't
+> > > own.
+> > > It
+> > > could reside on a DIMM if I am not mistaking (or later on
+> > > paravirtualized memory devices like virtio-mem if I ever get to
+> > > implement them ;) ).
+> > 
+> > This is just for baremetal/powernv so shouldn't affect virtual
+> > memory
+> > devices.
 > 
-> It seems that it can be added to the existing implementation with out adding
-> significant complexity.
+> Good to now.
 > 
-> It will be easy to offload in HW.
+> > > How is it guaranteed that the memory you are allocating does not
+> > > reside
+> > > on a DIMM for example added via add_memory() by the ACPI driver?
+> > 
+> > Good point. We don't have ACPI on powernv but currently this would
+> > try
+> > to remove memory from any online memory node, not just the ones
+> > that
+> > are backed by RAM. oops.
 > 
-> I do not believe that it will be a performance issue, if this is a concern then
-> we may have to do a bit of benchmarking, or we can make it a configuration
-> option.
-> 
-> Long story short, we (Horatiu and I) learned a lot from the discussion here, and
-> I think we should try do a new patch with the learning we got. Then it is easier
-> to see what it actually means to the exiting code, complexity, exiting drivers,
-> performance, default behavioral, backwards compatibly, and other valid concerns.
-> 
-> If the patch is no good, and cannot be fixed, then we will go back and look
-> further into alternative solutions.
+> Okay, so essentially no memory hotplug/unplug along with memtrace.
+> (can
+> we document that somewhere?). I think
+> add_memory()/try_remove_memory()
+> could be tolerable in these environments (as it's only boot memory).
+>
+Sure thing.
 
-Overall, I tend to agree with Nik. I think your use case is too specific
-to justify the amount of changes you want to make in the bridge driver.
-We also provided other alternatives. That being said, you're more than
-welcome to send the patches and we can continue the discussion then.
+
