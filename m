@@ -5,65 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4A6C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1DFC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFDD204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8637020693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:51:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mnDSVL3M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ISJ9TA4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731038AbfG3BvV (ORCPT
+        id S1730886AbfG3Bue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:51:21 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46298 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730896AbfG3Bug (ORCPT
+        Mon, 29 Jul 2019 21:50:34 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44260 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730854AbfG3Bu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:50:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c2so28186764plz.13;
-        Mon, 29 Jul 2019 18:50:36 -0700 (PDT)
+        Mon, 29 Jul 2019 21:50:29 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so28915662pfe.11;
+        Mon, 29 Jul 2019 18:50:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Znhv/kCRKUKHxOSXZDgniqB5ZIlr3K3JgxSCaFgdq+8=;
-        b=mnDSVL3M6bAosUcHnoza2f8m7wEnumxSt3YvGoUwcyJEmuWgQSvjnGlgb6izTn97XH
-         WlFFapP2gmybE/zhqdO56mykLwgimYu1v8UaIwPDFvTopkNnSPYzV9cwr9xzQwpBzJ+p
-         Xg7xneetDXkvGpv8ehyjx/7htK1NAH+7+vyXX9E211v+GFQOZg4QBoJmL7Pzfptp5ZK0
-         i8X5jSa/Y3pDBHXBrJcfSHV1vsty9muNkpfrva7etLeNSAQwVwVB/OF+4yE/1WEZx98j
-         iarZwuS3V9vHIWqKPxNVa06nGj40Yu6RIznPCIObhC5bzPqBwZ7S5WW2D/fAxwiUL+0A
-         0k5A==
+        bh=IiHYsAumGmwMilrFK0b/NUIB9co6Y5UEsmqHb9nGQyU=;
+        b=ISJ9TA4FZmcd7womrY0uIyLdNdlSuPdhvjTVi55bbvOo+4KcTQunZschTJxOgpfE0i
+         xJQa3/ZoUAGWP+kk/km2Ros4yCR2rqZVzoR9laFigM+l08Ywd1UHScAvQwhT5fh8Q1BL
+         1WcDAjqMV+yBT1Sxb4i52Eq22z2+ROZ13HPf+0GKKFwuFZas8FtECFuI1uoXl5aM/c27
+         VfV4pjxDaPvusEDoNfuaKvSlqG5omKPtpxWhEOiM/zDwxaflk9RhCT2EU52hNXO78iWB
+         g4e1rgQ6HhYY21QsJGUoDj6uXt+drYVcY1dqSgwf5/ytHAl5GtZu4AWz3tgJ53Cw3zMx
+         7gwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Znhv/kCRKUKHxOSXZDgniqB5ZIlr3K3JgxSCaFgdq+8=;
-        b=dpqVC4dbNPzCjm4hCPMwACxEj517CIh3RalvAMWQ0iHC2ymwqZUNXqVAwwWWw+5ntq
-         GDe504U1aYhdU4pIra8S7pqw+YEMp8lAiLt6lmEid2Xo+N9IiM9gnTg/2Qo1+2fPJWod
-         kFjRGqhHBlj/9HZfwvdxZOlo9l/cDJV9o6U1zPJnU4BBB7E9ldr09+jqyC+kiiZfq4N+
-         w6eXxzBnXQONzP9wG/INN2/MV83Q+djtLMHlKb4x5kUmFxV8xCS3xqDH/RC1KBwzP7G4
-         33hXRNqzHelozEDd8o38lrVPAmSH7GdKJ+EMry7lePxOViiGbrX3PEs1VzaXFkEZ9CEo
-         EoYA==
-X-Gm-Message-State: APjAAAXp0HgVcrYFCkWh4oS1dIauxQ2XvdxcB32b5cu14SatdlaXc6Qg
-        QRe1LNAvrHYNVcTCLgmC4xSKms6YkWs=
-X-Google-Smtp-Source: APXvYqw5bUkSyOBiAJcIYvdeq+xCu//0ZThr2vJrAZqPxC+L2tzGlmqjAahHtHiCjAClQuPYpNrDLw==
-X-Received: by 2002:a17:902:110b:: with SMTP id d11mr117757847pla.213.1564451436018;
-        Mon, 29 Jul 2019 18:50:36 -0700 (PDT)
+        bh=IiHYsAumGmwMilrFK0b/NUIB9co6Y5UEsmqHb9nGQyU=;
+        b=soNTj2bvI6nRTKMQgrAkbaPGYNudNEv8gYB0vmeGdBYBofND4E+ySY+2UN2D0nokz7
+         IsxlJLhlDLNnDboiSgLzYmPSaOley6S/oyw7gQHDtkhRUQhwtNH8ogseneuuB0nrKs/9
+         1lfdDSiPJG3hN73cv2aWVOoMMrEB+0c6LWZiOxjcmsspdbazaQeUmQMh651/4A8li0iw
+         n1jHxyxsqI5C0QgQnPTYy46KURuGtDNZ1GRPxG/cisQckZ9+BKfr3Qrx2k6os51+BR91
+         fiSerRKCJZyfUk7vmyk0AAuF13YU6P9EPGzYGJfclHjh6xBQXCqrSVtsCMzxWJr8cOME
+         iSSA==
+X-Gm-Message-State: APjAAAWdVtu0jFIPRgefutV943oY5X7+5nHmb4N5/w+P6ahBXxhMf+89
+        pnQRqFe86TOWlPztyCKmXkg=
+X-Google-Smtp-Source: APXvYqy7CBHQMm439yEyjRbQweRYrXZDCuISH7LHBxFLktyDgLRupH2Pa3t6gj+0pivswKb1FS+xXg==
+X-Received: by 2002:a65:5a44:: with SMTP id z4mr107194289pgs.41.1564451428828;
+        Mon, 29 Jul 2019 18:50:28 -0700 (PDT)
 Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.50.35
+        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.50.27
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 18:50:35 -0700 (PDT)
+        Mon, 29 Jul 2019 18:50:28 -0700 (PDT)
 From:   Deepa Dinamani <deepa.kernel@gmail.com>
 To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, arnd@arndb.de,
-        y2038@lists.linaro.org, zyan@redhat.com, sage@redhat.com,
-        idryomov@gmail.com, ceph-devel@vger.kernel.org
-Subject: [PATCH 15/20] fs: ceph: Initialize filesystem timestamp ranges
-Date:   Mon, 29 Jul 2019 18:49:19 -0700
-Message-Id: <20190730014924.2193-16-deepa.kernel@gmail.com>
+        y2038@lists.linaro.org
+Subject: [PATCH 08/20] adfs: Fill in max and min timestamps in sb
+Date:   Mon, 29 Jul 2019 18:49:12 -0700
+Message-Id: <20190730014924.2193-9-deepa.kernel@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190730014924.2193-1-deepa.kernel@gmail.com>
 References: <20190730014924.2193-1-deepa.kernel@gmail.com>
@@ -76,33 +75,80 @@ Fill in the appropriate limits to avoid inconsistencies
 in the vfs cached inode times when timestamps are
 outside the permitted range.
 
-According to the disscussion in
-https://patchwork.kernel.org/patch/8308691/ we agreed to use
-unsigned 32 bit timestamps on ceph.
-Update the limits accordingly.
+Note that the min timestamp is assumed to be
+01 Jan 1970 00:00:00 (Unix epoch). This is consistent
+with the way we convert timestamps in adfs_adfs2unix_time().
 
 Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: zyan@redhat.com
-Cc: sage@redhat.com
-Cc: idryomov@gmail.com
-Cc: ceph-devel@vger.kernel.org
 ---
- fs/ceph/super.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/adfs/adfs.h  | 13 +++++++++++++
+ fs/adfs/inode.c |  8 ++------
+ fs/adfs/super.c |  2 ++
+ 3 files changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ceph/super.c b/fs/ceph/super.c
-index d57fa60dcd43..6cf3a4fceac1 100644
---- a/fs/ceph/super.c
-+++ b/fs/ceph/super.c
-@@ -981,6 +981,8 @@ static int ceph_set_super(struct super_block *s, void *data)
- 	s->s_export_op = &ceph_export_ops;
+diff --git a/fs/adfs/adfs.h b/fs/adfs/adfs.h
+index 804c6a77c5db..781b1c3817e0 100644
+--- a/fs/adfs/adfs.h
++++ b/fs/adfs/adfs.h
+@@ -2,6 +2,19 @@
+ #include <linux/fs.h>
+ #include <linux/adfs_fs.h>
  
- 	s->s_time_gran = 1000;  /* 1000 ns == 1 us */
-+	s->s_time_min = 0;
-+	s->s_time_max = U32_MAX;
++/*
++ * 01 Jan 1970 00:00:00 (Unix epoch) as seconds since
++ * 01 Jan 1900 00:00:00 (RISC OS epoch)
++ */
++#define RISC_OS_EPOCH_DELTA 2208988800LL
++
++/*
++ * Convert 40 bit centi seconds to seconds
++ * since 01 Jan 1900 00:00:00 (RISC OS epoch)
++ * The result is 2248-06-03 06:57:57 GMT
++ */
++#define ADFS_MAX_TIMESTAMP ((0xFFFFFFFFFFLL / 100) - RISC_OS_EPOCH_DELTA)
++
+ /* Internal data structures for ADFS */
  
- 	ret = set_anon_super(s, NULL);  /* what is that second arg for? */
- 	if (ret != 0)
+ #define ADFS_FREE_FRAG		 0
+diff --git a/fs/adfs/inode.c b/fs/adfs/inode.c
+index 66621e96f9af..3f75cefc0380 100644
+--- a/fs/adfs/inode.c
++++ b/fs/adfs/inode.c
+@@ -170,11 +170,7 @@ static void
+ adfs_adfs2unix_time(struct timespec64 *tv, struct inode *inode)
+ {
+ 	unsigned int high, low;
+-	/* 01 Jan 1970 00:00:00 (Unix epoch) as nanoseconds since
+-	 * 01 Jan 1900 00:00:00 (RISC OS epoch)
+-	 */
+-	static const s64 nsec_unix_epoch_diff_risc_os_epoch =
+-							2208988800000000000LL;
++	static const s64 nsec_unix_epoch_diff_risc_os_epoch = RISC_OS_EPOCH_DELTA * NSEC_PER_SEC;
+ 	s64 nsec;
+ 
+ 	if (ADFS_I(inode)->stamped == 0)
+@@ -219,7 +215,7 @@ adfs_unix2adfs_time(struct inode *inode, unsigned int secs)
+ 	if (ADFS_I(inode)->stamped) {
+ 		/* convert 32-bit seconds to 40-bit centi-seconds */
+ 		low  = (secs & 255) * 100;
+-		high = (secs / 256) * 100 + (low >> 8) + 0x336e996a;
++		high = (secs / 256) * 100 + (low >> 8) + (RISC_OS_EPOCH_DELTA*100/256);
+ 
+ 		ADFS_I(inode)->loadaddr = (high >> 24) |
+ 				(ADFS_I(inode)->loadaddr & ~0xff);
+diff --git a/fs/adfs/super.c b/fs/adfs/super.c
+index 2a83655c408f..0a0854ef9e3c 100644
+--- a/fs/adfs/super.c
++++ b/fs/adfs/super.c
+@@ -449,6 +449,8 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+ 	asb->s_size    		= adfs_discsize(dr, sb->s_blocksize_bits);
+ 	asb->s_version 		= dr->format_version;
+ 	asb->s_log2sharesize	= dr->log2sharesize;
++	sb->s_time_min		= 0;
++	sb->s_time_max		= ADFS_MAX_TIMESTAMP;
+ 
+ 	asb->s_map = adfs_read_map(sb, dr);
+ 	if (IS_ERR(asb->s_map)) {
 -- 
 2.17.1
 
