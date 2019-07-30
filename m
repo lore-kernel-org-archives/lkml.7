@@ -2,119 +2,532 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834AEC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B899C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5508C20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghT6fDpV"
+	by mail.kernel.org (Postfix) with ESMTP id D3232206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564455787;
+	bh=+9wDJyHAWH97G5rkUDJq2Tmmf5F4ZR5i+VOsdY80j20=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WOTN1tm8JTMHu6UI98ZA4EXqJIdnZl+Tp8sL3Dp4IS9arRD/tpTuKEUcRzbQ7TRtM
+	 7H1KPp/9yOYkkZ5bnRofz5zZCoxGMHotOdE2J4pW8tWrLlEn9aoCifKuO94ptsknWj
+	 eB0BTv/RD3Ved75A7h24lHgpt7DGv/dA5iSlqxDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732871AbfG3DCt (ORCPT
+        id S1732526AbfG3DBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:02:49 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44470 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732730AbfG3DCr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 23:02:47 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t14so28251248plr.11;
-        Mon, 29 Jul 2019 20:02:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+wCRrWmIk4Nc0ISlty592sI89pc1yeuZmJCIRwRKr38=;
-        b=ghT6fDpVNQ07/bhniKx+0CDugTQLh2JuWxcYh3Pb//LfguBMq+Gqu7hVYuz3aijLPn
-         yWnIUQvZfjFLY6DTd3CazPQc+N5vQQhVfzWHDQNWSrEZRyTRJ9K4K9zcsJqqI7uAoakU
-         b4hZTOP2udpN3kw7efV2bfANPqRPKCUt0ATxHzXtlddSyNZuTiHq3y+YUf4EREpqSCg6
-         9cqK6u5eOem9eU25GHVttXUcSdqxcZzx1nBqkLMnEdTvzn5sWvJ6eI1plWCcCFlKlO4l
-         o/YczNKWpyo5ACc2aBofLGx5MVnfyKEdeUxNqqXurvAF4Tox+sdngD8OwjBAXQepyUfa
-         8Maw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+wCRrWmIk4Nc0ISlty592sI89pc1yeuZmJCIRwRKr38=;
-        b=IFCs/W5xtvuXu96OaIAFFaSr2Bp+RZH4fHNNjRuPsV34n4sAm7Urx209leISa5WCGc
-         U9rmTIVUAcUwDovlg3VG6+HESehFaHtlZF+H+/b8Db1DIqzyGVHhbLWn9rk7gHWiSR4I
-         4Y/Cc/yonRNB8b6Ts838J9HPefUCuj0pucEs0D/QlDOMmMFn9WVS1O3lC2yjP43BpZuk
-         v7gM297VEwzXMakBiYQlbX6TRxLsQkZQCPOe+ocHnAg3AwAmOzvvMeVefgJwANcI9Uw3
-         4Xq/H3hAtxkdHQ2BrQ31xNXa8uPCJplk8EjfEM5LOq1u3h1BxIknjr3UAC0CIIcbtQLn
-         t9RQ==
-X-Gm-Message-State: APjAAAUxKZUbPZYwodRxe37WUzrVjMWidryivMLujZcRiMW0zORp6z5Z
-        IioUgKsQdk9HAGkZRhIKxQU=
-X-Google-Smtp-Source: APXvYqwtEg9oc+Ub8h8Ztki2a4IVL/OlCf+NImHZ83H+rMfXxdSJaWW1wJI9LMdfpoOlIOryu4ft3w==
-X-Received: by 2002:a17:902:8bc1:: with SMTP id r1mr64301099plo.42.1564455766537;
-        Mon, 29 Jul 2019 20:02:46 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id h26sm66277793pfq.64.2019.07.29.20.02.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 20:02:45 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] alpha: Replace strncmp with str_has_prefix
-Date:   Tue, 30 Jul 2019 11:02:39 +0800
-Message-Id: <20190730030239.17983-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 29 Jul 2019 23:01:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732509AbfG3DBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:01:02 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B11B21841;
+        Tue, 30 Jul 2019 03:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564455661;
+        bh=+9wDJyHAWH97G5rkUDJq2Tmmf5F4ZR5i+VOsdY80j20=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tctGPl7XfasKQfKqRWV8I6C+pN0g0Sr+aO/73zZDGv3ZWZD9b6EDEUYKKBHW/P4Fc
+         1w4AGNc46LPbD4wzdHhzz4n2u/mqaf3s9xKrq+cvNoWkTJULxTIJsrxBgGAgy4DhIn
+         wbiHEt+WjIgeDEPl213ypLJDfhKa8kG2VElxgoeQ=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 083/107] libperf: Add perf_evlist__set_maps() function
+Date:   Mon, 29 Jul 2019 23:55:46 -0300
+Message-Id: <20190730025610.22603-84-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
+References: <20190730025610.22603-1-acme@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit b6b2735514bc
-("tracing: Use str_has_prefix() instead of using fixed sizes")
-the newly introduced str_has_prefix() was used
-to replace error-prone strncmp(str, const, len).
-Here fix codes with the same pattern.
+From: Jiri Olsa <jolsa@kernel.org>
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Move the evlist__set_maps() function from tools/perf to libperf.
+
+Committer notes:
+
+Fix up reject due to earlier inversion in calling perf_evlist__init().
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190721112506.12306-57-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
-Changes in v2:
-  - Revise the indent and aligning.
+ tools/perf/arch/x86/tests/perf-time-to-tsc.c |  3 +-
+ tools/perf/builtin-script.c                  |  3 +-
+ tools/perf/builtin-stat.c                    |  3 +-
+ tools/perf/lib/evlist.c                      | 54 ++++++++++++++++++
+ tools/perf/lib/include/perf/evlist.h         |  6 ++
+ tools/perf/lib/libperf.map                   |  1 +
+ tools/perf/tests/code-reading.c              |  5 +-
+ tools/perf/tests/keep-tracking.c             |  3 +-
+ tools/perf/tests/mmap-basic.c                |  3 +-
+ tools/perf/tests/sw-clock.c                  |  3 +-
+ tools/perf/tests/switch-tracking.c           |  3 +-
+ tools/perf/tests/task-exit.c                 |  3 +-
+ tools/perf/util/evlist.c                     | 58 +-------------------
+ tools/perf/util/evlist.h                     |  2 -
+ 14 files changed, 83 insertions(+), 67 deletions(-)
 
- arch/alpha/boot/tools/objstrip.c | 2 +-
- arch/alpha/kernel/setup.c        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/alpha/boot/tools/objstrip.c b/arch/alpha/boot/tools/objstrip.c
-index 825a16f5f622..08b430d25a31 100644
---- a/arch/alpha/boot/tools/objstrip.c
-+++ b/arch/alpha/boot/tools/objstrip.c
-@@ -148,7 +148,7 @@ main (int argc, char *argv[])
- #ifdef __ELF__
-     elf = (struct elfhdr *) buf;
+diff --git a/tools/perf/arch/x86/tests/perf-time-to-tsc.c b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
+index 261bdd680651..582182d98a7f 100644
+--- a/tools/perf/arch/x86/tests/perf-time-to-tsc.c
++++ b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
+@@ -6,6 +6,7 @@
+ #include <linux/types.h>
+ #include <sys/prctl.h>
+ #include <perf/cpumap.h>
++#include <perf/evlist.h>
  
--    if (elf->e_ident[0] == 0x7f && strncmp((char *)elf->e_ident + 1, "ELF", 3) == 0) {
-+    if (elf->e_ident[0] == 0x7f && str_has_prefix((char *)elf->e_ident + 1, "ELF")) {
- 	if (elf->e_type != ET_EXEC) {
- 	    fprintf(stderr, "%s: %s is not an ELF executable\n",
- 		    prog_name, inname);
-diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
-index 5d4c76a77a9f..e82e45d5fd96 100644
---- a/arch/alpha/kernel/setup.c
-+++ b/arch/alpha/kernel/setup.c
-@@ -466,7 +466,7 @@ setup_arch(char **cmdline_p)
- #ifndef alpha_using_srm
- 	/* Assume that we've booted from SRM if we haven't booted from MILO.
- 	   Detect the later by looking for "MILO" in the system serial nr.  */
--	alpha_using_srm = strncmp((const char *)hwrpb->ssn, "MILO", 4) != 0;
-+	alpha_using_srm = !str_has_prefix((const char *)hwrpb->ssn, "MILO");
- #endif
- #ifndef alpha_using_qemu
- 	/* Similarly, look for QEMU.  */
+ #include "parse-events.h"
+ #include "evlist.h"
+@@ -72,7 +73,7 @@ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest __maybe
+ 	evlist = evlist__new();
+ 	CHECK_NOT_NULL__(evlist);
+ 
+-	perf_evlist__set_maps(evlist, cpus, threads);
++	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 
+ 	CHECK__(parse_events(evlist, "cycles:u", NULL));
+ 
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index a787c5cb1331..46fadbbe1c3e 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -48,6 +48,7 @@
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <subcmd/pager.h>
++#include <perf/evlist.h>
+ 
+ #include <linux/ctype.h>
+ 
+@@ -3264,7 +3265,7 @@ static int set_maps(struct perf_script *script)
+ 	if (WARN_ONCE(script->allocated, "stats double allocation\n"))
+ 		return -EINVAL;
+ 
+-	perf_evlist__set_maps(evlist, script->cpus, script->threads);
++	perf_evlist__set_maps(&evlist->core, script->cpus, script->threads);
+ 
+ 	if (perf_evlist__alloc_stats(evlist, true))
+ 		return -ENOMEM;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 4a94ca131d56..14e4c970d16a 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -83,6 +83,7 @@
+ #include <sys/resource.h>
+ 
+ #include <linux/ctype.h>
++#include <perf/evlist.h>
+ 
+ #define DEFAULT_SEPARATOR	" "
+ #define FREEZE_ON_SMI_PATH	"devices/cpu/freeze_on_smi"
+@@ -1517,7 +1518,7 @@ static int set_maps(struct perf_stat *st)
+ 	if (WARN_ONCE(st->maps_allocated, "stats double allocation\n"))
+ 		return -EINVAL;
+ 
+-	perf_evlist__set_maps(evsel_list, st->cpus, st->threads);
++	perf_evlist__set_maps(&evsel_list->core, st->cpus, st->threads);
+ 
+ 	if (perf_evlist__alloc_stats(evsel_list, true))
+ 		return -ENOMEM;
+diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+index 087ef76ea8fd..6a2308ef9868 100644
+--- a/tools/perf/lib/evlist.c
++++ b/tools/perf/lib/evlist.c
+@@ -5,6 +5,8 @@
+ #include <internal/evsel.h>
+ #include <linux/zalloc.h>
+ #include <stdlib.h>
++#include <perf/cpumap.h>
++#include <perf/threadmap.h>
+ 
+ void perf_evlist__init(struct perf_evlist *evlist)
+ {
+@@ -12,11 +14,39 @@ void perf_evlist__init(struct perf_evlist *evlist)
+ 	evlist->nr_entries = 0;
+ }
+ 
++static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
++					  struct perf_evsel *evsel)
++{
++	/*
++	 * We already have cpus for evsel (via PMU sysfs) so
++	 * keep it, if there's no target cpu list defined.
++	 */
++	if (!evsel->own_cpus || evlist->has_user_cpus) {
++		perf_cpu_map__put(evsel->cpus);
++		evsel->cpus = perf_cpu_map__get(evlist->cpus);
++	} else if (evsel->cpus != evsel->own_cpus) {
++		perf_cpu_map__put(evsel->cpus);
++		evsel->cpus = perf_cpu_map__get(evsel->own_cpus);
++	}
++
++	perf_thread_map__put(evsel->threads);
++	evsel->threads = perf_thread_map__get(evlist->threads);
++}
++
++static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
++{
++	struct perf_evsel *evsel;
++
++	perf_evlist__for_each_evsel(evlist, evsel)
++		__perf_evlist__propagate_maps(evlist, evsel);
++}
++
+ void perf_evlist__add(struct perf_evlist *evlist,
+ 		      struct perf_evsel *evsel)
+ {
+ 	list_add_tail(&evsel->node, &evlist->entries);
+ 	evlist->nr_entries += 1;
++	__perf_evlist__propagate_maps(evlist, evsel);
+ }
+ 
+ void perf_evlist__remove(struct perf_evlist *evlist,
+@@ -60,3 +90,27 @@ void perf_evlist__delete(struct perf_evlist *evlist)
+ {
+ 	free(evlist);
+ }
++
++void perf_evlist__set_maps(struct perf_evlist *evlist,
++			   struct perf_cpu_map *cpus,
++			   struct perf_thread_map *threads)
++{
++	/*
++	 * Allow for the possibility that one or another of the maps isn't being
++	 * changed i.e. don't put it.  Note we are assuming the maps that are
++	 * being applied are brand new and evlist is taking ownership of the
++	 * original reference count of 1.  If that is not the case it is up to
++	 * the caller to increase the reference count.
++	 */
++	if (cpus != evlist->cpus) {
++		perf_cpu_map__put(evlist->cpus);
++		evlist->cpus = perf_cpu_map__get(cpus);
++	}
++
++	if (threads != evlist->threads) {
++		perf_thread_map__put(evlist->threads);
++		evlist->threads = perf_thread_map__get(threads);
++	}
++
++	perf_evlist__propagate_maps(evlist);
++}
+diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
+index 9a126fd0773c..b1d8dee018d6 100644
+--- a/tools/perf/lib/include/perf/evlist.h
++++ b/tools/perf/lib/include/perf/evlist.h
+@@ -6,6 +6,8 @@
+ 
+ struct perf_evlist;
+ struct perf_evsel;
++struct perf_cpu_map;
++struct perf_thread_map;
+ 
+ LIBPERF_API void perf_evlist__init(struct perf_evlist *evlist);
+ LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
+@@ -22,4 +24,8 @@ LIBPERF_API struct perf_evsel* perf_evlist__next(struct perf_evlist *evlist,
+ 	     (pos) != NULL;				\
+ 	     (pos) = perf_evlist__next((evlist), (pos)))
+ 
++LIBPERF_API void perf_evlist__set_maps(struct perf_evlist *evlist,
++				       struct perf_cpu_map *cpus,
++				       struct perf_thread_map *threads);
++
+ #endif /* __LIBPERF_EVLIST_H */
+diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
+index 28ed04cbd223..9b6e8f165014 100644
+--- a/tools/perf/lib/libperf.map
++++ b/tools/perf/lib/libperf.map
+@@ -20,6 +20,7 @@ LIBPERF_0.0.1 {
+ 		perf_evlist__add;
+ 		perf_evlist__remove;
+ 		perf_evlist__next;
++		perf_evlist__set_maps;
+ 	local:
+ 		*;
+ };
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index bfaf22c2023c..e45df0736261 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -9,6 +9,7 @@
+ #include <string.h>
+ #include <sys/param.h>
+ #include <perf/cpumap.h>
++#include <perf/evlist.h>
+ 
+ #include "parse-events.h"
+ #include "evlist.h"
+@@ -629,7 +630,7 @@ static int do_test_code_reading(bool try_kcore)
+ 			goto out_put;
+ 		}
+ 
+-		perf_evlist__set_maps(evlist, cpus, threads);
++		perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 
+ 		str = do_determine_event(excl_kernel);
+ 		pr_debug("Parsing event '%s'\n", str);
+@@ -658,7 +659,7 @@ static int do_test_code_reading(bool try_kcore)
+ 				 */
+ 				perf_cpu_map__get(cpus);
+ 				perf_thread_map__get(threads);
+-				perf_evlist__set_maps(evlist, NULL, NULL);
++				perf_evlist__set_maps(&evlist->core, NULL, NULL);
+ 				evlist__delete(evlist);
+ 				evlist = NULL;
+ 				continue;
+diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
+index 46478ba1ed16..0ce5ce33bac4 100644
+--- a/tools/perf/tests/keep-tracking.c
++++ b/tools/perf/tests/keep-tracking.c
+@@ -3,6 +3,7 @@
+ #include <unistd.h>
+ #include <sys/prctl.h>
+ #include <perf/cpumap.h>
++#include <perf/evlist.h>
+ 
+ #include "parse-events.h"
+ #include "evlist.h"
+@@ -82,7 +83,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
+ 	evlist = evlist__new();
+ 	CHECK_NOT_NULL__(evlist);
+ 
+-	perf_evlist__set_maps(evlist, cpus, threads);
++	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 
+ 	CHECK__(parse_events(evlist, "dummy:u", NULL));
+ 	CHECK__(parse_events(evlist, "cycles:u", NULL));
+diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+index aa792aebd7f0..7327694fbde0 100644
+--- a/tools/perf/tests/mmap-basic.c
++++ b/tools/perf/tests/mmap-basic.c
+@@ -12,6 +12,7 @@
+ #include "tests.h"
+ #include <linux/err.h>
+ #include <linux/kernel.h>
++#include <perf/evlist.h>
+ 
+ /*
+  * This test will generate random numbers of calls to some getpid syscalls,
+@@ -68,7 +69,7 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
+ 		goto out_free_cpus;
+ 	}
+ 
+-	perf_evlist__set_maps(evlist, cpus, threads);
++	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 
+ 	for (i = 0; i < nsyscalls; ++i) {
+ 		char name[64];
+diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
+index 2decda2d4c17..c5f1a9f83380 100644
+--- a/tools/perf/tests/sw-clock.c
++++ b/tools/perf/tests/sw-clock.c
+@@ -11,6 +11,7 @@
+ #include "util/evlist.h"
+ #include "util/cpumap.h"
+ #include "util/thread_map.h"
++#include <perf/evlist.h>
+ 
+ #define NR_LOOPS  10000000
+ 
+@@ -64,7 +65,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
+ 		goto out_free_maps;
+ 	}
+ 
+-	perf_evlist__set_maps(evlist, cpus, threads);
++	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 
+ 	cpus	= NULL;
+ 	threads = NULL;
+diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
+index 9e0bbea15005..e3cee69f6ea2 100644
+--- a/tools/perf/tests/switch-tracking.c
++++ b/tools/perf/tests/switch-tracking.c
+@@ -6,6 +6,7 @@
+ #include <stdlib.h>
+ #include <linux/zalloc.h>
+ #include <perf/cpumap.h>
++#include <perf/evlist.h>
+ 
+ #include "parse-events.h"
+ #include "evlist.h"
+@@ -354,7 +355,7 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
+ 		goto out_err;
+ 	}
+ 
+-	perf_evlist__set_maps(evlist, cpus, threads);
++	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 
+ 	/* First event */
+ 	err = parse_events(evlist, "cpu-clock:u", NULL);
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index b0192ea636a7..4ca38fd0379a 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -7,6 +7,7 @@
+ 
+ #include <errno.h>
+ #include <signal.h>
++#include <perf/evlist.h>
+ 
+ static int exited;
+ static int nr_exit;
+@@ -71,7 +72,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ 		goto out_free_maps;
+ 	}
+ 
+-	perf_evlist__set_maps(evlist, cpus, threads);
++	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 
+ 	cpus	= NULL;
+ 	threads = NULL;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 1a6f877ebb03..4433b656cfb7 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -51,7 +51,7 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+ 	for (i = 0; i < PERF_EVLIST__HLIST_SIZE; ++i)
+ 		INIT_HLIST_HEAD(&evlist->heads[i]);
+ 	perf_evlist__init(&evlist->core);
+-	perf_evlist__set_maps(evlist, cpus, threads);
++	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 	fdarray__init(&evlist->pollfd, 64);
+ 	evlist->workload.pid = -1;
+ 	evlist->bkw_mmap_state = BKW_MMAP_NOTREADY;
+@@ -152,33 +152,6 @@ void evlist__delete(struct evlist *evlist)
+ 	free(evlist);
+ }
+ 
+-static void __perf_evlist__propagate_maps(struct evlist *evlist,
+-					  struct evsel *evsel)
+-{
+-	/*
+-	 * We already have cpus for evsel (via PMU sysfs) so
+-	 * keep it, if there's no target cpu list defined.
+-	 */
+-	if (!evsel->core.own_cpus || evlist->core.has_user_cpus) {
+-		perf_cpu_map__put(evsel->core.cpus);
+-		evsel->core.cpus = perf_cpu_map__get(evlist->core.cpus);
+-	} else if (evsel->core.cpus != evsel->core.own_cpus) {
+-		perf_cpu_map__put(evsel->core.cpus);
+-		evsel->core.cpus = perf_cpu_map__get(evsel->core.own_cpus);
+-	}
+-
+-	perf_thread_map__put(evsel->core.threads);
+-	evsel->core.threads = perf_thread_map__get(evlist->core.threads);
+-}
+-
+-static void perf_evlist__propagate_maps(struct evlist *evlist)
+-{
+-	struct evsel *evsel;
+-
+-	evlist__for_each_entry(evlist, evsel)
+-		__perf_evlist__propagate_maps(evlist, evsel);
+-}
+-
+ void evlist__add(struct evlist *evlist, struct evsel *entry)
+ {
+ 	entry->evlist = evlist;
+@@ -189,8 +162,6 @@ void evlist__add(struct evlist *evlist, struct evsel *entry)
+ 
+ 	if (evlist->core.nr_entries == 1)
+ 		perf_evlist__set_id_pos(evlist);
+-
+-	__perf_evlist__propagate_maps(evlist, entry);
+ }
+ 
+ void evlist__remove(struct evlist *evlist, struct evsel *evsel)
+@@ -1097,7 +1068,7 @@ int perf_evlist__create_maps(struct evlist *evlist, struct target *target)
+ 
+ 	evlist->core.has_user_cpus = !!target->cpu_list;
+ 
+-	perf_evlist__set_maps(evlist, cpus, threads);
++	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 
+ 	return 0;
+ 
+@@ -1106,29 +1077,6 @@ int perf_evlist__create_maps(struct evlist *evlist, struct target *target)
+ 	return -1;
+ }
+ 
+-void perf_evlist__set_maps(struct evlist *evlist, struct perf_cpu_map *cpus,
+-			   struct perf_thread_map *threads)
+-{
+-	/*
+-	 * Allow for the possibility that one or another of the maps isn't being
+-	 * changed i.e. don't put it.  Note we are assuming the maps that are
+-	 * being applied are brand new and evlist is taking ownership of the
+-	 * original reference count of 1.  If that is not the case it is up to
+-	 * the caller to increase the reference count.
+-	 */
+-	if (cpus != evlist->core.cpus) {
+-		perf_cpu_map__put(evlist->core.cpus);
+-		evlist->core.cpus = perf_cpu_map__get(cpus);
+-	}
+-
+-	if (threads != evlist->core.threads) {
+-		perf_thread_map__put(evlist->core.threads);
+-		evlist->core.threads = perf_thread_map__get(threads);
+-	}
+-
+-	perf_evlist__propagate_maps(evlist);
+-}
+-
+ void __perf_evlist__set_sample_bit(struct evlist *evlist,
+ 				   enum perf_event_sample_format bit)
+ {
+@@ -1381,7 +1329,7 @@ static int perf_evlist__create_syswide_maps(struct evlist *evlist)
+ 	if (!threads)
+ 		goto out_put;
+ 
+-	perf_evlist__set_maps(evlist, cpus, threads);
++	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ out:
+ 	return err;
+ out_put:
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index de2025d198d4..e31ddcc058f2 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -191,8 +191,6 @@ int perf_evlist__enable_event_idx(struct evlist *evlist,
+ void perf_evlist__set_selected(struct evlist *evlist,
+ 			       struct evsel *evsel);
+ 
+-void perf_evlist__set_maps(struct evlist *evlist, struct perf_cpu_map *cpus,
+-			   struct perf_thread_map *threads);
+ int perf_evlist__create_maps(struct evlist *evlist, struct target *target);
+ int perf_evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel);
+ 
 -- 
-2.20.1
+2.21.0
 
