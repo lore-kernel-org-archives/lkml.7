@@ -2,235 +2,223 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B5AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03AEC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F094A2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E46E216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:19:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="c/Eb6AsB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XpWt56F9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbfG3SS7 (ORCPT
+        id S1729356AbfG3STE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:18:59 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55541 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729269AbfG3SSy (ORCPT
+        Tue, 30 Jul 2019 14:19:04 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43525 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbfG3SQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:18:54 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIIgrV3326787
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:18:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIIgrV3326787
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564510723;
-        bh=9q1ANxLLGirwIn9gcyATJsNx3oJ4QsGskdhYaoHp+e8=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=c/Eb6AsBTbf9lkoBbdFiouDZpd96oB5im+53tgih85MYLMJOd+ivweFNL/ntIsDDq
-         7eUg+dLYLjuwyboNuFnmmBRb2kKZgzUkaVjkiNLF8JGNi7GKAw9PMQ3guby702oOHP
-         YZCtKEyG+XZlrSgek6aZwOkqpYU1yr3NiEC92B9itTEfRxJle8S8WUw8nXLttajHvx
-         6OkEY/0eaZvNd7tUFVFtKOCluXHhIirUcaUTvZ9vqLigzEqZtdFZFcKsJ+70kcuj29
-         cgowAXPSYpQavlSLBQMii/SrvgOs0Gwj1DwdzfLMkhuhwdQAVo7ptATWxWE+zw+FfH
-         TPNN770Cj+L/g==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIIgrh3326784;
-        Tue, 30 Jul 2019 11:18:42 -0700
-Date:   Tue, 30 Jul 2019 11:18:42 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-9a10bb22897ae9c2aa0ac9c2071f539f406ef942@git.kernel.org>
-Cc:     tglx@linutronix.de, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, mpetlan@redhat.com,
-        namhyung@kernel.org, ak@linux.intel.com, acme@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        jolsa@kernel.org, alexey.budankov@linux.intel.com, hpa@zytor.com
-Reply-To: tglx@linutronix.de, peterz@infradead.org, mingo@kernel.org,
-          alexander.shishkin@linux.intel.com,
-          alexey.budankov@linux.intel.com, jolsa@kernel.org,
-          namhyung@kernel.org, mpetlan@redhat.com,
-          linux-kernel@vger.kernel.org, acme@redhat.com,
-          ak@linux.intel.com, hpa@zytor.com
-In-Reply-To: <20190721112506.12306-17-jolsa@kernel.org>
-References: <20190721112506.12306-17-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf evsel: Rename perf_evsel__disable() to
- evsel__disable()
-Git-Commit-ID: 9a10bb22897ae9c2aa0ac9c2071f539f406ef942
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 14:16:27 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i189so30265166pfg.10
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=798KcEGTrSwLx5Xm6lM4Wt7zSKkXup1N6a2rN1l+UxY=;
+        b=XpWt56F9ZUXmWs3TPgoQ2NGKo/rPugYvYIBgS3UseXcF/J1rXuk4GMhje99H9mjZni
+         Q0lEn/Lu+lOmX29Sx5qRLdFE17hm6H82MAdmRlvSX7giM257M826Wmux64CoLQKTOpa9
+         czolyJSPK0NQDtxoPm1fygXMjN0QomV2SQwBA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=798KcEGTrSwLx5Xm6lM4Wt7zSKkXup1N6a2rN1l+UxY=;
+        b=CGz7pqwkq9L/gYY4nDHeyNwVSsi5u+YszMyi0wa4M1irHcnKQaivgKDquDPn0Qaj7P
+         RX2eCntxmv3F0Ww9XxyymkIUNUucRssER7f3uGRj8kd4SggU3GrXowgZzHZ5guhVixo7
+         2iFSXnoMvN6vBHepzJpLshOr6i4cLZhrMUZYGKIk6t297sOe4ezz6YCTD5+eSm+8ADAg
+         MhpkS7PA/z4IJSc8/gssx0v4q/2NtRU3YZFT2A06SpTP1MCEN/CYZKm69fROCu8xXNRI
+         o6RFT3Gxm78k/BBGKq5KogsDqw/b2Grwi5AxNmZtqKBtA/RbZRbtaQyxXE5A/svwwsBV
+         OFHA==
+X-Gm-Message-State: APjAAAUFW48VIxac0HKCzl1T11nUIbXtnlpOO+KYF3f2ozf7Op3SxDC7
+        Prn3YD4ycY9kuzngZCH8OUchqq3+LXM=
+X-Google-Smtp-Source: APXvYqzNRIBqN8b5v2paGctHdWin+ApXWdXI47XHsE/7P2JmxL4D0RP51NvavvSimwV77P2m3C7cTw==
+X-Received: by 2002:aa7:93bb:: with SMTP id x27mr44484534pff.10.1564510586198;
+        Tue, 30 Jul 2019 11:16:26 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 11:16:25 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v6 33/57] pinctrl: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:33 -0700
+Message-Id: <20190730181557.90391-34-swboyd@chromium.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
+References: <20190730181557.90391-1-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9a10bb22897ae9c2aa0ac9c2071f539f406ef942
-Gitweb:     https://git.kernel.org/tip/9a10bb22897ae9c2aa0ac9c2071f539f406ef942
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:24:03 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:43 -0300
+We don't need dev_err() messages when platform_get_irq() fails now that
+platform_get_irq() prints an error message itself when something goes
+wrong. Let's remove these prints with a simple semantic patch.
 
-perf evsel: Rename perf_evsel__disable() to evsel__disable()
+// <smpl>
+@@
+expression ret;
+struct platform_device *E;
+@@
 
-Renaming perf_evsel__disable() to evsel__disable(), so we don't have a
-name clash when we add perf_evsel__disable() in libperf.
+ret =
+(
+platform_get_irq(E, ...)
+|
+platform_get_irq_byname(E, ...)
+);
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-17-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+if ( \( ret < 0 \| ret <= 0 \) )
+{
+(
+-if (ret != -EPROBE_DEFER)
+-{ ...
+-dev_err(...);
+-... }
+|
+...
+-dev_err(...);
+)
+...
+}
+// </smpl>
+
+While we're here, remove braces on if statements that only have one
+statement (manually).
+
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- tools/perf/arch/arm/util/cs-etm.c    | 2 +-
- tools/perf/arch/x86/util/intel-bts.c | 2 +-
- tools/perf/arch/x86/util/intel-pt.c  | 2 +-
- tools/perf/builtin-trace.c           | 2 +-
- tools/perf/tests/keep-tracking.c     | 2 +-
- tools/perf/tests/switch-tracking.c   | 4 ++--
- tools/perf/util/evlist.c             | 2 +-
- tools/perf/util/evsel.c              | 2 +-
- tools/perf/util/evsel.h              | 2 +-
- 9 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 4b70b9504603..268fcb31cd53 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -821,7 +821,7 @@ static int cs_etm_snapshot_start(struct auxtrace_record *itr)
+Please apply directly to subsystem trees
+
+ drivers/pinctrl/pinctrl-amd.c           | 4 +---
+ drivers/pinctrl/pinctrl-oxnas.c         | 4 +---
+ drivers/pinctrl/pinctrl-pic32.c         | 4 +---
+ drivers/pinctrl/pinctrl-stmfx.c         | 4 +---
+ drivers/pinctrl/qcom/pinctrl-msm.c      | 4 +---
+ drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c | 5 +----
+ 6 files changed, 6 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 9b9c61e3f065..60d88e1df272 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -861,10 +861,8 @@ static int amd_gpio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
- 	evlist__for_each_entry(ptr->evlist, evsel) {
- 		if (evsel->attr.type == ptr->cs_etm_pmu->type)
--			return perf_evsel__disable(evsel);
-+			return evsel__disable(evsel);
- 	}
- 	return -EINVAL;
- }
-diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-index d27832fcb34c..8b0a53d748c9 100644
---- a/tools/perf/arch/x86/util/intel-bts.c
-+++ b/tools/perf/arch/x86/util/intel-bts.c
-@@ -317,7 +317,7 @@ static int intel_bts_snapshot_start(struct auxtrace_record *itr)
+ 	irq_base = platform_get_irq(pdev, 0);
+-	if (irq_base < 0) {
+-		dev_err(&pdev->dev, "Failed to get gpio IRQ: %d\n", irq_base);
++	if (irq_base < 0)
+ 		return irq_base;
+-	}
  
- 	evlist__for_each_entry(btsr->evlist, evsel) {
- 		if (evsel->attr.type == btsr->intel_bts_pmu->type)
--			return perf_evsel__disable(evsel);
-+			return evsel__disable(evsel);
- 	}
- 	return -EINVAL;
- }
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index e3dacb2bf01b..4ce157a4e5e2 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -788,7 +788,7 @@ static int intel_pt_snapshot_start(struct auxtrace_record *itr)
+ #ifdef CONFIG_PM_SLEEP
+ 	gpio_dev->saved_regs = devm_kcalloc(&pdev->dev, amd_pinctrl_desc.npins,
+diff --git a/drivers/pinctrl/pinctrl-oxnas.c b/drivers/pinctrl/pinctrl-oxnas.c
+index b4edbe0d9a73..4f6a196a663a 100644
+--- a/drivers/pinctrl/pinctrl-oxnas.c
++++ b/drivers/pinctrl/pinctrl-oxnas.c
+@@ -1229,10 +1229,8 @@ static int oxnas_gpio_probe(struct platform_device *pdev)
+ 		return PTR_ERR(bank->reg_base);
  
- 	evlist__for_each_entry(ptr->evlist, evsel) {
- 		if (evsel->attr.type == ptr->intel_pt_pmu->type)
--			return perf_evsel__disable(evsel);
-+			return evsel__disable(evsel);
- 	}
- 	return -EINVAL;
- }
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 89ae4737ef74..95ecefa9ff7e 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2400,7 +2400,7 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
- 			++trace->nr_events_printed;
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "irq get failed\n");
++	if (irq < 0)
+ 		return irq;
+-	}
  
- 			if (evsel->max_events != ULONG_MAX && ++evsel->nr_events_printed == evsel->max_events) {
--				perf_evsel__disable(evsel);
-+				evsel__disable(evsel);
- 				perf_evsel__close(evsel);
- 			}
- 		}
-diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
-index cdc19bcc7523..1976ccb3c812 100644
---- a/tools/perf/tests/keep-tracking.c
-+++ b/tools/perf/tests/keep-tracking.c
-@@ -129,7 +129,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
+ 	bank->id = id;
+ 	bank->gpio_chip.parent = &pdev->dev;
+diff --git a/drivers/pinctrl/pinctrl-pic32.c b/drivers/pinctrl/pinctrl-pic32.c
+index 6dc98e22f9f5..e7f6dd5ab578 100644
+--- a/drivers/pinctrl/pinctrl-pic32.c
++++ b/drivers/pinctrl/pinctrl-pic32.c
+@@ -2222,10 +2222,8 @@ static int pic32_gpio_probe(struct platform_device *pdev)
+ 		return PTR_ERR(bank->reg_base);
  
- 	evsel = perf_evlist__last(evlist);
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "irq get failed\n");
++	if (irq < 0)
+ 		return irq;
+-	}
  
--	CHECK__(perf_evsel__disable(evsel));
-+	CHECK__(evsel__disable(evsel));
- 
- 	comm = "Test COMM 2";
- 	CHECK__(prctl(PR_SET_NAME, (unsigned long)comm, 0, 0, 0));
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index acc4b5ff0cea..5662dc1c6bd3 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -464,7 +464,7 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
- 
- 	perf_evlist__enable(evlist);
- 
--	err = perf_evsel__disable(cpu_clocks_evsel);
-+	err = evsel__disable(cpu_clocks_evsel);
- 	if (err) {
- 		pr_debug("perf_evlist__disable_event failed!\n");
- 		goto out_err;
-@@ -483,7 +483,7 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
- 		goto out_err;
+ 	bank->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(bank->clk)) {
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index d3332da35637..5735ef5a71d5 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -608,10 +608,8 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
  	}
  
--	err = perf_evsel__disable(cycles_evsel);
-+	err = evsel__disable(cycles_evsel);
- 	if (err) {
- 		pr_debug("perf_evlist__disable_event failed!\n");
- 		goto out_err;
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index e87c43e339d0..9461583c53d9 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -350,7 +350,7 @@ void perf_evlist__disable(struct evlist *evlist)
- 	evlist__for_each_entry(evlist, pos) {
- 		if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos->fd)
- 			continue;
--		perf_evsel__disable(pos);
-+		evsel__disable(pos);
- 	}
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq <= 0) {
+-		dev_err(pctl->dev, "failed to get irq\n");
++	if (irq <= 0)
+ 		return -ENXIO;
+-	}
  
- 	evlist->enabled = false;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 7adae1736191..855d286298eb 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1244,7 +1244,7 @@ int evsel__enable(struct evsel *evsel)
- 	return err;
- }
+ 	mutex_init(&pctl->lock);
  
--int perf_evsel__disable(struct evsel *evsel)
-+int evsel__disable(struct evsel *evsel)
- {
- 	int err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0);
- 	/*
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index fa26c583a606..c338ce14e8aa 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -296,7 +296,7 @@ int perf_evsel__append_addr_filter(struct evsel *evsel,
- 				   const char *filter);
- int perf_evsel__apply_filter(struct evsel *evsel, const char *filter);
- int evsel__enable(struct evsel *evsel);
--int perf_evsel__disable(struct evsel *evsel);
-+int evsel__disable(struct evsel *evsel);
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 7f35c196bb3e..45975ed31205 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1160,10 +1160,8 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 	msm_pinctrl_setup_pm_reset(pctrl);
  
- int perf_evsel__open_per_cpu(struct evsel *evsel,
- 			     struct perf_cpu_map *cpus);
+ 	pctrl->irq = platform_get_irq(pdev, 0);
+-	if (pctrl->irq < 0) {
+-		dev_err(&pdev->dev, "No interrupt defined for msmgpio\n");
++	if (pctrl->irq < 0)
+ 		return pctrl->irq;
+-	}
+ 
+ 	pctrl->desc.owner = THIS_MODULE;
+ 	pctrl->desc.pctlops = &msm_pinctrl_ops;
+diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
+index 076ba085a6a1..3d8b1d74fa2f 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
++++ b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
+@@ -791,11 +791,8 @@ static int pm8xxx_mpp_probe(struct platform_device *pdev)
+ 	for (i = 0; i < pctrl->desc.npins; i++) {
+ 		pin_data[i].reg = SSBI_REG_ADDR_MPP(i);
+ 		pin_data[i].irq = platform_get_irq(pdev, i);
+-		if (pin_data[i].irq < 0) {
+-			dev_err(&pdev->dev,
+-				"missing interrupts for pin %d\n", i);
++		if (pin_data[i].irq < 0)
+ 			return pin_data[i].irq;
+-		}
+ 
+ 		ret = pm8xxx_pin_populate(pctrl, &pin_data[i]);
+ 		if (ret)
+-- 
+Sent by a computer through tubes
+
