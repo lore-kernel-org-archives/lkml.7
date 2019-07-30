@@ -2,115 +2,130 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9192EC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5A5C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F952087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564476167;
-	bh=YK2IrKjOsWEiencRzwtkuliQzDg5iArYwQoLPINIRA8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RgQKeSIXg2CDJtFCEnCVj+P5yqdzVKBzrWzpUKlyMrveUpJwZpoS3V8DX3b7dSB9u
-	 AIRvcttMo+RULjwgKEakpU7RsS+ZuTbIFnnxUj3oKJZB7tqXxHrBam6BEFotSE4vWP
-	 gBopRQ2vrJpBO3pPc0FTMvpHFBa8fD13nwZxZE6c=
+	by mail.kernel.org (Postfix) with ESMTP id 36DA32087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:43:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xG7r1Kkm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731024AbfG3Imq (ORCPT
+        id S1731047AbfG3In1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:42:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbfG3Imq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:42:46 -0400
-Received: from linux-8ccs (unknown [92.117.234.120])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEA68206A2;
-        Tue, 30 Jul 2019 08:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564476165;
-        bh=YK2IrKjOsWEiencRzwtkuliQzDg5iArYwQoLPINIRA8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZhAE4XiAR0lxtgqgtoYxN5SYyXm0adhMlJdrSkEJ6XXgah/SpUVb5UExJLe5pTPCr
-         cbJXtlcPxXvaWI/EQk7jDxsMsploMkUqXkVi9o7f4RTfWKOUGQsDFjixpUghXXo1nZ
-         6mvX52uc1uXN9atQc5ejGExZkxF+9GEt7h4ESHMM=
-Date:   Tue, 30 Jul 2019 10:42:39 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Jian Cheng <cj.chengjian@huawei.com>,
-        Nadav Amit <namit@vmware.com>, Sekhar Nori <nsekhar@ti.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Adam Ford <aford173@gmail.com>, Martin Kaiser <lists@kaiser.cx>
-Subject: Re: [PATCH] modules: always page-align module section allocations
-Message-ID: <20190730084239.GA19748@linux-8ccs>
-References: <20190724150156.28526-1-jeyu@kernel.org>
+        Tue, 30 Jul 2019 04:43:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:56092 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbfG3In1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 04:43:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5dtvEs2ayMMPDWlDVD/VDsH5GdZ7NguoxBUGDu1v+1A=; b=xG7r1KkmYiasqjaGmGOz72Bvj
+        0y27GNWNOy+MpQ4KS37k8JDOY7tYtI8IAqNjYPncukYi7M95ydimStrBb3IpiD/YIKOTorj5dlkW/
+        diNd1zqx3gUgaRb8lc8nPTkVsTdY1frc9BUQxXbhADAYnqs+7K/9Caz0prQ0CRz8JZJJ5mQEMVfKU
+        bs8EgdLviD8nLA9drj4K+9xd70p5QlYcvdecXAxq07ZZNDeVr1uxRx1RXpFCyLLLpXfug6MwlrklD
+        CqSHOGDXKs21BZagSWGc1Ripc5vOQCTL/vcdsMEHwuIuAzFlAZlsmjFVItaBpT0hgmeYaUHpikALG
+        94PhG1ZPw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsNj9-0005YZ-KW; Tue, 30 Jul 2019 08:43:23 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EB84320AFFE9F; Tue, 30 Jul 2019 10:43:21 +0200 (CEST)
+Date:   Tue, 30 Jul 2019 10:43:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Phil Auld <pauld@redhat.com>, Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH v3] sched/core: Don't use dying mm as active_mm of
+ kthreads
+Message-ID: <20190730084321.GL31381@hirez.programming.kicks-ass.net>
+References: <20190729210728.21634-1-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724150156.28526-1-jeyu@kernel.org>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+In-Reply-To: <20190729210728.21634-1-longman@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Jessica Yu [24/07/19 17:01 +0200]:
->Some arches (e.g., arm64, x86) have moved towards non-executable
->module_alloc() allocations for security hardening reasons. That means
->that the module loader will need to set the text section of a module to
->executable, regardless of whether or not CONFIG_STRICT_MODULE_RWX is set.
->
->When CONFIG_STRICT_MODULE_RWX=y, module section allocations are always
->page-aligned to handle memory rwx permissions. On some arches with
->CONFIG_STRICT_MODULE_RWX=n however, when setting the module text to
->executable, the BUG_ON() in frob_text() gets triggered since module
->section allocations are not page-aligned when CONFIG_STRICT_MODULE_RWX=n.
->Since the set_memory_* API works with pages, and since we need to call
->set_memory_x() regardless of whether CONFIG_STRICT_MODULE_RWX is set, we
->might as well page-align all module section allocations for ease of
->managing rwx permissions of module sections (text, rodata, etc).
->
->Fixes: 2eef1399a866 ("modules: fix BUG when load module with rodata=n")
->Reported-by: Martin Kaiser <lists@kaiser.cx>
->Reported-by: Bartosz Golaszewski <brgl@bgdev.pl>
->Tested-by: David Lechner <david@lechnology.com>
->Tested-by: Martin Kaiser <martin@kaiser.cx>
->Signed-off-by: Jessica Yu <jeyu@kernel.org>
+On Mon, Jul 29, 2019 at 05:07:28PM -0400, Waiman Long wrote:
+> It was found that a dying mm_struct where the owning task has exited
+> can stay on as active_mm of kernel threads as long as no other user
+> tasks run on those CPUs that use it as active_mm. This prolongs the
+> life time of dying mm holding up some resources that cannot be freed
+> on a mostly idle system.
+> 
+> Fix that by forcing the kernel threads to use init_mm as the active_mm
+> during a kernel thread to kernel thread transition if the previous
+> active_mm is dying (!mm_users). This will allows the freeing of resources
+> associated with the dying mm ASAP.
+> 
+> The presence of a kernel-to-kernel thread transition indicates that
+> the cpu is probably idling with no higher priority user task to run.
+> So the overhead of loading the mm_users cacheline should not really
+> matter in this case.
+> 
+> My testing on an x86 system showed that the mm_struct was freed within
+> seconds after the task exited instead of staying alive for minutes or
+> even longer on a mostly idle system before this patch.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  kernel/sched/core.c | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 795077af4f1a..41997e676251 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3214,6 +3214,8 @@ static __always_inline struct rq *
+>  context_switch(struct rq *rq, struct task_struct *prev,
+>  	       struct task_struct *next, struct rq_flags *rf)
+>  {
+> +	struct mm_struct *next_mm = next->mm;
+> +
+>  	prepare_task_switch(rq, prev, next);
+>  
+>  	/*
+> @@ -3229,8 +3231,22 @@ context_switch(struct rq *rq, struct task_struct *prev,
+>  	 *
+>  	 * kernel ->   user   switch + mmdrop() active
+>  	 *   user ->   user   switch
+> +	 *
+> +	 * kernel -> kernel and !prev->active_mm->mm_users:
+> +	 *   switch to init_mm + mmgrab() + mmdrop()
+>  	 */
+> -	if (!next->mm) {                                // to kernel
+> +	if (!next_mm) {					// to kernel
+> +		/*
+> +		 * Checking is only done on kernel -> kernel transition
+> +		 * to avoid any performance overhead while user tasks
+> +		 * are running.
+> +		 */
+> +		if (unlikely(!prev->mm &&
+> +			     !atomic_read(&prev->active_mm->mm_users))) {
+> +			next_mm = next->active_mm = &init_mm;
+> +			mmgrab(next_mm);
+> +			goto mm_switch;
+> +		}
+>  		enter_lazy_tlb(prev->active_mm, next);
+>  
+>  		next->active_mm = prev->active_mm;
 
-Applied, thanks everyone for testing.
+So I _really_ hate this complication. I'm thinking if you really care
+about this the time is much better spend getting rid of the active_mm
+tracking for x86 entirely.
 
-> kernel/module.c | 7 +------
-> 1 file changed, 1 insertion(+), 6 deletions(-)
->
->diff --git a/kernel/module.c b/kernel/module.c
->index 5933395af9a0..cd8df516666d 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -64,14 +64,9 @@
->
-> /*
->  * Modules' sections will be aligned on page boundaries
->- * to ensure complete separation of code and data, but
->- * only when CONFIG_STRICT_MODULE_RWX=y
->+ * to ensure complete separation of code and data
->  */
->-#ifdef CONFIG_STRICT_MODULE_RWX
-> # define debug_align(X) ALIGN(X, PAGE_SIZE)
->-#else
->-# define debug_align(X) (X)
->-#endif
->
-> /* If this is set, the section belongs in the init part of the module */
-> #define INIT_OFFSET_MASK (1UL << (BITS_PER_LONG-1))
->-- 
->2.16.4
->
