@@ -4,31 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7C2C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1C3C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3725720657
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 781F320657
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732149AbfG3PJ6 (ORCPT
+        id S1732168AbfG3PKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:09:58 -0400
-Received: from mxout014.mail.hostpoint.ch ([217.26.49.174]:40655 "EHLO
+        Tue, 30 Jul 2019 11:10:04 -0400
+Received: from mxout014.mail.hostpoint.ch ([217.26.49.174]:40692 "EHLO
         mxout014.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726602AbfG3PJ5 (ORCPT
+        by vger.kernel.org with ESMTP id S1732152AbfG3PKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:09:57 -0400
+        Tue, 30 Jul 2019 11:10:04 -0400
 Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
         by mxout014.mail.hostpoint.ch with esmtp (Exim 4.92 (FreeBSD))
         (envelope-from <dev@pschenker.ch>)
-        id 1hsTOz-0005LQ-Vj; Tue, 30 Jul 2019 16:46:57 +0200
+        id 1hsTOz-0005LE-7t; Tue, 30 Jul 2019 16:46:57 +0200
 Received: from [46.140.72.82] (helo=philippe-pc.toradex.int)
         by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.91 (FreeBSD))
         (envelope-from <dev@pschenker.ch>)
-        id 1hsTOz-000Mva-M4; Tue, 30 Jul 2019 16:46:57 +0200
+        id 1hsTOz-000Mva-2U; Tue, 30 Jul 2019 16:46:57 +0200
 X-Authenticated-Sender-Id: dev@pschenker.ch
 From:   Philippe Schenker <dev@pschenker.ch>
 To:     marcel.ziswiler@toradex.com, max.krummenacher@toradex.com,
@@ -42,9 +43,9 @@ Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 04/22] ARM: dts: imx7-colibri: Add sleep mode to ethernet
-Date:   Tue, 30 Jul 2019 16:46:31 +0200
-Message-Id: <20190730144649.19022-5-dev@pschenker.ch>
+Subject: [PATCH 03/22] ARM: dts: imx7-colibri: prepare module device tree for FlexCAN
+Date:   Tue, 30 Jul 2019 16:46:30 +0200
+Message-Id: <20190730144649.19022-4-dev@pschenker.ch>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730144649.19022-1-dev@pschenker.ch>
 References: <20190730144649.19022-1-dev@pschenker.ch>
@@ -57,52 +58,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Philippe Schenker <philippe.schenker@toradex.com>
 
-Add sleep pinmux to the fec so it can properly sleep.
+Prepare FlexCAN use on SODIMM 55/63 178/188. Those SODIMM pins are
+compatible for CAN bus use with several modules from the Colibri
+family.
+Add Better drivestrength and also add flexcan2.
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
 
- arch/arm/boot/dts/imx7-colibri.dtsi | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 35 ++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index 52046085ce6f..a8d992f3e897 100644
+index f7c9ce5bed47..52046085ce6f 100644
 --- a/arch/arm/boot/dts/imx7-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -101,8 +101,9 @@
+@@ -117,6 +117,18 @@
+ 	fsl,magic-packet;
  };
  
- &fec1 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&pinctrl_enet1>;
-+	pinctrl-1 = <&pinctrl_enet1_sleep>;
- 	clocks = <&clks IMX7D_ENET_AXI_ROOT_CLK>,
- 		<&clks IMX7D_ENET_AXI_ROOT_CLK>,
- 		<&clks IMX7D_ENET1_TIME_ROOT_CLK>,
-@@ -463,6 +464,22 @@
++&flexcan1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan1>;
++	status = "disabled";
++};
++
++&flexcan2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan2>;
++	status = "disabled";
++};
++
+ &gpmi {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_gpmi_nand>;
+@@ -330,12 +342,11 @@
+ 
+ &iomuxc {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4>;
++	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4
++		     &pinctrl_gpio7>;
+ 
+ 	pinctrl_gpio1: gpio1-grp {
+ 		fsl,pins = <
+-			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x74 /* SODIMM 55 */
+-			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x74 /* SODIMM 63 */
+ 			MX7D_PAD_SAI1_RX_SYNC__GPIO6_IO16	0x14 /* SODIMM 77 */
+ 			MX7D_PAD_EPDC_DATA09__GPIO2_IO9		0x14 /* SODIMM 89 */
+ 			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x74 /* SODIMM 91 */
+@@ -416,6 +427,13 @@
  		>;
  	};
  
-+	pinctrl_enet1_sleep: enet1sleepgrp {
++	pinctrl_gpio7: gpio7-grp { /* Alternatively CAN1 */
 +		fsl,pins = <
-+			MX7D_PAD_ENET1_RGMII_RX_CTL__GPIO7_IO4		0x0
-+			MX7D_PAD_ENET1_RGMII_RD0__GPIO7_IO0		0x0
-+			MX7D_PAD_ENET1_RGMII_RD1__GPIO7_IO1		0x0
-+			MX7D_PAD_ENET1_RGMII_RXC__GPIO7_IO5		0x0
-+
-+			MX7D_PAD_ENET1_RGMII_TX_CTL__GPIO7_IO10		0x0
-+			MX7D_PAD_ENET1_RGMII_TD0__GPIO7_IO6		0x0
-+			MX7D_PAD_ENET1_RGMII_TD1__GPIO7_IO7		0x0
-+			MX7D_PAD_GPIO1_IO12__GPIO1_IO12			0x0
-+			MX7D_PAD_SD2_CD_B__GPIO5_IO9			0x0
-+			MX7D_PAD_SD2_WP__GPIO5_IO10			0x0
++			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x14 /* SODIMM 55 */
++			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x14 /* SODIMM 63 */
 +		>;
 +	};
 +
- 	pinctrl_ecspi3_cs: ecspi3-cs-grp {
+ 	pinctrl_i2c1_int: i2c1-int-grp { /* PMIC / TOUCH */
  		fsl,pins = <
- 			MX7D_PAD_I2C2_SDA__GPIO4_IO11		0x14
+ 			MX7D_PAD_GPIO1_IO13__GPIO1_IO13	0x79
+@@ -459,10 +477,17 @@
+ 		>;
+ 	};
+ 
++	pinctrl_flexcan1: flexcan1-grp {
++		fsl,pins = <
++			MX7D_PAD_ENET1_RGMII_RD3__FLEXCAN1_TX	0x79 /* SODIMM 55 */
++			MX7D_PAD_ENET1_RGMII_RD2__FLEXCAN1_RX	0x79 /* SODIMM 63 */
++		>;
++	};
++
+ 	pinctrl_flexcan2: flexcan2-grp {
+ 		fsl,pins = <
+-			MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x59
+-			MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX	0x59
++			MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x79 /* SODIMM 188 */
++			MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX	0x79 /* SODIMM 178 */
+ 		>;
+ 	};
+ 
 -- 
 2.22.0
 
