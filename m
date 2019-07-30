@@ -2,82 +2,156 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8559EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C84C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C7720693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C78B20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564511938;
+	bh=OChHIstTK2zdB+afth0r88I81U8buXZ9fswSRaKxvq0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GNUXVi0NbMyjaftQFL7Qfw234jlEKWBc+q1beWjZi2B+55BuOHJRt/QaciCR5xtuA
+	 eIRTK5oRIlSIRDFUYugXHCYIOc+ZUBpmg75O5eduXSn3AjWVF3RquL1OLnh3Hq4ehW
+	 atIoPDZyunOYjSJ598l4eXN7OCrEprDvh5EIXp7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbfG3SiV (ORCPT
+        id S1729991AbfG3Si5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:38:21 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:42722 "EHLO inva021.nxp.com"
+        Tue, 30 Jul 2019 14:38:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbfG3SiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:38:21 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 929D2200742;
-        Tue, 30 Jul 2019 20:38:19 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 84A1E200735;
-        Tue, 30 Jul 2019 20:38:19 +0200 (CEST)
-Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 69572204D6;
-        Tue, 30 Jul 2019 20:38:19 +0200 (CEST)
-Date:   Tue, 30 Jul 2019 21:38:18 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Guido Gunther <agx@sigxcpu.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] clk: imx8mq: Mark AHB clock as critical
-Message-ID: <20190730183818.mvoo5q3s4xylrqao@fsr-ub1664-175>
-References: <1564471375-6736-1-git-send-email-abel.vesa@nxp.com>
- <20190730175231.B05ED206A2@mail.kernel.org>
+        id S1726165AbfG3Si4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 14:38:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BD99206A2;
+        Tue, 30 Jul 2019 18:38:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564511935;
+        bh=OChHIstTK2zdB+afth0r88I81U8buXZ9fswSRaKxvq0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MClK7EC2EGSMMykLIzctg8O6K4hjl6libkpRSi8PMGmwFu1gvJg9B/Ck4tHy5X1pi
+         UMvoiBDZ7c290TOmgDlnEYOKtUSgrchkHRIhTxqOKKlt+rcUvTxh/vB4j29u/UT/+P
+         yyn1Ww2p2Y2DU5sK7LBIHm3TsslVtLEM1slrH+A4=
+Date:   Tue, 30 Jul 2019 20:38:53 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Qian Cai <cai@lca.pw>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.14 054/293] sched/fair: Fix "runnable_avg_yN_inv" not
+ used warnings
+Message-ID: <20190730183853.GA5169@kroah.com>
+References: <20190729190820.321094988@linuxfoundation.org>
+ <20190729190828.058944959@linuxfoundation.org>
+ <20190730182801.GA94301@archlinux-threadripper>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190730175231.B05ED206A2@mail.kernel.org>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20190730182801.GA94301@archlinux-threadripper>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-07-30 10:52:30, Stephen Boyd wrote:
-> Quoting Abel Vesa (2019-07-30 00:22:55)
-> > Initially, the TMU_ROOT clock was marked as critical, which automatically
-> > made the AHB clock to stay always on. Since the TMU_ROOT clock is not
-> > marked as critical anymore, following commit:
+On Tue, Jul 30, 2019 at 11:28:01AM -0700, Nathan Chancellor wrote:
+> On Mon, Jul 29, 2019 at 09:19:05PM +0200, Greg Kroah-Hartman wrote:
+> > [ Upstream commit 509466b7d480bc5d22e90b9fbe6122ae0e2fbe39 ]
 > > 
-> > 431bdd1df48e ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT")
+> > runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
+> > included in several other places because they need other macros all
+> > came from kernel/sched/sched-pelt.h which was generated by
+> > Documentation/scheduler/sched-pelt. As the result, it causes compilation
+> > a lot of warnings,
 > > 
-> > all the clocks that derive from ipg_root clock (and implicitly ahb clock)
-> > would also have to enable, along with their own gate, the AHB clock.
+> >   kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+> >   kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+> >   kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+> >   ...
 > > 
-> > But considering that AHB is actually a bus that has to be always on, we mark
-> > it as critical in the clock provider driver and then all the clocks that
-> > derive from it can be controlled through the dedicated per IP gate which
-> > follows after the ipg_root clock.
+> > Silence it by appending the __maybe_unused attribute for it, so all
+> > generated variables and macros can still be kept in the same file.
 > > 
-> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> > Tested-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > Fixes: 431bdd1df48e ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT")
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Link: https://lkml.kernel.org/r/1559596304-31581-1-git-send-email-cai@lca.pw
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > > ---
+> >  Documentation/scheduler/sched-pelt.c | 3 ++-
+> >  kernel/sched/sched-pelt.h            | 2 +-
+> >  2 files changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
+> > index e4219139386a..7238b355919c 100644
+> > --- a/Documentation/scheduler/sched-pelt.c
+> > +++ b/Documentation/scheduler/sched-pelt.c
+> > @@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
+> >  	int i;
+> >  	unsigned int x;
+> >  
+> > -	printf("static const u32 runnable_avg_yN_inv[] = {");
+> > +	/* To silence -Wunused-but-set-variable warnings. */
+> > +	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
+> >  	for (i = 0; i < HALFLIFE; i++) {
+> >  		x = ((1UL<<32)-1)*pow(y, i);
+> >  
+> > diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
+> > index a26473674fb7..c529706bed11 100644
+> > --- a/kernel/sched/sched-pelt.h
+> > +++ b/kernel/sched/sched-pelt.h
+> > @@ -1,7 +1,7 @@
+> >  /* SPDX-License-Identifier: GPL-2.0 */
+> >  /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
+> >  
+> > -static const u32 runnable_avg_yN_inv[] = {
+> > +static const u32 runnable_avg_yN_inv[] __maybe_unused = {
+> >  	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
+> >  	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
+> >  	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
+> > -- 
+> > 2.20.1
+> > 
+> > 
 > > 
 > 
-> Should I just apply this to clk-fixes branch?
+> This patch does nothing in 4.14. There is no kernel/sched/pelt.c.
 > 
+> $ fd pelt
+> kernel/sched/sched-pelt.h
+> Documentation/scheduler/sched-pelt.c
+> 
+> runnable_avg_yN_inv is only used in one location in 4.14.134, in fair.c
+> behind CONFIG_SMP, which is also the guard that includes sched-pelt.h.
+> 
+> $ rg --no-heading -g '!Documentation' runnable_avg_yN_inv
+> kernel/sched/sched-pelt.h:4:static const u32 runnable_avg_yN_inv[] = {
+> kernel/sched/fair.c:2849:       val = mul_u64_u32_shr(val, runnable_avg_yN_inv[local_n], 32);
+> 
+> $ rg --no-heading -B 2 "sched-pelt.h"
+> kernel/sched/fair.c-707-#ifdef CONFIG_SMP
+> kernel/sched/fair.c-708-
+> kernel/sched/fair.c:709:#include "sched-pelt.h"
+> 
+> I see no way for the warnings in this patch to occur here, making it
+> pointless. I get two trivial conflicts in my msm-4.14 tree from this
+> patch that I would like to avoid dealing with.
+> 
+> Please consider dropping this patch, thanks!
 
-Nope. The commit 431bdd1df48e is just in -next for now.
-So this has to be taken by Shawn, I think.
+Now dropped, thanks.
+
+greg k-h
