@@ -2,134 +2,154 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A830C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B91C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE4AE206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0E2206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfG3Fth (ORCPT
+        id S1727572AbfG3Fve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 01:49:37 -0400
-Received: from anchovy2.45ru.net.au ([203.30.46.146]:45724 "EHLO
-        anchovy2.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfG3Fth (ORCPT
+        Tue, 30 Jul 2019 01:51:34 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:35851 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfG3Fve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 01:49:37 -0400
-Received: (qmail 23817 invoked by uid 5089); 30 Jul 2019 05:49:35 -0000
-Received: by simscan 1.2.0 ppid: 23689, pid: 23690, t: 0.3585s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950 spam: 3.1.4
-Received: from unknown (HELO ?192.168.0.34?) (rtresidd@electromag.com.au@203.59.235.95)
-  by anchovy3.45ru.net.au with ESMTPA; 30 Jul 2019 05:49:34 -0000
-Subject: Re: [PATCH 1/1] power: supply: sbs-battery: Add ability to force load
- a battery via the devicetree
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, rfontana@redhat.com,
-        allison@lohutok.net, Linux PM list <linux-pm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Nick Crews <ncrews@chromium.org>
-References: <1564030601-14639-1-git-send-email-rtresidd@electromag.com.au>
- <5023c937-0662-57e0-c104-bb9c23b07a49@electromag.com.au>
- <CABXOdTf45YEvF7YVxczzMwC2XQ2xuTpEo7cAAEqEs4=bdxmKNQ@mail.gmail.com>
-From:   Richard Tresidder <rtresidd@electromag.com.au>
-Message-ID: <ff5ad775-b0f0-1675-9d2f-f7bd86a6b3db@electromag.com.au>
-Date:   Tue, 30 Jul 2019 13:49:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 30 Jul 2019 01:51:34 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 18BD71BF20B;
+        Tue, 30 Jul 2019 05:51:25 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v5 00/14] Provide generic top-down mmap layout functions
+Date:   Tue, 30 Jul 2019 01:50:59 -0400
+Message-Id: <20190730055113.23635-1-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CABXOdTf45YEvF7YVxczzMwC2XQ2xuTpEo7cAAEqEs4=bdxmKNQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-AU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter
-   See below
-Richard Tresidder
+This series introduces generic functions to make top-down mmap layout
+easily accessible to architectures, in particular riscv which was
+the initial goal of this series.
+The generic implementation was taken from arm64 and used successively
+by arm, mips and finally riscv.
 
-Cheers
+Note that in addition the series fixes 2 issues:
+- stack randomization was taken into account even if not necessary.
+- [1] fixed an issue with mmap base which did not take into account
+  randomization but did not report it to arm and mips, so by moving
+  arm64 into a generic library, this problem is now fixed for both
+  architectures.
 
-   Richard Tresidder
+This work is an effort to factorize architecture functions to avoid
+code duplication and oversights as in [1].
 
-**
-On 30/07/2019 12:09 pm, Guenter Roeck wrote:
-> On Mon, Jul 29, 2019 at 8:02 PM Richard Tresidder
-> <rtresidd@electromag.com.au> wrote:
->> Hi Nick and Guenter
->> Just adding you to this one also seeing as you're looking at that other
->> sbs_battery patch for me.
->> Not sure why the get maintainers didn't list you for this one.
->>
->> Cheers
->>      Richard Tresidder
->>> Add the ability to force load a hot pluggable battery during boot where
->>> there is no gpio detect method available and the module is statically
->>> built. Normal polling will then occur on that battery when it is inserted.
->>>
->>> Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
->>> ---
->>>
->>> Notes:
->>>       Add the ability to force load a hot pluggable battery during boot where
->>>       there is no gpio detect method available and the module is statically
->>>       built. Normal polling will then occur on that battery when it is inserted.
->>>
->>>    drivers/power/supply/sbs-battery.c | 6 +++++-
->>>    1 file changed, 5 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
->>> index 048d205..ea8ba3e 100644
->>> --- a/drivers/power/supply/sbs-battery.c
->>> +++ b/drivers/power/supply/sbs-battery.c
->>> @@ -161,6 +161,7 @@ struct sbs_info {
->>>        int                             poll_time;
->>>        u32                             i2c_retry_count;
->>>        u32                             poll_retry_count;
->>> +     bool                            force_load;
->>>        struct delayed_work             work;
->>>        struct mutex                    mode_lock;
->>>        u32                             flags;
->>> @@ -852,6 +853,9 @@ static int sbs_probe(struct i2c_client *client,
->>>        if (rc)
->>>                chip->poll_retry_count = 0;
->>>
->>> +     chip->force_load = of_property_read_bool(client->dev.of_node,
->>> +                                             "sbs,force-load");
->>> +
-> Maybe it is documented in another patch, which I have not seen. If it
-> isn't, it will have to be documented and reviewed by a devicetree
-> maintainer. Either case, I don't immediately see why the variable
-> needs to reside in struct sbs_info; it seems to be used only in the
-> probe function.
-Good point, we don't actually need to store the value, it can just be a 
-local.
-Yep I had done a device tree documentation patch, but confused myself 
-when submitting due to it having to be in a separate patch
-I think I need to create 2 different patches but submit in the same 
-email via send-patch as a multipart patch..
-I'll try to fix that when I send it in again.
->
->>>        if (pdata) {
->>>                chip->poll_retry_count = pdata->poll_retry_count;
->>>                chip->i2c_retry_count  = pdata->i2c_retry_count;
->>> @@ -890,7 +894,7 @@ static int sbs_probe(struct i2c_client *client,
->>>         * Before we register, we might need to make sure we can actually talk
->>>         * to the battery.
->>>         */
->>> -     if (!(force_load || chip->gpio_detect)) {
->>> +     if (!(force_load || chip->gpio_detect || chip->force_load)) {
->>>                rc = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
->>>
->>>                if (rc < 0) {
->
+[1]: https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1429066.html
+
+Changes in v5:
+  - Fix [PATCH 11/14]
+  - Rebase on top of v5.3rc2 and commit
+    "riscv: kbuild: add virtual memory system selection"
+  - [PATCH 14/14] now takes into account the various virtual memory systems
+
+Changes in v4:
+  - Make ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT select ARCH_HAS_ELF_RANDOMIZE
+    by default as suggested by Kees,
+  - ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT depends on MMU and defines the
+    functions needed by ARCH_HAS_ELF_RANDOMIZE => architectures that use
+    the generic mmap topdown functions cannot have ARCH_HAS_ELF_RANDOMIZE
+    selected without MMU, but I think it's ok since randomization without
+    MMU does not add much security anyway.
+  - There is no common API to determine if a process is 32b, so I came up with
+    !IS_ENABLED(CONFIG_64BIT) || is_compat_task() in [PATCH v4 12/14].
+  - Mention in the change log that x86 already takes care of not offseting mmap
+    base address if the task does not want randomization.
+  - Re-introduce a comment that should not have been removed.
+  - Add Reviewed/Acked-By from Paul, Christoph and Kees, thank you for that.
+  - I tried to minimize the changes from the commits in v3 in order to make
+    easier the review of the v4, the commits changed or added are:
+    - [PATCH v4 5/14]
+    - [PATCH v4 8/14]
+    - [PATCH v4 11/14]
+    - [PATCH v4 12/14]
+    - [PATCH v4 13/14]
+
+Changes in v3:
+  - Split into small patches to ease review as suggested by Christoph
+    Hellwig and Kees Cook
+  - Move help text of new config as a comment, as suggested by Christoph
+  - Make new config depend on MMU, as suggested by Christoph
+
+Changes in v2 as suggested by Christoph Hellwig:
+  - Preparatory patch that moves randomize_stack_top
+  - Fix duplicate config in riscv
+  - Align #if defined on next line => this gives rise to a checkpatch
+    warning. I found this pattern all around the tree, in the same proportion
+    as the previous pattern which was less pretty:
+    git grep -C 1 -n -P "^#if defined.+\|\|.*\\\\$"
+
+Alexandre Ghiti (14):
+  mm, fs: Move randomize_stack_top from fs to mm
+  arm64: Make use of is_compat_task instead of hardcoding this test
+  arm64: Consider stack randomization for mmap base only when necessary
+  arm64, mm: Move generic mmap layout functions to mm
+  arm64, mm: Make randomization selected by generic topdown mmap layout
+  arm: Properly account for stack randomization and stack guard gap
+  arm: Use STACK_TOP when computing mmap base address
+  arm: Use generic mmap top-down layout and brk randomization
+  mips: Properly account for stack randomization and stack guard gap
+  mips: Use STACK_TOP when computing mmap base address
+  mips: Adjust brk randomization offset to fit generic version
+  mips: Replace arch specific way to determine 32bit task with generic
+    version
+  mips: Use generic mmap top-down layout and brk randomization
+  riscv: Make mmap allocation top-down by default
+
+ arch/Kconfig                       |  11 +++
+ arch/arm/Kconfig                   |   2 +-
+ arch/arm/include/asm/processor.h   |   2 -
+ arch/arm/kernel/process.c          |   5 --
+ arch/arm/mm/mmap.c                 |  52 --------------
+ arch/arm64/Kconfig                 |   2 +-
+ arch/arm64/include/asm/processor.h |   2 -
+ arch/arm64/kernel/process.c        |   8 ---
+ arch/arm64/mm/mmap.c               |  72 -------------------
+ arch/mips/Kconfig                  |   2 +-
+ arch/mips/include/asm/processor.h  |   5 --
+ arch/mips/mm/mmap.c                |  84 ----------------------
+ arch/riscv/Kconfig                 |  13 ++++
+ fs/binfmt_elf.c                    |  20 ------
+ include/linux/mm.h                 |   2 +
+ kernel/sysctl.c                    |   6 +-
+ mm/util.c                          | 107 ++++++++++++++++++++++++++++-
+ 17 files changed, 139 insertions(+), 256 deletions(-)
+
+-- 
+2.20.1
 
