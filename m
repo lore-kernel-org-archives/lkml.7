@@ -2,112 +2,93 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0EBC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5F9C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C9820679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9587820679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:48:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L8GR5DfM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZmjX1L6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731477AbfG3Cqo (ORCPT
+        id S1731486AbfG3CsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:46:44 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46090 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731462AbfG3Cqo (ORCPT
+        Mon, 29 Jul 2019 22:48:00 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44727 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730760AbfG3CsA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:46:44 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c2so28235318plz.13
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 19:46:43 -0700 (PDT)
+        Mon, 29 Jul 2019 22:48:00 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i18so29229286pgl.11;
+        Mon, 29 Jul 2019 19:47:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TIMkP6Sbv3HhH7Pg62xgc50SN2hQat3s6fyOGmFVet4=;
-        b=L8GR5DfMRyep5ArrsWvl2jbLj0dmva+GRlpTMBEy28z/3U4kCIKeBfzq/cFSiBzTUq
-         WhFNVymIRwcWDQ1d+MP+L6pG65a1cGoWsZQPFjvo6ct+L43Bji6mvXlBS1bQneYXg7cx
-         fy+1Mt8/3wqfOeX7J2TAKnyQ35VlrhKD8JpFAba6lteniuBVkgF4ubCMEGl0DZ/8hxjE
-         AcnOxEssWV3etZKwaV/WP3qCQ2uzrfUxPFssPd4SdLqohFGIpSgD7oSRd5+RzJ7P/oUp
-         9eGmRtDwiQDJsUdu9E6hAg0U25uQ22eAq+YqsUekO+88XtqsfJH7eqal1w1uOJS6LDPz
-         A67A==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=jWYfU1jYaSGV+LhFx50XtpqiC0SX7hxlhvxRl9ry8HQ=;
+        b=ZmjX1L6NHGq2f58VCh7Txf7lstlKz0iKTs3lzK/qU96oWtimllm+Kzv5X2ITSzVG8T
+         kgg22W1+enEkeaSm7VSlHRZB4pOzDuUXbavZDG2tIXaGkGzzuUabVirM/hOkqcqhKmpu
+         Qq9sTmUYMS6hgM1v37xxCb68CaGEHTdlS8UWns4ZfIUQnw3nqqDROQWLJU4fJynQKA1w
+         iJPGg8PwXJd8RzsxTvDJ4KEr0qYhWTEN//2WnV4NZeuSwmFhQ/wxhKrtXOxQH63oZZN4
+         lPuV4j6D/8KfAeEfQb4ehM8T0orezaK1X5qpgpYryorDnSn3ALih9rnaI/y82ywYKiht
+         2dgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TIMkP6Sbv3HhH7Pg62xgc50SN2hQat3s6fyOGmFVet4=;
-        b=Smds756yCidFKfl3W03dxVH8aFLUIA0eZGGXrCU4jifyLOUdg8mH3Sj48QDAo4+vDK
-         u5GI1VqL5TCywsySbmaII2QPMub++QiWRjh0wNWIeRInU0K4J7OxhKyHYOtzaM4y1HcK
-         sWeWMQ0OHbSPJl82iG1Ha6AKfhJsOMVSgfpP1uobAxZOPWWt/8RbprZiZG/ASg7Wc+aX
-         Ult06wBPe9aOHXDNeizSlhbp6GbeRJMbS7cqCmDUgNORQ1KUbZ8VxcNxlgJ6ILM7lYeb
-         Jh0yoz/PDyYvMxzbkQJD7hMPvt54hUExM6Qj/Cb2E5bu/qu3M1QUeVMga5mEnPbV+fsl
-         Iwyg==
-X-Gm-Message-State: APjAAAX2uImjDfoniwdWvzFRgzA/KUYPVfgzc8PvxgQhRioYieZhYYHa
-        PykhUMbVFaCAM5aBG+ChMIpSew==
-X-Google-Smtp-Source: APXvYqzeA9LVcJv5kbvk0OnqoT6oBgmnCofJDcZtwfBTMsDgwL3UumIql4DmQbc9jwe2WS2gmfH5ow==
-X-Received: by 2002:a17:902:aa41:: with SMTP id c1mr112285898plr.201.1564454803345;
-        Mon, 29 Jul 2019 19:46:43 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id x14sm79932677pfq.158.2019.07.29.19.46.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 19:46:42 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 08:16:40 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 0/3] Introduce Bandwidth OPPs for interconnects
-Message-ID: <20190730024640.xk27jgdfl2j6ucx7@vireshk-i7>
-References: <20190726231558.175130-1-saravanak@google.com>
- <20190729093545.kvnqxjkyx4nogddk@vireshk-i7>
- <CAGETcx8OBFGgP1-hj717Sk-_N95-kacVsz0yb288n3pej12n1Q@mail.gmail.com>
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=jWYfU1jYaSGV+LhFx50XtpqiC0SX7hxlhvxRl9ry8HQ=;
+        b=m9p1UdQTVTBJQfGxBCfPnI8iw70RQ8wwmtMC7Mdt8ryhTRSIkC7AMTHntwFTbK53VD
+         L8Taa2xCMI5b5j9J4mLevX4lvO58EDDqaDbzcLpEOK2tDQr4hbCMV/AQvR1memy263SU
+         MR9DY0Et0PN69p1ygrZ21qMWTWVCwhdsvQHFemoQyNA6s470O6ewVM1xyEuqx89dKSVI
+         nCDhx1IZmR/gIrLlho/pPVivncsOWNkXHNod5oPLL+Xg4F6Sw5IFuUXAOX7uPLNVZvMF
+         8P9H3BHeIpGGRK9eiuC8za9KnI4gsdeKalaoQVf8283FsiWLO+Ag0QxJ0dbi7Pa2O5yF
+         zicg==
+X-Gm-Message-State: APjAAAVMOnQwJEITAZ954KYt+3C409OeX4jwQ8EgiueSE5HSQG3oa5tf
+        Lw5rdOi4J9+YoA8qwNNmiMI=
+X-Google-Smtp-Source: APXvYqzkkNOkfXWo0GWINXk3JSea3VolpDz5dDOF8pQFVnABSddbUpbTyLpGOQSZwkWspIeieuMGXw==
+X-Received: by 2002:a17:90a:1ac5:: with SMTP id p63mr112799476pjp.25.1564454879392;
+        Mon, 29 Jul 2019 19:47:59 -0700 (PDT)
+Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id u7sm56813510pgr.94.2019.07.29.19.47.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 19:47:58 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
+Date:   Mon, 29 Jul 2019 19:47:54 -0700 (PDT)
+To:     Guenter Roeck <linux@roeck-us.net>
+cc:     Mark Balantzyan <mbalant3@gmail.com>, wim@linux-watchdog.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        andrianov@ispras.ru
+Subject: Re: [PATCH 1/4] watchdog device drivers:pc87413_wdt:Rewriting of
+ pc87413_wdt driver to utilize common watchdog interface
+In-Reply-To: <792afc6c-f705-a048-4e6d-81d00754c0ea@roeck-us.net>
+Message-ID: <alpine.DEB.2.21.1907291947330.103354@mbalantz-desktop>
+References: <20190730021540.66579-1-mbalant3@gmail.com> <792afc6c-f705-a048-4e6d-81d00754c0ea@roeck-us.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx8OBFGgP1-hj717Sk-_N95-kacVsz0yb288n3pej12n1Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: multipart/mixed; boundary="8323329-1861962599-1564454878=:103354"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-07-19, 13:16, Saravana Kannan wrote:
-> Sibi might be working on doing that for the SDM845 CPUfreq driver.
-> Georgi could also change his GPU driver use case to use this BW OPP
-> table and required-opps.
-> 
-> The problem is that people don't want to start using this until we
-> decide on the DT representation. So it's like a chicken and egg
-> situation.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Yeah, I agree to that.
+--8323329-1861962599-1564454878=:103354
+Content-Type: text/plain; format=flowed; charset=ISO-8859-7
+Content-Transfer-Encoding: 8BIT
 
-@Georgi and @Sibi: This is your chance to speak up about the proposal
-from Saravana and if you find anything wrong with them. And specially
-that it is mostly about interconnects here, I would like to have an
-explicit Ack from Georgi on this.
+Yes, each time I go through an edit I discover something I missed,
+apologies. Will be working on it for a bit, currently getting compile time
+errors. Just letting you know and it¢s good we¢re checking :-)
 
-And if you guys are all okay about this then please at least commit
-that you will convert your stuff based on this in coming days.
+Thank you,
+Mark
 
--- 
-viresh
+--8323329-1861962599-1564454878=:103354--
