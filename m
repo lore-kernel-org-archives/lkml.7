@@ -2,161 +2,153 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9054AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE74CC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C37206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:06:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OPoUT9Ba"
+	by mail.kernel.org (Postfix) with ESMTP id A61C520679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732387AbfG3KGC (ORCPT
+        id S1728364AbfG3KH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 06:06:02 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41228 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728490AbfG3KGB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 06:06:01 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c2so61877976wrm.8;
-        Tue, 30 Jul 2019 03:05:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UEcJqLpqdxHugh4FbCpqHOccSMWmtWE+74vZ1X+ixP4=;
-        b=OPoUT9BalTsSlqwWeigYMwb34ZoCBtcARK9YTsUWnuTww7Pgs+q+sEoLKrxR+LVzfW
-         QGVVA9LQ+speC/ahB1CcFHBd7b9yIQG6K4lKYvBXAV54pT2fPQ0rc2Ru+ql0xpd4Sued
-         zHJh3uTUxOKAxTJLP8aYpun/WGf6jPi/+kOSmYjZLIUfVXYkc0H9XA0t+5Dx11a+6A2d
-         e3V5A1tmScfnwY0ea6kZqp4Twj7SF3dhERL7cl88/ioQfkoABghOC4zNW4bVJT9dP86E
-         VL/Bt0+b32wr+++vvcPfO0k8yI0/Qwdhmf/uBEE7BXwe9GEBnAqSYxea4H4/zDEQSlHJ
-         wq/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UEcJqLpqdxHugh4FbCpqHOccSMWmtWE+74vZ1X+ixP4=;
-        b=Yx/9RwrFRmPEDYZNCwJcckkfpys5XH9lyrd5+xkGluIES/gX41n/L1jEp8VW0S9qbM
-         gyxXRL0utwIIMwhpV4Vh06qr73GyRcS35BiYApwNcJ9gIS7eYHZ6VO8nPGYFP7py3ZZx
-         PR9Q9mWY4Nzz5nCmRI8JKSe5B1RZcm3YdBWCeFfcPvRSXaF0s+mbYoe7Isu+ywVuxKai
-         tAtX8ardnrExY8M0qk5h262ZbKnn9sL8TAD+ghcDu21npzCFz29O6ACB2YM2qd6BuYaF
-         KIAUTitxZ4KLSEdF0xPVxmiChnHvJ0Mg+8xAqiI2D5NEXUQYuW6Nkh9jwBLg6doUqAIB
-         xkMw==
-X-Gm-Message-State: APjAAAVqW77fjiXl9ogJdJq0uaPeVGejZPR2YPKVGufvyffLkloPxCBM
-        vY/oqxxk8Hk+h7R4HV9LwOpgz+ZBONs=
-X-Google-Smtp-Source: APXvYqygSvOCoJZVpItyoofLlvPQGGZYG7h5++9O4ATiM0PUYGEcxhR62K3CqifMLOOpYvn6R5Oa7g==
-X-Received: by 2002:a5d:494d:: with SMTP id r13mr53013044wrs.152.1564481158990;
-        Tue, 30 Jul 2019 03:05:58 -0700 (PDT)
-Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
-        by smtp.gmail.com with ESMTPSA id n9sm108236322wrp.54.2019.07.30.03.05.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 03:05:58 -0700 (PDT)
-From:   Hubert Feurstein <h.feurstein@gmail.com>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH 1/4] net: dsa: mv88e6xxx: add support for MV88E6220
-Date:   Tue, 30 Jul 2019 12:04:26 +0200
-Message-Id: <20190730100429.32479-2-h.feurstein@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190730100429.32479-1-h.feurstein@gmail.com>
-References: <20190730100429.32479-1-h.feurstein@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 30 Jul 2019 06:07:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43014 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725209AbfG3KH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 06:07:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 12C59AFB1;
+        Tue, 30 Jul 2019 10:07:57 +0000 (UTC)
+Date:   Tue, 30 Jul 2019 12:07:56 +0200
+Message-ID: <s5hwofzvnr7.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     alsa-devel@alsa-project.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        syzbot <syzbot+d59c4387bfb6eced94e2@syzkaller.appspotmail.com>
+Subject: Re: [alsa-devel] [PATCH] ALSA: usb-audio: Fix gpf in   snd_usb_pipe_sanity_check
+In-Reply-To: <20190730092436.232-1-hdanton@sina.com>
+References: <20190730092436.232-1-hdanton@sina.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MV88E6220 is almost the same as MV88E6250 except that the ports 2-4 are
-not routed to pins. So the usable ports are 0, 1, 5 and 6.
+On Tue, 30 Jul 2019 11:24:36 +0200,
+Hillf Danton wrote:
+> 
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12befdc8600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
+> dashboard link: https://syzkaller.appspot.com/bug?extid=d59c4387bfb6eced94e2
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16efc49fa00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13245854600000
+> 
+> usb 1-1: New USB device found, idVendor=07fd, idProduct=0004, bcdDevice=d5.ac
+> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> usb 1-1: config 0 descriptor??
+> usb 1-1: string descriptor 0 read error: -71
+> usb 1-1: Waiting for MOTU Microbook II to boot up...
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] SMP KASAN
+> CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.3.0-rc2+ #23
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> RIP: 0010:snd_usb_pipe_sanity_check+0x80/0x130 sound/usb/helper.c:75
+> Code: 48 c1 ea 03 80 3c 02 00 0f 85 b3 00 00 00 48 8b 6d 00 c1 eb 1e 48 b8  
+> 00 00 00 00 00 fc ff df 48 8d 7d 03 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
+> 89 fa 83 e2 07 38 d0 7f 04 84 c0 75 7b 48 b8 00 00
+> RSP: 0018:ffff8881da2f7010 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: 0000000000000001 RCX: ffffffff8484d252
+> RDX: 0000000000000000 RSI: ffffffff8484d26c RDI: 0000000000000003
+> RBP: 0000000000000000 R08: ffff8881da22e000 R09: ffffed103b665d58
+> R10: ffffed103b665d57 R11: ffff8881db32eabf R12: 0000000000000000
+> R13: ffff8881d400ba80 R14: 1ffff1103b45ee06 R15: ffff8881c79244a0
+> FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f31b2a87000 CR3: 00000001d3fd4000 CR4: 00000000001406e0
+> Call Trace:
+>   snd_usb_motu_microbookii_communicate.constprop.0+0xa0/0x2fb  sound/usb/quirks.c:1007
+>   snd_usb_motu_microbookii_boot_quirk sound/usb/quirks.c:1051 [inline]
+>   snd_usb_apply_boot_quirk.cold+0x163/0x370 sound/usb/quirks.c:1280
+>   usb_audio_probe+0x2ec/0x2010 sound/usb/card.c:576
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x650 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:882
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x650 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:882
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+>   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+>   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> Modules linked in:
+> [ end trace 41e8577a8c48635e ]
 
-Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
----
- drivers/net/dsa/mv88e6xxx/chip.c | 25 +++++++++++++++++++++++++
- drivers/net/dsa/mv88e6xxx/chip.h |  3 ++-
- drivers/net/dsa/mv88e6xxx/port.h |  1 +
- 3 files changed, 28 insertions(+), 1 deletion(-)
+You don't have to copy the whole these texts at all.
+In general, it'd suffice to point out the dashboard URL, and if the
+stack trace is mandatory, drop the useless hex numbers and just show
+the significant part of the stack trace.
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 6b17cd961d06..c4982ced908e 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -4283,6 +4283,31 @@ static const struct mv88e6xxx_info mv88e6xxx_table[] = {
- 		.ops = &mv88e6240_ops,
- 	},
- 
-+	[MV88E6220] = {
-+		.prod_num = MV88E6XXX_PORT_SWITCH_ID_PROD_6220,
-+		.family = MV88E6XXX_FAMILY_6250,
-+		.name = "Marvell 88E6220",
-+		.num_databases = 64,
-+
-+		/* Ports 2-4 are not routed to pins
-+		 * => usable ports 0, 1, 5, 6
-+		 */
-+		.num_ports = 7,
-+		.num_internal_phys = 2,
-+		.max_vid = 4095,
-+		.port_base_addr = 0x08,
-+		.phy_base_addr = 0x00,
-+		.global1_addr = 0x0f,
-+		.global2_addr = 0x07,
-+		.age_time_coeff = 15000,
-+		.g1_irqs = 9,
-+		.g2_irqs = 10,
-+		.atu_move_port_mask = 0xf,
-+		.dual_chip = true,
-+		.tag_protocol = DSA_TAG_PROTO_DSA,
-+		.ops = &mv88e6250_ops,
-+	},
-+
- 	[MV88E6250] = {
- 		.prod_num = MV88E6XXX_PORT_SWITCH_ID_PROD_6250,
- 		.family = MV88E6XXX_FAMILY_6250,
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
-index 4646e46d47f2..6eb13f269366 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.h
-+++ b/drivers/net/dsa/mv88e6xxx/chip.h
-@@ -58,6 +58,7 @@ enum mv88e6xxx_model {
- 	MV88E6190X,
- 	MV88E6191,
- 	MV88E6240,
-+	MV88E6220,
- 	MV88E6250,
- 	MV88E6290,
- 	MV88E6320,
-@@ -77,7 +78,7 @@ enum mv88e6xxx_family {
- 	MV88E6XXX_FAMILY_6097,	/* 6046 6085 6096 6097 */
- 	MV88E6XXX_FAMILY_6165,	/* 6123 6161 6165 */
- 	MV88E6XXX_FAMILY_6185,	/* 6108 6121 6122 6131 6152 6155 6182 6185 */
--	MV88E6XXX_FAMILY_6250,	/* 6250 */
-+	MV88E6XXX_FAMILY_6250,	/* 6220, 6250 */
- 	MV88E6XXX_FAMILY_6320,	/* 6320 6321 */
- 	MV88E6XXX_FAMILY_6341,	/* 6141 6341 */
- 	MV88E6XXX_FAMILY_6351,	/* 6171 6175 6350 6351 */
-diff --git a/drivers/net/dsa/mv88e6xxx/port.h b/drivers/net/dsa/mv88e6xxx/port.h
-index 8d5a6cd6fb19..141df2988cd1 100644
---- a/drivers/net/dsa/mv88e6xxx/port.h
-+++ b/drivers/net/dsa/mv88e6xxx/port.h
-@@ -118,6 +118,7 @@
- #define MV88E6XXX_PORT_SWITCH_ID_PROD_6191	0x1910
- #define MV88E6XXX_PORT_SWITCH_ID_PROD_6185	0x1a70
- #define MV88E6XXX_PORT_SWITCH_ID_PROD_6240	0x2400
-+#define MV88E6XXX_PORT_SWITCH_ID_PROD_6220	0x2200
- #define MV88E6XXX_PORT_SWITCH_ID_PROD_6250	0x2500
- #define MV88E6XXX_PORT_SWITCH_ID_PROD_6290	0x2900
- #define MV88E6XXX_PORT_SWITCH_ID_PROD_6321	0x3100
--- 
-2.22.0
+> It was introduced in commit 801ebf1043ae for checking pipe and endpoint
+> types. It is fixed by adding a check of the ep pointer in question.
+> 
+> Reported-by: syzbot <syzbot+d59c4387bfb6eced94e2@syzkaller.appspotmail.com>
+> Fixes: commit 801ebf1043ae ("ALSA: usb-audio: Sanity checks for each pipe and EP types")
 
+Drop "commit" word.
+
+> Cc: Andrey Konovalov <andreyknvl@google.com>
+> Signed-off-by: Hillf Danton <dhanton@sina.com>
+> ---
+> This is to make syzbot happy for now and in long run we can make
+> snd_usb_pipe_sanity_check() available outside sound/usb by making
+> usb_urb_ep_type_check() a wrapper of the former. We will revisit
+> sound/usb once when things in the usb/core get in place.
+
+Actually I expected to apply the "long-term" fix now.  The same kind
+of fix was already submitted from me (<s5hlfwn376e.wl-tiwai@suse.de>),
+but I didn't merge it because working on the usb core helper would be
+a saner solution.
+
+If the usb core helper change would take more time, I'm going to merge
+this workaround for now with corrections.
+
+
+thanks,
+
+Takashi
