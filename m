@@ -2,117 +2,144 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74280C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B58FC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46DBC206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EEBE206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:07:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="KTozmroQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P7x6iRL+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbfG3RHk (ORCPT
+        id S1729001AbfG3RHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:07:40 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:45343 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfG3RHk (ORCPT
+        Tue, 30 Jul 2019 13:07:51 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46266 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfG3RHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:07:40 -0400
-Received: by mail-yb1-f196.google.com with SMTP id s41so1270118ybe.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 10:07:40 -0700 (PDT)
+        Tue, 30 Jul 2019 13:07:51 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c3so7028137pfa.13
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 10:07:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qks3K4GGrulb2C0Ck+/3WZ7Ox9e+XzeggPI4nq1FENI=;
-        b=KTozmroQs2NoFwB/7cl52MZhpQHOqD8frHClUzchrD+1HxPb9jxsHarpK3lbMg14oL
-         LvrYfMv1OxYxEk6jTm/oYLAA1RdIdt90n8LIv84ycM//5KWB2QKFMMRnNP2+q294Y/Ip
-         cuQdCy/DmyXBXHobGkSOPgzMDflCjWKmxCI2Gna6sU4P6WSEDL8WKeRFuFWX5o7CyMIF
-         wZyKmBnSXQ1KHVTuWNQi9UsCTyRX35TUPnXApNzYCjn7YYiHM9VhcNZSbK+PsB7WjA7t
-         EN1DNM4JQq0J0XMWbU6stHC55kbJswvAXgKDVC3C0YC0OmgqC4JCqrQVFSC9oXShtX0M
-         E4oA==
+         :content-disposition:in-reply-to;
+        bh=Ij5IHsIz5m1k/TZ9G+k0vjjrXKuI8zvs4XWvYMUv6xA=;
+        b=P7x6iRL+potI/UXe2GL2bGfRW6KNMvSV5ppccdYt283WmoDUkRdzp4koQgOgunvvzl
+         snnlVm7+LveboI+FEM9Sxiqv4tsYw40jcdadwsRQ4ypLgBK/XrqJnb9wZOPcxftcsBwJ
+         DqurscVqXfKuZu8Sjv4SL2ydKIbof4EZcvndE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qks3K4GGrulb2C0Ck+/3WZ7Ox9e+XzeggPI4nq1FENI=;
-        b=RiNALAaj7EdN37MOkeij9AuzlBt+/YK94djimAMBca45yBVyH4VCYcz/RKef5pK47q
-         Ya8HgFiQuPqcqcRgwto0W4C3qljrWDBC8AwAA4j1yWy9P5oYeu9Jcv4GJll0kuTFWnUh
-         6AGhXTZtnjbzpIlu9EHBtsyPyIlqlzHwUdMdtlUk5ZD8fMHTz2v+JRuDRZlHpKzzbfQz
-         ISh9rTuaKNJ16Tr8rMp58TL5doyDpFFREo1WdFshhqJSr3u78b4s74x8r+aTMdRReFaa
-         ciz4tdyiy/KQgNv7qTIx7mL89Y1CuUUxUUB/OIG1i5xpdQz/3ikUy/GIcYuNqE19CqZW
-         d99g==
-X-Gm-Message-State: APjAAAXTJk2ioZsrXMHqs64QGYOVpaPPvk20XnFfPnkZq4/mF2Gwy9+w
-        mUyxaxeSPjQD4oqCi1pnYxgpFA==
-X-Google-Smtp-Source: APXvYqyyhk5DPM+8bWP0tf2V0lR52Kjy3fuZGEK6h5rkpUxWToTAGb8tO/aypQUexqS+TP4/SxRaKg==
-X-Received: by 2002:a25:f202:: with SMTP id i2mr73141060ybe.462.1564506459592;
-        Tue, 30 Jul 2019 10:07:39 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id v135sm15374362ywc.53.2019.07.30.10.07.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 10:07:39 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 13:07:38 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     a.hajda@samsung.com, narmstrong@baylibre.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
-        seanpaul@chromium.org, heiko@sntech.de,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH -next] drm/rockchip: Make analogix_dp_atomic_check static
-Message-ID: <20190730170738.GR104440@art_vandelay>
-References: <20190730150057.57388-1-yuehaibing@huawei.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ij5IHsIz5m1k/TZ9G+k0vjjrXKuI8zvs4XWvYMUv6xA=;
+        b=LmwEiOS9Xy8XyOvqZPe8puowwQEUo+fDTHSCfAJPQEMMBTod/BSdirKpxV3jmi69I6
+         OpchNDoXsfvMmwvp77F/H1wdeyDF7L9dtAuaRz9n5goanhvzQUYmo5z0g++/JacfzRsq
+         oCmnTw6U/LRASe5Bkzo5nNgLjZfIocLhvHtGt8Gh1iCCawp8TWPmJ6M5ZqVIPnxODmgw
+         fhIhoxkfkiCef6jPLnUmY6BAD8RacSVlLafGeunAR567a2nRNZmZvhuHx4TxkA1w1pqF
+         ytGLiPXy7X3Rt+GFkeRQwP6Ki08hETzCZRyzIe1LE/iYbzLiooRus0QnblOxJ+o2MLSS
+         PHnQ==
+X-Gm-Message-State: APjAAAW/1DpPHhqs90aOmaY+6/G6PyUdJq9LothkhjGQrv5UuoKxmEgA
+        B8CnQezAPsx2OsY8oNjRm8dO7TECAlQ=
+X-Google-Smtp-Source: APXvYqxJ+yRT5SoyqEcmrG5qDLkr0gEeD/gtdMxDd4IXybXkd0K5WhnE3L10kkcRHqj8qn91kuZIng==
+X-Received: by 2002:aa7:9298:: with SMTP id j24mr41520880pfa.58.1564506470984;
+        Tue, 30 Jul 2019 10:07:50 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f6sm67441648pga.50.2019.07.30.10.07.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jul 2019 10:07:50 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 10:07:49 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Linux kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drivers/macintosh/smu.c: Mark expected switch
+ fall-through
+Message-ID: <201907301005.0661E63CF@keescook>
+References: <20190730143704.060a2606@canb.auug.org.au>
+ <878ssfzjdk.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190730150057.57388-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <878ssfzjdk.fsf@concordia.ellerman.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:00:57PM +0800, YueHaibing wrote:
-> Fix sparse warning:
+On Wed, Jul 31, 2019 at 12:28:55AM +1000, Michael Ellerman wrote:
+> Stephen Rothwell <sfr@canb.auug.org.au> writes:
+> > Mark switch cases where we are expecting to fall through.
+> >
+> > This patch fixes the following warning (Building: powerpc):
+> >
+> > drivers/macintosh/smu.c: In function 'smu_queue_i2c':
+> > drivers/macintosh/smu.c:854:21: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >    cmd->info.devaddr &= 0xfe;
+> >    ~~~~~~~~~~~~~~~~~~^~~~~~~
+> > drivers/macintosh/smu.c:855:2: note: here
+> >   case SMU_I2C_TRANSFER_STDSUB:
+> >   ^~~~
+> >
+> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/macintosh/smu.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/macintosh/smu.c b/drivers/macintosh/smu.c
+> > index 276065c888bc..23f1f41c8602 100644
+> > --- a/drivers/macintosh/smu.c
+> > +++ b/drivers/macintosh/smu.c
+> > @@ -852,6 +852,7 @@ int smu_queue_i2c(struct smu_i2c_cmd *cmd)
+> >  		break;
+> >  	case SMU_I2C_TRANSFER_COMBINED:
+> >  		cmd->info.devaddr &= 0xfe;
+> > +		/* fall through */
+> >  	case SMU_I2C_TRANSFER_STDSUB:
+> >  		if (cmd->info.sublen > 3)
+> >  			return -EINVAL;
 > 
-> drivers/gpu/drm/bridge/analogix/analogix_dp_core.c:1151:5: warning:
->  symbol 'analogix_dp_atomic_check' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Why do we think it's an expected fall through? I can't really convince
+> myself from the surrounding code that it's definitely intentional.
 
-Thanks for your patch, applied to drm-misc-next
+Yeah, good question. Just now when I went looking for who
+used SMU_I2C_TRANSFER_COMBINED, I found the only caller in
+arch/powerpc/platforms/powermac/low_i2c.c and it is clearly using a
+fall-through for building the command for "stdsub" and "combined",
+so I think that's justification enough:
 
-Sean
+        switch(bus->mode) {
+        case pmac_i2c_mode_std:
+                if (subsize != 0)
+                        return -EINVAL;
+                cmd->info.type = SMU_I2C_TRANSFER_SIMPLE;
+                break;
+        case pmac_i2c_mode_stdsub:
+        case pmac_i2c_mode_combined:
+                if (subsize > 3 || subsize < 1)
+                        return -EINVAL;
+                cmd->info.sublen = subsize;
+                /* that's big-endian only but heh ! */
+                memcpy(&cmd->info.subaddr, ((char *)&subaddr) + (4 - subsize),
+                       subsize);
+                if (bus->mode == pmac_i2c_mode_stdsub)
+                        cmd->info.type = SMU_I2C_TRANSFER_STDSUB;
+                else
+                        cmd->info.type = SMU_I2C_TRANSFER_COMBINED;
 
-> ---
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> index c82c7d5..f2f7f69 100644
-> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> @@ -1148,8 +1148,8 @@ analogix_dp_best_encoder(struct drm_connector *connector)
->  }
->  
->  
-> -int analogix_dp_atomic_check(struct drm_connector *connector,
-> -			     struct drm_atomic_state *state)
-> +static int analogix_dp_atomic_check(struct drm_connector *connector,
-> +				    struct drm_atomic_state *state)
->  {
->  	struct analogix_dp_device *dp = to_dp(connector);
->  	struct drm_connector_state *conn_state;
-> -- 
-> 2.7.4
-> 
-> 
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Kees Cook
