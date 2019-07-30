@@ -2,147 +2,159 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE92C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2D8C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CED720693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:15:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Zwx0RQpM"
+	by mail.kernel.org (Postfix) with ESMTP id D04A020693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:15:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564517714;
+	bh=2DeioQljBl/BZ/jhEzrVarLl6wiGsnZWbH39DDDmTOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jrfplXnfKC43NQC8dSeOpgrypMHhGiB+rVuj2nA7G9mL7t2zU6VPbhVL9+tjIvuTh
+	 fMIZCNIy9xihGlqFKvBzZMogssCUACsmlHk+R8Ed/ZL/Lk0og4HbsQHeZ0NEnLZltK
+	 f22cDk9uFLUNrLFbUd9ki/7CnfPG9vBMCbJmZ4yM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbfG3UPG (ORCPT
+        id S1728040AbfG3UPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:15:06 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44942 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbfG3UPF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:15:05 -0400
-Received: by mail-ot1-f68.google.com with SMTP id b7so17508431otl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 13:15:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5RzApq6XFoztBnIqNk8vSnTrtbUfODyGJJfunMohfoM=;
-        b=Zwx0RQpMg/Mqj/9z5S89A3ZEJVMpYC9h+xxOXAaZcuU5PCAM8m9Gqaz//RnKDBGDqW
-         9liyDLB1BwWzU+ZNcxIkUlAhEM4dwaxEWMetA5zngGXxvLUm9KzmX8yqMCHjIc+8qA1I
-         4Kz3jT1Z/FAcCfiuMTNuiLT9z2kiwc9S0x8YZz6OVlR8h69bqZIY4y5U2CziwyfAHt6S
-         8CcPZTmDK53Mwk0qwS3iX6X/MjsfAEfTAQNYo9qJOCNeLP9BFCn9fMgZ4bp/B5yi3zOB
-         uh6pK4X9QLjcA5W2PzdnflMG8qYA3C40MW87vpeyNAEv23qLtzsWi1Ofnp3dkIf+XH59
-         Buzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5RzApq6XFoztBnIqNk8vSnTrtbUfODyGJJfunMohfoM=;
-        b=XfFMKASWDwbS1tfH6/aGzAkgYma3mT7QzZ+k8Vk0HL6JvUrV2z2rirPYHwMGbDOliw
-         D6atRhiu1qGnIPYzOPhwM4Z8uf+ukrGbYmdO4gC57jVpdbZbt/n5Hpp0vxA7R88dFVbH
-         dqyA6WUgHhfY4mbaP7f57OvR0oTvGitZHAI2FjRo+IEPJUiKYq08Eg6Woz3SVdn6GWIg
-         hc0Ak1n1piL9Iz1aUy3uPkZvJA5ilTznm8lbLHleJ2TiWVuWMVhlc2+EPpJ2bB2JSE2r
-         dQM5MHOB71W0sYu92oWH6uh036M+jlSNANkvB8fqVx/4cIA3bnqpuKXZDhePDk+j8D01
-         6VSw==
-X-Gm-Message-State: APjAAAVJrIxnTQGesEfIUOqapeLOstGnSt3iWaJY0hf2ixBb8A5pqa3C
-        41RgyWDawwYO7OiavMDUax1zMXtMSQ6LTPWn69HJUQ==
-X-Google-Smtp-Source: APXvYqw9ObVuL9+XuGR4o0J2QBLrDkVcN3aYitNJvsGPbv5ZPcYvxRI6eCPCNx+pUD4yOvd0Fq+ICTQ9s+BKXhNpUpI=
-X-Received: by 2002:a9d:7248:: with SMTP id a8mr23671169otk.363.1564517704838;
- Tue, 30 Jul 2019 13:15:04 -0700 (PDT)
+        Tue, 30 Jul 2019 16:15:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727931AbfG3UPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 16:15:11 -0400
+Received: from earth.universe (unknown [185.62.205.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 209D8208E3;
+        Tue, 30 Jul 2019 20:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564517710;
+        bh=2DeioQljBl/BZ/jhEzrVarLl6wiGsnZWbH39DDDmTOo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZFu58bGBlKK44NLLQM02UuP3JakqHRxL6Np1HRFBUshugmLj4N0VIYhocimbjGQc6
+         +QM1FGMPsaFV1nVRWhAVYm2R5hTQTUfODu1Ahmzu65oQdY4lOi+S5eOLkxNRujoZbv
+         JwCi263N+ix+C8SM1actbJqnVwwSt8m4gMXgk/0A=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 8BE6A3C0943; Tue, 30 Jul 2019 22:15:07 +0200 (CEST)
+Date:   Tue, 30 Jul 2019 22:15:07 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] HSI: ssi_protocol: Mark expected switch fall-throughs
+Message-ID: <20190730201507.wvxy7bit7y2l5tsn@earth.universe>
+References: <20190729224519.GA23078@embeddedor>
 MIME-Version: 1.0
-References: <20190730192552.4014288-1-arnd@arndb.de> <20190730195819.901457-1-arnd@arndb.de>
-In-Reply-To: <20190730195819.901457-1-arnd@arndb.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 30 Jul 2019 13:14:52 -0700
-Message-ID: <CAPcyv4i_nHzV155RcgnAQ189aq2Lfd2g8pA1D5NbZqo9E_u+Dw@mail.gmail.com>
-Subject: Re: [PATCH v5 13/29] compat_ioctl: move more drivers to compat_ptr_ioctl
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-iio@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        sparclinux@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>, qat-linux@intel.com,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        linux-input@vger.kernel.org, Darren Hart <dvhart@infradead.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        David Sterba <dsterba@suse.com>,
-        platform-driver-x86@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux Wireless List <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tee-dev@lists.linaro.org,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-btrfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="taiuty7vd5dvkqvq"
+Content-Disposition: inline
+In-Reply-To: <20190729224519.GA23078@embeddedor>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 12:59 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> The .ioctl and .compat_ioctl file operations have the same prototype so
-> they can both point to the same function, which works great almost all
-> the time when all the commands are compatible.
->
-> One exception is the s390 architecture, where a compat pointer is only
-> 31 bit wide, and converting it into a 64-bit pointer requires calling
-> compat_ptr(). Most drivers here will never run in s390, but since we now
-> have a generic helper for it, it's easy enough to use it consistently.
->
-> I double-checked all these drivers to ensure that all ioctl arguments
-> are used as pointers or are ignored, but are not interpreted as integer
-> values.
->
-> Acked-by: Jason Gunthorpe <jgg@mellanox.com>
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Acked-by: David Sterba <dsterba@suse.com>
-> Acked-by: Darren Hart (VMware) <dvhart@infradead.org>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/nvdimm/bus.c                        | 4 ++--
-[..]
-> diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-> index 798c5c4aea9c..6ca142d833ab 100644
-> --- a/drivers/nvdimm/bus.c
-> +++ b/drivers/nvdimm/bus.c
-> @@ -1229,7 +1229,7 @@ static const struct file_operations nvdimm_bus_fops = {
->         .owner = THIS_MODULE,
->         .open = nd_open,
->         .unlocked_ioctl = bus_ioctl,
-> -       .compat_ioctl = bus_ioctl,
-> +       .compat_ioctl = compat_ptr_ioctl,
->         .llseek = noop_llseek,
->  };
->
-> @@ -1237,7 +1237,7 @@ static const struct file_operations nvdimm_fops = {
->         .owner = THIS_MODULE,
->         .open = nd_open,
->         .unlocked_ioctl = dimm_ioctl,
-> -       .compat_ioctl = dimm_ioctl,
-> +       .compat_ioctl = compat_ptr_ioctl,
->         .llseek = noop_llseek,
->  };
 
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+--taiuty7vd5dvkqvq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Jul 29, 2019 at 05:45:19PM -0500, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
+>=20
+> This patch fixes the following warning (Building: arm):
+>=20
+> drivers/hsi/clients/ssi_protocol.c: In function =E2=80=98ssip_set_rxstate=
+=E2=80=99:
+> drivers/hsi/clients/ssi_protocol.c:291:6: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+>    if (atomic_read(&ssi->tx_usecnt))
+>       ^
+> drivers/hsi/clients/ssi_protocol.c:294:2: note: here
+>   case RECEIVING:
+>   ^~~~
+>=20
+> drivers/hsi/clients/ssi_protocol.c: In function =E2=80=98ssip_keep_alive=
+=E2=80=99:
+> drivers/hsi/clients/ssi_protocol.c:466:7: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+>     if (atomic_read(&ssi->tx_usecnt) =3D=3D 0)
+>        ^
+> drivers/hsi/clients/ssi_protocol.c:472:3: note: here
+>    case SEND_IDLE:
+>    ^~~~
+>=20
+> Notice that, in this particular case, the code comment is
+> modified in accordance with what GCC is expecting to find.
+>=20
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+
+Thanks, queued to hsi-next.
+
+-- Sebastian
+
+>  drivers/hsi/clients/ssi_protocol.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/hsi/clients/ssi_protocol.c b/drivers/hsi/clients/ssi=
+_protocol.c
+> index 9aeed98b87a1..504d00ec1ea7 100644
+> --- a/drivers/hsi/clients/ssi_protocol.c
+> +++ b/drivers/hsi/clients/ssi_protocol.c
+> @@ -290,7 +290,7 @@ static void ssip_set_rxstate(struct ssi_protocol *ssi=
+, unsigned int state)
+>  		/* CMT speech workaround */
+>  		if (atomic_read(&ssi->tx_usecnt))
+>  			break;
+> -		/* Otherwise fall through */
+> +		/* Else, fall through */
+>  	case RECEIVING:
+>  		mod_timer(&ssi->keep_alive, jiffies +
+>  						msecs_to_jiffies(SSIP_KATOUT));
+> @@ -465,9 +465,10 @@ static void ssip_keep_alive(struct timer_list *t)
+>  		case SEND_READY:
+>  			if (atomic_read(&ssi->tx_usecnt) =3D=3D 0)
+>  				break;
+> +			/* Fall through */
+>  			/*
+> -			 * Fall through. Workaround for cmt-speech
+> -			 * in that case we relay on audio timers.
+> +			 * Workaround for cmt-speech in that case
+> +			 * we relay on audio timers.
+>  			 */
+>  		case SEND_IDLE:
+>  			spin_unlock(&ssi->lock);
+> --=20
+> 2.22.0
+>=20
+
+--taiuty7vd5dvkqvq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1ApUcACgkQ2O7X88g7
++po30RAAnTpQP30nHUBPDb5bMaH+xIpDedxkJfYqxatFNGAHYJrFkE1XPsicpDOL
+rjhcs/QIUabdJxDqcbGmB7sKv/RpGPYtV1h7n091zbRyfTtrJ7F5/cyYY7xjkdPr
+8XtyFgiK7o8Nc45UrZ0Zod0vcxG4E6sjFU489M3h1hVHhnnJdGE0gW5bU4JARcSe
+6rkzquxz+aNC1rPIDfOOXWRw9DwI9/YRuNl2y3rakeJSXDB6TfPl7Nk/Z+3ZgKg/
+rZucVptRaoGjHB26YBOlHxAxNvhYnl/iOpVy9giOIPs39JjWTbsfpxGTvbIEshge
+95XyLlMI3iOvkU5esviVBjzSsm+vN9t/2GyzIhPeqRvOgcspej9NYkZd1nQpMyO6
+tSzWK1wTQ/JzPow0WhCp52SlkdfzA9KD6W5KYf1/GPXtHsUiA+2e4PGFTCJDW9I3
+gmPAymQZ8dO5/f0M7RjueIO33ig/qUTC1YB/ziplLMlE0WxGxuWaVG3rbOR4lMcL
+BZG9DHdclldyrkuDFbnyZgEkVK406oX1rShYiVIUdKpy+mxiuyM7f45p+2043gWo
+QxjwWRmsZ1T++jXDwckHnUGUoXxm4U+OJSpAde/I5XtazivvwOPxdnT4jMLYmxEp
+sDdGtBGi/ErTDpWZkgpJwA0oswVdiqsxXBhdYBc1WHtCKihlsMg=
+=vsr6
+-----END PGP SIGNATURE-----
+
+--taiuty7vd5dvkqvq--
