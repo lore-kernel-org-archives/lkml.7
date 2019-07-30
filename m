@@ -2,176 +2,255 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A89C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C647C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC33D2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:52:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="s9tQPhZI"
+	by mail.kernel.org (Postfix) with ESMTP id 389F62087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564530982;
+	bh=5cw5UMIQzzNDhVkdjfYBVpsACJVeh1Vqmj5RxFAzRTc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=q9rbV4fvKcEmggDXyFeDaYCn/BDhRIrbrPjC9kOTqfyuFpF1Ii9dYFwUPdHJe4+BX
+	 JFCnq0fL5gKVsU2LJD402kB0lP5LZ4ZYBmDJMoLBxg18LmbOYpP/pZ6ncl4OUej3kn
+	 bShx86IMUKyFQEtIMXSM1aCsYcmODQFvukz+GTFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfG3XwQ (ORCPT
+        id S1727986AbfG3X4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 19:52:16 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.114]:21445 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726798AbfG3XwQ (ORCPT
+        Tue, 30 Jul 2019 19:56:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53228 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbfG3X4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 19:52:16 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 8E6BE12D34
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 18:52:14 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id sbughepWddnCesbugh7yiC; Tue, 30 Jul 2019 18:52:14 -0500
-X-Authority-Reason: nr=8
+        Tue, 30 Jul 2019 19:56:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/ukpMDk0wz5CKxDvTagctdZtNe0/IpirBbr6dKugnM8=; b=s9tQPhZIjt4WV11f3iLv3viKaM
-        3bhni4I9Xcealg6Ws/572HxaDn4LeG4l5N+qESUHYUtLAEv6BGzvULAHVBIJkPdMXrHmAWDNMtkOr
-        6IqULw1YzDY2h5m3Ygx6YW0Pf1NCkJrrBOAmCPywN8Gx8UErb+HJyMQAUMS+9YIC1uZkcoUmZkgxd
-        9lPEpeu2Xg8KOrvQtjNgk3COVcXO5aDhw/IpXXLQ4wR0Tx2873vJrgrRv8pbMl7scO6mNWz0BiqNs
-        yA1JADgLSc+LCBtcDirWfqOpU8Ehy8IvJfcMzvbY6mLoqVnaQCHscweUnLaetUzO4UIY8XIUcBMKQ
-        auXcd++w==;
-Received: from [187.192.11.120] (port=58536 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hsbug-002CWg-56; Tue, 30 Jul 2019 18:52:14 -0500
-To:     Tony Luck <tony.luck@intel.com>, Doug Ledford <dledford@redhat.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190730202407.31046-1-tony.luck@intel.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] IB/core: Add mitigation for Spectre V1
-Message-ID: <95f5cf70-1a1d-f48c-efac-f389360f585e@embeddedor.com>
-Date:   Tue, 30 Jul 2019 18:52:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JQ8ZXlp9GXhn73FiB2SmOA/5VvS72scj4r/PouoaPAI=; b=bxINSaUTX7XjFtdLHCPljHp1M
+        qm59hPe7okTSFnq+8y4mFINTa6nu8olhY2xI7KNCVqrRvQtrfqApwhiZeHpTyelWInsOQSCoV9U9e
+        34X55U9gp6EYK+S04Ok39X4SVpgiIlVXW8WAI+NcEB3y643eSQQdfP5wm9OAGyjSbu0bGs96MvzNT
+        wlJjp1txOD+ML3bWf+ln4o9Ge7wegqwGwak8PFY74O1SGy6NhxU2lJiZe10UTPPemm1LEP6W5Xyga
+        5ZcG3eftPzFHhJS7J7xdEZ7tpVWxWOrWUpH4ajV1rUaGwVVRuGSW7XbhK37swk8uCfwt9YC72RfyQ
+        0xkRwOh7A==;
+Received: from [177.157.101.143] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsbyb-0006se-Ed; Tue, 30 Jul 2019 23:56:17 +0000
+Date:   Tue, 30 Jul 2019 20:56:11 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 2/3] docs: rcu: Correct links referring to titles
+Message-ID: <20190730205611.2810fc26@coco.lan>
+In-Reply-To: <20190730231030.27510-3-joel@joelfernandes.org>
+References: <20190730231030.27510-1-joel@joelfernandes.org>
+        <20190730231030.27510-3-joel@joelfernandes.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190730202407.31046-1-tony.luck@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hsbug-002CWg-56
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:58536
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Tue, 30 Jul 2019 19:10:29 -0400
+"Joel Fernandes (Google)" <joel@joelfernandes.org> escreveu:
 
+> Mauro's auto conversion broken these links, fix them.
 
-On 7/30/19 3:24 PM, Tony Luck wrote:
-> Some processors may mispredict an array bounds check and
-> speculatively access memory that they should not. With
-> a user supplied array index we like to play things safe
-> by masking the value with the array size before it is
-> used as an index.
+They actually worked here with the Sphinx I used, but yeah, the way it
+is is a way cleaner.
+
 > 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > ---
+>  .../Tree-RCU-Memory-Ordering.rst              | 17 ++--
+>  .../RCU/Design/Requirements/Requirements.rst  | 90 ++++++++-----------
+>  2 files changed, 47 insertions(+), 60 deletions(-)
 > 
-> [I don't have h/w, so just compile tested]
-> 
->  drivers/infiniband/core/user_mad.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
-> index 9f8a48016b41..fdce254e4f65 100644
-> --- a/drivers/infiniband/core/user_mad.c
-> +++ b/drivers/infiniband/core/user_mad.c
-> @@ -49,6 +49,7 @@
->  #include <linux/sched.h>
->  #include <linux/semaphore.h>
->  #include <linux/slab.h>
-> +#include <linux/nospec.h>
+> diff --git a/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst
+> index 1011b5db1b3d..248b1222f918 100644
+> --- a/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst
+> +++ b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst
+> @@ -230,15 +230,14 @@ Tree RCU Grace Period Memory Ordering Components
+>  Tree RCU's grace-period memory-ordering guarantee is provided by a
+>  number of RCU components:
 >  
->  #include <linux/uaccess.h>
+> -#. `Callback Registry <#Callback%20Registry>`__
+> -#. `Grace-Period Initialization <#Grace-Period%20Initialization>`__
+> -#. `Self-Reported Quiescent
+> -   States <#Self-Reported%20Quiescent%20States>`__
+> -#. `Dynamic Tick Interface <#Dynamic%20Tick%20Interface>`__
+> -#. `CPU-Hotplug Interface <#CPU-Hotplug%20Interface>`__
+> -#. `Forcing Quiescent States <Forcing%20Quiescent%20States>`__
+> -#. `Grace-Period Cleanup <Grace-Period%20Cleanup>`__
+> -#. `Callback Invocation <Callback%20Invocation>`__
+> +#. `Callback Registry`_
+> +#. `Grace-Period Initialization`_
+> +#. `Self-Reported Quiescent States`_
+> +#. `Dynamic Tick Interface`_
+> +#. `CPU-Hotplug Interface`_
+> +#. `Forcing Quiescent States`_
+> +#. `Grace-Period Cleanup`_
+> +#. `Callback Invocation`_
 >  
-> @@ -888,6 +889,7 @@ static int ib_umad_unreg_agent(struct ib_umad_file *file, u32 __user *arg)
->  	mutex_lock(&file->port->file_mutex);
->  	mutex_lock(&file->mutex);
+>  Each of the following section looks at the corresponding component in
+>  detail.
+> diff --git a/Documentation/RCU/Design/Requirements/Requirements.rst b/Documentation/RCU/Design/Requirements/Requirements.rst
+> index 876e0038bb58..a33b5fb331b4 100644
+> --- a/Documentation/RCU/Design/Requirements/Requirements.rst
+> +++ b/Documentation/RCU/Design/Requirements/Requirements.rst
+> @@ -36,16 +36,14 @@ technologies in interesting new ways.
+>  All that aside, here are the categories of currently known RCU
+>  requirements:
 >  
-> +	id = array_index_nospec(id, IB_UMAD_MAX_AGENTS);
+> -#. `Fundamental Requirements <#Fundamental%20Requirements>`__
+> -#. `Fundamental Non-Requirements <#Fundamental%20Non-Requirements>`__
+> -#. `Parallelism Facts of Life <#Parallelism%20Facts%20of%20Life>`__
+> -#. `Quality-of-Implementation
+> -   Requirements <#Quality-of-Implementation%20Requirements>`__
+> -#. `Linux Kernel Complications <#Linux%20Kernel%20Complications>`__
+> -#. `Software-Engineering
+> -   Requirements <#Software-Engineering%20Requirements>`__
+> -#. `Other RCU Flavors <#Other%20RCU%20Flavors>`__
+> -#. `Possible Future Changes <#Possible%20Future%20Changes>`__
+> +#. `Fundamental Requirements`_
+> +#. `Fundamental Non-Requirements`_
+> +#. `Parallelism Facts of Life`_
+> +#. `Quality-of-Implementation Requirements`_
+> +#. `Linux Kernel Complications`_
+> +#. `Software-Engineering Requirements`_
+> +#. `Other RCU Flavors`_
+> +#. `Possible Future Changes`_
+>  
+>  This is followed by a `summary <#Summary>`__, however, the answers to
+>  each quick quiz immediately follows the quiz. Select the big white space
+> @@ -57,13 +55,11 @@ Fundamental Requirements
+>  RCU's fundamental requirements are the closest thing RCU has to hard
+>  mathematical requirements. These are:
+>  
+> -#. `Grace-Period Guarantee <#Grace-Period%20Guarantee>`__
+> -#. `Publish-Subscribe Guarantee <#Publish-Subscribe%20Guarantee>`__
+> -#. `Memory-Barrier Guarantees <#Memory-Barrier%20Guarantees>`__
+> -#. `RCU Primitives Guaranteed to Execute
+> -   Unconditionally <#RCU%20Primitives%20Guaranteed%20to%20Execute%20Unconditionally>`__
+> -#. `Guaranteed Read-to-Write
+> -   Upgrade <#Guaranteed%20Read-to-Write%20Upgrade>`__
+> +#. `Grace-Period Guarantee`_
+> +#. `Publish/Subscribe Guarantee`_
+> +#. `Memory-Barrier Guarantees`_
+> +#. `RCU Primitives Guaranteed to Execute Unconditionally`_
+> +#. `Guaranteed Read-to-Write Upgrade`_
+>  
+>  Grace-Period Guarantee
+>  ~~~~~~~~~~~~~~~~~~~~~~
+> @@ -689,16 +685,11 @@ infinitely long, however, the following sections list a few
+>  non-guarantees that have caused confusion. Except where otherwise noted,
+>  these non-guarantees were premeditated.
+>  
+> -#. `Readers Impose Minimal
+> -   Ordering <#Readers%20Impose%20Minimal%20Ordering>`__
+> -#. `Readers Do Not Exclude
+> -   Updaters <#Readers%20Do%20Not%20Exclude%20Updaters>`__
+> -#. `Updaters Only Wait For Old
+> -   Readers <#Updaters%20Only%20Wait%20For%20Old%20Readers>`__
+> -#. `Grace Periods Don't Partition Read-Side Critical
+> -   Sections <#Grace%20Periods%20Don't%20Partition%20Read-Side%20Critical%20Sections>`__
+> -#. `Read-Side Critical Sections Don't Partition Grace
+> -   Periods <#Read-Side%20Critical%20Sections%20Don't%20Partition%20Grace%20Periods>`__
+> +#. `Readers Impose Minimal Ordering`_
+> +#. `Readers Do Not Exclude Updaters`_
+> +#. `Updaters Only Wait For Old Readers`_
+> +#. `Grace Periods Don't Partition Read-Side Critical Sections`_
+> +#. `Read-Side Critical Sections Don't Partition Grace Periods`_
+>  
+>  Readers Impose Minimal Ordering
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> @@ -1056,11 +1047,11 @@ it would likely be subject to limitations that would make it
+>  inappropriate for industrial-strength production use. Classes of
+>  quality-of-implementation requirements are as follows:
+>  
+> -#. `Specialization <#Specialization>`__
+> -#. `Performance and Scalability <#Performance%20and%20Scalability>`__
+> -#. `Forward Progress <#Forward%20Progress>`__
+> -#. `Composability <#Composability>`__
+> -#. `Corner Cases <#Corner%20Cases>`__
+> +#. `Specialization`_
+> +#. `Performance and Scalability`_
+> +#. `Forward Progress`_
+> +#. `Composability`_
+> +#. `Corner Cases`_
+>  
+>  These classes is covered in the following sections.
+>  
+> @@ -1692,21 +1683,18 @@ The Linux kernel provides an interesting environment for all kinds of
+>  software, including RCU. Some of the relevant points of interest are as
+>  follows:
+>  
+> -#. `Configuration <#Configuration>`__.
+> -#. `Firmware Interface <#Firmware%20Interface>`__.
+> -#. `Early Boot <#Early%20Boot>`__.
+> -#. `Interrupts and non-maskable interrupts
+> -   (NMIs) <#Interrupts%20and%20NMIs>`__.
+> -#. `Loadable Modules <#Loadable%20Modules>`__.
+> -#. `Hotplug CPU <#Hotplug%20CPU>`__.
+> -#. `Scheduler and RCU <#Scheduler%20and%20RCU>`__.
+> -#. `Tracing and RCU <#Tracing%20and%20RCU>`__.
+> -#. `Energy Efficiency <#Energy%20Efficiency>`__.
+> -#. `Scheduling-Clock Interrupts and
+> -   RCU <#Scheduling-Clock%20Interrupts%20and%20RCU>`__.
+> -#. `Memory Efficiency <#Memory%20Efficiency>`__.
+> -#. `Performance, Scalability, Response Time, and
+> -   Reliability <#Performance,%20Scalability,%20Response%20Time,%20and%20Reliability>`__.
+> +#. `Configuration`_
+> +#. `Firmware Interface`_
+> +#. `Early Boot`_
+> +#. `Interrupts and NMIs`_
+> +#. `Loadable Modules`_
+> +#. `Hotplug CPU`_
+> +#. `Scheduler and RCU`_
+> +#. `Tracing and RCU`_
+> +#. `Energy Efficiency`_
+> +#. `Scheduling-Clock Interrupts and RCU`_
+> +#. `Memory Efficiency`_
+> +#. `Performance, Scalability, Response Time, and Reliability`_
+>  
+>  This list is probably incomplete, but it does give a feel for the most
+>  notable Linux-kernel complications. Each of the following sections
+> @@ -2344,10 +2332,10 @@ implementations, non-preemptible and preemptible. The other four flavors
+>  are listed below, with requirements for each described in a separate
+>  section.
+>  
+> -#. `Bottom-Half Flavor (Historical) <#Bottom-Half%20Flavor>`__
+> -#. `Sched Flavor (Historical) <#Sched%20Flavor>`__
+> -#. `Sleepable RCU <#Sleepable%20RCU>`__
+> -#. `Tasks RCU <#Tasks%20RCU>`__
+> +#. `Bottom-Half Flavor (Historical)`_
+> +#. `Sched Flavor (Historical)`_
+> +#. `Sleepable RCU`_
+> +#. `Tasks RCU`_
+>  
+>  Bottom-Half Flavor (Historical)
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is wrong. This prevents the below condition id >= IB_UMAD_MAX_AGENTS
-from ever being true. And I don't think this is what you want.
+Sounds a lot better to me.
 
->  	if (id >= IB_UMAD_MAX_AGENTS || !__get_agent(file, id)) {
->  		ret = -EINVAL;
->  		goto out;
-> 
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
---
-Gustavo
+
+Thanks,
+Mauro
