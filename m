@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293D2C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F91AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F11D3206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB6120578
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455433;
-	bh=6sFnxyB/QBz0w34YwHV+jid1lKjjURWsnBJV4eIHLZU=;
+	s=default; t=1564455435;
+	bh=Gg4yc9y6IvlwvNfMui1tPLSs/ukvOGgDdlqGjKALhSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bz+t9MTxRJJopgTq1PqMkc3J2O4tJSSgN0e/AgVD5r3oYqMi5u0uNaPdpFPy5H6Iy
-	 mCxsi+8X3qUiTCdJrwROnHDcbR2YprbdFRyz+5mCpRkCdDUfMKRCRnQIsZ007w7o5B
-	 fy0GCqex/WblsZvJmqdUMCjxH2S5M3jHM195Xw3Q=
+	b=DDWMZy+bOSmMxIqYOBxkiuzt6zREkHBe1khDiAYxJUT6dhipyfjh3u/HBjCMLfy7R
+	 kfVXOviEAUu2IN1UctPWdCPn568z7bq5an+Ij+vbVjYDVmBTUUyldzksVPPxS/Zhf+
+	 FkPfUhKDp5oBoduNKx1zpqU4YkCgV/tKekErVDPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731715AbfG3C5M (ORCPT
+        id S1731729AbfG3C5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:57:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46672 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 22:57:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731459AbfG3C5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:57:08 -0400
+        id S1731705AbfG3C5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 22:57:10 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13D6720578;
-        Tue, 30 Jul 2019 02:57:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE79F2070B;
+        Tue, 30 Jul 2019 02:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455427;
-        bh=6sFnxyB/QBz0w34YwHV+jid1lKjjURWsnBJV4eIHLZU=;
+        s=default; t=1564455430;
+        bh=Gg4yc9y6IvlwvNfMui1tPLSs/ukvOGgDdlqGjKALhSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qss0yYU7mh/PRikOVs5RAR8DmlsFoTXx+wToMUPKK4f1FyDm6kpxHdHntuybSHr7W
-         FVFwhf0wSkIDZaym26f93uPWoEfEJovEcF1rptFUtdvn2V2g8ZDrH3DN+Y3Uf/dM3n
-         B3Gj0Y4y8A2RZZZYBEt7vbi6e9+wCdsDJmCy9DfE=
+        b=N70QdXETEasWX/krMXVxr3Kvz9rNGX+naERs91+FQ9LKEDG5ISi3ySGXZmVy/0PSh
+         z7fPhsFn6FUqEdfrk3V0tIjuhhgyvxXAaVrBG/PaQejX4UPoMH1/21CwpJcUee9IkH
+         ojJIzkfVU+fKlKOZ5KogyWaeO+MNBgzBI1e+8KSg=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 016/107] perf augmented_raw_syscalls: Augment sockaddr arg in 'connect'
-Date:   Mon, 29 Jul 2019 23:54:39 -0300
-Message-Id: <20190730025610.22603-17-acme@kernel.org>
+Subject: [PATCH 017/107] perf trace beauty: Make connect's addrlen be printed as an int, not hex
+Date:   Mon, 29 Jul 2019 23:54:40 -0300
+Message-Id: <20190730025610.22603-18-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
@@ -65,99 +65,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We already had a beautifier for an augmented sockaddr payload, but that
-was when we were hooking on each syscalls:sys_enter_foo tracepoints,
-since now we're almost doing that by doing a tail call from
-raw_syscalls:sys_enter, its almost the same, we can reuse it straight
-away.
-
   # perf trace -e connec* ssh www.bla.com
-  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
-  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
-  connect(4<socket:[16604782]>, { .family: PF_LOCAL, path: /var/lib/sss/pipes/nss }, 0x6e) = 0
-  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
-  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
-  connect(5</etc/hosts>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
-  connect(5</etc/hosts>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
-  connect(5</etc/hosts>, { .family: PF_INET, port: 53, addr: 192.168.44.1 }, 0x10) = 0
-  connect(5</etc/hosts>, { .family: PF_INET, port: 22, addr: 146.112.61.108 }, 0x10) = 0
-  connect(5</etc/hosts>, { .family: PF_INET6, port: 22, addr: ::ffff:146.112.61.108 }, 0x1c) = 0
-  ^C#
+  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(4<socket:[16610959]>, { .family: PF_LOCAL, path: /var/lib/sss/pipes/nss }, 110) = 0
+  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(5, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET, port: 53, addr: 192.168.44.1 }, 16) = 0
+  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET, port: 22, addr: 146.112.61.108 }, 16) = 0
+  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET6, port: 22, addr: ::ffff:146.112.61.108 }, 28) = 0
+  ^Cconnect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET, port: 22, addr: 146.112.61.108 }, 16) = -1 (unknown) (INTERNAL ERROR: strerror_r(512, [buf], 128)=22)
+  #
+
+Argh, the SCA_FD needs to invalidate its cache when close is done...
+
+It works if the 'close' syscall is not filtered out ;-\
+
+  # perf trace -e close,connec* ssh www.bla.com
+  close(3)                                = 0
+  close(3</usr/lib64/libpcre2-8.so.0.8.0>) = 0
+  close(3)                                = 0
+  close(3</usr/lib64/libkrb5.so.3.3>)     = 0
+  close(3</usr/lib64/libkrb5.so.3.3>)     = 0
+  close(3)                                = 0
+  close(3</usr/lib64/libk5crypto.so.3.1>) = 0
+  close(3</usr/lib64/libk5crypto.so.3.1>) = 0
+  close(3</usr/lib64/libcom_err.so.2.1>)  = 0
+  close(3</usr/lib64/libcom_err.so.2.1>)  = 0
+  close(3)                                = 0
+  close(3</usr/lib64/libkrb5support.so.0.1>) = 0
+  close(3</usr/lib64/libkrb5support.so.0.1>) = 0
+  close(3</usr/lib64/libkeyutils.so.1.8>) = 0
+  close(3</usr/lib64/libkeyutils.so.1.8>) = 0
+  close(3)                                = 0
+  close(3)                                = 0
+  close(3)                                = 0
+  close(3)                                = 0
+  close(4)                                = 0
+  close(3)                                = 0
+  close(3)                                = 0
+  connect(3</etc/nsswitch.conf>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  close(3</etc/nsswitch.conf>)            = 0
+  connect(3</usr/lib64/libnss_sss.so.2>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  close(3</usr/lib64/libnss_sss.so.2>)    = 0
+  close(3</usr/lib64/libnss_sss.so.2>)    = 0
+  close(3)                                = 0
+  close(3)                                = 0
+  connect(4<socket:[16616519]>, { .family: PF_LOCAL, path: /var/lib/sss/pipes/nss }, 110) = 0
+  ^C
+  #
+
+Will disable this beautifier when 'close' is filtered out...
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-5xkrbcpjsgnr3zt1aqdd7nvc@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ekuiciyx4znchvy95c8p1yyi@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../examples/bpf/augmented_raw_syscalls.c     | 35 ++++++++++++++++---
- 1 file changed, 30 insertions(+), 5 deletions(-)
+ tools/perf/builtin-trace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index 77bb6a0edce3..d7a292d7ee2f 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -16,6 +16,7 @@
- 
- #include <unistd.h>
- #include <linux/limits.h>
-+#include <linux/socket.h>
- #include <pid_filter.h>
- 
- /* bpf-output associated map */
-@@ -69,10 +70,13 @@ pid_filter(pids_filtered);
- 
- struct augmented_args_payload {
-        struct syscall_enter_args args;
--       struct {
--	       struct augmented_filename filename;
--	       struct augmented_filename filename2;
--       };
-+       union {
-+		struct {
-+			struct augmented_filename filename,
-+						  filename2;
-+		};
-+		struct sockaddr_storage saddr;
-+	};
- };
- 
- bpf_map(augmented_args_tmp, PERCPU_ARRAY, int, struct augmented_args_payload, 1);
-@@ -112,11 +116,32 @@ int syscall_unaugmented(struct syscall_enter_args *args)
- }
- 
- /*
-- * This will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
-+ * These will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
-  * augmented_args_tmp what was read by that raw_syscalls:sys_enter and go
-  * on from there, reading the first syscall arg as a string, i.e. open's
-  * filename.
-  */
-+SEC("!syscalls:sys_enter_connect")
-+int sys_enter_connect(struct syscall_enter_args *args)
-+{
-+	int key = 0;
-+	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
-+	const void *sockaddr_arg = (const void *)args->args[1];
-+	unsigned int socklen = args->args[2];
-+	unsigned int len = sizeof(augmented_args->args);
-+
-+        if (augmented_args == NULL)
-+                return 1; /* Failure: don't filter */
-+
-+	if (socklen > sizeof(augmented_args->saddr))
-+		socklen = sizeof(augmented_args->saddr);
-+
-+	probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
-+
-+	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
-+	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len + socklen);
-+}
-+
- SEC("!syscalls:sys_enter_open")
- int sys_enter_open(struct syscall_enter_args *args)
- {
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 5258399a1c94..123d7efc12e8 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -725,7 +725,8 @@ static struct syscall_fmt {
+ 	{ .name	    = "close",
+ 	  .arg = { [0] = { .scnprintf = SCA_CLOSE_FD, /* fd */ }, }, },
+ 	{ .name	    = "connect",
+-	  .arg = { [1] = { .scnprintf = SCA_SOCKADDR, /* servaddr */ }, }, },
++	  .arg = { [1] = { .scnprintf = SCA_SOCKADDR, /* servaddr */ },
++		   [2] = { .scnprintf = SCA_INT, /* addrlen */ }, }, },
+ 	{ .name	    = "epoll_ctl",
+ 	  .arg = { [1] = STRARRAY(op, epoll_ctl_ops), }, },
+ 	{ .name	    = "eventfd2",
 -- 
 2.21.0
 
