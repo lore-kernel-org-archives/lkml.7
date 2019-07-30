@@ -2,264 +2,140 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC10FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B78C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F7620679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6893720665
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:26:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="LguhQ+mC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731301AbfG3J0S (ORCPT
+        id S1731312AbfG3J0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:26:18 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42424 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729566AbfG3J0S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:26:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x1so15045001wrr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 02:26:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fDcXuaEqBcqFqyhatcYfAxE+0nZ8Uuvubs5vgvou1vo=;
-        b=AhavqBx2rXCJrck547Jm9VgZVHwehS/4A2INYWHImr7DMZ1R1nEd6xaxRVV0fSBVA7
-         25lVBXHvSV0s6Y84g6MRHhH2Zhlt+56gsXgVns4xjxcBtn+vri4wWpjP40be0pVrmw0l
-         sVWlZIKPb7hBRqC5AGSQ7k71dKrP61F6izqH16rtMLVMxI5TUFP1D1kkXbNAb428V/pj
-         7C4WlA4kNIbyrFx7pfrIzIZhgg3EXQrKdsVqyZ7kHREU4A53xCFowDPrQuDkeYbbzf7I
-         v9vCxhdx3aKZLw2A7WV1v899fbmvQKIqRME3Wie6vQmGefQSzvAp6Nxy2mv5IcysT7eb
-         QMmQ==
-X-Gm-Message-State: APjAAAVYC44MQV21ux3DmssetCYsXFWwhHE2dlHD/wg0O0xDqp0kcP1c
-        VqJVdd8YQQorpZRVtD0RY+u+UmQ8yNc=
-X-Google-Smtp-Source: APXvYqwtL1HZ1RWdht1fQjT9dvLgYd3QV82Ccznry2lpAS+f94IOzBKijj+MsaJZOX59J5rfMP7InA==
-X-Received: by 2002:adf:ea4c:: with SMTP id j12mr131458738wrn.75.1564478775736;
-        Tue, 30 Jul 2019 02:26:15 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id f1sm44093843wml.28.2019.07.30.02.26.14
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 02:26:15 -0700 (PDT)
-Subject: Re: [RFC PATCH 15/16] RISC-V: KVM: Add SBI v0.1 support
-To:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190729115544.17895-1-anup.patel@wdc.com>
- <20190729115544.17895-16-anup.patel@wdc.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <41bcc34d-7752-04e7-077b-9a3851f66189@redhat.com>
-Date:   Tue, 30 Jul 2019 11:26:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 30 Jul 2019 05:26:25 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:36291 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729566AbfG3J0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 05:26:24 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45yWQQ4Dlkz9v6rL;
+        Tue, 30 Jul 2019 11:26:22 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=LguhQ+mC; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id KZgfe_18yVyX; Tue, 30 Jul 2019 11:26:22 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45yWQQ358Sz9v6rD;
+        Tue, 30 Jul 2019 11:26:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1564478782; bh=W494YaqgUnZA2FNm31/aP5pf5NOo4mChfve8KHyIrgo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LguhQ+mCh1Cl3JcH0/tMBY4TpGOZyqIb++mijiTCVHZV09QnAoXuaDmUQdnmZ57bd
+         uf6sUo38sJhtq7e2HwZwA24AxJF+bkaGLEpd049BpDFMLI3hds8qFwgxi7w51ec2+X
+         +hsuVhzyeJirIeuY8ttS9wqtcP8mSTxpvyoaAOyM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 848AD8B800;
+        Tue, 30 Jul 2019 11:26:23 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id jTKB_g-k_myc; Tue, 30 Jul 2019 11:26:23 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 40AC08B74F;
+        Tue, 30 Jul 2019 11:26:23 +0200 (CEST)
+Subject: Re: [PATCH v2 05/10] powerpc/fsl_booke/32: introduce
+ reloc_kernel_entry() helper
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com
+Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
+        yebin10@huawei.com, thunder.leizhen@huawei.com,
+        jingxiangfeng@huawei.com, fanchengyang@huawei.com,
+        zhaohongjiang@huawei.com
+References: <20190730074225.39544-1-yanaijie@huawei.com>
+ <20190730074225.39544-6-yanaijie@huawei.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a1159f8e-ba34-5568-aef0-31f3a8b65449@c-s.fr>
+Date:   Tue, 30 Jul 2019 11:26:23 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190729115544.17895-16-anup.patel@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190730074225.39544-6-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/19 13:57, Anup Patel wrote:
-> From: Atish Patra <atish.patra@wdc.com>
+
+
+Le 30/07/2019 à 09:42, Jason Yan a écrit :
+> Add a new helper reloc_kernel_entry() to jump back to the start of the
+> new kernel. After we put the new kernel in a randomized place we can use
+> this new helper to enter the kernel and begin to relocate again.
 > 
-> The KVM host kernel running in HS-mode needs to handle SBI calls coming
-> from guest kernel running in VS-mode.
-> 
-> This patch adds SBI v0.1 support in KVM RISC-V. All the SBI calls are
-> implemented correctly except remote tlb flushes. For remote TLB flushes,
-> we are doing full TLB flush and this will be optimized in future.
-> 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Cc: Diana Craciun <diana.craciun@nxp.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
 > ---
->  arch/riscv/include/asm/kvm_host.h |   2 +
->  arch/riscv/kvm/Makefile           |   2 +-
->  arch/riscv/kvm/vcpu_exit.c        |   3 +
->  arch/riscv/kvm/vcpu_sbi.c         | 118 ++++++++++++++++++++++++++++++
->  4 files changed, 124 insertions(+), 1 deletion(-)
->  create mode 100644 arch/riscv/kvm/vcpu_sbi.c
+>   arch/powerpc/kernel/head_fsl_booke.S | 13 +++++++++++++
+>   arch/powerpc/mm/mmu_decl.h           |  1 +
+>   2 files changed, 14 insertions(+)
 > 
-> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> index 1bb4befa89da..22a62ffc09f5 100644
-> --- a/arch/riscv/include/asm/kvm_host.h
-> +++ b/arch/riscv/include/asm/kvm_host.h
-> @@ -227,4 +227,6 @@ void kvm_riscv_vcpu_power_on(struct kvm_vcpu *vcpu);
->  void kvm_riscv_halt_guest(struct kvm *kvm);
->  void kvm_riscv_resume_guest(struct kvm *kvm);
->  
-> +int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu);
-> +
->  #endif /* __RISCV_KVM_HOST_H__ */
-> diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-> index 3e0c7558320d..b56dc1650d2c 100644
-> --- a/arch/riscv/kvm/Makefile
-> +++ b/arch/riscv/kvm/Makefile
-> @@ -9,6 +9,6 @@ ccflags-y := -Ivirt/kvm -Iarch/riscv/kvm
->  kvm-objs := $(common-objs-y)
->  
->  kvm-objs += main.o vm.o vmid.o tlb.o mmu.o
-> -kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o
-> +kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o vcpu_sbi.o
->  
->  obj-$(CONFIG_KVM)	+= kvm.o
-> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-> index 2d09640c98b2..003e43facdfc 100644
-> --- a/arch/riscv/kvm/vcpu_exit.c
-> +++ b/arch/riscv/kvm/vcpu_exit.c
-> @@ -531,6 +531,9 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
->  		    (vcpu->arch.guest_context.hstatus & HSTATUS_STL))
->  			ret = stage2_page_fault(vcpu, run, scause, stval);
->  		break;
-> +	case EXC_SUPERVISOR_SYSCALL:
-> +		if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
-> +			ret = kvm_riscv_vcpu_sbi_ecall(vcpu);
->  	default:
->  		break;
->  	};
-> diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-> new file mode 100644
-> index 000000000000..8dfdbf744378
-> --- /dev/null
-> +++ b/arch/riscv/kvm/vcpu_sbi.c
-> @@ -0,0 +1,118 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/**
-> + * Copyright (c) 2019 Western Digital Corporation or its affiliates.
-> + *
-> + * Authors:
-> + *     Atish Patra <atish.patra@wdc.com>
+> diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
+> index 04d124fee17d..2083382dd662 100644
+> --- a/arch/powerpc/kernel/head_fsl_booke.S
+> +++ b/arch/powerpc/kernel/head_fsl_booke.S
+> @@ -1143,6 +1143,19 @@ _GLOBAL(create_tlb_entry)
+>   	sync
+>   	blr
+>   
+> +/*
+> + * Return to the start of the relocated kernel and run again
+> + * r3 - virtual address of fdt
+> + * r4 - entry of the kernel
 > + */
+> +_GLOBAL(reloc_kernel_entry)
+> +	mfmsr	r7
+> +	rlwinm	r7, r7, 0, ~(MSR_IS | MSR_DS)
 > +
-> +#include <linux/errno.h>
-> +#include <linux/err.h>
-> +#include <linux/kvm_host.h>
-> +#include <asm/csr.h>
-> +#include <asm/kvm_vcpu_timer.h>
+> +	mtspr	SPRN_SRR0,r4
+> +	mtspr	SPRN_SRR1,r7
+> +	rfi
 > +
-> +#define SBI_VERSION_MAJOR			0
-> +#define SBI_VERSION_MINOR			1
-> +
-> +static unsigned long kvm_sbi_unpriv_load(const unsigned long *addr,
-> +					 struct kvm_vcpu *vcpu)
-> +{
-> +	unsigned long flags, val;
-> +	unsigned long __hstatus, __sstatus;
-> +
-> +	local_irq_save(flags);
-> +	__hstatus = csr_read(CSR_HSTATUS);
-> +	__sstatus = csr_read(CSR_SSTATUS);
-> +	csr_write(CSR_HSTATUS, vcpu->arch.guest_context.hstatus | HSTATUS_SPRV);
-> +	csr_write(CSR_SSTATUS, vcpu->arch.guest_context.sstatus);
-> +	val = *addr;
-> +	csr_write(CSR_HSTATUS, __hstatus);
-> +	csr_write(CSR_SSTATUS, __sstatus);
-> +	local_irq_restore(flags);
-> +
-> +	return val;
-> +}
-> +
-> +static void kvm_sbi_system_shutdown(struct kvm_vcpu *vcpu, u32 type)
-> +{
-> +	int i;
-> +	struct kvm_vcpu *tmp;
-> +
-> +	kvm_for_each_vcpu(i, tmp, vcpu->kvm)
-> +		tmp->arch.power_off = true;
-> +	kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP);
-> +
-> +	memset(&vcpu->run->system_event, 0, sizeof(vcpu->run->system_event));
-> +	vcpu->run->system_event.type = type;
-> +	vcpu->run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
-> +}
-> +
-> +int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu)
-> +{
-> +	int ret = 1;
-> +	u64 next_cycle;
-> +	int vcpuid;
-> +	struct kvm_vcpu *remote_vcpu;
-> +	ulong dhart_mask;
-> +	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
-> +
-> +	if (!cp)
-> +		return -EINVAL;
-> +	switch (cp->a7) {
-> +	case SBI_SET_TIMER:
-> +#if __riscv_xlen == 32
-> +		next_cycle = ((u64)cp->a1 << 32) | (u64)cp->a0;
-> +#else
-> +		next_cycle = (u64)cp->a0;
-> +#endif
-> +		kvm_riscv_vcpu_timer_next_event(vcpu, next_cycle);
-> +		break;
-> +	case SBI_CONSOLE_PUTCHAR:
-> +		/* Not implemented */
-> +		cp->a0 = -ENOTSUPP;
-> +		break;
-> +	case SBI_CONSOLE_GETCHAR:
-> +		/* Not implemented */
-> +		cp->a0 = -ENOTSUPP;
-> +		break;
-
-Would it make sense to send these two down to userspace?
-
-Paolo
-
-> +	case SBI_CLEAR_IPI:
-> +		kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_S_SOFT);
-> +		break;
-> +	case SBI_SEND_IPI:
-> +		dhart_mask = kvm_sbi_unpriv_load((unsigned long *)cp->a0, vcpu);
-> +		for_each_set_bit(vcpuid, &dhart_mask, BITS_PER_LONG) {
-> +			remote_vcpu = kvm_get_vcpu_by_id(vcpu->kvm, vcpuid);
-> +			kvm_riscv_vcpu_set_interrupt(remote_vcpu, IRQ_S_SOFT);
-> +		}
-> +		break;
-> +	case SBI_SHUTDOWN:
-> +		kvm_sbi_system_shutdown(vcpu, KVM_SYSTEM_EVENT_SHUTDOWN);
-> +		ret = 0;
-> +		break;
-> +	case SBI_REMOTE_FENCE_I:
-> +		sbi_remote_fence_i(NULL);
-> +		break;
-> +
-> +	/*TODO:There should be a way to call remote hfence.bvma.
-> +	 * Preferred method is now a SBI call. Until then, just flush
-> +	 * all tlbs.
-> +	 */
-> +	case SBI_REMOTE_SFENCE_VMA:
-> +		/*TODO: Parse vma range.*/
-> +		sbi_remote_sfence_vma(NULL, 0, 0);
-> +		break;
-> +	case SBI_REMOTE_SFENCE_VMA_ASID:
-> +		/*TODO: Parse vma range for given ASID */
-> +		sbi_remote_sfence_vma(NULL, 0, 0);
-> +		break;
-> +	default:
-> +		cp->a0 = ENOTSUPP;
-> +		break;
-> +	};
-> +
-> +	if (ret >= 0)
-> +		cp->sepc += 4;
-> +
-> +	return ret;
-> +}
+>   /*
+>    * Create a tlb entry with the same effective and physical address as
+>    * the tlb entry used by the current running code. But set the TS to 1.
+> diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+> index a09f89d3aa0f..804da298beb3 100644
+> --- a/arch/powerpc/mm/mmu_decl.h
+> +++ b/arch/powerpc/mm/mmu_decl.h
+> @@ -143,6 +143,7 @@ extern void adjust_total_lowmem(void);
+>   extern int switch_to_as1(void);
+>   extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
+>   void create_tlb_entry(phys_addr_t phys, unsigned long virt, int entry);
+> +void reloc_kernel_entry(void *fdt, int addr);
+>   #endif
+>   extern void loadcam_entry(unsigned int index);
+>   extern void loadcam_multi(int first_idx, int num, int tmp_idx);
 > 
-
