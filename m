@@ -2,82 +2,124 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE873C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56806C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25CD20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C55E208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564501913;
+	bh=UAJPjXLp6QObQOA1+dhmRl9M72w8AhADPG8lAQIQt8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tEBnwcmuXx/Q9fvbOpl2NH0LoH71Sw8e2cT9vvP2ffybt9tMWdm4Kxgy3LAnUsqyj
+	 s2abEU5Ub3EuEALl1kTYH6PI3UWy+4GWtR/4xlfgd7TENvMtR84XACpmWeMciwyvgr
+	 +41kn1LZMetUjKba5Hz+TDlB1WR32GoZ2SRSqsWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732655AbfG3Pvl (ORCPT
+        id S1732664AbfG3Pvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:51:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54784 "EHLO mx1.redhat.com"
+        Tue, 30 Jul 2019 11:51:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfG3Pvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:51:41 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725974AbfG3Pvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 11:51:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BBA843E2D3;
-        Tue, 30 Jul 2019 15:51:40 +0000 (UTC)
-Received: from redhat.com (ovpn-112-36.rdu2.redhat.com [10.10.112.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DFACB608A5;
-        Tue, 30 Jul 2019 15:51:37 +0000 (UTC)
-Date:   Tue, 30 Jul 2019 11:51:34 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 9/9] mm: remove the MIGRATE_PFN_WRITE flag
-Message-ID: <20190730155134.GA10366@redhat.com>
-References: <20190729142843.22320-1-hch@lst.de>
- <20190729142843.22320-10-hch@lst.de>
- <20190729233044.GA7171@redhat.com>
- <20190730054633.GA28515@lst.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 133AA20644;
+        Tue, 30 Jul 2019 15:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564501910;
+        bh=UAJPjXLp6QObQOA1+dhmRl9M72w8AhADPG8lAQIQt8Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fZAuOTqNF6yqAXpB0RdOJUizbifavF4BqDssPJVLt1MPm5IP6XJC14xYyYqCFNhRc
+         OlDUdOXg7sYVuwI7Xxs5ECm5M4z8ZxOGUtnx81V1SHNSQlw58nRP8l2ncjoZV/bnDL
+         1jDj6S55CV36f7CdjMmSkmsCXKcyNUxuYosQs8Xo=
+Date:   Tue, 30 Jul 2019 17:51:48 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: [PATCH v5 2/3] treewide: Remove dev_err() usage after
+ platform_get_irq()
+Message-ID: <20190730155148.GA21985@kroah.com>
+References: <20190730053845.126834-1-swboyd@chromium.org>
+ <20190730053845.126834-3-swboyd@chromium.org>
+ <20190730064917.GB1213@kroah.com>
+ <5d4063e0.1c69fb81.fb7c2.9528@mx.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190730054633.GA28515@lst.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 30 Jul 2019 15:51:41 +0000 (UTC)
+In-Reply-To: <5d4063e0.1c69fb81.fb7c2.9528@mx.google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 07:46:33AM +0200, Christoph Hellwig wrote:
-> On Mon, Jul 29, 2019 at 07:30:44PM -0400, Jerome Glisse wrote:
-> > On Mon, Jul 29, 2019 at 05:28:43PM +0300, Christoph Hellwig wrote:
-> > > The MIGRATE_PFN_WRITE is only used locally in migrate_vma_collect_pmd,
-> > > where it can be replaced with a simple boolean local variable.
+On Tue, Jul 30, 2019 at 08:35:59AM -0700, Stephen Boyd wrote:
+> Quoting Greg Kroah-Hartman (2019-07-29 23:49:17)
+> > On Mon, Jul 29, 2019 at 10:38:44PM -0700, Stephen Boyd wrote:
+> > > We don't need dev_err() messages when platform_get_irq() fails now that
+> > > platform_get_irq() prints an error message itself when something goes
+> > > wrong. Let's remove these prints with a simple semantic patch.
 > > > 
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > // <smpl>
+> > > @@
+> > > expression ret;
+> > > struct platform_device *E;
+> > > @@
+> > > 
+> > > ret =
+> > > (
+> > > platform_get_irq(E, ...)
+> > > |
+> > > platform_get_irq_byname(E, ...)
+> > > );
+> > > 
+> > > if ( \( ret < 0 \| ret <= 0 \) )
+> > > {
+> > > (
+> > > -if (ret != -EPROBE_DEFER)
+> > > -{ ...
+> > > -dev_err(...);
+> > > -... }
+> > > |
+> > > ...
+> > > -dev_err(...);
+> > > )
+> > > ...
+> > > }
+> > > // </smpl>
+> > > 
+> > > While we're here, remove braces on if statements that only have one
+> > > statement (manually).
 > > 
-> > NAK that flag is useful, for instance a anonymous vma might have
-> > some of its page read only even if the vma has write permission.
+> > I like this, and I like patch 1/3, but this is going to conflict like
+> > crazy all over the tree with who ever ends up taking it in their tree.
 > > 
-> > It seems that the code in nouveau is wrong (probably lost that
-> > in various rebase/rework) as this flag should be use to decide
-> > wether to map the device memory with write permission or not.
-> > 
-> > I am traveling right now, i will investigate what happened to
-> > nouveau code.
+> > Can you just break this up into per-subsystem pieces and send it through
+> > those trees, and any remaining ones I can take, but at least give
+> > maintainers a chance to take it.
 > 
-> We can add it back when needed pretty easily.  Much of this has bitrotted
-> way to fast, and the pending ppc kvmhmm code doesn't need it either.
+> Ok. Let me resend just this patch broken up into many pieces.
 
-Not using is a serious bug, i will investigate this friday.
+Thanks.
 
-Cheers,
-Jérôme
+> > You are also going to have to do a sweep every other release or so to
+> > catch the stragglers.
+> 
+> I was going to let the janitors do that.
+
+We are all janitors :)
