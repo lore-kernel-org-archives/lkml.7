@@ -2,131 +2,111 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F73C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1037C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70A9206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B826F2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:23:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LWjUBjQN"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="UdN6jB6i";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pKthU7jU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbfG3GTF (ORCPT
+        id S1728599AbfG3GXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 02:19:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45448 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728360AbfG3GTF (ORCPT
+        Tue, 30 Jul 2019 02:23:11 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:34979 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725793AbfG3GXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 02:19:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jzoHUBaVmA64oWNrVo/G4me83PbtX+FG4xTY0W22gF8=; b=LWjUBjQNvq23AXlcybE9iOAY7
-        85k5b/KawWAxULHTtBb7zuuhUOcIeJbw5r1FThcXJAkD3StG5K+b28lS0eI52lxhLUiCHcJfGBkTx
-        AtDkk2RJwdRoU+zKsWZfQuo5IFHjE43dhQ4UcZ61be72RNFo+0tS3o3do7osxGS/ojGO22o5GYvtl
-        97SDA3JukypuGlYFTkzOIPsDNGzaaaAJII3JvH5W9ZSq5a7Jre5a4eSUKBM6h0CKux7o6b67m6pn8
-        /LxGiNxdQDzq98xG7wxgwTv/GYP1EdxlvVZEq/A6Izmb5Jl6I1n+QKk0ahKUjMjrilCanPK559AAg
-        +n7M/43oA==;
-Received: from [195.167.85.94] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsLTR-0006Rn-FJ; Tue, 30 Jul 2019 06:19:01 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     tomi.valkeinen@ti.com
-Cc:     laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dma-mapping: remove dma_{alloc,free,mmap}_writecombine
-Date:   Tue, 30 Jul 2019 09:18:49 +0300
-Message-Id: <20190730061849.29686-1-hch@lst.de>
+        Tue, 30 Jul 2019 02:23:11 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id EF934AA7;
+        Tue, 30 Jul 2019 02:23:09 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 30 Jul 2019 02:23:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=xUyh/uFx5Pvf1Uq1MZFdHPn+B1
+        1pIejp1FpFbo/nfyo=; b=UdN6jB6igo0Ty+DeyvZbWVNSAQaky7Dhy//EXdEPJj
+        E3VwBUdaPoGSzU/o4BPLHloGuAkUn1/uTHkiKr3Z2Zug0YNBK9yFPehow5momf0+
+        VEaWPHNe2ee0/hy7GYm/yzcjsV9KR13A3tOpiEGXirChmVzj+tCddxXOU42NNXRM
+        Mefv7piyNaugsSzVZMUZRVXJMYM5MbfkaGRkuoG+8G5oozljCvgcreRNsz7v7R6x
+        maXVSYXJtW4lISQ3cfhTTVP/f/81TShO9PfMm3n87blCXWCV4P8pL5DROHnmF5KN
+        QKhV3PL0AB4ZHTuTm8TYHfKX0qBRk7xLYppERpmn9L3g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=xUyh/uFx5Pvf1Uq1M
+        ZFdHPn+B11pIejp1FpFbo/nfyo=; b=pKthU7jUwLnIpxgW/pDXAhTnjyuXJJCrB
+        EkpB7bOpdZyR2faU3ib1KCN9gxtnxVHtei3Apb1v94NkennpmFfXnYHlR96Dwyjc
+        1puma2kqqmVej+v/mbBX/cIxfCuPePFEiWAznUXPzlh60ZOTnuAwNST4oQk8q9MI
+        gANZEImUB7gZtYI6mH+qnhuB3DvvE02HjZHpTIssQUf2V3ZsIUdnadxD5eKGxQP5
+        ZcDWmeT67Bv3rSKtb4W9uvmymXUFKAghBhF48XZ3avfWFFlzRcU+NHtnsg63U3gE
+        /LHSGloyIolNFHBkR3Xfiiomxc0jcka1B7kNmkxFTxqdk1hgb7BNQ==
+X-ME-Sender: <xms:TOI_XYrE5sZqkDUxk0kc4FPaANSiAFGzEmZV0dDyVvajl7mWFBURGg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledvgddutdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecuffhomhgrihhnpehoiihlrggsshdrohhrghenucfkphepvddtvddrke
+    durddukedrfedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhi
+    ugdrrghunecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:TOI_XS6gMoGcyY4h7_EqJMkEStNAV6W1Dfwx_ej5hA50ggBnju-7zg>
+    <xmx:TOI_XYN0is4b6LbHFvcjmzEjeD8XEWrn8A-jdM4nRUg93Z88G-0Wtg>
+    <xmx:TOI_XUNXZGeGHXVnckNMX9Oy3YdgOcBmN5amS8wzyWFZNx357wU90A>
+    <xmx:TeI_Xd4ayhocA9duTCI7EotOBL6jJ3BDN1iQ80mUnF4il8E8MnIfVQ>
+Received: from mistburn.bha-au.ibmmobiledemo.com (bh02i525f01.au.ibm.com [202.81.18.30])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CAE3880066;
+        Tue, 30 Jul 2019 02:23:04 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-mmc@vger.kernel.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
+        adrian.hunter@intel.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        ryanchen.aspeed@gmail.com
+Subject: [PATCH v3 0/2] mmc: Add support for the ASPEED SD controller
+Date:   Tue, 30 Jul 2019 15:53:14 +0930
+Message-Id: <20190730062316.32037-1-andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can already use DMA_ATTR_WRITE_COMBINE or the _wc prefixed version,
-so remove the third way of doing things.
+Hello,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/gpu/drm/omapdrm/dss/dispc.c | 11 +++++------
- include/linux/dma-mapping.h         |  9 ---------
- 2 files changed, 5 insertions(+), 15 deletions(-)
+v3 of the ASPEED SDHCI driver makes a bunch of fixes to the driver and the
+devicetree binding, including the addition of the AST2600 compatible string.
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
-index 785c5546067a..c70f3246a552 100644
---- a/drivers/gpu/drm/omapdrm/dss/dispc.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
-@@ -4609,11 +4609,10 @@ static int dispc_errata_i734_wa_init(struct dispc_device *dispc)
- 	i734_buf.size = i734.ovli.width * i734.ovli.height *
- 		color_mode_to_bpp(i734.ovli.fourcc) / 8;
- 
--	i734_buf.vaddr = dma_alloc_writecombine(&dispc->pdev->dev,
--						i734_buf.size, &i734_buf.paddr,
--						GFP_KERNEL);
-+	i734_buf.vaddr = dma_alloc_wc(&dispc->pdev->dev, i734_buf.size,
-+			&i734_buf.paddr, GFP_KERNEL);
- 	if (!i734_buf.vaddr) {
--		dev_err(&dispc->pdev->dev, "%s: dma_alloc_writecombine failed\n",
-+		dev_err(&dispc->pdev->dev, "%s: dma_alloc_wc failed\n",
- 			__func__);
- 		return -ENOMEM;
- 	}
-@@ -4626,8 +4625,8 @@ static void dispc_errata_i734_wa_fini(struct dispc_device *dispc)
- 	if (!dispc->feat->has_gamma_i734_bug)
- 		return;
- 
--	dma_free_writecombine(&dispc->pdev->dev, i734_buf.size, i734_buf.vaddr,
--			      i734_buf.paddr);
-+	dma_free_wc(&dispc->pdev->dev, i734_buf.size, i734_buf.vaddr,
-+		    i734_buf.paddr);
- }
- 
- static void dispc_errata_i734_wa(struct dispc_device *dispc)
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index f7d1eea32c78..633dae466097 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -786,9 +786,6 @@ static inline void *dma_alloc_wc(struct device *dev, size_t size,
- 
- 	return dma_alloc_attrs(dev, size, dma_addr, gfp, attrs);
- }
--#ifndef dma_alloc_writecombine
--#define dma_alloc_writecombine dma_alloc_wc
--#endif
- 
- static inline void dma_free_wc(struct device *dev, size_t size,
- 			       void *cpu_addr, dma_addr_t dma_addr)
-@@ -796,9 +793,6 @@ static inline void dma_free_wc(struct device *dev, size_t size,
- 	return dma_free_attrs(dev, size, cpu_addr, dma_addr,
- 			      DMA_ATTR_WRITE_COMBINE);
- }
--#ifndef dma_free_writecombine
--#define dma_free_writecombine dma_free_wc
--#endif
- 
- static inline int dma_mmap_wc(struct device *dev,
- 			      struct vm_area_struct *vma,
-@@ -808,9 +802,6 @@ static inline int dma_mmap_wc(struct device *dev,
- 	return dma_mmap_attrs(dev, vma, cpu_addr, dma_addr, size,
- 			      DMA_ATTR_WRITE_COMBINE);
- }
--#ifndef dma_mmap_writecombine
--#define dma_mmap_writecombine dma_mmap_wc
--#endif
- 
- #ifdef CONFIG_NEED_DMA_MAP_STATE
- #define DEFINE_DMA_UNMAP_ADDR(ADDR_NAME)        dma_addr_t ADDR_NAME
+v2 can be found here:
+
+https://lists.ozlabs.org/pipermail/linux-aspeed/2019-July/002013.html
+
+Please review!
+
+Andrew
+
+Andrew Jeffery (2):
+  dt-bindings: mmc: Document Aspeed SD controller
+  mmc: Add support for the ASPEED SD controller
+
+ .../devicetree/bindings/mmc/aspeed,sdhci.yaml | 100 ++++++
+ drivers/mmc/host/Kconfig                      |  12 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/sdhci-of-aspeed.c            | 328 ++++++++++++++++++
+ 4 files changed, 441 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+ create mode 100644 drivers/mmc/host/sdhci-of-aspeed.c
+
 -- 
 2.20.1
 
