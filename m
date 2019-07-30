@@ -2,87 +2,111 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B1CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ACFC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A289206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564495219;
-	bh=rjfYlIFJKyjHV658MkmGFyE8PfeXgXKIun/jfAxfgOE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=cS3n6H87Em738pVvLlLpTxAnk3PvPsuzlbENHByXCBLNIggrXfGP3CCLssXKCYcq2
-	 GQo4/HOyYeMVwEVsl/DnNCisQV9c/Ry+RvhQIRz7NK0JSudPB+1cqd1H1sUDcJZLH2
-	 bV89JYTP9z1Kd50n8VwkrRCpeiGvXDmSpOMKhrww=
+	by mail.kernel.org (Postfix) with ESMTP id 3EE80206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:00:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pyq1/qjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbfG3OAS (ORCPT
+        id S1729391AbfG3OAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 10:00:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbfG3OAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 10:00:16 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A79D2089E;
-        Tue, 30 Jul 2019 14:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564495216;
-        bh=rjfYlIFJKyjHV658MkmGFyE8PfeXgXKIun/jfAxfgOE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Oc+ECnb4FHLj3Y4qeiqAPUxu8/fXtLL4na1Mb0W04WQL7Iki/QDXfm7X4BNDo3jRk
-         tIrisZh7wBgDbhAxlded5l2FY2AfP1ouBSTqZjZbGXzmcHVqcHcECmAafZ35Sjj+XU
-         GcCsq5DnUZE9N0Jiw3HIf4FwFtEb7JNsl6XioPi0=
-Subject: Re: [PATCH 4.19 000/113] 4.19.63-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190729190655.455345569@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <bdd761c0-09f3-61f1-b3b3-95b3062942c9@kernel.org>
-Date:   Tue, 30 Jul 2019 08:00:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 30 Jul 2019 10:00:45 -0400
+Received: from mail-lf1-f44.google.com ([209.85.167.44]:35853 "EHLO
+        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbfG3OAo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 10:00:44 -0400
+Received: by mail-lf1-f44.google.com with SMTP id q26so44828250lfc.3;
+        Tue, 30 Jul 2019 07:00:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bMy8+dulgQaBaijk1anMSQXHRDRkHWnBbw4vTm4odwg=;
+        b=Pyq1/qjpp/VnceAmo91bY/5v35EmOlekZhGI+oMmsRxIqAvoPOD9Yo9OcSVVpWZHEf
+         FMlqCrRAqSHFqN4Z4iSYPrN+f/ZqNM8iF8BXhr0ww6CrQsPfdzmmBSkR7kQD6I9IMXv8
+         htF1xk2D3gMHeIBwHvfAjSs4ntFv5oY54sHfkucZjV1TESC3ZFlcJJvy+SwMqiFo7WI7
+         5X87VF5aZLU/nMHMROQ5kcu2yaIR/kj96yVG9ggOS82VIpPeW+Qfh4HdsTN3w9JPBXt7
+         quVkv+Div03d37lxJwvUbgHTjWRUaHOcEvKxoUGdqZv3wubjk8xv+qf5LKf95RjpyuCU
+         jN/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bMy8+dulgQaBaijk1anMSQXHRDRkHWnBbw4vTm4odwg=;
+        b=O5jNJJ3eTBkPmFD0h5l69icm6IZAPvGzAjv0B3Ah5Vbvw3Uu5N8v1bT2C68jeHidor
+         Tdw/a2F4trFkjU4YZKxGdm79okK9LNxs/nhprLSABJPk0OPi9r2NTCmoCiV1QZwrhY0Q
+         3ilhBTeqJY8iwXEnQyRjJfAkRZNGqqgYHG6PRYpcactjIGeGLN4BzT7TACIpmR193tOW
+         i0H2u7BuXxtwg8ETmu6YizXn4r/ShbhvYpA3XKQGcEb0FaYHwwUJf8NiS9348uQ1Xexl
+         WiUGS4oMxt2YxUYB8tOGJ0A/lvAgFItDccMuuMKHSSie7NPT9UeflcR2o0Am+F5Te+yQ
+         ZieA==
+X-Gm-Message-State: APjAAAXi5lqnRzdKkI7q0hLv57F1ZhUOwzqsUYYAAHk7jIVNw1UVo25c
+        IvzQOylZEoQiELUhmpBP4CWq2XC018elfZdQ/tE=
+X-Google-Smtp-Source: APXvYqwFxU2aJZupq15tPMGGPhkUeiRbVX/Ny/AeH8PilgWZ6eMHMSsYLghdUHcVU7IvMo2OXna8FsoXwIfybTJwoN4=
+X-Received: by 2002:ac2:5382:: with SMTP id g2mr53150361lfh.92.1564495242574;
+ Tue, 30 Jul 2019 07:00:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190729190655.455345569@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190730100429.32479-1-h.feurstein@gmail.com> <20190730100429.32479-2-h.feurstein@gmail.com>
+ <20190730134924.GH28552@lunn.ch>
+In-Reply-To: <20190730134924.GH28552@lunn.ch>
+From:   Hubert Feurstein <h.feurstein@gmail.com>
+Date:   Tue, 30 Jul 2019 16:00:31 +0200
+Message-ID: <CAFfN3gX3RMoe7_2EpoCtzO+gHTOxoH9j2WB7ZxuE6FKgPXK1fw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] net: dsa: mv88e6xxx: add support for MV88E6220
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/19 1:21 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.63 release.
-> There are 113 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 31 Jul 2019 07:05:01 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.63-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hi Andrew,
 
-Compiled and booted on my test system. No dmesg regressions.
+[...]
+> Do the registers for the ports exist?
+Yes, they do and they return sane values.
 
-thanks,
--- Shuah
+> > +     [MV88E6220] = {
+> > +             .prod_num = MV88E6XXX_PORT_SWITCH_ID_PROD_6220,
+> > +             .family = MV88E6XXX_FAMILY_6250,
+> > +             .name = "Marvell 88E6220",
+> > +             .num_databases = 64,
+> > +
+> > +             /* Ports 2-4 are not routed to pins
+> > +              * => usable ports 0, 1, 5, 6
+> > +              */
+> > +             .num_ports = 7,
+>
+> I'm wondering if we should add something like
+>
+>                 .invalid_port_mask = BIT(2) | BIT(3) | BIT(4)
+>
+Would make sense. I'll add it to the next series.
+
+>
+> and
+>
+>         /* Setup Switch Port Registers */
+>         for (i = 0; i < mv88e6xxx_num_ports(chip); i++) {
+> +               if (chip->info->invalid_port_mask & BIT(i) &&
+> +                   !dsa_is_unused_port(ds, i))
+> +                   return -EINVAL;
+>                 if (dsa_is_unused_port(ds, i)) {
+>                         err = mv88e6xxx_port_set_state(chip, i,
+>                                                        BR_STATE_DISABLED);
+>
+>         Andrew
+
+Hubert
