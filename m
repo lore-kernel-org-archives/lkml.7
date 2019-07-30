@@ -2,176 +2,241 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D138C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF82C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1A6204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14EC206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:25:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uM+oBlrX"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="e6eDrtB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbfG3XVh (ORCPT
+        id S1727195AbfG3XZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 19:21:37 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33715 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbfG3XVh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 19:21:37 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q20so68092251otl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 16:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t68EXPEyPb2/r7j8LTsJ+u3l3tFbqRdeyuThoSQX0Z8=;
-        b=uM+oBlrX9psFtPZuEZkbi0e4Vpn7VCy/YMTrHPulqmY/1qWEEVwhjuNGmHxf0E+HQb
-         rrVW1W3yK4x96wQG6KFPEOMXHduMyfhAQI8JN0qpPDLRkrcCCIgVXsBuzLc5TUcz+K3T
-         Xytm0P1ezA9fyvj74lY/B/scgzyuVwmiZgx6NTTkVY5m3nd5O9As83CCE5rfnmLc8C4D
-         4fjPHIMupHeP0Dj5o3dD+/fXTIW3YSjXyaZYfi9rhJNLh6j1deJZ7RO0iWXIII1Mx7nE
-         VhZwiJeSFCWbeKH88s58QktIT6+OC4rNZm5C8a9ZaLSu3WqAoKh7sybL/QwFkQM6e7tx
-         UzTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t68EXPEyPb2/r7j8LTsJ+u3l3tFbqRdeyuThoSQX0Z8=;
-        b=rfqDYs980lqrx60dM3uddwCzUtYGq8Ft0hAYeRGbw3clgXxi1kTJxvY+8yS2/I2415
-         x6pqjhqj57Cjb6mJrJOwpHw1rXzmG5IGcnSsXYWZZUKlHwG925rKoQ1DrLy7UE1wA8AD
-         UteZ0o/qkntuUgMQW3hHqj/cdWYpPcLFkduWrvc1RN93a4UoRiEAqhPVgOhzzASG79B5
-         W3tue8NpfWuYkyhBeHT6Cnwib8VUywF1BejqwN8i75Aje95UVaAjb2TAYJ1F7cA8JcMI
-         02TQRtV6IUUNUuek03UDWilIi5ChJ0sKCa/pUhrlRf2jvjQbwjDyoZCkVCFs0lVSiaMi
-         5vhA==
-X-Gm-Message-State: APjAAAVXnjjfBpum5ZQqldJ25OBODYGnul8OQLmEHI1Tq0HH36pqDSza
-        OvUsNKrrWmwgjUenCu024f/WPFqM/lC6SBUfEOSADg==
-X-Google-Smtp-Source: APXvYqxF/lQBcl9VxeFdGQwyL2cwO0iPXqbd56cQNfFXEZQ5pknZKItQoFD9aLi9hff7bgWRRh9wTQkrYevQ0y5/0pA=
-X-Received: by 2002:a9d:6201:: with SMTP id g1mr89652643otj.195.1564528895800;
- Tue, 30 Jul 2019 16:21:35 -0700 (PDT)
+        Tue, 30 Jul 2019 19:25:42 -0400
+Received: from mail-eopbgr740128.outbound.protection.outlook.com ([40.107.74.128]:18208
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726169AbfG3XZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 19:25:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PXxKenjl+hwgXbKC43AsRxKx4pXCbBPBtUNDgD+fa5naRkpWp1V8I5kUTQ6LOLwOC2EK1MY95hqSSV4FwI5EJmAlzvGqi/F8HyQVdWPKDR4XKi+XIWGwhVdDAIGLAMoi4pbzarzqciuCA4XZzQbEcpXTv/ysJqschNYuUvajVC0Ot7A9GCN/0UfxEcVpUW/5zAa6qRVxbjmXewQ+EvV2nnaMPMbH7751P6gBeNhzBBVHjgXQ/vRc+Ve0PoGsBefHH1D88WKRmnAIHk0Q4/fHcDmt8XkEbKX1bl3ftEdEr/KUZiJ4oJ0ZzrXLdg6OYhHRYGZOY1bFVa2nTTtZ8FwNwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qsr3gizro2CSNJJQkVckX7KsKf5v5TtfRXEnvL/Pi4A=;
+ b=nP7Yl//7bKmB96p5WyvwU7GtwHvp8AWQcVnxJwaLnyxe3za5RQXYga8PwIwoAqFyxCEVRIZdv21YdsmCgodX5XmWvi4pkqeN5hOuQVyOwT7DOaCDz6S72voghUKeDHB7ZgPBQor++4GkN/UOWubs1WLEsZAE/X+hTG/twDc0XgIUUrCuAR/M1QOuDideaQKxTQmvGYuHn/KXxbcOba/49haq7LLdG8emnsdI7b2QL7C04D8jhlw/MaSaegPUfX4XwSnfmNHrTDj/lsdQ93nfYS7EUrYPQAkLZzIDDtHPpi4QxQ9eVVtYnQvtd2l4cLkgeT2PmCOsgL0nHmTaH/42Cw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qsr3gizro2CSNJJQkVckX7KsKf5v5TtfRXEnvL/Pi4A=;
+ b=e6eDrtB004T8Is7Vw2X4aIjyMKWUAu9LRzQ/wtNN0IoL/TMcn/8CG1lxpT4eQ0hkeCg9/yXjw37/tFa8AHuU1MaprM6oDOPiVYzDr445dqjPwaUIIpDt0chjpbBZ79oumonv9VAb/p1YLBnMIhU+ZBdqCoCcpT2ogAiShUsvmCE=
+Received: from MWHPR21MB0784.namprd21.prod.outlook.com (10.173.51.150) by
+ MWHPR21MB0141.namprd21.prod.outlook.com (10.173.52.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.2; Tue, 30 Jul 2019 23:25:37 +0000
+Received: from MWHPR21MB0784.namprd21.prod.outlook.com
+ ([fe80::7de1:e6c1:296:4e82]) by MWHPR21MB0784.namprd21.prod.outlook.com
+ ([fe80::7de1:e6c1:296:4e82%5]) with mapi id 15.20.2157.001; Tue, 30 Jul 2019
+ 23:25:37 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 6/7] Drivers: hv: vmbus: Suspend/resume the vmbus itself
+ for hibernation
+Thread-Topic: [PATCH 6/7] Drivers: hv: vmbus: Suspend/resume the vmbus itself
+ for hibernation
+Thread-Index: AQHVNhdJZWKYdNj8hk22NGM1tZCwVabj7olQ
+Date:   Tue, 30 Jul 2019 23:25:37 +0000
+Message-ID: <MWHPR21MB078461F2DB6FE0A6D0647B70D7DC0@MWHPR21MB0784.namprd21.prod.outlook.com>
+References: <1562650084-99874-1-git-send-email-decui@microsoft.com>
+ <1562650084-99874-7-git-send-email-decui@microsoft.com>
+In-Reply-To: <1562650084-99874-7-git-send-email-decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-30T23:25:35.5916184Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3253bf88-42be-4c76-912a-1ac61c3e3840;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ced21867-f5f6-4ff6-405f-08d715453a69
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MWHPR21MB0141;
+x-ms-traffictypediagnostic: MWHPR21MB0141:|MWHPR21MB0141:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR21MB0141FB6A597D3522206D0730D7DC0@MWHPR21MB0141.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0114FF88F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(376002)(346002)(39860400002)(136003)(199004)(189003)(76116006)(6436002)(305945005)(66556008)(66446008)(6246003)(66946007)(8936002)(81166006)(10090500001)(110136005)(4326008)(71190400001)(71200400001)(14444005)(74316002)(8676002)(8990500004)(86362001)(316002)(99286004)(22452003)(81156014)(68736007)(25786009)(53936002)(1511001)(256004)(7736002)(10290500003)(55016002)(186003)(76176011)(7696005)(26005)(5660300002)(478600001)(2201001)(52536014)(486006)(15650500001)(446003)(6506007)(102836004)(476003)(11346002)(9686003)(14454004)(229853002)(2906002)(66066001)(33656002)(6116002)(64756008)(2501003)(3846002)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR21MB0141;H:MWHPR21MB0784.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VigwI7kJMX3mZ+YlzGJ60jYSKicmg6PG14rhH94BfoCuxYu9vONviXEU10nldifbqRTPseS6VGloiiH3c3YnneY31k/VWO6eh9ZUbRD6Ovjtsg8dU7loz6b1fOIilhwPsqvfFzcVWBxCe1BGymvj1Bn3IKlmlQyVCSRpH5d+620PQEaCIcmj149tl/v7r3Kf5Xw4IkIWtwuKsvZ3krPAQH1diK5fbI8xZjRf/Zh9DCSoWljsmfa+mtJK2stvjL+k2XnALMVJL1anDFfMI4n5Z4MR62LsBjqiq+on8eUCouSgl5G5sH+DEz61D+4sKgcj7ix7kVQXEv6jWuUSu4Tb5r8kcrPaqQfncte7OmLosn6GH//onhAiV9Ry5Zb7nqYTKJM5JUq813fs+IfBFPl3LnGcAu51gAdOIc558AjCorI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-3-saravanak@google.com>
- <CAHLCerP81Eotae5s4-Qye77SSF6-BbqFhckvkTEQWBD9biwzbw@mail.gmail.com>
-In-Reply-To: <CAHLCerP81Eotae5s4-Qye77SSF6-BbqFhckvkTEQWBD9biwzbw@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 30 Jul 2019 16:20:59 -0700
-Message-ID: <CAGETcx-2vKLkr1Mcs-ujLdgOmztK655X2ybOnFqhupXe2xu+xg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] OPP: Add support for bandwidth OPP tables
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ced21867-f5f6-4ff6-405f-08d715453a69
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 23:25:37.1568
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: b+EnvyBczv6uKZGfE36gTgHsvIKtzgJhVXOn3KkdRGOHVVVDpfJrvI/ONsQCRvYxRlEomhHvs8oY32oNQ79E6amiHDS+q9mMs2DSA3UcjeU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 3:57 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> On Wed, Jul 3, 2019 at 6:40 AM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > Not all devices quantify their performance points in terms of frequency.
-> > Devices like interconnects quantify their performance points in terms of
-> > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> > add support for parsing bandwidth OPPs from DT.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/opp/of.c  | 34 ++++++++++++++++++++++++++++++++--
-> >  drivers/opp/opp.h |  4 +++-
-> >  2 files changed, 35 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> > index c10c782d15aa..54fa70ed2adc 100644
-> > --- a/drivers/opp/of.c
-> > +++ b/drivers/opp/of.c
-> > @@ -552,6 +552,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
-> >
-> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
-> > +{
-> > +       int ret;
-> > +       u64 rate;
-> > +       u32 bw;
-> > +
-> > +       ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +       if (!ret) {
-> > +               /*
-> > +                * Rate is defined as an unsigned long in clk API, and so
-> > +                * casting explicitly to its type. Must be fixed once rate is 64
-> > +                * bit guaranteed in clk API.
-> > +                */
-> > +               new_opp->rate = (unsigned long)rate;
-> > +               return 0;
-> > +       }
-> > +
-> > +       ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
-> > +       if (ret)
-> > +               return ret;
-> > +       new_opp->rate = (unsigned long) &bw;
-> > +
-> > +       ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
-> > +       if (!ret)
-> > +               new_opp->avg_bw = (unsigned long) &bw;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  /**
-> >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
-> >   * @opp_table: OPP table
-> > @@ -589,11 +618,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
-> >         if (!new_opp)
-> >                 return ERR_PTR(-ENOMEM);
-> >
-> > -       ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +       ret = _read_opp_key(new_opp, np);
-> >         if (ret < 0) {
-> >                 /* "opp-hz" is optional for devices like power domains. */
-> >                 if (!opp_table->is_genpd) {
-> > -                       dev_err(dev, "%s: opp-hz not found\n", __func__);
-> > +                       dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
-> > +                               __func__);
-> >                         goto free_opp;
-> >                 }
-> >
-> > diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> > index 569b3525aa67..ead2cdafe957 100644
-> > --- a/drivers/opp/opp.h
-> > +++ b/drivers/opp/opp.h
-> > @@ -59,7 +59,8 @@ extern struct list_head opp_tables;
-> >   * @turbo:     true if turbo (boost) OPP
-> >   * @suspend:   true if suspend OPP
-> >   * @pstate: Device's power domain's performance state.
-> > - * @rate:      Frequency in hertz
-> > + * @rate:      Frequency in hertz OR Peak bandwidth in kilobytes per second
->
-> rate is most often used for clk rates. Let us not overload this just
-> to save one struct member. IMO, you should introduce a peak_bw member
-> and then have an error check if the DT provides both rate and peak_bw
-> during parsing.
+From: Dexuan Cui <decui@microsoft.com>  Sent: Monday, July 8, 2019 10:30 PM
+>=20
+> This is needed when we resume the old kernel from the "current" kernel.
 
-This is not about saving space. It avoids having to rewrite a lot of
-helper functions. If you want, I can rename this to "key" but I'm not
-going to create a different field.
+Perhaps a bit more descriptive commit message could be supplied?
 
--Saravana
+>=20
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  drivers/hv/connection.c   |  3 +--
+>  drivers/hv/hyperv_vmbus.h |  2 ++
+>  drivers/hv/vmbus_drv.c    | 40 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 43 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index 09829e1..806319c 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -59,8 +59,7 @@ static __u32 vmbus_get_next_version(__u32 current_versi=
+on)
+>  	}
+>  }
+>=20
+> -static int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo=
+,
+> -					__u32 version)
+> +int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 v=
+ersion)
+>  {
+>  	int ret =3D 0;
+>  	unsigned int cur_cpu;
+> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> index 26ea161..e657197 100644
+> --- a/drivers/hv/hyperv_vmbus.h
+> +++ b/drivers/hv/hyperv_vmbus.h
+> @@ -274,6 +274,8 @@ struct vmbus_msginfo {
+>=20
+>  extern struct vmbus_connection vmbus_connection;
+>=20
+> +int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 v=
+ersion);
+> +
+>  static inline void vmbus_send_interrupt(u32 relid)
+>  {
+>  	sync_set_bit(relid, vmbus_connection.send_int_page);
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 1c2d935..1730e7b 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -2045,6 +2045,41 @@ static int vmbus_acpi_add(struct acpi_device *devi=
+ce)
+>  	return ret_val;
+>  }
+>=20
+> +static int vmbus_bus_suspend(struct device *dev)
+> +{
+> +	vmbus_initiate_unload(false);
+> +
+> +	vmbus_connection.conn_state =3D DISCONNECTED;
+> +
+> +	return 0;
+> +}
+> +
+> +static int vmbus_bus_resume(struct device *dev)
+> +{
+> +	struct vmbus_channel_msginfo *msginfo;
+> +	size_t msgsize;
+> +	int ret;
+> +
+> +	msgsize =3D sizeof(*msginfo) +
+> +		  sizeof(struct vmbus_channel_initiate_contact);
+> +
+> +	msginfo =3D kzalloc(msgsize, GFP_KERNEL);
+> +
+> +	if (msginfo =3D=3D NULL)
+> +		return -ENOMEM;
+> +
+> +	ret =3D vmbus_negotiate_version(msginfo, vmbus_proto_version);
+
+I think this code answers my earlier question:  Upon resume, we negotiate t=
+he same
+VMbus protocol version we had at time of hibernation, even if running on a =
+newer
+version of Hyper-V that might support newer protocol versions.  Hence the o=
+ffer
+messages should not have any previously reserved fields now being used.   A
+comment to this effect would be useful.
+
+> +
+> +	kfree(msginfo);
+> +
+> +	if (ret !=3D 0)
+> +		return ret;
+> +
+> +	vmbus_request_offers();
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct acpi_device_id vmbus_acpi_device_ids[] =3D {
+>  	{"VMBUS", 0},
+>  	{"VMBus", 0},
+> @@ -2052,6 +2087,10 @@ static int vmbus_acpi_add(struct acpi_device *devi=
+ce)
+>  };
+>  MODULE_DEVICE_TABLE(acpi, vmbus_acpi_device_ids);
+>=20
+> +static const struct dev_pm_ops vmbus_bus_pm =3D {
+> +	SET_SYSTEM_SLEEP_PM_OPS(vmbus_bus_suspend, vmbus_bus_resume)
+> +};
+> +
+>  static struct acpi_driver vmbus_acpi_driver =3D {
+>  	.name =3D "vmbus",
+>  	.ids =3D vmbus_acpi_device_ids,
+> @@ -2059,6 +2098,7 @@ static int vmbus_acpi_add(struct acpi_device *devic=
+e)
+>  		.add =3D vmbus_acpi_add,
+>  		.remove =3D vmbus_acpi_remove,
+>  	},
+> +	.drv.pm =3D &vmbus_bus_pm,
+>  };
+>=20
+>  static void hv_kexec_handler(void)
+> --
+> 1.8.3.1
+
