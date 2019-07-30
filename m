@@ -2,117 +2,119 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9337DC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 510C8C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B94820644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E2F20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:47:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564469224;
+	bh=+mcR5vDHWu/voTGbeuStxWO8Zg7KMvSmaUE+hk1z5dQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v2ztxTZ47Z3fKVTBl0xlKk268QZEjr+ZnnvbX2VH4e+L4yg9zPvicl8rdfpqWZMtA
+	 YOmSo2VbPOlF0YxfKcZvAoLXPaWuBwkXxene3FWbyzCRZoBUp5yIvKDbPOfRpC92ie
+	 B9g86tMzwehFTlN6NpHs5Cum+V96GkhNuz9HNBLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbfG3GlV (ORCPT
+        id S1729166AbfG3GrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 02:41:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42605 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfG3GlU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 02:41:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x1so14496697wrr.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 23:41:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7vdnLGgCJYtbW7FK96EXzyS9jXfM/zfzKmdlAEa+8Qs=;
-        b=SkWjIdd9t2CUJNMsihvHjrfmaDGF7hhtjBVV1lAADxucSco1/8Q46rtb21hs+bEdor
-         wJaSqlZwzOOy0GTlSDlvJOMvovA0tzZYNZiT/EH7XCNu82NUqcX5ABGVFcx+C8Ij7vC1
-         BAJoHpRL8BgnErcZYJwYEdG5OILbQDtVia/E/bI5BLE6ERKQYTSyd6LQWQxZA92rFdJl
-         4y6XVyzFAkW9J87l0A8Bqut5tLVViIw9Z55ZSWggwyOBa1JBWkDjVIvQjvvWtUswLnCU
-         SoJGQsH0uoGDyM7UsEyBIxzL1hpruaVyADtkxXmEH7nrKKnd/2L4W6aVj4PxMexdggJL
-         +U1Q==
-X-Gm-Message-State: APjAAAULtlhdIdumjtRFucCYpnf5rhVsvqDPVuNJeE+DOKxwVbm9hatp
-        DSr3ZCAGt31aF/PgNEFILqx1wQ==
-X-Google-Smtp-Source: APXvYqw6cYwqFlT7bSdzLL4hAIbbaB/qVTksL5NpJ3Bm3t0suy+bS3ljZmOYsCCa6LEkhg03rmNRug==
-X-Received: by 2002:a5d:46cf:: with SMTP id g15mr129745861wrs.93.1564468878561;
-        Mon, 29 Jul 2019 23:41:18 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.237.107])
-        by smtp.gmail.com with ESMTPSA id i66sm105876293wmi.11.2019.07.29.23.41.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 23:41:17 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 08:41:15 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <Valentin.Schneider@arm.com>,
-        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] sched/deadline: Cleanup on_dl_rq() handling
-Message-ID: <20190730064115.GC8927@localhost.localdomain>
-References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
- <20190726082756.5525-5-dietmar.eggemann@arm.com>
- <20190729164932.GN31398@hirez.programming.kicks-ass.net>
+        Tue, 30 Jul 2019 02:47:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729111AbfG3GrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 02:47:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 098442087F;
+        Tue, 30 Jul 2019 06:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564469221;
+        bh=+mcR5vDHWu/voTGbeuStxWO8Zg7KMvSmaUE+hk1z5dQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0X5uEEo5+XexQbACNSHfGbmgZue0fuH4eOG88WT8lnCgrTpj3I0E2x5BdwQvUPll7
+         RUhw2QmDGr0vzuKU954IxoLym6f2DEYUFwYCepH89H1sHSffZ2WMjT2QE8Lkemk22f
+         VBf6ewfiHSwgdPz5HpKWFLQK5qMqZ86NJDNvuGNU=
+Date:   Tue, 30 Jul 2019 08:46:57 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tri Vo <trong@android.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, rafael@kernel.org,
+        hridya@google.com, sspatil@google.com, kaleshsingh@google.com,
+        ravisadineni@chromium.org, swboyd@chromium.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com, kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v5] PM / wakeup: show wakeup sources stats in sysfs
+Message-ID: <20190730064657.GA1213@kroah.com>
+References: <20190730024309.233728-1-trong@android.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190729164932.GN31398@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190730024309.233728-1-trong@android.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/19 18:49, Peter Zijlstra wrote:
-> On Fri, Jul 26, 2019 at 09:27:55AM +0100, Dietmar Eggemann wrote:
-> > Remove BUG_ON() in __enqueue_dl_entity() since there is already one in
-> > enqueue_dl_entity().
-> > 
-> > Move the check that the dl_se is not on the dl_rq from
-> > __dequeue_dl_entity() to dequeue_dl_entity() to align with the enqueue
-> > side and use the on_dl_rq() helper function.
-> > 
-> > Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> > ---
-> >  kernel/sched/deadline.c | 8 +++-----
-> >  1 file changed, 3 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> > index 1fa005f79307..a9cb52ceb761 100644
-> > --- a/kernel/sched/deadline.c
-> > +++ b/kernel/sched/deadline.c
-> > @@ -1407,8 +1407,6 @@ static void __enqueue_dl_entity(struct sched_dl_entity *dl_se)
-> >  	struct sched_dl_entity *entry;
-> >  	int leftmost = 1;
-> >  
-> > -	BUG_ON(!RB_EMPTY_NODE(&dl_se->rb_node));
-> > -
-> >  	while (*link) {
-> >  		parent = *link;
-> >  		entry = rb_entry(parent, struct sched_dl_entity, rb_node);
-> > @@ -1430,9 +1428,6 @@ static void __dequeue_dl_entity(struct sched_dl_entity *dl_se)
-> >  {
-> >  	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
-> >  
-> > -	if (RB_EMPTY_NODE(&dl_se->rb_node))
-> > -		return;
-> > -
-> >  	rb_erase_cached(&dl_se->rb_node, &dl_rq->root);
-> >  	RB_CLEAR_NODE(&dl_se->rb_node);
-> >  
-> > @@ -1466,6 +1461,9 @@ enqueue_dl_entity(struct sched_dl_entity *dl_se,
-> >  
-> >  static void dequeue_dl_entity(struct sched_dl_entity *dl_se)
-> >  {
-> > +	if (!on_dl_rq(dl_se))
-> > +		return;
+On Mon, Jul 29, 2019 at 07:43:09PM -0700, Tri Vo wrote:
+> Userspace can use wakeup_sources debugfs node to plot history of suspend
+> blocking wakeup sources over device's boot cycle. This information can
+> then be used (1) for power-specific bug reporting and (2) towards
+> attributing battery consumption to specific processes over a period of
+> time.
 > 
-> Why allow double dequeue instead of WARN?
+> However, debugfs doesn't have stable ABI. For this reason, create a
+> 'struct device' to expose wakeup sources statistics in sysfs under
+> /sys/class/wakeup/wakeup<ID>/*.
 
-As I was saying to Valentin, it can currently happen that a task could
-have already been dequeued by update_curr_dl()->throttle called by
-dequeue_task_dl() before calling __dequeue_task_dl(). Do you think we
-should check for this condition before calling into dequeue_dl_entity()?
+I agree with Rafael here, no need for the extra "wakeup" in the device
+name as you are in the "wakeup" namespace already.
+
+If you have an IDA-allocated name, there's no need for the extra
+'wakeup' at all.
+
+> +int wakeup_source_sysfs_add(struct device *parent, struct wakeup_source *ws)
+> +{
+> +	struct device *dev;
+> +	int id;
+> +
+> +	id = ida_simple_get(&wakeup_ida, 0, 0, GFP_KERNEL);
+> +	if (id < 0)
+> +		return id;
+
+No lock needed for this ida?  Are you sure?
+
+> +	ws->id = id;
+> +
+> +	dev = device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), ws,
+> +					wakeup_source_groups, "wakeup%d",
+> +					ws->id);
+> +	if (IS_ERR(dev)) {
+> +		ida_simple_remove(&wakeup_ida, ws->id);
+> +		return PTR_ERR(dev);
+> +	}
+> +
+> +	ws->dev = dev;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_source_sysfs_add);
+> +
+> +/**
+> + * wakeup_source_sysfs_remove - Remove wakeup_source attributes from sysfs.
+> + * @ws: Wakeup source to be removed from sysfs.
+> + */
+> +void wakeup_source_sysfs_remove(struct wakeup_source *ws)
+> +{
+> +	device_unregister(ws->dev);
+> +	ida_simple_remove(&wakeup_ida, ws->id);
+
+Again, no lock, is that ok?  I think ida's can work without a lock, but
+not always, sorry, I don't remember the rules anymore given the recent
+changes in that code.
+
+thanks,
+
+greg k-h
