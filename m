@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678E7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BE8C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0CB2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8052089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:20:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MTmVbzT3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IqRwxNai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfG3SUk (ORCPT
+        id S1729620AbfG3SUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:20:40 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39992 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728707AbfG3SQD (ORCPT
+        Tue, 30 Jul 2019 14:20:41 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35376 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbfG3SQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:16:03 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p184so30255273pfp.7
+        Tue, 30 Jul 2019 14:16:02 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s1so24174420pgr.2
         for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WqnP5pBY6aQYlpjg6EOYyndcooTiqsLsFL8lZlLzN+U=;
-        b=MTmVbzT3m0PXTQ9blNFhLXdJJ1/PA9DulRvg9x45w14FOHgKM5QBLmsH+mBfY2XflK
-         ReHiXz0JsNu4/f/5PZJ8crgr/2/VaA3sveOh5vrV3ygXnjK0/7GpiESxhi9vzsNGo3Dn
-         tMK/mpQwKLyLYsQd+eE2qD339vyfdxhUMRsgQ=
+        bh=uWcMorJDwKvnrZ+uFe5615N3dWxPyAPY0OX9n+4Id+U=;
+        b=IqRwxNaiIXDJJtbYw7DiEMUc+d5JpdIqrrNmI5fHyEZMcEfNGlbeZP0qj071ZF9ERk
+         NhQgILZE6EIxY5vdmrPVbatPz/ofis+5bIxBmNcTrPnJ70H18iPErl5x0M3NeO7mT/r8
+         ZSdnz3azkXYLfEizn/S5D8obQtm5avg4Cbt5Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WqnP5pBY6aQYlpjg6EOYyndcooTiqsLsFL8lZlLzN+U=;
-        b=kd3bnKrPHjNrIUvf47UzD0Cio7cuV2OJ4BSoxb8CqmwWZtKGdMuJ1wvJ1+RSkKIIM2
-         tWMOkEFOp3d/jODJbPIQDh1Zcldg84R7cv54OkanJi94+goonZmLZ0SmibrfZsvmRhUK
-         BeIKYUIgqvGx5F3wlC7T7LhZRpUF4WZ79F3IAktTvrC6A3qXX/+xszEMVWgO8d2O5grv
-         ZyrxgfU0VSL8hUJ7xyIZDufKgBP8jGeXKO0XA5Jmhb2RnUCZW00ZCjoHprg9TwqvPX11
-         +uo9kRaKOYAP/vETeyWnr5I1NIhP6/WsBg/jFGth+ALhsPQK4xlJIRyvnqSoGgslfxm/
-         VpMw==
-X-Gm-Message-State: APjAAAX1UDuXDhx1M/bUl3TbioSD+ZHLB+7s+L2qpDJu0dzPVk4/jdyD
-        INmHcvzTi043EgPqboDuvLuVDpaeynw=
-X-Google-Smtp-Source: APXvYqx3NAn8hmPXUNVhZt3irZVuWFfprkMsdB5KsNDxO+BhG8v0uXxUdNs0kGYdTa0IeW/sz59WoQ==
-X-Received: by 2002:a63:5d54:: with SMTP id o20mr93933941pgm.413.1564510562231;
-        Tue, 30 Jul 2019 11:16:02 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        bh=uWcMorJDwKvnrZ+uFe5615N3dWxPyAPY0OX9n+4Id+U=;
+        b=tV/Qi6LLPm21laoZWjs2qQDhxhSGG8Ko7gLFu4+U4xjiy4dfSiB21KyWGVtjLmyf1Z
+         biqa4OY5EXaKYcSuejrIqeSatMD0NRCiUPhw+XxZFPQzD2zE8Kd9o4Q9E8IeUhvjG41Q
+         sNQ9Ru44o71aKY8FEMNrKTDMXrxSMJSbxCoz2lYOfpxBkwUQI+FhdQPhGiy5zGxYkxOo
+         P2z+ya1ZE1CpjJ86LA9cTunAKUDhEFLkJeZ5V/ZXhhyyybnX9Sq5FXfdOi4ol6c3sthU
+         rs1G62Vrho5CeRVXzTGafUq2qaszxxztyHV4MDvTPRyLQRGGqtFaZPxUMc55BkYJPcqO
+         XXvA==
+X-Gm-Message-State: APjAAAU2T6Mdqp/27Y2H2GNUtcbxtq/nn/M8EEot2cUBaTKijzCKBfft
+        HJCn9Ed5SzPUWjhTGEd4ORGifY4Thd4=
+X-Google-Smtp-Source: APXvYqy3Laes9SZ2LYMflp8n6VEUsNJXR98M73zWazTRqJV7pActIO5nc49uiCDhB1obHw4BF99Xww==
+X-Received: by 2002:a62:303:: with SMTP id 3mr42925303pfd.118.1564510561568;
         Tue, 30 Jul 2019 11:16:01 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 11:16:00 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v6 04/57] clocksource: Remove dev_err() usage after platform_get_irq()
-Date:   Tue, 30 Jul 2019 11:15:04 -0700
-Message-Id: <20190730181557.90391-5-swboyd@chromium.org>
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH v6 03/57] hwrng: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:03 -0700
+Message-Id: <20190730181557.90391-4-swboyd@chromium.org>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
 References: <20190730181557.90391-1-swboyd@chromium.org>
@@ -107,68 +107,67 @@ While we're here, remove braces on if statements that only have one
 statement (manually).
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Matt Mackall <mpm@selenic.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
 Please apply directly to subsystem trees
 
- drivers/clocksource/em_sti.c | 4 +---
- drivers/clocksource/sh_cmt.c | 5 +----
- drivers/clocksource/sh_tmu.c | 5 +----
- 3 files changed, 3 insertions(+), 11 deletions(-)
+ drivers/char/hw_random/imx-rngc.c  | 4 +---
+ drivers/char/hw_random/omap-rng.c  | 5 +----
+ drivers/char/hw_random/xgene-rng.c | 4 +---
+ 3 files changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/clocksource/em_sti.c b/drivers/clocksource/em_sti.c
-index 8e12b11e81b0..9039df4f90e2 100644
---- a/drivers/clocksource/em_sti.c
-+++ b/drivers/clocksource/em_sti.c
-@@ -291,10 +291,8 @@ static int em_sti_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, p);
+diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
+index 69f537980004..d996875862cc 100644
+--- a/drivers/char/hw_random/imx-rngc.c
++++ b/drivers/char/hw_random/imx-rngc.c
+@@ -216,10 +216,8 @@ static int imx_rngc_probe(struct platform_device *pdev)
+ 	}
  
  	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "failed to get irq\n");
-+	if (irq < 0)
+-	if (irq <= 0) {
+-		dev_err(&pdev->dev, "Couldn't get irq %d\n", irq);
++	if (irq <= 0)
  		return irq;
 -	}
  
- 	/* map memory, let base point to the STI instance */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
-index 55d3e03f2cd4..f6424b61e212 100644
---- a/drivers/clocksource/sh_cmt.c
-+++ b/drivers/clocksource/sh_cmt.c
-@@ -776,11 +776,8 @@ static int sh_cmt_register_clockevent(struct sh_cmt_channel *ch,
- 	int ret;
+ 	ret = clk_prepare_enable(rngc->clk);
+ 	if (ret)
+diff --git a/drivers/char/hw_random/omap-rng.c b/drivers/char/hw_random/omap-rng.c
+index e9b6ac61fb7f..82261f1c4d63 100644
+--- a/drivers/char/hw_random/omap-rng.c
++++ b/drivers/char/hw_random/omap-rng.c
+@@ -385,11 +385,8 @@ static int of_get_omap_rng_device_details(struct omap_rng_dev *priv,
+ 	if (of_device_is_compatible(dev->of_node, "ti,omap4-rng") ||
+ 	    of_device_is_compatible(dev->of_node, "inside-secure,safexcel-eip76")) {
+ 		irq = platform_get_irq(pdev, 0);
+-		if (irq < 0) {
+-			dev_err(dev, "%s: error getting IRQ resource - %d\n",
+-				__func__, irq);
++		if (irq < 0)
+ 			return irq;
+-		}
  
- 	irq = platform_get_irq(ch->cmt->pdev, ch->index);
--	if (irq < 0) {
--		dev_err(&ch->cmt->pdev->dev, "ch%u: failed to get irq\n",
--			ch->index);
-+	if (irq < 0)
- 		return irq;
+ 		err = devm_request_irq(dev, irq, omap4_rng_irq,
+ 				       IRQF_TRIGGER_NONE, dev_name(dev), priv);
+diff --git a/drivers/char/hw_random/xgene-rng.c b/drivers/char/hw_random/xgene-rng.c
+index 8c6f9f63da5e..b1439a3aaa1d 100644
+--- a/drivers/char/hw_random/xgene-rng.c
++++ b/drivers/char/hw_random/xgene-rng.c
+@@ -330,10 +330,8 @@ static int xgene_rng_probe(struct platform_device *pdev)
+ 		return PTR_ERR(ctx->csr_base);
+ 
+ 	rc = platform_get_irq(pdev, 0);
+-	if (rc < 0) {
+-		dev_err(&pdev->dev, "No IRQ resource\n");
++	if (rc < 0)
+ 		return rc;
 -	}
+ 	ctx->irq = rc;
  
- 	ret = request_irq(irq, sh_cmt_interrupt,
- 			  IRQF_TIMER | IRQF_IRQPOLL | IRQF_NOBALANCING,
-diff --git a/drivers/clocksource/sh_tmu.c b/drivers/clocksource/sh_tmu.c
-index 49f1c805fc95..8c4f3753b36e 100644
---- a/drivers/clocksource/sh_tmu.c
-+++ b/drivers/clocksource/sh_tmu.c
-@@ -462,11 +462,8 @@ static int sh_tmu_channel_setup(struct sh_tmu_channel *ch, unsigned int index,
- 		ch->base = tmu->mapbase + 8 + ch->index * 12;
- 
- 	ch->irq = platform_get_irq(tmu->pdev, index);
--	if (ch->irq < 0) {
--		dev_err(&tmu->pdev->dev, "ch%u: failed to get irq\n",
--			ch->index);
-+	if (ch->irq < 0)
- 		return ch->irq;
--	}
- 
- 	ch->cs_enabled = false;
- 	ch->enable_count = 0;
+ 	dev_dbg(&pdev->dev, "APM X-Gene RNG BASE %p ALARM IRQ %d",
 -- 
 Sent by a computer through tubes
 
