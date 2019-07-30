@@ -2,216 +2,122 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCA7C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66701C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B052089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4017D20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:08:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Zz6wD9gR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CE2ybIhq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbfG3SH5 (ORCPT
+        id S1727594AbfG3SIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:07:57 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52495 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfG3SH4 (ORCPT
+        Tue, 30 Jul 2019 14:08:01 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34151 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfG3SIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:07:56 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UI7dHm3324711
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:07:39 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UI7dHm3324711
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564510060;
-        bh=lKyA9m0mnhqAyIQI7v6BmCVsK802ZuwxtGLxUS30gLc=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Zz6wD9gRHhu2oWLy+D+5XaTznjXdl0i+aQYe+YvYFVfiK2si1jpL+7mmj1J1jf2r6
-         YxAFWOh41Pj40/IdCaQXN+RWDyg8xIbPvr7MRYIECz6bJKnV4Bcs5m3WEETU5TCfLi
-         nSUR6fO5TXaO+e0WnhEtNxlWrpx8VI9GBo6j+gWgIVa2BALuZwJNKcySex2Jj1NmMa
-         KKg6kKuqHHyMRF90bFF74XvE2l0AHtBS8tPVWYWOXnFRycqRq5DrdxzWt9b8svC1Yr
-         rGlXEswqHpIRmS19RwAGtNpHyIZvs+zE02UlI5C5+a/o5ivbyleAVJh28DWtigUIdM
-         6iJ+u+GnvOkUQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UI7cHr3324708;
-        Tue, 30 Jul 2019 11:07:38 -0700
-Date:   Tue, 30 Jul 2019 11:07:38 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-df1d6856eaa7ec9ad1e670685b370f3e66326079@git.kernel.org>
-Cc:     hpa@zytor.com, namhyung@kernel.org,
-        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, mpetlan@redhat.com, jolsa@kernel.org,
-        peterz@infradead.org, mingo@kernel.org,
-        alexey.budankov@linux.intel.com, acme@redhat.com,
-        ak@linux.intel.com
-Reply-To: mingo@kernel.org, alexey.budankov@linux.intel.com,
-          acme@redhat.com, ak@linux.intel.com, namhyung@kernel.org,
-          hpa@zytor.com, alexander.shishkin@linux.intel.com,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          mpetlan@redhat.com, peterz@infradead.org, jolsa@kernel.org
-In-Reply-To: <20190721112506.12306-2-jolsa@kernel.org>
-References: <20190721112506.12306-2-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf stat: Move loaded out of struct
- perf_counts_values
-Git-Commit-ID: df1d6856eaa7ec9ad1e670685b370f3e66326079
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 14:08:00 -0400
+Received: by mail-pl1-f196.google.com with SMTP id i2so29223448plt.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UiyIYqXSI6n8BvwhN7+LjSI4Y/g+Sy0AddtIzNX1Okc=;
+        b=CE2ybIhq+DHqTSzNEuPWsQl9INxAbJjWW+X54Ku6XG6LT1afZKNHBxq82foLw1BWvZ
+         8NL8ea1l7oLUTUU3hn2l+iwfsmRIlHQ5zSDph3UwbcfFWCnnm2LNjX5GpGftd01P8Vye
+         R3EFG4W2GkYR/iTAjgtyxcvFBIwmlPtTE4nxo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UiyIYqXSI6n8BvwhN7+LjSI4Y/g+Sy0AddtIzNX1Okc=;
+        b=DgvDGthqZQBzo5+8l67+hjpXZsqpOVtfPHtQ6Y4KYckQ6NeHFZKDcLm02KE6HeOlh0
+         JZWzwQxk3JxipTxTBh23QjQMRpWLpztIm2mboKastZmmcOhz3VNVHNaMiSN75E0EawYj
+         upFGkkG5IpsSQayXyVOTAhxefFT45Fazy7fbOW0TL6JcDA5kWWy/X+e6CSIXTc6qyVT+
+         AKPuaAEIs3QQVpd8lOwTbf9A/qoxvno01xjTN1kUG8zcA/+oSp1RSjpkGzTyPiza4v31
+         gk566RajD8GUQAhyWMreKef2+Pfm80CjqdG0aJqnQYDG6BrmpPJTN9+QZypy7/vOJNnv
+         +h3A==
+X-Gm-Message-State: APjAAAXb17PONEUe3m9rCfWaZyyoHpMs1I8On9CX0ktSPplo/CgHg8+j
+        /5XvV58cR+VbjSE7mDgaah6/sg==
+X-Google-Smtp-Source: APXvYqwJUJxHb4lnVwTVUxR9cVdjvtI62uHrKVppYv1MdwT1BahcYU/I99f7pcnI+EMLo7i+5vP47g==
+X-Received: by 2002:a17:902:aa09:: with SMTP id be9mr31359048plb.52.1564510079444;
+        Tue, 30 Jul 2019 11:07:59 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y11sm68541316pfb.119.2019.07.30.11.07.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jul 2019 11:07:58 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 11:07:57 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        David Laight <David.Laight@aculab.com>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Message-ID: <201907301102.9339710C6@keescook>
+References: <20190509084352.GA96236@gmail.com>
+ <CALCETrV1067Es=KEjkz=CtdoT79a2EJg4dJDae6oGDiTaubL1A@mail.gmail.com>
+ <201905111703.5998DF5F@keescook>
+ <20190512080245.GA7827@gmail.com>
+ <201905120705.4F27DF3244@keescook>
+ <2236FBA76BA1254E88B949DDB74E612BA4CA8DBF@IRSMSX102.ger.corp.intel.com>
+ <20190528133347.GD19149@mit.edu>
+ <2236FBA76BA1254E88B949DDB74E612BA4CABA56@IRSMSX102.ger.corp.intel.com>
+ <201905291136.FD61FF42@keescook>
+ <2236FBA76BA1254E88B949DDB74E612BA4D4BFCA@IRSMSX102.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4D4BFCA@IRSMSX102.ger.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  df1d6856eaa7ec9ad1e670685b370f3e66326079
-Gitweb:     https://git.kernel.org/tip/df1d6856eaa7ec9ad1e670685b370f3e66326079
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:23:48 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:42 -0300
+On Mon, Jul 29, 2019 at 11:41:11AM +0000, Reshetova, Elena wrote:
+> I want to summarize here the data (including the performance numbers)
+> and reasoning for the in-stack randomization feature. I have organized
+> it in a simple set of Q&A below.
 
-perf stat: Move loaded out of struct perf_counts_values
+Thanks for these!
 
-Because we will make struct perf_counts_values public in following
-patches and 'loaded' is implementation related.
+> The in-stack randomization is really a very small change both code wise and
+> logic wise.
+> It does not affect real workloads and does not require enablement of other
+> features (such as GCC plugins).
+> So, I think we should really reconsider its inclusion.
 
-No functional change is expected.
+I'd agree: the code is tiny and while the benefit can't point to a
+specific issue, it does point to the general weakness of the stack
+offset being predictable which has been a core observation for many
+stack-based attacks.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-2-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-stat.c |  4 ++--
- tools/perf/util/counts.c  | 11 +++++++++++
- tools/perf/util/counts.h  | 14 +++++++++++++-
- tools/perf/util/evsel.c   |  3 ++-
- 4 files changed, 28 insertions(+), 4 deletions(-)
+If we're going to save state between syscalls (like the 4096 random
+bytes pool), how about instead we just use a single per-CPU long mixed
+with rdtsc saved at syscall exit. That should be a reasonable balance
+between all the considerations and make it trivial for the feature to
+be a boot flag without the extra page of storage, etc.
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 352cf39d7c2f..7b9c26f9cf34 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -287,7 +287,7 @@ static int read_counter(struct perf_evsel *counter, struct timespec *rs)
- 			 * The leader's group read loads data into its group members
- 			 * (via perf_evsel__read_counter) and sets threir count->loaded.
- 			 */
--			if (!count->loaded &&
-+			if (!perf_counts__is_loaded(counter->counts, cpu, thread) &&
- 			    read_single_counter(counter, cpu, thread, rs)) {
- 				counter->counts->scaled = -1;
- 				perf_counts(counter->counts, cpu, thread)->ena = 0;
-@@ -295,7 +295,7 @@ static int read_counter(struct perf_evsel *counter, struct timespec *rs)
- 				return -1;
- 			}
- 
--			count->loaded = false;
-+			perf_counts__set_loaded(counter->counts, cpu, thread, false);
- 
- 			if (STAT_RECORD) {
- 				if (perf_evsel__write_stat_event(counter, cpu, thread, count)) {
-diff --git a/tools/perf/util/counts.c b/tools/perf/util/counts.c
-index 88be9c4365e0..01ee81df3fe5 100644
---- a/tools/perf/util/counts.c
-+++ b/tools/perf/util/counts.c
-@@ -19,6 +19,15 @@ struct perf_counts *perf_counts__new(int ncpus, int nthreads)
- 		}
- 
- 		counts->values = values;
-+
-+		values = xyarray__new(ncpus, nthreads, sizeof(bool));
-+		if (!values) {
-+			xyarray__delete(counts->values);
-+			free(counts);
-+			return NULL;
-+		}
-+
-+		counts->loaded = values;
- 	}
- 
- 	return counts;
-@@ -27,6 +36,7 @@ struct perf_counts *perf_counts__new(int ncpus, int nthreads)
- void perf_counts__delete(struct perf_counts *counts)
- {
- 	if (counts) {
-+		xyarray__delete(counts->loaded);
- 		xyarray__delete(counts->values);
- 		free(counts);
- 	}
-@@ -34,6 +44,7 @@ void perf_counts__delete(struct perf_counts *counts)
- 
- static void perf_counts__reset(struct perf_counts *counts)
- {
-+	xyarray__reset(counts->loaded);
- 	xyarray__reset(counts->values);
- }
- 
-diff --git a/tools/perf/util/counts.h b/tools/perf/util/counts.h
-index 0d1050ccc586..460b56ce3252 100644
---- a/tools/perf/util/counts.h
-+++ b/tools/perf/util/counts.h
-@@ -13,13 +13,13 @@ struct perf_counts_values {
- 		};
- 		u64 values[3];
- 	};
--	bool	loaded;
- };
- 
- struct perf_counts {
- 	s8			  scaled;
- 	struct perf_counts_values aggr;
- 	struct xyarray		  *values;
-+	struct xyarray		  *loaded;
- };
- 
- 
-@@ -29,6 +29,18 @@ perf_counts(struct perf_counts *counts, int cpu, int thread)
- 	return xyarray__entry(counts->values, cpu, thread);
- }
- 
-+static inline bool
-+perf_counts__is_loaded(struct perf_counts *counts, int cpu, int thread)
-+{
-+	return *((bool *) xyarray__entry(counts->loaded, cpu, thread));
-+}
-+
-+static inline void
-+perf_counts__set_loaded(struct perf_counts *counts, int cpu, int thread, bool loaded)
-+{
-+	*((bool *) xyarray__entry(counts->loaded, cpu, thread)) = loaded;
-+}
-+
- struct perf_counts *perf_counts__new(int ncpus, int nthreads);
- void perf_counts__delete(struct perf_counts *counts);
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 7d1757a2ec46..d23b9574f793 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1439,7 +1439,8 @@ perf_evsel__set_count(struct perf_evsel *counter, int cpu, int thread,
- 	count->val    = val;
- 	count->ena    = ena;
- 	count->run    = run;
--	count->loaded = true;
-+
-+	perf_counts__set_loaded(counter->counts, cpu, thread, true);
- }
- 
- static int
+-- 
+Kees Cook
