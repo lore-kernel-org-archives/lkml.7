@@ -2,449 +2,534 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE63C32751
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E07C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9BF9205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:55:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ATyahzvY"
+	by mail.kernel.org (Postfix) with ESMTP id A36612087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:57:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564527477;
+	bh=f4k0j9bHsniA1FY5CF0aqaNbJON3SO7xwppKi/dyoV4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XwvjbymnxXYU9wzs1k+bhfYZgR/CXBVKP9ZpWv1f2TsaXRcEFUXY5n2pUOi/yR5hf
+	 dr4CXChEdXCErgZYmdduzDKMh47bYVsOArsr+2h4cagkz5m86FaZsqCEbbE5wjYJ9C
+	 aIErvHThkMRDadSxec3l65xWVWEDIrI+av+52t1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbfG3Wz1 (ORCPT
+        id S1728490AbfG3W54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 18:55:27 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42722 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfG3Wz1 (ORCPT
+        Tue, 30 Jul 2019 18:57:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52290 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbfG3W54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 18:55:27 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t28so63659617lje.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 15:55:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HuxacadCKeWEKqWWz9RqubYvlMjn7xoCg6JlJ2blDyM=;
-        b=ATyahzvYUmfJmfke4/0o+vZFaFO5T+Pqk00mtTrEoeiYP6s2PRLR/UbctKEbnlkqSf
-         vfjEONIULNau/ADeCCLOaWiTkDNP3JC7rmiUbFT2xS35uYgaqC2g8/VBBAGpsJcMb0Dn
-         tqmeqKdOzQ+KjLVeOVzSmT5oEBm1p6/IrjotI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HuxacadCKeWEKqWWz9RqubYvlMjn7xoCg6JlJ2blDyM=;
-        b=hyU2MMhgBXnkajpGdJLmE6jA1kN4sQi+BFr1ObRGZm+mg3J67X9FSN1fyVosOFaytP
-         Dr82ZWUm8SoHoOdmbucDf0juYemcRmjwxHmB4j4Du48bXFUeeBU0kO52hvW5lx5aPgGJ
-         bVLHIw/zvVgdp4d3VYv+QwvHAnJuniEvGpJTVXZOt0QOVQY9PKv5No6LX5ZciMubJxIw
-         u4JXqcuynwigGm8IL+dUWSjM9jQ3GO2FVpRU9l25VrG9mG+GnuPdiOi+LXDtLAlZnw3G
-         oLu0XmUaYYGpPUCKlt69KJOW7jqdOVsFf906NEWc8BNKrKRB+UOEeMl1iFg3cnCoJJep
-         uECQ==
-X-Gm-Message-State: APjAAAURjU7yXfgqNSICLjdi5brnftKNZDH3cgWrNOHSzcv/XFlvDQTZ
-        QvAak3G+McKCCKbpMhXrPEjEYI0hXKM=
-X-Google-Smtp-Source: APXvYqwKZggzUma/UtauCxes9uJ2NadI9AyxSj/YJL7qJWO6LjO/+3Ff4LqoCvxkV4m2rq6cWLmmsw==
-X-Received: by 2002:a2e:c51:: with SMTP id o17mr21933393ljd.157.1564527322991;
-        Tue, 30 Jul 2019 15:55:22 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id x67sm13648907ljb.13.2019.07.30.15.55.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 15:55:21 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id m8so30065461lji.7
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 15:55:21 -0700 (PDT)
-X-Received: by 2002:a2e:2bd3:: with SMTP id r80mr63477163ljr.23.1564527321106;
- Tue, 30 Jul 2019 15:55:21 -0700 (PDT)
+        Tue, 30 Jul 2019 18:57:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pv0SUEsw6SjeIqRni/ZcsaM+cHPlvjjJfUnxTICLn9s=; b=HvAlobxxRv/SlOSKo4be7YJqy
+        SQ2QvN/5XP1cI+wQ4aab+/w9YXOVYmhpWW0OTm50p1QIMUwvCy5DsXNm3L8kZ9IV98S0v7QQStSXG
+        e1u69hFEGaPEfNBYxCCK8jWPCATeCi5cbrhxYDdQi2gNqow8zzgnhIglHLlcYf0Obm7Tj3HhuCCg+
+        DLWPeuKA9vwZbly3cixSSIAKn2OFOQwor7kezgqkLnQuuuWhr9+4U6MfILeF3ZKC1ILdXOvRmDQNr
+        R2kmfpycJKsaq2tvED4bGv7wIx+60j+YxbfxAxZYazZ6ufOK970i4aa0UjBaLnYVnWMYw3jwOOf4j
+        gpfUZy3Sg==;
+Received: from [177.157.101.143] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsb43-0006vq-Jt; Tue, 30 Jul 2019 22:57:52 +0000
+Date:   Tue, 30 Jul 2019 19:57:44 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        SeongJae Park <sj38.park@gmail.com>, linux-arch@vger.kernel.org
+Subject: Re: [PATCH] tools: memory-model: add it to the Documentation body
+Message-ID: <20190730195744.3aef478e@coco.lan>
+In-Reply-To: <20190730221701.GC254050@google.com>
+References: <20190726180201.GE146401@google.com>
+        <5826090bf29ec831df620b79d7fe60ef7a705795.1564167643.git.mchehab+samsung@kernel.org>
+        <20190727141013.dpvjlcp3juja4see@penguin>
+        <20190727123754.5d91d4a4@coco.lan>
+        <20190730221701.GC254050@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190618091724.28232-1-georgi.djakov@linaro.org>
- <20190618091724.28232-3-georgi.djakov@linaro.org> <CAE=gft7=ZbK3ARtWyv8n_hWJ4kuXRs0UA0QsE420pqL8R1quUQ@mail.gmail.com>
- <05d9fea0-c040-d609-38bf-11cddbe6aa4d@codeaurora.org> <CAE=gft4pQXyCdRsMkN7Xs-R5HU=2baYhCPqSsw=uqOfT+hTJDg@mail.gmail.com>
- <1fa30512-a0aa-dcc1-4160-778100a03e7c@codeaurora.org>
-In-Reply-To: <1fa30512-a0aa-dcc1-4160-778100a03e7c@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Tue, 30 Jul 2019 15:54:43 -0700
-X-Gmail-Original-Message-ID: <CAE=gft5_ZNUd7WC3c6t59Dwg32jeapvPFLxnESt143SaLqdO3g@mail.gmail.com>
-Message-ID: <CAE=gft5_ZNUd7WC3c6t59Dwg32jeapvPFLxnESt143SaLqdO3g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] interconnect: qcom: Add tagging and wake/sleep
- support for sdm845
-To:     David Dai <daidavid1@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        amit.kucheria@linaro.org, Doug Anderson <dianders@chromium.org>,
-        Sean Sweeney <seansw@qti.qualcomm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 10:59 AM David Dai <daidavid1@codeaurora.org> wrote:
->
-> On 7/16/2019 1:15 PM, Evan Green wrote:
-> > On Mon, Jul 15, 2019 at 4:34 PM David Dai <daidavid1@codeaurora.org> wrote:
-> >> Hi Evan,
-> >>
-> >> Thanks for the continued help in reviewing these patches!
-> > No problem. I want to do more, but haven't found time to do the
-> > prerequisite research before jumping into some of the other
-> > discussions yet.
-> >
-> >> On 7/11/2019 10:06 AM, Evan Green wrote:
-> >>> Hi Georgi and David,
-> >>>
-> >>> On Tue, Jun 18, 2019 at 2:17 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
-> >>>> From: David Dai <daidavid1@codeaurora.org>
-> >>>>
-> >>>> Add support for wake and sleep commands by using a tag to indicate
-> >>>> whether or not the aggregate and set requests fall into execution
-> >>>> state specific bucket.
-> >>>>
-> >>>> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> >>>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> >>>> ---
-> >>>>    drivers/interconnect/qcom/sdm845.c | 129 ++++++++++++++++++++++-------
-> >>>>    1 file changed, 98 insertions(+), 31 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-> >>>> index fb526004c82e..c100aab39415 100644
-> >>>> --- a/drivers/interconnect/qcom/sdm845.c
-> >>>> +++ b/drivers/interconnect/qcom/sdm845.c
-> >>>> @@ -66,6 +66,17 @@ struct bcm_db {
-> >>>>    #define SDM845_MAX_BCM_PER_NODE        2
-> >>>>    #define SDM845_MAX_VCD         10
-> >>>>
-> >>>> +#define QCOM_ICC_BUCKET_AMC            0
-> >>> What is AMC again? Is it the "right now" bucket? Maybe a comment on
-> >>> the meaning of this bucket would be helpful.
-> >> That's correct. Will add a comment for this.
-> >>>> +#define QCOM_ICC_BUCKET_WAKE           1
-> >>>> +#define QCOM_ICC_BUCKET_SLEEP          2
-> >>>> +#define QCOM_ICC_NUM_BUCKETS           3
-> >>>> +#define QCOM_ICC_TAG_AMC               BIT(QCOM_ICC_BUCKET_AMC)
-> >>>> +#define QCOM_ICC_TAG_WAKE              BIT(QCOM_ICC_BUCKET_WAKE)
-> >>>> +#define QCOM_ICC_TAG_SLEEP             BIT(QCOM_ICC_BUCKET_SLEEP)
-> >>>> +#define QCOM_ICC_TAG_ACTIVE_ONLY       (QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
-> >>>> +#define QCOM_ICC_TAG_ALWAYS            (QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
-> >>>> +                                        QCOM_ICC_TAG_SLEEP)
-> >>>> +
-> >>>>    /**
-> >>>>     * struct qcom_icc_node - Qualcomm specific interconnect nodes
-> >>>>     * @name: the node name used in debugfs
-> >>>> @@ -75,7 +86,9 @@ struct bcm_db {
-> >>>>     * @channels: num of channels at this node
-> >>>>     * @buswidth: width of the interconnect between a node and the bus
-> >>>>     * @sum_avg: current sum aggregate value of all avg bw requests
-> >>>> + * @sum_avg_cached: previous sum aggregate value of all avg bw requests
-> >>>>     * @max_peak: current max aggregate value of all peak bw requests
-> >>>> + * @max_peak_cached: previous max aggregate value of all peak bw requests
-> >>>>     * @bcms: list of bcms associated with this logical node
-> >>>>     * @num_bcms: num of @bcms
-> >>>>     */
-> >>>> @@ -86,8 +99,10 @@ struct qcom_icc_node {
-> >>>>           u16 num_links;
-> >>>>           u16 channels;
-> >>>>           u16 buswidth;
-> >>>> -       u64 sum_avg;
-> >>>> -       u64 max_peak;
-> >>>> +       u64 sum_avg[QCOM_ICC_NUM_BUCKETS];
-> >>>> +       u64 sum_avg_cached[QCOM_ICC_NUM_BUCKETS];
-> >>>> +       u64 max_peak[QCOM_ICC_NUM_BUCKETS];
-> >>>> +       u64 max_peak_cached[QCOM_ICC_NUM_BUCKETS];
-> >>>>           struct qcom_icc_bcm *bcms[SDM845_MAX_BCM_PER_NODE];
-> >>>>           size_t num_bcms;
-> >>>>    };
-> >>>> @@ -112,8 +127,8 @@ struct qcom_icc_bcm {
-> >>>>           const char *name;
-> >>>>           u32 type;
-> >>>>           u32 addr;
-> >>>> -       u64 vote_x;
-> >>>> -       u64 vote_y;
-> >>>> +       u64 vote_x[QCOM_ICC_NUM_BUCKETS];
-> >>>> +       u64 vote_y[QCOM_ICC_NUM_BUCKETS];
-> >>>>           bool dirty;
-> >>>>           bool keepalive;
-> >>>>           struct bcm_db aux_data;
-> >>>> @@ -555,7 +570,7 @@ inline void tcs_cmd_gen(struct tcs_cmd *cmd, u64 vote_x, u64 vote_y,
-> >>>>                   cmd->wait = true;
-> >>>>    }
-> >>>>
-> >>>> -static void tcs_list_gen(struct list_head *bcm_list,
-> >>>> +static void tcs_list_gen(struct list_head *bcm_list, int bucket,
-> >>>>                            struct tcs_cmd tcs_list[SDM845_MAX_VCD],
-> >>>>                            int n[SDM845_MAX_VCD])
-> >>>>    {
-> >>>> @@ -573,8 +588,8 @@ static void tcs_list_gen(struct list_head *bcm_list,
-> >>>>                           commit = true;
-> >>>>                           cur_vcd_size = 0;
-> >>>>                   }
-> >>>> -               tcs_cmd_gen(&tcs_list[idx], bcm->vote_x, bcm->vote_y,
-> >>>> -                           bcm->addr, commit);
-> >>>> +               tcs_cmd_gen(&tcs_list[idx], bcm->vote_x[bucket],
-> >>>> +                           bcm->vote_y[bucket], bcm->addr, commit);
-> >>>>                   idx++;
-> >>>>                   n[batch]++;
-> >>>>                   /*
-> >>>> @@ -595,32 +610,39 @@ static void tcs_list_gen(struct list_head *bcm_list,
-> >>>>
-> >>>>    static void bcm_aggregate(struct qcom_icc_bcm *bcm)
-> >>>>    {
-> >>>> -       size_t i;
-> >>>> -       u64 agg_avg = 0;
-> >>>> -       u64 agg_peak = 0;
-> >>>> +       size_t i, bucket;
-> >>>> +       u64 agg_avg[QCOM_ICC_NUM_BUCKETS] = {0};
-> >>>> +       u64 agg_peak[QCOM_ICC_NUM_BUCKETS] = {0};
-> >>>>           u64 temp;
-> >>>>
-> >>>> -       for (i = 0; i < bcm->num_nodes; i++) {
-> >>>> -               temp = bcm->nodes[i]->sum_avg * bcm->aux_data.width;
-> >>>> -               do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
-> >>>> -               agg_avg = max(agg_avg, temp);
-> >>>> +       for (bucket = 0; bucket < QCOM_ICC_NUM_BUCKETS; bucket++) {
-> >>>> +               for (i = 0; i < bcm->num_nodes; i++) {
-> >>>> +                       temp = bcm->nodes[i]->sum_avg_cached[bucket] * bcm->aux_data.width;
-> >>>> +                       do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
-> >>>> +                       agg_avg[bucket] = max(agg_avg[bucket], temp);
-> >>>>
-> >>>> -               temp = bcm->nodes[i]->max_peak * bcm->aux_data.width;
-> >>>> -               do_div(temp, bcm->nodes[i]->buswidth);
-> >>> Why is it that this one doesn't have the multiply by
-> >>> bcm->nodes[i]->channels again? I can't recall if there was a reason.
-> >>> If it's correct maybe it deserves a comment.
-> >> I think the rationale behind this is generally for consumers to target a
-> >> certain minimum threshold to satisfy some structural latency
-> >> requirements as opposed to strictly throughput, and it may be easier for
-> >> consumers to reuse certain values to support hitting some minimum NoC
-> >> frequencies without having to be concerned with the number of channels
-> >> that may change from platform to platform.
-> > I was mostly pointing out that sum_avg seems to have the multiply, but
-> > max_peak does not. I would have expected those two things to be of the
-> > same units, and get the same treatment. Maybe the hardware is taking
-> > in different final units for that field, one that is per-channel and
-> > one that isn't?
->
-> The hardware isn't treating the values differently. I couldn't find any
-> justification other than the intuition mentioned above for the ease of
-> voting from the consumer perspective. The consumer would know that this
-> peak_bw value results in some floor performance from the system to
-> satisfy its latency requirements. The same approach would work if we
-> accounted for the number of channels as well, but given that channels
-> may vary from platform to platform or even on the same platform that
-> shares multiple channel configurations(DDR), it can be difficult for
-> consumers to keep track of and have to adjust their votes constantly(to
-> try to hit some frequency/latency requirement, this intuition doesn't
-> apply for avg_bw since we're concerned with throughput in that case).
->
-> >>>> -               agg_peak = max(agg_peak, temp);
-> >>>> -       }
-> >>>> +                       temp = bcm->nodes[i]->max_peak_cached[bucket] * bcm->aux_data.width;
-> >>>> +                       do_div(temp, bcm->nodes[i]->buswidth);
-> >>>> +                       agg_peak[bucket] = max(agg_peak[bucket], temp);
-> >>>>
-> >>>> -       temp = agg_avg * 1000ULL;
-> >>>> -       do_div(temp, bcm->aux_data.unit);
-> >>>> -       bcm->vote_x = temp;
-> >>>> +                       bcm->nodes[i]->sum_avg[bucket] = 0;
-> >>>> +                       bcm->nodes[i]->max_peak[bucket] = 0;
-> >>> I don't understand the sum_avg vs sum_avg_cached. Here's what I understand:
-> >>> 1. qcom_icc_aggregate() does the math from the incoming values on
-> >>> sum_avg, and then clobbers sum_avg_cached with those values.
-> >>> 2. bcm_aggregate() uses sum_avg_cached in its calculations, then clears sum_avg.
-> >>>
-> >>> But I don't get why that's needed. Why not just have sum_avg? Wouldn't
-> >>> it work the same? Ok, it wouldn't if you ended up calling
-> >>> bcm_aggregate() multiple times on the same bcm. But you have a dirty
-> >>> flag that prevents this from happening. So I think it's safe to remove
-> >>> the cached arrays, and just clear out the sum_avg when you aggregate.
-> >> You are correct in that the dirty flag would prevent another repeat of
-> >> the bcm_aggregate() call in the same icc_set request. But consider a
-> >> following icc_set request on a different node that shares the same BCM,
-> >> the next bcm_aggregate() would result in an incorrect aggregate sum_avg
-> >> for the BCM since the avg_sum from the previous node(from the previous
-> >> icc_set) was cleared out. We need a way to retain the current state of
-> >> all nodes to accurately aggregate the bw values for the BCM.
-> > I don't get it. qcom_icc_aggregate() clobbers sum_avg_cached. So
-> > they're only ever a) equal, like after qcom_icc_aggregate(), or b)
-> > sum_avg is zeroed, and sum_avg_cached is its old value. A new
-> > icc_set_bw() would call aggregate_requests(), which would clobber
-> > sum_avg_cached to sum_avg for every BCM involved. Then the core would
-> > call apply_constraints(), then qcom_icc_set(), which would use
-> > sum_avg_cached, and clear out sum_avg, being sure with the dirty flag
-> > that bcm_aggregate() is only called once per BCM. This all happens
-> > under the mutex held in the core. A new request would start the whole
-> > thing over, since sum_avg is cleared. It seems to me that flow would
-> > work the same with one array as it does with two. Maybe you can walk
-> > me through a scenario?
-> > -Evan
->
-> Let's walk through the scenario you've just described with the
-> assumption that there's only one avg_sum value per node with two
-> icc_set_bw() requests on two different nodes(say 2MB for node 1 and 1MB
-> for node 2) under the same BCM(say BCM A). The first
-> qcom_icc_aggregate() aggregates to a 2MB avg_sum at the node1 followed
-> by apply_constraints(), qcom_icc_set(), bcm_aggregate() which causes BCM
-> A to aggregate to max(node1->avg_sum, node2->avg_sum) and reach a vote_x
-> of 2MB(for simplicity let's ignore unit). We then clear out
-> node1->avg_sum before we start the next icc_set_bw(). In the following
-> icc_set_bw(), the qcom_icc_aggregate() aggregates to 1MB in node2
-> followed by apply_constraints(), qcom_icc_set(), bcm_aggregate(), but
-> now incorrectly aggregates BCM A to 1MB by looking at
-> max(node1->avg_sum, node2->avg_sum) because node1->avg_sum was cleared
-> out when in reality BCM A should have a vote_x value of 2MB at this
-> point. The subsequent bcm_aggregate do not re-aggregate all of the
-> requests for each of its nodes, but assumes that the aggregated results
-> at the nodes are correct.
+Em Tue, 30 Jul 2019 18:17:01 -0400
+Joel Fernandes <joel@joelfernandes.org> escreveu:
 
-Ah, I finally get it. Thanks for the detailed explanation. It's pretty
-confusing that there are essentially two connected graphs laid on top
-of each other, one graph consisting of nodes the framework deals with,
-and another graph that groups those nodes together into BCMs. I was
-failing to understand that bcm_aggregate loops over nodes that have
-nothing to do with the current request, and so it needs to remember
-the old totals from former requests. You've got the two arrays
-basically to differentiate between "add together all requests for this
-node", and "max all nodes into a BCM", since you need to reset sum_avg
-at the start of the first call to qcom_icc_aggregate().
+> On Sat, Jul 27, 2019 at 12:37:54PM -0300, Mauro Carvalho Chehab wrote:
+> > Em Sat, 27 Jul 2019 14:14:53 +0000
+> > Joel Fernandes <joel@joelfernandes.org> escreveu:
+> >   
+> > > On Fri, Jul 26, 2019 at 04:01:37PM -0300, Mauro Carvalho Chehab wrote:  
+> > > > The books at tools/memory-model/Documentation are very well
+> > > > formatted. Congrats to the ones that wrote them!
+> > > > 
+> > > > The manual conversion to ReST is really trivial:
+> > > > 
+> > > > 	- Add document titles;
+> > > > 	- change the bullets on some lists;
+> > > > 	- mark code blocks.    
+> > > 
+> > > Thanks so much, some feedback:  
+> > > > 
+> > > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>    
+> > > 
+> > > (1)
+> > > I could not find the table of contents appear in the HTML output for this.
+> > > Basically this list in the beginning doesn't render:
+> > >   1. INTRODUCTION
+> > >   2. BACKGROUND
+> > >   3. A SIMPLE EXAMPLE
+> > >   4. A SELECTION OF MEMORY MODELS
+> > >   5. ORDERING AND CYCLES  
+> > 
+> > Yes. It is written as a comment, like:
+> > 
+> > 	.. foo  This is a comment block
+> > 
+> > 	   Everything on this block
+> > 
+> > 	   won't be parsed.
+> > 
+> > So it won't be parsed, but having a TOC like this isn't need, as
+> > Sphinx generates it automatically via "toctree" markup.   
+> 
+> Ok.
+> 
+> > > Could we add a proper TOC with sections? My motivation for ReST here would be
+> > > to make the sections jumpable since it is a large document.  
+> > 
+> > Just change the toctree depth at index.rst to 2 and you'll see an index
+> > produced by Sphinx with both levels 1 (doc name) and level 2 (chapters):
+> > 
+> > 	.. toctree::
+> > 	   :maxdepth: 2  
+> 
+> Admittedly, I don't have much time at the moment to do these experiments :(
+> 
+> > > Also could we make the different sections appear as a tree in the left
+> > > sidebar?  
+> > 
+> > The sidebar follows the maxdepth too.
+> >   
+> > > 
+> > > (2) Arguably several function names in the document HTML output should appear
+> > > in monospace fonting and/or referring to the documentation for real function
+> > > names, but these can be fixed as we go, I guess.  
+> > 
+> > If you want monospaced fonts, just use: ``monospaced_symbol_foo`` within
+> > any paragraph, or place the monospaced data inside a code-block:
+> > 
+> > 	::
+> > 
+> > 		This will be monospaced.
+> >   
+> > > 
+> > > (3) Things like smp_load_acquire() and spin_lock() should probably refer to
+> > > the documentation for those elsewhere..  
+> > 
+> > Jon added an automarkup extension on Kernel 5.2. So, all functions that
+> > are defined elsewhere will automatically generate an hyperlink. For that to
+> > happen, you need to add the kernel-doc markup at the *.h or *.c file where
+> > the function is declared and use the kernel-doc markup somewhere within the
+> > Kernel Documentation/.
+> >   
+> > > 
+> > > (4) I would argue that every occurence of
+> > > A ->(some dependency) B should be replaced with fixed size font in the HTML
+> > > results.  
+> > 
+> > Just place those with ``A -> (some dependency)``. This will make them use
+> > a fixed size font.  
+> 
+> Ok, understood all these. I guess my point was all of these will need to be
+> done to make this document useful from a ReST conversion standpoint. Until
+> then it is probably just better off being plain text - since there are so
+> many of those ``A -> (dep) B`` things.
+> 
+> > > Arguably it is better IMO if the whole document is fixed size font in the
+> > > HTML output because so many things need to be fixed size, but that my just be
+> > > my opinion.  
+> > 
+> > Just my 2 cents here, but having the entire document using a fixed size
+> > font makes it more boring to read. Having just the symbols with a fixed size
+> > is a common convention used on technical books, and helps to make easier
+> > to identify the symbols while reading the docs.
+> > 
+> > That's said, Sphinx doesn't have any tag to switch the font for the entire
+> > document. All it can be done is to define a CSS and apply it for the
+> > doc - or to place everything within a code-block, with will suppress all
+> > markup tags, including cross-references for functions.  
+> 
+> Ok, got it.
+> 
+> > The problem with CSS is that you need to write both an html CSS file
+> > and add LaTeX macros associated to this "CSS style" (technically, LaTeX
+> > doesn't have a CSS concept, but Sphinx emulates it).  
+> 
+> Yeah I don't think we want to do CSS here. So the correct thing to do would
+> be to place all fixed-width things within double backticks, if someone had
+> the time to do it. I am currently spending time understanding the document's
+> content itself..
+> 
+> thanks for the effort, it could probably serve as a good future reference,
 
-I had suggested a callback in the core earlier to tell the providers
-"I'm about to start aggregating on these nodes", which would have
-allowed you to clear sum_avg in that callback and reduce down to one
-array. IMO that's a lot easier to understand than these double arrays,
-but maybe it's just me that gets confused.
+On a very quick look, it seems that, if we replace:
 
-Why do we bother with the individual nodes at all, why don't we just
-build a graph out of the BCMs themselves and pass that to the
-framework? I guess you can't do that because of .channels and
-.bus_width, you wouldn't know what to multiply/divide by to translate
-to a vote value? Hm... it would be great to make this simpler, but I'm
-out of suggestions for now.
--Evan
+	(\S+\s->\S*\s\w+)
 
->
-> >
-> >>>> +               }
-> >>>>
-> >>>> -       temp = agg_peak * 1000ULL;
-> >>>> -       do_div(temp, bcm->aux_data.unit);
-> >>>> -       bcm->vote_y = temp;
-> >>>> +               temp = agg_avg[bucket] * 1000ULL;
-> >>>> +               do_div(temp, bcm->aux_data.unit);
-> >>>> +               bcm->vote_x[bucket] = temp;
-> >>>>
-> >>>> -       if (bcm->keepalive && bcm->vote_x == 0 && bcm->vote_y == 0) {
-> >>>> -               bcm->vote_x = 1;
-> >>>> -               bcm->vote_y = 1;
-> >>>> +               temp = agg_peak[bucket] * 1000ULL;
-> >>>> +               do_div(temp, bcm->aux_data.unit);
-> >>>> +               bcm->vote_y[bucket] = temp;
-> >>>> +       }
-> >>>> +
-> >>>> +       if (bcm->keepalive && bcm->vote_x[0] == 0 && bcm->vote_y[0] == 0) {
-> >>>> +               bcm->vote_x[QCOM_ICC_BUCKET_AMC] = 1;
-> >>>> +               bcm->vote_x[QCOM_ICC_BUCKET_WAKE] = 1;
-> >>>> +               bcm->vote_y[QCOM_ICC_BUCKET_AMC] = 1;
-> >>>> +               bcm->vote_y[QCOM_ICC_BUCKET_WAKE] = 1;
-> >>>>           }
-> >>>>
-> >>>>           bcm->dirty = false;
-> >>>> @@ -631,15 +653,25 @@ static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-> >>>>    {
-> >>>>           size_t i;
-> >>>>           struct qcom_icc_node *qn;
-> >>>> +       unsigned long tag_word = (unsigned long)tag;
-> >>>>
-> >>>>           qn = node->data;
-> >>>>
-> >>>> +       if (!tag)
-> >>>> +               tag_word = QCOM_ICC_TAG_ALWAYS;
-> >>>> +
-> >>>> +       for (i = 0; i < QCOM_ICC_NUM_BUCKETS; i++) {
-> >>>> +               if (test_bit(i, &tag_word)) {
-> >>> I guess all this extra business with tag_word and casting is so that
-> >>> you can use test_bit, which is presumably a tiny bit faster? Does this
-> >>> actually make a measurable difference? Maybe in the name of simplicity
-> >>> we just do if (tag & BIT(i)), and then optimize if we find that
-> >>> conditional to be a hotspot?
-> >> Using (tag & BIT(i)) as opposed to test_bit seems reasonable to me.
-> >>>> +                       qn->sum_avg[i] += avg_bw;
-> >>>> +                       qn->max_peak[i] = max_t(u32, qn->max_peak[i], peak_bw);
-> >>>> +                       qn->sum_avg_cached[i] = qn->sum_avg[i];
-> >>>> +                       qn->max_peak_cached[i] = qn->max_peak[i];
-> >>>> +               }
-> >>>> +       }
-> >>>> +
-> >>>>           *agg_avg += avg_bw;
-> >>>>           *agg_peak = max_t(u32, *agg_peak, peak_bw);
-> >>>>
-> >>>> -       qn->sum_avg = *agg_avg;
-> >>>> -       qn->max_peak = *agg_peak;
-> >>>> -
-> >>>>           for (i = 0; i < qn->num_bcms; i++)
-> >>>>                   qn->bcms[i]->dirty = true;
-> >>>>
-> >>>> @@ -675,7 +707,7 @@ static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-> >>>>            * Construct the command list based on a pre ordered list of BCMs
-> >>>>            * based on VCD.
-> >>>>            */
-> >>>> -       tcs_list_gen(&commit_list, cmds, commit_idx);
-> >>>> +       tcs_list_gen(&commit_list, QCOM_ICC_BUCKET_AMC, cmds, commit_idx);
-> >>>>
-> >>>>           if (!commit_idx[0])
-> >>>>                   return ret;
-> >>>> @@ -693,6 +725,41 @@ static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-> >>>>                   return ret;
-> >>>>           }
-> >>>>
-> >>>> +       INIT_LIST_HEAD(&commit_list);
-> >>>> +
-> >>>> +       for (i = 0; i < qp->num_bcms; i++) {
-> >>>> +               /*
-> >>>> +                * Only generate WAKE and SLEEP commands if a resource's
-> >>>> +                * requirements change as the execution environment transitions
-> >>>> +                * between different power states.
-> >>>> +                */
-> >>>> +               if (qp->bcms[i]->vote_x[QCOM_ICC_BUCKET_WAKE] !=
-> >>>> +                   qp->bcms[i]->vote_x[QCOM_ICC_BUCKET_SLEEP] ||
-> >>>> +                   qp->bcms[i]->vote_y[QCOM_ICC_BUCKET_WAKE] !=
-> >>>> +                   qp->bcms[i]->vote_y[QCOM_ICC_BUCKET_SLEEP]) {
-> >>>> +                       list_add_tail(&qp->bcms[i]->list, &commit_list);
-> >>>> +               }
-> >>>> +       }
-> >>>> +
-> >>>> +       if (list_empty(&commit_list))
-> >>>> +               return ret;
-> >>>> +
-> >>>> +       tcs_list_gen(&commit_list, QCOM_ICC_BUCKET_WAKE, cmds, commit_idx);
-> >>>> +
-> >>>> +       ret = rpmh_write_batch(qp->dev, RPMH_WAKE_ONLY_STATE, cmds, commit_idx);
-> >>>> +       if (ret) {
-> >>>> +               pr_err("Error sending WAKE RPMH requests (%d)\n", ret);
-> >>>> +               return ret;
-> >>>> +       }
-> >>>> +
-> >>>> +       tcs_list_gen(&commit_list, QCOM_ICC_BUCKET_SLEEP, cmds, commit_idx);
-> >>>> +
-> >>>> +       ret = rpmh_write_batch(qp->dev, RPMH_SLEEP_STATE, cmds, commit_idx);
-> >>>> +       if (ret) {
-> >>>> +               pr_err("Error sending SLEEP RPMH requests (%d)\n", ret);
-> >>>> +               return ret;
-> >>>> +       }
-> >>>> +
-> >>>>           return ret;
-> >>>>    }
-> >>>>
-> >> --
-> >> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> >> a Linux Foundation Collaborative Project
-> >>
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+by:
+	``\1``
+
+
+On an editor that would allow to manually replace the regex (like kate),
+most of those can be get.
+
+See patch enclosed.
+
+
+Thanks,
+Mauro
+
+[PATCH] Use monotonic fonts for ``A -> (dep) B`` 
+
+Manually replace:
+
+	(\S+\s->\S*\s\w+)
+
+by:
+	``\1``
+
+On their occurrences and fix a couple of places where it doesn't
+hit well.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+diff --git a/tools/memory-model/Documentation/explanation.rst b/tools/memory-model/Documentation/explanation.rst
+index 227ec75f8dc4..9b5d10cef0c2 100644
+--- a/tools/memory-model/Documentation/explanation.rst
++++ b/tools/memory-model/Documentation/explanation.rst
+@@ -332,7 +332,7 @@ can think of it as the order in which statements occur in the source
+ code after branches are taken into account and loops have been
+ unrolled.  A better description might be the order in which
+ instructions are presented to a CPU's execution unit.  Thus, we say
+-that X is po-before Y (written as "X ->po Y" in formulas) if X occurs
++that X is po-before Y (written as ``X ->po Y`` in formulas) if X occurs
+ before Y in the instruction stream.
+ 
+ This is inherently a single-CPU relation; two instructions executing
+@@ -485,9 +485,9 @@ which depends on the value obtained by the READ_ONCE(); hence there is
+ a control dependency from the load to the store.
+ 
+ It should be pretty obvious that events can only depend on reads that
+-come earlier in program order.  Symbolically, if we have R ->data X,
+-R ->addr X, or R ->ctrl X (where R is a read event), then we must also
+-have R ->po X.  It wouldn't make sense for a computation to depend
++come earlier in program order.  Symbolically, if we have ``R ->data X``,
++``R ->addr X``, or ``R ->ctrl X`` (where R is a read event), then we must also
++have ``R ->po X``.  It wouldn't make sense for a computation to depend
+ somehow on a value that doesn't get loaded from shared memory until
+ later in the code!
+ 
+@@ -498,7 +498,7 @@ THE READS-FROM RELATION: rf, rfi, and rfe
+ The reads-from relation (rf) links a write event to a read event when
+ the value loaded by the read is the value that was stored by the
+ write.  In colloquial terms, the load "reads from" the store.  We
+-write W ->rf R to indicate that the load R reads from the store W.  We
++write ``W ->rf R`` to indicate that the load R reads from the store W.  We
+ further distinguish the cases where the load and the store occur on
+ the same CPU (internal reads-from, or rfi) and where they occur on
+ different CPUs (external reads-from, or rfe).
+@@ -579,26 +579,26 @@ that value comes third, and so on.
+ You can think of the coherence order as being the order in which the
+ stores reach x's location in memory (or if you prefer a more
+ hardware-centric view, the order in which the stores get written to
+-x's cache line).  We write W ->co W' if W comes before W' in the
++x's cache line).  We write ``W ->co W'`` if W comes before W' in the
+ coherence order, that is, if the value stored by W gets overwritten,
+ directly or indirectly, by the value stored by W'.
+ 
+ Coherence order is required to be consistent with program order.  This
+ requirement takes the form of four coherency rules:
+ 
+-	Write-write coherence: If W ->po-loc W' (i.e., W comes before
++	Write-write coherence: If ``W ->po-loc W'`` (i.e., W comes before
+ 	W' in program order and they access the same location), where W
+-	and W' are two stores, then W ->co W'.
++	and W' are two stores, then ``W ->co W'``.
+ 
+-	Write-read coherence: If W ->po-loc R, where W is a store and R
++	Write-read coherence: If ``W ->po-loc R``, where W is a store and R
+ 	is a load, then R must read from W or from some other store
+ 	which comes after W in the coherence order.
+ 
+-	Read-write coherence: If R ->po-loc W, where R is a load and W
++	Read-write coherence: If ``R ->po-loc W``, where R is a load and W
+ 	is a store, then the store which R reads from must come before
+ 	W in the coherence order.
+ 
+-	Read-read coherence: If R ->po-loc R', where R and R' are two
++	Read-read coherence: If ``R ->po-loc R'``, where R and R' are two
+ 	loads, then either they read from the same store or else the
+ 	store read by R comes before the store read by R' in the
+ 	coherence order.
+@@ -694,7 +694,7 @@ THE FROM-READS RELATION: fr, fri, and fre
+ 
+ The from-reads relation (fr) can be a little difficult for people to
+ grok.  It describes the situation where a load reads a value that gets
+-overwritten by a store.  In other words, we have R ->fr W when the
++overwritten by a store.  In other words, we have ``R ->fr W`` when the
+ value that R reads is overwritten (directly or indirectly) by W, or
+ equivalently, when R reads from a store which comes earlier than W in
+ the coherence order.
+@@ -723,7 +723,7 @@ different CPUs).
+ 
+ Note that the fr relation is determined entirely by the rf and co
+ relations; it is not independent.  Given a read event R and a write
+-event W for the same location, we will have R ->fr W if and only if
++event W for the same location, we will have ``R ->fr W`` if and only if
+ the write which R reads from is co-before W.  In symbols,
+ 
+ ::
+@@ -850,13 +850,13 @@ defined to link memory access events E and F whenever:
+ 	event occurs between them in program order; or
+ 
+ 	F is a release fence and some X comes before F in program order,
+-	where either X = E or else E ->rf X; or
++	where either ``X = E`` or else ``E ->rf X``; or
+ 
+ 	A strong fence event occurs between some X and F in program
+-	order, where either X = E or else E ->rf X.
++	order, where either ``X = E`` or else ``E ->rf X``.
+ 
+ The operational model requires that whenever W and W' are both stores
+-and W ->cumul-fence W', then W must propagate to any given CPU
++and ``W ->cumul-fence W'``, then W must propagate to any given CPU
+ before W' does.  However, for different CPUs C and C', it does not
+ require W to propagate to C before W' propagates to C'.
+ 
+@@ -910,7 +910,7 @@ first for CPU 0, then CPU 1, etc.
+ 
+ You can check that the four coherency rules imply that the rf, co, fr,
+ and po-loc relations agree with this global ordering; in other words,
+-whenever we have X ->rf Y or X ->co Y or X ->fr Y or X ->po-loc Y, the
++whenever we have ``X ->rf Y`` or ``X ->co Y`` or ``X ->fr Y`` or ``X ->po-loc Y``, the
+ X event comes before the Y event in the global ordering.  The LKMM's
+ "coherence" axiom expresses this by requiring the union of these
+ relations not to have any cycles.  This means it must not be possible
+@@ -977,7 +977,7 @@ po.
+ 
+ The operational model already includes a description of one such
+ situation: Fences are a source of ppo links.  Suppose X and Y are
+-memory accesses with X ->po Y; then the CPU must execute X before Y if
++memory accesses with ``X ->po Y``; then the CPU must execute X before Y if
+ any of the following hold:
+ 
+ 	A strong (smp_mb() or synchronize_rcu()) fence occurs between
+@@ -996,7 +996,7 @@ any of the following hold:
+ Another possibility, not mentioned earlier but discussed in the next
+ section, is:
+ 
+-	X and Y are both loads, X ->addr Y (i.e., there is an address
++	X and Y are both loads, ``X ->addr Y`` (i.e., there is an address
+ 	dependency from X to Y), and X is a READ_ONCE() or an atomic
+ 	access.
+ 
+@@ -1176,25 +1176,25 @@ The happens-before relation (hb) links memory accesses that have to
+ execute in a certain order.  hb includes the ppo relation and two
+ others, one of which is rfe.
+ 
+-W ->rfe R implies that W and R are on different CPUs.  It also means
++``W ->rfe R`` implies that W and R are on different CPUs.  It also means
+ that W's store must have propagated to R's CPU before R executed;
+ otherwise R could not have read the value stored by W.  Therefore W
+-must have executed before R, and so we have W ->hb R.
++must have executed before R, and so we have ``W ->hb R``.
+ 
+-The equivalent fact need not hold if W ->rfi R (i.e., W and R are on
++The equivalent fact need not hold if ``W ->rfi R`` (i.e., W and R are on
+ the same CPU).  As we have already seen, the operational model allows
+ W's value to be forwarded to R in such cases, meaning that R may well
+ execute before W does.
+ 
+ It's important to understand that neither coe nor fre is included in
+ hb, despite their similarities to rfe.  For example, suppose we have
+-W ->coe W'.  This means that W and W' are stores to the same location,
++``W ->coe W'``.  This means that W and W' are stores to the same location,
+ they execute on different CPUs, and W comes before W' in the coherence
+ order (i.e., W' overwrites W).  Nevertheless, it is possible for W' to
+ execute before W, because the decision as to which store overwrites
+ the other is made later by the memory subsystem.  When the stores are
+ nearly simultaneous, either one can come out on top.  Similarly,
+-R ->fre W means that W overwrites the value which R reads, but it
++``R ->fre W`` means that W overwrites the value which R reads, but it
+ doesn't mean that W has to execute after R.  All that's necessary is
+ for the memory subsystem not to propagate W to R's CPU until after R
+ has executed, which is possible if W executes shortly before R.
+@@ -1393,10 +1393,10 @@ The existence of a pb link from E to F implies that E must execute
+ before F.  To see why, suppose that F executed first.  Then W would
+ have propagated to E's CPU before E executed.  If E was a store, the
+ memory subsystem would then be forced to make E come after W in the
+-coherence order, contradicting the fact that E ->coe W.  If E was a
++coherence order, contradicting the fact that ``E ->coe W``.  If E was a
+ load, the memory subsystem would then be forced to satisfy E's read
+ request with the value stored by W or an even later store,
+-contradicting the fact that E ->fre W.
++contradicting the fact that ``E ->fre W``.
+ 
+ A good example illustrating how pb works is the SB pattern with strong
+ fences::
+@@ -1518,9 +1518,9 @@ entirely clear.  The LKMM formalizes this notion by means of the
+ rcu-link relation.  rcu-link encompasses a very general notion of
+ "before": If E and F are RCU fence events (i.e., rcu_read_lock(),
+ rcu_read_unlock(), or synchronize_rcu()) then among other things,
+-E ->rcu-link F includes cases where E is po-before some memory-access
++``E ->rcu-link F`` includes cases where E is po-before some memory-access
+ event X, F is po-after some memory-access event Y, and we have any of
+-X ->rfe Y, X ->co Y, or X ->fr Y.
++``X ->rfe Y``, ``X ->co Y``, or ``X ->fr Y``.
+ 
+ The formal definition of the rcu-link relation is more than a little
+ obscure, and we won't give it here.  It is closely related to the pb
+@@ -1532,22 +1532,22 @@ The LKMM also defines the rcu-gp and rcu-rscsi relations.  They bring
+ grace periods and read-side critical sections into the picture, in the
+ following way:
+ 
+-	E ->rcu-gp F means that E and F are in fact the same event,
++	``E ->rcu-gp F`` means that E and F are in fact the same event,
+ 	and that event is a synchronize_rcu() fence (i.e., a grace
+ 	period).
+ 
+-	E ->rcu-rscsi F means that E and F are the rcu_read_unlock()
++	``E ->rcu-rscsi F`` means that E and F are the rcu_read_unlock()
+ 	and rcu_read_lock() fence events delimiting some read-side
+ 	critical section.  (The 'i' at the end of the name emphasizes
+ 	that this relation is "inverted": It links the end of the
+ 	critical section to the start.)
+ 
+ If we think of the rcu-link relation as standing for an extended
+-"before", then X ->rcu-gp Y ->rcu-link Z roughly says that X is a
++"before", then ``X ->rcu-gp Y ->rcu-link Z`` roughly says that X is a
+ grace period which ends before Z begins.  (In fact it covers more than
+ this, because it also includes cases where some store propagates to
+ Z's CPU before Z begins but doesn't propagate to some other CPU until
+-after X ends.)  Similarly, X ->rcu-rscsi Y ->rcu-link Z says that X is
++after X ends.)  Similarly, ``X ->rcu-rscsi Y ->rcu-link Z`` says that X is
+ the end of a critical section which starts before Z begins.
+ 
+ The LKMM goes on to define the rcu-fence relation as a sequence of
+@@ -1557,18 +1557,18 @@ example::
+ 
+ 	X ->rcu-gp Y ->rcu-link Z ->rcu-rscsi T ->rcu-link U ->rcu-gp V
+ 
+-would imply that X ->rcu-fence V, because this sequence contains two
++would imply that ``X ->rcu-fence V``, because this sequence contains two
+ rcu-gp links and one rcu-rscsi link.  (It also implies that
+-X ->rcu-fence T and Z ->rcu-fence V.)  On the other hand::
++``X ->rcu-fence T`` and ``Z ->rcu-fence V``.)  On the other hand::
+ 
+ 	X ->rcu-rscsi Y ->rcu-link Z ->rcu-rscsi T ->rcu-link U ->rcu-gp V
+ 
+-does not imply X ->rcu-fence V, because the sequence contains only
++does not imply ``X ->rcu-fence V``, because the sequence contains only
+ one rcu-gp link but two rcu-rscsi links.
+ 
+ The rcu-fence relation is important because the Grace Period Guarantee
+ means that rcu-fence acts kind of like a strong fence.  In particular,
+-E ->rcu-fence F implies not only that E begins before F ends, but also
++``E ->rcu-fence F`` implies not only that E begins before F ends, but also
+ that any write po-before E will propagate to every CPU before any
+ instruction po-after F can execute.  (However, it does not imply that
+ E must execute before F; in fact, each synchronize_rcu() fence event
+@@ -1604,13 +1604,13 @@ covered by rcu-fence.
+ Finally, the LKMM defines the RCU-before (rb) relation in terms of
+ rcu-fence.  This is done in essentially the same way as the pb
+ relation was defined in terms of strong-fence.  We will omit the
+-details; the end result is that E ->rb F implies E must execute
+-before F, just as E ->pb F does (and for much the same reasons).
++details; the end result is that ``E ->rb F`` implies E must execute
++before F, just as ``E ->pb F`` does (and for much the same reasons).
+ 
+ Putting this all together, the LKMM expresses the Grace Period
+ Guarantee by requiring that the rb relation does not contain a cycle.
+ Equivalently, this "rcu" axiom requires that there are no events E
+-and F with E ->rcu-link F ->rcu-fence E.  Or to put it a third way,
++and F with ``E ->rcu-link F ->rcu-fence E``.  Or to put it a third way,
+ the axiom requires that there are no cycles consisting of rcu-gp and
+ rcu-rscsi alternating with rcu-link, where the number of rcu-gp links
+ is >= the number of rcu-rscsi links.
+@@ -1649,8 +1649,8 @@ by rcu-link::
+ 
+ 	S ->rcu-link U.
+ 
+-Since S is a grace period we have S ->rcu-gp S, and since L and U are
+-the start and end of the critical section C we have U ->rcu-rscsi L.
++Since S is a grace period we have ``S ->rcu-gp S``, and since L and U are
++the start and end of the critical section C we have ``U ->rcu-rscsi L``.
+ From this we obtain::
+ 
+ 	S ->rcu-gp S ->rcu-link U ->rcu-rscsi L ->rcu-link S,
+@@ -1683,16 +1683,16 @@ time with statement labels added::
+ 
+ 
+ If r2 = 0 at the end then P0's store at Y overwrites the value that
+-P1's load at W reads from, so we have W ->fre Y.  Since S ->po W and
+-also Y ->po U, we get S ->rcu-link U.  In addition, S ->rcu-gp S
++P1's load at W reads from, so we have ``W ->fre Y``.  Since ``S ->po W`` and
++also ``Y ->po U``, we get ``S ->rcu-link U``.  In addition, ``S ->rcu-gp S``
+ because S is a grace period.
+ 
+ If r1 = 1 at the end then P1's load at Z reads from P0's store at X,
+-so we have X ->rfe Z.  Together with L ->po X and Z ->po S, this
+-yields L ->rcu-link S.  And since L and U are the start and end of a
+-critical section, we have U ->rcu-rscsi L.
++so we have ``X ->rfe Z``.  Together with ``L ->po X`` and ``Z ->po S``, this
++yields ``L ->rcu-link S``.  And since L and U are the start and end of a
++critical section, we have ``U ->rcu-rscsi L``.
+ 
+-Then U ->rcu-rscsi L ->rcu-link S ->rcu-gp S ->rcu-link U is a
++Then ``U ->rcu-rscsi L ->rcu-link S ->rcu-gp S ->rcu-link U`` is a
+ forbidden cycle, violating the "rcu" axiom.  Hence the outcome is not
+ allowed by the LKMM, as we would expect.
+ 
+@@ -1729,9 +1729,9 @@ For contrast, let's see what can happen in a more complicated example::
+ 		U2: rcu_read_unlock();
+ 	}
+ 
+-If r0 = r1 = r2 = 1 at the end, then similar reasoning to before shows
+-that U0 ->rcu-rscsi L0 ->rcu-link S1 ->rcu-gp S1 ->rcu-link U2 ->rcu-rscsi
+-L2 ->rcu-link U0.  However this cycle is not forbidden, because the
++If ``r0 = r1 = r2 = 1`` at the end, then similar reasoning to before shows
++that ``U0 ->rcu-rscsi L0 ->rcu-link S1 ->rcu-gp S1 ->rcu-link U2 ->rcu-rscsi
++L2 ->rcu-link U0``.  However this cycle is not forbidden, because the
+ sequence of relations contains fewer instances of rcu-gp (one) than of
+ rcu-rscsi (two).  Consequently the outcome is allowed by the LKMM.
+ The following instruction timing diagram shows how it might actually
+
