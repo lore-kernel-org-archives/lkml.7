@@ -2,184 +2,168 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A822C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7C6C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16C11206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:04:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="4Bp21u1Y"
+	by mail.kernel.org (Postfix) with ESMTP id 3517D206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:04:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387784AbfG3SEG (ORCPT
+        id S2387816AbfG3SEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:04:06 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51963 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728116AbfG3SEG (ORCPT
+        Tue, 30 Jul 2019 14:04:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15928 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729978AbfG3SEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:04:06 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UI3wTw3322512
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:03:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UI3wTw3322512
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564509839;
-        bh=Q8r8DuGQ1Jlpl52DzFaeQCJat4D9MW6m7X95NaG4ub4=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=4Bp21u1YWc23HglypOyFpCuCmhyPyQH2f7JM86j38xnTEbJBmmYyNyL4e/k6Df5tE
-         BxaTI9vBPwxtC9wPPuQIPDe1R69bfrmrbr8jAcs9xZ3LKQETYTCt7NLtVYO8IUenpR
-         cyPugqNfcRAoeaCJ+nnsInCZuMZTebHXEiUnJFMuVGh+ck9UKCEDtkeuJA6UZitQrT
-         5/ucvpr4pfbTuopEEE+8SsOCGGoBb8G7D8M3B5Q8KLd17BYoQRC5NRPOBbtIeN2Fu+
-         GfYvoxcRW6siEpWRGlj6IWi+FCDx4ugApHzYBnfazK7OD92MjtQLfJK2N3vlnSEkfq
-         st111Pke+DbgA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UI3wTB3322508;
-        Tue, 30 Jul 2019 11:03:58 -0700
-Date:   Tue, 30 Jul 2019 11:03:58 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-w3eluap63x9je0bb8o3t79tz@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
-        lclaudio@redhat.com, acme@redhat.com, tglx@linutronix.de,
-        namhyung@kernel.org, hpa@zytor.com, jolsa@kernel.org,
-        mingo@kernel.org
-Reply-To: jolsa@kernel.org, tglx@linutronix.de, hpa@zytor.com,
-          namhyung@kernel.org, acme@redhat.com, mingo@kernel.org,
-          lclaudio@redhat.com, adrian.hunter@intel.com,
-          linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf trace: Forward error codes when trying to read
- syscall info
-Git-Commit-ID: 5d2bd88975117062766a48b5f36ce31d2c1a8269
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 14:04:13 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6UI2wC0099805
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 14:04:11 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u2tamh7p9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 14:04:11 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Tue, 30 Jul 2019 19:04:09 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 30 Jul 2019 19:04:04 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6UI43V029360352
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 18:04:04 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C01ED4C052;
+        Tue, 30 Jul 2019 18:04:03 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 616CE4C040;
+        Tue, 30 Jul 2019 18:04:02 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.144.206])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Jul 2019 18:04:02 +0000 (GMT)
+Subject: Re: [PATCH 2/2] KVM: selftests: Enable dirty_log_test on s390x
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+        Janosch Frank <frankja@linux.ibm.com>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>, Peter Xu <peterx@redhat.com>
+References: <20190730100112.18205-1-thuth@redhat.com>
+ <20190730100112.18205-3-thuth@redhat.com>
+ <d48ac43b-c960-54af-a145-360a67b4a3d9@de.ibm.com>
+ <02c5c7b4-c45e-4573-d2c3-ebfa2cd2c9d1@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Tue, 30 Jul 2019 20:04:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <02c5c7b4-c45e-4573-d2c3-ebfa2cd2c9d1@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19073018-0008-0000-0000-000003024C05
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19073018-0009-0000-0000-0000226FEEC7
+Message-Id: <341c3705-c2cb-9e87-cc03-42e0cefba308@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-30_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907300188
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5d2bd88975117062766a48b5f36ce31d2c1a8269
-Gitweb:     https://git.kernel.org/tip/5d2bd88975117062766a48b5f36ce31d2c1a8269
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Wed, 17 Jul 2019 19:53:51 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:42 -0300
 
-perf trace: Forward error codes when trying to read syscall info
 
-We iterate thru the syscall table produced from the kernel syscall
-tables reading info, propagate the error and add to the debug message.
+On 30.07.19 19:11, Thomas Huth wrote:
+> On 30/07/2019 16.57, Christian Borntraeger wrote:
+>>
+>>
+>> On 30.07.19 12:01, Thomas Huth wrote:
+>>> To run the dirty_log_test on s390x, we have to make sure that we
+>>> access the dirty log bitmap with little endian byte ordering and
+>>> we have to properly align the memslot of the guest.
+>>> Also all dirty bits of a segment are set once on s390x when one
+>>> of the pages of a segment are written to for the first time, so
+>>> we have to make sure that we touch all pages during the first
+>>> iteration to keep the test in sync here.
+>>
+>> While this fixes the test (and the migration does work fine), it still
+>> means that s390x overindicates the dirty bit for sparsely populated
+>> 1M segments. It is just a performance issue, but maybe we should try 
+>> to get this fixed.
+> 
+> I hope you don't expect me to fix this - the gmap code is really not my
+> turf...
 
-This helps in fixing further bugs, such as failing to read the
-"sendfile" syscall info when it really should try the aliasm
-"sendfile64".
+No, this is clearly on our turf. 
+> 
+>> Not sure what to do here to remember us about this, 
+>> adding this as expected fail?
+> 
+> There is no such thing like an expected failure in KVM selftests -
+> that's only available in kvm-unit-tests.
+> 
+> So the only option that I currently see is to add a printf("TODO: ...")
+> on s390x here... would that work for you?
 
-  Problems reading syscall 40: 2 (No such file or directory)(sendfile) information
+Maybe just keep this as is - we should just not forget about it.
 
-  # grep sendfile /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c
-	[40] = "sendfile",
-  #
-
-I.e. in the tracefs format file for the syscall tracepoints we have it
-as sendfile64:
-
-  # find /sys -type f -name format | grep sendfile
-  /sys/kernel/debug/tracing/events/syscalls/sys_enter_sendfile64/format
-  /sys/kernel/debug/tracing/events/syscalls/sys_exit_sendfile64/format
-  #
-
-But as "sendfile" in the file used to build the syscall table used in
-perf:
-
-  $ grep sendfile arch/x86/entry/syscalls/syscall_64.tbl
-  40	common	sendfile		__x64_sys_sendfile64
-  $
-
-So we need to add, in followup patches, aliases in 'perf trace' syscall
-data structures to cope with thie.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-w3eluap63x9je0bb8o3t79tz@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index d403b09812d1..5dae7b172291 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1492,13 +1492,13 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	const char *name = syscalltbl__name(trace->sctbl, id);
- 
- 	if (name == NULL)
--		return -1;
-+		return -EINVAL;
- 
- 	if (id > trace->syscalls.max) {
- 		struct syscall *nsyscalls = realloc(trace->syscalls.table, (id + 1) * sizeof(*sc));
- 
- 		if (nsyscalls == NULL)
--			return -1;
-+			return -ENOMEM;
- 
- 		if (trace->syscalls.max != -1) {
- 			memset(nsyscalls + trace->syscalls.max + 1, 0,
-@@ -1525,10 +1525,10 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	}
- 
- 	if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ? 6 : sc->tp_format->format.nr_fields))
--		return -1;
-+		return -ENOMEM;
- 
- 	if (IS_ERR(sc->tp_format))
--		return -1;
-+		return PTR_ERR(sc->tp_format);
- 
- 	sc->args = sc->tp_format->format.fields;
- 	/*
-@@ -1789,6 +1789,7 @@ typedef int (*tracepoint_handler)(struct trace *trace, struct perf_evsel *evsel,
- static struct syscall *trace__syscall_info(struct trace *trace,
- 					   struct perf_evsel *evsel, int id)
- {
-+	int err = 0;
- 
- 	if (id < 0) {
- 
-@@ -1811,9 +1812,10 @@ static struct syscall *trace__syscall_info(struct trace *trace,
- 	}
- 
- 	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL) &&
--	    trace__read_syscall_info(trace, id))
-+	    (err = trace__read_syscall_info(trace, id)) != 0)
- 		goto out_cant_read;
- 
-+	err = -EINVAL;
- 	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL))
- 		goto out_cant_read;
- 
-@@ -1821,7 +1823,8 @@ static struct syscall *trace__syscall_info(struct trace *trace,
- 
- out_cant_read:
- 	if (verbose > 0) {
--		fprintf(trace->output, "Problems reading syscall %d", id);
-+		char sbuf[STRERR_BUFSIZE];
-+		fprintf(trace->output, "Problems reading syscall %d: %d (%s)", id, -err, str_error_r(-err, sbuf, sizeof(sbuf)));
- 		if (id <= trace->syscalls.max && trace->syscalls.table[id].name != NULL)
- 			fprintf(trace->output, "(%s)", trace->syscalls.table[id].name);
- 		fputs(" information\n", trace->output);
