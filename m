@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AC2C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B3CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 225502089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802CC20C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731886AbfG3O61 (ORCPT
+        id S1731903AbfG3O6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 10:58:27 -0400
-Received: from mxout014.mail.hostpoint.ch ([217.26.49.174]:37719 "EHLO
-        mxout014.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731821AbfG3O6U (ORCPT
+        Tue, 30 Jul 2019 10:58:33 -0400
+Received: from mxout013.mail.hostpoint.ch ([217.26.49.173]:35765 "EHLO
+        mxout013.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731626AbfG3O6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 10:58:20 -0400
+        Tue, 30 Jul 2019 10:58:31 -0400
 Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
-        by mxout014.mail.hostpoint.ch with esmtp (Exim 4.92 (FreeBSD))
+        by mxout013.mail.hostpoint.ch with esmtp (Exim 4.92 (FreeBSD))
         (envelope-from <dev@pschenker.ch>)
-        id 1hsTZy-0007eM-NO; Tue, 30 Jul 2019 16:58:18 +0200
+        id 1hsTa9-000FsZ-8w; Tue, 30 Jul 2019 16:58:29 +0200
 Received: from [46.140.72.82] (helo=philippe-pc.toradex.int)
         by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.91 (FreeBSD))
         (envelope-from <dev@pschenker.ch>)
-        id 1hsTP5-000Mva-DX; Tue, 30 Jul 2019 16:47:03 +0200
+        id 1hsTP8-000Mva-Db; Tue, 30 Jul 2019 16:47:06 +0200
 X-Authenticated-Sender-Id: dev@pschenker.ch
 From:   Philippe Schenker <dev@pschenker.ch>
 To:     marcel.ziswiler@toradex.com, max.krummenacher@toradex.com,
@@ -42,9 +42,9 @@ Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 13/22] ARM: dts: colibri-imx6: Add missing pinmuxing to Toradex eval board
-Date:   Tue, 30 Jul 2019 16:46:40 +0200
-Message-Id: <20190730144649.19022-14-dev@pschenker.ch>
+Subject: [PATCH 18/22] ARM: dts: imx6ull-colibri: Add watchdog
+Date:   Tue, 30 Jul 2019 16:46:45 +0200
+Message-Id: <20190730144649.19022-19-dev@pschenker.ch>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730144649.19022-1-dev@pschenker.ch>
 References: <20190730144649.19022-1-dev@pschenker.ch>
@@ -57,34 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Philippe Schenker <philippe.schenker@toradex.com>
 
-This patch adds some missing pinmuxing that is in the colibri
-standard to the dts.
+This patch adds the watchdog to the imx6ull-colibri devicetree
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
 
- arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/imx6ull-colibri.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-index 63d4f9ca9ad8..13800e60246c 100644
---- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-+++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-@@ -204,6 +204,14 @@
+diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+index 1f112ec55e5c..e3220298dd6f 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+@@ -199,6 +199,12 @@
+ 	assigned-clock-rates = <0>, <198000000>;
  };
  
- &iomuxc {
++&wdog1 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <
-+		&pinctrl_weim_gpio_1 &pinctrl_weim_gpio_2
-+		&pinctrl_weim_gpio_3 &pinctrl_weim_gpio_4
-+		&pinctrl_weim_gpio_5 &pinctrl_weim_gpio_6
-+		&pinctrl_usbh_oc_1 &pinctrl_usbc_id_1
-+	>;
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++};
 +
- 	pinctrl_pcap_1: pcap-1 {
+ &iomuxc {
+ 	pinctrl_can_int: canint-grp {
  		fsl,pins = <
- 			MX6QDL_PAD_GPIO_9__GPIO1_IO09	0x1b0b0 /* SODIMM 28 */
+@@ -506,6 +512,12 @@
+ 			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x14
+ 		>;
+ 	};
++
++	pinctrl_wdog: wdog-grp {
++		fsl,pins = <
++			MX6UL_PAD_LCD_RESET__WDOG1_WDOG_ANY    0x30b0
++		>;
++	};
+ };
+ 
+ &iomuxc_snvs {
 -- 
 2.22.0
 
