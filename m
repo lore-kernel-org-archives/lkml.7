@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6851CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF851C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E252171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869D6216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:59:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgWL5H0a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+GZOYya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730418AbfG3Q7X (ORCPT
+        id S1730466AbfG3Q73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:59:23 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43642 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729736AbfG3Q6S (ORCPT
+        Tue, 30 Jul 2019 12:59:29 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52027 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729668AbfG3Q6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:58:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so66548942wru.10;
-        Tue, 30 Jul 2019 09:58:17 -0700 (PDT)
+        Tue, 30 Jul 2019 12:58:14 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so57855432wma.1;
+        Tue, 30 Jul 2019 09:58:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cHY/PWsCS9Gy0qH6S2V8hqONNTeRxBp0T3nKwM2El6E=;
-        b=RgWL5H0abdsOwXIac0uk/56Qpu8Dml3donOrYITO24N5I+EnLII2X5yAKHLyjnUUks
-         k6SiXHGvJjI3cynhy48jDglqa+w5KNfWmnDN40HOdpLfxidJIQ6x6SGnhf91KoX6cT/7
-         rIIwoMVNT0LHM3Ojm3bcz/ywA5X7gmej0lVsuWO2NJwmQk0aODkAIjXzAbS1xMLDPPXH
-         LXxngxauImVR5cZ/IeUt4oX9KBlva8JWARcA9omSG+bYJCW0E+7lC8AQChsnFP+bhlSz
-         kU8jHeM5B5CX909YH65KKhO64jncXB3WD8XIRQ3wtw9QOJc4CxwsMos499pKdsdtlb4D
-         xc5g==
+        bh=PCQNSQK+2muyk726fUJhk7VrSnWFFmbUV5XprGSciK8=;
+        b=c+GZOYyaQp1JNvHftjK98BENDh2w8pUzm5vCs4vyLNbkbGCv9ybiUHSyIOBZolaRdd
+         3UGLwUT4uDO3sr+VWmNltbi3OKwX5Wi5cSciqzAE/qOaxDdV9a4K+ONItqtvA9pCHL4d
+         DyKvNtDPVOW20kQO7dciyVNCJrUNdvd+1+ksEBF5OaIg1BTzmDUfU9R9LSOnZasHN6FD
+         nu/kt9BJ95moviNv4CSGmtRoYljcMAwqFVYU8YR8yKvDF7E1tDnxszIfT9fAIl2IzSM3
+         JdhZt6K0lBWLzIFvjju+rC6Vq3ydVYheKGAXq1AKUjefuyzXB4hCAK05o1ly6yR5rl2z
+         a1GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cHY/PWsCS9Gy0qH6S2V8hqONNTeRxBp0T3nKwM2El6E=;
-        b=BAPCYk4OBEgb1JsaYwiPTKmD8Sb4h5kcr47CoTbsaqlokEPXo1dIO0NiCe//DsLD3z
-         VOSjHJVhF9V8pFxVGvFs7jjyxc0Z5GLEkNf3gv3GV3MO8D7JFO6lakpVyv8JwAO7h+eo
-         jrijPIKWM/awjZFPCYndhTFkH0ax3eN8RurKXPEgYQITb9IctDqeExYyqc9+NjeeZnrq
-         siJ8yn45dzKAbwCXt8jp9rdvgjFGxjmnNh6NoyhncWzO3M/FVfeAq7rjhPnKMrAfzQsy
-         rqEVkohKCsSoti3Ht7iJdLWFIGlV1Q4wwyknpwOMliGvc4tcKUme3kqg3xJsVxZVSObv
-         ENcg==
-X-Gm-Message-State: APjAAAUJ/IJABGqYuFIc+KrnNRXaF0SIBvw4LORbW0/OXFEzSnAhKkNV
-        vEExxwh57kOdd8RppZuRcsMD/MCP
-X-Google-Smtp-Source: APXvYqyrsktUZZ3xbBXfS16fNrP8gGuWqmcaULBm5PX+z5WSnr534qgc8EXw5VVqQNiKjXWTTRZktA==
-X-Received: by 2002:a5d:50d1:: with SMTP id f17mr74521257wrt.124.1564505896476;
-        Tue, 30 Jul 2019 09:58:16 -0700 (PDT)
+        bh=PCQNSQK+2muyk726fUJhk7VrSnWFFmbUV5XprGSciK8=;
+        b=JjrZdMx4gxcFfLjUoWAZIFrQvDRGOECkLjMUNTvCcQp7wf9TeIxdXMOopypKlpk9Xf
+         FffjTm7esv2JGkEiEYC9Sbce/cDIRuCVUQiwuEO6s/JonJqdKt3FY/yh1KusFlJssrbv
+         pNORAyqbuj2ZcMgMuW9bFim7FDAVOLbHICNAMozK+pRHIpX1qbNVwihdj6JYo8Exx5rd
+         9UMYB0MqFaNcy2AYtEorHIaAwQ/gEmdZA2du593pUFhlvgblW34yMKiGL3VGhDpvX+hV
+         MUqdZKqBQiZH0pEN0RVI/QNUZ0Nb4lLTG5cIcJok8nLHatrJsguKP+n253oyu7w37vAP
+         73Pg==
+X-Gm-Message-State: APjAAAWcFpzC2AFiFK3n9h2IaTvRClf+A+UUWgSvHJrDBBkE2Ny0NII2
+        VErthnUglWbDOkJm4vCEqoZ8Vx3W
+X-Google-Smtp-Source: APXvYqygO5NFFLsYp4WhWLD7ZVP7KsagNkXt1AlKjvyVhfvh5FZn9qOXup11dkmNVQ8635QgU2BYxA==
+X-Received: by 2002:a1c:6555:: with SMTP id z82mr108948548wmb.129.1564505892259;
+        Tue, 30 Jul 2019 09:58:12 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id r5sm70845040wmh.35.2019.07.30.09.58.15
+        by smtp.gmail.com with ESMTPSA id r5sm70845040wmh.35.2019.07.30.09.58.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 09:58:16 -0700 (PDT)
+        Tue, 30 Jul 2019 09:58:11 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -68,9 +68,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v9 06/15] memory: tegra20-emc: Print a brief info message about the timings
-Date:   Tue, 30 Jul 2019 19:56:09 +0300
-Message-Id: <20190730165618.10122-7-digetx@gmail.com>
+Subject: [PATCH v9 03/15] memory: tegra20-emc: Adapt for clock driver changes
+Date:   Tue, 30 Jul 2019 19:56:06 +0300
+Message-Id: <20190730165618.10122-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730165618.10122-1-digetx@gmail.com>
 References: <20190730165618.10122-1-digetx@gmail.com>
@@ -81,34 +81,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During boot print how many memory timings got the driver and what's the
-RAM code. This is a very useful information when something is wrong with
-boards memory timing.
+Now Terga20 and Tegra30 EMC drivers should provide clock-rounding
+functionality using the new Tegra-CLK driver API.
 
-Suggested-by: Marc Dietrich <marvin24@gmx.de>
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/tegra20-emc.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/memory/tegra/tegra20-emc.c | 50 ++++++++++++++++++++++++++++--
+ 1 file changed, 48 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index 85c24f285fd4..25a6aad6a7a9 100644
+index da8fa592b071..b519f02b0ee9 100644
 --- a/drivers/memory/tegra/tegra20-emc.c
 +++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -368,6 +368,13 @@ static int tegra_emc_load_timings_from_dt(struct tegra_emc *emc,
- 	sort(emc->timings, emc->num_timings, sizeof(*timing), cmp_timings,
- 	     NULL);
+@@ -6,6 +6,7 @@
+  */
  
-+	dev_info(emc->dev,
-+		 "got %u timings for RAM code %u (min %luMHz max %luMHz)\n",
-+		 emc->num_timings,
-+		 tegra_read_ram_code(),
-+		 emc->timings[0].rate / 1000000,
-+		 emc->timings[emc->num_timings - 1].rate / 1000000);
-+
+ #include <linux/clk.h>
++#include <linux/clk/tegra.h>
+ #include <linux/completion.h>
+ #include <linux/err.h>
+ #include <linux/interrupt.h>
+@@ -421,6 +422,44 @@ static int emc_setup_hw(struct tegra_emc *emc)
  	return 0;
  }
  
++static long emc_round_rate(unsigned long rate,
++			   unsigned long min_rate,
++			   unsigned long max_rate,
++			   void *arg)
++{
++	struct emc_timing *timing = NULL;
++	struct tegra_emc *emc = arg;
++	unsigned int i;
++
++	min_rate = min(min_rate, emc->timings[emc->num_timings - 1].rate);
++
++	for (i = 0; i < emc->num_timings; i++) {
++		if (emc->timings[i].rate < rate && i != emc->num_timings - 1)
++			continue;
++
++		if (emc->timings[i].rate > max_rate) {
++			i = max(i, 1u) - 1;
++
++			if (emc->timings[i].rate < min_rate)
++				break;
++		}
++
++		if (emc->timings[i].rate < min_rate)
++			continue;
++
++		timing = &emc->timings[i];
++		break;
++	}
++
++	if (!timing) {
++		dev_err(emc->dev, "no timing for rate %lu min %lu max %lu\n",
++			rate, min_rate, max_rate);
++		return -EINVAL;
++	}
++
++	return timing->rate;
++}
++
+ static int tegra_emc_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np;
+@@ -477,21 +516,28 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
++	tegra20_clk_set_emc_round_callback(emc_round_rate, emc);
++
+ 	emc->clk = devm_clk_get(&pdev->dev, "emc");
+ 	if (IS_ERR(emc->clk)) {
+ 		err = PTR_ERR(emc->clk);
+ 		dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
+-		return err;
++		goto unset_cb;
+ 	}
+ 
+ 	err = clk_notifier_register(emc->clk, &emc->clk_nb);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "failed to register clk notifier: %d\n",
+ 			err);
+-		return err;
++		goto unset_cb;
+ 	}
+ 
+ 	return 0;
++
++unset_cb:
++	tegra20_clk_set_emc_round_callback(NULL, NULL);
++
++	return err;
+ }
+ 
+ static const struct of_device_id tegra_emc_of_match[] = {
 -- 
 2.22.0
 
