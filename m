@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48410C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C26C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0997E20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE8920693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aqyUhqs/"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eZe6oH4M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387866AbfG3SOc (ORCPT
+        id S1728401AbfG3SPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:14:32 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41025 "EHLO
+        Tue, 30 Jul 2019 14:15:14 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:50599 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbfG3SOc (ORCPT
+        with ESMTP id S1726576AbfG3SPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:14:32 -0400
+        Tue, 30 Jul 2019 14:15:14 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIEIVF3325833
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIF2Dd3325987
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:14:18 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIEIVF3325833
+        Tue, 30 Jul 2019 11:15:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIF2Dd3325987
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564510459;
-        bh=BwGFZ0E5ir3djK+EjNFs/WKw1INNTsfq1xeQJtJqyBg=;
+        s=2019071901; t=1564510503;
+        bh=RIDbHj4dcX0LAT0D1AlS8luBMzGaCde1C2650N2QVkU=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=aqyUhqs/rWVNcRbqpPzQ+f/Td2rvUD15luDFcBWMriRo0vd5U3l1hDgQ49VQCXlgi
-         xleV6Q/v/hn9Dxt6U7rU/YiqzM6bQnr9Qs0XzJ4d6hvGL3mQXuxwV8f9AYlah2hJTK
-         E99yY2UrAI69VoMx9H6/lax4nPXW7400DoxVRp8wdF5Xf5QBWa/3tVzvEdHeY1Ms5n
-         0n9QXjwINe3h5rGKmfcn31GnASokmaV7j+/+gcW96Gf3rsfbIob+NXRiHTp0reVYku
-         YGhAbrnKPKGN54ICc2NgiHMPS1/VPetO1gvryf7r34ew93g7K0pvHO7dyHS6sFIh5r
-         PN6H0oB07zf0A==
+        b=eZe6oH4MgXWYgCnMi0zP4eS8Kz4nxM9ltUuU0N7K3f5tsZ1bJUCUcsO1S3xq5TLsa
+         K0AxVcGmC5Dk/r3xKvwIFjGhiPIQV+0lwhO1OvjECmGoB/uArKJ2CzZ5MA7NP+EqD+
+         jIjZmmRBfhLAZ+Kj65gWI9lRY1LwWyHF7jD/7TF47WZgHN0x+vEp1Nvfpfpuz6QZh4
+         PJrHZzDD8F8Fc4NanlL7AvjN+xUsmKRaMuxvPfJBDG4HD183T82QBv+y1OFVlRpzj0
+         TAjpcDCJjLF+4Chts3UpL4eT0NBTAXdg0h+4+rJ8eFQenZ7MeklRBVg9UMUVo1e8Hp
+         eDxJCBvZykUow==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIEHf93325830;
-        Tue, 30 Jul 2019 11:14:17 -0700
-Date:   Tue, 30 Jul 2019 11:14:17 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIF1sa3325926;
+        Tue, 30 Jul 2019 11:15:01 -0700
+Date:   Tue, 30 Jul 2019 11:15:01 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-5eb2dd2ade8354dcbe4cef54cd1719622af8f2dc@git.kernel.org>
-Cc:     ak@linux.intel.com, alexey.budankov@linux.intel.com,
-        peterz@infradead.org, acme@redhat.com, hpa@zytor.com,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org, mpetlan@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de
-Reply-To: jolsa@kernel.org, hpa@zytor.com, mingo@kernel.org,
-          acme@redhat.com, alexander.shishkin@linux.intel.com,
-          tglx@linutronix.de, namhyung@kernel.org, ak@linux.intel.com,
-          mpetlan@redhat.com, peterz@infradead.org,
-          alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20190721112506.12306-11-jolsa@kernel.org>
-References: <20190721112506.12306-11-jolsa@kernel.org>
+Message-ID: <tip-365c3ae7452ca95e0a8f1e4716dd806550ade706@git.kernel.org>
+Cc:     alexey.budankov@linux.intel.com, ak@linux.intel.com,
+        alexander.shishkin@linux.intel.com, mpetlan@redhat.com,
+        acme@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, peterz@infradead.org, hpa@zytor.com,
+        jolsa@kernel.org, mingo@kernel.org
+Reply-To: hpa@zytor.com, peterz@infradead.org, mingo@kernel.org,
+          jolsa@kernel.org, mpetlan@redhat.com, acme@redhat.com,
+          ak@linux.intel.com, alexey.budankov@linux.intel.com,
+          alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de
+In-Reply-To: <20190721112506.12306-12-jolsa@kernel.org>
+References: <20190721112506.12306-12-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf evsel: Rename perf_evsel__delete() to
- evsel__delete()
-Git-Commit-ID: 5eb2dd2ade8354dcbe4cef54cd1719622af8f2dc
+Subject: [tip:perf/core] perf evsel: Rename perf_evsel__new() to
+ evsel__new()
+Git-Commit-ID: 365c3ae7452ca95e0a8f1e4716dd806550ade706
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,19 +74,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5eb2dd2ade8354dcbe4cef54cd1719622af8f2dc
-Gitweb:     https://git.kernel.org/tip/5eb2dd2ade8354dcbe4cef54cd1719622af8f2dc
+Commit-ID:  365c3ae7452ca95e0a8f1e4716dd806550ade706
+Gitweb:     https://git.kernel.org/tip/365c3ae7452ca95e0a8f1e4716dd806550ade706
 Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:23:57 +0200
+AuthorDate: Sun, 21 Jul 2019 13:23:58 +0200
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 29 Jul 2019 18:34:43 -0300
 
-perf evsel: Rename perf_evsel__delete() to evsel__delete()
+perf evsel: Rename perf_evsel__new() to evsel__new()
 
-Remame perf_evsel__delete() to evsel__delete(), so we don't have a name
-clash when we add perf_evsel__delete() in libperf.
-
-Also renaming perf_evsel__delete_priv() to evsel__delete_priv().
+Rename perf_evsel__new() to evsel__new(), so we don't have a name clash
+when we add perf_evsel__new() in libperf.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -95,212 +93,101 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-11-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-12-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-inject.c                |  4 ++--
- tools/perf/builtin-trace.c                 | 12 ++++++------
- tools/perf/tests/evsel-tp-sched.c          |  4 ++--
- tools/perf/tests/openat-syscall-all-cpus.c |  2 +-
- tools/perf/tests/openat-syscall.c          |  2 +-
- tools/perf/util/evlist.c                   |  4 ++--
- tools/perf/util/evsel.c                    |  4 ++--
- tools/perf/util/evsel.h                    |  2 +-
- tools/perf/util/parse-events.c             |  4 ++--
- 9 files changed, 19 insertions(+), 19 deletions(-)
+ tools/perf/builtin-trace.c     | 2 +-
+ tools/perf/tests/sw-clock.c    | 2 +-
+ tools/perf/util/evsel.c        | 2 +-
+ tools/perf/util/evsel.h        | 2 +-
+ tools/perf/util/header.c       | 4 ++--
+ tools/perf/util/parse-events.c | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index d2131fc863be..917c8fb4baa5 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -623,7 +623,7 @@ static void strip_fini(struct perf_inject *inject)
- 		    ok_to_remove(evlist, evsel)) {
- 			pr_debug("Deleting %s\n", perf_evsel__name(evsel));
- 			perf_evlist__remove(evlist, evsel);
--			perf_evsel__delete(evsel);
-+			evsel__delete(evsel);
- 		}
- 	}
- }
-@@ -725,7 +725,7 @@ static int __cmd_inject(struct perf_inject *inject)
- 				pr_debug("Deleting %s\n",
- 					 perf_evsel__name(evsel));
- 				perf_evlist__remove(session->evlist, evsel);
--				perf_evsel__delete(evsel);
-+				evsel__delete(evsel);
- 			}
- 			if (inject->strip)
- 				strip_fini(inject);
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index e133204b3bb9..0f7d1859a2d1 100644
+index 0f7d1859a2d1..c5eb47f4e42e 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -274,10 +274,10 @@ static int perf_evsel__init_tp_ptr_field(struct evsel *evsel,
- 	({ struct syscall_tp *sc = evsel->priv;\
- 	   perf_evsel__init_tp_ptr_field(evsel, &sc->name, #name); })
+@@ -2657,7 +2657,7 @@ static struct evsel *perf_evsel__new_pgfault(u64 config)
  
--static void perf_evsel__delete_priv(struct evsel *evsel)
-+static void evsel__delete_priv(struct evsel *evsel)
- {
- 	zfree(&evsel->priv);
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
- }
+ 	event_attr_init(&attr);
  
- static int perf_evsel__init_syscall_tp(struct evsel *evsel)
-@@ -368,7 +368,7 @@ static struct evsel *perf_evsel__raw_syscall_newtp(const char *direction, void *
- 	return evsel;
+-	evsel = perf_evsel__new(&attr);
++	evsel = evsel__new(&attr);
+ 	if (evsel)
+ 		evsel->handler = trace__pgfault;
  
- out_delete:
--	perf_evsel__delete_priv(evsel);
-+	evsel__delete_priv(evsel);
- 	return NULL;
- }
- 
-@@ -2638,7 +2638,7 @@ static bool perf_evlist__add_vfs_getname(struct evlist *evlist)
- 
- 		list_del_init(&evsel->node);
- 		evsel->evlist = NULL;
--		perf_evsel__delete(evsel);
-+		evsel__delete(evsel);
+diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
+index 1c7d8adb43d0..247d3734686e 100644
+--- a/tools/perf/tests/sw-clock.c
++++ b/tools/perf/tests/sw-clock.c
+@@ -49,7 +49,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
+ 		return -1;
  	}
  
- 	return found;
-@@ -2739,9 +2739,9 @@ out:
- 	return ret;
- 
- out_delete_sys_exit:
--	perf_evsel__delete_priv(sys_exit);
-+	evsel__delete_priv(sys_exit);
- out_delete_sys_enter:
--	perf_evsel__delete_priv(sys_enter);
-+	evsel__delete_priv(sys_enter);
- 	goto out;
- }
- 
-diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
-index 0170e9d2e329..261e6eaaee99 100644
---- a/tools/perf/tests/evsel-tp-sched.c
-+++ b/tools/perf/tests/evsel-tp-sched.c
-@@ -64,7 +64,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
- 	if (perf_evsel__test_field(evsel, "next_prio", 4, true))
- 		ret = -1;
- 
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
- 
- 	evsel = perf_evsel__newtp("sched", "sched_wakeup");
- 
-@@ -85,6 +85,6 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
- 	if (perf_evsel__test_field(evsel, "target_cpu", 4, true))
- 		ret = -1;
- 
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
- 	return ret;
- }
-diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
-index 4bf73896695a..001a0e8e6998 100644
---- a/tools/perf/tests/openat-syscall-all-cpus.c
-+++ b/tools/perf/tests/openat-syscall-all-cpus.c
-@@ -118,7 +118,7 @@ int test__openat_syscall_event_on_all_cpus(struct test *test __maybe_unused, int
- out_close_fd:
- 	perf_evsel__close_fd(evsel);
- out_evsel_delete:
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
- out_cpu_map_delete:
- 	cpu_map__put(cpus);
- out_thread_map_delete:
-diff --git a/tools/perf/tests/openat-syscall.c b/tools/perf/tests/openat-syscall.c
-index f3efadd05863..20e353fbfdd0 100644
---- a/tools/perf/tests/openat-syscall.c
-+++ b/tools/perf/tests/openat-syscall.c
-@@ -59,7 +59,7 @@ int test__openat_syscall_event(struct test *test __maybe_unused, int subtest __m
- out_close_fd:
- 	perf_evsel__close_fd(evsel);
- out_evsel_delete:
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
- out_thread_map_delete:
- 	thread_map__put(threads);
- 	return err;
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 9fa3663068b4..986d20c15778 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -121,7 +121,7 @@ static void perf_evlist__purge(struct evlist *evlist)
- 	evlist__for_each_entry_safe(evlist, n, pos) {
- 		list_del_init(&pos->node);
- 		pos->evlist = NULL;
--		perf_evsel__delete(pos);
-+		evsel__delete(pos);
- 	}
- 
- 	evlist->nr_entries = 0;
-@@ -277,7 +277,7 @@ static int perf_evlist__add_attrs(struct evlist *evlist,
- 
- out_delete_partial_list:
- 	__evlist__for_each_entry_safe(&head, n, evsel)
--		perf_evsel__delete(evsel);
-+		evsel__delete(evsel);
- 	return -1;
- }
- 
+-	evsel = perf_evsel__new(&attr);
++	evsel = evsel__new(&attr);
+ 	if (evsel == NULL) {
+ 		pr_debug("perf_evsel__new\n");
+ 		goto out_delete_evlist;
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 97bee83f0f98..de379b63f1ce 100644
+index de379b63f1ce..c9723c2d57c9 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -316,7 +316,7 @@ new_event:
- out:
- 	return evsel;
- error_free:
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
- 	evsel = NULL;
- 	goto out;
- }
-@@ -1333,7 +1333,7 @@ void perf_evsel__exit(struct evsel *evsel)
- 	perf_evsel__object.fini(evsel);
- }
+@@ -301,7 +301,7 @@ struct evsel *perf_evsel__new_cycles(bool precise)
+ 	 * to kick in when we return and before perf_evsel__open() is called.
+ 	 */
+ new_event:
+-	evsel = perf_evsel__new(&attr);
++	evsel = evsel__new(&attr);
+ 	if (evsel == NULL)
+ 		goto out;
  
--void perf_evsel__delete(struct evsel *evsel)
-+void evsel__delete(struct evsel *evsel)
- {
- 	perf_evsel__exit(evsel);
- 	free(evsel);
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index af230d92fbef..20b4e31b63a9 100644
+index 20b4e31b63a9..ecea51a918e0 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -240,7 +240,7 @@ struct tep_event *event_format__new(const char *sys, const char *name);
+@@ -219,7 +219,7 @@ int perf_evsel__object_config(size_t object_size,
  
- void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
- void perf_evsel__exit(struct evsel *evsel);
--void perf_evsel__delete(struct evsel *evsel);
-+void evsel__delete(struct evsel *evsel);
+ struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx);
  
- struct callchain_param;
+-static inline struct evsel *perf_evsel__new(struct perf_event_attr *attr)
++static inline struct evsel *evsel__new(struct perf_event_attr *attr)
+ {
+ 	return perf_evsel__new_idx(attr, 0);
+ }
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 29bbfd699226..7760ddc4bc18 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3583,7 +3583,7 @@ int perf_session__read_header(struct perf_session *session)
+ 		}
+ 
+ 		tmp = lseek(fd, 0, SEEK_CUR);
+-		evsel = perf_evsel__new(&f_attr.attr);
++		evsel = evsel__new(&f_attr.attr);
+ 
+ 		if (evsel == NULL)
+ 			goto out_delete_evlist;
+@@ -4021,7 +4021,7 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+ 			return -ENOMEM;
+ 	}
+ 
+-	evsel = perf_evsel__new(&event->attr.attr);
++	evsel = evsel__new(&event->attr.attr);
+ 	if (evsel == NULL)
+ 		return -ENOMEM;
  
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6a4bfc7ab0c1..cc63367f6e45 100644
+index cc63367f6e45..40087cf74dd1 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -662,7 +662,7 @@ static int add_bpf_event(const char *group, const char *event, int fd, struct bp
- 			 group, event);
- 		list_for_each_entry_safe(evsel, tmp, &new_evsels, node) {
- 			list_del_init(&evsel->node);
--			perf_evsel__delete(evsel);
-+			evsel__delete(evsel);
- 		}
- 		return err;
- 	}
-@@ -2334,7 +2334,7 @@ static bool is_event_supported(u8 type, unsigned config)
- 			evsel->attr.exclude_kernel = 1;
- 			ret = perf_evsel__open(evsel, NULL, tmap) >= 0;
- 		}
--		perf_evsel__delete(evsel);
-+		evsel__delete(evsel);
- 	}
+@@ -2318,7 +2318,7 @@ static bool is_event_supported(u8 type, unsigned config)
+ 	if (tmap == NULL)
+ 		return false;
  
- 	thread_map__put(tmap);
+-	evsel = perf_evsel__new(&attr);
++	evsel = evsel__new(&attr);
+ 	if (evsel) {
+ 		open_return = perf_evsel__open(evsel, NULL, tmap);
+ 		ret = open_return >= 0;
