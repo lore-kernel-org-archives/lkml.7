@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFD7C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C75C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8552B21726
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 742E62171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEiA+6DX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eltNGhHd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730944AbfG3Bur (ORCPT
+        id S1730961AbfG3Buw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:50:47 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40770 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730848AbfG3Bug (ORCPT
+        Mon, 29 Jul 2019 21:50:52 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36624 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730918AbfG3Bul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:50:36 -0400
-Received: by mail-pf1-f195.google.com with SMTP id p184so28939008pfp.7;
-        Mon, 29 Jul 2019 18:50:35 -0700 (PDT)
+        Mon, 29 Jul 2019 21:50:41 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k8so28231701plt.3;
+        Mon, 29 Jul 2019 18:50:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Yus3UESewstQeP6xBqn0c8tU9AnJsLA523aHx91as5s=;
-        b=SEiA+6DXUY8nU4JxxRcvILAhfCyQ812nRVCkzqt6XOkyQhJUxSD9nZOCDqD09aXxnP
-         8R9W+2OaX65xIoHL7hc89glmAE+6JmpxEhamDtnMtuxBqI41Ve4dY8vwevEuvYidaP5H
-         dVdhr9c2V45rbKJF8LjovcLCNUc8ix+/hS+hN8isukEoIIjSR6KxuQvBwB/pOAOQa7g7
-         kypBuCvFNYFZV8nOxcjFPButxRxD4V3m/kwIF0gdHPMDjcCD+eluBD7penp75YA/GaeC
-         3fTE8s3nUCTR/b403KpScgWpdbP11kRswyt/ElBYo5dd1JjF8qR7vzPU4iPwKETBehhK
-         nsxw==
+        bh=B53kfNAL5bPehU6SpckbeuA1BwDTxczPn/Y5JPnbD6I=;
+        b=eltNGhHdxejXM79qXFqifZMz3c9fD/tHWJqdYrJnjpWpRXTApoIF6g3lgi8ELjYpkm
+         WuD26NHfwxy2wLBeTgJHcAw5qX6l1WaxdGOZupq1cjJ6QHBlqGIyuz20MTzaO5M3PTin
+         G8jAkZ36iwHdVjHvXowRGWPGjBqjXCALDnj1IDslzPEUwXWSyiLjgFI8xgGOBtglRzBM
+         VndPR4HjWJMnQZKKn5dX3CPnddEaxI0TNj8m4dANAY5db6oTtrPvlAAltRadS9wZ7jwN
+         kdwxg9HM3PF39JUUhGkmI5Ul8vcYxCfuVZCOXbAJOH4tAVZZArwflc5KsohHLjSuLpVp
+         5Crg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Yus3UESewstQeP6xBqn0c8tU9AnJsLA523aHx91as5s=;
-        b=OW1o94OoznGeDYbHFbc5NU0/wbNt7hYTuZGRryDjiinG5P0Uw+h4qnJ09f6JBGS/sS
-         /UqPfoGYNsOlCrToU6VnUg5nhMGV2bUjZq2qZLNqrYPPcJwxkSnIa3wrMmBbnx1701+0
-         x8GOVRDp9fi8T+ku5njVkpHJoCliOU1nwVX0dTj38LyKpk9MTpfynLSSB09Q3WdxWlqQ
-         GqRO69RN/uu7JRQg+eSTAPPd1DsHU8VhYQE6m5jp4aBJEstHoOeJ1eZWoUDoSwCdioRB
-         Zom5FQz1Uj5/bSlXAePctzhxMAKBvzbrWFuuzCja9SavJC8c90UBlY967Rf6BjHMan6K
-         3YfQ==
-X-Gm-Message-State: APjAAAWaY3CfyUfnc+E/a91bShwRWttqaBvN4AJVw7FRzCLLXnx8Oe7a
-        F2XVUZKTK0YvMlghHIszK8M=
-X-Google-Smtp-Source: APXvYqy5JQbCWDUYQpBFr2nhGCvc2pEAyEn23IjvOJzC/OFOcCnF/y/pvQmApBMVM5vLDLwlxUTQbA==
-X-Received: by 2002:a62:27c2:: with SMTP id n185mr30133871pfn.79.1564451435056;
-        Mon, 29 Jul 2019 18:50:35 -0700 (PDT)
+        bh=B53kfNAL5bPehU6SpckbeuA1BwDTxczPn/Y5JPnbD6I=;
+        b=ejau2OOcjCEtEYmnpVsBnndw2KLoeXbQY7GoRV8JX07d7yPdIL9u9RFNlgbIf6m2hJ
+         UOz26O3321H24MlJl/N6RLMXhMEUVrzV5Oa+nEQZfDmXZnhk9xQ3tW1RdU37X2LyEQv2
+         iaypv32jcsZUyrkY7R04Sq9fVjLCATsKcxYr7mIJE8Bb3fHGBVLibk4ZEppmCIN7Po6U
+         QlpT9Iubd0+7+xY7oaR3R0rIC4sbNywgSQSCHdQWaU6SzprjqU7kjy5xtiQkwdeYeGJs
+         Css7RHLDPD8NTwldnq1wUUdsAKtR6NpxDDlARX1MDla78fM2z0RuZxsJkVQekvYOrejl
+         APfA==
+X-Gm-Message-State: APjAAAVgT56f0Ai0PguXo9gmQ1+OjZTVSB8bL95HVsRehFf0SiagkFP9
+        j9Q9OUaA9MfrlJyTKMngIDo=
+X-Google-Smtp-Source: APXvYqzBrmFYzI1gA3MEAy0sqbGPWC4ZXkGLgmkSkfkzYyNBaIrlOjsnhxJve8s7Brg31n/F6xooVw==
+X-Received: by 2002:a17:902:2d01:: with SMTP id o1mr115526266plb.105.1564451440882;
+        Mon, 29 Jul 2019 18:50:40 -0700 (PDT)
 Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.50.34
+        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.50.40
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 18:50:34 -0700 (PDT)
+        Mon, 29 Jul 2019 18:50:40 -0700 (PDT)
 From:   Deepa Dinamani <deepa.kernel@gmail.com>
 To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, arnd@arndb.de,
-        y2038@lists.linaro.org, hch@infradead.org
-Subject: [PATCH 14/20] fs: sysv: Initialize filesystem timestamp ranges
-Date:   Mon, 29 Jul 2019 18:49:18 -0700
-Message-Id: <20190730014924.2193-15-deepa.kernel@gmail.com>
+        y2038@lists.linaro.org
+Subject: [PATCH 20/20] isofs: Initialize filesystem timestamp ranges
+Date:   Mon, 29 Jul 2019 18:49:24 -0700
+Message-Id: <20190730014924.2193-21-deepa.kernel@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190730014924.2193-1-deepa.kernel@gmail.com>
 References: <20190730014924.2193-1-deepa.kernel@gmail.com>
@@ -75,34 +75,37 @@ Fill in the appropriate limits to avoid inconsistencies
 in the vfs cached inode times when timestamps are
 outside the permitted range.
 
-Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: hch@infradead.org
----
- fs/sysv/super.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Reference: http://www.ecma-international.org/publications/standards/Ecma-119.htm
 
-diff --git a/fs/sysv/super.c b/fs/sysv/super.c
-index d788b1daa7eb..cc8e2ed155c8 100644
---- a/fs/sysv/super.c
-+++ b/fs/sysv/super.c
-@@ -368,7 +368,8 @@ static int sysv_fill_super(struct super_block *sb, void *data, int silent)
- 	sbi->s_block_base = 0;
- 	mutex_init(&sbi->s_lock);
- 	sb->s_fs_info = sbi;
--
-+	sb->s_time_min = 0;
-+	sb->s_time_max = U32_MAX;
- 	sb_set_blocksize(sb, BLOCK_SIZE);
+Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+---
+ fs/isofs/inode.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/fs/isofs/inode.c b/fs/isofs/inode.c
+index 9e30d8703735..62c0462dc89f 100644
+--- a/fs/isofs/inode.c
++++ b/fs/isofs/inode.c
+@@ -30,6 +30,9 @@
+ #include "isofs.h"
+ #include "zisofs.h"
  
- 	for (i = 0; i < ARRAY_SIZE(flavours) && !size; i++) {
-@@ -487,6 +488,8 @@ static int v7_fill_super(struct super_block *sb, void *data, int silent)
- 	sbi->s_type = FSTYPE_V7;
- 	mutex_init(&sbi->s_lock);
- 	sb->s_fs_info = sbi;
-+	sb->s_time_min = 0;
-+	sb->s_time_max = U32_MAX;
- 	
- 	sb_set_blocksize(sb, 512);
++/* max tz offset is 13 hours */
++#define MAX_TZ_OFFSET (52*15*60)
++
+ #define BEQUIET
+ 
+ static int isofs_hashi(const struct dentry *parent, struct qstr *qstr);
+@@ -801,6 +804,10 @@ static int isofs_fill_super(struct super_block *s, void *data, int silent)
+ 	 */
+ 	s->s_maxbytes = 0x80000000000LL;
+ 
++	/* ECMA-119 timestamp from 1900/1/1 with tz offset */
++	s->s_time_min = mktime64(1900, 1, 1, 0, 0, 0) - MAX_TZ_OFFSET;
++	s->s_time_max = mktime64(U8_MAX+1900, 12, 31, 23, 59, 59) + MAX_TZ_OFFSET;
++
+ 	/* Set this for reference. Its not currently used except on write
+ 	   which we don't have .. */
  
 -- 
 2.17.1
