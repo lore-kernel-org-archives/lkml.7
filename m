@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07A0C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E0BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3E72087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBEB820C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NEHgj6CU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UzfwNipG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfG3TNh (ORCPT
+        id S1728787AbfG3TNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 15:13:37 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37698 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388320AbfG3TN1 (ORCPT
+        Tue, 30 Jul 2019 15:13:42 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39717 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388250AbfG3TNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 15:13:27 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b3so29294621plr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 12:13:26 -0700 (PDT)
+        Tue, 30 Jul 2019 15:13:24 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so30551229pgi.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 12:13:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=djb+K5YV06tE6CuanEg0CCbjMrpDNzEbnLAfye7ZkSY=;
-        b=NEHgj6CUyhuGNXZT844G24GmkoVlxjwnp/ZZK+KeYPZYfnl+y2UvSztPruWijQ4cSI
-         kBY38ehlnCl9JH9OOX/JsC03zQgxQlLzWzBZnYs6E5MkdIvE+bVThcfwBcwDd1fydiyS
-         XhhW1KJvnX2Qrszc09rMS6Fb8iqbbIIl1pYec=
+        bh=w9qKOvSY58oXoZzqByoYWX1yQMI9BNWXHffy8/37d08=;
+        b=UzfwNipG4HY3slWhmBB4ukvohWeOPP67m+ETT6UkK8qvjgImw05klp/yhBxcCntWO2
+         Ue5RqYysOk+r2ZuO2MoS6akd/tkiuhAyhsDIFONkGYFFIBErMVturE3dLLSfMd4vh1Fz
+         g/7+6diM+H6Lch0wDYcCiTIoZJUM/Ru/YUYHk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=djb+K5YV06tE6CuanEg0CCbjMrpDNzEbnLAfye7ZkSY=;
-        b=l1npUPsvYeCBncVcWS3uV5I7OBLKyp2VMwTOoar3nw4pD1k5fNNiD9Sp9ExDnDQfxb
-         apXkpleqmfccJdXTjMSC01EGm5KUkh9QHGsZRHSJZUOM8PbXtiJi6GO1iRSwwSQPvw4r
-         oScLc6gigNAAZpjHkhepdy5Jn95OGmIbbzExre/f6YlEtU09D8OrHydT2ncD4JJ2gLH6
-         EPZEGP1MsN/MjKS8mRLg5jFlnvANOgvldWeTsGgn1vRzVII6LdqJ5moHspfeyGQwDy7f
-         Y6+jJsgAmgCHb7n9MtTrTnaog4VUT7GKArFMXooTJxef3yEVADReGTWsRXM4aKfRSCbW
-         S+ig==
-X-Gm-Message-State: APjAAAVR8bNRzxbdv8Cuwd1unydt44J2DUS06UN130jOR41YtppiVHO7
-        7zlcMbDNKUWB6rFJhBzHgV0k9w==
-X-Google-Smtp-Source: APXvYqx7PDw4+udfJ0/X/aulEp6speZuvn3qPpw/ORb5g1xlvlm+szU4lbJM3sBZ+Qyz/KRfApdJug==
-X-Received: by 2002:a17:902:42a5:: with SMTP id h34mr120262792pld.16.1564514006452;
-        Tue, 30 Jul 2019 12:13:26 -0700 (PDT)
+        bh=w9qKOvSY58oXoZzqByoYWX1yQMI9BNWXHffy8/37d08=;
+        b=a3uwxpb828yTtroiCXC2xKEfCQB140la+/GV7CgL0sDk5Ry4u3UuvX+DzgMUWWD5IN
+         A4Cd7SpYezAWt2G4a6PCCMWeeTQ1D2aIdiXyiKu3UMooYTzJa76a0Okr3JNfI5fjQ2Lu
+         5fdHTywLBIe9EKLC2g0ETRB8A6nbtZf5OZ+aEYrvIV55PbCPna8C4NnzPbxfp+sl0zws
+         p+OtiXcbEsjQrKdgZdr/pZXqciyoQA8moPeFCMVXSrbqkTbHXVm+hQ51Q9qFVafJ4xNV
+         NtPUGO2Pm0+GiHlP9hXnia64sR70beYxgX9/6FcaZVg57jCeijcywXuk7+1TVSk/fWbE
+         8zJQ==
+X-Gm-Message-State: APjAAAX+xiNP5E4iMB1tlJKsvgiL2o6CiDRFs1R6K2KRv8pDCJk7cy8V
+        evBzgU/WC1FsL0I1F5euyREpRw==
+X-Google-Smtp-Source: APXvYqy6D4jSuBlQiYSSxJuvYeBUKPk9VGJxOmy0ZoMGLMmWHX1N9VP8jp1Vbly1uFyIRpTQEY74pQ==
+X-Received: by 2002:aa7:8102:: with SMTP id b2mr2027397pfi.105.1564514002619;
+        Tue, 30 Jul 2019 12:13:22 -0700 (PDT)
 Received: from skynet.sea.corp.google.com ([2620:0:1008:1100:c4b5:ec23:d87b:d6d3])
-        by smtp.gmail.com with ESMTPSA id n89sm84649540pjc.0.2019.07.30.12.13.25
+        by smtp.gmail.com with ESMTPSA id n89sm84649540pjc.0.2019.07.30.12.13.21
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 12:13:26 -0700 (PDT)
+        Tue, 30 Jul 2019 12:13:22 -0700 (PDT)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
 Cc:     kristen@linux.intel.com, keescook@chromium.org,
@@ -60,11 +60,15 @@ Cc:     kristen@linux.intel.com, keescook@chromium.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Juergen Gross <jgross@suse.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Nadav Amit <namit@vmware.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v9 11/11] x86/alternatives: Adapt assembly for PIE support
-Date:   Tue, 30 Jul 2019 12:12:55 -0700
-Message-Id: <20190730191303.206365-12-thgarnie@chromium.org>
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Maran Wilson <maran.wilson@oracle.com>,
+        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 08/11] x86/boot/64: Adapt assembly for PIE support
+Date:   Tue, 30 Jul 2019 12:12:52 -0700
+Message-Id: <20190730191303.206365-9-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
 In-Reply-To: <20190730191303.206365-1-thgarnie@chromium.org>
 References: <20190730191303.206365-1-thgarnie@chromium.org>
@@ -75,40 +79,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the assembly options to work with pointers instead of integers.
+Change the assembly code to use only relative references of symbols for the
+kernel to be PIE compatible.
+
+Early at boot, the kernel is mapped at a temporary address while preparing
+the page table. To know the changes needed for the page table with KASLR,
+the boot code calculate the difference between the expected address of the
+kernel and the one chosen by KASLR. It does not work with PIE because all
+symbols in code are relatives. Instead of getting the future relocated
+virtual address, you will get the current temporary mapping.
+Instructions were changed to have absolute 64-bit references.
 
 Position Independent Executable (PIE) support will allow to extend the
 KASLR randomization range below 0xffffffff80000000.
 
 Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/alternative.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kernel/head_64.S | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index 094fbc9c0b1c..28a838106e5f 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -243,7 +243,7 @@ static inline int alternatives_text_reserved(void *start, void *end)
- /* Like alternative_io, but for replacing a direct call with another one. */
- #define alternative_call(oldfunc, newfunc, feature, output, input...)	\
- 	asm volatile (ALTERNATIVE("call %P[old]", "call %P[new]", feature) \
--		: output : [old] "i" (oldfunc), [new] "i" (newfunc), ## input)
-+		: output : [old] "X" (oldfunc), [new] "X" (newfunc), ## input)
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index f3d3e9646a99..9a3f96566eb2 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -88,8 +88,10 @@ startup_64:
+ 	popq	%rsi
  
- /*
-  * Like alternative_call, but there are two features and respective functions.
-@@ -256,8 +256,8 @@ static inline int alternatives_text_reserved(void *start, void *end)
- 	asm volatile (ALTERNATIVE_2("call %P[old]", "call %P[new1]", feature1,\
- 		"call %P[new2]", feature2)				      \
- 		: output, ASM_CALL_CONSTRAINT				      \
--		: [old] "i" (oldfunc), [new1] "i" (newfunc1),		      \
--		  [new2] "i" (newfunc2), ## input)
-+		: [old] "X" (oldfunc), [new1] "X" (newfunc1),		      \
-+		  [new2] "X" (newfunc2), ## input)
+ 	/* Form the CR3 value being sure to include the CR3 modifier */
+-	addq	$(early_top_pgt - __START_KERNEL_map), %rax
++	movabs  $(early_top_pgt - __START_KERNEL_map), %rcx
++	addq    %rcx, %rax
+ 	jmp 1f
++
+ ENTRY(secondary_startup_64)
+ 	UNWIND_HINT_EMPTY
+ 	/*
+@@ -118,7 +120,8 @@ ENTRY(secondary_startup_64)
+ 	popq	%rsi
  
- /*
-  * use this macro(s) if you need more than one output parameter
+ 	/* Form the CR3 value being sure to include the CR3 modifier */
+-	addq	$(init_top_pgt - __START_KERNEL_map), %rax
++	movabs	$(init_top_pgt - __START_KERNEL_map), %rcx
++	addq    %rcx, %rax
+ 1:
+ 
+ 	/* Enable PAE mode, PGE and LA57 */
+@@ -136,7 +139,7 @@ ENTRY(secondary_startup_64)
+ 	movq	%rax, %cr3
+ 
+ 	/* Ensure I am executing from virtual addresses */
+-	movq	$1f, %rax
++	movabs  $1f, %rax
+ 	ANNOTATE_RETPOLINE_SAFE
+ 	jmp	*%rax
+ 1:
+@@ -233,11 +236,12 @@ ENTRY(secondary_startup_64)
+ 	 *	REX.W + FF /5 JMP m16:64 Jump far, absolute indirect,
+ 	 *		address given in m16:64.
+ 	 */
+-	pushq	$.Lafter_lret	# put return address on stack for unwinder
++	movabs  $.Lafter_lret, %rax
++	pushq	%rax		# put return address on stack for unwinder
+ 	xorl	%ebp, %ebp	# clear frame pointer
+-	movq	initial_code(%rip), %rax
++	leaq	initial_code(%rip), %rax
+ 	pushq	$__KERNEL_CS	# set correct cs
+-	pushq	%rax		# target address in negative space
++	pushq	(%rax)		# target address in negative space
+ 	lretq
+ .Lafter_lret:
+ END(secondary_startup_64)
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
