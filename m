@@ -2,96 +2,188 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37328C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E68C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1358320882
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A053220882
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:44:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DaopBaT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbfG3FoD (ORCPT
+        id S1729571AbfG3FoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 01:44:03 -0400
-Received: from mx.socionext.com ([202.248.49.38]:57337 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729426AbfG3Fnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 01:43:47 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 30 Jul 2019 14:43:46 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 33151180B6E;
-        Tue, 30 Jul 2019 14:43:46 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 30 Jul 2019 14:43:46 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 94A731A04FC;
-        Tue, 30 Jul 2019 14:43:45 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-gpio@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2 4/5] pinctrl: uniphier: Add Pro5 PCIe pin-mux settings
-Date:   Tue, 30 Jul 2019 14:43:29 +0900
-Message-Id: <1564465410-9165-5-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564465410-9165-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1564465410-9165-1-git-send-email-hayashi.kunihiko@socionext.com>
+        Tue, 30 Jul 2019 01:44:25 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:40047 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbfG3FoZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 01:44:25 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id x6U5htrh014000;
+        Tue, 30 Jul 2019 14:43:55 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x6U5htrh014000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564465436;
+        bh=jvXtS3IdtW2U6PNx0KXESbeP9+QZPJpAFb8C103FY44=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DaopBaT95A9MUOde2+xnhT46FS3ePS8Ls3oVALYnVH+62jB1mt9FI+VEw3e5ueTVv
+         fFyliS1OdxZ1nQ1HlZjPNvQXADxgJFcTUobq/o36vLyu5Au+8rz2eR+VteTTt7fL+p
+         H/0AIhB5iimthkBdglMJpYw0sovTbflR2Q2cRhW1uBNzVUcx2zqczx+XUU1cx837He
+         qBsrDZ+anNSTHXDnOxveOdCp7hStdKF6um8dqYgXZVsp6mobAfoPH0XytGcCYZdE6o
+         TwYGp32dXgpxsCAplLVHqXNRaCrOnqmFaEsbTpkWAqvn4Xjm6lWzXJ8W1C4/m/709E
+         5fks0I3EWAyUg==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] gpio: remove less important #ifdef around declarations
+Date:   Tue, 30 Jul 2019 14:43:47 +0900
+Message-Id: <20190730054347.15500-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pro5 PCIe interface uses the following pins:
-    XPERST, XPEWAKE, XPECLKRQ
+The whole struct/function declarations in this header are surrounded
+by #ifdef.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+As far as I understood, the motivation of this is probably to break
+the build earlier if a driver misses to select or depend on correct
+CONFIG options in Kconfig.
+
+Since commit 94bed2a9c4ae ("Add -Werror-implicit-function-declaration")
+no one cannot call functions that have not been declared.
+
+So, I see some benefit in doing this in the cost of uglier headers.
+
+In reality, it would not be so easy to catch missed 'select' or
+'depends on' because GPIOLIB, GPIOLIB_IRQCHIP etc. are already selected
+by someone else eventually. So, this kind of error, if any, will be
+caught by randconfig bots.
+
+In summary, I am not a big fan of cluttered #ifdef nesting, and this
+does not matter for normal developers. The code readability wins.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c
-index 1d418e3..0c0af99 100644
---- a/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c
-@@ -807,6 +807,8 @@ static const unsigned nand_pins[] = {19, 20, 21, 22, 23, 24, 25, 28, 29, 30,
- static const int nand_muxvals[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
- static const unsigned nand_cs1_pins[] = {26, 27};
- static const int nand_cs1_muxvals[] = {0, 0};
-+static const unsigned pcie_pins[] = {109, 110, 111};
-+static const int pcie_muxvals[] = {0, 0, 0};
- static const unsigned sd_pins[] = {250, 251, 252, 253, 254, 255, 256, 257, 258};
- static const int sd_muxvals[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
- static const unsigned spi0_pins[] = {120, 121, 122, 123};
-@@ -902,6 +904,7 @@ static const struct uniphier_pinctrl_group uniphier_pro5_groups[] = {
- 	UNIPHIER_PINCTRL_GROUP(i2c5b),
- 	UNIPHIER_PINCTRL_GROUP(i2c5c),
- 	UNIPHIER_PINCTRL_GROUP(i2c6),
-+	UNIPHIER_PINCTRL_GROUP(pcie),
- 	UNIPHIER_PINCTRL_GROUP(sd),
- 	UNIPHIER_PINCTRL_GROUP(spi0),
- 	UNIPHIER_PINCTRL_GROUP(spi1),
-@@ -936,6 +939,7 @@ static const char * const i2c3_groups[] = {"i2c3"};
- static const char * const i2c5_groups[] = {"i2c5", "i2c5b", "i2c5c"};
- static const char * const i2c6_groups[] = {"i2c6"};
- static const char * const nand_groups[] = {"nand", "nand_cs1"};
-+static const char * const pcie_groups[] = {"pcie"};
- static const char * const sd_groups[] = {"sd"};
- static const char * const spi0_groups[] = {"spi0"};
- static const char * const spi1_groups[] = {"spi1"};
-@@ -967,6 +971,7 @@ static const struct uniphier_pinmux_function uniphier_pro5_functions[] = {
- 	UNIPHIER_PINMUX_FUNCTION(i2c5),
- 	UNIPHIER_PINMUX_FUNCTION(i2c6),
- 	UNIPHIER_PINMUX_FUNCTION(nand),
-+	UNIPHIER_PINMUX_FUNCTION(pcie),
- 	UNIPHIER_PINMUX_FUNCTION(sd),
- 	UNIPHIER_PINMUX_FUNCTION(spi0),
- 	UNIPHIER_PINMUX_FUNCTION(spi1),
+Changes in v2:
+  - rebase
+
+ include/linux/gpio/driver.h | 27 ++++++++-------------------
+ 1 file changed, 8 insertions(+), 19 deletions(-)
+
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 6a0e420915a3..f28f534f451a 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -20,9 +20,6 @@ struct module;
+ enum gpiod_flags;
+ enum gpio_lookup_flags;
+ 
+-#ifdef CONFIG_GPIOLIB
+-
+-#ifdef CONFIG_GPIOLIB_IRQCHIP
+ /**
+  * struct gpio_irq_chip - GPIO interrupt controller
+  */
+@@ -161,7 +158,6 @@ struct gpio_irq_chip {
+ 	 */
+ 	void		(*irq_disable)(struct irq_data *data);
+ };
+-#endif /* CONFIG_GPIOLIB_IRQCHIP */
+ 
+ /**
+  * struct gpio_chip - abstract a GPIO controller
+@@ -441,16 +437,12 @@ bool gpiochip_line_is_valid(const struct gpio_chip *chip, unsigned int offset);
+ /* get driver data */
+ void *gpiochip_get_data(struct gpio_chip *chip);
+ 
+-struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
+-
+ struct bgpio_pdata {
+ 	const char *label;
+ 	int base;
+ 	int ngpio;
+ };
+ 
+-#if IS_ENABLED(CONFIG_GPIO_GENERIC)
+-
+ int bgpio_init(struct gpio_chip *gc, struct device *dev,
+ 	       unsigned long sz, void __iomem *dat, void __iomem *set,
+ 	       void __iomem *clr, void __iomem *dirout, void __iomem *dirin,
+@@ -463,10 +455,6 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
+ #define BGPIOF_READ_OUTPUT_REG_SET	BIT(4) /* reg_set stores output value */
+ #define BGPIOF_NO_OUTPUT		BIT(5) /* only input */
+ 
+-#endif /* CONFIG_GPIO_GENERIC */
+-
+-#ifdef CONFIG_GPIOLIB_IRQCHIP
+-
+ int gpiochip_irq_map(struct irq_domain *d, unsigned int irq,
+ 		     irq_hw_number_t hwirq);
+ void gpiochip_irq_unmap(struct irq_domain *d, unsigned int irq);
+@@ -555,15 +543,11 @@ static inline int gpiochip_irqchip_add_nested(struct gpio_chip *gpiochip,
+ }
+ #endif /* CONFIG_LOCKDEP */
+ 
+-#endif /* CONFIG_GPIOLIB_IRQCHIP */
+-
+ int gpiochip_generic_request(struct gpio_chip *chip, unsigned offset);
+ void gpiochip_generic_free(struct gpio_chip *chip, unsigned offset);
+ int gpiochip_generic_config(struct gpio_chip *chip, unsigned offset,
+ 			    unsigned long config);
+ 
+-#ifdef CONFIG_PINCTRL
+-
+ /**
+  * struct gpio_pin_range - pin range controlled by a gpio chip
+  * @node: list for maintaining set of pin ranges, used internally
+@@ -576,6 +560,8 @@ struct gpio_pin_range {
+ 	struct pinctrl_gpio_range range;
+ };
+ 
++#ifdef CONFIG_PINCTRL
++
+ int gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+ 			   unsigned int gpio_offset, unsigned int pin_offset,
+ 			   unsigned int npins);
+@@ -586,8 +572,6 @@ void gpiochip_remove_pin_ranges(struct gpio_chip *chip);
+ 
+ #else /* ! CONFIG_PINCTRL */
+ 
+-struct pinctrl_dev;
+-
+ static inline int
+ gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+ 		       unsigned int gpio_offset, unsigned int pin_offset,
+@@ -619,6 +603,11 @@ void gpiochip_free_own_desc(struct gpio_desc *desc);
+ void devprop_gpiochip_set_names(struct gpio_chip *chip,
+ 				const struct fwnode_handle *fwnode);
+ 
++
++#ifdef CONFIG_GPIOLIB
++
++struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
++
+ #else /* CONFIG_GPIOLIB */
+ 
+ static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+@@ -630,4 +619,4 @@ static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+ 
+ #endif /* CONFIG_GPIOLIB */
+ 
+-#endif
++#endif /* __LINUX_GPIO_DRIVER_H */
 -- 
-2.7.4
+2.17.1
 
