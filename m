@@ -2,119 +2,121 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07372C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA37C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB2DF2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:09:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564520997;
-	bh=aNZkoiiwsLaA3ozZPkWtsvL4+79Cb7swsTHwNP3u3zU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uxUn2k8Six/BB5LPL1k+UCXru6XLIhxVqRmPJ6xiKeADi/OXq12oOU2itqOaDJ2Be
-	 8rxlIkwepq2ypBDZpE5aC29My1EJd0bnDGbQNEXuF22jeagVj1dSbjPnik6emxUZ/B
-	 8qW7zU8k/v6WlzALY8vFZ4/meINPYSUPTipLHFTA=
+	by mail.kernel.org (Postfix) with ESMTP id F3F132087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:10:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="qPiiN0Qp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387583AbfG3VJ4 (ORCPT
+        id S1728696AbfG3VKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 17:09:56 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33623 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfG3VJ4 (ORCPT
+        Tue, 30 Jul 2019 17:10:21 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:40823 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfG3VKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 17:09:56 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r6so47649718qkc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 14:09:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6d3g5Eb7RssGimuUVLnc9Oe3VuINI0PuovERS1dVP0w=;
-        b=gzLohxw1KICcCmeuRUZVXP9epaqSm+vrgI5WCC9J+aToe9PC2rF0glarw3xaa2IbwE
-         0bc5EB8OXSoI6WRvHu0jzFyX8TL1O1CmWE9vcxRh/Tnb60a+EUQhczGyYFvFfXq7ebjM
-         fnxxc8MftflpLvsidbMbapkmb2G29SCYE5ara/fZle8vEAmzWpfZuBQbsik54w6atLnK
-         MwHJiYB4Fu9oVBi2Eok+PBgFDeNKpL8vQ69pxPAWweWB6UhOJ9OtVRWV+e3a4ylYfaV2
-         VJ9BfAwl0RnTrOrVCk4jP00W2Kl/G69cKc2+r/o0MdpP9nC32rb9OV6Bsl62e3eq+7+A
-         yjRw==
-X-Gm-Message-State: APjAAAX3hbLoj56p1BgxbPKTYTcXfUtUIflpLSZhREp16yZtvzNjhWQY
-        /OR+FP83XJ6ZbcYJgtYFg4s=
-X-Google-Smtp-Source: APXvYqxMSvB5TKi/+chiBT7wCFVw5w/PWL6aSh+LFGiBGlU52oTw/IDUNyDM/wE/qDgVVzAvy7l85w==
-X-Received: by 2002:a37:9b92:: with SMTP id d140mr76382522qke.443.1564520995282;
-        Tue, 30 Jul 2019 14:09:55 -0700 (PDT)
-Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c091:500::2:6988])
-        by smtp.gmail.com with ESMTPSA id k33sm33021721qte.69.2019.07.30.14.09.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 14:09:54 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 17:09:52 -0400
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] mm/vmalloc.c: Fix percpu free VM area search
- criteria
-Message-ID: <20190730210952.GA62702@dennisz-mbp.dhcp.thefacebook.com>
-References: <20190729232139.91131-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190730204643.tsxgc3n4adb63rlc@pc636>
- <d121eb22-01fd-c549-a6e8-9459c54d7ead@intel.com>
+        Tue, 30 Jul 2019 17:10:21 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 510E0891D6
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 09:10:16 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1564521016;
+        bh=0Z+XLHEs3tpnU67EfTU8KrstZnQvSsRUwQwRt1ZFcpc=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=qPiiN0Qp1mjg9BYADu41zkSiOz4X5c5m5q2Hbmeevb+jb0IK91cbgQIXT4vsRYebw
+         FC+TiAKLOCWUvRyla/Yar2NkdOiuCvIMoXuAPiwxy2eIaxrS/na4eKA5vqQeudzWjA
+         T+lr7CHZ0YadtguEPKHB2vPDifRRRuwW+gVdSs5kqL+RhRyGb9+6dVLdKQvCtpnnwy
+         6JIk0gj+Nn2Fb5UfY3QiLPR/NJUnD5MbQEh0yLC5xfyhHM5T9twa7b5cKcyCmEcSvs
+         pVA1YR1+4KGiVhvl5fbwzFm+HKWl92ojyMkDz0VLXvkdt53NM+stvNj+RGwzekjX3R
+         73cCr7LstpkZA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d40b2370001>; Wed, 31 Jul 2019 09:10:15 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Wed, 31 Jul 2019 09:10:15 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Wed, 31 Jul 2019 09:10:15 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] powerpc: Support CMDLINE_EXTEND
+Thread-Topic: [PATCH] powerpc: Support CMDLINE_EXTEND
+Thread-Index: AQHVQeFH9dM2UcWg8kibPPBr3exODabh/KaAgADsyoA=
+Date:   Tue, 30 Jul 2019 21:10:15 +0000
+Message-ID: <1564521015.6123.11.camel@alliedtelesis.co.nz>
+References: <20190724053303.24317-1-chris.packham@alliedtelesis.co.nz>
+         <59674457-eda5-fe3b-65e0-29c20102fe4d@c-s.fr>
+In-Reply-To: <59674457-eda5-fe3b-65e0-29c20102fe4d@c-s.fr>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <55D24E6294C00F46945DD7FD181941E6@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d121eb22-01fd-c549-a6e8-9459c54d7ead@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 01:54:06PM -0700, Dave Hansen wrote:
-> On 7/30/19 1:46 PM, Uladzislau Rezki wrote:
-> >> +		/*
-> >> +		 * If required width exeeds current VA block, move
-> >> +		 * base downwards and then recheck.
-> >> +		 */
-> >> +		if (base + end > va->va_end) {
-> >> +			base = pvm_determine_end_from_reverse(&va, align) - end;
-> >> +			term_area = area;
-> >> +			continue;
-> >> +		}
-> >> +
-> >>  		/*
-> >>  		 * If this VA does not fit, move base downwards and recheck.
-> >>  		 */
-> >> -		if (base + start < va->va_start || base + end > va->va_end) {
-> >> +		if (base + start < va->va_start) {
-> >>  			va = node_to_va(rb_prev(&va->rb_node));
-> >>  			base = pvm_determine_end_from_reverse(&va, align) - end;
-> >>  			term_area = area;
-> >> -- 
-> >> 2.21.0
-> >>
-> > I guess it is NUMA related issue, i mean when we have several
-> > areas/sizes/offsets. Is that correct?
-> 
-> I don't think NUMA has anything to do with it.  The vmalloc() area
-> itself doesn't have any NUMA properties I can think of.  We don't, for
-> instance, partition it into per-node areas that I know of.
-> 
-> I did encounter this issue on a system with ~100 logical CPUs, which is
-> a moderate amount these days.
-> 
-
-Percpu memory does have this restriction when we embed the first chunk
-as we need to preserve the offsets. So that is when we'd require
-multiple areas in the vma.
-
-I didn't see the original patches come through, but this seems like it
-restores the original functionality. FWIW, this way of finding space
-isn't really smart, so it's possible we want to revisit this.
-
-Acked-by: Dennis Zhou <dennis@kernel.org>
-
-Thanks,
-Dennis
+SGkgQ2hyaXN0b3BoZSwNCg0KT24gVHVlLCAyMDE5LTA3LTMwIGF0IDA5OjAyICswMjAwLCBDaHJp
+c3RvcGhlIExlcm95IHdyb3RlOg0KPiANCj4gTGUgMjQvMDcvMjAxOSDDoCAwNzozMywgQ2hyaXMg
+UGFja2hhbSBhIMOpY3JpdMKgOg0KPiA+IA0KPiA+IERldmljZSB0cmVlIGF3YXJlIHBsYXRmb3Jt
+cyBjYW4gbWFrZSB1c2Ugb2YgQ01ETElORV9FWFRFTkQgdG8NCj4gPiBleHRlbmQgdGhlDQo+ID4g
+a2VybmVsIGNvbW1hbmQgbGluZSBwcm92aWRlZCBieSB0aGUgYm9vdGxvYWRlci4gVGhpcyBpcw0K
+PiA+IHBhcnRpY3VsYXJseQ0KPiA+IHVzZWZ1bCB0byBzZXQgcGFyYW1ldGVycyBmb3IgYnVpbHQt
+aW4gbW9kdWxlcyB0aGF0IHdvdWxkIG90aGVyd2lzZQ0KPiA+IGJlDQo+ID4gZG9uZSBhdCBtb2R1
+bGUgaW5zZXJ0aW9uLiBBZGQgc3VwcG9ydCBmb3IgdGhpcyBpbiB0aGUgcG93ZXJwYw0KPiA+IGFy
+Y2hpdGVjdHVyZS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQYWNraGFtIDxjaHJp
+cy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+ID4gLS0tDQo+ID4gwqAgYXJjaC9wb3dl
+cnBjL0tjb25maWcgfCAxMiArKysrKysrKysrKysNCj4gSSB0aGluayB5b3UgYWxzbyBoYXZlIHRv
+IGltcGxlbWVudCBzb21lIHN0dWZmIGluDQo+IGVhcmx5X2NtZGxpbmVfcGFyc2UoKcKgDQo+IGlu
+IGFyY2gvcG93ZXJwYy9rZXJuZWwvcHJvbV9pbml0LmMNCg0KSSBteSBjYXNlIEkgZGlkbid0IG5l
+ZWQgdG8gc2luY2UgdGhlIGdlbmVyaWMgY29kZSBpbsKgZHJpdmVycy9vZi9mZHQuYw0KZGlkIHdo
+YXQgSSBuZWVkLiBGb3IgZWFybHkgb3B0aW9ucyBvciBwbGF0Zm9ybXMgdGhhdCBkb24ndCB1c2Ug
+YSBkZXZpY2UNCnRyZWUgdGhlbiBJIGNhbiBzZWUgd2h5IEknZCBuZWVkIHRoZSB1cGRhdGUgdG8g
+dXBkYXRlIHRvIHByb21faW5pdC4NCg0KPiANCj4gTWF5YmUgbG9vayBhdCBodHRwczovL3BhdGNo
+d29yay5vemxhYnMub3JnL3BhdGNoLzEwNzQxMjYvDQo+IA0KDQpEbyB5b3UgbWluZCBpZiBJIHRh
+a2UgdGhpcyBhbmQgZm9sZCBpdCBpbnRvIGEgdjIgb2YgbXkgcGF0Y2g/IEFueQ0KcGFydGljdWxh
+ciByZWFzb24gaXQgZGlkbid0IGdldCBwaWNrZWQgdXAgaW4gQXByaWw/DQoNCj4gQ2hyaXN0b3Bo
+ZQ0KPiANCj4gPiANCj4gPiDCoCAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKQ0KPiA+
+IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvS2NvbmZpZyBiL2FyY2gvcG93ZXJwYy9L
+Y29uZmlnDQo+ID4gaW5kZXggZDhkY2Q4ODIwMzY5Li5jZDliMzk3NGFhMzYgMTAwNjQ0DQo+ID4g
+LS0tIGEvYXJjaC9wb3dlcnBjL0tjb25maWcNCj4gPiArKysgYi9hcmNoL3Bvd2VycGMvS2NvbmZp
+Zw0KPiA+IEBAIC04NTEsNiArODUxLDExIEBAIGNvbmZpZyBDTURMSU5FDQo+ID4gwqDCoAnCoMKg
+c29tZSBjb21tYW5kLWxpbmUgb3B0aW9ucyBhdCBidWlsZCB0aW1lIGJ5IGVudGVyaW5nDQo+ID4g
+dGhlbSBoZXJlLsKgwqBJbg0KPiA+IMKgwqAJwqDCoG1vc3QgY2FzZXMgeW91IHdpbGwgbmVlZCB0
+byBzcGVjaWZ5IHRoZSByb290IGRldmljZQ0KPiA+IGhlcmUuDQo+ID4gwqDCoA0KPiA+ICtjaG9p
+Y2UNCj4gPiArCXByb21wdCAiS2VybmVsIGNvbW1hbmQgbGluZSB0eXBlIiBpZiBDTURMSU5FICE9
+ICIiDQo+ID4gKwlkZWZhdWx0IENNRExJTkVfRk9SQ0UNCj4gPiArCWRlcGVuZHMgb24gQ01ETElO
+RV9CT09MDQo+ID4gKw0KPiA+IMKgIGNvbmZpZyBDTURMSU5FX0ZPUkNFDQo+ID4gwqDCoAlib29s
+ICJBbHdheXMgdXNlIHRoZSBkZWZhdWx0IGtlcm5lbCBjb21tYW5kIHN0cmluZyINCj4gPiDCoMKg
+CWRlcGVuZHMgb24gQ01ETElORV9CT09MDQo+ID4gQEAgLTg2MCw2ICs4NjUsMTMgQEAgY29uZmln
+IENNRExJTkVfRk9SQ0UNCj4gPiDCoMKgCcKgwqBUaGlzIGlzIHVzZWZ1bCBpZiB5b3UgY2Fubm90
+IG9yIGRvbid0IHdhbnQgdG8gY2hhbmdlDQo+ID4gdGhlDQo+ID4gwqDCoAnCoMKgY29tbWFuZC1s
+aW5lIG9wdGlvbnMgeW91ciBib290IGxvYWRlciBwYXNzZXMgdG8gdGhlDQo+ID4ga2VybmVsLg0K
+PiA+IMKgwqANCj4gPiArY29uZmlnIENNRExJTkVfRVhURU5EDQo+ID4gKwlib29sICJFeHRlbmQg
+Ym9vdGxvYWRlciBrZXJuZWwgYXJndW1lbnRzIg0KPiA+ICsJaGVscA0KPiA+ICsJwqDCoFRoZSBj
+b21tYW5kLWxpbmUgYXJndW1lbnRzIHByb3ZpZGVkIGJ5IHRoZSBib290IGxvYWRlcg0KPiA+IHdp
+bGwgYmUNCj4gPiArCcKgwqBhcHBlbmRlZCB0byB0aGUgZGVmYXVsdCBrZXJuZWwgY29tbWFuZCBz
+dHJpbmcuDQo+ID4gK2VuZGNob2ljZQ0KPiA+ICsNCj4gPiDCoCBjb25maWcgRVhUUkFfVEFSR0VU
+Uw0KPiA+IMKgwqAJc3RyaW5nICJBZGRpdGlvbmFsIGRlZmF1bHQgaW1hZ2UgdHlwZXMiDQo+ID4g
+wqDCoAloZWxwDQo+ID4g
