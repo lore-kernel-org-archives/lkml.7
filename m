@@ -2,142 +2,146 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24596C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AABC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8772206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564504996;
-	bh=mVaQfCUduyzwcuSDuf/0pHJrjsbowJ87qw05RgYyXQE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TRzqXcKodM5iR6P4G3pmuKaJQHc5nk/Mv1o4Sks/jmbSBu5UzTAsqA8XmmZ6x6nLL
-	 ZMY+LwmY6k9vFXYT1XccHAtOZ6bR7pSQwzWgXTwc0StnV1qex066jQvyGM6g5GdXJE
-	 e0uiLY882L70cRknvHoEwF4ANUaRcbWApnTQZxqk=
+	by mail.kernel.org (Postfix) with ESMTP id 8DC4220693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:43:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HOl2oflI";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="giQuwOOg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfG3QnO (ORCPT
+        id S1728736AbfG3Qno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:43:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfG3QnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:43:14 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 30 Jul 2019 12:43:44 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58870 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfG3Qno (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 12:43:44 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B501560850; Tue, 30 Jul 2019 16:43:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564505022;
+        bh=nzlx+WA8YpyPWGC852+7ZM1qfO8l79oxasafpFjso+c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=HOl2oflInJUHQq2PZ68pCYQNQYdFCO+4JJDpEmNEvs49i4kZiqV10RlrLP2bhZs8c
+         S8a2q/z0w9eWP1x6/KjBQtyEkYlMei1S6kRHUYDaKQ7lDM1zr0kp+CsX7VLlMzCuJg
+         D1DVLX47+Yjxz05bcWdpCbU3/E19t0Csq//tIpEg=
+Received: from [10.79.43.230] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E60E9206A2;
-        Tue, 30 Jul 2019 16:43:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564504993;
-        bh=mVaQfCUduyzwcuSDuf/0pHJrjsbowJ87qw05RgYyXQE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O1oQy6DccGyY7TC6pRc2eJsnPfi+bdsqdoeupCCLYHUfH8LL82VRB2LxDHL0KRFo8
-         kUUS2tNQUSUFwzTP/ymVG0SoLI4y6HkFQDtNN6G7Ob10gxvkGlbdFziqGMIbeNJauF
-         ciK3a8J5Mi8FUhh+W+FEiwGOy0RWKe8hTJAs8waY=
-Date:   Tue, 30 Jul 2019 18:43:10 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        peterz@infradead.org, paulmckrcu@gmail.com
-Subject: Re: How to turn scheduler tick on for current nohz_full CPU?
-Message-ID: <20190730164309.GA962@lenoir>
-References: <20190724115331.GA29059@linux.ibm.com>
- <20190724132257.GA1029@lenoir>
- <20190724135219.GY14271@linux.ibm.com>
- <20190724143012.GB1029@lenoir>
- <20190725011243.GZ14271@linux.ibm.com>
- <20190729223238.GF14271@linux.ibm.com>
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 915F3602BC;
+        Tue, 30 Jul 2019 16:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564505021;
+        bh=nzlx+WA8YpyPWGC852+7ZM1qfO8l79oxasafpFjso+c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=giQuwOOght+bx4P3Ia3F/fMlV8ERnpI8PRUC20JNo8qJIr0KXTBoby48qa2lmfAL3
+         /sjUn3+QJrx6sOjCwtrE0B9gbngmM9FIWZ+mHQU8Mw+UTzw7yW8VPEn4fp4sp6F6Sr
+         ozzHq2Z2qC/0vcVOmmA1Kz7Ad2G+XJ/GhSIGQFoo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 915F3602BC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+Subject: Re: [PATCH v4 0/3] Introduce Bandwidth OPPs for interconnects
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20190726231558.175130-1-saravanak@google.com>
+ <20190729093545.kvnqxjkyx4nogddk@vireshk-i7>
+ <CAGETcx8OBFGgP1-hj717Sk-_N95-kacVsz0yb288n3pej12n1Q@mail.gmail.com>
+ <20190730024640.xk27jgdfl2j6ucx7@vireshk-i7>
+ <361effba-4433-24d9-243c-201af39214cc@codeaurora.org>
+ <CAGETcx_BpJswxA4AGARogZ1xRJPqm=_zTOZq1xJ2vgx+DUYsqQ@mail.gmail.com>
+From:   Sibi Sankar <sibis@codeaurora.org>
+Message-ID: <a9ab8614-7626-c309-24cc-02ce08a80ce5@codeaurora.org>
+Date:   Tue, 30 Jul 2019 22:13:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729223238.GF14271@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAGETcx_BpJswxA4AGARogZ1xRJPqm=_zTOZq1xJ2vgx+DUYsqQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 03:32:38PM -0700, Paul E. McKenney wrote:
-> On Wed, Jul 24, 2019 at 06:12:43PM -0700, Paul E. McKenney wrote:
+On 7/30/19 11:23 AM, Saravana Kannan wrote:
+> On Mon, Jul 29, 2019 at 10:28 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+>>
+>> Hey Viresh,
+>>
+>> On 7/30/19 8:16 AM, Viresh Kumar wrote:
+>>> On 29-07-19, 13:16, Saravana Kannan wrote:
+>>>> Sibi might be working on doing that for the SDM845 CPUfreq driver.
+>>>> Georgi could also change his GPU driver use case to use this BW OPP
+>>>> table and required-opps.
+>>>>
+>>>> The problem is that people don't want to start using this until we
+>>>> decide on the DT representation. So it's like a chicken and egg
+>>>> situation.
+>>>
+>>> Yeah, I agree to that.
+>>>
+>>> @Georgi and @Sibi: This is your chance to speak up about the proposal
+>>> from Saravana and if you find anything wrong with them. And specially
+>>> that it is mostly about interconnects here, I would like to have an
+>>> explicit Ack from Georgi on this.
+>>>
+>>> And if you guys are all okay about this then please at least commit
+>>> that you will convert your stuff based on this in coming days.
+>>
+>> I've been using both Saravana's and Georgi's series for a while
+>> now to scale DDR and L3 on SDM845. There is currently no consensus
+>> as to where the votes are to be actuated from, hence couldn't post
+>> anything out.
+>>
+>> DCVS based on Saravana's series + passive governor:
+>> https://github.com/QuinAsura/linux/tree/lnext-072619-SK-series
 > 
-> The patch below (which includes your patch) does help considerably.
-> However, it does have some shortcomings:
-> 
-> 1.	Adds an atomic operation (albeit a cache-local one) to
-> 	the scheduler fastpath.  One approach would be to have
-> 	a way of testing this bit and clearing it only if set.
-> 
-> 	Another approach would be to instead clear it on the
-> 	transition to nohz_full userspace or to idle.
+> Thanks Sibi! You might want to convert your patches so that until the
+> passive governor is ready, you just look up the required opps and vote
+> for BW directly from the cpufreq driver. Once devfreq governor is
+> ready, you can switch to it.
 
-Well, the latter would be costly as it is going to restart the tick on every
-user -> kernel transitions.
+Sure I'll do that.
 
 > 
-> 2.	There are a lot of other places in the kernel that are in
-> 	need of this bit being set.  I am therefore considering making
-> 	multi_cpu_stop() or its callers set this bit on all CPUs upon
-> 	entry and clear it upon exit.  While in this state, it is
-> 	likely necessary to disable clearing this bit.  Or it would
-> 	be necessary to make multi_cpu_stop() repeat clearing the bit
-> 	every so often.
+> -Saravana
 > 
-> 	As it stands, I have CPU hotplug removal operations taking
-> 	more than 400 seconds.
-> 
-> 3.	It was tempting to ask for this bit to be tracked on a per-task
-> 	basis, but from what I can see that adds at least as much
-> 	complexity as it removes.
+>>
+>> DCVS based on Georgi's series: (I had already posted this out)
+>> https://github.com/QuinAsura/linux/tree/lnext-072619-GJ-series
+>>
+>> --
+>> Qualcomm Innovation Center, Inc.
+>> Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
 
-Yeah I forgot to answer, you can use tick_dep_set_task() for that.
-
-> 
-> Thoughts?
-> 
-> 							Thanx, Paul
-> 
-> PS.  Outage on @linux.ibm.com, hence the CC of my gmail address.
-> 
-> ------------------------------------------------------------------------
-> 
-> diff --git a/include/linux/tick.h b/include/linux/tick.h
-> index 196a0a7bfc4f..0dea6fb33a11 100644
-> --- a/include/linux/tick.h
-> +++ b/include/linux/tick.h
-> @@ -108,7 +108,8 @@ enum tick_dep_bits {
->  	TICK_DEP_BIT_POSIX_TIMER	= 0,
->  	TICK_DEP_BIT_PERF_EVENTS	= 1,
->  	TICK_DEP_BIT_SCHED		= 2,
-> -	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3
-> +	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3,
-> +	TICK_DEP_BIT_RCU		= 4
->  };
->  
->  #define TICK_DEP_MASK_NONE		0
-> @@ -116,6 +117,7 @@ enum tick_dep_bits {
->  #define TICK_DEP_MASK_PERF_EVENTS	(1 << TICK_DEP_BIT_PERF_EVENTS)
->  #define TICK_DEP_MASK_SCHED		(1 << TICK_DEP_BIT_SCHED)
->  #define TICK_DEP_MASK_CLOCK_UNSTABLE	(1 << TICK_DEP_BIT_CLOCK_UNSTABLE)
-> +#define TICK_DEP_MASK_RCU		(1 << TICK_DEP_BIT_RCU)
->  
->  #ifdef CONFIG_NO_HZ_COMMON
->  extern bool tick_nohz_enabled;
-> @@ -258,6 +260,9 @@ static inline bool tick_nohz_full_enabled(void) { return false; }
->  static inline bool tick_nohz_full_cpu(int cpu) { return false; }
->  static inline void tick_nohz_full_add_cpus_to(struct cpumask *mask) { }
->  
-> +static inline void tick_nohz_dep_set_cpu(int cpu, enum tick_dep_bits bit) { }
-> +static inline void tick_nohz_dep_clear_cpu(int cpu, enum tick_dep_bits bit) { }
-
-And I gave you the wrong APIs. Please consider_using tick_dep_set_cpu()
-and tick_dep_clear_cpu() that first check if the CPU uses nohz_full.
-
-Those should have the !CONFIG_NO_HZ_FULL stub implemented as well.
-
-Thanks.
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
