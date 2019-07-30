@@ -2,68 +2,52 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3254BC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257CDC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06CF620693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:02:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdTchBIz"
+	by mail.kernel.org (Postfix) with ESMTP id EA24420693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564488307;
+	bh=4xHN5JoqHKamARZpeNV4nfdGOcqIZaC5iBwfGs29oFM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bt5ZlsJGjyyBEmR/6A0Hgin6nXokiWBxU46Rk3TU1vZVvKdidEVyngS/y1Lipk0l2
+	 eznEXDCBetcpq6bOSZKYSme8C07ouODeDSHlap1s/Gyan3o9Yl+GP8zc4frMR5ZiIq
+	 CkGKPt4r260KU+8onsxWmfaS7SW5O/521REyp+eU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbfG3MCp (ORCPT
+        id S1728705AbfG3MFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 08:02:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53113 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbfG3MCo (ORCPT
+        Tue, 30 Jul 2019 08:05:05 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44282 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727206AbfG3MFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 08:02:44 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s3so56873198wms.2;
-        Tue, 30 Jul 2019 05:02:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tt3AOcyXKV0IKTdpiUgJmlQW7AFYrTvWnfWkl3EFYV0=;
-        b=DdTchBIzR49p1do0ixk4FGygfA12+2grKmIoZ2yLj1ahaobmMEjFjuAVbAzJ75eEBJ
-         W0BU0ufoQrtTv95Df+kramh8NuyZqPKkDG8Ehv8zjjnYMANetIi52daq984sEQdAhrj0
-         TeMD6LnqG1kwFsfgJPUqO+yjQRoqPyHxArn6LwcuXc6/ZyAHtMZn7797XwY1BfBQxgkf
-         xrqjR+q0LA/3J+aecFu4pB6tyFiAyF2CBbPbU5SeBkV/2fDw/DUgBp9YCS4f+gRQkvKI
-         gygk4s9xcDwm4ueMdql/4ATbDD/OjKgwVQbUaJ44IVTu5nlv5GHfU4EEIe03lwhoDIhp
-         O4Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tt3AOcyXKV0IKTdpiUgJmlQW7AFYrTvWnfWkl3EFYV0=;
-        b=TC30Dpg14SCEy+p4ILM1Qn1BVQKqENGJPxevvr+kIVNFhtfQZvWYO+lP3VHz5cyfzR
-         y9ZQ+Cvxv3bc4Ce2qytWmkg+Ggtmo1WsIZqkk2zU4PxjGst4NTq84Qj6Eikl2rAO7rOk
-         IytkmjoqKV7XrrHcaIXb/P8GZTSYobsE7kww86aOXRH5l1bmGuxIgQybqgHLh4upOuqG
-         lJfhCKx+7PMaP4NA1aUXBycUK4BxlTs3OQ9iBMeb/Dh40CZ7G3idaHAFqmXGf9q7zTzQ
-         NGo6uZm4J2etpWEWGJZIOBbYZYYBG8jgsFz/byNku0U0ZDycqoPRAa+NqlTsRL3Dt1xs
-         SfOQ==
-X-Gm-Message-State: APjAAAXW6/UkXzTQaWMnguDSPvsr/+tPsvf4Ta+7mQkZzJGhi1DOrTzo
-        eoagy6ChVOXF7kMoFPyzpc57CecdW4hzvyNVE2s=
-X-Google-Smtp-Source: APXvYqwghX6WkVGHF+i6a+U4+65mHT4/Hpn8Bch0SCYfGIaMV4TncRfMk7olObeb7KKke5CJSErAP7e2stA6hFGyGps=
-X-Received: by 2002:a7b:c247:: with SMTP id b7mr109385481wmj.13.1564488162043;
- Tue, 30 Jul 2019 05:02:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190728192429.1514-1-daniel.baluta@nxp.com> <20190728192429.1514-8-daniel.baluta@nxp.com>
- <20190730080135.GB5892@Asurada>
-In-Reply-To: <20190730080135.GB5892@Asurada>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Tue, 30 Jul 2019 15:02:30 +0300
-Message-ID: <CAEnQRZAUOzmP2yPb4utyDTnYUDNyqesXJPb5-Ms0tfPy8TMBig@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH v2 7/7] ASoC: dt-bindings: Introduce
- compatible strings for 7ULP and 8MQ
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Tue, 30 Jul 2019 08:05:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4xHN5JoqHKamARZpeNV4nfdGOcqIZaC5iBwfGs29oFM=; b=CUbKJOSwv4V3JsWTmEv/hECy/
+        jMqU1C6z8dcefdwH5lbwt7prDmE+zhSzcosPTSnuLqxI4wfiepZlCmFq7y6DZEe0AzuBKAXdfNpSp
+        rNrBwa5r1HyOfspwdp/epPoOwnVTPqXusLgTpf4xfjngkv+MsBb/DC3sZWPXByFoab90U=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hsQsC-0007Ly-Ey; Tue, 30 Jul 2019 12:04:56 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 920E72742CB5; Tue, 30 Jul 2019 13:04:55 +0100 (BST)
+Date:   Tue, 30 Jul 2019 13:04:55 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
         Devicetree List <devicetree@vger.kernel.org>,
         Linux-ALSA <alsa-devel@alsa-project.org>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -72,44 +56,58 @@ Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
         "Angus Ainslie (Purism)" <angus@akkea.ca>,
         Takashi Iwai <tiwai@suse.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
         dl-linux-imx <linux-imx@nxp.com>,
         Viorel Suman <viorel.suman@nxp.com>,
         Fabio Estevam <festevam@gmail.com>,
         Mihai Serban <mihai.serban@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [alsa-devel] [PATCH v2 7/7] ASoC: dt-bindings: Introduce
+ compatible strings for 7ULP and 8MQ
+Message-ID: <20190730120455.GA4264@sirena.org.uk>
+References: <20190728192429.1514-1-daniel.baluta@nxp.com>
+ <20190728192429.1514-8-daniel.baluta@nxp.com>
+ <20190730080135.GB5892@Asurada>
+ <CAEnQRZAUOzmP2yPb4utyDTnYUDNyqesXJPb5-Ms0tfPy8TMBig@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
+Content-Disposition: inline
+In-Reply-To: <CAEnQRZAUOzmP2yPb4utyDTnYUDNyqesXJPb5-Ms0tfPy8TMBig@mail.gmail.com>
+X-Cookie: Times approximate.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:02 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Sun, Jul 28, 2019 at 10:24:29PM +0300, Daniel Baluta wrote:
-> > For i.MX7ULP and i.MX8MQ register map is changed. Add two new compatbile
-> > strings to differentiate this.
-> >
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/sound/fsl-sai.txt | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> > index 2b38036a4883..b008e9cfedc1 100644
-> > --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> > +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> > @@ -8,7 +8,8 @@ codec/DSP interfaces.
-> >  Required properties:
-> >
-> >    - compatible               : Compatible list, contains "fsl,vf610-sai",
-> > -                       "fsl,imx6sx-sai" or "fsl,imx6ul-sai"
-> > +                       "fsl,imx6sx-sai", "fsl,imx6ul-sai",
-> > +                       "fsl,imx7ulp-sai", "fsl,imx8mq-sai".
->
-> A nit, could have that 'or' :)
 
-I removed the 'or' on purpose because I don't want to move it
-around each time we add a new compatible.
+--dDRMvlgZJXvWKvBx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Anyhow, I can put it back if this is the convention.
+On Tue, Jul 30, 2019 at 03:02:30PM +0300, Daniel Baluta wrote:
+
+> I removed the 'or' on purpose because I don't want to move it
+> around each time we add a new compatible.
+
+> Anyhow, I can put it back if this is the convention.
+
+You could convert to the YAML binding format and sidestep the problem a
+different way!
+
+--dDRMvlgZJXvWKvBx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1AMmQACgkQJNaLcl1U
+h9AMEAf+L6HeZMKwL3JgS35lz8KJn8puYlz6JlAgu8b5kJD5U15z/ScSQXE8uJOt
+CMauZ7x1gmPQXGEdGQHFSFa365yso1EB4MgsReZDTurM0YYdi9I2038gqzLrtKB0
+r+avuU0EzhaljA0ZugeMbEN6v5YiZGf2yrlzOFUyyUb83zTCFQsHscmnH+cw5QCH
+HhjVqWPaGLUKuPmJRWO8ol9QMKghvRP5y5N2e+Yohj+mb3xNHdHvXN1Qa/G9koeA
+uJU3R7ifuKcvxbGmu/HoWpcvfpWVMPyF/ej2BC2i1uKdiwSsvxFrN3OP8EfUlL5p
+syfgAj372TEvfhTQ/2190PTyHrr++A==
+=VqB7
+-----END PGP SIGNATURE-----
+
+--dDRMvlgZJXvWKvBx--
