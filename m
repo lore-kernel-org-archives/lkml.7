@@ -5,64 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85239C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D718C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57ACF216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0458C217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:50:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwmjPnB1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOaRnw02"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730831AbfG3BuZ (ORCPT
+        id S1730864AbfG3Bua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:50:25 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42671 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730780AbfG3BuY (ORCPT
+        Mon, 29 Jul 2019 21:50:30 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34278 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730844AbfG3Bu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:50:24 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so28931294pff.9;
-        Mon, 29 Jul 2019 18:50:24 -0700 (PDT)
+        Mon, 29 Jul 2019 21:50:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n9so22944751pgc.1;
+        Mon, 29 Jul 2019 18:50:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RW8wa5CmvNow6jsuxhZgtbxifDJuKVtv4F+8WUaIVIU=;
-        b=YwmjPnB19KAj+BjmIJ50cdgeFM5UHFfUDO0cpXF0s+JcgHsVn1lYYhQ/4LCBEuEQ81
-         4BZt/eGZWaz2Yfk+Dq8a8mJWVY5q3Xfq5+S0qlPEKml8x72HTXAYahrfG2/Tocc5fT5r
-         85xAHR4qucnnndtFeLW244mj+SpwP590cPXHRy+WJkiO+ffBRDC6SvcdzwcE3wgV5wJ3
-         NbCapeZbQOcVTVmfTlZ1xeF5mXVPFYeo1f3frjsMEjiSFOb+t1IOymYCw/o/1s8n3s4A
-         Sb0g7mrj/CnrmyOB8+sDfwEwrqG5ovtGVpkqjJjnYicE4aGDMpfeUEu3YNMqeZFv6kjM
-         6mLQ==
+        bh=i+LRMSNrj6ysytmm99Rc/BfD1o0cWeoJWbC6wV2pjKo=;
+        b=AOaRnw02TsiwbCxYhAlzGLg8nzDQpMpWKxAHBFB2a2RvzGYWBZFg5mRgPqCx4Vu/Ln
+         F7AFryz6gakJOc7pt1+Mezu2nTV+CoYiOL0kEEDEplGq85bmjpgLLccmlg+RkfTCu6vA
+         j2pCVHiq3XiXaquRa8YxS9yV/LSwebuWDnGqey3jTN7oa1PMiu5QXpqxjPR5zvMOg8hH
+         LAev1+8dhbQDkV1bVk7/YLZuJXDimbINKT82EOpErLSxfD/z9gYMmjcue8T+bzhmVtTr
+         DC5m/iDWQFAem/S70vYShqEKwYB81IyQocXsx9QoCdZfX8oI2+osvKNsj2t6+8Uh+4ky
+         im8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=RW8wa5CmvNow6jsuxhZgtbxifDJuKVtv4F+8WUaIVIU=;
-        b=HDZfO5b6sUjdMD1RLdfNpx4neJEbx2WFJ+IJ9XC6yXLeWS84VxYulOEWC7NzodBfgF
-         K2l5SmOGjs+js0uyWwOVAcchl6/NzoFT9n0qwb11RJR9WN7Miw2xSAEXL8JrOrDaeqVI
-         9arVmfuME47kyDuHJ5j1D244bjjQQ5KIACtLmAIXC7YMvInKQh4YSdTzMkqCGjcRMwIF
-         d/hvBJO17k0n4akcnk+qUQBVDM+YS/u6woG/Jn4OgalUPzu18eTK7Pl9fKFQb7N49VpR
-         yNTY6tXwHFE//B72RgvkOzdjV27yUYbsdjamTBBwtx0BjaPqchp3clcWRvWz5AdqEjU1
-         8MIg==
-X-Gm-Message-State: APjAAAWlDwXodu6BJ+U2b4fHAZKp530oYiNoA4lxrynjUz5BLQQgfnXJ
-        TfgdejmhH6B3+BGgimXkMBg=
-X-Google-Smtp-Source: APXvYqz29EMBCshdmdETjuOL+Tr9F3tUgVJAtBZcxutuiiC/3ISyMH46dd/NGOfeMhYKjxoEaaHKkA==
-X-Received: by 2002:a62:174a:: with SMTP id 71mr40680263pfx.140.1564451423830;
-        Mon, 29 Jul 2019 18:50:23 -0700 (PDT)
+        bh=i+LRMSNrj6ysytmm99Rc/BfD1o0cWeoJWbC6wV2pjKo=;
+        b=Ly8bwe+btewquGWf+6h6tkbJvPIp1+OnrrDpRS21jjiibwOS8/DJMs2MITkt2CLJsq
+         SOuh6Nb7N+WGYg7wTUhQ4/a2niv7KNY3ZfcUXhizWAyo3IrutQ6/n8vs5VCRkSpGh8AU
+         HG8XLAjo7qDSLrigGq7u3KnVa1BKYgLWJPB0JynFVS3kGSHS/X43iO1A1Ivv8/eT0c5b
+         BYtfgvLOGhXe61wsy0IC11qOAgm7EktchMJ/bJCNd0lkhaq3GFuq9c0gVak/jzpAZP+p
+         G7kyicLuPIGgIClOAgFpEw/2PhlTHdithobliDo3I0t1LJaN7nmk3skJs16NouBvkZM8
+         EFzw==
+X-Gm-Message-State: APjAAAWvDNFt6U2iZRpPKcWe/uOC13J2Zm2xS34OMKXfEe53hz2lSdHi
+        KyrvMd8vdAsdsWLkJFTL7cQ=
+X-Google-Smtp-Source: APXvYqzh6lY3nSUp4F9grKKAti8Q66DXm71R/Zu8sXqaO+Na/2RIljxHn26XwhCIyD2K77n58g3ICg==
+X-Received: by 2002:a63:b747:: with SMTP id w7mr53077423pgt.205.1564451427431;
+        Mon, 29 Jul 2019 18:50:27 -0700 (PDT)
 Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
-        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.50.23
+        by smtp.gmail.com with ESMTPSA id r6sm138807156pjb.22.2019.07.29.18.50.26
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 18:50:23 -0700 (PDT)
+        Mon, 29 Jul 2019 18:50:27 -0700 (PDT)
 From:   Deepa Dinamani <deepa.kernel@gmail.com>
 To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, arnd@arndb.de,
-        y2038@lists.linaro.org
-Subject: [PATCH 04/20] mount: Add mount warning for impending timestamp expiry
-Date:   Mon, 29 Jul 2019 18:49:08 -0700
-Message-Id: <20190730014924.2193-5-deepa.kernel@gmail.com>
+        y2038@lists.linaro.org, ericvh@gmail.com, lucho@ionkov.net,
+        asmadeus@codewreck.org, v9fs-developer@lists.sourceforge.net
+Subject: [PATCH 07/20] 9p: Fill min and max timestamps in sb
+Date:   Mon, 29 Jul 2019 18:49:11 -0700
+Message-Id: <20190730014924.2193-8-deepa.kernel@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190730014924.2193-1-deepa.kernel@gmail.com>
 References: <20190730014924.2193-1-deepa.kernel@gmail.com>
@@ -71,39 +72,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The warning reuses the uptime max of 30 years used by the
-setitimeofday().
+struct p9_wstat and struct p9_stat_dotl indicate that the
+wire transport uses u32 and u64 fields for timestamps.
+Fill in the appropriate limits to avoid inconsistencies in
+the vfs cached inode times when timestamps are outside the
+permitted range.
 
-Note that the warning is only added for new filesystem mounts
-through the mount syscall. Automounts do not have the same warning.
+Note that the upper bound for V9FS_PROTO_2000L is retained as S64_MAX.
+This is because that is the upper bound supported by vfs.
 
 Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: ericvh@gmail.com
+Cc: lucho@ionkov.net
+Cc: asmadeus@codewreck.org
+Cc: v9fs-developer@lists.sourceforge.net
 ---
- fs/namespace.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ fs/9p/vfs_super.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index b26778bdc236..5314fac8035e 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2739,6 +2739,17 @@ static int do_new_mount_fc(struct fs_context *fc, struct path *mountpoint,
- 	error = do_add_mount(real_mount(mnt), mountpoint, mnt_flags);
- 	if (error < 0)
- 		mntput(mnt);
-+
-+	if (!error && sb->s_time_max &&
-+	    (ktime_get_real_seconds() + TIME_UPTIME_SEC_MAX > sb->s_time_max)) {
-+		char *buf = (char *)__get_free_page(GFP_KERNEL);
-+		char *mntpath = buf ? d_path(mountpoint, buf, PAGE_SIZE) : ERR_PTR(-ENOMEM);
-+
-+		pr_warn("Mounted %s file system at %s supports timestamps until 0x%llx\n",
-+			fc->fs_type->name, mntpath, (unsigned long long)sb->s_time_max);
-+		free_page((unsigned long)buf);
+diff --git a/fs/9p/vfs_super.c b/fs/9p/vfs_super.c
+index 08112fbcaece..ca243e658d71 100644
+--- a/fs/9p/vfs_super.c
++++ b/fs/9p/vfs_super.c
+@@ -69,8 +69,12 @@ v9fs_fill_super(struct super_block *sb, struct v9fs_session_info *v9ses,
+ 	if (v9fs_proto_dotl(v9ses)) {
+ 		sb->s_op = &v9fs_super_ops_dotl;
+ 		sb->s_xattr = v9fs_xattr_handlers;
+-	} else
++	} else {
+ 		sb->s_op = &v9fs_super_ops;
++		sb->s_time_max = U32_MAX;
 +	}
 +
- 	return error;
- }
++	sb->s_time_min = 0;
  
+ 	ret = super_setup_bdi(sb);
+ 	if (ret)
 -- 
 2.17.1
 
