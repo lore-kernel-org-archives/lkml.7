@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE58DC76193
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C591C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88AF206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34342206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wWuCaQBH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YV5Dtbg3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbfG3ADX (ORCPT
+        id S1730187AbfG3AD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 20:03:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36820 "EHLO
+        Mon, 29 Jul 2019 20:03:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36928 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730107AbfG3ADT (ORCPT
+        with ESMTP id S1730154AbfG3ADX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 20:03:19 -0400
+        Mon, 29 Jul 2019 20:03:23 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6TNx2AM162569;
-        Tue, 30 Jul 2019 00:02:50 GMT
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6TNx0bD162470;
+        Tue, 30 Jul 2019 00:02:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=LxHdlVcb4O1KXI2s0LMH1tV5Z2/1LTz/F4sJ16ZyKkQ=;
- b=wWuCaQBHOq7JKi99Sbbr14VP+NxLit44yT9tn9aV7wXsWTr1E2brHC81EGgtjAqp8fmm
- QzqgFWo4qIqe28uYkJ3fYGoGYM5GfwLRisNxhMTn4ulJPdfMuANrDoky1NXgKvYFIKww
- wdmUpSyqWEfBV8TmflggMo8pM6BtnPyrf55JhxQP5UVDBXUgTBfnbr6k0Kp4Gp2u98Ff
- 3sA5cc0p9v8wobMDkWK5DL3EU+Lzysi644BRyfCwyI8s0RGFfGurRtW3zIrtgKpk8nN9
- texeppMJEcSAnO/YUv1O+LQrrCkjGAW9pFX32hUQRoMYRmlxEERyw9+CQER6Z8V4khK7 Ag== 
+ bh=QV3mkbvDqVOuRyxrBxvxIwvW8RbxilJ7TWeQkboRwPw=;
+ b=YV5Dtbg3JaqFI8k7yfiuTDuc4CdZGDjWE8t2gVtHRk7CgTbqPZUP5TkCrMDI4tDpRQCW
+ Tv1pMiiNKojHrMh9e5/dHWk10PlrCOyBEg6jRZ/Pb/D2OlnazqEw0Hj8tPBJldqwWMIT
+ xryKNvfU4DhuAgjQvWl+0JZCPxwyPYsd+0ZzLjxWXGjdLO1vRD+LjhR6DdaNOasI2mvt
+ aF8fQAsAF8Kgd6eFxX5sQq6Oz6gf9Zz5N+RZ5gPWbErAb6Skztr7YYa17Cik1nvt9sNA
+ QNuJ8kbNaciQvMH8hRMSsY/dmbIvAzBgrbwpTPI8NY0Bu18vihcYJ11wUHblgmTLb5sG MA== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2u0f8qtpgy-1
+        by userp2120.oracle.com with ESMTP id 2u0f8qtph3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jul 2019 00:02:50 +0000
+        Tue, 30 Jul 2019 00:02:54 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6TNvmPL039169;
-        Tue, 30 Jul 2019 00:02:49 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2u0xv7th9m-1
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6TNvhx8039139;
+        Tue, 30 Jul 2019 00:02:53 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2u0xv7tha8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jul 2019 00:02:49 +0000
+        Tue, 30 Jul 2019 00:02:53 +0000
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6U02mtD003744;
-        Tue, 30 Jul 2019 00:02:48 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6U02ql4012440;
+        Tue, 30 Jul 2019 00:02:52 GMT
 Received: from ca-common-hq.us.oracle.com (/10.211.9.209)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 29 Jul 2019 17:02:48 -0700
+        with ESMTP ; Mon, 29 Jul 2019 17:02:52 -0700
 From:   Divya Indi <divya.indi@oracle.com>
 To:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
 Cc:     Divya Indi <divya.indi@oracle.com>, Joe Jin <joe.jin@oracle.com>,
         Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
         Srinivas Eeda <srinivas.eeda@oracle.com>
-Subject: [PATCH 4/7] tracing: Adding NULL checks
-Date:   Mon, 29 Jul 2019 17:02:31 -0700
-Message-Id: <1564444954-28685-5-git-send-email-divya.indi@oracle.com>
+Subject: [PATCH 7/7] tracing: Un-export ftrace_set_clr_event
+Date:   Mon, 29 Jul 2019 17:02:34 -0700
+Message-Id: <1564444954-28685-8-git-send-email-divya.indi@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1564444954-28685-1-git-send-email-divya.indi@oracle.com>
 References: <1564444954-28685-1-git-send-email-divya.indi@oracle.com>
@@ -78,44 +78,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of commit f45d1225adb0 ("tracing: Kernel access to Ftrace
-instances") we exported certain functions. Here, we are adding some additional
-NULL checks to ensure safe usage by users of these APIs.
+Use "trace_array_set_clr_event" to enable/disable events to a trace
+array from other kernel modules/components.
+Hence, we no longer need to have ftrace_set_clr_event as an exported API.
 
 Signed-off-by: Divya Indi <divya.indi@oracle.com>
 Reviewed-By: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
 ---
- kernel/trace/trace.c        | 3 +++
- kernel/trace/trace_events.c | 2 ++
- 2 files changed, 5 insertions(+)
+ include/linux/trace_events.h | 1 -
+ kernel/trace/trace_events.c  | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 468ecc5..22bf166 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3205,6 +3205,9 @@ int trace_array_printk(struct trace_array *tr,
- 	if (!(global_trace.trace_flags & TRACE_ITER_PRINTK))
- 		return 0;
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 6da3600..025ae2b 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -542,7 +542,6 @@ extern int trace_define_field(struct trace_event_call *call, const char *type,
+ int trace_set_clr_event(const char *system, const char *event, int set);
+ int trace_array_set_clr_event(struct trace_array *tr, const char *system,
+ 		const char *event, int set);
+-int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
  
-+	if (!tr)
-+		return -ENOENT;
-+
- 	va_start(ap, fmt);
- 	ret = trace_array_vprintk(tr, ip, fmt, ap);
- 	va_end(ap);
+ /*
+  * The double __builtin_constant_p is because gcc will give us an error
 diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index b6b4618..99eb5f8 100644
+index 9ee6b52..96dd997 100644
 --- a/kernel/trace/trace_events.c
 +++ b/kernel/trace/trace_events.c
-@@ -800,6 +800,8 @@ int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
+@@ -795,7 +795,7 @@ static int __ftrace_set_clr_event(struct trace_array *tr, const char *match,
+ 	return ret;
+ }
+ 
+-int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
++static int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
+ {
  	char *event = NULL, *sub = NULL, *match;
  	int ret;
+@@ -834,7 +834,6 @@ int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
  
-+	if (!tr)
-+		return -ENOENT;
- 	/*
- 	 * The buf format can be <subsystem>:<event-name>
- 	 *  *:<event-name> means any event by that name.
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(ftrace_set_clr_event);
+ 
+ /**
+  * trace_set_clr_event - enable or disable an event
 -- 
 1.8.3.1
 
