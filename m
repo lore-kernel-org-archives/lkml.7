@@ -2,139 +2,95 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0A1C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5C1C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA2F206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427A920693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:50:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iCS8VdiX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mncpJ9/j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfG3QuF (ORCPT
+        id S1729397AbfG3Qul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:50:05 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33310 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbfG3QuE (ORCPT
+        Tue, 30 Jul 2019 12:50:41 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47178 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbfG3Qul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:50:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id h19so45713808wme.0;
-        Tue, 30 Jul 2019 09:50:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4ipmrrzG/Wk902fPLix62FvHSEpdXBNMCXbDCZqAWVI=;
-        b=iCS8VdiXv5dvB40PdsUMjPQ2r/6DFhIRl1/6h6nMSnw7SicbhW/B2PpIzRLUwHzPTk
-         xzcg3rGUDwK1nTo8cTLCYG++iHESxmG5g5etBxeUfywlEiPIecVEqYdZVkBFj4wh8wvk
-         DLhfLnhoGN9oh/Bogdh+cxG8LWG2YGoI61bd0xOhjrGj4eImYSgu7hu53jbAfMWq7Nwa
-         zUhYvIkmB1isVog/2Aoxp1gjVSe4uoo7gH1OwfjUsGODv8X29G/gyBkl93O7gfLmRux2
-         I8YQrQQ73xhv5bVjDW+/0m/rA6V2jVl/wj2og2wz4yq0WtpZCZPXD6LYt2DfB2JKsaFE
-         VtIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4ipmrrzG/Wk902fPLix62FvHSEpdXBNMCXbDCZqAWVI=;
-        b=bptthMXcnBXQlndkIsmmhCTreah6JX41UV5DcB+e1YqzmiN926L4T65sY0yYdVxo0Q
-         B/opPoD5TVtJeVR5dSvLIcKgMBIdWIRC3cHwGsqucMV/AOo3lj9j1yDjuzmtZk514xDT
-         UuPbOHsXPRCJUAM2jdtHbEdIFBEmny2j1V4V0fQv6CQVzTJKKdsPodsBkKleeqEnnNTx
-         o99RIgfTkbC5hZUKZXFBPj2ncVQxo92wcFYw0Ivmt58fvV8TvsT1KZ3fwufCg6z8D+YN
-         byNjFspmrpLkmlok9FQfFuQOXRpCoIkhjQaoo6tjIlLCzTEj+Bu3/9dYdxsRh4iaSOeX
-         QEzw==
-X-Gm-Message-State: APjAAAUG0cR05kMZdAQdaiKNDzRdRAHkXIVx9EnTLC15jT3SVrlQ24DK
-        68c9qKKHRntX0CMQF+ljWcY=
-X-Google-Smtp-Source: APXvYqx53BXhI6xLQVg7kXYcO+LqqdQYlGDiCiNdNYt7Excd/gWehlgxRdpeYiAbEi74JMDGSNAXsA==
-X-Received: by 2002:a7b:c149:: with SMTP id z9mr109567197wmi.0.1564505401952;
-        Tue, 30 Jul 2019 09:50:01 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id v15sm63218486wrt.25.2019.07.30.09.50.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 09:50:01 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 09:49:59 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3] kbuild: Check for unknown options with cc-option
- usage in Kconfig and clang
-Message-ID: <20190730164959.GA129059@archlinux-threadripper>
-References: <20190730164803.45080-1-swboyd@chromium.org>
+        Tue, 30 Jul 2019 12:50:41 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6UGnhXv122160;
+        Tue, 30 Jul 2019 16:50:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=z+OzfW5DDng5sZF2Uzq9/0gDuwAmmX/lJ7hkaWBxDa8=;
+ b=mncpJ9/jHeW6ebDcM3e2thsJAT/0OknzWRp6gjLe8ZPm85tfFIB8IRzhwzOE+E+6M1E1
+ Sh3nkkECDukD/RqVOqagcOpiL91QyFmu7bzVB/8TanI5/fWk+C/PFb/SidJy9f0dL3en
+ HKwnbr0M7J2GPNhyU/wEr9EwcM3ad9wciOLZH6HqNefZNEG5yFeiBwQesB43k4Y+FLjO
+ 6kL/z+8dp+TzkUflkT1aJF+MSut6jp3wJ558yFgj0m0VWLTlczfzzWd1pZlHKQP74Ztg
+ aIgMy8sr1bGBzeW3WqMtRMM0xIaOST/iGDU55d+lCE1PZmfglsH+8pJr/BJT+zIPxCOk Kg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2u0ejpfs23-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 16:50:36 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6UGlhks184473;
+        Tue, 30 Jul 2019 16:50:36 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2u2jp466tr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 16:50:35 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6UGoY6o012031;
+        Tue, 30 Jul 2019 16:50:34 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 30 Jul 2019 09:50:33 -0700
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: qla2xxx: Fix possible null-pointer dereferences in qla2x00_alloc_fcport()
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190729084451.29290-1-baijiaju1990@gmail.com>
+Date:   Tue, 30 Jul 2019 12:50:31 -0400
+In-Reply-To: <20190729084451.29290-1-baijiaju1990@gmail.com> (Jia-Ju Bai's
+        message of "Mon, 29 Jul 2019 16:44:51 +0800")
+Message-ID: <yq1imrjmppk.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730164803.45080-1-swboyd@chromium.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=735
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907300175
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=803 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907300175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 09:48:03AM -0700, Stephen Boyd wrote:
-> If the particular version of clang a user has doesn't enable
-> -Werror=unknown-warning-option by default, even though it is the
-> default[1], then make sure to pass the option to the Kconfig cc-option
-> command so that testing options from Kconfig files works properly.
-> Otherwise, depending on the default values setup in the clang toolchain
-> we will silently assume options such as -Wmaybe-uninitialized are
-> supported by clang, when they really aren't.
-> 
-> A compilation issue only started happening for me once commit
-> 589834b3a009 ("kbuild: Add -Werror=unknown-warning-option to
-> CLANG_FLAGS") was applied on top of commit b303c6df80c9 ("kbuild:
-> compute false-positive -Wmaybe-uninitialized cases in Kconfig"). This
-> leads kbuild to try and test for the existence of the
-> -Wmaybe-uninitialized flag with the cc-option command in
-> scripts/Kconfig.include, and it doesn't see an error returned from the
-> option test so it sets the config value to Y. Then the Makefile tries to
-> pass the unknown option on the command line and
-> -Werror=unknown-warning-option catches the invalid option and breaks the
-> build. Before commit 589834b3a009 ("kbuild: Add
-> -Werror=unknown-warning-option to CLANG_FLAGS") the build works fine,
-> but any cc-option test of a warning option in Kconfig files silently
-> evaluates to true, even if the warning option flag isn't supported on
-> clang.
-> 
-> Note: This doesn't change cc-option usages in Makefiles because those
-> use a different rule that includes KBUILD_CFLAGS by default (see the
-> __cc-option command in scripts/Kbuild.incluide). The KBUILD_CFLAGS
-> variable already has the -Werror=unknown-warning-option flag set. Thanks
-> to Doug for pointing out the different rule.
-> 
-> [1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
-> Cc: Peter Smith <peter.smith@linaro.org>
-> Cc: Nathan Chancellor <natechancellor@gmail.com>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Jia-Ju,
 
-> ---
->  Makefile                | 1 +
->  scripts/Kconfig.include | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 9be5834073f8..517d0a3f6539 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -536,6 +536,7 @@ KBUILD_AFLAGS	+= $(CLANG_FLAGS)
->  export CLANG_FLAGS
->  endif
->  
-> +
+> In qla2x00_alloc_fcport(), fcport is assigned to NULL in the error
+> handling code on line 4880:
+>     fcport = NULL;
 
-Not sure it's worth sending a v4 for but I don't think this should be
-there.
+Applied to 5.3/scsi-fixes. Thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
