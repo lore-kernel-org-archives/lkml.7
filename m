@@ -2,81 +2,93 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEBAC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4BCC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8FD2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979F62087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfG3HWw (ORCPT
+        id S1729057AbfG3HXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:22:52 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3243 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727527AbfG3HWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:22:52 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DCFCEE9B87D52890DB6C;
-        Tue, 30 Jul 2019 15:22:49 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Jul 2019
- 15:22:44 +0800
-Subject: Re: [PATCH] Input: applespi - Fix build error
-To:     "Life is hard, and then you die" <ronald@innovation.ch>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-References: <20190729031455.59400-1-yuehaibing@huawei.com>
- <20190729140438.GA2372@penguin> <20190730070117.GB20206@innovation.ch>
-CC:     <nikolas@gnu.org>, <linux-kernel@vger.kernel.org>,
-        <linux-input@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <59344451-4752-8610-22cd-2aa9b34e21ed@huawei.com>
-Date:   Tue, 30 Jul 2019 15:22:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190730070117.GB20206@innovation.ch>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Tue, 30 Jul 2019 03:23:05 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:37796 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727527AbfG3HXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 03:23:04 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AF3621A05CF;
+        Tue, 30 Jul 2019 09:23:02 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A30DF1A05C0;
+        Tue, 30 Jul 2019 09:23:02 +0200 (CEST)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2C2EF204D6;
+        Tue, 30 Jul 2019 09:23:02 +0200 (CEST)
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Guido Gunther <agx@sigxcpu.org>,
+        Anson Huang <anson.huang@nxp.com>
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v3] clk: imx8mq: Mark AHB clock as critical
+Date:   Tue, 30 Jul 2019 10:22:55 +0300
+Message-Id: <1564471375-6736-1-git-send-email-abel.vesa@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/30 15:01, Life is hard, and then you die wrote:
-> 
-> On Mon, Jul 29, 2019 at 04:04:38PM +0200, Dmitry Torokhov wrote:
->> On Mon, Jul 29, 2019 at 11:14:55AM +0800, YueHaibing wrote:
->>> If CONFIG_KEYBOARD_APPLESPI=y but CONFIG_LEDS_CLASS=m
->>> building fails:
->>>
->>> drivers/input/keyboard/applespi.o: In function `applespi_probe':
->>> applespi.c:(.text+0x1fcd): undefined reference to `devm_led_classdev_register_ext'
->>>
->>> Wrap it in LEDS_CLASS macro to fix this.
->>
->> No, we should add "depends on LEDS_CLASS" to the Konfig instead.
-> 
-> While the loss of keyboard-backlight functionality is certainly not
-> critical, in practice when building a kernel for desktops/laptops
-> (i.e. where this module would be used) I see no real reason why you'd
-> not have/want LEDS_CLASS enabled. So I'd agree with Dmitry that a
-> Kconfig depends-on is probably the preferred approach.
+Initially, the TMU_ROOT clock was marked as critical, which automatically
+made the AHB clock to stay always on. Since the TMU_ROOT clock is not
+marked as critical anymore, following commit:
 
-Thanks, will send v2 as suggestion.
+431bdd1df48e ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT")
 
-> 
-> 
->   Cheers,
-> 
->   Ronald
-> 
-> 
-> .
-> 
+all the clocks that derive from ipg_root clock (and implicitly ahb clock)
+would also have to enable, along with their own gate, the AHB clock.
+
+But considering that AHB is actually a bus that has to be always on, we mark
+it as critical in the clock provider driver and then all the clocks that
+derive from it can be controlled through the dedicated per IP gate which
+follows after the ipg_root clock.
+
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Tested-by: Daniel Baluta <daniel.baluta@nxp.com>
+Fixes: 431bdd1df48e ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT")
+---
+
+Changes since v2:
+ * added a more detailed commit message and mentioned the commit
+   that this change is fixing
+
+ drivers/clk/imx/clk-imx8mq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index 4328c22..04302f2 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -406,7 +406,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_CLK_NOC_APB] = imx8m_clk_composite_critical("noc_apb", imx8mq_noc_apb_sels, base + 0x8d80);
+ 
+ 	/* AHB */
+-	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite("ahb", imx8mq_ahb_sels, base + 0x9000);
++	/* AHB clock is used by the AHB bus therefore marked as critical */
++	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite_critical("ahb", imx8mq_ahb_sels, base + 0x9000);
+ 	clks[IMX8MQ_CLK_AUDIO_AHB] = imx8m_clk_composite("audio_ahb", imx8mq_audio_ahb_sels, base + 0x9100);
+ 
+ 	/* IPG */
+-- 
+2.7.4
 
