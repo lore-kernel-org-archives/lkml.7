@@ -2,180 +2,149 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C95C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8A5C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F0F20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D723720665
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:34:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODHhJ2Mh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731362AbfG3Jdt (ORCPT
+        id S1731375AbfG3JeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:33:49 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:38637 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730931AbfG3Jdt (ORCPT
+        Tue, 30 Jul 2019 05:34:03 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44722 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729793AbfG3JeC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:33:49 -0400
-Received: from localhost.localdomain (p5B3D2BA7.dip0.t-ipconnect.de [91.61.43.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 75099CECFD;
-        Tue, 30 Jul 2019 11:42:25 +0200 (CEST)
-From:   Marcel Holtmann <marcel@holtmann.org>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org
-Subject: [PATCH v5.3-rc2] Bluetooth: hci_uart: check for missing tty operations
-Date:   Tue, 30 Jul 2019 11:33:45 +0200
-Message-Id: <20190730093345.25573-1-marcel@holtmann.org>
-X-Mailer: git-send-email 2.21.0
+        Tue, 30 Jul 2019 05:34:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t14so28640974plr.11;
+        Tue, 30 Jul 2019 02:34:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uIGR8x0TECvOo9CdyXSlrLKWHQC1JilrbogeoKsnZE0=;
+        b=ODHhJ2MhVHs98ZUhYReVc9M1l3q+VolTtsGd/io1VvhfAp7G52eBT97T/10LJRXrW0
+         Sx3zebYKCR4EKymUvEt2PHGLfOuTilh79jd0e455EjLjFZIuPxHhcIMgzVCPrwLM2KIT
+         uN6uT4TwqtryKAAXeCkSz4CmcBtCdwS3Kc4K1C5X+PApn9MX8iRCkYvD4TJVVNqdOb1Y
+         HWYsCFFMMDlNy8POTIrtSeVLfiZ15tHaYWr8SfeRdmzZeRG7XvY11uwS9oiivVAxH9NA
+         6GkamN6NUvXg/q4Pv9g3SWGWhX1Aj3Vi0ogGhqRmULUDPWV6pxt9378HZ26i+5T4KqPb
+         hR7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uIGR8x0TECvOo9CdyXSlrLKWHQC1JilrbogeoKsnZE0=;
+        b=Lalv5hWAy2kEUaSkciSsCChQBq2QMnMb/KHHnpuKyyrN4AUZX/FQmgY+f3KdGFrqpf
+         mBGCjkbwAls7Os042wbUrlinEQ8uE4pdXQ2izmGKHPb/qC1jWtsqSSR2Myj4t9iXwuf0
+         AzDkExkgHSoGKTwT+wB9093hDFX3sRM6VuwRMLwL3axncEDMGdD46v+2rBxKessJ5iJx
+         ToQm3DOW89PYv8/Rm336qwYMU0VJA76oYP7sjyamoPLzVus3FH4qi8Ya3/6U+2dw1r3W
+         xSFMkKfrdn9rntnTUuli1GqNNQVwOtv/nNai6lavH5TuJjck///MnlDnQ9AQ8RJDVNtE
+         OJ0A==
+X-Gm-Message-State: APjAAAUvy3xw6CmBBNuDVPwFKFJJcOo1y+WndDG92epQj97dhdXpgKRu
+        QjfdYEACZa7doW8PNqkI/sGGvpD+kGY=
+X-Google-Smtp-Source: APXvYqzROT6cHu0Ac+/iucteZUCYhv984vcpmhmxGui+4xDy69nik3NBwBh8wvKaFnJHyn7inkEPdA==
+X-Received: by 2002:a17:902:3181:: with SMTP id x1mr112092581plb.135.1564479241456;
+        Tue, 30 Jul 2019 02:34:01 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id p15sm61641097pjf.27.2019.07.30.02.33.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 30 Jul 2019 02:34:00 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] KVM: Disable wake-affine vCPU process to mitigate lock holder preemption
+Date:   Tue, 30 Jul 2019 17:33:55 +0800
+Message-Id: <1564479235-25074-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
-functions which are called by the certain HCI UART protocols (hci_ath,
-hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
-or directly. This leads to an execution at NULL and can be triggered by
-an unprivileged user. Fix this by adding a helper function and a check
-for the missing tty operations in the protocols code.
+Wake-affine is a feature inside scheduler which we attempt to make processes 
+running closely, it gains benefit mostly from cache-hit. When waker tries 
+to wakup wakee, it needs to select cpu to run wakee, wake affine heuristic 
+mays select the cpu which waker is running on currently instead of the prev 
+cpu which wakee was last time running. 
 
-This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
-tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
-protocols.
+However, in multiple VMs over-subscribe virtualization scenario, it increases 
+the probability to incur vCPU stacking which means that the sibling vCPUs from 
+the same VM will be stacked on one pCPU. I test three 80 vCPUs VMs running on 
+one 80 pCPUs Skylake server(PLE is supported), the ebizzy score can increase 17% 
+after disabling wake-affine for vCPU process. 
 
-Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
-Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
-Cc: stable@vger.kernel.org # v2.6.36+
-Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
-Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
-Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
-Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
-Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+When qemu/other vCPU inject virtual interrupt to guest through waking up one 
+sleeping vCPU, it increases the probability to stack vCPUs/qemu by scheduler
+wake-affine. vCPU stacking issue can greately inceases the lock synchronization 
+latency in a virtualized environment. This patch disables wake-affine vCPU 
+process to mitigtate lock holder preemption.
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- drivers/bluetooth/hci_ath.c   |  3 +++
- drivers/bluetooth/hci_bcm.c   |  3 +++
- drivers/bluetooth/hci_intel.c |  3 +++
- drivers/bluetooth/hci_ldisc.c | 13 +++++++++++++
- drivers/bluetooth/hci_mrvl.c  |  3 +++
- drivers/bluetooth/hci_qca.c   |  3 +++
- drivers/bluetooth/hci_uart.h  |  1 +
- 7 files changed, 29 insertions(+)
+ include/linux/sched.h | 1 +
+ kernel/sched/fair.c   | 3 +++
+ virt/kvm/kvm_main.c   | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/drivers/bluetooth/hci_ath.c b/drivers/bluetooth/hci_ath.c
-index a55be205b91a..dbfe34664633 100644
---- a/drivers/bluetooth/hci_ath.c
-+++ b/drivers/bluetooth/hci_ath.c
-@@ -98,6 +98,9 @@ static int ath_open(struct hci_uart *hu)
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 8dc1811..3dd33d8 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1468,6 +1468,7 @@ extern struct pid *cad_pid;
+ #define PF_NO_SETAFFINITY	0x04000000	/* Userland is not allowed to meddle with cpus_mask */
+ #define PF_MCE_EARLY		0x08000000      /* Early kill for mce process policy */
+ #define PF_MEMALLOC_NOCMA	0x10000000	/* All allocation request will have _GFP_MOVABLE cleared */
++#define PF_NO_WAKE_AFFINE	0x20000000	/* This thread should not be wake affine */
+ #define PF_FREEZER_SKIP		0x40000000	/* Freezer should not count it as freezable */
+ #define PF_SUSPEND_TASK		0x80000000      /* This thread called freeze_processes() and should not be frozen */
  
- 	BT_DBG("hu %p", hu);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 036be95..18eb1fa 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5428,6 +5428,9 @@ static int wake_wide(struct task_struct *p)
+ 	unsigned int slave = p->wakee_flips;
+ 	int factor = this_cpu_read(sd_llc_size);
  
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
++	if (unlikely(p->flags & PF_NO_WAKE_AFFINE))
++		return 1;
 +
- 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
- 	if (!ath)
- 		return -ENOMEM;
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 8905ad2edde7..ae2624fce913 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -406,6 +406,9 @@ static int bcm_open(struct hci_uart *hu)
+ 	if (master < slave)
+ 		swap(master, slave);
+ 	if (slave < factor || master < slave * factor)
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 887f3b0..b9f75c3 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2680,6 +2680,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
  
- 	bt_dev_dbg(hu->hdev, "hu %p", hu);
+ 	mutex_unlock(&kvm->lock);
+ 	kvm_arch_vcpu_postcreate(vcpu);
++	current->flags |= PF_NO_WAKE_AFFINE;
+ 	return r;
  
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	bcm = kzalloc(sizeof(*bcm), GFP_KERNEL);
- 	if (!bcm)
- 		return -ENOMEM;
-diff --git a/drivers/bluetooth/hci_intel.c b/drivers/bluetooth/hci_intel.c
-index 207bae5e0d46..31f25153087d 100644
---- a/drivers/bluetooth/hci_intel.c
-+++ b/drivers/bluetooth/hci_intel.c
-@@ -391,6 +391,9 @@ static int intel_open(struct hci_uart *hu)
- 
- 	BT_DBG("hu %p", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	intel = kzalloc(sizeof(*intel), GFP_KERNEL);
- 	if (!intel)
- 		return -ENOMEM;
-diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
-index 8950e07889fe..85a30fb9177b 100644
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -292,6 +292,19 @@ static int hci_uart_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
- 	return 0;
- }
- 
-+/* Check the underlying device or tty has flow control support */
-+bool hci_uart_has_flow_control(struct hci_uart *hu)
-+{
-+	/* serdev nodes check if the needed operations are present */
-+	if (hu->serdev)
-+		return true;
-+
-+	if (hu->tty->driver->ops->tiocmget && hu->tty->driver->ops->tiocmset)
-+		return true;
-+
-+	return false;
-+}
-+
- /* Flow control or un-flow control the device */
- void hci_uart_set_flow_control(struct hci_uart *hu, bool enable)
- {
-diff --git a/drivers/bluetooth/hci_mrvl.c b/drivers/bluetooth/hci_mrvl.c
-index f98e5cc343b2..fbc3f7c3a5c7 100644
---- a/drivers/bluetooth/hci_mrvl.c
-+++ b/drivers/bluetooth/hci_mrvl.c
-@@ -59,6 +59,9 @@ static int mrvl_open(struct hci_uart *hu)
- 
- 	BT_DBG("hu %p", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	mrvl = kzalloc(sizeof(*mrvl), GFP_KERNEL);
- 	if (!mrvl)
- 		return -ENOMEM;
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 9a5c9c1f9484..82a0a3691a63 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -473,6 +473,9 @@ static int qca_open(struct hci_uart *hu)
- 
- 	BT_DBG("hu %p qca_open", hu);
- 
-+	if (!hci_uart_has_flow_control(hu))
-+		return -EOPNOTSUPP;
-+
- 	qca = kzalloc(sizeof(struct qca_data), GFP_KERNEL);
- 	if (!qca)
- 		return -ENOMEM;
-diff --git a/drivers/bluetooth/hci_uart.h b/drivers/bluetooth/hci_uart.h
-index f11af3912ce6..6ab631101019 100644
---- a/drivers/bluetooth/hci_uart.h
-+++ b/drivers/bluetooth/hci_uart.h
-@@ -104,6 +104,7 @@ int hci_uart_wait_until_sent(struct hci_uart *hu);
- int hci_uart_init_ready(struct hci_uart *hu);
- void hci_uart_init_work(struct work_struct *work);
- void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
-+bool hci_uart_has_flow_control(struct hci_uart *hu);
- void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
- void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
- 			 unsigned int oper_speed);
+ unlock_vcpu_destroy:
 -- 
-2.21.0
+2.7.4
 
