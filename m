@@ -2,44 +2,43 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F423BC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D287EC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45B320578
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55FC20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455854;
-	bh=iqntjTMM3MBLznOhI3BXDGyS9WB4aYP76B8QqXkMqWI=;
+	s=default; t=1564455859;
+	bh=akX8pTRSgtWmvSY+wS4yy14rnr2wZfN2n3Sc5ej76tw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qtH5RwGkMEFiPGgq8G6jUMAOHg3dRFfGKFcCuHV3RB6zEq6rVnyNp2c8hgg9C7sF6
-	 j3ti4fVJo8PRdDvfnu2kQ1bYl+YgTXrHaHh8XMaTQoQnXgAYL+eDS212kYkqWS+tpG
-	 e3cCGBjaQwnn/+4K70d8BsFaas5va0FnP+A3eg3k=
+	b=PTDB6uYnZsBQSLVfFQ9P7QraHYzoXuQF1G6nZvTlD+gQtRJE67j0FPmK1yKs251ML
+	 zx60EQcQxUZ9cp2q9IYxazuM2+SN/REWXjpcsg5f7pdPGw8iwhwETAyeADd0C9Pazy
+	 pkNHhb0lNcLZTPdJe8vrI/IPg4/a6nRjFz+AQA/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731451AbfG3C5H (ORCPT
+        id S1731644AbfG3C4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:57:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46574 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 22:56:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731655AbfG3C5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:57:02 -0400
+        id S1731618AbfG3C4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 22:56:50 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43E62206DD;
-        Tue, 30 Jul 2019 02:56:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F335206DD;
+        Tue, 30 Jul 2019 02:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455421;
-        bh=iqntjTMM3MBLznOhI3BXDGyS9WB4aYP76B8QqXkMqWI=;
+        s=default; t=1564455410;
+        bh=akX8pTRSgtWmvSY+wS4yy14rnr2wZfN2n3Sc5ej76tw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RIY/bMKBNLjbTwVCWvGmdri7mM0kgNVHaDGTFBnONc3nssLEwmxkJnQpiLEEycvt5
-         i6ebbo+7Jr4zcEFVKBx0tkh6Ck7CVYgc7ID5Iip2dRJDyXukSLWGlqmkslJoRH33mY
-         SrP8N3/flLANZi9RhTw2H0bY3GbVdhA+goI7Nf7k=
+        b=YoZe4XaA+nDT0Lmgk66TJ+/JXsKlT62O6q11BxuVuSg/BVqIqEPW8Vo0rwBTW3QmR
+         phIOzJnWrsH2m7AZBKmVsymbjlE+4iwzrTuQRypgemO5Upxzk4oIFfTBtyXzYWeoOA
+         z58wPlGMCxwhpEVSXinIMe6HdBE4vtC1EYVR6HfY=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -50,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 014/107] perf trace: Look for default name for entries in the syscalls prog array
-Date:   Mon, 29 Jul 2019 23:54:37 -0300
-Message-Id: <20190730025610.22603-15-acme@kernel.org>
+Subject: [PATCH 010/107] perf trace: Handle raw_syscalls:sys_enter just like the BPF_OUTPUT augmented event
+Date:   Mon, 29 Jul 2019 23:54:33 -0300
+Message-Id: <20190730025610.22603-11-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
@@ -66,91 +65,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-I.e. just look for "!syscalls:sys_enter_" or "exit_" plus the syscall
-name, that way we need just to add entries to the
-augmented_raw_syscalls.c BPF source to add handlers.
+So, we use a PERF_COUNT_SW_BPF_OUTPUT to output the augmented sys_enter
+payload, i.e. to output more than just the raw syscall args, and if
+something goes wrong when handling an unfiltered syscall, we bail out
+and just return 1 in the bpf program associated with
+raw_syscalls:sys_enter, meaning, don't filter that tracepoint, in which
+case what will appear in the perf ring buffer isn't the BPF_OUTPUT
+event, but the original raw_syscalls:sys_enter event with its normal
+payload.
+
+Now that we're switching to using a bpf_tail_call +
+BPF_MAP_TYPE_PROG_ARRAY we're going to use this in the common case, so a
+bug where raw_syscalls:sys_enter wasn't being handled by
+trace__sys_enter() surfaced and for  that case, instead of using the
+strace-like augmenter (trace__sys_enter()), we continued to use the
+normal generic tracepoint handler:
+
+  (gdb) p evsel
+  $2 = (struct perf_evsel *) 0xc03e40
+  (gdb) p evsel->name
+  $3 = 0xbc56c0 "raw_syscalls:sys_enter"
+  (gdb) p ((struct perf_evsel *) 0xc03e40)->name
+  $4 = 0xbc56c0 "raw_syscalls:sys_enter"
+  (gdb) p ((struct perf_evsel *) 0xc03e40)->handler
+  $5 = (void *) 0x495eb3 <trace__event_handler>
+
+This resulted in this:
+
+     0.027 raw_syscalls:sys_enter:NR 12 (0, 7fcfcac64c9b, 4d, 7fcfcac64c9b, 7fcfcac6ce00, 19)
+     ... [continued]: brk())                = 0x563b88677000
+
+I.e. only the sys_exit tracepoint was being properly handled, but since
+the sys_enter went to the generic trace__event_handler() we printed it
+using libtraceevent's formatter instead of 'perf trace's strace-like
+one.
+
+Fix it by setting trace__sys_enter() as the handler for
+raw_syscalls:sys_enter and setup the tp_field tracepoint field
+accessors.
+
+Now, to test it we just make raw_syscalls:sys_enter return 1 right after
+checking if the pid is filtered, making it not use
+bpf_perf_output_event() but rather ask for the tracepoint not to be
+filtered and the result is the expected one:
+
+  brk(NULL)                               = 0x556f42d6e000
+
+I.e. raw_syscalls:sys_enter returns 1, gets handled by
+trace__sys_enter() and gets it combined with the raw_syscalls:sys_exit
+in a strace-like way.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-6xavwddruokp6ohs7tf4qilb@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-0mkocgk31nmy0odknegcby4z@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ tools/perf/builtin-trace.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index c64f7c99db15..5258399a1c94 100644
+index fb8b8e78d7b5..872c9cc982a5 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -830,13 +830,11 @@ static struct syscall_fmt {
- 	{ .name	    = "newfstatat",
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
- 	{ .name	    = "open",
--	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_open", },
- 	  .arg = { [1] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "open_by_handle_at",
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
- 		   [2] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "openat",
--	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_openat", },
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
- 		   [2] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "perf_event_open",
-@@ -873,7 +871,6 @@ static struct syscall_fmt {
- 	{ .name	    = "recvmsg",
- 	  .arg = { [2] = { .scnprintf = SCA_MSG_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "renameat",
--	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_renameat", },
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* olddirfd */ },
- 		   [2] = { .scnprintf = SCA_FDAT, /* newdirfd */ }, }, },
- 	{ .name	    = "renameat2",
-@@ -2778,12 +2775,27 @@ static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, str
- {
- 	struct bpf_program *prog;
+@@ -4128,7 +4128,22 @@ int cmd_trace(int argc, const char **argv)
+ 				if (perf_evsel__init_augmented_syscall_tp(augmented, evsel) ||
+ 				    perf_evsel__init_augmented_syscall_tp_args(augmented))
+ 					goto out;
++				/*
++				 * Augmented is __augmented_syscalls__ BPF_OUTPUT event
++				 * Above we made sure we can get from the payload the tp fields
++				 * that we get from syscalls:sys_enter tracefs format file.
++				 */
+ 				augmented->handler = trace__sys_enter;
++				/*
++				 * Now we do the same for the *syscalls:sys_enter event so that
++				 * if we handle it directly, i.e. if the BPF prog returns 0 so
++				 * as not to filter it, then we'll handle it just like we would
++				 * for the BPF_OUTPUT one:
++				 */
++				if (perf_evsel__init_augmented_syscall_tp(evsel, evsel) ||
++				    perf_evsel__init_augmented_syscall_tp_args(evsel))
++					goto out;
++				evsel->handler = trace__sys_enter;
+ 			}
  
--	if (prog_name == NULL)
-+	if (prog_name == NULL) {
-+		char default_prog_name[256];
-+		scnprintf(default_prog_name, sizeof(default_prog_name), "!syscalls:sys_%s_%s", type, sc->name);
-+		prog = trace__find_bpf_program_by_title(trace, default_prog_name);
-+		if (prog != NULL)
-+			goto out_found;
-+		if (sc->fmt && sc->fmt->alias) {
-+			scnprintf(default_prog_name, sizeof(default_prog_name), "!syscalls:sys_%s_%s", type, sc->fmt->alias);
-+			prog = trace__find_bpf_program_by_title(trace, default_prog_name);
-+			if (prog != NULL)
-+				goto out_found;
-+		}
- 		goto out_unaugmented;
-+	}
- 
- 	prog = trace__find_bpf_program_by_title(trace, prog_name);
--	if (prog != NULL)
-+
-+	if (prog != NULL) {
-+out_found:
- 		return prog;
-+	}
- 
- 	pr_debug("Couldn't find BPF prog \"%s\" to associate with syscalls:sys_%s_%s, not augmenting it\n",
- 		 prog_name, type, sc->name);
-@@ -2798,12 +2810,8 @@ static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
- 	if (sc == NULL)
- 		return;
- 
--	if (sc->fmt != NULL) {
--		sc->bpf_prog.sys_enter = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_enter, "enter");
--		sc->bpf_prog.sys_exit  = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_exit,  "exit");
--	} else {
--		sc->bpf_prog.sys_enter = sc->bpf_prog.sys_exit = trace->syscalls.unaugmented_prog;
--	}
-+	sc->bpf_prog.sys_enter = trace__find_syscall_bpf_prog(trace, sc, sc->fmt ? sc->fmt->bpf_prog_name.sys_enter : NULL, "enter");
-+	sc->bpf_prog.sys_exit  = trace__find_syscall_bpf_prog(trace, sc, sc->fmt ? sc->fmt->bpf_prog_name.sys_exit  : NULL,  "exit");
- }
- 
- static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int id)
+ 			if (strstarts(perf_evsel__name(evsel), "syscalls:sys_exit_")) {
 -- 
 2.21.0
 
