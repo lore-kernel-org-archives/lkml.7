@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2A2C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC8FC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3EB8208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F33F208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731050AbfG3NcH (ORCPT
+        id S1731093AbfG3NcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:32:07 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3223 "EHLO huawei.com"
+        Tue, 30 Jul 2019 09:32:19 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3251 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730712AbfG3NcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:32:04 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B3FE395B58A4493B73AB;
-        Tue, 30 Jul 2019 21:32:00 +0800 (CST)
+        id S1731038AbfG3NcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 09:32:07 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 66C0CBEC2A8FB601871B;
+        Tue, 30 Jul 2019 21:32:05 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 30 Jul 2019 21:31:54 +0800
+ 14.3.439.0; Tue, 30 Jul 2019 21:31:55 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <xuwei5@huawei.com>
 CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>,
         <linux-kernel@vger.kernel.org>, <arnd@arndb.de>, <olof@lixom.net>,
         <stable@vger.kernel.org>, John Garry <john.garry@huawei.com>
-Subject: [PATCH v4 2/5] lib: logic_pio: Avoid possible overlap for unregistering regions
-Date:   Tue, 30 Jul 2019 21:29:53 +0800
-Message-ID: <1564493396-92195-3-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v4 4/5] bus: hisi_lpc: Unregister logical PIO range to avoid potential use-after-free
+Date:   Tue, 30 Jul 2019 21:29:55 +0800
+Message-ID: <1564493396-92195-5-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1564493396-92195-1-git-send-email-john.garry@huawei.com>
 References: <1564493396-92195-1-git-send-email-john.garry@huawei.com>
@@ -46,62 +46,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code was originally written to not support unregistering logical PIO
-regions.
+If, after registering a logical PIO range, the driver probe later fails,
+the logical PIO range memory will be released automatically.
 
-To accommodate supporting unregistering logical PIO regions, subtly modify
-LOGIC_PIO_CPU_MMIO region registration code, such that the "end" of the
-registered regions is the "end" of the last region, and not the sum of
-the sizes of all the registered regions.
+This causes an issue, in that the logical PIO range is not unregistered
+and the released range memory may be later referenced.
+
+Fix by unregistering the logical PIO range.
+
+And since we now unregister the logical PIO range for probe failure, avoid
+the special ordering of setting logical PIO range ops, which was the
+previous (poor) attempt at a safeguard against this.
 
 Cc: stable@vger.kernel.org
+Fixes: adf38bb0b595 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- lib/logic_pio.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/bus/hisi_lpc.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-index 761296376fbc..d0165c88f705 100644
---- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -35,7 +35,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
- 	struct logic_pio_hwaddr *range;
- 	resource_size_t start;
- 	resource_size_t end;
--	resource_size_t mmio_sz = 0;
-+	resource_size_t mmio_end = 0;
- 	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
- 	int ret = 0;
+diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
+index 19d7b6ff2f17..6d301aafcad2 100644
+--- a/drivers/bus/hisi_lpc.c
++++ b/drivers/bus/hisi_lpc.c
+@@ -606,24 +606,25 @@ static int hisi_lpc_probe(struct platform_device *pdev)
+ 	range->fwnode = dev->fwnode;
+ 	range->flags = LOGIC_PIO_INDIRECT;
+ 	range->size = PIO_INDIRECT_SIZE;
++	range->hostdata = lpcdev;
++	range->ops = &hisi_lpc_ops;
++	lpcdev->io_host = range;
  
-@@ -56,7 +56,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
- 			/* for MMIO ranges we need to check for overlap */
- 			if (start >= range->hw_start + range->size ||
- 			    end < range->hw_start) {
--				mmio_sz += range->size;
-+				mmio_end = range->io_start + range->size;
- 			} else {
- 				ret = -EFAULT;
- 				goto end_register;
-@@ -69,16 +69,16 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+ 	ret = logic_pio_register_range(range);
+ 	if (ret) {
+ 		dev_err(dev, "register IO range failed (%d)!\n", ret);
+ 		return ret;
+ 	}
+-	lpcdev->io_host = range;
  
- 	/* range not registered yet, check for available space */
- 	if (new_range->flags == LOGIC_PIO_CPU_MMIO) {
--		if (mmio_sz + new_range->size - 1 > MMIO_UPPER_LIMIT) {
-+		if (mmio_end + new_range->size - 1 > MMIO_UPPER_LIMIT) {
- 			/* if it's too big check if 64K space can be reserved */
--			if (mmio_sz + SZ_64K - 1 > MMIO_UPPER_LIMIT) {
-+			if (mmio_end + SZ_64K - 1 > MMIO_UPPER_LIMIT) {
- 				ret = -E2BIG;
- 				goto end_register;
- 			}
- 			new_range->size = SZ_64K;
- 			pr_warn("Requested IO range too big, new size set to 64K\n");
- 		}
--		new_range->io_start = mmio_sz;
-+		new_range->io_start = mmio_end;
- 	} else if (new_range->flags == LOGIC_PIO_INDIRECT) {
- 		if (iio_sz + new_range->size - 1 > IO_SPACE_LIMIT) {
- 			ret = -E2BIG;
+ 	/* register the LPC host PIO resources */
+ 	if (acpi_device)
+ 		ret = hisi_lpc_acpi_probe(dev);
+ 	else
+ 		ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
+-	if (ret)
++	if (ret) {
++		logic_pio_unregister_range(range);
+ 		return ret;
+-
+-	lpcdev->io_host->hostdata = lpcdev;
+-	lpcdev->io_host->ops = &hisi_lpc_ops;
++	}
+ 
+ 	io_end = lpcdev->io_host->io_start + lpcdev->io_host->size;
+ 	dev_info(dev, "registered range [%pa - %pa]\n",
 -- 
 2.17.1
 
