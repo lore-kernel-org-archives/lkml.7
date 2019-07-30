@@ -2,331 +2,230 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1540CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147E5C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43B02089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B962089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LYATqRcQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731391AbfG3JfE (ORCPT
+        id S1731422AbfG3JfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:35:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:58058 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729152AbfG3JfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:35:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1091A344;
-        Tue, 30 Jul 2019 02:35:03 -0700 (PDT)
-Received: from [10.162.43.134] (p8cg001049571a15.blr.arm.com [10.162.43.134])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C07683F575;
-        Tue, 30 Jul 2019 02:34:56 -0700 (PDT)
-Subject: Re: [PATCH V6 RESEND 0/3] arm64/mm: Enable memory hot remove
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, will.deacon@arm.com, mhocko@suse.com,
-        ira.weiny@intel.com, david@redhat.com, cai@lca.pw,
-        logang@deltatee.com, james.morse@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com,
-        mgorman@techsingularity.net, osalvador@suse.de,
-        ard.biesheuvel@arm.com, steve.capper@arm.com
-References: <1563171470-3117-1-git-send-email-anshuman.khandual@arm.com>
- <20190723105636.GA5004@lakrids.cambridge.arm.com>
- <a69ed426-98ff-32ed-82ce-8216dd56daba@arm.com>
- <20190725135132.GH14347@lakrids.cambridge.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <e1ea5e70-f9ce-53e8-1cc4-8500a4e90928@arm.com>
-Date:   Tue, 30 Jul 2019 15:05:36 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 30 Jul 2019 05:35:10 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:46824 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729152AbfG3JfI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 05:35:08 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6U9Z1tf100582;
+        Tue, 30 Jul 2019 04:35:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564479301;
+        bh=FmEP4mSp+GB3++ivD8Sfw2OMCbXIs8M52yHh6m5wEd4=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=LYATqRcQprPaQwLyBByKQlP9ll91SQSwU1S+vHgkyFgcBK4FVPI+sCVfljtrp251M
+         CS5nYpTDQeyfD7CoEJw72YivxZV9R2sSKS+DgrYA30gTBEauCjmQCm0IyWc2X7nE6H
+         OD1BU7PCw+Z3cllFAUqsxQyYKhs4YhDzzjTudXls=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6U9Z1G9058580
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Jul 2019 04:35:01 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
+ Jul 2019 04:35:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 30 Jul 2019 04:35:00 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6U9YkU0027547;
+        Tue, 30 Jul 2019 04:34:57 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+Subject: [PATCH v2 03/14] dmaengine: doc: Add sections for per descriptor metadata support
+Date:   Tue, 30 Jul 2019 12:34:39 +0300
+Message-ID: <20190730093450.12664-4-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190730093450.12664-1-peter.ujfalusi@ti.com>
+References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20190725135132.GH14347@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/25/2019 07:21 PM, Mark Rutland wrote:
-> On Wed, Jul 24, 2019 at 12:28:50PM +0530, Anshuman Khandual wrote:
->> On 07/23/2019 04:26 PM, Mark Rutland wrote:
->>> On Mon, Jul 15, 2019 at 11:47:47AM +0530, Anshuman Khandual wrote:
->>>> This series enables memory hot remove on arm64 after fixing a memblock
->>>> removal ordering problem in generic try_remove_memory() and a possible
->>>> arm64 platform specific kernel page table race condition. This series
->>>> is based on linux-next (next-20190712).
->>>>
->>>> Concurrent vmalloc() and hot-remove conflict:
->>>>
->>>> As pointed out earlier on the v5 thread [2] there can be potential conflict
->>>> between concurrent vmalloc() and memory hot-remove operation. This can be
->>>> solved or at least avoided with some possible methods. The problem here is
->>>> caused by inadequate locking in vmalloc() which protects installation of a
->>>> page table page but not the walk or the leaf entry modification.
->>>>
->>>> Option 1: Making locking in vmalloc() adequate
->>>>
->>>> Current locking scheme protects installation of page table pages but not the
->>>> page table walk or leaf entry creation which can conflict with hot-remove.
->>>> This scheme is sufficient for now as vmalloc() works on mutually exclusive
->>>> ranges which can proceed concurrently only if their shared page table pages
->>>> can be created while inside the lock. It achieves performance improvement
->>>> which will be compromised if entire vmalloc() operation (even if with some
->>>> optimization) has to be completed under a lock.
->>>>
->>>> Option 2: Making sure hot-remove does not happen during vmalloc()
->>>>
->>>> Take mem_hotplug_lock in read mode through [get|put]_online_mems() constructs
->>>> for the entire duration of vmalloc(). It protects from concurrent memory hot
->>>> remove operation and does not add any significant overhead to other concurrent
->>>> vmalloc() threads. It solves the problem in right way unless we do not want to
->>>> extend the usage of mem_hotplug_lock in generic MM.
->>>>
->>>> Option 3: Memory hot-remove does not free (conflicting) page table pages
->>>>
->>>> Don't not free page table pages (if any) for vmemmap mappings after unmapping
->>>> it's virtual range. The only downside here is that some page table pages might
->>>> remain empty and unused until next memory hot-add operation of the same memory
->>>> range.
->>>>
->>>> Option 4: Dont let vmalloc and vmemmap share intermediate page table pages
->>>>
->>>> The conflict does not arise if vmalloc and vmemap range do not share kernel
->>>> page table pages to start with. If such placement can be ensured in platform
->>>> kernel virtual address layout, this problem can be successfully avoided.
->>>>
->>>> There are two generic solutions (Option 1 and 2) and two platform specific
->>>> solutions (Options 2 and 3). This series has decided to go with (Option 3)
->>
->> s/Option 2 and 3/Option 3 and 4/
->>
->>>> which requires minimum changes while self-contained inside the functionality.
->>>
->>> ... while also leaking memory, right?
->>
->> This is not a memory leak. In the worst case where an empty page table page could
->> have been freed after parts of it's kernel virtual range span's vmemmap mapping has
->> been taken down still remains attached to the higher level page table entry. This
->> empty page table page will be completely reusable during future vmalloc() allocations
->> or vmemmap mapping for newly hot added memory in overlapping memory range. It is just
->> an empty data structure sticking around which could (probably would) be reused later.
->> This problem will not scale and get worse because its part of kernel page table not
->> user process which could get multiplied. Its a small price we are paying to remain
->> safe from a vmalloc() and memory hot remove potential collisions on the kernel page
->> table. IMHO that is fair enough.
-> 
-> I appreciate that we can reuse the memory if we hotplug the same
-> phyiscal range.
-> 
-> Regardless, I think it's important to note that this approach leaves
-> that memory around. Could you please quantify how much memory this
-> would be? i.e. for a 4K 48-bit VA kernel, how many pages would be left
-> over for a 1GiB region of memory?
+Update the provider and client documentation with details about the
+metadata support.
 
-Evaluated this for all possible configs with a single 1GB memory region
-for hot remove.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ Documentation/driver-api/dmaengine/client.rst | 75 +++++++++++++++++++
+ .../driver-api/dmaengine/provider.rst         | 46 ++++++++++++
+ 2 files changed, 121 insertions(+)
 
-1. 4K  page size - 39 bit VA - 3 LEVEL PGTABLE
+diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+index 45953f171500..d708e46b88a2 100644
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -151,6 +151,81 @@ The details of these operations are:
+      Note that callbacks will always be invoked from the DMA
+      engines tasklet, never from interrupt context.
+ 
++  Optional: per descriptor metadata
++  ---------------------------------
++  DMAengine provides two ways for metadata support.
++
++  DESC_METADATA_CLIENT
++
++    The metadata buffer is allocated/provided by the client driver and it is
++    attached to the descriptor.
++
++  .. code-block:: c
++
++     int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
++				   void *data, size_t len);
++
++  DESC_METADATA_ENGINE
++
++    The metadata buffer is allocated/managed by the DMA driver. The client
++    driver can ask for the pointer, maximum size and the currently used size of
++    the metadata and can directly update or read it.
++
++  .. code-block:: c
++
++     void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
++		size_t *payload_len, size_t *max_len);
++
++     int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
++		size_t payload_len);
++
++  Client drivers can query if a given mode is supported with:
++
++  .. code-block:: c
++
++     bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
++		enum dma_desc_metadata_mode mode);
++
++  Depending on the used mode client drivers must follow different flow.
++
++  DESC_METADATA_CLIENT
++
++    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++         construct the metadata in the client's buffer
++      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++         descriptor
++      3. submit the transfer
++    - DMA_DEV_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++         descriptor
++      3. submit the transfer
++      4. when the transfer is completed, the metadata should be available in the
++         attached buffer
++
++  DESC_METADATA_ENGINE
++
++    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
++         engine's metadata area
++      3. update the metadata at the pointer
++      4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
++         amount of data the client has placed into the metadata buffer
++      5. submit the transfer
++    - DMA_DEV_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. submit the transfer
++      3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get the
++         pointer to the engine's metadata are
++      4. Read out the metadate from the pointer
++
++  .. note::
++
++     Mixed use of DESC_METADATA_CLIENT / DESC_METADATA_ENGINE is not allowed,
++     client drivers must use either of the modes per descriptor.
++
+ 4. Submit the transaction
+ 
+    Once the descriptor has been prepared and the callback information
+diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+index dfc4486b5743..9e6d87b3c477 100644
+--- a/Documentation/driver-api/dmaengine/provider.rst
++++ b/Documentation/driver-api/dmaengine/provider.rst
+@@ -247,6 +247,52 @@ after each transfer. In case of a ring buffer, they may loop
+ (DMA_CYCLIC). Addresses pointing to a device's register (e.g. a FIFO)
+ are typically fixed.
+ 
++Per descriptor metadata support
++-------------------------------
++Some data movement architecure (DMA controller and peripherals) uses metadata
++associated with a transaction. The DMA controller role is to transfer the
++payload and the metadata alongside.
++The metadata itself is not used by the DMA engine itself, but it contains
++parameters, keys, vectors, etc for peripheral or from the peripheral.
++
++The DMAengine framework provides a generic ways to facilitate the metadata for
++descriptors. Depending on the architecture the DMA driver can implement either
++or both of the methods and it is up to the client driver to choose which one
++to use.
++
++- DESC_METADATA_CLIENT
++
++  The metadata buffer is allocated/provided by the client driver and it is
++  attached (via the dmaengine_desc_attach_metadata() helper to the descriptor.
++
++  From the DMA driver the following is expected for this mode:
++  - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM
++    The data from the provided metadata buffer should be prepared for the DMA
++    controller to be sent alongside of the payload data. Either by copying to a
++    hardware descriptor, or highly coupled packet.
++  - DMA_DEV_TO_MEM
++    On transfer completion the DMA driver must copy the metadata to the client
++    provided metadata buffer.
++
++- DESC_METADATA_ENGINE
++
++  The metadata buffer is allocated/managed by the DMA driver. The client driver
++  can ask for the pointer, maximum size and the currently used size of the
++  metadata and can directly update or read it. dmaengine_desc_get_metadata_ptr()
++  and dmaengine_desc_set_metadata_len() is provided as helper functions.
++
++  From the DMA driver the following is expected for this mode:
++  - get_metadata_ptr
++    Should return a pointer for the metadata buffer, the maximum size of the
++    metadata buffer and the currently used / valid (if any) bytes in the buffer.
++  - set_metadata_len
++    It is called by the clients after it have placed the metadata to the buffer
++    to let the DMA driver know the number of valid bytes provided.
++
++  Note: since the client will ask for the metadata pointer in the completion
++  callback (in DMA_DEV_TO_MEM case) the DMA driver must ensure that the
++  descriptor is not freed up prior the callback is called.
++
+ Device operations
+ -----------------
+ 
+-- 
+Peter
 
-	Potential pte page [freed: 0 skipped: 0]
-	Potential pmd page [freed: 0 skipped: 1]
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-2. 4K  page size - 48 bit VA - 4 LEVEL PGTABLE
-
-	Potential pte page [freed: 0 skipped: 0]
-	Potential pmd page [freed: 0 skipped: 1]
-	Potential pud page [freed: 0 skipped: 1]
-
-3. 16K page size - 47 bit VA - 3 LEVEL PGTABLE
-
-	Potential pte page [freed: 0 skipped: 1]
-	Potential pmd page [freed: 0 skipped: 1]
-
-4. 16K page size - 48 bit VA - 4 LEVEL PGTABLE
-
-	Potential pte page [freed: 0 skipped: 1]
-	Potential pmd page [freed: 0 skipped: 1]
-	Potential pud page [freed: 0 skipped: 1]
-
-5. 64K page size - 42 bit VA - 2 LEVEL PGTABLE
-
-	Potential pte page [freed: 0 skipped: 1]
-
-6. 64K page size - 48 bit VA - 3 LEVEL PGTABLE
-
-	Potential pte page [freed: 0 skipped: 1]
-	Potential pmd page [freed: 0 skipped: 1]
-
-7. 64K page size - 52 bit VA - 3 LEVEL PGTABLE
-
-	Potential pte page [freed: 0 skipped: 1]
-	Potential pmd page [freed: 0 skipped: 1]
-
-This is based on if free_empty_tables() would have been called from
-vmemmap_free() during memory hot remove process then how many pages
-would have got freed or skipped.
-
-Freed:   pgtable pages (pte|pmd|pud) did actually get freed
-Skipped: pgtable pages (pte|pmd|pud) did not get freed due
-	 to other valid and present entries
-
-This indicates there no potential free page table pages being left
-around with 1GB memory region. It might be because of this particular
-memory region in the experiment which finds a particular place in the
-kernel page table based on it's starting address. Regardless it at least
-indicates that memory pages being left around during hot remove (if any)
-would be minimal.
-
-> 
->>> In my view, option 2 or 4 would have been preferable. Were there
->>
->> I would say option 2 is the ideal solution where we make sure that each vmalloc()
->> instance is protected against concurrent memory hot remove through a read side lock
->> via [get|put]_online_mems().
-> 
-> I agree that this would be simple to reason about. However, even taking
-> a read lock could significantly change the performance of operations in
-> the vmalloc space, so that would need to be quantified. Additionally,
-> hotplug operations would stall all vmalloc space operations, which is
-> unfortunate.
-> 
->> Option 4 is very much platform specific and each platform has to make sure that they
->> remain compliant all the time which is not ideal. Its is also an a work around which
->> avoids the problem and does not really fix it.
-> 
-> I understand that you don't like this solution.
-> 
-> I think it should be simple to verify that the layout is safe via
-> BUILD_BUG_ON() checking the regions we care about don't overlap, so I
-> don't buy that it's all that difficult to ensure going forward if it's
-> naturally the case today.
-
-The concern was that platform need to ensure this all the time not that it
-is difficult to do so. I did evaluate this for all possible config options.
-
-1. 4K  page size - 39 bit VA - 3 LEVEL PGTABLE
-
-vmalloc [start ffffff8010000000 end ffffffbebfff0000 size 3eafff0000]
-vmemmap [start ffffffbf00000000 end ffffffc000000000 size 100000000]
-pgtable [pgdir 40000000 pud 40000000  pmd 200000]
-spacing [40010000]
-
-2. 4K  page size - 48 bit VA - 4 LEVEL PGTABLE
-
-vmalloc [start ffff000010000000 end ffff7dffbfff0000 size 7dffafff0000]
-vmemmap [start ffff7e0000000000 end ffff800000000000 size 20000000000]
-pgtable [pgdir 8000000000 pud 40000000  pmd 200000]
-spacing [40010000]
-
-3. 16K page size - 47 bit VA - 3 LEVEL PGTABLE
-
-vmalloc [start ffff800010000000 end ffffbfafffff0000 size 3fafefff0000]
-vmemmap [start ffffbfc000000000 end ffffc00000000000 size 4000000000]
-pgtable [pgdir 1000000000 pud 1000000000  pmd 2000000]
-spacing [1000010000] 
-
-4. 16K page size - 48 bit VA - 4 LEVEL PGTABLE
-
-vmalloc [start ffff000010000000 end ffff7f6fffff0000 size 7f6fefff0000]
-vmemmap [start ffff7f8000000000 end ffff800000000000 size 8000000000]
-pgtable [pgdir 800000000000 pud 1000000000  pmd 2000000]
-spacing [1000010000] PGD overlapping
-
-5. 64K page size - 42 bit VA - 2 LEVEL PGTABLE
-
-vmalloc [start fffffc0010000000 end fffffdff5fff0000 size 1ff4fff0000]
-vmemmap [start fffffdff80000000 end fffffe0000000000 size 80000000]
-pgtable [pgdir 20000000 pud 20000000  pmd 20000000]
-spacing [20010000]
-
-6. 64K page size - 48 bit VA - 3 LEVEL PGTABLE
-
-vmalloc [start ffff000010000000 end ffff7bdfffff0000 size 7bdfefff0000]
-vmemmap [start ffff7fe000000000 end ffff800000000000 size 2000000000]
-pgtable [pgdir 40000000000 pud 40000000000  pmd 20000000]
-spacing [40000010000] 
-
-7. 64K page size - 52 bit VA - 3 LEVEL PGTABLE
-
-vmalloc [start ffff000010000000 end ffff7bdfffff0000 size 7bdfefff0000]
-vmemmap [start ffff7fe000000000 end ffff800000000000 size 2000000000]
-pgtable [pgdir 40000000000 pud 40000000000  pmd 20000000]
-spacing [40000010000] 
-
-So except just one case (16K page size - 48 bit VA - 4 LEVEL PGTABLE) vmalloc
-and vmemmap does not seem to share any intermediate page table entry. Even in
-that case it shares just a PGD entry. So calling free_empty_tables() during
-memory hot-remove might not be that risky as it appeared before and just to be
-sure we can have a BUILD_BUG_ON() when memory hot remove is enabled which will
-make sure that (vmalloc - vmemap) spacing is adequate.
-
-When a PGD entry (i.e PUD page) is being shared it can still potentially collide
-with a concurrent vmalloc(). Should we not call free_empty_tables() only for that
-particular case ? Any thoughts ?
-
-spacing: (vmalloc - vmemmap)
-pgdir:	 PGDIR_SIZE
-pud:	 PUD_SIZE
-pmd:	 PMD_SIZE
-
-> 
->>> specific technical reasons to not go down either of those routes? I'm
->>
->> Option 2 will require wider agreement as it involves a very critical hot-path vmalloc()
->> which can affect many workloads.
-> 
-> I agree that this would need to be quantified.
-> 
->> IMHO Option 4 is neither optimal and not does it solve the problem
->> correctly. Like this approach it just avoids it but unlike this
->> touches upon another code area.
-> 
-> I disagree that option 4 wouldn't be correct; it's just avoiding the
-> issue at a different level.
-> 
->>> not sure that minimizing changes is the right rout given that this same
->>> problem presumably applies to other architectures, which will need to be
->>> fixed.
->>
->> Yes this needs to be fixed but we can get there one step at a time. vmemmap tear
->> down process can start freeing empty page table pages when this gets solved. But
->> why should it prevent entire memory hot remove functionality from being available.
-> 
-> My experience has been that people rarely go back to solve the edge
-> cases once the feature they care about has been merged, and we're left
-> with more edge cases...
-> 
-> I think we at least need to have a clear idea that we can fix the
-> problem before we punt it on as later cleanup. Especially given that
-> this seems like it is an existing problem affecting other architectures.
-> 
->>> Do we know why we aren't seeing issues on other architectures? e.g. is
->>> the issue possible but rare (and hence not reported), or masked by
->>> something else (e.g. the layout of the kernel VA space)?
->>
->> I would believe so but we can only get more insights from respective architecture folks.
-> 
-> Could you please investigate, e.g. have a look at how this works on x86?
-> 
-> You should be able to figure out if the VA ranges overlap, and I suspect
-> that if there is a problem youi can deliberately trigger it within a
-> QEMU VM.
-
-Even on x86 the vmemmap vmalloc separation seems adequate. IIUC X86 does
-not seem to have other config combinations which need to verified. Please
-let me know if that is not correct.
-
-vmalloc [start ffffb91080000000 end ffffd9107fffffff size 1fffffffffff]
-vmemmap [start ffffe9c3c0000000 end ffffe9efc0000000 size 2c00000000]
-pgtable [pgdir 8000000000 pud 40000000  pmd 200000]
-spacing [10b340000001] 
-
-So x86 might never have faced this problem ? It does not have VMEMMAP_SIZE
-hence computed these with a hack.
