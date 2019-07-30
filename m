@@ -7,85 +7,139 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAE0C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECF2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5902208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D036216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AWVJPYpg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iuewzSFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbfG3Q5t (ORCPT
+        id S1729477AbfG3Q6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:57:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42888 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728286AbfG3Q5t (ORCPT
+        Tue, 30 Jul 2019 12:58:04 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36157 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727297AbfG3Q6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:57:49 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so30139328pff.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 09:57:48 -0700 (PDT)
+        Tue, 30 Jul 2019 12:58:04 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r7so30157395pfl.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 09:58:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ix9OKDjxXPyx1f5taSuIkM3gnuH/NmRqMA6DOLybtl0=;
-        b=AWVJPYpg7cmlGHotrArS9WfeqnVwUAjou9+7Dkkgt4LR8AAFjW0ooQaPy60h9U1WHf
-         l7q5zVJ0reaqH64g9rq2FzLRPRnwX70XhAYmKdsBzel9BLBIVQe4wA99QbXIBcYVdS5+
-         y3MVEOs51cSd03F/OoGUwwYjPZkGIjrBlX3P0=
+        bh=yrlIIjQiKa7HcwYMn5WEh3zoQP+A3KUtlQo6rp+l/70=;
+        b=iuewzSFkAJ/RaH8ev4JnCSNMqw8AdCVdKZPIDPPxMJN7aIlzlj7FaD1UkkKWa7ztc/
+         0eBXDQbyOVRPBheNGkAL1XkeD+aQuj/vihJwuK30V4LJC06VEE5qpuQ3GG9ZxH0o5XKT
+         N5AmTQ9QKx1M2mZdMRwWdITglvVKF6skoeQfQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=ix9OKDjxXPyx1f5taSuIkM3gnuH/NmRqMA6DOLybtl0=;
-        b=ARwgLRd7fwsK2sKVUSOnK2zjHmWB6yCGyDQjkLrj+01c4WHG99CcGvHBaqdIk+Dgpk
-         yPiMrRPgsWHz4mJ/iU9yu6Ho70G9sUiB3ZJqCr/6HWATphEFvn0JF8WBILimglsV3DDY
-         A6OmaydJQovVxm1MpdoOrhmZnvPsGssFcyOA4Lr7J10gVoaauwv5qfi4DCxywlb3HiAO
-         20L2HcGdWoY2YLlTYUlACDGhpSRBuddYXUiJy+6KyvKDb7I73LfxpMolIkdmQ1h51UZD
-         YSB/FT/wjfgvTH4AYNCeO8uehzrw2uhBSGde/bdbP5ideZ6tlxOSM3OE+uIidERvPvUD
-         ZJxg==
-X-Gm-Message-State: APjAAAX3+hT08T6RtIJqBm2U0/FfAb0fNuF2nJUAIBPeUnHDK25gtUgs
-        p+elAIOoe/P7KhbTNvPoM51K32Ad/F8=
-X-Google-Smtp-Source: APXvYqzE9AgceJOtUfpQp9NAmVB2r9LsPVCK8iyMvE9ch6UgwEPO2kl8NKoc88W4qqOgZlVTDO2I+Q==
-X-Received: by 2002:a65:6495:: with SMTP id e21mr110932536pgv.359.1564505868296;
-        Tue, 30 Jul 2019 09:57:48 -0700 (PDT)
+        bh=yrlIIjQiKa7HcwYMn5WEh3zoQP+A3KUtlQo6rp+l/70=;
+        b=FbzKxvic56HrINPvIe13iCIcwhvElTWiBQ/GiwLqoU7ijSWhnmAZvHEM/58+XqTyOI
+         wAZ66XkIC4HA4ZY6CIgMZBc5H0BrnqbWgNAGD6mfOdIoW7q8m0O2xB1lVcFPGUPQ1tgE
+         Pb1pVFLMzXxhFHTiaCmqGRVR37DvgWrAfQP1wyUWsMLhyOf1XEoIVXBvpwAsZSNHMa/m
+         T2OslZZ1XxxjtWFVv2zwqo6MFe0jvvjiH3NyobcAIOk3OC6zG2RomuHRWHffy6J3oyyv
+         E24RAJSlKF0aFlqvluO8zzygXeiaCohtyZQB1E12rU7SAn9Ocb56+B0sVvj85vZNkQpM
+         3kbg==
+X-Gm-Message-State: APjAAAWLM53av6jnhkkA034sXqDg5J3d4TILhzAMdwKJX/hZ7kkYJD+s
+        r0f9y3wnPfA1FX5atdovDSIskw==
+X-Google-Smtp-Source: APXvYqzgUU43LGPOfga52QV0fCYdmludaIg0NRd9KeW0cvvx6BYzyyL0pDTvJ1mSDs+nmFSKfQNygQ==
+X-Received: by 2002:a17:90a:fa12:: with SMTP id cm18mr117751421pjb.137.1564505883503;
+        Tue, 30 Jul 2019 09:58:03 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p67sm75555573pfg.124.2019.07.30.09.57.47
+        by smtp.gmail.com with ESMTPSA id b26sm74248720pfo.129.2019.07.30.09.58.02
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jul 2019 09:57:47 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 09:57:46 -0700
+        Tue, 30 Jul 2019 09:58:02 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 09:58:01 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watchdog: wdt977: Mark expected switch fall-through
-Message-ID: <201907300957.D6F173D@keescook>
-References: <20190729223159.GA20878@embeddedor>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: ux500/crypt: Mark expected switch fall-throughs
+Message-ID: <201907300958.55BF0AD@keescook>
+References: <20190729223819.GA21985@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190729223159.GA20878@embeddedor>
+In-Reply-To: <20190729223819.GA21985@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 05:31:59PM -0500, Gustavo A. R. Silva wrote:
+On Mon, Jul 29, 2019 at 05:38:19PM -0500, Gustavo A. R. Silva wrote:
 > Mark switch cases where we are expecting to fall through.
 > 
 > This patch fixes the following warning (Building: arm):
 > 
-> drivers/watchdog/wdt977.c: In function ‘wdt977_ioctl’:
->   LD [M]  drivers/media/platform/vicodec/vicodec.o
-> drivers/watchdog/wdt977.c:400:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    wdt977_keepalive();
->    ^~~~~~~~~~~~~~~~~~
-> drivers/watchdog/wdt977.c:403:2: note: here
->   case WDIOC_GETTIMEOUT:
+> drivers/crypto/ux500/cryp/cryp.c: In function ‘cryp_save_device_context’:
+> drivers/crypto/ux500/cryp/cryp.c:316:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    ctx->key_4_r = readl_relaxed(&src_reg->key_4_r);
+> drivers/crypto/ux500/cryp/cryp.c:318:2: note: here
+>   case CRYP_KEY_SIZE_192:
 >   ^~~~
+> drivers/crypto/ux500/cryp/cryp.c:320:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    ctx->key_3_r = readl_relaxed(&src_reg->key_3_r);
+> drivers/crypto/ux500/cryp/cryp.c:322:2: note: here
+>   case CRYP_KEY_SIZE_128:
+>   ^~~~
+> drivers/crypto/ux500/cryp/cryp.c:324:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    ctx->key_2_r = readl_relaxed(&src_reg->key_2_r);
+> drivers/crypto/ux500/cryp/cryp.c:326:2: note: here
+>   default:
+>   ^~~~~~~
+> In file included from ./include/linux/io.h:13:0,
+>                  from drivers/crypto/ux500/cryp/cryp_p.h:14,
+>                  from drivers/crypto/ux500/cryp/cryp.c:15:
+> drivers/crypto/ux500/cryp/cryp.c: In function ‘cryp_restore_device_context’:
+> ./arch/arm/include/asm/io.h:92:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>  #define __raw_writel __raw_writel
+>                       ^
+> ./arch/arm/include/asm/io.h:299:29: note: in expansion of macro ‘__raw_writel’
+>  #define writel_relaxed(v,c) __raw_writel((__force u32) cpu_to_le32(v),c)
+>                              ^~~~~~~~~~~~
+> drivers/crypto/ux500/cryp/cryp.c:363:3: note: in expansion of macro ‘writel_relaxed’
+>    writel_relaxed(ctx->key_4_r, &reg->key_4_r);
+>    ^~~~~~~~~~~~~~
+> drivers/crypto/ux500/cryp/cryp.c:365:2: note: here
+>   case CRYP_KEY_SIZE_192:
+>   ^~~~
+> In file included from ./include/linux/io.h:13:0,
+>                  from drivers/crypto/ux500/cryp/cryp_p.h:14,
+>                  from drivers/crypto/ux500/cryp/cryp.c:15:
+> ./arch/arm/include/asm/io.h:92:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>  #define __raw_writel __raw_writel
+>                       ^
+> ./arch/arm/include/asm/io.h:299:29: note: in expansion of macro ‘__raw_writel’
+>  #define writel_relaxed(v,c) __raw_writel((__force u32) cpu_to_le32(v),c)
+>                              ^~~~~~~~~~~~
+> drivers/crypto/ux500/cryp/cryp.c:367:3: note: in expansion of macro ‘writel_relaxed’
+>    writel_relaxed(ctx->key_3_r, &reg->key_3_r);
+>    ^~~~~~~~~~~~~~
+> drivers/crypto/ux500/cryp/cryp.c:369:2: note: here
+>   case CRYP_KEY_SIZE_128:
+>   ^~~~
+> In file included from ./include/linux/io.h:13:0,
+>                  from drivers/crypto/ux500/cryp/cryp_p.h:14,
+>                  from drivers/crypto/ux500/cryp/cryp.c:15:
+> ./arch/arm/include/asm/io.h:92:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>  #define __raw_writel __raw_writel
+>                       ^
+> ./arch/arm/include/asm/io.h:299:29: note: in expansion of macro ‘__raw_writel’
+>  #define writel_relaxed(v,c) __raw_writel((__force u32) cpu_to_le32(v),c)
+>                              ^~~~~~~~~~~~
+> drivers/crypto/ux500/cryp/cryp.c:371:3: note: in expansion of macro ‘writel_relaxed’
+>    writel_relaxed(ctx->key_2_r, &reg->key_2_r);
+>    ^~~~~~~~~~~~~~
+> drivers/crypto/ux500/cryp/cryp.c:373:2: note: here
+>   default:
+>   ^~~~~~~
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
@@ -94,22 +148,49 @@ Reviewed-by: Kees Cook <keescook@chromium.org>
 -Kees
 
 > ---
->  drivers/watchdog/wdt977.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/crypto/ux500/cryp/cryp.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/watchdog/wdt977.c b/drivers/watchdog/wdt977.c
-> index 567005d7598e..5c52c73e1839 100644
-> --- a/drivers/watchdog/wdt977.c
-> +++ b/drivers/watchdog/wdt977.c
-> @@ -398,7 +398,7 @@ static long wdt977_ioctl(struct file *file, unsigned int cmd,
->  			return -EINVAL;
->  
->  		wdt977_keepalive();
-> -		/* Fall */
+> diff --git a/drivers/crypto/ux500/cryp/cryp.c b/drivers/crypto/ux500/cryp/cryp.c
+> index ece83a363e11..f22f6fa612b3 100644
+> --- a/drivers/crypto/ux500/cryp/cryp.c
+> +++ b/drivers/crypto/ux500/cryp/cryp.c
+> @@ -314,14 +314,17 @@ void cryp_save_device_context(struct cryp_device_data *device_data,
+>  	case CRYP_KEY_SIZE_256:
+>  		ctx->key_4_l = readl_relaxed(&src_reg->key_4_l);
+>  		ctx->key_4_r = readl_relaxed(&src_reg->key_4_r);
 > +		/* Fall through */
 >  
->  	case WDIOC_GETTIMEOUT:
->  		return put_user(timeout, uarg.i);
+>  	case CRYP_KEY_SIZE_192:
+>  		ctx->key_3_l = readl_relaxed(&src_reg->key_3_l);
+>  		ctx->key_3_r = readl_relaxed(&src_reg->key_3_r);
+> +		/* Fall through */
+>  
+>  	case CRYP_KEY_SIZE_128:
+>  		ctx->key_2_l = readl_relaxed(&src_reg->key_2_l);
+>  		ctx->key_2_r = readl_relaxed(&src_reg->key_2_r);
+> +		/* Fall through */
+>  
+>  	default:
+>  		ctx->key_1_l = readl_relaxed(&src_reg->key_1_l);
+> @@ -361,14 +364,17 @@ void cryp_restore_device_context(struct cryp_device_data *device_data,
+>  	case CRYP_KEY_SIZE_256:
+>  		writel_relaxed(ctx->key_4_l, &reg->key_4_l);
+>  		writel_relaxed(ctx->key_4_r, &reg->key_4_r);
+> +		/* Fall through */
+>  
+>  	case CRYP_KEY_SIZE_192:
+>  		writel_relaxed(ctx->key_3_l, &reg->key_3_l);
+>  		writel_relaxed(ctx->key_3_r, &reg->key_3_r);
+> +		/* Fall through */
+>  
+>  	case CRYP_KEY_SIZE_128:
+>  		writel_relaxed(ctx->key_2_l, &reg->key_2_l);
+>  		writel_relaxed(ctx->key_2_r, &reg->key_2_r);
+> +		/* Fall through */
+>  
+>  	default:
+>  		writel_relaxed(ctx->key_1_l, &reg->key_1_l);
 > -- 
 > 2.22.0
 > 
