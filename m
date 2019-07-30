@@ -2,81 +2,108 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC4EC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1404C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593D0206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77C77206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YMR/Ewvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733028AbfG3QdR (ORCPT
+        id S1733035AbfG3Qd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:33:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60568 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727924AbfG3QdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:33:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 992B1B03C;
-        Tue, 30 Jul 2019 16:33:14 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 5990ADA808; Tue, 30 Jul 2019 18:33:49 +0200 (CEST)
-Date:   Tue, 30 Jul 2019 18:33:49 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.cz,
-        quwenruo.btrfs@gmx.com, linux-btrfs@vger.kernel.org,
+        Tue, 30 Jul 2019 12:33:29 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43288 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732902AbfG3Qcm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 12:32:42 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p13so66462911wru.10;
+        Tue, 30 Jul 2019 09:32:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GmdGNk4oNO4STFUUcJmXV87+bjb8OGrYJzjuXg++0eg=;
+        b=YMR/EwvrgUn7iTeE2I0BcdmvIOc8h2UPagqrNRtz6XSKx1d4HDj8okgti2ywcWfduQ
+         WeOSv0DL8lRGYJ6monsDZdgM3DmExNwTit4u9i8nxQczwa7yxlAY66y9sqZ7X+HS4Bfa
+         Hh7MEQH6dOA4MfMro4mW/Wk5u4tW9Sn5dZhOwukpUQ3YWiTWo8r5RdsF/V2Q4HF6JIKs
+         0j1BpdPe0Oemxt559Uh/zoowFD1YHoBcyLJaBHpBVWUwmslPNJ3ZOcMTX3tJa8KBvCpN
+         o8PW1dNxwjSJkhijdQP8DR0K2ICcXxVtOKKFPWDh8zWhpx7LeMGRGgDz+NIGp+OZbpVo
+         Leeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GmdGNk4oNO4STFUUcJmXV87+bjb8OGrYJzjuXg++0eg=;
+        b=lJmtEibUUaWIZvhg5fga1kCuxip4x8IU1f6WMhpVBgyZOgpOQtsQpNXlJWO9lG50lD
+         e8tbs26x2uMzg/CHG7YKi59oDRvzEzkchjIJXXZPrxaIxS1JwmBp6nK1r+K5/ViH5ugD
+         RBdbfSl6Y2k44SM/tD2zd+xqgq91rQZ5oKh2iL22Fli+gc3ZndldT7zYElvmk3S8vLZ2
+         EZaWRm4jPez8AG624TjN6CEYPhFzCqeePdjIrNgVUiL+8DpPlYz6B6JDgvMlqocBBDaT
+         TDjJQFbhN3mFXeUkyB4XbyYk7UUTT8thwzfJKCgtVEx3OdjnobVCey4/gsgE+PqNcpwI
+         Uw2A==
+X-Gm-Message-State: APjAAAWYb55CRAIfSSITjadCzXvWU431AiWbOQJnezXHfusxgEIbAjos
+        OOj2NMMrmiOYEoQP9ViudseDHyWO
+X-Google-Smtp-Source: APXvYqyXHBWiO1COppwKmNpaAn5hNvdAM4G8Jq59l5I7Jb1x+FnRT3BqdlZXBqzfaTnwOLDDUgherg==
+X-Received: by 2002:adf:e552:: with SMTP id z18mr131982400wrm.45.1564504360757;
+        Tue, 30 Jul 2019 09:32:40 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.gmail.com with ESMTPSA id c65sm64835175wma.44.2019.07.30.09.32.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 09:32:40 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: btrfs: Add an assertion to warn incorrct case in
- insert_inline_extent()
-Message-ID: <20190730163349.GD28208@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        clm@fb.com, josef@toxicpanda.com, quwenruo.btrfs@gmx.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190727085113.11530-1-baijiaju1990@gmail.com>
+Subject: [PATCH v5 17/20] PM / devfreq: tegra30: Increase sampling period to 16ms
+Date:   Tue, 30 Jul 2019 19:22:33 +0300
+Message-Id: <20190730162236.6063-18-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190730162236.6063-1-digetx@gmail.com>
+References: <20190730162236.6063-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190727085113.11530-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 04:51:13PM +0800, Jia-Ju Bai wrote:
-> In insert_inline_extent(), the case that compressed_size > 0 
-> and compressed_pages = NULL cannot occur, otherwise a null-pointer
-> dereference may occur on line 215:
->      cpage = compressed_pages[i];
-> 
-> To warn this incorrect case, an assertion is added.
-> Thank Qu Wenruo and David Sterba for good advice.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  fs/btrfs/inode.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index 1af069a9a0c7..21d6e2dcc25f 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -178,6 +178,9 @@ static int insert_inline_extent(struct btrfs_trans_handle *trans,
->  	size_t cur_size = size;
->  	unsigned long offset;
->  
-> +	ASSERT((compressed_size > 0 && compressed_pages) ||
-> +			(compressed_size == 0 && !compressed_pages))
+Increase sampling period by 4ms to get a nicer pow2 value, converting
+diving into shifts in the code. That's more preferable for Tegra30 that
+doesn't have hardware divider instructions because of older Cortex-A9 CPU.
+In a result boosting events are delayed by 4ms, which is not sensible in
+practice at all.
 
-Thanks. I expect that the static checking tools can be instructed to
-understand that the condition has been checked and is not missing in the
-code below. ASSERT is conditinally a BUG() wrapper, otherwise a no-op.
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/devfreq/tegra30-devfreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Btw, it's also good to check that the code compiles, the statement is
-missing semicolon.
+diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+index 8280f96f4cb9..3543fba74b52 100644
+--- a/drivers/devfreq/tegra30-devfreq.c
++++ b/drivers/devfreq/tegra30-devfreq.c
+@@ -67,7 +67,7 @@
+  * translates to 2 ^ (K_VAL + 1). ex: 2 ^ (6 + 1) = 128
+  */
+ #define ACTMON_AVERAGE_WINDOW_LOG2				6
+-#define ACTMON_SAMPLING_PERIOD					12 /* ms */
++#define ACTMON_SAMPLING_PERIOD					16 /* ms */
+ 
+ #define KHZ							1000
+ 
+-- 
+2.22.0
+
