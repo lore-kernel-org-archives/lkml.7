@@ -2,107 +2,121 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A6AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B62C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7947B206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F04206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oeNn2Nb/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oNRi4Rrq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730352AbfG3MZQ (ORCPT
+        id S1730385AbfG3MZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 08:25:16 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33490 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730316AbfG3MZP (ORCPT
+        Tue, 30 Jul 2019 08:25:39 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36026 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728534AbfG3MZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 08:25:15 -0400
-Received: by mail-pf1-f193.google.com with SMTP id g2so29768014pfq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 05:25:15 -0700 (PDT)
+        Tue, 30 Jul 2019 08:25:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id o9so23964147iom.3;
+        Tue, 30 Jul 2019 05:25:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UdO7TiN1GZWaQttAvLZ44/neyJcGu5j8j3RhNT+Sui8=;
-        b=oeNn2Nb/KW67tK/SQYA3SwA0z1uQndtVJSRu+PDEjP72OlO8KmCMDtWBV5wq5bXjh9
-         hS9nOcAhh0rZcgj0RAfW0XRibChG2g3/3zWkiH4hkx8VgHfmHWA4aM6qvQRMCbMGDSOp
-         Bo53QaBP5OkWQzpZYWoNrCGtD3zIF2iH9bYNCt0o/ZLVt1XE+gTFteVw0X0p801KmcMi
-         mIumz0AGK/+0LiHxAWX/nfQoS8Y1yP7gHMEixVeHFMyQ1tqGa9Tnh5U41MsKDVNf5llv
-         RVYHfmDG2keihY0FTtTRGgzTF4IdgXDe5G/ve9Nji1Pbk27WKRIn6biY+aN2+F66OH/R
-         oz6w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=s5yWI2xfBi7yZUvh5vbuUYKfiAIOr2+n9/J+pTBAvvA=;
+        b=oNRi4RrqZcCHcv3ihpvxRh05FVUCJujtgcfihPqzEIhibrVSyvLxH6ou+KPX3QcJW1
+         8odyqmb9Xy6OZW3Akl4mhb8QXyeta1TByczNxiawqeZqlsAEQgeNH4zWnRQNZjNaanng
+         0uyuZIy+8zTVFFxa0Ya/KrP2BWiVnBI9uP6oyFln1SImZYqFXKVsPFuT21tgQZ7JxlFX
+         Fs+CbA/+uEvCQ0ZUgz9IPY356ERlad9t/WiFeJ2j53Gucbi1JlQ9yIBQgH0c0Te24k7b
+         EffDwc1jhPKoAalhRJA+XcovRIjMe2TsRZptfp0V8HA2/1B5SE8WZ8hszhzXBdu/7690
+         DokQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=UdO7TiN1GZWaQttAvLZ44/neyJcGu5j8j3RhNT+Sui8=;
-        b=WnRcT40OIL3ce8gQsDW0n3Pm+ltFyVl0pE4FG4SjjmlOZBlhJBvpIWF+Shc/KaYWz+
-         FXgzQELp6aph0Ze6+3cenew0AggKq1VNwsKq25PkrxrTC8XrbNStIet66CaO4lGHF+ge
-         fhaFCklYB+KE95dIT9MYJgH24y2WhK/3ba5KnqzSrD3t6DzsGdp5Zx6p7XW+zyitDxtd
-         7FY0Vb/2RNNDryisoPT6BMXxd0e7RjUAJH1QaZ/GrqlD7ldPkntuULFYmlbAenUCKzhC
-         LXpyL++mBMpAyfMkNE0dVwqOhgHWoAd+QjG9M7NE3L6Dl0YFKQ9q9fZpnud7Sv5arFdF
-         RF6A==
-X-Gm-Message-State: APjAAAUZpn3X/FW8rfSUScksNdfaQyJO2vSW0SSXpS/D9G57EWkWicoO
-        eETMEvehYjyKF4tauORzd1VboA==
-X-Google-Smtp-Source: APXvYqwiIFZ1Lpnf1zrtvEq7BSLgYRy9SXqV38k99nAfJbSJqZuysqZ14yG/NTWJNUvb4F6Bw3cxBw==
-X-Received: by 2002:a63:5c7:: with SMTP id 190mr106671104pgf.67.1564489515198;
-        Tue, 30 Jul 2019 05:25:15 -0700 (PDT)
-Received: from localhost.localdomain ([45.114.72.197])
-        by smtp.gmail.com with ESMTPSA id v8sm54895462pgs.82.2019.07.30.05.25.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 30 Jul 2019 05:25:14 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     jens.wiklander@linaro.org, corbet@lwn.net, dhowells@redhat.com,
-        jejb@linux.ibm.com, jarkko.sakkinen@linux.intel.com,
-        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
-        casey@schaufler-ca.com, ard.biesheuvel@linaro.org,
-        daniel.thompson@linaro.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        tee-dev@lists.linaro.org, Sumit Garg <sumit.garg@linaro.org>
-Subject: [RFC v2 6/6] MAINTAINERS: Add entry for TEE based Trusted Keys
-Date:   Tue, 30 Jul 2019 17:53:40 +0530
-Message-Id: <1564489420-677-7-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
-References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=s5yWI2xfBi7yZUvh5vbuUYKfiAIOr2+n9/J+pTBAvvA=;
+        b=TMGbfHz7XYUaf0EEpYhojlH2AUFA8fqyYprqvHQp0O+q0TjwUdFbpgltjDLL9ujHyn
+         yeZ00voKnicZ84UCrXg6I8nSL+xZ6tvdaiYd7Bmn8Qryw+8NhG9WlsgxcuJZIvcuZB+J
+         JtHrkSSxBc4X5FV6x4qQWAoqzunbiYNj5mljYW6JnzNVi0/P5CXxlI9/t1MFRI8ANQdZ
+         wpMIEapsrfEYW7cXrkcrPqEjBI/YuhlWqPKb0mN3LTXLmLSrReCPiC5fBoQ8cYxHhb3D
+         cD5/6dvCJz7NfXVcBa7CtjQdMoxreac96H5y8a7dwievlDsY09rEbbmMquO8YCFjhHpG
+         oQIg==
+X-Gm-Message-State: APjAAAUbOB4VI52yGSCxBg4E9Ux5lxqkkngGvDEH5YFAJF1wOlefoLnN
+        wj4Dl2K7JSpkv3oJyPTAiA==
+X-Google-Smtp-Source: APXvYqyQH9tqYauuovKG4HR22AWdKr93hT9a4O67gZNyhFbLW2ujv+hKs4GCYjdavvE1y4Ujue7gVA==
+X-Received: by 2002:a6b:cd86:: with SMTP id d128mr106118586iog.234.1564489538291;
+        Tue, 30 Jul 2019 05:25:38 -0700 (PDT)
+Received: from ip-172-31-35-247.us-east-2.compute.internal (ec2-52-15-165-154.us-east-2.compute.amazonaws.com. [52.15.165.154])
+        by smtp.gmail.com with ESMTPSA id j23sm52454755ioo.6.2019.07.30.05.25.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 05:25:37 -0700 (PDT)
+From:   Rundong Ge <rdong.ge@gmail.com>
+To:     davem@davemloft.net
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, pablo@netfilter.org, kadlec@netfilter.org,
+        fw@strlen.de, roopa@cumulusnetworks.com,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, nikolay@cumulusnetworks.com,
+        linux-kernel@vger.kernel.org, rdong.ge@gmail.com
+Subject: [PATCH] bridge:fragmented packets dropped by bridge
+Date:   Tue, 30 Jul 2019 12:25:34 +0000
+Message-Id: <20190730122534.30687-1-rdong.ge@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MAINTAINERS entry for TEE based Trusted Keys framework.
+Given following setup:
+-modprobe br_netfilter
+-echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+-brctl addbr br0
+-brctl addif br0 enp2s0
+-brctl addif br0 enp3s0
+-brctl addif br0 enp6s0
+-ifconfig enp2s0 mtu 1300
+-ifconfig enp3s0 mtu 1500
+-ifconfig enp6s0 mtu 1500
+-ifconfig br0 up
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+                 multi-port
+mtu1500 - mtu1500|bridge|1500 - mtu1500
+  A                  |            B
+                   mtu1300
+
+With netfilter defragmentation/conntrack enabled, fragmented
+packets from A will be defragmented in prerouting, and refragmented
+at postrouting.
+But in this scenario the bridge found the frag_max_size(1500) is
+larger than the dst mtu stored in the fake_rtable whitch is
+always equal to the bridge's mtu 1300, then packets will be dopped.
+
+This modifies ip_skb_dst_mtu to use the out dev's mtu instead
+of bridge's mtu in bridge refragment.
+
+Signed-off-by: Rundong Ge <rdong.ge@gmail.com>
 ---
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/net/ip.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ce06877..0b61ecf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8930,6 +8930,15 @@ F:	include/keys/trusted-type.h
- F:	security/keys/trusted.c
- F:	security/keys/trusted.h
+diff --git a/include/net/ip.h b/include/net/ip.h
+index 29d89de..0512de3 100644
+--- a/include/net/ip.h
++++ b/include/net/ip.h
+@@ -450,6 +450,8 @@ static inline unsigned int ip_dst_mtu_maybe_forward(const struct dst_entry *dst,
+ static inline unsigned int ip_skb_dst_mtu(struct sock *sk,
+ 					  const struct sk_buff *skb)
+ {
++	if ((skb_dst(skb)->flags & DST_FAKE_RTABLE) && skb->dev)
++		return min(skb->dev->mtu, IP_MAX_MTU);
+ 	if (!sk || !sk_fullsock(sk) || ip_sk_use_pmtu(sk)) {
+ 		bool forwarding = IPCB(skb)->flags & IPSKB_FORWARDED;
  
-+KEYS-TEE-TRUSTED
-+M:	Sumit Garg <sumit.garg@linaro.org>
-+L:	linux-integrity@vger.kernel.org
-+L:	keyrings@vger.kernel.org
-+S:	Supported
-+F:	Documentation/security/keys/tee-trusted.rst
-+F:	include/keys/trusted_tee.h
-+F:	security/keys/trusted-keys/trusted-tee.c
-+
- KEYS/KEYRINGS:
- M:	David Howells <dhowells@redhat.com>
- L:	keyrings@vger.kernel.org
 -- 
-2.7.4
+1.8.3.1
 
