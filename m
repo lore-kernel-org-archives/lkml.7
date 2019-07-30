@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81079C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4D5C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE602089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16AA62089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbfG3HPC (ORCPT
+        id S1729947AbfG3HPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:15:02 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3206 "EHLO huawei.com"
+        Tue, 30 Jul 2019 03:15:08 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3205 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729835AbfG3HO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:14:59 -0400
+        id S1729829AbfG3HPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 03:15:02 -0400
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BCEF8578DD938B543F28;
+        by Forcepoint Email with ESMTP id B0B678234457616B7E84;
         Tue, 30 Jul 2019 15:14:56 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 30 Jul
- 2019 15:14:48 +0800
+ 2019 15:14:46 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -45,9 +46,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v5 13/24] erofs: add compression indexes support
-Date:   Tue, 30 Jul 2019 15:14:02 +0800
-Message-ID: <20190730071413.11871-14-gaoxiang25@huawei.com>
+Subject: [PATCH v5 11/24] erofs: introduce xattr & posixacl support
+Date:   Tue, 30 Jul 2019 15:14:00 +0800
+Message-ID: <20190730071413.11871-12-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190730071413.11871-1-gaoxiang25@huawei.com>
 References: <20190730071413.11871-1-gaoxiang25@huawei.com>
@@ -60,668 +61,1168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds EROFS compression indexes support,
-including legacy and compacted 2/4B indexes.
+This implements xattr and posixacl functionalities.
 
-In addition, it introduces an iterable L2P mapping
-operation called 'z_erofs_map_blocks_iter'.
+1) Inline and shared xattrs are introduced for flexibility.
 
-Compared with 'erofs_map_blocks', it avoids a number
-of redundant 'release and regrab' processes if they
-request the same meta page.
+   Specifically, if the same xattr is used for a large number of
+   inodes or the size of a xattr is so large that unsuitable to
+   inline, a shared xattr will be used instead in xattr meta.
+
+2) Add .get_acl() to read the file's acl from its xattrs to
+   make POSIX ACL usable.
+
+   Here is the on-disk detail,
+   fullname: system.posix_acl_access
+   struct erofs_xattr_entry:
+           .e_name_len = 0
+           .e_name_index = EROFS_XATTR_INDEX_POSIX_ACL_ACCESS (2)
+
+   fullname: system.posix_acl_default
+   struct erofs_xattr_entry:
+           .e_name_len = 0
+           .e_name_index = EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT (3)
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/Kconfig             |   9 +
- fs/erofs/Makefile            |   1 +
- fs/erofs/data.c              |  10 +-
- fs/erofs/inode.c             |   2 +-
- fs/erofs/internal.h          |  35 ++-
- fs/erofs/zmap.c              | 460 +++++++++++++++++++++++++++++++++++
- include/trace/events/erofs.h |  17 +-
- 7 files changed, 529 insertions(+), 5 deletions(-)
- create mode 100644 fs/erofs/zmap.c
+ fs/erofs/Kconfig    |  38 +++
+ fs/erofs/Makefile   |   1 +
+ fs/erofs/inode.c    |  14 +-
+ fs/erofs/internal.h |  16 +
+ fs/erofs/namei.c    |   6 +-
+ fs/erofs/super.c    |  77 ++++-
+ fs/erofs/xattr.c    | 700 ++++++++++++++++++++++++++++++++++++++++++++
+ fs/erofs/xattr.h    |  94 ++++++
+ 8 files changed, 943 insertions(+), 3 deletions(-)
+ create mode 100644 fs/erofs/xattr.c
+ create mode 100644 fs/erofs/xattr.h
 
 diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index c5e7c5ae026e..a475fbebb831 100644
+index 98f05043448a..c5e7c5ae026e 100644
 --- a/fs/erofs/Kconfig
 +++ b/fs/erofs/Kconfig
-@@ -72,3 +72,12 @@ config EROFS_FS_SECURITY
+@@ -34,3 +34,41 @@ config EROFS_FAULT_INJECTION
+ 	  Test EROFS to inject faults such as ENOMEM, EIO, and so on.
+ 	  If unsure, say N.
  
- 	  If you are not using a security module, say N.
- 
-+config EROFS_FS_ZIP
-+	bool "EROFS Data Compression Support"
++config EROFS_FS_XATTR
++	bool "EROFS extended attributes"
 +	depends on EROFS_FS
-+	select LZ4_DECOMPRESS
++	default y
 +	help
-+	  Enable fixed-sized output compression for EROFS.
++	  Extended attributes are name:value pairs associated with inodes by
++	  the kernel or by users (see the attr(5) manual page, or visit
++	  <http://acl.bestbits.at/> for details).
 +
-+	  If you don't want to enable compression feature, say N.
++	  If unsure, say N.
++
++config EROFS_FS_POSIX_ACL
++	bool "EROFS Access Control Lists"
++	depends on EROFS_FS_XATTR
++	select FS_POSIX_ACL
++	default y
++	help
++	  Posix Access Control Lists (ACLs) support permissions for users and
++	  groups beyond the owner/group/world scheme.
++
++	  To learn more about Access Control Lists, visit the POSIX ACLs for
++	  Linux website <http://acl.bestbits.at/>.
++
++	  If you don't know what Access Control Lists are, say N.
++
++config EROFS_FS_SECURITY
++	bool "EROFS Security Labels"
++	depends on EROFS_FS_XATTR
++	default y
++	help
++	  Security labels provide an access control facility to support Linux
++	  Security Models (LSMs) accepted by AppArmor, SELinux, Smack and TOMOYO
++	  Linux. This option enables an extended attribute handler for file
++	  security labels in the erofs filesystem, so that it requires enabling
++	  the extended attribute support in advance.
++
++	  If you are not using a security module, say N.
 +
 diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index 190a73083f23..481a966caf06 100644
+index c3f4e549ef90..190a73083f23 100644
 --- a/fs/erofs/Makefile
 +++ b/fs/erofs/Makefile
-@@ -7,4 +7,5 @@ ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
+@@ -6,4 +6,5 @@ ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
+ 
  obj-$(CONFIG_EROFS_FS) += erofs.o
  erofs-objs := super.o inode.o data.o namei.o dir.o
- erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
-+erofs-$(CONFIG_EROFS_FS_ZIP) += zmap.o
- 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index d4ecf0611f8b..1b659c222604 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -170,9 +170,15 @@ static int erofs_map_blocks_flatmode(struct inode *inode,
- int erofs_map_blocks(struct inode *inode,
- 		     struct erofs_map_blocks *map, int flags)
- {
--	if (is_inode_layout_compression(inode))
--		return -ENOTSUPP;
-+	if (unlikely(is_inode_layout_compression(inode))) {
-+		int err = z_erofs_map_blocks_iter(inode, map, flags);
- 
-+		if (map->mpage) {
-+			put_page(map->mpage);
-+			map->mpage = NULL;
-+		}
-+		return err;
-+	}
- 	return erofs_map_blocks_flatmode(inode, map, flags);
- }
++erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
  
 diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index aee53988aef5..2c771063889b 100644
+index 637bf6e4de44..aee53988aef5 100644
 --- a/fs/erofs/inode.c
 +++ b/fs/erofs/inode.c
-@@ -205,7 +205,7 @@ static int fill_inode(struct inode *inode, int isdir)
- 		}
+@@ -6,7 +6,7 @@
+  *             http://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+-#include "internal.h"
++#include "xattr.h"
  
- 		if (is_inode_layout_compression(inode)) {
--			err = -ENOTSUPP;
-+			err = z_erofs_fill_inode(inode);
- 			goto out_unlock;
- 		}
+ #include <trace/events/erofs.h>
+ 
+@@ -300,15 +300,27 @@ int erofs_getattr(const struct path *path, struct kstat *stat,
+ 
+ const struct inode_operations erofs_generic_iops = {
+ 	.getattr = erofs_getattr,
++#ifdef CONFIG_EROFS_FS_XATTR
++	.listxattr = erofs_listxattr,
++#endif
++	.get_acl = erofs_get_acl,
+ };
+ 
+ const struct inode_operations erofs_symlink_iops = {
+ 	.get_link = page_get_link,
+ 	.getattr = erofs_getattr,
++#ifdef CONFIG_EROFS_FS_XATTR
++	.listxattr = erofs_listxattr,
++#endif
++	.get_acl = erofs_get_acl,
+ };
+ 
+ const struct inode_operations erofs_fast_symlink_iops = {
+ 	.get_link = simple_get_link,
+ 	.getattr = erofs_getattr,
++#ifdef CONFIG_EROFS_FS_XATTR
++	.listxattr = erofs_listxattr,
++#endif
++	.get_acl = erofs_get_acl,
+ };
  
 diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 93221787b48d..1949677f6ac4 100644
+index 9e0ad271394b..93221787b48d 100644
 --- a/fs/erofs/internal.h
 +++ b/fs/erofs/internal.h
-@@ -172,9 +172,12 @@ static inline erofs_off_t iloc(struct erofs_sb_info *sbi, erofs_nid_t nid)
+@@ -63,6 +63,9 @@ typedef u32 erofs_blk_t;
+ struct erofs_sb_info {
+ 	u32 blocks;
+ 	u32 meta_blkaddr;
++#ifdef CONFIG_EROFS_FS_XATTR
++	u32 xattr_blkaddr;
++#endif
  
- /* atomic flag definitions */
- #define EROFS_V_EA_INITED_BIT	0
-+#define EROFS_V_Z_INITED_BIT	1
+ 	/* inode slot unit size in bit shift */
+ 	unsigned char islotbits;
+@@ -133,6 +136,8 @@ static inline void *erofs_kmalloc(struct erofs_sb_info *sbi,
+ #define EROFS_I_SB(inode) ((struct erofs_sb_info *)(inode)->i_sb->s_fs_info)
  
- /* bitlock definitions (arranged in reverse order) */
- #define EROFS_V_BL_XATTR_BIT	(BITS_PER_LONG - 1)
-+#define EROFS_V_BL_Z_BIT	(BITS_PER_LONG - 2)
+ /* Mount flags set via mount options or defaults */
++#define EROFS_MOUNT_XATTR_USER		0x00000010
++#define EROFS_MOUNT_POSIX_ACL		0x00000020
+ #define EROFS_MOUNT_FAULT_INJECTION	0x00000040
+ 
+ #define clear_opt(sbi, option)	((sbi)->mount_opt &= ~EROFS_MOUNT_##option)
+@@ -165,13 +170,24 @@ static inline erofs_off_t iloc(struct erofs_sb_info *sbi, erofs_nid_t nid)
+ 	return blknr_to_addr(sbi->meta_blkaddr) + (nid << sbi->islotbits);
+ }
+ 
++/* atomic flag definitions */
++#define EROFS_V_EA_INITED_BIT	0
 +
++/* bitlock definitions (arranged in reverse order) */
++#define EROFS_V_BL_XATTR_BIT	(BITS_PER_LONG - 1)
  struct erofs_vnode {
  	erofs_nid_t nid;
  
-@@ -188,7 +191,17 @@ struct erofs_vnode {
- 	unsigned int xattr_shared_count;
- 	unsigned int *xattr_shared_xattrs;
++	/* atomic flags (including bitlocks) */
++	unsigned long flags;
++
+ 	unsigned char datamode;
+ 	unsigned char inode_isize;
+ 	unsigned short xattr_isize;
  
--	erofs_blk_t raw_blkaddr;
-+	union {
-+		erofs_blk_t raw_blkaddr;
-+#ifdef CONFIG_EROFS_FS_ZIP
-+		struct {
-+			unsigned short z_advise;
-+			unsigned char  z_algorithmtype[2];
-+			unsigned char  z_logical_clusterbits;
-+			unsigned char  z_physical_clusterbits[2];
-+		};
-+#endif	/* CONFIG_EROFS_FS_ZIP */
-+	};
++	unsigned int xattr_shared_count;
++	unsigned int *xattr_shared_xattrs;
++
+ 	erofs_blk_t raw_blkaddr;
  	/* the corresponding vfs inode */
  	struct inode vfs_inode;
+diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
+index 73bf61637907..ccce53d46547 100644
+--- a/fs/erofs/namei.c
++++ b/fs/erofs/namei.c
+@@ -6,7 +6,7 @@
+  *             http://www.huawei.com/
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+-#include "internal.h"
++#include "xattr.h"
+ 
+ #include <trace/events/erofs.h>
+ 
+@@ -243,5 +243,9 @@ static struct dentry *erofs_lookup(struct inode *dir,
+ const struct inode_operations erofs_dir_iops = {
+ 	.lookup = erofs_lookup,
+ 	.getattr = erofs_getattr,
++#ifdef CONFIG_EROFS_FS_XATTR
++	.listxattr = erofs_listxattr,
++#endif
++	.get_acl = erofs_get_acl,
  };
-@@ -261,6 +274,10 @@ enum {
- #define EROFS_MAP_MAPPED	(1 << BH_Mapped)
- /* Located in metadata (could be copied from bd_inode) */
- #define EROFS_MAP_META		(1 << BH_Meta)
-+/* The extent has been compressed */
-+#define EROFS_MAP_ZIPPED	(1 << BH_Zipped)
-+/* The length of extent is full */
-+#define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
  
- struct erofs_map_blocks {
- 	erofs_off_t m_pa, m_la;
-@@ -274,6 +291,22 @@ struct erofs_map_blocks {
- /* Flags used by erofs_map_blocks() */
- #define EROFS_GET_BLOCKS_RAW    0x0001
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index cd4bd6f48173..561ae6f7fe13 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -11,7 +11,7 @@
+ #include <linux/statfs.h>
+ #include <linux/parser.h>
+ #include <linux/seq_file.h>
+-#include "internal.h"
++#include "xattr.h"
  
-+/* zmap.c */
-+#ifdef CONFIG_EROFS_FS_ZIP
-+int z_erofs_fill_inode(struct inode *inode);
-+int z_erofs_map_blocks_iter(struct inode *inode,
-+			    struct erofs_map_blocks *map,
-+			    int flags);
-+#else
-+static inline int z_erofs_fill_inode(struct inode *inode) { return -ENOTSUPP; }
-+static inline int z_erofs_map_blocks_iter(struct inode *inode,
-+					  struct erofs_map_blocks *map,
-+					  int flags)
-+{
-+	return -ENOTSUPP;
-+}
-+#endif	/* !CONFIG_EROFS_FS_ZIP */
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/erofs.h>
+@@ -61,6 +61,8 @@ static void free_inode(struct inode *inode)
+ 	if (is_inode_fast_symlink(inode))
+ 		kfree(inode->i_link);
+ 
++	kfree(vi->xattr_shared_xattrs);
 +
- /* data.c */
- static inline struct bio *erofs_grab_bio(struct super_block *sb,
- 					 erofs_blk_t blkaddr,
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+ 	kmem_cache_free(erofs_inode_cachep, vi);
+ }
+ 
+@@ -118,6 +120,9 @@ static int superblock_read(struct super_block *sb)
+ 
+ 	sbi->blocks = le32_to_cpu(layout->blocks);
+ 	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
++#ifdef CONFIG_EROFS_FS_XATTR
++	sbi->xattr_blkaddr = le32_to_cpu(layout->xattr_blkaddr);
++#endif
+ 	sbi->islotbits = ffs(sizeof(struct erofs_inode_v1)) - 1;
+ 	sbi->root_nid = le16_to_cpu(layout->root_nid);
+ 	sbi->inos = le64_to_cpu(layout->inos);
+@@ -195,14 +200,28 @@ static unsigned int erofs_get_fault_rate(struct erofs_sb_info *sbi)
+ /* set up default EROFS parameters */
+ static void default_options(struct erofs_sb_info *sbi)
+ {
++#ifdef CONFIG_EROFS_FS_XATTR
++	set_opt(sbi, XATTR_USER);
++#endif
++#ifdef CONFIG_EROFS_FS_POSIX_ACL
++	set_opt(sbi, POSIX_ACL);
++#endif
+ }
+ 
+ enum {
++	Opt_user_xattr,
++	Opt_nouser_xattr,
++	Opt_acl,
++	Opt_noacl,
+ 	Opt_fault_injection,
+ 	Opt_err
+ };
+ 
+ static match_table_t erofs_tokens = {
++	{Opt_user_xattr, "user_xattr"},
++	{Opt_nouser_xattr, "nouser_xattr"},
++	{Opt_acl, "acl"},
++	{Opt_noacl, "noacl"},
+ 	{Opt_fault_injection, "fault_injection=%u"},
+ 	{Opt_err, NULL}
+ };
+@@ -226,6 +245,36 @@ static int parse_options(struct super_block *sb, char *options)
+ 		token = match_token(p, erofs_tokens, args);
+ 
+ 		switch (token) {
++#ifdef CONFIG_EROFS_FS_XATTR
++		case Opt_user_xattr:
++			set_opt(EROFS_SB(sb), XATTR_USER);
++			break;
++		case Opt_nouser_xattr:
++			clear_opt(EROFS_SB(sb), XATTR_USER);
++			break;
++#else
++		case Opt_user_xattr:
++			infoln("user_xattr options not supported");
++			break;
++		case Opt_nouser_xattr:
++			infoln("nouser_xattr options not supported");
++			break;
++#endif
++#ifdef CONFIG_EROFS_FS_POSIX_ACL
++		case Opt_acl:
++			set_opt(EROFS_SB(sb), POSIX_ACL);
++			break;
++		case Opt_noacl:
++			clear_opt(EROFS_SB(sb), POSIX_ACL);
++			break;
++#else
++		case Opt_acl:
++			infoln("acl options not supported");
++			break;
++		case Opt_noacl:
++			infoln("noacl options not supported");
++			break;
++#endif
+ 		case Opt_fault_injection:
+ 			err = erofs_build_fault_attr(EROFS_SB(sb), args);
+ 			if (err)
+@@ -270,6 +319,10 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ 
+ 	sb->s_op = &erofs_sops;
+ 
++#ifdef CONFIG_EROFS_FS_XATTR
++	sb->s_xattr = erofs_xattr_handlers;
++#endif
++
+ 	/* set erofs default mount options */
+ 	default_options(sbi);
+ 
+@@ -280,6 +333,11 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (!silent)
+ 		infoln("root inode @ nid %llu", ROOT_NID(sbi));
+ 
++	if (test_opt(sbi, POSIX_ACL))
++		sb->s_flags |= SB_POSIXACL;
++	else
++		sb->s_flags &= ~SB_POSIXACL;
++
+ 	/* get the root inode */
+ 	inode = erofs_iget(sb, ROOT_NID(sbi), true);
+ 	if (IS_ERR(inode))
+@@ -393,6 +451,18 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
+ {
+ 	struct erofs_sb_info *sbi __maybe_unused = EROFS_SB(root->d_sb);
+ 
++#ifdef CONFIG_EROFS_FS_XATTR
++	if (test_opt(sbi, XATTR_USER))
++		seq_puts(seq, ",user_xattr");
++	else
++		seq_puts(seq, ",nouser_xattr");
++#endif
++#ifdef CONFIG_EROFS_FS_POSIX_ACL
++	if (test_opt(sbi, POSIX_ACL))
++		seq_puts(seq, ",acl");
++	else
++		seq_puts(seq, ",noacl");
++#endif
+ 	if (test_opt(sbi, FAULT_INJECTION))
+ 		seq_printf(seq, ",fault_injection=%u",
+ 			   erofs_get_fault_rate(sbi));
+@@ -411,6 +481,11 @@ static int erofs_remount(struct super_block *sb, int *flags, char *data)
+ 	if (err)
+ 		goto out;
+ 
++	if (test_opt(sbi, POSIX_ACL))
++		sb->s_flags |= SB_POSIXACL;
++	else
++		sb->s_flags &= ~SB_POSIXACL;
++
+ 	*flags |= SB_RDONLY;
+ 	return 0;
+ out:
+diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
 new file mode 100644
-index 000000000000..8cd55c33f50b
+index 000000000000..148ceaf72790
 --- /dev/null
-+++ b/fs/erofs/zmap.c
-@@ -0,0 +1,460 @@
++++ b/fs/erofs/xattr.c
+@@ -0,0 +1,700 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * linux/fs/erofs/zmap.c
++ * linux/fs/erofs/xattr.c
 + *
-+ * Copyright (C) 2018-2019 HUAWEI, Inc.
++ * Copyright (C) 2017-2018 HUAWEI, Inc.
 + *             http://www.huawei.com/
 + * Created by Gao Xiang <gaoxiang25@huawei.com>
 + */
-+#include "internal.h"
-+#include <asm/unaligned.h>
-+#include <trace/events/erofs.h>
++#include <linux/security.h>
++#include "xattr.h"
 +
-+int z_erofs_fill_inode(struct inode *inode)
++struct xattr_iter {
++	struct super_block *sb;
++	struct page *page;
++	void *kaddr;
++
++	erofs_blk_t blkaddr;
++	unsigned int ofs;
++};
++
++static inline void xattr_iter_end(struct xattr_iter *it, bool atomic)
 +{
-+	struct erofs_vnode *const vi = EROFS_V(inode);
++	/* the only user of kunmap() is 'init_inode_xattrs' */
++	if (unlikely(!atomic))
++		kunmap(it->page);
++	else
++		kunmap_atomic(it->kaddr);
 +
-+	if (vi->datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY) {
-+		vi->z_advise = 0;
-+		vi->z_algorithmtype[0] = 0;
-+		vi->z_algorithmtype[1] = 0;
-+		vi->z_logical_clusterbits = LOG_BLOCK_SIZE;
-+		vi->z_physical_clusterbits[0] = vi->z_logical_clusterbits;
-+		vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits;
-+		set_bit(EROFS_V_Z_INITED_BIT, &vi->flags);
-+	}
-+	return -ENOTSUPP;
++	unlock_page(it->page);
++	put_page(it->page);
 +}
 +
-+static int fill_inode_lazy(struct inode *inode)
++static inline void xattr_iter_end_final(struct xattr_iter *it)
++{
++	if (!it->page)
++		return;
++
++	xattr_iter_end(it, true);
++}
++
++static int init_inode_xattrs(struct inode *inode)
++{
++	struct erofs_vnode *const vi = EROFS_V(inode);
++	struct xattr_iter it;
++	unsigned int i;
++	struct erofs_xattr_ibody_header *ih;
++	struct super_block *sb;
++	struct erofs_sb_info *sbi;
++	bool atomic_map;
++	int ret = 0;
++
++	/* the most case is that xattrs of this inode are initialized. */
++	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
++		return 0;
++
++	if (wait_on_bit_lock(&vi->flags, EROFS_V_BL_XATTR_BIT, TASK_KILLABLE))
++		return -ERESTARTSYS;
++
++	/* someone has initialized xattrs for us? */
++	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
++		goto out_unlock;
++
++	/*
++	 * bypass all xattr operations if ->xattr_isize is not greater than
++	 * sizeof(struct erofs_xattr_ibody_header), in detail:
++	 * 1) it is not enough to contain erofs_xattr_ibody_header then
++	 *    ->xattr_isize should be 0 (it means no xattr);
++	 * 2) it is just to contain erofs_xattr_ibody_header, which is on-disk
++	 *    undefined right now (maybe use later with some new sb feature).
++	 */
++	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
++		errln("xattr_isize %d of nid %llu is not supported yet",
++		      vi->xattr_isize, vi->nid);
++		ret = -ENOTSUPP;
++		goto out_unlock;
++	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
++		if (unlikely(vi->xattr_isize)) {
++			DBG_BUGON(1);
++			ret = -EIO;
++			goto out_unlock;	/* xattr ondisk layout error */
++		}
++		ret = -ENOATTR;
++		goto out_unlock;
++	}
++
++	sb = inode->i_sb;
++	sbi = EROFS_SB(sb);
++	it.blkaddr = erofs_blknr(iloc(sbi, vi->nid) + vi->inode_isize);
++	it.ofs = erofs_blkoff(iloc(sbi, vi->nid) + vi->inode_isize);
++
++	it.page = erofs_get_inline_page(inode, it.blkaddr);
++	if (IS_ERR(it.page)) {
++		ret = PTR_ERR(it.page);
++		goto out_unlock;
++	}
++
++	/* read in shared xattr array (non-atomic, see kmalloc below) */
++	it.kaddr = kmap(it.page);
++	atomic_map = false;
++
++	ih = (struct erofs_xattr_ibody_header *)(it.kaddr + it.ofs);
++
++	vi->xattr_shared_count = ih->h_shared_count;
++	vi->xattr_shared_xattrs = kmalloc_array(vi->xattr_shared_count,
++						sizeof(uint), GFP_KERNEL);
++	if (!vi->xattr_shared_xattrs) {
++		xattr_iter_end(&it, atomic_map);
++		ret = -ENOMEM;
++		goto out_unlock;
++	}
++
++	/* let's skip ibody header */
++	it.ofs += sizeof(struct erofs_xattr_ibody_header);
++
++	for (i = 0; i < vi->xattr_shared_count; ++i) {
++		if (unlikely(it.ofs >= EROFS_BLKSIZ)) {
++			/* cannot be unaligned */
++			BUG_ON(it.ofs != EROFS_BLKSIZ);
++			xattr_iter_end(&it, atomic_map);
++
++			it.page = erofs_get_meta_page(sb, ++it.blkaddr,
++						      S_ISDIR(inode->i_mode));
++			if (IS_ERR(it.page)) {
++				kfree(vi->xattr_shared_xattrs);
++				vi->xattr_shared_xattrs = NULL;
++				ret = PTR_ERR(it.page);
++				goto out_unlock;
++			}
++
++			it.kaddr = kmap_atomic(it.page);
++			atomic_map = true;
++			it.ofs = 0;
++		}
++		vi->xattr_shared_xattrs[i] =
++			le32_to_cpu(*(__le32 *)(it.kaddr + it.ofs));
++		it.ofs += sizeof(__le32);
++	}
++	xattr_iter_end(&it, atomic_map);
++
++	set_bit(EROFS_V_EA_INITED_BIT, &vi->flags);
++
++out_unlock:
++	clear_and_wake_up_bit(EROFS_V_BL_XATTR_BIT, &vi->flags);
++	return ret;
++}
++
++/*
++ * the general idea for these return values is
++ * if    0 is returned, go on processing the current xattr;
++ *       1 (> 0) is returned, skip this round to process the next xattr;
++ *    -err (< 0) is returned, an error (maybe ENOXATTR) occurred
++ *                            and need to be handled
++ */
++struct xattr_iter_handlers {
++	int (*entry)(struct xattr_iter *_it, struct erofs_xattr_entry *entry);
++	int (*name)(struct xattr_iter *_it, unsigned int processed, char *buf,
++		    unsigned int len);
++	int (*alloc_buffer)(struct xattr_iter *_it, unsigned int value_sz);
++	void (*value)(struct xattr_iter *_it, unsigned int processed, char *buf,
++		      unsigned int len);
++};
++
++static inline int xattr_iter_fixup(struct xattr_iter *it)
++{
++	if (it->ofs < EROFS_BLKSIZ)
++		return 0;
++
++	xattr_iter_end(it, true);
++
++	it->blkaddr += erofs_blknr(it->ofs);
++
++	it->page = erofs_get_meta_page(it->sb, it->blkaddr, false);
++	if (IS_ERR(it->page)) {
++		int err = PTR_ERR(it->page);
++
++		it->page = NULL;
++		return err;
++	}
++
++	it->kaddr = kmap_atomic(it->page);
++	it->ofs = erofs_blkoff(it->ofs);
++	return 0;
++}
++
++static int inline_xattr_iter_begin(struct xattr_iter *it,
++				   struct inode *inode)
++{
++	struct erofs_vnode *const vi = EROFS_V(inode);
++	struct erofs_sb_info *const sbi = EROFS_SB(inode->i_sb);
++	unsigned int xattr_header_sz, inline_xattr_ofs;
++
++	xattr_header_sz = inlinexattr_header_size(inode);
++	if (unlikely(xattr_header_sz >= vi->xattr_isize)) {
++		BUG_ON(xattr_header_sz > vi->xattr_isize);
++		return -ENOATTR;
++	}
++
++	inline_xattr_ofs = vi->inode_isize + xattr_header_sz;
++
++	it->blkaddr = erofs_blknr(iloc(sbi, vi->nid) + inline_xattr_ofs);
++	it->ofs = erofs_blkoff(iloc(sbi, vi->nid) + inline_xattr_ofs);
++
++	it->page = erofs_get_inline_page(inode, it->blkaddr);
++	if (IS_ERR(it->page))
++		return PTR_ERR(it->page);
++
++	it->kaddr = kmap_atomic(it->page);
++	return vi->xattr_isize - xattr_header_sz;
++}
++
++/*
++ * Regardless of success or failure, `xattr_foreach' will end up with
++ * `ofs' pointing to the next xattr item rather than an arbitrary position.
++ */
++static int xattr_foreach(struct xattr_iter *it,
++			 const struct xattr_iter_handlers *op,
++			 unsigned int *tlimit)
++{
++	struct erofs_xattr_entry entry;
++	unsigned int value_sz, processed, slice;
++	int err;
++
++	/* 0. fixup blkaddr, ofs, ipage */
++	err = xattr_iter_fixup(it);
++	if (err)
++		return err;
++
++	/*
++	 * 1. read xattr entry to the memory,
++	 *    since we do EROFS_XATTR_ALIGN
++	 *    therefore entry should be in the page
++	 */
++	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
++	if (tlimit) {
++		unsigned int entry_sz = EROFS_XATTR_ENTRY_SIZE(&entry);
++
++		BUG_ON(*tlimit < entry_sz);
++		*tlimit -= entry_sz;
++	}
++
++	it->ofs += sizeof(struct erofs_xattr_entry);
++	value_sz = le16_to_cpu(entry.e_value_size);
++
++	/* handle entry */
++	err = op->entry(it, &entry);
++	if (err) {
++		it->ofs += entry.e_name_len + value_sz;
++		goto out;
++	}
++
++	/* 2. handle xattr name (ofs will finally be at the end of name) */
++	processed = 0;
++
++	while (processed < entry.e_name_len) {
++		if (it->ofs >= EROFS_BLKSIZ) {
++			BUG_ON(it->ofs > EROFS_BLKSIZ);
++
++			err = xattr_iter_fixup(it);
++			if (err)
++				goto out;
++			it->ofs = 0;
++		}
++
++		slice = min_t(unsigned int, PAGE_SIZE - it->ofs,
++			      entry.e_name_len - processed);
++
++		/* handle name */
++		err = op->name(it, processed, it->kaddr + it->ofs, slice);
++		if (err) {
++			it->ofs += entry.e_name_len - processed + value_sz;
++			goto out;
++		}
++
++		it->ofs += slice;
++		processed += slice;
++	}
++
++	/* 3. handle xattr value */
++	processed = 0;
++
++	if (op->alloc_buffer) {
++		err = op->alloc_buffer(it, value_sz);
++		if (err) {
++			it->ofs += value_sz;
++			goto out;
++		}
++	}
++
++	while (processed < value_sz) {
++		if (it->ofs >= EROFS_BLKSIZ) {
++			BUG_ON(it->ofs > EROFS_BLKSIZ);
++
++			err = xattr_iter_fixup(it);
++			if (err)
++				goto out;
++			it->ofs = 0;
++		}
++
++		slice = min_t(unsigned int, PAGE_SIZE - it->ofs,
++			      value_sz - processed);
++		op->value(it, processed, it->kaddr + it->ofs, slice);
++		it->ofs += slice;
++		processed += slice;
++	}
++
++out:
++	/* xattrs should be 4-byte aligned (on-disk constraint) */
++	it->ofs = EROFS_XATTR_ALIGN(it->ofs);
++	return err < 0 ? err : 0;
++}
++
++struct getxattr_iter {
++	struct xattr_iter it;
++
++	char *buffer;
++	int buffer_size, index;
++	struct qstr name;
++};
++
++static int xattr_entrymatch(struct xattr_iter *_it,
++			    struct erofs_xattr_entry *entry)
++{
++	struct getxattr_iter *it = container_of(_it, struct getxattr_iter, it);
++
++	return (it->index != entry->e_name_index ||
++		it->name.len != entry->e_name_len) ? -ENOATTR : 0;
++}
++
++static int xattr_namematch(struct xattr_iter *_it,
++			   unsigned int processed, char *buf, unsigned int len)
++{
++	struct getxattr_iter *it = container_of(_it, struct getxattr_iter, it);
++
++	return memcmp(buf, it->name.name + processed, len) ? -ENOATTR : 0;
++}
++
++static int xattr_checkbuffer(struct xattr_iter *_it,
++			     unsigned int value_sz)
++{
++	struct getxattr_iter *it = container_of(_it, struct getxattr_iter, it);
++	int err = it->buffer_size < value_sz ? -ERANGE : 0;
++
++	it->buffer_size = value_sz;
++	return !it->buffer ? 1 : err;
++}
++
++static void xattr_copyvalue(struct xattr_iter *_it,
++			    unsigned int processed,
++			    char *buf, unsigned int len)
++{
++	struct getxattr_iter *it = container_of(_it, struct getxattr_iter, it);
++
++	memcpy(it->buffer + processed, buf, len);
++}
++
++static const struct xattr_iter_handlers find_xattr_handlers = {
++	.entry = xattr_entrymatch,
++	.name = xattr_namematch,
++	.alloc_buffer = xattr_checkbuffer,
++	.value = xattr_copyvalue
++};
++
++static int inline_getxattr(struct inode *inode, struct getxattr_iter *it)
++{
++	int ret;
++	unsigned int remaining;
++
++	ret = inline_xattr_iter_begin(&it->it, inode);
++	if (ret < 0)
++		return ret;
++
++	remaining = ret;
++	while (remaining) {
++		ret = xattr_foreach(&it->it, &find_xattr_handlers, &remaining);
++		if (ret != -ENOATTR)
++			break;
++	}
++	xattr_iter_end_final(&it->it);
++
++	return ret ? ret : it->buffer_size;
++}
++
++static int shared_getxattr(struct inode *inode, struct getxattr_iter *it)
 +{
 +	struct erofs_vnode *const vi = EROFS_V(inode);
 +	struct super_block *const sb = inode->i_sb;
-+	int err;
-+	erofs_off_t pos;
-+	struct page *page;
-+	void *kaddr;
-+	struct z_erofs_map_header *h;
++	struct erofs_sb_info *const sbi = EROFS_SB(sb);
++	unsigned int i;
++	int ret = -ENOATTR;
 +
-+	if (test_bit(EROFS_V_Z_INITED_BIT, &vi->flags))
-+		return 0;
++	for (i = 0; i < vi->xattr_shared_count; ++i) {
++		erofs_blk_t blkaddr =
++			xattrblock_addr(sbi, vi->xattr_shared_xattrs[i]);
 +
-+	if (wait_on_bit_lock(&vi->flags, EROFS_V_BL_Z_BIT, TASK_KILLABLE))
-+		return -ERESTARTSYS;
++		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
 +
-+	err = 0;
-+	if (test_bit(EROFS_V_Z_INITED_BIT, &vi->flags))
-+		goto out_unlock;
++		if (!i || blkaddr != it->it.blkaddr) {
++			if (i)
++				xattr_iter_end(&it->it, true);
 +
-+	DBG_BUGON(vi->datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY);
++			it->it.page = erofs_get_meta_page(sb, blkaddr, false);
++			if (IS_ERR(it->it.page))
++				return PTR_ERR(it->it.page);
 +
-+	pos = ALIGN(iloc(EROFS_SB(sb), vi->nid) + vi->inode_isize +
-+		    vi->xattr_isize, 8);
-+	page = erofs_get_meta_page(sb, erofs_blknr(pos), false);
-+	if (IS_ERR(page)) {
-+		err = PTR_ERR(page);
-+		goto out_unlock;
-+	}
-+
-+	kaddr = kmap_atomic(page);
-+
-+	h = kaddr + erofs_blkoff(pos);
-+	vi->z_advise = le16_to_cpu(h->h_advise);
-+	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
-+	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
-+
-+	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
-+		errln("unknown compression format %u for nid %llu, please upgrade kernel",
-+		      vi->z_algorithmtype[0], vi->nid);
-+		err = -ENOTSUPP;
-+		goto unmap_done;
-+	}
-+
-+	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
-+	vi->z_physical_clusterbits[0] = vi->z_logical_clusterbits +
-+					((h->h_clusterbits >> 3) & 3);
-+
-+	if (vi->z_physical_clusterbits[0] != LOG_BLOCK_SIZE) {
-+		errln("unsupported physical clusterbits %u for nid %llu, please upgrade kernel",
-+		      vi->z_physical_clusterbits[0], vi->nid);
-+		err = -ENOTSUPP;
-+		goto unmap_done;
-+	}
-+
-+	vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits +
-+					((h->h_clusterbits >> 5) & 7);
-+unmap_done:
-+	kunmap_atomic(kaddr);
-+	unlock_page(page);
-+	put_page(page);
-+
-+	set_bit(EROFS_V_Z_INITED_BIT, &vi->flags);
-+out_unlock:
-+	clear_and_wake_up_bit(EROFS_V_BL_Z_BIT, &vi->flags);
-+	return err;
-+}
-+
-+struct z_erofs_maprecorder {
-+	struct inode *inode;
-+	struct erofs_map_blocks *map;
-+	void *kaddr;
-+
-+	unsigned long lcn;
-+	/* compression extent information gathered */
-+	u8  type;
-+	u16 clusterofs;
-+	u16 delta[2];
-+	erofs_blk_t pblk;
-+};
-+
-+static int z_erofs_reload_indexes(struct z_erofs_maprecorder *m,
-+				  erofs_blk_t eblk)
-+{
-+	struct super_block *const sb = m->inode->i_sb;
-+	struct erofs_map_blocks *const map = m->map;
-+	struct page *mpage = map->mpage;
-+
-+	if (mpage) {
-+		if (mpage->index == eblk) {
-+			if (!m->kaddr)
-+				m->kaddr = kmap_atomic(mpage);
-+			return 0;
++			it->it.kaddr = kmap_atomic(it->it.page);
++			it->it.blkaddr = blkaddr;
 +		}
 +
-+		if (m->kaddr) {
-+			kunmap_atomic(m->kaddr);
-+			m->kaddr = NULL;
-+		}
-+		put_page(mpage);
++		ret = xattr_foreach(&it->it, &find_xattr_handlers, NULL);
++		if (ret != -ENOATTR)
++			break;
 +	}
++	if (vi->xattr_shared_count)
++		xattr_iter_end_final(&it->it);
 +
-+	mpage = erofs_get_meta_page(sb, eblk, false);
-+	if (IS_ERR(mpage)) {
-+		map->mpage = NULL;
-+		return PTR_ERR(mpage);
-+	}
-+	m->kaddr = kmap_atomic(mpage);
-+	unlock_page(mpage);
-+	map->mpage = mpage;
-+	return 0;
++	return ret ? ret : it->buffer_size;
 +}
 +
-+static int vle_legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
-+					     unsigned long lcn)
++static bool erofs_xattr_user_list(struct dentry *dentry)
 +{
-+	struct inode *const inode = m->inode;
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+	const erofs_off_t ibase = iloc(EROFS_I_SB(inode), vi->nid);
-+	const erofs_off_t pos =
-+		Z_EROFS_VLE_LEGACY_INDEX_ALIGN(ibase + vi->inode_isize +
-+					       vi->xattr_isize) +
-+		lcn * sizeof(struct z_erofs_vle_decompressed_index);
-+	struct z_erofs_vle_decompressed_index *di;
-+	unsigned int advise, type;
-+	int err;
-+
-+	err = z_erofs_reload_indexes(m, erofs_blknr(pos));
-+	if (err)
-+		return err;
-+
-+	m->lcn = lcn;
-+	di = m->kaddr + erofs_blkoff(pos);
-+
-+	advise = le16_to_cpu(di->di_advise);
-+	type = (advise >> Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT) &
-+		((1 << Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS) - 1);
-+	switch (type) {
-+	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
-+		m->clusterofs = 1 << vi->z_logical_clusterbits;
-+		m->delta[0] = le16_to_cpu(di->di_u.delta[0]);
-+		m->delta[1] = le16_to_cpu(di->di_u.delta[1]);
-+		break;
-+	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
-+	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-+		m->clusterofs = le16_to_cpu(di->di_clusterofs);
-+		m->pblk = le32_to_cpu(di->di_u.blkaddr);
-+		break;
-+	default:
-+		DBG_BUGON(1);
-+		return -EIO;
-+	}
-+	m->type = type;
-+	return 0;
++	return test_opt(EROFS_SB(dentry->d_sb), XATTR_USER);
 +}
 +
-+static unsigned int decode_compactedbits(unsigned int lobits,
-+					 unsigned int lomask,
-+					 u8 *in, unsigned int pos, u8 *type)
++static bool erofs_xattr_trusted_list(struct dentry *dentry)
 +{
-+	const unsigned int v = get_unaligned_le32(in + pos / 8) >> (pos & 7);
-+	const unsigned int lo = v & lomask;
-+
-+	*type = (v >> lobits) & 3;
-+	return lo;
++	return capable(CAP_SYS_ADMIN);
 +}
 +
-+static int unpack_compacted_index(struct z_erofs_maprecorder *m,
-+				  unsigned int amortizedshift,
-+				  unsigned int eofs)
++int erofs_getxattr(struct inode *inode, int index,
++		   const char *name,
++		   void *buffer, size_t buffer_size)
 +{
-+	struct erofs_vnode *const vi = EROFS_V(m->inode);
-+	const unsigned int lclusterbits = vi->z_logical_clusterbits;
-+	const unsigned int lomask = (1 << lclusterbits) - 1;
-+	unsigned int vcnt, base, lo, encodebits, nblk;
-+	int i;
-+	u8 *in, type;
++	int ret;
++	struct getxattr_iter it;
 +
-+	if (1 << amortizedshift == 4)
-+		vcnt = 2;
-+	else if (1 << amortizedshift == 2 && lclusterbits == 12)
-+		vcnt = 16;
-+	else
-+		return -ENOTSUPP;
-+
-+	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
-+	base = round_down(eofs, vcnt << amortizedshift);
-+	in = m->kaddr + base;
-+
-+	i = (eofs - base) >> amortizedshift;
-+
-+	lo = decode_compactedbits(lclusterbits, lomask,
-+				  in, encodebits * i, &type);
-+	m->type = type;
-+	if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
-+		m->clusterofs = 1 << lclusterbits;
-+		if (i + 1 != vcnt) {
-+			m->delta[0] = lo;
-+			return 0;
-+		}
-+		/*
-+		 * since the last lcluster in the pack is special,
-+		 * of which lo saves delta[1] rather than delta[0].
-+		 * Hence, get delta[0] by the previous lcluster indirectly.
-+		 */
-+		lo = decode_compactedbits(lclusterbits, lomask,
-+					  in, encodebits * (i - 1), &type);
-+		if (type != Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
-+			lo = 0;
-+		m->delta[0] = lo + 1;
-+		return 0;
-+	}
-+	m->clusterofs = lo;
-+	m->delta[0] = 0;
-+	/* figout out blkaddr (pblk) for HEAD lclusters */
-+	nblk = 1;
-+	while (i > 0) {
-+		--i;
-+		lo = decode_compactedbits(lclusterbits, lomask,
-+					  in, encodebits * i, &type);
-+		if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
-+			i -= lo;
-+
-+		if (i >= 0)
-+			++nblk;
-+	}
-+	in += (vcnt << amortizedshift) - sizeof(__le32);
-+	m->pblk = le32_to_cpu(*(__le32 *)in) + nblk;
-+	return 0;
-+}
-+
-+static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
-+					    unsigned long lcn)
-+{
-+	struct inode *const inode = m->inode;
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+	const unsigned int lclusterbits = vi->z_logical_clusterbits;
-+	const erofs_off_t ebase = ALIGN(iloc(EROFS_I_SB(inode), vi->nid) +
-+					vi->inode_isize + vi->xattr_isize, 8) +
-+		sizeof(struct z_erofs_map_header);
-+	const unsigned int totalidx = DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
-+	unsigned int compacted_4b_initial, compacted_2b;
-+	unsigned int amortizedshift;
-+	erofs_off_t pos;
-+	int err;
-+
-+	if (lclusterbits != 12)
-+		return -ENOTSUPP;
-+
-+	if (lcn >= totalidx)
++	if (unlikely(!name))
 +		return -EINVAL;
 +
-+	m->lcn = lcn;
-+	/* used to align to 32-byte (compacted_2b) alignment */
-+	compacted_4b_initial = (32 - ebase % 32) / 4;
-+	if (compacted_4b_initial == 32 / 4)
-+		compacted_4b_initial = 0;
++	ret = init_inode_xattrs(inode);
++	if (ret)
++		return ret;
 +
-+	if (vi->z_advise & Z_EROFS_ADVISE_COMPACTED_2B)
-+		compacted_2b = rounddown(totalidx - compacted_4b_initial, 16);
-+	else
-+		compacted_2b = 0;
++	it.index = index;
 +
-+	pos = ebase;
-+	if (lcn < compacted_4b_initial) {
-+		amortizedshift = 2;
-+		goto out;
-+	}
-+	pos += compacted_4b_initial * 4;
-+	lcn -= compacted_4b_initial;
++	it.name.len = strlen(name);
++	if (it.name.len > EROFS_NAME_LEN)
++		return -ERANGE;
++	it.name.name = name;
 +
-+	if (lcn < compacted_2b) {
-+		amortizedshift = 1;
-+		goto out;
-+	}
-+	pos += compacted_2b * 2;
-+	lcn -= compacted_2b;
-+	amortizedshift = 2;
-+out:
-+	pos += lcn * (1 << amortizedshift);
-+	err = z_erofs_reload_indexes(m, erofs_blknr(pos));
-+	if (err)
-+		return err;
-+	return unpack_compacted_index(m, amortizedshift, erofs_blkoff(pos));
++	it.buffer = buffer;
++	it.buffer_size = buffer_size;
++
++	it.it.sb = inode->i_sb;
++	ret = inline_getxattr(inode, &it);
++	if (ret == -ENOATTR)
++		ret = shared_getxattr(inode, &it);
++	return ret;
 +}
 +
-+static int vle_load_cluster_from_disk(struct z_erofs_maprecorder *m,
-+				      unsigned int lcn)
++static int erofs_xattr_generic_get(const struct xattr_handler *handler,
++				   struct dentry *unused, struct inode *inode,
++				   const char *name, void *buffer, size_t size)
 +{
-+	const unsigned int datamode = EROFS_V(m->inode)->datamode;
++	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
 +
-+	if (datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY)
-+		return vle_legacy_load_cluster_from_disk(m, lcn);
-+
-+	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
-+		return compacted_load_cluster_from_disk(m, lcn);
-+
-+	return -EINVAL;
-+}
-+
-+static int vle_extent_lookback(struct z_erofs_maprecorder *m,
-+			       unsigned int lookback_distance)
-+{
-+	struct erofs_vnode *const vi = EROFS_V(m->inode);
-+	struct erofs_map_blocks *const map = m->map;
-+	const unsigned int lclusterbits = vi->z_logical_clusterbits;
-+	unsigned long lcn = m->lcn;
-+	int err;
-+
-+	if (lcn < lookback_distance) {
-+		DBG_BUGON(1);
-+		return -EIO;
-+	}
-+
-+	/* load extent head logical cluster if needed */
-+	lcn -= lookback_distance;
-+	err = vle_load_cluster_from_disk(m, lcn);
-+	if (err)
-+		return err;
-+
-+	switch (m->type) {
-+	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
-+		return vle_extent_lookback(m, m->delta[0]);
-+	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
-+		map->m_flags &= ~EROFS_MAP_ZIPPED;
-+		/* fallthrough */
-+	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-+		map->m_la = (lcn << lclusterbits) | m->clusterofs;
++	switch (handler->flags) {
++	case EROFS_XATTR_INDEX_USER:
++		if (!test_opt(sbi, XATTR_USER))
++			return -EOPNOTSUPP;
++		break;
++	case EROFS_XATTR_INDEX_TRUSTED:
++		if (!capable(CAP_SYS_ADMIN))
++			return -EPERM;
++		break;
++	case EROFS_XATTR_INDEX_SECURITY:
 +		break;
 +	default:
-+		errln("unknown type %u at lcn %lu of nid %llu",
-+		      m->type, lcn, vi->nid);
-+		DBG_BUGON(1);
-+		return -EIO;
++		return -EINVAL;
 +	}
++
++	return erofs_getxattr(inode, handler->flags, name, buffer, size);
++}
++
++const struct xattr_handler erofs_xattr_user_handler = {
++	.prefix	= XATTR_USER_PREFIX,
++	.flags	= EROFS_XATTR_INDEX_USER,
++	.list	= erofs_xattr_user_list,
++	.get	= erofs_xattr_generic_get,
++};
++
++const struct xattr_handler erofs_xattr_trusted_handler = {
++	.prefix	= XATTR_TRUSTED_PREFIX,
++	.flags	= EROFS_XATTR_INDEX_TRUSTED,
++	.list	= erofs_xattr_trusted_list,
++	.get	= erofs_xattr_generic_get,
++};
++
++#ifdef CONFIG_EROFS_FS_SECURITY
++const struct xattr_handler __maybe_unused erofs_xattr_security_handler = {
++	.prefix	= XATTR_SECURITY_PREFIX,
++	.flags	= EROFS_XATTR_INDEX_SECURITY,
++	.get	= erofs_xattr_generic_get,
++};
++#endif
++
++const struct xattr_handler *erofs_xattr_handlers[] = {
++	&erofs_xattr_user_handler,
++#ifdef CONFIG_EROFS_FS_POSIX_ACL
++	&posix_acl_access_xattr_handler,
++	&posix_acl_default_xattr_handler,
++#endif
++	&erofs_xattr_trusted_handler,
++#ifdef CONFIG_EROFS_FS_SECURITY
++	&erofs_xattr_security_handler,
++#endif
++	NULL,
++};
++
++struct listxattr_iter {
++	struct xattr_iter it;
++
++	struct dentry *dentry;
++	char *buffer;
++	int buffer_size, buffer_ofs;
++};
++
++static int xattr_entrylist(struct xattr_iter *_it,
++			   struct erofs_xattr_entry *entry)
++{
++	struct listxattr_iter *it =
++		container_of(_it, struct listxattr_iter, it);
++	unsigned int prefix_len;
++	const char *prefix;
++
++	const struct xattr_handler *h =
++		erofs_xattr_handler(entry->e_name_index);
++
++	if (!h || (h->list && !h->list(it->dentry)))
++		return 1;
++
++	prefix = xattr_prefix(h);
++	prefix_len = strlen(prefix);
++
++	if (!it->buffer) {
++		it->buffer_ofs += prefix_len + entry->e_name_len + 1;
++		return 1;
++	}
++
++	if (it->buffer_ofs + prefix_len
++		+ entry->e_name_len + 1 > it->buffer_size)
++		return -ERANGE;
++
++	memcpy(it->buffer + it->buffer_ofs, prefix, prefix_len);
++	it->buffer_ofs += prefix_len;
 +	return 0;
 +}
 +
-+int z_erofs_map_blocks_iter(struct inode *inode,
-+			    struct erofs_map_blocks *map,
-+			    int flags)
++static int xattr_namelist(struct xattr_iter *_it,
++			  unsigned int processed, char *buf, unsigned int len)
 +{
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+	struct z_erofs_maprecorder m = {
-+		.inode = inode,
-+		.map = map,
-+	};
-+	int err = 0;
-+	unsigned int lclusterbits, endoff;
-+	unsigned long long ofs, end;
++	struct listxattr_iter *it =
++		container_of(_it, struct listxattr_iter, it);
 +
-+	trace_z_erofs_map_blocks_iter_enter(inode, map, flags);
-+
-+	/* when trying to read beyond EOF, leave it unmapped */
-+	if (unlikely(map->m_la >= inode->i_size)) {
-+		map->m_llen = map->m_la + 1 - inode->i_size;
-+		map->m_la = inode->i_size;
-+		map->m_flags = 0;
-+		goto out;
-+	}
-+
-+	err = fill_inode_lazy(inode);
-+	if (err)
-+		goto out;
-+
-+	lclusterbits = vi->z_logical_clusterbits;
-+	ofs = map->m_la;
-+	m.lcn = ofs >> lclusterbits;
-+	endoff = ofs & ((1 << lclusterbits) - 1);
-+
-+	err = vle_load_cluster_from_disk(&m, m.lcn);
-+	if (err)
-+		goto unmap_out;
-+
-+	map->m_flags = EROFS_MAP_ZIPPED;	/* by default, compressed */
-+	end = (m.lcn + 1ULL) << lclusterbits;
-+
-+	switch (m.type) {
-+	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
-+		if (endoff >= m.clusterofs)
-+			map->m_flags &= ~EROFS_MAP_ZIPPED;
-+		/* fallthrough */
-+	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-+		if (endoff >= m.clusterofs) {
-+			map->m_la = (m.lcn << lclusterbits) | m.clusterofs;
-+			break;
-+		}
-+		/* m.lcn should be >= 1 if endoff < m.clusterofs */
-+		if (unlikely(!m.lcn)) {
-+			errln("invalid logical cluster 0 at nid %llu",
-+			      vi->nid);
-+			err = -EIO;
-+			goto unmap_out;
-+		}
-+		end = (m.lcn << lclusterbits) | m.clusterofs;
-+		map->m_flags |= EROFS_MAP_FULL_MAPPED;
-+		m.delta[0] = 1;
-+		/* fallthrough */
-+	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
-+		/* get the correspoinding first chunk */
-+		err = vle_extent_lookback(&m, m.delta[0]);
-+		if (unlikely(err))
-+			goto unmap_out;
-+		break;
-+	default:
-+		errln("unknown type %u at offset %llu of nid %llu",
-+		      m.type, ofs, vi->nid);
-+		err = -EIO;
-+		goto unmap_out;
-+	}
-+
-+	map->m_llen = end - map->m_la;
-+	map->m_plen = 1 << lclusterbits;
-+	map->m_pa = blknr_to_addr(m.pblk);
-+	map->m_flags |= EROFS_MAP_MAPPED;
-+
-+unmap_out:
-+	if (m.kaddr)
-+		kunmap_atomic(m.kaddr);
-+
-+out:
-+	debugln("%s, m_la %llu m_pa %llu m_llen %llu m_plen %llu m_flags 0%o",
-+		__func__, map->m_la, map->m_pa,
-+		map->m_llen, map->m_plen, map->m_flags);
-+
-+	trace_z_erofs_map_blocks_iter_exit(inode, map, flags, err);
-+
-+	/* aggressively BUG_ON iff CONFIG_EROFS_FS_DEBUG is on */
-+	DBG_BUGON(err < 0 && err != -ENOMEM);
-+	return err;
++	memcpy(it->buffer + it->buffer_ofs, buf, len);
++	it->buffer_ofs += len;
++	return 0;
 +}
 +
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-index 0c5847c54b60..bfb2da9c4eee 100644
---- a/include/trace/events/erofs.h
-+++ b/include/trace/events/erofs.h
-@@ -20,7 +20,8 @@
- 
- #define show_mflags(flags) __print_flags(flags, "",	\
- 	{ EROFS_MAP_MAPPED,	"M" },			\
--	{ EROFS_MAP_META,	"I" })
-+	{ EROFS_MAP_META,	"I" },			\
-+	{ EROFS_MAP_ZIPPED,	"Z" })
- 
- TRACE_EVENT(erofs_lookup,
- 
-@@ -172,6 +173,13 @@ DEFINE_EVENT(erofs__map_blocks_enter, erofs_map_blocks_flatmode_enter,
- 	TP_ARGS(inode, map, flags)
- );
- 
-+DEFINE_EVENT(erofs__map_blocks_enter, z_erofs_map_blocks_iter_enter,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned int flags),
++static int xattr_skipvalue(struct xattr_iter *_it,
++			   unsigned int value_sz)
++{
++	struct listxattr_iter *it =
++		container_of(_it, struct listxattr_iter, it);
 +
-+	TP_ARGS(inode, map, flags)
-+);
++	it->buffer[it->buffer_ofs++] = '\0';
++	return 1;
++}
 +
- DECLARE_EVENT_CLASS(erofs__map_blocks_exit,
- 	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
- 		 unsigned int flags, int ret),
-@@ -217,6 +225,13 @@ DEFINE_EVENT(erofs__map_blocks_exit, erofs_map_blocks_flatmode_exit,
- 	TP_ARGS(inode, map, flags, ret)
- );
- 
-+DEFINE_EVENT(erofs__map_blocks_exit, z_erofs_map_blocks_iter_exit,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned int flags, int ret),
++static const struct xattr_iter_handlers list_xattr_handlers = {
++	.entry = xattr_entrylist,
++	.name = xattr_namelist,
++	.alloc_buffer = xattr_skipvalue,
++	.value = NULL
++};
 +
-+	TP_ARGS(inode, map, flags, ret)
-+);
++static int inline_listxattr(struct listxattr_iter *it)
++{
++	int ret;
++	unsigned int remaining;
 +
- TRACE_EVENT(erofs_destroy_inode,
- 	TP_PROTO(struct inode *inode),
- 
++	ret = inline_xattr_iter_begin(&it->it, d_inode(it->dentry));
++	if (ret < 0)
++		return ret;
++
++	remaining = ret;
++	while (remaining) {
++		ret = xattr_foreach(&it->it, &list_xattr_handlers, &remaining);
++		if (ret)
++			break;
++	}
++	xattr_iter_end_final(&it->it);
++	return ret ? ret : it->buffer_ofs;
++}
++
++static int shared_listxattr(struct listxattr_iter *it)
++{
++	struct inode *const inode = d_inode(it->dentry);
++	struct erofs_vnode *const vi = EROFS_V(inode);
++	struct super_block *const sb = inode->i_sb;
++	struct erofs_sb_info *const sbi = EROFS_SB(sb);
++	unsigned int i;
++	int ret = 0;
++
++	for (i = 0; i < vi->xattr_shared_count; ++i) {
++		erofs_blk_t blkaddr =
++			xattrblock_addr(sbi, vi->xattr_shared_xattrs[i]);
++
++		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
++		if (!i || blkaddr != it->it.blkaddr) {
++			if (i)
++				xattr_iter_end(&it->it, true);
++
++			it->it.page = erofs_get_meta_page(sb, blkaddr, false);
++			if (IS_ERR(it->it.page))
++				return PTR_ERR(it->it.page);
++
++			it->it.kaddr = kmap_atomic(it->it.page);
++			it->it.blkaddr = blkaddr;
++		}
++
++		ret = xattr_foreach(&it->it, &list_xattr_handlers, NULL);
++		if (ret)
++			break;
++	}
++	if (vi->xattr_shared_count)
++		xattr_iter_end_final(&it->it);
++
++	return ret ? ret : it->buffer_ofs;
++}
++
++ssize_t erofs_listxattr(struct dentry *dentry,
++			char *buffer, size_t buffer_size)
++{
++	int ret;
++	struct listxattr_iter it;
++
++	ret = init_inode_xattrs(d_inode(dentry));
++	if (ret)
++		return ret;
++
++	it.dentry = dentry;
++	it.buffer = buffer;
++	it.buffer_size = buffer_size;
++	it.buffer_ofs = 0;
++
++	it.it.sb = dentry->d_sb;
++
++	ret = inline_listxattr(&it);
++	if (ret < 0 && ret != -ENOATTR)
++		return ret;
++	return shared_listxattr(&it);
++}
++
++#ifdef CONFIG_EROFS_FS_POSIX_ACL
++struct posix_acl *erofs_get_acl(struct inode *inode, int type)
++{
++	struct posix_acl *acl;
++	int prefix, rc;
++	char *value = NULL;
++
++	switch (type) {
++	case ACL_TYPE_ACCESS:
++		prefix = EROFS_XATTR_INDEX_POSIX_ACL_ACCESS;
++		break;
++	case ACL_TYPE_DEFAULT:
++		prefix = EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT;
++		break;
++	default:
++		return ERR_PTR(-EINVAL);
++	}
++
++	rc = erofs_getxattr(inode, prefix, "", NULL, 0);
++	if (rc > 0) {
++		value = kmalloc(rc, GFP_KERNEL);
++		if (!value)
++			return ERR_PTR(-ENOMEM);
++		rc = erofs_getxattr(inode, prefix, "", value, rc);
++	}
++
++	if (rc == -ENOATTR)
++		acl = NULL;
++	else if (rc < 0)
++		acl = ERR_PTR(rc);
++	else
++		acl = posix_acl_from_xattr(&init_user_ns, value, rc);
++	kfree(value);
++	return acl;
++}
++#endif
++
+diff --git a/fs/erofs/xattr.h b/fs/erofs/xattr.h
+new file mode 100644
+index 000000000000..d4213fff57e7
+--- /dev/null
++++ b/fs/erofs/xattr.h
+@@ -0,0 +1,94 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * linux/fs/erofs/xattr.h
++ *
++ * Copyright (C) 2017-2018 HUAWEI, Inc.
++ *             http://www.huawei.com/
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
++ */
++#ifndef __EROFS_XATTR_H
++#define __EROFS_XATTR_H
++
++#include "internal.h"
++#include <linux/posix_acl_xattr.h>
++#include <linux/xattr.h>
++
++/* Attribute not found */
++#define ENOATTR         ENODATA
++
++static inline unsigned int inlinexattr_header_size(struct inode *inode)
++{
++	return sizeof(struct erofs_xattr_ibody_header)
++		+ sizeof(u32) * EROFS_V(inode)->xattr_shared_count;
++}
++
++static inline erofs_blk_t xattrblock_addr(struct erofs_sb_info *sbi,
++					  unsigned int xattr_id)
++{
++#ifdef CONFIG_EROFS_FS_XATTR
++	return sbi->xattr_blkaddr +
++		xattr_id * sizeof(__u32) / EROFS_BLKSIZ;
++#else
++	return 0;
++#endif
++}
++
++static inline unsigned int xattrblock_offset(struct erofs_sb_info *sbi,
++					     unsigned int xattr_id)
++{
++	return (xattr_id * sizeof(__u32)) % EROFS_BLKSIZ;
++}
++
++#ifdef CONFIG_EROFS_FS_XATTR
++extern const struct xattr_handler erofs_xattr_user_handler;
++extern const struct xattr_handler erofs_xattr_trusted_handler;
++#ifdef CONFIG_EROFS_FS_SECURITY
++extern const struct xattr_handler erofs_xattr_security_handler;
++#endif
++
++static inline const struct xattr_handler *erofs_xattr_handler(unsigned int idx)
++{
++static const struct xattr_handler *xattr_handler_map[] = {
++	[EROFS_XATTR_INDEX_USER] = &erofs_xattr_user_handler,
++#ifdef CONFIG_EROFS_FS_POSIX_ACL
++	[EROFS_XATTR_INDEX_POSIX_ACL_ACCESS] = &posix_acl_access_xattr_handler,
++	[EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT] =
++		&posix_acl_default_xattr_handler,
++#endif
++	[EROFS_XATTR_INDEX_TRUSTED] = &erofs_xattr_trusted_handler,
++#ifdef CONFIG_EROFS_FS_SECURITY
++	[EROFS_XATTR_INDEX_SECURITY] = &erofs_xattr_security_handler,
++#endif
++};
++
++	return idx && idx < ARRAY_SIZE(xattr_handler_map) ?
++		xattr_handler_map[idx] : NULL;
++}
++
++extern const struct xattr_handler *erofs_xattr_handlers[];
++
++int erofs_getxattr(struct inode *, int, const char *, void *, size_t);
++ssize_t erofs_listxattr(struct dentry *, char *, size_t);
++#else
++static inline int erofs_getxattr(struct inode *inode, int index,
++				 const char *name, void *buffer,
++				 size_t buffer_size)
++{
++	return -ENOTSUPP;
++}
++
++static inline ssize_t erofs_listxattr(struct dentry *dentry,
++				      char *buffer, size_t buffer_size)
++{
++	return -ENOTSUPP;
++}
++#endif	/* !CONFIG_EROFS_FS_XATTR */
++
++#ifdef CONFIG_EROFS_FS_POSIX_ACL
++struct posix_acl *erofs_get_acl(struct inode *inode, int type);
++#else
++#define erofs_get_acl	(NULL)
++#endif
++
++#endif
++
 -- 
 2.17.1
 
