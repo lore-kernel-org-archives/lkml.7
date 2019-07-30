@@ -5,67 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA040C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9BDC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1BA2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CBE2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m478ElFD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F2smkGoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388211AbfG3TNW (ORCPT
+        id S1728907AbfG3TNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 15:13:22 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42198 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387673AbfG3TNM (ORCPT
+        Tue, 30 Jul 2019 15:13:49 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33653 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388142AbfG3TNV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 15:13:12 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so30321295pff.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 12:13:12 -0700 (PDT)
+        Tue, 30 Jul 2019 15:13:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f20so21322436pgj.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 12:13:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cCMnXk6r3FPny+fs1rFc2SWMhw3bJ0loL2W4TiBySr8=;
-        b=m478ElFD7q//7AsCxpL9OrAKQBrInm/GCtxGDID+1HbrAnQFF52Ffax0qaupTPDbf/
-         GHWHftjDWsObpuzqxd4JH6kFG9bWkMamNih32q2W6VEU2kHfJUJMUiqfHVVZTC06mUOj
-         MC1EU6K7NgoUvlEjAb13R+v1h/BbOjctlPBjk=
+        bh=9kWf22Rclzq8G5FoRJbzmMz7xyL94toIUGR9urAcRyA=;
+        b=F2smkGoK8KcptIdvV2SjQfrL6PlXipy7JjEVMHgzprpHrwcKNVKa93zl9Fymh8BUlh
+         fpA3d71j1qBWHNgMomuekNiCQ8MlumiE/acWNOlnavR9gnndo7YWMyqkKvctTUhMJcWm
+         5nm1cizH8+WJfF2ZVgUHYpKcxa3wRzq+Z8spk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cCMnXk6r3FPny+fs1rFc2SWMhw3bJ0loL2W4TiBySr8=;
-        b=T1SbbDr7Fv+Yd1GY0NQHPZWt90cfq/fHaZ8Tm1FlhvB0a5o5J/y5JRt/cghU0OKnS4
-         dr+lKExTf54TM4WqW2hCZlhLUf5SHX8KFHmT6wEbd2gawvtmf1S0+5cKuvMSJOieF3I7
-         0wlaRLl9iTGZtgcsz2tdPsJrNak6lf5flmaz0LdjV1hBHtrGTkgXPZP3HooCEWGsxFgl
-         D9R9eB24XFvXuhSGlw39qqQ4B4pa1MFTTfj+Mi5m78nbhuZmuUnQT7Vb8nYRUj6FEMo3
-         rL92k1neuSbvs6kwU+dMbG7DFwJlOuVrgk0yFfLdDGEjcX05qpHwWxcOiA6nRWcEV0DC
-         wAVQ==
-X-Gm-Message-State: APjAAAVoa2XjoHk1Y811VCNXKMe18rL3IPJCTPjJHeBuiTpGxDp9tsJi
-        xLJC/XFt7F1swD/MxKj1WhbkcQ==
-X-Google-Smtp-Source: APXvYqxEEHpoFd295wN4FVenXhrnLJncXmAxP37HqjVX+fNi4I8BrYTgPlqRHeP0sCOCSagbyTiddw==
-X-Received: by 2002:a63:fd57:: with SMTP id m23mr44942158pgj.204.1564513992259;
-        Tue, 30 Jul 2019 12:13:12 -0700 (PDT)
+        bh=9kWf22Rclzq8G5FoRJbzmMz7xyL94toIUGR9urAcRyA=;
+        b=rojlHaFljxslbGrv2bh3rSzzE1Y6hh+nZZSatWPQGTsAeyYX7N1nmdKsK5ouN0dpAz
+         VdwGrFoYqrfKL7b86aIJV+xDK8wUUVpJnBmzBmmW21A3a8Gc/VW6I1guPK2qkFy2iVhg
+         CZWf9UocXOoO/n3FDWhlQ06jo+q/feFlGMnG8TnQCR7yMHbnlIRGD4NgEykjjjYMJu1+
+         fqMSIFWcH5eeET9b64LRZF6ncZoZr/7JZjNaAaByKbtsHusUom+Uan1ZdkGcWRwki66O
+         zYsKIlmAL+phVutJPUH4l6ceHgVbassxP+g8VfrW8N0QTxZVo2G4G5WCxfP9kXxVbBZh
+         YK9g==
+X-Gm-Message-State: APjAAAXVeExfyh4mqgVfvxlChgFMW/7q28Og0zQT/R+28sgw9NbD9/T2
+        qCRemOiffLQwMg+zFsPzV7qVng==
+X-Google-Smtp-Source: APXvYqzr6BK0Xn2ozWdzr0KbSdWi9wDSK/YZN9WyQ63sDSm1hYENlMW/XPd2uWlP9oB/IStB2Eg/AA==
+X-Received: by 2002:a63:784c:: with SMTP id t73mr113500712pgc.268.1564514000500;
+        Tue, 30 Jul 2019 12:13:20 -0700 (PDT)
 Received: from skynet.sea.corp.google.com ([2620:0:1008:1100:c4b5:ec23:d87b:d6d3])
-        by smtp.gmail.com with ESMTPSA id n89sm84649540pjc.0.2019.07.30.12.13.11
+        by smtp.gmail.com with ESMTPSA id n89sm84649540pjc.0.2019.07.30.12.13.19
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 12:13:11 -0700 (PDT)
+        Tue, 30 Jul 2019 12:13:20 -0700 (PDT)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
 Cc:     kristen@linux.intel.com, keescook@chromium.org,
         Thomas Garnier <thgarnie@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nadav Amit <namit@vmware.com>, Jann Horn <jannh@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 02/11] x86: Add macro to get symbol address for PIE support
-Date:   Tue, 30 Jul 2019 12:12:46 -0700
-Message-Id: <20190730191303.206365-3-thgarnie@chromium.org>
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 07/11] x86/acpi: Adapt assembly for PIE support
+Date:   Tue, 30 Jul 2019 12:12:51 -0700
+Message-Id: <20190730191303.206365-8-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
 In-Reply-To: <20190730191303.206365-1-thgarnie@chromium.org>
 References: <20190730191303.206365-1-thgarnie@chromium.org>
@@ -76,27 +78,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new _ASM_MOVABS macro to fetch a symbol address. It will be used
-to replace "_ASM_MOV $<symbol>, %dst" code construct that are not
-compatible with PIE.
+Change the assembly code to use only relative references of symbols for the
+kernel to be PIE compatible.
+
+Position Independent Executable (PIE) support will allow to extend the
+KASLR randomization range below 0xffffffff80000000.
 
 Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/asm.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/acpi/wakeup_64.S | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index 3ff577c0b102..3a686057e882 100644
---- a/arch/x86/include/asm/asm.h
-+++ b/arch/x86/include/asm/asm.h
-@@ -30,6 +30,7 @@
- #define _ASM_ALIGN	__ASM_SEL(.balign 4, .balign 8)
+diff --git a/arch/x86/kernel/acpi/wakeup_64.S b/arch/x86/kernel/acpi/wakeup_64.S
+index b0715c3ac18d..3ec6c1b74ad4 100644
+--- a/arch/x86/kernel/acpi/wakeup_64.S
++++ b/arch/x86/kernel/acpi/wakeup_64.S
+@@ -15,7 +15,7 @@
+ 	 * Hooray, we are in Long 64-bit mode (but still running in low memory)
+ 	 */
+ ENTRY(wakeup_long64)
+-	movq	saved_magic, %rax
++	movq	saved_magic(%rip), %rax
+ 	movq	$0x123456789abcdef0, %rdx
+ 	cmpq	%rdx, %rax
+ 	jne	bogus_64_magic
+@@ -26,14 +26,14 @@ ENTRY(wakeup_long64)
+ 	movw	%ax, %es
+ 	movw	%ax, %fs
+ 	movw	%ax, %gs
+-	movq	saved_rsp, %rsp
++	movq	saved_rsp(%rip), %rsp
  
- #define _ASM_MOV	__ASM_SIZE(mov)
-+#define _ASM_MOVABS	__ASM_SEL(movl, movabsq)
- #define _ASM_INC	__ASM_SIZE(inc)
- #define _ASM_DEC	__ASM_SIZE(dec)
- #define _ASM_ADD	__ASM_SIZE(add)
+-	movq	saved_rbx, %rbx
+-	movq	saved_rdi, %rdi
+-	movq	saved_rsi, %rsi
+-	movq	saved_rbp, %rbp
++	movq	saved_rbx(%rip), %rbx
++	movq	saved_rdi(%rip), %rdi
++	movq	saved_rsi(%rip), %rsi
++	movq	saved_rbp(%rip), %rbp
+ 
+-	movq	saved_rip, %rax
++	movq	saved_rip(%rip), %rax
+ 	jmp	*%rax
+ ENDPROC(wakeup_long64)
+ 
+@@ -46,7 +46,7 @@ ENTRY(do_suspend_lowlevel)
+ 	xorl	%eax, %eax
+ 	call	save_processor_state
+ 
+-	movq	$saved_context, %rax
++	leaq	saved_context(%rip), %rax
+ 	movq	%rsp, pt_regs_sp(%rax)
+ 	movq	%rbp, pt_regs_bp(%rax)
+ 	movq	%rsi, pt_regs_si(%rax)
+@@ -65,13 +65,14 @@ ENTRY(do_suspend_lowlevel)
+ 	pushfq
+ 	popq	pt_regs_flags(%rax)
+ 
+-	movq	$.Lresume_point, saved_rip(%rip)
++	leaq	.Lresume_point(%rip), %rax
++	movq	%rax, saved_rip(%rip)
+ 
+-	movq	%rsp, saved_rsp
+-	movq	%rbp, saved_rbp
+-	movq	%rbx, saved_rbx
+-	movq	%rdi, saved_rdi
+-	movq	%rsi, saved_rsi
++	movq	%rsp, saved_rsp(%rip)
++	movq	%rbp, saved_rbp(%rip)
++	movq	%rbx, saved_rbx(%rip)
++	movq	%rdi, saved_rdi(%rip)
++	movq	%rsi, saved_rsi(%rip)
+ 
+ 	addq	$8, %rsp
+ 	movl	$3, %edi
+@@ -83,7 +84,7 @@ ENTRY(do_suspend_lowlevel)
+ 	.align 4
+ .Lresume_point:
+ 	/* We don't restore %rax, it must be 0 anyway */
+-	movq	$saved_context, %rax
++	leaq	saved_context(%rip), %rax
+ 	movq	saved_context_cr4(%rax), %rbx
+ 	movq	%rbx, %cr4
+ 	movq	saved_context_cr3(%rax), %rbx
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
