@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8522DC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CF8C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5426C2184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65205204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455684;
-	bh=Pw3CHLw1UkY+PFK9hu7cmOCAtAMKEn/ogD+ZhWDcDSQ=;
+	s=default; t=1564455689;
+	bh=isQ8HLSlzADNkYMRQNcnOHIbMhkOdxUMA8L3euHfNX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jev0QvpxQg3B2kZJVgKwfYeR5yQRlyrNFG4yg52CnkmRmg71U+3pnfkz8Mf2WBgK7
-	 NWVY2yV+hvjKlovJMY98SWiTx8/A4d5ID1n5JzEHMAEgXUnSRFAtNbzdlBa1YnhVfV
-	 LMlavehHIbnT8KmI6GDZywdX0zNUPQTq6QUjCQNY=
+	b=FydgD03/kZXewNk9gOEffT+Ym7xZFLJJ9LbcwgQUfJNCZdoWSRVTSIC/eeE1aN2hP
+	 pACxMkwPqLV91RzrgRD9JmKhGRybPYtdtnYPuBxbv93+Q4+/47zwWjWrFqVFS3kvKa
+	 vkGRl3NqUHCY7SApYWIm/dhJIEAXsey25uU50NwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732584AbfG3DBX (ORCPT
+        id S1732598AbfG3DB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:01:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 23:01:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732573AbfG3DBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 23:01:20 -0400
+        id S1732579AbfG3DBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:01:23 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA86E206DD;
-        Tue, 30 Jul 2019 03:01:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54EF7217F4;
+        Tue, 30 Jul 2019 03:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455678;
-        bh=Pw3CHLw1UkY+PFK9hu7cmOCAtAMKEn/ogD+ZhWDcDSQ=;
+        s=default; t=1564455682;
+        bh=isQ8HLSlzADNkYMRQNcnOHIbMhkOdxUMA8L3euHfNX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cdP+KVbKfV1pb8dWSIT40DXPhIQD3FACwHtfU+DPjT6F0hb1fzhMqrezssph+kgjT
-         sjDoJvKxznRxl2lmnw2T/V9gHNH6RLJjYwOzJNlZcg1V+eYfMgY8C3pHm4Sl4S6maD
-         1WQPZwQndUGEnPdvaCdIO7QykK4i7C1Ab3SAvmhw=
+        b=x1r1X+4+zpRUz39CaGdjbbx2KT4wzl1gY1gyYxLsaLIOA98ZpPoLFONRb+0j9H515
+         apJz/h4pH0AMlT55jebqBmt67W5hX7a0eacoIg4ecMx0qyC3JX2agy6c5++m440N//
+         NBbXkVYLzmcrKyxS148QTtiYhdnqtp9lIKjLbFOo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 088/107] libperf: Adopt perf_evsel__alloc_fd() function from tools/perf
-Date:   Mon, 29 Jul 2019 23:55:51 -0300
-Message-Id: <20190730025610.22603-89-acme@kernel.org>
+Subject: [PATCH 089/107] libperf: Adopt simplified perf_evsel__open() function from tools/perf
+Date:   Mon, 29 Jul 2019 23:55:52 -0300
+Message-Id: <20190730025610.22603-90-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
@@ -66,9 +66,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move the perf_evsel__alloc_fd() function from perf to libperf.
+Add a perf_evsel__open() function to libperf.
 
-It's not exported.
+It's a simplified version of evsel__open() without the fallback
+mechanism.
+
+We can try to merge it in the future to libperf, but it has many
+details, lets start simple, requiring the latest kernel, perf should
+continue using its evsel__open() version, continuing to support running
+on older kernels when possible.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -77,100 +83,130 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-62-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-63-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evsel.c                  | 21 +++++++++++++++++++++
- tools/perf/lib/include/internal/evsel.h |  2 ++
- tools/perf/util/evsel.c                 | 18 +-----------------
- 3 files changed, 24 insertions(+), 17 deletions(-)
+ tools/perf/lib/evsel.c              | 65 +++++++++++++++++++++++++++++
+ tools/perf/lib/include/perf/evsel.h |  4 ++
+ tools/perf/lib/libperf.map          |  1 +
+ 3 files changed, 70 insertions(+)
 
 diff --git a/tools/perf/lib/evsel.c b/tools/perf/lib/evsel.c
-index ddc3ad447bfb..027f1edb4e8e 100644
+index 027f1edb4e8e..7027dacb50f6 100644
 --- a/tools/perf/lib/evsel.c
 +++ b/tools/perf/lib/evsel.c
-@@ -1,9 +1,12 @@
+@@ -1,11 +1,17 @@
  // SPDX-License-Identifier: GPL-2.0
-+#include <errno.h>
+ #include <errno.h>
++#include <unistd.h>
++#include <sys/syscall.h>
  #include <perf/evsel.h>
++#include <perf/cpumap.h>
++#include <perf/threadmap.h>
  #include <linux/list.h>
  #include <internal/evsel.h>
  #include <linux/zalloc.h>
  #include <stdlib.h>
-+#include <internal/xyarray.h>
-+#include <linux/string.h>
+ #include <internal/xyarray.h>
++#include <internal/cpumap.h>
++#include <internal/threadmap.h>
+ #include <linux/string.h>
  
  void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr)
- {
-@@ -25,3 +28,21 @@ void perf_evsel__delete(struct perf_evsel *evsel)
- {
- 	free(evsel);
+@@ -46,3 +52,62 @@ int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
+ 
+ 	return evsel->fd != NULL ? 0 : -ENOMEM;
  }
 +
-+#define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
-+
-+int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
++static int
++sys_perf_event_open(struct perf_event_attr *attr,
++		    pid_t pid, int cpu, int group_fd,
++		    unsigned long flags)
 +{
-+	evsel->fd = xyarray__new(ncpus, nthreads, sizeof(int));
++	return syscall(__NR_perf_event_open, attr, pid, cpu, group_fd, flags);
++}
 +
-+	if (evsel->fd) {
-+		int cpu, thread;
-+		for (cpu = 0; cpu < ncpus; cpu++) {
-+			for (thread = 0; thread < nthreads; thread++) {
-+				FD(evsel, cpu, thread) = -1;
-+			}
++int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
++		     struct perf_thread_map *threads)
++{
++	int cpu, thread, err = 0;
++
++	if (cpus == NULL) {
++		static struct perf_cpu_map *empty_cpu_map;
++
++		if (empty_cpu_map == NULL) {
++			empty_cpu_map = perf_cpu_map__dummy_new();
++			if (empty_cpu_map == NULL)
++				return -ENOMEM;
++		}
++
++		cpus = empty_cpu_map;
++	}
++
++	if (threads == NULL) {
++		static struct perf_thread_map *empty_thread_map;
++
++		if (empty_thread_map == NULL) {
++			empty_thread_map = perf_thread_map__new_dummy();
++			if (empty_thread_map == NULL)
++				return -ENOMEM;
++		}
++
++		threads = empty_thread_map;
++	}
++
++	if (evsel->fd == NULL &&
++	    perf_evsel__alloc_fd(evsel, cpus->nr, threads->nr) < 0)
++		return -ENOMEM;
++
++	for (cpu = 0; cpu < cpus->nr; cpu++) {
++		for (thread = 0; thread < threads->nr; thread++) {
++			int fd;
++
++			fd = sys_perf_event_open(&evsel->attr,
++						 threads->map[thread].pid,
++						 cpus->map[cpu], -1, 0);
++
++			if (fd < 0)
++				return -errno;
++
++			FD(evsel, cpu, thread) = fd;
 +		}
 +	}
 +
-+	return evsel->fd != NULL ? 0 : -ENOMEM;
++	return err;
 +}
-diff --git a/tools/perf/lib/include/internal/evsel.h b/tools/perf/lib/include/internal/evsel.h
-index 29eca9576546..3cb9a0f5f32e 100644
---- a/tools/perf/lib/include/internal/evsel.h
-+++ b/tools/perf/lib/include/internal/evsel.h
-@@ -20,4 +20,6 @@ struct perf_evsel {
- 	int			 nr_members;
- };
+diff --git a/tools/perf/lib/include/perf/evsel.h b/tools/perf/lib/include/perf/evsel.h
+index a57efc0f5c8b..e9fbaa8fb51a 100644
+--- a/tools/perf/lib/include/perf/evsel.h
++++ b/tools/perf/lib/include/perf/evsel.h
+@@ -6,10 +6,14 @@
  
-+int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads);
-+
- #endif /* __LIBPERF_INTERNAL_EVSEL_H */
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 8b9a00598677..d3c8488f7069 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1153,22 +1153,6 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
- 		perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
- }
+ struct perf_evsel;
+ struct perf_event_attr;
++struct perf_cpu_map;
++struct perf_thread_map;
  
--static int perf_evsel__alloc_fd(struct evsel *evsel, int ncpus, int nthreads)
--{
--	evsel->core.fd = xyarray__new(ncpus, nthreads, sizeof(int));
--
--	if (evsel->core.fd) {
--		int cpu, thread;
--		for (cpu = 0; cpu < ncpus; cpu++) {
--			for (thread = 0; thread < nthreads; thread++) {
--				FD(evsel, cpu, thread) = -1;
--			}
--		}
--	}
--
--	return evsel->core.fd != NULL ? 0 : -ENOMEM;
--}
--
- static int perf_evsel__run_ioctl(struct evsel *evsel,
- 			  int ioc,  void *arg)
- {
-@@ -1866,7 +1850,7 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		nthreads = threads->nr;
+ LIBPERF_API void perf_evsel__init(struct perf_evsel *evsel,
+ 				  struct perf_event_attr *attr);
+ LIBPERF_API struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr);
+ LIBPERF_API void perf_evsel__delete(struct perf_evsel *evsel);
++LIBPERF_API int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
++				 struct perf_thread_map *threads);
  
- 	if (evsel->core.fd == NULL &&
--	    perf_evsel__alloc_fd(evsel, cpus->nr, nthreads) < 0)
-+	    perf_evsel__alloc_fd(&evsel->core, cpus->nr, nthreads) < 0)
- 		return -ENOMEM;
- 
- 	if (evsel->cgrp) {
+ #endif /* __LIBPERF_EVSEL_H */
+diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
+index 9b6e8f165014..7594d3d89c5f 100644
+--- a/tools/perf/lib/libperf.map
++++ b/tools/perf/lib/libperf.map
+@@ -14,6 +14,7 @@ LIBPERF_0.0.1 {
+ 		perf_evsel__new;
+ 		perf_evsel__delete;
+ 		perf_evsel__init;
++		perf_evsel__open;
+ 		perf_evlist__new;
+ 		perf_evlist__delete;
+ 		perf_evlist__init;
 -- 
 2.21.0
 
