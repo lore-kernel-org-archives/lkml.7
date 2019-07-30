@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7269C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E9EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B12204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7016C204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="I2Hmb5kK"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="w9EAKXX0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbfG3WM6 (ORCPT
+        id S1728914AbfG3WNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 18:12:58 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55795 "EHLO
+        Tue, 30 Jul 2019 18:13:41 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39617 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfG3WM6 (ORCPT
+        with ESMTP id S1726253AbfG3WNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 18:12:58 -0400
+        Tue, 30 Jul 2019 18:13:40 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UMCkBA3398437
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UMDTvT3398484
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 15:12:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UMCkBA3398437
+        Tue, 30 Jul 2019 15:13:29 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UMDTvT3398484
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564524767;
-        bh=HfyyqeeW9mdr/U99zf3PfxOpXJMgdoqX6K54hmj/CuA=;
+        s=2019071901; t=1564524810;
+        bh=ys10qE4WEsPZO7KAJEp2LXeIFxeiAzXgX/3H0wsD2xs=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=I2Hmb5kKgIq1UxyWWPfKFHmhPUXvyV35iDj9Hgb4iHEF7KGqa3+mrUTEtth9tp9z4
-         IYBzmkRDynhMAcIpjsSDqwmFfoSLlmUUbIavjGXbaOKwipRIjnHj56mrkrjkJt0hjA
-         GWRIfEbFRQARi/OD8QjdElyJ6GlzhAwWkgpmYTa7hozR80ZQCvA6zfxU4Eo+nDKX1j
-         Or/d0A55NZ9XCTf/R+I9vpCffvZsI+2ASU8oIUr2Ceaiqz4BWRqHDipcACC0bnpNG7
-         3KigsBWDqbX89eg+Br3wSKQM5FgUZ1uC74fJVUOWaGf+W0239EW2h3QNZyup1oznPh
-         JDceX5JhRvw5g==
+        b=w9EAKXX0bRofbRzGDFN9AjeUmSHTIYc5URQ8AYyFOhgBBojDaYF0qNW9Hu7mzdZxk
+         sev+bd/aahO4oBe183X0vDzUVJUv2LzPkVgXGykZ5NqRPG3/jSGC3wq0PMzDWo1Q4S
+         1hMFg3VfBUztKCi2y3Zqa3RLyup201hW/r2g1A29l8P4XEppGBILZE2ZiUCFu9szvs
+         JQGD9F3XnvsTTYS+W6sVE+tGbCbDWQEuMZFQRWUKg9wLAP9CZkfDipAvEEJVh868VQ
+         X9qa3eISCw2JlprpGszj4voJSn8/KP/pJcGKqfY4uwPczM2GpwA2dTcZtL+m7Wvn6V
+         4CmwUpTenrpSg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UMCiso3398434;
-        Tue, 30 Jul 2019 15:12:44 -0700
-Date:   Tue, 30 Jul 2019 15:12:44 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UMDTiT3398481;
+        Tue, 30 Jul 2019 15:13:29 -0700
+Date:   Tue, 30 Jul 2019 15:13:29 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-c23a8bd3ac02df2ca5e77396df1dee247db3d49f@git.kernel.org>
-Cc:     hpa@zytor.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bigeasy@linutronix.de, peterz@infradead.org
-Reply-To: bigeasy@linutronix.de, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, peterz@infradead.org,
-          hpa@zytor.com, mingo@kernel.org
-In-Reply-To: <20190726185753.169509224@linutronix.de>
-References: <20190726185753.169509224@linutronix.de>
+From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
+Message-ID: <tip-2c6db53c4b4a52012e644f1f50bcc958c87f046a@git.kernel.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        bigeasy@linutronix.de, mingo@kernel.org, hpa@zytor.com,
+        peterz@infradead.org
+Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
+          mingo@kernel.org, bigeasy@linutronix.de, peterz@infradead.org
+In-Reply-To: <20190726185753.262895510@linutronix.de>
+References: <20190726185753.262895510@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] perf/core: Mark hrtimers to expire in hard
+Subject: [tip:timers/core] watchdog: Mark watchdog_hrtimer to expire in hard
  interrupt context
-Git-Commit-ID: c23a8bd3ac02df2ca5e77396df1dee247db3d49f
+Git-Commit-ID: 2c6db53c4b4a52012e644f1f50bcc958c87f046a
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,70 +69,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c23a8bd3ac02df2ca5e77396df1dee247db3d49f
-Gitweb:     https://git.kernel.org/tip/c23a8bd3ac02df2ca5e77396df1dee247db3d49f
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 20:30:53 +0200
+Commit-ID:  2c6db53c4b4a52012e644f1f50bcc958c87f046a
+Gitweb:     https://git.kernel.org/tip/2c6db53c4b4a52012e644f1f50bcc958c87f046a
+Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate: Fri, 26 Jul 2019 20:30:54 +0200
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Tue, 30 Jul 2019 23:57:54 +0200
+CommitDate: Tue, 30 Jul 2019 23:57:55 +0200
 
-perf/core: Mark hrtimers to expire in hard interrupt context
+watchdog: Mark watchdog_hrtimer to expire in hard interrupt context
 
-To guarantee that the multiplexing mechanism and the hrtimer driven events
-work on PREEMPT_RT enabled kernels it's required that the related hrtimers
-expire in hard interrupt context. Mark them so PREEMPT_RT kernels wont
-defer them to soft interrupt context.
+The watchdog hrtimer must expire in hard interrupt context even on
+PREEMPT_RT=y kernels as otherwise the hard/softlockup detection logic would
+not work.
 
 No functional change.
 
-[ tglx: Split out of larger combo patch. Added changelog ]
+[ tglx: Split out from larger combo patch. Added changelog ]
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190726185753.169509224@linutronix.de
+Link: https://lkml.kernel.org/r/20190726185753.262895510@linutronix.de
 
 ---
- kernel/events/core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/watchdog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 026a14541a38..9d623e257a51 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1103,7 +1103,7 @@ static void __perf_mux_hrtimer_init(struct perf_cpu_context *cpuctx, int cpu)
- 	cpuctx->hrtimer_interval = ns_to_ktime(NSEC_PER_MSEC * interval);
- 
- 	raw_spin_lock_init(&cpuctx->hrtimer_lock);
--	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
-+	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
- 	timer->function = perf_mux_hrtimer_handler;
- }
- 
-@@ -1121,7 +1121,7 @@ static int perf_mux_hrtimer_restart(struct perf_cpu_context *cpuctx)
- 	if (!cpuctx->hrtimer_active) {
- 		cpuctx->hrtimer_active = 1;
- 		hrtimer_forward_now(timer, cpuctx->hrtimer_interval);
--		hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED);
-+		hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED_HARD);
- 	}
- 	raw_spin_unlock_irqrestore(&cpuctx->hrtimer_lock, flags);
- 
-@@ -9491,7 +9491,7 @@ static void perf_swevent_start_hrtimer(struct perf_event *event)
- 		period = max_t(u64, 10000, hwc->sample_period);
- 	}
- 	hrtimer_start(&hwc->hrtimer, ns_to_ktime(period),
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 7f9e7b9306fe..f41334ef0971 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -490,10 +490,10 @@ static void watchdog_enable(unsigned int cpu)
+ 	 * Start the timer first to prevent the NMI watchdog triggering
+ 	 * before the timer has a chance to fire.
+ 	 */
+-	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+ 	hrtimer->function = watchdog_timer_fn;
+ 	hrtimer_start(hrtimer, ns_to_ktime(sample_period),
 -		      HRTIMER_MODE_REL_PINNED);
 +		      HRTIMER_MODE_REL_PINNED_HARD);
- }
  
- static void perf_swevent_cancel_hrtimer(struct perf_event *event)
-@@ -9513,7 +9513,7 @@ static void perf_swevent_init_hrtimer(struct perf_event *event)
- 	if (!is_sampling_event(event))
- 		return;
- 
--	hrtimer_init(&hwc->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(&hwc->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	hwc->hrtimer.function = perf_swevent_hrtimer;
- 
- 	/*
+ 	/* Initialize timestamp */
+ 	__touch_watchdog();
