@@ -2,232 +2,100 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0B2C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDA3C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307F3206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB05206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXRFi9Xs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HZV5K3sn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfG3Bct (ORCPT
+        id S1730539AbfG3BdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:32:49 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46419 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729473AbfG3Bcs (ORCPT
+        Mon, 29 Jul 2019 21:33:24 -0400
+Received: from mail-vs1-f73.google.com ([209.85.217.73]:54351 "EHLO
+        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729221AbfG3BdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:32:48 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d4so61093668edr.13;
-        Mon, 29 Jul 2019 18:32:46 -0700 (PDT)
+        Mon, 29 Jul 2019 21:33:24 -0400
+Received: by mail-vs1-f73.google.com with SMTP id b188so16471859vsc.21
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 18:33:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5Ftzg7THfmAK8OMfuBiBZ76IWfuhIkncq/8zqyt2pEg=;
-        b=cXRFi9Xs7adSiJ9+x1QqPHr3kKXJq+4QwiXeWuiyGUhnfzD7x+Xlf0nf9LePdzzpGs
-         jrC6UqK1Lv2A/GJU9u3Iht8ecKAJsFH7QHSUgHUb1S6BqFK6TBOgQsokgu/bkgPHVO8D
-         1Vlfqy4gYXJeZLbqtDztUyVuGbQsX5xB3nbC8wPz9HJcGCep1oP6xlihpg7SCnuAf984
-         0p+//YdZ1pxoUiIQNDSSary8lO5mxtN/n/PgX2rveV0WR5miFbnL2eo3VJu4qzGuVUSd
-         NR69lE0abWNwaprvqo769kpvEOOawbYdxvQi0DkDbPdk0EOdYMOq6+FE23Z0vRkMMqRW
-         wPvg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Frj/SS/W3AFZFbyzaOV4LWLnrMlPxcryoFLQjik2HTI=;
+        b=HZV5K3snh9+hZYi0hyCp//JyWT/fXpO3R4ntivO3tTKVGtiJDw32+qKHYjRImOIIZW
+         VxTiXkHj+VspcOQwMQmsA2V4AKt/XjP3LHtr1xFiKnUbnM3QWXE/wSzzzjwb8HARp0NL
+         NnuTKiG3/MUCJOwH8yeiqO0PT9JR5nFtwF6U8A53/0E2cI+PwTcE9W+5puIoSJsXHcYY
+         pGpqdjgsz/Gm/zNNZuQ/PWKC68R/embIB/nPMOQPIpfTsQj4rmJs4brzVzJl1hn7d19A
+         ijF6rMV/AiriXix/ERN3pm4aTwkganjyHVi9+SBcKd4uYnPHslwXHHddmjlMGT2iycj7
+         WlvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5Ftzg7THfmAK8OMfuBiBZ76IWfuhIkncq/8zqyt2pEg=;
-        b=iDOBA7ldoFb+ftvUDySyd7V4qTYYG5pgZpPtYuRFxfrqOLLoAVciPgp4nwZWpyimmM
-         Jn+9CGVz1WMhxiKdf8Lh3+arKj3PmINXWnXQXyiZcGAahw+cSxqfkosIfNVNDvgP15U9
-         vHHMtOhhB154esNCSAYgopi0pOFg9TirihW7+8rP8tcD+iJklrLQiDkvrBfU2ulhrwxA
-         ima5uYHHQcZWMOsN+brKG34KgACRwFr7SzA3cPhF7/KWpK1DizdTeS9Q6+Pu7SZ2tMp6
-         CKlev6c0j2/04BVWlKbNA0F2W5VKmSn1jKP6Lp3hq15+lUe2exqHEFhWOZlsqTGcOoeq
-         txzw==
-X-Gm-Message-State: APjAAAXMk1Uj3/CvnO+efOFNcuHxaGOEZ9+kWYwc5fso/0LH9nFKI3BL
-        dZq4ax0IC87RfUB1G1aHy1Ib73lF8UFUntAPtbg=
-X-Google-Smtp-Source: APXvYqwt/QDnB9rTcjd7QhYqNNd2VrJcFwWAxBLPBnlVoaUa9E+8qUS6lr2o3cQ+y2MNazuIPOMHiQ8/FdFxQAC3UU4=
-X-Received: by 2002:a50:ba19:: with SMTP id g25mr98971820edc.123.1564450366223;
- Mon, 29 Jul 2019 18:32:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190730002549.86824-1-taoren@fb.com>
-In-Reply-To: <20190730002549.86824-1-taoren@fb.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 30 Jul 2019 04:32:35 +0300
-Message-ID: <CA+h21hq1+E6-ScFx425hXwTPTZHTVZbBuAm7RROFZTBOFvD8vQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 2/2] net: phy: broadcom: add 1000Base-X support
- for BCM54616S
-To:     Tao Ren <taoren@fb.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Frj/SS/W3AFZFbyzaOV4LWLnrMlPxcryoFLQjik2HTI=;
+        b=dGyTAdGB2sjRCiaF0uiHtDB1ZduPGX7POREz1SjE2UVV2O6GfWCp8MdTGlZ6PCuqJF
+         3tmJfZuEN80mp6lGKWtwT/0r2IUvvOIw14jI3mszfG0sagaOmfzzlglD5Fn6w0GXJNbA
+         GTOoZFk8eaof46I0tmoP6mzWa8vk+kbk5DNh6yinaoAvHLPxdSYdDQnm8Zz1iC6pkMhn
+         hHNa08pnF9pOUkDH4x0nHFcvcvJFRAsF/Xf4ABxlWUd069E15D0K2eShghlbKY+/M7kC
+         dW5v58X3VIvojYU56dN8u5W2G1rh4++SNUbcLAGcrS6MWPkr6VToXwWuc+/ruUvzdwtQ
+         BAjQ==
+X-Gm-Message-State: APjAAAXTlSfgzZQ7BA4YNS3C9BBPUt1kTwSUesdl/TrWvbXWxl8Cdn+H
+        fOHE2DwCjUqRuY/EqJKEM2LJdMTvSgI=
+X-Google-Smtp-Source: APXvYqzqfX8t1uXNFJXNaDwGRiqkwrH6h4jiFWfc6T5iZhZ57KmlPWww1KkuiFIxc6pVEcoJJlMga4+hqnw=
+X-Received: by 2002:ab0:740e:: with SMTP id r14mr68442936uap.108.1564450403321;
+ Mon, 29 Jul 2019 18:33:23 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 18:33:10 -0700
+Message-Id: <20190730013310.162367-1-surenb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+Subject: [PATCH 1/1] psi: do not require setsched permission from the trigger creator
+From:   Suren Baghdasaryan <surenb@google.com>
+To:     mingo@redhat.com, peterz@infradead.org
+Cc:     lizefan@huawei.com, hannes@cmpxchg.org, axboe@kernel.dk,
+        dennis@kernel.org, dennisszhou@gmail.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Suren Baghdasaryan <surenb@google.com>,
+        Nick Kralevich <nnk@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tao,
+When a process creates a new trigger by writing into /proc/pressure/*
+files, permissions to write such a file should be used to determine whether
+the process is allowed to do so or not. Current implementation would also
+require such a process to have setsched capability. Setting of psi trigger
+thread's scheduling policy is an implementation detail and should not be
+exposed to the user level. Remove the permission check by using _nocheck
+version of the function.
 
-On Tue, 30 Jul 2019 at 03:31, Tao Ren <taoren@fb.com> wrote:
->
-> Configure the BCM54616S for 1000Base-X mode when "brcm-phy-mode-1000bx"
-> is set in device tree. This is needed when the PHY is used for fiber and
-> backplane connections.
->
-> The patch is inspired by commit cd9af3dac6d1 ("PHYLIB: Add 1000Base-X
-> support for Broadcom bcm5482").
+Suggested-by: Nick Kralevich <nnk@google.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+---
+ kernel/sched/psi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-As far as I can see, for the commit you referenced,
-PHY_BCM_FLAGS_MODE_1000BX is referenced from nowhere in the entire
-mainline kernel:
-https://elixir.bootlin.com/linux/latest/ident/PHY_BCM_FLAGS_MODE_1000BX
-(it is supposed to be put by the MAC driver in phydev->dev_flags prior
-to calling phy_connect). But I don't see the point to this - can't you
-check for phydev->interface == PHY_INTERFACE_MODE_1000BASEX?
-This has the advantage that no MAC driver will need to know that it's
-talking to a Broadcom PHY. Additionally, no custom DT bindings are
-needed.
-Also, for backplane connections you probably want 1000Base-KX which
-has its own AN/LT, not plain 1000Base-X.
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 7acc632c3b82..ed9a1d573cb1 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1061,7 +1061,7 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
+ 			mutex_unlock(&group->trigger_lock);
+ 			return ERR_CAST(kworker);
+ 		}
+-		sched_setscheduler(kworker->task, SCHED_FIFO, &param);
++		sched_setscheduler_nocheck(kworker->task, SCHED_FIFO, &param);
+ 		kthread_init_delayed_work(&group->poll_work,
+ 				psi_poll_work);
+ 		rcu_assign_pointer(group->poll_kworker, kworker);
+-- 
+2.22.0.709.g102302147b-goog
 
->
-> Signed-off-by: Tao Ren <taoren@fb.com>
-> ---
->  drivers/net/phy/broadcom.c | 58 +++++++++++++++++++++++++++++++++++---
->  include/linux/brcmphy.h    |  4 +--
->  2 files changed, 56 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-> index 2b4e41a9d35a..6c22ac3a844b 100644
-> --- a/drivers/net/phy/broadcom.c
-> +++ b/drivers/net/phy/broadcom.c
-> @@ -383,9 +383,9 @@ static int bcm5482_config_init(struct phy_device *phydev)
->                 /*
->                  * Select 1000BASE-X register set (primary SerDes)
->                  */
-> -               reg = bcm_phy_read_shadow(phydev, BCM5482_SHD_MODE);
-> -               bcm_phy_write_shadow(phydev, BCM5482_SHD_MODE,
-> -                                    reg | BCM5482_SHD_MODE_1000BX);
-> +               reg = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
-> +               bcm_phy_write_shadow(phydev, BCM54XX_SHD_MODE,
-> +                                    reg | BCM54XX_SHD_MODE_1000BX);
->
->                 /*
->                  * LED1=ACTIVITYLED, LED3=LINKSPD[2]
-> @@ -451,6 +451,34 @@ static int bcm5481_config_aneg(struct phy_device *phydev)
->         return ret;
->  }
->
-> +static int bcm54616s_config_init(struct phy_device *phydev)
-> +{
-> +       int err, reg;
-> +       struct device_node *np = phydev->mdio.dev.of_node;
-> +
-> +       err = bcm54xx_config_init(phydev);
-> +
-> +       if (of_property_read_bool(np, "brcm-phy-mode-1000bx")) {
-> +               /* Select 1000BASE-X register set. */
-> +               reg = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
-> +               bcm_phy_write_shadow(phydev, BCM54XX_SHD_MODE,
-> +                                    reg | BCM54XX_SHD_MODE_1000BX);
-> +
-> +               /* Auto-negotiation doesn't seem to work quite right
-> +                * in this mode, so we disable it and force it to the
-> +                * right speed/duplex setting.  Only 'link status'
-> +                * is important.
-> +                */
-> +               phydev->autoneg = AUTONEG_DISABLE;
-> +               phydev->speed = SPEED_1000;
-> +               phydev->duplex = DUPLEX_FULL;
-> +
-
-1000Base-X AN does not include speed negotiation, so hardcoding
-SPEED_1000 is probably correct.
-What is wrong with the AN of duplex settings?
-
-> +               phydev->dev_flags |= PHY_BCM_FLAGS_MODE_1000BX;
-> +       }
-> +
-> +       return err;
-> +}
-> +
->  static int bcm54616s_config_aneg(struct phy_device *phydev)
->  {
->         int ret;
-> @@ -464,6 +492,27 @@ static int bcm54616s_config_aneg(struct phy_device *phydev)
->         return ret;
->  }
->
-> +static int bcm54616s_read_status(struct phy_device *phydev)
-> +{
-> +       int ret;
-> +
-> +       ret = genphy_read_status(phydev);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       if (phydev->dev_flags & PHY_BCM_FLAGS_MODE_1000BX) {
-> +               /* Only link status matters for 1000Base-X mode, so force
-> +                * 1000 Mbit/s full-duplex status.
-> +                */
-> +               if (phydev->link) {
-> +                       phydev->speed = SPEED_1000;
-> +                       phydev->duplex = DUPLEX_FULL;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static int brcm_phy_setbits(struct phy_device *phydev, int reg, int set)
->  {
->         int val;
-> @@ -651,8 +700,9 @@ static struct phy_driver broadcom_drivers[] = {
->         .phy_id_mask    = 0xfffffff0,
->         .name           = "Broadcom BCM54616S",
->         .features       = PHY_GBIT_FEATURES,
-> -       .config_init    = bcm54xx_config_init,
-> +       .config_init    = bcm54616s_config_init,
->         .config_aneg    = bcm54616s_config_aneg,
-> +       .read_status    = bcm54616s_read_status,
->         .ack_interrupt  = bcm_phy_ack_intr,
->         .config_intr    = bcm_phy_config_intr,
->  }, {
-> diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
-> index 6db2d9a6e503..82030155558c 100644
-> --- a/include/linux/brcmphy.h
-> +++ b/include/linux/brcmphy.h
-> @@ -200,8 +200,8 @@
->  #define BCM5482_SHD_SSD                0x14    /* 10100: Secondary SerDes control */
->  #define BCM5482_SHD_SSD_LEDM   0x0008  /* SSD LED Mode enable */
->  #define BCM5482_SHD_SSD_EN     0x0001  /* SSD enable */
-> -#define BCM5482_SHD_MODE       0x1f    /* 11111: Mode Control Register */
-> -#define BCM5482_SHD_MODE_1000BX        0x0001  /* Enable 1000BASE-X registers */
-> +#define BCM54XX_SHD_MODE       0x1f    /* 11111: Mode Control Register */
-> +#define BCM54XX_SHD_MODE_1000BX        0x0001  /* Enable 1000BASE-X registers */
-
-These registers are also present on my BCM5464, probably safe to
-assume they're generic for the entire family.
-So if you make the registers definitions common, you can probably make
-the 1000Base-X configuration common as well.
-
->
->
->  /*
-> --
-> 2.17.1
->
-
-Regards,
--Vladimir
