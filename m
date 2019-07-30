@@ -2,105 +2,129 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA819C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27ECC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB15206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564478757;
-	bh=nqU4k4X/e7lYeTAPiZAW8mdKZR5UN/bj9V8U1bHWGn8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CoAW2g2LWZwgf5LvgOzCOyLWFggCNfBbqneOJDwGHppZckwOt+O6QGyiUjObG3oXE
-	 iHPYiHtbvx0If9uNzN6xRKyNcw1ntplT7dkdKasQNc1ioan/zo3OMwL/0i38i9ccJX
-	 w2WWDkwW6jAkXdJ5yejHATYS8lCk8NMXQyVJj4BI=
+	by mail.kernel.org (Postfix) with ESMTP id CA16A208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:25:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="MwaqkRm4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731218AbfG3JZ4 (ORCPT
+        id S1731275AbfG3JZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59216 "EHLO mail.kernel.org"
+        Tue, 30 Jul 2019 05:25:58 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:49751 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731046AbfG3JZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:25:54 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 906A22089E;
-        Tue, 30 Jul 2019 09:25:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564478753;
-        bh=nqU4k4X/e7lYeTAPiZAW8mdKZR5UN/bj9V8U1bHWGn8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=2F0v4akXyoiqT9/IdB6Ohu4GIcsn8FKvMOtHoG+WiVduFmfrv/2DFnEhZcTFRMI38
-         djITFzPR+wZabZ+x6kLMIDxM8IeHsUqlAD02hW1ZOJmf8bPYufh5CJ1EzwQEM2Abru
-         Yd+T5QoVt9ASTYqx5qMTWhukv0Vsan1typDxX4/Q=
-From:   Will Deacon <will@kernel.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        "# 4 . 9+" <stable@vger.kernel.org>,
-        Aurelien Jarno <aurelien@aurel32.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH] arm64: compat: Provide definition for COMPAT_SIGMINSTKSZ
-Date:   Tue, 30 Jul 2019 10:25:47 +0100
-Message-Id: <20190730092547.1284-1-will@kernel.org>
-X-Mailer: git-send-email 2.11.0
+        id S1728824AbfG3JZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 05:25:55 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45yWPr5TVtz9v6rL;
+        Tue, 30 Jul 2019 11:25:52 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=MwaqkRm4; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 7KFNCyn7xq7n; Tue, 30 Jul 2019 11:25:52 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45yWPr4N12z9v6rD;
+        Tue, 30 Jul 2019 11:25:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1564478752; bh=pX9B5rT8fdYyTjZx+y7CWb+oTWSJ3t8UtVUS0M54TGU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MwaqkRm4vHR8/sYmxLpOgTAQa18mHrb0VUqrjcNqC1Aaq+35egfN8JkhKEZ3se6ea
+         z03O0PuzFXxwU4G53xz6iNsa6xCJOFcZKbwn3CqgeJI43bVNH3jjSV87cZTbKM9r0o
+         Q8OXsbj1nwj/LypjTYleCuGgV3570gHdIuTUlVUU=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B081D8B801;
+        Tue, 30 Jul 2019 11:25:53 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id iChTdP8KxfiN; Tue, 30 Jul 2019 11:25:53 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7ABBB8B74F;
+        Tue, 30 Jul 2019 11:25:53 +0200 (CEST)
+Subject: Re: [PATCH v2 03/10] powerpc: introduce kimage_vaddr to store the
+ kernel base
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com
+Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
+        yebin10@huawei.com, thunder.leizhen@huawei.com,
+        jingxiangfeng@huawei.com, fanchengyang@huawei.com,
+        zhaohongjiang@huawei.com
+References: <20190730074225.39544-1-yanaijie@huawei.com>
+ <20190730074225.39544-4-yanaijie@huawei.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <8a0c469d-3c69-393b-54ce-a75b8719ca65@c-s.fr>
+Date:   Tue, 30 Jul 2019 11:25:53 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190730074225.39544-4-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
 
-[ Upstream commit 24951465cbd279f60b1fdc2421b3694405bcff42 ]
 
-arch/arm/ defines a SIGMINSTKSZ of 2k, so we should use the same value
-for compat tasks.
+Le 30/07/2019 à 09:42, Jason Yan a écrit :
+> Now the kernel base is a fixed value - KERNELBASE. To support KASLR, we
+> need a variable to store the kernel base.
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Cc: Diana Craciun <diana.craciun@nxp.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Kees Cook <keescook@chromium.org>
 
-Cc: <stable@vger.kernel.org> # 4.9+
-Cc: Aurelien Jarno <aurelien@aurel32.net>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Reviewed-by: Dave Martin <Dave.Martin@arm.com>
-Reported-by: Steve McIntyre <steve.mcintyre@arm.com>
-Tested-by: Steve McIntyre <93sam@debian.org>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
----
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Aurelien points out that this didn't get selected for -stable despite its
-counterpart (22839869f21a ("signal: Introduce COMPAT_SIGMINSTKSZ for use
-in compat_sys_sigaltstack")) being backported to 4.9. Oops.
-
- arch/arm64/include/asm/compat.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/include/asm/compat.h b/arch/arm64/include/asm/compat.h
-index 1a037b94eba1..cee28a05ee98 100644
---- a/arch/arm64/include/asm/compat.h
-+++ b/arch/arm64/include/asm/compat.h
-@@ -159,6 +159,7 @@ static inline compat_uptr_t ptr_to_compat(void __user *uptr)
- }
- 
- #define compat_user_stack_pointer() (user_stack_pointer(task_pt_regs(current)))
-+#define COMPAT_MINSIGSTKSZ	2048
- 
- static inline void __user *arch_compat_alloc_user_space(long len)
- {
--- 
-2.11.0
-
+> ---
+>   arch/powerpc/include/asm/page.h | 2 ++
+>   arch/powerpc/mm/init-common.c   | 2 ++
+>   2 files changed, 4 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+> index 0d52f57fca04..60a68d3a54b1 100644
+> --- a/arch/powerpc/include/asm/page.h
+> +++ b/arch/powerpc/include/asm/page.h
+> @@ -315,6 +315,8 @@ void arch_free_page(struct page *page, int order);
+>   
+>   struct vm_area_struct;
+>   
+> +extern unsigned long kimage_vaddr;
+> +
+>   #include <asm-generic/memory_model.h>
+>   #endif /* __ASSEMBLY__ */
+>   #include <asm/slice.h>
+> diff --git a/arch/powerpc/mm/init-common.c b/arch/powerpc/mm/init-common.c
+> index 152ae0d21435..d4801ce48dc5 100644
+> --- a/arch/powerpc/mm/init-common.c
+> +++ b/arch/powerpc/mm/init-common.c
+> @@ -25,6 +25,8 @@ phys_addr_t memstart_addr = (phys_addr_t)~0ull;
+>   EXPORT_SYMBOL_GPL(memstart_addr);
+>   phys_addr_t kernstart_addr;
+>   EXPORT_SYMBOL_GPL(kernstart_addr);
+> +unsigned long kimage_vaddr = KERNELBASE;
+> +EXPORT_SYMBOL_GPL(kimage_vaddr);
+>   
+>   static bool disable_kuep = !IS_ENABLED(CONFIG_PPC_KUEP);
+>   static bool disable_kuap = !IS_ENABLED(CONFIG_PPC_KUAP);
+> 
