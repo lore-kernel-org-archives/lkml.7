@@ -2,156 +2,133 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54675C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF72C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257D6208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:35:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="DbmAT97h"
+	by mail.kernel.org (Postfix) with ESMTP id 7ED22208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbfG3QfW (ORCPT
+        id S1728843AbfG3QgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:35:22 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:36795 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbfG3QfV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:35:21 -0400
-Received: by mail-vk1-f193.google.com with SMTP id b69so12921059vkb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 09:35:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bd218zoMUJsn4aIQS2BNDS+uQZePQhIcqq2z5vcOhic=;
-        b=DbmAT97hG2aiN+XhQQTZB5GAaDDkGfUifEkCoJoVfvRfLFdTChp80EEGUEuP4IyxWq
-         Q/ySXZL+bKgz4ffKvibIoxHldoiPWbnpTa/r6tE4KxSgvZtu0gLHPDyEGBtSgWP0QcFT
-         hkGBj+Ls+hedLeqNzH1rnyadXMkhfGe4vLnzajogJ4YOOkASv0fErAMon/Z22+4LAQPK
-         i0YSUcsMX7a8F11PHu+wK4lc8t9+BSwbiE29SE9KVOB0t31NEQBRym30FJ2N3OPfqY2j
-         MN8E4ILhiu16fE9WVkVCnNEt+w6NmsDhYYO78AGunBVuRQ2lRf2aVLUImSTylou57g8E
-         UF1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bd218zoMUJsn4aIQS2BNDS+uQZePQhIcqq2z5vcOhic=;
-        b=hsAunVXJjzEXA1pRqUmonqJ9ryhcyFu+xsUWbS3Mo6tk0TnTsqQ//JaOA7yVHrY6oj
-         /Jg23m7ECW5a1mTNX5RXpL+5DqEVrPemnMVDlkr+15k5Jb2pE7dWqwvDBZjgaUzcUlBU
-         e89eux0Yj4/WvQLgdBl4DR8Fn1aG255vc0C03pDA8kzz6n8VMTfLghcgfiy0Age9wgRv
-         3nrSunYhlf6sygFupr+XvJc7iJNBPjlJBkDUhUDgIfVtpj3GBCDT5pWiqPPg5rBEBSOP
-         vB2Y3jKcGDrRnloWMCQPRn2RvZr8HrrGBgTK10phvCztCO8iCxRWbo4xSVD2Wzoppgpb
-         YFsA==
-X-Gm-Message-State: APjAAAVQkFjwlYXYI9G5JpxGgIy76aS5Ly5yr+EtAJW84oz+fA6uneDM
-        iESFPvpbTfvKA6IG+LPbSDm99MB4JYPgWPbRPvE=
-X-Google-Smtp-Source: APXvYqys0WpkMk5B9ROnp16nbLIVY7ZU3prgqc+nvtWnwOpbR9j0jCxIbSSadoW3uD0BTg4p7Q/DEd1I5uOt47w3sfA=
-X-Received: by 2002:a1f:1d58:: with SMTP id d85mr44781885vkd.13.1564504520182;
- Tue, 30 Jul 2019 09:35:20 -0700 (PDT)
+        Tue, 30 Jul 2019 12:36:02 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:34082 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726107AbfG3QgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 12:36:02 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hsV6V-0003y8-5k; Tue, 30 Jul 2019 10:36:00 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hsV6R-0001ID-0L; Tue, 30 Jul 2019 10:35:55 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Tue, 30 Jul 2019 10:35:31 -0600
+Message-Id: <20190730163545.4915-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190725135150.9972-1-vkoul@kernel.org> <20190725135150.9972-2-vkoul@kernel.org>
-In-Reply-To: <20190725135150.9972-2-vkoul@kernel.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 30 Jul 2019 22:05:09 +0530
-Message-ID: <CAHLCerNsAX4raauTjogOpwqAjEWfd+jpaZYsFnC10tcmvnD5cg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] arm64: dts: qcom: pms405: add unit name adc nodes
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, hch@lst.de, Christian.Koenig@amd.com, jgg@mellanox.com, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, dan.j.williams@intel.com, epilmore@gigaio.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v2 00/14]  PCI/P2PDMA: Support transactions that hit the host bridge
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 7:23 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> The adc nodes have reg property but were missing the unit name, so add
-> that to fix these warnings:
->
-> arch/arm64/boot/dts/qcom/pms405.dtsi:91.12-94.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/ref_gnd: node has a reg or ranges property, but no unit name
-> arch/arm64/boot/dts/qcom/pms405.dtsi:96.14-99.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/vref_1p25: node has a reg or ranges property, but no unit name
-> arch/arm64/boot/dts/qcom/pms405.dtsi:101.19-104.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/vph_pwr: node has a reg or ranges property, but no unit name
-> arch/arm64/boot/dts/qcom/pms405.dtsi:106.13-109.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/die_temp: node has a reg or ranges property, but no unit name
-> arch/arm64/boot/dts/qcom/pms405.dtsi:111.27-116.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/thermistor1: node has a reg or ranges property, but no unit name
-> arch/arm64/boot/dts/qcom/pms405.dtsi:118.27-123.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/thermistor3: node has a reg or ranges property, but no unit name
-> arch/arm64/boot/dts/qcom/pms405.dtsi:125.22-130.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/xo_temp: node has a reg or ranges property, but no unit name
->
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/pms405.dtsi | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
-> index 14240fedd916..3c10cf04d26e 100644
-> --- a/arch/arm64/boot/dts/qcom/pms405.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
-> @@ -88,41 +88,41 @@
->                         #size-cells = <0>;
->                         #io-channel-cells = <1>;
->
-> -                       ref_gnd {
-> +                       ref_gnd@0 {
->                                 reg = <ADC5_REF_GND>;
->                                 qcom,pre-scaling = <1 1>;
->                         };
->
-> -                       vref_1p25 {
-> +                       vref_1p25@1 {
->                                 reg = <ADC5_1P25VREF>;
->                                 qcom,pre-scaling = <1 1>;
->                         };
->
-> -                       pon_1: vph_pwr {
-> +                       pon_1: vph_pwr@131 {
->                                 reg = <ADC5_VPH_PWR>;
->                                 qcom,pre-scaling = <1 3>;
->                         };
->
-> -                       die_temp {
-> +                       die_temp@6 {
->                                 reg = <ADC5_DIE_TEMP>;
->                                 qcom,pre-scaling = <1 1>;
->                         };
->
-> -                       pa_therm1: thermistor1 {
-> +                       pa_therm1: thermistor1@115 {
+Here's v2 of the patchset. It doesn't sound like there's anything
+terribly controversial here so this version is mostly just some
+cleanup changes for clarity.
 
-s/115/77 ?
+Changes in v2:
+ * Rebase on v5.3-rc2 (No changes)
+ * Re-introduce the private pagemap structure and move the p2p-specific
+   elements out of the commond dev_pagemap (per Christoph)
+ * Use flags instead of bool in the whitelist (per Jason)
+ * Only store the mapping type in the xarray (instead of the distance
+   with flags) such that a function can return the mapping method
+   with a switch statement to decide how to map. (per Christoph)
+ * Drop find_parent_pci_dev() on the fast path and rely on the fact
+   that the struct device passed to the mapping functions *must* be
+   a PCI device and convert it directly. (per suggestions from
+   Christoph and Jason)
+ * Collected Christian's Reviewed-by's
 
->                                 reg = <ADC5_AMUX_THM1_100K_PU>;
->                                 qcom,ratiometric;
->                                 qcom,hw-settle-time = <200>;
->                                 qcom,pre-scaling = <1 1>;
->                         };
->
-> -                       pa_therm3: thermistor3 {
-> +                       pa_therm3: thermistor3@117 {
+--
 
-s/117/79 ?
+As discussed on the list previously, in order to fully support the
+whitelist Christian added with the IOMMU, we must ensure that we
+map any buffer going through the IOMMU with an aprropriate dma_map
+call. This patchset accomplishes this by cleaning up the output of
+upstream_bridge_distance() to better indicate the mapping requirements,
+caching these requirements in an xarray, then looking them up at map
+time and applying the appropriate mapping method.
 
->                                 reg = <ADC5_AMUX_THM3_100K_PU>;
->                                 qcom,ratiometric;
->                                 qcom,hw-settle-time = <200>;
->                                 qcom,pre-scaling = <1 1>;
->                         };
->
-> -                       xo_therm: xo_temp {
-> +                       xo_therm: xo_temp@114 {
+After this patchset, it's possible to use the NVMe-of P2P support to
+transfer between devices without a switch on the whitelisted root
+complexes. A couple Intel device I have tested this on have also
+been added to the white list.
 
-s/114/76 ?
+Most of the changes are contained within the p2pdma.c, but there are
+a few minor touches to other subsystems, mostly to add support
+to call an unmap function.
 
->                                 reg = <ADC5_XO_THERM_100K_PU>;
->                                 qcom,ratiometric;
->                                 qcom,hw-settle-time = <200>;
-> --
-> 2.20.1
->
+The final patch in this series demonstrates a possible
+pci_p2pdma_map_resource() function that I expect Christian will need
+but does not have any users at this time so I don't intend for it to be
+considered for merging.
+
+This patchset is based on 5.3-rc2 and a git branch is available here:
+
+https://github.com/sbates130272/linux-p2pmem/ p2pdma_rc_map_v2
+
+--
+
+Logan Gunthorpe (14):
+  PCI/P2PDMA: Introduce private pagemap structure
+  PCI/P2PDMA: Add the provider's pci_dev to the pci_p2pdma_pagemap
+    struct
+  PCI/P2PDMA: Add constants for not-supported result
+    upstream_bridge_distance()
+  PCI/P2PDMA: Factor out __upstream_bridge_distance()
+  PCI/P2PDMA: Apply host bridge white list for ACS
+  PCI/P2PDMA: Factor out host_bridge_whitelist()
+  PCI/P2PDMA: Add whitelist support for Intel Host Bridges
+  PCI/P2PDMA: Add attrs argument to pci_p2pdma_map_sg()
+  PCI/P2PDMA: Introduce pci_p2pdma_unmap_sg()
+  PCI/P2PDMA: Factor out __pci_p2pdma_map_sg()
+  PCI/P2PDMA: Store mapping method in an xarray
+  PCI/P2PDMA: dma_map P2PDMA map requests that traverse the host bridge
+  PCI/P2PDMA: No longer require no-mmu for host bridge whitelist
+  PCI/P2PDMA: Update documentation for pci_p2pdma_distance_many()
+
+ drivers/infiniband/core/rw.c |   6 +-
+ drivers/nvme/host/pci.c      |  10 +-
+ drivers/pci/p2pdma.c         | 361 +++++++++++++++++++++++++----------
+ include/linux/memremap.h     |   1 -
+ include/linux/pci-p2pdma.h   |  28 ++-
+ 5 files changed, 296 insertions(+), 110 deletions(-)
+
+--
+2.20.1
