@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D1AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CC7C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A16208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB29208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:52:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HAiKpX1E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PwwV1uMv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbfG3Fwk (ORCPT
+        id S1729630AbfG3Fwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 01:52:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46206 "EHLO
+        Tue, 30 Jul 2019 01:52:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46244 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbfG3Fwg (ORCPT
+        with ESMTP id S1729587AbfG3Fwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 01:52:36 -0400
+        Tue, 30 Jul 2019 01:52:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gUN1ysYphbaom7o3SlTt3jkBtHdaNGKW2RkJa25nOPs=; b=HAiKpX1EVNOPs9UAiXpBK7RtOr
-        zWukhNQVhuMZwGpox0xkimd9OFR2Ina8VGIPXExI+LErg/VnNm4GKw3KhxEHcuS6/LRmr138bugv5
-        vNpJF/+SAhyuf8MH5RCG47zhWLt0kP5bM2tUSa6/9lHeqc4acuR/Q/iWZCz3+2uVGPw4DAQIlnpoh
-        fnaTSPET4vYNsZeP/lcOk31QyTLoeN7vASsyNjZ/ynhufNdRmdM/Jzi+1OeWixGX72h02GqhtFvg4
-        YlZr6QULf+iUQhX4wBYbOqwf03LD8S1F5OaHDFK8eFbdtQ5tnFaet/ViEYVOX5jwe2IVoZ0qJck9p
-        yoAN3cVQ==;
+        bh=b/9edj6OiWVlv3WVS80N1fYDkV0WF2l+sPw3a4dWbfc=; b=PwwV1uMvlDTXpPMRUViyPmLA2/
+        KJsCq+/JAnSamHewYk0gwqaFOPbXwmsNCa2YJoj20TrOwbiu2CkUo9kffkHl7l9A0DZBCXiXZmvAw
+        iadlnyzca9yIJdOResfC3lkn4ew1r36r6S76Y7jp0faIKHtyrxyzEHZ9ZBgLxuhJK7GmkdHLnqf0M
+        SYysK8E8UKfghD8G7ENuOr/r5Lec21/Og/wNdau5FEW3XUL3VsSpKcCo5h7ZN4dL704rvxk9Guetm
+        mdGAHO9k3kia0714GeokE/q5sdBs2Z7cRgkPK2NMyZpZdfZyI7e2iZieUJUgn6jmWmhyaaO7SNAm7
+        P+AUia3g==;
 Received: from [195.167.85.94] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsL3o-0001Iz-GC; Tue, 30 Jul 2019 05:52:32 +0000
+        id 1hsL3r-0001JT-2V; Tue, 30 Jul 2019 05:52:35 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
@@ -46,9 +46,9 @@ To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
 Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
         nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 06/13] mm: remove superflous arguments from hmm_range_register
-Date:   Tue, 30 Jul 2019 08:51:56 +0300
-Message-Id: <20190730055203.28467-7-hch@lst.de>
+Subject: [PATCH 07/13] mm: remove the page_shift member from struct hmm_range
+Date:   Tue, 30 Jul 2019 08:51:57 +0300
+Message-Id: <20190730055203.28467-8-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190730055203.28467-1-hch@lst.de>
 References: <20190730055203.28467-1-hch@lst.de>
@@ -60,134 +60,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The start, end and page_shift values are all saved in the range
-structure, so we might as well use that for argument passing.
+All users pass PAGE_SIZE here, and if we wanted to support single
+entries for huge pages we should really just add a HMM_FAULT_HUGEPAGE
+flag instead that uses the huge page size instead of having the
+caller calculate that size once, just for the hmm code to verify it.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- Documentation/vm/hmm.rst                |  2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c |  7 +++++--
- drivers/gpu/drm/nouveau/nouveau_svm.c   |  5 ++---
- include/linux/hmm.h                     |  6 +-----
- mm/hmm.c                                | 20 +++++---------------
- 5 files changed, 14 insertions(+), 26 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c |  1 -
+ drivers/gpu/drm/nouveau/nouveau_svm.c   |  1 -
+ include/linux/hmm.h                     | 22 -------------
+ mm/hmm.c                                | 42 ++++++-------------------
+ 4 files changed, 9 insertions(+), 57 deletions(-)
 
-diff --git a/Documentation/vm/hmm.rst b/Documentation/vm/hmm.rst
-index ddcb5ca8b296..e63c11f7e0e0 100644
---- a/Documentation/vm/hmm.rst
-+++ b/Documentation/vm/hmm.rst
-@@ -222,7 +222,7 @@ The usage pattern is::
-       range.flags = ...;
-       range.values = ...;
-       range.pfn_shift = ...;
--      hmm_range_register(&range);
-+      hmm_range_register(&range, mirror);
- 
-       /*
-        * Just wait for range to be valid, safe to ignore return value as we
 diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-index f0821638bbc6..71d6e7087b0b 100644
+index 71d6e7087b0b..8bf79288c4e2 100644
 --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
 +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-@@ -818,8 +818,11 @@ int amdgpu_ttm_tt_get_user_pages(struct amdgpu_bo *bo, struct page **pages)
+@@ -818,7 +818,6 @@ int amdgpu_ttm_tt_get_user_pages(struct amdgpu_bo *bo, struct page **pages)
  				0 : range->flags[HMM_PFN_WRITE];
  	range->pfn_flags_mask = 0;
  	range->pfns = pfns;
--	hmm_range_register(range, mirror, start,
--			   start + ttm->num_pages * PAGE_SIZE, PAGE_SHIFT);
-+	range->page_shift = PAGE_SHIFT;
-+	range->start = start;
-+	range->end = start + ttm->num_pages * PAGE_SIZE;
-+
-+	hmm_range_register(range, mirror);
+-	range->page_shift = PAGE_SHIFT;
+ 	range->start = start;
+ 	range->end = start + ttm->num_pages * PAGE_SIZE;
  
- 	/*
- 	 * Just wait for range to be valid, safe to ignore return value as we
 diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-index b889d5ec4c7e..40e706234554 100644
+index 40e706234554..e7068ce46949 100644
 --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
 +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -492,9 +492,7 @@ nouveau_range_fault(struct nouveau_svmm *svmm, struct hmm_range *range)
- 	range->default_flags = 0;
- 	range->pfn_flags_mask = -1UL;
- 
--	ret = hmm_range_register(range, &svmm->mirror,
--				 range->start, range->end,
--				 PAGE_SHIFT);
-+	ret = hmm_range_register(range, &svmm->mirror);
- 	if (ret) {
- 		up_read(&range->hmm->mm->mmap_sem);
- 		return (int)ret;
-@@ -682,6 +680,7 @@ nouveau_svm_fault(struct nvif_notify *notify)
+@@ -680,7 +680,6 @@ nouveau_svm_fault(struct nvif_notify *notify)
  			 args.i.p.addr + args.i.p.size, fn - fi);
  
  		/* Have HMM fault pages within the fault window to the GPU. */
-+		range.page_shift = PAGE_SHIFT;
+-		range.page_shift = PAGE_SHIFT;
  		range.start = args.i.p.addr;
  		range.end = args.i.p.addr + args.i.p.size;
  		range.pfns = args.phys;
 diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 59be0aa2476d..c5b51376b453 100644
+index c5b51376b453..51e18fbb8953 100644
 --- a/include/linux/hmm.h
 +++ b/include/linux/hmm.h
-@@ -400,11 +400,7 @@ void hmm_mirror_unregister(struct hmm_mirror *mirror);
- /*
-  * Please see Documentation/vm/hmm.rst for how to use the range API.
+@@ -158,7 +158,6 @@ enum hmm_pfn_value_e {
+  * @values: pfn value for some special case (none, special, error, ...)
+  * @default_flags: default flags for the range (write, read, ... see hmm doc)
+  * @pfn_flags_mask: allows to mask pfn flags so that only default_flags matter
+- * @page_shift: device virtual address shift value (should be >= PAGE_SHIFT)
+  * @pfn_shifts: pfn shift value (should be <= PAGE_SHIFT)
+  * @valid: pfns array did not change since it has been fill by an HMM function
   */
--int hmm_range_register(struct hmm_range *range,
--		       struct hmm_mirror *mirror,
--		       unsigned long start,
--		       unsigned long end,
--		       unsigned page_shift);
-+int hmm_range_register(struct hmm_range *range, struct hmm_mirror *mirror);
- void hmm_range_unregister(struct hmm_range *range);
+@@ -172,31 +171,10 @@ struct hmm_range {
+ 	const uint64_t		*values;
+ 	uint64_t		default_flags;
+ 	uint64_t		pfn_flags_mask;
+-	uint8_t			page_shift;
+ 	uint8_t			pfn_shift;
+ 	bool			valid;
+ };
  
+-/*
+- * hmm_range_page_shift() - return the page shift for the range
+- * @range: range being queried
+- * Return: page shift (page size = 1 << page shift) for the range
+- */
+-static inline unsigned hmm_range_page_shift(const struct hmm_range *range)
+-{
+-	return range->page_shift;
+-}
+-
+-/*
+- * hmm_range_page_size() - return the page size for the range
+- * @range: range being queried
+- * Return: page size for the range in bytes
+- */
+-static inline unsigned long hmm_range_page_size(const struct hmm_range *range)
+-{
+-	return 1UL << hmm_range_page_shift(range);
+-}
+-
  /*
+  * hmm_range_wait_until_valid() - wait for range to be valid
+  * @range: range affected by invalidation to wait on
 diff --git a/mm/hmm.c b/mm/hmm.c
-index 3a3852660757..926735a3aef9 100644
+index 926735a3aef9..f26d6abc4ed2 100644
 --- a/mm/hmm.c
 +++ b/mm/hmm.c
-@@ -843,35 +843,25 @@ static void hmm_pfns_clear(struct hmm_range *range,
-  * hmm_range_register() - start tracking change to CPU page table over a range
-  * @range: range
-  * @mm: the mm struct for the range of virtual address
-- * @start: start virtual address (inclusive)
-- * @end: end virtual address (exclusive)
-- * @page_shift: expect page shift for the range
-+ *
-  * Return: 0 on success, -EFAULT if the address space is no longer valid
-  *
-  * Track updates to the CPU page table see include/linux/hmm.h
-  */
--int hmm_range_register(struct hmm_range *range,
--		       struct hmm_mirror *mirror,
--		       unsigned long start,
--		       unsigned long end,
--		       unsigned page_shift)
-+int hmm_range_register(struct hmm_range *range, struct hmm_mirror *mirror)
+@@ -344,13 +344,12 @@ static int hmm_vma_walk_hole_(unsigned long addr, unsigned long end,
+ 	struct hmm_vma_walk *hmm_vma_walk = walk->private;
+ 	struct hmm_range *range = hmm_vma_walk->range;
+ 	uint64_t *pfns = range->pfns;
+-	unsigned long i, page_size;
++	unsigned long i;
+ 
+ 	hmm_vma_walk->last = addr;
+-	page_size = hmm_range_page_size(range);
+-	i = (addr - range->start) >> range->page_shift;
++	i = (addr - range->start) >> PAGE_SHIFT;
+ 
+-	for (; addr < end; addr += page_size, i++) {
++	for (; addr < end; addr += PAGE_SIZE, i++) {
+ 		pfns[i] = range->values[HMM_PFN_NONE];
+ 		if (fault || write_fault) {
+ 			int ret;
+@@ -772,7 +771,7 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned long hmask,
+ 				      struct mm_walk *walk)
  {
--	unsigned long mask = ((1UL << page_shift) - 1UL);
-+	unsigned long mask = ((1UL << range->page_shift) - 1UL);
+ #ifdef CONFIG_HUGETLB_PAGE
+-	unsigned long addr = start, i, pfn, mask, size, pfn_inc;
++	unsigned long addr = start, i, pfn, mask;
+ 	struct hmm_vma_walk *hmm_vma_walk = walk->private;
+ 	struct hmm_range *range = hmm_vma_walk->range;
+ 	struct vm_area_struct *vma = walk->vma;
+@@ -783,24 +782,12 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned long hmask,
+ 	pte_t entry;
+ 	int ret = 0;
+ 
+-	size = huge_page_size(h);
+-	mask = size - 1;
+-	if (range->page_shift != PAGE_SHIFT) {
+-		/* Make sure we are looking at a full page. */
+-		if (start & mask)
+-			return -EINVAL;
+-		if (end < (start + size))
+-			return -EINVAL;
+-		pfn_inc = size >> PAGE_SHIFT;
+-	} else {
+-		pfn_inc = 1;
+-		size = PAGE_SIZE;
+-	}
++	mask = huge_page_size(h) - 1;
+ 
+ 	ptl = huge_pte_lock(hstate_vma(vma), walk->mm, pte);
+ 	entry = huge_ptep_get(pte);
+ 
+-	i = (start - range->start) >> range->page_shift;
++	i = (start - range->start) >> PAGE_SHIFT;
+ 	orig_pfn = range->pfns[i];
+ 	range->pfns[i] = range->values[HMM_PFN_NONE];
+ 	cpu_flags = pte_to_hmm_pfn_flags(range, entry);
+@@ -812,8 +799,8 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned long hmask,
+ 		goto unlock;
+ 	}
+ 
+-	pfn = pte_pfn(entry) + ((start & mask) >> range->page_shift);
+-	for (; addr < end; addr += size, i++, pfn += pfn_inc)
++	pfn = pte_pfn(entry) + ((start & mask) >> PAGE_SHIFT);
++	for (; addr < end; addr += PAGE_SIZE, i++, pfn++)
+ 		range->pfns[i] = hmm_device_entry_from_pfn(range, pfn) |
+ 				 cpu_flags;
+ 	hmm_vma_walk->last = end;
+@@ -850,14 +837,13 @@ static void hmm_pfns_clear(struct hmm_range *range,
+  */
+ int hmm_range_register(struct hmm_range *range, struct hmm_mirror *mirror)
+ {
+-	unsigned long mask = ((1UL << range->page_shift) - 1UL);
  	struct hmm *hmm = mirror->hmm;
  	unsigned long flags;
  
  	range->valid = false;
  	range->hmm = NULL;
  
--	if ((start & mask) || (end & mask))
-+	if ((range->start & mask) || (range->end & mask))
+-	if ((range->start & mask) || (range->end & mask))
++	if ((range->start & (PAGE_SIZE - 1)) || (range->end & (PAGE_SIZE - 1)))
  		return -EINVAL;
--	if (start >= end)
-+	if (range->start >= range->end)
+ 	if (range->start >= range->end)
  		return -EINVAL;
+@@ -964,16 +950,6 @@ long hmm_range_fault(struct hmm_range *range, unsigned int flags)
+ 		if (vma == NULL || (vma->vm_flags & device_vma))
+ 			return -EFAULT;
  
--	range->page_shift = page_shift;
--	range->start = start;
--	range->end = end;
+-		if (is_vm_hugetlb_page(vma)) {
+-			if (huge_page_shift(hstate_vma(vma)) !=
+-			    range->page_shift &&
+-			    range->page_shift != PAGE_SHIFT)
+-				return -EINVAL;
+-		} else {
+-			if (range->page_shift != PAGE_SHIFT)
+-				return -EINVAL;
+-		}
 -
- 	/* Prevent hmm_release() from running while the range is valid */
- 	if (!mmget_not_zero(hmm->mm))
- 		return -EFAULT;
+ 		if (!(vma->vm_flags & VM_READ)) {
+ 			/*
+ 			 * If vma do not allow read access, then assume that it
 -- 
 2.20.1
 
