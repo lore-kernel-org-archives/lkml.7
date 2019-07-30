@@ -2,94 +2,180 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AD7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C95C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E82217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F0F20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731351AbfG3JbK (ORCPT
+        id S1731362AbfG3Jdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:31:10 -0400
-Received: from mail.parknet.co.jp ([210.171.160.6]:55402 "EHLO
-        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730931AbfG3JbK (ORCPT
+        Tue, 30 Jul 2019 05:33:49 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:38637 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730931AbfG3Jdt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:31:10 -0400
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-        by mail.parknet.co.jp (Postfix) with ESMTPSA id 9548A15F926;
-        Tue, 30 Jul 2019 18:31:08 +0900 (JST)
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-12) with ESMTPS id x6U9V7FK030262
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Tue, 30 Jul 2019 18:31:08 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-12) with ESMTPS id x6U9V7O4001723
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Tue, 30 Jul 2019 18:31:07 +0900
-Received: (from hirofumi@localhost)
-        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id x6U9V65R001722;
-        Tue, 30 Jul 2019 18:31:06 +0900
-From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, arnd@arndb.de,
-        y2038@lists.linaro.org
-Subject: Re: [PATCH 12/20] fs: fat: Initialize filesystem timestamp ranges
-References: <20190730014924.2193-1-deepa.kernel@gmail.com>
-        <20190730014924.2193-13-deepa.kernel@gmail.com>
-Date:   Tue, 30 Jul 2019 18:31:06 +0900
-In-Reply-To: <20190730014924.2193-13-deepa.kernel@gmail.com> (Deepa Dinamani's
-        message of "Mon, 29 Jul 2019 18:49:16 -0700")
-Message-ID: <878ssfc1id.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.50 (gnu/linux)
+        Tue, 30 Jul 2019 05:33:49 -0400
+Received: from localhost.localdomain (p5B3D2BA7.dip0.t-ipconnect.de [91.61.43.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 75099CECFD;
+        Tue, 30 Jul 2019 11:42:25 +0200 (CEST)
+From:   Marcel Holtmann <marcel@holtmann.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org
+Subject: [PATCH v5.3-rc2] Bluetooth: hci_uart: check for missing tty operations
+Date:   Tue, 30 Jul 2019 11:33:45 +0200
+Message-Id: <20190730093345.25573-1-marcel@holtmann.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deepa Dinamani <deepa.kernel@gmail.com> writes:
+From: Vladis Dronov <vdronov@redhat.com>
 
-> +/* DOS dates from 1980/1/1 through 2107/12/31 */
-> +#define FAT_DATE_MIN (0<<9 | 1<<5 | 1)
-> +#define FAT_DATE_MAX (127<<9 | 12<<5 | 31)
-> +#define FAT_TIME_MAX (23<<11 | 59<<5 | 29)
-> +
->  /*
->   * A deserialized copy of the on-disk structure laid out in struct
->   * fat_boot_sector.
-> @@ -1605,6 +1610,7 @@ int fat_fill_super(struct super_block *sb, void *data, int silent, int isvfat,
->  	int debug;
->  	long error;
->  	char buf[50];
-> +	struct timespec64 ts;
->  
->  	/*
->  	 * GFP_KERNEL is ok here, because while we do hold the
-> @@ -1698,6 +1704,12 @@ int fat_fill_super(struct super_block *sb, void *data, int silent, int isvfat,
->  	sbi->free_clus_valid = 0;
->  	sbi->prev_free = FAT_START_ENT;
->  	sb->s_maxbytes = 0xffffffff;
-> +	fat_time_fat2unix(sbi, &ts, 0, cpu_to_le16(FAT_DATE_MIN), 0);
-> +	sb->s_time_min = ts.tv_sec;
-> +
-> +	fat_time_fat2unix(sbi, &ts, cpu_to_le16(FAT_TIME_MAX),
-> +			  cpu_to_le16(FAT_DATE_MAX), 0);
-> +	sb->s_time_max = ts.tv_sec;
+Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
+functions which are called by the certain HCI UART protocols (hci_ath,
+hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
+or directly. This leads to an execution at NULL and can be triggered by
+an unprivileged user. Fix this by adding a helper function and a check
+for the missing tty operations in the protocols code.
 
-At least, it is wrong to call fat_time_fat2unix() before setup parameters
-in sbi.
+This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
+tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
+protocols.
 
-And please move those timestamp stuff to fat/misc.c like other fat
-timestamp helpers. (Maybe, provide fat_time_{min,max}() from fat/misc.c,
-or fat_init_time() such?).
+Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
+Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org # v2.6.36+
+Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
+Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
+Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
+Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
+Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+---
+ drivers/bluetooth/hci_ath.c   |  3 +++
+ drivers/bluetooth/hci_bcm.c   |  3 +++
+ drivers/bluetooth/hci_intel.c |  3 +++
+ drivers/bluetooth/hci_ldisc.c | 13 +++++++++++++
+ drivers/bluetooth/hci_mrvl.c  |  3 +++
+ drivers/bluetooth/hci_qca.c   |  3 +++
+ drivers/bluetooth/hci_uart.h  |  1 +
+ 7 files changed, 29 insertions(+)
 
-Thanks.
+diff --git a/drivers/bluetooth/hci_ath.c b/drivers/bluetooth/hci_ath.c
+index a55be205b91a..dbfe34664633 100644
+--- a/drivers/bluetooth/hci_ath.c
++++ b/drivers/bluetooth/hci_ath.c
+@@ -98,6 +98,9 @@ static int ath_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
+ 	if (!ath)
+ 		return -ENOMEM;
+diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+index 8905ad2edde7..ae2624fce913 100644
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -406,6 +406,9 @@ static int bcm_open(struct hci_uart *hu)
+ 
+ 	bt_dev_dbg(hu->hdev, "hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	bcm = kzalloc(sizeof(*bcm), GFP_KERNEL);
+ 	if (!bcm)
+ 		return -ENOMEM;
+diff --git a/drivers/bluetooth/hci_intel.c b/drivers/bluetooth/hci_intel.c
+index 207bae5e0d46..31f25153087d 100644
+--- a/drivers/bluetooth/hci_intel.c
++++ b/drivers/bluetooth/hci_intel.c
+@@ -391,6 +391,9 @@ static int intel_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	intel = kzalloc(sizeof(*intel), GFP_KERNEL);
+ 	if (!intel)
+ 		return -ENOMEM;
+diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
+index 8950e07889fe..85a30fb9177b 100644
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -292,6 +292,19 @@ static int hci_uart_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
+ 	return 0;
+ }
+ 
++/* Check the underlying device or tty has flow control support */
++bool hci_uart_has_flow_control(struct hci_uart *hu)
++{
++	/* serdev nodes check if the needed operations are present */
++	if (hu->serdev)
++		return true;
++
++	if (hu->tty->driver->ops->tiocmget && hu->tty->driver->ops->tiocmset)
++		return true;
++
++	return false;
++}
++
+ /* Flow control or un-flow control the device */
+ void hci_uart_set_flow_control(struct hci_uart *hu, bool enable)
+ {
+diff --git a/drivers/bluetooth/hci_mrvl.c b/drivers/bluetooth/hci_mrvl.c
+index f98e5cc343b2..fbc3f7c3a5c7 100644
+--- a/drivers/bluetooth/hci_mrvl.c
++++ b/drivers/bluetooth/hci_mrvl.c
+@@ -59,6 +59,9 @@ static int mrvl_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	mrvl = kzalloc(sizeof(*mrvl), GFP_KERNEL);
+ 	if (!mrvl)
+ 		return -ENOMEM;
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 9a5c9c1f9484..82a0a3691a63 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -473,6 +473,9 @@ static int qca_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p qca_open", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	qca = kzalloc(sizeof(struct qca_data), GFP_KERNEL);
+ 	if (!qca)
+ 		return -ENOMEM;
+diff --git a/drivers/bluetooth/hci_uart.h b/drivers/bluetooth/hci_uart.h
+index f11af3912ce6..6ab631101019 100644
+--- a/drivers/bluetooth/hci_uart.h
++++ b/drivers/bluetooth/hci_uart.h
+@@ -104,6 +104,7 @@ int hci_uart_wait_until_sent(struct hci_uart *hu);
+ int hci_uart_init_ready(struct hci_uart *hu);
+ void hci_uart_init_work(struct work_struct *work);
+ void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
++bool hci_uart_has_flow_control(struct hci_uart *hu);
+ void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
+ void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
+ 			 unsigned int oper_speed);
 -- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+2.21.0
+
