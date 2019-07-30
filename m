@@ -2,105 +2,75 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AC3C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31D7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 099BE2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA8F2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bXFfgyHS";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bXFfgyHS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="epaSeSql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730879AbfG3IIo (ORCPT
+        id S1730897AbfG3IIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:08:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54480 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730839AbfG3IIn (ORCPT
+        Tue, 30 Jul 2019 04:08:51 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55920 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730839AbfG3IIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:08:43 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D6EDC6037C; Tue, 30 Jul 2019 08:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564474122;
-        bh=+sMHcpS1ulUUbOmL1Z9dNBUBD3g23n1MFcbcZj3a+ko=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=bXFfgyHSjL0PRBtecGd20UWGA4l8n1uGluyo/dEkV1t2J75intbKIxtYx1SF4SqDl
-         udg1tD2b/zKAVaV3kS58KSkDQCeE8h/onM3dpTe8s8b4G8W5NJqcC2MUg0s8QLId3Q
-         HX5yKOmj71IafmJ2HitJYY84tT3i96fLV3SFnia4=
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92C256037C;
-        Tue, 30 Jul 2019 08:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564474122;
-        bh=+sMHcpS1ulUUbOmL1Z9dNBUBD3g23n1MFcbcZj3a+ko=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=bXFfgyHSjL0PRBtecGd20UWGA4l8n1uGluyo/dEkV1t2J75intbKIxtYx1SF4SqDl
-         udg1tD2b/zKAVaV3kS58KSkDQCeE8h/onM3dpTe8s8b4G8W5NJqcC2MUg0s8QLId3Q
-         HX5yKOmj71IafmJ2HitJYY84tT3i96fLV3SFnia4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92C256037C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Takashi Iwai <tiwai@suse.de>, Ganapathi Bhat <gbhat@marvell.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        stable <stable@vger.kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>
-Subject: Re: [PATCH 5.3] mwifiex: fix 802.11n/WPA detection
-References: <20190724194634.205718-1-briannorris@chromium.org>
-        <s5hv9vkx21i.wl-tiwai@suse.de>
-        <CA+ASDXMEFew2Sg5G1ofKq-0gfOTFEOhZNjfyNJMRzRjv7ZFgXw@mail.gmail.com>
-Date:   Tue, 30 Jul 2019 11:08:37 +0300
-In-Reply-To: <CA+ASDXMEFew2Sg5G1ofKq-0gfOTFEOhZNjfyNJMRzRjv7ZFgXw@mail.gmail.com>
-        (Brian Norris's message of "Mon, 29 Jul 2019 12:45:26 -0700")
-Message-ID: <87y30glzay.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 30 Jul 2019 04:08:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=y3iFGUlRLtMdNYNKd2rPyoY/5unGucudlv15bLsbMXQ=; b=epaSeSql5Ltv22UQ0FpT70mNB
+        txTtD475/TBnKgqzZqFZNu9hwPS5tMfzbOtHpJUQngl6rt/7v6kvfj3+rYw3jsSTcOoI2mKrHtcDK
+        AtrKAHVjM0WCx7GKyJRaolGHRFiDda8K2vFnSwWzvY9M18XGN2BmWxGBorYdrrcieQtg2/yGC8wC/
+        LRomltpyYrbTzBTqW5wA7k1NZJy/7XCV34DzizooFC+f+WX+nkRouPkkwmqWITg6wK4OZwQjw1tFM
+        IdSVow4M0IleXzUzGO0RRsLxMZ84RVeQ1gHklKHrjbG5wBG2OFGYkcd/UcQVX7cwFDVLLVOpHjE8B
+        9fvvM2kzg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsNBc-0005JA-Fx; Tue, 30 Jul 2019 08:08:44 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 42CE320AFFE9F; Tue, 30 Jul 2019 10:08:43 +0200 (CEST)
+Date:   Tue, 30 Jul 2019 10:08:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86: drop REG_OUT macro from hweight functions
+Message-ID: <20190730080843.GG31381@hirez.programming.kicks-ass.net>
+References: <20190728115140.GA32463@avx2>
+ <20190729094329.GW31381@hirez.programming.kicks-ass.net>
+ <20190729100447.GD31425@hirez.programming.kicks-ass.net>
+ <20190729204417.GA2146@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729204417.GA2146@avx2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Norris <briannorris@chromium.org> writes:
+On Mon, Jul 29, 2019 at 11:44:17PM +0300, Alexey Dobriyan wrote:
+> On Mon, Jul 29, 2019 at 12:04:47PM +0200, Peter Zijlstra wrote:
+> > +#define _ASM_ARG1B	__ASM_FORM_RAW(dil)
+> > +#define _ASM_ARG2B	__ASM_FORM_RAW(sil)
+> > +#define _ASM_ARG3B	__ASM_FORM_RAW(dl)
+> > +#define _ASM_ARG4B	__ASM_FORM_RAW(cl)
+> > +#define _ASM_ARG5B	__ASM_FORM_RAW(r8b)
+> > +#define _ASM_ARG6B	__ASM_FORM_RAW(r9b)
+> 
+> I preprocessed percpu code once to see what precisely it does because
+> it was easier than wading through forest of macroes.
 
-> On Mon, Jul 29, 2019 at 9:01 AM Takashi Iwai <tiwai@suse.de> wrote:
->> This isn't seen in linux-next yet.
->
-> Apparently not.
->
->> Still pending review?
->
-> I guess? Probably mostly pending maintainer attention.
+Per cpu is easy, try reading the tracepoint code ;-)
 
-Correct, I was offline for few days.
-
-> Also, Johannes already had noticed (and privately messaged me): this
-> patch took a while to show up on the linux-wireless Patchwork
-> instance. So the first review (from Guenter Roeck) and my extra reply
-> noting the -stable regression didn't make it to Patchwork:
->
-> https://patchwork.kernel.org/patch/11057585/
->
->> In anyway,
->>   Reviewed-by: Takashi Iwai <tiwai@suse.de>
->
-> Thanks. Hopefully Kalle can pick it up.
-
-I expect to apply this today.
-
--- 
-Kalle Valo
