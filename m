@@ -2,110 +2,180 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F369FC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2630C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92B320693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F67020693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Vp7cYXso"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="pTAUOFHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbfG3Lzf (ORCPT
+        id S1729409AbfG3L6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:55:35 -0400
-Received: from mail-eopbgr30080.outbound.protection.outlook.com ([40.107.3.80]:65286
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        Tue, 30 Jul 2019 07:58:42 -0400
+Received: from mail-eopbgr00055.outbound.protection.outlook.com ([40.107.0.55]:32238
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727156AbfG3Lzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:55:35 -0400
+        id S1727156AbfG3L6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:58:41 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HE043HXCptkS8MyABZOHunzmJQumjzQkbwEBg53DytlGjuBvjCvhc7Q+0cdCMt8xgtRpZK2SZSQATEXIAqugG6Y9fD9fGEbsFGBmeWjYk82wT49vM5CRWYNelipY7ZkbmJUIcgHC2gSgpfI48L9enAHidnNYuvi2L6J8fUDJ+j7uSjbZ6S2YRJtWQCnWpnaEooFJzFB59IAdsum7fgChz2EQv7cdNhI2ioFGpcxIfG6GzScmiWL98TrW4GB/hG5A/LMTB8n95YyVW8z84h5G1gfBm1UAG8m7Fkxv/olBAxI/Ke2EaFN9PZJC9bcJ0gt+iKZPZygNWaMc/3GnkWM/0g==
+ b=Uc8o/Yooyf+Fy5LKnRl1Q0XcxHidnxtz+lMj2KtHxnjqhVsUr95WcbfWNVwhqnJf79bfhWflXFWoL8XG7qXJFtMuJ67f6mRH4gynMI6pbd2yMI+3kfqoLEJGRdgWffFsDRgK1Uzue56PoCOHq8EK3G+VYJyVOXTf/SmxvWJdLybhWQIO5gYCwwT8LKjbEIrKyqn87++TjyzkwFbaL3jJK3PeprU5YxSOqNqvGm01F3Z8LpudxrbHJA54pkSyIQ3T1O40adB0DhnKgfL+/R1n5DkUt/WsrjmN9n/iaGZiHpdmZ6kq9KN29PMEfY2qd9srciO+LYFnOjfw/bWg66Sr8g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mAFYHVanRIxPa59/EhU2gy1fL5NqBPTv5Zn10oFU0xk=;
- b=VM0la2fTzVI3LvvKzu+1rWNEqIg2zA/NMHc6OqbS83zmsljwHpUs0XMerbSaqjyMo4ZCRML+9ZeUkkno45MHZBWPnhMwBDEinOVDM4zldvhIUE1vT++mhIKqP1UanY7jxQW+UE3GrtkGF7wTpKb6hcqdM7Xwr2X9MIPGEAixUr0s9n2mFPFLx493tuHIPfrTS2isxooDpFr6Owdp0xMQv067/gaNhlL2efqlTkHiIoKVjQMjGXjLpwOOSfIDsxyiO0OkHBaGHSBMrFDApttSvdAxeL0/X4w4e+CXeZE1KrOKW4phAIhSl9+ihniLKGNC3DpYp/zHasDrfigA4V4usg==
+ bh=+33JPkMeNqyLpIkArR+07OT/1Uc18dPOVsUqjAcecF0=;
+ b=iGk7bvIkg/GNugY0L0VxDrVeuuAamrfuGgpnx0hvCiMUdsWStVYn7Pwy+3jd3G3mep0LnT1Qaz6y0YsCKGR3LBe9+c6PNHOZKjdShaidgDXsIgPGFlYOM2JYmdN+epxZe7V+YWyeA2wbIl52BR06T7rOPktUQZsS+wIEJuP5UZb+rD9BmyS2uL3+1F+OnGNMMS1cQ5569/DBlInyxqYAtNn+QR9tM2na/O/ymR+oOkSllxoLI55iJdZFO2eCF4HSuSjlqkwVl+cRz/BwG9YR0waPI4J+jBWtLTHcvTSRl7OG1mRsm/vc3gBsZpYb6QeFCXa5jlzhxIqMxcXuXuW+6A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mAFYHVanRIxPa59/EhU2gy1fL5NqBPTv5Zn10oFU0xk=;
- b=Vp7cYXsoXzSRZBwyX7IcVsaOWHYZbDGcVmxsJrfOoIbrtq6hr5iuElhvtr2H1cgroE5RaaxfSxUvjp1oBrbF2ZX6o418LsDIpDjGPu69R9xatT7babRl7DBoViq/qDBBs3Im6Y7n7VIuOJuMlnKyeDq5wqpWX27oY2LTIDHIcok=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3680.eurprd04.prod.outlook.com (52.134.15.22) with Microsoft SMTP
+ bh=+33JPkMeNqyLpIkArR+07OT/1Uc18dPOVsUqjAcecF0=;
+ b=pTAUOFHFWfescS2ALdSMnHR93xaow9VsWlzsAk8JjASyGaYs4pWcwCVu6CuTbDVgQfBSypFOugHWALdYbxjv7Vxd/pSUo6emmDdLH8+vBD/Su7SlYf/6FeOJQ8mjNbb6PbQ5Qt+xmsYlY/wjA4Pewlm5aTiJo45RVexpLp6yyNo=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6063.eurprd05.prod.outlook.com (20.178.204.33) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Tue, 30 Jul 2019 11:55:30 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::7c64:5296:4607:e10]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::7c64:5296:4607:e10%5]) with mapi id 15.20.2094.017; Tue, 30 Jul 2019
- 11:55:30 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v4 08/14] crypto: caam - update rfc4106 sh desc to support
- zero length input
-Thread-Topic: [PATCH v4 08/14] crypto: caam - update rfc4106 sh desc to
- support zero length input
-Thread-Index: AQHVRsbmfUSbo2E0uU+2cq+YZ001Zw==
-Date:   Tue, 30 Jul 2019 11:55:30 +0000
-Message-ID: <VI1PR0402MB3485CD37422496ACD99B153198DC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1564484805-28735-1-git-send-email-iuliana.prodan@nxp.com>
- <1564484805-28735-9-git-send-email-iuliana.prodan@nxp.com>
+ 15.20.2115.15; Tue, 30 Jul 2019 11:58:37 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
+ 11:58:37 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Christoph Hellwig <hch@lst.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull hmm changes
+Thread-Topic: [GIT PULL] Please pull hmm changes
+Thread-Index: AQHVRs4epyeD1jwmWUi/iXXZo7asug==
+Date:   Tue, 30 Jul 2019 11:58:37 +0000
+Message-ID: <20190730115831.GA15720@ziepe.ca>
 Accept-Language: en-US
 Content-Language: en-US
-X-MS-Has-Attach: 
+X-MS-Has-Attach: yes
 X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQXPR01CA0104.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:41::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7e132f74-72e5-4652-0078-08d714e4d1ff
+x-ms-office365-filtering-correlation-id: b6f9997d-b133-407b-5779-08d714e5413a
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3680;
-x-ms-traffictypediagnostic: VI1PR0402MB3680:
-x-microsoft-antispam-prvs: <VI1PR0402MB3680C97C33F7CBCBB96F855398DC0@VI1PR0402MB3680.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(49563074)(7193020);SRVR:VI1PR05MB6063;
+x-ms-traffictypediagnostic: VI1PR05MB6063:
+x-microsoft-antispam-prvs: <VI1PR05MB6063117D58AB82D9BBD5CD20CFDC0@VI1PR05MB6063.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
 x-forefront-prvs: 0114FF88F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(346002)(396003)(136003)(39860400002)(199004)(189003)(186003)(76176011)(6506007)(26005)(44832011)(478600001)(15650500001)(446003)(7696005)(316002)(3846002)(33656002)(6116002)(53936002)(6436002)(110136005)(54906003)(53546011)(71190400001)(52536014)(55016002)(256004)(71200400001)(68736007)(5660300002)(8936002)(476003)(66946007)(66066001)(6636002)(9686003)(14444005)(486006)(4326008)(86362001)(558084003)(99286004)(25786009)(74316002)(81166006)(81156014)(66556008)(64756008)(305945005)(66476007)(229853002)(6246003)(7736002)(8676002)(14454004)(76116006)(2906002)(91956017)(66446008)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3680;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(366004)(396003)(39860400002)(199004)(189003)(66446008)(99286004)(4326008)(54906003)(8936002)(53936002)(33656002)(68736007)(81156014)(81166006)(2906002)(316002)(486006)(66066001)(110136005)(99936001)(186003)(386003)(6506007)(102836004)(71200400001)(71190400001)(26005)(8676002)(476003)(52116002)(7416002)(478600001)(256004)(14454004)(305945005)(6512007)(6486002)(14444005)(7736002)(36756003)(6436002)(9686003)(1076003)(25786009)(5660300002)(66946007)(6116002)(66476007)(66616009)(86362001)(66556008)(64756008)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6063;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: pmpnwozpNozyBgtOb/nICFKadHzVX/tgGzkHkr5c51fEF9n0wC7a6zeIiw6wxifXsOREmiQqkwPckJaSlKBCQ8pdolpGMAQO1rjC8Xjzu3vysGvBhGNlYPCMoEWY6+69YaQc2YvcRu4aGbWjiyLFc0UL3Sy1ng8xN0DKO/Eh784DMEvviFtifC4b18lyHPCzem3yE/4oInscbP27ihix6tGMKnEkmaqlvMW/vawUPvS8zPYsuFMkAhlkXq4D3rTkfjBaqcGvFiQIlT12k91a3ThrZSIEha/mmh0p/kR6Z3iwWIZ4MadMwkVnF1MspqFuDQ7YkAZAIFsqMrT7MNbtzZt7CXgVRkHwMgqQrApafLm21YLuw1JlJyoPQmutUYvyIsmDdPtU2p4r5xwV9/XIaOwSGlVcFuA9xaaiZawGZPE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: 5lwbL/YVtpY1+D5llxcTNXTbawvmeQQKNRaFB7wOLtBFTVGXipPPkgJryzHiWHG/XZWScZv9oJYdOB3qYtDOHbWHDqRo8PWrd3Ev498c5T2DQEBKlamgQpSB905/FbcjUoj49aH/xVj5DrtIGh3ljuSdo8DIywKp+wn2saqRHoQOn3Qm847USGFdAZC+mQw9wbx+VQyKQQOo11AgcqeNaLt4C6EiYyHHM9zM4N0LOoMC5i6XUC8f5bo4nWiCchaoqkJz0b32ALq51NclJz1zWpgqdGSqgb6a386gTi8WHJF9u5KFzHdOkr439yGB7m5x5LvKlZL4doaItYPvle6GOAtpKoonSl3I23Tg7RwKSOxs8bXkieWDWyJiPdNFtoDdPlXkkOaxFJm3bRcce9f4aoKoYtiH8U14x2yZfwDBxfE=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e132f74-72e5-4652-0078-08d714e4d1ff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 11:55:30.3344
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6f9997d-b133-407b-5779-08d714e5413a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 11:58:37.2602
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3680
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/2019 2:06 PM, Iuliana Prodan wrote:=0A=
-> Update share descriptor for rfc4106 to skip instructions in case=0A=
-> cryptlen is zero. If no instructions are jumped the DECO hangs and a=0A=
-> timeout error is thrown.=0A=
-> =0A=
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-Reviewed-by: Horia Geanta <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Linus,
+
+Locking fix for nouveau's use of HMM
+
+This small series was posted by Christoph before the merge window, but didn't
+make it in time for the PR. It fixes various locking errors in the nouveau
+driver's use of the hmm_range_* functions.
+
+The diffstat is a bit big as Christoph did a comprehensive job to move the
+obsolete API from the core header and into the driver before fixing its flow,
+but the risk of regression from this code motion is low.
+
+I don't intend to often send -rc patches for hmm, but this is entangled with
+other changes already, so it is simpler to keep it on the hmm git branch.
+
+Thanks,
+Jason
+
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus-hmm
+
+for you to fetch changes up to de4ee728465f7c0c29241550e083139b2ce9159c:
+
+  nouveau: unlock mmap_sem on all errors from nouveau_range_fault (2019-07-25 16:14:40 -0300)
+
+----------------------------------------------------------------
+HMM patches for 5.3-rc
+
+Fix the locking around nouveau's use of the hmm_range_* APIs. It works
+correctly in the success case, but many of the the edge cases have missing
+unlocks or double unlocks.
+
+----------------------------------------------------------------
+Christoph Hellwig (4):
+      mm/hmm: always return EBUSY for invalid ranges in hmm_range_{fault,snapshot}
+      mm/hmm: move hmm_vma_range_done and hmm_vma_fault to nouveau
+      nouveau: remove the block parameter to nouveau_range_fault
+      nouveau: unlock mmap_sem on all errors from nouveau_range_fault
+
+ Documentation/vm/hmm.rst              |  2 +-
+ drivers/gpu/drm/nouveau/nouveau_svm.c | 47 ++++++++++++++++++++++++++++--
+ include/linux/hmm.h                   | 54 -----------------------------------
+ mm/hmm.c                              | 10 +++----
+ 4 files changed, 49 insertions(+), 64 deletions(-)
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl1AMOIACgkQOG33FX4g
+mxoQ2g//RnLjfumNrH3tMwS8UkYgAoWVh6NGyQ7EjUPT2fvHlfo3dMqzUNK9h+wN
+k2MKDTSZbFVhJQ5scU9KbhzGBXih4+DLnW1bpN1k/6nfZ6EXxRJakmcEz+LE53Pn
+ylcuBXU9SLf733j+uwy42BQhkL7/Ykk+vt/aToWEyuTIXsR7zkTPVd7XH4JcHKi6
+Lsf+zGtBCsIsh27T7uyyyOI52XwcY8Zm6LvfIKdOLczPRB8SzQ3yyMHjG42L7/ui
+VGDvoU+4pMGQmBg2anE49/xsxDrGWeVYgkcsQcw2PhlthXw3VwmWBj83chLU9+qt
+Vc1jofLj4Srgv+mXgFjmu0j1yJ84qoJaBb1YPzxDWoJGHpXyhLWKc7U55lvvotDD
+EJCOV6nE+VMGo/Zu96O+LI4IW05afPxJstNj3XQg72lF4WaRGOS8q3OhmGqntaNh
+ajQNYrcUDODmwepiOpDPf28K2cybwdINqrNKFw2e9eybnBxE4VEoF5vjUIlQmYoj
+BNZAORxOyrnNHr8w3q46pK5OPinjXhNnKXJFrcqldZKKonhRCTIb+vu22CLD0QCC
+DjmflIaGbHx8Q8yB+9B5pFt3j/a9lMzYgfN61Kh1qCOAiDWDXBjJ/c/mA6++iwgL
+08F+Xltp9NoE46VUbpij+5xq6eaXrHWb7v8QyRZJt04KHziebmM=
+=6E82
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
