@@ -2,267 +2,90 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE2AC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCC2C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84FA206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:24:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wnFRxdhF"
+	by mail.kernel.org (Postfix) with ESMTP id E9907206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732291AbfG3PYu (ORCPT
+        id S1732314AbfG3PZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:24:50 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44239 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732273AbfG3PYr (ORCPT
+        Tue, 30 Jul 2019 11:25:06 -0400
+Received: from atlmailgw2.ami.com ([63.147.10.42]:60948 "EHLO
+        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729202AbfG3PZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:24:47 -0400
-Received: by mail-qt1-f193.google.com with SMTP id 44so32393990qtg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:24:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yjlVdjPruOMY43BI1raOa3L6IFCLU0ya6RBy0Shy9/M=;
-        b=wnFRxdhFzAoVXTk34+7y/goDyY2S2eDHoEPHCxwYLmPhRgwC1D0mW85msH++16qpQ3
-         NCTDHTFBWVHqiy9uWd76S/15T4LMqWNRv75vz5fPP5exKYTzIlsE9EF42uKdF9CWNENf
-         TUGZqEOYjShTK/Ylx+d/FvwQ828tpDQ6oltmhLbA6nt6oWjjhOQUWexGb2BUnUO37z4/
-         45BcHmBklm9KLvA7kAldnGHmIFIu9t01ihKMtLRInd+/O1ECmglGapihQZFQnVmWdidA
-         pInv6s5l2ScD/uwgumbzcNs8naueM7GGuyAZGvTQwPboOEr784BPpZOPUp+JYn9U+zgU
-         e3PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yjlVdjPruOMY43BI1raOa3L6IFCLU0ya6RBy0Shy9/M=;
-        b=a+m/wjW2JN0xxs7dSJ99kNvgX5+3rAJgSq3DlgQkyrXNcnPtFJ+m7OQmM7tQrlyOlS
-         Jqq8Hj7vuYHjIokQH/mY6+XwHHGydq06cEKjUN+2/AzPMhv+FsmyPyvadV9s1Soqy+KZ
-         xDJ/ZQslbYzOGw8Q2bf86CqpZS1FER+GCAmr/O9lkukJEHwPh2hdSWlxnlJlq3Sw4v06
-         Jd2VBc28FlN5tze1wyC6drANN+33YTgITxb0Jkz0QZ/4d6CiFO6IehMoNu//pmlKiCzu
-         HlqYhu87HGXG9TECFEVj8LYFMoksGFrNvBDmjfD806FnCFvCAWsr69xSRKkijVCmf5Ps
-         JG8w==
-X-Gm-Message-State: APjAAAUvE+rRq1KzD03tcUb94CALmaOXjAizhp5VXPZCaZ2pSrNSx7x/
-        +79+HYBG/w6VZbq9mzXFyI6IQQ==
-X-Google-Smtp-Source: APXvYqwPZyL4xxCTewgV6IZMfeHGwQFgFmTMA4oDV8enxoQLTfJXfwsDS+OvdlRW5Mt7N+p/nNV+eg==
-X-Received: by 2002:ac8:3908:: with SMTP id s8mr36552603qtb.224.1564500286674;
-        Tue, 30 Jul 2019 08:24:46 -0700 (PDT)
-Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
-        by smtp.googlemail.com with ESMTPSA id r14sm27251082qkm.100.2019.07.30.08.24.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 30 Jul 2019 08:24:46 -0700 (PDT)
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, agross@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
-        vinod.koul@linaro.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Patch v2 1/2] soc: qcom: Extend AOSS QMP driver to support resources that are used to wake up the SoC.
-Date:   Tue, 30 Jul 2019 11:24:42 -0400
-Message-Id: <1564500283-16038-2-git-send-email-thara.gopinath@linaro.org>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1564500283-16038-1-git-send-email-thara.gopinath@linaro.org>
-References: <1564500283-16038-1-git-send-email-thara.gopinath@linaro.org>
+        Tue, 30 Jul 2019 11:25:06 -0400
+X-AuditID: ac10606f-d27ff70000003324-fb-5d406151cc24
+Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
+        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id 24.AC.13092.151604D5; Tue, 30 Jul 2019 11:25:05 -0400 (EDT)
+Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
+ atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 30 Jul 2019 11:25:04 -0400
+From:   Hongwei Zhang <hongweiz@ami.com>
+To:     Andrew Jeffery <andrew@aj.id.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>,
+        <devicetree@vger.kernel.org>, <linux-aspeed@lists.ozlabs.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [v6 0/2] gpio: aspeed: Add SGPIO driver
+Date:   Tue, 30 Jul 2019 11:24:26 -0400
+Message-ID: <1564500268-2627-1-git-send-email-hongweiz@ami.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [172.16.98.93]
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsWyRiBhgm5gokOswdedEha7LnNYfJl7isVi
+        /pFzrBa/z/9ltpjyZzmTxabH11gtmlefY7bYPP8Po8XlXXPYLJZev8hk0br3CLsDt8fV9l3s
+        HmvmrWH0eH+jld3j4sdjzB6bVnWyedy5tofNY/OSeo/zMxYyenzeJBfAGcVlk5Kak1mWWqRv
+        l8CV8ez7aZaCk2wVN6+5NDAuZO1i5OSQEDCReN9/nR3EFhLYxSTRssyni5ELyD7MKNGx+CwL
+        SIJNQE1i7+Y5TCC2iECexOH1b1lBipgFTjFJzNjXCTZJWMBA4vOa72wgNouAqkTzw8tgNq+A
+        vcSp6TOZIbbJSdw818kMEReUODnzCdgCZgEJiYMvXjBDXCErcevQYyaIegWJ532PWSYw8s1C
+        0jILScsCRqZVjEKJJTm5iZk56eVGeom5mXrJ+bmbGCEhnr+D8eNH80OMTByMhxglOJiVRHgX
+        i9vHCvGmJFZWpRblxxeV5qQWH2KU5mBREuddteZbjJBAemJJanZqakFqEUyWiYNTqoGRU6+k
+        SrhkctiU/MjKL0dzmDYIv9uZKR8lfV7QefHnJ0Y7fwtZzuT4V+c26f4z3qXvjcUv3xdcyNwu
+        4VzCmh+b/5lDve3elgMbJ8h5SC2z3HZr7ZILvOynL5zSOMKa9r3VZ2cP87RdGw/mbzgadO6m
+        SRJLdeedhQv2/1V6enna9E/SHzxqn7BJK7EUZyQaajEXFScCAI781llfAgAA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AOSS QMP driver is extended to communicate with the additional
-resources. These resources are then registered as cooling devices
-with the thermal framework.
+Hello,
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
----
-v1->v2:
-        Added back name variable in qmp_cooling_device to fix the 
-        compilation error.               
-        Other minor naming changes as mentioned in review on the list.
+This short series introduce dt-binding document and a driver for the 
+Aspeed AST2500 SGPIO controller. Please review.
 
- drivers/soc/qcom/qcom_aoss.c | 131 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 131 insertions(+)
+[v6]:	Changes between v5 and v6:
+	- fix a bug in aspeed_sgpio_dir_out()
+	- v5 feedback updates, some comments cleanup
 
-diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
-index 5f88519..dc6201e 100644
---- a/drivers/soc/qcom/qcom_aoss.c
-+++ b/drivers/soc/qcom/qcom_aoss.c
-@@ -10,6 +10,8 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/pm_domain.h>
-+#include <linux/thermal.h>
-+#include <linux/slab.h>
- 
- #define QMP_DESC_MAGIC			0x0
- #define QMP_DESC_VERSION		0x4
-@@ -40,6 +42,17 @@
- /* 64 bytes is enough to store the requests and provides padding to 4 bytes */
- #define QMP_MSG_LEN			64
- 
-+#define QMP_NUM_COOLING_RESOURCES	2
-+
-+static bool qmp_cdev_init_state = 1;
-+
-+struct qmp_cooling_device {
-+	struct thermal_cooling_device *cdev;
-+	struct qmp *qmp;
-+	char *name;
-+	bool state;
-+};
-+
- /**
-  * struct qmp - driver state for QMP implementation
-  * @msgram: iomem referencing the message RAM used for communication
-@@ -69,6 +82,7 @@ struct qmp {
- 
- 	struct clk_hw qdss_clk;
- 	struct genpd_onecell_data pd_data;
-+	struct qmp_cooling_device *cooling_devs;
- };
- 
- struct qmp_pd {
-@@ -385,6 +399,118 @@ static void qmp_pd_remove(struct qmp *qmp)
- 		pm_genpd_remove(data->domains[i]);
- }
- 
-+static int qmp_cdev_get_max_state(struct thermal_cooling_device *cdev,
-+				  unsigned long *state)
-+{
-+	*state = qmp_cdev_init_state;
-+	return 0;
-+}
-+
-+static int qmp_cdev_get_cur_state(struct thermal_cooling_device *cdev,
-+				  unsigned long *state)
-+{
-+	struct qmp_cooling_device *qmp_cdev = cdev->devdata;
-+
-+	*state = qmp_cdev->state;
-+	return 0;
-+}
-+
-+static int qmp_cdev_set_cur_state(struct thermal_cooling_device *cdev,
-+				  unsigned long state)
-+{
-+	struct qmp_cooling_device *qmp_cdev = cdev->devdata;
-+	char buf[QMP_MSG_LEN] = {};
-+	bool cdev_state;
-+	int ret;
-+
-+	/* Normalize state */
-+	cdev_state = !!state;
-+
-+	if (qmp_cdev->state == state)
-+		return 0;
-+
-+	snprintf(buf, sizeof(buf),
-+		 "{class: volt_flr, event:zero_temp, res:%s, value:%s}",
-+			qmp_cdev->name,
-+			cdev_state ? "off" : "on");
-+
-+	ret = qmp_send(qmp_cdev->qmp, buf, sizeof(buf));
-+
-+	if (!ret)
-+		qmp_cdev->state = cdev_state;
-+
-+	return ret;
-+}
-+
-+static struct thermal_cooling_device_ops qmp_cooling_device_ops = {
-+	.get_max_state = qmp_cdev_get_max_state,
-+	.get_cur_state = qmp_cdev_get_cur_state,
-+	.set_cur_state = qmp_cdev_set_cur_state,
-+};
-+
-+static int qmp_cooling_device_add(struct qmp *qmp,
-+				  struct qmp_cooling_device *qmp_cdev,
-+				  struct device_node *node)
-+{
-+	char *cdev_name = (char *)node->name;
-+
-+	qmp_cdev->qmp = qmp;
-+	qmp_cdev->state = qmp_cdev_init_state;
-+	qmp_cdev->name = cdev_name;
-+	qmp_cdev->cdev = devm_thermal_of_cooling_device_register
-+				(qmp->dev, node,
-+				cdev_name,
-+				qmp_cdev, &qmp_cooling_device_ops);
-+
-+	if (IS_ERR(qmp_cdev->cdev))
-+		dev_err(qmp->dev, "unable to register %s cooling device\n",
-+			cdev_name);
-+
-+	return PTR_ERR_OR_ZERO(qmp_cdev->cdev);
-+}
-+
-+static int qmp_cooling_devices_register(struct qmp *qmp)
-+{
-+	struct device_node *np, *child;
-+	int count = QMP_NUM_COOLING_RESOURCES;
-+	int ret;
-+
-+	np = qmp->dev->of_node;
-+
-+	qmp->cooling_devs = devm_kcalloc(qmp->dev, count,
-+					 sizeof(*qmp->cooling_devs),
-+					 GFP_KERNEL);
-+
-+	if (!qmp->cooling_devs)
-+		return -ENOMEM;
-+
-+	for_each_available_child_of_node(np, child) {
-+		if (!of_find_property(child, "#cooling-cells", NULL))
-+			continue;
-+		ret = qmp_cooling_device_add(qmp, &qmp->cooling_devs[count++],
-+					     child);
-+		if (ret)
-+			goto uroll;
-+	}
-+
-+	return 0;
-+
-+uroll:
-+	while (--count >= 0)
-+		thermal_cooling_device_unregister
-+			(qmp->cooling_devs[count].cdev);
-+
-+	return ret;
-+}
-+
-+static void qmp_cooling_devices_remove(struct qmp *qmp)
-+{
-+	int i;
-+
-+	for (i = 0; i < QMP_NUM_COOLING_RESOURCES; i++)
-+		thermal_cooling_device_unregister(qmp->cooling_devs[i].cdev);
-+}
-+
- static int qmp_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-@@ -433,6 +559,10 @@ static int qmp_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_remove_qdss_clk;
- 
-+	ret = qmp_cooling_devices_register(qmp);
-+	if (ret)
-+		dev_err(&pdev->dev, "failed to register aoss cooling devices\n");
-+
- 	platform_set_drvdata(pdev, qmp);
- 
- 	return 0;
-@@ -453,6 +583,7 @@ static int qmp_remove(struct platform_device *pdev)
- 
- 	qmp_qdss_clk_remove(qmp);
- 	qmp_pd_remove(qmp);
-+	qmp_cooling_devices_remove(qmp);
- 
- 	qmp_close(qmp);
- 	mbox_free_channel(qmp->mbox_chan);
+The related SGPM pinmux dt-binding document, dts, and pinctrl driver
+updates have been accepted and merged:
+_http://patchwork.ozlabs.org/patch/1110210/
+
+
+Hongwei Zhang (2):
+  dt-bindings: gpio: aspeed: Add SGPIO support
+  gpio: aspeed: Add SGPIO driver
+
+ .../devicetree/bindings/gpio/sgpio-aspeed.txt      |  55 +++
+ drivers/gpio/sgpio-aspeed.c                        | 521 +++++++++++++++++++++
+ 2 files changed, 576 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+ create mode 100644 drivers/gpio/sgpio-aspeed.c
+
 -- 
-2.1.4
+2.7.4
 
