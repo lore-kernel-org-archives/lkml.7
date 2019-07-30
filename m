@@ -2,125 +2,113 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE7CC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC96BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EAC320659
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBBF620659
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:20:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="HWMR49/X"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dyrBL+wP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbfG3OTx (ORCPT
+        id S1730972AbfG3OUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 10:19:53 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:7460 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726937AbfG3OTw (ORCPT
+        Tue, 30 Jul 2019 10:20:15 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42116 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbfG3OUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 10:19:52 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x6UEEUj1010238;
-        Tue, 30 Jul 2019 09:18:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=16TtY1AqhnRkUXcrlSdlYeSs6q0dlo2RqTFOF7duXMs=;
- b=HWMR49/XS0fWtn/X6ImxVX/kKU4meBn+91iR6j5k88+HhNyK/5yr3+UyjZ53XTfpqtnF
- skkTu3ULE67+GQkuNj3GrJgsfKGTkDc1BlezFXyKDlcdTooBq+nSibsDqSv+/u9hhfL8
- m3K9F9o1qAGIRUPXidKbxoh503yFFBFcrXJIEd21U3jsL3lbMaaFeR8PMBQhv56p7xkP
- EnP8oQ6w8YGzVxYGvXsxSvPWe9sEOQ42sCJUQj6cuosjENwDLTQO2eaZkUsdUkO7j2XX
- S8BtNJPKm5aGA23PGFvzge9HdyOSWNmQkiTh8acX0l60VBOoL72PHmH452aCys+Y1EYy dw== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2u0mapmxef-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 30 Jul 2019 09:18:25 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 30 Jul
- 2019 15:18:22 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Tue, 30 Jul 2019 15:18:22 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id DD3C42C5;
-        Tue, 30 Jul 2019 15:18:22 +0100 (BST)
-Date:   Tue, 30 Jul 2019 15:18:22 +0100
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Thomas Preston <thomas.preston@codethink.co.uk>
-CC:     Mark Rutland <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kirill Marinushkin <kmarinushkin@birdec.tech>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on
- diagnostic routine
-Message-ID: <20190730141822.GI54126@ediswmail.ad.cirrus.com>
-References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
- <20190730120937.16271-4-thomas.preston@codethink.co.uk>
- <20190730124158.GH54126@ediswmail.ad.cirrus.com>
- <e7a879d3-36c2-2df8-97c0-3c4bbd2e7ea2@codethink.co.uk>
+        Tue, 30 Jul 2019 10:20:15 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so29910324pff.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 07:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VxDw0/AhSqBc+UFZUyCqEn82uv1wGE11yVcaX4Q0n6o=;
+        b=dyrBL+wPYhegsmZBAGBP2FqAXypY3hXlWpWfsF+mgCyBUA0/oMiPQvycFXN3A1WD6J
+         +p+u3fsrMWUaxUiUcxPnAs5SCfDBt+ULGVIV6tyT2heZPE/D/ZSTK7yWZ1liHqzaBCeI
+         GqOCLj9pi0x6QeBwfFWNB98qCgd+OKBwTzrNBkt4M4H7/CKhRQN0o2AAMiBz01SL2OgA
+         JggS6g7grF/FxS9rPQmJSJdGrkcVDLjHDHfgRkq3gUZGpR8l9ZQIsECyJBV9LVbSQyQs
+         dljp8qX7VRXub5gq5qdPbxIxvuvHMDhuSsQZUy0ci+TpaaLJ+55tcy03sueidlVCczJi
+         Iv7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VxDw0/AhSqBc+UFZUyCqEn82uv1wGE11yVcaX4Q0n6o=;
+        b=VDPeKy47xcWwHstzN2vgtuXSGOtEUHDFG2SKTJFMCmeet1o4iI39nwDKdWZ4he0Hk5
+         7oBQ+qfmFhTX7qMpHtdzVY/knXoeRN22Z+g5GbN3iyjFg/r2TIl+p7aszOVP8SNcULuK
+         qPm2uNssHvX6RHSZ2NlnEGtZik6zT3RwSstVz6umuOlyzjUCVb4th0ed0f61b6j8vkpG
+         hWxlJrng5eiZJbKuamBdZNZXD5eZMlSNqEA78GXGaThCsMA836iVdc1I2+tslq+pyW0d
+         eYZ4L2+BACe2bsORUd4XNOdoTM8TMA2E4zCbrBIEOiYguIdyRw74BZfmwVWnwjYbv9Dr
+         ydpw==
+X-Gm-Message-State: APjAAAVTSVs5vFu4PA/hoW2GWwrfsW0DEx3JbwbBFePMxSL444kNm7XR
+        gX7hHpfRQi8HlFOr+KrcAWcMZBYOgLISeJDQeTy/MA==
+X-Google-Smtp-Source: APXvYqyvBs8WO4qGUlFCXZ9vDpUjAUxiMdKSUdDNg2hJRew4ETs8qJMLqcasMg/Komef7BsJUXiDvqfz3domfp3/OGQ=
+X-Received: by 2002:a17:90a:a116:: with SMTP id s22mr116488183pjp.47.1564496413927;
+ Tue, 30 Jul 2019 07:20:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <e7a879d3-36c2-2df8-97c0-3c4bbd2e7ea2@codethink.co.uk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 phishscore=0
- impostorscore=0 clxscore=1015 suspectscore=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=820 priorityscore=1501 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1907300147
+References: <00000000000014c877058ee2c4a6@google.com> <Pine.LNX.4.44L0.1907301011100.1507-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1907301011100.1507-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 30 Jul 2019 16:20:02 +0200
+Message-ID: <CAAeHK+wnhfMvoMbuv3Oco1eH35BL5tdR9-X5erEJmKLS1finAg@mail.gmail.com>
+Subject: Re: KMSAN: kernel-usb-infoleak in pcan_usb_pro_send_req
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+513e4d0985298538bf9b@syzkaller.appspotmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 03:04:19PM +0100, Thomas Preston wrote:
-> On 30/07/2019 13:41, Charles Keepax wrote:
-> >> +static int tda7802_bulk_update(struct regmap *map, struct reg_update *update,
-> >> +		size_t update_count)
-> >> +{
-> >> +	int i, err;
-> >> +
-> >> +	for (i = 0; i < update_count; i++) {
-> >> +		err = regmap_update_bits(map, update[i].reg, update[i].mask,
-> >> +				update[i].val);
-> >> +		if (err < 0)
-> >> +			return err;
-> >> +	}
-> >> +
-> >> +	return i;
-> >> +}
-> > 
-> > This could probably be removed using regmap_multi_reg_write.
-> > 
-> 
-> The problem is that I want to retain the state of the other bits in those
-> registers. Maybe I should make a copy of the backed up state, set the bits
-> I want to off-device, then either:
-> 
-> 1. Write the changes with regmap_multi_reg_write
-> 2. Write all six regs again (if my device doesn't support the multi_reg)
-> 
+On Tue, Jul 30, 2019 at 4:17 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Tue, 30 Jul 2019, syzbot wrote:
+>
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    41550654 [UPSTREAM] KVM: x86: degrade WARN to pr_warn_rate..
+> > git tree:       kmsan
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=13e95183a00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=40511ad0c5945201
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=513e4d0985298538bf9b
+> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17eafa1ba00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17b87983a00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+513e4d0985298538bf9b@syzkaller.appspotmail.com
+> >
+> > usb 1-1: config 0 has no interface number 0
+> > usb 1-1: New USB device found, idVendor=0c72, idProduct=0014,
+> > bcdDevice=8b.53
+> > usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> > usb 1-1: config 0 descriptor??
+> > peak_usb 1-1:0.146: PEAK-System PCAN-USB X6 v0 fw v0.0.0 (2 channels)
+> > ==================================================================
+> > BUG: KMSAN: kernel-usb-infoleak in usb_submit_urb+0x7ef/0x1f50
+> > drivers/usb/core/urb.c:405
+>
+> What does "kernel-usb-infoleak" mean?
 
-Nah sorry my bad you are probably better off they way you are.
+That means that the kernel put some uninitialized data into a request
+that was sent to a USB device.
 
-Thanks,
-Charles
+>
+> Alan Stern
+>
