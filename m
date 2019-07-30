@@ -7,172 +7,125 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2345CC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20824C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E165B206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2438206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:31:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="TQAcMC8J"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ky12He8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731733AbfG3PbH (ORCPT
+        id S1731879AbfG3PbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:31:07 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35687 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfG3PbH (ORCPT
+        Tue, 30 Jul 2019 11:31:14 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39822 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731347AbfG3PbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:31:07 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d23so63485233qto.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:31:06 -0700 (PDT)
+        Tue, 30 Jul 2019 11:31:13 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v18so62456731ljh.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:31:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=icQ+mmUwHlGo5WrRaYExQwbod/Jz68i28SEVBs5MWe0=;
-        b=TQAcMC8JLFSx1a3GX3PlPg86q7cbX6i8+ue1vGOYJkg/B7hCQb/49FmaadO8+aGcSn
-         Brz9eeXm2C7YvtHtDee/XOQWV2gf2fi6RAn6CYVULtbVCzbBX6bmeT2plzcv6hfriDQR
-         Vwqg9HSubXdL+SlkhQALukz6KLaaYpuzPB4Y/PxcFQ3OCus7vk169BqPcBMg2VCa//HN
-         yh12pjChhhSdW7mgjIWXaVM1UCLbbRwqtC5HLX4lHzU4uEenTkXSy+im0m+pA6m54OW3
-         1CSZwl9XVSavEOxFcff2NEymzqiM5IkkdfJ/yPaXf00QfHOmjVOU68U1C5l+TmyHYRQt
-         7GSg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ijf+IXMFVOGyvl/6lR3Dl4FHOPijwIT8zlA3D+mB5Zg=;
+        b=ky12He8Kf8tUIMDwGJbIw/FAZCNoOYc2+0deJeoUMUYn71ibisQOQBx3k6VOLHsTuo
+         B1dzMxoZdynUB6zjeAwIMLthlkJ+ZjykQ1XLvWnpUkORJ49J2i7rTLTrcxe5S5wVazgY
+         sN4tUbFcMmf6azm9wd2Vt0HGmw8R3gjYK7q4u7dP3xcI6T0V84NL7ri6cxhfjiIWcTk8
+         szRtTwondYA84H0RtHLJ59dTa0a8GMLmHcwNszu7oJaWMsbBkpH80NIHAuBR3faQ+lBp
+         jC5V/LgKlFNaEWIBprf+MaSxhio7gITyAIw64IdCi+q4VVkTkoEPpDHFuEv0fQQHIDiz
+         22OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=icQ+mmUwHlGo5WrRaYExQwbod/Jz68i28SEVBs5MWe0=;
-        b=QjzAX4yqRfWR2oELXmT22opLxt3hEu8Ji3C8UCZBqHUEVcmmpSOmWDzHcvbB9ySIWM
-         Zby78kvXpNRjXGrydQ2UebCrGcibjtgZ1+7iibQiDH1MUNv2P2F1JiswcCOH/fUEpnHS
-         gbpZ0Z/yxu1TLv7A8MqB+VJ2qfizzyW/VlEzWCpTDKr1y3pAeqNZBKFLFbpnTJR9wRVA
-         7gU8XO2Upx05hOk8u/T9AjR+4HxxoBfTC2QiqfoGTTKTDgDpXkFJ15RzLh76sbU9RJ4S
-         PTosihF7W2wN70QxjbfOnfB4rIZ5B5WGwHfV1Sjqrfsp5j4mzXkeCbyI8QHBZCsOWQqO
-         +ObA==
-X-Gm-Message-State: APjAAAXjLTYpWM7RjN2Us8Wzxd03ilUQfFj8Q50LWcLJL961I4MoMyDZ
-        p5KcWVcnVcnrwmdeuaKpzeuOwQ4bOUglCw==
-X-Google-Smtp-Source: APXvYqxWizCQ2lrtrTlT130eyj++JM/rzivWzH05iPty1SPyO9/8wH9PnKozyoEe5P7CKlh+ezMbhA==
-X-Received: by 2002:a0c:8602:: with SMTP id p2mr84787456qva.111.1564500665583;
-        Tue, 30 Jul 2019 08:31:05 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id c5sm30023404qkb.41.2019.07.30.08.31.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 08:31:04 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     davem@davemloft.net
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, David.Laight@ACULAB.COM,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH v3] net/socket: fix GCC8+ Wpacked-not-aligned warnings
-Date:   Tue, 30 Jul 2019 11:30:33 -0400
-Message-Id: <1564500633-7419-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ijf+IXMFVOGyvl/6lR3Dl4FHOPijwIT8zlA3D+mB5Zg=;
+        b=bEmaDRJMBb0cJXW5REWmUP9xgkdsbScogLjcaJ3RG5k2efsLe6d2Eib6H/Gm/7ztTp
+         mdSI43zVsJ4TRewHPyW4g8bVeoN58kr1chtFs1Bhiff4IN2TCjve57zWc7z6encccoio
+         U0ykRdHkpqYrAfbh1bpKAY2hzlcL8SamFhuIYc6eYKeBVArBDPJnxveivmKoqBQIwSrx
+         Zz9pfIbnqLGMisamoum/EEGut6/50yizOv/UHkE6X+9xh00MOtA0SlyYfm6oGVeFDpyR
+         ilQGYoYoJTG2jqTKrw5m4YY6UtMiko5lNaJeg31EtAGhfVrzdLK0rH+z/XSJ6/d0JaSa
+         hZdw==
+X-Gm-Message-State: APjAAAVrpGqFeGQblaIn3oewhIQlP7yjZufFf7xhA6QU2fdtxDZoe8Hq
+        cgtG1ipwLLydO63A771tmAd4PkOGAxTfug==
+X-Google-Smtp-Source: APXvYqwn5yHeNh2SggjrocFklpCW7DMwZmxMpOfufxOmSHRUb0st7KBTDbw62b+nH+RnCHOuX2bDgg==
+X-Received: by 2002:a05:651c:1b8:: with SMTP id c24mr63473072ljn.2.1564500671320;
+        Tue, 30 Jul 2019 08:31:11 -0700 (PDT)
+Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
+        by smtp.gmail.com with ESMTPSA id l22sm13409494ljc.4.2019.07.30.08.31.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 08:31:10 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     malidp@foss.arm.com, airlied@linux.ie, daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        gustavo@embeddedor.com, liviu.dudau@arm.com,
+        Anders Roxell <anders.roxell@linaro.org>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] drm: mali-dp: Mark expected switch fall-through
+Date:   Tue, 30 Jul 2019 17:30:56 +0200
+Message-Id: <20190730153056.3606-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a lot of those warnings with GCC8+ 64-bit,
+Now that -Wimplicit-fallthrough is passed to GCC by default, the
+following warnings shows up:
 
-In file included from ./include/linux/sctp.h:42,
-                 from net/core/skbuff.c:47:
-./include/uapi/linux/sctp.h:395:1: warning: alignment 4 of 'struct
-sctp_paddr_change' is less than 8 [-Wpacked-not-aligned]
- } __attribute__((packed, aligned(4)));
- ^
-./include/uapi/linux/sctp.h:728:1: warning: alignment 4 of 'struct
-sctp_setpeerprim' is less than 8 [-Wpacked-not-aligned]
- } __attribute__((packed, aligned(4)));
- ^
-./include/uapi/linux/sctp.h:727:26: warning: 'sspp_addr' offset 4 in
-'struct sctp_setpeerprim' isn't aligned to 8 [-Wpacked-not-aligned]
-  struct sockaddr_storage sspp_addr;
-                          ^~~~~~~~~
-./include/uapi/linux/sctp.h:741:1: warning: alignment 4 of 'struct
-sctp_prim' is less than 8 [-Wpacked-not-aligned]
- } __attribute__((packed, aligned(4)));
- ^
-./include/uapi/linux/sctp.h:740:26: warning: 'ssp_addr' offset 4 in
-'struct sctp_prim' isn't aligned to 8 [-Wpacked-not-aligned]
-  struct sockaddr_storage ssp_addr;
-                          ^~~~~~~~
-./include/uapi/linux/sctp.h:792:1: warning: alignment 4 of 'struct
-sctp_paddrparams' is less than 8 [-Wpacked-not-aligned]
- } __attribute__((packed, aligned(4)));
- ^
-./include/uapi/linux/sctp.h:784:26: warning: 'spp_address' offset 4 in
-'struct sctp_paddrparams' isn't aligned to 8 [-Wpacked-not-aligned]
-  struct sockaddr_storage spp_address;
-                          ^~~~~~~~~~~
-./include/uapi/linux/sctp.h:905:1: warning: alignment 4 of 'struct
-sctp_paddrinfo' is less than 8 [-Wpacked-not-aligned]
- } __attribute__((packed, aligned(4)));
- ^
-./include/uapi/linux/sctp.h:899:26: warning: 'spinfo_address' offset 4
-in 'struct sctp_paddrinfo' isn't aligned to 8 [-Wpacked-not-aligned]
-  struct sockaddr_storage spinfo_address;
-                          ^~~~~~~~~~~~~~
+../drivers/gpu/drm/arm/malidp_hw.c: In function ‘malidp_format_get_bpp’:
+../drivers/gpu/drm/arm/malidp_hw.c:387:8: warning: this statement may fall
+ through [-Wimplicit-fallthrough=]
+    bpp = 30;
+    ~~~~^~~~
+../drivers/gpu/drm/arm/malidp_hw.c:388:3: note: here
+   case DRM_FORMAT_YUV420_10BIT:
+   ^~~~
+../drivers/gpu/drm/arm/malidp_hw.c: In function ‘malidp_se_irq’:
+../drivers/gpu/drm/arm/malidp_hw.c:1311:4: warning: this statement may fall
+ through [-Wimplicit-fallthrough=]
+    drm_writeback_signal_completion(&malidp->mw_connector, 0);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/gpu/drm/arm/malidp_hw.c:1313:3: note: here
+   case MW_START:
+   ^~~~
 
-This is because the commit 20c9c825b12f ("[SCTP] Fix SCTP socket options
-to work with 32-bit apps on 64-bit kernels.") added "packed, aligned(4)"
-GCC attributes to some structures but one of the members, i.e, "struct
-sockaddr_storage" in those structures has the attribute,
-"aligned(__alignof__ (struct sockaddr *)" which is 8-byte on 64-bit
-systems, so the commit overwrites the designed alignments for
-"sockaddr_storage".
+Rework to add a 'break;' in a case that didn't have it so that
+the compiler doesn't warn about fall-through.
 
-To fix this, "struct sockaddr_storage" needs to be aligned to 4-byte as
-it is only used in those packed sctp structure which is part of UAPI,
-and "struct __kernel_sockaddr_storage" is used in some other
-places of UAPI that need not to change alignments in order to not
-breaking userspace.
-
-Use an implicit alignment for "struct __kernel_sockaddr_storage" so it
-can keep the same alignments as a member in both packed and un-packed
-structures without breaking UAPI.
-
-Suggested-by: David Laight <David.Laight@ACULAB.COM>
-Signed-off-by: Qian Cai <cai@lca.pw>
+Cc: stable@vger.kernel.org # v5.2+
+Fixes: b8207562abdd ("drm/arm/malidp: Specified the rotation memory requirements for AFBC YUV formats")
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
+ drivers/gpu/drm/arm/malidp_hw.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-v3: Add some comments and rearrange the public member first per David.
-v2: Use an implicit alignment for "struct __kernel_sockaddr_storage".
-
- include/uapi/linux/socket.h | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/include/uapi/linux/socket.h b/include/uapi/linux/socket.h
-index 8eb96021709c..c3409c8ec0dd 100644
---- a/include/uapi/linux/socket.h
-+++ b/include/uapi/linux/socket.h
-@@ -6,17 +6,24 @@
-  * Desired design of maximum size and alignment (see RFC2553)
-  */
- #define _K_SS_MAXSIZE	128	/* Implementation specific max size */
--#define _K_SS_ALIGNSIZE	(__alignof__ (struct sockaddr *))
--				/* Implementation specific desired alignment */
- 
- typedef unsigned short __kernel_sa_family_t;
- 
-+/*
-+ * The definition uses anonymous union and struct in order to control the
-+ * default alignment.
-+ */
- struct __kernel_sockaddr_storage {
--	__kernel_sa_family_t	ss_family;		/* address family */
--	/* Following field(s) are implementation specific */
--	char		__data[_K_SS_MAXSIZE - sizeof(unsigned short)];
-+	union {
-+		struct {
-+			__kernel_sa_family_t	ss_family; /* address family */
-+			/* Following field(s) are implementation specific */
-+			char __data[_K_SS_MAXSIZE - sizeof(unsigned short)];
- 				/* space to achieve desired size, */
- 				/* _SS_MAXSIZE value minus size of ss_family */
--} __attribute__ ((aligned(_K_SS_ALIGNSIZE)));	/* force desired alignment */
-+		};
-+		void *__align; /* implementation specific desired alignment */
-+	};
-+};
- 
- #endif /* _UAPI_LINUX_SOCKET_H */
+diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
+index 50af399d7f6f..380be66d4c6e 100644
+--- a/drivers/gpu/drm/arm/malidp_hw.c
++++ b/drivers/gpu/drm/arm/malidp_hw.c
+@@ -385,6 +385,7 @@ int malidp_format_get_bpp(u32 fmt)
+ 		switch (fmt) {
+ 		case DRM_FORMAT_VUY101010:
+ 			bpp = 30;
++			break;
+ 		case DRM_FORMAT_YUV420_10BIT:
+ 			bpp = 15;
+ 			break;
+@@ -1309,7 +1310,7 @@ static irqreturn_t malidp_se_irq(int irq, void *arg)
+ 			break;
+ 		case MW_RESTART:
+ 			drm_writeback_signal_completion(&malidp->mw_connector, 0);
+-			/* fall through to a new start */
++			/* fall through - to a new start */
+ 		case MW_START:
+ 			/* writeback started, need to emulate one-shot mode */
+ 			hw->disable_memwrite(hwdev);
 -- 
-1.8.3.1
+2.20.1
 
