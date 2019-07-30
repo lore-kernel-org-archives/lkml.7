@@ -2,116 +2,76 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26274C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E3BC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBA120693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:26:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUamGemk"
+	by mail.kernel.org (Postfix) with ESMTP id 698D52089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfG3R0f (ORCPT
+        id S1730770AbfG3R0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:26:35 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33087 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfG3R0f (ORCPT
+        Tue, 30 Jul 2019 13:26:41 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:52446 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfG3R0k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:26:35 -0400
-Received: by mail-io1-f68.google.com with SMTP id z3so11099224iog.0;
-        Tue, 30 Jul 2019 10:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tsLPrLOcclqm31GATo5KG4DgL5WcwoSIYZV9oMmibkM=;
-        b=LUamGemkbRqnOVHbq7CXnlGi/lEYqOEEySiKtSrwXqEp6shA4gxXuseHjOaOiH3aa7
-         q4CF5Eum/dqTa4wC00EDfSR4wSTPClq6Y3O6fnjnuTa8UISAGRv24/2prGpJP4yj+/5K
-         pp6QgCoaOkGX8YfVQJvI0ldkf7g5Qtz5YPjBIm1MafS1QJbnmne2KPhWiFiOFjpLhpua
-         9zkTIHWrBNLvn7Si20xo61CMzJCVm2tyy8IPzybo7iqfWECXz7HiHXR7qDV7Zs/ri977
-         AjNYEbpGf5FVBSgWnRjBEI6oRswJ4WN7oBSH2Oh+cBt5ZquUgXtZtN3ILEA184MLtXtW
-         bQ/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tsLPrLOcclqm31GATo5KG4DgL5WcwoSIYZV9oMmibkM=;
-        b=NG2H9GcQ68UYhIqA3DHz1MQLHBYaQ6WlL5Ny3/8lQ+dUWqFqL+0L6+rDa36qxFvQWo
-         qMlymEW3nT8NX9di+UldcC6QvPOwEoBDK8G71ADLWoOhkQLLVLOJ0MzNvcgU+im+3N9l
-         0BD0DOaj7nSX8SKV5YisV6gKrqQzYYU00M93mWK33/quxMoauh+PjgBn9HTVH4lTo48Z
-         Ut5k9KXyRWhmkxbRKPwQuIlZ6I4FdJpAg1A8AHgAFMgu3nf4fo9dUgNCg8f3ZorlsVrK
-         laySDgwqOElPQ8R4gIQL8jTinjNKE4LwOu8VL/rhqOLHGs/VwpUNogcvtGwYrYKg2H16
-         Nwqw==
-X-Gm-Message-State: APjAAAXXMf4nUgxDA8dmzb1URvoerk/7LBTv3dn0IeKspqQXe4i/dWfu
-        5Cno/1ccIv/b3fNd+TbqTWxsv/rX8e9g11HV/j8=
-X-Google-Smtp-Source: APXvYqy+9zDOTHm2OHuBLA2soclNQ3YwB8p18dgCUYzErzvrXdSDbEEW8GCwNV3FQCvXOrwwAN9MF+uqzNXPUM4I49E=
-X-Received: by 2002:a5e:8210:: with SMTP id l16mr81558885iom.240.1564507594217;
- Tue, 30 Jul 2019 10:26:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-4-deepa.kernel@gmail.com>
- <87d0hsapwr.fsf@mail.parknet.co.jp>
-In-Reply-To: <87d0hsapwr.fsf@mail.parknet.co.jp>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Tue, 30 Jul 2019 10:26:22 -0700
-Message-ID: <CABeXuvqgaxDSR8N_D1Tdw06g_5PGinZS--6nx-bPtAWP4v+mwg@mail.gmail.com>
-Subject: Re: [PATCH 03/20] timestamp_truncate: Replace users of timespec64_trunc
-To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>, anton@tuxera.com,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        stoph Hellwig <hch@lst.de>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Joel Becker <jlbec@evilplan.org>,
-        Richard Weinberger <richard@nod.at>, Tejun Heo <tj@kernel.org>,
-        yuchao0@huawei.com,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ntfs-dev@lists.sourceforge.net,
-        linux-mtd <linux-mtd@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 30 Jul 2019 13:26:40 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 40E811265965D;
+        Tue, 30 Jul 2019 10:26:39 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 10:26:38 -0700 (PDT)
+Message-Id: <20190730.102638.2201830580799063447.davem@davemloft.net>
+To:     Jose.Abreu@synopsys.com
+Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        mcoquelin.stm32@gmail.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jonathanh@nvidia.com
+Subject: Re: [PATCH net] net: stmmac: Sync RX Buffer upon allocation
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <3601e3ae4357d48b3294f42781d0f19095d1b00e.1564479382.git.joabreu@synopsys.com>
+References: <3601e3ae4357d48b3294f42781d0f19095d1b00e.1564479382.git.joabreu@synopsys.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 30 Jul 2019 10:26:39 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 1:27 AM OGAWA Hirofumi
-<hirofumi@mail.parknet.co.jp> wrote:
->
-> Deepa Dinamani <deepa.kernel@gmail.com> writes:
->
-> > diff --git a/fs/fat/misc.c b/fs/fat/misc.c
-> > index 1e08bd54c5fb..53bb7c6bf993 100644
-> > --- a/fs/fat/misc.c
-> > +++ b/fs/fat/misc.c
-> > @@ -307,8 +307,9 @@ int fat_truncate_time(struct inode *inode, struct timespec64 *now, int flags)
-> >               inode->i_atime = (struct timespec64){ seconds, 0 };
-> >       }
-> >       if (flags & S_CTIME) {
-> > -             if (sbi->options.isvfat)
-> > -                     inode->i_ctime = timespec64_trunc(*now, 10000000);
-> > +             if (sbi->options.isvfat) {
-> > +                     inode->i_ctime = timestamp_truncate(*now, inode);
-> > +             }
-> >               else
-> >                       inode->i_ctime = fat_timespec64_trunc_2secs(*now);
-> >       }
->
-> Looks like broken. It changed to sb->s_time_gran from 10000000, and
-> changed coding style.
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Tue, 30 Jul 2019 15:57:16 +0200
 
-This is using a new api: timestamp_truncate(). granularity is gotten
-by inode->sb->s_time_gran. See Patch [2/20]:
-https://lkml.org/lkml/2019/7/29/1853
+> With recent changes that introduced support for Page Pool in stmmac, Jon
+> reported that NFS boot was no longer working on an ARM64 based platform
+> that had the IP behind an IOMMU.
+> 
+> As Page Pool API does not guarantee DMA syncing because of the use of
+> DMA_ATTR_SKIP_CPU_SYNC flag, we have to explicit sync the whole buffer upon
+> re-allocation because we are always re-using same pages.
+> 
+> In fact, ARM64 code invalidates the DMA area upon two situations [1]:
+> 	- sync_single_for_cpu(): Invalidates if direction != DMA_TO_DEVICE
+> 	- sync_single_for_device(): Invalidates if direction == DMA_FROM_DEVICE
+> 
+> So, as we must invalidate both the current RX buffer and the newly allocated
+> buffer we propose this fix.
+> 
+> [1] arch/arm64/mm/cache.S
+> 
+> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> Fixes: 2af6106ae949 ("net: stmmac: Introducing support for Page Pool")
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-So this is not broken if fat is filling in the right granularity in the sb.
-
--Deepa
+Applied.
