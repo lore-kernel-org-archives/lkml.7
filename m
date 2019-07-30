@@ -2,224 +2,94 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BFBC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C478C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7E620644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20ABD20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730834AbfG3JXa (ORCPT
+        id S1730996AbfG3JXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:23:30 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:55296 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729806AbfG3JX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:23:28 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 79C571A061C;
-        Tue, 30 Jul 2019 11:23:25 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C07371A00BF;
-        Tue, 30 Jul 2019 11:23:21 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 226E1402E8;
-        Tue, 30 Jul 2019 17:23:17 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biwen Li <biwen.li@nxp.com>
-Subject: [2/3] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa: add ftm_alarm0 node
-Date:   Tue, 30 Jul 2019 17:13:46 +0800
-Message-Id: <20190730091347.25593-2-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190730091347.25593-1-biwen.li@nxp.com>
-References: <20190730091347.25593-1-biwen.li@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 30 Jul 2019 05:23:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35889 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfG3JXo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 05:23:44 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g67so51841945wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 02:23:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mWMZh3wUcWsqPn07oFt7cBOH5RBu0IlIBiCukBD3l9o=;
+        b=Bitkvbdi/4L9CmILWmwwpZcuGSjsHwHzUhWvhRVEExo81XaK7DiC6xJbBQClrYnICc
+         0zgSuj6XFr/fYLJ5YEhAN+JDXw9bIIu5MFhsFDuEDCDo065+J/1r4Cs6jrYae59Jl0P8
+         ApmK3/UFgEheRpmfLm0v7XbL6SuZp5JDn80YP5oNHD7MG6exzT1P8SB9fm5VZBpKrgps
+         TETqe4c1XivQrWZAo3RUPsMsU8HCbJCUPuLAd0f/JqcyH/G7llkr35zjUNf9H1S1HlGw
+         mFtRHCefeOfXLxj2QD0OGq8lmm5sNfDP/3IWOu6t1iVLI5NBhDCsc+sZz7hXDOLYllkf
+         J5IQ==
+X-Gm-Message-State: APjAAAUBCTGQibQDgbpdfO075U9xjO5Xu3Q7OSqT/JokJaX2n4PWyi6R
+        9H7A0sXEx0zl7XrTQz7lhLRMvntCCck=
+X-Google-Smtp-Source: APXvYqyjkTFE8K19/Ax2T+TuTtN5zUHOBpO/LA8yzScwVqCfBWpuwT+J9Qb8/NNoeIAkuB0HbwVZzQ==
+X-Received: by 2002:a7b:cc04:: with SMTP id f4mr40005383wmh.125.1564478622449;
+        Tue, 30 Jul 2019 02:23:42 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:29d3:6123:6d5f:2c04? ([2001:b07:6468:f312:29d3:6123:6d5f:2c04])
+        by smtp.gmail.com with ESMTPSA id s10sm48654942wrt.49.2019.07.30.02.23.40
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 02:23:41 -0700 (PDT)
+Subject: Re: [RFC PATCH 03/16] RISC-V: Add initial skeletal KVM support
+To:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190729115544.17895-1-anup.patel@wdc.com>
+ <20190729115544.17895-4-anup.patel@wdc.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <309b9fb3-9909-48d6-eabf-88356df4bb3b@redhat.com>
+Date:   Tue, 30 Jul 2019 11:23:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190729115544.17895-4-anup.patel@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch adds ftm_alarm0 DT node
-	- add new rcpm node
-	- add ftm_alarm0 node
-	- aliases ftm_alarm0 as rtc1
+On 29/07/19 13:56, Anup Patel wrote:
+> +	case KVM_CAP_DEVICE_CTRL:
+> +	case KVM_CAP_USER_MEMORY:
+> +	case KVM_CAP_SYNC_MMU:
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 14 ++++++++++++++
- 5 files changed, 72 insertions(+)
+Technically KVM_CAP_SYNC_MMU should only be added after you add MMU
+notifiers.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index ec6257a5b251..401210e3afd2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -22,6 +22,7 @@
- 		rtic-c = &rtic_c;
- 		rtic-d = &rtic_d;
- 		sec-mon = &sec_mon;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -500,6 +501,20 @@
- 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
-+
-+		rcpm: rcpm@1ee2140 {
-+			compatible = "fsl,ls1012a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1012a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <0 86 0x4>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 71d9ed9ff985..9ff5dd32e87d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -27,6 +27,7 @@
- 		ethernet4 = &enet4;
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -767,6 +768,19 @@
- 			big-endian;
- 		};
- 
-+		rcpm: rcpm@1ee2140 {
-+			compatible = "fsl,ls1043a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1043a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <0 86 0x4>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index b0ef08b090dd..d216375b174f 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -28,6 +28,7 @@
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
- 		ethernet7 = &enet7;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -771,6 +772,20 @@
- 			queue-sizes = <64 64>;
- 			big-endian;
- 		};
-+
-+		rcpm: rcpm@1ee208c {
-+			compatible = "fsl,ls1046a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee208c 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1046a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	reserved-memory {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index dacd8cf03a7f..61cb897b940a 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -18,6 +18,7 @@
- 
- 	aliases {
- 		crypto = &crypto;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -745,6 +746,19 @@
- 				};
- 			};
- 		};
-+
-+		rcpm: rcpm@1e34040 {
-+			compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls1088a-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <0 44 4>;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 3ace91945b72..908386042c5b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -24,6 +24,7 @@
- 		serial1 = &serial1;
- 		serial2 = &serial2;
- 		serial3 = &serial3;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpu: cpus {
-@@ -758,6 +759,19 @@
- 			reg = <0x0 0x04000000 0x0 0x01000000>;
- 			interrupts = <0 12 4>;
- 		};
-+
-+		rcpm: rcpm@1e34040 {
-+			compatible = "fsl,ls208xa-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls208xa-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <0 44 4>;
-+		};
- 	};
- 
- 	ddr1: memory-controller@1080000 {
--- 
-2.17.1
+Paolo
+
+> +	case KVM_CAP_DESTROY_MEMORY_REGION_WORKS:
+> +	case KVM_CAP_ONE_REG:
+> +	case KVM_CAP_READONLY_MEM:
+> +	case KVM_CAP_MP_STATE:
+> +	case KVM_CAP_IMMEDIATE_EXIT:
+> +		r = 1;
+> +		break;
 
