@@ -2,43 +2,43 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FD5C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C4CC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8DC21841
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D35217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455651;
-	bh=UIeL9OJN2YK36OthhLk7JLDBBQZSEffiKIhBBJDJyt0=;
+	s=default; t=1564455655;
+	bh=FwWs/GtZup6DxOF2lPS0CEk0zVSxmeYWNcs8OZLdaYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J6/jWl1DgfrSAfVCoNJ7UuW7kkdzenR1Nif9XBUgUiqajImxgrhPx2NIybOSt3n0g
-	 8A0ZsufBUqqO+57ltrKZ3M5kcIjU+9maUgxdqUBFk3uanpVKQtiuMlLCvDHKFtsq8p
-	 L/lNcVyJTLbY4bzW8KdBHE9aQ3WfxctewKrUHUUA=
+	b=wXFcmo//gtehU0T5UlCy0xwW+9YzNUJmuRe6JrGIt2xiChKIiWqChIN50UcubK3wB
+	 cJ5pVgG1BqxunvLiLMqNfl3+J5S2EnFAnZ7kgqfo4WjW5crF2GTDznNmlUbMYL1Zjw
+	 DxMifRGoPcdZB4zdEGtR1qwGEPh7ghYnmi4zpWM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732480AbfG3DAu (ORCPT
+        id S1732490AbfG3DAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:00:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 23:00:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732462AbfG3DAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 23:00:47 -0400
+        id S1732462AbfG3DAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:00:52 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 115E6217D4;
-        Tue, 30 Jul 2019 03:00:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9843B2171F;
+        Tue, 30 Jul 2019 03:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455647;
-        bh=UIeL9OJN2YK36OthhLk7JLDBBQZSEffiKIhBBJDJyt0=;
+        s=default; t=1564455650;
+        bh=FwWs/GtZup6DxOF2lPS0CEk0zVSxmeYWNcs8OZLdaYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VBaoe7nVo+4YGslNObzEn5Azl4SzbfzREqhQIPxSZY1DDgEerRThiGjNTPE8wV+t0
-         x1hosgOfhg+yOCaA5CTRaSEQznlgdynXu9/81bNo3GCmPzZF6d0eYs20yHAqNpt/m+
-         tk89hE6QHqLFmh5NY+znmN/AWLLlsD7Og1xF71Gk=
+        b=d4ZTGbvDfvFx2kOOZ2YEw9cAP2Q9tpbPseox7yPezIH8DhfT4zH+941vNhlRKmuEy
+         tVWGVXygzI0Ml2kYRvlh3X+Dcef5wy76ZXSTk9dqj7aHETtBfaS3DgGQaBYVbskHBa
+         3kpR/zGxZ0vSTW9u1sTFPHcJir2IskntwOLXgzBU=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 079/107] libperf: Add threads to struct perf_evsel
-Date:   Mon, 29 Jul 2019 23:55:42 -0300
-Message-Id: <20190730025610.22603-80-acme@kernel.org>
+Subject: [PATCH 080/107] libperf: Add has_user_cpus to struct perf_evlist
+Date:   Mon, 29 Jul 2019 23:55:43 -0300
+Message-Id: <20190730025610.22603-81-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move 'threads' from tools/perf's evsel to libperf's perf_evsel struct.
+Move has_user_cpus from tools/perf's evlist to libbperf's perf_evlist struct.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -75,201 +75,60 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-53-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-54-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c                            | 2 +-
- tools/perf/builtin-script.c                            | 4 ++--
- tools/perf/lib/include/internal/evsel.h                | 2 ++
- tools/perf/util/evlist.c                               | 6 +++---
- tools/perf/util/evsel.c                                | 4 ++--
- tools/perf/util/evsel.h                                | 1 -
- tools/perf/util/scripting-engines/trace-event-python.c | 2 +-
- tools/perf/util/stat-display.c                         | 6 +++---
- tools/perf/util/stat.c                                 | 6 +++---
- 9 files changed, 17 insertions(+), 16 deletions(-)
+ tools/perf/lib/include/internal/evlist.h | 1 +
+ tools/perf/util/evlist.c                 | 4 ++--
+ tools/perf/util/evlist.h                 | 1 -
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 090aaa2cf4b3..27ff899bed88 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -739,7 +739,7 @@ static int record__open(struct record *rec)
- 
- 	evlist__for_each_entry(evlist, pos) {
- try_again:
--		if (evsel__open(pos, pos->core.cpus, pos->threads) < 0) {
-+		if (evsel__open(pos, pos->core.cpus, pos->core.threads) < 0) {
- 			if (perf_evsel__fallback(pos, errno, msg, sizeof(msg))) {
- 				if (verbose > 0)
- 					ui__warning("%s\n", msg);
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 35f07dde5ad4..a787c5cb1331 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1899,7 +1899,7 @@ static struct scripting_ops	*scripting_ops;
- 
- static void __process_stat(struct evsel *counter, u64 tstamp)
- {
--	int nthreads = thread_map__nr(counter->threads);
-+	int nthreads = thread_map__nr(counter->core.threads);
- 	int ncpus = perf_evsel__nr_cpus(counter);
- 	int cpu, thread;
- 	static int header_printed;
-@@ -1921,7 +1921,7 @@ static void __process_stat(struct evsel *counter, u64 tstamp)
- 
- 			printf("%3d %8d %15" PRIu64 " %15" PRIu64 " %15" PRIu64 " %15" PRIu64 " %s\n",
- 				counter->core.cpus->map[cpu],
--				thread_map__pid(counter->threads, thread),
-+				thread_map__pid(counter->core.threads, thread),
- 				counts->val,
- 				counts->ena,
- 				counts->run,
-diff --git a/tools/perf/lib/include/internal/evsel.h b/tools/perf/lib/include/internal/evsel.h
-index d15d8ccfa3dc..8340fd883a3d 100644
---- a/tools/perf/lib/include/internal/evsel.h
-+++ b/tools/perf/lib/include/internal/evsel.h
-@@ -6,12 +6,14 @@
- #include <linux/perf_event.h>
- 
- struct perf_cpu_map;
-+struct perf_thread_map;
- 
- struct perf_evsel {
- 	struct list_head	 node;
- 	struct perf_event_attr	 attr;
- 	struct perf_cpu_map	*cpus;
- 	struct perf_cpu_map	*own_cpus;
-+	struct perf_thread_map	*threads;
+diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
+index a12c712a9197..9964e4a9456e 100644
+--- a/tools/perf/lib/include/internal/evlist.h
++++ b/tools/perf/lib/include/internal/evlist.h
+@@ -5,6 +5,7 @@
+ struct perf_evlist {
+ 	struct list_head	entries;
+ 	int			nr_entries;
++	bool			has_user_cpus;
  };
  
- #endif /* __LIBPERF_INTERNAL_EVSEL_H */
+ #endif /* __LIBPERF_INTERNAL_EVLIST_H */
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index d203305ac187..5ce8fc730453 100644
+index 5ce8fc730453..23a8ead4512f 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -167,8 +167,8 @@ static void __perf_evlist__propagate_maps(struct evlist *evlist,
- 		evsel->core.cpus = perf_cpu_map__get(evsel->core.own_cpus);
- 	}
+@@ -159,7 +159,7 @@ static void __perf_evlist__propagate_maps(struct evlist *evlist,
+ 	 * We already have cpus for evsel (via PMU sysfs) so
+ 	 * keep it, if there's no target cpu list defined.
+ 	 */
+-	if (!evsel->core.own_cpus || evlist->has_user_cpus) {
++	if (!evsel->core.own_cpus || evlist->core.has_user_cpus) {
+ 		perf_cpu_map__put(evsel->core.cpus);
+ 		evsel->core.cpus = perf_cpu_map__get(evlist->cpus);
+ 	} else if (evsel->core.cpus != evsel->core.own_cpus) {
+@@ -1095,7 +1095,7 @@ int perf_evlist__create_maps(struct evlist *evlist, struct target *target)
+ 	if (!cpus)
+ 		goto out_delete_threads;
  
--	perf_thread_map__put(evsel->threads);
--	evsel->threads = perf_thread_map__get(evlist->threads);
-+	perf_thread_map__put(evsel->core.threads);
-+	evsel->core.threads = perf_thread_map__get(evlist->threads);
- }
+-	evlist->has_user_cpus = !!target->cpu_list;
++	evlist->core.has_user_cpus = !!target->cpu_list;
  
- static void perf_evlist__propagate_maps(struct evlist *evlist)
-@@ -1407,7 +1407,7 @@ int evlist__open(struct evlist *evlist)
- 	perf_evlist__update_id_pos(evlist);
+ 	perf_evlist__set_maps(evlist, cpus, threads);
  
- 	evlist__for_each_entry(evlist, evsel) {
--		err = evsel__open(evsel, evsel->core.cpus, evsel->threads);
-+		err = evsel__open(evsel, evsel->core.cpus, evsel->core.threads);
- 		if (err < 0)
- 			goto out_err;
- 	}
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index c5f6ee6d5f3b..f7758ce0dd5c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1327,7 +1327,7 @@ void perf_evsel__exit(struct evsel *evsel)
- 	cgroup__put(evsel->cgrp);
- 	perf_cpu_map__put(evsel->core.cpus);
- 	perf_cpu_map__put(evsel->core.own_cpus);
--	perf_thread_map__put(evsel->threads);
-+	perf_thread_map__put(evsel->core.threads);
- 	zfree(&evsel->group_name);
- 	zfree(&evsel->name);
- 	perf_evsel__object.fini(evsel);
-@@ -3065,7 +3065,7 @@ static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
- int perf_evsel__store_ids(struct evsel *evsel, struct evlist *evlist)
- {
- 	struct perf_cpu_map *cpus = evsel->core.cpus;
--	struct perf_thread_map *threads = evsel->threads;
-+	struct perf_thread_map *threads = evsel->core.threads;
- 
- 	if (perf_evsel__alloc_id(evsel, cpus->nr, threads->nr))
- 		return -ENOMEM;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 2eff837f10bd..57b5523b480c 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -123,7 +123,6 @@ struct evsel {
- 	u64			db_id;
- 	struct cgroup		*cgrp;
- 	void			*handler;
--	struct perf_thread_map *threads;
- 	unsigned int		sample_size;
- 	int			id_pos;
- 	int			is_pos;
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index c5f520e0885b..32c17a727450 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1392,7 +1392,7 @@ process_stat(struct evsel *counter, int cpu, int thread, u64 tstamp,
- static void python_process_stat(struct perf_stat_config *config,
- 				struct evsel *counter, u64 tstamp)
- {
--	struct perf_thread_map *threads = counter->threads;
-+	struct perf_thread_map *threads = counter->core.threads;
- 	struct perf_cpu_map *cpus = counter->core.cpus;
- 	int cpu, thread;
- 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index e84f8063c2db..7c938135398b 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -116,9 +116,9 @@ static void aggr_printout(struct perf_stat_config *config,
- 	case AGGR_THREAD:
- 		fprintf(config->output, "%*s-%*d%s",
- 			config->csv_output ? 0 : 16,
--			perf_thread_map__comm(evsel->threads, id),
-+			perf_thread_map__comm(evsel->core.threads, id),
- 			config->csv_output ? 0 : -8,
--			thread_map__pid(evsel->threads, id),
-+			thread_map__pid(evsel->core.threads, id),
- 			config->csv_sep);
- 		break;
- 	case AGGR_GLOBAL:
-@@ -744,7 +744,7 @@ static void print_aggr_thread(struct perf_stat_config *config,
- 			      struct evsel *counter, char *prefix)
- {
- 	FILE *output = config->output;
--	int nthreads = thread_map__nr(counter->threads);
-+	int nthreads = thread_map__nr(counter->core.threads);
- 	int ncpus = cpu_map__nr(counter->core.cpus);
- 	int thread, sorted_threads, id;
- 	struct perf_aggr_thread_value *buf;
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 632bf72cf780..1e351462ca49 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -158,7 +158,7 @@ static void perf_evsel__free_prev_raw_counts(struct evsel *evsel)
- static int perf_evsel__alloc_stats(struct evsel *evsel, bool alloc_raw)
- {
- 	int ncpus = perf_evsel__nr_cpus(evsel);
--	int nthreads = thread_map__nr(evsel->threads);
-+	int nthreads = thread_map__nr(evsel->core.threads);
- 
- 	if (perf_evsel__alloc_stat_priv(evsel) < 0 ||
- 	    perf_evsel__alloc_counts(evsel, ncpus, nthreads) < 0 ||
-@@ -308,7 +308,7 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
- static int process_counter_maps(struct perf_stat_config *config,
- 				struct evsel *counter)
- {
--	int nthreads = thread_map__nr(counter->threads);
-+	int nthreads = thread_map__nr(counter->core.threads);
- 	int ncpus = perf_evsel__nr_cpus(counter);
- 	int cpu, thread;
- 
-@@ -485,7 +485,7 @@ int create_perf_stat_counter(struct evsel *evsel,
- 	if (target__has_cpu(target) && !target__has_per_thread(target))
- 		return perf_evsel__open_per_cpu(evsel, evsel__cpus(evsel));
- 
--	return perf_evsel__open_per_thread(evsel, evsel->threads);
-+	return perf_evsel__open_per_thread(evsel, evsel->core.threads);
- }
- 
- int perf_stat_synthesize_config(struct perf_stat_config *config,
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 17dd83021a79..35cca0242631 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -31,7 +31,6 @@ struct evlist {
+ 	int		 nr_groups;
+ 	int		 nr_mmaps;
+ 	bool		 enabled;
+-	bool		 has_user_cpus;
+ 	size_t		 mmap_len;
+ 	int		 id_pos;
+ 	int		 is_pos;
 -- 
 2.21.0
 
