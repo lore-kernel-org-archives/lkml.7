@@ -2,159 +2,112 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FE5C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152F6C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32649206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCB3206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 02:41:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IQnc3HvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731390AbfG3CjY (ORCPT
+        id S1731404AbfG3Clv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 22:39:24 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:39411 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730921AbfG3CjX (ORCPT
+        Mon, 29 Jul 2019 22:41:51 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46196 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730921AbfG3Clv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:39:23 -0400
-X-IronPort-AV: E=Sophos;i="5.64,325,1559491200"; 
-   d="scan'208";a="72493080"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 30 Jul 2019 10:37:03 +0800
-Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
-        by cn.fujitsu.com (Postfix) with ESMTP id 816394CDDAE4;
-        Tue, 30 Jul 2019 10:37:00 +0800 (CST)
-Received: from localhost.localdomain (10.167.226.33) by
- G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Tue, 30 Jul 2019 10:36:59 +0800
-From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
-To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <suyj.fnst@cn.fujitsu.com>
-Subject: [PATCH net v2] net: ipv6: Fix a bug in ndisc_send_ns when netdev only has a global address
-Date:   Tue, 30 Jul 2019 10:35:15 +0800
-Message-ID: <1564454115-66184-1-git-send-email-suyj.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 29 Jul 2019 22:41:51 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c3so5867088pfa.13
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 19:41:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1tuCSroln1sKVEDl7Uz0luKkd7K+d2sop8UYdCF/zYY=;
+        b=IQnc3HvKS1AsZ44Uc7vJY8Yoc6tijURNF659ep/dp58zJ8fE/AmA9TswmEyJ0oXqxR
+         NoLJlABA1c1Ao64rG+GGvglsYT52yqNozLXyo1/5mqKhQB3hjSmVUmwQLUoRAOooL54v
+         a9DEvLlYAgcpe1xEmEJXDtSEXn97bEBJ46+55MUDD+f6rV5xt8cOc8GlcQBrqsm9G9zN
+         08IP2LGq67MhwZmQrugWYPNFhsOZnNI9tqDlW7DlgZrl9hX/c5zI/mkzm4waRHb/ChoW
+         SWWV8bknVIVIzrqfufaS3A0sMn1yTgfSovqumUhphpLvVYGnooP7MR6WFC2VXhr4JdyZ
+         s2tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1tuCSroln1sKVEDl7Uz0luKkd7K+d2sop8UYdCF/zYY=;
+        b=kz+4Xx/ujl6u3c0SZqwT2E31sRre6QMGarjrv3uCKoro8q8wc7BhcrFigmBN9epMMn
+         tXDqSQxKSHw2mjsoptJwhkuNbqKxJ113lFgunKyEy9HvwCibOP9a2teU3a5eh3z6vhMp
+         BcQAlBjTaO+6FMOklmN5AYA4vMcRntjmVM+upmZsLXH5nqERN8T7CSAEwrT/Vu60cfzh
+         EWpJdJ3LjrttYtGS4N7d2C9yqvSokFIJ8lNS+7VNw045/UHtVLUA+QOPiOrjENJI8qR7
+         4hpAtR8aBIF5oBx3qZvTEDMkigLTtV9s+j4/ZhTgtFUFr5JQDLVvfNOAYxdJSqVza7ys
+         wttA==
+X-Gm-Message-State: APjAAAWxV89Bk0qZc8owo3rw7yqZVleTlAKWG5I38+zrY3Yp5x06DyDx
+        jQnOId9tmuRAdi85IP5Xc9p89w==
+X-Google-Smtp-Source: APXvYqx0Fa+EaxN9mX1U8i4V7Dv4in3falhkaYUARqtPdbrvGfhz0ywhR8B2CjcMPHxNgT9FgEAmaw==
+X-Received: by 2002:aa7:8b10:: with SMTP id f16mr40191079pfd.44.1564454510323;
+        Mon, 29 Jul 2019 19:41:50 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id i198sm61607713pgd.44.2019.07.29.19.41.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 19:41:49 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 08:11:46 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] cpufreq: ti-cpufreq: Mark expected switch fall-through
+Message-ID: <20190730024146.46cqoyzxg6mjjc7k@vireshk-i7>
+References: <20190729224933.GA23686@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.167.226.33]
-X-yoursite-MailScanner-ID: 816394CDDAE4.AE319
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190729224933.GA23686@embeddedor>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the egress interface does not have a link local address, it can
-not communicate with other hosts.
+On 29-07-19, 17:49, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following warning (Building: arm):
+> 
+> drivers/cpufreq/ti-cpufreq.c: In function ‘dra7_efuse_xlate’:
+> drivers/cpufreq/ti-cpufreq.c:79:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
+> drivers/cpufreq/ti-cpufreq.c:80:2: note: here
+>   case DRA7_EFUSE_HAS_OD_MPU_OPP:
+>   ^~~~
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/cpufreq/ti-cpufreq.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+> index 2ad1ae17932d..aeaa883a8c9d 100644
+> --- a/drivers/cpufreq/ti-cpufreq.c
+> +++ b/drivers/cpufreq/ti-cpufreq.c
+> @@ -77,6 +77,7 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
+>  	case DRA7_EFUSE_HAS_ALL_MPU_OPP:
+>  	case DRA7_EFUSE_HAS_HIGH_MPU_OPP:
+>  		calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
+> +		/* Fall through */
+>  	case DRA7_EFUSE_HAS_OD_MPU_OPP:
+>  		calculated_efuse |= DRA7_EFUSE_OD_MPU_OPP;
+>  	}
 
-In RFC4861, 7.2.2 says
-"If the source address of the packet prompting the solicitation is the
-same as one of the addresses assigned to the outgoing interface, that
-address SHOULD be placed in the IP Source Address of the outgoing
-solicitation.  Otherwise, any one of the addresses assigned to the
-interface should be used."
+Applied. Thanks.
 
-In this patch we try get a global address if we get ll address failed.
-
-Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
----
-Changes since V1:
-	- Change patch description and code optimization at 
-          David Ahern's suggestion
----
- include/net/addrconf.h |  2 ++
- net/ipv6/addrconf.c    | 34 ++++++++++++++++++++++++++++++++++
- net/ipv6/ndisc.c       |  9 ++++++---
- 3 files changed, 42 insertions(+), 3 deletions(-)
-
-diff --git a/include/net/addrconf.h b/include/net/addrconf.h
-index becdad5..ce1561e 100644
---- a/include/net/addrconf.h
-+++ b/include/net/addrconf.h
-@@ -107,6 +107,8 @@ int __ipv6_get_lladdr(struct inet6_dev *idev, struct in6_addr *addr,
- 		      u32 banned_flags);
- int ipv6_get_lladdr(struct net_device *dev, struct in6_addr *addr,
- 		    u32 banned_flags);
-+int ipv6_get_addr(struct net_device *dev, struct in6_addr *addr,
-+		    u32 banned_flags);
- bool inet_rcv_saddr_equal(const struct sock *sk, const struct sock *sk2,
- 			  bool match_wildcard);
- bool inet_rcv_saddr_any(const struct sock *sk);
-diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-index 521e320..9467457 100644
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -1870,6 +1870,40 @@ int ipv6_get_lladdr(struct net_device *dev, struct in6_addr *addr,
- 	return err;
- }
- 
-+int __ipv6_get_addr(struct inet6_dev *idev, struct in6_addr *addr,
-+		    u32 banned_flags)
-+{
-+	struct inet6_ifaddr *ifp;
-+	int err = -EADDRNOTAVAIL;
-+
-+	list_for_each_entry(ifp, &idev->addr_list, if_list) {
-+		if (ifp->scope == 0 &&
-+		    !(ifp->flags & banned_flags)) {
-+			*addr = ifp->addr;
-+			err = 0;
-+			break;
-+		}
-+	}
-+	return err;
-+}
-+
-+int ipv6_get_addr(struct net_device *dev, struct in6_addr *addr,
-+		  u32 banned_flags)
-+{
-+	struct inet6_dev *idev;
-+	int err = -EADDRNOTAVAIL;
-+
-+	rcu_read_lock();
-+	idev = __in6_dev_get(dev);
-+	if (idev) {
-+		read_lock_bh(&idev->lock);
-+		err = __ipv6_get_addr(idev, addr, banned_flags);
-+		read_unlock_bh(&idev->lock);
-+	}
-+	rcu_read_unlock();
-+	return err;
-+}
-+
- static int ipv6_count_addresses(const struct inet6_dev *idev)
- {
- 	const struct inet6_ifaddr *ifp;
-diff --git a/net/ipv6/ndisc.c b/net/ipv6/ndisc.c
-index 083cc1c..156c027 100644
---- a/net/ipv6/ndisc.c
-+++ b/net/ipv6/ndisc.c
-@@ -603,11 +603,14 @@ void ndisc_send_ns(struct net_device *dev, const struct in6_addr *solicit,
- 	int inc_opt = dev->addr_len;
- 	int optlen = 0;
- 	struct nd_msg *msg;
-+	u32 banned_flags = IFA_F_TENTATIVE | IFA_F_OPTIMISTIC;
- 
- 	if (!saddr) {
--		if (ipv6_get_lladdr(dev, &addr_buf,
--				   (IFA_F_TENTATIVE|IFA_F_OPTIMISTIC)))
--			return;
-+		if (ipv6_get_lladdr(dev, &addr_buf, banned_flags)) {
-+			/* try global address */
-+			if (ipv6_get_addr(dev, &addr_buf, banned_flags))
-+				return;
-+		}
- 		saddr = &addr_buf;
- 	}
- 
 -- 
-2.7.4
-
-
-
+viresh
