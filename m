@@ -2,135 +2,118 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516F9C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE89C7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2391C2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FCA4206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dPVIznaX";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PlMzf4+n"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CTRXVnpH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbfG3Egi (ORCPT
+        id S1728533AbfG3EhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 00:36:38 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41196 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728454AbfG3Egh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 00:36:37 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4E126605A5; Tue, 30 Jul 2019 04:36:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564461396;
-        bh=AgW8T/aFOLgGFp497+tsPv5AXD39QeiyHoimN2WKVE4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dPVIznaXzpPkaXTocG74aVUxQ+XzM8yeP4kHYLzdBIK8lDZHEks99KCvfqTP8hUsL
-         /JGqh72utOqTcB1oXL12CIqx5loQTe/4vPUfan60lARz7epIIUJSWHOKIQJhBtNLeX
-         WPcpRrqKQFwBc6jH0L8PRJpfK4TFbG5mMgyN4r4Y=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        Tue, 30 Jul 2019 00:37:07 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46661 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728454AbfG3EhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 00:37:07 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 924966021A;
-        Tue, 30 Jul 2019 04:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564461395;
-        bh=AgW8T/aFOLgGFp497+tsPv5AXD39QeiyHoimN2WKVE4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PlMzf4+nENUjFBIdUJU/p4cI6jhCwMJrLbp1LhEC/33eZ20pfcEnFWFMxYEAnRdKJ
-         C6NWipbd1AmXdfMYzUyq3ktTmIvfZdzg/UWbC4PUpDT9gov1CDvSue4qvu1YusM/y2
-         novZAhzDXI9bMsMGuuzKPthOh44gOTwDv4CmuU1M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 924966021A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Tue, 30 Jul 2019 10:06:30 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Chao Yu <chao@kernel.org>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, stummala@codeaurora.org
-Subject: Re: [f2fs-dev] [PATCH] f2fs: Fix indefinite loop in f2fs_gc()
-Message-ID: <20190730043630.GG8289@codeaurora.org>
-References: <1564377626-12898-1-git-send-email-stummala@codeaurora.org>
- <a5acb5cb-2e77-902f-0a5e-063f7cbd0643@kernel.org>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45yP0c5bvwz9s3Z;
+        Tue, 30 Jul 2019 14:37:04 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564461424;
+        bh=ZEK/SveL+CYAKkTNLqtDMeYcvcYDJezeg9+KKvNlKX8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CTRXVnpHci8dgwsm4WCheU0z7Wo7RhRqoLsYsB9dHCqCAqBuW/V0C43fq8dnSdqvS
+         G89D86dDP6iOiXMy8YMBGh2U1E/PJJ/5SWBNYjbgsfAGPeUslwM4+vBhb5otx/bCEq
+         tZhSdPCRoaUnXhl0Ow8yRxkYjcSxI+ORx4sY8wbCtQQz53lnfw7rutolOzGJwWnEEG
+         /uKoL12TKT610vhMFkemVe9d0L8Ta1ky8eRa+QqOG8i/QMA65E/nJTqEtn6BYPorL0
+         JSDh1womcDyczzaJOwKPC2lQ5oEckKnnlJPqO42sAOyr7NRXvfWft3BMrQ+49kPLFr
+         ncu6ya2dz0k4w==
+Date:   Tue, 30 Jul 2019 14:37:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     PowerPC <linuxppc-dev@lists.ozlabs.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drivers/macintosh/smu.c: Mark expected switch fall-through
+Message-ID: <20190730143704.060a2606@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5acb5cb-2e77-902f-0a5e-063f7cbd0643@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/signed; boundary="Sig_/WkrTSZW/7hwA8JeT.W=8kOU";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+--Sig_/WkrTSZW/7hwA8JeT.W=8kOU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 30, 2019 at 12:00:45AM +0800, Chao Yu wrote:
-> Hi Sahitya,
-> 
-> On 2019-7-29 13:20, Sahitya Tummala wrote:
-> > Policy - foreground GC, LFS mode and greedy GC mode.
-> > 
-> > Under this policy, f2fs_gc() loops forever to GC as it doesn't have
-> > enough free segements to proceed and thus it keeps calling gc_more
-> > for the same victim segment.  This can happen if the selected victim
-> > segment could not be GC'd due to failed blkaddr validity check i.e.
-> > is_alive() returns false for the blocks set in current validity map.
-> > 
-> > Fix this by not resetting the sbi->cur_victim_sec to NULL_SEGNO, when
-> > the segment selected could not be GC'd. This helps to select another
-> > segment for GC and thus helps to proceed forward with GC.
-> > 
-> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > ---
-> >  fs/f2fs/gc.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> > index 8974672..7bbcc4a 100644
-> > --- a/fs/f2fs/gc.c
-> > +++ b/fs/f2fs/gc.c
-> > @@ -1303,7 +1303,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
-> >  		round++;
-> >  	}
-> >  
-> > -	if (gc_type == FG_GC)
-> > +	if (gc_type == FG_GC && seg_freed)
-> >  		sbi->cur_victim_sec = NULL_SEGNO;
-> 
-> In some cases, we may remain last victim in sbi->cur_victim_sec, and jump out of
-> GC cycle, then SSR can skip the last victim due to sec_usage_check()...
-> 
+Mark switch cases where we are expecting to fall through.
 
-I see. I have a few questions on how to fix this issue. Please share your
-comments.
+This patch fixes the following warning (Building: powerpc):
 
-1. Do you think the scenario described is valid? It happens rarely, not very
-easy to reproduce.  From the dumps, I see that only block is set as valid in
-the sentry->cur_valid_map for which I see that summary block check is_alive()
-could return false. As only one block is set as valid, chances are there it
-can be always selected as the victim by get_victim_by_default() under FG_GC.
+drivers/macintosh/smu.c: In function 'smu_queue_i2c':
+drivers/macintosh/smu.c:854:21: warning: this statement may fall through [-=
+Wimplicit-fallthrough=3D]
+   cmd->info.devaddr &=3D 0xfe;
+   ~~~~~~~~~~~~~~~~~~^~~~~~~
+drivers/macintosh/smu.c:855:2: note: here
+  case SMU_I2C_TRANSFER_STDSUB:
+  ^~~~
 
-2. What are the possible scenarios where summary block check is_alive() could
-fail for a segment?
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/macintosh/smu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-3. How does GC handle such segments?
+diff --git a/drivers/macintosh/smu.c b/drivers/macintosh/smu.c
+index 276065c888bc..23f1f41c8602 100644
+--- a/drivers/macintosh/smu.c
++++ b/drivers/macintosh/smu.c
+@@ -852,6 +852,7 @@ int smu_queue_i2c(struct smu_i2c_cmd *cmd)
+ 		break;
+ 	case SMU_I2C_TRANSFER_COMBINED:
+ 		cmd->info.devaddr &=3D 0xfe;
++		/* fall through */
+ 	case SMU_I2C_TRANSFER_STDSUB:
+ 		if (cmd->info.sublen > 3)
+ 			return -EINVAL;
+--=20
+2.22.0
 
-Thanks,
+--=20
+Cheers,
+Stephen Rothwell
 
-> Thanks,
-> 
-> >  
-> >  	if (sync)
-> > 
+--Sig_/WkrTSZW/7hwA8JeT.W=8kOU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0/yXAACgkQAVBC80lX
+0GwhmAf/ePhS1Q79PIStbUXViKasLy26Y63miHzQp6DC0yYLAPcNySioEUZDBVuV
+Pd4/3Pk/y8AKLhfuMOer8EMs7c16qY/yXKHn645SatMojhyHPR2HwYMLbNXQQip0
+ziPURJty85qxE0ipdZJhWqtk5LC8kaIxXTXO4MRtzBOHHgSVOrMpv4LzIyuCxxbO
+I59imbAfo5Uaf4EVlgg59yslaTKNc8Bf9LR2/E2KHez4eb4kh4G+mWk6hQ2p0lp8
+zcsjrJpVJXUX/gZpngjhfMtiqr1KDQFHDCeOOAB4v6NwABvOqMDx5xN5Cs2OYi+K
+/S1vr+2r9m0yvPEn80pZ8/HrBvhVvg==
+=Gr+3
+-----END PGP SIGNATURE-----
+
+--Sig_/WkrTSZW/7hwA8JeT.W=8kOU--
