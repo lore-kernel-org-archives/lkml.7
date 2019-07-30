@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBC8C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D783FC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72622171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2751208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DcktBYqZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZ9mV96g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729929AbfG3Q6Z (ORCPT
+        id S1730115AbfG3Q6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:58:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40922 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfG3Q6V (ORCPT
+        Tue, 30 Jul 2019 12:58:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42767 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729908AbfG3Q6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:58:21 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r1so66552652wrl.7;
-        Tue, 30 Jul 2019 09:58:19 -0700 (PDT)
+        Tue, 30 Jul 2019 12:58:25 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x1so16664746wrr.9;
+        Tue, 30 Jul 2019 09:58:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ty6qgDcH1fj9SELU8vi4wQcPSTs39HjIXkEXwkiA/cs=;
-        b=DcktBYqZILEehO0NUu6fQpEUJDZ42ARu1VpLw7J2sQ6sSapnkpoiHlZUq3dY7U79b3
-         MKKTWgt0cP8dhEuAJFJICb2tbN+USsd6M6NChExAyyS7lt+erLQsLVttp1p5UdhdgevY
-         fltEND229Z0H9fVT1X1SiiWx66Rn8YFRUTnSgWom26/aprT+JKAnSGGCPAUNBkYEIMcR
-         /d3GihX4ze2UH0/YlwnCeHKF9riSxLq7PsWb4WBYNak3jEqFbfvggSu+2FIJhP4Wyuo1
-         Xvolr0BUHH3lIlzg0Edk25xiL0Z25YLbAxobKlN22HxYdGiu3hKkOvV/NwK8UwqAWM2w
-         m/RA==
+        bh=BE65cOTXtmtLp98MJ/wcdV0Av74ifD6PaTlEiBDCTbg=;
+        b=ZZ9mV96gy6iFmpubEjT/JcS92SZqHZxnB6QhjtNqaU8ewfOjb7O74ynPsTx1bNAXFn
+         7GWYCWbXYK2Ov+z9QXkJv0wu3EVoZ4vA0CNXLr+oX5orXfcknLKh4ce2DSlrhB/I1xcm
+         hdzdg/MXvhh32Yg9UdRa7zrc+19PPWdvOwK9PTDdE5V8biwDCgEK1MzdkeBVUZzUeFD8
+         Nc8dgLeQce/g3dDD1NIHCd6OvyyRoWUlrs8AX692KeydKOmmSZ/YE5TeOdOkSNNL2G00
+         RTOa4Ey3kwAQLg8N5wyqe4BZaz+xWJTiNnh25W3FerAr1UFpJlsnRp6VKnlnLgXMRo3k
+         CnVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ty6qgDcH1fj9SELU8vi4wQcPSTs39HjIXkEXwkiA/cs=;
-        b=OLL9R5Vux3FNfSU0jmz9/6Xyno0lhUvzbl+grpCTSINFmN3060EvYpxF1PBHpzh4Q0
-         lIPN5JoJvmGy3Dqz/02D31veZMyNz2KTqhGbh9Q4RCZVqlkq//kSwrb0mfdJgq/mmnpZ
-         oWBJIazJeocQRUBKhBPStaWazR5rg1hRfTxM+gBWe5Jky020aD+F/LdPRFsDWUkUSFBO
-         r58neBxAYIzb5/TvS7FsBto7jMKHT0CE2Nq/K7lva47bhM/zk1NPawe4eLaHf7JvUCjn
-         4T6MuV+DA/FCOOgy+la36IEPGbtQm0+Ul+/P+ribLiiinMT1hJEbqI3NF3yzjH7WAPAl
-         QYGw==
-X-Gm-Message-State: APjAAAV7ARtvgnX3ItAh6EVpjhIBhWcSuw5Nt0YM0VHgUiLe1KHRtNhH
-        6VCdSeGBk2pGN1MpGys7eck=
-X-Google-Smtp-Source: APXvYqw/R1cugSyqm4rkiFSz3sAu/xlDY72pY0qeOQNS1g2WWdzkYZzZu+5dQo0OIW3IHuGa3/gjMQ==
-X-Received: by 2002:a5d:518d:: with SMTP id k13mr33653100wrv.40.1564505899289;
-        Tue, 30 Jul 2019 09:58:19 -0700 (PDT)
+        bh=BE65cOTXtmtLp98MJ/wcdV0Av74ifD6PaTlEiBDCTbg=;
+        b=fyw5bsF9SsZ1VrdiqzMfimRaj1H2GdfphS8Zkv5Pp/feHAtWv9m0mQj4H5dH6vsv+H
+         VPpL3DGfOKQ1iwce+GhuL0UvNP0Qu6ITaFdBxTMylAbNF9q/FFggNKgTWb4bJLQJItOS
+         mia3TCQkVC5Kb8Q62d6H3AA0LQerZBoNpg5xE6ohWbonobMqxazyMpshrGoEi+F2P//S
+         GRdrAF5qJbf9EUp9dU7qezGjzVZnsya/4tkUhP1tFgLxts7ceoSK1mQGeVAC+NLjaEvr
+         uphpOxciYgs8vyAZZmCo9hD8TraIEWeNeqs27L8thOIkh+u8BkgKq+v2VQUdPCY7DIfr
+         S2lA==
+X-Gm-Message-State: APjAAAXwwXQ71DFmJMoKUaQXUzAjucVRLYjDQcqQEqeunQxsQxxQXHe0
+        Pu9s+PIaM8K1SoUOWpQdS+g=
+X-Google-Smtp-Source: APXvYqzjZBS7WSbFdI+PUAwaagScTahSJXaybdXjz6NF/PxfyF0cl/CcTc2r/GPQWd2TA1FZRRzHAw==
+X-Received: by 2002:adf:b1d0:: with SMTP id r16mr73828566wra.332.1564505902144;
+        Tue, 30 Jul 2019 09:58:22 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id r5sm70845040wmh.35.2019.07.30.09.58.17
+        by smtp.gmail.com with ESMTPSA id r5sm70845040wmh.35.2019.07.30.09.58.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 09:58:18 -0700 (PDT)
+        Tue, 30 Jul 2019 09:58:21 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -68,9 +68,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v9 08/15] memory: tegra20-emc: wait_for_completion_timeout() doesn't return error
-Date:   Tue, 30 Jul 2019 19:56:11 +0300
-Message-Id: <20190730165618.10122-9-digetx@gmail.com>
+Subject: [PATCH v9 10/15] dt-bindings: memory: Add binding for NVIDIA Tegra30 Memory Controller
+Date:   Tue, 30 Jul 2019 19:56:13 +0300
+Message-Id: <20190730165618.10122-11-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730165618.10122-1-digetx@gmail.com>
 References: <20190730165618.10122-1-digetx@gmail.com>
@@ -81,37 +81,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "interruptible" variant may error out, the "uninterruptible" not.
+Add binding for the NVIDIA Tegra30 SoC Memory Controller.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/tegra20-emc.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ .../memory-controllers/nvidia,tegra30-mc.yaml | 173 ++++++++++++++++++
+ 1 file changed, 173 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
 
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index da75efc632c7..1b23b1c34476 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -224,7 +224,7 @@ static int emc_prepare_timing_change(struct tegra_emc *emc, unsigned long rate)
- 
- static int emc_complete_timing_change(struct tegra_emc *emc, bool flush)
- {
--	long timeout;
-+	unsigned long timeout;
- 
- 	dev_dbg(emc->dev, "%s: flush %d\n", __func__, flush);
- 
-@@ -240,10 +240,6 @@ static int emc_complete_timing_change(struct tegra_emc *emc, bool flush)
- 	if (timeout == 0) {
- 		dev_err(emc->dev, "EMC-CAR handshake failed\n");
- 		return -EIO;
--	} else if (timeout < 0) {
--		dev_err(emc->dev, "failed to wait for EMC-CAR handshake: %ld\n",
--			timeout);
--		return timeout;
- 	}
- 
- 	return 0;
+diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
+new file mode 100644
+index 000000000000..40e63cdf836b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
+@@ -0,0 +1,173 @@
++# SPDX-License-Identifier: (GPL-2.0)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/memory-controllers/nvidia,tegra30-mc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NVIDIA Tegra30 SoC Memory Controller
++
++maintainers:
++  - Dmitry Osipenko <digetx@gmail.com>
++  - Jon Hunter <jonathanh@nvidia.com>
++  - Thierry Reding <thierry.reding@gmail.com>
++
++description: |
++  Tegra30 Memory Controller architecturally consists of the following parts:
++
++    Arbitration Domains, which can handle a single request or response per
++    clock from a group of clients. Typically, a system has a single Arbitration
++    Domain, but an implementation may divide the client space into multiple
++    Arbitration Domains to increase the effective system bandwidth.
++
++    Protocol Arbiter, which manage a related pool of memory devices. A system
++    may have a single Protocol Arbiter or multiple Protocol Arbiters.
++
++    Memory Crossbar, which routes request and responses between Arbitration
++    Domains and Protocol Arbiters. In the simplest version of the system, the
++    Memory Crossbar is just a pass through between a single Arbitration Domain
++    and a single Protocol Arbiter.
++
++    Global Resources, which include things like configuration registers which
++    are shared across the Memory Subsystem.
++
++  The Tegra30 Memory Controller handles memory requests from internal clients
++  and arbitrates among them to allocate memory bandwidth for DDR3L and LPDDR2
++  SDRAMs.
++
++properties:
++  compatible:
++    const: nvidia,tegra30-mc
++
++  reg:
++    maxItems: 1
++    description:
++      Physical base address.
++
++  clocks:
++    maxItems: 1
++    description:
++      Memory Controller clock.
++
++  clock-names:
++    items:
++      - const: mc
++
++  interrupts:
++    maxItems: 1
++    description:
++      Memory Controller interrupt.
++
++  "#reset-cells":
++    const: 1
++
++  "#iommu-cells":
++    const: 1
++
++patternProperties:
++  "^emc-timings-[0-9]+$":
++    type: object
++    properties:
++      nvidia,ram-code:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description:
++          Value of RAM_CODE this timing set is used for.
++
++    patternProperties:
++      "^timing-[0-9]+$":
++        type: object
++        properties:
++          clock-frequency:
++            description:
++              Memory clock rate in Hz.
++            minimum: 1000000
++            maximum: 900000000
++
++          nvidia,emem-configuration:
++            $ref: /schemas/types.yaml#/definitions/uint32-array
++            description: |
++              Values to be written to the EMEM register block. See section
++              "18.13.1 MC Registers" in the TRM.
++            items:
++              - description: MC_EMEM_ARB_CFG
++              - description: MC_EMEM_ARB_OUTSTANDING_REQ
++              - description: MC_EMEM_ARB_TIMING_RCD
++              - description: MC_EMEM_ARB_TIMING_RP
++              - description: MC_EMEM_ARB_TIMING_RC
++              - description: MC_EMEM_ARB_TIMING_RAS
++              - description: MC_EMEM_ARB_TIMING_FAW
++              - description: MC_EMEM_ARB_TIMING_RRD
++              - description: MC_EMEM_ARB_TIMING_RAP2PRE
++              - description: MC_EMEM_ARB_TIMING_WAP2PRE
++              - description: MC_EMEM_ARB_TIMING_R2R
++              - description: MC_EMEM_ARB_TIMING_W2W
++              - description: MC_EMEM_ARB_TIMING_R2W
++              - description: MC_EMEM_ARB_TIMING_W2R
++              - description: MC_EMEM_ARB_DA_TURNS
++              - description: MC_EMEM_ARB_DA_COVERS
++              - description: MC_EMEM_ARB_MISC0
++              - description: MC_EMEM_ARB_RING1_THROTTLE
++
++        required:
++          - clock-frequency
++          - nvidia,emem-configuration
++
++        additionalProperties: false
++
++    required:
++      - nvidia,ram-code
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - "#reset-cells"
++  - "#iommu-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    memory-controller@7000f000 {
++        compatible = "nvidia,tegra30-mc";
++        reg = <0x7000f000 0x400>;
++        clocks = <&tegra_car 32>;
++        clock-names = "mc";
++
++        interrupts = <0 77 4>;
++
++        #iommu-cells = <1>;
++        #reset-cells = <1>;
++
++        emc-timings-1 {
++            nvidia,ram-code = <1>;
++
++            timing-667000000 {
++                clock-frequency = <667000000>;
++
++                nvidia,emem-configuration = <
++                    0x0000000a /* MC_EMEM_ARB_CFG */
++                    0xc0000079 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++                    0x00000003 /* MC_EMEM_ARB_TIMING_RCD */
++                    0x00000004 /* MC_EMEM_ARB_TIMING_RP */
++                    0x00000010 /* MC_EMEM_ARB_TIMING_RC */
++                    0x0000000b /* MC_EMEM_ARB_TIMING_RAS */
++                    0x0000000a /* MC_EMEM_ARB_TIMING_FAW */
++                    0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++                    0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++                    0x0000000b /* MC_EMEM_ARB_TIMING_WAP2PRE */
++                    0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++                    0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++                    0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++                    0x00000008 /* MC_EMEM_ARB_TIMING_W2R */
++                    0x08040202 /* MC_EMEM_ARB_DA_TURNS */
++                    0x00130b10 /* MC_EMEM_ARB_DA_COVERS */
++                    0x70ea1f11 /* MC_EMEM_ARB_MISC0 */
++                    0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++                >;
++            };
++        };
++    };
 -- 
 2.22.0
 
