@@ -2,65 +2,166 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418E0C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DBEC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F79217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA9920659
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfG3UAb (ORCPT
+        id S1727232AbfG3UAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:00:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58435 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfG3UAb (ORCPT
+        Tue, 30 Jul 2019 16:00:41 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:48805 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfG3UAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:00:31 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hsYIE-0008TC-Rh; Tue, 30 Jul 2019 22:00:18 +0200
-Date:   Tue, 30 Jul 2019 22:00:12 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Reinette Chatre <reinette.chatre@intel.com>
-cc:     fenghua.yu@intel.com, bp@alien8.de, tony.luck@intel.com,
-        kuo-lang.tseng@intel.com, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 00/10] x86/CPU and x86/resctrl: Support pseudo-lock
- regions spanning L2 and L3 cache
-In-Reply-To: <cover.1564504901.git.reinette.chatre@intel.com>
-Message-ID: <alpine.DEB.2.21.1907302158450.1786@nanos.tec.linutronix.de>
-References: <cover.1564504901.git.reinette.chatre@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 30 Jul 2019 16:00:40 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MnJUy-1ibTt43Pkq-00jM8M; Tue, 30 Jul 2019 22:00:38 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Karsten Keil <isdn@linux-pingi.de>, netdev@vger.kernel.org
+Subject: [PATCH v5 17/29] compat_ioctl: move isdn/capi ioctl translation into driver
+Date:   Tue, 30 Jul 2019 21:55:33 +0200
+Message-Id: <20190730195819.901457-5-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190730195819.901457-1-arnd@arndb.de>
+References: <20190730192552.4014288-1-arnd@arndb.de>
+ <20190730195819.901457-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:tpmLoTqdinjnsl+Tzj0InbA5QBGlwzwLt6rMTmYy+504j0UdEId
+ QiG5+wHtN39MzCfP630K+xBuXw775V5yZ5sxRh47GZLly6s15o8/DAi6Y0gaHsGzGXDiLxz
+ WyfcighW8bpWmVwTes1xUXGC8fBfCOUkHMel1RFnxFfIqmwMocdRr75MepWyxvo4NtPz1uy
+ 58VOEpE9Vynvyxcxr+5/g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1fvi13ynrwg=:EHvBJHlSTgn7k/EsrSt6fp
+ AiTI9iMa5W7w7GWQ/w8GCd5qRlGwtNTGgKSfh3mX7jAnd4LOFP50HK4WCSE+olcuJr8W4lmJp
+ y7sSrbK4lFtuQVZ6mGSGBzcPuv+6jXzchqzS5yVw0jIHXXHD2nArG6OHpurpdX0Q+otz1X3Os
+ cm/w7nHlQFtAhQdbsNjozKZA7lnHoqmF0TyXD3m+ids0RGsj1ex/LRNeEKuTfsaVJqR9bW4B2
+ WisznjgEQMmY+Fz4lynYHt5zIuNEMToB/sYVElQHcFUS5qf4vdK9guFzJfS8bkuvJVh5Nsy7h
+ bL7YS6KFilyWoah7E1QPFLxOedCCvSQpHbpOxn2x9E+pYpEAHrUDyYzylIX7g54h2MEgGJnhx
+ Zax2+mVOvgn2GPkbaFyBI6Da9jsT5ZORR+qbrcYt6RUDJe55nF6dL7Rfv/zDpRWO/Gh+e1xRf
+ 0IVESsJtR50iffijWNNPVqc7D5LdLV+YMRHpUyVSBDyY4m477WufxZD1UgyEm6I7uMwWIPAYV
+ dNP+aFRJmFHPYQExuYojVqMR+Lj4x6PyXhhQKMrqAGII6MwIqHR5F8kuBHsiHXuOIKO3FVt2Z
+ phT8iQZbMAgeMYbtBMEml73VQa1uuynXo/0mlt+xk2mKRflv0zjlBYLZ+VU3fuYvA+y2ORxh5
+ n5OsHQbXIbCef/uUk4Q256vP21YVjNPgiB94EWFi9J76flLnfjq2eifgX0k8IlLPBNvBpmFnB
+ GZYjtUueFsiKdhts1qHeRb7aCajurnSRY3FHAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reinette,
+Neither the old isdn4linux interface nor the newer mISDN stack
+ever had working 32-bit compat mode as far as I can tell.
 
-On Tue, 30 Jul 2019, Reinette Chatre wrote:
-> Patches 2 to 8 to the resctrl subsystem are preparing for the new feature
-> and should result in no functional change, but some comments do refer to
-> the new feature. Support for pseudo-locked regions spanning L2 and L3 cache
-> is introduced in patches 9 and 10.
-> 
-> Your feedback will be greatly appreciated.
+However, the CAPI stack has some ioctl commands that are
+correctly listed in fs/compat_ioctl.c.
 
-I've already skimmed V1 and did not find something horrible, but I want to
-hand the deeper review off to Borislav who should return from his well
-earned vacation soon.
+We can trivially move all of those into the corresponding
+file that implement the native handlers by adding a compat_ioctl
+redirect to that.
 
-Thanks,
+I did notice that treating CAPI_MANUFACTURER_CMD() as compatible
+is broken, so I'm also adding a handler for that, realizing that
+in all likelyhood, nobody is ever going to call it.
 
-	tglx
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/isdn/capi/capi.c | 31 +++++++++++++++++++++++++++++++
+ fs/compat_ioctl.c        | 17 -----------------
+ 2 files changed, 31 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/isdn/capi/capi.c b/drivers/isdn/capi/capi.c
+index 3c3ad42f22bf..3b72fd8104db 100644
+--- a/drivers/isdn/capi/capi.c
++++ b/drivers/isdn/capi/capi.c
+@@ -942,6 +942,34 @@ capi_unlocked_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_COMPAT
++static long
++capi_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++{
++	int ret;
++
++	if (cmd == CAPI_MANUFACTURER_CMD) {
++		struct {
++			unsigned long cmd;
++			compat_uptr_t data;
++		} mcmd32;
++
++		if (!capable(CAP_SYS_ADMIN))
++			return -EPERM;
++		if (copy_from_user(&mcmd32, compat_ptr(arg), sizeof(mcmd32)))
++			return -EFAULT;
++
++		mutex_lock(&capi_mutex);
++		ret = capi20_manufacturer(mcmd32.cmd, compat_ptr(mcmd32.data));
++		mutex_unlock(&capi_mutex);
++
++		return ret;
++	}
++
++	return capi_unlocked_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
+ static int capi_open(struct inode *inode, struct file *file)
+ {
+ 	struct capidev *cdev;
+@@ -988,6 +1016,9 @@ static const struct file_operations capi_fops =
+ 	.write		= capi_write,
+ 	.poll		= capi_poll,
+ 	.unlocked_ioctl	= capi_unlocked_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= capi_compat_ioctl,
++#endif
+ 	.open		= capi_open,
+ 	.release	= capi_release,
+ };
+diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
+index a4e8fb7da968..f3b4179d6dff 100644
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -44,9 +44,6 @@
+ #include <net/bluetooth/hci_sock.h>
+ #include <net/bluetooth/rfcomm.h>
+ 
+-#include <linux/capi.h>
+-#include <linux/gigaset_dev.h>
+-
+ #ifdef CONFIG_BLOCK
+ #include <linux/cdrom.h>
+ #include <linux/fd.h>
+@@ -681,20 +678,6 @@ COMPATIBLE_IOCTL(RFCOMMRELEASEDEV)
+ COMPATIBLE_IOCTL(RFCOMMGETDEVLIST)
+ COMPATIBLE_IOCTL(RFCOMMGETDEVINFO)
+ COMPATIBLE_IOCTL(RFCOMMSTEALDLC)
+-/* CAPI */
+-COMPATIBLE_IOCTL(CAPI_REGISTER)
+-COMPATIBLE_IOCTL(CAPI_GET_MANUFACTURER)
+-COMPATIBLE_IOCTL(CAPI_GET_VERSION)
+-COMPATIBLE_IOCTL(CAPI_GET_SERIAL)
+-COMPATIBLE_IOCTL(CAPI_GET_PROFILE)
+-COMPATIBLE_IOCTL(CAPI_MANUFACTURER_CMD)
+-COMPATIBLE_IOCTL(CAPI_GET_ERRCODE)
+-COMPATIBLE_IOCTL(CAPI_INSTALLED)
+-COMPATIBLE_IOCTL(CAPI_GET_FLAGS)
+-COMPATIBLE_IOCTL(CAPI_SET_FLAGS)
+-COMPATIBLE_IOCTL(CAPI_CLR_FLAGS)
+-COMPATIBLE_IOCTL(CAPI_NCCI_OPENCOUNT)
+-COMPATIBLE_IOCTL(CAPI_NCCI_GETUNIT)
+ /* Misc. */
+ COMPATIBLE_IOCTL(PCIIOC_CONTROLLER)
+ COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_IO)
+-- 
+2.20.0
+
