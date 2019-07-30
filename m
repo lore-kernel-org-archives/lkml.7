@@ -2,165 +2,161 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B50AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6235C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65760206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746CF206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="kckDgO/Z"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="N4HQWp2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731785AbfG3RyQ (ORCPT
+        id S2387446AbfG3RyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:54:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52619 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728287AbfG3RyQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:54:16 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UHs6N83320855
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 10:54:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UHs6N83320855
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564509247;
-        bh=syc0/h2IW1ZVlTnW3uRN/cg62JnR/88rTxa1qTJpkDM=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=kckDgO/ZSflCK+OkKGPU36vq9BOiPnUDI6UWS1Kx29TR0ApIrcK2WgDhLAgecJ2/1
-         FGjIT+ivVJV6D1A7UgrrCq1VQxrBFsP7tgiVXXFkG+zcyxtUM590i9c2z6JPwE2eWK
-         gqeSWdBzRY6XvDseFTJq97/qaf3bKUPbO1IxXaXN7ozAbSSy5zuszgkVHr/bFm5VE/
-         1dFhShN/17wzZer4srIDtvo5RU1f5i5rk5RN8d80reUc7vbfmTuliPbAtL1NP8CZpR
-         hgO6jQ6rV3s/AFM9Vbv3YDZSQF8v3e9v+u0As0sD9g4SPpiBPrKH7V0vAawc5Ghb2Q
-         lixH7vZidmzEg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UHs6nG3320852;
-        Tue, 30 Jul 2019 10:54:06 -0700
-Date:   Tue, 30 Jul 2019 10:54:06 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-0mkocgk31nmy0odknegcby4z@git.kernel.org>
-Cc:     jolsa@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, namhyung@kernel.org, lclaudio@redhat.com,
-        acme@redhat.com, hpa@zytor.com, adrian.hunter@intel.com
-Reply-To: adrian.hunter@intel.com, hpa@zytor.com, acme@redhat.com,
-          lclaudio@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, mingo@kernel.org, jolsa@kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf trace: Handle raw_syscalls:sys_enter just like
- the BPF_OUTPUT augmented event
-Git-Commit-ID: b119970aa541091e405373399690c24ead9d2920
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 13:54:20 -0400
+Received: from mail-eopbgr80082.outbound.protection.outlook.com ([40.107.8.82]:47649
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728287AbfG3RyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 13:54:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CT806lH3GJFKccQD1MdEtYa59TfzKVZas0pBNefAL7MGwFs+IXfUKXWKfKiEUqG2IWFORXEEHhkcN80KYnMtpN4PZdLMJLelcQm/22Wc1+Pv1m3t/694c47Zjv2XYweXeTPEuG4eOn/Cp1ltLvC0FfQwh9FmW0vWC9XuzohqNdIuMECDei/XMjbOUIDyYZV0i6mv/MUqtYOwz/LKkQKfudSTNHcKQVgpthC5W0FmrSxrWivuC93ebpE40hRE/wmsN0fYkiKMZEPLuj2Xmetrdw9JDp4BwdnB9BHOkgGa0HfK0qikdDCMmWavw0ycDVieML3IUUzT1EL6tnDWe0glAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=svBQypctoSakaJxDr/47kKSOg5ovdqk45jRwEu4qKbc=;
+ b=Xyl0QzWvTn9K/PgDrSnOfnN1Metsv/zKFRdDxdgrdjkWfLJ4EFSyhkswpi6g0ctqWd3cJa12jhmb8DUxktP2tWvG2x728v7zgldFnE/NYyVuZ8yUWkpXKU/ijijO4YKNkSvLVR17pE54eTZbHqrEoU8DgJ6Wvdmo5bLdSihDUx55RD/eKn+DJMUY9Ze24WPPZNM9nb/vhzHwI41ereDwiABixOtmZF9itGrDHrlBe1N35Y+MDiQrlv/aQyeOhj055449iQEb6HLVRhXH5RChz61652KK+9b6R7C6qAs94zbXEXu1tW+wqIwJu/b+kDyTDmI7ehZi3aqrfs13n124kg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=svBQypctoSakaJxDr/47kKSOg5ovdqk45jRwEu4qKbc=;
+ b=N4HQWp2clWmIY6kC/cFpcFbUva8KgFw4ye84Wigpj6+tFdnR44iE6vUc97vpPTw0gNAMhO6TKu2UHXIYadMNudLiWkw9h6pMFARZIi4KlWYs8iNlOrEDoDb9hg0cbwupovJeYsHloI8yDlUXblEr2rTUGR7jgjp+iPiwqE09S5E=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6127.eurprd05.prod.outlook.com (20.178.205.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.13; Tue, 30 Jul 2019 17:53:14 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
+ 17:53:14 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 11/13] mm: cleanup the hmm_vma_handle_pmd stub
+Thread-Topic: [PATCH 11/13] mm: cleanup the hmm_vma_handle_pmd stub
+Thread-Index: AQHVRpsFqcopldMqYEmw+Nzxjc71m6bjchWA
+Date:   Tue, 30 Jul 2019 17:53:14 +0000
+Message-ID: <20190730175309.GN24038@mellanox.com>
+References: <20190730055203.28467-1-hch@lst.de>
+ <20190730055203.28467-12-hch@lst.de>
+In-Reply-To: <20190730055203.28467-12-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQBPR0101CA0034.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00::47) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a86e21db-ce58-4552-20a6-08d71516cb53
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6127;
+x-ms-traffictypediagnostic: VI1PR05MB6127:
+x-microsoft-antispam-prvs: <VI1PR05MB6127DF35F7C611722F89A276CFDC0@VI1PR05MB6127.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1850;
+x-forefront-prvs: 0114FF88F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(376002)(366004)(396003)(199004)(189003)(6506007)(6486002)(2906002)(256004)(476003)(11346002)(229853002)(66066001)(446003)(6436002)(25786009)(486006)(2616005)(86362001)(6916009)(305945005)(7416002)(81166006)(8676002)(81156014)(316002)(99286004)(1076003)(7736002)(8936002)(4326008)(54906003)(386003)(33656002)(6512007)(71200400001)(71190400001)(5660300002)(6116002)(3846002)(6246003)(186003)(478600001)(76176011)(68736007)(52116002)(14454004)(36756003)(66446008)(53936002)(64756008)(66556008)(66476007)(26005)(102836004)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6127;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eMqyxStZBZXBfI7QOYbRdCnQWZbklIeusgJmFjsEOIO5UawNseLehFkPAB+PnBPfGkBQoOyco5nEy+/0Bb1opqHO3IPX6n2Wx1gjcMjXSMMWaWCQX9u6fdGZ+XR2QGrqiwR7ipGZxNYBiqIsxkVKeXtnRnLdwkTWwIeKnTUAI88LJ7gGpii6LuqBceQu51tTKFHLDsAl/K2pVhyKp+1tNNvN2RNv+syEoL0XlZ1tGjtz4YJ+jEEM+lexqBmMSTAR1LqM0Z8fX9kYXouHw0M7BK7hC2uAoCPZ8ky13fy7a9bHhps2QjrPbqZ8X/NPkNN7Lkve+zgWk7cT1tylCHPSg+G4Ips+UH5tDuIwU+op8H/wlrD5Jzh1vah+ik6M3rNSf8ZxuTE43QEHJiGAVWCvJTY+amLgF0/Bg/rQuojOfrA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <EC3900854AA3CC4983AC1C9EED4B06BC@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a86e21db-ce58-4552-20a6-08d71516cb53
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 17:53:14.2580
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  b119970aa541091e405373399690c24ead9d2920
-Gitweb:     https://git.kernel.org/tip/b119970aa541091e405373399690c24ead9d2920
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Tue, 16 Jul 2019 11:53:03 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:41 -0300
+On Tue, Jul 30, 2019 at 08:52:01AM +0300, Christoph Hellwig wrote:
+> Stub out the whole function when CONFIG_TRANSPARENT_HUGEPAGE is not set
+> to make the function easier to read.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>  mm/hmm.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index 4d3bd41b6522..f4e90ea5779f 100644
+> +++ b/mm/hmm.c
+> @@ -455,13 +455,10 @@ static inline uint64_t pmd_to_hmm_pfn_flags(struct =
+hmm_range *range, pmd_t pmd)
+>  				range->flags[HMM_PFN_VALID];
+>  }
+> =20
+> -static int hmm_vma_handle_pmd(struct mm_walk *walk,
+> -			      unsigned long addr,
+> -			      unsigned long end,
+> -			      uint64_t *pfns,
+> -			      pmd_t pmd)
+> -{
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +static int hmm_vma_handle_pmd(struct mm_walk *walk, unsigned long addr,
+> +		unsigned long end, uint64_t *pfns, pmd_t pmd)
+> +{
+>  	struct hmm_vma_walk *hmm_vma_walk =3D walk->private;
+>  	struct hmm_range *range =3D hmm_vma_walk->range;
+>  	struct dev_pagemap *pgmap =3D NULL;
+> @@ -490,11 +487,14 @@ static int hmm_vma_handle_pmd(struct mm_walk *walk,
+>  		put_dev_pagemap(pgmap);
+>  	hmm_vma_walk->last =3D end;
+>  	return 0;
+> -#else
+> -	/* If THP is not enabled then we should never reach this=20
 
-perf trace: Handle raw_syscalls:sys_enter just like the BPF_OUTPUT augmented event
+This old comment says we should never get here
 
-So, we use a PERF_COUNT_SW_BPF_OUTPUT to output the augmented sys_enter
-payload, i.e. to output more than just the raw syscall args, and if
-something goes wrong when handling an unfiltered syscall, we bail out
-and just return 1 in the bpf program associated with
-raw_syscalls:sys_enter, meaning, don't filter that tracepoint, in which
-case what will appear in the perf ring buffer isn't the BPF_OUTPUT
-event, but the original raw_syscalls:sys_enter event with its normal
-payload.
+> +}
+> +#else /* CONFIG_TRANSPARENT_HUGEPAGE */
+> +static int hmm_vma_handle_pmd(struct mm_walk *walk, unsigned long addr,
+> +		unsigned long end, uint64_t *pfns, pmd_t pmd)
+> +{
+>  	return -EINVAL;
 
-Now that we're switching to using a bpf_tail_call +
-BPF_MAP_TYPE_PROG_ARRAY we're going to use this in the common case, so a
-bug where raw_syscalls:sys_enter wasn't being handled by
-trace__sys_enter() surfaced and for  that case, instead of using the
-strace-like augmenter (trace__sys_enter()), we continued to use the
-normal generic tracepoint handler:
+So could we just do
+   #define hmm_vma_handle_pmd NULL
 
-  (gdb) p evsel
-  $2 = (struct perf_evsel *) 0xc03e40
-  (gdb) p evsel->name
-  $3 = 0xbc56c0 "raw_syscalls:sys_enter"
-  (gdb) p ((struct perf_evsel *) 0xc03e40)->name
-  $4 = 0xbc56c0 "raw_syscalls:sys_enter"
-  (gdb) p ((struct perf_evsel *) 0xc03e40)->handler
-  $5 = (void *) 0x495eb3 <trace__event_handler>
+?
 
-This resulted in this:
+At the very least this seems like a WARN_ON too?
 
-     0.027 raw_syscalls:sys_enter:NR 12 (0, 7fcfcac64c9b, 4d, 7fcfcac64c9b, 7fcfcac6ce00, 19)
-     ... [continued]: brk())                = 0x563b88677000
-
-I.e. only the sys_exit tracepoint was being properly handled, but since
-the sys_enter went to the generic trace__event_handler() we printed it
-using libtraceevent's formatter instead of 'perf trace's strace-like
-one.
-
-Fix it by setting trace__sys_enter() as the handler for
-raw_syscalls:sys_enter and setup the tp_field tracepoint field
-accessors.
-
-Now, to test it we just make raw_syscalls:sys_enter return 1 right after
-checking if the pid is filtered, making it not use
-bpf_perf_output_event() but rather ask for the tracepoint not to be
-filtered and the result is the expected one:
-
-  brk(NULL)                               = 0x556f42d6e000
-
-I.e. raw_syscalls:sys_enter returns 1, gets handled by
-trace__sys_enter() and gets it combined with the raw_syscalls:sys_exit
-in a strace-like way.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-0mkocgk31nmy0odknegcby4z@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index fb8b8e78d7b5..872c9cc982a5 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4128,7 +4128,22 @@ int cmd_trace(int argc, const char **argv)
- 				if (perf_evsel__init_augmented_syscall_tp(augmented, evsel) ||
- 				    perf_evsel__init_augmented_syscall_tp_args(augmented))
- 					goto out;
-+				/*
-+				 * Augmented is __augmented_syscalls__ BPF_OUTPUT event
-+				 * Above we made sure we can get from the payload the tp fields
-+				 * that we get from syscalls:sys_enter tracefs format file.
-+				 */
- 				augmented->handler = trace__sys_enter;
-+				/*
-+				 * Now we do the same for the *syscalls:sys_enter event so that
-+				 * if we handle it directly, i.e. if the BPF prog returns 0 so
-+				 * as not to filter it, then we'll handle it just like we would
-+				 * for the BPF_OUTPUT one:
-+				 */
-+				if (perf_evsel__init_augmented_syscall_tp(evsel, evsel) ||
-+				    perf_evsel__init_augmented_syscall_tp_args(evsel))
-+					goto out;
-+				evsel->handler = trace__sys_enter;
- 			}
- 
- 			if (strstarts(perf_evsel__name(evsel), "syscalls:sys_exit_")) {
+Jason
