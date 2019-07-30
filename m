@@ -4,30 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BB3C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E78C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEADD216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8330A216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbfG3Qg2 (ORCPT
+        id S1729676AbfG3QgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:36:28 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:34286 "EHLO ale.deltatee.com"
+        Tue, 30 Jul 2019 12:36:10 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:34156 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728975AbfG3QgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:36:11 -0400
+        id S1729326AbfG3QgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 12:36:06 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hsV6X-0003yI-Bt; Tue, 30 Jul 2019 10:36:10 -0600
+        id 1hsV6V-0003yC-5p; Tue, 30 Jul 2019 10:36:05 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hsV6S-0001Ig-3A; Tue, 30 Jul 2019 10:35:56 -0600
+        id 1hsV6R-0001IO-Gl; Tue, 30 Jul 2019 10:35:55 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org
@@ -40,18 +39,20 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Eric Pilmore <epilmore@gigaio.com>,
         Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Tue, 30 Jul 2019 10:35:41 -0600
-Message-Id: <20190730163545.4915-11-logang@deltatee.com>
+        Logan Gunthorpe <logang@deltatee.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Date:   Tue, 30 Jul 2019 10:35:35 -0600
+Message-Id: <20190730163545.4915-5-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190730163545.4915-1-logang@deltatee.com>
 References: <20190730163545.4915-1-logang@deltatee.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, hch@lst.de, Christian.Koenig@amd.com, jgg@mellanox.com, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, dan.j.williams@intel.com, epilmore@gigaio.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, hch@lst.de, jgg@mellanox.com, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, dan.j.williams@intel.com, epilmore@gigaio.com, sbates@raithlin.com, logang@deltatee.com, Christian.Koenig@amd.com, christian.koenig@amd.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v2 10/14] PCI/P2PDMA: Factor out __pci_p2pdma_map_sg()
+Subject: [PATCH v2 04/14] PCI/P2PDMA: Factor out __upstream_bridge_distance()
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,82 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factor out the bus only mapping into it's own static function.
-No functional changes. The original pci_p2pdma_map_sg_attrs() will
-be used to decide whether this is an appropriate way to map.
+This is a prep patch to create a second level helper. There are no
+functional changes.
+
+The root complex whitelist code will be moved into this function in
+a subsequent patch.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
 ---
- drivers/pci/p2pdma.c | 41 ++++++++++++++++++++++++-----------------
- 1 file changed, 24 insertions(+), 17 deletions(-)
+ drivers/pci/p2pdma.c | 89 ++++++++++++++++++++++++--------------------
+ 1 file changed, 48 insertions(+), 41 deletions(-)
 
 diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 392653fe0583..fe647bd8f947 100644
+index 64f5a0e30244..b4ef6e8da784 100644
 --- a/drivers/pci/p2pdma.c
 +++ b/drivers/pci/p2pdma.c
-@@ -782,23 +782,9 @@ void pci_p2pmem_publish(struct pci_dev *pdev, bool publish)
- }
- EXPORT_SYMBOL_GPL(pci_p2pmem_publish);
+@@ -303,47 +303,9 @@ enum {
+ 	P2PDMA_NOT_SUPPORTED		= 0x08000000,
+ };
  
--/**
-- * pci_p2pdma_map_sg - map a PCI peer-to-peer scatterlist for DMA
-- * @dev: device doing the DMA request
-- * @sg: scatter list to map
-- * @nents: elements in the scatterlist
-- * @dir: DMA direction
-- * @attrs: dma attributes passed to dma_map_sg() (if called)
+-/*
+- * Find the distance through the nearest common upstream bridge between
+- * two PCI devices.
 - *
-- * Scatterlists mapped with this function should be unmapped using
-- * pci_p2pdma_unmap_sg_attrs().
+- * If the two devices are the same device then 0 will be returned.
 - *
-- * Returns the number of SG entries mapped or 0 on error.
+- * If there are two virtual functions of the same device behind the same
+- * bridge port then 2 will be returned (one step down to the PCIe switch,
+- * then one step back to the same device).
+- *
+- * In the case where two devices are connected to the same PCIe switch, the
+- * value 4 will be returned. This corresponds to the following PCI tree:
+- *
+- *     -+  Root Port
+- *      \+ Switch Upstream Port
+- *       +-+ Switch Downstream Port
+- *       + \- Device A
+- *       \-+ Switch Downstream Port
+- *         \- Device B
+- *
+- * The distance is 4 because we traverse from Device A through the downstream
+- * port of the switch, to the common upstream port, back up to the second
+- * downstream port and then to Device B.
+- *
+- * Any two devices that cannot communicate using p2pdma will return the distance
+- * with the flag P2PDMA_NOT_SUPPORTED.
+- *
+- * Any two devices that have a data path that goes through the host bridge
+- * will consult a whitelist. If the host bridges are on the whitelist,
+- * then the distance will be returned with the flag P2PDMA_THRU_HOST_BRIDGE set.
+- * If either bridge is not on the whitelist, the flag P2PDMA_NOT_SUPPORTED will
+- * be set.
+- *
+- * If a bridge which has any ACS redirection bits set is in the path
+- * then this functions will flag the result with P2PDMA_ACS_FORCES_UPSTREAM.
+- * In this case, a list of all infringing bridge addresses will be
+- * populated in acs_list (assuming it's non-null) for printk purposes.
 - */
--int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
--		int nents, enum dma_data_direction dir, unsigned long attrs)
-+static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
-+		struct device *dev, struct scatterlist *sg, int nents)
+-static int upstream_bridge_distance(struct pci_dev *provider,
+-				    struct pci_dev *client,
+-				    struct seq_buf *acs_list)
++static int __upstream_bridge_distance(struct pci_dev *provider,
++				      struct pci_dev *client,
++				      struct seq_buf *acs_list)
  {
--	struct pci_p2pdma_pagemap *p2p_pgmap;
- 	struct scatterlist *s;
- 	phys_addr_t paddr;
- 	int i;
-@@ -814,7 +800,6 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
- 		return 0;
- 
- 	for_each_sg(sg, s, nents, i) {
--		p2p_pgmap = to_p2p_pgmap(sg_page(s)->pgmap);
- 		paddr = sg_phys(s);
- 
- 		s->dma_address = paddr - p2p_pgmap->bus_offset;
-@@ -823,6 +808,28 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
- 
- 	return nents;
+ 	struct pci_dev *a = provider, *b = client, *bb;
+ 	int dist_a = 0;
+@@ -409,6 +371,51 @@ static int upstream_bridge_distance(struct pci_dev *provider,
+ 	return dist_a + dist_b;
  }
-+
-+/**
-+ * pci_p2pdma_map_sg - map a PCI peer-to-peer scatterlist for DMA
-+ * @dev: device doing the DMA request
-+ * @sg: scatter list to map
-+ * @nents: elements in the scatterlist
-+ * @dir: DMA direction
-+ * @attrs: dma attributes passed to dma_map_sg() (if called)
-+ *
-+ * Scatterlists mapped with this function should be unmapped using
-+ * pci_p2pdma_unmap_sg_attrs().
-+ *
-+ * Returns the number of SG entries mapped or 0 on error.
-+ */
-+int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
-+		int nents, enum dma_data_direction dir, unsigned long attrs)
-+{
-+	struct pci_p2pdma_pagemap *p2p_pgmap =
-+		to_p2p_pgmap(sg_page(sg)->pgmap);
-+
-+	return __pci_p2pdma_map_sg(p2p_pgmap, dev, sg, nents);
-+}
- EXPORT_SYMBOL_GPL(pci_p2pdma_map_sg_attrs);
  
- /**
++/*
++ * Find the distance through the nearest common upstream bridge between
++ * two PCI devices.
++ *
++ * If the two devices are the same device then 0 will be returned.
++ *
++ * If there are two virtual functions of the same device behind the same
++ * bridge port then 2 will be returned (one step down to the PCIe switch,
++ * then one step back to the same device).
++ *
++ * In the case where two devices are connected to the same PCIe switch, the
++ * value 4 will be returned. This corresponds to the following PCI tree:
++ *
++ *     -+  Root Port
++ *      \+ Switch Upstream Port
++ *       +-+ Switch Downstream Port
++ *       + \- Device A
++ *       \-+ Switch Downstream Port
++ *         \- Device B
++ *
++ * The distance is 4 because we traverse from Device A through the downstream
++ * port of the switch, to the common upstream port, back up to the second
++ * downstream port and then to Device B.
++ *
++ * Any two devices that cannot communicate using p2pdma will return the distance
++ * with the flag P2PDMA_NOT_SUPPORTED.
++ *
++ * Any two devices that have a data path that goes through the host bridge
++ * will consult a whitelist. If the host bridges are on the whitelist,
++ * then the distance will be returned with the flag P2PDMA_THRU_HOST_BRIDGE set.
++ * If either bridge is not on the whitelist, the flag P2PDMA_NOT_SUPPORTED will
++ * be set.
++ *
++ * If a bridge which has any ACS redirection bits set is in the path
++ * then this functions will flag the result with P2PDMA_ACS_FORCES_UPSTREAM.
++ * In this case, a list of all infringing bridge addresses will be
++ * populated in acs_list (assuming it's non-null) for printk purposes.
++ */
++static int upstream_bridge_distance(struct pci_dev *provider,
++				    struct pci_dev *client,
++				    struct seq_buf *acs_list)
++{
++	return __upstream_bridge_distance(provider, client, acs_list);
++}
++
+ static int upstream_bridge_distance_warn(struct pci_dev *provider,
+ 					 struct pci_dev *client)
+ {
 -- 
 2.20.1
 
