@@ -2,105 +2,158 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D7CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEE9C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B87B20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:53:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uq+lPiYK"
+	by mail.kernel.org (Postfix) with ESMTP id 4AF7320679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbfG3Fwr (ORCPT
+        id S1728653AbfG3FxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 01:52:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46318 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729614AbfG3Fwl (ORCPT
+        Tue, 30 Jul 2019 01:53:11 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:44581 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728338AbfG3Fwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 01:52:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lQ9XWeQmmP2B/eiMeXgVV4uJBU5pKgmRyH+iL8uHSEM=; b=uq+lPiYKi3jyFWYRyJc2ZqGofZ
-        AfLm7DwXmu4JT8EzoT14gmQsntskqRtuY8G1cnrd/LGbf8XPIjVfgOc8bb9ap9X0V7joXGNksytRi
-        zALM22SNoQasN3BLoeBFR/vvCHaXwDoi9ZRyvE3+UeWsboS9MGuTqQ9l97jIiVzC7JdWxUgbDi94Y
-        SNudo9geEIfISGK8/w858hjF3tJ5AFspbRUlnzqRM0O4lBbRAx36X7p2UDsP9spKDQweK0rlIxERO
-        kDjVa7wlLGqVNCj2hmZofEs7SfZ+60OPJU4FjcxlQ7UvktaV6516z56wix5W6aeIElxYkE9PQKl+5
-        u8tqsQjg==;
-Received: from [195.167.85.94] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsL3u-0001K2-4x; Tue, 30 Jul 2019 05:52:38 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/13] mm: remove the mask variable in hmm_vma_walk_hugetlb_entry
-Date:   Tue, 30 Jul 2019 08:51:58 +0300
-Message-Id: <20190730055203.28467-9-hch@lst.de>
+        Tue, 30 Jul 2019 01:52:37 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C4A9E1BF20E;
+        Tue, 30 Jul 2019 05:52:31 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v5 01/14] mm, fs: Move randomize_stack_top from fs to mm
+Date:   Tue, 30 Jul 2019 01:51:00 -0400
+Message-Id: <20190730055113.23635-2-alex@ghiti.fr>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190730055203.28467-1-hch@lst.de>
-References: <20190730055203.28467-1-hch@lst.de>
+In-Reply-To: <20190730055113.23635-1-alex@ghiti.fr>
+References: <20190730055113.23635-1-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pagewalk code already passes the value as the hmask parameter.
+This preparatory commit moves this function so that further introduction
+of generic topdown mmap layout is contained only in mm/util.c.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- mm/hmm.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ fs/binfmt_elf.c    | 20 --------------------
+ include/linux/mm.h |  2 ++
+ mm/util.c          | 22 ++++++++++++++++++++++
+ 3 files changed, 24 insertions(+), 20 deletions(-)
 
-diff --git a/mm/hmm.c b/mm/hmm.c
-index f26d6abc4ed2..88b77a4a6a1e 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -771,19 +771,16 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned long hmask,
- 				      struct mm_walk *walk)
- {
- #ifdef CONFIG_HUGETLB_PAGE
--	unsigned long addr = start, i, pfn, mask;
-+	unsigned long addr = start, i, pfn;
- 	struct hmm_vma_walk *hmm_vma_walk = walk->private;
- 	struct hmm_range *range = hmm_vma_walk->range;
- 	struct vm_area_struct *vma = walk->vma;
--	struct hstate *h = hstate_vma(vma);
- 	uint64_t orig_pfn, cpu_flags;
- 	bool fault, write_fault;
- 	spinlock_t *ptl;
- 	pte_t entry;
- 	int ret = 0;
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index d4e11b2e04f6..cec3b4146440 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -670,26 +670,6 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+  * libraries.  There is no binary dependent code anywhere else.
+  */
  
--	mask = huge_page_size(h) - 1;
+-#ifndef STACK_RND_MASK
+-#define STACK_RND_MASK (0x7ff >> (PAGE_SHIFT - 12))	/* 8MB of VA */
+-#endif
 -
- 	ptl = huge_pte_lock(hstate_vma(vma), walk->mm, pte);
- 	entry = huge_ptep_get(pte);
+-static unsigned long randomize_stack_top(unsigned long stack_top)
+-{
+-	unsigned long random_variable = 0;
+-
+-	if (current->flags & PF_RANDOMIZE) {
+-		random_variable = get_random_long();
+-		random_variable &= STACK_RND_MASK;
+-		random_variable <<= PAGE_SHIFT;
+-	}
+-#ifdef CONFIG_STACK_GROWSUP
+-	return PAGE_ALIGN(stack_top) + random_variable;
+-#else
+-	return PAGE_ALIGN(stack_top) - random_variable;
+-#endif
+-}
+-
+ static int load_elf_binary(struct linux_binprm *bprm)
+ {
+ 	struct file *interpreter = NULL; /* to shut gcc up */
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 0334ca97c584..ae0e5d241eb8 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2351,6 +2351,8 @@ extern int install_special_mapping(struct mm_struct *mm,
+ 				   unsigned long addr, unsigned long len,
+ 				   unsigned long flags, struct page **pages);
  
-@@ -799,7 +796,7 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned long hmask,
- 		goto unlock;
- 	}
++unsigned long randomize_stack_top(unsigned long stack_top);
++
+ extern unsigned long get_unmapped_area(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  
--	pfn = pte_pfn(entry) + ((start & mask) >> PAGE_SHIFT);
-+	pfn = pte_pfn(entry) + ((start & hmask) >> PAGE_SHIFT);
- 	for (; addr < end; addr += PAGE_SIZE, i++, pfn++)
- 		range->pfns[i] = hmm_device_entry_from_pfn(range, pfn) |
- 				 cpu_flags;
+ extern unsigned long mmap_region(struct file *file, unsigned long addr,
+diff --git a/mm/util.c b/mm/util.c
+index e6351a80f248..15a4fb0f5473 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -16,6 +16,8 @@
+ #include <linux/hugetlb.h>
+ #include <linux/vmalloc.h>
+ #include <linux/userfaultfd_k.h>
++#include <linux/elf.h>
++#include <linux/random.h>
+ 
+ #include <linux/uaccess.h>
+ 
+@@ -293,6 +295,26 @@ int vma_is_stack_for_current(struct vm_area_struct *vma)
+ 	return (vma->vm_start <= KSTK_ESP(t) && vma->vm_end >= KSTK_ESP(t));
+ }
+ 
++#ifndef STACK_RND_MASK
++#define STACK_RND_MASK (0x7ff >> (PAGE_SHIFT - 12))     /* 8MB of VA */
++#endif
++
++unsigned long randomize_stack_top(unsigned long stack_top)
++{
++	unsigned long random_variable = 0;
++
++	if (current->flags & PF_RANDOMIZE) {
++		random_variable = get_random_long();
++		random_variable &= STACK_RND_MASK;
++		random_variable <<= PAGE_SHIFT;
++	}
++#ifdef CONFIG_STACK_GROWSUP
++	return PAGE_ALIGN(stack_top) + random_variable;
++#else
++	return PAGE_ALIGN(stack_top) - random_variable;
++#endif
++}
++
+ #if defined(CONFIG_MMU) && !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
+ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+ {
 -- 
 2.20.1
 
