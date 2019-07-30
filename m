@@ -2,108 +2,103 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68750C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931E0C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3537520659
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:03:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S0AuQAcR"
+	by mail.kernel.org (Postfix) with ESMTP id 6D5C820693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfG3UDB (ORCPT
+        id S1727580AbfG3UDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:03:01 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42254 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfG3UDB (ORCPT
+        Tue, 30 Jul 2019 16:03:18 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:55395 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbfG3UDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:03:01 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6UJwTu3003829;
-        Tue, 30 Jul 2019 20:02:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=PRuifwtBdlMAtrPrUPTDS6ONh/DQGdobk5Ch65KcSmo=;
- b=S0AuQAcR4+/LS+GqDZF/Kz+HLGXGn1dGVHhYKZ+ZDb15xSE7vhFvLLu16rcbRcrOwyOm
- ZkH5EKJDaEsKSK7lPSByt8mfiUZF2szLKpyjGTp/B36DzVjnUa2pSuFCT4VAyW1fsz70
- kRh/zRj8ySK8woBrP9ALZAaNPXNaxCptnmNzAITAU3iZhWGvHQRhdqiePnNm/G/VZO22
- f1ZwBdwPzZz79rF1r10CSj0oHMY6zFC1hawqSiL02vkJAGd/Ie6aRVr7HeINZ2WSKfIa
- rVEor7rZm7OMnvo4wE/BcVc1qQ1KQr1iFRJ9f9Dq3HQoV7ZAyiHBSPTb3SaavlK95AJ8 gQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2u0e1trwjd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jul 2019 20:02:54 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6UK2qnY165614;
-        Tue, 30 Jul 2019 20:02:53 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2u0xv8e5xb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jul 2019 20:02:52 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6UK2mD0030873;
-        Tue, 30 Jul 2019 20:02:48 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 30 Jul 2019 13:02:47 -0700
-To:     Minwoo Im <minwoo.im.dev@gmail.com>
-Cc:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Euihyeok Kwon <eh81.kwon@samsung.com>,
-        Sarah Cho <sohyeon.jo@samsung.com>,
-        Sanggwan Lee <sanggwan.lee@samsung.com>,
-        Gyeongmin Nam <gm.nam@samsung.com>,
-        Sungjun Park <sj1228.park@samsung.com>,
-        Minwoo Im <minwoo.im@samsung.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        MPT-FusionLinux.pdl@broadcom.com
-Subject: Re: [RESEND PATCH] mpt3sas: support target smid for [abort|query] task
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190727185337.19299-1-minwoo.im.dev@gmail.com>
-Date:   Tue, 30 Jul 2019 16:02:44 -0400
-In-Reply-To: <20190727185337.19299-1-minwoo.im.dev@gmail.com> (Minwoo Im's
-        message of "Sun, 28 Jul 2019 03:53:37 +0900")
-Message-ID: <yq1sgqnl28r.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 30 Jul 2019 16:03:17 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N3Kc8-1iJOc03PN4-010Ipo; Tue, 30 Jul 2019 22:03:10 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Theodore Ts'o" <tytso@mit.edu>
+Subject: [PATCH v5 24/29] compat_ioctl: remove /dev/random commands
+Date:   Tue, 30 Jul 2019 22:01:29 +0200
+Message-Id: <20190730200145.1081541-5-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190730200145.1081541-1-arnd@arndb.de>
+References: <20190730192552.4014288-1-arnd@arndb.de>
+ <20190730200145.1081541-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907300204
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907300203
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:ixl6q7ELY2CPbzKLyp5yiEj9Xp94vS2g2+D9pmZiqmQGtHrHVuh
+ aP6VLFt1s3Angfhw3puQSSyPIQoMFC8JaAaLkWZaC0dvRz7VXG9RWpet+Nb76KQIPpekFKA
+ Nd1b1kdnf+YNa3DAaG/jC8KTP1EdrF4cdI0wOPTlmx9eag5FHB2S6nJ0/Zmfkmri53ukm18
+ DiLPEdVaRaX0snXTmEcVA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Xy4izpXa1kI=:sVc73Mvr8CzeTr6AVkie+W
+ Ki5UhfHTqiaYmzPJC1WgRAU3/qCbvvatP5Rs7Ptqozk94PUzdruutiYIu8Yi9TmHALz2GYGkM
+ tWCINWkn8QZmmmY1adp3OP3ziuHeI6Y7j1IY5CT8OBjwJ65F31EsPmcDwlIvb12THeTsdBqdg
+ +sR3BHARGMJmN+Pk2yX8sCHbu62H99NSWXNFWrdBywrciWeAskzBbkvkNhhqbOTysWybV2rvb
+ Jg5icpjkAyglp/JalFGj6qKj3ikZTbpPklBn3O2jXQ4KhwqyO8z/3GPybItzr6wFuyErBcFGm
+ R3vUXD7bvcgdguDkbTyCC64OufFxFDtbCXYXv+LYXsTmExt0mPMEoBNK5tHGpfF/dfFAGWNux
+ 4Qbq3ohc8XRr1M1xAEzmKMPnOH/kLWJBTZu5yorCcBIKgUKE6jFPbiHqKvZzFL8oL7VFi97yI
+ R1FVBHf6DWs4TVYLDbCz5Dw3NwFsm5SdnhyDOZI7Tt5pihusWjTSWUBkiZTi11NPXJN4o7+5q
+ 3XyiNakD9nzjP895d/HTkGHbc/9gP321Wp72L0/3XDifndBv95EGeDMSd1C+1IdqSi5iFTBUV
+ lDogv/dbn37ssdB2tuqcGkZjuHQp9HSlWXgvXGpaEyRms6ZeyE3MFHKENtke4SRU7fKkd2gP3
+ SVsPm7c6UYAs9ScsaUi/f0THXTBVcXst/zA3YoqdjISfz9Pso5sHTtRxACzRQiz5xfdOTDCOr
+ Hnya4c5Mjdv08QPOAW4PHEVzM1OkdB+FnoX8Vw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+These are all handled by the random driver, so instead of listing
+each ioctl, we can use the generic compat_ptr_ioctl() helper.
 
-Minwoo,
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/char/random.c | 1 +
+ fs/compat_ioctl.c     | 7 -------
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
-> We can request task management IOCTL
-> command(MPI2_FUNCTION_SCSI_TASK_MGMT) to /dev/mpt3ctl.  If the given
-> task_type is either abort task or query task, it may need a field
-> named "Initiator Port Transfer Tag to Manage" in the IU.
-
-Applied to 5.4/scsi-queue, thank you!
-
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 5d5ea4ce1442..355dc54576f2 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -2106,6 +2106,7 @@ const struct file_operations random_fops = {
+ 	.write = random_write,
+ 	.poll  = random_poll,
+ 	.unlocked_ioctl = random_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
+ 	.fasync = random_fasync,
+ 	.llseek = noop_llseek,
+ };
+diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
+index 10dfe4d80bbd..398268604ab7 100644
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -439,13 +439,6 @@ COMPATIBLE_IOCTL(WDIOC_SETTIMEOUT)
+ COMPATIBLE_IOCTL(WDIOC_GETTIMEOUT)
+ COMPATIBLE_IOCTL(WDIOC_SETPRETIMEOUT)
+ COMPATIBLE_IOCTL(WDIOC_GETPRETIMEOUT)
+-/* Big R */
+-COMPATIBLE_IOCTL(RNDGETENTCNT)
+-COMPATIBLE_IOCTL(RNDADDTOENTCNT)
+-COMPATIBLE_IOCTL(RNDGETPOOL)
+-COMPATIBLE_IOCTL(RNDADDENTROPY)
+-COMPATIBLE_IOCTL(RNDZAPENTCNT)
+-COMPATIBLE_IOCTL(RNDCLEARPOOL)
+ /* Misc. */
+ COMPATIBLE_IOCTL(PCIIOC_CONTROLLER)
+ COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_IO)
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.20.0
+
