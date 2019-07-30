@@ -2,109 +2,170 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06BEC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CDDC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B4A2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="j3KinMXb"
+	by mail.kernel.org (Postfix) with ESMTP id 955B32087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbfG3L3z (ORCPT
+        id S1730144AbfG3Lai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:29:55 -0400
-Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:37685
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726267AbfG3L3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:29:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nNXsl0YmbDfVAavm6yOj8Z2smMfYAyqAkUdYoxpLxXcA8x7Ivr82nxV6AxjR3NDJ4ukYLbdy0gmAnn9ZJPJFXoC0oxJy9XpDNPjSzXCi6OWvWf5AlJt2Z4BoTM3Cb1pa7pTW0Kw5pW6uDuqKUUUAgxGiSWxyC0YB6ZxGsFAXMaAx4MzqksMvK1uxNlUk8sevCZ5kYRrxuqMaQVWtcGc18CzyAt/ioI6ktoF0ZlxRL7eBNTVwvJ9AWnUr+3RefIQhigEGZes1tz9TSIPLMnXVGoX9ZsCFrDu6DkcGTvYxlJN/kEW+ZEya4GqICpCq7WfQlNlzR+2tM+TPMQbM/axyYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZPeH7A1dw9YnTzMqOv8V+/KHIkGjGgAb1kRGV8ZueNU=;
- b=XIeN/w08BvIv4Ykfvtj3ma/QklU9fHoPhUoF0LXxgo1GIdsuziqZbkCHXnjVcWixxkYLBzPK+IMDtiyNg523yFqPsCWql53yxgHlwWZWHTQ+HVnMSUfz1nSYH48F8s52kYYCTvQGbkMXCUxWyQBMO98Pt5h0DAyCSojW9e2+lmm4WgMf9UJLkJbivDBF2e9uLnk9zcQ0xi43N0hG2mrjnEQv1amZl7puKKTqcNPJUPKvpdPU33ZQwHJwzra2H0UGV/aKqgWnujv8fRiRHFDP2chD9k+PXrj4Weiy1wBEJZHjoT5dJ8MeXxc99cEC/KJX5oQlSQeUGHCWyZ6i8HS30Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZPeH7A1dw9YnTzMqOv8V+/KHIkGjGgAb1kRGV8ZueNU=;
- b=j3KinMXbHm12lEKdWUyvN58+Bl4ZCyliUqBxjI0c5cl4prF8gZDlD20qy7MPahQRNuUD9gDhx2HdBiyfCBohKKP/9+69O5v0XExpiK5E/EBtMccCNhNG1vdAgWU+AzEH13jTaLrywEs21wRO32OtBbeXlq6fFlS56t5p8IvDH/0=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3950.eurprd04.prod.outlook.com (52.134.17.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.14; Tue, 30 Jul 2019 11:29:51 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::7c64:5296:4607:e10]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::7c64:5296:4607:e10%5]) with mapi id 15.20.2094.017; Tue, 30 Jul 2019
- 11:29:51 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v2 2/2] crypto: aes - helper function to validate key
- length for AES algorithms
-Thread-Topic: [PATCH v2 2/2] crypto: aes - helper function to validate key
- length for AES algorithms
-Thread-Index: AQHVRsJGjJrvlx+J+E+468QqPTLh1Q==
-Date:   Tue, 30 Jul 2019 11:29:51 +0000
-Message-ID: <VI1PR0402MB34857CAE5CA386DED98CA5BC98DC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1564482824-26581-1-git-send-email-iuliana.prodan@nxp.com>
- <1564482824-26581-3-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a33e0029-6958-4289-79e8-08d714e13c83
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3950;
-x-ms-traffictypediagnostic: VI1PR0402MB3950:
-x-microsoft-antispam-prvs: <VI1PR0402MB3950CDEDFDB6D8A8887F377D98DC0@VI1PR0402MB3950.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0114FF88F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(396003)(136003)(376002)(199004)(189003)(110136005)(76176011)(3846002)(66446008)(64756008)(76116006)(71200400001)(25786009)(446003)(33656002)(66476007)(66556008)(44832011)(316002)(7696005)(6116002)(26005)(91956017)(486006)(6506007)(53546011)(2906002)(66946007)(71190400001)(229853002)(86362001)(102836004)(99286004)(476003)(8676002)(55016002)(54906003)(478600001)(7736002)(74316002)(558084003)(14454004)(66066001)(53936002)(5660300002)(4326008)(6436002)(81166006)(186003)(68736007)(9686003)(52536014)(6246003)(256004)(8936002)(81156014)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3950;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gDJx6RAShg7WjsATnCkBe1pY14ATyzW9F1YSjvfn6jjGqhsCNqv5tkiMl988M1WfxmdrXnT5RSGb16FqAxdWbgsBB8IK/hpen2Y3eGP2HO+CmhJw6mWAYm2XagkJRaWTRwBl6PC4qPttHA0xvSCll3+A4FOGjLwyYKzWalPgFyQUxRTLRh2eiWK3MCnEbvSFLFbPjjGIynQFReRxXUoRvivT5qz1yOfUNcWW7+9DmqAFHQvUNrDZtpXiasW1Swr9kxstpGdljYctPA3jWit33FPXYKAHSMq2QbMD1OgZA/HHsJs38Dgyx9Htf8gpXpJRuuqxM+xZQMhTJtliuMEfL5BhpExuG909q9B3Agysqw9AjSqQdnRMPcp10xdShGsTTjuxkv3vcS9H0wyBfCCWWsWm7/JTyE4ky9q2Z/cqu5k=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 30 Jul 2019 07:30:38 -0400
+Received: from mga02.intel.com ([134.134.136.20]:20371 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730101AbfG3Lai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:30:38 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 04:30:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,326,1559545200"; 
+   d="scan'208";a="190841166"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 30 Jul 2019 04:30:33 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 30 Jul 2019 14:30:33 +0300
+Date:   Tue, 30 Jul 2019 14:30:33 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/2] gpiolib: add support for fetching descriptors from
+ static properties
+Message-ID: <20190730113033.GJ28600@kuha.fi.intel.com>
+References: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
+ <20190713075259.243565-3-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a33e0029-6958-4289-79e8-08d714e13c83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 11:29:51.1321
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3950
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190713075259.243565-3-dmitry.torokhov@gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/2019 1:33 PM, Iuliana Prodan wrote:=0A=
-> Add inline helper function to check key length for AES algorithms.=0A=
-> The key can be 128, 192 or 256 bits size.=0A=
-> This function is used in the generic aes implementation.=0A=
-> =0A=
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+Hi Dmitry,
+
+On Sat, Jul 13, 2019 at 12:52:59AM -0700, Dmitry Torokhov wrote:
+> Now that static device properties understand notion of child nodes, let's
+> teach gpiolib to tie such children and machine GPIO descriptor tables.
+> We will continue using a single table for entire device, but instead of
+> using connection ID as a lookup key in the GPIO descriptor table directly,
+> we will perform additional translation: fwnode_get_named_gpiod() when
+> dealing with property_set-backed fwnodes will try parsing string property
+> with name matching connection ID and use result of the lookup as the key in
+> the table:
+> 
+> static const struct property_entry dev_child1_props[] __initconst = {
+> 	...
+> 	PROPERTY_ENTRY_STRING("gpios",		"child-1-gpios"),
+> 	{ }
+> };
+> 
+> static struct gpiod_lookup_table dev_gpiod_table = {
+> 	.dev_id = "some-device",
+> 	.table = {
+> 		...
+> 		GPIO_LOOKUP_IDX("B", 1, "child-1-gpios", 1, GPIO_ACTIVE_LOW),
+> 		...
+> 	},
+> };
+
+We don't need struct gpiod_lookup_table anymore. We can mimic DT with
+the software nodes now that we have those "reference properties". A
+gpio reference with the software nodes would look something like this:
+
+        enum {
+                GPIO_CONTROLLER,
+                MY_DEVICE
+        };
+
+        static const struct software_node nodes[];
+
+        static const struct software_node_ref_args reset_gpio_ref = {
+                .node = &nodes[GPIO_CONTROLLER],
+                .nargs = 2,
+                .args = {
+                        14,                     /* line number */
+                        GPIO_ACTIVE_HIGH        /* flags */
+                }
+        };
+
+        static const struct software_node_reference my_refs[] = {
+                { "reset-gpios", 1, &reset_gpio_ref }
+        };
+
+        /* Optionally, we could support gpiochip finding by name... */
+        static const struct property_entry my_props[] = {
+                PROPERTY_ENTRY_STRING("gpio-controller", "name_of_the_controller")
+        };
+
+        static const struct software_node nodes[] = {
+                [GPIO_CONTROLLER]       = { "gpio_controller" },
+                [MY_DEVICE]             = { "my_device", NULL, my_props, my_refs }
+        };
+
+        void my_init(void)
+        {
+                ...
+                ret = software_node_register_nodes(nodes);
+                ...
+        }
+
+In gpiolib we should now be able to access that reference with
+fwnode_property_get_references_args():
+
+        static int gpiochip_match_fwnode(struct gpio_chip *chip, void *fwnode)
+        {
+                /* The fwnode member needs to be added to struct gpio_chip */
+                return chip->fwnode == fwnode;
+        }
+
+        static struct gpio_desc *gpiod_find(struct device *dev,
+                                            const char *con_id,
+                                            unsigned int idx,
+                                            unsigned long flags)
+        {
+                struct fwnode_reference_args args;
+                struct gpio_chip *chip;
+                struct gpio_desc *desc;
+                const char *name;
+                int ret;
+
+                ret = fwnode_property_get_refernce_args(dev_fwnode(dev), con_id,
+                                                        NULL, idx, &args);
+                ...
+
+                /* Let's find the gpiochip */
+                chip = gpiochip_find(args.fwnode, gpiochip_match_fwnode);
+                ...
+
+                /* Or optionally with find_chip_by_name() */
+                //ret = device_property_read_string(dev, "gpio-controller", &name);
+                ...
+                //chip = find_chip_by_name(name);
+                ...
+
+                /* I'm assuming hwnum is the same as line number? */
+                desc = gpiochip_get_desc(chip, args.args[0]);
+                *flags = args.args[1];
+
+                return desc;
+        }
+
+The above is just an example, but I'm pretty sure that something like
+it (with a little bit of tuning) is all that we need.
+
+thanks,
+
+-- 
+heikki
