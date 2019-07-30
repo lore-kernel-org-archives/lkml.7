@@ -2,470 +2,676 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1A9C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A0AC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCC1206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A416D206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PST+diSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbfG3IuL (ORCPT
+        id S1731189AbfG3Iys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:50:11 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56120 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728432AbfG3IuL (ORCPT
+        Tue, 30 Jul 2019 04:54:48 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8680 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731052AbfG3Iys (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:50:11 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hsNpZ-0002aN-A3; Tue, 30 Jul 2019 10:50:01 +0200
-Date:   Tue, 30 Jul 2019 10:50:00 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ingo Molnar <mingo@kernel.org>
-cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Michael Petlan <mpetlan@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL 000/107] perf/core improvements and fixes
-In-Reply-To: <20190730080358.GA115870@gmail.com>
-Message-ID: <alpine.DEB.2.21.1907301048030.1738@nanos.tec.linutronix.de>
-References: <20190730025610.22603-1-acme@kernel.org> <20190730080358.GA115870@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 30 Jul 2019 04:54:48 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4005db0001>; Tue, 30 Jul 2019 01:54:52 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 30 Jul 2019 01:54:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 30 Jul 2019 01:54:43 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jul
+ 2019 08:54:40 +0000
+Subject: Re: [PATCH v2] driver core: Remove device link creation limitation
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+References: <2305283.AStDPdUUnE@kreacher>
+ <c8960d91-4446-9acf-5575-e442a652bd05@gmail.com>
+ <7944678.tFQQHhpDPp@kreacher>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <d033cd65-4432-5675-c9f4-ca12e74d1f7b@nvidia.com>
+Date:   Tue, 30 Jul 2019 09:54:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <7944678.tFQQHhpDPp@kreacher>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564476892; bh=dgfKm5y28+yQ9fELiVhC6w1NHnDrmN8V8JfR55VjlL4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PST+diSm2cCnP5R5UkftBXT/6mdVeMve2w3puxl4UcNZmLKw78VRahHB30vr/ifO7
+         3+WuZRexci/jqugOfwYQsdxHAcuK0Ut3ARLxA2S1ANn9EvPrgilJYyOmUzojew+NT8
+         nqUonJ6XrkQwwvAqWW0NYGvaYetrrb8TWwxsSH/KWb+TddCnEUPGlqDFU3Gwwt9CTZ
+         n1mDNIm0wxuNv27fYZpJ7GZKFeoj9wHjyZiqMaDXCNuyWvdSS2odARl4O0hhBDYVHw
+         zIkQ4Vxrjia0njn6pRPN3cmbrM24d/l5dDCczuK2BjQsIcPetjyhWNUSs4xODMGj+4
+         AhOiFUaI088Ew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019, Ingo Molnar wrote:
 
-What's almost as annoying as top-posting?
+On 29/07/2019 22:50, Rafael J. Wysocki wrote:
+> On Monday, July 29, 2019 5:48:57 PM CEST Dmitry Osipenko wrote:
+>> 16.07.2019 18:21, Rafael J. Wysocki =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>> Subject: [PATCH] driver core: Remove device link creation limitation
+>>>
+>>> If device_link_add() is called for a consumer/supplier pair with an
+>>> existing device link between them and the existing link's type is
+>>> not in agreement with the flags passed to that function by its
+>>> caller, NULL will be returned.  That is seriously inconvenient,
+>>> because it forces the callers of device_link_add() to worry about
+>>> what others may or may not do even if that is not relevant to them
+>>> for any other reasons.
+>>>
+>>> It turns out, however, that this limitation can be made go away
+>>> relatively easily.
+>>>
+>>> The underlying observation is that if DL_FLAG_STATELESS has been
+>>> passed to device_link_add() in flags for the given consumer/supplier
+>>> pair at least once, calling either device_link_del() or
+>>> device_link_remove() to release the link returned by it should work,
+>>> but there are no other requirements associated with that flag.  In
+>>> turn, if at least one of the callers of device_link_add() for the
+>>> given consumer/supplier pair has not passed DL_FLAG_STATELESS to it
+>>> in flags, the driver core should track the status of the link and act
+>>> on it as appropriate (ie. the link should be treated as "managed").
+>>> This means that DL_FLAG_STATELESS needs to be set for managed device
+>>> links and it should be valid to call device_link_del() or
+>>> device_link_remove() to drop references to them in certain
+>>> sutiations.
+>>>
+>>> To allow that to happen, introduce a new (internal) device link flag
+>>> called DL_FLAG_MANAGED and make device_link_add() set it automatically
+>>> whenever DL_FLAG_STATELESS is not passed to it.  Also make it take
+>>> additional references to existing device links that were previously
+>>> stateless (that is, with DL_FLAG_STATELESS set and DL_FLAG_MANAGED
+>>> unset) and will need to be managed going forward and initialize
+>>> their status (which has been DL_STATE_NONE so far).
+>>>
+>>> Accordingly, when a managed device link is dropped automatically
+>>> by the driver core, make it clear DL_FLAG_MANAGED, reset the link's
+>>> status back to DL_STATE_NONE and drop the reference to it associated
+>>> with DL_FLAG_MANAGED instead of just deleting it right away (to
+>>> allow it to stay around in case it still needs to be released
+>>> explicitly by someone).
+>>>
+>>> With that, since setting DL_FLAG_STATELESS doesn't mean that the
+>>> device link in question is not managed any more, replace all of the
+>>> status-tracking checks against DL_FLAG_STATELESS with analogous
+>>> checks against DL_FLAG_MANAGED and update the documentation to
+>>> reflect these changes.
+>>>
+>>> While at it, make device_link_add() reject flags that it does not
+>>> recognize, including DL_FLAG_MANAGED.
+>>>
+>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>> Reviewed-by: Saravana Kannan <saravanak@google.com>
+>>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>> ---
+>>>
+>>> -> v2:
+>>>    * Add a check to device_link_add() to return NULL if unrecognized fl=
+ags are
+>>>      passed to it.
+>>>    * Modify kerneldoc comments around DL_FLAG_MANAGED.
+>>>
+>>> I've tentatively added the Tested-by tag from Marek, because I don't ex=
+pect
+>>> the changes made between the initial posting and the v2 to make any dif=
+ference
+>>> for him.
+>>>
+>>> ---
+>>>  Documentation/driver-api/device_link.rst |    4=20
+>>>  drivers/base/core.c                      |  176 +++++++++++++++++-----=
+---------
+>>>  drivers/base/power/runtime.c             |    4=20
+>>>  include/linux/device.h                   |    4=20
+>>>  4 files changed, 106 insertions(+), 82 deletions(-)
+>>>
+>>> Index: linux-pm/drivers/base/core.c
+>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>> --- linux-pm.orig/drivers/base/core.c
+>>> +++ linux-pm/drivers/base/core.c
+>>> @@ -124,6 +124,50 @@ static int device_is_dependent(struct de
+>>>  	return ret;
+>>>  }
+>>> =20
+>>> +static void device_link_init_status(struct device_link *link,
+>>> +				    struct device *consumer,
+>>> +				    struct device *supplier)
+>>> +{
+>>> +	switch (supplier->links.status) {
+>>> +	case DL_DEV_PROBING:
+>>> +		switch (consumer->links.status) {
+>>> +		case DL_DEV_PROBING:
+>>> +			/*
+>>> +			 * A consumer driver can create a link to a supplier
+>>> +			 * that has not completed its probing yet as long as it
+>>> +			 * knows that the supplier is already functional (for
+>>> +			 * example, it has just acquired some resources from the
+>>> +			 * supplier).
+>>> +			 */
+>>> +			link->status =3D DL_STATE_CONSUMER_PROBE;
+>>> +			break;
+>>> +		default:
+>>> +			link->status =3D DL_STATE_DORMANT;
+>>> +			break;
+>>> +		}
+>>> +		break;
+>>> +	case DL_DEV_DRIVER_BOUND:
+>>> +		switch (consumer->links.status) {
+>>> +		case DL_DEV_PROBING:
+>>> +			link->status =3D DL_STATE_CONSUMER_PROBE;
+>>> +			break;
+>>> +		case DL_DEV_DRIVER_BOUND:
+>>> +			link->status =3D DL_STATE_ACTIVE;
+>>> +			break;
+>>> +		default:
+>>> +			link->status =3D DL_STATE_AVAILABLE;
+>>> +			break;
+>>> +		}
+>>> +		break;
+>>> +	case DL_DEV_UNBINDING:
+>>> +		link->status =3D DL_STATE_SUPPLIER_UNBIND;
+>>> +		break;
+>>> +	default:
+>>> +		link->status =3D DL_STATE_DORMANT;
+>>> +		break;
+>>> +	}
+>>> +}
+>>> +
+>>>  static int device_reorder_to_tail(struct device *dev, void *not_used)
+>>>  {
+>>>  	struct device_link *link;
+>>> @@ -165,6 +209,10 @@ void device_pm_move_to_tail(struct devic
+>>>  	device_links_read_unlock(idx);
+>>>  }
+>>> =20
+>>> +#define DL_MANAGED_LINK_FLAGS (DL_FLAG_AUTOREMOVE_CONSUMER | \
+>>> +			       DL_FLAG_AUTOREMOVE_SUPPLIER | \
+>>> +			       DL_FLAG_AUTOPROBE_CONSUMER)
+>>> +
+>>>  /**
+>>>   * device_link_add - Create a link between two devices.
+>>>   * @consumer: Consumer end of the link.
+>>> @@ -179,9 +227,9 @@ void device_pm_move_to_tail(struct devic
+>>>   * of the link.  If DL_FLAG_PM_RUNTIME is not set, DL_FLAG_RPM_ACTIVE =
+will be
+>>>   * ignored.
+>>>   *
+>>> - * If DL_FLAG_STATELESS is set in @flags, the link is not going to be =
+managed by
+>>> - * the driver core and, in particular, the caller of this function is =
+expected
+>>> - * to drop the reference to the link acquired by it directly.
+>>> + * If DL_FLAG_STATELESS is set in @flags, the caller of this function =
+is
+>>> + * expected to release the link returned by it directly with the help =
+of either
+>>> + * device_link_del() or device_link_remove().
+>>>   *
+>>>   * If that flag is not set, however, the caller of this function is ha=
+nding the
+>>>   * management of the link over to the driver core entirely and its ret=
+urn value
+>>> @@ -201,9 +249,16 @@ void device_pm_move_to_tail(struct devic
+>>>   * be used to request the driver core to automaticall probe for a cons=
+mer
+>>>   * driver after successfully binding a driver to the supplier device.
+>>>   *
+>>> - * The combination of DL_FLAG_STATELESS and either DL_FLAG_AUTOREMOVE_=
+CONSUMER
+>>> - * or DL_FLAG_AUTOREMOVE_SUPPLIER set in @flags at the same time is in=
+valid and
+>>> - * will cause NULL to be returned upfront.
+>>> + * The combination of DL_FLAG_STATELESS and one of DL_FLAG_AUTOREMOVE_=
+CONSUMER,
+>>> + * DL_FLAG_AUTOREMOVE_SUPPLIER, or DL_FLAG_AUTOPROBE_CONSUMER set in @=
+flags at
+>>> + * the same time is invalid and will cause NULL to be returned upfront=
+.
+>>> + * However, if a device link between the given @consumer and @supplier=
+ pair
+>>> + * exists already when this function is called for them, the existing =
+link will
+>>> + * be returned regardless of its current type and status (the link's f=
+lags may
+>>> + * be modified then).  The caller of this function is then expected to=
+ treat
+>>> + * the link as though it has just been created, so (in particular) if
+>>> + * DL_FLAG_STATELESS was passed in @flags, the link needs to be releas=
+ed
+>>> + * explicitly when not needed any more (as stated above).
+>>>   *
+>>>   * A side effect of the link creation is re-ordering of dpm_list and t=
+he
+>>>   * devices_kset list by moving the consumer device and all devices dep=
+ending
+>>> @@ -220,10 +275,8 @@ struct device_link *device_link_add(stru
+>>>  	struct device_link *link;
+>>> =20
+>>>  	if (!consumer || !supplier ||
+>>> -	    (flags & DL_FLAG_STATELESS &&
+>>> -	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
+>>> -		      DL_FLAG_AUTOREMOVE_SUPPLIER |
+>>> -		      DL_FLAG_AUTOPROBE_CONSUMER)) ||
+>>> +	    (flags & ~(DL_FLAG_STATELESS | DL_MANAGED_LINK_FLAGS)) ||
+>>> +	    (flags & DL_FLAG_STATELESS && flags & DL_MANAGED_LINK_FLAGS) ||
+>>>  	    (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
+>>>  	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
+>>>  		      DL_FLAG_AUTOREMOVE_SUPPLIER)))
+>>> @@ -236,6 +289,9 @@ struct device_link *device_link_add(stru
+>>>  		}
+>>>  	}
+>>> =20
+>>> +	if (!(flags & DL_FLAG_STATELESS))
+>>> +		flags |=3D DL_FLAG_MANAGED;
+>>> +
+>>>  	device_links_write_lock();
+>>>  	device_pm_lock();
+>>> =20
+>>> @@ -262,15 +318,6 @@ struct device_link *device_link_add(stru
+>>>  		if (link->consumer !=3D consumer)
+>>>  			continue;
+>>> =20
+>>> -		/*
+>>> -		 * Don't return a stateless link if the caller wants a stateful
+>>> -		 * one and vice versa.
+>>> -		 */
+>>> -		if (WARN_ON((flags & DL_FLAG_STATELESS) !=3D (link->flags & DL_FLAG_=
+STATELESS))) {
+>>> -			link =3D NULL;
+>>> -			goto out;
+>>> -		}
+>>> -
+>>>  		if (flags & DL_FLAG_PM_RUNTIME) {
+>>>  			if (!(link->flags & DL_FLAG_PM_RUNTIME)) {
+>>>  				pm_runtime_new_link(consumer);
+>>> @@ -281,6 +328,7 @@ struct device_link *device_link_add(stru
+>>>  		}
+>>> =20
+>>>  		if (flags & DL_FLAG_STATELESS) {
+>>> +			link->flags |=3D DL_FLAG_STATELESS;
+>>>  			kref_get(&link->kref);
+>>>  			goto out;
+>>>  		}
+>>> @@ -299,6 +347,11 @@ struct device_link *device_link_add(stru
+>>>  			link->flags &=3D ~(DL_FLAG_AUTOREMOVE_CONSUMER |
+>>>  					 DL_FLAG_AUTOREMOVE_SUPPLIER);
+>>>  		}
+>>> +		if (!(link->flags & DL_FLAG_MANAGED)) {
+>>> +			kref_get(&link->kref);
+>>> +			link->flags |=3D DL_FLAG_MANAGED;
+>>> +			device_link_init_status(link, consumer, supplier);
+>>> +		}
+>>>  		goto out;
+>>>  	}
+>>> =20
+>>> @@ -325,48 +378,10 @@ struct device_link *device_link_add(stru
+>>>  	kref_init(&link->kref);
+>>> =20
+>>>  	/* Determine the initial link state. */
+>>> -	if (flags & DL_FLAG_STATELESS) {
+>>> +	if (flags & DL_FLAG_STATELESS)
+>>>  		link->status =3D DL_STATE_NONE;
+>>> -	} else {
+>>> -		switch (supplier->links.status) {
+>>> -		case DL_DEV_PROBING:
+>>> -			switch (consumer->links.status) {
+>>> -			case DL_DEV_PROBING:
+>>> -				/*
+>>> -				 * A consumer driver can create a link to a
+>>> -				 * supplier that has not completed its probing
+>>> -				 * yet as long as it knows that the supplier is
+>>> -				 * already functional (for example, it has just
+>>> -				 * acquired some resources from the supplier).
+>>> -				 */
+>>> -				link->status =3D DL_STATE_CONSUMER_PROBE;
+>>> -				break;
+>>> -			default:
+>>> -				link->status =3D DL_STATE_DORMANT;
+>>> -				break;
+>>> -			}
+>>> -			break;
+>>> -		case DL_DEV_DRIVER_BOUND:
+>>> -			switch (consumer->links.status) {
+>>> -			case DL_DEV_PROBING:
+>>> -				link->status =3D DL_STATE_CONSUMER_PROBE;
+>>> -				break;
+>>> -			case DL_DEV_DRIVER_BOUND:
+>>> -				link->status =3D DL_STATE_ACTIVE;
+>>> -				break;
+>>> -			default:
+>>> -				link->status =3D DL_STATE_AVAILABLE;
+>>> -				break;
+>>> -			}
+>>> -			break;
+>>> -		case DL_DEV_UNBINDING:
+>>> -			link->status =3D DL_STATE_SUPPLIER_UNBIND;
+>>> -			break;
+>>> -		default:
+>>> -			link->status =3D DL_STATE_DORMANT;
+>>> -			break;
+>>> -		}
+>>> -	}
+>>> +	else
+>>> +		device_link_init_status(link, consumer, supplier);
+>>> =20
+>>>  	/*
+>>>  	 * Some callers expect the link creation during consumer driver probe=
+ to
+>>> @@ -528,7 +543,7 @@ static void device_links_missing_supplie
+>>>   * mark the link as "consumer probe in progress" to make the supplier =
+removal
+>>>   * wait for us to complete (or bad things may happen).
+>>>   *
+>>> - * Links with the DL_FLAG_STATELESS flag set are ignored.
+>>> + * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>   */
+>>>  int device_links_check_suppliers(struct device *dev)
+>>>  {
+>>> @@ -538,7 +553,7 @@ int device_links_check_suppliers(struct
+>>>  	device_links_write_lock();
+>>> =20
+>>>  	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+>>> -		if (link->flags & DL_FLAG_STATELESS)
+>>> +		if (!(link->flags & DL_FLAG_MANAGED))
+>>>  			continue;
+>>> =20
+>>>  		if (link->status !=3D DL_STATE_AVAILABLE) {
+>>> @@ -563,7 +578,7 @@ int device_links_check_suppliers(struct
+>>>   *
+>>>   * Also change the status of @dev's links to suppliers to "active".
+>>>   *
+>>> - * Links with the DL_FLAG_STATELESS flag set are ignored.
+>>> + * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>   */
+>>>  void device_links_driver_bound(struct device *dev)
+>>>  {
+>>> @@ -572,7 +587,7 @@ void device_links_driver_bound(struct de
+>>>  	device_links_write_lock();
+>>> =20
+>>>  	list_for_each_entry(link, &dev->links.consumers, s_node) {
+>>> -		if (link->flags & DL_FLAG_STATELESS)
+>>> +		if (!(link->flags & DL_FLAG_MANAGED))
+>>>  			continue;
+>>> =20
+>>>  		/*
+>>> @@ -593,7 +608,7 @@ void device_links_driver_bound(struct de
+>>>  	}
+>>> =20
+>>>  	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+>>> -		if (link->flags & DL_FLAG_STATELESS)
+>>> +		if (!(link->flags & DL_FLAG_MANAGED))
+>>>  			continue;
+>>> =20
+>>>  		WARN_ON(link->status !=3D DL_STATE_CONSUMER_PROBE);
+>>> @@ -605,6 +620,13 @@ void device_links_driver_bound(struct de
+>>>  	device_links_write_unlock();
+>>>  }
+>>> =20
+>>> +static void device_link_drop_managed(struct device_link *link)
+>>> +{
+>>> +	link->flags &=3D ~DL_FLAG_MANAGED;
+>>> +	WRITE_ONCE(link->status, DL_STATE_NONE);
+>>> +	kref_put(&link->kref, __device_link_del);
+>>> +}
+>>> +
+>>>  /**
+>>>   * __device_links_no_driver - Update links of a device without a drive=
+r.
+>>>   * @dev: Device without a drvier.
+>>> @@ -615,18 +637,18 @@ void device_links_driver_bound(struct de
+>>>   * unless they already are in the "supplier unbind in progress" state =
+in which
+>>>   * case they need not be updated.
+>>>   *
+>>> - * Links with the DL_FLAG_STATELESS flag set are ignored.
+>>> + * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>   */
+>>>  static void __device_links_no_driver(struct device *dev)
+>>>  {
+>>>  	struct device_link *link, *ln;
+>>> =20
+>>>  	list_for_each_entry_safe_reverse(link, ln, &dev->links.suppliers, c_n=
+ode) {
+>>> -		if (link->flags & DL_FLAG_STATELESS)
+>>> +		if (!(link->flags & DL_FLAG_MANAGED))
+>>>  			continue;
+>>> =20
+>>>  		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
+>>> -			__device_link_del(&link->kref);
+>>> +			device_link_drop_managed(link);
+>>>  		else if (link->status =3D=3D DL_STATE_CONSUMER_PROBE ||
+>>>  			 link->status =3D=3D DL_STATE_ACTIVE)
+>>>  			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
+>>> @@ -643,7 +665,7 @@ static void __device_links_no_driver(str
+>>>   * %__device_links_no_driver() to update links to suppliers for it as
+>>>   * appropriate.
+>>>   *
+>>> - * Links with the DL_FLAG_STATELESS flag set are ignored.
+>>> + * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>   */
+>>>  void device_links_no_driver(struct device *dev)
+>>>  {
+>>> @@ -652,7 +674,7 @@ void device_links_no_driver(struct devic
+>>>  	device_links_write_lock();
+>>> =20
+>>>  	list_for_each_entry(link, &dev->links.consumers, s_node) {
+>>> -		if (link->flags & DL_FLAG_STATELESS)
+>>> +		if (!(link->flags & DL_FLAG_MANAGED))
+>>>  			continue;
+>>> =20
+>>>  		/*
+>>> @@ -680,7 +702,7 @@ void device_links_no_driver(struct devic
+>>>   * invoke %__device_links_no_driver() to update links to suppliers for=
+ it as
+>>>   * appropriate.
+>>>   *
+>>> - * Links with the DL_FLAG_STATELESS flag set are ignored.
+>>> + * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>   */
+>>>  void device_links_driver_cleanup(struct device *dev)
+>>>  {
+>>> @@ -689,7 +711,7 @@ void device_links_driver_cleanup(struct
+>>>  	device_links_write_lock();
+>>> =20
+>>>  	list_for_each_entry_safe(link, ln, &dev->links.consumers, s_node) {
+>>> -		if (link->flags & DL_FLAG_STATELESS)
+>>> +		if (!(link->flags & DL_FLAG_MANAGED))
+>>>  			continue;
+>>> =20
+>>>  		WARN_ON(link->flags & DL_FLAG_AUTOREMOVE_CONSUMER);
+>>> @@ -702,7 +724,7 @@ void device_links_driver_cleanup(struct
+>>>  		 */
+>>>  		if (link->status =3D=3D DL_STATE_SUPPLIER_UNBIND &&
+>>>  		    link->flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
+>>> -			__device_link_del(&link->kref);
+>>> +			device_link_drop_managed(link);
+>>> =20
+>>>  		WRITE_ONCE(link->status, DL_STATE_DORMANT);
+>>>  	}
+>>> @@ -724,7 +746,7 @@ void device_links_driver_cleanup(struct
+>>>   *
+>>>   * Return 'false' if there are no probing or active consumers.
+>>>   *
+>>> - * Links with the DL_FLAG_STATELESS flag set are ignored.
+>>> + * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>   */
+>>>  bool device_links_busy(struct device *dev)
+>>>  {
+>>> @@ -734,7 +756,7 @@ bool device_links_busy(struct device *de
+>>>  	device_links_write_lock();
+>>> =20
+>>>  	list_for_each_entry(link, &dev->links.consumers, s_node) {
+>>> -		if (link->flags & DL_FLAG_STATELESS)
+>>> +		if (!(link->flags & DL_FLAG_MANAGED))
+>>>  			continue;
+>>> =20
+>>>  		if (link->status =3D=3D DL_STATE_CONSUMER_PROBE
+>>> @@ -764,7 +786,7 @@ bool device_links_busy(struct device *de
+>>>   * driver to unbind and start over (the consumer will not re-probe as =
+we have
+>>>   * changed the state of the link already).
+>>>   *
+>>> - * Links with the DL_FLAG_STATELESS flag set are ignored.
+>>> + * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>   */
+>>>  void device_links_unbind_consumers(struct device *dev)
+>>>  {
+>>> @@ -776,7 +798,7 @@ void device_links_unbind_consumers(struc
+>>>  	list_for_each_entry(link, &dev->links.consumers, s_node) {
+>>>  		enum device_link_state status;
+>>> =20
+>>> -		if (link->flags & DL_FLAG_STATELESS)
+>>> +		if (!(link->flags & DL_FLAG_MANAGED))
+>>>  			continue;
+>>> =20
+>>>  		status =3D link->status;
+>>> Index: linux-pm/drivers/base/power/runtime.c
+>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>> --- linux-pm.orig/drivers/base/power/runtime.c
+>>> +++ linux-pm/drivers/base/power/runtime.c
+>>> @@ -1624,7 +1624,7 @@ void pm_runtime_remove(struct device *de
+>>>   * runtime PM references to the device, drop the usage counter of the =
+device
+>>>   * (as many times as needed).
+>>>   *
+>>> - * Links with the DL_FLAG_STATELESS flag set are ignored.
+>>> + * Links with the DL_FLAG_MANAGED flag unset are ignored.
+>>>   *
+>>>   * Since the device is guaranteed to be runtime-active at the point th=
+is is
+>>>   * called, nothing else needs to be done here.
+>>> @@ -1641,7 +1641,7 @@ void pm_runtime_clean_up_links(struct de
+>>>  	idx =3D device_links_read_lock();
+>>> =20
+>>>  	list_for_each_entry_rcu(link, &dev->links.consumers, s_node) {
+>>> -		if (link->flags & DL_FLAG_STATELESS)
+>>> +		if (!(link->flags & DL_FLAG_MANAGED))
+>>>  			continue;
+>>> =20
+>>>  		while (refcount_dec_not_one(&link->rpm_active))
+>>> Index: linux-pm/include/linux/device.h
+>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>> --- linux-pm.orig/include/linux/device.h
+>>> +++ linux-pm/include/linux/device.h
+>>> @@ -829,12 +829,13 @@ enum device_link_state {
+>>>  /*
+>>>   * Device link flags.
+>>>   *
+>>> - * STATELESS: The core won't track the presence of supplier/consumer d=
+rivers.
+>>> + * STATELESS: The core will not remove this link automatically.
+>>>   * AUTOREMOVE_CONSUMER: Remove the link automatically on consumer driv=
+er unbind.
+>>>   * PM_RUNTIME: If set, the runtime PM framework will use this link.
+>>>   * RPM_ACTIVE: Run pm_runtime_get_sync() on the supplier during link c=
+reation.
+>>>   * AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driv=
+er unbind.
+>>>   * AUTOPROBE_CONSUMER: Probe consumer driver automatically after suppl=
+ier binds.
+>>> + * MANAGED: The core tracks presence of supplier/consumer drivers (int=
+ernal).
+>>>   */
+>>>  #define DL_FLAG_STATELESS		BIT(0)
+>>>  #define DL_FLAG_AUTOREMOVE_CONSUMER	BIT(1)
+>>> @@ -842,6 +843,7 @@ enum device_link_state {
+>>>  #define DL_FLAG_RPM_ACTIVE		BIT(3)
+>>>  #define DL_FLAG_AUTOREMOVE_SUPPLIER	BIT(4)
+>>>  #define DL_FLAG_AUTOPROBE_CONSUMER	BIT(5)
+>>> +#define DL_FLAG_MANAGED			BIT(6)
+>>> =20
+>>>  /**
+>>>   * struct device_link - Device link representation.
+>>> Index: linux-pm/Documentation/driver-api/device_link.rst
+>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>> --- linux-pm.orig/Documentation/driver-api/device_link.rst
+>>> +++ linux-pm/Documentation/driver-api/device_link.rst
+>>> @@ -78,8 +78,8 @@ typically deleted in its ``->remove`` ca
+>>>  driver is compiled as a module, the device link is added on module loa=
+d and
+>>>  orderly deleted on unload.  The same restrictions that apply to device=
+ link
+>>>  addition (e.g. exclusion of a parallel suspend/resume transition) appl=
+y equally
+>>> -to deletion.  Device links with ``DL_FLAG_STATELESS`` unset (i.e. mana=
+ged
+>>> -device links) are deleted automatically by the driver core.
+>>> +to deletion.  Device links managed by the driver core are deleted auto=
+matically
+>>> +by it.
+>>> =20
+>>>  Several flags may be specified on device link addition, two of which
+>>>  have already been mentioned above:  ``DL_FLAG_STATELESS`` to express t=
+hat no
+>>>
+>>>
+>>>
+>>>
+>>
+>> Hello Rafael,
+>>
+>> This patch breaks NVIDIA Tegra DRM driver, which fails to probe now
+>> using the recent linux-next.
+>>
+>> 	tegra-dc 54240000.dc: failed to link controllers
+>>
+>=20
+> Thanks for the report and sorry for the breakage!
+>=20
+> My bad, obviously DL_FLAG_PM_RUNTIME must be accepted by device_link_add(=
+),
+> as well as DL_FLAG_RPM_ACTIVE.
+>=20
+> Please test the appended patch and let me know if it helps.
 
-> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> 
-> > Hi Ingo,
-> > 
-> > 	Please consider pulling,
-> > 
-> > Best regards,
-> > 
-> > - Arnaldo
-> > 
-> > Test results at the end of this message, as usual.
-> > 
-> > The following changes since commit b3c303be4c35856945cb17ec639b94637447dae2:
-> > 
-> >   Merge tag 'perf-urgent-for-mingo-5.3-20190729' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2019-07-29 23:24:07 +0200)
-> > 
-> > are available in the Git repository at:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.4-20190729
-> > 
-> > for you to fetch changes up to 123a039d0d54de6d5bafd551e7aa17569e13e315:
-> > 
-> >   perf vendor events power9: Added missing event descriptions (2019-07-29 18:34:47 -0300)
-> > 
-> > ----------------------------------------------------------------
-> > perf/core improvements and fixes:
-> > 
-> > perf trace:
-> > 
-> >   Arnaldo Carvalho de Melo:
-> > 
-> >   - Use BPF_MAP_TYPE_PROG_ARRAY + bpf_tail_call() for augmenting raw syscalls,
-> >     i.e. copy pointers passed to/from userspace. The use of a table per syscall
-> >     to tell the BPF program what to copy made the raw_syscalls:sys_enter/exit
-> >     programs a bit complex, the scratch space would have to be bigger to allow
-> >     for checking all args to see which ones were a pathname, so use a PROG_ARRAY
-> >     map instead, test it with syscalls that receive multiple pathnames at
-> >     different pairs of arguments (rename, renameat, etc).
-> > 
-> >   - Beautify various syscalls using this new infrastructure, and also add code
-> >     that looks for syscalls with BPF augmenters, such as "open", and then reuse
-> >     it with syscalls not yet having a specific augmenter, but that copies the
-> >     same argument with the same type, say "statfs" can initially reuse "open",
-> >     beautifier, as both have as its first arg a "const char *".
-> > 
-> >   - Do not using fd->pathname beautifier when the 'close' syscall isn't enabled,
-> >     as we can't invalidate that mapping.
-> > 
-> > core:
-> > 
-> >   Jiri Olsa:
-> > 
-> >   - Introduce tools/perf/lib/, that eventually will move to tools/lib/perf/, to
-> >     allow other tools to use the abstractions and code perf uses to set up
-> >     the perf ring buffer and set up the many possible combinations in allowed
-> >     by the kernel, starting with 'struct perf_evsel' and 'struct perf_evlist'.
-> > 
-> > perf vendor events:
-> > 
-> >   Michael Petlan:
-> > 
-> >   - Add missing event description to power9 event definitions.
-> > 
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > ----------------------------------------------------------------
-> > Arnaldo Carvalho de Melo (27):
-> >       perf include bpf: Add bpf_tail_call() prototype
-> >       perf bpf: Do not attach a BPF prog to a tracepoint if its name starts with !
-> >       perf evsel: Store backpointer to attached bpf_object
-> >       perf trace: Add pointer to BPF object containing __augmented_syscalls__
-> >       perf trace: Look up maps just on the __augmented_syscalls__ BPF object
-> >       perf trace: Order -e syscalls table
-> >       perf trace: Add BPF handler for unaugmented syscalls
-> >       perf trace: Allow specifying the bpf prog to augment specific syscalls
-> >       perf trace: Put the per-syscall entry/exit prog_array BPF map infrastructure in place
-> >       perf trace: Handle raw_syscalls:sys_enter just like the BPF_OUTPUT augmented event
-> >       perf augmented_raw_syscalls: Add handler for "openat"
-> >       perf augmented_raw_syscalls: Switch to using BPF_MAP_TYPE_PROG_ARRAY
-> >       perf augmented_raw_syscalls: Support copying two string syscall args
-> >       perf trace: Look for default name for entries in the syscalls prog array
-> >       perf augmented_raw_syscalls: Rename augmented_args_filename to augmented_args_payload
-> >       perf augmented_raw_syscalls: Augment sockaddr arg in 'connect'
-> >       perf trace beauty: Make connect's addrlen be printed as an int, not hex
-> >       perf trace beauty: Disable fd->pathname when close() not enabled
-> >       perf trace beauty: Do not try to use the fd->pathname beautifier for bind/connect fd arg
-> >       perf trace beauty: Beautify 'sendto's sockaddr arg
-> >       perf trace beauty: Beautify bind's sockaddr arg
-> >       perf trace beauty: Add BPF augmenter for the 'rename' syscall
-> >       perf trace: Forward error codes when trying to read syscall info
-> >       perf trace: Mark syscall ids that are not allocated to avoid unnecessary error messages
-> >       perf trace: Preallocate the syscall table
-> >       perf trace: Reuse BPF augmenters from syscalls with similar args signature
-> >       perf trace: Add "sendfile64" alias to the "sendfile" syscall
-> > 
-> > Jiri Olsa (79):
-> >       perf stat: Move loaded out of struct perf_counts_values
-> >       perf cpu_map: Rename struct cpu_map to struct perf_cpu_map
-> >       perf tools: Rename struct thread_map to struct perf_thread_map
-> >       perf evsel: Rename struct perf_evsel to struct evsel
-> >       perf evlist: Rename struct perf_evlist to struct evlist
-> >       perf evsel: Rename perf_evsel__init() to evsel__init()
-> >       perf evlist: Rename perf_evlist__init() to evlist__init()
-> >       perf evlist: Rename perf_evlist__new() to evlist__new()
-> >       perf evlist: Rename perf_evlist__delete() to evlist__delete()
-> >       perf evsel: Rename perf_evsel__delete() to evsel__delete()
-> >       perf evsel: Rename perf_evsel__new() to evsel__new()
-> >       perf evlist: Rename perf_evlist__add() to evlist__add()
-> >       perf evlist: Rename perf_evlist__remove() to evlist__remove()
-> >       perf evsel: Rename perf_evsel__open() to evsel__open()
-> >       perf evsel: Rename perf_evsel__enable() to evsel__enable()
-> >       perf evsel: Rename perf_evsel__disable() to evsel__disable()
-> >       perf evsel: Rename perf_evsel__apply_filter() to evsel__apply_filter()
-> >       perf evsel: Rename perf_evsel__cpus() to evsel__cpus()
-> >       perf evlist: Rename perf_evlist__open() to evlist__open()
-> >       perf evlist: Rename perf_evlist__close() to evlist__close()
-> >       perf evlist: Rename perf_evlist__enable() to evlist__enable()
-> >       perf evlist: Rename perf_evlist__disable() to evlist__disable()
-> >       libperf: Make libperf.a part of the perf build
-> >       libperf: Add build version support
-> >       libperf: Add libperf to the python.so build
-> >       libperf: Add perf/core.h header
-> >       libperf: Add debug output support
-> >       libperf: Add perf_cpu_map struct
-> >       libperf: Add perf_cpu_map__dummy_new() function
-> >       libperf: Add perf_cpu_map__get()/perf_cpu_map__put()
-> >       libperf: Add perf_thread_map struct
-> >       libperf: Add perf_thread_map__new_dummy() function
-> >       libperf: Add perf_thread_map__get()/perf_thread_map__put()
-> >       libperf: Add perf_evlist and perf_evsel structs
-> >       libperf: Include perf_evsel in evsel object
-> >       libperf: Include perf_evlist in evlist object
-> >       libperf: Add perf_evsel__init function
-> >       libperf: Add perf_evlist__init() function
-> >       libperf: Add perf_evlist__add() function
-> >       libperf: Add perf_evlist__remove() function
-> >       libperf: Add nr_entries to struct perf_evlist
-> >       libperf: Move perf_event_attr field from perf's evsel to libperf's perf_evsel
-> >       libperf: Add perf_cpu_map__new()/perf_cpu_map__read() functions
-> >       libperf: Move zalloc.o into libperf
-> >       libperf: Add perf_evlist__new() function
-> >       libperf: Add perf_evsel__new() function
-> >       libperf: Add perf_evlist__for_each_evsel() iterator
-> >       libperf: Add perf_evlist__delete() function
-> >       libperf: Add perf_evsel__delete() function
-> >       libperf: Add cpus to struct perf_evsel
-> >       libperf: Add own_cpus to struct perf_evsel
-> >       libperf: Add threads to struct perf_evsel
-> >       libperf: Add has_user_cpus to struct perf_evlist
-> >       libperf: Add cpus to struct perf_evlist
-> >       libperf: Add threads to struct perf_evlist
-> >       libperf: Add perf_evlist__set_maps() function
-> >       libperf: Adopt xyarray class from perf
-> >       libperf: Move fd array from perf's evsel to lobperf's perf_evsel class
-> >       libperf: Move nr_members from perf's evsel to libperf's perf_evsel
-> >       libperf: Adopt the readn()/writen() functions from tools/perf
-> >       libperf: Adopt perf_evsel__alloc_fd() function from tools/perf
-> >       libperf: Adopt simplified perf_evsel__open() function from tools/perf
-> >       libperf: Adopt simplified perf_evsel__close() function from tools/perf
-> >       libperf: Adopt perf_evsel__read() function from tools/perf
-> >       libperf: Adopt perf_evsel__enable()/disable()/apply_filter() functions
-> >       libperf: Add perf_cpu_map__for_each_cpu() macro
-> >       libperf: Add perf_evsel__cpus()/threads() functions
-> >       libperf: Adopt simplified perf_evlist__open()/close() functions from tools/perf
-> >       libperf: Adopt perf_evlist__enable()/disable() functions from perf
-> >       libperf: Add perf_evsel__attr() function
-> >       libperf: Add install targets
-> >       libperf: Add tests support
-> >       libperf: Add perf_cpu_map test
-> >       libperf: Add perf_thread_map test
-> >       libperf: Add perf_evlist test
-> >       libperf: Add perf_evsel tests
-> >       libperf: Add perf_evlist__enable/disable test
-> >       libperf: Add perf_evsel__enable/disable test
-> >       libperf: Initial documentation
-> > 
-> > Michael Petlan (1):
-> >       perf vendor events power9: Added missing event descriptions
-> > 
-> >  tools/perf/Makefile.config                         |    1 +
-> >  tools/perf/Makefile.perf                           |   31 +-
-> >  tools/perf/arch/arm/util/auxtrace.c                |    8 +-
-> >  tools/perf/arch/arm/util/cs-etm.c                  |   82 +-
-> >  tools/perf/arch/arm64/util/arm-spe.c               |   24 +-
-> >  tools/perf/arch/arm64/util/header.c                |    6 +-
-> >  tools/perf/arch/powerpc/util/kvm-stat.c            |   12 +-
-> >  tools/perf/arch/s390/util/auxtrace.c               |   12 +-
-> >  tools/perf/arch/s390/util/kvm-stat.c               |    8 +-
-> >  tools/perf/arch/x86/tests/intel-cqm.c              |    8 +-
-> >  tools/perf/arch/x86/tests/perf-time-to-tsc.c       |   30 +-
-> >  tools/perf/arch/x86/util/auxtrace.c                |   10 +-
-> >  tools/perf/arch/x86/util/intel-bts.c               |   38 +-
-> >  tools/perf/arch/x86/util/intel-pt.c                |   82 +-
-> >  tools/perf/arch/x86/util/kvm-stat.c                |   12 +-
-> >  tools/perf/bench/epoll-ctl.c                       |    7 +-
-> >  tools/perf/bench/epoll-wait.c                      |    7 +-
-> >  tools/perf/bench/futex-hash.c                      |    5 +-
-> >  tools/perf/bench/futex-lock-pi.c                   |    7 +-
-> >  tools/perf/bench/futex-requeue.c                   |    7 +-
-> >  tools/perf/bench/futex-wake-parallel.c             |    6 +-
-> >  tools/perf/bench/futex-wake.c                      |    7 +-
-> >  tools/perf/builtin-annotate.c                      |   16 +-
-> >  tools/perf/builtin-c2c.c                           |   10 +-
-> >  tools/perf/builtin-diff.c                          |   20 +-
-> >  tools/perf/builtin-evlist.c                        |    4 +-
-> >  tools/perf/builtin-ftrace.c                        |   18 +-
-> >  tools/perf/builtin-inject.c                        |   60 +-
-> >  tools/perf/builtin-kmem.c                          |   24 +-
-> >  tools/perf/builtin-kvm.c                           |   46 +-
-> >  tools/perf/builtin-lock.c                          |   30 +-
-> >  tools/perf/builtin-mem.c                           |    2 +-
-> >  tools/perf/builtin-record.c                        |   50 +-
-> >  tools/perf/builtin-report.c                        |   32 +-
-> >  tools/perf/builtin-sched.c                         |   96 +-
-> >  tools/perf/builtin-script.c                        |  167 +--
-> >  tools/perf/builtin-stat.c                          |  135 +--
-> >  tools/perf/builtin-timechart.c                     |   46 +-
-> >  tools/perf/builtin-top.c                           |   71 +-
-> >  tools/perf/builtin-trace.c                         |  619 +++++++---
-> >  tools/perf/examples/bpf/augmented_raw_syscalls.c   |  284 +++--
-> >  tools/perf/include/bpf/bpf.h                       |    2 +
-> >  tools/perf/lib/Build                               |   12 +
-> >  tools/perf/lib/Documentation/Makefile              |    7 +
-> >  tools/perf/lib/Documentation/man/libperf.rst       |  100 ++
-> >  tools/perf/lib/Documentation/tutorial/tutorial.rst |  123 ++
-> >  tools/perf/lib/Makefile                            |  158 +++
-> >  tools/perf/lib/core.c                              |   34 +
-> >  tools/perf/lib/cpumap.c                            |  239 ++++
-> >  tools/perf/lib/evlist.c                            |  159 +++
-> >  tools/perf/lib/evsel.c                             |  232 ++++
-> >  tools/perf/lib/include/internal/cpumap.h           |   17 +
-> >  tools/perf/lib/include/internal/evlist.h           |   50 +
-> >  tools/perf/lib/include/internal/evsel.h            |   29 +
-> >  tools/perf/lib/include/internal/lib.h              |   10 +
-> >  tools/perf/lib/include/internal/tests.h            |   19 +
-> >  tools/perf/lib/include/internal/threadmap.h        |   23 +
-> >  .../perf/{util => lib/include/internal}/xyarray.h  |    6 +-
-> >  tools/perf/lib/include/perf/core.h                 |   22 +
-> >  tools/perf/lib/include/perf/cpumap.h               |   23 +
-> >  tools/perf/lib/include/perf/evlist.h               |   35 +
-> >  tools/perf/lib/include/perf/evsel.h                |   39 +
-> >  tools/perf/lib/include/perf/threadmap.h            |   18 +
-> >  tools/perf/lib/internal.h                          |   18 +
-> >  tools/perf/lib/lib.c                               |   46 +
-> >  tools/perf/lib/libperf.map                         |   40 +
-> >  tools/perf/lib/libperf.pc.template                 |   11 +
-> >  tools/perf/lib/tests/Makefile                      |   38 +
-> >  tools/perf/lib/tests/test-cpumap.c                 |   21 +
-> >  tools/perf/lib/tests/test-evlist.c                 |  186 +++
-> >  tools/perf/lib/tests/test-evsel.c                  |  125 ++
-> >  tools/perf/lib/tests/test-threadmap.c              |   21 +
-> >  tools/perf/lib/threadmap.c                         |   81 ++
-> >  tools/perf/lib/xyarray.c                           |   33 +
-> >  .../pmu-events/arch/powerpc/power9/memory.json     |    2 +-
-> >  .../perf/pmu-events/arch/powerpc/power9/other.json |    8 +-
-> >  tools/perf/tests/backward-ring-buffer.c            |   18 +-
-> >  tools/perf/tests/bitmap.c                          |    5 +-
-> >  tools/perf/tests/bpf.c                             |   12 +-
-> >  tools/perf/tests/code-reading.c                    |   50 +-
-> >  tools/perf/tests/cpumap.c                          |   21 +-
-> >  tools/perf/tests/event-times.c                     |   81 +-
-> >  tools/perf/tests/event_update.c                    |   13 +-
-> >  tools/perf/tests/evsel-roundtrip-name.c            |   12 +-
-> >  tools/perf/tests/evsel-tp-sched.c                  |    8 +-
-> >  tools/perf/tests/hists_cumulate.c                  |   18 +-
-> >  tools/perf/tests/hists_filter.c                    |   10 +-
-> >  tools/perf/tests/hists_link.c                      |   10 +-
-> >  tools/perf/tests/hists_output.c                    |   20 +-
-> >  tools/perf/tests/keep-tracking.c                   |   44 +-
-> >  tools/perf/tests/mem2node.c                        |    5 +-
-> >  tools/perf/tests/mmap-basic.c                      |   28 +-
-> >  tools/perf/tests/mmap-thread-lookup.c              |    4 +-
-> >  tools/perf/tests/openat-syscall-all-cpus.c         |   18 +-
-> >  tools/perf/tests/openat-syscall-tp-fields.c        |   14 +-
-> >  tools/perf/tests/openat-syscall.c                  |   10 +-
-> >  tools/perf/tests/parse-events.c                    | 1220 ++++++++++----------
-> >  tools/perf/tests/parse-no-sample-id-all.c          |    6 +-
-> >  tools/perf/tests/perf-record.c                     |   10 +-
-> >  tools/perf/tests/sample-parsing.c                  |   14 +-
-> >  tools/perf/tests/sw-clock.c                        |   33 +-
-> >  tools/perf/tests/switch-tracking.c                 |   64 +-
-> >  tools/perf/tests/task-exit.c                       |   35 +-
-> >  tools/perf/tests/thread-map.c                      |   28 +-
-> >  tools/perf/tests/time-utils-test.c                 |    2 +-
-> >  tools/perf/tests/topology.c                        |    9 +-
-> >  tools/perf/ui/browsers/annotate.c                  |   16 +-
-> >  tools/perf/ui/browsers/hists.c                     |   54 +-
-> >  tools/perf/ui/browsers/res_sample.c                |    4 +-
-> >  tools/perf/ui/browsers/scripts.c                   |    6 +-
-> >  tools/perf/ui/gtk/annotate.c                       |    8 +-
-> >  tools/perf/ui/gtk/gtk.h                            |    8 +-
-> >  tools/perf/ui/gtk/hists.c                          |    6 +-
-> >  tools/perf/ui/hist.c                               |   16 +-
-> >  tools/perf/util/Build                              |    6 -
-> >  tools/perf/util/annotate.c                         |   42 +-
-> >  tools/perf/util/annotate.h                         |   28 +-
-> >  tools/perf/util/auxtrace.c                         |   28 +-
-> >  tools/perf/util/auxtrace.h                         |   24 +-
-> >  tools/perf/util/bpf-event.c                        |    2 +-
-> >  tools/perf/util/bpf-event.h                        |    4 +-
-> >  tools/perf/util/bpf-loader.c                       |   38 +-
-> >  tools/perf/util/bpf-loader.h                       |   30 +-
-> >  tools/perf/util/build-id.c                         |    2 +-
-> >  tools/perf/util/build-id.h                         |    2 +-
-> >  tools/perf/util/callchain.c                        |    2 +-
-> >  tools/perf/util/callchain.h                        |    2 +-
-> >  tools/perf/util/cgroup.c                           |   22 +-
-> >  tools/perf/util/cgroup.h                           |    6 +-
-> >  tools/perf/util/counts.c                           |   17 +-
-> >  tools/perf/util/counts.h                           |   34 +-
-> >  tools/perf/util/cpumap.c                           |  264 +----
-> >  tools/perf/util/cpumap.h                           |   54 +-
-> >  tools/perf/util/cputopo.c                          |   13 +-
-> >  tools/perf/util/cs-etm.c                           |   28 +-
-> >  tools/perf/util/data-convert-bt.c                  |   38 +-
-> >  tools/perf/util/db-export.c                        |   10 +-
-> >  tools/perf/util/db-export.h                        |   10 +-
-> >  tools/perf/util/env.c                              |    2 +-
-> >  tools/perf/util/env.h                              |    2 +-
-> >  tools/perf/util/event.c                            |   30 +-
-> >  tools/perf/util/event.h                            |   14 +-
-> >  tools/perf/util/evlist.c                           |  607 +++++-----
-> >  tools/perf/util/evlist.h                           |  215 ++--
-> >  tools/perf/util/evsel.c                            |  497 ++++----
-> >  tools/perf/util/evsel.h                            |  197 ++--
-> >  tools/perf/util/evsel_fprintf.c                    |   16 +-
-> >  tools/perf/util/header.c                           |  225 ++--
-> >  tools/perf/util/header.h                           |   24 +-
-> >  tools/perf/util/hist.c                             |   32 +-
-> >  tools/perf/util/hist.h                             |   38 +-
-> >  tools/perf/util/intel-bts.c                        |   22 +-
-> >  tools/perf/util/intel-pt.c                         |   94 +-
-> >  tools/perf/util/jitdump.c                          |    8 +-
-> >  tools/perf/util/kvm-stat.h                         |   22 +-
-> >  tools/perf/util/machine.c                          |   12 +-
-> >  tools/perf/util/machine.h                          |    8 +-
-> >  tools/perf/util/map.h                              |    2 +-
-> >  tools/perf/util/metricgroup.c                      |   26 +-
-> >  tools/perf/util/metricgroup.h                      |    6 +-
-> >  tools/perf/util/mmap.c                             |    4 +-
-> >  tools/perf/util/parse-events.c                     |  155 +--
-> >  tools/perf/util/parse-events.h                     |    8 +-
-> >  tools/perf/util/pmu.c                              |   15 +-
-> >  tools/perf/util/pmu.h                              |    2 +-
-> >  tools/perf/util/python-ext-sources                 |    2 -
-> >  tools/perf/util/python.c                           |   73 +-
-> >  tools/perf/util/record.c                           |   73 +-
-> >  tools/perf/util/s390-cpumsf.c                      |    4 +-
-> >  tools/perf/util/s390-sample-raw.c                  |    6 +-
-> >  tools/perf/util/sample-raw.c                       |    2 +-
-> >  tools/perf/util/sample-raw.h                       |    6 +-
-> >  .../perf/util/scripting-engines/trace-event-perl.c |   14 +-
-> >  .../util/scripting-engines/trace-event-python.c    |   40 +-
-> >  tools/perf/util/session.c                          |   81 +-
-> >  tools/perf/util/session.h                          |   12 +-
-> >  tools/perf/util/setup.py                           |    3 +-
-> >  tools/perf/util/sort.c                             |   60 +-
-> >  tools/perf/util/sort.h                             |    6 +-
-> >  tools/perf/util/stat-display.c                     |  112 +-
-> >  tools/perf/util/stat-shadow.c                      |   70 +-
-> >  tools/perf/util/stat.c                             |   64 +-
-> >  tools/perf/util/stat.h                             |   35 +-
-> >  tools/perf/util/svghelper.c                        |    7 +-
-> >  tools/perf/util/syscalltbl.c                       |    1 +
-> >  tools/perf/util/syscalltbl.h                       |    1 +
-> >  tools/perf/util/thread_map.c                       |  131 +--
-> >  tools/perf/util/thread_map.h                       |   58 +-
-> >  tools/perf/util/tool.h                             |    8 +-
-> >  tools/perf/util/top.c                              |   12 +-
-> >  tools/perf/util/top.h                              |    8 +-
-> >  tools/perf/util/trace-event-info.c                 |   14 +-
-> >  tools/perf/util/trace-event-scripting.c            |    2 +-
-> >  tools/perf/util/trace-event.h                      |    4 +-
-> >  tools/perf/util/util.c                             |   40 -
-> >  tools/perf/util/util.h                             |    4 +-
-> >  196 files changed, 5958 insertions(+), 4051 deletions(-)
-> >  create mode 100644 tools/perf/lib/Build
-> >  create mode 100644 tools/perf/lib/Documentation/Makefile
-> >  create mode 100644 tools/perf/lib/Documentation/man/libperf.rst
-> >  create mode 100644 tools/perf/lib/Documentation/tutorial/tutorial.rst
-> >  create mode 100644 tools/perf/lib/Makefile
-> >  create mode 100644 tools/perf/lib/core.c
-> >  create mode 100644 tools/perf/lib/cpumap.c
-> >  create mode 100644 tools/perf/lib/evlist.c
-> >  create mode 100644 tools/perf/lib/evsel.c
-> >  create mode 100644 tools/perf/lib/include/internal/cpumap.h
-> >  create mode 100644 tools/perf/lib/include/internal/evlist.h
-> >  create mode 100644 tools/perf/lib/include/internal/evsel.h
-> >  create mode 100644 tools/perf/lib/include/internal/lib.h
-> >  create mode 100644 tools/perf/lib/include/internal/tests.h
-> >  create mode 100644 tools/perf/lib/include/internal/threadmap.h
-> >  rename tools/perf/{util => lib/include/internal}/xyarray.h (84%)
-> >  create mode 100644 tools/perf/lib/include/perf/core.h
-> >  create mode 100644 tools/perf/lib/include/perf/cpumap.h
-> >  create mode 100644 tools/perf/lib/include/perf/evlist.h
-> >  create mode 100644 tools/perf/lib/include/perf/evsel.h
-> >  create mode 100644 tools/perf/lib/include/perf/threadmap.h
-> >  create mode 100644 tools/perf/lib/internal.h
-> >  create mode 100644 tools/perf/lib/lib.c
-> >  create mode 100644 tools/perf/lib/libperf.map
-> >  create mode 100644 tools/perf/lib/libperf.pc.template
-> >  create mode 100644 tools/perf/lib/tests/Makefile
-> >  create mode 100644 tools/perf/lib/tests/test-cpumap.c
-> >  create mode 100644 tools/perf/lib/tests/test-evlist.c
-> >  create mode 100644 tools/perf/lib/tests/test-evsel.c
-> >  create mode 100644 tools/perf/lib/tests/test-threadmap.c
-> >  create mode 100644 tools/perf/lib/threadmap.c
-> >  create mode 100644 tools/perf/lib/xyarray.c
-> 
-> Pulled, thanks a lot Arnaldo!
+This also fixes a boot regression I have observed on Tegra210. So ...
 
-Having to scroll through 400+ lines of useless information to find a single
-line of content.
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-Thanks,
+Cheers
+Jon
 
-	tglx
+--=20
+nvpublic
