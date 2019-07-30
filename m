@@ -2,97 +2,168 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2303C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD89CC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F48720659
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XMg6rveV"
+	by mail.kernel.org (Postfix) with ESMTP id 75E4520659
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfG3UBM (ORCPT
+        id S1727393AbfG3UBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:01:12 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39508 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbfG3UBI (ORCPT
+        Tue, 30 Jul 2019 16:01:30 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:44405 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbfG3UB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:01:08 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6UJwRc7003782;
-        Tue, 30 Jul 2019 20:00:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=I7g93oDAJADygq6HSUWo+aeYES9vSI9AEdt1OGiyNz8=;
- b=XMg6rveVIGSKpDg4eBg4bBESeRtboHPucj9F2SYq6R2ALT81L2o0uSab+zMSEXDwvYqy
- xnAwa763jDgYu9X/2Oz5GyjC/iRfxrp+6z8zA5zkuAwvqTpc9Ty7H3FXlsH9kQcS4gIJ
- xv0ficoyJOcFiKaeThUoYpNMk6SFP5HT+Bq9c+qWh/ETtmyRqv24yNSbL1BKSiRQw1ws
- MsFXXISiLPgwpo3TkN7YToBMGbECGJztcSjwRAYWiMTMq87cYM0goin5C3ExAIR1wqz1
- PRxZwfK+HucTveSFZa0hgWYpSD97L4bU0tQV1aiL3KfGLns0uME+DncUgqpoiEirIfCQ jg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2u0e1trw67-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jul 2019 20:00:42 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6UJwOFO051471;
-        Tue, 30 Jul 2019 20:00:41 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2u2jp4b17d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jul 2019 20:00:41 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6UK0d5B021969;
-        Tue, 30 Jul 2019 20:00:40 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 30 Jul 2019 13:00:39 -0700
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Michael Cyr <mikecyr@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] scsi: ibmvscsi_tgt: Mark expected switch fall-throughs
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190729112902.GA3768@embeddedor>
-Date:   Tue, 30 Jul 2019 16:00:35 -0400
-In-Reply-To: <20190729112902.GA3768@embeddedor> (Gustavo A. R. Silva's message
-        of "Mon, 29 Jul 2019 06:29:02 -0500")
-Message-ID: <yq1wofzl2cc.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 30 Jul 2019 16:01:29 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MzR0i-1iEV4S49z6-00vL3y; Tue, 30 Jul 2019 22:01:21 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v5 19/29] compat_ioctl: move hci_sock handlers into driver
+Date:   Tue, 30 Jul 2019 21:55:35 +0200
+Message-Id: <20190730195819.901457-7-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190730195819.901457-1-arnd@arndb.de>
+References: <20190730192552.4014288-1-arnd@arndb.de>
+ <20190730195819.901457-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=807
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907300203
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=875 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907300203
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:MRkTCynjx8ZKieEaweTLO5hE+mPqZVxegMLXPvi77ZFI1txQjJ9
+ mTrIRI4m4fTqEgGSmmFN3Usqtf2R5hhD0UTDT/QRPC8IcYkJNc9RCybcAKzU9ok26pVCy5x
+ ntkofHM1zI0tSnU5pRTvXGNm9jz6ODVkgpTv3FlyEqRYcF0gPPf0Zg4bNFKh5M/3p95jW3c
+ NJpqqqWo8sTvCujeLhHJQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:imcKfvdmqYo=:DzN1SJA2kycqmDkWZRU/Nc
+ NsiVwWKpUTSbb/mjgweqnGJqA8PbLpXcIVI0DnYKLcstHKQqUM9bO1645MdEsaq35cznVPvnq
+ X9McomuGyhOeQ4PuSbktBrAlw0vSZNecfiZbb3tG7c3h22XpzdplbFOuxv3KhygMonfVWHRom
+ q/lMAAoIWhR0QRDN3FJ7HuxgNRTr7sSsYzWLch8LnunYDT7RAzT8SXZWWJJLACkpr027DVyBm
+ huvqteZ6Pd8c2x4Aggmq/hFTmsM3Zq9uPsl9lo935UhlkRild7uIT9VuPcWYPtlV2L+eoAnCS
+ Pnlb4AdR2HlsodyDTCQeCcjUgzEHDub1fnFtoonfOdpw5bf22CbPFFcrFmFO6jrDrYeNuxmva
+ ix3kaBzwtWdlwkm57P4mrdU6RkeO/B74i4gO1svQDK7My2+U8l3oD1c/ow7kpQyLk77k0i8PK
+ raIm0SZOwvPAT/xC4YctG+JWo6dvw1nCt4x+GcshvZNS0bvVb+U671bBLfumJqbGql+jqSWvQ
+ /7zT8QpcC5SMTxfJAGBChF6BIceVc3gKJCROeL+dXVKfyE9cBEhQZzVlSdphRCpuoFKPt8eLv
+ Td5m7QCdZ+W8eXpu6wquobqfUhHJ12/2yxsqKSKfFpO3/Ag/TBXOKTuHKnVHNpVkmEiFU+2Mc
+ lCLkOH5UiTCy359HjqQDgB2hX4PkesHavNc/hE3CnlZzRMAiUOuQi3br5MXWsqjDFmO5MYGw7
+ 47iC//C6Eal1Nx6VmsgdHZTfqrEtec8LChFJ6w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+All these ioctl commands are compatible, so we can handle
+them with a trivial wrapper in hci_sock.c and remove
+the listing in fs/compat_ioctl.c.
 
-Gustavo,
+A few of the commands pass integer arguments instead of
+pointers, so for correctness skip the compat_ptr() conversion
+here.
 
-> Mark switch cases where we are expecting to fall through.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/compat_ioctl.c        | 24 ------------------------
+ net/bluetooth/hci_sock.c | 21 ++++++++++++++++++++-
+ 2 files changed, 20 insertions(+), 25 deletions(-)
 
-Applied to 5.4/scsi-queue, thanks!
-
+diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
+index 8dbef92b10fd..9302157d1471 100644
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -40,9 +40,6 @@
+ 
+ #include "internal.h"
+ 
+-#include <net/bluetooth/bluetooth.h>
+-#include <net/bluetooth/hci_sock.h>
+-
+ #ifdef CONFIG_BLOCK
+ #include <linux/cdrom.h>
+ #include <linux/fd.h>
+@@ -646,27 +643,6 @@ COMPATIBLE_IOCTL(RNDADDENTROPY)
+ COMPATIBLE_IOCTL(RNDZAPENTCNT)
+ COMPATIBLE_IOCTL(RNDCLEARPOOL)
+ /* Bluetooth */
+-COMPATIBLE_IOCTL(HCIDEVUP)
+-COMPATIBLE_IOCTL(HCIDEVDOWN)
+-COMPATIBLE_IOCTL(HCIDEVRESET)
+-COMPATIBLE_IOCTL(HCIDEVRESTAT)
+-COMPATIBLE_IOCTL(HCIGETDEVLIST)
+-COMPATIBLE_IOCTL(HCIGETDEVINFO)
+-COMPATIBLE_IOCTL(HCIGETCONNLIST)
+-COMPATIBLE_IOCTL(HCIGETCONNINFO)
+-COMPATIBLE_IOCTL(HCIGETAUTHINFO)
+-COMPATIBLE_IOCTL(HCISETRAW)
+-COMPATIBLE_IOCTL(HCISETSCAN)
+-COMPATIBLE_IOCTL(HCISETAUTH)
+-COMPATIBLE_IOCTL(HCISETENCRYPT)
+-COMPATIBLE_IOCTL(HCISETPTYPE)
+-COMPATIBLE_IOCTL(HCISETLINKPOL)
+-COMPATIBLE_IOCTL(HCISETLINKMODE)
+-COMPATIBLE_IOCTL(HCISETACLMTU)
+-COMPATIBLE_IOCTL(HCISETSCOMTU)
+-COMPATIBLE_IOCTL(HCIBLOCKADDR)
+-COMPATIBLE_IOCTL(HCIUNBLOCKADDR)
+-COMPATIBLE_IOCTL(HCIINQUIRY)
+ COMPATIBLE_IOCTL(HCIUARTSETPROTO)
+ COMPATIBLE_IOCTL(HCIUARTGETPROTO)
+ COMPATIBLE_IOCTL(HCIUARTGETDEVICE)
+diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
+index d32077b28433..5d0ed28c0d3a 100644
+--- a/net/bluetooth/hci_sock.c
++++ b/net/bluetooth/hci_sock.c
+@@ -23,7 +23,7 @@
+ */
+ 
+ /* Bluetooth HCI sockets. */
+-
++#include <linux/compat.h>
+ #include <linux/export.h>
+ #include <linux/utsname.h>
+ #include <linux/sched.h>
+@@ -1054,6 +1054,22 @@ static int hci_sock_ioctl(struct socket *sock, unsigned int cmd,
+ 	return err;
+ }
+ 
++#ifdef CONFIG_COMPAT
++static int hci_sock_compat_ioctl(struct socket *sock, unsigned int cmd,
++				 unsigned long arg)
++{
++	switch (cmd) {
++	case HCIDEVUP:
++	case HCIDEVDOWN:
++	case HCIDEVRESET:
++	case HCIDEVRESTAT:
++		return hci_sock_ioctl(sock, cmd, arg);
++	}
++
++	return hci_sock_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
+ static int hci_sock_bind(struct socket *sock, struct sockaddr *addr,
+ 			 int addr_len)
+ {
+@@ -1974,6 +1990,9 @@ static const struct proto_ops hci_sock_ops = {
+ 	.sendmsg	= hci_sock_sendmsg,
+ 	.recvmsg	= hci_sock_recvmsg,
+ 	.ioctl		= hci_sock_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= hci_sock_compat_ioctl,
++#endif
+ 	.poll		= datagram_poll,
+ 	.listen		= sock_no_listen,
+ 	.shutdown	= sock_no_shutdown,
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.20.0
+
