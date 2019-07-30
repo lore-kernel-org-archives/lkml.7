@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EBEC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22988C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE6420578
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E999320578
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455873;
-	bh=07kmdvtAjq+P6lKb4NfPv1qRZVvaGFBnnOj5BVi+pjY=;
+	s=default; t=1564455878;
+	bh=7xKWf7f7XU6np8Pt92Tf+FJQxVCbkw4YzuYP8oLd2ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rm3xhLuYqUfM7qXLUGHIDPuwbPUkMQjV2C6rRLYnbyHPuTssmsX2PgD2/LTE5BD/B
-	 C3udX5oVB8kK8bDUIrHKNhBq7vQv6hsPKNU+P6uHBW6Vk53rsWzoumLPqqMfIeuHpq
-	 hOEfRvmLpKGHlOWYuibQfCTvRZOMDLH2AKyrYFqM=
+	b=XMieE9nT6cmJqzSrX3sG2uuGyNLWIy9UDdaySn48FXT3KCof6QhWaIbPExrq77GPL
+	 mGVtSQldq/3OopOn75uCJLZfbTirHvde52p/ueGhI7f/IvbCFyMfoIo/hV1Jrvv8xd
+	 8cbp85UJv9odRG6CGFW3lpuc1muOo/ukG1+XSY+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732881AbfG3DEb (ORCPT
+        id S1732886AbfG3DEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:04:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46262 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 23:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731576AbfG3C4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:56:39 -0400
+        id S1731504AbfG3C4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 22:56:30 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0483E2070B;
-        Tue, 30 Jul 2019 02:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15E8E21849;
+        Tue, 30 Jul 2019 02:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455398;
-        bh=07kmdvtAjq+P6lKb4NfPv1qRZVvaGFBnnOj5BVi+pjY=;
+        s=default; t=1564455389;
+        bh=7xKWf7f7XU6np8Pt92Tf+FJQxVCbkw4YzuYP8oLd2ys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKZvB4aicWUIdWoEx1IbRjnBML3L3rYx5y6DYFYVg0kA5ZJkdYCju2/pJ/lQFjt88
-         /CAtOnTunStK9V56Xat5R7+ARYn0woS4SPDYL5D8ywZYQFcl98t4Uwjrmf2Hk2fp+f
-         mhu1oXqaQJXz1w4/7ajzZUD3jcI9l1C/IcDvHwoI=
+        b=gIK1R+SRONsBW73JKCAzMiAHuJjFcRhQmnn2Bju8t1AFCQ4HntJHUog+TpWEwt4Zg
+         rDm6Ert5ZG0dxq6+nJTqzIdfi0Mf5YegFUC+XVOjb9mZfeiaPMK5FNPQPQbMoz6EAR
+         +5ED7p2OzUKJvX9SlQIBLjchWmP+8wmqRRfISLaE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 006/107] perf trace: Order -e syscalls table
-Date:   Mon, 29 Jul 2019 23:54:29 -0300
-Message-Id: <20190730025610.22603-7-acme@kernel.org>
+Subject: [PATCH 003/107] perf evsel: Store backpointer to attached bpf_object
+Date:   Mon, 29 Jul 2019 23:54:26 -0300
+Message-Id: <20190730025610.22603-4-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
@@ -65,46 +65,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The ev_qualifier is an array with the syscall ids passed via -e on the
-command line, sort it as we'll search it when setting up the
-BPF_MAP_TYPE_PROG_ARRAY.
+We may want to get to this bpf_object, to search for other BPF programs,
+etc.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-c8hprylp3ai6e0z9burn2r3s@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-3y8hrb6lszjfi23vjlic3cib@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/util/bpf-loader.c   | 4 ++--
+ tools/perf/util/bpf-loader.h   | 2 +-
+ tools/perf/util/evsel.c        | 1 +
+ tools/perf/util/evsel.h        | 3 +++
+ tools/perf/util/parse-events.c | 3 ++-
+ 5 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index bfd739a321d1..9bd5ecd6a8dd 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1528,6 +1528,13 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	return syscall__set_arg_fmts(sc);
- }
+diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+index c61974a50aa5..6d0dfb777a79 100644
+--- a/tools/perf/util/bpf-loader.c
++++ b/tools/perf/util/bpf-loader.c
+@@ -763,7 +763,7 @@ int bpf__foreach_event(struct bpf_object *obj,
  
-+static int intcmp(const void *a, const void *b)
-+{
-+	const int *one = a, *another = b;
+ 		if (priv->is_tp) {
+ 			fd = bpf_program__fd(prog);
+-			err = (*func)(priv->sys_name, priv->evt_name, fd, arg);
++			err = (*func)(priv->sys_name, priv->evt_name, fd, obj, arg);
+ 			if (err) {
+ 				pr_debug("bpf: tracepoint call back failed, stop iterate\n");
+ 				return err;
+@@ -788,7 +788,7 @@ int bpf__foreach_event(struct bpf_object *obj,
+ 				return fd;
+ 			}
+ 
+-			err = (*func)(tev->group, tev->event, fd, arg);
++			err = (*func)(tev->group, tev->event, fd, obj, arg);
+ 			if (err) {
+ 				pr_debug("bpf: call back failed, stop iterate\n");
+ 				return err;
+diff --git a/tools/perf/util/bpf-loader.h b/tools/perf/util/bpf-loader.h
+index 3f46856e3330..8c3441a4b72c 100644
+--- a/tools/perf/util/bpf-loader.h
++++ b/tools/perf/util/bpf-loader.h
+@@ -46,7 +46,7 @@ struct parse_events_term;
+ #define PERF_BPF_PROBE_GROUP "perf_bpf_probe"
+ 
+ typedef int (*bpf_prog_iter_callback_t)(const char *group, const char *event,
+-					int fd, void *arg);
++					int fd, struct bpf_object *obj, void *arg);
+ 
+ #ifdef HAVE_LIBBPF_SUPPORT
+ struct bpf_object *bpf__prepare_load(const char *filename, bool source);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 52459dd5ad0c..7d1757a2ec46 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -234,6 +234,7 @@ void perf_evsel__init(struct perf_evsel *evsel,
+ 	evsel->scale	   = 1.0;
+ 	evsel->max_events  = ULONG_MAX;
+ 	evsel->evlist	   = NULL;
++	evsel->bpf_obj	   = NULL;
+ 	evsel->bpf_fd	   = -1;
+ 	INIT_LIST_HEAD(&evsel->node);
+ 	INIT_LIST_HEAD(&evsel->config_terms);
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index cad54e8ba522..b27935a6d36c 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -82,6 +82,8 @@ enum perf_tool_event {
+ 	PERF_TOOL_DURATION_TIME = 1,
+ };
+ 
++struct bpf_object;
 +
-+	return *one - *another;
-+}
-+
- static int trace__validate_ev_qualifier(struct trace *trace)
+ /** struct perf_evsel - event selector
+  *
+  * @evlist - evlist this evsel is in, if it is in one.
+@@ -152,6 +154,7 @@ struct perf_evsel {
+ 	char			*group_name;
+ 	bool			cmdline_group_boundary;
+ 	struct list_head	config_terms;
++	struct bpf_object	*bpf_obj;
+ 	int			bpf_fd;
+ 	bool			auto_merge_stats;
+ 	bool			merged_stat;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index fac6b32ef94a..0540303e5e97 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -630,7 +630,7 @@ struct __add_bpf_event_param {
+ 	struct list_head *head_config;
+ };
+ 
+-static int add_bpf_event(const char *group, const char *event, int fd,
++static int add_bpf_event(const char *group, const char *event, int fd, struct bpf_object *obj,
+ 			 void *_param)
  {
- 	int err = 0;
-@@ -1591,6 +1598,7 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+ 	LIST_HEAD(new_evsels);
+@@ -672,6 +672,7 @@ static int add_bpf_event(const char *group, const char *event, int fd,
+ 		pr_debug("adding %s:%s to %p\n",
+ 			 group, event, pos);
+ 		pos->bpf_fd = fd;
++		pos->bpf_obj = obj;
  	}
- 
- 	trace->ev_qualifier_ids.nr = nr_used;
-+	qsort(trace->ev_qualifier_ids.entries, nr_used, sizeof(int), intcmp);
- out:
- 	if (printed_invalid_prefix)
- 		pr_debug("\n");
+ 	list_splice(&new_evsels, list);
+ 	return 0;
 -- 
 2.21.0
 
