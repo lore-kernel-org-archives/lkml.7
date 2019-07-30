@@ -2,165 +2,128 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AB5C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EDBC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19751206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589CA206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BIzGLCaR"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="A4WdObgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387851AbfG3SEv (ORCPT
+        id S1729041AbfG3SFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:04:51 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55883 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387837AbfG3SEu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:04:50 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UI4gtT3324164
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:04:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UI4gtT3324164
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564509883;
-        bh=Q93UdOxBPaMehLIASygquktSIG3eYCvGYY8quCJsUZo=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=BIzGLCaRp8nKbCKtzDnB/sRbqyIxwrxj2AbBf2970GLpI9bx/swa7VDdRyvLHlyVX
-         V2NOKSA58c6WWqRCv3toYS+8VgA/RAOCo8b1lc3RC1lObVt6ib82UhXJhc02qs7wfh
-         Nv+v3TZf01k3VJ5+XIj1ciCq5n3OzEmhX6K8MPu6GlcwA5xVO4+uzjI6m12xGLB1X5
-         JOX5I4aOQhQX4dXhgUBE7dc0YipkTUQXYENhXljUoSqXtheHvv4PXbahoUCcD5NJtB
-         0SYLSQfqHOkmLlhcb06bE+GQ86l8QMiEuiNOezN5FaNZRd2W50bWtcd9Q46RJGlDB4
-         ZF/FFpwebku6w==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UI4g013324161;
-        Tue, 30 Jul 2019 11:04:42 -0700
-Date:   Tue, 30 Jul 2019 11:04:42 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-cku9mpcrcsqaiq0jepu86r68@git.kernel.org>
-Cc:     acme@redhat.com, mingo@kernel.org, hpa@zytor.com, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, adrian.hunter@intel.com,
-        linux-kernel@vger.kernel.org, lclaudio@redhat.com
-Reply-To: lclaudio@redhat.com, linux-kernel@vger.kernel.org,
-          adrian.hunter@intel.com, tglx@linutronix.de, hpa@zytor.com,
-          namhyung@kernel.org, jolsa@kernel.org, acme@redhat.com,
-          mingo@kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf trace: Mark syscall ids that are not allocated
- to avoid unnecessary error messages
-Git-Commit-ID: b8b1033fcaa091d82289698d7179e84e28cbd92a
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 14:05:00 -0400
+Received: from mail-eopbgr20048.outbound.protection.outlook.com ([40.107.2.48]:34689
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726050AbfG3SE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 14:04:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aECTEKaTJSF6htBUeivzdC2oAhbW4BzDDD39qSIj2qtLdclTEK38BdBx8R6gdXfGQ7LpaIfO6wAyfrpOVK8uIybAI6J7vG/R4XHEMvFde6Ag2/osaDJP3h5x6C7ydaqsYmp6qp+GC9eB6DCffhG8kmhNM+C8gfGY6vos1FD37yDaHPSrYN1SzVsggJtNIyFip9loP57E1Z9EdBlRja68RKoW4GHlYDjpp2Vj2tMyTSjIlLz7jua1AnVJg7a8n1R/doiQsCJ3T3g/bhkfUva/87U+s3TeKL83wAuTmsfmC65oNzbTrotPLo9GDs1AHxa/wXnpk+EzYgH2/IGq+ZCqnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zmMG7fy8EB9WOd2cuGypDJPWNOzA91LZ7osMb4Y8dGo=;
+ b=dSJPAihApcofDcIfhr+gvOvc+pPU+u4D9HG2atD9ST+SPRsmVdgzZVNnuWu/NMvLEaJTTdRn8kEuNrJTHDSpWS3jKT/ObTQGHb5rOsfaM+f8f0+FEPw22Uswi5D0xT1zWU6sO5MRY10z0mOPpA+24tsQd3KMDurwowtBjxGNNhvpYTm7UKnVXhuofaWtwMz0CzG+apcQfiPmY1BDqpWIAfWi/9LwBqYZDT73bkTCaPCL1Jsj8mtVXSclcj8H1T/tXF52YVyaNrbYAgwSr6DqjuSL5SDyWUSLMgv5o67FFvaOfStnHQw7IqoHXv5ueJCa0+SMK1C8eNdvUIBwptPrWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zmMG7fy8EB9WOd2cuGypDJPWNOzA91LZ7osMb4Y8dGo=;
+ b=A4WdObgldV4S0lnDWsj1RCt27Y2mlRvXlumO2qvJ/pZdfL4p0YJbBT/D/zBHHZHdl0CKsKTKo5Sv83+jXJ9ClS1rgpoFp3Qu7PdgmVsaM/Hq5XPnsFgdsuD3rxJdTeu/pBdjhgdN0K95EHiJYvKspFjkhSQJIa+57+u2jn8vzN0=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5728.eurprd05.prod.outlook.com (20.178.121.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.14; Tue, 30 Jul 2019 18:04:56 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
+ 18:04:56 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 13/13] mm: allow HMM_MIRROR on all architectures with MMU
+Thread-Topic: [PATCH 13/13] mm: allow HMM_MIRROR on all architectures with MMU
+Thread-Index: AQHVRpsJa23GemswhU+gJVFr5hDTJqbjdQwAgAAATwA=
+Date:   Tue, 30 Jul 2019 18:04:56 +0000
+Message-ID: <20190730180452.GS24038@mellanox.com>
+References: <20190730055203.28467-1-hch@lst.de>
+ <20190730055203.28467-14-hch@lst.de> <20190730180346.GR24038@mellanox.com>
+In-Reply-To: <20190730180346.GR24038@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTBPR01CA0033.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::46) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 03d84397-3d3b-4c11-fad7-08d715186dca
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5728;
+x-ms-traffictypediagnostic: VI1PR05MB5728:
+x-microsoft-antispam-prvs: <VI1PR05MB5728937C459D064314C0B32BCFDC0@VI1PR05MB5728.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0114FF88F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(376002)(346002)(396003)(199004)(189003)(6116002)(3846002)(68736007)(2616005)(71200400001)(71190400001)(2906002)(11346002)(14454004)(386003)(102836004)(26005)(446003)(486006)(256004)(305945005)(6506007)(5660300002)(476003)(52116002)(186003)(76176011)(7736002)(66066001)(86362001)(81156014)(6916009)(6486002)(6512007)(6436002)(25786009)(4326008)(36756003)(7416002)(4744005)(99286004)(66946007)(478600001)(1076003)(8676002)(81166006)(8936002)(316002)(54906003)(66476007)(33656002)(66446008)(66556008)(64756008)(6246003)(53936002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5728;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hhc/Ht635k2j1rY/C8iYECS199dZkk48XaLnfkr4e3iLTnuw3zMrgJIoGyUsrbAViDerk4hGbpOnk/fGxl70D8Q35oX+VOQGAH2LkMXkwXQEVIH+JmWpSZP3bHZdPrXyPPrs/suZKIrRf6lB/AYSwCIrkCZWfQcimH7EFFM38Nui+aDVGPEXDnsoetdMF3i5OpYCjqLY4N7tHebqpt1cRIFWv74LM7t1eWyapOkHKXt0FRAdsRrUrgv7NeGE+oipfbN5VmlC/hXJW9eovyT6+uPld/0x2v8sAmA5vH7Q2nAV6pcVnBn/mMpYNFjn93C7lWcQfngFe3X4BG5ltqVKQuFn21bhqh2C5I2EuG8SaHbkUTgGR0LC2Jg97yWjCWQEOMyOYhQkwWU5NuuRMqrpGDJNkvtkQOmfokyLkGyV1nA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <19A5F90EDC581B4E9B7EA8DB5AE872E2@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03d84397-3d3b-4c11-fad7-08d715186dca
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 18:04:56.3410
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5728
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  b8b1033fcaa091d82289698d7179e84e28cbd92a
-Gitweb:     https://git.kernel.org/tip/b8b1033fcaa091d82289698d7179e84e28cbd92a
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Wed, 17 Jul 2019 20:21:37 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:42 -0300
+On Tue, Jul 30, 2019 at 03:03:46PM -0300, Jason Gunthorpe wrote:
+> On Tue, Jul 30, 2019 at 08:52:03AM +0300, Christoph Hellwig wrote:
+> > There isn't really any architecture specific code in this page table
+> > walk implementation, so drop the dependencies.
+> >=20
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> >  mm/Kconfig | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> Happy to see it, lets try to get this patch + the required parts of
+> this series into linux-next to be really sure
+>=20
+> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 
-perf trace: Mark syscall ids that are not allocated to avoid unnecessary error messages
+Oh, can we make this into a non-user selectable option now?=20
 
-There are holes in syscall tables with IDs not associated with any
-syscall, mark those when trying to read information for syscalls, which
-could happen when iterating thru all syscalls from 0 to the highest
-numbered syscall id.
+ie have the drivers that use the API select it?
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-cku9mpcrcsqaiq0jepu86r68@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 5dae7b172291..765b998755ce 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -976,6 +976,7 @@ static struct syscall_fmt *syscall_fmt__find_by_alias(const char *alias)
-  * is_exit: is this "exit" or "exit_group"?
-  * is_open: is this "open" or "openat"? To associate the fd returned in sys_exit with the pathname in sys_enter.
-  * args_size: sum of the sizes of the syscall arguments, anything after that is augmented stuff: pathname for openat, etc.
-+ * nonexistent: Just a hole in the syscall table, syscall id not allocated
-  */
- struct syscall {
- 	struct tep_event    *tp_format;
-@@ -987,6 +988,7 @@ struct syscall {
- 	}		    bpf_prog;
- 	bool		    is_exit;
- 	bool		    is_open;
-+	bool		    nonexistent;
- 	struct tep_format_field *args;
- 	const char	    *name;
- 	struct syscall_fmt  *fmt;
-@@ -1491,9 +1493,6 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	struct syscall *sc;
- 	const char *name = syscalltbl__name(trace->sctbl, id);
- 
--	if (name == NULL)
--		return -EINVAL;
--
- 	if (id > trace->syscalls.max) {
- 		struct syscall *nsyscalls = realloc(trace->syscalls.table, (id + 1) * sizeof(*sc));
- 
-@@ -1512,8 +1511,15 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	}
- 
- 	sc = trace->syscalls.table + id;
--	sc->name = name;
-+	if (sc->nonexistent)
-+		return 0;
- 
-+	if (name == NULL) {
-+		sc->nonexistent = true;
-+		return 0;
-+	}
-+
-+	sc->name = name;
- 	sc->fmt  = syscall_fmt__find(sc->name);
- 
- 	snprintf(tp_name, sizeof(tp_name), "sys_enter_%s", sc->name);
-@@ -1811,14 +1817,21 @@ static struct syscall *trace__syscall_info(struct trace *trace,
- 		return NULL;
- 	}
- 
-+	err = -EINVAL;
-+
- 	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL) &&
- 	    (err = trace__read_syscall_info(trace, id)) != 0)
- 		goto out_cant_read;
- 
--	err = -EINVAL;
--	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL))
-+	if (id > trace->syscalls.max)
- 		goto out_cant_read;
- 
-+	if (trace->syscalls.table[id].name == NULL) {
-+		if (trace->syscalls.table[id].nonexistent)
-+			return NULL;
-+		goto out_cant_read;
-+	}
-+
- 	return &trace->syscalls.table[id];
- 
- out_cant_read:
+Thanks,
+Jason
