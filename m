@@ -2,89 +2,113 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88C7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26FBC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877D5216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564506724;
-	bh=qSk9H3oF4s0bizd7mN3SIpZp4kHPDX9XVVk3ku3CDxk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=maxNSnWfPCA5auUaO6tjaQLGsip35D/kxc0qWaRtA8oYbdtN5xarQ3pjXYd9RN0JM
-	 46tY5PfhrUUEgH9UFx+lvjhRHYruJQvb/EgwVQrzmf1CHJT2N4JatRTlLfPO0qaBk0
-	 glWb8rekalceaXb3TAXroARbvvqk7Y9bH0jTJxbQ=
+	by mail.kernel.org (Postfix) with ESMTP id C8061206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:12:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="fnTPfuSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbfG3RMD (ORCPT
+        id S1728758AbfG3RM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:12:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbfG3RMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:12:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F448208E4;
-        Tue, 30 Jul 2019 17:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564506722;
-        bh=qSk9H3oF4s0bizd7mN3SIpZp4kHPDX9XVVk3ku3CDxk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MOYeijNJedp7Eav6TCAQAEoTVjDFt4NFw5s0DfXieoplWnotqr0sx12ES72J9aY6n
-         lpdgNVIVJe5Nj0pf1EwXDynSvCWTNJxpC2KFtLCqfZvOguu5nwvJKEzP38ci/HP2KF
-         OKcx4IYuHdRc+IQ0V9d1oRl35y7b57qljQyVTKxI=
-Date:   Tue, 30 Jul 2019 19:11:59 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
-        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        Kenneth Heitke <kenneth.heitke@intel.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Subject: Re: [PATCH 2/2] devcoredump: fix typo in comment
-Message-ID: <20190730171159.GB32124@kroah.com>
-References: <1564243146-5681-1-git-send-email-akinobu.mita@gmail.com>
- <1564243146-5681-3-git-send-email-akinobu.mita@gmail.com>
- <41a47bd3f48ea0ecd25e6ffefff9f100edf53a0c.camel@sipsolutions.net>
- <20190730162320.GA28134@kroah.com>
- <27feb840cba115e4ff8c96d47dfbab08fda30bef.camel@sipsolutions.net>
- <20190730164553.GA14088@kroah.com>
- <a8e2b0673b982696e3e3a71abfd1f647f2bcb2b7.camel@sipsolutions.net>
+        Tue, 30 Jul 2019 13:12:28 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:33259 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfG3RM2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 13:12:28 -0400
+Received: by mail-yw1-f67.google.com with SMTP id l124so24045479ywd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 10:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ImY2DybhOrcM2lI55Kc331ajwFUz03xP4fYhf/CoFd4=;
+        b=fnTPfuSOS5xpzgI/dQJjNEhuWQ9V5NaVEYODjti6i+5CsuI18ORya/MuBcyjj5rKHw
+         OGqBw9FvQA+91ljA6QWTZ+QjMYN6u0YAvnZ6iB6zumCkot1zgc+Ge8Zr36k9WdlYCPIq
+         5Qa+Xb7vJCv4lzx1IY48fS1EAyLA9/Pui0xCKvGCSTggjJbOVlLLVggs++kF07g3IQ+O
+         MDdhIiresslcCgniwoC9JKTEDXB2NgciRQNn42Sv31gjZ6lsRJdl5wmhwdJ/hRypG8x5
+         /ePhj9cW+yWQYFKxEnLr1qEJp1o4qn6Mm25gYkJ3tlQqAsxDseFTGf3giZ5YNxic5xeY
+         6ocQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ImY2DybhOrcM2lI55Kc331ajwFUz03xP4fYhf/CoFd4=;
+        b=d1rjARXc5LCMcv6im5mlWZdQtMO52EjqW5mRyAPsSeRtObr9cm5qZAsTi8p3c5zIQv
+         Doqtw5NyiXVi6NiB7TddRdWDUGL5j/njICK/58Ce6gxVQSn96aaTMt6DVfZuiXwjOdn9
+         saTvUUQ+fd1ADAmJrwkzeEd2O6Leik77k9FGNQ691qg8aDtO5knByPF70WFTtWKWaO5q
+         E/ojM4h0EbcSEP4Ag4BPYeUxVHoKQg/o7tzRw1tKEkWfxzrG8zDBk1JtGOw88v7PKROx
+         r07hScrctC6V8C/zP+JK/q/AylX+CD4QZAXL6ZoCaSXCBFLZpdVnduB0Ru0wY2W2Qblz
+         u2Fw==
+X-Gm-Message-State: APjAAAXwby+PZIcz7k/mCmA3czq0dS6+D5bROnSF4hANfurvzH2fVFn8
+        Miikye754Iz4oXAfTDXeXHF6jQ==
+X-Google-Smtp-Source: APXvYqyrgMcO6GnWamgao3bXgcKs3QGF2zVbFr+EJ+2MO+luR4eSsfFewIm3vX0bBfYAvjwhDqbgCw==
+X-Received: by 2002:a0d:eb89:: with SMTP id u131mr71135814ywe.417.1564506747714;
+        Tue, 30 Jul 2019 10:12:27 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id x67sm15128373ywg.70.2019.07.30.10.12.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 10:12:27 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 13:12:27 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/modes: Fix unterminated strncpy
+Message-ID: <20190730171227.GS104440@art_vandelay>
+References: <20190730084032.26428-1-hslester96@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a8e2b0673b982696e3e3a71abfd1f647f2bcb2b7.camel@sipsolutions.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190730084032.26428-1-hslester96@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 06:49:12PM +0200, Johannes Berg wrote:
-> On Tue, 2019-07-30 at 18:45 +0200, Greg KH wrote:
+On Tue, Jul 30, 2019 at 04:40:32PM +0800, Chuhong Yuan wrote:
+> strncpy(dest, src, strlen(src)) leads to unterminated
+> dest, which is dangerous.
+> Fix it by using strscpy.
 > 
-> > > I mean, you take patches to devcoredump in general?
-> > 
-> > I have no idea, run 'scripts/get_maintainer.pl' to be sure :)
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  drivers/gpu/drm/drm_modes.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> That actually points to me :-)
+> diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
+> index 80fcd5dc1558..170fc24e0f31 100644
+> --- a/drivers/gpu/drm/drm_modes.c
+> +++ b/drivers/gpu/drm/drm_modes.c
+> @@ -1770,7 +1770,7 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
+>  	}
+>  
+>  	if (named_mode) {
+> -		strncpy(mode->name, name, mode_end);
+> +		strscpy(mode->name, name, mode_end + 1);
+
+Shouldn't you be checking that mode_end + 1 is not > than the size of mode->name
+(ie: DRM_DISPLAY_MODE_LEN)? This still seems unsafe.
+
+Sean
+
+>  	} else {
+>  		ret = drm_mode_parse_cmdline_res_mode(name, mode_end,
+>  						      parse_extras,
+> -- 
+> 2.20.1
 > 
-> So really I guess the question is how I should send these upstream? It's
-> to drivers/base/devcoredump.c and include/linux/devcoredump.h and I
-> kinda figured you wanted to see these things.
 
-Ah, sure, I can take them, I had no idea what devcoredump was.  Remember
-my patch workload :)
-
-So send them on please.
-
-thanks,
-
-greg k-h
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
