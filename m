@@ -2,219 +2,112 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913E0C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8256C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8CC2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:48:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddkccz9d"
+	by mail.kernel.org (Postfix) with ESMTP id A39C3206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 21:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387816AbfG3Vsv (ORCPT
+        id S2387835AbfG3Vsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 17:48:51 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34511 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfG3Vsv (ORCPT
+        Tue, 30 Jul 2019 17:48:55 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:42451 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387819AbfG3Vsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 17:48:51 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so24514196pgc.1;
-        Tue, 30 Jul 2019 14:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ElPlp+VRpfvHqwOymsphqHnB2ea8iEK4QxZsWnz9kGM=;
-        b=ddkccz9dF/g2WpKWiXA9y5t9DwjI47nEvnGe+OmlHLimwzVNo/XEkXeZx+sXTwpZaS
-         8OFDOvduTWzvh8VHtc3R/vJXwlJgxBYjEdsqVt6BT/pFnx8+4xwfTtrbSmfUZc3R6gC/
-         iRIsmS61wBzt9diF8OtOKhW8QuZAKHPlGBiKqJV/f68YUzLTSX8ybXYWlG0legoWZdyR
-         LHPeU+199A6j16MbSpEUCEPqazyTroRJn3+0xoRz6bX4Wi4dS+9dnlqFT2pW9u6IrOmn
-         RyR8lKxIGYbmIwhMObn8wdYWVJ/DqFUj5KzhQhcMo+KvcZHEyeG7Qg4Q0izRewGv6yQo
-         1p3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ElPlp+VRpfvHqwOymsphqHnB2ea8iEK4QxZsWnz9kGM=;
-        b=Wom4FA1ZrHXV2oQxEpPkZQujk/VOF8V9CIYIg9o4IGqaPyQfqaudciq9UrCArHO+Tn
-         pqfQRYpOe3baV53s4SpsLlgZlMTAQI4E4FeUmS4P50999eTUxNHPvReZY7o12991idNg
-         BMVsYNu+8+L9bCvEPFcqeqV3IyhuQH4TklA5cW5Vvh46KgS4x3IE3wlTL0rdSFPLHCj7
-         hI5ZAHATBSacpHOzz0j7ucExyfcBbyvY+pY1RIVFTbAaO8EsgP/CuI9ds5yj5zZTuJpT
-         cnj81Yh0MNQjybfgNIilcwAt9Kd441aU5cqrbrYZE2YR1JZp7+EpKmop3yFPyvYCqpqk
-         7XhA==
-X-Gm-Message-State: APjAAAVS3Yt2XBZip/qfu90loMdhBW0ikRCwHDgfvN6Vjm3AGGgwkCHA
-        h8WrJ6SL0p87rTPph7mT4pc=
-X-Google-Smtp-Source: APXvYqx37O6WDVUjoOK86chq+3TypiJfoSPzXlU122ldm7wURtrmx4CX2Kp/O3dtRKVbPlRDSXEglA==
-X-Received: by 2002:a63:904:: with SMTP id 4mr38008433pgj.19.1564523330494;
-        Tue, 30 Jul 2019 14:48:50 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id l25sm81887158pff.143.2019.07.30.14.48.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 14:48:49 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/msm: shake fist angrily at dma-mapping
-Date:   Tue, 30 Jul 2019 14:46:28 -0700
-Message-Id: <20190730214633.17820-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 30 Jul 2019 17:48:54 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45yqv75F8Cz1rBnG;
+        Tue, 30 Jul 2019 23:48:51 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45yqv740QBz1qqkQ;
+        Tue, 30 Jul 2019 23:48:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id H5W5SgB4fodb; Tue, 30 Jul 2019 23:48:50 +0200 (CEST)
+X-Auth-Info: llMVCs5jRc9iyn3ETV/87/IBYSMF0oXRV1DQb9JCjHk=
+Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue, 30 Jul 2019 23:48:50 +0200 (CEST)
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v2] ARM: dts: vf610-bk4: Fix qspi node description
+Date:   Tue, 30 Jul 2019 23:48:33 +0200
+Message-Id: <20190730214833.30659-1-lukma@denx.de>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+Before this change the device tree description of qspi node for
+second memory on BK4 board was wrong (applicable to old, removed
+fsl-quadspi.c driver).
 
-So, using dma_sync_* for our cache needs works out w/ dma iommu ops, but
-it falls appart with dma direct ops.  The problem is that, depending on
-display generation, we can have either set of dma ops (mdp4 and dpu have
-iommu wired to mdss node, which maps to toplevel drm device, but mdp5
-has iommu wired up to the mdp sub-node within mdss).
+As a result this memory was not recognized correctly when used
+with the new spi-fsl-qspi.c driver.
 
-Fixes this splat on mdp5 devices:
+From the dt-bindings:
 
-   Unable to handle kernel paging request at virtual address ffffffff80000000
-   Mem abort info:
-     ESR = 0x96000144
-     Exception class = DABT (current EL), IL = 32 bits
-     SET = 0, FnV = 0
-     EA = 0, S1PTW = 0
-   Data abort info:
-     ISV = 0, ISS = 0x00000144
-     CM = 1, WnR = 1
-   swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000000810e4000
-   [ffffffff80000000] pgd=0000000000000000
-   Internal error: Oops: 96000144 [#1] SMP
-   Modules linked in: btqcomsmd btqca bluetooth cfg80211 ecdh_generic ecc rfkill libarc4 panel_simple msm wcnss_ctrl qrtr_smd drm_kms_helper venus_enc venus_dec videobuf2_dma_sg videobuf2_memops drm venus_core ipv6 qrtr qcom_wcnss_pil v4l2_mem2mem qcom_sysmon videobuf2_v4l2 qmi_helpers videobuf2_common crct10dif_ce mdt_loader qcom_common videodev qcom_glink_smem remoteproc bmc150_accel_i2c bmc150_magn_i2c bmc150_accel_core bmc150_magn snd_soc_lpass_apq8016 snd_soc_msm8916_analog mms114 mc nf_defrag_ipv6 snd_soc_lpass_cpu snd_soc_apq8016_sbc industrialio_triggered_buffer kfifo_buf snd_soc_lpass_platform snd_soc_msm8916_digital drm_panel_orientation_quirks
-   CPU: 2 PID: 33 Comm: kworker/2:1 Not tainted 5.3.0-rc2 #1
-   Hardware name: Samsung Galaxy A5U (EUR) (DT)
-   Workqueue: events deferred_probe_work_func
-   pstate: 80000005 (Nzcv daif -PAN -UAO)
-   pc : __clean_dcache_area_poc+0x20/0x38
-   lr : arch_sync_dma_for_device+0x28/0x30
-   sp : ffff0000115736a0
-   x29: ffff0000115736a0 x28: 0000000000000001
-   x27: ffff800074830800 x26: ffff000011478000
-   x25: 0000000000000000 x24: 0000000000000001
-   x23: ffff000011478a98 x22: ffff800009fd1c10
-   x21: 0000000000000001 x20: ffff800075ad0a00
-   x19: 0000000000000000 x18: ffff0000112b2000
-   x17: 0000000000000000 x16: 0000000000000000
-   x15: 00000000fffffff0 x14: ffff000011455d70
-   x13: 0000000000000000 x12: 0000000000000028
-   x11: 0000000000000001 x10: ffff00001106c000
-   x9 : ffff7e0001d6b380 x8 : 0000000000001000
-   x7 : ffff7e0001d6b380 x6 : ffff7e0001d6b382
-   x5 : 0000000000000000 x4 : 0000000000001000
-   x3 : 000000000000003f x2 : 0000000000000040
-   x1 : ffffffff80001000 x0 : ffffffff80000000
-   Call trace:
-    __clean_dcache_area_poc+0x20/0x38
-    dma_direct_sync_sg_for_device+0xb8/0xe8
-    get_pages+0x22c/0x250 [msm]
-    msm_gem_get_and_pin_iova+0xdc/0x168 [msm]
-    ...
+"Required SPI slave node properties:
+  - reg: There are two buses (A and B) with two chip selects each.
+This encodes to which bus and CS the flash is connected:
+<0>: Bus A, CS 0
+<1>: Bus A, CS 1
+<2>: Bus B, CS 0
+<3>: Bus B, CS 1"
 
-Fixes the combination of two patches:
+According to above with new driver the second SPI-NOR memory shall
+have reg=<2> as it is connected to Bus B, CS 0.
 
-Fixes: 0036bc73ccbe ("drm/msm: stop abusing dma_map/unmap for cache")
-Fixes: 449fa54d6815 ("dma-direct: correct the physical addr in dma_direct_sync_sg_for_cpu/device")
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Suggested-by: Fabio Estevam <festevam@gmail.com>
+Fixes: a67d2c52a82f ("ARM: dts: Add support for Liebherr's BK4 device
+(vf610 based)")
+
 ---
-I think it is time to revisit drm_cache support for arm64, but we need
-something for v5.3 to keep things working.
+Changes for v2:
+- Add proper Suggested-by tag as Fabio was the one who pointed out the
+  the issue with wrong reg number assignment for the second SPI-NOR memory
+- Add Fixes: tag, so the patch could be added to LTS kernels
+- Fix the subject line to more appropriate
+---
+ arch/arm/boot/dts/vf610-bk4.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-armv7 support might be harder, but hopefully no one is changing dma-
-mapping implementation much on armv7 and we can just limp along with
-the current hack on 32b arm.
-
- drivers/gpu/drm/msm/msm_gem.c | 47 +++++++++++++++++++++++++++++++----
- 1 file changed, 42 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index c2114c748c2f..8cf6362e64bf 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -32,6 +32,46 @@ static bool use_pages(struct drm_gem_object *obj)
- 	return !msm_obj->vram_node;
- }
+diff --git a/arch/arm/boot/dts/vf610-bk4.dts b/arch/arm/boot/dts/vf610-bk4.dts
+index 3fa0cbe456db..0f3870d3b099 100644
+--- a/arch/arm/boot/dts/vf610-bk4.dts
++++ b/arch/arm/boot/dts/vf610-bk4.dts
+@@ -246,13 +246,13 @@
+ 		reg = <0>;
+ 	};
  
-+/*
-+ * Cache sync.. this is a bit over-complicated, to fit dma-mapping
-+ * API.  Really GPU cache is out of scope here (handled on cmdstream)
-+ * and all we need to do is invalidate newly allocated pages before
-+ * mapping to CPU as uncached/writecombine.
-+ *
-+ * On top of this, we have the added headache, that depending on
-+ * display generation, the display's iommu may be wired up to either
-+ * the toplevel drm device (mdss), or to the mdp sub-node, meaning
-+ * that here we either have dma-direct or iommu ops.
-+ *
-+ * Let this be a cautionary tail of abstraction gone wrong.
-+ */
-+
-+static void sync_for_device(struct msm_gem_object *msm_obj)
-+{
-+	struct device *dev = msm_obj->base.dev->dev;
-+
-+	if (get_dma_ops(dev)) {
-+		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
-+			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+	} else {
-+		dma_map_sg(dev, msm_obj->sgt->sgl,
-+			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+	}
-+}
-+
-+static void sync_for_cpu(struct msm_gem_object *msm_obj)
-+{
-+	struct device *dev = msm_obj->base.dev->dev;
-+
-+	if (get_dma_ops(dev)) {
-+		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
-+			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+	} else {
-+		dma_unmap_sg(dev, msm_obj->sgt->sgl,
-+			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+	}
-+}
-+
- /* allocate pages from VRAM carveout, used when no IOMMU: */
- static struct page **get_pages_vram(struct drm_gem_object *obj, int npages)
- {
-@@ -97,8 +137,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
- 		 * because display controller, GPU, etc. are not coherent:
- 		 */
- 		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
--			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
--					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+			sync_for_device(msm_obj);
- 	}
+-	n25q128a13_2: flash@1 {
++	n25q128a13_2: flash@2 {
+ 		compatible = "n25q128a13", "jedec,spi-nor";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		spi-max-frequency = <66000000>;
+ 		spi-rx-bus-width = <2>;
+-		reg = <1>;
++		reg = <2>;
+ 	};
+ };
  
- 	return msm_obj->pages;
-@@ -127,9 +166,7 @@ static void put_pages(struct drm_gem_object *obj)
- 			 * GPU, etc. are not coherent:
- 			 */
- 			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
--				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
--					     msm_obj->sgt->nents,
--					     DMA_BIDIRECTIONAL);
-+				sync_for_cpu(msm_obj);
- 
- 			sg_free_table(msm_obj->sgt);
- 			kfree(msm_obj->sgt);
 -- 
-2.21.0
+2.11.0
 
