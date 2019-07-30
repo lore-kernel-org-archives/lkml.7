@@ -2,182 +2,116 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6F6C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03578C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC5E205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6910205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:15:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gzJZeDRm"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="cceTkrjE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbfG3WPN (ORCPT
+        id S1728980AbfG3WPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 18:15:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59667 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfG3WPM (ORCPT
+        Tue, 30 Jul 2019 18:15:43 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36300 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfG3WPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 18:15:12 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UMEx9M3398584
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 15:15:00 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UMEx9M3398584
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564524900;
-        bh=mD70gKmkh6jDBFlhLyayjqQ0pkFhWaeZ62L8iKyfSgg=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=gzJZeDRm7MomnNjdsxmwUuW3BmnNcZlUBVAgmNOZRizenO33mIipsRdFa0BsdYkPO
-         amJLdgr3vGZ2/mCbJytgQIcPwa6TtH6VtJV8WrGDMaaHT6SsHwUyBDoq/xPVxG/HCD
-         Tfl5ipucGDvERrHHY6LYOu+4tFeJbeO5x0Tz+7vgFzFjkTftHmFjXbja9/+stz4kd+
-         5WKgK5pKTXFw+H0hV/kI+eG09pq/UJCbxjbzMBvx6RBxVl6V9h50XQl4NcN871vmGy
-         89jcIU8Q84v9Bvc6gUs6ZdUqF+jG5BOR1eL2gCRdV4bKvLyNDmy3/JNZCEE0aJUmxM
-         VIFXctmyRtN+g==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UMEx6D3398580;
-        Tue, 30 Jul 2019 15:14:59 -0700
-Date:   Tue, 30 Jul 2019 15:14:59 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-fe2db1c61da8176954e84d2e1f42863a945b1a21@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, hpa@zytor.com, bigeasy@linutronix.de,
-        tglx@linutronix.de
-Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com, mingo@kernel.org,
-          peterz@infradead.org, tglx@linutronix.de, bigeasy@linutronix.de
-In-Reply-To: <20190726185753.459144407@linutronix.de>
-References: <20190726185753.459144407@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] tick: Mark tick related hrtimers to expiry in
- hard interrupt context
-Git-Commit-ID: fe2db1c61da8176954e84d2e1f42863a945b1a21
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 18:15:43 -0400
+Received: by mail-io1-f66.google.com with SMTP id o9so28232060iom.3;
+        Tue, 30 Jul 2019 15:15:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eJWTXDTsE+z8vuI+3+Qq5diLIDrFR4TuvgdInaKarkA=;
+        b=cceTkrjEHo1IVeZWBhk/wi74szSDUuElNWxyWZ9zgPfMQsj0xiNXErA4Ip3Qub2NBU
+         aK4zcsxJNL6yGDgvSNU4l3Dz8p2FASqASrIQngRH42ly+ZJJqCt6XF2xW52MHu7UyE6p
+         /qljE1Oj+8Hjta/HXbKN3wqKEcRZfGei88rf8iNgT7t2YFZjuQyrUk1M/3r9a/Ne5DgG
+         xm3Y9plTVZiAtnbOymCCpefjPufDwpHrSG2ANlrYGA3l6sHpmVoWZ0O7E5S5eeNqDQAr
+         O/dUdT8JMSKBvLqkbnYTYSxSfwZlgaTSpI2fbAgOXvGYwBcduzOGfRVbK1ZlIX6bCno2
+         JFIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eJWTXDTsE+z8vuI+3+Qq5diLIDrFR4TuvgdInaKarkA=;
+        b=R8yjoOs8+WuRdavEjorSjOVS50XRtTOPirW7SB4J6yvXDsJAjbwsiCgfJ4EgMlKFts
+         hsQEgN6VR0m76MQBwK9wqv6N6B2kno+MYAZFpDqsbc3/AneZe8IbNNi0oLGoas/S4Sfz
+         NzvBi1Yi6q/OrAMc51yX4npDQLMVhDNUdPWLbyZXu4AkdMggHQg5Rnv3PwPxHiEBPtdh
+         z2DLshXQH6Nd5raENdboPeydze6cluIXf1rTGoOx79kWkmFjoffMOXCSH0Dc0bdqw5Pt
+         N4hRp1iSikAXxpwnKEWKb8PfJjQp2jH+a/x6yRkMeOz86IuRudg0T7lLRAnqYjomkPbB
+         JQHQ==
+X-Gm-Message-State: APjAAAX952354ZsIFlV2Fj0pkyk9rgQDRZ5D/LzpXpLv2JIdMxH/C3/J
+        51/yLMhZgtslnarlRQw132vpS6KApOxQdq9p0Qs=
+X-Google-Smtp-Source: APXvYqzacbhzX6CmRaif1jdwGFgTYO3dYaLxT/41iTKcLbynfkFATjOsa1NpAW9so1aVjlBxmgqjRRu36ogOi52OC3g=
+X-Received: by 2002:a02:662f:: with SMTP id k47mr121858178jac.4.1564524941279;
+ Tue, 30 Jul 2019 15:15:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190730113708.14660-1-pagupta@redhat.com> <2030283543.5419072.1564486701158.JavaMail.zimbra@redhat.com>
+ <20190730190737.GA14873@redhat.com> <CAPcyv4i10K3QdSwa3EF9t8pS-QrB9YcBEMy49N1PnYQzCkBJCw@mail.gmail.com>
+ <20190730220102.GA15604@redhat.com>
+In-Reply-To: <20190730220102.GA15604@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 30 Jul 2019 15:15:30 -0700
+Message-ID: <CAA9_cmd8to1108H+osSuyyRriX50-g1YV3YebJ=PNsKbW0NPFw@mail.gmail.com>
+Subject: Re: dm: fix dax_dev NULL dereference
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        device-mapper development <dm-devel@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alasdair Kergon <agk@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  fe2db1c61da8176954e84d2e1f42863a945b1a21
-Gitweb:     https://git.kernel.org/tip/fe2db1c61da8176954e84d2e1f42863a945b1a21
-Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 20:30:56 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Tue, 30 Jul 2019 23:57:56 +0200
+On Tue, Jul 30, 2019 at 3:01 PM Mike Snitzer <snitzer@redhat.com> wrote:
+>
+> On Tue, Jul 30 2019 at  5:38pm -0400,
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > On Tue, Jul 30, 2019 at 12:07 PM Mike Snitzer <snitzer@redhat.com> wrote:
+> > >
+> > > I staged the fix (which I tweaked) here:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.3&id=95b9ebb78c4c733f8912a195fbd0bc19960e726e
+> >
+> > Thanks for picking this up Mike, but I'd prefer to just teach
+> > dax_synchronous() to return false if the passed in dax_dev is NULL.
+> > Thoughts?
+>
+> I considered that too but I moved away from it because I'm so used to
+> the various block interfaces requiring the caller pass a non-NULL
+> pointer (e.g. request_queue):
+>
+> $ grep -ri return drivers/md/dm-table.c | grep \&\&
+> drivers/md/dm-table.c:        return dev->dax_dev && dax_synchronous(dev->dax_dev);
+> drivers/md/dm-table.c:        return q && blk_queue_zoned_model(q) == *zoned_model;
+> drivers/md/dm-table.c:        return q && blk_queue_zone_sectors(q) == *zone_sectors;
+> drivers/md/dm-table.c:        return q && (q->queue_flags & flush);
+> drivers/md/dm-table.c:        return q && blk_queue_nonrot(q);
+> drivers/md/dm-table.c:        return q && !blk_queue_add_random(q);
+> drivers/md/dm-table.c:        return q && !q->limits.max_write_same_sectors;
+> drivers/md/dm-table.c:        return q && !q->limits.max_write_zeroes_sectors;
+> drivers/md/dm-table.c:        return q && !blk_queue_discard(q);
+> drivers/md/dm-table.c:        return q && !blk_queue_secure_erase(q);
+> drivers/md/dm-table.c:        return q && bdi_cap_stable_pages_required(q->backing_dev_info);
+>
+> I'm fine with however you'd like to skin this cat though.
+>
+> Just let me know and I'll keep/drop this patch accordingly.
 
-tick: Mark tick related hrtimers to expiry in hard interrupt context
+Ok, since you've already got it queued, and there are no other
+required "if (!dax_dev)" fixups go ahead with what you have.
 
-The tick related hrtimers, which drive the scheduler tick and hrtimer based
-broadcasting are required to expire in hard interrupt context for obvious
-reasons.
+    Acked-by: Dan Williams <dan.j.williams@intel.com>
 
-Mark them so PREEMPT_RT kernels wont move them to soft interrupt expiry.
-
-Make the horribly formatted RCU_NONIDLE bracket maze readable while at it.
-
-No functional change, 
-
-[ tglx: Split out from larger combo patch. Add changelog ]
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190726185753.459144407@linutronix.de
-
----
- kernel/time/tick-broadcast-hrtimer.c | 13 +++++++++----
- kernel/time/tick-sched.c             | 15 +++++++++------
- 2 files changed, 18 insertions(+), 10 deletions(-)
-
-diff --git a/kernel/time/tick-broadcast-hrtimer.c b/kernel/time/tick-broadcast-hrtimer.c
-index 5be6154e2fd2..c1f5bb590b5e 100644
---- a/kernel/time/tick-broadcast-hrtimer.c
-+++ b/kernel/time/tick-broadcast-hrtimer.c
-@@ -59,11 +59,16 @@ static int bc_set_next(ktime_t expires, struct clock_event_device *bc)
- 	 * hrtimer_{start/cancel} functions call into tracing,
- 	 * calls to these functions must be bound within RCU_NONIDLE.
- 	 */
--	RCU_NONIDLE({
-+	RCU_NONIDLE(
-+		{
- 			bc_moved = hrtimer_try_to_cancel(&bctimer) >= 0;
--			if (bc_moved)
-+			if (bc_moved) {
- 				hrtimer_start(&bctimer, expires,
--					      HRTIMER_MODE_ABS_PINNED);});
-+					      HRTIMER_MODE_ABS_PINNED_HARD);
-+			}
-+		}
-+	);
-+
- 	if (bc_moved) {
- 		/* Bind the "device" to the cpu */
- 		bc->bound_on = smp_processor_id();
-@@ -104,7 +109,7 @@ static enum hrtimer_restart bc_handler(struct hrtimer *t)
- 
- void tick_setup_hrtimer_broadcast(void)
- {
--	hrtimer_init(&bctimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-+	hrtimer_init(&bctimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
- 	bctimer.function = bc_handler;
- 	clockevents_register_device(&ce_broadcast_hrtimer);
- }
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index be9707f68024..01ff32a02af2 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -634,10 +634,12 @@ static void tick_nohz_restart(struct tick_sched *ts, ktime_t now)
- 	/* Forward the time to expire in the future */
- 	hrtimer_forward(&ts->sched_timer, now, tick_period);
- 
--	if (ts->nohz_mode == NOHZ_MODE_HIGHRES)
--		hrtimer_start_expires(&ts->sched_timer, HRTIMER_MODE_ABS_PINNED);
--	else
-+	if (ts->nohz_mode == NOHZ_MODE_HIGHRES) {
-+		hrtimer_start_expires(&ts->sched_timer,
-+				      HRTIMER_MODE_ABS_PINNED_HARD);
-+	} else {
- 		tick_program_event(hrtimer_get_expires(&ts->sched_timer), 1);
-+	}
- 
- 	/*
- 	 * Reset to make sure next tick stop doesn't get fooled by past
-@@ -802,7 +804,8 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
- 	}
- 
- 	if (ts->nohz_mode == NOHZ_MODE_HIGHRES) {
--		hrtimer_start(&ts->sched_timer, tick, HRTIMER_MODE_ABS_PINNED);
-+		hrtimer_start(&ts->sched_timer, tick,
-+			      HRTIMER_MODE_ABS_PINNED_HARD);
- 	} else {
- 		hrtimer_set_expires(&ts->sched_timer, tick);
- 		tick_program_event(tick, 1);
-@@ -1327,7 +1330,7 @@ void tick_setup_sched_timer(void)
- 	/*
- 	 * Emulate tick processing via per-CPU hrtimers:
- 	 */
--	hrtimer_init(&ts->sched_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-+	hrtimer_init(&ts->sched_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
- 	ts->sched_timer.function = tick_sched_timer;
- 
- 	/* Get the next period (per-CPU) */
-@@ -1342,7 +1345,7 @@ void tick_setup_sched_timer(void)
- 	}
- 
- 	hrtimer_forward(&ts->sched_timer, now, tick_period);
--	hrtimer_start_expires(&ts->sched_timer, HRTIMER_MODE_ABS_PINNED);
-+	hrtimer_start_expires(&ts->sched_timer, HRTIMER_MODE_ABS_PINNED_HARD);
- 	tick_nohz_activate(ts, NOHZ_MODE_HIGHRES);
- }
- #endif /* HIGH_RES_TIMERS */
+I just reserve the right to go push it down a level if the kernel ever
+grows more dax_synchronous() users that do that safety check.
