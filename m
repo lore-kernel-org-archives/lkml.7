@@ -2,110 +2,109 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2CDC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6AFC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E3B206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B7B206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:53:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="o1eKgPg+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QxM2Jxx9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbfG3Hv1 (ORCPT
+        id S1730684AbfG3Hx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:51:27 -0400
-Received: from mga11.intel.com ([192.55.52.93]:44240 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbfG3Hv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:51:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 00:51:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,326,1559545200"; 
-   d="scan'208";a="171844937"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Jul 2019 00:51:23 -0700
-Subject: Re: [PATCH 3/3] Fix insn.c misaligned address error
-To:     Ian Rogers <irogers@google.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, mbd@fb.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-References: <20190724184512.162887-1-nums@google.com>
- <20190724184512.162887-4-nums@google.com> <20190726193806.GB24867@kernel.org>
- <20190727184638.3263eb76c3cbde95f9896210@kernel.org>
- <2bc0fcc6-0477-ba1d-7418-5497efa7d571@intel.com>
- <CAP-5=fU2XBoOa2=00VCuWYqsLUzMSMzUXY63ZJt9rz-NJ+vYwA@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <07436d28-73c3-bda4-11cc-4bab7d7b1547@intel.com>
-Date:   Tue, 30 Jul 2019 10:50:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 30 Jul 2019 03:53:28 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49866 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbfG3Hx1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 03:53:27 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5772C607DF; Tue, 30 Jul 2019 07:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564473207;
+        bh=I5Z/jdTrRMXYJjBwUB5kQ34K8iBiwLsT3vud+4Ac4+U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=o1eKgPg+kCx+JZrkUWXo41CCzcOgABVf2/kdQEeG81yZ4p3MVyXa6SKMpvBjIJJXS
+         oTWRj8uNUZKzVTExAbuWeiM7ffHaQXnTdacBYMKD6NeONToyKTVszVzxwS2dvKPOUX
+         Vf/d8B4aKhxLlhWYbtZaTNXAjC9D1R99LTUWBikc=
+Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94BFF6037C;
+        Tue, 30 Jul 2019 07:53:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564473206;
+        bh=I5Z/jdTrRMXYJjBwUB5kQ34K8iBiwLsT3vud+4Ac4+U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QxM2Jxx9TiYp72J1T163dPWRsWqdlMKqCTtgtIEGG6Bg4Q9AeWLxZxhyh44FV3p9q
+         YdwMDDI6ydRooVFb5LurRM9lrrwuMTs1D/dwSpQOQcTSy6dCgAJ+gGR5bR2CI4Pvtb
+         EBSVu66xO+156V7tmfMpKD6Cj1/s0sp58a7QfEfM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94BFF6037C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH 2/2] locking/mutex: Use mutex flags macro instead of hard
+ code value
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, will@kernel.org, linux-kernel@vger.kernel.org
+References: <1564397578-28423-1-git-send-email-mojha@codeaurora.org>
+ <1564397578-28423-2-git-send-email-mojha@codeaurora.org>
+ <20190729110727.GB31398@hirez.programming.kicks-ass.net>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <a80972a1-8e24-33cb-0088-49ef0e680540@codeaurora.org>
+Date:   Tue, 30 Jul 2019 13:23:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fU2XBoOa2=00VCuWYqsLUzMSMzUXY63ZJt9rz-NJ+vYwA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190729110727.GB31398@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/19 10:32 PM, Ian Rogers wrote:
-> On Mon, Jul 29, 2019 at 1:24 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 27/07/19 12:46 PM, Masami Hiramatsu wrote:
->>> On Fri, 26 Jul 2019 16:38:06 -0300
->>> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->>>
->>>> Em Wed, Jul 24, 2019 at 11:45:12AM -0700, Numfor Mbiziwo-Tiapo escreveu:
->>>>> The ubsan (undefined behavior sanitizer) version of perf throws an
->>>>> error on the 'x86 instruction decoder - new instructions' function
->>>>> of perf test.
->>>>>
->>>>> To reproduce this run:
->>>>> make -C tools/perf USE_CLANG=1 EXTRA_CFLAGS="-fsanitize=undefined"
->>>>>
->>>>> then run: tools/perf/perf test 62 -v
->>>>>
->>>>> The error occurs in the __get_next macro (line 34) where an int is
->>>>> read from a potentially unaligned address. Using memcpy instead of
->>>>> assignment from an unaligned pointer.
->>>>
->>>> Since this came from the kernel, don't we have to fix it there as well?
->>>> Masami, Adrian?
->>>
->>> I guess we don't need it, since x86 can access "unaligned address" and
->>> x86 insn decoder in kernel runs only on x86. I'm not sure about perf's
->>> that part. Maybe if we run it on other arch as cross-arch application,
->>> it may cause unaligned pointer issue.
-> 
-> http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf
-> "A pointer to an object or incomplete type may be converted to a
-> pointer to a different object or incomplete type. If the resulting
-> pointer is not correctly aligned for the pointed-to type, the behavior
-> is undefined."
-> I agree the code will generally run on x86.
-> 
->> Yes, theoretically Intel PT decoding can be done on any arch.
->>
->> But the memcpy is probably sub-optimal for x86, so the patch as it stands
->> does not seem suitable.  I notice the kernel has get_unaligned() and
->> put_unaligned().
-> 
-> Why is a fixed sized memcpy suboptimal? The compiler can should turn
-> into a load.
 
-True, I didn't click it was fixed size.
+On 7/29/2019 4:37 PM, Peter Zijlstra wrote:
+> On Mon, Jul 29, 2019 at 04:22:58PM +0530, Mukesh Ojha wrote:
+>> Let's use the mutex flag macro(which got moved from mutex.c
+>> to linux/mutex.h in the last patch) instead of hard code
+>> value which was used in __mutex_owner().
+>>
+>> Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+>> ---
+>>   include/linux/mutex.h | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+>> index 79b28be..c3833ba 100644
+>> --- a/include/linux/mutex.h
+>> +++ b/include/linux/mutex.h
+>> @@ -87,7 +87,7 @@ struct mutex {
+>>    */
+>>   static inline struct task_struct *__mutex_owner(struct mutex *lock)
+>>   {
+>> -	return (struct task_struct *)(atomic_long_read(&lock->owner) & ~0x07);
+>> +	return (struct task_struct *)(atomic_long_read(&lock->owner) & ~MUTEX_FLAGS);
+>>   }
+> I would _much_ rather move __mutex_owner() out of line, you're exposing
+> far too much stuff.
+
+if i understand you correctly, you want me to move __mutex_owner() to 
+mutex.c
+__mutex_owner() is used in mutex_is_locked() and mutex_trylock_recursive 
+inside linux/mutex.h.
+
+Shall i move them as well ?
+
+Thanks,
+Mukesh
+
+
