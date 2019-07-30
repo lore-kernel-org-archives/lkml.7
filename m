@@ -2,105 +2,128 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA86C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9D2C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D52B206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB53E208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:28:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="oMplsA8u"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="q5IM+Db+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732444AbfG3P2O (ORCPT
+        id S1732459AbfG3P2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:28:14 -0400
-Received: from vern.gendns.com ([98.142.107.122]:41606 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728653AbfG3P2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:28:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=D1cCKbBJLkaeJdKkx3868DjQ1Exc5f5bo+iv777eCxM=; b=oMplsA8uNa2qIKzbHTIzvrjLHu
-        iKNy3P0r1uBI1xJ1VmdzMQgorZddjJQ9g6ARWgJilPRIG5wZiD25Pk/n55nQbwj3YP7HOFIAvXWOu
-        uMdNvVQH0FvUUbQ/QM438RIbLsbr6ZfE7CLyNKwVkJI87xEXzUOZ58wX6paoIc8zDy7LmxUDWjn8i
-        wwYdFlpoadsErKsRjDieagqDq+SXaEXNNZJu93CjkmhW4I84hSvkcI+nqyrgE9s3HBn82lSNIFQhm
-        Lhz2j/mqJKMVdzrDdWYtzQMJKPcEObd+aSly9uo8oqRRjm7HUIu+pLOo3sp5MyGosQJQ9keL2Ydkm
-        UYMbmWoQ==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:57832 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1hsU2t-00G8iR-1G; Tue, 30 Jul 2019 11:28:11 -0400
-Subject: Re: [PATCH 2/4] counter: new TI eQEP driver
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20190722154538.5314-1-david@lechnology.com>
- <20190722154538.5314-3-david@lechnology.com>
- <20190730123523.cjtmr3tpttn6r3pt@pengutronix.de>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <58ef00df-4d99-f4f2-0eda-01db2afe5502@lechnology.com>
-Date:   Tue, 30 Jul 2019 10:28:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190730123523.cjtmr3tpttn6r3pt@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 30 Jul 2019 11:28:20 -0400
+Received: from mail-eopbgr20064.outbound.protection.outlook.com ([40.107.2.64]:24899
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731021AbfG3P2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 11:28:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n9geLBFU8NT4yOq5XtIp5USab+ejOVUwGuxJ34kS+X7psHo9hM99+KA08JLPBoLu334282msNCDl7BiMy3Dqj7Knds/JC75F4K/WRqyC/pKvB3EZIdm9S4s1F+VtpVj2aeulqq7BQYxJQPTKWdSfMxGGmLDM3lNuVHBlSnhCz3Bxb7QWVmp+8n2ZCUjVkTYjYBQeh+Kv9Apo4BJbdr+/3Xxw+cdQCbMyEyJJzcdVjPca4JxtCjubRt9KYhGH/iPFce/GspCXuy3zMg0nN9ETkG+5egThDux1q2YO1VeRYytw59aaxV22FkwYNIxGZDJwgERouDHNlqRG48tgvUzvIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wKp1rvLlRa+aSLPokwjQfQ95CU0nnyosbju1axMrYx0=;
+ b=TYcB0Qf12sLzEDyT7jhlRwd9kcL0rHYrWK9ms+Di8f01K+5h0kLQbRBQxIeiNwjoCbTaipizQOFNjkd/xoEJlxshYcX76udV+vKszGMOykikjwGpjMuc9bCVTvvtbSwoc/tiF4zU7cEIekVJ3rSr/S2Ltk0iko55hE14HtQcgF5NKIc04hbXWiK+9D6PWeFH6JRY2/+2aCWsgQeHHZAlrn8H88N+OEO13+VaRkWDfo+eRzHqb7I5bs7F+HZIgNad+RG6HUunkaUFFstjmu8FuUW/spbGknMJ7fiW+xQ/BxSab9xl+rYBHdza+zk94MuGgeEJtbgHQGo9YzNJHaAs1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wKp1rvLlRa+aSLPokwjQfQ95CU0nnyosbju1axMrYx0=;
+ b=q5IM+Db+jj1QbVwCamBqvhTB4uYOICAYXsbAqUaf2uB+4poKS7ltTOEmhDRZ+0MWIrmwUXsNBD8Ns/bAMLhuC6NJE0CaOVQCUZS9Uz1K3/NejqIvNPB8TO3PptvGIGseyj1cIiRX7MlNLy8zpzaCItE2jatC/5tmoV5/y3lpmnY=
+Received: from VI1PR04MB4880.eurprd04.prod.outlook.com (20.177.49.153) by
+ VI1PR04MB4847.eurprd04.prod.outlook.com (20.177.49.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.15; Tue, 30 Jul 2019 15:28:15 +0000
+Received: from VI1PR04MB4880.eurprd04.prod.outlook.com
+ ([fe80::e401:6546:3729:47c0]) by VI1PR04MB4880.eurprd04.prod.outlook.com
+ ([fe80::e401:6546:3729:47c0%6]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
+ 15:28:15 +0000
+From:   Claudiu Manoil <claudiu.manoil@nxp.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH] enetc: Fix build error without PHYLIB
+Thread-Topic: [PATCH] enetc: Fix build error without PHYLIB
+Thread-Index: AQHVRuN4FvRC8RANFUG8NxF+oLMasabjRz7w
+Date:   Tue, 30 Jul 2019 15:28:15 +0000
+Message-ID: <VI1PR04MB48802D5D08728D1392F4308896DC0@VI1PR04MB4880.eurprd04.prod.outlook.com>
+References: <20190730142959.50892-1-yuehaibing@huawei.com>
+In-Reply-To: <20190730142959.50892-1-yuehaibing@huawei.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=claudiu.manoil@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 404eb395-010e-46ba-9e9f-08d715028ac5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4847;
+x-ms-traffictypediagnostic: VI1PR04MB4847:
+x-microsoft-antispam-prvs: <VI1PR04MB4847605F93CD40D1E280432296DC0@VI1PR04MB4847.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:590;
+x-forefront-prvs: 0114FF88F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(376002)(366004)(136003)(189003)(199004)(13464003)(7696005)(478600001)(52536014)(8676002)(486006)(256004)(446003)(14444005)(81166006)(81156014)(25786009)(86362001)(5660300002)(11346002)(66476007)(4326008)(7736002)(66446008)(44832011)(6246003)(8936002)(66556008)(64756008)(76116006)(68736007)(66946007)(2501003)(6436002)(74316002)(229853002)(76176011)(102836004)(316002)(26005)(9686003)(2906002)(55016002)(476003)(305945005)(33656002)(186003)(66066001)(14454004)(53936002)(71200400001)(6116002)(3846002)(99286004)(110136005)(54906003)(71190400001)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4847;H:VI1PR04MB4880.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PN07bS8P45YDKPnNfigQo7sAodRoeEa1Q3+HxQLjRiTJVD5bDOhy9N2KqFWbgdOoFa+e4mG0yt5oDqxNOYac2IBEgjumjQDGEG5xoojI3/FD9kCT6XgTdkbDa1oeYn12pKdG9KzpRPGwLHHgXo2hikzOR3Q9fIBlhHCqOpim8ywjAsdzzwdWyFpdP8epWwEqPYDCaC5/C5KHkdEYAOsYhc1jsa9F8q/+Hpj36ORIAztDKlHgoztwsRgrv/XQD0m9WMW0JzZucDYj9JGkoy0rzdv0RQEP+Hm0kykZlUEAkiD7GswXwYqeDjiAUKG564qjhjPt4XxJEh+5vn5JUlwuXApAQalgGhcQD3WTnXIXsXfm0BXYZrQ4HBBwUewdVsulbYRrwVPJ8g6zRPjvH+JdNL+3ySIkNpj2g2xdDu60LFk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 404eb395-010e-46ba-9e9f-08d715028ac5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 15:28:15.7340
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: claudiu.manoil@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4847
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/19 7:35 AM, Uwe Kleine-König wrote:
-> On Mon, Jul 22, 2019 at 10:45:36AM -0500, David Lechner wrote:
->> This adds a new counter driver for the Texas Instruments Enhanced
->> Quadrature Encoder Pulse (eQEP) module.
->>
->> Only very basic functionality is currently implemented - only enough to
->> be able to read the position. The actual device has many more features
->> which can be added to the driver on an as-needed basis.
->>
->> Signed-off-by: David Lechner <david@lechnology.com>
->> ---
->>   MAINTAINERS               |   6 +
->>   drivers/counter/Kconfig   |  12 ++
->>   drivers/counter/Makefile  |   1 +
->>   drivers/counter/ti-eqep.c | 381 ++++++++++++++++++++++++++++++++++++++
->>   drivers/pwm/Kconfig       |   2 +-
-> 
-> It's not obvious why the change to drivers/pwm/Kconfig is needed. Can
-> you please motivate that in the change log?
+>-----Original Message-----
+>From: YueHaibing <yuehaibing@huawei.com>
+>Sent: Tuesday, July 30, 2019 5:30 PM
+>To: Claudiu Manoil <claudiu.manoil@nxp.com>; davem@davemloft.net
+>Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org; YueHaibing
+><yuehaibing@huawei.com>
+>Subject: [PATCH] enetc: Fix build error without PHYLIB
+>
+>If PHYLIB is not set, build enetc will fails:
+>
+>drivers/net/ethernet/freescale/enetc/enetc.o: In function `enetc_open':
+>enetc.c: undefined reference to `phy_disconnect'
+>enetc.c: undefined reference to `phy_start'
+>drivers/net/ethernet/freescale/enetc/enetc.o: In function `enetc_close':
+>enetc.c: undefined reference to `phy_stop'
+>enetc.c: undefined reference to `phy_disconnect'
+>drivers/net/ethernet/freescale/enetc/enetc_ethtool.o: undefined reference =
+to
+>`phy_ethtool_get_link_ksettings'
+>drivers/net/ethernet/freescale/enetc/enetc_ethtool.o: undefined reference =
+to
+>`phy_ethtool_set_link_ksettings'
+>drivers/net/ethernet/freescale/enetc/enetc_mdio.o: In function
+>`enetc_mdio_probe':
+>enetc_mdio.c: undefined reference to `mdiobus_alloc_size'
+>enetc_mdio.c: undefined reference to `mdiobus_free'
+>
+>Reported-by: Hulk Robot <hulkci@huawei.com>
+>Fixes: d4fd0404c1c9 ("enetc: Introduce basic PF and VF ENETC ethernet driv=
+ers")
+>Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Will do. The short version is that it is needed for power management.
-
-> 
-> Best regards
-> Uwe
-> 
-
+Acked-by: Claudiu Manoil <claudiu.manoil@nxp.com>
