@@ -2,118 +2,77 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52DEC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C562C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3CB9206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F33206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="qCC56rGf"
+	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="DezN6Day"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbfG3HAS (ORCPT
+        id S1729413AbfG3HBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:00:18 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:33650 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728673AbfG3HAR (ORCPT
+        Tue, 30 Jul 2019 03:01:18 -0400
+Received: from chill.innovation.ch ([216.218.245.220]:57186 "EHLO
+        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729357AbfG3HBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:00:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1564470017; x=1596006017;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=6yX5wo1SMWNdvTLLZ4kGJt2N9VK/hrcTYoYK9A/+LG0=;
-  b=qCC56rGfb1GOhqj48wIpcB7sZhk4KihSK9MTfvEp4DFTJEm2nKB7JirY
-   A+ZT5D31S3JZrrz+EkZCVHLwlptNJEuuBuf2Y8gt6ujxhHfEBgfd0kYzT
-   YtSJSCg8ZKrffzcFhCYR/Ypng5ZsNGsAOeWicop4Hp3AH4bW+ZJU3ahQF
-   mdoPxa4an3Nb5VBjO18optwTy4UF5Ov89QJtFr6XX5vlCq9u43g25cNQZ
-   y7FzJ62tgcEzn/USDmNVTClyhdsrf22mKpLEQ1juQG8/nq0k7jnbSZacR
-   ZNo3AEvB13qAnFPxE0NDoEygqhfAS24kW0gRu8z5gLAxDhW5ALz5Rh1sH
-   Q==;
-IronPort-SDR: WE4K9dwGMNU8/J3rFFhy5c6WITPTrKQEqjVGrtN1IGqAuuL/7ohk8zj0dt6dcpQh0sB4PH72OD
- cqDlj0qEUw3ny1uCApcwOQ5YGN/JqqISbJNaM8uGn1ENVmZgoyCN0cr8nvY2j2cFgrugc/nr3I
- L63FfpfyeMyYXNkYrcU6OYrlTHtTxfx+TYVAl5s+vQ374hC3QXSpHt4N8U62D60xRJvc97ijn4
- zzHlFtyJIHQH/ueUpfSccwARTZ62b3/UsfIeI+9eIqb0v1Dspg6xWRtW3G/vf45rHaiHQOzZ9/
- q7A=
-X-IronPort-AV: E=Sophos;i="5.64,325,1559491200"; 
-   d="scan'208";a="114456997"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Jul 2019 15:00:17 +0800
-IronPort-SDR: /QWI+yFcZ0rmgrhKzyaUKAxecyhx6rlLS9zDK+jVfV2Ur085+At+ld04SJShKi9+Xb+zxh0S7D
- pEsv13dWfGT7hPlN1hLRf14IIujJoCGQbhUaKylgYuTPgVtDUAr7qi/C4J3JKvtAg5yMdXBzwA
- O9X5cEHbbf20DW/l6g9nojv0yFoJ6fo4xgm7Avbdmv1/53PXeTWOFKyWV+bnFGZ+l3UZAUs4+W
- 7ILDLn24sZOja9ptQ+hpUyO5fkstDY0Zfg1aOim4RDGMKxa+s1NI9IGM30lkLxQdkM1nLLULdS
- 6WOdx8q6kT8rQ3S7M9JYhsx+
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 29 Jul 2019 23:58:20 -0700
-IronPort-SDR: PCZNYufBvpE+xMfNsmNx/TlpTDwjyYVkZ4LeoaSFcTvmUrDclh9vepYujrd287BTmiIXHyFXpE
- H6Ff+uC+5bOpDPx7+TzSF+LmE85iKM7xEHaitIoCAqKGwNPrvMiyD2YFvyXyUSLiIzCKyM1HJU
- cE60SHu5w4JUL7ne/ZpqwyqVc37bNuM/Ba5fo8CVnLgDiYzsZLk1h/pK8gjIVnnRbAwm67UT/1
- ds4vVY+wFANqtZOJCkKS4VJ95y2fx4ACxcqAknOYi3LHM7PSBDYqH3u99x3HWGa7TJvyDWr/zk
- Wfw=
-Received: from unknown (HELO [10.225.104.231]) ([10.225.104.231])
-  by uls-op-cesaip01.wdc.com with ESMTP; 30 Jul 2019 00:00:16 -0700
-Subject: Re: [RFC PATCH 13/16] RISC-V: KVM: Add timer functionality
-To:     Andreas Schwab <schwab@suse.de>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "anup@brainfault.org" <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>
-References: <20190729115544.17895-1-anup.patel@wdc.com>
- <20190729115544.17895-14-anup.patel@wdc.com> <mvmpnlsc39p.fsf@suse.de>
- <d26a4582fad27d0f475cf8bca4d3e6c49987d37d.camel@wdc.com>
- <mvma7cwaubk.fsf@suse.de>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <ce9e762d-5b70-0092-d21c-3d9be8fa2a69@wdc.com>
-Date:   Tue, 30 Jul 2019 00:00:15 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Tue, 30 Jul 2019 03:01:18 -0400
+Date:   Tue, 30 Jul 2019 00:01:17 -0700
+DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch B809F640134
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
+        s=default; t=1564470077;
+        bh=odb/ex7qOOtzc025BL4OpTK8RF6DI6yzZ3QasbAko7M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DezN6DayzvMgu/0eVN8JKWYfm4qrm28k/brozTrH1P0fsv3tn3MSa7NaSubIEwMBQ
+         +D+X7IUoEfacU9ERnhifzW/WVvNH37126TwbQWeV0+oBjAVz7aG02XXybJ+6wpZfWm
+         FfDNHjl3+ZfPQZV6F7IyXH7ZWtQw0nuRq7uyUo1qAmlqoW8aY9QTqi+95haW68kUY7
+         bDETWtheGhyCZs5ByJTaU3DnkRBv+8bWpphBIhWd5FptidkrJ2EwgDz+1GwBbu/DBC
+         fZ8O6/AoG6bP3J+KwEsHnBJDnvIVaMOeHBIMPcAkSCaqtzC3uC6EQwgVj/0/tg9Rxe
+         5sWhYQRjbgiBw==
+From:   "Life is hard, and then you die" <ronald@innovation.ch>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>, nikolas@gnu.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH] Input: applespi - Fix build error
+Message-ID: <20190730070117.GB20206@innovation.ch>
+References: <20190729031455.59400-1-yuehaibing@huawei.com>
+ <20190729140438.GA2372@penguin>
 MIME-Version: 1.0
-In-Reply-To: <mvma7cwaubk.fsf@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20190729140438.GA2372@penguin>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/19 11:51 PM, Andreas Schwab wrote:
-> On Jul 29 2019, Atish Patra <Atish.Patra@wdc.com> wrote:
-> 
->> Strange. We never saw this error.
-> 
-> It is part of CONFIG_KERNEL_HEADER_TEST.  Everyone developing a driver
-> should enable it.
-> 
->> #include <linux/types.h>
->>
->> Can you try it at your end and confirm please ?
-> 
-> Confirmed.
-> 
 
-Thanks. I will update the patch in v2.
-
-> Andreas.
+On Mon, Jul 29, 2019 at 04:04:38PM +0200, Dmitry Torokhov wrote:
+> On Mon, Jul 29, 2019 at 11:14:55AM +0800, YueHaibing wrote:
+> > If CONFIG_KEYBOARD_APPLESPI=y but CONFIG_LEDS_CLASS=m
+> > building fails:
+> > 
+> > drivers/input/keyboard/applespi.o: In function `applespi_probe':
+> > applespi.c:(.text+0x1fcd): undefined reference to `devm_led_classdev_register_ext'
+> > 
+> > Wrap it in LEDS_CLASS macro to fix this.
 > 
+> No, we should add "depends on LEDS_CLASS" to the Konfig instead.
+
+While the loss of keyboard-backlight functionality is certainly not
+critical, in practice when building a kernel for desktops/laptops
+(i.e. where this module would be used) I see no real reason why you'd
+not have/want LEDS_CLASS enabled. So I'd agree with Dmitry that a
+Kconfig depends-on is probably the preferred approach.
 
 
--- 
-Regards,
-Atish
+  Cheers,
+
+  Ronald
+
