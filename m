@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B3CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E00C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802CC20C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73E4206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 14:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731903AbfG3O6d (ORCPT
+        id S1731504AbfG3O7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 10:58:33 -0400
-Received: from mxout013.mail.hostpoint.ch ([217.26.49.173]:35765 "EHLO
-        mxout013.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731626AbfG3O6b (ORCPT
+        Tue, 30 Jul 2019 10:59:11 -0400
+Received: from mxout014.mail.hostpoint.ch ([217.26.49.174]:37936 "EHLO
+        mxout014.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728717AbfG3O7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 10:58:31 -0400
+        Tue, 30 Jul 2019 10:59:11 -0400
 Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
-        by mxout013.mail.hostpoint.ch with esmtp (Exim 4.92 (FreeBSD))
+        by mxout014.mail.hostpoint.ch with esmtp (Exim 4.92 (FreeBSD))
         (envelope-from <dev@pschenker.ch>)
-        id 1hsTa9-000FsZ-8w; Tue, 30 Jul 2019 16:58:29 +0200
+        id 1hsTP3-0005MR-4A; Tue, 30 Jul 2019 16:47:01 +0200
 Received: from [46.140.72.82] (helo=philippe-pc.toradex.int)
         by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.91 (FreeBSD))
         (envelope-from <dev@pschenker.ch>)
-        id 1hsTP8-000Mva-Db; Tue, 30 Jul 2019 16:47:06 +0200
+        id 1hsTP2-000Mva-V6; Tue, 30 Jul 2019 16:47:01 +0200
 X-Authenticated-Sender-Id: dev@pschenker.ch
 From:   Philippe Schenker <dev@pschenker.ch>
 To:     marcel.ziswiler@toradex.com, max.krummenacher@toradex.com,
@@ -42,9 +42,9 @@ Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 18/22] ARM: dts: imx6ull-colibri: Add watchdog
-Date:   Tue, 30 Jul 2019 16:46:45 +0200
-Message-Id: <20190730144649.19022-19-dev@pschenker.ch>
+Subject: [PATCH 09/22] ARM: dts: imx6qdl-colibri: add phy to fec
+Date:   Tue, 30 Jul 2019 16:46:36 +0200
+Message-Id: <20190730144649.19022-10-dev@pschenker.ch>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730144649.19022-1-dev@pschenker.ch>
 References: <20190730144649.19022-1-dev@pschenker.ch>
@@ -57,44 +57,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Philippe Schenker <philippe.schenker@toradex.com>
 
-This patch adds the watchdog to the imx6ull-colibri devicetree
+Add the phy-node and mdio bus to the fec-node, represented as is on
+hardware.
+This commit includes micrel,led-mode that is set to the default
+value, prepared for someone who wants to change this.
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
 
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/imx6qdl-colibri.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-index 1f112ec55e5c..e3220298dd6f 100644
---- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -199,6 +199,12 @@
- 	assigned-clock-rates = <0>, <198000000>;
- };
- 
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+};
+diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+index 1beac22266ed..019dda6b88ad 100644
+--- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+@@ -140,7 +140,18 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+ 	phy-mode = "rmii";
++	phy-handle = <&ethphy>;
+ 	status = "okay";
 +
- &iomuxc {
- 	pinctrl_can_int: canint-grp {
- 		fsl,pins = <
-@@ -506,6 +512,12 @@
- 			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x14
- 		>;
- 	};
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+	pinctrl_wdog: wdog-grp {
-+		fsl,pins = <
-+			MX6UL_PAD_LCD_RESET__WDOG1_WDOG_ANY    0x30b0
-+		>;
++		ethphy: ethernet-phy@0 {
++			reg = <0>;
++			micrel,led-mode = <0>;
++		};
 +	};
  };
  
- &iomuxc_snvs {
+ &hdmi {
 -- 
 2.22.0
 
