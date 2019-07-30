@@ -2,181 +2,245 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC9BC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3946C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA15216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:57:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lkRzDG3p"
+	by mail.kernel.org (Postfix) with ESMTP id 975DE2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbfG3K51 (ORCPT
+        id S1729883AbfG3K5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 06:57:27 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:42495 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbfG3K51 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 06:57:27 -0400
-Received: by mail-vs1-f66.google.com with SMTP id 190so43144845vsf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 03:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PU2Fv6R/P/i3mcSRuoPPGRfAr6wNs2iQGjXmUbGxWxs=;
-        b=lkRzDG3pOo++tgaJ/bk6mpSVrJ4U+eY8OcNTWGQUVYUYttxgttg75uet9SsFVlFj5X
-         56vVKNNShTVrkciES8RZLgERCq6Eu0inKgLrUXv+UHknTTkko1Me/AOYQaVhrvr9ul74
-         k1ZTN/KKq9M1A97FcfnuCHs66ezrP2LfZjt5Jh4mNTvBZ+Qa5vBvXihKX09g1pwef9ah
-         1RwV0XnWUyYYde3qxBhhETbVOtbuTv60HpbxbZL2DhePWYOkqd7U1ATi3lvbR2YHhSiJ
-         BqxzRofIdR8rdaLCo1QBqSHc2QbtkbxrWoMWZkIvC311uMEgvbJ1WhFqqUpQRgGI02/r
-         jRKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PU2Fv6R/P/i3mcSRuoPPGRfAr6wNs2iQGjXmUbGxWxs=;
-        b=Ny+xaNTWN9LENDBZlfdnDkcmN53hYlC41Vqvdn+57X2WXZ7yix2gJDg0QQwWyiGZ7x
-         mU2F+294yKae6bxdTKm9ltOHLumyiRjDrbtKpsC0rPTqnWQAhTeJTMmQUOEflRcW31Pz
-         3aC3dLqsosvv3aRcIqz0qj2MABiNFgf+p7OrJxf0JzbtBLngI2l0Hk3KsEnRC5BLE1vz
-         UsgGn+G4GSJQ+D2nM+jJWEXUNvMDjtQGH/vlFGbUIE4Fu4FiYB5MlV8SPImH8pKz30xj
-         RJwlfuJMT6kxNIKQeGpNXUfJ72HhBFydOctyTz8zyGD54gEBVFe+Jc8Qimirueg+L/Rh
-         Owpg==
-X-Gm-Message-State: APjAAAVUuMfa6loR8FAwvCPSKOE+TXHos8N/yfguBkP5sLYgo1oGC1A3
-        m2HLyCWONDWq1mCT4hNv/cTRgpV8ZRPZpH0y+7Q=
-X-Google-Smtp-Source: APXvYqxdHlZ4vF5yKTPQPNGjlJ/ek0vmLnEB8hjWQ9oAZTWBvgX+iEXTp/PoBM1Tn6vGEE1EyjhPaEe2qNC/+UygfcM=
-X-Received: by 2002:a67:fb87:: with SMTP id n7mr42648957vsr.9.1564484245706;
- Tue, 30 Jul 2019 03:57:25 -0700 (PDT)
+        Tue, 30 Jul 2019 06:57:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58044 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727445AbfG3K5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 06:57:30 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 59E042F8BE3;
+        Tue, 30 Jul 2019 10:57:30 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C77A5C1A1;
+        Tue, 30 Jul 2019 10:57:23 +0000 (UTC)
+Date:   Tue, 30 Jul 2019 12:57:21 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>, Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH 2/2] KVM: selftests: Enable dirty_log_test on s390x
+Message-ID: <20190730105721.z4zsul7uxl2igoue@kamzik.brq.redhat.com>
+References: <20190730100112.18205-1-thuth@redhat.com>
+ <20190730100112.18205-3-thuth@redhat.com>
 MIME-Version: 1.0
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-3-saravanak@google.com>
-In-Reply-To: <20190703011020.151615-3-saravanak@google.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 30 Jul 2019 16:27:14 +0530
-Message-ID: <CAHLCerP81Eotae5s4-Qye77SSF6-BbqFhckvkTEQWBD9biwzbw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] OPP: Add support for bandwidth OPP tables
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        evgreen@chromium.org, kernel-team@android.com,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730100112.18205-3-thuth@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 30 Jul 2019 10:57:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 6:40 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> Not all devices quantify their performance points in terms of frequency.
-> Devices like interconnects quantify their performance points in terms of
-> bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> add support for parsing bandwidth OPPs from DT.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+On Tue, Jul 30, 2019 at 12:01:12PM +0200, Thomas Huth wrote:
+> To run the dirty_log_test on s390x, we have to make sure that we
+> access the dirty log bitmap with little endian byte ordering and
+> we have to properly align the memslot of the guest.
+> Also all dirty bits of a segment are set once on s390x when one
+> of the pages of a segment are written to for the first time, so
+> we have to make sure that we touch all pages during the first
+> iteration to keep the test in sync here.
+> 
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
 > ---
->  drivers/opp/of.c  | 34 ++++++++++++++++++++++++++++++++--
->  drivers/opp/opp.h |  4 +++-
->  2 files changed, 35 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index c10c782d15aa..54fa70ed2adc 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -552,6 +552,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
->
-> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
-> +{
-> +       int ret;
-> +       u64 rate;
-> +       u32 bw;
+>  tools/testing/selftests/kvm/Makefile         |  1 +
+>  tools/testing/selftests/kvm/dirty_log_test.c | 70 ++++++++++++++++++--
+>  2 files changed, 66 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+> index ba7849751989..ac7e63e00fee 100644
+> --- a/tools/testing/selftests/kvm/Makefile
+> +++ b/tools/testing/selftests/kvm/Makefile
+> @@ -33,6 +33,7 @@ TEST_GEN_PROGS_aarch64 += dirty_log_test
+>  TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
+>  
+>  TEST_GEN_PROGS_s390x += s390x/sync_regs_test
+> +TEST_GEN_PROGS_s390x += dirty_log_test
+>  TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
+>  
+>  TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
+> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+> index ceb52b952637..7a1223ad0ff3 100644
+> --- a/tools/testing/selftests/kvm/dirty_log_test.c
+> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
+> @@ -26,9 +26,22 @@
+>  /* The memory slot index to track dirty pages */
+>  #define TEST_MEM_SLOT_INDEX		1
+>  
+> +#ifdef __s390x__
 > +
-> +       ret = of_property_read_u64(np, "opp-hz", &rate);
-> +       if (!ret) {
-> +               /*
-> +                * Rate is defined as an unsigned long in clk API, and so
-> +                * casting explicitly to its type. Must be fixed once rate is 64
-> +                * bit guaranteed in clk API.
-> +                */
-> +               new_opp->rate = (unsigned long)rate;
-> +               return 0;
-> +       }
-> +
-> +       ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
-> +       if (ret)
-> +               return ret;
-> +       new_opp->rate = (unsigned long) &bw;
-> +
-> +       ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
-> +       if (!ret)
-> +               new_opp->avg_bw = (unsigned long) &bw;
-> +
-> +       return 0;
-> +}
-> +
->  /**
->   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
->   * @opp_table: OPP table
-> @@ -589,11 +618,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
->         if (!new_opp)
->                 return ERR_PTR(-ENOMEM);
->
-> -       ret = of_property_read_u64(np, "opp-hz", &rate);
-> +       ret = _read_opp_key(new_opp, np);
->         if (ret < 0) {
->                 /* "opp-hz" is optional for devices like power domains. */
->                 if (!opp_table->is_genpd) {
-> -                       dev_err(dev, "%s: opp-hz not found\n", __func__);
-> +                       dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
-> +                               __func__);
->                         goto free_opp;
->                 }
->
-> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> index 569b3525aa67..ead2cdafe957 100644
-> --- a/drivers/opp/opp.h
-> +++ b/drivers/opp/opp.h
-> @@ -59,7 +59,8 @@ extern struct list_head opp_tables;
->   * @turbo:     true if turbo (boost) OPP
->   * @suspend:   true if suspend OPP
->   * @pstate: Device's power domain's performance state.
-> - * @rate:      Frequency in hertz
-> + * @rate:      Frequency in hertz OR Peak bandwidth in kilobytes per second
+> +/*
+> + * On s390x, the ELF program is sometimes linked at 0x80000000, so we can
+> + * not use 0x40000000 here without overlapping into that region. Thus let's
+> + * use 0xc0000000 as base address there instead.
+> + */
+> +#define DEFAULT_GUEST_TEST_MEM		0xc0000000
 
-rate is most often used for clk rates. Let us not overload this just
-to save one struct member. IMO, you should introduce a peak_bw member
-and then have an error check if the DT provides both rate and peak_bw
-during parsing.
+I think both x86 and aarch64 should be ok with this offset. If testing
+proves it does, then we can just change it for all architecture.
 
-> + * @avg_bw:    Average bandwidth in kilobytes per second
->   * @level:     Performance level
->   * @supplies:  Power supplies voltage/current values
->   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
-> @@ -81,6 +82,7 @@ struct dev_pm_opp {
->         bool suspend;
->         unsigned int pstate;
->         unsigned long rate;
-> +       unsigned long avg_bw;
->         unsigned int level;
+> +
+> +#else
+> +
+>  /* Default guest test memory offset, 1G */
+>  #define DEFAULT_GUEST_TEST_MEM		0x40000000
+>  
+> +#endif
+> +
+>  /* How many pages to dirty for each guest loop */
+>  #define TEST_PAGES_PER_LOOP		1024
+>  
+> @@ -38,6 +51,27 @@
+>  /* Interval for each host loop (ms) */
+>  #define TEST_HOST_LOOP_INTERVAL		10UL
+>  
+> +/* Dirty bitmaps are always little endian, so we need to swap on big endian */
+> +#if defined(__s390x__)
+> +# define BITOP_LE_SWIZZLE	((BITS_PER_LONG-1) & ~0x7)
+> +# define test_bit_le(nr, addr) \
+> +	test_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
+> +# define set_bit_le(nr, addr) \
+> +	set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
+> +# define clear_bit_le(nr, addr) \
+> +	clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
+> +# define test_and_set_bit_le(nr, addr) \
+> +	test_and_set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
+> +# define test_and_clear_bit_le(nr, addr) \
+> +	test_and_clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
+> +#else
+> +# define test_bit_le	test_bit
+> +# define set_bit_le	set_bit
+> +# define clear_bit_le	clear_bit
+> +# define test_and_set_bit_le	test_and_set_bit
+> +# define test_and_clear_bit_le	test_and_clear_bit
+> +#endif
+
+nit: does the formatting above look right after applying the patch?
+
+> +
+>  /*
+>   * Guest/Host shared variables. Ensure addr_gva2hva() and/or
+>   * sync_global_to/from_guest() are used when accessing from
+> @@ -69,11 +103,25 @@ static uint64_t guest_test_virt_mem = DEFAULT_GUEST_TEST_MEM;
+>   */
+>  static void guest_code(void)
+>  {
+> +	uint64_t addr;
+>  	int i;
+>  
+> +#ifdef __s390x__
+> +	/*
+> +	 * On s390x, all pages of a 1M segment are initially marked as dirty
+> +	 * when a page of the segment is written to for the very first time.
+> +	 * To compensate this specialty in this test, we need to touch all
+> +	 * pages during the first iteration.
+> +	 */
+> +	for (i = 0; i < guest_num_pages; i++) {
+> +		addr = guest_test_virt_mem + i * guest_page_size;
+> +		*(uint64_t *)addr = READ_ONCE(iteration);
+> +	}
+> +#endif
+> +
+>  	while (true) {
+>  		for (i = 0; i < TEST_PAGES_PER_LOOP; i++) {
+> -			uint64_t addr = guest_test_virt_mem;
+> +			addr = guest_test_virt_mem;
+>  			addr += (READ_ONCE(random_array[i]) % guest_num_pages)
+>  				* guest_page_size;
+>  			addr &= ~(host_page_size - 1);
+> @@ -158,15 +206,15 @@ static void vm_dirty_log_verify(unsigned long *bmap)
+>  		value_ptr = host_test_mem + page * host_page_size;
+>  
+>  		/* If this is a special page that we were tracking... */
+> -		if (test_and_clear_bit(page, host_bmap_track)) {
+> +		if (test_and_clear_bit_le(page, host_bmap_track)) {
+>  			host_track_next_count++;
+> -			TEST_ASSERT(test_bit(page, bmap),
+> +			TEST_ASSERT(test_bit_le(page, bmap),
+>  				    "Page %"PRIu64" should have its dirty bit "
+>  				    "set in this iteration but it is missing",
+>  				    page);
+>  		}
+>  
+> -		if (test_bit(page, bmap)) {
+> +		if (test_bit_le(page, bmap)) {
+>  			host_dirty_count++;
+>  			/*
+>  			 * If the bit is set, the value written onto
+> @@ -209,7 +257,7 @@ static void vm_dirty_log_verify(unsigned long *bmap)
+>  				 * should report its dirtyness in the
+>  				 * next run
+>  				 */
+> -				set_bit(page, host_bmap_track);
+> +				set_bit_le(page, host_bmap_track);
+>  			}
+>  		}
+>  	}
+> @@ -293,6 +341,10 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+>  	 * case where the size is not aligned to 64 pages.
+>  	 */
+>  	guest_num_pages = (1ul << (30 - guest_page_shift)) + 16;
+> +#ifdef __s390x__
+> +	/* Round up to multiple of 1M (segment size) */
+> +	guest_num_pages = (guest_num_pages + 0xff) & ~0xffUL;
+
+We could maybe do this for all architectures as well.
+
+> +#endif
+>  	host_page_size = getpagesize();
+>  	host_num_pages = (guest_num_pages * guest_page_size) / host_page_size +
+>  			 !!((guest_num_pages * guest_page_size) % host_page_size);
+> @@ -304,6 +356,11 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+>  		guest_test_phys_mem = phys_offset;
+>  	}
+>  
+> +#ifdef __s390x__
+> +	/* Align to 1M (segment size) */
+> +	guest_test_phys_mem &= ~((1 << 20) - 1);
+
+and this
+
+> +#endif
+> +
+>  	DEBUG("guest physical test memory offset: 0x%lx\n", guest_test_phys_mem);
+>  
+>  	bmap = bitmap_alloc(host_num_pages);
+> @@ -454,6 +511,9 @@ int main(int argc, char *argv[])
+>  		vm_guest_mode_params_init(VM_MODE_P48V48_64K, true, true);
+>  	}
+>  #endif
+> +#ifdef __s390x__
+> +	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
+> +#endif
+>  
+>  	while ((opt = getopt(argc, argv, "hi:I:p:m:")) != -1) {
+>  		switch (opt) {
+> -- 
+> 2.21.0
 >
->         struct dev_pm_opp_supply *supplies;
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+
+Thanks,
+drew 
