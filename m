@@ -2,174 +2,139 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA3AC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 343F1C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E46E206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F19208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:09:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gEUI3Lxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726132AbfG3ED5 (ORCPT
+        id S1726196AbfG3EJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 00:03:57 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2504 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726002AbfG3ED4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 00:03:56 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 3837DBCD2D681C0F5F54;
-        Tue, 30 Jul 2019 12:03:52 +0800 (CST)
-Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 30 Jul 2019 12:03:51 +0800
-Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
- (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Tue, 30
- Jul 2019 12:03:51 +0800
-Subject: Re: [RFC] net: phy: read link status twice when
- phy_check_link_status()
-To:     Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
-References: <1564134831-24962-1-git-send-email-liuyonglong@huawei.com>
- <92f42ee8-3659-87a7-ac96-d312a98046ba@gmail.com>
- <4b4ba599-f160-39e7-d611-45ac53268389@huawei.com>
- <a0b26e4b-e288-cf44-049a-7d0b7f5696eb@gmail.com>
-From:   liuyonglong <liuyonglong@huawei.com>
-Message-ID: <1d4be6ad-ffe6-2325-ceab-9f35da617ee9@huawei.com>
-Date:   Tue, 30 Jul 2019 12:03:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 30 Jul 2019 00:09:33 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:36231 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfG3EJc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 00:09:32 -0400
+Received: by mail-yw1-f65.google.com with SMTP id x67so22023890ywd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 21:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CZ/qbh71cM7/4Sn8yjlhaQLGnLaI4jI9zz5SRsmHonU=;
+        b=gEUI3Lxu5EebGD79kpxXdVItRKE8YQtmrOx6MnmyBgNFQsAgthepQdmZ7YR24w91Au
+         t2mdnKbzJP26aoKvKj64M3Y1fbgDMqFpixGzeM4dryfG/Q7j1VgUiN7NsjbxINHXxHFD
+         MkKT9HFQLK9wYcOWV5UZR2X4jiPOMR/XsKylcLWpPDfQVS+Abg8MYfhpyx29l3LoeiFa
+         c+/vLs6STG4OAqwqT2s1otHpzYVR3GdRdWLH0QQH7fi/vopR5hK50jpEx4hG0kNBEd9T
+         CKkXZ33pqiZn67enA6AfLOLSTk+TqDn8xdvWDXTotFeFlA21RHjqlu1Qo7h4o6LXfcr+
+         gfAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CZ/qbh71cM7/4Sn8yjlhaQLGnLaI4jI9zz5SRsmHonU=;
+        b=jc8b+5SgFZ6Nuld5VoiseVEpXKKRdx/Xe0Jeje3IWRzLK5Bb9IYDK2UUy6PDi48sST
+         vJKkinj9ocqkvMQsNT+i2uTLh9KQ9T6DBNKr8nZlpUL5+qdXmrxKAHfrSODTxQa/eMfb
+         mFzElfLVbFPIakYVcFJ19NZY+paJC3PBxPqHQ6edP3s1TogbJ2aMCZ18zWxeqC0HiRMy
+         pyDkGyQNmqcfH8DxNQGxFvfJsHvbcNQvCV5vHsiQD7uAW/MJy6fr/XD9NhcETn0AowE2
+         d3uUQuYDy1MEgwxddA11IhVuFOl2zj0LkzA9/koLJB4ItRAWGzltrvoazk3Pp1+sgrd3
+         tu7Q==
+X-Gm-Message-State: APjAAAXIszBLBTs3KI/akqHOQPu+ZpJWdWhJ3WS1/MFhW/KBDQCqT87h
+        Ha2gmY/W4l7y88dT8tBhfU4pOyphOqZ9Ui8EwAOEmQ==
+X-Google-Smtp-Source: APXvYqxvGwed2JfCJB11l5R+IOYds/ZYaZtd3Zdle3DGE6x31mLpHihO7SiNQn4zOOnRJdqDO9fBDXBaqvxk7N3Ds58=
+X-Received: by 2002:a81:3803:: with SMTP id f3mr67420374ywa.337.1564459771762;
+ Mon, 29 Jul 2019 21:09:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a0b26e4b-e288-cf44-049a-7d0b7f5696eb@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.37.248]
-X-ClientProxiedBy: dggeme702-chm.china.huawei.com (10.1.199.98) To
- dggeme760-chm.china.huawei.com (10.3.19.106)
-X-CFilter-Loop: Reflected
+References: <1564030601-14639-1-git-send-email-rtresidd@electromag.com.au> <5023c937-0662-57e0-c104-bb9c23b07a49@electromag.com.au>
+In-Reply-To: <5023c937-0662-57e0-c104-bb9c23b07a49@electromag.com.au>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Mon, 29 Jul 2019 21:09:20 -0700
+Message-ID: <CABXOdTf45YEvF7YVxczzMwC2XQ2xuTpEo7cAAEqEs4=bdxmKNQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] power: supply: sbs-battery: Add ability to force load
+ a battery via the devicetree
+To:     Richard Tresidder <rtresidd@electromag.com.au>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, rfontana@redhat.com,
+        allison@lohutok.net, Linux PM list <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Nick Crews <ncrews@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 29, 2019 at 8:02 PM Richard Tresidder
+<rtresidd@electromag.com.au> wrote:
+>
+> Hi Nick and Guenter
+> Just adding you to this one also seeing as you're looking at that other
+> sbs_battery patch for me.
+> Not sure why the get maintainers didn't list you for this one.
+>
+> Cheers
+>     Richard Tresidder
+> > Add the ability to force load a hot pluggable battery during boot where
+> > there is no gpio detect method available and the module is statically
+> > built. Normal polling will then occur on that battery when it is inserted.
+> >
+> > Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
+> > ---
+> >
+> > Notes:
+> >      Add the ability to force load a hot pluggable battery during boot where
+> >      there is no gpio detect method available and the module is statically
+> >      built. Normal polling will then occur on that battery when it is inserted.
+> >
+> >   drivers/power/supply/sbs-battery.c | 6 +++++-
+> >   1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
+> > index 048d205..ea8ba3e 100644
+> > --- a/drivers/power/supply/sbs-battery.c
+> > +++ b/drivers/power/supply/sbs-battery.c
+> > @@ -161,6 +161,7 @@ struct sbs_info {
+> >       int                             poll_time;
+> >       u32                             i2c_retry_count;
+> >       u32                             poll_retry_count;
+> > +     bool                            force_load;
+> >       struct delayed_work             work;
+> >       struct mutex                    mode_lock;
+> >       u32                             flags;
+> > @@ -852,6 +853,9 @@ static int sbs_probe(struct i2c_client *client,
+> >       if (rc)
+> >               chip->poll_retry_count = 0;
+> >
+> > +     chip->force_load = of_property_read_bool(client->dev.of_node,
+> > +                                             "sbs,force-load");
+> > +
 
+Maybe it is documented in another patch, which I have not seen. If it
+isn't, it will have to be documented and reviewed by a devicetree
+maintainer. Either case, I don't immediately see why the variable
+needs to reside in struct sbs_info; it seems to be used only in the
+probe function.
 
-On 2019/7/30 4:57, Heiner Kallweit wrote:
-> On 29.07.2019 05:59, liuyonglong wrote:
->>
->>
->> On 2019/7/27 2:14, Heiner Kallweit wrote:
->>> On 26.07.2019 11:53, Yonglong Liu wrote:
->>>> According to the datasheet of Marvell phy and Realtek phy, the
->>>> copper link status should read twice, or it may get a fake link
->>>> up status, and cause up->down->up at the first time when link up.
->>>> This happens more oftem at Realtek phy.
->>>>
->>> This is not correct, there is no fake link up status.
->>> Read the comment in genphy_update_link, only link-down events
->>> are latched. Means if the first read returns link up, then there
->>> is no need for a second read. And in polling mode we don't do a
->>> second read because we want to detect also short link drops.
->>>
->>> It would be helpful if you could describe your actual problem
->>> and whether you use polling or interrupt mode.
->>>
->>
->> [   44.498633] hns3 0000:bd:00.1 eth5: net open
->> [   44.504273] hns3 0000:bd:00.1: reg=0x1, data=0x79ad -> called from phy_start_aneg
->> [   44.532348] hns3 0000:bd:00.1: reg=0x1, data=0x798d -> called from phy_state_machine,update link.
-> 
-> This should not happen. The PHY indicates link up w/o having aneg finished.
-> 
->>
->> According to the datasheet:
->> reg 1.5=0 now, means copper auto-negotiation not complete
->> reg 1.2=1 now, means link is up
->>
->> We can see that, when we read the link up, the auto-negotiation
->> is not complete yet, so the speed is invalid.
->>
->> I don't know why this happen, maybe this state is keep from bios?
->> Or we may do something else in the phy initialize to fix it?
->> And also confuse that why read twice can fix it?
->>
-> I suppose that basically any delay would do.
-> 
->> [   44.554063] hns3 0000:bd:00.1: invalid speed (-1)
->> [   44.560412] hns3 0000:bd:00.1 eth5: failed to adjust link.
->> [   45.194870] hns3 0000:bd:00.1 eth5: link up
->> [   45.574095] hns3 0000:bd:00.1: phyid=3, reg=0x1, data=0x7989
->> [   46.150051] hns3 0000:bd:00.1 eth5: link down
->> [   46.598074] hns3 0000:bd:00.1: phyid=3, reg=0x1, data=0x7989
->> [   47.622075] hns3 0000:bd:00.1: phyid=3, reg=0x1, data=0x79a9
->> [   48.646077] hns3 0000:bd:00.1: phyid=3, reg=0x1, data=0x79ad
->> [   48.934050] hns3 0000:bd:00.1 eth5: link up
->> [   49.702140] hns3 0000:bd:00.1: phyid=3, reg=0x1, data=0x79ad
->>
->>>> I add a fake status read, and can solve this problem.
->>>>
->>>> I also see that in genphy_update_link(), had delete the fake
->>>> read in polling mode, so I don't know whether my solution is
->>>> correct.
->>>>
-> 
-> Can you test whether the following fixes the issue for you?
-> Also it would be interesting which exact PHY models you tested
-> and whether you built the respective PHY drivers or whether you
-> rely on the genphy driver. Best use the second patch to get the
-> needed info. It may make sense anyway to add the call to
-> phy_attached_info() to the hns3 driver.
-> 
-
-[   40.100716] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: attached PHY driver [RTL8211F Gigabit Ethernet] (mii_bus:phy_addr=mii-0000:bd:00.3:07, irq=POLL)
-[   40.932133] hns3 0000:bd:00.3 eth7: net open
-[   40.932458] hns3 0000:bd:00.3: invalid speed (-1)
-[   40.932541] 8021q: adding VLAN 0 to HW filter on device eth7
-[   40.937149] hns3 0000:bd:00.3 eth7: failed to adjust link.
-
-[   40.662050] Generic PHY mii-0000:bd:00.2:05: attached PHY driver [Generic PHY] (mii_bus:phy_addr=mii-0000:bd:00.2:05, irq=POLL)
-[   41.563511] hns3 0000:bd:00.2 eth6: net open
-[   41.563853] hns3 0000:bd:00.2: invalid speed (-1)
-[   41.563943] 8021q: adding VLAN 0 to HW filter on device eth6
-[   41.568578] IPv6: ADDRCONF(NETDEV_CHANGE): eth6: link becomes ready
-[   41.568898] hns3 0000:bd:00.2 eth6: failed to adjust link.
-
-I am using RTL8211F, but you can see that, both genphy driver and
-RTL8211F driver have the same issue.
-
-> 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 6b5cb87f3..fbecfe210 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -1807,7 +1807,8 @@ int genphy_read_status(struct phy_device *phydev)
->  
->  	linkmode_zero(phydev->lp_advertising);
->  
-> -	if (phydev->autoneg == AUTONEG_ENABLE && phydev->autoneg_complete) {
-> +	if (phydev->autoneg == AUTONEG_ENABLE &&
-> +	    (phydev->autoneg_complete || phydev->link)) {
->  		if (phydev->is_gigabit_capable) {
->  			lpagb = phy_read(phydev, MII_STAT1000);
->  			if (lpagb < 0)
-> 
-
-I have try this patch, have no effect. I suppose that at this time,
-the autoneg actually not complete yet.
-
-Maybe the wrong phy state is passed from bios? Invalid speed just
-happen at the first time when ethX up, after that, repeat the
-ifconfig down/ifconfig up command can not see that again.
-
-So I think the bios should power off the phy(writing reg 1.11 to 1)
-before it starts the OS? Or any other way to fix this in the OS?
-
-
-
+> >       if (pdata) {
+> >               chip->poll_retry_count = pdata->poll_retry_count;
+> >               chip->i2c_retry_count  = pdata->i2c_retry_count;
+> > @@ -890,7 +894,7 @@ static int sbs_probe(struct i2c_client *client,
+> >        * Before we register, we might need to make sure we can actually talk
+> >        * to the battery.
+> >        */
+> > -     if (!(force_load || chip->gpio_detect)) {
+> > +     if (!(force_load || chip->gpio_detect || chip->force_load)) {
+> >               rc = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
+> >
+> >               if (rc < 0) {
+>
