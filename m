@@ -2,60 +2,60 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2961EC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7269C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC586204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B12204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 22:12:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gH7betta"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="I2Hmb5kK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbfG3WML (ORCPT
+        id S1728893AbfG3WM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 18:12:11 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60527 "EHLO
+        Tue, 30 Jul 2019 18:12:58 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55795 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfG3WML (ORCPT
+        with ESMTP id S1726253AbfG3WM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 18:12:11 -0400
+        Tue, 30 Jul 2019 18:12:58 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UMC0b63398141
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UMCkBA3398437
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 15:12:00 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UMC0b63398141
+        Tue, 30 Jul 2019 15:12:46 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UMCkBA3398437
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564524720;
-        bh=wOVYqXVJoU91lcEwPzjNYPM3EOq9c9CN7k6lqmQwMV4=;
+        s=2019071901; t=1564524767;
+        bh=HfyyqeeW9mdr/U99zf3PfxOpXJMgdoqX6K54hmj/CuA=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=gH7bettan5F7+cmCdich/dGoXITeX3berQiEFMj0dSI5tnwL0Cx/lW+6cSePiQ2zX
-         jSEyIak6uGfHH8JKBymt7ClakP659GAhPn4k/LiO2HWbjJtyYqtQBuUiygxuxgyZdt
-         8Pn+Jr7Xu4rN5l7Z7DPBt8hLEAoR/ePiSlJPaSjoIC6pTqr9iWElIwoairr8ekGQau
-         I4s0feQk5fULAgWLxqjTSiJYX8nm6iLkxH5BqQBy55Hg8YtxEew0vQ7OUnGMLn9tED
-         RcypU3+weXhih3c8l6w57kw1AWeGIQNI6no48kVmzwG+UOGoED47A5USrobCIUnfU3
-         /7phJvAEN8g6w==
+        b=I2Hmb5kKgIq1UxyWWPfKFHmhPUXvyV35iDj9Hgb4iHEF7KGqa3+mrUTEtth9tp9z4
+         IYBzmkRDynhMAcIpjsSDqwmFfoSLlmUUbIavjGXbaOKwipRIjnHj56mrkrjkJt0hjA
+         GWRIfEbFRQARi/OD8QjdElyJ6GlzhAwWkgpmYTa7hozR80ZQCvA6zfxU4Eo+nDKX1j
+         Or/d0A55NZ9XCTf/R+I9vpCffvZsI+2ASU8oIUr2Ceaiqz4BWRqHDipcACC0bnpNG7
+         3KigsBWDqbX89eg+Br3wSKQM5FgUZ1uC74fJVUOWaGf+W0239EW2h3QNZyup1oznPh
+         JDceX5JhRvw5g==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UMBwd93398138;
-        Tue, 30 Jul 2019 15:11:58 -0700
-Date:   Tue, 30 Jul 2019 15:11:58 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UMCiso3398434;
+        Tue, 30 Jul 2019 15:12:44 -0700
+Date:   Tue, 30 Jul 2019 15:12:44 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-b78b1e6b5b77b265a94e3027e6f0dcaad33faf9f@git.kernel.org>
-Cc:     tglx@linutronix.de, peterz@infradead.org, mingo@kernel.org,
-        bigeasy@linutronix.de, linux-kernel@vger.kernel.org, hpa@zytor.com
-Reply-To: bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
-          hpa@zytor.com, tglx@linutronix.de, peterz@infradead.org,
-          mingo@kernel.org
-In-Reply-To: <20190726185753.077004842@linutronix.de>
-References: <20190726185753.077004842@linutronix.de>
+Message-ID: <tip-c23a8bd3ac02df2ca5e77396df1dee247db3d49f@git.kernel.org>
+Cc:     hpa@zytor.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bigeasy@linutronix.de, peterz@infradead.org
+Reply-To: bigeasy@linutronix.de, tglx@linutronix.de,
+          linux-kernel@vger.kernel.org, peterz@infradead.org,
+          hpa@zytor.com, mingo@kernel.org
+In-Reply-To: <20190726185753.169509224@linutronix.de>
+References: <20190726185753.169509224@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] sched: Mark hrtimers to expire in hard interrupt
- context
-Git-Commit-ID: b78b1e6b5b77b265a94e3027e6f0dcaad33faf9f
+Subject: [tip:timers/core] perf/core: Mark hrtimers to expire in hard
+ interrupt context
+Git-Commit-ID: c23a8bd3ac02df2ca5e77396df1dee247db3d49f
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,108 +69,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  b78b1e6b5b77b265a94e3027e6f0dcaad33faf9f
-Gitweb:     https://git.kernel.org/tip/b78b1e6b5b77b265a94e3027e6f0dcaad33faf9f
+Commit-ID:  c23a8bd3ac02df2ca5e77396df1dee247db3d49f
+Gitweb:     https://git.kernel.org/tip/c23a8bd3ac02df2ca5e77396df1dee247db3d49f
 Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 20:30:52 +0200
+AuthorDate: Fri, 26 Jul 2019 20:30:53 +0200
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Tue, 30 Jul 2019 23:57:54 +0200
 
-sched: Mark hrtimers to expire in hard interrupt context
+perf/core: Mark hrtimers to expire in hard interrupt context
 
-The scheduler related hrtimers need to expire in hard interrupt context
-even on PREEMPT_RT enabled kernels. Mark then as such.
+To guarantee that the multiplexing mechanism and the hrtimer driven events
+work on PREEMPT_RT enabled kernels it's required that the related hrtimers
+expire in hard interrupt context. Mark them so PREEMPT_RT kernels wont
+defer them to soft interrupt context.
 
 No functional change.
 
-[ tglx: Split out from larger combo patch. Add changelog. ]
+[ tglx: Split out of larger combo patch. Added changelog ]
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190726185753.077004842@linutronix.de
+Link: https://lkml.kernel.org/r/20190726185753.169509224@linutronix.de
 
 ---
- kernel/sched/core.c     | 6 +++---
- kernel/sched/deadline.c | 4 ++--
- kernel/sched/rt.c       | 7 ++++---
- 3 files changed, 9 insertions(+), 8 deletions(-)
+ kernel/events/core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2b037f195473..389e0993fbb4 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -255,7 +255,7 @@ static void __hrtick_restart(struct rq *rq)
- {
- 	struct hrtimer *timer = &rq->hrtick_timer;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 026a14541a38..9d623e257a51 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1103,7 +1103,7 @@ static void __perf_mux_hrtimer_init(struct perf_cpu_context *cpuctx, int cpu)
+ 	cpuctx->hrtimer_interval = ns_to_ktime(NSEC_PER_MSEC * interval);
  
--	hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED);
-+	hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED_HARD);
+ 	raw_spin_lock_init(&cpuctx->hrtimer_lock);
+-	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
++	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
+ 	timer->function = perf_mux_hrtimer_handler;
  }
  
- /*
-@@ -314,7 +314,7 @@ void hrtick_start(struct rq *rq, u64 delay)
- 	 */
- 	delay = max_t(u64, delay, 10000LL);
- 	hrtimer_start(&rq->hrtick_timer, ns_to_ktime(delay),
+@@ -1121,7 +1121,7 @@ static int perf_mux_hrtimer_restart(struct perf_cpu_context *cpuctx)
+ 	if (!cpuctx->hrtimer_active) {
+ 		cpuctx->hrtimer_active = 1;
+ 		hrtimer_forward_now(timer, cpuctx->hrtimer_interval);
+-		hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED);
++		hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED_HARD);
+ 	}
+ 	raw_spin_unlock_irqrestore(&cpuctx->hrtimer_lock, flags);
+ 
+@@ -9491,7 +9491,7 @@ static void perf_swevent_start_hrtimer(struct perf_event *event)
+ 		period = max_t(u64, 10000, hwc->sample_period);
+ 	}
+ 	hrtimer_start(&hwc->hrtimer, ns_to_ktime(period),
 -		      HRTIMER_MODE_REL_PINNED);
 +		      HRTIMER_MODE_REL_PINNED_HARD);
  }
- #endif /* CONFIG_SMP */
  
-@@ -328,7 +328,7 @@ static void hrtick_rq_init(struct rq *rq)
- 	rq->hrtick_csd.info = rq;
- #endif
+ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
+@@ -9513,7 +9513,7 @@ static void perf_swevent_init_hrtimer(struct perf_event *event)
+ 	if (!is_sampling_event(event))
+ 		return;
  
--	hrtimer_init(&rq->hrtick_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(&rq->hrtick_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	rq->hrtick_timer.function = hrtick;
- }
- #else	/* CONFIG_SCHED_HRTICK */
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index ef5b9f6b1d42..0359612d5443 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -923,7 +923,7 @@ static int start_dl_timer(struct task_struct *p)
- 	 */
- 	if (!hrtimer_is_queued(timer)) {
- 		get_task_struct(p);
--		hrtimer_start(timer, act, HRTIMER_MODE_ABS);
-+		hrtimer_start(timer, act, HRTIMER_MODE_ABS_HARD);
- 	}
+-	hrtimer_init(&hwc->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_init(&hwc->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+ 	hwc->hrtimer.function = perf_swevent_hrtimer;
  
- 	return 1;
-@@ -1053,7 +1053,7 @@ void init_dl_task_timer(struct sched_dl_entity *dl_se)
- {
- 	struct hrtimer *timer = &dl_se->dl_timer;
- 
--	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	timer->function = dl_task_timer;
- }
- 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index a532558a5176..da3e85e61013 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -45,8 +45,8 @@ void init_rt_bandwidth(struct rt_bandwidth *rt_b, u64 period, u64 runtime)
- 
- 	raw_spin_lock_init(&rt_b->rt_runtime_lock);
- 
--	hrtimer_init(&rt_b->rt_period_timer,
--			CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(&rt_b->rt_period_timer, CLOCK_MONOTONIC,
-+		     HRTIMER_MODE_REL_HARD);
- 	rt_b->rt_period_timer.function = sched_rt_period_timer;
- }
- 
-@@ -67,7 +67,8 @@ static void start_rt_bandwidth(struct rt_bandwidth *rt_b)
- 		 * to update the period.
- 		 */
- 		hrtimer_forward_now(&rt_b->rt_period_timer, ns_to_ktime(0));
--		hrtimer_start_expires(&rt_b->rt_period_timer, HRTIMER_MODE_ABS_PINNED);
-+		hrtimer_start_expires(&rt_b->rt_period_timer,
-+				      HRTIMER_MODE_ABS_PINNED_HARD);
- 	}
- 	raw_spin_unlock(&rt_b->rt_runtime_lock);
- }
+ 	/*
