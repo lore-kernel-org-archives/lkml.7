@@ -2,71 +2,69 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C7FC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1D4C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA99F2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB48A20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="smWwwiLf"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DXlIl4nT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbfG3PO7 (ORCPT
+        id S1729754AbfG3PPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:14:59 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46059 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727481AbfG3PO6 (ORCPT
+        Tue, 30 Jul 2019 11:15:14 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36739 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729563AbfG3PPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:14:58 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so66178842wre.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:14:55 -0700 (PDT)
+        Tue, 30 Jul 2019 11:15:14 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g67so52892381wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=ZOGEYkIwZDJRgit5Pt/9TpD9rMgykD3hszhx8LLxEdg=;
-        b=smWwwiLf3j46e0X52mDH16gAJ4lorwf5rxhpIq9a7R74u/Rk4g+2WCI1v2uBfBy/Fm
-         ewIygKL+T59fL9NKFpS/3NcJnof5R/lkid08JHorLPc1vtTLFjS+CA/bgVsqE+sEZY+/
-         sTQo++LswisgFgYk3IgSp+CPbDaU/C0YfK8iuSLnvuzyu/Jjydv5Hh1Xc7Fv6zeFIiWe
-         9vK5+7pY9yVPmaPJrfLLEqW4CAwVRe/5oJmBmPg5eyrTCfKcUtmSGJMNkKT3ZqvS/iOB
-         IIaFj31IDr7mwrT6hvLm7BzgkqpigO82IyUMsu8ZtnU7odGlnACKlLlLB0Fs3A/mR5xD
-         ggfw==
+        bh=EhbeQO/sbzX1wCFvm0GZWm7qJ3FO4A/C4w34t6g3cpo=;
+        b=DXlIl4nTqmEe7C7/5F7DyN6jaUMILc8SxV+MZ+XIY/GdFJ3v2rNd+hN2huyzCHuN9R
+         OOzmiVARYtsgGUFuXK8i7D9xBWc9v5RxEQTU+yVz+xijDJyx5mi9D6nnjdTDABNye0gB
+         uPCAvcIgnr4KGa2W/PZooIjYfMJki0pmaog+X4TVw39JIXLl93sTJMUiT2LBqR4qP1Nx
+         90FNFkr2q+3xm/Fka55psfudHJX0DoECcCYTC6wldMoBm0JswliVR5ntSmmLyFXFIqzG
+         MBJgwIVib1u6Jnb4WylEoIhpHKhbgUyFyW6zGwwjJSEiOHjWcrHON17EovmXePOsiP5C
+         uobw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=ZOGEYkIwZDJRgit5Pt/9TpD9rMgykD3hszhx8LLxEdg=;
-        b=KU97Ndj3FX1HW9fmHfds4X0FzHJ2CERdxB3i9EoEw4IXriYePCgy8ACzs/d2hPCwmT
-         muCiPxbTsvCbxzsPyokZJxQcgWTTX0NkL4tdfgTdYQp9Mk4Nef9gVEFraewVGLIhnmq3
-         cmR8cqDWmiLMXnoPgB3xznuv8RQGiG+ukJ2nlZy9J+4hsycJtK5U/H4rBQqn5E96sg+q
-         Pn6fyXVnty1ec1vzfk9/q4QBeoHV9zJvmu7klDsy9xAevyNcuGVO6PWZXSo1jDRrkf6/
-         iuC4hTb0zNbwDNhTSKNkvjYyDgmfx4QactXHDKSaPersU22f573yzKoMRZ/ilKGKq/3Q
-         qAuQ==
-X-Gm-Message-State: APjAAAUv0na3F+kIJrPk36AWdWIXn901J/DRgG8Qds4GsqS+JjHwd4aK
-        gHByxoEzYzk1VU1mmaeU1U1bsg==
-X-Google-Smtp-Source: APXvYqwlCadMa0VRCkkH404iVtKGzkG2DQngT4Y19XlQIJdiCa7AurcA71F4z7GNTbJVdZ+NJBCa1Q==
-X-Received: by 2002:a5d:4d81:: with SMTP id b1mr47348036wru.27.1564499694615;
-        Tue, 30 Jul 2019 08:14:54 -0700 (PDT)
+        bh=EhbeQO/sbzX1wCFvm0GZWm7qJ3FO4A/C4w34t6g3cpo=;
+        b=mv4nDSX6f0hpcCWVWml39bGrgtPsbVkPRHmI/MPToOQQ+djA9y2vGcZ8VLOfMBJ8r5
+         HBk+XmMb4nKIL045hJsmpNpLTvGtMSbCqJUd0gWXcfYvamP4FBuKIOb92Tn1Zd9SOLWB
+         2sJOtp/2Opl7P+IKvj4kN80jpCTFX6iY0veTkINmwIlII1y3I0363EefToef3CoGhyIe
+         Oou7eQe4YtihFd7iKTNAkmXIXKfcB+gertYjnQ8g1jdbl6ZY+hBboQMSOplhsO/MqG15
+         gPMc4s49jevvoZNzNnfOcJeorCp7Ff0UNaHCZ4/orJ8Qc11bYWiOcuglgoSXdtBLnwo5
+         kmpQ==
+X-Gm-Message-State: APjAAAWARM0kEGWFHRG+hN3O69zUDnSfS5l3HMreivFoKyp8FbrA5UPZ
+        1yUY3D3eDub6dmwpxwbqd3noZA==
+X-Google-Smtp-Source: APXvYqyGJA1QmlIk0WavFwyd3FuLAcipXt35xDK8prAqwNkvc0mdR71OIZgBEefsIdB20yaaOHp7UA==
+X-Received: by 2002:a1c:7f93:: with SMTP id a141mr106145494wmd.131.1564499711059;
+        Tue, 30 Jul 2019 08:15:11 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id f204sm98079780wme.18.2019.07.30.08.14.53
+        by smtp.gmail.com with ESMTPSA id y7sm48075361wmm.19.2019.07.30.08.15.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 08:14:53 -0700 (PDT)
-Subject: Re: [PATCH 3/4] clk: meson: g12a: add notifiers to handle cpu clock
- change
-To:     Jerome Brunet <jbrunet@baylibre.com>
+        Tue, 30 Jul 2019 08:15:10 -0700 (PDT)
+Subject: Re: [PATCH 2/4] clk: meson: regmap: export regmap_div ops functions
+To:     jbrunet@baylibre.com
 Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 References: <20190729131656.7308-1-narmstrong@baylibre.com>
- <20190729131656.7308-4-narmstrong@baylibre.com>
- <1j36in3okl.fsf@starbuckisacylon.baylibre.com>
+ <20190729131656.7308-3-narmstrong@baylibre.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -119,12 +117,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <e4ed8d79-a385-fcfc-b587-da6a2b1d2346@baylibre.com>
-Date:   Tue, 30 Jul 2019 17:14:53 +0200
+Message-ID: <cd1d5041-3f48-93ba-ad66-8737a2e3cde9@baylibre.com>
+Date:   Tue, 30 Jul 2019 17:15:09 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1j36in3okl.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <20190729131656.7308-3-narmstrong@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -133,315 +131,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/07/2019 10:37, Jerome Brunet wrote:
-> On Mon 29 Jul 2019 at 15:16, Neil Armstrong <narmstrong@baylibre.com> wrote:
+On 29/07/2019 15:16, Neil Armstrong wrote:
+> The G12A CPU Clock Postmux divider needs a custom div_set_rate() call.
 > 
->> In order to implement clock switching for the CLKID_CPU_CLK and
->> CLKID_CPUB_CLK, notifiers are added on specific points of the
->> clock tree :
->>
->> cpu_clk / cpub_clk
->> |   \- cpu_clk_dyn
->> |      |  \- cpu_clk_premux0
->> |      |        |- cpu_clk_postmux0
->> |      |        |    |- cpu_clk_dyn0_div
->> |      |        |    \- xtal/fclk_div2/fclk_div3
->> |      |        \- xtal/fclk_div2/fclk_div3
->> |      \- cpu_clk_premux1
->> |            |- cpu_clk_postmux1
->> |            |    |- cpu_clk_dyn1_div
->> |            |    \- xtal/fclk_div2/fclk_div3
->> |            \- xtal/fclk_div2/fclk_div3
->> \ sys_pll / sys1_pll
->>
->> This for each cluster, a single one for G12A, two for G12B.
->>
->> Each cpu_clk_premux1 tree is marked as read-only and CLK_SET_RATE_NO_REPARENT,
->> to be used as "parking" clock in a safe clock frequency.
->>
->> A notifier is added on each cpu_clk_premux0 to detech when CCF want to
->> change the frequency of the cpu_clk_dyn tree.
->> In this notifier, the cpu_clk_premux1 tree is configured to use the xtal
->> clock and then the cpu_clk_dyn is switch to cpu_clk_premux1 while CCF
->> updates the cpu_clk_premux0 tree.
->>
->> A notifier is added on each sys_pll/sys1_pll to detect when CCF wants to
->> change the PLL clock source of the cpu_clk.
->> In this notifier, the cpu_clk is switched to cpu_clk_dyn while CCF
->> updates the sys_pll/sys1_pll frequency.
->>
->> A third small notifier is added on each cpu_clk / cpub_clk and cpu_clk_dyn,
->> add a small delay at PRE_RATE_CHANGE/POST_RATE_CHANGE to let the other
->> notofiers change propagate before changing the cpu_clk_premux0 and sys_pll
->> clock trees.
->>
->> This notifier set permits switching the cpu_clk / cpub_clk without any
->> glitches and using a safe parking clock while switching between sub-GHz
->> clocks using the cpu_clk_dyn tree.
->>
->> This setup has been tested and validated on the Amlogic G12A and G12B
->> SoCs running the arm64 cpuburn at [1] and cycling between all the possible
->> cpufreq translations of each cluster and checking the final frequency using
->> the clock-measurer, script at [2].
->>
->> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
->> [2] https://gist.github.com/superna9999/d4de964dbc0f84b7d527e1df2ddea25f
+> Export the clk_regmap_div_round_rate() and clk_regmap_div_recalc_rate()
+> to be able to override the default clk_regmap_div_set_rate() callback.
 
 Signoff missing.... will fix in v2
 
->> ---
->>  drivers/clk/meson/g12a.c | 567 +++++++++++++++++++++++++++++++++++----
->>  1 file changed, 521 insertions(+), 46 deletions(-)
->>
->> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
->> index e4957fd9f91f..23162310c7ee 100644
->> --- a/drivers/clk/meson/g12a.c
->> +++ b/drivers/clk/meson/g12a.c
->> @@ -14,6 +14,7 @@
->>  #include <linux/init.h>
->>  #include <linux/of_device.h>
->>  #include <linux/platform_device.h>
->> +#include <linux/clk.h>
->>  
->>  #include "clk-mpll.h"
->>  #include "clk-pll.h"
->> @@ -88,16 +89,9 @@ static struct clk_regmap g12a_fixed_pll = {
->>  	},
->>  };
->>  
->> -/*
->> - * Internal sys pll emulation configuration parameters
->> - */
->> -static const struct reg_sequence g12a_sys_init_regs[] = {
->> -	{ .reg = HHI_SYS_PLL_CNTL1,	.def = 0x00000000 },
->> -	{ .reg = HHI_SYS_PLL_CNTL2,	.def = 0x00000000 },
->> -	{ .reg = HHI_SYS_PLL_CNTL3,	.def = 0x48681c00 },
->> -	{ .reg = HHI_SYS_PLL_CNTL4,	.def = 0x88770290 },
->> -	{ .reg = HHI_SYS_PLL_CNTL5,	.def = 0x39272000 },
->> -	{ .reg = HHI_SYS_PLL_CNTL6,	.def = 0x56540000 },
->> +static const struct pll_mult_range g12a_sys_pll_mult_range = {
->> +	.min = 128,
->> +	.max = 250,
->>  };
+> ---
+>  drivers/clk/meson/clk-regmap.c | 10 ++++++----
+>  drivers/clk/meson/clk-regmap.h |  5 +++++
+>  2 files changed, 11 insertions(+), 4 deletions(-)
 > 
-> The init sequence is removed, I suppose you were concerned about
-> glitching the clock on startup ?
-> 
-> Without the init sequence, it will inherit whatever is left by the
-> bootloader. We have seen in the past that this is not desirable.
-> 
-> I'm mostly concerned about CNTL3 to CNTL6. Should we apply the sequence
-> on .set_rate() instead ? It should be safe then ?
+> diff --git a/drivers/clk/meson/clk-regmap.c b/drivers/clk/meson/clk-regmap.c
+> index dcd1757cc5df..26c8c74a8cf0 100644
+> --- a/drivers/clk/meson/clk-regmap.c
+> +++ b/drivers/clk/meson/clk-regmap.c
+> @@ -56,8 +56,8 @@ const struct clk_ops clk_regmap_gate_ro_ops = {
+>  };
+>  EXPORT_SYMBOL_GPL(clk_regmap_gate_ro_ops);
+>  
+> -static unsigned long clk_regmap_div_recalc_rate(struct clk_hw *hw,
+> -						unsigned long prate)
+> +unsigned long clk_regmap_div_recalc_rate(struct clk_hw *hw,
+> +					 unsigned long prate)
+>  {
+>  	struct clk_regmap *clk = to_clk_regmap(hw);
+>  	struct clk_regmap_div_data *div = clk_get_regmap_div_data(clk);
+> @@ -74,9 +74,10 @@ static unsigned long clk_regmap_div_recalc_rate(struct clk_hw *hw,
+>  	return divider_recalc_rate(hw, prate, val, div->table, div->flags,
+>  				   div->width);
+>  }
+> +EXPORT_SYMBOL_GPL(clk_regmap_div_recalc_rate);
+>  
+> -static long clk_regmap_div_round_rate(struct clk_hw *hw, unsigned long rate,
+> -				      unsigned long *prate)
+> +long clk_regmap_div_round_rate(struct clk_hw *hw, unsigned long rate,
+> +			       unsigned long *prate)
+>  {
+>  	struct clk_regmap *clk = to_clk_regmap(hw);
+>  	struct clk_regmap_div_data *div = clk_get_regmap_div_data(clk);
+> @@ -100,6 +101,7 @@ static long clk_regmap_div_round_rate(struct clk_hw *hw, unsigned long rate,
+>  	return divider_round_rate(hw, rate, prate, div->table, div->width,
+>  				  div->flags);
+>  }
+> +EXPORT_SYMBOL_GPL(clk_regmap_div_round_rate);
+>  
+>  static int clk_regmap_div_set_rate(struct clk_hw *hw, unsigned long rate,
+>  				   unsigned long parent_rate)
+> diff --git a/drivers/clk/meson/clk-regmap.h b/drivers/clk/meson/clk-regmap.h
+> index c4a39604cffd..ebf776a32ce3 100644
+> --- a/drivers/clk/meson/clk-regmap.h
+> +++ b/drivers/clk/meson/clk-regmap.h
+> @@ -78,6 +78,11 @@ clk_get_regmap_div_data(struct clk_regmap *clk)
+>  	return (struct clk_regmap_div_data *)clk->data;
+>  }
+>  
+> +unsigned long clk_regmap_div_recalc_rate(struct clk_hw *hw,
+> +					 unsigned long prate);
+> +long clk_regmap_div_round_rate(struct clk_hw *hw, unsigned long rate,
+> +			       unsigned long *prate);
+> +
+>  extern const struct clk_ops clk_regmap_divider_ops;
+>  extern const struct clk_ops clk_regmap_divider_ro_ops;
+>  
 > 
 
-This PLL (and the SYS1_PLL) cannot be disabled (thus re-initialized) until
-the cpu has been parked on a safe clock, and the default beahavior of the
-current G12A & G12B BL2 is to setup this PLL and the SYS1_PLL to start with
-the cores at 1,2GHz. So we can consider theses PLLs has been correctly
-initialized, thus removing the init code and still be safe.
-
->>
-> 
-> [...]
-> 
->>  
->> @@ -364,16 +366,50 @@ static struct clk_regmap g12a_cpu_clk_premux1 = {
->>  	},
->>  	.hw.init = &(struct clk_init_data){
->>  		.name = "cpu_clk_dyn1_sel",
->> -		.ops = &clk_regmap_mux_ro_ops,
->> +		.ops = &clk_regmap_mux_ops,
->>  		.parent_data = (const struct clk_parent_data []) {
->>  			{ .fw_name = "xtal", },
->>  			{ .hw = &g12a_fclk_div2.hw },
->>  			{ .hw = &g12a_fclk_div3.hw },
->>  		},
->>  		.num_parents = 3,
->> +		/* This sub-tree is used a parking clock */
->> +		.flags = CLK_SET_RATE_NO_REPARENT
->>  	},
->>  };
->>  
->> +#define SYS_CPU_DYN_ENABLE	BIT(26)
->> +
->> +/* This divider uses bit 26 to take change in account */
->> +static int g12a_cpu_clk_mux0_div_set_rate(struct clk_hw *hw, unsigned long rate,
->> +					  unsigned long parent_rate)
->> +{
->> +	struct clk_regmap *clk = to_clk_regmap(hw);
->> +	struct clk_regmap_div_data *div = clk_get_regmap_div_data(clk);
->> +	unsigned int val;
->> +	int ret;
->> +
->> +	ret = divider_get_val(rate, parent_rate, div->table, div->width,
->> +			      div->flags);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	val = (unsigned int)ret << div->shift;
->> +
->> +	regmap_update_bits(clk->map, HHI_SYS_CPU_CLK_CNTL0,
->> +			   SYS_CPU_DYN_ENABLE, SYS_CPU_DYN_ENABLE);
->> +
->> +	return regmap_update_bits(clk->map, div->offset,
->> +				  clk_div_mask(div->width) << div->shift |
->> +				  SYS_CPU_DYN_ENABLE, val);
->> +};
->> +
->> +const struct clk_ops g12a_cpu_clk_mux0_div_ops = {
->> +	.recalc_rate = clk_regmap_div_recalc_rate,
->> +	.round_rate = clk_regmap_div_round_rate,
->> +	.set_rate = g12a_cpu_clk_mux0_div_set_rate,
->> +};
-> 
-> I would prefer if we could keep the clock drivers and clock controllers
-> separated.
-> 
-> Could you move the above above in another file ?
-
-Yup, done
-
-> 
->> +
-> 
-> [...]
-> 
->>  
->> +/* This divider uses bit 26 to take change in account */
->> +static int g12b_cpub_clk_mux0_div_set_rate(struct clk_hw *hw,
->> +					   unsigned long rate,
->> +					   unsigned long parent_rate)
->> +{
->> +	struct clk_regmap *clk = to_clk_regmap(hw);
->> +	struct clk_regmap_div_data *div = clk_get_regmap_div_data(clk);
->> +	unsigned int val;
->> +	int ret;
->> +
->> +	ret = divider_get_val(rate, parent_rate, div->table, div->width,
->> +			      div->flags);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	val = (unsigned int)ret << div->shift;
->> +
->> +	regmap_update_bits(clk->map, HHI_SYS_CPUB_CLK_CNTL,
-> 
-> Unless I missed something, this function is same as the g12a with the
-> exception of the register address.
-> 
-> It seems this clock could have its own clock type and its own data
-> structure to store the 'dyn enable' register parameter.
-
-Yup done
-
-> 
->> +			   SYS_CPU_DYN_ENABLE, SYS_CPU_DYN_ENABLE);
->> +
->> +	return regmap_update_bits(clk->map, div->offset,
->> +				  clk_div_mask(div->width) << div->shift |
->> +				  SYS_CPU_DYN_ENABLE, val);
->> +};
->> +
->> +static const struct clk_ops g12b_cpub_clk_mux0_div_ops = {
->> +	.recalc_rate = clk_regmap_div_recalc_rate,
->> +	.round_rate = clk_regmap_div_round_rate,
->> +	.set_rate = g12b_cpub_clk_mux0_div_set_rate,
->> +};
->> +
-> 
-> [...]
-> 
->> +
->> +static int g12a_cpu_clk_postmux_notifier_cb(struct notifier_block *nb,
->> +					    unsigned long event, void *data)
->> +{
->> +	struct g12a_cpu_clk_postmux_nb_data *nb_data =
->> +		container_of(nb, struct g12a_cpu_clk_postmux_nb_data, nb);
->> +
->> +	switch (event) {
->> +	case PRE_RATE_CHANGE:
->> +		/*
->> +		 * This notifier means cpu_clk_postmux0 clock will be changed
->> +		 * to feed cpu_clk, this is the current path :
->> +		 * cpu_clk
->> +		 *    \- cpu_clk_dyn
->> +		 *          \- cpu_clk_postmux0
->> +		 *                \- cpu_clk_muxX_div
->> +		 *                      \- cpu_clk_premux0
->> +		 *				\- fclk_div3 or fclk_div2
->> +		 *		OR
->> +		 *                \- cpu_clk_premux0
->> +		 *			\- fclk_div3 or fclk_div2
->> +		 */
->> +
->> +		/* Setup cpu_clk_premux1 to xtal */
->> +		clk_hw_set_parent(nb_data->cpu_clk_premux1,
->> +				  nb_data->xtal);
->> +
->> +		/* Setup cpu_clk_postmux1 to bypass divider */
->> +		clk_hw_set_parent(nb_data->cpu_clk_postmux1,
->> +				  nb_data->cpu_clk_premux1);
->> +
->> +		/* Switch to parking clk on cpu_clk_postmux1 */
->> +		clk_hw_set_parent(nb_data->cpu_clk_dyn,
->> +				  nb_data->cpu_clk_postmux1);
->> +
->> +		/*
->> +		 * Now, cpu_clk is 24MHz in the current path :
->> +		 * cpu_clk
->> +		 *    \- cpu_clk_dyn
->> +		 *          \- cpu_clk_postmux1
->> +		 *                \- cpu_clk_premux1
->> +		 *                      \- xtal
->> +		 */
->> +
->> +		udelay(100);
-> 
-> Just curious about the this 100us delay. It seems fairly long, even at
-> 24MHz. In your stress tests, have you tried shorter delays ? 10us maybe ?
-
-Honestly no, I took the values from Amlogic implementation to be safe for
-the first implementation, and I gave all my test scripts and utilities for
-others to re-run them to eventually reduce these values to 10us in a second
-time.
-
-> 
->> +
->> +		return NOTIFY_OK;
->> +
->> +	case POST_RATE_CHANGE:
->> +		/*
->> +		 * The cpu_clk_postmux0 has ben updated, now switch back
->> +		 * cpu_clk_dyn to cpu_clk_postmux0 and take the changes
->> +		 * in account.
->> +		 */
->> +
->> +		/* Configure cpu_clk_dyn back to cpu_clk_postmux0 */
->> +		clk_hw_set_parent(nb_data->cpu_clk_dyn,
->> +				  nb_data->cpu_clk_postmux0);
->> +
->> +		/*
->> +		 * new path :
->> +		 * cpu_clk
->> +		 *    \- cpu_clk_dyn
->> +		 *          \- cpu_clk_postmux0
->> +		 *                \- cpu_clk_muxX_div
->> +		 *                      \- cpu_clk_premux0
->> +		 *				\- fclk_div3 or fclk_div2
->> +		 *		OR
->> +		 *                \- cpu_clk_premux0
->> +		 *			\- fclk_div3 or fclk_div2
->> +		 */
->> +
->> +		udelay(100);
->> +
->> +		return NOTIFY_OK;
->> +
->> +	default:
->> +		return NOTIFY_DONE;
->> +	}
->> +}
->> +
-
-Thanks,
-Neil
