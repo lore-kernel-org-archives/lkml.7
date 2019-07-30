@@ -3,180 +3,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DF1C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557C5C32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8622087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA9E2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:59:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="H/N9ZWWA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RtkoNgbZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgoRjWXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfG3X7G (ORCPT
+        id S1728098AbfG3X7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 19:59:06 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:44919 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725975AbfG3X7G (ORCPT
+        Tue, 30 Jul 2019 19:59:23 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35460 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfG3X7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 19:59:06 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 649912222B;
-        Tue, 30 Jul 2019 19:59:02 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Tue, 30 Jul 2019 19:59:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=LbhKQoZqdxV+FyL2mwG35/QPyn9PEC7
-        JgRbmiOeNOKs=; b=H/N9ZWWAUoC7TI+7xDGE7x5/qU/3kpM3kb6ukIpLrQHhohe
-        ZoCfxAEiFHDCRjlH90i+M328gC7z51eoLkUBSxn9H+a93dOAQCha99Cc2HZZqQw7
-        4i5OJ3OuQ7L1Zf51aIvS16QWLRucjRcOKfWfQocczxpaIuernv6HlLBtEyPzCc83
-        uKpB9e04kiTtnBIEtYbzpLuFDcXMPOUrf9CSpMJZKOFDMuT4Ty0s6Ek0Ax2NZdgI
-        CO6GBzzTyd48YbQGOs63RaETWQ+qBrSYpdwtACcCN/3+AsmHIEwwooOeFoI9mi/u
-        SSYVO86Et4skrL9py6S48FminHiFVh/bL57pLPg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=LbhKQo
-        ZqdxV+FyL2mwG35/QPyn9PEC7JgRbmiOeNOKs=; b=RtkoNgbZl4NxnK2LXMZkiB
-        6pLZKctXFK7NPqiaPEmiQ2AmS1tnhzZtV729zAW0JcP3ShQ7H6epxCE5yrzEqE8y
-        jS7ipNLQgrpyY9iFURWL8ATKvp+yiMgelBn84QaLOlXkypnLVHUpL0VHTqI+9hl7
-        /3N7iG+GnHvRXvvjWnQUJQBXW6yM+kEbrORhBnHV9GfTbVe2HlErAKq9z15X6ihq
-        SSYQlX5w80nMhfnvr+v/yYvysRRIFvXxoci+gsHry92/sSG/Ouwc/EPg95M8TpGJ
-        RdwX91Iwg1vcPQ0an78HsihBzT1/SpADpI+1ovfIi0SuZ5up6GCGuRkW10QTTTiw
-        ==
-X-ME-Sender: <xms:xNlAXe17BXmoxBo25Ez3iPBdJTxezcLyjRfcvI5ZCkxbVpiDWgld1Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleeggddvlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:xNlAXXOVszbMbFu48LtMPfYbKIOD6I8TLlalhsUxC84AkMgjsmr_vQ>
-    <xmx:xNlAXdal8ewJPHdGPcyg4vtK36wpQxiUY9sj4hxpHGhuCb6I3h9oUA>
-    <xmx:xNlAXZ11wkN97U0OsYSrsvzFs1fndP2bfvyTbPgaA1qiAR5HkYSJew>
-    <xmx:xtlAXSrdFGXaWAroQYZagEcubiQWf4Qvjh_NPUFjlbF8k7awnhntMA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id AF4B6E00A2; Tue, 30 Jul 2019 19:59:00 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-799-g925e343-fmstable-20190729v1
-Mime-Version: 1.0
-Message-Id: <f22b671a-2968-41cb-b158-372663fa6843@www.fastmail.com>
-In-Reply-To: <1564500268-2627-2-git-send-email-hongweiz@ami.com>
-References: <1564500268-2627-1-git-send-email-hongweiz@ami.com>
- <1564500268-2627-2-git-send-email-hongweiz@ami.com>
-Date:   Wed, 31 Jul 2019 09:28:49 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Hongwei Zhang" <hongweiz@ami.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org
-Cc:     "Rob Herring" <robh+dt@kernel.org>,
-        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [v6 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
-Content-Type: text/plain
+        Tue, 30 Jul 2019 19:59:23 -0400
+Received: by mail-ed1-f68.google.com with SMTP id w20so64023046edd.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 16:59:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m6L07MYm2XUREWdGGxm/q3wDS0RhzZLGHAZkdnpAJv0=;
+        b=UgoRjWXYlcZIgPmz9GDErbiOBm3M9jhIFl9wjh+Dc2ZlNE/L6VSVht0anlDxUG9UVu
+         gb6hEZgc0N+p+UpQGFv34suB0UnrI0mhggxyBth8Xw35Uf9L1TZDS25N0DLJeI9qQvpF
+         24a5+ulOqpD4mdk6/DBaFTR5ttxB7qwMTP7v1qMY4RxK/Xw3d5i4iD1N9gHf1G1YqWj5
+         K8uWQvPYDlxPjIijdnoyLAiF7unrjLDI0ANrpXfDj1/3v+gTv1QSobwf6UJkHw8H+gdV
+         pz1pQX4vpuFheYB0xJxgL7BLyqo0HnXZI6rfwpF1fIU5iFjOQC7OmqpN6gN1rkJM+NzR
+         eRyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m6L07MYm2XUREWdGGxm/q3wDS0RhzZLGHAZkdnpAJv0=;
+        b=lUzwHj6d269omDsU9xp+d/Ujw+Xp+0YT1rHNjxZ7GJL+zLASvBUrw84IGbq4wP5Gos
+         M0q/VkjAiRhCV7BtGLVUvkff12aPRXy2DYVYwU8kEGn3CdKxQkETNjau8OafpIn0b950
+         /zJUIzrzG2urGfYh4/lxdLyZ2j1Hq92dMWwWpoCOGPlL9j7EcHYd5xvkocbd/gVxBAK1
+         jeAOBj/PXIHcTbbHN/nAy+rbHn+s4ySau8JjpwrIkXhuIXntZaCDVp0/mOoLe7NqLKZK
+         6iL69z20FrhYG+tcs+gFDr/A7fexxHq3Rwrcl3LIuRy/KMq9Heq0/tn1j8x1z1pE42UD
+         kLyQ==
+X-Gm-Message-State: APjAAAWEmPQRgW+0NpTKjK6xvgD5mjJRj1S0Qu4rztTbX1Ktrw4VUwPf
+        cblJpT/weRKWJJRXqlJRfQjy6o93/Kmpp9T0eC0=
+X-Google-Smtp-Source: APXvYqx4PX+CqhLKT8Fr6q2Ml2NHtV/F3E2eYjRMIvt5WgPWUpc5t44qvE7khZiUJJWtb50UqV+XTKXefqw+cMeXC74=
+X-Received: by 2002:a17:906:6bc4:: with SMTP id t4mr94346685ejs.256.1564531161620;
+ Tue, 30 Jul 2019 16:59:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190730225852.30319-1-robdclark@gmail.com>
+In-Reply-To: <20190730225852.30319-1-robdclark@gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 30 Jul 2019 16:59:10 -0700
+Message-ID: <CAF6AEGvLTbTQjH+-Gbk4Vr1Cp8aL5e+3XD=XoTabzX2YoRoBCw@mail.gmail.com>
+Subject: Re: [PATCH] drm: add cache support for arm64
+To:     dri-devel <dri-devel@lists.freedesktop.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Wed, 31 Jul 2019, at 00:55, Hongwei Zhang wrote:
-> Add bindings to support SGPIO on AST2400 or AST2500.
-> 
-> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+On Tue, Jul 30, 2019 at 4:01 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> From: Rob Clark <robdclark@chromium.org>
+>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 > ---
->  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt 
-> b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> new file mode 100644
-> index 0000000..f9ed438
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> @@ -0,0 +1,55 @@
-> +Aspeed SGPIO controller Device Tree Bindings
-> +-------------------------------------------
-> +
-> +This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 
-> full 
-> +featured Serial GPIOs. Each of the Serial GPIO pins can be programmed 
-> to 
-> +support the following options:
-> +- Support interrupt option for each input port and various interrupt 
-> +  sensitivity option (level-high, level-low, edge-high, edge-low)
-> +- Support reset tolerance option for each output port
-> +- Directly connected to APB bus and its shift clock is from APB bus 
-> clock
-> +  divided by a programmable value.
-> +- Co-work with external signal-chained TTL components (74LV165/74LV595)
-> +
-> +
-> +Required properties:
-> +
-> +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-> +
-> +- #gpio-cells 		: Should be two
-> +			  - First cell is the GPIO line number
-> +			  - Second cell is used to specify optional
-> +			    parameters (unused)
-> +
-> +- reg			: Address and length of the register set for the device
-> +- gpio-controller	: Marks the device node as a GPIO controller
-> +- interrupts		: Interrupt specifier (see interrupt bindings for
-> +			  details)
-> +
-> +- interrupt-controller	: Mark the GPIO controller as an 
-> interrupt-controller
-> +
-> +- ngpios		: number of GPIO pins to serialise. 
-> +			  (should be multiple of 8, up to 80 pins)
-> +
-> +- clocks                : A phandle to the APB clock for SGPM clock 
-> division
-> +
-> +- bus-frequency		: SGPM CLK frequency
-> +
-> +
-> +The sgpio and interrupt properties are further described in their 
-> respective bindings documentation:
-> +
-> +- Documentation/devicetree/bindings/sgpio/gpio.txt
+> Not sure about 32b arm, but at least for aarch64 this is relatively
+> easy.  So lets at least enable for arm64.
 
-This isn't a file? This one is (s/sgpio/gpio/):
+hmm, bleh, I thought this was too easy.. I hadn't noticed that (even
+though driver was =m) CONFIG_DRM was =y
 
- Documentation/devicetree/bindings/gpio/gpio.txt
+Can we make drm_cache.o built-in even if the rest of drm is a module?
 
-I assume this was the result of a stray search/replace?
+BR,
+-R
 
-With that fixed you can add: Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-
-Andrew
-
-> +- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>
+>  drivers/gpu/drm/drm_cache.c | 20 +++++++++++++++++---
+>  1 file changed, 17 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_cache.c b/drivers/gpu/drm/drm_cache.c
+> index 3bd76e918b5d..90105c637797 100644
+> --- a/drivers/gpu/drm/drm_cache.c
+> +++ b/drivers/gpu/drm/drm_cache.c
+> @@ -69,6 +69,14 @@ static void drm_cache_flush_clflush(struct page *pages[],
+>  }
+>  #endif
+>
+> +#if defined(__powerpc__)
+> +static void __flush_dcache_area(void *addr, size_t len)
+> +{
+> +       flush_dcache_range((unsigned long)addr,
+> +                          (unsigned long)addr + PAGE_SIZE);
+> +}
+> +#endif
 > +
-> +  Example:
-> +	sgpio: sgpio@1e780200 {
-> +		#gpio-cells = <2>;
-> +		compatible = "aspeed,ast2500-sgpio";
-> +		gpio-controller;
-> +		interrupts = <40>;
-> +		reg = <0x1e780200 0x0100>;
-> +		clocks = <&syscon ASPEED_CLK_APB>;
-> +		interrupt-controller;
-> +		ngpios = <8>;
-> +		bus-frequency = <12000000>;
-> +	};
-> -- 
-> 2.7.4
-> 
+>  /**
+>   * drm_clflush_pages - Flush dcache lines of a set of pages.
+>   * @pages: List of pages to be flushed.
+> @@ -90,7 +98,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
+>         if (wbinvd_on_all_cpus())
+>                 pr_err("Timed out waiting for cache flush\n");
+>
+> -#elif defined(__powerpc__)
+> +#elif defined(__powerpc__) || defined(CONFIG_ARM64)
+>         unsigned long i;
+>         for (i = 0; i < num_pages; i++) {
+>                 struct page *page = pages[i];
+> @@ -100,8 +108,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
+>                         continue;
+>
+>                 page_virtual = kmap_atomic(page);
+> -               flush_dcache_range((unsigned long)page_virtual,
+> -                                  (unsigned long)page_virtual + PAGE_SIZE);
+> +               __flush_dcache_area(page_virtual, PAGE_SIZE);
+>                 kunmap_atomic(page_virtual);
+>         }
+>  #else
+> @@ -135,6 +142,13 @@ drm_clflush_sg(struct sg_table *st)
+>
+>         if (wbinvd_on_all_cpus())
+>                 pr_err("Timed out waiting for cache flush\n");
+> +#elif defined(CONFIG_ARM64)
+> +       struct sg_page_iter sg_iter;
+> +
+> +       for_each_sg_page(st->sgl, &sg_iter, st->nents, 0) {
+> +               struct page *p = sg_page_iter_page(&sg_iter);
+> +               drm_clflush_pages(&p, 1);
+> +       }
+>  #else
+>         pr_err("Architecture has no drm_cache.c support\n");
+>         WARN_ON_ONCE(1);
+> --
+> 2.21.0
 >
