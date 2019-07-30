@@ -2,109 +2,224 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7648FC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35DFC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E6F0206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVBvxgZ6"
+	by mail.kernel.org (Postfix) with ESMTP id 9CE0820578
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:04:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564455866;
+	bh=Xf/wX2ohg/gTko7xy9JBaxdRaYjDHUz6ncXm9zQnIqc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XA1bZE8ly4ifSe8jDr9vvz/1d8lhjWzCSF+8GBZHvW6x8w4gbyemsMg0vauY0EcTr
+	 01WIZZs0t1B0q6nHHqgHX64MsL8xw2czFXnrsRvO4CLooCL83pTEQZrqwnqjQ/wLDr
+	 Z+XR1m5kYPDPlnjQIY9w+6+sHeh6xXTwroGuh0Ow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbfG3DEV (ORCPT
+        id S1731630AbfG3C4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:04:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41546 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfG3DES (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 23:04:18 -0400
-Received: by mail-pg1-f193.google.com with SMTP id x15so18903723pgg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 20:04:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=gD5mfEMWuXarGCctKEueAm1TQYwfzvdTbbmFFyNOtWo=;
-        b=UVBvxgZ6r/zLyKNUUmC7qzvDk5EBxkpH1aC3y+kIo97u1sg42yewB7FkZdIpZMqvpS
-         QIB4TpEnF3SyEtGHbXb/AB4jlJ9mRLrxHLY5bz5G9UFc70g+I+IJA+g1/ySrcOw/pfWt
-         tzD7FDrpyDosPIvxQacedkrga26Bv7MfrsThJiWoy5ymskilTpMy8SO2zzUd7beqKfsl
-         u4Bbb9PSRp/zymco+TgOhWf3RH0SNTve4sqmjJQ8YX7KeQehRXgKMlEsLB5DVtQL2FOR
-         sfTCYP4R/1c2eDlXt/0WCDtWBVhW7r29c2S1WcHEstdLYrR/syUqDu72U6O9LfaWd3Qt
-         0WkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=gD5mfEMWuXarGCctKEueAm1TQYwfzvdTbbmFFyNOtWo=;
-        b=jr2YxxwkZB144QFs+EM7HhCpaGkjj2wW9umSfAv7QGoMM6MfirOQcodRh0agiJTKJj
-         EliL/kx5uJ1TNFu6LxkSjJf3ELh8xy4Umh6Rn2fqYoKFoZp/3DzrHTkTiaKmNEBsVjNI
-         2HrnPi6OTx+ZgF2VgSZa43VDG6EbyHsnM9c4amBDKpZw8UTLyQ4ydVhd7riRvUpY33jp
-         SuFRPhNa1y4grVCMf+cJg//cRMYWUOLewVmsaFcSzDugseWGfG+m2rkz4/Ek7hMmJaeE
-         VC5tL7zPVID9B0Qj3N0h9Nq1PntR138mnSlWc1e+MXezn2J97z7xDIyJzqfov51ry6z/
-         04eQ==
-X-Gm-Message-State: APjAAAXnyrmAYaFkycbmNgiA3687iBEKXplkwbgEaut1kLCdzPgRNaTZ
-        P8U1VozEsNTxV/bV2yPqTJ8=
-X-Google-Smtp-Source: APXvYqzdWv0EJeJ8yPP/yNdZlsxyvWTQ6kqL8q4wcSPSHXHBf6Lp1lQKBVsPsqDq/ZrNU2RgtE/OJA==
-X-Received: by 2002:a17:90a:1aa4:: with SMTP id p33mr116749314pjp.27.1564455858074;
-        Mon, 29 Jul 2019 20:04:18 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id n185sm45771965pga.16.2019.07.29.20.04.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 20:04:17 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 08:34:11 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeeeun Evans <jeeeunevans@gmail.com>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        hdegoede@redhat.com, Larry.Finger@lwfinger.net
-Subject: [PATCH] staging: rtl8723bs: core: Remove Macro
- "IS_MAC_ADDRESS_BROADCAST"
-Message-ID: <20190730030411.GA6140@hari-Inspiron-1545>
+        Mon, 29 Jul 2019 22:56:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731600AbfG3C4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 22:56:45 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB1E521726;
+        Tue, 30 Jul 2019 02:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564455404;
+        bh=Xf/wX2ohg/gTko7xy9JBaxdRaYjDHUz6ncXm9zQnIqc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=irCoCt7gdrjz00Y7m7xiBSVRUaC3GEKhNB69C9i4zvmP4YJOkzW+duv1ZiWWvwcbR
+         7zbeM8eYZb+Hi+5YDrbperKXimKpvhNPXZKVNIcfTB77MeZdAyJ3u4LpYhelgbuxwq
+         mqUAwRaS81Syr5RJLl7hnMGdn2yU7ivoaBL8vCnQ=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>
+Subject: [PATCH 008/107] perf trace: Allow specifying the bpf prog to augment specific syscalls
+Date:   Mon, 29 Jul 2019 23:54:31 -0300
+Message-Id: <20190730025610.22603-9-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
+References: <20190730025610.22603-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unused macro IS_MAC_ADDRESS_BROADCAST. In future if one wants use
-it ,use generic API "is_broadcast_ether_addr"
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+This is a step in the direction of being able to use a
+BPF_MAP_TYPE_PROG_ARRAY to handle syscalls that need to copy pointer
+payloads in addition to the raw tracepoint syscall args.
+
+There is a first example in
+tools/perf/examples/bpf/augmented_raw_syscalls.c for the 'open' syscall.
+
+Next step is to introduce the prog array map and use this 'open'
+augmenter, then use that augmenter in other syscalls that also only copy
+the first arg as a string, and then show how to use with a syscall that
+reads more than one filename, like 'rename', etc.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-pys4v57x5qqrybb4cery2mc8@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- drivers/staging/rtl8723bs/core/rtw_ioctl_set.c | 7 -------
- 1 file changed, 7 deletions(-)
+ tools/perf/builtin-trace.c                    | 50 ++++++++++++++++++-
+ .../examples/bpf/augmented_raw_syscalls.c     | 23 +++++++++
+ 2 files changed, 71 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c b/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
-index 8eb0ff5..eb08569 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
-@@ -9,13 +9,6 @@
- #include <drv_types.h>
- #include <rtw_debug.h>
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 07df952a0d7f..6cc696edf24a 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -690,6 +690,10 @@ struct syscall_arg_fmt {
+ static struct syscall_fmt {
+ 	const char *name;
+ 	const char *alias;
++	struct {
++		const char *sys_enter,
++			   *sys_exit;
++	}	   bpf_prog_name;
+ 	struct syscall_arg_fmt arg[6];
+ 	u8	   nr_args;
+ 	bool	   errpid;
+@@ -823,6 +827,7 @@ static struct syscall_fmt {
+ 	{ .name	    = "newfstatat",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
+ 	{ .name	    = "open",
++	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_open", },
+ 	  .arg = { [1] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "open_by_handle_at",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
+@@ -967,6 +972,10 @@ struct syscall {
+ 	struct tep_event    *tp_format;
+ 	int		    nr_args;
+ 	int		    args_size;
++	struct {
++		struct bpf_program *sys_enter,
++				   *sys_exit;
++	}		    bpf_prog;
+ 	bool		    is_exit;
+ 	bool		    is_open;
+ 	struct tep_format_field *args;
+@@ -2742,6 +2751,39 @@ static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace,
+ 	return bpf_object__find_program_by_title(trace->bpf_obj, name);
+ }
  
--#define IS_MAC_ADDRESS_BROADCAST(addr) \
--(\
--	((addr[0] == 0xff) && (addr[1] == 0xff) && \
--		(addr[2] == 0xff) && (addr[3] == 0xff) && \
--		(addr[4] == 0xff) && (addr[5] == 0xff))  ? true : false \
--)
--
- u8 rtw_validate_bssid(u8 *bssid)
++static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, struct syscall *sc,
++							const char *prog_name, const char *type)
++{
++	struct bpf_program *prog;
++
++	if (prog_name == NULL)
++		goto out_unaugmented;
++
++	prog = trace__find_bpf_program_by_title(trace, prog_name);
++	if (prog != NULL)
++		return prog;
++
++	pr_debug("Couldn't find BPF prog \"%s\" to associate with syscalls:sys_%s_%s, not augmenting it\n",
++		 prog_name, type, sc->name);
++out_unaugmented:
++	return trace->syscalls.unaugmented_prog;
++}
++
++static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
++{
++	struct syscall *sc = trace__syscall_info(trace, NULL, id);
++
++	if (sc == NULL)
++		return;
++
++	if (sc->fmt != NULL) {
++		sc->bpf_prog.sys_enter = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_enter, "enter");
++		sc->bpf_prog.sys_exit  = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_exit,  "exit");
++	} else {
++		sc->bpf_prog.sys_enter = sc->bpf_prog.sys_exit = trace->syscalls.unaugmented_prog;
++	}
++}
++
+ static void trace__init_bpf_map_syscall_args(struct trace *trace, int id, struct bpf_map_syscall_entry *entry)
  {
- 	u8 ret = true;
+ 	struct syscall *sc = trace__syscall_info(trace, NULL, id);
+@@ -2773,8 +2815,10 @@ static int trace__set_ev_qualifier_bpf_filter(struct trace *trace)
+ 	for (i = 0; i < trace->ev_qualifier_ids.nr; ++i) {
+ 		int key = trace->ev_qualifier_ids.entries[i];
+ 
+-		if (value.enabled)
++		if (value.enabled) {
+ 			trace__init_bpf_map_syscall_args(trace, key, &value);
++			trace__init_syscall_bpf_progs(trace, key);
++		}
+ 
+ 		err = bpf_map_update_elem(fd, &key, &value, BPF_EXIST);
+ 		if (err)
+@@ -2793,8 +2837,10 @@ static int __trace__init_syscalls_bpf_map(struct trace *trace, bool enabled)
+ 	int err = 0, key;
+ 
+ 	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
+-		if (enabled)
++		if (enabled) {
+ 			trace__init_bpf_map_syscall_args(trace, key, &value);
++			trace__init_syscall_bpf_progs(trace, key);
++		}
+ 
+ 		err = bpf_map_update_elem(fd, &key, &value, BPF_ANY);
+ 		if (err)
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index 48a536b1be6d..66b33b299349 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -94,6 +94,29 @@ int syscall_unaugmented(struct syscall_enter_args *args)
+ 	return 1;
+ }
+ 
++/*
++ * This will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
++ * augmented_filename_map what was read by that raw_syscalls:sys_enter and go
++ * on from there, reading the first syscall arg as a string, i.e. open's
++ * filename.
++ */
++SEC("!syscalls:sys_enter_open")
++int sys_enter_open(struct syscall_enter_args *args)
++{
++	int key = 0;
++	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
++	const void *filename_arg = (const void *)args->args[0];
++	unsigned int len = sizeof(augmented_args->args);
++
++        if (augmented_args == NULL)
++                return 1; /* Failure: don't filter */
++
++	len += augmented_filename__read(&augmented_args->filename, filename_arg, sizeof(augmented_args->filename.value));
++
++	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
++}
++
+ SEC("raw_syscalls:sys_enter")
+ int sys_enter(struct syscall_enter_args *args)
+ {
 -- 
-2.7.4
+2.21.0
 
