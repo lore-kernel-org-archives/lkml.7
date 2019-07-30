@@ -2,224 +2,102 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB69C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62074C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D40D20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2703520665
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:16:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JbqA+AlT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730332AbfG3JQS (ORCPT
+        id S1730388AbfG3JQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:16:18 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:44286 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729086AbfG3JQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:16:10 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 25DCF1A061B;
-        Tue, 30 Jul 2019 11:16:08 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 63AFD1A0615;
-        Tue, 30 Jul 2019 11:16:04 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BB246402E0;
-        Tue, 30 Jul 2019 17:15:59 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biwen Li <biwen.li@nxp.com>
-Subject: [PATCH 2/3] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa: add ftm_alarm0 node
-Date:   Tue, 30 Jul 2019 17:06:33 +0800
-Message-Id: <20190730090634.25070-2-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190730090634.25070-1-biwen.li@nxp.com>
-References: <20190730090634.25070-1-biwen.li@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 30 Jul 2019 05:16:56 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34939 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727317AbfG3JQz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 05:16:55 -0400
+Received: by mail-io1-f66.google.com with SMTP id m24so126512149ioo.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 02:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8hoEmfigp9ygbOEfI9QiraZHR/SZ40vPRaaSFbyaBes=;
+        b=JbqA+AlT1qb/0bCrA/oKdW5wmCjrTbpaeKB+PKSRKP2Fh4cNKNCXeJvMII9mtX0Qmf
+         k9p2kowjwtLwsflKcOJsI7tkvGBtPU8LDqi/nZuQa4wUqbY8wMjwwjMl+TXTgs0O3d0b
+         HfNZu3Wq3N6SbsrtmCzB/gj6Q6TCXAXwhfAOWTOOUPy38yl+AB+S3otN2XJnqg85Z4dO
+         aZc7VzMy98ItGMAzuhDGl/KbqIES0OlYtc8B79qwZZCyb0IjGcL/M85iPDTAWaRW5pBT
+         gGQz0yFCi17D1Vjw0kO9FaRm1QSAvHiyQbZgn7mhslDbYCpJcMGmNiMO2YcXLwRNZh25
+         w5ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8hoEmfigp9ygbOEfI9QiraZHR/SZ40vPRaaSFbyaBes=;
+        b=UArmMCnT6RwOtwJSzeViI57u/EDfMyOkExzv7bIPK0F6w38Crez8CPxaKa4ojRdjg/
+         3iM0DEIw28MLlFudF9fGDTqeklNnaLmPc/0q0d6vkxho3myEWWorknM8R9XEJMf6zbmR
+         nlBF+mde1fJXH2yylb2hh8mhsZ81OmzJZlNDWVeO1SGeFFx8+p13Sv2EgFVmfjHB5Wol
+         XVKmiZzi6+J08iswiZIc2pdT7RkU4XkFxPCSipENjyYYyMvl+1ZL3uWrd+0FzqaLFMpy
+         GbLOs9lQJhOg6Er2DIc+fAIlqYAhgBNsXxTD9KPpf/8rDDY8ySHF9CPv1/Ieg65cnrcD
+         HOMA==
+X-Gm-Message-State: APjAAAVO2aJXj8EHhuoypFwRIDwL9+1qpOilxbAL+8jqxUJIfWST9TgT
+        jNyqb79pa6toJ0EXsrveeDdidIZpaW2DMtkihERvgg==
+X-Google-Smtp-Source: APXvYqxieDFXnqU6U75u7jANuVEvk58nHg1/NSVBtmUUBJazeojb7zc0qCMbAL8CXZ8E3neVGbHW4tRVcc1H+lyh7A4=
+X-Received: by 2002:a05:6638:303:: with SMTP id w3mr63198021jap.103.1564478214407;
+ Tue, 30 Jul 2019 02:16:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <CACT4Y+Y3nN=nLEkHXLFcX7vxp_vs1JrD=8auJ3cX9we6TQHO+w@mail.gmail.com>
+ <CACT4Y+YXQBF1QQwEPEkR3b3-RoeZw_We5B-o_71xxc9HMSyTdw@mail.gmail.com> <20190729133618.GG2368@arrakis.emea.arm.com>
+In-Reply-To: <20190729133618.GG2368@arrakis.emea.arm.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 30 Jul 2019 11:16:43 +0200
+Message-ID: <CACT4Y+bDD8s1cbMOad_S=8f=MAMagiOpZJZnQTNwBU5skm3ycQ@mail.gmail.com>
+Subject: Re: syzbot bisection analysis
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     syzkaller <syzkaller@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Eric Biggers <ebiggers@google.com>,
+        Eric Dumazet <edumazet@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch adds ftm_alarm0 DT node
-	- add new rcpm node
-	- add ftm_alarm0 node
-	- aliases ftm_alarm0 as rtc1
+On Mon, Jul 29, 2019 at 3:36 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> Hi Dmitry,
+>
+> On Mon, Jul 29, 2019 at 01:08:16PM +0200, Dmitry Vyukov wrote:
+> > The remaining 10 were all diverged due to other unrelated memory leaks
+> > and other non-leak bugs. It seems the main 2 reasons for this:
+> > 1. Lots of leaks are old (kernel is under-tested with KMEMLEAK).
+> > 2. Lots of unrelated bugs.
+> > It's unclear how much KMEMLEAK potential for false positives is in
+> > play. For example, lots of bisections are diverged by "memory leak in
+> > batadv_tvlv_handler_register", but this is a true bug reported at:
+> > https://syzkaller.appspot.com/bug?id=0654529ad3cc1d67a6d9812d8b75489c03dfb983
+> > However, some are diverged by e.g. "memory leak in __neigh_create" and
+> > "memory leak in copy_process" and these were not reported as separate
+> > leaks, so either false positives or true leaks fixed in previous
+> > releases.
+>
+> Out of curiosity, when the tool tries to bisect a memory leak, does it
+> check for precisely that leak (e.g. by function name, object size) or
+> any other unrelated leak can confuse the bisection?
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 14 ++++++++++++++
- 5 files changed, 72 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index ec6257a5b251..401210e3afd2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -22,6 +22,7 @@
- 		rtic-c = &rtic_c;
- 		rtic-d = &rtic_d;
- 		sec-mon = &sec_mon;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -500,6 +501,20 @@
- 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
-+
-+		rcpm: rcpm@1ee2140 {
-+			compatible = "fsl,ls1012a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1012a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <0 86 0x4>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 71d9ed9ff985..9ff5dd32e87d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -27,6 +27,7 @@
- 		ethernet4 = &enet4;
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -767,6 +768,19 @@
- 			big-endian;
- 		};
- 
-+		rcpm: rcpm@1ee2140 {
-+			compatible = "fsl,ls1043a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1043a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <0 86 0x4>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index b0ef08b090dd..d216375b174f 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -28,6 +28,7 @@
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
- 		ethernet7 = &enet7;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -771,6 +772,20 @@
- 			queue-sizes = <64 64>;
- 			big-endian;
- 		};
-+
-+		rcpm: rcpm@1ee208c {
-+			compatible = "fsl,ls1046a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee208c 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1046a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	reserved-memory {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index dacd8cf03a7f..61cb897b940a 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -18,6 +18,7 @@
- 
- 	aliases {
- 		crypto = &crypto;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -745,6 +746,19 @@
- 				};
- 			};
- 		};
-+
-+		rcpm: rcpm@1e34040 {
-+			compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls1088a-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <0 44 4>;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 3ace91945b72..908386042c5b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -24,6 +24,7 @@
- 		serial1 = &serial1;
- 		serial2 = &serial2;
- 		serial3 = &serial3;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpu: cpus {
-@@ -758,6 +759,19 @@
- 			reg = <0x0 0x04000000 0x0 0x01000000>;
- 			interrupts = <0 12 4>;
- 		};
-+
-+		rcpm: rcpm@1e34040 {
-+			compatible = "fsl,ls208xa-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls208xa-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <0 44 4>;
-+		};
- 	};
- 
- 	ddr1: memory-controller@1080000 {
--- 
-2.17.1
-
+Bisection of leaks uses the common scheme which is just "crashed"/"not
+crashed" (black/white, no further classification) for reasons outlined
+here:
+https://groups.google.com/forum/#!msg/syzkaller/sR8aAXaWEF4/tTWYRgvmAwAJ
+Consider object size changes across revisions, or the function is
+renamed, or code changes. Even if we take just leaks, I am not sure if
+it's possible to understand if it's the same leak or not.
