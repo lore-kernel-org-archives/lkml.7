@@ -2,130 +2,134 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCABBC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7352AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C9F206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A12208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:38:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730749AbfG3Lhy (ORCPT
+        id S1730792AbfG3LiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:37:54 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60277 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730614AbfG3Lhy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:37:54 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 39FA3802B5; Tue, 30 Jul 2019 13:37:40 +0200 (CEST)
-Date:   Tue, 30 Jul 2019 13:37:51 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.2 048/215] drm/omap: dont check dispc timings for DSI
-Message-ID: <20190730113751.GB21815@amd>
-References: <20190729190739.971253303@linuxfoundation.org>
- <20190729190748.832081009@linuxfoundation.org>
+        Tue, 30 Jul 2019 07:38:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49214 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730278AbfG3LiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:38:22 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B875D30821A0;
+        Tue, 30 Jul 2019 11:38:21 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A50C95D9E2;
+        Tue, 30 Jul 2019 11:38:21 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 8AF84149E0;
+        Tue, 30 Jul 2019 11:38:21 +0000 (UTC)
+Date:   Tue, 30 Jul 2019 07:38:21 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     snitzer@redhat.com, dan j williams <dan.j.williams@intel.com>
+Cc:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        agk@redhat.com, jencce.kernel@gmail.com
+Message-ID: <2030283543.5419072.1564486701158.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190730113708.14660-1-pagupta@redhat.com>
+References: <20190730113708.14660-1-pagupta@redhat.com>
+Subject: Re: [PATCH] dm: fix dax_dev NULL dereference
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
-Content-Disposition: inline
-In-Reply-To: <20190729190748.832081009@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.177, 10.4.195.28]
+Thread-Topic: fix dax_dev NULL dereference
+Thread-Index: DJwGj3eAs0AsRYOTmWq49b3nMP9dlA==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 30 Jul 2019 11:38:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---1LKvkjL3sHcu1TtY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon 2019-07-29 21:20:44, Greg Kroah-Hartman wrote:
-> [ Upstream commit ad9df7d91b4a6e8f4b20c2bf539ac09b3b2ad6eb ]
->=20
-> While most display types only forward their VM to the DISPC, this
-> is not true for DSI. DSI calculates the VM for DISPC based on its
-> own, but it's not identical. Actually the DSI VM is not even a valid
-> DISPC VM making this check fail. Let's restore the old behaviour
-> and avoid checking the DISPC VM for DSI here.
->=20
-> Fixes: 7c27fa57ef31 ("drm/omap: Call dispc timings check operation direct=
-ly")
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Tested-by: Tony Lindgren <tony@atomide.com>
-> Tested-by: Pavel Machek <pavel@ucw.cz>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-
-Not sure if this is good idea for stable. IIRC there's series of
-patches to enable display on droid4 (etc), which is useful, but this
-patch is not going to do any good on its own.
-
-								Pavel
-
->  drivers/gpu/drm/omapdrm/omap_crtc.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omapdr=
-m/omap_crtc.c
-> index 8712af79a49c..4c43dd282acc 100644
-> --- a/drivers/gpu/drm/omapdrm/omap_crtc.c
-> +++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
-> @@ -384,10 +384,20 @@ static enum drm_mode_status omap_crtc_mode_valid(st=
-ruct drm_crtc *crtc,
->  	int r;
-> =20
->  	drm_display_mode_to_videomode(mode, &vm);
-> -	r =3D priv->dispc_ops->mgr_check_timings(priv->dispc, omap_crtc->channe=
-l,
-> -					       &vm);
-> -	if (r)
-> -		return r;
++CC [jencce.kernel@gmail.com]
+> 
+> 
+>   'Murphy Zhou' reports[1] hitting the panic when running xfstests
+>   generic/108 on pmem ramdisk. In his words:
+> 
+>    This test is simulating partial disk error when calling fsync():
+>    create a lvm vg which consists of 2 disks:
+>    one scsi_debug disk; one other disk I specified, pmem ramdisk in this
+>    case.
+>    create lv in this vg and write to it, make sure writing across 2 disks;
+>    offline scsi_debug disk;
+>    write again to allocated area;
+>    expect fsync: IO error.
+>    If one of the disks is pmem ramdisk, it reproduces every time on my setup,
+>    on v5.3-rc2+.
+>    The mount -o dax option is not required to reproduce this panic.
+>    ...
+> 
+>   Fix this by returning false from 'device_synchronous' function when dax_dev
+>   is NULL.
+> 
+>  [ 1984.878208] BUG: kernel NULL pointer dereference, address:
+>  00000000000002d0
+>  [ 1984.882546] #PF: supervisor read access in kernel mode
+>  [ 1984.885664] #PF: error_code(0x0000) - not-present page
+>  [ 1984.888626] PGD 0 P4D 0
+>  [ 1984.890140] Oops: 0000 [#1] SMP PTI
+>  ...
+>  ...
+>  [ 1984.943682] Call Trace:
+>  [ 1984.945007]  device_synchronous+0xe/0x20 [dm_mod]
+>  [ 1984.947328]  stripe_iterate_devices+0x48/0x60 [dm_mod]
+>  [ 1984.949947]  ? dm_set_device_limits+0x130/0x130 [dm_mod]
+>  [ 1984.952516]  dm_table_supports_dax+0x39/0x90 [dm_mod]
+>  [ 1984.954989]  dm_table_set_restrictions+0x248/0x5d0 [dm_mod]
+>  [ 1984.957685]  dm_setup_md_queue+0x66/0x110 [dm_mod]
+>  [ 1984.960280]  table_load+0x1e3/0x390 [dm_mod]
+>  [ 1984.962491]  ? retrieve_status+0x1c0/0x1c0 [dm_mod]
+>  [ 1984.964910]  ctl_ioctl+0x1d3/0x550 [dm_mod]
+>  [ 1984.967006]  ? path_lookupat+0xf4/0x200
+>  [ 1984.968890]  dm_ctl_ioctl+0xa/0x10 [dm_mod]
+>  [ 1984.970920]  do_vfs_ioctl+0xa9/0x630
+>  [ 1984.972701]  ksys_ioctl+0x60/0x90
+>  [ 1984.974335]  __x64_sys_ioctl+0x16/0x20
+>  [ 1984.976221]  do_syscall_64+0x5b/0x1d0
+>  [ 1984.978091]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+>  [1]
+>  https://lore.kernel.org/linux-fsdevel/2011806368.5335560.1564469373050.JavaMail.zimbra@redhat.com/T/#mac662eb50b9d7bd282b23e6e8625a3f7a4687506
+> 
+> Fixes: 2e9ee0955d3c ("dm: enable synchronous dax")
+> Reported-by: jencce.kernel@gmail.com
+> Tested-by: jencce.kernel@gmail.com
+> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> ---
+>  drivers/md/dm-table.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index caaee8032afe..b065845c1bdd 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
+> @@ -894,6 +894,9 @@ int device_supports_dax(struct dm_target *ti, struct
+> dm_dev *dev,
+>  static int device_synchronous(struct dm_target *ti, struct dm_dev *dev,
+>  				       sector_t start, sector_t len, void *data)
+>  {
+> +	if (!dev->dax_dev)
+> +		return false;
 > +
-> +	/*
-> +	 * DSI might not call this, since the supplied mode is not a
-> +	 * valid DISPC mode. DSI will calculate and configure the
-> +	 * proper DISPC mode later.
-> +	 */
-> +	if (omap_crtc->pipe->output->next =3D=3D NULL ||
-> +	    omap_crtc->pipe->output->next->type !=3D OMAP_DISPLAY_TYPE_DSI) {
-> +		r =3D priv->dispc_ops->mgr_check_timings(priv->dispc,
-> +						       omap_crtc->channel,
-> +						       &vm);
-> +		if (r)
-> +			return r;
-> +	}
-> =20
->  	/* Check for bandwidth limit */
->  	if (priv->max_bandwidth) {
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---1LKvkjL3sHcu1TtY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1ALA8ACgkQMOfwapXb+vLivwCfSxC4OWQN/14fhb5nIvRRnOS+
-JMwAnix68z/VpEm39HRi2R0vnq3K7lOU
-=mnTv
------END PGP SIGNATURE-----
-
---1LKvkjL3sHcu1TtY--
+>  	return dax_synchronous(dev->dax_dev);
+>  }
+>  
+> --
+> 2.20.1
+> 
+> 
