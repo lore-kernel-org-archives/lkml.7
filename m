@@ -2,90 +2,156 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202BFC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54675C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F80208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257D6208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:35:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="DbmAT97h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728744AbfG3QfB (ORCPT
+        id S1728842AbfG3QfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:35:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32978 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726770AbfG3QfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:35:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 45EB2AC9B;
-        Tue, 30 Jul 2019 16:35:00 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id DCA0B1E4370; Tue, 30 Jul 2019 18:34:58 +0200 (CEST)
-Date:   Tue, 30 Jul 2019 18:34:58 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Chengguang Xu <cgxu519@zoho.com.cn>
-Cc:     Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] quota: fix condition for resetting time limit in
- do_set_dqblk()
-Message-ID: <20190730163458.GI28829@quack2.suse.cz>
-References: <20190724053216.19392-1-cgxu519@zoho.com.cn>
+        Tue, 30 Jul 2019 12:35:22 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:36795 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727025AbfG3QfV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 12:35:21 -0400
+Received: by mail-vk1-f193.google.com with SMTP id b69so12921059vkb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 09:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bd218zoMUJsn4aIQS2BNDS+uQZePQhIcqq2z5vcOhic=;
+        b=DbmAT97hG2aiN+XhQQTZB5GAaDDkGfUifEkCoJoVfvRfLFdTChp80EEGUEuP4IyxWq
+         Q/ySXZL+bKgz4ffKvibIoxHldoiPWbnpTa/r6tE4KxSgvZtu0gLHPDyEGBtSgWP0QcFT
+         hkGBj+Ls+hedLeqNzH1rnyadXMkhfGe4vLnzajogJ4YOOkASv0fErAMon/Z22+4LAQPK
+         i0YSUcsMX7a8F11PHu+wK4lc8t9+BSwbiE29SE9KVOB0t31NEQBRym30FJ2N3OPfqY2j
+         MN8E4ILhiu16fE9WVkVCnNEt+w6NmsDhYYO78AGunBVuRQ2lRf2aVLUImSTylou57g8E
+         UF1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bd218zoMUJsn4aIQS2BNDS+uQZePQhIcqq2z5vcOhic=;
+        b=hsAunVXJjzEXA1pRqUmonqJ9ryhcyFu+xsUWbS3Mo6tk0TnTsqQ//JaOA7yVHrY6oj
+         /Jg23m7ECW5a1mTNX5RXpL+5DqEVrPemnMVDlkr+15k5Jb2pE7dWqwvDBZjgaUzcUlBU
+         e89eux0Yj4/WvQLgdBl4DR8Fn1aG255vc0C03pDA8kzz6n8VMTfLghcgfiy0Age9wgRv
+         3nrSunYhlf6sygFupr+XvJc7iJNBPjlJBkDUhUDgIfVtpj3GBCDT5pWiqPPg5rBEBSOP
+         vB2Y3jKcGDrRnloWMCQPRn2RvZr8HrrGBgTK10phvCztCO8iCxRWbo4xSVD2Wzoppgpb
+         YFsA==
+X-Gm-Message-State: APjAAAVQkFjwlYXYI9G5JpxGgIy76aS5Ly5yr+EtAJW84oz+fA6uneDM
+        iESFPvpbTfvKA6IG+LPbSDm99MB4JYPgWPbRPvE=
+X-Google-Smtp-Source: APXvYqys0WpkMk5B9ROnp16nbLIVY7ZU3prgqc+nvtWnwOpbR9j0jCxIbSSadoW3uD0BTg4p7Q/DEd1I5uOt47w3sfA=
+X-Received: by 2002:a1f:1d58:: with SMTP id d85mr44781885vkd.13.1564504520182;
+ Tue, 30 Jul 2019 09:35:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724053216.19392-1-cgxu519@zoho.com.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190725135150.9972-1-vkoul@kernel.org> <20190725135150.9972-2-vkoul@kernel.org>
+In-Reply-To: <20190725135150.9972-2-vkoul@kernel.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Tue, 30 Jul 2019 22:05:09 +0530
+Message-ID: <CAHLCerNsAX4raauTjogOpwqAjEWfd+jpaZYsFnC10tcmvnD5cg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: pms405: add unit name adc nodes
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 24-07-19 13:32:16, Chengguang Xu wrote:
-> We reset time limit when current usage is smaller
-> or equal to soft limit in other place, so follow
-> this rule in do_set_dqblk().
-> 
-> Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
-
-Thanks! Applied.
-
-								Honza
-
+On Thu, Jul 25, 2019 at 7:23 PM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> The adc nodes have reg property but were missing the unit name, so add
+> that to fix these warnings:
+>
+> arch/arm64/boot/dts/qcom/pms405.dtsi:91.12-94.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/ref_gnd: node has a reg or ranges property, but no unit name
+> arch/arm64/boot/dts/qcom/pms405.dtsi:96.14-99.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/vref_1p25: node has a reg or ranges property, but no unit name
+> arch/arm64/boot/dts/qcom/pms405.dtsi:101.19-104.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/vph_pwr: node has a reg or ranges property, but no unit name
+> arch/arm64/boot/dts/qcom/pms405.dtsi:106.13-109.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/die_temp: node has a reg or ranges property, but no unit name
+> arch/arm64/boot/dts/qcom/pms405.dtsi:111.27-116.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/thermistor1: node has a reg or ranges property, but no unit name
+> arch/arm64/boot/dts/qcom/pms405.dtsi:118.27-123.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/thermistor3: node has a reg or ranges property, but no unit name
+> arch/arm64/boot/dts/qcom/pms405.dtsi:125.22-130.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/xo_temp: node has a reg or ranges property, but no unit name
+>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > ---
->  fs/quota/dquot.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-> index be9c471cdbc8..6e826b454082 100644
-> --- a/fs/quota/dquot.c
-> +++ b/fs/quota/dquot.c
-> @@ -2731,7 +2731,7 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
->  
->  	if (check_blim) {
->  		if (!dm->dqb_bsoftlimit ||
-> -		    dm->dqb_curspace + dm->dqb_rsvspace < dm->dqb_bsoftlimit) {
-> +		    dm->dqb_curspace + dm->dqb_rsvspace <= dm->dqb_bsoftlimit) {
->  			dm->dqb_btime = 0;
->  			clear_bit(DQ_BLKS_B, &dquot->dq_flags);
->  		} else if (!(di->d_fieldmask & QC_SPC_TIMER))
-> @@ -2740,7 +2740,7 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
->  	}
->  	if (check_ilim) {
->  		if (!dm->dqb_isoftlimit ||
-> -		    dm->dqb_curinodes < dm->dqb_isoftlimit) {
-> +		    dm->dqb_curinodes <= dm->dqb_isoftlimit) {
->  			dm->dqb_itime = 0;
->  			clear_bit(DQ_INODES_B, &dquot->dq_flags);
->  		} else if (!(di->d_fieldmask & QC_INO_TIMER))
-> -- 
+>  arch/arm64/boot/dts/qcom/pms405.dtsi | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> index 14240fedd916..3c10cf04d26e 100644
+> --- a/arch/arm64/boot/dts/qcom/pms405.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> @@ -88,41 +88,41 @@
+>                         #size-cells = <0>;
+>                         #io-channel-cells = <1>;
+>
+> -                       ref_gnd {
+> +                       ref_gnd@0 {
+>                                 reg = <ADC5_REF_GND>;
+>                                 qcom,pre-scaling = <1 1>;
+>                         };
+>
+> -                       vref_1p25 {
+> +                       vref_1p25@1 {
+>                                 reg = <ADC5_1P25VREF>;
+>                                 qcom,pre-scaling = <1 1>;
+>                         };
+>
+> -                       pon_1: vph_pwr {
+> +                       pon_1: vph_pwr@131 {
+>                                 reg = <ADC5_VPH_PWR>;
+>                                 qcom,pre-scaling = <1 3>;
+>                         };
+>
+> -                       die_temp {
+> +                       die_temp@6 {
+>                                 reg = <ADC5_DIE_TEMP>;
+>                                 qcom,pre-scaling = <1 1>;
+>                         };
+>
+> -                       pa_therm1: thermistor1 {
+> +                       pa_therm1: thermistor1@115 {
+
+s/115/77 ?
+
+>                                 reg = <ADC5_AMUX_THM1_100K_PU>;
+>                                 qcom,ratiometric;
+>                                 qcom,hw-settle-time = <200>;
+>                                 qcom,pre-scaling = <1 1>;
+>                         };
+>
+> -                       pa_therm3: thermistor3 {
+> +                       pa_therm3: thermistor3@117 {
+
+s/117/79 ?
+
+>                                 reg = <ADC5_AMUX_THM3_100K_PU>;
+>                                 qcom,ratiometric;
+>                                 qcom,hw-settle-time = <200>;
+>                                 qcom,pre-scaling = <1 1>;
+>                         };
+>
+> -                       xo_therm: xo_temp {
+> +                       xo_therm: xo_temp@114 {
+
+s/114/76 ?
+
+>                                 reg = <ADC5_XO_THERM_100K_PU>;
+>                                 qcom,ratiometric;
+>                                 qcom,hw-settle-time = <200>;
+> --
 > 2.20.1
-> 
-> 
-> 
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>
