@@ -2,121 +2,181 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62921C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC9BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3898C2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA15216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EwFFDpXe";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Gxd8DUT1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lkRzDG3p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbfG3KvN (ORCPT
+        id S1729426AbfG3K51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 06:51:13 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60586 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729182AbfG3KvN (ORCPT
+        Tue, 30 Jul 2019 06:57:27 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:42495 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbfG3K51 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 06:51:13 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2F8F76037C; Tue, 30 Jul 2019 10:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564483872;
-        bh=DL9JmuEtXCegm37XBTQk4cwqN21AEw0lJCHHuENxGEQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=EwFFDpXePhSxoi4TZSnCmO4z8mYMr2gquZT7CyX8yPK6nvu38IDn3WC+45jQMARN8
-         zSqz0a19MfY3Ba2czYG6r4y1NwYgjFS+xdA7zaIov2O6Wr2Pjc9n7pUDO6we/wmNnN
-         zBfe9wXfnvKOj8K7PL7LHF8lnGRcq7RVAlFx/JsU=
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 422F76030E;
-        Tue, 30 Jul 2019 10:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564483871;
-        bh=DL9JmuEtXCegm37XBTQk4cwqN21AEw0lJCHHuENxGEQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Gxd8DUT15qHAT/4ioLaszCzORntzwEC4bG0AqkjF0SHVmoqNTKBUinQYKS4RoGruI
-         L+KDdPHRmmZ//fS6BTeHiUnd4Ui26EI086YzJiQOfCwj/5CzsTduwtMRwQ84YpKJ0b
-         nlRwvYn/S5Uw+vqkovCal5hp5H7NT6/3+y1IlsPo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 422F76030E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v1 3/3] clk: qcom: rcg: update the DFS macro for RCG
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1557339895-21952-1-git-send-email-tdas@codeaurora.org>
- <1557339895-21952-4-git-send-email-tdas@codeaurora.org>
- <155742286525.14659.18081373668341127486@swboyd.mtv.corp.google.com>
- <07bcd2df-a786-ea52-8566-70f484248952@codeaurora.org>
- <155751085370.14659.7749105088997177801@swboyd.mtv.corp.google.com>
- <f65811f8-42ea-6365-7822-db662eaea228@codeaurora.org>
- <20190715224441.F12122080A@mail.kernel.org>
- <243de3a4-292b-77c0-6232-0b38d124d183@codeaurora.org>
- <20190716232228.2B84F2173E@mail.kernel.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <63d15392-f296-cd13-7821-61d59d568347@codeaurora.org>
-Date:   Tue, 30 Jul 2019 16:21:07 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 30 Jul 2019 06:57:27 -0400
+Received: by mail-vs1-f66.google.com with SMTP id 190so43144845vsf.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 03:57:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PU2Fv6R/P/i3mcSRuoPPGRfAr6wNs2iQGjXmUbGxWxs=;
+        b=lkRzDG3pOo++tgaJ/bk6mpSVrJ4U+eY8OcNTWGQUVYUYttxgttg75uet9SsFVlFj5X
+         56vVKNNShTVrkciES8RZLgERCq6Eu0inKgLrUXv+UHknTTkko1Me/AOYQaVhrvr9ul74
+         k1ZTN/KKq9M1A97FcfnuCHs66ezrP2LfZjt5Jh4mNTvBZ+Qa5vBvXihKX09g1pwef9ah
+         1RwV0XnWUyYYde3qxBhhETbVOtbuTv60HpbxbZL2DhePWYOkqd7U1ATi3lvbR2YHhSiJ
+         BqxzRofIdR8rdaLCo1QBqSHc2QbtkbxrWoMWZkIvC311uMEgvbJ1WhFqqUpQRgGI02/r
+         jRKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PU2Fv6R/P/i3mcSRuoPPGRfAr6wNs2iQGjXmUbGxWxs=;
+        b=Ny+xaNTWN9LENDBZlfdnDkcmN53hYlC41Vqvdn+57X2WXZ7yix2gJDg0QQwWyiGZ7x
+         mU2F+294yKae6bxdTKm9ltOHLumyiRjDrbtKpsC0rPTqnWQAhTeJTMmQUOEflRcW31Pz
+         3aC3dLqsosvv3aRcIqz0qj2MABiNFgf+p7OrJxf0JzbtBLngI2l0Hk3KsEnRC5BLE1vz
+         UsgGn+G4GSJQ+D2nM+jJWEXUNvMDjtQGH/vlFGbUIE4Fu4FiYB5MlV8SPImH8pKz30xj
+         RJwlfuJMT6kxNIKQeGpNXUfJ72HhBFydOctyTz8zyGD54gEBVFe+Jc8Qimirueg+L/Rh
+         Owpg==
+X-Gm-Message-State: APjAAAVUuMfa6loR8FAwvCPSKOE+TXHos8N/yfguBkP5sLYgo1oGC1A3
+        m2HLyCWONDWq1mCT4hNv/cTRgpV8ZRPZpH0y+7Q=
+X-Google-Smtp-Source: APXvYqxdHlZ4vF5yKTPQPNGjlJ/ek0vmLnEB8hjWQ9oAZTWBvgX+iEXTp/PoBM1Tn6vGEE1EyjhPaEe2qNC/+UygfcM=
+X-Received: by 2002:a67:fb87:: with SMTP id n7mr42648957vsr.9.1564484245706;
+ Tue, 30 Jul 2019 03:57:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190716232228.2B84F2173E@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-3-saravanak@google.com>
+In-Reply-To: <20190703011020.151615-3-saravanak@google.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 30 Jul 2019 16:27:14 +0530
+Message-ID: <CAHLCerP81Eotae5s4-Qye77SSF6-BbqFhckvkTEQWBD9biwzbw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] OPP: Add support for bandwidth OPP tables
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        evgreen@chromium.org, kernel-team@android.com,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 3, 2019 at 6:40 AM Saravana Kannan <saravanak@google.com> wrote:
+>
+> Not all devices quantify their performance points in terms of frequency.
+> Devices like interconnects quantify their performance points in terms of
+> bandwidth. We need a way to represent these bandwidth levels in OPP. So,
+> add support for parsing bandwidth OPPs from DT.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/opp/of.c  | 34 ++++++++++++++++++++++++++++++++--
+>  drivers/opp/opp.h |  4 +++-
+>  2 files changed, 35 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index c10c782d15aa..54fa70ed2adc 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -552,6 +552,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+>
+> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
+> +{
+> +       int ret;
+> +       u64 rate;
+> +       u32 bw;
+> +
+> +       ret = of_property_read_u64(np, "opp-hz", &rate);
+> +       if (!ret) {
+> +               /*
+> +                * Rate is defined as an unsigned long in clk API, and so
+> +                * casting explicitly to its type. Must be fixed once rate is 64
+> +                * bit guaranteed in clk API.
+> +                */
+> +               new_opp->rate = (unsigned long)rate;
+> +               return 0;
+> +       }
+> +
+> +       ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
+> +       if (ret)
+> +               return ret;
+> +       new_opp->rate = (unsigned long) &bw;
+> +
+> +       ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
+> +       if (!ret)
+> +               new_opp->avg_bw = (unsigned long) &bw;
+> +
+> +       return 0;
+> +}
+> +
+>  /**
+>   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
+>   * @opp_table: OPP table
+> @@ -589,11 +618,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+>         if (!new_opp)
+>                 return ERR_PTR(-ENOMEM);
+>
+> -       ret = of_property_read_u64(np, "opp-hz", &rate);
+> +       ret = _read_opp_key(new_opp, np);
+>         if (ret < 0) {
+>                 /* "opp-hz" is optional for devices like power domains. */
+>                 if (!opp_table->is_genpd) {
+> -                       dev_err(dev, "%s: opp-hz not found\n", __func__);
+> +                       dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
+> +                               __func__);
+>                         goto free_opp;
+>                 }
+>
+> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+> index 569b3525aa67..ead2cdafe957 100644
+> --- a/drivers/opp/opp.h
+> +++ b/drivers/opp/opp.h
+> @@ -59,7 +59,8 @@ extern struct list_head opp_tables;
+>   * @turbo:     true if turbo (boost) OPP
+>   * @suspend:   true if suspend OPP
+>   * @pstate: Device's power domain's performance state.
+> - * @rate:      Frequency in hertz
+> + * @rate:      Frequency in hertz OR Peak bandwidth in kilobytes per second
 
+rate is most often used for clk rates. Let us not overload this just
+to save one struct member. IMO, you should introduce a peak_bw member
+and then have an error check if the DT provides both rate and peak_bw
+during parsing.
 
-On 7/17/2019 4:52 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-07-15 21:22:02)
->> Hello Stephen,
->>
->> Thanks for the review.
->>
->> On 7/16/2019 4:14 AM, Stephen Boyd wrote:
->>> Quoting Taniya Das (2019-05-12 20:44:46)
->>>> On 5/10/2019 11:24 PM, Stephen Boyd wrote:
->>>>> Why is the clk name changing to not have a _src after the "root" of the
->>>>> clk name? As long as I can remember, RCGs have a "_src" postfix.
->>>>>
->>>>
->>>> Yes, the RCGs would have _src, so we do want the init data also to be
->>>> generated with _src postfix. So that we do not have to manually clean up
->>>> the generated code.
->>>>
->>>
->>> Please manually cleanup the generated code, or fix the code
->>> generator to do what you want.
->>>
->>
->> Fixing the code manually is not what we intend to do and it is time
->> consuming with too many DFS controlled clocks. This really helps us
->> align to internal code.
->>
-> 
-> And you can't fix the code generator to drop the _src part of whatever
-> is spit out for the DFS lines?
-> 
-
-Sure, will drop this.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+> + * @avg_bw:    Average bandwidth in kilobytes per second
+>   * @level:     Performance level
+>   * @supplies:  Power supplies voltage/current values
+>   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
+> @@ -81,6 +82,7 @@ struct dev_pm_opp {
+>         bool suspend;
+>         unsigned int pstate;
+>         unsigned long rate;
+> +       unsigned long avg_bw;
+>         unsigned int level;
+>
+>         struct dev_pm_opp_supply *supplies;
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
