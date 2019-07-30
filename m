@@ -2,92 +2,184 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E4AC32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABBCC32750
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F196206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:43:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6vS1VpM"
+	by mail.kernel.org (Postfix) with ESMTP id A488E2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564519460;
+	bh=P3UiamUUeG6LN1NfFcjZtH7ENsm+grTuRBggTQlXPNc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UyFpt58SVopOcry5BXnzejsXHUiADL9RC0/FQ8z19oQz1gXvPRCPp1117uIdHsI0O
+	 Z/TCw7cEkOiC9blI8PTN1+glKLE1mEuvWPnY6EY391AGSwjujW0GKszqIEEKCqhcXH
+	 PXcR8J+btWlHQzbT9vkHG899RsChP2sV/5bx0ztk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbfG3UnK (ORCPT
+        id S1727125AbfG3UoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:43:10 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42831 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbfG3UnK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:43:10 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t28so63385296lje.9;
-        Tue, 30 Jul 2019 13:43:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NeOSOuZCKnuPWQlWTYZc7E94zSZCX6CWgucI8QbC5SI=;
-        b=e6vS1VpMx06tzuYWtKIBuNEws8WAi3NUbyIV7c4StbvhwCGhsBL970rim8meTTIkWM
-         O6ZmuI6RD5nOFDouzyCl0suxmg6ejTqvmTOZ+VISXnNVogpEdiP0rxFAJ0ecsXi2Mfb8
-         RYJ67ZTGVfifqJC41HGloDKUppZCNsWmSQoNs/qEz8anDqTka3u82kUtC6pJgqk2NQoa
-         FziK5WeFt3InEumrNWBLewagXXd2Bc4unv/x7zwcBc1A9iDOmunInHHOZlqWMrjvCsqX
-         NtLNxGyeH8wrBXwUJqJF8a2hXQltEzL8VbGXsWeS7xYtM4cjZ2mCGG5VenQOWx+CQdZ1
-         m9Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NeOSOuZCKnuPWQlWTYZc7E94zSZCX6CWgucI8QbC5SI=;
-        b=YfRnArV0t2YSstLoe53EY23VD44hnWmQLX4YM/f5IMRyZv83/6B0Kh3lEwT2JsEJ3S
-         VVJf4EldL3zSR9D/DcScPW3N4Qi69xnHOMrIeAmOM8FtDBCBVpm/Yk4/CgVGS3avitxs
-         8w45+XbZsIWVvV6uYRLdiyDRAZc0eQVg2m7WVK6TihsGVg7oK5WIYzphCNpkH5eqlbKX
-         er372e8z3WMgwFi2168acxeZ7iIxNO6PJ3rK1fsUh10rbQ9ysdI/h4fJRiX0/9Zdoyv+
-         kCuOuy7fq04fGnSMmHfOyXEqoKvrx4uyr4tKzvu/u8Rby+1loZhmI6F5i2IYgjJGhxgA
-         33uQ==
-X-Gm-Message-State: APjAAAWc1mSiLnDzfRtiU1Ra9WSf9JM5jK1kLYzZV5rISG2Y+UBNf5K6
-        tUSszqSbSZzAmmPYWwFFBoI/5hnlwq1NGfFjBO6ckpWW
-X-Google-Smtp-Source: APXvYqxGggeM2c8JKjHmE9XbOYkhPz3csWiBXje6H5oE/lVW3Y1DXijh0U7E24nUj8ZS7F/lrjAURo32s+z0BYMNXYg=
-X-Received: by 2002:a2e:8650:: with SMTP id i16mr62727650ljj.178.1564519387730;
- Tue, 30 Jul 2019 13:43:07 -0700 (PDT)
+        Tue, 30 Jul 2019 16:44:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725913AbfG3UoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 16:44:19 -0400
+Received: from earth.universe (unknown [185.62.205.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9B47206A2;
+        Tue, 30 Jul 2019 20:44:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564519458;
+        bh=P3UiamUUeG6LN1NfFcjZtH7ENsm+grTuRBggTQlXPNc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HJF0xAo6pygf6VzDSGmlJ5OP5GQGQP+tmdc6jEWdXIiaqfCygfqED2Rk/NN/e8FEc
+         KY+1JQQZ/ANT3RO4dgIMTbWnUgfgH0kBGZ2vzt6P8PFVXenTYW0lCZo+r7h/zlgGce
+         2QCWy8zn3YHCZV8FJKZLcvaosNByUrSpRJJEuj2o=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 595B03C0943; Tue, 30 Jul 2019 22:44:15 +0200 (CEST)
+Date:   Tue, 30 Jul 2019 22:44:15 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 16/57] HSI: Remove dev_err() usage after
+ platform_get_irq()
+Message-ID: <20190730204415.qvqabstlv5r5m3qw@earth.universe>
+References: <20190730181557.90391-1-swboyd@chromium.org>
+ <20190730181557.90391-17-swboyd@chromium.org>
 MIME-Version: 1.0
-References: <20190730144649.19022-1-dev@pschenker.ch> <20190730144649.19022-16-dev@pschenker.ch>
-In-Reply-To: <20190730144649.19022-16-dev@pschenker.ch>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 30 Jul 2019 17:43:12 -0300
-Message-ID: <CAOMZO5BqbUzBi5nR33TOpgnR4CFAwxF34m+oKtRZ6rtMaMVu9g@mail.gmail.com>
-Subject: Re: [PATCH 15/22] ARM: dts: apalis-imx6: Add some optional I2C devices
-To:     Philippe Schenker <dev@pschenker.ch>
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Stefan Agner <stefan@agner.ch>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ugynw7smm36mkkr4"
+Content-Disposition: inline
+In-Reply-To: <20190730181557.90391-17-swboyd@chromium.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philippe,
 
-On Tue, Jul 30, 2019 at 11:57 AM Philippe Schenker <dev@pschenker.ch> wrote:
+--ugynw7smm36mkkr4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +&mipi_csi {
-> +       ipu_id = <0>;
-> +       csi_id = <1>;
-> +       v_channel = <0>;
-> +       lanes = <2>;
+Hi,
 
-None of these properties are valid upstream.
+On Tue, Jul 30, 2019 at 11:15:16AM -0700, Stephen Boyd wrote:
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
+>=20
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
+>=20
+> ret =3D
+> (
+> platform_get_irq(E, ...)
+> |
+> platform_get_irq_byname(E, ...)
+> );
+>=20
+> if ( \( ret < 0 \| ret <=3D 0 \) )
+> {
+> (
+> -if (ret !=3D -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> |
+> ...
+> -dev_err(...);
+> )
+> ...
+> }
+> // </smpl>
+>=20
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
+>=20
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>=20
+> Please apply directly to subsystem trees
+
+Thanks, queued to hsi-next.
+
+-- Sebastian
+
+>=20
+>  drivers/hsi/controllers/omap_ssi_core.c | 4 +---
+>  drivers/hsi/controllers/omap_ssi_port.c | 4 +---
+>  2 files changed, 2 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/hsi/controllers/omap_ssi_core.c b/drivers/hsi/contro=
+llers/omap_ssi_core.c
+> index 0cba567ee2d7..4bc4a201f0f6 100644
+> --- a/drivers/hsi/controllers/omap_ssi_core.c
+> +++ b/drivers/hsi/controllers/omap_ssi_core.c
+> @@ -370,10 +370,8 @@ static int ssi_add_controller(struct hsi_controller =
+*ssi,
+>  	if (err < 0)
+>  		goto out_err;
+>  	err =3D platform_get_irq_byname(pd, "gdd_mpu");
+> -	if (err < 0) {
+> -		dev_err(&pd->dev, "GDD IRQ resource missing\n");
+> +	if (err < 0)
+>  		goto out_err;
+> -	}
+>  	omap_ssi->gdd_irq =3D err;
+>  	tasklet_init(&omap_ssi->gdd_tasklet, ssi_gdd_tasklet,
+>  							(unsigned long)ssi);
+> diff --git a/drivers/hsi/controllers/omap_ssi_port.c b/drivers/hsi/contro=
+llers/omap_ssi_port.c
+> index 2cd93119515f..a0cb5be246e1 100644
+> --- a/drivers/hsi/controllers/omap_ssi_port.c
+> +++ b/drivers/hsi/controllers/omap_ssi_port.c
+> @@ -1038,10 +1038,8 @@ static int ssi_port_irq(struct hsi_port *port, str=
+uct platform_device *pd)
+>  	int err;
+> =20
+>  	err =3D platform_get_irq(pd, 0);
+> -	if (err < 0) {
+> -		dev_err(&port->device, "Port IRQ resource missing\n");
+> +	if (err < 0)
+>  		return err;
+> -	}
+>  	omap_port->irq =3D err;
+>  	err =3D devm_request_threaded_irq(&port->device, omap_port->irq, NULL,
+>  				ssi_pio_thread, IRQF_ONESHOT, "SSI PORT", port);
+> --=20
+> Sent by a computer through tubes
+>=20
+
+--ugynw7smm36mkkr4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1ArBoACgkQ2O7X88g7
++ppedw/+Jc8kGpySHPFQ4goKZ5kTA5ajxzpkcQEaKh38ZnwVpsOHZ4ktk+vpuKbo
+dwaCaaQfx9I1oPt8hkIh8Xu3Ur+hnK/MTj/dlSgBy54EjTrFA71S6Q5o+RHEcqSb
+Hj+MbUX/xP5PbUD73PAJ+EBphIDHoPOzEo9OOO8nWmDDg1F1C3cG+bv6bFgKVSxN
+dG5zbX0wdmsb8JZpm4wMidBdNx+XhRAVWpJFlqYOloummZUniI+D1SaDctJT9ad8
+KWNgZYwBU7MdG31OheLJX5mHngcje+/taccdDmKcZABIRNJSPRGWzyMHAZpgG7YY
+X6zkj4CAbXr2QjCdCOAL4iiAQr0wsp9WoWIEPWVqrMh6F2myckadf6IzfxWzpJVo
+eltgW33ZhzGttTI9GPm93BVNDVjHsAayPn6RnSLv+aF/Zgch5IU2PM+veUhFzuby
+qH7d149BzFqSX+1g8IGRsftqHqHXt+SMnHdDOV3SF42ZAxhzKF4yftfIM7UZzZFK
+760zoMR+0OVgpy4AaoaQRSMqFNCgY5194e+4pesBUlH1x58H+C8P4UpIUsSD8lgt
+mb2uNofUdr4ic+fYrRHs2oLM0U1MYjhpgNJoJGP/5wQBakVcmBaJ1zWsrooNYKmy
++L2EQ1HGKgq52gS80/YcSDSdffG1Pwka7WYjvv+CL2PkqNmriEQ=
+=akOq
+-----END PGP SIGNATURE-----
+
+--ugynw7smm36mkkr4--
