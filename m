@@ -2,178 +2,109 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15F5C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D72CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA632089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40FD7208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uOYi27sP"
+	dkim=pass (2048-bit key) header.d=jaseg.net header.i=@jaseg.net header.b="Sbq1rGrJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fy+g7haM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731291AbfG3Nr7 (ORCPT
+        id S1731545AbfG3NsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:47:59 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37058 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728240AbfG3Nr5 (ORCPT
+        Tue, 30 Jul 2019 09:48:15 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:33143 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731505AbfG3NsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:47:57 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w13so62668273eds.4;
-        Tue, 30 Jul 2019 06:47:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3fepK0Jwe5W6w8k8YhbMt3CwG0aFRSUfnwoWIEoMNS4=;
-        b=uOYi27sPVshsO12cRu1wgKTuW3aD1eYQnWnJ2Am1fF90xmwdBZJOFVJTT8BrZgmEwo
-         ZnvRXMpvklk4YTSBvnvrEuqvIRBfxTWWk3hKpkNdCDHIjKcyePB6RlSuHLJINi71cbig
-         UDS8L5FB1nzxRAGHZufvSU8oEaFBam8Yp8a1Prm3ti5hdJZDerZAju8AS4ViZS3gsZh9
-         PYBqRMQleYpz887iXlk+SP1rIyyB2D/YqW85mmSu4BRWBno5a+WyzzjE3VPw2c/pao3H
-         X9LP10UTo5/zQAPAzpMcph3soTiTW0oDStxuomLhYVyeQow+bpVeR63QBE9Jm62xV3i6
-         2qgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3fepK0Jwe5W6w8k8YhbMt3CwG0aFRSUfnwoWIEoMNS4=;
-        b=HhhJkShQ5dRKzeFjbAGC618F18cWkVX4ZdtminHXEuSxTQi3oBf4HyZPKBupqYb95e
-         6qMi7ogc/M5XK0XHHnNCxv4AluYLE1ISZ4N+sUTE7VSZxytaz908XXNrSN/0MQ7ptsZP
-         BedBQBSEjkaGVXfiE0KHY1Z31sMPdzQE21LYOrj+vNsjqR/XNAOGQufKoF2qz4dorZ+f
-         gBkrpdG2aiUpvNjcyvuBb/Z0TuZr37Pm4TIn14E2xVka/lR/fjD69zPrz+s/DxvvrQr0
-         HM8bjUfN8wB9l/xgxzf/eO7Y8dLC2Xp5HgsdKv+1IbZvfiDg6/0JpIxvPLbOcwBrJWoY
-         W6jQ==
-X-Gm-Message-State: APjAAAWQupYX4gtkEoQGFO1zgdYHCWBhCHbOywWq8uM3FjYBFzlvdCl7
-        3cIVYwTxSrg0mAACvKsuwfiD0MOjJIGz5XwluyU=
-X-Google-Smtp-Source: APXvYqw0Lss1BrfXSJ8BL7bsixwvMwj0uTRxnSUvSMt/BOqrwM0Jqj7X+7JK7PBUHyqM6cDax7UE8TnfnJ8/Xc+V/d4=
-X-Received: by 2002:a17:906:a350:: with SMTP id bz16mr91682077ejb.296.1564494475561;
- Tue, 30 Jul 2019 06:47:55 -0700 (PDT)
+        Tue, 30 Jul 2019 09:48:14 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 9D8EE2177A;
+        Tue, 30 Jul 2019 09:48:13 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 30 Jul 2019 09:48:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaseg.net; h=
+        from:subject:to:cc:in-reply-to:message-id:date:mime-version
+        :content-type:content-transfer-encoding; s=fm3; bh=BV5udAWkY68a8
+        1lrXbHWDnn+Gj2t2NQYxWIA3zsL6uE=; b=Sbq1rGrJoNq6CFknKZCn4G+tvR+fT
+        G3YYv/t7RWG7DiLouptH7h6Hk9aAS3KlufHONsf2E2s7mWXccis3CxZ0C2df+rdn
+        gMAw5/0up+kHOK059ph69R7KKpoxLBJsZDDM+krjnLDJeuKh45Zf2mB+fiU7TY2A
+        2a/h5VsnaJfaCKQFhrz8UKYxoK3/Kq3pgZrWdLVo2I5gNYUsJLDGuO1y5QZCZiOv
+        6ZRpspcuFsuboEHrEmr6822752famJWWGxkxKSlK+85T2jxLLlq6Df6edA5aQ4Am
+        ZZZ7lE6oLwqowcnEof/HWbypKKFY2Wq2YH/gkkXzWsxRYnhlEUzAJ95IQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=BV5udAWkY68a81lrXbHWDnn+Gj2t2NQYxWIA3zsL6uE=; b=fy+g7haM
+        v79C6qaq1t8vu0FhJUhFDCzf5altlp1xfpjygD5OKysJ5FmgB0vf68rFyU5pi2wJ
+        HNBLu+o1LntrjpZ6SvmBB1Zuxr0M4AJBhHFq0qp0LX2wli7Jp2JQNruDzkPY+rJz
+        yhrMUS6Kl5eQ+uhyvzDaaCEaE3FCZjLxXOvnZ5orG5bv8iM6FeoTzy6TDFjZV6U8
+        k4cLHA5IiW6q0wC7ZPsYiiBp0v6QguGrTZreWjh4ZR/Uaa/+o7qlKGtCgsnxsWHu
+        k5JK5P+bd9gkD9aOy9JSEHh02m6RehxoXLGaK99//zLsMtu/VHnEm1cKHHbgTNEE
+        75lEz652D3brdw==
+X-ME-Sender: <xms:nUpAXTvQYK6YMIB7uevrFdWJ2VvfvgkfDhiNIm1OVkPQmQzK_osDFA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleefgdeijecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhuffvjgfkffgfgggtgfesthekredttdefjeenucfhrhhomheplfgrnhgpufgv
+    sggrshhtihgrnhgpifpnthhtvgcuoehlihhnuhigsehjrghsvghgrdhnvghtqeenucfkph
+    epiedtrdejuddrieefrdejheenucfrrghrrghmpehmrghilhhfrhhomheplhhinhhugies
+    jhgrshgvghdrnhgvthenucevlhhushhtvghrufhiiigvpedu
+X-ME-Proxy: <xmx:nUpAXa7Me2QnPqiZdemfqW5Luv37tL0IJOPmEGzMJ-wFf8a3JLRY9A>
+    <xmx:nUpAXUQuEWF6TdyIEOHAXdD24X3XbqVzk_Z9ZtH01tYzuAN2-eqsIw>
+    <xmx:nUpAXanYS-G5WQ-_ypICJU-L2mUbSsnKE8BSQ5Ggs6RktkLpDc5lCg>
+    <xmx:nUpAXU3eR-E1J3LHvJqyT53iUXWdmLY77sALuYg6BPs6EA2ed2_6BA>
+Received: from [10.137.0.16] (softbank060071063075.bbtec.net [60.71.63.75])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1911880061;
+        Tue, 30 Jul 2019 09:48:11 -0400 (EDT)
+From:   =?UTF-8?Q?Jan_Sebastian_G=c3=b6tte?= <linux@jaseg.net>
+Subject: [PATCH 2/6] dt-bindings: add gooddisplay vendor prefix
+To:     dri-devel@lists.freedesktop.org
+Cc:     =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+In-Reply-To: <3c8fccc9-63f7-18bb-dcb5-dcd0b9e151d2@jaseg.net>
+Message-ID: <6bab6d9d-135b-426f-738d-f5ef5bba3453@jaseg.net>
+Date:   Tue, 30 Jul 2019 22:48:10 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190729151346.9280-1-hslester96@gmail.com> <201907292117.DA40CA7D@keescook>
- <CANhBUQ3V2A-TBVizVh+eMLSi5Gzw5sMBY7C-0a8=-z15qyQ75w@mail.gmail.com>
-In-Reply-To: <CANhBUQ3V2A-TBVizVh+eMLSi5Gzw5sMBY7C-0a8=-z15qyQ75w@mail.gmail.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Tue, 30 Jul 2019 21:47:46 +0800
-Message-ID: <CANhBUQ3pYGwKng-wxsGn3tBj3z_kN-CZQL__5YTwwJuco=fH0w@mail.gmail.com>
-Subject: Re: [PATCH 01/12] rdmacg: Replace strncmp with str_has_prefix
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chuhong Yuan <hslester96@gmail.com> =E4=BA=8E2019=E5=B9=B47=E6=9C=8830=E6=
-=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=882:39=E5=86=99=E9=81=93=EF=BC=9A
->
-> Kees Cook <keescook@chromium.org> =E4=BA=8E2019=E5=B9=B47=E6=9C=8830=E6=
-=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=8812:26=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > On Mon, Jul 29, 2019 at 11:13:46PM +0800, Chuhong Yuan wrote:
-> > > strncmp(str, const, len) is error-prone.
-> > > We had better use newly introduced
-> > > str_has_prefix() instead of it.
-> >
-> > Wait, stop. :) After Laura called my attention to your conversion serie=
-s,
-> > mpe pointed out that str_has_prefix() is almost redundant to strstarts(=
-)
-> > (from 2009), and the latter has many more users. Let's fix strstarts()
-> > match str_has_prefix()'s return behavior (all the existing callers are
-> > doing boolean tests, so the change in return value won't matter), and
-> > then we can continue with this replacement. (And add some documentation
-> > to Documenation/process/deprecated.rst along with a checkpatch.pl test
-> > maybe too?)
-> >
->
-> Thanks for your advice!
-> Does that mean replacing strstarts()'s implementation with
-> str_has_prefix()'s and then use strstarts() to substitute
-> strncmp?
->
-> I am not very clear about how to add the test into checkpatch.pl.
-> Should I write a check for this pattern or directly add strncmp into
-> deprecated_apis?
->
-> > Actually I'd focus first on the actually broken cases first (sizeof()
-> > without the "-1", etc):
-> >
-> > $ git grep strncmp.*sizeof | grep -v -- '-' | wc -l
-> > 17
-> >
-> > I expect the "copy/paste" changes could just be a Coccinelle script tha=
-t
-> > Linus could run to fix all the cases (and should be added to the kernel
-> > source's list of Coccinelle scripts). Especially since the bulk of the
-> > usage pattern are doing literals like this:
-> >
->
-> Actually I am using a Coccinelle script to detect the cases and
-> have found 800+ places of strncmp(str, const, len).
-> But the script still needs some improvement since it has false
-> negatives and only focuses on detecting, not replacement.
-> I can upload it after improvement.
-> In which form should I upload it? In a patch's description or put it
-> in coccinelle scripts?
->
-> > arch/alpha/kernel/setup.c:   if (strncmp(p, "mem=3D", 4) =3D=3D 0) {
-> >
-> > $ git grep -E 'strncmp.*(sizeof|, *[0-9]*)' | wc -l
-> > 2565
-> >
-> > And some cases are weirdly backwards:
-> >
-> > tools/perf/util/callchain.c:  if (!strncmp(tok, "none", strlen(tok))) {
-> >
+Dalian Good Display Co., Ltd. among others makes three-color epaper
+panels.
 
-I find there are cases of this pattern are not wrong.
-One example is kernel/irq/debugfs.c: if (!strncmp(buf, "trigger", size)) {
+Signed-off-by: Jan Sebastian Götte <linux@jaseg.net>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thus I do not know whether I should include these cases in my script.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 33a65a45e319..fae6da6cd77d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -339,6 +339,8 @@ patternProperties:
+     description: GlobalTop Technology, Inc.
+   "^gmt,.*":
+     description: Global Mixed-mode Technology, Inc.
++  "^gooddisplay,.*":
++    description: Dalian Good Display Co., Ltd.
+   "^goodix,.*":
+     description: Shenzhen Huiding Technology Co., Ltd.
+   "^google,.*":
+-- 
+2.21.0
 
-> > -Kees
-> >
->
-> I think with the help of Coccinelle script, all strncmp(str, const, len)
-> can be replaced and these problems will be eliminated. :)
->
-> Regards,
-> Chuhong
->
-> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > > ---
-> > >  kernel/cgroup/rdma.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/kernel/cgroup/rdma.c b/kernel/cgroup/rdma.c
-> > > index ae042c347c64..fd12a227f8e4 100644
-> > > --- a/kernel/cgroup/rdma.c
-> > > +++ b/kernel/cgroup/rdma.c
-> > > @@ -379,7 +379,7 @@ static int parse_resource(char *c, int *intval)
-> > >                       return -EINVAL;
-> > >               return i;
-> > >       }
-> > > -     if (strncmp(value, RDMACG_MAX_STR, len) =3D=3D 0) {
-> > > +     if (str_has_prefix(value, RDMACG_MAX_STR)) {
-> > >               *intval =3D S32_MAX;
-> > >               return i;
-> > >       }
-> > > --
-> > > 2.20.1
-> > >
-> >
-> > --
-> > Kees Cook
