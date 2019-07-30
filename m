@@ -2,92 +2,146 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8397FC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BE8C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B1220693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2397F204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGmY/e7m"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="0oB6/df/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387693AbfG3SnI (ORCPT
+        id S2387804AbfG3Sn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:43:08 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36177 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfG3SnI (ORCPT
+        Tue, 30 Jul 2019 14:43:28 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:33523 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfG3Sn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:43:08 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r7so30300838pfl.3;
-        Tue, 30 Jul 2019 11:43:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XQ1HEShJ5s73d/yzmaGNdklZsr1H4GUBmJKRPpDPWac=;
-        b=pGmY/e7mYn6/fhUsdIx/RoglIfB/4X9OYqdQsHGhi82reiyeOfK9FHszatzzMzp8Lk
-         KNeIX9Ly0NpN6VwGaTD3N+RuRjlr5UCft0cwvhatUWbShDdFUO27XeE7zTwJXZgIq+sd
-         Vm7xlJy2DLWrQ0bREA1OZqqQwshO2T5IWnvFqS0H2ZtZeMsVATpEU/PtZCwPilWI0spX
-         TQQ1dU23LhXJX3Oy0E7/XPG6VjfGokLJQt7Dg6HfKLbZl8GUUVy6AU601PyXQwhUzvQH
-         BzvKNM5W6lAmcVVneI9lpL2J0uKkY5gXGYuTfmrcMNtdzmWiiO0SRjcsfgkPqNe24grP
-         EW6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XQ1HEShJ5s73d/yzmaGNdklZsr1H4GUBmJKRPpDPWac=;
-        b=Xl7uUuoZ8q+9L+H1C9h10Hyd+Mk5TFrpUzNu4gIsl0yV4CRDztc8vpo7/CtMtlTStv
-         y546V/51oGcVaXxTHQhQ7f3EbnbjUruoFsNvLlFb8e56PUTZpBpM6P1vs2eNHbVEcn6A
-         tLwHUW17KrU5LUaJx+kc88xIyR5hv/7NPs/IYjvfNliZVy0SX30uCdu5Qt2lPStT6ua/
-         U6AqOSBDkK6pyq1rm4o7OlLEXZXR2SXH4etfQd9+72/uAuMIWJ4lzGPchSGo0Hczc21X
-         v/ctsD4aNGgH43z0lunoDTfNRutpUV2j3wPhVITw4yEmgJL78JDoEGGaLN8IZqoOcJ+T
-         7wmw==
-X-Gm-Message-State: APjAAAWGncmngnjdD3++e0DQJQeLitB4IcbC5eRBGEGdR30/sh9+EM5J
-        WzjAojWqrNqDMNg6NN0qVdfAGmAn
-X-Google-Smtp-Source: APXvYqwfjsNS8DEHByj9xWPHciC5KhmAfnuAb5KgUSFcj2zvbHeQnoxqiLY7hLOW5eaHFqfJD1Dgmw==
-X-Received: by 2002:a63:484a:: with SMTP id x10mr51948768pgk.430.1564512187173;
-        Tue, 30 Jul 2019 11:43:07 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f7sm64284652pfd.43.2019.07.30.11.43.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 11:43:06 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 11:43:05 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 000/215] 5.2.5-stable review
-Message-ID: <20190730184305.GD32293@roeck-us.net>
-References: <20190729190739.971253303@linuxfoundation.org>
+        Tue, 30 Jul 2019 14:43:27 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIhGiA3332821
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 30 Jul 2019 11:43:16 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIhGiA3332821
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564512197;
+        bh=+BB1SJcNU4L+JJkZfm+OeqH//qteO1BzhfAvtQCxHA0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=0oB6/df/BM0KgeedAaWP1IUfBvoyWWjqXZsRae1RyjpqxZEXH9QH/6hRkjqCltCVt
+         yZ45RF7Ux7g/Tk5NhjOobfU9Y0OJiCddTFbYuvD74cZOSf0gsdCcV3HM56u2igaic9
+         SVNJJRh4dNoVYTaz0HncoTXVQ19MBToEjp9tEY2TzCFn4wOpmL9CdxW30zL5ADu7CQ
+         qizJqJJYVEKdUPPD6IE3s51hJEuuLc1d6sj80YqEB2o9ON0Mmi3ZiLoZEnSrvIzv1t
+         XsfghncGAcyOiWRKDaLBCfSVHghhFa6krR0Z/HyZplgo4x7iw5F67s4PXUkrc3IG/0
+         XRmLMH0dBp2gQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIhFAW3332818;
+        Tue, 30 Jul 2019 11:43:15 -0700
+Date:   Tue, 30 Jul 2019 11:43:15 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-57f0c3b6e13ae822ba02dd37563c8e6956a47141@git.kernel.org>
+Cc:     namhyung@kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        tglx@linutronix.de, peterz@infradead.org, mingo@kernel.org,
+        ak@linux.intel.com, mpetlan@redhat.com, hpa@zytor.com,
+        alexey.budankov@linux.intel.com
+Reply-To: alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+          tglx@linutronix.de, namhyung@kernel.org,
+          linux-kernel@vger.kernel.org, acme@redhat.com,
+          alexey.budankov@linux.intel.com, mingo@kernel.org,
+          peterz@infradead.org, ak@linux.intel.com, mpetlan@redhat.com,
+          hpa@zytor.com
+In-Reply-To: <20190721112506.12306-49-jolsa@kernel.org>
+References: <20190721112506.12306-49-jolsa@kernel.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] libperf: Add perf_evlist__delete() function
+Git-Commit-ID: 57f0c3b6e13ae822ba02dd37563c8e6956a47141
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 09:19:56PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.5 release.
-> There are 215 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 31 Jul 2019 07:05:01 PM UTC.
-> Anything received after that time might be too late.
-> 
+Commit-ID:  57f0c3b6e13ae822ba02dd37563c8e6956a47141
+Gitweb:     https://git.kernel.org/tip/57f0c3b6e13ae822ba02dd37563c8e6956a47141
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Sun, 21 Jul 2019 13:24:35 +0200
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 29 Jul 2019 18:34:45 -0300
 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 364 pass: 364 fail: 0
+libperf: Add perf_evlist__delete() function
 
-Guenter
+Add the perf_evlist__delete() function to delete a perf_evlist instance.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190721112506.12306-49-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/lib/evlist.c              | 6 ++++++
+ tools/perf/lib/include/perf/evlist.h | 1 +
+ tools/perf/lib/libperf.map           | 1 +
+ 3 files changed, 8 insertions(+)
+
+diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+index 979ee423490f..087ef76ea8fd 100644
+--- a/tools/perf/lib/evlist.c
++++ b/tools/perf/lib/evlist.c
+@@ -4,6 +4,7 @@
+ #include <internal/evlist.h>
+ #include <internal/evsel.h>
+ #include <linux/zalloc.h>
++#include <stdlib.h>
+ 
+ void perf_evlist__init(struct perf_evlist *evlist)
+ {
+@@ -54,3 +55,8 @@ perf_evlist__next(struct perf_evlist *evlist, struct perf_evsel *prev)
+ 
+ 	return next;
+ }
++
++void perf_evlist__delete(struct perf_evlist *evlist)
++{
++	free(evlist);
++}
+diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
+index 5092b622935b..9a126fd0773c 100644
+--- a/tools/perf/lib/include/perf/evlist.h
++++ b/tools/perf/lib/include/perf/evlist.h
+@@ -13,6 +13,7 @@ LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
+ LIBPERF_API void perf_evlist__remove(struct perf_evlist *evlist,
+ 				     struct perf_evsel *evsel);
+ LIBPERF_API struct perf_evlist *perf_evlist__new(void);
++LIBPERF_API void perf_evlist__delete(struct perf_evlist *evlist);
+ LIBPERF_API struct perf_evsel* perf_evlist__next(struct perf_evlist *evlist,
+ 						 struct perf_evsel *evsel);
+ 
+diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
+index c0968226f7b6..153e77cd6739 100644
+--- a/tools/perf/lib/libperf.map
++++ b/tools/perf/lib/libperf.map
+@@ -14,6 +14,7 @@ LIBPERF_0.0.1 {
+ 		perf_evsel__new;
+ 		perf_evsel__init;
+ 		perf_evlist__new;
++		perf_evlist__delete;
+ 		perf_evlist__init;
+ 		perf_evlist__add;
+ 		perf_evlist__remove;
