@@ -2,112 +2,122 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BB1C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27826C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3D920644
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF34A208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:46:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564487162;
+	bh=MdCmTq2/62GOla3xYdR1q+U30DvmMzx9ilbakjTfbuY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q4uZ2KJktIk9V6f3muQ+QWGh/b+l9RVZn5oJMYhcE8Lsw1UD/1jb5JfUW7pV8Cy71
+	 7k5HbE8cMHC3tuLY5G/fLJ4RkfHvrlHzPIz7wk11ipUFNrC2d57/esYc7+itU9AQvs
+	 Dxoc0BS+x7+/2j+KvzUFP8Zn1qrn7YwnaS7N4fxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbfG3Lmg (ORCPT
+        id S1730883AbfG3LqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:42:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:59660 "EHLO foss.arm.com"
+        Tue, 30 Jul 2019 07:46:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbfG3Lmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:42:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6770428;
-        Tue, 30 Jul 2019 04:42:35 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 987123F575;
-        Tue, 30 Jul 2019 04:42:34 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 12:42:32 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm_pmu: Mark expected switch fall-through
-Message-ID: <20190730114232.GC51922@lakrids.cambridge.arm.com>
-References: <20190726112737.19309-1-anders.roxell@linaro.org>
- <20190726122956.GC26088@lakrids.cambridge.arm.com>
- <20190726151825.GA12552@e121166-lin.cambridge.arm.com>
- <20190730112415.GB51922@lakrids.cambridge.arm.com>
- <20190730112758.ctgg6l5gldsefdgs@willie-the-truck>
+        id S1728590AbfG3LqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:46:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D767D206E0;
+        Tue, 30 Jul 2019 11:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564487159;
+        bh=MdCmTq2/62GOla3xYdR1q+U30DvmMzx9ilbakjTfbuY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hNRILnIGpwN0IQ17UgUT9sNy5oW3a2JqVMfOgkS1x5zDIp+bnrnOA5gUA3vFMnckT
+         ImalFhGvGWcRgYOH4oWtJGoEErv0Hg16NWumKADitrYbYxaF5WUPl3I9wt65hcy2D5
+         UpEcc6XDJDwSe5h8nvuSvpKdK1R8vJAO2KCAu+Nk=
+Date:   Tue, 30 Jul 2019 13:45:56 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        Salvatore Bellizzi <salvatore.bellizzi@linux.seppia.net>,
+        andy.shevchenko@gmail.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        egranata@chromium.org, egranata@google.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        linux-acpi@vger.kernel.org, Benson Leung <bleung@chromium.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] driver core: platform: return -ENXIO for missing GpioInt
+Message-ID: <20190730114556.GA10673@kroah.com>
+References: <20190729204954.25510-1-briannorris@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190730112758.ctgg6l5gldsefdgs@willie-the-truck>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190729204954.25510-1-briannorris@chromium.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 12:27:59PM +0100, Will Deacon wrote:
-> On Tue, Jul 30, 2019 at 12:24:15PM +0100, Mark Rutland wrote:
-> > On Fri, Jul 26, 2019 at 04:18:25PM +0100, Lorenzo Pieralisi wrote:
-> > > On Fri, Jul 26, 2019 at 01:29:56PM +0100, Mark Rutland wrote:
-> > > > On Fri, Jul 26, 2019 at 01:27:37PM +0200, Anders Roxell wrote:
-> > > > > When fall-through warnings was enabled by default the following warning
-> > > > > was starting to show up:
-> > > > > 
-> > > > > ../drivers/perf/arm_pmu.c: In function ‘cpu_pm_pmu_notify’:
-> > > > > ../drivers/perf/arm_pmu.c:726:3: warning: this statement may fall
-> > > > >  through [-Wimplicit-fallthrough=]
-> > > > >    cpu_pm_pmu_setup(armpmu, cmd);
-> > > > >    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > > > ../drivers/perf/arm_pmu.c:727:2: note: here
-> > > > >   case CPU_PM_ENTER_FAILED:
-> > > > >   ^~~~
-> > > > > 
-> > > > > Rework so that the compiler doesn't warn about fall-through.
-> > > > > 
-> > > > > Fixes: d93512ef0f0e ("Makefile: Globally enable fall-through warning")
-> > > > > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-> > > > > ---
-> > > > > 
-> > > > > I'm not convinced that this is the correct patch to fix this issue.
-> > > > > However, I can't see why we do 'armpmu->start(armpmu);' only in 'case
-> > > > > CPU_PM_ENTER_FAILED' and why we not call function cpu_pm_pmu_setup()
-> > > > > there also, since in cpu_pm_pmu_setup() has a case prepared for
-> > > > > CPU_PM_ENTER_FAILED.
-> > > > 
-> > > > I agree, think that should be:
-> > > > 
-> > > > 	case CPU_PM_EXIT:
-> > > > 	case CPU_PM_ENTER_FAILED:
-> > > > 		cpu_pm_pmu_setup(armpmu, cmd);
-> > > > 		armpmu->start(armpmu);
-> > > > 		break;
-> > > > 
-> > > > ... so that we re-start the events before we start the PMU.
-> > > > 
-> > > > That would be a fix for commit:
-> > > > 
-> > > >   da4e4f18afe0f372 ("drivers/perf: arm_pmu: implement CPU_PM notifier")
-> > > 
-> > > Yes that's correct, apologies. Probably we did not hit it because CPU PM
-> > > notifier entry failures are a pretty rare event; regardless:
-> > > 
-> > > Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > 
-> > > I can send the updated fix, just let me know.
-> > 
-> > I'm not sure what Will wants, but assuming you do so:
-> > 
-> > Acked-by: Mark Rutland <mark.rutland@arm.com>
+On Mon, Jul 29, 2019 at 01:49:54PM -0700, Brian Norris wrote:
+> Commit daaef255dc96 ("driver: platform: Support parsing GpioInt 0 in
+> platform_get_irq()") broke the Embedded Controller driver on most LPC
+> Chromebooks (i.e., most x86 Chromebooks), because cros_ec_lpc expects
+> platform_get_irq() to return -ENXIO for non-existent IRQs.
+> Unfortunately, acpi_dev_gpio_irq_get() doesn't follow this convention
+> and returns -ENOENT instead. So we get this error from cros_ec_lpc:
 > 
-> I gave up waiting, so it's already queued here:
+>    couldn't retrieve IRQ number (-2)
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/commit/?h=for-next/fixes&id=0d7fd70f26039bd4b33444ca47f0e69ce3ae0354
+> I see a variety of drivers that treat -ENXIO specially, so rather than
+> fix all of them, let's fix up the API to restore its previous behavior.
+> 
+> I reported this on v2 of this patch:
+> 
+> https://lore.kernel.org/lkml/20190220180538.GA42642@google.com/
+> 
+> but apparently the patch had already been merged before v3 got sent out:
+> 
+> https://lore.kernel.org/lkml/20190221193429.161300-1-egranata@chromium.org/
+> 
+> and the result is that the bug landed and remains unfixed.
+> 
+> I differ from the v3 patch by:
+>  * allowing for ret==0, even though acpi_dev_gpio_irq_get() specifically
+>    documents (and enforces) that 0 is not a valid return value (noted on
+>    the v3 review)
+>  * adding a small comment
+> 
+> Reported-by: Brian Norris <briannorris@chromium.org>
+> Reported-by: Salvatore Bellizzi <salvatore.bellizzi@linux.seppia.net>
+> Cc: Enrico Granata <egranata@chromium.org>
+> Cc: <stable@vger.kernel.org>
+> Fixes: daaef255dc96 ("driver: platform: Support parsing GpioInt 0 in platform_get_irq()")
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Enrico Granata <egranata@google.com>
+> ---
+> Side note: it might have helped alleviate some of this pain if there
+> were email notifications to the mailing list when a patch gets applied.
+> I didn't realize (and I'm not sure if Enrico did) that v2 was already
+> merged by the time I noted its mistakes. If I had known, I would have
+> suggested a follow-up patch, not a v3.
+> 
+> I know some maintainers' "tip bots" do this, but not all apparently.
 
-Great; I'll mark this thread as done, then. :)
+We can't drown out mailing list traffic with a ton of "this patch was
+applied" emails.  We send them directly to the people involved in it.
 
-Mark.
+Note, you can always set up your own "watch" for stuff like this by
+pulling linux-next every day and sending yourself any new patches that
+get applied for any specific files/directories you are concerned about.
+
+thanks,
+
+greg k-h
