@@ -2,114 +2,190 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CAAC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3EAC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C030C2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440C4206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVBJslbc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayoiR1m4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbfG3RJD (ORCPT
+        id S1730006AbfG3RKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:09:03 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36037 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729330AbfG3RJD (ORCPT
+        Tue, 30 Jul 2019 13:10:10 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39144 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfG3RKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:09:03 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so30173169pfl.3;
-        Tue, 30 Jul 2019 10:09:02 -0700 (PDT)
+        Tue, 30 Jul 2019 13:10:08 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u25so46981357wmc.4;
+        Tue, 30 Jul 2019 10:10:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=DilQFfP56DdN5Kdq5OznAgfL1puUo/GsuVBjQKuj3/o=;
-        b=bVBJslbcKBO0jyAhuYAR0WYm4kTsbpzqF5Mr+ZLHgbQ2wBjff7162J+yYre7h+vS/X
-         lnf/+ri6eA7PdX/sTZIoigkJSt2PlhP3eVwNaZkD4J7cQxPMkZTTfdh3S1kayoreYlJ6
-         dF6f6O966HFjB6ShGFbMd44IZRE3Q5MSrgZ00vWAUVceQi+QknvtzBMgogPJ3CRcATf5
-         uJuYxsB2aJjOXrSmMKos9js37MToeFWdTCPiKe+ZYqTIWbmx8xaeKvMVlIlOpN/L0+kI
-         yxj6JtDMVbxU80qAYuaTqOwaKQA5isJqu1STXW5lYauk/6Ham477G9m88D88F6xEbOL8
-         zwGw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QMMwBZ+wPi5N3A625ygkZR4cE1oderMpAJBhWBkLHY8=;
+        b=ayoiR1m4FqC/qaZmeKnUgSERK11yKotMN1DqucKBCmYKq1eVtp/g+pdQ4eTFYgpUwt
+         S3CuTM5K4/JE9uHD1Lu5hlnoj1E2DvByOiJnuJshAYaOgrloMoq+wjQT0Zb0QXFFTehp
+         hk/rlBCArnc2oZqrKX2q42JL/8+N7//FOSYlW+B+cMGYd00EcX2hufpyvm1cW1vI3qhs
+         zDagrw6LyROjyL8Anel8qSVXlvtFPO9SlGwvBwjCuxP2d+MaYT1WvD2o/SErvynoemcH
+         LHxtalLkdbMcW3Xsx3dUa93J+4MRdhBKlGEBPnuTnFaTiTt4dBKf/6C/oGOVeMe1y1Ut
+         o8AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=DilQFfP56DdN5Kdq5OznAgfL1puUo/GsuVBjQKuj3/o=;
-        b=dFgDNDHJPIXqwEhwZULxf+6wow3Cl0iXzJMaWCHy/df/KW8uuVIHbXF2y5+MJD9Wzk
-         vGmFQaj9KikT9n4MbWQMj0RmOYiGJn3x4uxaqdLRDsh6iPGP1K5ZC6pPV1I31gSxY7Tv
-         DOEc1yz51lg8q5mLgPc1SPopAPgz1oD2STYwEdAZmWL1nD6o5HzZGp3y9ZpbkA3+vRUa
-         OWf7WzZeMy+V2ZiyjSqp4JhE4FEnZQV6thNmw6mbmBB/HQ/cQgTj4K/kSiVkbfYMCFMG
-         nVE0Nip17/mkXQWrZOV+cIZVObmBJJaElRnpEpRvqvzkLHKD5O6C3d37cMFUX66HyAR8
-         72EA==
-X-Gm-Message-State: APjAAAVTfMCt5Hky0nkhkMEK3nyb6PE0WbiD/k3aLYtVi5fAnkd7s0pp
-        dWGvhdm9d3omDaBxFp3q89D/RXdb
-X-Google-Smtp-Source: APXvYqwSSWn0fcDuIRvJQkKj6u29ImFIedJydUp1B1Z/6qK6P2Rb6k9PNadGcQ/Yg4lho5d/nHAXzw==
-X-Received: by 2002:aa7:98da:: with SMTP id e26mr42667064pfm.34.1564506542116;
-        Tue, 30 Jul 2019 10:09:02 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v7sm25313099pff.87.2019.07.30.10.09.01
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QMMwBZ+wPi5N3A625ygkZR4cE1oderMpAJBhWBkLHY8=;
+        b=Cp7wP+2F2AzeBl6M2rIsENh2S5ewbEDdY5oYlDReVLg9BWK5eltstXGDPJ53hG0ZRb
+         iedRLTEq8vsY9xdFXnfvWO3YiaFxpDiDgOZMShFgdLHCJ/BQW6YM0CEG8kKFzLEkHtFt
+         kL0ngEL3/SEWy7JoN4k+Q1Jkk1Wzqc7ZXOCiSG5Ag+Wxc96Uw+R8d4Uc3f10vuZGmQPW
+         T/pE/SH7VMCtLMV/Jwl5LaLPCB/0HvEBrU5EHIN/374PMJiv2XLsnYqz+owEDwhZk+p7
+         g1K0Ix5BsRsZGGQPCAnZQz5DUongPI+RAAGKi9tWTpr8sSwkem4VVxRWt41/yiAHBuWp
+         4kTA==
+X-Gm-Message-State: APjAAAU4ohmZKH/qIILajyeQxD+ZV/hLROdLYkP5c6YjVKTIC9D7I2EF
+        7rvKDuzXSLtNs2IQWqJmH7g=
+X-Google-Smtp-Source: APXvYqxbBF6HgmRbnge5qXYXW5fvDCB0OpYXesJYnFSB2oA6mzE7L6bvZhypunTpklAoBfu+F+mM+Q==
+X-Received: by 2002:a1c:6c08:: with SMTP id h8mr16976384wmc.62.1564506605557;
+        Tue, 30 Jul 2019 10:10:05 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.gmail.com with ESMTPSA id i13sm58897736wrr.73.2019.07.30.10.10.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 10:09:01 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 10:09:00 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] watchdog: riowd: Mark expected switch fall-through
-Message-ID: <20190730170900.GA20743@roeck-us.net>
-References: <20190730014650.GA31309@embeddedor>
+        Tue, 30 Jul 2019 10:10:04 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/13] Consolidate and improve NVIDIA Tegra CPUIDLE driver(s)
+Date:   Tue, 30 Jul 2019 20:09:42 +0300
+Message-Id: <20190730170955.11987-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190730014650.GA31309@embeddedor>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 08:46:50PM -0500, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings (Building: sparc64):
-> 
-> drivers/watchdog/riowd.c: In function ‘riowd_ioctl’:
-> drivers/watchdog/riowd.c:136:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    riowd_writereg(p, riowd_timeout, WDTO_INDEX);
->    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/watchdog/riowd.c:139:2: note: here
->   case WDIOC_GETTIMEOUT:
->   ^~~~
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+Hello,
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+I was spending quite some time recently trying to hunt down CPU-suspend
+bug on Tegra30 SoC and in the end it was nailed. During that time I
+realized that the CPU Idle drivers could get some polish and gain new
+features, thus that's what this series does:
 
-> ---
->  drivers/watchdog/riowd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/riowd.c b/drivers/watchdog/riowd.c
-> index 41a2a11535a6..b35f7be20c00 100644
-> --- a/drivers/watchdog/riowd.c
-> +++ b/drivers/watchdog/riowd.c
-> @@ -134,7 +134,7 @@ static long riowd_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  			return -EINVAL;
->  		riowd_timeout = (new_margin + 59) / 60;
->  		riowd_writereg(p, riowd_timeout, WDTO_INDEX);
-> -		/* Fall */
-> +		/* Fall through */
->  
->  	case WDIOC_GETTIMEOUT:
->  		return put_user(riowd_timeout * 60, (int __user *)argp);
+  1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
+     into common drivers/cpuidle/ directory.
+
+  2. Enables CPU cluster power-down idling state on Tegra30.
+
+In the end there is a quite nice clean up of the Tegra CPUIDLE driver(s)
+and of the Tegra's arch code in general. Please review, thanks!
+
+Changelog:
+
+v4: - Fixed compilation with !CONFIG_CACHE_L2X0 (and tested that it still
+      works).
+
+    - Replaced ktime_compare() with ktime_before() in the new driver,
+      for consistency.
+
+v3: - Addressed review comments that were made by Jon Hunter to v2 by
+      splitting patches into smaller (and simpler) chunks, better
+      documenting changes in the commit messages and using proper error
+      codes in the code.
+
+      Warnings are replaced with a useful error messages in the code of
+      "Introduce unified driver for NVIDIA Tegra SoCs" patch.
+
+      Secondary CPUs parking timeout increased to 100ms because I found
+      that it actually may happen to take more than 1ms if CPU is running
+      on a *very* low frequency.
+
+      Added diagnostic messages that are reporting Flow Controller state
+      when CPU parking fails.
+
+      Further polished cpuidle driver's code.
+
+      The coupled state entering is now aborted if there is a pending SGI
+      (Software Generated Interrupt) because it will be lost after GIC's
+      power-cycling. Like it was done by the old Tegra20 CPUIDLE driver.
+
+v2: - Added patches to enable the new cpuidle driver in the defconfigs:
+
+        ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
+        ARM: tegra: Enable Tegra cpuidle driver in tegra_defconfig
+
+    - Dropped patches that removed CPUIDLE_FLAG_TIMER_STOP from the idling
+      states because that flag actually doesn't have any negative effects,
+      but still is correct for the case of a local CPU timer on older Tegra
+      SoCs:
+
+        cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from Tegra114/124 idle-state
+        cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from all states
+
+    - The "Add unified driver for NVIDIA Tegra SoCs" patch got more polish.
+      Tegra30 and Terga114 states are now squashed into a single common C7
+      state (following Parker TRM terminology, see 17.2.2.2 Power Management
+      States), more comments added, etc minor changes.
+
+Dmitry Osipenko (13):
+  ARM: tegra: Remove cpuidle drivers to replace them with a new driver
+  ARM: tegra: Change tegra_set_cpu_in_lp2() type to void
+  ARM: tegra: Propagate error from tegra_idle_lp2_last()
+  ARM: tegra: Compile sleep-tegra20/30.S unconditionally
+  ARM: tegra: Expose PM functions required for new cpuidle driver
+  ARM: tegra: Rename some of the newly exposed PM functions
+  ARM: tegra: Add tegra_pm_park_secondary_cpu()
+  clk: tegra: Add missing stubs for the case of !CONFIG_PM_SLEEP
+  cpuidle: Introduce unified driver for NVIDIA Tegra SoCs
+  cpuidle: tegra: Support CPU cluster power-down state on Tegra30
+  ARM: tegra: Create simple platform device for cpuidle driver
+  ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
+  ARM: tegra: Enable Tegra cpuidle driver in tegra_defconfig
+
+ arch/arm/configs/multi_v7_defconfig           |   1 +
+ arch/arm/configs/tegra_defconfig              |   1 +
+ arch/arm/mach-tegra/Makefile                  |  23 +-
+ arch/arm/mach-tegra/cpuidle-tegra114.c        |  89 -----
+ arch/arm/mach-tegra/cpuidle-tegra20.c         | 212 -----------
+ arch/arm/mach-tegra/cpuidle-tegra30.c         | 132 -------
+ arch/arm/mach-tegra/cpuidle.c                 |  50 ---
+ arch/arm/mach-tegra/cpuidle.h                 |  21 --
+ arch/arm/mach-tegra/irq.c                     |   3 +-
+ arch/arm/mach-tegra/pm.c                      |  50 +--
+ arch/arm/mach-tegra/pm.h                      |   4 -
+ arch/arm/mach-tegra/reset-handler.S           |  11 -
+ arch/arm/mach-tegra/reset.h                   |   9 +-
+ arch/arm/mach-tegra/sleep-tegra20.S           | 170 ---------
+ arch/arm/mach-tegra/sleep-tegra30.S           |   6 +-
+ arch/arm/mach-tegra/sleep.h                   |  15 -
+ arch/arm/mach-tegra/tegra.c                   |   7 +-
+ drivers/cpuidle/Kconfig.arm                   |   8 +
+ drivers/cpuidle/Makefile                      |   1 +
+ drivers/cpuidle/cpuidle-tegra.c               | 348 ++++++++++++++++++
+ drivers/soc/tegra/Kconfig                     |   1 -
+ include/linux/clk/tegra.h                     |  13 +
+ include/soc/tegra/cpuidle.h                   |   2 +-
+ .../mach-tegra => include/soc/tegra}/irq.h    |   8 +-
+ include/soc/tegra/pm.h                        |  31 ++
+ 25 files changed, 452 insertions(+), 764 deletions(-)
+ delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra114.c
+ delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra20.c
+ delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra30.c
+ delete mode 100644 arch/arm/mach-tegra/cpuidle.c
+ delete mode 100644 arch/arm/mach-tegra/cpuidle.h
+ create mode 100644 drivers/cpuidle/cpuidle-tegra.c
+ rename {arch/arm/mach-tegra => include/soc/tegra}/irq.h (59%)
+
+-- 
+2.22.0
+
