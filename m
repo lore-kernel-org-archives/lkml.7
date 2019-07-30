@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DCCC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62810C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281F62171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39094206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455745;
-	bh=bw7TeQ/DjJdj0desmQ1hE8iAY07f4w4dwbPqZvoFuI0=;
+	s=default; t=1564455747;
+	bh=9Q/t4L+WrSWCQ5YpOlazXkHz8GQ+0Gzu8XN2Qs/CYac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VB81Wgu9+IZFpVutdoE21FkqDV4PYJXXvEBhPQw81Ys64vZlLyvF3w9OsS9xztC8N
-	 Juznpd4g81+QW5fvd7Qj9XdVy6JqfURjGK2xAoMQQG+xjBOHOUNmU3zVjBIQ8yItL8
-	 XtKt9EfV5pMPZ9WlnuBIsJGzM4ayNq1WgWo8CTkk=
+	b=l0HxB+gmAl1vV3ts+wXm/pQ8sgO7sWIYgvlIKJgRvC09Md1/xZpC8FDj27Vv2c4WM
+	 icDIwEVwF5jF49luFoI5at8q5meh4hiKG3P8d/g0nSYz3lOSn6XJTRjx9Hv8nBjJ+L
+	 S38KnC1tu4y2i+AE1Yw17bOIQvLM/fHS0LgeW/O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732807AbfG3DCX (ORCPT
+        id S1732796AbfG3DCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:02:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732790AbfG3DCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jul 2019 23:02:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732779AbfG3DCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:02:17 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6CAF206DD;
-        Tue, 30 Jul 2019 03:02:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3120C21726;
+        Tue, 30 Jul 2019 03:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455739;
-        bh=bw7TeQ/DjJdj0desmQ1hE8iAY07f4w4dwbPqZvoFuI0=;
+        s=default; t=1564455736;
+        bh=9Q/t4L+WrSWCQ5YpOlazXkHz8GQ+0Gzu8XN2Qs/CYac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fSOzvdSpFtLmbToWjrMSi2w+3FFv5/hgjBlyQbBknn+vfV/1vRrNNnx8wdfZszNux
-         FA/AhqAEv6Xz6HyaFpDMOcyh8EOSJjeco6tqmT6rBvUFg+KE8FTxahI3bhK9+ZS93x
-         tWgKNEE40cA6DaQ+H+9FKoTEp3frCLTWoMgoL9p4=
+        b=gZY/rQaC6Dn3Tg8fyTPu+vL8e51OtClMn/CwLYYlrfvYLzk57cja2i9dTv7aSoz3P
+         HNU/Bx1xluavqC3ZJ7GiOfDlsLjJwTFew0pXb5awaPIEATVWp7O0zKKXLBJEeVoen1
+         zrwoj822V6TnZ6XJkER1Dpl5/rGplsnv/rrRYN/U=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 105/107] libperf: Add perf_evsel__enable/disable test
-Date:   Mon, 29 Jul 2019 23:56:08 -0300
-Message-Id: <20190730025610.22603-106-acme@kernel.org>
+Subject: [PATCH 104/107] libperf: Add perf_evlist__enable/disable test
+Date:   Mon, 29 Jul 2019 23:56:07 -0300
+Message-Id: <20190730025610.22603-105-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add simple perf_evsel enable/disable test together with evsel counter
+Add simple perf_evlist enable/disable test together with evlist counter
 reading interface.
 
 Committer testing:
@@ -102,17 +102,17 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-79-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-78-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/tests/test-evsel.c | 43 +++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ tools/perf/lib/tests/test-evlist.c | 63 ++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-diff --git a/tools/perf/lib/tests/test-evsel.c b/tools/perf/lib/tests/test-evsel.c
-index 268712292f60..2c648fe5617e 100644
---- a/tools/perf/lib/tests/test-evsel.c
-+++ b/tools/perf/lib/tests/test-evsel.c
-@@ -70,12 +70,55 @@ static int test_stat_thread(void)
+diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/test-evlist.c
+index f24c531afcb6..4e1407f20ffd 100644
+--- a/tools/perf/lib/tests/test-evlist.c
++++ b/tools/perf/lib/tests/test-evlist.c
+@@ -111,12 +111,75 @@ static int test_stat_thread(void)
  	return 0;
  }
  
@@ -120,8 +120,14 @@ index 268712292f60..2c648fe5617e 100644
 +{
 +	struct perf_counts_values counts = { .val = 0 };
 +	struct perf_thread_map *threads;
++	struct perf_evlist *evlist;
 +	struct perf_evsel *evsel;
-+	struct perf_event_attr attr = {
++	struct perf_event_attr attr1 = {
++		.type	  = PERF_TYPE_SOFTWARE,
++		.config	  = PERF_COUNT_SW_CPU_CLOCK,
++		.disabled = 1,
++	};
++	struct perf_event_attr attr2 = {
 +		.type	  = PERF_TYPE_SOFTWARE,
 +		.config	  = PERF_COUNT_SW_TASK_CLOCK,
 +		.disabled = 1,
@@ -133,26 +139,40 @@ index 268712292f60..2c648fe5617e 100644
 +
 +	perf_thread_map__set_pid(threads, 0, 0);
 +
-+	evsel = perf_evsel__new(&attr);
-+	__T("failed to create evsel", evsel);
++	evlist = perf_evlist__new();
++	__T("failed to create evlist", evlist);
 +
-+	err = perf_evsel__open(evsel, NULL, threads);
++	evsel = perf_evsel__new(&attr1);
++	__T("failed to create evsel1", evsel);
++
++	perf_evlist__add(evlist, evsel);
++
++	evsel = perf_evsel__new(&attr2);
++	__T("failed to create evsel2", evsel);
++
++	perf_evlist__add(evlist, evsel);
++
++	perf_evlist__set_maps(evlist, NULL, threads);
++
++	err = perf_evlist__open(evlist);
 +	__T("failed to open evsel", err == 0);
 +
-+	perf_evsel__read(evsel, 0, 0, &counts);
-+	__T("failed to read value for evsel", counts.val == 0);
++	perf_evlist__for_each_evsel(evlist, evsel) {
++		perf_evsel__read(evsel, 0, 0, &counts);
++		__T("failed to read value for evsel", counts.val == 0);
++	}
 +
-+	err = perf_evsel__enable(evsel);
-+	__T("failed to enable evsel", err == 0);
++	perf_evlist__enable(evlist);
 +
-+	perf_evsel__read(evsel, 0, 0, &counts);
-+	__T("failed to read value for evsel", counts.val != 0);
++	perf_evlist__for_each_evsel(evlist, evsel) {
++		perf_evsel__read(evsel, 0, 0, &counts);
++		__T("failed to read value for evsel", counts.val != 0);
++	}
 +
-+	err = perf_evsel__disable(evsel);
-+	__T("failed to enable evsel", err == 0);
++	perf_evlist__disable(evlist);
 +
-+	perf_evsel__close(evsel);
-+	perf_evsel__delete(evsel);
++	perf_evlist__close(evlist);
++	perf_evlist__delete(evlist);
 +
 +	perf_thread_map__put(threads);
 +	return 0;
