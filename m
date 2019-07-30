@@ -2,79 +2,83 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E58C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB02C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30982054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037BF20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:36:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NPTsPRll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbfG3NgZ (ORCPT
+        id S1731133AbfG3Ngd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:36:25 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3224 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726358AbfG3NgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:36:25 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B571A76C86F14882582D;
-        Tue, 30 Jul 2019 21:36:21 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Jul 2019
- 21:36:13 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ronald@innovation.ch>, <dmitry.torokhov@gmail.com>,
-        <nikolas@gnu.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2] Input: applespi - Fix build error
-Date:   Tue, 30 Jul 2019 21:34:14 +0800
-Message-ID: <20190730133414.49008-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190729031455.59400-1-yuehaibing@huawei.com>
-References: <20190729031455.59400-1-yuehaibing@huawei.com>
+        Tue, 30 Jul 2019 09:36:33 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47680 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbfG3Ngd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 09:36:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=RC6tIGwZC6KZ5xjgsAj/6/FxTVS/oIHkMk0TVJBI0t4=; b=NPTsPRllk0O6lF3vymU3DqlDO3
+        jAkE+qu1eomwPDxkBAXbLqDioo7M326DnwK+lAbJb0FiukxRBEub7/HQpjJ5HAeruE4sU5NS4mVCp
+        zU/RD11ZUSY57jZb3GWH7OQ5fr2eLTbbvkZZfTxYNSFbStJj9GRJpZDL5cX616tIArBk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hsSIl-0007kn-Nf; Tue, 30 Jul 2019 15:36:27 +0200
+Date:   Tue, 30 Jul 2019 15:36:27 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Hubert Feurstein <h.feurstein@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH 1/4] net: dsa: mv88e6xxx: add support for MV88E6220
+Message-ID: <20190730133627.GE28552@lunn.ch>
+References: <20190730100429.32479-1-h.feurstein@gmail.com>
+ <20190730100429.32479-2-h.feurstein@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730100429.32479-2-h.feurstein@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_KEYBOARD_APPLESPI=y but CONFIG_LEDS_CLASS=m
-building fails:
+On Tue, Jul 30, 2019 at 12:04:26PM +0200, Hubert Feurstein wrote:
+> The MV88E6220 is almost the same as MV88E6250 except that the ports 2-4 are
+> not routed to pins. So the usable ports are 0, 1, 5 and 6.
+> 
+> Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
+> ---
+>  drivers/net/dsa/mv88e6xxx/chip.c | 25 +++++++++++++++++++++++++
+>  drivers/net/dsa/mv88e6xxx/chip.h |  3 ++-
+>  drivers/net/dsa/mv88e6xxx/port.h |  1 +
+>  3 files changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+> index 6b17cd961d06..c4982ced908e 100644
+> --- a/drivers/net/dsa/mv88e6xxx/chip.c
+> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
+> @@ -4283,6 +4283,31 @@ static const struct mv88e6xxx_info mv88e6xxx_table[] = {
+>  		.ops = &mv88e6240_ops,
+>  	},
 
-drivers/input/keyboard/applespi.o: In function `applespi_probe':
-applespi.c:(.text+0x1fcd): undefined reference to `devm_led_classdev_register_ext'
+Hi Hubert
 
-Add "depends on LEDS_CLASS" to the Konfig
+We try to keep all these lists in strict numerical order. Please can
+you add 6220 before 6240, in all the places you have added it.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 038b1a05eae6 ("Input: add Apple SPI keyboard and trackpad driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: use 'depends on LEDS_CLASS'
----
- drivers/input/keyboard/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index ebb19e2..90e8a7f 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -76,6 +76,7 @@ config KEYBOARD_APPLESPI
- 	depends on ACPI && EFI
- 	depends on SPI
- 	depends on X86 || COMPILE_TEST
-+	depends on LEDS_CLASS
- 	select CRC16
- 	help
- 	  Say Y here if you are running Linux on any Apple MacBook8,1 or later,
--- 
-2.7.4
-
-
+    Thanks
+	Andrew
