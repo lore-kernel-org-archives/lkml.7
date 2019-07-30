@@ -2,76 +2,195 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD8CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56566C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904EA208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564502066;
-	bh=k6CX9KEHvBk/IiymUjhqZ6rZstuFcOFgtsdawlCcPrE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O4Gdlsi+QEuEOJCy35rKLZzp7c+WpvUTzoT6oKy8HBGQ4HdZ7bc3gkp6aBLtC974A
-	 RKkEwnBC5l3CczDfxdHAcG4u0n697+yA21Hv78B6HkmghpweHgwp9WL5cCUs28mq8x
-	 Rl1UkqpQtRh2GS4imbdB9ypq5SURrjROPCqOeNT8=
+	by mail.kernel.org (Postfix) with ESMTP id 27EF6206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbfG3PyZ (ORCPT
+        id S1730122AbfG3PzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:54:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbfG3PyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:54:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49D5320693;
-        Tue, 30 Jul 2019 15:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564502063;
-        bh=k6CX9KEHvBk/IiymUjhqZ6rZstuFcOFgtsdawlCcPrE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y0TZQcG5HYJNHMqjmrglfX/lSzIIepTs/dWF31QCxJSbKJF+C0OwgJ3YmZYeYlvM/
-         Exgylz96ytkVOE/kzMq0Oe0M1WnnWon1YJMoiSlRGZdDcm226IMIPrPm2Tadb8XD93
-         rKbSP0oSnUuA8WXPa37XHgRfJ3rn4+6Q5omGPVcc=
-Date:   Tue, 30 Jul 2019 17:54:21 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-serial@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/24] LPUART fixes and improvements
-Message-ID: <20190730155421.GA15705@kroah.com>
-References: <20190729195226.8862-1-andrew.smirnov@gmail.com>
- <20190730155357.GA5448@kroah.com>
+        Tue, 30 Jul 2019 11:55:01 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36305 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbfG3PzA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 11:55:00 -0400
+Received: by mail-qk1-f195.google.com with SMTP id g18so46975263qkl.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:54:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tmCMoK1a6NCMUfLEVNFrjQmMIJ4oPpSmaEGUcUDe/1M=;
+        b=QwTqkPRQZO1BUwCaaDkBfGSeHNkn+owo80YW6Rvx5AFh0EvbFmANSleO4gM26hubYO
+         Y0zG7bIpFwoIGyzWSUM7KSZ6YlsTXKsYNtCRMQ1a7JmDwfyAnS2DCABIW5EuQs6vEMCM
+         n9QKQVywuDJOPy5uO6Xq03VPd4l63hXYpIMKAPBOg7xKlM2BOusZ/srTdLHgV1xzNyyz
+         RCwQQ5fWkpIAWgCL546X+0YdY4RFJ79ERtCTTtFj+NFgK8nxNDJYwW6WM0gBiXV62wYl
+         CuCVWEfR9tYxb/46+ScCAeaDY2YE88k3fJ6mnq6No34cwybrb7sSv0gmp3HzeB9Mux/4
+         ixBg==
+X-Gm-Message-State: APjAAAVJ+mxiNkeuoxH1ieM3sGtBhZXzs1WEMXnOTSFG2w5Q90s263r9
+        3U7SPgUzj4VwKIg+pXoNT6fd/g==
+X-Google-Smtp-Source: APXvYqzpFBivhTWycLvlACVoBJewsAX2LuoSgnRQ3Dj/7DHS83FGXnqu27tOsPQWLcDdfkYC0TLCRQ==
+X-Received: by 2002:a37:ea0c:: with SMTP id t12mr60654723qkj.117.1564502099393;
+        Tue, 30 Jul 2019 08:54:59 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id u71sm30595968qka.21.2019.07.30.08.54.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 08:54:58 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 11:54:53 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        kvm@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: Re: [PATCH net-next v5 0/5] vsock/virtio: optimizations to increase
+ the throughput
+Message-ID: <20190730115339-mutt-send-email-mst@kernel.org>
+References: <20190730154334.237789-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190730155357.GA5448@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190730154334.237789-1-sgarzare@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 05:53:57PM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Jul 29, 2019 at 12:52:02PM -0700, Andrey Smirnov wrote:
-> > Everyone:
-> > 
-> > This series contains fixes/improvements to LPUART dirver I came up
-> > with recently as well as fixes picked up from Toradex and NXP Vybrid
-> > repos.
-> > 
-> > Feedback is welcome!
+On Tue, Jul 30, 2019 at 05:43:29PM +0200, Stefano Garzarella wrote:
+> This series tries to increase the throughput of virtio-vsock with slight
+> changes.
+> While I was testing the v2 of this series I discovered an huge use of memory,
+> so I added patch 1 to mitigate this issue. I put it in this series in order
+> to better track the performance trends.
 > 
-> Nice cleanups, all now queued up.
+> v5:
+> - rebased all patches on net-next
+> - added Stefan's R-b and Michael's A-b
 
-Oops, nope, not all, have a build error...
+This doesn't solve all issues around allocation - as I mentioned I think
+we will need to improve accounting for that,
+and maybe add pre-allocation.
+But it's a great series of steps in the right direction!
+
+
+
+> v4: https://patchwork.kernel.org/cover/11047717
+> v3: https://patchwork.kernel.org/cover/10970145
+> v2: https://patchwork.kernel.org/cover/10938743
+> v1: https://patchwork.kernel.org/cover/10885431
+> 
+> Below are the benchmarks step by step. I used iperf3 [1] modified with VSOCK
+> support. As Michael suggested in the v1, I booted host and guest with 'nosmap'.
+> 
+> A brief description of patches:
+> - Patches 1:   limit the memory usage with an extra copy for small packets
+> - Patches 2+3: reduce the number of credit update messages sent to the
+>                transmitter
+> - Patches 4+5: allow the host to split packets on multiple buffers and use
+>                VIRTIO_VSOCK_MAX_PKT_BUF_SIZE as the max packet size allowed
+> 
+>                     host -> guest [Gbps]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.032     0.030    0.048    0.051
+> 64         0.061     0.059    0.108    0.117
+> 128        0.122     0.112    0.227    0.234
+> 256        0.244     0.241    0.418    0.415
+> 512        0.459     0.466    0.847    0.865
+> 1K         0.927     0.919    1.657    1.641
+> 2K         1.884     1.813    3.262    3.269
+> 4K         3.378     3.326    6.044    6.195
+> 8K         5.637     5.676   10.141   11.287
+> 16K        8.250     8.402   15.976   16.736
+> 32K       13.327    13.204   19.013   20.515
+> 64K       21.241    21.341   20.973   21.879
+> 128K      21.851    22.354   21.816   23.203
+> 256K      21.408    21.693   21.846   24.088
+> 512K      21.600    21.899   21.921   24.106
+> 
+>                     guest -> host [Gbps]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.045     0.046    0.057    0.057
+> 64         0.089     0.091    0.103    0.104
+> 128        0.170     0.179    0.192    0.200
+> 256        0.364     0.351    0.361    0.379
+> 512        0.709     0.699    0.731    0.790
+> 1K         1.399     1.407    1.395    1.427
+> 2K         2.670     2.684    2.745    2.835
+> 4K         5.171     5.199    5.305    5.451
+> 8K         8.442     8.500   10.083    9.941
+> 16K       12.305    12.259   13.519   15.385
+> 32K       11.418    11.150   11.988   24.680
+> 64K       10.778    10.659   11.589   35.273
+> 128K      10.421    10.339   10.939   40.338
+> 256K      10.300     9.719   10.508   36.562
+> 512K       9.833     9.808   10.612   35.979
+> 
+> As Stefan suggested in the v1, I measured also the efficiency in this way:
+>     efficiency = Mbps / (%CPU_Host + %CPU_Guest)
+> 
+> The '%CPU_Guest' is taken inside the VM. I know that it is not the best way,
+> but it's provided for free from iperf3 and could be an indication.
+> 
+>         host -> guest efficiency [Mbps / (%CPU_Host + %CPU_Guest)]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.35      0.45     0.79     1.02
+> 64         0.56      0.80     1.41     1.54
+> 128        1.11      1.52     3.03     3.12
+> 256        2.20      2.16     5.44     5.58
+> 512        4.17      4.18    10.96    11.46
+> 1K         8.30      8.26    20.99    20.89
+> 2K        16.82     16.31    39.76    39.73
+> 4K        30.89     30.79    74.07    75.73
+> 8K        53.74     54.49   124.24   148.91
+> 16K       80.68     83.63   200.21   232.79
+> 32K      132.27    132.52   260.81   357.07
+> 64K      229.82    230.40   300.19   444.18
+> 128K     332.60    329.78   331.51   492.28
+> 256K     331.06    337.22   339.59   511.59
+> 512K     335.58    328.50   331.56   504.56
+> 
+>         guest -> host efficiency [Mbps / (%CPU_Host + %CPU_Guest)]
+> pkt_size before opt   p 1     p 2+3    p 4+5
+> 
+> 32         0.43      0.43     0.53     0.56
+> 64         0.85      0.86     1.04     1.10
+> 128        1.63      1.71     2.07     2.13
+> 256        3.48      3.35     4.02     4.22
+> 512        6.80      6.67     7.97     8.63
+> 1K        13.32     13.31    15.72    15.94
+> 2K        25.79     25.92    30.84    30.98
+> 4K        50.37     50.48    58.79    59.69
+> 8K        95.90     96.15   107.04   110.33
+> 16K      145.80    145.43   143.97   174.70
+> 32K      147.06    144.74   146.02   282.48
+> 64K      145.25    143.99   141.62   406.40
+> 128K     149.34    146.96   147.49   489.34
+> 256K     156.35    149.81   152.21   536.37
+> 512K     151.65    150.74   151.52   519.93
+> 
+> [1] https://github.com/stefano-garzarella/iperf/
+> 
+> Stefano Garzarella (5):
+>   vsock/virtio: limit the memory used per-socket
+>   vsock/virtio: reduce credit update messages
+>   vsock/virtio: fix locking in virtio_transport_inc_tx_pkt()
+>   vhost/vsock: split packets to send using multiple buffers
+>   vsock/virtio: change the maximum packet size allowed
+> 
+>  drivers/vhost/vsock.c                   | 68 ++++++++++++-----
+>  include/linux/virtio_vsock.h            |  4 +-
+>  net/vmw_vsock/virtio_transport.c        |  1 +
+>  net/vmw_vsock/virtio_transport_common.c | 99 ++++++++++++++++++++-----
+>  4 files changed, 134 insertions(+), 38 deletions(-)
+> 
+> -- 
+> 2.20.1
