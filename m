@@ -2,348 +2,143 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CFDC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674F8C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607172064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8042064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="wDHM0oEx"
+	dkim=pass (1024-bit key) header.d=towerbridgetechnology.onmicrosoft.com header.i=@towerbridgetechnology.onmicrosoft.com header.b="vnC/uXzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbfG3THQ (ORCPT
+        id S2387599AbfG3THe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 15:07:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:33667 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfG3THQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 15:07:16 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UJ73fw3340402
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 12:07:03 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UJ73fw3340402
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564513624;
-        bh=tMX8kpm2ip7uhZYOQjC4RDCfdHAPtGwN6agP6KB1xf0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=wDHM0oExdoMIGC5zfMiwPZbS96aTZaCRi9mp/+zKIRAjBwcCP5Fci2FCbEqq4H7QD
-         V/wbBG1doXLWQjPvGxd2O5Muipaz6inbRvz2s3oHWqZ0iLSDMnJpHGqRX6TyOL90jJ
-         DVZ+o1nng8QV4jqpUSgW7PTIw11kdSOyPWGVdiV0bMd4uX9qwe5wU2VgsizqmPZHdH
-         510f4+2UV5z9iFjzUuF/E0VZsHv3yyks/UAX6UHJPPbUiwaULZPPKGnIkwQ6KFHeKf
-         s7zGMw26/6ArXx6W2ngL/RxyhSbfC3X4e4jQr+NfYuzUCaoxYsDWN9qMu3mTsfYQf1
-         TcndxQIcpg6cg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UJ727E3340397;
-        Tue, 30 Jul 2019 12:07:02 -0700
-Date:   Tue, 30 Jul 2019 12:07:02 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-f4f48e9c1adb49f732ac0abc4b2513f2b62a10cb@git.kernel.org>
-Cc:     peterz@infradead.org, alexander.shishkin@linux.intel.com,
-        linux-kernel@vger.kernel.org, acme@redhat.com, namhyung@kernel.org,
-        alexey.budankov@linux.intel.com, tglx@linutronix.de,
-        mpetlan@redhat.com, ak@linux.intel.com, jolsa@kernel.org,
-        mingo@kernel.org, hpa@zytor.com
-Reply-To: jolsa@kernel.org, mpetlan@redhat.com, ak@linux.intel.com,
-          namhyung@kernel.org, alexey.budankov@linux.intel.com,
-          linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
-          tglx@linutronix.de, acme@redhat.com,
-          alexander.shishkin@linux.intel.com, peterz@infradead.org
-In-Reply-To: <20190721112506.12306-80-jolsa@kernel.org>
-References: <20190721112506.12306-80-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] libperf: Initial documentation
-Git-Commit-ID: f4f48e9c1adb49f732ac0abc4b2513f2b62a10cb
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 15:07:34 -0400
+Received: from mail-eopbgr760137.outbound.protection.outlook.com ([40.107.76.137]:26432
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727621AbfG3THe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 15:07:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iGy9dJGcdsHFYeB+C+qutr7+mGjLlbCn9uJrHb76vSPtExMfYDFCA4mIBOIW9n37ydGOtsKzSgx/T6mV2bWPwFbOMJ1asaprx0+FAAtcMexLg1k0oBCfC1fPFDvJwcq6/K9p+WHax8UowkWeRFYICxHL6kwuXCByS1mIx9D1gdDNlLGX/SzsRSmWtMF8ZTMnPLzaGzTULz7w8y38YKkblVjg+j33V8wwHsEUqvd2WimunP/RYu2oDIJO/RTQWExKW8QNGfkbqa6ZHO9tfZVTcM195C3wmDPJfGUBWyUVV/a22cT/gO+luEFrIE01g8AmNQqlFKoUPRdIwxuu72ngWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GV5yVaYeB83MLQkTP7A2qWvza+XNI4VZb9eS8p0ZUuU=;
+ b=DtJQDTdY6cHiFVxvVxqK023Dnegsmyf/asQk/JSmE+fw/wBFclrCX//slZTA+qnLDidyoA5MO95pVlSzGyrBsedpSS/0rZmEmXJ5cCG++/T9QOs5eGlkdMxrzSp/QddJvWqmOgP8mcy6+/YKoYCv9pGQzDRfnAPny2twP0uhd6gXxtEsJnVFdZwXuEeYWuzT2qwf0Wg/8jbeS6xQoFycGP7TvrD+XF+jsLBxtQmbWsJDv8j0J1QHAgdyP0ZjM57TkzgAuRZ1TvKlRGGGc//3rP6DqYN0Hv11WhUVwGxg0H/iUIHZeACVw79JKNaL6U/++n4hLiW/LZy6yZcqQDbmsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=bayhubtech.com;dmarc=pass action=none
+ header.from=bayhubtech.com;dkim=pass header.d=bayhubtech.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=towerbridgetechnology.onmicrosoft.com;
+ s=selector2-towerbridgetechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GV5yVaYeB83MLQkTP7A2qWvza+XNI4VZb9eS8p0ZUuU=;
+ b=vnC/uXzqyGJNseTDI7++TA+RZXm77Mn37uF2L+o3LbHXRmppiv7gBuStiGhU3tGnn7fqDOc/lT4dtF0OOI4RXZK9VbI8YzRrTRAfBRBeyw5N8yo3dQcDaWQIpKE2MRnVTE0XdSZJV9FMbaywipimrnZ39gEAYFrFRh5pYVNbwKA=
+Received: from MWHPR16MB1455.namprd16.prod.outlook.com (10.175.5.21) by
+ MWHPR16MB1455.namprd16.prod.outlook.com (10.175.5.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.15; Tue, 30 Jul 2019 19:07:31 +0000
+Received: from MWHPR16MB1455.namprd16.prod.outlook.com
+ ([fe80::cc4a:10c6:fcac:d3e0]) by MWHPR16MB1455.namprd16.prod.outlook.com
+ ([fe80::cc4a:10c6:fcac:d3e0%9]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
+ 19:07:31 +0000
+From:   "Shirley Her (SC)" <shirley.her@bayhubtech.com>
+To:     "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
+        "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
+        "Max Huang (SC)" <max.huang@bayhubtech.com>,
+        "Shirley Her (SC)" <shirley.her@bayhubtech.com>
+Subject: [PATCH V3 1/2] mmc: sdhci: Fix O2 Host data read/write DLL lock phase
+ shift issue
+Thread-Topic: [PATCH V3 1/2] mmc: sdhci: Fix O2 Host data read/write DLL lock
+ phase shift issue
+Thread-Index: AQHVRwoJNw6NuC9tc0Wwlz+CI0GUdA==
+Date:   Tue, 30 Jul 2019 19:07:30 +0000
+Message-ID: <1564513648-16377-1-git-send-email-shirley.her@bayhubtech.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR02CA0003.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::16) To MWHPR16MB1455.namprd16.prod.outlook.com
+ (2603:10b6:320:28::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shirley.her@bayhubtech.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [209.36.105.184]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3e22db25-4685-40fb-2b7a-08d715212b9a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR16MB1455;
+x-ms-traffictypediagnostic: MWHPR16MB1455:
+x-microsoft-antispam-prvs: <MWHPR16MB14557516AFC51ACD01AD46228BDC0@MWHPR16MB1455.namprd16.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2000;
+x-forefront-prvs: 0114FF88F6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(396003)(136003)(39840400004)(346002)(189003)(199004)(66556008)(66476007)(6116002)(71190400001)(71200400001)(186003)(66066001)(99286004)(486006)(386003)(64756008)(6506007)(102836004)(3846002)(107886003)(66946007)(36756003)(5660300002)(6512007)(66446008)(110136005)(52116002)(54906003)(305945005)(53936002)(14454004)(6436002)(8676002)(4326008)(81166006)(2201001)(68736007)(50226002)(26005)(14444005)(2616005)(2906002)(316002)(7736002)(81156014)(256004)(8936002)(508600001)(6486002)(2501003)(476003)(86362001)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR16MB1455;H:MWHPR16MB1455.namprd16.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: bayhubtech.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6ABV6LX81D4h68vDkdtnZHEcgQSIWydb4SQDtyH0k8lMKEwZ5+qfuW3qVl24jiuXQ0kjuFjLUM0ZNzUpuRCLiB1ulu6OS8XYW+VFu2sJ4wN/Y3JGdvLtyULqjmPqFeMirh+ZAWuHLVlkUHqyfjtfoeuOvMpRPH1S/QQqhzPHHwEfmojFsqAUnwFcD5lXZ0bF+aoJUxcwuJNka5859Y791/fT9pU9x2gd9TaboxiTCt9dXOOpz6YxJr7U+MADdMSReiIP2R6fpq2W4fT61TxIa/bkQDJj4UEoEA0EtnJ9jIykVSDNcuZG2s97ha++U52iamV5qvRW5MvL2w2FV2LrAkD+I2bgM9nh91muQQohnt6vw3oKob6dW1wEIeoI8x5pgIu3DcbimLWh0Bm4STTzeRTzi5Qb2YZIIRFZctl3Xys=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-OriginatorOrg: bayhubtech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e22db25-4685-40fb-2b7a-08d715212b9a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 19:07:30.8754
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0a7aae2b-8f2e-44df-ba2f-42de7f93c642
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: shirley.her@bayhubtech.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR16MB1455
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f4f48e9c1adb49f732ac0abc4b2513f2b62a10cb
-Gitweb:     https://git.kernel.org/tip/f4f48e9c1adb49f732ac0abc4b2513f2b62a10cb
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:25:06 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:47 -0300
+Fix data read/write error in HS200 mode due to chip DLL lock phase shift
 
-libperf: Initial documentation
-
-Add initial drafts of documentation files, hugely unfinished.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-80-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by:Shirley Her <shirley.her@bayhubtech.com>
 ---
- tools/perf/lib/Documentation/Makefile              |   7 ++
- tools/perf/lib/Documentation/man/libperf.rst       | 100 +++++++++++++++++
- tools/perf/lib/Documentation/tutorial/tutorial.rst | 123 +++++++++++++++++++++
- 3 files changed, 230 insertions(+)
+change in V3:
+ 1. add more explanation in dll_recovery and execute_tuning function
+ 2. move dll_adjust_count to O2_host struct
+ 3. fix some coding style error
+ 4. renaming O2_PLL_WDT_CONTROL1 to O2_PLL_DLL_WDT_CONTROL1
 
-diff --git a/tools/perf/lib/Documentation/Makefile b/tools/perf/lib/Documentation/Makefile
-new file mode 100644
-index 000000000000..586425a88795
---- /dev/null
-+++ b/tools/perf/lib/Documentation/Makefile
-@@ -0,0 +1,7 @@
-+all:
-+	rst2man man/libperf.rst > man/libperf.7
-+	rst2pdf tutorial/tutorial.rst
-+
-+clean:
-+	rm -f man/libperf.7
-+	rm -f tutorial/tutorial.pdf
-diff --git a/tools/perf/lib/Documentation/man/libperf.rst b/tools/perf/lib/Documentation/man/libperf.rst
-new file mode 100644
-index 000000000000..09a270fccb9c
---- /dev/null
-+++ b/tools/perf/lib/Documentation/man/libperf.rst
-@@ -0,0 +1,100 @@
-+.. SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+
-+libperf
-+
-+The libperf library provides an API to access the linux kernel perf
-+events subsystem. It provides the following high level objects:
-+
-+  - struct perf_cpu_map
-+  - struct perf_thread_map
-+  - struct perf_evlist
-+  - struct perf_evsel
-+
-+reference
-+=========
-+Function reference by header files:
-+
-+perf/core.h
-+-----------
-+.. code-block:: c
-+
-+  typedef int (\*libperf_print_fn_t)(enum libperf_print_level level,
-+                                     const char \*, va_list ap);
-+
-+  void libperf_set_print(libperf_print_fn_t fn);
-+
-+perf/cpumap.h
-+-------------
-+.. code-block:: c
-+
-+  struct perf_cpu_map \*perf_cpu_map__dummy_new(void);
-+  struct perf_cpu_map \*perf_cpu_map__new(const char \*cpu_list);
-+  struct perf_cpu_map \*perf_cpu_map__read(FILE \*file);
-+  struct perf_cpu_map \*perf_cpu_map__get(struct perf_cpu_map \*map);
-+  void perf_cpu_map__put(struct perf_cpu_map \*map);
-+  int perf_cpu_map__cpu(const struct perf_cpu_map \*cpus, int idx);
-+  int perf_cpu_map__nr(const struct perf_cpu_map \*cpus);
-+  perf_cpu_map__for_each_cpu(cpu, idx, cpus)
-+
-+perf/threadmap.h
-+----------------
-+.. code-block:: c
-+
-+  struct perf_thread_map \*perf_thread_map__new_dummy(void);
-+  void perf_thread_map__set_pid(struct perf_thread_map \*map, int thread, pid_t pid);
-+  char \*perf_thread_map__comm(struct perf_thread_map \*map, int thread);
-+  struct perf_thread_map \*perf_thread_map__get(struct perf_thread_map \*map);
-+  void perf_thread_map__put(struct perf_thread_map \*map);
-+
-+perf/evlist.h
-+-------------
-+.. code-block::
-+
-+  void perf_evlist__init(struct perf_evlist \*evlist);
-+  void perf_evlist__add(struct perf_evlist \*evlist,
-+                      struct perf_evsel \*evsel);
-+  void perf_evlist__remove(struct perf_evlist \*evlist,
-+                         struct perf_evsel \*evsel);
-+  struct perf_evlist \*perf_evlist__new(void);
-+  void perf_evlist__delete(struct perf_evlist \*evlist);
-+  struct perf_evsel\* perf_evlist__next(struct perf_evlist \*evlist,
-+                                     struct perf_evsel \*evsel);
-+  int perf_evlist__open(struct perf_evlist \*evlist);
-+  void perf_evlist__close(struct perf_evlist \*evlist);
-+  void perf_evlist__enable(struct perf_evlist \*evlist);
-+  void perf_evlist__disable(struct perf_evlist \*evlist);
-+  perf_evlist__for_each_evsel(evlist, pos)
-+  void perf_evlist__set_maps(struct perf_evlist \*evlist,
-+                           struct perf_cpu_map \*cpus,
-+                           struct perf_thread_map \*threads);
-+
-+perf/evsel.h
-+------------
-+.. code-block:: c
-+
-+  struct perf_counts_values {
-+        union {
-+                struct {
-+                        uint64_t val;
-+                        uint64_t ena;
-+                        uint64_t run;
-+                };
-+                uint64_t values[3];
-+        };
-+  };
-+
-+  void perf_evsel__init(struct perf_evsel \*evsel,
-+                      struct perf_event_attr \*attr);
-+  struct perf_evsel \*perf_evsel__new(struct perf_event_attr \*attr);
-+  void perf_evsel__delete(struct perf_evsel \*evsel);
-+  int perf_evsel__open(struct perf_evsel \*evsel, struct perf_cpu_map \*cpus,
-+                     struct perf_thread_map \*threads);
-+  void perf_evsel__close(struct perf_evsel \*evsel);
-+  int perf_evsel__read(struct perf_evsel \*evsel, int cpu, int thread,
-+                     struct perf_counts_values \*count);
-+  int perf_evsel__enable(struct perf_evsel \*evsel);
-+  int perf_evsel__disable(struct perf_evsel \*evsel);
-+  int perf_evsel__apply_filter(struct perf_evsel \*evsel, const char \*filter);
-+  struct perf_cpu_map \*perf_evsel__cpus(struct perf_evsel \*evsel);
-+  struct perf_thread_map \*perf_evsel__threads(struct perf_evsel \*evsel);
-+  struct perf_event_attr \*perf_evsel__attr(struct perf_evsel \*evsel);
-diff --git a/tools/perf/lib/Documentation/tutorial/tutorial.rst b/tools/perf/lib/Documentation/tutorial/tutorial.rst
-new file mode 100644
-index 000000000000..7be7bc27b385
---- /dev/null
-+++ b/tools/perf/lib/Documentation/tutorial/tutorial.rst
-@@ -0,0 +1,123 @@
-+.. SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+
-+libperf tutorial
-+================
-+
-+Compile and install libperf from kernel sources
-+===============================================
-+.. code-block:: bash
-+
-+  git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-+  cd linux/tools/perf/lib
-+  make
-+  sudo make install prefix=/usr
-+
-+Libperf object
-+==============
-+The libperf library provides several high level objects:
-+
-+struct perf_cpu_map
-+  Provides a cpu list abstraction.
-+
-+struct perf_thread_map
-+  Provides a thread list abstraction.
-+
-+struct perf_evsel
-+  Provides an abstraction for single a perf event.
-+
-+struct perf_evlist
-+  Gathers several struct perf_evsel object and performs functions on all of them.
-+
-+The exported API binds these objects together,
-+for full reference see the libperf.7 man page.
-+
-+Examples
-+========
-+Examples aim to explain libperf functionality on simple use cases.
-+They are based in on a checked out linux kernel git tree:
-+
-+.. code-block:: bash
-+
-+  $ cd tools/perf/lib/Documentation/tutorial/
-+  $ ls -d  ex-*
-+  ex-1-compile  ex-2-evsel-stat  ex-3-evlist-stat
-+
-+ex-1-compile example
-+====================
-+This example shows the basic usage of *struct perf_cpu_map*,
-+how to create it and display its cpus:
-+
-+.. code-block:: bash
-+
-+  $ cd ex-1-compile/
-+  $ make
-+  gcc -o test test.c -lperf
-+  $ ./test
-+  0 1 2 3 4 5 6 7
-+
-+
-+The full code listing is here:
-+
-+.. code-block:: c
-+
-+   1 #include <perf/cpumap.h>
-+   2
-+   3 int main(int argc, char **Argv)
-+   4 {
-+   5         struct perf_cpu_map *cpus;
-+   6         int cpu, tmp;
-+   7
-+   8         cpus = perf_cpu_map__new(NULL);
-+   9
-+  10         perf_cpu_map__for_each_cpu(cpu, tmp, cpus)
-+  11                 fprintf(stdout, "%d ", cpu);
-+  12
-+  13         fprintf(stdout, "\n");
-+  14
-+  15         perf_cpu_map__put(cpus);
-+  16         return 0;
-+  17 }
-+
-+
-+First you need to include the proper header to have *struct perf_cpumap*
-+declaration and functions:
-+
-+.. code-block:: c
-+
-+   1 #include <perf/cpumap.h>
-+
-+
-+The *struct perf_cpumap* object is created by *perf_cpu_map__new* call.
-+The *NULL* argument asks it to populate the object with the current online CPUs list:
-+
-+.. code-block:: c
-+
-+   8         cpus = perf_cpu_map__new(NULL);
-+
-+This is paired with a *perf_cpu_map__put*, that drops its reference at the end, possibly deleting it.
-+
-+.. code-block:: c
-+
-+  15         perf_cpu_map__put(cpus);
-+
-+The iteration through the *struct perf_cpumap* CPUs is done using the *perf_cpu_map__for_each_cpu*
-+macro which requires 3 arguments:
-+
-+- cpu  - the cpu numer
-+- tmp  - iteration helper variable
-+- cpus - the *struct perf_cpumap* object
-+
-+.. code-block:: c
-+
-+  10         perf_cpu_map__for_each_cpu(cpu, tmp, cpus)
-+  11                 fprintf(stdout, "%d ", cpu);
-+
-+ex-2-evsel-stat example
-+=======================
-+
-+TBD
-+
-+ex-3-evlist-stat example
-+========================
-+
-+TBD
+change in V2:
+ 1. use usleep_range instead of udelay
+ 2. move dll_adjust_count to sdhci-pci-o2micro.com
+
+change in V1:
+ 1. add error recovery function to relock DLL with correct phase
+ 2. retunign HS200 after DLL locked
+---
+ drivers/mmc/host/sdhci-pci-o2micro.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-=
+pci-o2micro.c
+index 9dc4548..186a33d 100644
+--- a/drivers/mmc/host/sdhci-pci-o2micro.c
++++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+@@ -51,7 +51,7 @@
+ #define O2_SD_VENDOR_SETTING2	0x1C8
+ #define O2_SD_HW_TUNING_DISABLE	BIT(4)
+=20
+-#define O2_PLL_WDT_CONTROL1	0x1CC
++#define O2_PLL_DLL_WDT_CONTROL1	0x1CC
+ #define  O2_PLL_FORCE_ACTIVE	BIT(18)
+ #define  O2_PLL_LOCK_STATUS	BIT(14)
+ #define  O2_PLL_SOFT_RESET	BIT(12)
+--=20
+2.7.4
+
