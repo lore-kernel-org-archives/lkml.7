@@ -2,140 +2,141 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B78C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8004EC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6893720665
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B60206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="LguhQ+mC"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="L6DSmzQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731312AbfG3J0Z (ORCPT
+        id S1731252AbfG3J04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:26:25 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:36291 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729566AbfG3J0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:26:24 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45yWQQ4Dlkz9v6rL;
-        Tue, 30 Jul 2019 11:26:22 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=LguhQ+mC; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id KZgfe_18yVyX; Tue, 30 Jul 2019 11:26:22 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45yWQQ358Sz9v6rD;
-        Tue, 30 Jul 2019 11:26:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1564478782; bh=W494YaqgUnZA2FNm31/aP5pf5NOo4mChfve8KHyIrgo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LguhQ+mCh1Cl3JcH0/tMBY4TpGOZyqIb++mijiTCVHZV09QnAoXuaDmUQdnmZ57bd
-         uf6sUo38sJhtq7e2HwZwA24AxJF+bkaGLEpd049BpDFMLI3hds8qFwgxi7w51ec2+X
-         +hsuVhzyeJirIeuY8ttS9wqtcP8mSTxpvyoaAOyM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 848AD8B800;
-        Tue, 30 Jul 2019 11:26:23 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id jTKB_g-k_myc; Tue, 30 Jul 2019 11:26:23 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 40AC08B74F;
-        Tue, 30 Jul 2019 11:26:23 +0200 (CEST)
-Subject: Re: [PATCH v2 05/10] powerpc/fsl_booke/32: introduce
- reloc_kernel_entry() helper
-To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
-        keescook@chromium.org, kernel-hardening@lists.openwall.com
-Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
-        yebin10@huawei.com, thunder.leizhen@huawei.com,
-        jingxiangfeng@huawei.com, fanchengyang@huawei.com,
-        zhaohongjiang@huawei.com
-References: <20190730074225.39544-1-yanaijie@huawei.com>
- <20190730074225.39544-6-yanaijie@huawei.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a1159f8e-ba34-5568-aef0-31f3a8b65449@c-s.fr>
-Date:   Tue, 30 Jul 2019 11:26:23 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 30 Jul 2019 05:26:56 -0400
+Received: from sender-pp-o92.zoho.com ([135.84.80.237]:25442 "EHLO
+        sender-pp-o92.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729020AbfG3J04 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 05:26:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1564478802; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=g4GBX0zjUqPghOUaZdN8hDcN6Ciq87XF2OS+vOd8iAhiE8amWj+4qhZEHSya4p+i72aUNvmfrwFz9DFn9beyaLtDS+Aqi0Dr9DKloY878leEaWKAlQFugZrJ/OfA4gO59pw13Bgvg8Dbvyrd6ypsIDezz0B+iOxcCaYsHLgUuJU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1564478802; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To:ARC-Authentication-Results; 
+        bh=ASKwkj0b5qg5Fwxkz3wYNADsEou8Um77UtYwS51eowk=; 
+        b=O07PNCCJFUFWjxb42LXn+Tuqh7eaSnrE7sE7+aZI/yWFApYTh0vYpQJBiH6J2j6iZC30tH0F/VEHeg3pHfeCxjA4gptPd7o+xqSIIc0Vi6rapBbUvk0AGEoqllYjPWlDxjwWOpDrKX3sLp51LMpwG4BJrkfyL59mh5/7n05eD/A=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=eNewHd+DC3QHjVzaOiZIxPefbajvaQt1P0vdVP23LE5U4ej0+H+OGWOrYRmDAqTZc7k24grXD5gN
+    V5SFgOHI4piSTWk2KGO82nZzDk+rcB16VHWFVomV87Zvuvf6WRte  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1564478802;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        l=2316; bh=ASKwkj0b5qg5Fwxkz3wYNADsEou8Um77UtYwS51eowk=;
+        b=L6DSmzQpRjEQFpemZIj+HFhAMTzWjDprAdGag2faKe7EPVVYFPp9oTAE8h+IcMuF
+        MAStIBT2fPWr1wkqAN8tLZPeZb3ZlrXxK7LacX5b0fIvdE3wscxORkLkfXAuXd2355a
+        M0wOTI76Au7un7kSfFxZspnWWkJ9Cd7cSpZbYXVc=
+Received: from [192.168.88.139] (171.221.113.137 [171.221.113.137]) by mx.zohomail.com
+        with SMTPS id 1564478800053174.88358763329188; Tue, 30 Jul 2019 02:26:40 -0700 (PDT)
+Subject: Re: [PATCH 4/4 v4] irqchip: Ingenic: Add support for new Ingenic
+ Socs.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
+ <1564335273-22931-1-git-send-email-zhouyanjie@zoho.com>
+ <1564335273-22931-5-git-send-email-zhouyanjie@zoho.com>
+ <1564421133.6633.1@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, tglx@linutronix.de, mark.rutland@arm.com,
+        jason@lakedaemon.net, marc.zyngier@arm.com
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5D3FE309.7020103@zoho.com>
+Date:   Tue, 30 Jul 2019 14:26:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190730074225.39544-6-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1564421133.6633.1@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Paul,
+It seems very strange to appear another soc model in one soc's devicetree,
+and before submitting this patch I referred to some other irq drivers.=20
+Similar
+usage was found in irq-sunxi-nmi.c and irq-omap-intc.c, and the original
+irq-ingenic.c was declare jz4770, jz4775, jz4780 in the same way. So I=20
+followed
+the same method to add the declare of jz4760/x1000/x1500, this may be a=20
+little
+better.
+
+On 2019=E5=B9=B407=E6=9C=8830=E6=97=A5 01:25, Paul Cercueil wrote:
+>
+>
+> Le dim. 28 juil. 2019 =C3=A0 13:34, Zhou Yanjie <zhouyanjie@zoho.com> a=
+=20
+> =C3=A9crit :
+>> Add support for probing the irq-ingenic driver on the JZ4760/JZ4760B
+>> and the X1000/X1000E and the X1500 Socs from Ingenic.
+>>
+>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>> ---
+>>  drivers/irqchip/irq-ingenic.c | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/irqchip/irq-ingenic.c=20
+>> b/drivers/irqchip/irq-ingenic.c
+>> index 8430f5a..b72430c 100644
+>> --- a/drivers/irqchip/irq-ingenic.c
+>> +++ b/drivers/irqchip/irq-ingenic.c
+>> @@ -173,6 +173,11 @@ static int __init intc_2chip_of_init(struct=20
+>> device_node *node,
+>>  {
+>>      return ingenic_intc_of_init(node, 2);
+>>  }
+>> +IRQCHIP_DECLARE(jz4760_intc, "ingenic,jz4760-intc",=20
+>> intc_2chip_of_init);
+>> +IRQCHIP_DECLARE(jz4760b_intc, "ingenic,jz4760b-intc",=20
+>> intc_2chip_of_init);
+>>  IRQCHIP_DECLARE(jz4770_intc, "ingenic,jz4770-intc",=20
+>> intc_2chip_of_init);
+>>  IRQCHIP_DECLARE(jz4775_intc, "ingenic,jz4775-intc",=20
+>> intc_2chip_of_init);
+>>  IRQCHIP_DECLARE(jz4780_intc, "ingenic,jz4780-intc",=20
+>> intc_2chip_of_init);
+>> +IRQCHIP_DECLARE(x1000_intc, "ingenic,x1000-intc", intc_2chip_of_init);
+>> +IRQCHIP_DECLARE(x1000e_intc, "ingenic,x1000e-intc",=20
+>> intc_2chip_of_init);
+>> +IRQCHIP_DECLARE(x1500_intc, "ingenic,x1500-intc", intc_2chip_of_init);
+>
+> All these compatible strings point to the exact same behaviour. It was
+> already a mistake to have the three "ingenic,jz47[70,75,80]-intc" here;
+> there should have been only one, e.g. "ingenic,jz4770-intc" and the other
+> two SoCs using it as a fallback compatible.
+>
+> I think you don't need to add these, and in your devicetree just use
+> "ingenic,jz4780-intc" as a fallback compatible.
+>
+> Cheers,
+> -Paul
+>
+>
 
 
-Le 30/07/2019 à 09:42, Jason Yan a écrit :
-> Add a new helper reloc_kernel_entry() to jump back to the start of the
-> new kernel. After we put the new kernel in a randomized place we can use
-> this new helper to enter the kernel and begin to relocate again.
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> Cc: Diana Craciun <diana.craciun@nxp.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Kees Cook <keescook@chromium.org>
 
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
-> ---
->   arch/powerpc/kernel/head_fsl_booke.S | 13 +++++++++++++
->   arch/powerpc/mm/mmu_decl.h           |  1 +
->   2 files changed, 14 insertions(+)
-> 
-> diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
-> index 04d124fee17d..2083382dd662 100644
-> --- a/arch/powerpc/kernel/head_fsl_booke.S
-> +++ b/arch/powerpc/kernel/head_fsl_booke.S
-> @@ -1143,6 +1143,19 @@ _GLOBAL(create_tlb_entry)
->   	sync
->   	blr
->   
-> +/*
-> + * Return to the start of the relocated kernel and run again
-> + * r3 - virtual address of fdt
-> + * r4 - entry of the kernel
-> + */
-> +_GLOBAL(reloc_kernel_entry)
-> +	mfmsr	r7
-> +	rlwinm	r7, r7, 0, ~(MSR_IS | MSR_DS)
-> +
-> +	mtspr	SPRN_SRR0,r4
-> +	mtspr	SPRN_SRR1,r7
-> +	rfi
-> +
->   /*
->    * Create a tlb entry with the same effective and physical address as
->    * the tlb entry used by the current running code. But set the TS to 1.
-> diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-> index a09f89d3aa0f..804da298beb3 100644
-> --- a/arch/powerpc/mm/mmu_decl.h
-> +++ b/arch/powerpc/mm/mmu_decl.h
-> @@ -143,6 +143,7 @@ extern void adjust_total_lowmem(void);
->   extern int switch_to_as1(void);
->   extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
->   void create_tlb_entry(phys_addr_t phys, unsigned long virt, int entry);
-> +void reloc_kernel_entry(void *fdt, int addr);
->   #endif
->   extern void loadcam_entry(unsigned int index);
->   extern void loadcam_multi(int first_idx, int num, int tmp_idx);
-> 
