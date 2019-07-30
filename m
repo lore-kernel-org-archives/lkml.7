@@ -2,160 +2,203 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ED7C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C555C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E035420693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2E220693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 17:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dgl4wrJM";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VpmDr2ip"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="s7zFO4hv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbfG3R3j (ORCPT
+        id S1730825AbfG3R3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 13:29:39 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43442 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728935AbfG3R3i (ORCPT
+        Tue, 30 Jul 2019 13:29:46 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40360 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730794AbfG3R3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 13:29:38 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 468726037C; Tue, 30 Jul 2019 17:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564507777;
-        bh=E7jANAXXkajQa6C5PUztGcfWtG5q4XzpnhfVwCjYX9E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dgl4wrJMPHWyja+Qb8FeMv3prWlJBX1WSvlSbxBO2TrB5kp8ROUSHAvd7yaaLyFZs
-         oe21hvwDdwUpgSDts/iPwTSmUGTTmK1fAsW9w1d110lJ6BQ5bI/tkTcpYEM67updlO
-         tFfEoB7YYp1Xr/Kdp5CzGsAHF9Nxagkdf4NHZxZY=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0678F602BC;
-        Tue, 30 Jul 2019 17:29:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564507776;
-        bh=E7jANAXXkajQa6C5PUztGcfWtG5q4XzpnhfVwCjYX9E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VpmDr2ipp6AByTDQOLnlZBeRmVtl3lmYmYIQjWu9DWjJNPQVo+roHb0j+5s/THjoh
-         8KaLpJ+xwwF88ubJqNBr5wHKsCiTRzu/N3cM8NkLLS9GdLc0ct0HwKURiLVgVvapXC
-         KuL4JJQ/mocvPY35hZeyzZ5CGgnaBZK2aqTFdJ0M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0678F602BC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 30 Jul 2019 11:29:35 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>, mkshah@codeaurora.org
-Subject: Re: [PATCH V2 2/4] drivers: qcom: rpmh-rsc: avoid locking in the
- interrupt handler
-Message-ID: <20190730172935.GJ18620@codeaurora.org>
-References: <20190722215340.3071-2-ilina@codeaurora.org>
- <5d3769df.1c69fb81.55d03.aa33@mx.google.com>
- <20190724145251.GB18620@codeaurora.org>
- <5d38b38e.1c69fb81.e8e5d.035b@mx.google.com>
- <20190724203610.GE18620@codeaurora.org>
- <CAD=FV=UYj55m99EcQXmkYhs257A46x8DaarE0DC-GRF_3dY3-Q@mail.gmail.com>
- <20190725151851.GG18620@codeaurora.org>
- <CAD=FV=X2ENqt5+vdUoRnLTRbedj_sFdQD3Me-yYEW0fDOdBCvg@mail.gmail.com>
- <20190729190139.GH18620@codeaurora.org>
- <5d3f5d6d.1c69fb81.4c1e2.5be6@mx.google.com>
+        Tue, 30 Jul 2019 13:29:46 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a93so29113838pla.7
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 10:29:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=J96sCmcpv5jc6KXI+H8AgKlRuiuOdpzylGlevDua29k=;
+        b=s7zFO4hvKE3r2wrXraLbuzIjInUrOpzkipMUT3MEmqlN+h91X7MEgsAq+VBYsWvwBe
+         h5g0qyM68dayqk0sLwosm6cHa9EDQlu+jEC/SchSiub1IFkSS2NWv4FzxTUgkJs1UEsL
+         kdDZSFkb1sK0KRb4ucuSDjUkEmTcekI/m6etEd7PFvYjctvkWJyRE7QU0E9/GFg16XWv
+         SuiwdZ0DNSgr0HO1GLfaiaKuUQnyEFGGLOvOl3jzmq98nf5Y2MmCu1iA2sNBf57Ygrvr
+         OGPKXTImFQE/Y0+2S+/PXF5EldZUGZHNfAnipp5muXtXtcui91lfhhCGJnuw4qn/D2sY
+         d6Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=J96sCmcpv5jc6KXI+H8AgKlRuiuOdpzylGlevDua29k=;
+        b=N4yHiVLhbAiMtwtR3kRLuZuq/ZBpeR9xyv76WXoHkBvBPu4pV6UhMKWiMsIn5QMlGx
+         U+MJP3he6I9fCVk41sB5jxOfGdNHhEqqGcBq3y+MG5lUurqlUGkuMyALiNv97t2wImjz
+         6s98xODjlX3/CiEQVOKupoy99gUghN6rqwTH4d5l1DtY/J4aamr3uawSx+b6glOqxpEx
+         CfhN0QH+8oerBJLzu3RIvJA33fw6oAzXKoVJWD+Qh+W4qRc2eJgs3BA7u/JEIkn+hAVY
+         A4O4sQQ7ED9cpuOpOypWuNsca5trt/9KDqzB2dHOSyshGmGYo/oeEWWomzyZZLjhTbvb
+         rS+A==
+X-Gm-Message-State: APjAAAXDEfinHwpjUJ/nFdGhF1nCcSofdR4uuq3n44ciqMn0jdD2Y1s0
+        TxXJ6Cxqo5hHHpna23vEPk5NkH0dyGw=
+X-Google-Smtp-Source: APXvYqw3rLwiqOBVdjj2dYubSN9LIjAXB+n2EItwx0IbUGp5imTckEBC33i4pBZebEUAH8i5f3+Z4A==
+X-Received: by 2002:a17:902:e011:: with SMTP id ca17mr118509656plb.328.1564507784789;
+        Tue, 30 Jul 2019 10:29:44 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.gmail.com with ESMTPSA id o129sm39856293pfg.1.2019.07.30.10.29.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 10:29:44 -0700 (PDT)
+From:   Mark Salyzyn <salyzyn@android.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-unionfs@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: [PATCH v12 3/5] overlayfs: handle XATTR_NOSECURITY flag for get xattr method
+Date:   Tue, 30 Jul 2019 10:29:00 -0700
+Message-Id: <20190730172904.79146-4-salyzyn@android.com>
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+In-Reply-To: <20190730172904.79146-1-salyzyn@android.com>
+References: <20190730172904.79146-1-salyzyn@android.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5d3f5d6d.1c69fb81.4c1e2.5be6@mx.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29 2019 at 14:56 -0600, Stephen Boyd wrote:
->Quoting Lina Iyer (2019-07-29 12:01:39)
->> On Thu, Jul 25 2019 at 09:44 -0600, Doug Anderson wrote:
->> >On Thu, Jul 25, 2019 at 8:18 AM Lina Iyer <ilina@codeaurora.org> wrote:
->> >>
->> >> On Wed, Jul 24 2019 at 17:28 -0600, Doug Anderson wrote:
->> >> >
->> >> >Jumping in without reading all the context, but I saw this fly by and
->> >> >it seemed odd.  If I'm way off base then please ignore...
->> >> >
->> >> >Can you give more details?  Why are these drivers in atomic contexts?
->> >> >If they are in atomic contexts because they are running in the context
->> >> >of an interrupt then your next patch in the series isn't so correct.
->> >> >
->> >> >Also: when people submit requests in atomic context are they always
->> >> >submitting an asynchronous request?  In that case we could
->> >> >(presumably) just use a spinlock to protect the queue of async
->> >> >requests and a mutex for everything else?
->> >> Yes, drivers only make async requests in interrupt contexts.
->> >
->> >So correct me if I'm off base, but you're saying that drivers make
->> >requests in interrupt contexts even after your whole series and that's
->> >why you're using spinlocks instead of mutexes.  ...but then in patch
->> >#3 in your series you say:
->> >
->> >> Switch over from using _irqsave/_irqrestore variants since we no longer
->> >> race with a lock from the interrupt handler.
->> >
->> >Those seem like contradictions.  What happens if someone is holding
->> >the lock, then an interrupt fires, then the interrupt routine wants to
->> >do an async request.  Boom, right?
->> >
->> The interrupt routine is handled by the driver and only completes the
->> waiting object (for sync requests). No other requests can be made from
->> our interrupt handler.
->
->The question is more if an interrupt handler for some consumer driver
->can call into this code and make an async request. Is that possible? If
->so, the concern is that the driver's interrupt handler can run and try
->to grab the lock on a CPU that already holds the lock in a non-irq
->disabled context. This would lead to a deadlock while the CPU servicing
->the interrupt waits for the lock held by another task that's been
->interrupted.
->
-Hmm.. this patch will cause that issue, since we remove the irqsave
-aspects of the locking. Let me give that a thought.
->>
->> >> They cannot
->> >> use the sync variants. The async and sync variants are streamlined into
->> >> the same code path. Hence the use of spinlocks instead of mutexes
->> >> through the critical path.
->> >
->> >I will perhaps defer to Stephen who was the one thinking that a mutex
->> >would be a big win here.  ...but if a mutex truly is a big win then it
->> >doesn't seem like it'd be that hard to have a linked list (protected
->> >by a spinlock) and then some type of async worker that:
->> >
->> >1. Grab the spinlock, pops one element off the linked list, release the spinlock
->> >2. Grab the mutex, send the one element, release the mutex
->> This would be a problem when the request is made from an irq handler. We
->> want to keep things simple and quick.
->>
->
->Is the problem that you want to use RPMh code from deep within the idle
->thread? As part of some sort of CPU idle driver for qcom platforms? The
->way this discussion is going it sounds like nothing is standing in the
->way of a design that use a kthread to pump messages off a queue of
->messages that is protected by a spinlock. The kthread would be woken up
->by the sync or async write to continue to pump messages out until the
->queue is empty.
->
-While it is true that we want to use RPMH in cpuidle driver. Its just
-that we had threads and all in our downstream 845 and it complicated the
-whole setup a bit too much to our liking and did not help debug either.
-I would rather not get all that back in the driver.
+Because of the overlayfs getxattr recursion, the incoming inode fails
+to update the selinux sid resulting in avc denials being reported
+against a target context of u:object_r:unlabeled:s0.
 
---Lina
+Solution is to respond to the XATTR_NOSECURITY flag in get xattr
+method that calls the __vfs_getxattr handler instead so that the
+context can be read in, rather than being denied with an -EACCES
+when vfs_getxattr handler is called.
+
+For the use case where access is to be blocked by the security layer.
+
+The path then would be security(dentry) -> __vfs_getxattr(dentry) ->
+handler->get(dentry...XATTR_NOSECURITY) ->
+__vfs_getxattr(realdentry) -> lower_handler->get(realdentry) which
+would report back through the chain data and success as expected,
+the logging security layer at the top would have the data to
+determine the access permissions and report back to the logs and
+the caller that the target context was blocked.
+
+For selinux this would solve the cosmetic issue of the selinux log
+and allow audit2allow to correctly report the rule needed to address
+the access problem.
+
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Stephen Smalley <sds@tycho.nsa.gov>
+Cc: linux-unionfs@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kernel-team@android.com
+---
+v12 - Added back to patch series as get xattr with flag option.
+
+v11 - Squashed out of patch series and replaced with per-thread flag
+      solution.
+
+v10 - Added to patch series as __get xattr method.
+---
+ fs/overlayfs/inode.c     | 8 ++++++--
+ fs/overlayfs/overlayfs.h | 2 +-
+ fs/overlayfs/super.c     | 7 ++++---
+ 3 files changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
+index 7663aeb85fa3..ce66f4050557 100644
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -363,7 +363,7 @@ int ovl_xattr_set(struct dentry *dentry, struct inode *inode, const char *name,
+ }
+ 
+ int ovl_xattr_get(struct dentry *dentry, struct inode *inode, const char *name,
+-		  void *value, size_t size)
++		  void *value, size_t size, int flags)
+ {
+ 	ssize_t res;
+ 	const struct cred *old_cred;
+@@ -371,7 +371,11 @@ int ovl_xattr_get(struct dentry *dentry, struct inode *inode, const char *name,
+ 		ovl_i_dentry_upper(inode) ?: ovl_dentry_lower(dentry);
+ 
+ 	old_cred = ovl_override_creds(dentry->d_sb);
+-	res = vfs_getxattr(realdentry, name, value, size);
++	if (flags & XATTR_NOSECURITY)
++		res = __vfs_getxattr(realdentry, d_inode(realdentry), name,
++				     value, size);
++	else
++		res = vfs_getxattr(realdentry, name, value, size);
+ 	revert_creds(old_cred);
+ 	return res;
+ }
+diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
+index 6934bcf030f0..ab3d031c422b 100644
+--- a/fs/overlayfs/overlayfs.h
++++ b/fs/overlayfs/overlayfs.h
+@@ -356,7 +356,7 @@ int ovl_permission(struct inode *inode, int mask);
+ int ovl_xattr_set(struct dentry *dentry, struct inode *inode, const char *name,
+ 		  const void *value, size_t size, int flags);
+ int ovl_xattr_get(struct dentry *dentry, struct inode *inode, const char *name,
+-		  void *value, size_t size);
++		  void *value, size_t size, int flags);
+ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size);
+ struct posix_acl *ovl_get_acl(struct inode *inode, int type);
+ int ovl_update_time(struct inode *inode, struct timespec64 *ts, int flags);
+diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+index 57df03f3259f..6f041e1fceda 100644
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c
+@@ -856,7 +856,7 @@ ovl_posix_acl_xattr_get(const struct xattr_handler *handler,
+ 			struct dentry *dentry, struct inode *inode,
+ 			const char *name, void *buffer, size_t size, int flags)
+ {
+-	return ovl_xattr_get(dentry, inode, handler->name, buffer, size);
++	return ovl_xattr_get(dentry, inode, handler->name, buffer, size, flags);
+ }
+ 
+ static int __maybe_unused
+@@ -919,7 +919,8 @@ ovl_posix_acl_xattr_set(const struct xattr_handler *handler,
+ 
+ static int ovl_own_xattr_get(const struct xattr_handler *handler,
+ 			     struct dentry *dentry, struct inode *inode,
+-			     const char *name, void *buffer, size_t size)
++			     const char *name, void *buffer, size_t size,
++			     int flags)
+ {
+ 	return -EOPNOTSUPP;
+ }
+@@ -937,7 +938,7 @@ static int ovl_other_xattr_get(const struct xattr_handler *handler,
+ 			       const char *name, void *buffer, size_t size,
+ 			       int flags)
+ {
+-	return ovl_xattr_get(dentry, inode, name, buffer, size);
++	return ovl_xattr_get(dentry, inode, name, buffer, size, flags);
+ }
+ 
+ static int ovl_other_xattr_set(const struct xattr_handler *handler,
+-- 
+2.22.0.770.g0f2c4a37fd-goog
+
