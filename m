@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1404C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840D9C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C77206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A390206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:33:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YMR/Ewvr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YzE3t3ni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733035AbfG3Qd3 (ORCPT
+        id S1733046AbfG3Qdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:33:29 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43288 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732902AbfG3Qcm (ORCPT
+        Tue, 30 Jul 2019 12:33:37 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39195 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732883AbfG3Qcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:32:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p13so66462911wru.10;
-        Tue, 30 Jul 2019 09:32:41 -0700 (PDT)
+        Tue, 30 Jul 2019 12:32:39 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u25so46879524wmc.4;
+        Tue, 30 Jul 2019 09:32:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GmdGNk4oNO4STFUUcJmXV87+bjb8OGrYJzjuXg++0eg=;
-        b=YMR/EwvrgUn7iTeE2I0BcdmvIOc8h2UPagqrNRtz6XSKx1d4HDj8okgti2ywcWfduQ
-         WeOSv0DL8lRGYJ6monsDZdgM3DmExNwTit4u9i8nxQczwa7yxlAY66y9sqZ7X+HS4Bfa
-         Hh7MEQH6dOA4MfMro4mW/Wk5u4tW9Sn5dZhOwukpUQ3YWiTWo8r5RdsF/V2Q4HF6JIKs
-         0j1BpdPe0Oemxt559Uh/zoowFD1YHoBcyLJaBHpBVWUwmslPNJ3ZOcMTX3tJa8KBvCpN
-         o8PW1dNxwjSJkhijdQP8DR0K2ICcXxVtOKKFPWDh8zWhpx7LeMGRGgDz+NIGp+OZbpVo
-         Leeg==
+        bh=XmclFA46wXQuDKk5uU+iG4Yqz23zPEinY/Vi4hutc/w=;
+        b=YzE3t3niR1sxF+pHCCy14dkq5ZkHYyuPBBhXGqVMPEu87NkE9mByMm+Ne1pro/Td4h
+         ABOH40+V6NqDLxjHzKTyAgz8GTsiso6oGY6egD5cYOQcccf+KZ1/Y5wbpyk29Lcf2P58
+         lKtQCwj1V+F5LcDeM9awBXpKlGR5vwUp7ZdKAzjzbOlffYy+rLY+0xxWSXsFR1dMPoDd
+         918C1IC+j6XfF4xPJAazznoMGm971oxhh1e5+pd3z5PR/8KQbP/e4qzBpxeRlLOT8ail
+         IqF5cdYaNk9UqN/qSJORWgtwyQtd2lv2tcZ/IfmbWIAUfTndu7haHdHgN/jaDAZAsW48
+         gUOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GmdGNk4oNO4STFUUcJmXV87+bjb8OGrYJzjuXg++0eg=;
-        b=lJmtEibUUaWIZvhg5fga1kCuxip4x8IU1f6WMhpVBgyZOgpOQtsQpNXlJWO9lG50lD
-         e8tbs26x2uMzg/CHG7YKi59oDRvzEzkchjIJXXZPrxaIxS1JwmBp6nK1r+K5/ViH5ugD
-         RBdbfSl6Y2k44SM/tD2zd+xqgq91rQZ5oKh2iL22Fli+gc3ZndldT7zYElvmk3S8vLZ2
-         EZaWRm4jPez8AG624TjN6CEYPhFzCqeePdjIrNgVUiL+8DpPlYz6B6JDgvMlqocBBDaT
-         TDjJQFbhN3mFXeUkyB4XbyYk7UUTT8thwzfJKCgtVEx3OdjnobVCey4/gsgE+PqNcpwI
-         Uw2A==
-X-Gm-Message-State: APjAAAWYb55CRAIfSSITjadCzXvWU431AiWbOQJnezXHfusxgEIbAjos
-        OOj2NMMrmiOYEoQP9ViudseDHyWO
-X-Google-Smtp-Source: APXvYqyXHBWiO1COppwKmNpaAn5hNvdAM4G8Jq59l5I7Jb1x+FnRT3BqdlZXBqzfaTnwOLDDUgherg==
-X-Received: by 2002:adf:e552:: with SMTP id z18mr131982400wrm.45.1564504360757;
-        Tue, 30 Jul 2019 09:32:40 -0700 (PDT)
+        bh=XmclFA46wXQuDKk5uU+iG4Yqz23zPEinY/Vi4hutc/w=;
+        b=mwaRGsUFS3mlvWw+QcO2OYiii3Cj9Pq3cn0BpVDtyp813mAVjd+Qq8qMQYSoTuLpRF
+         NRX7LaVcp5WQ+A/UEjFU5KzJq0dodKx9Wd9n4JsJHf2sEvt78vN7BILZTjWEE3aUfn75
+         nz8TICHlVobXEV6F+Q4ANrPcLAsR5wtg+SXmvv1nZA1p9rKRR2fXt8tDtIOnth5Z9j0U
+         mCD+cmyuG4KWDhbOSMobsjXCUjisz3hwY2/odz1zq6f5pHsR+uati4KQ1TW/MikiMLuQ
+         aISB3h3bwBhtCw70SDY0vzqb5hT9LlE7JoHcvklt/MhquucOlJPr4/EUmCYQ/pReGZpu
+         Y6pA==
+X-Gm-Message-State: APjAAAXSUKHKM6eDlaZ1kiE/geTIqtADw2SxRMWkzdG1UE/4FmWAfFv7
+        TyiZR1vql+QYpCRXFjet1Zs=
+X-Google-Smtp-Source: APXvYqynTbyNtG8AXRPwfKrGReBamcnPasILdR5NqQ2fCTlANwgK6E99JMHjaF7yNi7IsN6hHN1YYw==
+X-Received: by 2002:a7b:ce95:: with SMTP id q21mr5650976wmj.65.1564504356860;
+        Tue, 30 Jul 2019 09:32:36 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id c65sm64835175wma.44.2019.07.30.09.32.39
+        by smtp.gmail.com with ESMTPSA id c65sm64835175wma.44.2019.07.30.09.32.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 09:32:40 -0700 (PDT)
+        Tue, 30 Jul 2019 09:32:36 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 17/20] PM / devfreq: tegra30: Increase sampling period to 16ms
-Date:   Tue, 30 Jul 2019 19:22:33 +0300
-Message-Id: <20190730162236.6063-18-digetx@gmail.com>
+Subject: [PATCH v5 14/20] PM / devfreq: tegra30: Don't enable consecutive-down interrupt on startup
+Date:   Tue, 30 Jul 2019 19:22:30 +0300
+Message-Id: <20190730162236.6063-15-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730162236.6063-1-digetx@gmail.com>
 References: <20190730162236.6063-1-digetx@gmail.com>
@@ -79,30 +79,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Increase sampling period by 4ms to get a nicer pow2 value, converting
-diving into shifts in the code. That's more preferable for Tegra30 that
-doesn't have hardware divider instructions because of older Cortex-A9 CPU.
-In a result boosting events are delayed by 4ms, which is not sensible in
-practice at all.
+The consecutive-down event tells that we should perform frequency
+de-boosting, but boosting is in a reset state on start and hence the
+event won't do anything useful for us and it will be just a dummy
+interrupt request.
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/devfreq/tegra30-devfreq.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 8280f96f4cb9..3543fba74b52 100644
+index 6e8ae20c3bf1..d0e971e51faf 100644
 --- a/drivers/devfreq/tegra30-devfreq.c
 +++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -67,7 +67,7 @@
-  * translates to 2 ^ (K_VAL + 1). ex: 2 ^ (6 + 1) = 128
-  */
- #define ACTMON_AVERAGE_WINDOW_LOG2				6
--#define ACTMON_SAMPLING_PERIOD					12 /* ms */
-+#define ACTMON_SAMPLING_PERIOD					16 /* ms */
- 
- #define KHZ							1000
+@@ -706,7 +706,6 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
+ 		<< ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_NUM_SHIFT;
+ 	val |= ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN;
+ 	val |= ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
+-	val |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
+ 	val |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
+ 	val |= ACTMON_DEV_CTRL_ENB;
  
 -- 
 2.22.0
