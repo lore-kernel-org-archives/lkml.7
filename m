@@ -2,60 +2,61 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3076C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2788FC32751
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B166420693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71AB20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqDbh2O8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPofLF/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfG3U5J (ORCPT
+        id S1728713AbfG3U5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:57:09 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39966 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbfG3U5J (ORCPT
+        Tue, 30 Jul 2019 16:57:15 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39958 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728593AbfG3U5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:57:09 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so30683265pgj.7;
-        Tue, 30 Jul 2019 13:57:08 -0700 (PDT)
+        Tue, 30 Jul 2019 16:57:13 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p184so30455139pfp.7;
+        Tue, 30 Jul 2019 13:57:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uqJmpXDtzLBWNlelQWuVA7iDRDyZ/qRljFOmlSAAnn0=;
-        b=NqDbh2O85KBLGJwB95wfPrIlnecdhR2uQrPFwjpUkrDdeCEBoZOXuXAUHe9xcOwYdE
-         7eTcvJNfUnCdUWexszZcf+DvLJ1OdISQx9CQRlfNBJFR5U3aSpeH6jy6URKtMpx1OLef
-         QBBW/iq2fVyiwN5P9A3tVS9c80X+Pm16kPgexkp66bPV/A+6Kgkew/ofKlAUO9uUcrBI
-         efgD3JxOO564hLodKPUr4nYTImYgmOwz7byaI7fdBHyYEDVv9DOLlYMm/yNrkjJ65wAs
-         OFPF8ZW5FFPq4B1VlhQdTxfzAuDPHjJnAdP2T2CYXiO2DNiigyO64i83I8LN5jSVO5Ug
-         lc+w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zIg1AeRgD/CqkmVywbx+SzJM6fRrXplz7aYhAvptzng=;
+        b=XPofLF/PHutz4HRxq81cl690l9JazNX7DE9Sz1LHW56Ma+PaWewPn4NCX7vVDtKrug
+         q4GYLQHOLbQNIyzRjkilYec92LYHDHYE3s7umnjLyHZVoR8ACBwShBGZlhCQzJ0e/K9n
+         G7PcNQdBdB1MIJeCd9Jz0A5GyrPYQBkVdaffdydfOlpBLG3dhqUxeiCBrG1LWqTE7Xqy
+         zmL+9yVwrhVt2Kz5wb2SR2RniJWXisEJMoF7R3sZthPZBIVjkuCkP3ahQg4hWjCzfAjS
+         HmJSUf3TZqxLbfGjRtE0Yjx4i11cxdEwGB/Fo/WLx+/qENW7fbOiVLgn4HM3pHlMEDwz
+         K+sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uqJmpXDtzLBWNlelQWuVA7iDRDyZ/qRljFOmlSAAnn0=;
-        b=r6aedpXNi0/n2/PNRCHKTu9I6mnd/Y15hc4FLjK/fMC2Z4Zl7Dt66V2Upgz1PDBQZx
-         T7eLpVfHBaZQiv304FPJluupE/PEytKO9+rKL+tAIbyA3GFiBVEYaXFhMtoCp4SANMyl
-         muPCmE59tTe4VZ+RlTH7J6mJf/tmsAOYp2Ahj1yUlLlEpGZR+QHBHC5yGn549so9hbTs
-         +TXQ6LtIvQm6ciRbu4whAcCcbc4x5Bsw8nDQ5bZ/g9umw/qKF1jnZmnhXpfOaXS2p4xu
-         1ajhG4o6gGF5IdLU+bpIGRgBcO5aqXX++VwNohU11NgVW7fVNpO09Xmk35KfDjgM/9cy
-         d3qg==
-X-Gm-Message-State: APjAAAV6wENbnVEVEv0Xh730YGoN7oWRfSmlB4kjeX1Yam1WbEzLBZRR
-        OX+8ryBiZd5EPbxmsCZFznM=
-X-Google-Smtp-Source: APXvYqwcRbMlDK99ar4exlWQ05oz6IdyB0wpqZP985LoMg3ICsxtQKsx77BzPQMx87QOkdoFN7DPKQ==
-X-Received: by 2002:a63:1:: with SMTP id 1mr45751834pga.162.1564520228384;
-        Tue, 30 Jul 2019 13:57:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zIg1AeRgD/CqkmVywbx+SzJM6fRrXplz7aYhAvptzng=;
+        b=Vx8slnE/HxNKYox/WR+/ciNJMUFQHwzvjhWAbz1FBZBGb5KQZX4ihvswFNUqRJ04Te
+         nK73QQgZB9ypa1TiFBJglNEpeXDie2gHXPJKGxIFyKdUVXENngZqJ85Z9i4knajwbxgg
+         Gcep/7OVYaZzXTiDtI56G/RgZkrAX98TFbMvqoV5YhNGvukGx+WVerLwfWwOhJ6oKTEi
+         wDWotlkeZjxc/rw7Rty3Xn57777fsGNXkJBhU5LI7s8/A37o1neIzEGH6peQD5vvF7jO
+         BV4H8T46aKgneyP563LK09BNS6MURWXliLZwFbHT4nlsVdEwgQj+SHBap/N6N+AIzdk8
+         kSGw==
+X-Gm-Message-State: APjAAAWMDlPTB2RUgo6mz1+w916IG2rCQWH70AcK0vOenSUEpVZx2C0G
+        GN9EmeJKbIRtu+yyLEsdErs=
+X-Google-Smtp-Source: APXvYqxsCn2vX6p1aDH+4gab5/zzeAvDw245fAqNqTfAzQelWKMC8Rw1mqVzx4xsB8ePETum3mpINg==
+X-Received: by 2002:a63:121b:: with SMTP id h27mr95395492pgl.335.1564520232325;
+        Tue, 30 Jul 2019 13:57:12 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id 137sm80565678pfz.112.2019.07.30.13.57.06
+        by smtp.gmail.com with ESMTPSA id 137sm80565678pfz.112.2019.07.30.13.57.11
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 13:57:07 -0700 (PDT)
+        Tue, 30 Jul 2019 13:57:11 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -76,11 +77,16 @@ Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-mm@kvack.org, linux-xfs@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v4 0/3] mm/gup: add make_dirty arg to put_user_pages_dirty_lock()
-Date:   Tue, 30 Jul 2019 13:57:02 -0700
-Message-Id: <20190730205705.9018-1-jhubbard@nvidia.com>
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: [PATCH v4 3/3] net/xdp: convert put_page() to put_user_page*()
+Date:   Tue, 30 Jul 2019 13:57:05 -0700
+Message-Id: <20190730205705.9018-4-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190730205705.9018-1-jhubbard@nvidia.com>
+References: <20190730205705.9018-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-NVConfidentiality: public
@@ -92,69 +98,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: John Hubbard <jhubbard@nvidia.com>
 
-Changes since v3:
-
-* Fixed an unused variable warning in siw_mem.c
-
-Changes since v2:
-
-* Critical bug fix: remove a stray "break;" from the new routine.
-
-Changes since v1:
-
-* Instead of providing __put_user_pages(), add an argument to
-  put_user_pages_dirty_lock(), and delete put_user_pages_dirty().
-  This is based on the following points:
-
-    1. Lots of call sites become simpler if a bool is passed
-    into put_user_page*(), instead of making the call site
-    choose which put_user_page*() variant to call.
-
-    2. Christoph Hellwig's observation that set_page_dirty_lock()
-    is usually correct, and set_page_dirty() is usually a
-    bug, or at least questionable, within a put_user_page*()
-    calling chain.
-
-* Added the Infiniband driver back to the patch series, because it is
-  a caller of put_user_pages_dirty_lock().
-
-Unchanged parts from the v1 cover letter (except for the diffstat):
-
-Notes about the remaining patches to come:
-
-There are about 50+ patches in my tree [2], and I'll be sending out the
-remaining ones in a few more groups:
-
-    * The block/bio related changes (Jerome mostly wrote those, but I've
-      had to move stuff around extensively, and add a little code)
-
-    * mm/ changes
-
-    * other subsystem patches
-
-    * an RFC that shows the current state of the tracking patch set. That
-      can only be applied after all call sites are converted, but it's
-      good to get an early look at it.
+For pages that were retained via get_user_pages*(), release those pages
+via the new put_user_page*() routines, instead of via put_page() or
+release_pages().
 
 This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
 ("mm: introduce put_user_page*(), placeholder versions").
 
-John Hubbard (3):
-  mm/gup: add make_dirty arg to put_user_pages_dirty_lock()
-  drivers/gpu/drm/via: convert put_page() to put_user_page*()
-  net/xdp: convert put_page() to put_user_page*()
+Cc: Björn Töpel <bjorn.topel@intel.com>
+Cc: Magnus Karlsson <magnus.karlsson@intel.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ net/xdp/xdp_umem.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
- drivers/gpu/drm/via/via_dmablit.c          |  10 +-
- drivers/infiniband/core/umem.c             |   5 +-
- drivers/infiniband/hw/hfi1/user_pages.c    |   5 +-
- drivers/infiniband/hw/qib/qib_user_pages.c |   5 +-
- drivers/infiniband/hw/usnic/usnic_uiom.c   |   5 +-
- drivers/infiniband/sw/siw/siw_mem.c        |  10 +-
- include/linux/mm.h                         |   5 +-
- mm/gup.c                                   | 115 +++++++++------------
- net/xdp/xdp_umem.c                         |   9 +-
- 9 files changed, 61 insertions(+), 108 deletions(-)
-
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index 83de74ca729a..17c4b3d3dc34 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -166,14 +166,7 @@ void xdp_umem_clear_dev(struct xdp_umem *umem)
+ 
+ static void xdp_umem_unpin_pages(struct xdp_umem *umem)
+ {
+-	unsigned int i;
+-
+-	for (i = 0; i < umem->npgs; i++) {
+-		struct page *page = umem->pgs[i];
+-
+-		set_page_dirty_lock(page);
+-		put_page(page);
+-	}
++	put_user_pages_dirty_lock(umem->pgs, umem->npgs, true);
+ 
+ 	kfree(umem->pgs);
+ 	umem->pgs = NULL;
 -- 
 2.22.0
 
