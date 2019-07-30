@@ -2,235 +2,470 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303E8C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1A9C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB814206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="R67zYE6Z"
+	by mail.kernel.org (Postfix) with ESMTP id 8CCC1206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:50:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbfG3Itk (ORCPT
+        id S1731166AbfG3IuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:49:40 -0400
-Received: from mout.web.de ([212.227.17.11]:45451 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728432AbfG3Itk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:49:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1564476542;
-        bh=udk/4DiKcVzXKfu8rZxOBGfmVl1dsR4NnNq0mHljcLg=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=R67zYE6Zv/FsW8uMTVzATrlebMsiCosyd/GuRAirzvSf9yO3V1s+wzgCS2PevCOXc
-         RGPl6glYrp61Hp4xmjsPscxNMRL+0+9n6DrAdyGoa7mf//cLgH/kB13Igyz2eHmTTY
-         wpQK+01iSpTAP1x4lNth0MX0e6aT1L+Tq6G6PGHU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.24.141]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MV4fx-1hrgQa3paH-00YQ4y; Tue, 30
- Jul 2019 10:49:02 +0200
-Subject: Re: [PATCH v5 3/3] coccinelle: Add script to check for
- platform_get_irq() excessive prints
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        kernel-janitors@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20190730053845.126834-1-swboyd@chromium.org>
- <20190730053845.126834-4-swboyd@chromium.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <7debc03d-0bed-e0d7-a793-089fcc85c9ee@web.de>
-Date:   Tue, 30 Jul 2019 10:49:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 30 Jul 2019 04:50:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56120 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728432AbfG3IuL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 04:50:11 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hsNpZ-0002aN-A3; Tue, 30 Jul 2019 10:50:01 +0200
+Date:   Tue, 30 Jul 2019 10:50:00 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ingo Molnar <mingo@kernel.org>
+cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Michael Petlan <mpetlan@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL 000/107] perf/core improvements and fixes
+In-Reply-To: <20190730080358.GA115870@gmail.com>
+Message-ID: <alpine.DEB.2.21.1907301048030.1738@nanos.tec.linutronix.de>
+References: <20190730025610.22603-1-acme@kernel.org> <20190730080358.GA115870@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190730053845.126834-4-swboyd@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:OCF3C0lcfWYjWEDBmfvnDA8RhhJEy91vMb12hxaIrorlbWRJARm
- k6totR05fNL3BcvN8pKBvus3rJ3PixEhWewY8RqxsLtm18CaQvX0hwV5pxt5Pi3/WvuvMbm
- WEBkhGKXh6dCUqu585QfLAMj6uqd0qIdGrseb6dEeJyctQJOSn1vubh0ftCDZm2e0D1EN+/
- zAMO6CTJ+AGhdb4ASzEoA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:buCdTcSCens=:lWBFEtRNfzg3ZAf7voRRLm
- 7orqc/iPa0X4hquPqsqO8hyFsE2qsaxxCVjwjzWr4AGLbqySmL2HoxAbBUHRNR3v36HYo5XcE
- NkG4Kwnz0an0JWRkLTAw/GQrds4MU+9ffh4W/rsOaoRi3JQJ4ZcjWORtl+n86M9CXsUjFLbdI
- TWvEuKx5wXqOrYZw01u/0cQB/jOafImHlYEnnSFDq67B+1Na13731t0+1FN12o0lqg3jM3Z49
- w2kowoyr1J9IkdHrvxpTVa9//ieJpHqrL2ktM8OO5at7CSQX9aFKXWIWt6woPVmmDiWZPo8IS
- 5UdiB2bY0bS3JUttcGpUgO5azKB+AUC8/bWKzkBA4fzk2ObXZDWSt0BH3gdG6yDyVWyO7wX1b
- 30T8bkSzmr7mgIswIKR++ePz3+k7hODILwl1vlE5imZj4wm9DTM1ZE00K8iQXubgfpGIiDmXM
- 7Hbf7D5O0/UFVN3s0dH+tfbiEVmouHdZ4S3EzHUqTMXcoapBky7B4P+sxt/7V0B6B/gU5ZUW7
- UJme3XAxnoZfXbV3C5/NrqnKzRDouMbYKJtjSCeeLh4MbGYKEx+WGScAVzt9u3I69HWIUiGvk
- UdLnOtGkPQQKTLAyWcA/csaUHXkFBc78+lxKalkn2ebKxuGIGPYTUmSU/klZphno+Md0xZqOU
- E4+iPqjwtEqah2bb4eXa0wpP9q4PtQCqBS3ICzHSv+BHArlTvgVEfCITt1RJDiz0ZckParSkG
- w8ZXOgvKmyJEuRJeXDMaZwNDkiAgDoGi61hoG73Wvw85+RyTzFgzkO2n9Kw65CvEU/UyzI2dd
- +6j6UxTd/wOMzB2FwF4joa8AOQ3NBPOQD6qjR3p01d+5uLs8FxQ9ctTRlaYpmINge8IRBG2aC
- uKOsTrkFdsWCKevT4OnrwuPPudREQdSfIEdFoWR5OPmmnOb5MCjf6K9NJE2yUyfC54HPwXt2i
- +VDvSI0uz7NS3JypOz7YFZ+kVirLaSkTpPquSnxr0daf8rWwNXBoWSlsmRkMhqyAb2J6MyCb/
- grfp32QqvRcXgXFvT5I8/Haz+nAf55F8P2PE18HFXXRcteMNMJCl3vuJDtt0vtCk0dyoCBEZR
- nN+RffGHtyMl+fjFBCkhtvRZPmFgmWYoDo0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I'm not sure this will be accepted or not
+On Tue, 30 Jul 2019, Ingo Molnar wrote:
 
-The patch review and corresponding clarification will become more interest=
-ing,
-won't it?
+What's almost as annoying as top-posting?
 
-I am missing more constructive feedback to remaining software development =
-concerns.
-https://lore.kernel.org/patchwork/comment/1301194/
-https://lore.kernel.org/lkml/3baa3e3c-c122-e868-55a0-597e279496ac@web.de/
-https://systeme.lip6.fr/pipermail/cocci/2019-July/006143.html
-https://lkml.org/lkml/2019/7/24/886
+> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> 
+> > Hi Ingo,
+> > 
+> > 	Please consider pulling,
+> > 
+> > Best regards,
+> > 
+> > - Arnaldo
+> > 
+> > Test results at the end of this message, as usual.
+> > 
+> > The following changes since commit b3c303be4c35856945cb17ec639b94637447dae2:
+> > 
+> >   Merge tag 'perf-urgent-for-mingo-5.3-20190729' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2019-07-29 23:24:07 +0200)
+> > 
+> > are available in the Git repository at:
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.4-20190729
+> > 
+> > for you to fetch changes up to 123a039d0d54de6d5bafd551e7aa17569e13e315:
+> > 
+> >   perf vendor events power9: Added missing event descriptions (2019-07-29 18:34:47 -0300)
+> > 
+> > ----------------------------------------------------------------
+> > perf/core improvements and fixes:
+> > 
+> > perf trace:
+> > 
+> >   Arnaldo Carvalho de Melo:
+> > 
+> >   - Use BPF_MAP_TYPE_PROG_ARRAY + bpf_tail_call() for augmenting raw syscalls,
+> >     i.e. copy pointers passed to/from userspace. The use of a table per syscall
+> >     to tell the BPF program what to copy made the raw_syscalls:sys_enter/exit
+> >     programs a bit complex, the scratch space would have to be bigger to allow
+> >     for checking all args to see which ones were a pathname, so use a PROG_ARRAY
+> >     map instead, test it with syscalls that receive multiple pathnames at
+> >     different pairs of arguments (rename, renameat, etc).
+> > 
+> >   - Beautify various syscalls using this new infrastructure, and also add code
+> >     that looks for syscalls with BPF augmenters, such as "open", and then reuse
+> >     it with syscalls not yet having a specific augmenter, but that copies the
+> >     same argument with the same type, say "statfs" can initially reuse "open",
+> >     beautifier, as both have as its first arg a "const char *".
+> > 
+> >   - Do not using fd->pathname beautifier when the 'close' syscall isn't enabled,
+> >     as we can't invalidate that mapping.
+> > 
+> > core:
+> > 
+> >   Jiri Olsa:
+> > 
+> >   - Introduce tools/perf/lib/, that eventually will move to tools/lib/perf/, to
+> >     allow other tools to use the abstractions and code perf uses to set up
+> >     the perf ring buffer and set up the many possible combinations in allowed
+> >     by the kernel, starting with 'struct perf_evsel' and 'struct perf_evlist'.
+> > 
+> > perf vendor events:
+> > 
+> >   Michael Petlan:
+> > 
+> >   - Add missing event description to power9 event definitions.
+> > 
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > ----------------------------------------------------------------
+> > Arnaldo Carvalho de Melo (27):
+> >       perf include bpf: Add bpf_tail_call() prototype
+> >       perf bpf: Do not attach a BPF prog to a tracepoint if its name starts with !
+> >       perf evsel: Store backpointer to attached bpf_object
+> >       perf trace: Add pointer to BPF object containing __augmented_syscalls__
+> >       perf trace: Look up maps just on the __augmented_syscalls__ BPF object
+> >       perf trace: Order -e syscalls table
+> >       perf trace: Add BPF handler for unaugmented syscalls
+> >       perf trace: Allow specifying the bpf prog to augment specific syscalls
+> >       perf trace: Put the per-syscall entry/exit prog_array BPF map infrastructure in place
+> >       perf trace: Handle raw_syscalls:sys_enter just like the BPF_OUTPUT augmented event
+> >       perf augmented_raw_syscalls: Add handler for "openat"
+> >       perf augmented_raw_syscalls: Switch to using BPF_MAP_TYPE_PROG_ARRAY
+> >       perf augmented_raw_syscalls: Support copying two string syscall args
+> >       perf trace: Look for default name for entries in the syscalls prog array
+> >       perf augmented_raw_syscalls: Rename augmented_args_filename to augmented_args_payload
+> >       perf augmented_raw_syscalls: Augment sockaddr arg in 'connect'
+> >       perf trace beauty: Make connect's addrlen be printed as an int, not hex
+> >       perf trace beauty: Disable fd->pathname when close() not enabled
+> >       perf trace beauty: Do not try to use the fd->pathname beautifier for bind/connect fd arg
+> >       perf trace beauty: Beautify 'sendto's sockaddr arg
+> >       perf trace beauty: Beautify bind's sockaddr arg
+> >       perf trace beauty: Add BPF augmenter for the 'rename' syscall
+> >       perf trace: Forward error codes when trying to read syscall info
+> >       perf trace: Mark syscall ids that are not allocated to avoid unnecessary error messages
+> >       perf trace: Preallocate the syscall table
+> >       perf trace: Reuse BPF augmenters from syscalls with similar args signature
+> >       perf trace: Add "sendfile64" alias to the "sendfile" syscall
+> > 
+> > Jiri Olsa (79):
+> >       perf stat: Move loaded out of struct perf_counts_values
+> >       perf cpu_map: Rename struct cpu_map to struct perf_cpu_map
+> >       perf tools: Rename struct thread_map to struct perf_thread_map
+> >       perf evsel: Rename struct perf_evsel to struct evsel
+> >       perf evlist: Rename struct perf_evlist to struct evlist
+> >       perf evsel: Rename perf_evsel__init() to evsel__init()
+> >       perf evlist: Rename perf_evlist__init() to evlist__init()
+> >       perf evlist: Rename perf_evlist__new() to evlist__new()
+> >       perf evlist: Rename perf_evlist__delete() to evlist__delete()
+> >       perf evsel: Rename perf_evsel__delete() to evsel__delete()
+> >       perf evsel: Rename perf_evsel__new() to evsel__new()
+> >       perf evlist: Rename perf_evlist__add() to evlist__add()
+> >       perf evlist: Rename perf_evlist__remove() to evlist__remove()
+> >       perf evsel: Rename perf_evsel__open() to evsel__open()
+> >       perf evsel: Rename perf_evsel__enable() to evsel__enable()
+> >       perf evsel: Rename perf_evsel__disable() to evsel__disable()
+> >       perf evsel: Rename perf_evsel__apply_filter() to evsel__apply_filter()
+> >       perf evsel: Rename perf_evsel__cpus() to evsel__cpus()
+> >       perf evlist: Rename perf_evlist__open() to evlist__open()
+> >       perf evlist: Rename perf_evlist__close() to evlist__close()
+> >       perf evlist: Rename perf_evlist__enable() to evlist__enable()
+> >       perf evlist: Rename perf_evlist__disable() to evlist__disable()
+> >       libperf: Make libperf.a part of the perf build
+> >       libperf: Add build version support
+> >       libperf: Add libperf to the python.so build
+> >       libperf: Add perf/core.h header
+> >       libperf: Add debug output support
+> >       libperf: Add perf_cpu_map struct
+> >       libperf: Add perf_cpu_map__dummy_new() function
+> >       libperf: Add perf_cpu_map__get()/perf_cpu_map__put()
+> >       libperf: Add perf_thread_map struct
+> >       libperf: Add perf_thread_map__new_dummy() function
+> >       libperf: Add perf_thread_map__get()/perf_thread_map__put()
+> >       libperf: Add perf_evlist and perf_evsel structs
+> >       libperf: Include perf_evsel in evsel object
+> >       libperf: Include perf_evlist in evlist object
+> >       libperf: Add perf_evsel__init function
+> >       libperf: Add perf_evlist__init() function
+> >       libperf: Add perf_evlist__add() function
+> >       libperf: Add perf_evlist__remove() function
+> >       libperf: Add nr_entries to struct perf_evlist
+> >       libperf: Move perf_event_attr field from perf's evsel to libperf's perf_evsel
+> >       libperf: Add perf_cpu_map__new()/perf_cpu_map__read() functions
+> >       libperf: Move zalloc.o into libperf
+> >       libperf: Add perf_evlist__new() function
+> >       libperf: Add perf_evsel__new() function
+> >       libperf: Add perf_evlist__for_each_evsel() iterator
+> >       libperf: Add perf_evlist__delete() function
+> >       libperf: Add perf_evsel__delete() function
+> >       libperf: Add cpus to struct perf_evsel
+> >       libperf: Add own_cpus to struct perf_evsel
+> >       libperf: Add threads to struct perf_evsel
+> >       libperf: Add has_user_cpus to struct perf_evlist
+> >       libperf: Add cpus to struct perf_evlist
+> >       libperf: Add threads to struct perf_evlist
+> >       libperf: Add perf_evlist__set_maps() function
+> >       libperf: Adopt xyarray class from perf
+> >       libperf: Move fd array from perf's evsel to lobperf's perf_evsel class
+> >       libperf: Move nr_members from perf's evsel to libperf's perf_evsel
+> >       libperf: Adopt the readn()/writen() functions from tools/perf
+> >       libperf: Adopt perf_evsel__alloc_fd() function from tools/perf
+> >       libperf: Adopt simplified perf_evsel__open() function from tools/perf
+> >       libperf: Adopt simplified perf_evsel__close() function from tools/perf
+> >       libperf: Adopt perf_evsel__read() function from tools/perf
+> >       libperf: Adopt perf_evsel__enable()/disable()/apply_filter() functions
+> >       libperf: Add perf_cpu_map__for_each_cpu() macro
+> >       libperf: Add perf_evsel__cpus()/threads() functions
+> >       libperf: Adopt simplified perf_evlist__open()/close() functions from tools/perf
+> >       libperf: Adopt perf_evlist__enable()/disable() functions from perf
+> >       libperf: Add perf_evsel__attr() function
+> >       libperf: Add install targets
+> >       libperf: Add tests support
+> >       libperf: Add perf_cpu_map test
+> >       libperf: Add perf_thread_map test
+> >       libperf: Add perf_evlist test
+> >       libperf: Add perf_evsel tests
+> >       libperf: Add perf_evlist__enable/disable test
+> >       libperf: Add perf_evsel__enable/disable test
+> >       libperf: Initial documentation
+> > 
+> > Michael Petlan (1):
+> >       perf vendor events power9: Added missing event descriptions
+> > 
+> >  tools/perf/Makefile.config                         |    1 +
+> >  tools/perf/Makefile.perf                           |   31 +-
+> >  tools/perf/arch/arm/util/auxtrace.c                |    8 +-
+> >  tools/perf/arch/arm/util/cs-etm.c                  |   82 +-
+> >  tools/perf/arch/arm64/util/arm-spe.c               |   24 +-
+> >  tools/perf/arch/arm64/util/header.c                |    6 +-
+> >  tools/perf/arch/powerpc/util/kvm-stat.c            |   12 +-
+> >  tools/perf/arch/s390/util/auxtrace.c               |   12 +-
+> >  tools/perf/arch/s390/util/kvm-stat.c               |    8 +-
+> >  tools/perf/arch/x86/tests/intel-cqm.c              |    8 +-
+> >  tools/perf/arch/x86/tests/perf-time-to-tsc.c       |   30 +-
+> >  tools/perf/arch/x86/util/auxtrace.c                |   10 +-
+> >  tools/perf/arch/x86/util/intel-bts.c               |   38 +-
+> >  tools/perf/arch/x86/util/intel-pt.c                |   82 +-
+> >  tools/perf/arch/x86/util/kvm-stat.c                |   12 +-
+> >  tools/perf/bench/epoll-ctl.c                       |    7 +-
+> >  tools/perf/bench/epoll-wait.c                      |    7 +-
+> >  tools/perf/bench/futex-hash.c                      |    5 +-
+> >  tools/perf/bench/futex-lock-pi.c                   |    7 +-
+> >  tools/perf/bench/futex-requeue.c                   |    7 +-
+> >  tools/perf/bench/futex-wake-parallel.c             |    6 +-
+> >  tools/perf/bench/futex-wake.c                      |    7 +-
+> >  tools/perf/builtin-annotate.c                      |   16 +-
+> >  tools/perf/builtin-c2c.c                           |   10 +-
+> >  tools/perf/builtin-diff.c                          |   20 +-
+> >  tools/perf/builtin-evlist.c                        |    4 +-
+> >  tools/perf/builtin-ftrace.c                        |   18 +-
+> >  tools/perf/builtin-inject.c                        |   60 +-
+> >  tools/perf/builtin-kmem.c                          |   24 +-
+> >  tools/perf/builtin-kvm.c                           |   46 +-
+> >  tools/perf/builtin-lock.c                          |   30 +-
+> >  tools/perf/builtin-mem.c                           |    2 +-
+> >  tools/perf/builtin-record.c                        |   50 +-
+> >  tools/perf/builtin-report.c                        |   32 +-
+> >  tools/perf/builtin-sched.c                         |   96 +-
+> >  tools/perf/builtin-script.c                        |  167 +--
+> >  tools/perf/builtin-stat.c                          |  135 +--
+> >  tools/perf/builtin-timechart.c                     |   46 +-
+> >  tools/perf/builtin-top.c                           |   71 +-
+> >  tools/perf/builtin-trace.c                         |  619 +++++++---
+> >  tools/perf/examples/bpf/augmented_raw_syscalls.c   |  284 +++--
+> >  tools/perf/include/bpf/bpf.h                       |    2 +
+> >  tools/perf/lib/Build                               |   12 +
+> >  tools/perf/lib/Documentation/Makefile              |    7 +
+> >  tools/perf/lib/Documentation/man/libperf.rst       |  100 ++
+> >  tools/perf/lib/Documentation/tutorial/tutorial.rst |  123 ++
+> >  tools/perf/lib/Makefile                            |  158 +++
+> >  tools/perf/lib/core.c                              |   34 +
+> >  tools/perf/lib/cpumap.c                            |  239 ++++
+> >  tools/perf/lib/evlist.c                            |  159 +++
+> >  tools/perf/lib/evsel.c                             |  232 ++++
+> >  tools/perf/lib/include/internal/cpumap.h           |   17 +
+> >  tools/perf/lib/include/internal/evlist.h           |   50 +
+> >  tools/perf/lib/include/internal/evsel.h            |   29 +
+> >  tools/perf/lib/include/internal/lib.h              |   10 +
+> >  tools/perf/lib/include/internal/tests.h            |   19 +
+> >  tools/perf/lib/include/internal/threadmap.h        |   23 +
+> >  .../perf/{util => lib/include/internal}/xyarray.h  |    6 +-
+> >  tools/perf/lib/include/perf/core.h                 |   22 +
+> >  tools/perf/lib/include/perf/cpumap.h               |   23 +
+> >  tools/perf/lib/include/perf/evlist.h               |   35 +
+> >  tools/perf/lib/include/perf/evsel.h                |   39 +
+> >  tools/perf/lib/include/perf/threadmap.h            |   18 +
+> >  tools/perf/lib/internal.h                          |   18 +
+> >  tools/perf/lib/lib.c                               |   46 +
+> >  tools/perf/lib/libperf.map                         |   40 +
+> >  tools/perf/lib/libperf.pc.template                 |   11 +
+> >  tools/perf/lib/tests/Makefile                      |   38 +
+> >  tools/perf/lib/tests/test-cpumap.c                 |   21 +
+> >  tools/perf/lib/tests/test-evlist.c                 |  186 +++
+> >  tools/perf/lib/tests/test-evsel.c                  |  125 ++
+> >  tools/perf/lib/tests/test-threadmap.c              |   21 +
+> >  tools/perf/lib/threadmap.c                         |   81 ++
+> >  tools/perf/lib/xyarray.c                           |   33 +
+> >  .../pmu-events/arch/powerpc/power9/memory.json     |    2 +-
+> >  .../perf/pmu-events/arch/powerpc/power9/other.json |    8 +-
+> >  tools/perf/tests/backward-ring-buffer.c            |   18 +-
+> >  tools/perf/tests/bitmap.c                          |    5 +-
+> >  tools/perf/tests/bpf.c                             |   12 +-
+> >  tools/perf/tests/code-reading.c                    |   50 +-
+> >  tools/perf/tests/cpumap.c                          |   21 +-
+> >  tools/perf/tests/event-times.c                     |   81 +-
+> >  tools/perf/tests/event_update.c                    |   13 +-
+> >  tools/perf/tests/evsel-roundtrip-name.c            |   12 +-
+> >  tools/perf/tests/evsel-tp-sched.c                  |    8 +-
+> >  tools/perf/tests/hists_cumulate.c                  |   18 +-
+> >  tools/perf/tests/hists_filter.c                    |   10 +-
+> >  tools/perf/tests/hists_link.c                      |   10 +-
+> >  tools/perf/tests/hists_output.c                    |   20 +-
+> >  tools/perf/tests/keep-tracking.c                   |   44 +-
+> >  tools/perf/tests/mem2node.c                        |    5 +-
+> >  tools/perf/tests/mmap-basic.c                      |   28 +-
+> >  tools/perf/tests/mmap-thread-lookup.c              |    4 +-
+> >  tools/perf/tests/openat-syscall-all-cpus.c         |   18 +-
+> >  tools/perf/tests/openat-syscall-tp-fields.c        |   14 +-
+> >  tools/perf/tests/openat-syscall.c                  |   10 +-
+> >  tools/perf/tests/parse-events.c                    | 1220 ++++++++++----------
+> >  tools/perf/tests/parse-no-sample-id-all.c          |    6 +-
+> >  tools/perf/tests/perf-record.c                     |   10 +-
+> >  tools/perf/tests/sample-parsing.c                  |   14 +-
+> >  tools/perf/tests/sw-clock.c                        |   33 +-
+> >  tools/perf/tests/switch-tracking.c                 |   64 +-
+> >  tools/perf/tests/task-exit.c                       |   35 +-
+> >  tools/perf/tests/thread-map.c                      |   28 +-
+> >  tools/perf/tests/time-utils-test.c                 |    2 +-
+> >  tools/perf/tests/topology.c                        |    9 +-
+> >  tools/perf/ui/browsers/annotate.c                  |   16 +-
+> >  tools/perf/ui/browsers/hists.c                     |   54 +-
+> >  tools/perf/ui/browsers/res_sample.c                |    4 +-
+> >  tools/perf/ui/browsers/scripts.c                   |    6 +-
+> >  tools/perf/ui/gtk/annotate.c                       |    8 +-
+> >  tools/perf/ui/gtk/gtk.h                            |    8 +-
+> >  tools/perf/ui/gtk/hists.c                          |    6 +-
+> >  tools/perf/ui/hist.c                               |   16 +-
+> >  tools/perf/util/Build                              |    6 -
+> >  tools/perf/util/annotate.c                         |   42 +-
+> >  tools/perf/util/annotate.h                         |   28 +-
+> >  tools/perf/util/auxtrace.c                         |   28 +-
+> >  tools/perf/util/auxtrace.h                         |   24 +-
+> >  tools/perf/util/bpf-event.c                        |    2 +-
+> >  tools/perf/util/bpf-event.h                        |    4 +-
+> >  tools/perf/util/bpf-loader.c                       |   38 +-
+> >  tools/perf/util/bpf-loader.h                       |   30 +-
+> >  tools/perf/util/build-id.c                         |    2 +-
+> >  tools/perf/util/build-id.h                         |    2 +-
+> >  tools/perf/util/callchain.c                        |    2 +-
+> >  tools/perf/util/callchain.h                        |    2 +-
+> >  tools/perf/util/cgroup.c                           |   22 +-
+> >  tools/perf/util/cgroup.h                           |    6 +-
+> >  tools/perf/util/counts.c                           |   17 +-
+> >  tools/perf/util/counts.h                           |   34 +-
+> >  tools/perf/util/cpumap.c                           |  264 +----
+> >  tools/perf/util/cpumap.h                           |   54 +-
+> >  tools/perf/util/cputopo.c                          |   13 +-
+> >  tools/perf/util/cs-etm.c                           |   28 +-
+> >  tools/perf/util/data-convert-bt.c                  |   38 +-
+> >  tools/perf/util/db-export.c                        |   10 +-
+> >  tools/perf/util/db-export.h                        |   10 +-
+> >  tools/perf/util/env.c                              |    2 +-
+> >  tools/perf/util/env.h                              |    2 +-
+> >  tools/perf/util/event.c                            |   30 +-
+> >  tools/perf/util/event.h                            |   14 +-
+> >  tools/perf/util/evlist.c                           |  607 +++++-----
+> >  tools/perf/util/evlist.h                           |  215 ++--
+> >  tools/perf/util/evsel.c                            |  497 ++++----
+> >  tools/perf/util/evsel.h                            |  197 ++--
+> >  tools/perf/util/evsel_fprintf.c                    |   16 +-
+> >  tools/perf/util/header.c                           |  225 ++--
+> >  tools/perf/util/header.h                           |   24 +-
+> >  tools/perf/util/hist.c                             |   32 +-
+> >  tools/perf/util/hist.h                             |   38 +-
+> >  tools/perf/util/intel-bts.c                        |   22 +-
+> >  tools/perf/util/intel-pt.c                         |   94 +-
+> >  tools/perf/util/jitdump.c                          |    8 +-
+> >  tools/perf/util/kvm-stat.h                         |   22 +-
+> >  tools/perf/util/machine.c                          |   12 +-
+> >  tools/perf/util/machine.h                          |    8 +-
+> >  tools/perf/util/map.h                              |    2 +-
+> >  tools/perf/util/metricgroup.c                      |   26 +-
+> >  tools/perf/util/metricgroup.h                      |    6 +-
+> >  tools/perf/util/mmap.c                             |    4 +-
+> >  tools/perf/util/parse-events.c                     |  155 +--
+> >  tools/perf/util/parse-events.h                     |    8 +-
+> >  tools/perf/util/pmu.c                              |   15 +-
+> >  tools/perf/util/pmu.h                              |    2 +-
+> >  tools/perf/util/python-ext-sources                 |    2 -
+> >  tools/perf/util/python.c                           |   73 +-
+> >  tools/perf/util/record.c                           |   73 +-
+> >  tools/perf/util/s390-cpumsf.c                      |    4 +-
+> >  tools/perf/util/s390-sample-raw.c                  |    6 +-
+> >  tools/perf/util/sample-raw.c                       |    2 +-
+> >  tools/perf/util/sample-raw.h                       |    6 +-
+> >  .../perf/util/scripting-engines/trace-event-perl.c |   14 +-
+> >  .../util/scripting-engines/trace-event-python.c    |   40 +-
+> >  tools/perf/util/session.c                          |   81 +-
+> >  tools/perf/util/session.h                          |   12 +-
+> >  tools/perf/util/setup.py                           |    3 +-
+> >  tools/perf/util/sort.c                             |   60 +-
+> >  tools/perf/util/sort.h                             |    6 +-
+> >  tools/perf/util/stat-display.c                     |  112 +-
+> >  tools/perf/util/stat-shadow.c                      |   70 +-
+> >  tools/perf/util/stat.c                             |   64 +-
+> >  tools/perf/util/stat.h                             |   35 +-
+> >  tools/perf/util/svghelper.c                        |    7 +-
+> >  tools/perf/util/syscalltbl.c                       |    1 +
+> >  tools/perf/util/syscalltbl.h                       |    1 +
+> >  tools/perf/util/thread_map.c                       |  131 +--
+> >  tools/perf/util/thread_map.h                       |   58 +-
+> >  tools/perf/util/tool.h                             |    8 +-
+> >  tools/perf/util/top.c                              |   12 +-
+> >  tools/perf/util/top.h                              |    8 +-
+> >  tools/perf/util/trace-event-info.c                 |   14 +-
+> >  tools/perf/util/trace-event-scripting.c            |    2 +-
+> >  tools/perf/util/trace-event.h                      |    4 +-
+> >  tools/perf/util/util.c                             |   40 -
+> >  tools/perf/util/util.h                             |    4 +-
+> >  196 files changed, 5958 insertions(+), 4051 deletions(-)
+> >  create mode 100644 tools/perf/lib/Build
+> >  create mode 100644 tools/perf/lib/Documentation/Makefile
+> >  create mode 100644 tools/perf/lib/Documentation/man/libperf.rst
+> >  create mode 100644 tools/perf/lib/Documentation/tutorial/tutorial.rst
+> >  create mode 100644 tools/perf/lib/Makefile
+> >  create mode 100644 tools/perf/lib/core.c
+> >  create mode 100644 tools/perf/lib/cpumap.c
+> >  create mode 100644 tools/perf/lib/evlist.c
+> >  create mode 100644 tools/perf/lib/evsel.c
+> >  create mode 100644 tools/perf/lib/include/internal/cpumap.h
+> >  create mode 100644 tools/perf/lib/include/internal/evlist.h
+> >  create mode 100644 tools/perf/lib/include/internal/evsel.h
+> >  create mode 100644 tools/perf/lib/include/internal/lib.h
+> >  create mode 100644 tools/perf/lib/include/internal/tests.h
+> >  create mode 100644 tools/perf/lib/include/internal/threadmap.h
+> >  rename tools/perf/{util => lib/include/internal}/xyarray.h (84%)
+> >  create mode 100644 tools/perf/lib/include/perf/core.h
+> >  create mode 100644 tools/perf/lib/include/perf/cpumap.h
+> >  create mode 100644 tools/perf/lib/include/perf/evlist.h
+> >  create mode 100644 tools/perf/lib/include/perf/evsel.h
+> >  create mode 100644 tools/perf/lib/include/perf/threadmap.h
+> >  create mode 100644 tools/perf/lib/internal.h
+> >  create mode 100644 tools/perf/lib/lib.c
+> >  create mode 100644 tools/perf/lib/libperf.map
+> >  create mode 100644 tools/perf/lib/libperf.pc.template
+> >  create mode 100644 tools/perf/lib/tests/Makefile
+> >  create mode 100644 tools/perf/lib/tests/test-cpumap.c
+> >  create mode 100644 tools/perf/lib/tests/test-evlist.c
+> >  create mode 100644 tools/perf/lib/tests/test-evsel.c
+> >  create mode 100644 tools/perf/lib/tests/test-threadmap.c
+> >  create mode 100644 tools/perf/lib/threadmap.c
+> >  create mode 100644 tools/perf/lib/xyarray.c
+> 
+> Pulled, thanks a lot Arnaldo!
 
+Having to scroll through 400+ lines of useless information to find a single
+line of content.
 
-> given that Markus indicates a similar patch was made for other error mes=
-sages
+Thanks,
 
-I am also curious how the acceptance will evolve around such change possib=
-ilities.
-Did you get any useful development ideas from this approach?
-
-
-> that this may be able to be merged into.
-
-I find it unlikely that a merge will be useful in this case because of spe=
-cific
-property differences in SmPL specifications.
-But I imagine that improved SmPL script variants will be helpful.
-
-
->  create mode 100644 scripts/coccinelle/api/platform_get_irq.cocci
-
-On which storage locations would we like to agree?
-
-
-> +@depends on context@
-> +expression ret;
-> +struct platform_device *E;
-
-How much does this specification matter for the parameters
-of the mentioned functions (in the SmPL script)?
-Will the selection of function names be sufficient for the discussed
-source code search pattern?
-
-
-> +@@
-> +
-> +ret =3D
-> +(
-> +platform_get_irq
-> +|
-> +platform_get_irq_byname
-> +)(E, ...);
-
-* Would you eventually like to extend the function name selection?
-
-* Will the SmPL ellipsis be appropriate without the metavariable =E2=80=9C=
-E=E2=80=9D?
-
-
-> +if ( ret \( < \| <=3D \) 0 )
-> +{
-> +(
-> +if (ret !=3D -EPROBE_DEFER)
-> +{ ...
-> +*dev_err(...);
-> +... }
-> +|
-> +...
-> +*dev_err(...);
-> +)
-> +...
-> +}
-
-I suggest to reconsider SmPL implementation details once more.
-
-* Case distinction for curly brackets of compound statements
-
-* Application of the SmPL construct =E2=80=9C<+... =E2=80=A6 ...+>=E2=80=
-=9D
-
-
-> +@script:python depends on org@
-> +p1 << r.p1;
-> +@@
-> +
-> +cocci.print_main(p1)
-> +
-> +@script:python depends on report@
-> +p1 << r.p1;
-> +@@
-> +
-> +msg =3D "line %s is redundant because platform_get_irq() already prints=
- an error" % (p1[0].line)
-> +coccilib.report.print_report(p1[0],msg)
-
-Will the message constructions be adjusted?
-
-Regards,
-Markus
+	tglx
