@@ -2,90 +2,162 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D86C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C39EC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA6420693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E8620693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:00:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hhKXb4Vb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2gP4V6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732771AbfG3QAC (ORCPT
+        id S1732781AbfG3QAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:00:02 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45798 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbfG3QAC (ORCPT
+        Tue, 30 Jul 2019 12:00:36 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36732 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbfG3QAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:00:02 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m23so62524927lje.12;
-        Tue, 30 Jul 2019 09:00:00 -0700 (PDT)
+        Tue, 30 Jul 2019 12:00:36 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r7so30074275pfl.3;
+        Tue, 30 Jul 2019 09:00:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FbWP76mrhorJU5Gh42fiL/ClcaJsatH+/BvxqeOmpoo=;
-        b=hhKXb4VbvWawrVLus06feXu5xMqfwssq2twQz4cKGdYaiRbVbenv6hWl6Pqdok8GOP
-         cozW8PrNTLsuxjp8+E11PWJ75cPVTy22NNq3xlAyW+HBLdDXda/c/4ygemrH++iQZZBx
-         6IPUT5qjjOBLh+D9TFtoiVQ1Vm+R6wc1IMx+bdaob/IKG/qucWZ+Alm2xxFcX5KOah65
-         EELKjTF0A/rU/VLuPggyU5lRrKsXXxB8xTqIgTGll37n7jvvLuMS8yMP6xqs27gYUpaQ
-         VEEHDHdwfLPlwCBhw09jTokIpnrWz8ME8SUpSFeTbFw8/FA0BfQBPzPyI5uBiNHjKwOb
-         bEdg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wW+xc9Xlw2bu+K653N1yOhVKcSYS+KkktZQO9tOmIPA=;
+        b=C2gP4V6SRRGKWO60VOsZvA1swD6ZnkJl42IMkeGBbKTq6tQk0m7fUBHqG75Oy3jQig
+         jXRW3i+yZiIXOBQuZS6Dpdx45gIYQf52FwP7rUR7XXCIVLl7I1cXL1hmEBAGJAMdsj+S
+         7ojoFNu9m23sbUPKc6SXKHw0chTjyjMFOz5O5Ex75K6j0fhJ8P5BUO1Zeq1vDG7IHM44
+         4ysVcfjAu61vDBa3rBs3XGvKbqQ3mToM9Je5/d+d2t9rz8k1oV1gSO5K3g79VJMNODf5
+         i6cFxmkUm+plU5tKqDgw1cnaq7NfJk1/V7IML5gMl6v3OvodJc0Nqths/2zSVxu/m+C9
+         74Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FbWP76mrhorJU5Gh42fiL/ClcaJsatH+/BvxqeOmpoo=;
-        b=IpAyN5qhgj2/gUw7G4jHawaaeiWA+WBAMxmnUr/9KIYAP1ZlVfBxBUM5jpQwp8LlfY
-         EA7lRCcDDThDfxmR9sNbUW5oQHGRDOqkve40DAp6ayvMQ/qPPaMJaMdGoom1PZn417Gj
-         onC+npYIrclq2DgJDTQlBZpmGygeivxWqbnTGwZCx7yh2OPt7yQGFFza0AuZDH3a3EUr
-         fEGwWX16bYp/8dyjAA3K7pIGlYLGT87MBZDZyppfCTjUHfLnmlvGYhFP4vZBsECjlOt1
-         ZOS9egcNr+SXisS12RkAqK4LYErttVP9vxpKLBF5FNmW+1vDReAcfQURpl/W/wUnfGoL
-         m1KQ==
-X-Gm-Message-State: APjAAAW9nWnhiNpKJ3mKF7KTZKMxp6u13gFbRJ+T0OfpEHNIfkcnqMW5
-        94B8ohXYrESeDQBzDxlwqAd0d45UIkqJZxZCC0I=
-X-Google-Smtp-Source: APXvYqwoKwtYKco8BUfXu3fhhNLfUigpTR6OWIi4WPXK91dIOZ1Vmb9tPgwn8TOXDGj96mjfoE6Mhw4lIdCqQyDzD5s=
-X-Received: by 2002:a2e:5dc6:: with SMTP id v67mr61634312lje.240.1564502399982;
- Tue, 30 Jul 2019 08:59:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wW+xc9Xlw2bu+K653N1yOhVKcSYS+KkktZQO9tOmIPA=;
+        b=fTUkNXzVybZ2V8X8GnilHFdBWl4+aAKVZC2kszDB4JIipKhsfkXu+ehFAzW5s4mZbD
+         2OD2V18nuVrFtEQPrD7oWYYauLnbIYezXFXnypLFK2IxR/37RnLZK6ySWdEywm2a/PMw
+         7eMEbBGr49E+5pyyQ8gioyfwHuSzcCtUY2TklPmlDnLzZ9SH6VuamKpF/QU/gNO4pT+Z
+         fT4NipGgPyyQ5f6YGarC6lefy6dTio3ibmCoDXSrEllBQYmgVDj+XJX2IoPIb3OFclPp
+         HPt+KLB0ncQGs4xeAEUOnP8fSYYbjBrcwmCrJIPlUgdcSwcSSgTh+x7mMBuUASg9ZGIE
+         /suQ==
+X-Gm-Message-State: APjAAAXnhnpiFbFrMxKFIIAJlsmqfAhfZTt2zoUBqFWPzUnQrvL+0Xcv
+        +56QdZNy9AzXAGj2f5+ur24T0Txo
+X-Google-Smtp-Source: APXvYqzj2DZFl8jNtMjbadFdv7+wxNLAYWpl6FZ49oH4kTxWHBLLDqv+fuQODPBxVH5i89VLxtdPXg==
+X-Received: by 2002:a17:90a:fa18:: with SMTP id cm24mr114728053pjb.120.1564502435745;
+        Tue, 30 Jul 2019 09:00:35 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id k22sm70726634pfk.157.2019.07.30.09.00.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 09:00:34 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 09:00:32 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Hubert Feurstein <h.feurstein@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH 4/4] net: dsa: mv88e6xxx: add PTP support for MV88E6250
+ family
+Message-ID: <20190730160032.GA1251@localhost>
+References: <20190730100429.32479-1-h.feurstein@gmail.com>
+ <20190730100429.32479-5-h.feurstein@gmail.com>
 MIME-Version: 1.0
-References: <20190730150552.24927-1-lukma@denx.de> <CAOMZO5AxPHHobQQhq30fjLVeSroLdvdT0+GqCWi8it1ejhDONA@mail.gmail.com>
- <20190730175336.382d833c@jawa>
-In-Reply-To: <20190730175336.382d833c@jawa>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 30 Jul 2019 13:01:19 -0300
-Message-ID: <CAOMZO5AoSCDCMRKpkWQ=0PwiFG-O9doGaA31FRhDCGmNr7Xefg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: DTS: vybrid: Update qspi node description for VF610
- BK4 board
-To:     Lukasz Majewski <lukma@denx.de>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730100429.32479-5-h.feurstein@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
+On Tue, Jul 30, 2019 at 12:04:29PM +0200, Hubert Feurstein wrote:
+> diff --git a/drivers/net/dsa/mv88e6xxx/ptp.c b/drivers/net/dsa/mv88e6xxx/ptp.c
+> index 768d256f7c9f..51cdf4712517 100644
+> --- a/drivers/net/dsa/mv88e6xxx/ptp.c
+> +++ b/drivers/net/dsa/mv88e6xxx/ptp.c
+> @@ -15,11 +15,38 @@
+>  #include "hwtstamp.h"
+>  #include "ptp.h"
+>  
+> -/* Raw timestamps are in units of 8-ns clock periods. */
+> -#define CC_SHIFT	28
+> -#define CC_MULT		(8 << CC_SHIFT)
+> -#define CC_MULT_NUM	(1 << 9)
+> -#define CC_MULT_DEM	15625ULL
+> +/* The adjfine API clamps ppb between [-32,768,000, 32,768,000], and
 
-On Tue, Jul 30, 2019 at 12:53 PM Lukasz Majewski <lukma@denx.de> wrote:
+That is not true.
 
-> Shall I refer to the original commit (which added this DTS)? Or the
-> original issue posted to linux-mtd [1] ?
+> + * therefore scaled_ppm between [-2,147,483,648, 2,147,483,647].
+> + * Set the maximum supported ppb to a round value smaller than the maximum.
+> + *
+> + * Percentually speaking, this is a +/- 0.032x adjustment of the
+> + * free-running counter (0.968x to 1.032x).
+> + */
+> +#define MV88E6XXX_MAX_ADJ_PPB	32000000
 
-You can add a Fixes tag like this:
+I had set an arbitrary limit of 1000 ppm.  I can't really see any
+point in raising the limit.
 
-Fixes: a67d2c52a82f ("ARM: dts: Add support for Liebherr's BK4 device
-(vf610 based)")
+> +/* Family MV88E6250:
+> + * Raw timestamps are in units of 10-ns clock periods.
+> + *
+> + * clkadj = scaled_ppm * 10*2^28 / (10^6 * 2^16)
+> + * simplifies to
+> + * clkadj = scaled_ppm * 2^7 / 5^5
+> + */
+> +#define MV88E6250_CC_SHIFT	28
+> +#define MV88E6250_CC_MULT	(10 << MV88E6250_CC_SHIFT)
+> +#define MV88E6250_CC_MULT_NUM	(1 << 7)
+> +#define MV88E6250_CC_MULT_DEM	3125ULL
+> +
+> +/* Other families:
+> + * Raw timestamps are in units of 8-ns clock periods.
+> + *
+> + * clkadj = scaled_ppm * 8*2^28 / (10^6 * 2^16)
+> + * simplifies to
+> + * clkadj = scaled_ppm * 2^9 / 5^6
+> + */
+> +#define MV88E6XXX_CC_SHIFT	28
+> +#define MV88E6XXX_CC_MULT	(8 << MV88E6XXX_CC_SHIFT)
+> +#define MV88E6XXX_CC_MULT_NUM	(1 << 9)
+> +#define MV88E6XXX_CC_MULT_DEM	15625ULL
+>  
+>  #define TAI_EVENT_WORK_INTERVAL msecs_to_jiffies(100)
+>  
+> @@ -179,24 +206,14 @@ static void mv88e6352_tai_event_work(struct work_struct *ugly)
+>  static int mv88e6xxx_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+>  {
+>  	struct mv88e6xxx_chip *chip = ptp_to_chip(ptp);
+> -	int neg_adj = 0;
+> -	u32 diff, mult;
+> -	u64 adj;
+> +	s64 adj;
+>  
+> -	if (scaled_ppm < 0) {
+> -		neg_adj = 1;
+> -		scaled_ppm = -scaled_ppm;
+> -	}
+
+Please don't re-write this logic.  It is written like that for a reason.
+
+> -	mult = CC_MULT;
+> -	adj = CC_MULT_NUM;
+> -	adj *= scaled_ppm;
+> -	diff = div_u64(adj, CC_MULT_DEM);
+
+Just substitute CC_MULT* with your new chip->ptp_cc_mult*
+and leave the rest alone.
+
+Thanks,
+Richard
