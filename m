@@ -2,337 +2,210 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E494C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64A4C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA251208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B41E2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564517877;
+	bh=/W+9jaawErVT51Elva3JfolGD51FWoAeFhMH0Y/9LUI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OUmXjwX8Zha5SknNQodCBilSII7UX8EvSLoJ9DSzdSPaIsPQmboKvHhCvrNADKBMv
+	 t+0CNqEDOIsdIf1fyxdztgHg8vvCyFFh4dqGY7Ce5e0X3hePlXLXmg2VPN4M5TqTZQ
+	 LYRnJG0Kf+1S4X5qWyL1kPTIHOzQuHTGBjlnhRYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387402AbfG3UPh (ORCPT
+        id S1728157AbfG3UR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:15:37 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:44505 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727947AbfG3UPg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:15:36 -0400
-Received: from [IPv6:2001:983:e9a7:1:a003:9a19:9f18:5372] ([IPv6:2001:983:e9a7:1:a003:9a19:9f18:5372])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id sYWshp6MAAffAsYWthkw5y; Tue, 30 Jul 2019 22:15:33 +0200
-Subject: Re: [PATCH v8 00/14] Rockchip ISP1 Driver
-To:     Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com,
-        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
-        linux-kernel@vger.kernel.org, tfiga@chromium.org,
-        hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com,
-        sakari.ailus@linux.intel.com, kernel@collabora.com,
-        ezequiel@collabora.com, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com
-References: <20190730184256.30338-1-helen.koike@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <dbdfed3e-7bb6-bf1f-64b9-ab7298193e2d@xs4all.nl>
-Date:   Tue, 30 Jul 2019 22:15:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Jul 2019 16:17:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726837AbfG3UR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 16:17:56 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99D7220693;
+        Tue, 30 Jul 2019 20:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564517873;
+        bh=/W+9jaawErVT51Elva3JfolGD51FWoAeFhMH0Y/9LUI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cehCfNRKkrT9n1L7WOZyKEqR51p2eWfpV5gx6oNuAUQ4OcD3RRgsXG0nTq31thgXQ
+         emn16oRHDXBFzxh0A0k0sUWiRanV/dhPtSwRwLF962zqPR5A7wj/PhmzePF6Z46i22
+         Gh5fRebxyBK+goX+IVN0h7One1pe6TBCV72a378Y=
+Date:   Tue, 30 Jul 2019 16:17:52 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     maowenan <maowenan@huawei.com>
+Cc:     gregkh@linuxfoundation.org, stable@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH stable 4.9] tcp: reset sk_send_head in
+ tcp_write_queue_purge
+Message-ID: <20190730201752.GE29162@sasha-vm>
+References: <20190729132108.162320-1-maowenan@huawei.com>
+ <20190729153218.GA29162@sasha-vm>
+ <29c1ee9c-4a5d-4f61-f526-85980185f0bd@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190730184256.30338-1-helen.koike@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfK+dx4j+dgGtxLsoHU+ORoEJPKIOp+jWl83XrDrQqacNsVuM79Xwci6DE5kLv1wrq3xUzFj3gGdhEYMfJjhOPZPULtph22J50wHmYbEpO+orz0iZzKh1
- 8PCRs5OAsnRplxTozRzQuuyMz+igycBj0LCE4c2+uiKxTNFOwA4rUuh6zoiaf4uJyhmQa3a9xlxtJXxHyYMY+MJcBEadFN2fOdfvWKwKdzl55y8Gw/oIc5HC
- 7B5MTCBmcVIVUKfWKuRQ6LL+BJN1cCx/2vBULk4nrSkKJB8MOa4xNSIc1amHlUcmW6aKxXrIRs3ZP2Nqf0aQTUpGgjM2HXWDjTxcZnKY1L5octE3lkMyWJZR
- Eleqf+j7ZhQNn53HfN7K/NN3InJ1CVLoZIbXJf27nny8GzEoXwkB2edwSb9Ln9XH77tmZiwOkRieoCae71cLTxcW+MyuCnhpDY3nEloS1FjPs1gbG4l7t9pG
- +F6e4IxXR4dvDG05P3swZKpM2QVdBo7ow51+0wBqqkmWDtRuqK9hWUwJiWXIjau+3wMrfk+xQ50whGUR29XB7TRLx+uaxNGVbdzll0gIHNyuY/iJOoY9y6SX
- GRthWhqtGpqz1klRqINLvfDXLnKDKoOxerdmC8vjkjzaNQ+SAT7s/14uOkqYOygnS1fdVxkhTv3F1KXUI3A/e0xUtGGAhMkU8MuGmYBYi4yNQo2sTzhGAFGg
- qZwIk6vZZRsaTETGDKfQ4qL5gya3aE9zSq+u1rEqfgDbX6bUOaXh7UsNj5CAZmIue7jGVOM85fwCjgUkoYqmDZdiEXAsqG3EyNvRV+2mp8f1orJoYzRp6wpr
- Gqx8rl9KGTyX4ldZSkGMO01UeqIPZZDMRMgEA+67/u0RKRxKwYUqbS2Xg0AksFOTVSRmLQ2RZZL4dZpl3YZoLZC8F6U65GFP7av0a2cld2MTeVKsQGHwRVRN
- cTGuIw==
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <29c1ee9c-4a5d-4f61-f526-85980185f0bd@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/19 8:42 PM, Helen Koike wrote:
-> Hello,
-> 
-> I'm re-sending a new version of ISP(Camera) v4l2 driver for rockchip
-> rk3399 SoC.
-> 
-> I didn't change much from the last version, just applying the
-> suggestions made in the previous one.
-> 
-> This patchset is also available at:
-> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v8
-> 
-> Libcamera patched to work with this version:
-> https://gitlab.collabora.com/koike/libcamera
-> (also sent to the mailing list)
-> 
-> I tested on the rockpi 4 with a rpi v1.3 sensor and also with the
-> Scarlet Chromebook.
-> 
-> Known issues (same as in v7):
-> -------------
-> - Reloading the module doesn't work (there is some missing cleanup when
-> unloading)
-> - When capturing in bayer format, changing the size doesn't seem to
-> affect the image.
-> - crop needs more tests
-> - v4l2-compliance error:
->         fail: v4l2-test-controls.cpp(824): subscribe event for control 'Image Processing Controls' failed
-> test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
+On Tue, Jul 30, 2019 at 09:31:19AM +0800, maowenan wrote:
+>
+>
+>On 2019/7/29 23:32, Sasha Levin wrote:
+>> On Mon, Jul 29, 2019 at 09:21:08PM +0800, Mao Wenan wrote:
+>>> From: Soheil Hassas Yeganeh <soheil@google.com>
+>>>
+>>> tcp_write_queue_purge clears all the SKBs in the write queue
+>>> but does not reset the sk_send_head. As a result, we can have
+>>> a NULL pointer dereference anywhere that we use tcp_send_head
+>>> instead of the tcp_write_queue_tail.
+>>>
+>>> For example, after a27fd7a8ed38 (tcp: purge write queue upon RST),
+>>> we can purge the write queue on RST. Prior to
+>>> 75c119afe14f (tcp: implement rb-tree based retransmit queue),
+>>> tcp_push will only check tcp_send_head and then accesses
+>>> tcp_write_queue_tail to send the actual SKB. As a result, it will
+>>> dereference a NULL pointer.
+>>>
+>>> This has been reported twice for 4.14 where we don't have
+>>> 75c119afe14f:
+>>>
+>>> By Timofey Titovets:
+>>>
+>>> [  422.081094] BUG: unable to handle kernel NULL pointer dereference
+>>> at 0000000000000038
+>>> [  422.081254] IP: tcp_push+0x42/0x110
+>>> [  422.081314] PGD 0 P4D 0
+>>> [  422.081364] Oops: 0002 [#1] SMP PTI
+>>>
+>>> By Yongjian Xu:
+>>>
+>>> BUG: unable to handle kernel NULL pointer dereference at 0000000000000038
+>>> IP: tcp_push+0x48/0x120
+>>> PGD 80000007ff77b067 P4D 80000007ff77b067 PUD 7fd989067 PMD 0
+>>> Oops: 0002 [#18] SMP PTI
+>>> Modules linked in: tcp_diag inet_diag tcp_bbr sch_fq iTCO_wdt
+>>> iTCO_vendor_support pcspkr ixgbe mdio i2c_i801 lpc_ich joydev input_leds shpchp
+>>> e1000e igb dca ptp pps_core hwmon mei_me mei ipmi_si ipmi_msghandler sg ses
+>>> scsi_transport_sas enclosure ext4 jbd2 mbcache sd_mod ahci libahci megaraid_sas
+>>> wmi ast ttm dm_mirror dm_region_hash dm_log dm_mod dax
+>>> CPU: 6 PID: 14156 Comm: [ET_NET 6] Tainted: G D 4.14.26-1.el6.x86_64 #1
+>>> Hardware name: LENOVO ThinkServer RD440 /ThinkServer RD440, BIOS A0TS80A
+>>> 09/22/2014
+>>> task: ffff8807d78d8140 task.stack: ffffc9000e944000
+>>> RIP: 0010:tcp_push+0x48/0x120
+>>> RSP: 0018:ffffc9000e947a88 EFLAGS: 00010246
+>>> RAX: 00000000000005b4 RBX: ffff880f7cce9c00 RCX: 0000000000000000
+>>> RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff8807d00f5000
+>>> RBP: ffffc9000e947aa8 R08: 0000000000001c84 R09: 0000000000000000
+>>> R10: ffff8807d00f5158 R11: 0000000000000000 R12: ffff8807d00f5000
+>>> R13: 0000000000000020 R14: 00000000000256d4 R15: 0000000000000000
+>>> FS: 00007f5916de9700(0000) GS:ffff88107fd00000(0000) knlGS:0000000000000000
+>>> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> CR2: 0000000000000038 CR3: 00000007f8226004 CR4: 00000000001606e0
+>>> Call Trace:
+>>> tcp_sendmsg_locked+0x33d/0xe50
+>>> tcp_sendmsg+0x37/0x60
+>>> inet_sendmsg+0x39/0xc0
+>>> sock_sendmsg+0x49/0x60
+>>> sock_write_iter+0xb6/0x100
+>>> do_iter_readv_writev+0xec/0x130
+>>> ? rw_verify_area+0x49/0xb0
+>>> do_iter_write+0x97/0xd0
+>>> vfs_writev+0x7e/0xe0
+>>> ? __wake_up_common_lock+0x80/0xa0
+>>> ? __fget_light+0x2c/0x70
+>>> ? __do_page_fault+0x1e7/0x530
+>>> do_writev+0x60/0xf0
+>>> ? inet_shutdown+0xac/0x110
+>>> SyS_writev+0x10/0x20
+>>> do_syscall_64+0x6f/0x140
+>>> ? prepare_exit_to_usermode+0x8b/0xa0
+>>> entry_SYSCALL_64_after_hwframe+0x3d/0xa2
+>>> RIP: 0033:0x3135ce0c57
+>>> RSP: 002b:00007f5916de4b00 EFLAGS: 00000293 ORIG_RAX: 0000000000000014
+>>> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000003135ce0c57
+>>> RDX: 0000000000000002 RSI: 00007f5916de4b90 RDI: 000000000000606f
+>>> RBP: 0000000000000000 R08: 0000000000000000 R09: 00007f5916de8c38
+>>> R10: 0000000000000000 R11: 0000000000000293 R12: 00000000000464cc
+>>> R13: 00007f5916de8c30 R14: 00007f58d8bef080 R15: 0000000000000002
+>>> Code: 48 8b 97 60 01 00 00 4c 8d 97 58 01 00 00 41 b9 00 00 00 00 41 89 f3 4c 39
+>>> d2 49 0f 44 d1 41 81 e3 00 80 00 00 0f 85 b0 00 00 00 <80> 4a 38 08 44 8b 8f 74
+>>> 06 00 00 44 89 8f 7c 06 00 00 83 e6 01
+>>> RIP: tcp_push+0x48/0x120 RSP: ffffc9000e947a88
+>>> CR2: 0000000000000038
+>>> ---[ end trace 8d545c2e93515549 ]---
+>>>
+>>> There is other scenario which found in stable 4.4:
+>>> Allocated:
+>>> [<ffffffff82f380a6>] __alloc_skb+0xe6/0x600 net/core/skbuff.c:218
+>>> [<ffffffff832466c3>] alloc_skb_fclone include/linux/skbuff.h:856 [inline]
+>>> [<ffffffff832466c3>] sk_stream_alloc_skb+0xa3/0x5d0 net/ipv4/tcp.c:833
+>>> [<ffffffff83249164>] tcp_sendmsg+0xd34/0x2b00 net/ipv4/tcp.c:1178
+>>> [<ffffffff83300ef3>] inet_sendmsg+0x203/0x4d0 net/ipv4/af_inet.c:755
+>>> Freed:
+>>> [<ffffffff82f372fd>] __kfree_skb+0x1d/0x20 net/core/skbuff.c:676
+>>> [<ffffffff83288834>] sk_wmem_free_skb include/net/sock.h:1447 [inline]
+>>> [<ffffffff83288834>] tcp_write_queue_purge include/net/tcp.h:1460 [inline]
+>>> [<ffffffff83288834>] tcp_connect_init net/ipv4/tcp_output.c:3122 [inline]
+>>> [<ffffffff83288834>] tcp_connect+0xb24/0x30c0 net/ipv4/tcp_output.c:3261
+>>> [<ffffffff8329b991>] tcp_v4_connect+0xf31/0x1890 net/ipv4/tcp_ipv4.c:246
+>>>
+>>> BUG: KASAN: use-after-free in tcp_skb_pcount include/net/tcp.h:796 [inline]
+>>> BUG: KASAN: use-after-free in tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
+>>> BUG: KASAN: use-after-free in tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
+>>> [<ffffffff81515cd5>] kasan_report.cold.7+0x175/0x2f7 mm/kasan/report.c:408
+>>> [<ffffffff814f9784>] __asan_report_load2_noabort+0x14/0x20 mm/kasan/report.c:427
+>>> [<ffffffff83286582>] tcp_skb_pcount include/net/tcp.h:796 [inline]
+>>> [<ffffffff83286582>] tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
+>>> [<ffffffff83286582>] tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
+>>> [<ffffffff83287a40>] __tcp_push_pending_frames+0xa0/0x290 net/ipv4/tcp_output.c:2307
+>>>
+>>> stable 4.4 and stable 4.9 don't have the commit abb4a8b870b5 ("tcp: purge write queue upon RST")
+>>> which is referred in dbbf2d1e4077,
+>>> in tcp_connect_init, it calls tcp_write_queue_purge, and does not reset sk_send_head, then UAF.
+>>>
+>>> stable 4.14 have the commit abb4a8b870b5 ("tcp: purge write queue upon RST"),
+>>> in tcp_reset, it calls tcp_write_queue_purge(sk), and does not reset sk_send_head, then UAF.
+>>>
+>>> So this patch can be used to fix stable 4.4 and 4.9.
+>>>
+>>> Fixes: a27fd7a8ed38 (tcp: purge write queue upon RST)
+>>> Reported-by: Timofey Titovets <nefelim4ag@gmail.com>
+>>> Reported-by: Yongjian Xu <yongjianchn@gmail.com>
+>>> Signed-off-by: Eric Dumazet <edumazet@google.com>
+>>> Signed-off-by: Soheil Hassas Yeganeh <soheil@google.com>
+>>> Tested-by: Yongjian Xu <yongjianchn@gmail.com>
+>>>
+>>> Signed-off-by: David S. Miller <davem@davemloft.net>
+>>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>>
+>> So the "Fixes:" commit in the commit message is wrong? What's the actual
+>> commit that this fixes?
+>
+>Upstream commit is 7f582b248d0a ("tcp: purge write queue in tcp_connect_init()")
+>linux-4.4.y
+>Fixes: 5bbe138a250e ("tcp: purge write queue in tcp_connect_init()")
+>linux-4.9.y
+>Fixes: 74a4c09d4b05 ("tcp: purge write queue in tcp_connect_init()")
+>linux-4.14.y
+>Fixes: a27fd7a8ed38 ("tcp: purge write queue upon RST")
 
-Can you mail me the full v4l2-compliance output?
+Okay, I've queued this for 4.9 and 4.4, thank you.
 
-Regards,
-
-	Hans
-
-> It seems that if controls are supported, v4l2-compliance says that
-> controls of type 'Image Processing Controls' are mandatory, is this
-> correct?
-> - It seems there are still some issues with interrupts, but I couldn't
-> isolate them yet.
-> 
-> Previous changelog:
-> -------------------
-> 
-> changes in V6:
->   - add mipi txrx phy support
->   - remove bool and enum from uapi header
->   - add buf_prepare op
->   - correct some spelling problems
->   - return all queued buffers when starting stream failed
-> 
-> changes in V5: Sync with local changes,
->   - fix the SP height limit
->   - speed up the second stream capture
->   - the second stream can't force sync for rsz when start/stop streaming
->   - add frame id to param vb2 buf
->   - enable luminance maximum threshold
-> 
-> changes in V4:
->   - fix some bugs during development
->   - move quantization settings to rkisp1 subdev
->   - correct some spelling problems
->   - describe ports in dt-binding documents
-> 
-> changes in V3:
->   - add some comments
->   - fix wrong use of v4l2_async_subdev_notifier_register
->   - optimize two paths capture at a time
->   - remove compose
->   - re-struct headers
->   - add a tmp wiki page: http://opensource.rock-chips.com/wiki_Rockchip-isp1
-> 
-> changes in V2:
->   mipi-phy:
->     - use async probing
->     - make it be a child device of the GRF
->   isp:
->     - add dummy buffer
->     - change the way to get bus configuration, which make it possible to
->             add parallel sensor support in the future(without mipi-phy driver).
-> 
-> ------------------
-> 
-> Changes in v8:
-> - Add SPDX in the header
-> - Remove emacs configs
-> - Fix doc style
-> - Remove boiler plate license text
-> 
-> Changes in v7:
-> - s/IPU3/RK_ISP1
-> - s/correspond/corresponding
-> - s/use/uses
-> - s/docuemnt/document
-> - Fix checkpatch errors (lines over 80 and SPDX)
-> - Add TODO to improve docs
-> - Migrate dphy specific code from
-> drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
-> to drivers/phy/rockchip/phy-rockchip-dphy.c
-> - Drop support for rk3288
-> - Drop support for dphy txrx
-> - code styling and checkpatch fixes
-> - fixed warning because of unknown entity type
-> - fixed v4l2-compliance errors regarding rkisp1 formats, try formats
-> and default values
-> - fix typo riksp1/rkisp1
-> - redesign: remove mipi/csi subdevice, sensors connect directly to the
-> isp subdevice in the media topology now. As a consequence, remove the
-> hack in mipidphy_g_mbus_config() where information from the sensor was
-> being propagated through the topology.
-> - From the old dphy:
->         * cache get_remote_sensor() in s_stream
->         * use V4L2_CID_PIXEL_RATE instead of V4L2_CID_LINK_FREQ
-> - Replace stream state with a boolean
-> - code styling and checkpatch fixes
-> - fix stop_stream (return after calling stop, do not reenable the stream)
-> - fix rkisp1_isp_sd_get_selection when V4L2_SUBDEV_FORMAT_TRY is set
-> - fix get format in output (isp_sd->out_fmt.mbus_code was being ignored)
-> - s/intput/input
-> - remove #define sd_to_isp_sd(_sd), add a static inline as it will be
-> reused by the capture
-> - s/strlcpy/strscpy
-> - sort out the locks in isp stats
-> - code styling and checkpatch fixes
-> - s/strlcpy/strscpy
-> - s/strcpy/strscpy
-> - fix config lsc error
-> LSC data table size is 17x17, but when configuring data to ISP,
-> should be aligned to 18x17. That means every last data of last
-> line should be filled with 0, and not filled with the data of
-> next line.
-> - Update new ISP parameters immediately
-> For those sub modules that have shadow registers in core isp, the
-> new programing parameters would not be active if both
-> CIF_ISP_CTRL_ISP_CFG_UPD_PERMANENT and CFG_UPD are not set. Now
-> we configure CFG_UPD to force update the shadow registers when new
-> ISP parameters are configured.
-> - fix some ISP parameters config error
-> Some ISP parameter config functions may override the old enable
-> bit value, because the enable bits of these modules are in the
-> same registers with parameters. So we should save the old enable
-> bits firstly.
-> - code styling and checkpatch fixes
-> - s/strlcpy/strscpy
-> - Fix v4l2-compliance issues:
->         * remove input ioctls
-> media api can be used to define the topology, this input api is not
-> required. Besides it, if an input is enumerated, v4l2-compliance is not
-> happy with G_FMT returning the default colorspace instead of something
-> more specific.
->         * return the pixelformat to the userspace
-> G_/S_/TRY_ FORMAT should return a valid pixelformat to the user, even if
-> the user gave an invalid one
->         * add missing default colorspace and ycbcr
->         * fix wrong pixformat in mp_fmts[] table
->         * add buf type check in s_/g_selection
->         * queue_setup - check sizes
->         * normalize bus_info name
->         * fix field any v4l2-compliance -s complain - set field none
->         when streaming
-> - Fix compiling error: s/vidioc_enum_fmt_vid_cap_mplane/vidioc_enum_fmt_vid_cap
-> - Replace stream state with a boolean
-> The rkisp1_state enum consists only of 3 entries, where 1 is completely
-> unused and the other two respectively mean not streaming or streaming.
-> Replace it with a boolean called "streaming".
-> - Simplify MI interrupt handling
-> Rather than adding unnecessary indirection, just use stream index to
-> handle MI interrupt enable/disable/clear, since the stream index matches
-> the order of bits now, thanks to previous patch. While at it, remove
-> some dead code.
-> - code styling and checkpatch fixes
-> - add link_validate: don't allow a link with bayer/non-bayer mismatch
-> - VIDEO_ROCKCHIP_ISP1 selects VIDEOBUF2_VMALLOC
-> - add PHY_ROCKCHIP_DPHY as a dependency for VIDEO_ROCKCHIP_ISP1
-> - Fix compilation and runtime errors due to bitrotting
-> The code has bit-rotten since March 2018, fix compilation errors.
-> The new V4L2 async notifier API requires notifiers to be initialized by
-> a call to v4l2_async_notifier_init() before being used, do so.
-> - Add missing module device table
-> - use clk_bulk framework
-> - add missing notifiers cleanups
-> - s/strlcpy/strscpy
-> - normalize bus_info name
-> - fix s_stream error path, stream_cnt wans't being decremented properly
-> - use devm_platform_ioremap_resource() helper
-> - s/deice/device
-> - redesign: remove mipi/csi subdevice, sensors connect directly to the
-> isp subdevice in the media topology now.
-> - remove "saved_state" member from rkisp1_stream struct
-> - Reverse the order of MIs
-> - Simplify MI interrupt handling
-> Rather than adding unnecessary indirection, just use stream index to
-> handle MI interrupt enable/disable/clear, since the stream index matches
-> the order of bits now, thanks to previous patch. While at it, remove
-> some dead code.
-> - code styling and checkpatch fixes
-> - update document with new design and tested example
-> - updated doc with new design and tested example
-> - add phy properties
-> - add ports
-> - add phy-cells
-> 
-> Helen Koike (1):
->   MAINTAINERS: add entry for Rockchip ISP1 driver
-> 
-> Jacob Chen (9):
->   media: doc: add document for rkisp1 meta buffer format
->   media: rkisp1: add Rockchip MIPI Synopsys DPHY driver
->   media: rkisp1: add Rockchip ISP1 subdev driver
->   media: rkisp1: add ISP1 statistics driver
->   media: rkisp1: add ISP1 params driver
->   media: rkisp1: add capture device driver
->   media: rkisp1: add rockchip isp1 core driver
->   dt-bindings: Document the Rockchip ISP1 bindings
->   dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
-> 
-> Jeffy Chen (1):
->   media: rkisp1: Add user space ABI definitions
-> 
-> Shunqian Zheng (3):
->   media: videodev2.h, v4l2-ioctl: add rkisp1 meta buffer format
->   arm64: dts: rockchip: add isp0 node for rk3399
->   arm64: dts: rockchip: add rx0 mipi-phy for rk3399
-> 
->  .../bindings/media/rockchip-isp1.txt          |   71 +
->  .../bindings/media/rockchip-mipi-dphy.txt     |   38 +
->  Documentation/media/uapi/v4l/meta-formats.rst |    2 +
->  .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    |   23 +
->  .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      |   22 +
->  MAINTAINERS                                   |    8 +
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi      |   36 +
->  drivers/media/platform/Kconfig                |   12 +
->  drivers/media/platform/Makefile               |    1 +
->  drivers/media/platform/rockchip/isp1/Makefile |    7 +
->  .../media/platform/rockchip/isp1/capture.c    | 1754 +++++++++++++++++
->  .../media/platform/rockchip/isp1/capture.h    |  164 ++
->  drivers/media/platform/rockchip/isp1/common.h |  101 +
->  drivers/media/platform/rockchip/isp1/dev.c    |  675 +++++++
->  drivers/media/platform/rockchip/isp1/dev.h    |   97 +
->  .../media/platform/rockchip/isp1/isp_params.c | 1604 +++++++++++++++
->  .../media/platform/rockchip/isp1/isp_params.h |   50 +
->  .../media/platform/rockchip/isp1/isp_stats.c  |  508 +++++
->  .../media/platform/rockchip/isp1/isp_stats.h  |   60 +
->  drivers/media/platform/rockchip/isp1/regs.c   |  223 +++
->  drivers/media/platform/rockchip/isp1/regs.h   | 1525 ++++++++++++++
->  drivers/media/platform/rockchip/isp1/rkisp1.c | 1286 ++++++++++++
->  drivers/media/platform/rockchip/isp1/rkisp1.h |  111 ++
->  drivers/media/v4l2-core/v4l2-ioctl.c          |    2 +
->  drivers/phy/rockchip/Kconfig                  |    8 +
->  drivers/phy/rockchip/Makefile                 |    1 +
->  drivers/phy/rockchip/phy-rockchip-dphy.c      |  408 ++++
->  include/uapi/linux/rkisp1-config.h            |  816 ++++++++
->  include/uapi/linux/videodev2.h                |    4 +
->  29 files changed, 9617 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
->  create mode 100644 drivers/media/platform/rockchip/isp1/Makefile
->  create mode 100644 drivers/media/platform/rockchip/isp1/capture.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/capture.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/common.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/dev.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/dev.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/regs.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/regs.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
->  create mode 100644 drivers/phy/rockchip/phy-rockchip-dphy.c
->  create mode 100644 include/uapi/linux/rkisp1-config.h
-> 
-
+--
+Thanks,
+Sasha
