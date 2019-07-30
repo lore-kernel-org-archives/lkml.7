@@ -2,180 +2,205 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2630C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1C4C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F67020693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCCE32089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:00:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="pTAUOFHF"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="Sl72/4E2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbfG3L6m (ORCPT
+        id S1729510AbfG3MAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:58:42 -0400
-Received: from mail-eopbgr00055.outbound.protection.outlook.com ([40.107.0.55]:32238
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727156AbfG3L6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:58:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Uc8o/Yooyf+Fy5LKnRl1Q0XcxHidnxtz+lMj2KtHxnjqhVsUr95WcbfWNVwhqnJf79bfhWflXFWoL8XG7qXJFtMuJ67f6mRH4gynMI6pbd2yMI+3kfqoLEJGRdgWffFsDRgK1Uzue56PoCOHq8EK3G+VYJyVOXTf/SmxvWJdLybhWQIO5gYCwwT8LKjbEIrKyqn87++TjyzkwFbaL3jJK3PeprU5YxSOqNqvGm01F3Z8LpudxrbHJA54pkSyIQ3T1O40adB0DhnKgfL+/R1n5DkUt/WsrjmN9n/iaGZiHpdmZ6kq9KN29PMEfY2qd9srciO+LYFnOjfw/bWg66Sr8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+33JPkMeNqyLpIkArR+07OT/1Uc18dPOVsUqjAcecF0=;
- b=iGk7bvIkg/GNugY0L0VxDrVeuuAamrfuGgpnx0hvCiMUdsWStVYn7Pwy+3jd3G3mep0LnT1Qaz6y0YsCKGR3LBe9+c6PNHOZKjdShaidgDXsIgPGFlYOM2JYmdN+epxZe7V+YWyeA2wbIl52BR06T7rOPktUQZsS+wIEJuP5UZb+rD9BmyS2uL3+1F+OnGNMMS1cQ5569/DBlInyxqYAtNn+QR9tM2na/O/ymR+oOkSllxoLI55iJdZFO2eCF4HSuSjlqkwVl+cRz/BwG9YR0waPI4J+jBWtLTHcvTSRl7OG1mRsm/vc3gBsZpYb6QeFCXa5jlzhxIqMxcXuXuW+6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+33JPkMeNqyLpIkArR+07OT/1Uc18dPOVsUqjAcecF0=;
- b=pTAUOFHFWfescS2ALdSMnHR93xaow9VsWlzsAk8JjASyGaYs4pWcwCVu6CuTbDVgQfBSypFOugHWALdYbxjv7Vxd/pSUo6emmDdLH8+vBD/Su7SlYf/6FeOJQ8mjNbb6PbQ5Qt+xmsYlY/wjA4Pewlm5aTiJo45RVexpLp6yyNo=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6063.eurprd05.prod.outlook.com (20.178.204.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Tue, 30 Jul 2019 11:58:37 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
- 11:58:37 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Christoph Hellwig <hch@lst.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull hmm changes
-Thread-Topic: [GIT PULL] Please pull hmm changes
-Thread-Index: AQHVRs4epyeD1jwmWUi/iXXZo7asug==
-Date:   Tue, 30 Jul 2019 11:58:37 +0000
-Message-ID: <20190730115831.GA15720@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQXPR01CA0104.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:41::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b6f9997d-b133-407b-5779-08d714e5413a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(49563074)(7193020);SRVR:VI1PR05MB6063;
-x-ms-traffictypediagnostic: VI1PR05MB6063:
-x-microsoft-antispam-prvs: <VI1PR05MB6063117D58AB82D9BBD5CD20CFDC0@VI1PR05MB6063.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-forefront-prvs: 0114FF88F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(366004)(396003)(39860400002)(199004)(189003)(66446008)(99286004)(4326008)(54906003)(8936002)(53936002)(33656002)(68736007)(81156014)(81166006)(2906002)(316002)(486006)(66066001)(110136005)(99936001)(186003)(386003)(6506007)(102836004)(71200400001)(71190400001)(26005)(8676002)(476003)(52116002)(7416002)(478600001)(256004)(14454004)(305945005)(6512007)(6486002)(14444005)(7736002)(36756003)(6436002)(9686003)(1076003)(25786009)(5660300002)(66946007)(6116002)(66476007)(66616009)(86362001)(66556008)(64756008)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6063;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5lwbL/YVtpY1+D5llxcTNXTbawvmeQQKNRaFB7wOLtBFTVGXipPPkgJryzHiWHG/XZWScZv9oJYdOB3qYtDOHbWHDqRo8PWrd3Ev498c5T2DQEBKlamgQpSB905/FbcjUoj49aH/xVj5DrtIGh3ljuSdo8DIywKp+wn2saqRHoQOn3Qm847USGFdAZC+mQw9wbx+VQyKQQOo11AgcqeNaLt4C6EiYyHHM9zM4N0LOoMC5i6XUC8f5bo4nWiCchaoqkJz0b32ALq51NclJz1zWpgqdGSqgb6a386gTi8WHJF9u5KFzHdOkr439yGB7m5x5LvKlZL4doaItYPvle6GOAtpKoonSl3I23Tg7RwKSOxs8bXkieWDWyJiPdNFtoDdPlXkkOaxFJm3bRcce9f4aoKoYtiH8U14x2yZfwDBxfE=
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+        Tue, 30 Jul 2019 08:00:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43007 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727156AbfG3MAZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 08:00:25 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x1so15560672wrr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 05:00:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n/JJxoSHKvaru38fIGlmwaHlnuxMxh6jpy0Kuq5lmmE=;
+        b=Sl72/4E2kqtDZ2CQIMMfomIbhFZDZDSCqUCB+R4H7uJSODB8IQnLn5GgZEZ5fShul4
+         b8zn3xuhCVjR16uUHRlBKI+jKBAUgRYXeMtoFwC8z+gIlDJZVWCP3jM504guxcVTvzLP
+         fYQwNm74kcCX4M7eMly/p7M+P9RiJW9QBkMOutLsLrApJDeWgjwJ/iDNbb/gZufDTAGU
+         rNoKlvBwDliEOVi3jOqIklKVRYOQVQTzoGeOwWLK6zKLI7UKqD991GvjbFAD09/D1HXg
+         ONKN2qH0FVKuNIRfa8SpTV62TzfkoXcJhFg6zQjdpI/jBmCaPoInWqiPyYf+LGwBSfyW
+         ug6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n/JJxoSHKvaru38fIGlmwaHlnuxMxh6jpy0Kuq5lmmE=;
+        b=BkGIEGa/UkRtmQgVT9IKXra/cys3eeGar82C07dhE6t9l+9w4CCqRHeK2hyBLRA6xv
+         XPHq5cklL++jazg6Wqx75QntezcaDQCdy4a6nF68xAQiv5t1Q+yLt1JK31rSpVS96Eur
+         /EytBVMDwh7U7IwFPHXfOq290AochPOSIGaSp0QNmnA6M1Ay0UOwhwjj8w73mtXdOQTf
+         l+0XUh8NvKs2fQJB824Slsh1Lq8VwyrOF/VHTUFv5FwU7FxtdV+PtC0IEUvwexZFxNFF
+         YFC5xn73wEJkW0Q2f8fxDmw0mYMRxpblpMF6oMy9EM7xqyaxv+Ioch4AOazz07nmeILV
+         OgUg==
+X-Gm-Message-State: APjAAAWhucwUiNt+Axg9YAVEXgx2id3ms2pvvcmXa3/w/mvKe87mvFFi
+        sRRquUYL79rcSJxS563CGsPxLeVw06rdBXs/L+s=
+X-Google-Smtp-Source: APXvYqwdGj8tn+Lc+jdWqVTEGuaT6OEVtpsGQreyIcF1DxNxjXt75IZwoWbIPt3vCU8A0lK4eiedRhBfqabA/jYv85k=
+X-Received: by 2002:a5d:6b11:: with SMTP id v17mr50383530wrw.323.1564488022522;
+ Tue, 30 Jul 2019 05:00:22 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6f9997d-b133-407b-5779-08d714e5413a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 11:58:37.2602
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6063
+References: <20190729115544.17895-1-anup.patel@wdc.com> <20190729115544.17895-6-anup.patel@wdc.com>
+ <9f9d09e5-49bc-f8e3-cfe1-bd5221e3b683@redhat.com>
+In-Reply-To: <9f9d09e5-49bc-f8e3-cfe1-bd5221e3b683@redhat.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 30 Jul 2019 17:30:10 +0530
+Message-ID: <CAAhSdy3JZVEEnPnssALaxvCsyznF=rt=7-d5J_OgQEJv6cPhxQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 05/16] RISC-V: KVM: Implement VCPU interrupts and
+ requests handling
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Jul 30, 2019 at 4:47 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> First, something that is not clear to me: how do you deal with a guest
+> writing 1 to VSIP.SSIP?  I think that could lead to lost interrupts if
+> you have the following sequence
+>
+> 1) guest writes 1 to VSIP.SSIP
+>
+> 2) guest leaves VS-mode
+>
+> 3) host syncs VSIP
+>
+> 4) user mode triggers interrupt
+>
+> 5) host reenters guest
+>
+> 6) host moves irqs_pending to VSIP and clears VSIP.SSIP in the process
 
-Hi Linus,
+This reasoning also apply to M-mode firmware (OpenSBI) providing timer
+and IPI services to HS-mode software. We had some discussion around
+it in a different context.
+(Refer, https://github.com/riscv/opensbi/issues/128)
 
-Locking fix for nouveau's use of HMM
+The thing is SIP CSR is supposed to be read-only for any S-mode SW. This
+means HS-mode/VS-mode SW modifications to SIP CSR should have no
+effect.
 
-This small series was posted by Christoph before the merge window, but didn't
-make it in time for the PR. It fixes various locking errors in the nouveau
-driver's use of the hmm_range_* functions.
+For HS-mode, only certain bits are writable from M-mode such as SSIP
+and in-future even this will go away when we have specialized HW to
+trigger S-mode IPIs without going through M-mode firmware.
 
-The diffstat is a bit big as Christoph did a comprehensive job to move the
-obsolete API from the core header and into the driver before fixing its flow,
-but the risk of regression from this code motion is low.
+For VS-mode, only HS-mode controls the pending bits writes to VSIP CSR.
 
-I don't intend to often send -rc patches for hmm, but this is entangled with
-other changes already, so it is simpler to keep it on the hmm git branch.
+If above is honored correctly by HW then the use-case you mentioned above
+is not possible because Guest writing 1 to SIP.SSIP will be ignored.
 
-Thanks,
-Jason
+It is possible that we have buggy HW which does allow Guest write to SIP
+CSR bits then our current approach is to just overwrite VSIP whenver it
+is different from irq_pending bits before entering Guest.
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+Do you still an issue here?
 
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+Regards,
+Anup
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus-hmm
-
-for you to fetch changes up to de4ee728465f7c0c29241550e083139b2ce9159c:
-
-  nouveau: unlock mmap_sem on all errors from nouveau_range_fault (2019-07-25 16:14:40 -0300)
-
-----------------------------------------------------------------
-HMM patches for 5.3-rc
-
-Fix the locking around nouveau's use of the hmm_range_* APIs. It works
-correctly in the success case, but many of the the edge cases have missing
-unlocks or double unlocks.
-
-----------------------------------------------------------------
-Christoph Hellwig (4):
-      mm/hmm: always return EBUSY for invalid ranges in hmm_range_{fault,snapshot}
-      mm/hmm: move hmm_vma_range_done and hmm_vma_fault to nouveau
-      nouveau: remove the block parameter to nouveau_range_fault
-      nouveau: unlock mmap_sem on all errors from nouveau_range_fault
-
- Documentation/vm/hmm.rst              |  2 +-
- drivers/gpu/drm/nouveau/nouveau_svm.c | 47 ++++++++++++++++++++++++++++--
- include/linux/hmm.h                   | 54 -----------------------------------
- mm/hmm.c                              | 10 +++----
- 4 files changed, 49 insertions(+), 64 deletions(-)
-
---pWyiEgJYm5f9v55/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl1AMOIACgkQOG33FX4g
-mxoQ2g//RnLjfumNrH3tMwS8UkYgAoWVh6NGyQ7EjUPT2fvHlfo3dMqzUNK9h+wN
-k2MKDTSZbFVhJQ5scU9KbhzGBXih4+DLnW1bpN1k/6nfZ6EXxRJakmcEz+LE53Pn
-ylcuBXU9SLf733j+uwy42BQhkL7/Ykk+vt/aToWEyuTIXsR7zkTPVd7XH4JcHKi6
-Lsf+zGtBCsIsh27T7uyyyOI52XwcY8Zm6LvfIKdOLczPRB8SzQ3yyMHjG42L7/ui
-VGDvoU+4pMGQmBg2anE49/xsxDrGWeVYgkcsQcw2PhlthXw3VwmWBj83chLU9+qt
-Vc1jofLj4Srgv+mXgFjmu0j1yJ84qoJaBb1YPzxDWoJGHpXyhLWKc7U55lvvotDD
-EJCOV6nE+VMGo/Zu96O+LI4IW05afPxJstNj3XQg72lF4WaRGOS8q3OhmGqntaNh
-ajQNYrcUDODmwepiOpDPf28K2cybwdINqrNKFw2e9eybnBxE4VEoF5vjUIlQmYoj
-BNZAORxOyrnNHr8w3q46pK5OPinjXhNnKXJFrcqldZKKonhRCTIb+vu22CLD0QCC
-DjmflIaGbHx8Q8yB+9B5pFt3j/a9lMzYgfN61Kh1qCOAiDWDXBjJ/c/mA6++iwgL
-08F+Xltp9NoE46VUbpij+5xq6eaXrHWb7v8QyRZJt04KHziebmM=
-=6E82
------END PGP SIGNATURE-----
-
---pWyiEgJYm5f9v55/--
+>
+> Perhaps irqs_pending needs to be split in two fields, irqs_pending and
+> irqs_pending_mask, and then you can do this:
+>
+> /*
+>  * irqs_pending and irqs_pending_mask have multiple-producer/single-
+>  * consumer semantics; therefore bits can be set in the mask without
+>  * a lock, but clearing the bits requires vcpu_lock.  Furthermore,
+>  * consumers should never write to irqs_pending, and should not
+>  * use bits of irqs_pending that weren't 1 in the mask.
+>  */
+>
+> int kvm_riscv_vcpu_set_interrupt(struct kvm_vcpu *vcpu, unsigned int irq)
+> {
+>         ...
+>         set_bit(irq, &vcpu->arch.irqs_pending);
+>         smp_mb__before_atomic();
+>         set_bit(irq, &vcpu->arch.irqs_pending_mask);
+>         kvm_vcpu_kick(vcpu);
+> }
+>
+> int kvm_riscv_vcpu_unset_interrupt(struct kvm_vcpu *vcpu, unsigned int irq)
+> {
+>         ...
+>         clear_bit(irq, &vcpu->arch.irqs_pending);
+>         smp_mb__before_atomic();
+>         set_bit(irq, &vcpu->arch.irqs_pending_mask);
+> }
+>
+> static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+> {
+>         ...
+>         WRITE_ONCE(vcpu->arch.irqs_pending_mask, 0);
+> }
+>
+> and kvm_riscv_vcpu_flush_interrupts can leave aside VSIP bits that
+> aren't in vcpu->arch.irqs_pending_mask:
+>
+>         if (atomic_read(&vcpu->arch.irqs_pending_mask)) {
+>                 u32 mask, val;
+>
+>                 mask = xchg_acquire(&vcpu->arch.irqs_pending_mask, 0);
+>                 val = READ_ONCE(vcpu->arch.irqs_pending) & mask;
+>
+>                 vcpu->arch.guest_csr.vsip &= ~mask;
+>                 vcpu->arch.guest_csr.vsip |= val;
+>                 csr_write(CSR_VSIP, vsip);
+>         }
+>
+> Also, the getter of CSR_VSIP should call
+> kvm_riscv_vcpu_flush_interrupts, while the setter should clear
+> irqs_pending_mask.
+>
+> On 29/07/19 13:56, Anup Patel wrote:
+> > +     kvm_make_request(KVM_REQ_IRQ_PENDING, vcpu);
+> > +     kvm_vcpu_kick(vcpu);
+>
+> The request is not needed as long as kvm_riscv_vcpu_flush_interrupts is
+> called *after* smp_store_mb(vcpu->mode, IN_GUEST_MODE) in
+> kvm_arch_vcpu_ioctl_run.  This is the "request-less vCPU kick" pattern
+> in Documentation/virtual/kvm/vcpu-requests.rst.  The smp_store_mb then
+> orders the write of IN_GUEST_MODE before the read of irqs_pending (or
+> irqs_pending_mask in my proposal above); in the producers, there is a
+> dual memory barrier in kvm_vcpu_exiting_guest_mode(), ordering the write
+> of irqs_pending(_mask) before the read of vcpu->mode.
+>
+> Similar to other VS* CSRs, I'd rather have a ONE_REG interface for VSIE
+> and VSIP from the beginning as well.  Note that the VSIP setter would
+> clear irqs_pending_mask, while the getter would call
+> kvm_riscv_vcpu_flush_interrupts before reading.  It's up to userspace to
+> ensure that no interrupt injections happen between the calls to the
+> getter and the setter.
+>
+> Paolo
+>
+> > +             csr_write(CSR_VSIP, vcpu->arch.irqs_pending);
+> > +             vcpu->arch.guest_csr.vsip = vcpu->arch.irqs_pending;
+> > +     }
+>
