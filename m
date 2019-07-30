@@ -2,106 +2,77 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F6DC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF10C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E602064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E58208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 05:52:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TcyrmqgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbfG3FwE (ORCPT
+        id S1727843AbfG3FwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 01:52:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51842 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbfG3FwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 01:52:03 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7C74259455;
-        Tue, 30 Jul 2019 05:52:03 +0000 (UTC)
-Received: from rt4.app.eng.rdu2.redhat.com (rt4.app.eng.rdu2.redhat.com [10.10.161.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 476045DAA4;
-        Tue, 30 Jul 2019 05:52:03 +0000 (UTC)
-Received: from rt4.app.eng.rdu2.redhat.com (localhost [127.0.0.1])
-        by rt4.app.eng.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id x6U5q270005348;
-        Tue, 30 Jul 2019 01:52:02 -0400
-Received: (from apache@localhost)
-        by rt4.app.eng.rdu2.redhat.com (8.14.4/8.14.4/Submit) id x6U5q1aH005347;
-        Tue, 30 Jul 2019 01:52:01 -0400
-From:   Red Hat Product Security <secalert@redhat.com>
-X-PGP-Public-Key: https://www.redhat.com/security/650d5882.txt
-Subject: [engineering.redhat.com #494735] Re: [PATCH] nbd_genl_status: null check for nla_nest_start
-Reply-To: secalert@redhat.com
-In-Reply-To: <20190729164226.22632-1-navid.emamdoost@gmail.com>
-References: <RT-Ticket-494735@engineering.redhat.com>
- <20190729130912.7imtg3hfnvb4lt2y@MacBook-Pro-91.local>
- <20190729164226.22632-1-navid.emamdoost@gmail.com>
-Message-ID: <rt-4.0.13-5201-1564465920-1304.494735-5-0@engineering.redhat.com>
-X-RT-Loop-Prevention: engineering.redhat.com
-RT-Ticket: engineering.redhat.com #494735
-Managed-BY: RT 4.0.13 (http://www.bestpractical.com/rt/)
-RT-Originator: darunesh@redhat.com
-To:     navid.emamdoost@gmail.com
-CC:     axboe@kernel.dk, emamd001@umn.edu, josef@toxicpanda.com,
-        kjlu@umn.edu, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nbd@other.debian.org,
-        smccaman@umn.edu
+        Tue, 30 Jul 2019 01:52:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46092 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfG3FwT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 01:52:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=a6luPAARjEvL6+wrepaiTAj3y4NIety29NPDFmox12Y=; b=TcyrmqgStzKv1ExUPq4X25C2K
+        GsS0yBUn84eEzTV3G+bIV6w/Wz+zdOtTQgYRWctpWBG4m8RZX8Wy5MsS4r7N3hmMjWfF6ufk06OEH
+        Lb7wBYPu04YPbG9Q8/2AJ6Yg8EEmECICcfu4PZLtOkUbiZWv74mKnfRaChmb+dINOOXncvrUhYWIv
+        FKLVC7qSEfWk3r47f87nsmoAX+/yb/XktofWaUBfRO6uAoKsabsXIxOdJ5S8pbSz8XGvfre96fE80
+        m2Gz/7orow4ek0yS3DFI6va1nnSu5TOByhwgh6aRhwa3qUsmh/YCoO7ECAkPuk19GkYAT1cbpKh6f
+        QmbBIraeQ==;
+Received: from [195.167.85.94] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsL3W-00014y-Mf; Tue, 30 Jul 2019 05:52:15 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: hmm_range_fault related fixes and legacy API removal v3
+Date:   Tue, 30 Jul 2019 08:51:50 +0300
+Message-Id: <20190730055203.28467-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-X-RT-Original-Encoding: utf-8
-Date:   Tue, 30 Jul 2019 01:52:01 -0400
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 30 Jul 2019 05:52:03 +0000 (UTC)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Navid,
 
-Thank you for you report. I have forwarded this to our analysis team. Once I'll
-get an update on your reported vulnerability and it's patched I'll let you
-know.
-Please let me know if you have any questions or concerns.
+Hi Jérôme, Ben, Felxi and Jason,
 
-On Mon Jul 29 12:42:56 2019, navid.emamdoost@gmail.com wrote:
-> nla_nest_start may fail and return NULL. The check is inserted, and
-> errno is selected based on other call sites within the same source
-> code.
-> Update: removed extra new line.
->
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
-> drivers/block/nbd.c | 5 +++++
-> 1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> index 9bcde2325893..2410812d1e82 100644
-> --- a/drivers/block/nbd.c
-> +++ b/drivers/block/nbd.c
-> @@ -2149,6 +2149,11 @@ static int nbd_genl_status(struct sk_buff *skb,
-> struct genl_info *info)
-> }
->
-> dev_list = nla_nest_start_noflag(reply, NBD_ATTR_DEVICE_LIST);
-> + if (!dev_list) {
-> + ret = -EMSGSIZE;
-> + goto out;
-> + }
-> +
-> if (index == -1) {
-> ret = idr_for_each(&nbd_index_idr, &status_cb, reply);
-> if (ret) {
+below is a series against the hmm tree which cleans up various minor
+bits and allows HMM_MIRROR to be built on all architectures.
 
+Diffstat:
 
---
-Best Regards,
-Dhananjay Arunesh, Red Hat Product Security
-7F45 FDD1 BB92 2DA8 CD05 F034 9B3D 8FE3 50EC 5D74
+    7 files changed, 81 insertions(+), 171 deletions(-)
 
+A git tree is also available at:
+
+    git://git.infradead.org/users/hch/misc.git hmm-cleanups
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-cleanups
