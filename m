@@ -2,89 +2,151 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D11C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059B2C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBB92087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564471483;
-	bh=9+toDDS0IeJCx5z2IDpjA3h7rsOMw9bEbFITMy2LdSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2wkCl5HXLLUIIo2CzRIZRntRrkS7FVBZGM//vj4qnE/8FVEnqzAusbp0LA9A0huwg
-	 841MNgHbFYswJr8VxdjMSrmDwtuX2xew+IIHUVnG9E5yYOvZSTD3k+QcCB7c0jCJlw
-	 CORB0BnqXeely3V/J5Vd0FH2NaIa3QI2pxkvuczU=
+	by mail.kernel.org (Postfix) with ESMTP id D6B262087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbfG3HYl (ORCPT
+        id S1729721AbfG3HZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:24:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52754 "EHLO mx1.suse.de"
+        Tue, 30 Jul 2019 03:25:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3244 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727527AbfG3HYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:24:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1B770AE5C;
-        Tue, 30 Jul 2019 07:24:40 +0000 (UTC)
-Date:   Tue, 30 Jul 2019 09:24:39 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Rik van Riel <riel@surriel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>
-Subject: Re: [PATCH v3] sched/core: Don't use dying mm as active_mm of
- kthreads
-Message-ID: <20190730072439.GL9330@dhcp22.suse.cz>
-References: <20190729210728.21634-1-longman@redhat.com>
- <ec9effc07a94b28ecf364de40dee183bcfb146fc.camel@surriel.com>
- <3e2ff4c9-c51f-8512-5051-5841131f4acb@redhat.com>
+        id S1729407AbfG3HZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 03:25:31 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EA7D461F1782D299E9AC;
+        Tue, 30 Jul 2019 15:25:29 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Jul 2019
+ 15:25:23 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
+        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
+        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
+        <zhaohongjiang@huawei.com>, Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH v2 01/10] powerpc: unify definition of M_IF_NEEDED
+Date:   Tue, 30 Jul 2019 15:42:16 +0800
+Message-ID: <20190730074225.39544-2-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190730074225.39544-1-yanaijie@huawei.com>
+References: <20190730074225.39544-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e2ff4c9-c51f-8512-5051-5841131f4acb@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 29-07-19 17:42:20, Waiman Long wrote:
-> On 7/29/19 5:21 PM, Rik van Riel wrote:
-> > On Mon, 2019-07-29 at 17:07 -0400, Waiman Long wrote:
-> >> It was found that a dying mm_struct where the owning task has exited
-> >> can stay on as active_mm of kernel threads as long as no other user
-> >> tasks run on those CPUs that use it as active_mm. This prolongs the
-> >> life time of dying mm holding up some resources that cannot be freed
-> >> on a mostly idle system.
-> > On what kernels does this happen?
-> >
-> > Don't we explicitly flush all lazy TLB CPUs at exit
-> > time, when we are about to free page tables?
-> 
-> There are still a couple of calls that will be done until mm_count
-> reaches 0:
-> 
-> - mm_free_pgd(mm);
-> - destroy_context(mm);
-> - mmu_notifier_mm_destroy(mm);
-> - check_mm(mm);
-> - put_user_ns(mm->user_ns);
-> 
-> These are not big items, but holding it off for a long time is still not
-> a good thing.
+M_IF_NEEDED is defined too many times. Move it to a common place.
 
-It would be helpful to give a ball park estimation of how much that
-actually is. If we are talking about few pages worth of pages per idle
-cpu in the worst case then I am not sure we want to find an elaborate
-way around that. We are quite likely having more in per-cpu caches in
-different subsystems already. It is also quite likely that large
-machines with many CPUs will have a lot of memory as well.
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Cc: Diana Craciun <diana.craciun@nxp.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/nohash/mmu-book3e.h  | 10 ++++++++++
+ arch/powerpc/kernel/exceptions-64e.S          | 10 ----------
+ arch/powerpc/kernel/fsl_booke_entry_mapping.S | 10 ----------
+ arch/powerpc/kernel/misc_64.S                 |  5 -----
+ 4 files changed, 10 insertions(+), 25 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/nohash/mmu-book3e.h b/arch/powerpc/include/asm/nohash/mmu-book3e.h
+index 4c9777d256fb..0877362e48fa 100644
+--- a/arch/powerpc/include/asm/nohash/mmu-book3e.h
++++ b/arch/powerpc/include/asm/nohash/mmu-book3e.h
+@@ -221,6 +221,16 @@
+ #define TLBILX_T_CLASS2			6
+ #define TLBILX_T_CLASS3			7
+ 
++/*
++ * The mapping only needs to be cache-coherent on SMP, except on
++ * Freescale e500mc derivatives where it's also needed for coherent DMA.
++ */
++#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
++#define M_IF_NEEDED	MAS2_M
++#else
++#define M_IF_NEEDED	0
++#endif
++
+ #ifndef __ASSEMBLY__
+ #include <asm/bug.h>
+ 
+diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
+index 1cfb3da4a84a..fd49ec07ce4a 100644
+--- a/arch/powerpc/kernel/exceptions-64e.S
++++ b/arch/powerpc/kernel/exceptions-64e.S
+@@ -1342,16 +1342,6 @@ skpinv:	addi	r6,r6,1				/* Increment */
+ 	sync
+ 	isync
+ 
+-/*
+- * The mapping only needs to be cache-coherent on SMP, except on
+- * Freescale e500mc derivatives where it's also needed for coherent DMA.
+- */
+-#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
+-#define M_IF_NEEDED	MAS2_M
+-#else
+-#define M_IF_NEEDED	0
+-#endif
+-
+ /* 6. Setup KERNELBASE mapping in TLB[0]
+  *
+  * r3 = MAS0 w/TLBSEL & ESEL for the entry we started in
+diff --git a/arch/powerpc/kernel/fsl_booke_entry_mapping.S b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
+index ea065282b303..de0980945510 100644
+--- a/arch/powerpc/kernel/fsl_booke_entry_mapping.S
++++ b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
+@@ -153,16 +153,6 @@ skpinv:	addi	r6,r6,1				/* Increment */
+ 	tlbivax 0,r9
+ 	TLBSYNC
+ 
+-/*
+- * The mapping only needs to be cache-coherent on SMP, except on
+- * Freescale e500mc derivatives where it's also needed for coherent DMA.
+- */
+-#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
+-#define M_IF_NEEDED	MAS2_M
+-#else
+-#define M_IF_NEEDED	0
+-#endif
+-
+ #if defined(ENTRY_MAPPING_BOOT_SETUP)
+ 
+ /* 6. Setup KERNELBASE mapping in TLB1[0] */
+diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+index b55a7b4cb543..26074f92d4bc 100644
+--- a/arch/powerpc/kernel/misc_64.S
++++ b/arch/powerpc/kernel/misc_64.S
+@@ -432,11 +432,6 @@ kexec_create_tlb:
+ 	rlwimi	r9,r10,16,4,15		/* Setup MAS0 = TLBSEL | ESEL(r9) */
+ 
+ /* Set up a temp identity mapping v:0 to p:0 and return to it. */
+-#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
+-#define M_IF_NEEDED	MAS2_M
+-#else
+-#define M_IF_NEEDED	0
+-#endif
+ 	mtspr	SPRN_MAS0,r9
+ 
+ 	lis	r9,(MAS1_VALID|MAS1_IPROT)@h
 -- 
-Michal Hocko
-SUSE Labs
+2.17.2
+
