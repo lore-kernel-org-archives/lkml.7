@@ -2,118 +2,146 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592FAC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2B0C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395AE2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599B32087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:17:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xn6TrcnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbfG3IPr (ORCPT
+        id S1729852AbfG3IRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:15:47 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:51953 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727789AbfG3IPq (ORCPT
+        Tue, 30 Jul 2019 04:17:18 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37115 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729057AbfG3IRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:15:46 -0400
-Received: from [IPv6:2001:983:e9a7:1:3159:f139:4aff:7185] ([IPv6:2001:983:e9a7:1:3159:f139:4aff:7185])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id sNIGhAzQaqTdhsNIIhlAOr; Tue, 30 Jul 2019 10:15:41 +0200
-Subject: Re: [PATCH] media input infrastructure:tw686x: Fix of
- possibleinconsistent memory deallocation and/or race condition by
- implementation of custom video_device_release function in tw686x driver
-To:     Mark Balantzyan <mbalant3@gmail.com>, ezequiel@vanguardiasur.com.ar
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <alpine.DEB.2.21.1907291256080.16959@mbalantz-desktop>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <40d14e23-636e-ed8a-6608-99427f5b8169@xs4all.nl>
-Date:   Tue, 30 Jul 2019 10:15:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Jul 2019 04:17:17 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t76so47336096oih.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 01:17:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CNU8TS9u3/ubSDEXC8bYLt11vTX+jIiR3ccUu5xBq/s=;
+        b=xn6TrcnJQW1843kXVkaivWSqaN6YpPuOoSGwYZH296NWOGCTIIFUhybEsgwhGezhj/
+         JW8rx5mw3kap3WdICRseoi7PjJM75dSjB0Nz9wm9q63Krqsnlkc0a7J0mlGvPvEqp6KK
+         kdNapt9bS6ofRieaQoz2o8+I7Ex7zVe+chFEKlZBN3rlxPzLAMZm7TSFuLXf/MYG0bzg
+         5YPohWDxh6QreIXNahDV6kcvYSxG6RS+qCegWHydhnkykJbLHNNXLdkWE3Qd0H4Q1H8g
+         4WAef36wkgJGMpHDKLpyC7H++2UMaCTsF4tp3CLNLXWhJQCkZjy1xq+i5XE+wP84aGct
+         UX5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CNU8TS9u3/ubSDEXC8bYLt11vTX+jIiR3ccUu5xBq/s=;
+        b=X7gMZRNdFAOxgSdPGG6Uym+MwTIHBmIlv0NfEsxyOJDMBQ4gzMCE5f1qvUyX3uyTD6
+         40c9XBAGiKGihMDVUQe6Js1fgOqS8pFN2WyAV59IMHCxj4ns6G99Y6KmhXqZAyWaHCBC
+         T9LZyPnQDkqhiPgDrJTSP7vsIZjd+ZeADx2GJmSoR6t0n5EoQtMPhRetTWMhlIyF6Fw0
+         ChPZssteHgaOlQ+ercJXucujOzr+uMcwVPCTntYwbj4DSQU3fJS6LIrDMiPtWL6/Mx8J
+         qNIWJxJbODedv1v6JFdUOrBPHr4PT1gPQcv9fcAiLPETfF+NzifsYUbNujbnnHTc6moU
+         n/FQ==
+X-Gm-Message-State: APjAAAWOjUA4Vxw5PRuBQAK3G2XuCONDnt1ur2+HwYW8cFNgPTbjocVl
+        I0Mo6RtMCFXOqKzS/LGrS7zEUuE0E5xV53UcysPE4w==
+X-Google-Smtp-Source: APXvYqzA9lnj0jchZGCMVFVje5J2e2ig9YqjWZigBEwtFQWTiBVjS1h0WVLyPMueKKXBH389khOeqr/AbFqXtSaX1Ig=
+X-Received: by 2002:aca:b58b:: with SMTP id e133mr367236oif.147.1564474636495;
+ Tue, 30 Jul 2019 01:17:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1907291256080.16959@mbalantz-desktop>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfPqNhh2qVlJuZ2GmaH9XhGYKqumkyFarMB2ZiQRDm683SEAP533sV503AxCaD7YHeXDagHkODd+NotO33NqwPYWJ64aPeWhqhc9YpdcvoRIrwRSaE7e6
- zSGlL3E/tPmj3drXRzjZgCv6s+WNZ8M1KwhzZkrYXxATKUG4s2Sy7qbEAYUy5IklMMBVmKpoSCcp7a+3EYhD4sDodMDEubReyeJvD+31fC8shw+gdW5VyPri
- 4b9H1xgYMzoxLqF2E8lTM9HT0WeWVacV/FFhO7q/3hfxnYuIE+5Wkqfk6U8qK3KrEDhhbZtVZaKaCCyGVI2rZSlhbs2fWvk3YLfgloAaBzyFhMnlaruKHVdT
- PnaBI2B5vxMzxQzf2KZcyvdkFbaZr5j628+/i0bANEe1iNVDiTw=
+References: <20190729143730.18660-1-jcline@redhat.com>
+In-Reply-To: <20190729143730.18660-1-jcline@redhat.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 30 Jul 2019 10:17:05 +0200
+Message-ID: <CAMpxmJXanG_-Cet-VEg2=XHsZqCqqPJ9O8kUC+14u5-rr+ypkA@mail.gmail.com>
+Subject: Re: [PATCH v2] Documentation: gpio: fix function links in the HTML docs
+To:     Jeremy Cline <jcline@redhat.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
-
-Please, please read this first before posting patches:
-
-https://kernelnewbies.org/FirstKernelPatch
-
-And don't use insanely long subject lines in your email.
-
-This patch is nonsense. As said before, you need to override the release() callback
-of struct video_device with a tw686x-specific function that frees the dma memory and
-calls video_device_release() at the end to free the struct video_device itself.
-
-This release() callback is called by the V4L2 framework when the last user of the
-device closes its filehandle, so that's a good point to free all the memory. Doing
-it earlier (as the current code does) runs the risk that someone might still access
-that memory, and you don't want that.
-
-Regards,
-
-	Hans
-
-On 7/29/19 10:09 PM, Mark Balantzyan wrote:
-> 
-> Possible inconsistent memory deallocation and/or race conditions were detected specifically with respect to remaining open handles to the video device handled by the tw686x driver. This patch
-> addresses this by implementing a revised independent instance of the video_device_release function to free the remaining resources and memory where the last open handle(s) is/were closed.
-> 
-> Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
-> 
+pon., 29 lip 2019 o 16:37 Jeremy Cline <jcline@redhat.com> napisa=C5=82(a):
+>
+> The shorthand [_data] and [devm_] cause the HTML documentation to not
+> link to the function documentation properly. This expands the references
+> to the complete function names with the exception of
+> devm_gpiochip_remove() which was dropped by commit 48207d7595d2 ("gpio:
+> drop devm_gpiochip_remove()").
+>
+> Signed-off-by: Jeremy Cline <jcline@redhat.com>
 > ---
-> 
->  drivers/media/pci/tw686x/tw686x-video.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/pci/tw686x/tw686x-video.c b/drivers/media/pci/tw686x/tw686x-video.c
-> index 3a06c000..29e10c85 100644
-> --- a/drivers/media/pci/tw686x/tw686x-video.c
-> +++ b/drivers/media/pci/tw686x/tw686x-video.c
-> @@ -1151,18 +1151,25 @@ void tw686x_video_irq(struct tw686x_dev *dev, unsigned long requests,
->      }
->  }
-> 
-> +void video_device_release(tw686x_dev *dev) {
-> +    for (int pb = 0; pb < 2; pb++) {
-> +        dev->dma_ops->free(dev->video_channels,pb);
-> +    }
-> +    kfree(dev);
-> +}
-> +
->  void tw686x_video_free(struct tw686x_dev *dev)
->  {
-> -    unsigned int ch, pb;
-> +    unsigned int ch;
-> 
->      for (ch = 0; ch < max_channels(dev); ch++) {
->          struct tw686x_video_channel *vc = &dev->video_channels[ch];
-> 
->          video_unregister_device(vc->device);
-> 
-> -        if (dev->dma_ops->free)
-> -            for (pb = 0; pb < 2; pb++)
-> -                dev->dma_ops->free(vc, pb);
-> +        if (dev->dma_ops->free) {
-> +            video_device_release(dev);
-> +        }
->      }
->  }
-> 
+> New in v2:
+>   - Rebased onto v5.3-rc2
+>
+>  Documentation/driver-api/gpio/driver.rst | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/dri=
+ver-api/gpio/driver.rst
+> index 921c71a3d683..906af220b164 100644
+> --- a/Documentation/driver-api/gpio/driver.rst
+> +++ b/Documentation/driver-api/gpio/driver.rst
+> @@ -69,9 +69,9 @@ driver code:
+>
+>  The code implementing a gpio_chip should support multiple instances of t=
+he
+>  controller, preferably using the driver model. That code will configure =
+each
+> -gpio_chip and issue ``gpiochip_add[_data]()`` or ``devm_gpiochip_add_dat=
+a()``.
+> -Removing a GPIO controller should be rare; use ``[devm_]gpiochip_remove(=
+)``
+> -when it is unavoidable.
+> +gpio_chip and issue gpiochip_add(), gpiochip_add_data(), or
+> +devm_gpiochip_add_data().  Removing a GPIO controller should be rare; us=
+e
+> +gpiochip_remove() when it is unavoidable.
+>
+>  Often a gpio_chip is part of an instance-specific structure with states =
+not
+>  exposed by the GPIO interfaces, such as addressing, power management, an=
+d more.
+> @@ -418,11 +418,11 @@ symbol:
+>
+>  If there is a need to exclude certain GPIO lines from the IRQ domain han=
+dled by
+>  these helpers, we can set .irq.need_valid_mask of the gpiochip before
+> -``[devm_]gpiochip_add_data()`` is called. This allocates an .irq.valid_m=
+ask with as
+> -many bits set as there are GPIO lines in the chip, each bit representing=
+ line
+> -0..n-1. Drivers can exclude GPIO lines by clearing bits from this mask. =
+The mask
+> -must be filled in before gpiochip_irqchip_add() or gpiochip_irqchip_add_=
+nested()
+> -is called.
+> +devm_gpiochip_add_data() or gpiochip_add_data() is called. This allocate=
+s an
+> +.irq.valid_mask with as many bits set as there are GPIO lines in the chi=
+p, each
+> +bit representing line 0..n-1. Drivers can exclude GPIO lines by clearing=
+ bits
+> +from this mask. The mask must be filled in before gpiochip_irqchip_add()=
+ or
+> +gpiochip_irqchip_add_nested() is called.
+>
+>  To use the helpers please keep the following in mind:
+>
+> --
+> 2.21.0
+>
 
+Patch applied, thanks!
+
+Bartosz
