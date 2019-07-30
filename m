@@ -2,60 +2,157 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71952C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2861BC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC312171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D60206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:53:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564448007;
+	bh=9P9XTSwZEraMWe+Bk5cn6zbx8jLkRWytZvexBkWykzI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bCWPn6FFiC/sOZLdWfXof6tq6tx/C5Nv+Tl3KbPJsHabIR/F3UxvdtS2NRbRe9XYC
+	 2dAEG1O+t8DUI+FuYz44ibNcyCM0/6ztByL2BALMzIOXfKkPeTmL/+ZwLTsqaBOLI2
+	 i3LS9Xds+DaZBqvSzL+S1iQWUhA2ldzxv5SWJe1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbfG3Avm (ORCPT
+        id S1730361AbfG3Ax0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 20:51:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 20:53:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727723AbfG3Avl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 20:51:41 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727590AbfG3AxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 20:53:25 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20A0820651;
-        Tue, 30 Jul 2019 00:51:40 +0000 (UTC)
-Date:   Mon, 29 Jul 2019 20:51:38 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Divya Indi <divya.indi@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, Joe Jin <joe.jin@oracle.com>,
-        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>
-Subject: Re: [PATCH 7/7] tracing: Un-export ftrace_set_clr_event
-Message-ID: <20190729205138.689864d2@gandalf.local.home>
-In-Reply-To: <1564444954-28685-8-git-send-email-divya.indi@oracle.com>
-References: <1564444954-28685-1-git-send-email-divya.indi@oracle.com>
-        <1564444954-28685-8-git-send-email-divya.indi@oracle.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5964521726;
+        Tue, 30 Jul 2019 00:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564448004;
+        bh=9P9XTSwZEraMWe+Bk5cn6zbx8jLkRWytZvexBkWykzI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GZn0k3A0oUKjhpHUtqLiXRw3SRuEkDcz1+PO0erXAQO/scDbcDmhX0T170FwAUyY5
+         bs43EZSP1C4VOHZp6Ee6MsowaTqa2igTtD6/Gei3ZsJYZLXYW3K0cCfWMeBz+hU1eR
+         bJ+/HRQ17C6p7aybDnfpD4HYvSHP4Ueg6SnmGMU4=
+Received: by mail-qk1-f180.google.com with SMTP id 201so45380697qkm.9;
+        Mon, 29 Jul 2019 17:53:24 -0700 (PDT)
+X-Gm-Message-State: APjAAAVqOB6FEa6Tl8tJPk6LVTVvkOdh1rPaAtlVH6LHq8MYKukzx8ik
+        lMm2LS+nmXwnwFAJ5QhJKsr7ThAiRoMa+oGAkw==
+X-Google-Smtp-Source: APXvYqzg4CpA6qd+PAURQBwuutVBrAhYvydEn0PwGDcygNvMl/0/kHQLTQyV/snoQAZCqvPMbDRKwGTKrK5sagEuO9s=
+X-Received: by 2002:a37:6944:: with SMTP id e65mr68832709qkc.119.1564448003532;
+ Mon, 29 Jul 2019 17:53:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190726053959.2003-1-andrew@aj.id.au>
+In-Reply-To: <20190726053959.2003-1-andrew@aj.id.au>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 29 Jul 2019 18:53:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com>
+Message-ID: <CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com>
+Subject: Re: [RFC-ish PATCH 00/17] Clean up ASPEED devicetree warnings
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-aspeed@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        anoo@us.ibm.com, a.filippov@yadro.com,
+        Arnd Bergmann <arnd@arndb.de>, yang.brianc.w@inventec.com,
+        Corey Minyard <minyard@acm.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Haiyue Wang <haiyue.wang@linux.intel.com>, wangzqbj@inspur.com,
+        Ken Chen <chen.kenyy@inventec.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        openipmi-developer@lists.sourceforge.net,
+        Patrick Venture <venture@google.com>,
+        Stefan M Schaeckeler <sschaeck@cisco.com>, taoren@fb.com,
+        Xo Wang <xow@google.com>, yao.yuan@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jul 2019 17:02:34 -0700
-Divya Indi <divya.indi@oracle.com> wrote:
+On Thu, Jul 25, 2019 at 11:40 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> Hello,
+>
+> The aim of this series is to minimise/eliminate all the warnings from the
+> ASPEED devicetrees. It mostly achieves its goal, as outlined below.
+>
+> Using `aspeed_g5_defconfig` we started with the follow warning count:
+>
+>     $ make dtbs 2>&1 >/dev/null | wc -l
+>     218
+>
+> and after the full series is applied we have:
+>
+>     $ make dtbs 2>&1 >/dev/null | wc -l
+>     2
+>
+> for a 100x reduction.
+>
+> Getting there though isn't without some potential controversy, which I've saved
+> for the last half of the series. The following patches I think are in pretty
+> good shape:
+>
+>   ARM: dts: aspeed-g5: Move EDAC node to APB
+>   ARM: dts: aspeed-g5: Use recommended generic node name for SDMC
+>   ARM: dts: aspeed-g5: Fix aspeed,external-nodes description
+>   ARM: dts: vesnin: Add unit address for memory node
+>   ARM: dts: fp5280g2: Cleanup gpio-keys-polled properties
+>   ARM: dts: swift: Cleanup gpio-keys-polled properties
+>   ARM: dts: witherspoon: Cleanup gpio-keys-polled properties
+>   ARM: dts: aspeed: Cleanup lpc-ctrl and snoop regs
+>   ARM: dts: ibm-power9-dual: Add a unit address for OCC nodes
+>
+> With these patches applied we get to:
+>
+>     $ make dtbs 2>&1 >/dev/null | wc -l
+>     144
+>
+> So they make a dent, but fail to clean up the bulk of the issues. From here
+> I've mixed in some binding and driver changes with subsequent updates to the
+> devicetrees:
+>
+>   dt-bindings: pinctrl: aspeed: Add reg property as a hint
+>   dt-bindings: misc: Document reg for aspeed,p2a-ctrl nodes
+>   ARM: dts: aspeed: Add reg hints to syscon children
+>   dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS
+>   ipmi: kcs: Finish configuring ASPEED KCS device before enable
+>   ipmi: kcs: aspeed: Implement v2 bindings
+>   ARM: dts: aspeed-g5: Change KCS nodes to v2 binding
+>   ARM: dts: aspeed-g5: Sort LPC child nodes by unit address
+>
+> By `dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS` the warnings are
+> reduced to:
+>
+>     $ make dtbs 2>&1 >/dev/null | wc -l
+>     125
+>
+> The bang-for-buck is in fixing up the KCS bindings which removes all-but-two of
+> the remaining warnings (which we can't feasibly remove), but doing so forces
+> code changes (which I'd avoided up until this point).
+>
+> Reflecting broadly on the fixes, I think I've made a mistake way back by using
+> syscon/simple-mfds to expose the innards of the SCU and LPC controllers in the
+> devicetree. This series cleans up what's currently there, but I have half a
+> mind to rev the SCU and LPC bindings to not use simple-mfd and instead have a
+> driver implementation that uses `platform_device_register_full()` or similar to
+> deal with the mess.
+>
+> Rob - I'm looking for your thoughts here and on the series, I've never felt
+> entirely comfortable with what I cooked up. Your advice would be appreciated.
 
-> Use "trace_array_set_clr_event" to enable/disable events to a trace
-> array from other kernel modules/components.
-> Hence, we no longer need to have ftrace_set_clr_event as an exported API.
+The series generally looks fine to me from a quick scan. As far as
+dropping 'simple-mfd', having less fine grained description in DT is
+generally my preference. It comes down to whether what you have
+defined is maintainable. As most of it is just additions, I think what
+you have is fine. Maybe keep all this in mind for the next chip
+depending how the SCU and LPC change.
 
-Hmm, this simply reverts patch 1. Why have patch 1 and this patch in
-the first place?
-
--- Steve
-
-> 
-> Signed-off-by: Divya Indi <divya.indi@oracle.com>
-> Reviewed-By: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+Rob
